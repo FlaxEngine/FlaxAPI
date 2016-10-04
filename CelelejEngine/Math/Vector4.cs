@@ -59,6 +59,7 @@ namespace CelelejEngine
     /// <summary>
     ///   Represents a four dimensional mathematical vector.
     /// </summary>
+    [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Vector4 : IEquatable<Vector4>, IFormattable
     {

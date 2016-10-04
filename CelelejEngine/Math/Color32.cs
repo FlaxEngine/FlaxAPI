@@ -1,8 +1,13 @@
+// Celelej Game Engine scripting API
+
+using System;
+
 namespace CelelejEngine
 {
     /// <summary>
     ///   Representation of RGBA colors in 32 bit format.
     /// </summary>
+    [Serializable]
     public struct Color32
     {
         /// <summary>

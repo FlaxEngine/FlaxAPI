@@ -13,7 +13,6 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
-using System.Xml.Serialization;
 
 namespace fastJSON
 {
@@ -29,19 +28,9 @@ namespace fastJSON
         public bool DateTimeMilliseconds = false;
 
         /// <summary>
-        ///   Anonymous types have read only properties
-        /// </summary>
-        public bool EnableAnonymousTypes = false;
-
-        /// <summary>
-        ///   Ignore attributes to check for (default : XmlIgnoreAttribute, NonSerialized)
-        /// </summary>
-        public List<Type> IgnoreAttributes = new List<Type> {typeof(XmlIgnoreAttribute), typeof(NonSerializedAttribute)};
-
-        /// <summary>
         ///   Inline circular or already seen objects instead of replacement with $i (default = False)
         /// </summary>
-        public bool InlineCircularReferences;
+        public bool InlineCircularReferences = false;
 
         /// <summary>
         ///   Output string key dictionaries as "k"/"v" format (default = False)
@@ -60,19 +49,9 @@ namespace fastJSON
         public bool SerializeNullValues = true;
 
         /// <summary>
-        ///   Maximum depth for circular references in inline mode (default = 20)
+        ///   Maximum depth for circular references in inline mode (default = 12)
         /// </summary>
-        public byte SerializerMaxDepth = 20;
-
-        /// <summary>
-        ///   Save property/field names as lowercase (default = false)
-        /// </summary>
-        public bool SerializeToLowerCaseNames = false;
-
-        /// <summary>
-        ///   Show the readonly properties of types in the output (default = False)
-        /// </summary>
-        public bool ShowReadOnlyProperties;
+        public byte SerializerMaxDepth = 12;
 
         /// <summary>
         ///   Use escaped unicode i.e. \uXXXX format for non ASCII characters (default = True)
@@ -116,8 +95,6 @@ namespace fastJSON
                 UsingGlobalTypes = false;
                 InlineCircularReferences = true;
             }
-            if (EnableAnonymousTypes)
-                ShowReadOnlyProperties = true;
         }
     }
 
@@ -182,12 +159,6 @@ namespace fastJSON
             if ((t == typeof(Dictionary<,>)) || (t == typeof(List<>)))
                 param.UsingGlobalTypes = false;
 
-            // FEATURE : enable extensions when you can deserialize anon types
-            if (param.EnableAnonymousTypes)
-            {
-                param.UseExtensions = false;
-                param.UsingGlobalTypes = false;
-            }
             return new JSONSerializer(param).ConvertToJSON(obj);
         }
 
@@ -219,7 +190,7 @@ namespace fastJSON
         /// <returns></returns>
         public static T ToObject <T>(string json)
         {
-            return new deserializer(Parameters).ToObject<T>(json);
+            return new Deserializer(Parameters).ToObject<T>(json);
         }
 
         /// <summary>
@@ -231,7 +202,7 @@ namespace fastJSON
         /// <returns></returns>
         public static T ToObject <T>(string json, JSONParameters param)
         {
-            return new deserializer(param).ToObject<T>(json);
+            return new Deserializer(param).ToObject<T>(json);
         }
 
         /// <summary>
@@ -241,7 +212,7 @@ namespace fastJSON
         /// <returns></returns>
         public static object ToObject(string json)
         {
-            return new deserializer(Parameters).ToObject(json, null);
+            return new Deserializer(Parameters).ToObject(json, null);
         }
 
         /// <summary>
@@ -252,7 +223,7 @@ namespace fastJSON
         /// <returns></returns>
         public static object ToObject(string json, JSONParameters param)
         {
-            return new deserializer(param).ToObject(json, null);
+            return new Deserializer(param).ToObject(json, null);
         }
 
         /// <summary>
@@ -263,7 +234,7 @@ namespace fastJSON
         /// <returns></returns>
         public static object ToObject(string json, Type type)
         {
-            return new deserializer(Parameters).ToObject(json, type);
+            return new Deserializer(Parameters).ToObject(json, type);
         }
 
         /// <summary>
@@ -277,7 +248,7 @@ namespace fastJSON
             var ht = new JsonParser(json).Decode() as Dictionary<string, object>;
             if (ht == null)
                 return null;
-            return new deserializer(Parameters).ParseDictionary(ht, null, input.GetType(), input);
+            return new Deserializer(Parameters).ParseDictionary(ht, null, input.GetType(), input);
         }
 
         /// <summary>
@@ -287,7 +258,7 @@ namespace fastJSON
         /// <returns></returns>
         public static object DeepCopy(object obj)
         {
-            return new deserializer(Parameters).ToObject(ToJSON(obj));
+            return new Deserializer(Parameters).ToObject(ToJSON(obj));
         }
 
         /// <summary>
@@ -297,7 +268,7 @@ namespace fastJSON
         /// <returns></returns>
         public static T DeepCopy <T>(T obj)
         {
-            return new deserializer(Parameters).ToObject<T>(ToJSON(obj));
+            return new Deserializer(Parameters).ToObject<T>(ToJSON(obj));
         }
 
         /// <summary>
@@ -355,7 +326,7 @@ namespace fastJSON
         }
     }
 
-    internal class deserializer
+    internal class Deserializer
     {
         private Dictionary<object, int> _circobj = new Dictionary<object, int>();
         private Dictionary<int, object> _cirrev = new Dictionary<int, object>();
@@ -363,7 +334,7 @@ namespace fastJSON
         private JSONParameters _params;
         private bool _usingglobals;
 
-        public deserializer(JSONParameters param)
+        public Deserializer(JSONParameters param)
         {
             _params = param;
         }
@@ -941,7 +912,7 @@ namespace fastJSON
         private object CreateStringKeyDictionary(Dictionary<string, object> reader, Type pt, Type[] types, Dictionary<string, object> globalTypes)
         {
             var col = (IDictionary)Reflection.Instance.FastCreateInstance(pt);
-            Type arraytype = null;
+            Type arraytype;
             Type t2 = null;
             if (types != null)
                 t2 = types[1];

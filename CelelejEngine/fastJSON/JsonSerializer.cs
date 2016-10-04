@@ -23,7 +23,7 @@ namespace fastJSON
         private Dictionary<object, int> _cirobj = new Dictionary<object, int>();
         private int _current_depth;
         private Dictionary<string, int> _globalTypes = new Dictionary<string, int>();
-        private int _MAX_DEPTH = 20;
+        private int _MAX_DEPTH = 8;
         private StringBuilder _output = new StringBuilder();
         private JSONParameters _params;
 
@@ -86,7 +86,7 @@ namespace fastJSON
             )
                 _output.Append(((IConvertible)obj).ToString(NumberFormatInfo.InvariantInfo));
 
-            else if (obj is double || obj is double)
+            else if (obj is double)
             {
                 var d = (double)obj;
                 if (double.IsNaN(d))
@@ -94,7 +94,7 @@ namespace fastJSON
                 else
                     _output.Append(((IConvertible)obj).ToString(NumberFormatInfo.InvariantInfo));
             }
-            else if (obj is float || obj is float)
+            else if (obj is float)
             {
                 var d = (float)obj;
                 if (float.IsNaN(d))
@@ -113,10 +113,8 @@ namespace fastJSON
                      obj.GetType().IsGenericType && (obj.GetType().GetGenericArguments()[0] == typeof(string)))
 
                 WriteStringDictionary((IDictionary)obj);
-#if net4
             else if (_params.KVStyleStringDictionary == false && obj is System.Dynamic.ExpandoObject)
                 WriteStringDictionary((IDictionary<string, object>)obj);
-#endif
             else if (obj is IDictionary)
                 WriteDictionary((IDictionary)obj);
 
@@ -177,10 +175,7 @@ namespace fastJSON
                 {
                     if (pendingSeparator)
                         _output.Append(',');
-                    if (_params.SerializeToLowerCaseNames)
-                        WritePair(key.ToLower(), nameValueCollection[key]);
-                    else
-                        WritePair(key, nameValueCollection[key]);
+                    WritePair(key, nameValueCollection[key]);
                     pendingSeparator = true;
                 }
             _output.Append('}');
@@ -202,10 +197,7 @@ namespace fastJSON
                         _output.Append(',');
 
                     var k = (string)entry.Key;
-                    if (_params.SerializeToLowerCaseNames)
-                        WritePair(k.ToLower(), entry.Value);
-                    else
-                        WritePair(k, entry.Value);
+                    WritePair(k, entry.Value);
                     pendingSeparator = true;
                 }
             _output.Append('}');
@@ -391,7 +383,7 @@ namespace fastJSON
 
         private void WriteObject(object obj)
         {
-            var i = 0;
+            int i;
             if (_cirobj.TryGetValue(obj, out i) == false)
                 _cirobj.Add(obj, _cirobj.Count + 1);
             else
@@ -432,7 +424,7 @@ namespace fastJSON
                     WritePairFast("$type", Reflection.Instance.GetTypeAssemblyName(t));
                 else
                 {
-                    var dt = 0;
+                    int dt;
                     string ct = Reflection.Instance.GetTypeAssemblyName(t);
                     if (_globalTypes.TryGetValue(ct, out dt) == false)
                     {
@@ -444,12 +436,12 @@ namespace fastJSON
                 append = true;
             }
 
-            Getters[] g = Reflection.Instance.GetGetters(t, _params.ShowReadOnlyProperties, _params.IgnoreAttributes);
-            int c = g.Length;
-            for (var ii = 0; ii < c; ii++)
+            var fields = Reflection.Instance.GetFields(t);
+            int length = fields.Length;
+            for (var ii = 0; ii < length; ii++)
             {
-                Getters p = g[ii];
-                object o = p.Getter(obj);
+                var field = fields[ii];
+                object o = field.GetValue(obj);
                 if ((_params.SerializeNullValues == false) && ((o == null) || o is DBNull))
                 {
                     //append = false;
@@ -458,15 +450,12 @@ namespace fastJSON
                 {
                     if (append)
                         _output.Append(',');
-                    if (_params.SerializeToLowerCaseNames)
-                        WritePair(p.lcName, o);
-                    else
-                        WritePair(p.Name, o);
+                    WritePair(field.Name, o);
                     if ((o != null) && _params.UseExtensions)
                     {
                         Type tt = o.GetType();
                         if (tt == typeof(object))
-                            map.Add(p.Name, tt.ToString());
+                            map.Add(field.Name, tt.ToString());
                     }
                     append = true;
                 }
@@ -532,10 +521,7 @@ namespace fastJSON
                         _output.Append(',');
 
                     var k = (string)entry.Key;
-                    if (_params.SerializeToLowerCaseNames)
-                        WritePair(k.ToLower(), entry.Value);
-                    else
-                        WritePair(k, entry.Value);
+                    WritePair(k, entry.Value);
                     pendingSeparator = true;
                 }
             _output.Append('}');
@@ -555,10 +541,7 @@ namespace fastJSON
                         _output.Append(',');
                     string k = entry.Key;
 
-                    if (_params.SerializeToLowerCaseNames)
-                        WritePair(k.ToLower(), entry.Value);
-                    else
-                        WritePair(k, entry.Value);
+                    WritePair(k, entry.Value);
                     pendingSeparator = true;
                 }
             _output.Append('}');

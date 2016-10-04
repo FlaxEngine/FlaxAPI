@@ -59,6 +59,7 @@ namespace CelelejEngine
     /// <summary>
     ///   Represents a 4x4 mathematical matrix.
     /// </summary>
+    [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Matrix : IEquatable<Matrix>, IFormattable
     {

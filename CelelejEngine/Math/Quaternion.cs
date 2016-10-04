@@ -59,6 +59,7 @@ namespace CelelejEngine
     /// <summary>
     ///   Represents a four dimensional mathematical quaternion.
     /// </summary>
+    [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Quaternion : IEquatable<Quaternion>, IFormattable
     {

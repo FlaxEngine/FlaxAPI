@@ -34,6 +34,7 @@ namespace CelelejEngine
     /// <summary>
     ///   OrientedBoundingBox (OBB) is a rectangular block, much like an AABB (BoundingBox) but with an arbitrary orientation.
     /// </summary>
+    [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct OrientedBoundingBox : IEquatable<OrientedBoundingBox>, IFormattable
     {

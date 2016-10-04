@@ -59,6 +59,7 @@ namespace CelelejEngine
     /// <summary>
     ///   Represents a three dimensional line based on a point in space and a direction.
     /// </summary>
+    [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Ray : IEquatable<Ray>, IFormattable
     {

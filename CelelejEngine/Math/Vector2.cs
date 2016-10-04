@@ -59,6 +59,7 @@ namespace CelelejEngine
     /// <summary>
     ///   Represents a two dimensional mathematical vector.
     /// </summary>
+    [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Vector2 : IEquatable<Vector2>, IFormattable
     {

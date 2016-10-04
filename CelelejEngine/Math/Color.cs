@@ -5,6 +5,7 @@ namespace CelelejEngine
     /// <summary>
     ///   Representation of RGBA colors.
     /// </summary>
+    [Serializable]
     public partial struct Color
     {
         /// <summary>

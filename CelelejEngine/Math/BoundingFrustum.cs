@@ -34,6 +34,7 @@ namespace CelelejEngine
     ///   Defines a frustum which can be used in frustum culling, zoom to Extents (zoom to fit) operations,
     ///   (matrix, frustum, camera) interchange, and many kind of intersection testing.
     /// </summary>
+    [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct BoundingFrustum : IEquatable<BoundingFrustum>
     {

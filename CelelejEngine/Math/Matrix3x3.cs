@@ -59,6 +59,7 @@ namespace CelelejEngine
     /// <summary>
     /// Represents a 3x3 Matrix ( contains only Scale and Rotation ).
     /// </summary>
+    [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Matrix3x3 : IEquatable<Matrix3x3>, IFormattable
     {

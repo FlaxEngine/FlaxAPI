@@ -16,13 +16,6 @@ using System.Text;
 
 namespace fastJSON
 {
-    internal struct Getters
-    {
-        public string Name;
-        public string lcName;
-        public Reflection.GenericGetter Getter;
-    }
-
     internal enum myPropInfoType
     {
         Int,
@@ -71,7 +64,7 @@ namespace fastJSON
         private SafeDictionary<Type, CreateObject> _constrcache = new SafeDictionary<Type, CreateObject>();
         private SafeDictionary<Type, Type> _genericTypeDef = new SafeDictionary<Type, Type>();
         private SafeDictionary<Type, Type[]> _genericTypes = new SafeDictionary<Type, Type[]>();
-        private SafeDictionary<Type, Getters[]> _getterscache = new SafeDictionary<Type, Getters[]>();
+        private SafeDictionary<Type, FieldInfo[]> _fieldsCache = new SafeDictionary<Type, FieldInfo[]>();
         private SafeDictionary<string, Dictionary<string, myPropInfo>> _propertycache = new SafeDictionary<string, Dictionary<string, myPropInfo>>();
 
         private SafeDictionary<Type, string> _tyname = new SafeDictionary<Type, string>();
@@ -231,7 +224,7 @@ namespace fastJSON
             _tyname = new SafeDictionary<Type, string>();
             _typecache = new SafeDictionary<string, Type>();
             _constrcache = new SafeDictionary<Type, CreateObject>();
-            _getterscache = new SafeDictionary<Type, Getters[]>();
+            _fieldsCache = new SafeDictionary<Type, FieldInfo[]>();
             _propertycache = new SafeDictionary<string, Dictionary<string, myPropInfo>>();
             _genericTypes = new SafeDictionary<Type, Type[]>();
             _genericTypeDef = new SafeDictionary<Type, Type>();
@@ -520,85 +513,45 @@ namespace fastJSON
             return (GenericGetter)getter.CreateDelegate(typeof(GenericGetter));
         }
 
-        internal Getters[] GetGetters(Type type, bool ShowReadOnlyProperties, List<Type> IgnoreAttributes)
+        internal FieldInfo[] GetFields(Type type)
         {
-            Getters[] val = null;
-            if (_getterscache.TryGetValue(type, out val))
-                return val;
+            // Check if type has been laready cached
+            FieldInfo[] result;
+            if (_fieldsCache.TryGetValue(type, out result))
+                return result;
 
-            //bool isAnonymous = IsAnonymousType(type);
-
-            BindingFlags bf = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
-            //if (ShowReadOnlyProperties)
-            //    bf |= BindingFlags.NonPublic;
-            PropertyInfo[] props = type.GetProperties(bf);
-            var getters = new List<Getters>();
-            foreach (PropertyInfo p in props)
+            // Get fields to serialize
+            FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            int length = fields.Length;
+            var validFields = new List<FieldInfo>(length);
+            for (int i = 0; i < length; i++)
             {
-                if (p.GetIndexParameters().Length > 0)
-                    continue;
-                if (!p.CanWrite && (ShowReadOnlyProperties == false))//|| isAnonymous == false))
-                    continue;
-                if (IgnoreAttributes != null)
+                FieldInfo field = fields[i];
+
+                // Check if field is private
+                if (field.IsPrivate)
                 {
-                    var found = false;
-                    foreach (Type ignoreAttr in IgnoreAttributes)
-                        if (p.IsDefined(ignoreAttr, false))
-                        {
-                            found = true;
-                            break;
-                        }
-                    if (found)
+                    // Check if has been marked for serialization
+                    bool isSerializable = field.IsDefined(typeof(CelelejEngine.SerializeField), false);
+                    if (!isSerializable)
                         continue;
                 }
-                GenericGetter g = CreateGetMethod(type, p);
-                if (g != null)
-                    getters.Add(new Getters {Getter = g, Name = p.Name, lcName = p.Name.ToLower()});
+
+                // Check if can serialize that object type
+                var fieldType = field.FieldType;
+                if (fieldType.IsAbstract || !fieldType.IsSerializable)
+                    continue;
+
+                // Register field for serializaion
+                validFields.Add(field);
             }
 
-            FieldInfo[] fi = type.GetFields(bf);
-            foreach (FieldInfo f in fi)
-            {
-                if (IgnoreAttributes != null)
-                {
-                    var found = false;
-                    foreach (Type ignoreAttr in IgnoreAttributes)
-                        if (f.IsDefined(ignoreAttr, false))
-                        {
-                            found = true;
-                            break;
-                        }
-                    if (found)
-                        continue;
-                }
-                if (f.IsLiteral == false)
-                {
-                    GenericGetter g = CreateGetField(type, f);
-                    if (g != null)
-                        getters.Add(new Getters {Getter = g, Name = f.Name, lcName = f.Name.ToLower()});
-                }
-            }
-            val = getters.ToArray();
-            _getterscache.Add(type, val);
-            return val;
+            // Cache fields
+            result = validFields.ToArray();
+            _fieldsCache.Add(type, result);
+
+            return result;
         }
-
-        //private static bool IsAnonymousType(Type type)
-        //{
-        //    // may break in the future if compiler defined names change...
-        //    const string CS_ANONYMOUS_PREFIX = "<>f__AnonymousType";
-        //    const string VB_ANONYMOUS_PREFIX = "VB$AnonymousType";
-
-        //    if (type == null)
-        //        throw new ArgumentNullException("type");
-
-        //    if (type.Name.StartsWith(CS_ANONYMOUS_PREFIX, StringComparison.Ordinal) || type.Name.StartsWith(VB_ANONYMOUS_PREFIX, StringComparison.Ordinal))
-        //    {
-        //        return type.IsDefined(typeof(CompilerGeneratedAttribute), false);
-        //    }
-
-        //    return false;
-        //}
 
         #endregion
     }

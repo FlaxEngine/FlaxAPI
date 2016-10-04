@@ -59,6 +59,7 @@ namespace CelelejEngine
     /// <summary>
     ///   Represents an axis-aligned bounding box in three dimensional space.
     /// </summary>
+    [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct BoundingBox : IEquatable<BoundingBox>, IFormattable
     {

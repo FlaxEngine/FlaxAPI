@@ -59,6 +59,7 @@ namespace CelelejEngine
     /// <summary>
     ///   Represents a bounding sphere in three dimensional space.
     /// </summary>
+    [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct BoundingSphere : IEquatable<BoundingSphere>, IFormattable
     {
