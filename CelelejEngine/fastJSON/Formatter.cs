@@ -11,7 +11,7 @@ namespace fastJSON
 {
     internal static class Formatter
     {
-        public static string Indent = "   ";
+        public static string Indent = "\t";
 
         public static void AppendIndent(StringBuilder sb, int count)
         {

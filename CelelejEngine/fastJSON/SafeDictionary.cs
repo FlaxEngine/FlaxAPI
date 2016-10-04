@@ -11,16 +11,19 @@ namespace fastJSON
 {
     public sealed class SafeDictionary <TKey, TValue>
     {
-        private readonly Dictionary<TKey, TValue> _Dictionary;
-        private readonly object _Padlock = new object();
+        private readonly Dictionary<TKey, TValue> _dictionary;
+        private readonly object _locker = new object();
 
+        /// <summary>
+        /// Amount of objects in a dictionary
+        /// </summary>
         public int Count
         {
             get
             {
-                lock (_Padlock)
+                lock (_locker)
                 {
-                    return _Dictionary.Count;
+                    return _dictionary.Count;
                 }
             }
         }
@@ -29,44 +32,52 @@ namespace fastJSON
         {
             get
             {
-                lock (_Padlock)
+                lock (_locker)
                 {
-                    return _Dictionary[key];
+                    return _dictionary[key];
                 }
             }
             set
             {
-                lock (_Padlock)
+                lock (_locker)
                 {
-                    _Dictionary[key] = value;
+                    _dictionary[key] = value;
                 }
             }
         }
 
         public SafeDictionary(int capacity)
         {
-            _Dictionary = new Dictionary<TKey, TValue>(capacity);
+            _dictionary = new Dictionary<TKey, TValue>(capacity);
         }
 
         public SafeDictionary()
         {
-            _Dictionary = new Dictionary<TKey, TValue>();
+            _dictionary = new Dictionary<TKey, TValue>();
         }
 
         public bool TryGetValue(TKey key, out TValue value)
         {
-            lock (_Padlock)
+            lock (_locker)
             {
-                return _Dictionary.TryGetValue(key, out value);
+                return _dictionary.TryGetValue(key, out value);
             }
         }
 
         public void Add(TKey key, TValue value)
         {
-            lock (_Padlock)
+            lock (_locker)
             {
-                if (_Dictionary.ContainsKey(key) == false)
-                    _Dictionary.Add(key, value);
+                if (_dictionary.ContainsKey(key) == false)
+                    _dictionary.Add(key, value);
+            }
+        }
+
+        public void Clear()
+        {
+            lock (_locker)
+            {
+                _dictionary.Clear();
             }
         }
     }

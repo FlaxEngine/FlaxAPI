@@ -11,28 +11,24 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
 using System.Globalization;
-using System.IO;
 using System.Text;
 
 namespace fastJSON
 {
     internal sealed class JSONSerializer
     {
-        //private StringBuilder _before = new StringBuilder();
-        private int _before;
         private Dictionary<object, int> _cirobj = new Dictionary<object, int>();
         private int _current_depth;
-        private Dictionary<string, int> _globalTypes = new Dictionary<string, int>();
-        private int _MAX_DEPTH = 8;
+        private int _MAX_DEPTH;
         private StringBuilder _output = new StringBuilder();
         private JSONParameters _params;
 
-        private bool _TypesWritten;
         private bool _useEscapedUnicode;
 
         internal JSONSerializer(JSONParameters param)
         {
             _params = param;
+            _MAX_DEPTH = 8;
             _useEscapedUnicode = _params.UseEscapedUnicode;
             _MAX_DEPTH = _params.SerializerMaxDepth;
         }
@@ -41,25 +37,6 @@ namespace fastJSON
         {
             WriteValue(obj);
 
-            if (_params.UsingGlobalTypes && (_globalTypes != null) && (_globalTypes.Count > 0))
-            {
-                var sb = new StringBuilder();
-                sb.Append("\"$types\":{");
-                var pendingSeparator = false;
-                foreach (KeyValuePair<string, int> kv in _globalTypes)
-                {
-                    if (pendingSeparator)
-                        sb.Append(',');
-                    pendingSeparator = true;
-                    sb.Append('\"');
-                    sb.Append(kv.Key);
-                    sb.Append("\":\"");
-                    sb.Append(kv.Value);
-                    sb.Append('\"');
-                }
-                sb.Append("},");
-                _output.Insert(_before, sb.ToString());
-            }
             return _output.ToString();
         }
 
@@ -267,57 +244,7 @@ namespace fastJSON
                 _output.Append(dt.Millisecond.ToString("000", NumberFormatInfo.InvariantInfo));
             }
         }
-
-        private DatasetSchema GetSchema(DataTable ds)
-        {
-            if (ds == null)
-                return null;
-
-            var m = new DatasetSchema();
-            m.Info = new List<string>();
-            m.Name = ds.TableName;
-
-            foreach (DataColumn c in ds.Columns)
-            {
-                m.Info.Add(ds.TableName);
-                m.Info.Add(c.ColumnName);
-                m.Info.Add(c.DataType.ToString());
-            }
-            // FEATURE : serialize relations and constraints here
-
-            return m;
-        }
-
-        private DatasetSchema GetSchema(DataSet ds)
-        {
-            if (ds == null)
-                return null;
-
-            var m = new DatasetSchema();
-            m.Info = new List<string>();
-            m.Name = ds.DataSetName;
-
-            foreach (DataTable t in ds.Tables)
-                foreach (DataColumn c in t.Columns)
-                {
-                    m.Info.Add(t.TableName);
-                    m.Info.Add(c.ColumnName);
-                    m.Info.Add(c.DataType.ToString());
-                }
-            // FEATURE : serialize relations and constraints here
-
-            return m;
-        }
-
-        private string GetXmlSchema(DataTable dt)
-        {
-            using (var writer = new StringWriter())
-            {
-                dt.WriteXmlSchema(writer);
-                return dt.ToString();
-            }
-        }
-
+        
         private void WriteDataset(DataSet ds)
         {
             _output.Append('{');
@@ -376,32 +303,20 @@ namespace fastJSON
         {
             int i;
             if (_cirobj.TryGetValue(obj, out i) == false)
+            {
                 _cirobj.Add(obj, _cirobj.Count + 1);
+            }
             else
             {
-                if ((_current_depth > 0) && (_params.InlineCircularReferences == false))
+                if (_current_depth > 0)
                 {
-                    //_circular = true;
-                    _output.Append("{\"$i\":");
-                    _output.Append(i.ToString());
-                    _output.Append("}");
+                    // Circular references are not supported due to performance and Spaghetti Code!
+                    _output.Append("null");
                     return;
                 }
             }
-            if (_params.UsingGlobalTypes == false)
-                _output.Append('{');
-            else
-            {
-                if (_TypesWritten == false)
-                {
-                    _output.Append('{');
-                    _before = _output.Length;
-                    //_output = new StringBuilder();
-                }
-                else
-                    _output.Append('{');
-            }
-            _TypesWritten = true;
+            _output.Append('{');
+
             _current_depth++;
             if (_current_depth > _MAX_DEPTH)
                 throw new Exception("Serializer encountered maximum depth of " + _MAX_DEPTH);

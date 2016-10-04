@@ -46,7 +46,7 @@ namespace fastJSON
                         ConsumeToken();
                         break;
 
-                    case Token.Curly_Close:
+                    case Token.CurlyClose:
                         ConsumeToken();
                         return table;
 
@@ -80,7 +80,7 @@ namespace fastJSON
                         ConsumeToken();
                         break;
 
-                    case Token.Squared_Close:
+                    case Token.SquaredClose:
                         ConsumeToken();
                         return array;
 
@@ -100,10 +100,10 @@ namespace fastJSON
                 case Token.String:
                     return ParseString();
 
-                case Token.Curly_Open:
+                case Token.CurlyOpen:
                     return ParseObject();
 
-                case Token.Squared_Open:
+                case Token.SquaredOpen:
                     return ParseArray();
 
                 case Token.True:
@@ -334,16 +334,16 @@ namespace fastJSON
             switch (c)
             {
                 case '{':
-                    return Token.Curly_Open;
+                    return Token.CurlyOpen;
 
                 case '}':
-                    return Token.Curly_Close;
+                    return Token.CurlyClose;
 
                 case '[':
-                    return Token.Squared_Open;
+                    return Token.SquaredOpen;
 
                 case ']':
-                    return Token.Squared_Close;
+                    return Token.SquaredClose;
 
                 case ',':
                     return Token.Comma;
@@ -409,10 +409,10 @@ namespace fastJSON
         private enum Token
         {
             None = -1,// Used to denote no Lookahead available
-            Curly_Open,
-            Curly_Close,
-            Squared_Open,
-            Squared_Close,
+            CurlyOpen,
+            CurlyClose,
+            SquaredOpen,
+            SquaredClose,
             Colon,
             Comma,
             String,

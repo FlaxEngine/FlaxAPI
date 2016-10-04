@@ -14,6 +14,7 @@ namespace fastJSON
     internal class DynamicJson : DynamicObject
     {
         private IDictionary<string, object> _dictionary { get; }
+
         private List<object> _list { get; }
 
         public DynamicJson(string json)
@@ -28,8 +29,9 @@ namespace fastJSON
 
         private DynamicJson(object dictionary)
         {
-            if (dictionary is IDictionary<string, object>)
-                _dictionary = (IDictionary<string, object>)dictionary;
+            var obj = dictionary as IDictionary<string, object>;
+            if (obj != null)
+                _dictionary = obj;
         }
 
         public override IEnumerable<string> GetDynamicMemberNames()
