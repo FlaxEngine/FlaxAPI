@@ -61,15 +61,14 @@ namespace fastJSON
     internal sealed class Reflection
     {
         // Sinlgeton pattern 4 from : http://csharpindepth.com/articles/general/singleton.aspx
-        private SafeDictionary<Type, CreateObject> _constrcache = new SafeDictionary<Type, CreateObject>();
         private SafeDictionary<Type, Type> _genericTypeDef = new SafeDictionary<Type, Type>();
         private SafeDictionary<Type, Type[]> _genericTypes = new SafeDictionary<Type, Type[]>();
         private SafeDictionary<Type, FieldInfo[]> _fieldsCache = new SafeDictionary<Type, FieldInfo[]>();
-        private SafeDictionary<string, Dictionary<string, myPropInfo>> _propertycache = new SafeDictionary<string, Dictionary<string, myPropInfo>>();
-
         private SafeDictionary<Type, string> _tyname = new SafeDictionary<Type, string>();
         private SafeDictionary<string, Type> _typecache = new SafeDictionary<string, Type>();
+
         public static Reflection Instance { get; } = new Reflection();
+
         // Explicit static constructor to tell C# compiler
         // not to mark type as beforefieldinit
         static Reflection()
@@ -82,7 +81,7 @@ namespace fastJSON
 
         public Type GetGenericTypeDefinition(Type t)
         {
-            Type tt = null;
+            Type tt;
             if (_genericTypeDef.TryGetValue(t, out tt))
                 return tt;
             tt = t.GetGenericTypeDefinition();
@@ -92,7 +91,7 @@ namespace fastJSON
 
         public Type[] GetGenericArguments(Type t)
         {
-            Type[] tt = null;
+            Type[] tt;
             if (_genericTypes.TryGetValue(t, out tt))
                 return tt;
             tt = t.GetGenericArguments();
@@ -100,132 +99,15 @@ namespace fastJSON
             return tt;
         }
 
-        public Dictionary<string, myPropInfo> Getproperties(Type type, string typename)
-        {
-            Dictionary<string, myPropInfo> sd = null;
-            if (_propertycache.TryGetValue(typename, out sd))
-                return sd;
-            sd = new Dictionary<string, myPropInfo>();
-            BindingFlags bf = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
-            PropertyInfo[] pr = type.GetProperties(bf);
-            foreach (PropertyInfo p in pr)
-            {
-                if (p.GetIndexParameters().Length > 0)// Property is an indexer
-                    continue;
-
-                myPropInfo d = CreateMyProp(p.PropertyType, p.Name);
-                d.setter = CreateSetMethod(type, p);
-                if (d.setter != null)
-                    d.CanWrite = true;
-                d.getter = CreateGetMethod(type, p);
-                sd.Add(p.Name.ToLower(), d);
-            }
-            FieldInfo[] fi = type.GetFields(bf);
-            foreach (FieldInfo f in fi)
-            {
-                myPropInfo d = CreateMyProp(f.FieldType, f.Name);
-                if (f.IsLiteral == false)
-                {
-                    d.setter = CreateSetField(type, f);
-                    if (d.setter != null)
-                        d.CanWrite = true;
-                    d.getter = CreateGetField(type, f);
-                    sd.Add(f.Name.ToLower(), d);
-                }
-            }
-
-            _propertycache.Add(typename, sd);
-            return sd;
-        }
-
-        private myPropInfo CreateMyProp(Type t, string name)
-        {
-            var d = new myPropInfo();
-            var d_type = myPropInfoType.Unknown;
-
-            if ((t == typeof(int)) || (t == typeof(int?)))
-                d_type = myPropInfoType.Int;
-            else if ((t == typeof(long)) || (t == typeof(long?)))
-                d_type = myPropInfoType.Long;
-            else if (t == typeof(string))
-                d_type = myPropInfoType.String;
-            else if ((t == typeof(bool)) || (t == typeof(bool?)))
-                d_type = myPropInfoType.Bool;
-            else if ((t == typeof(DateTime)) || (t == typeof(DateTime?)))
-                d_type = myPropInfoType.DateTime;
-            else if (t.IsEnum)
-                d_type = myPropInfoType.Enum;
-            else if ((t == typeof(Guid)) || (t == typeof(Guid?)))
-                d_type = myPropInfoType.Guid;
-            else if (t == typeof(StringDictionary))
-                d_type = myPropInfoType.StringDictionary;
-            else if (t == typeof(NameValueCollection))
-                d_type = myPropInfoType.NameValue;
-            else if (t.IsArray)
-            {
-                d.bt = t.GetElementType();
-                if (t == typeof(byte[]))
-                    d_type = myPropInfoType.ByteArray;
-                else
-                    d_type = myPropInfoType.Array;
-            }
-            else if (t.Name.Contains("Dictionary"))
-            {
-                d.GenericTypes = Instance.GetGenericArguments(t);
-                if ((d.GenericTypes.Length > 0) && (d.GenericTypes[0] == typeof(string)))
-                    d_type = myPropInfoType.StringKeyDictionary;
-                else
-                    d_type = myPropInfoType.Dictionary;
-            }
-            else if (t == typeof(Hashtable))
-                d_type = myPropInfoType.Hashtable;
-            else if (t == typeof(DataSet))
-                d_type = myPropInfoType.DataSet;
-            else if (t == typeof(DataTable))
-                d_type = myPropInfoType.DataTable;
-            else if (IsTypeRegistered(t))
-                d_type = myPropInfoType.Custom;
-
-            if (t.IsValueType && !t.IsPrimitive && !t.IsEnum && (t != typeof(decimal)))
-                d.IsStruct = true;
-
-            d.IsInterface = t.IsInterface;
-            d.IsClass = t.IsClass;
-            d.IsValueType = t.IsValueType;
-            if (t.IsGenericType)
-            {
-                d.IsGenericType = true;
-                d.bt = t.GetGenericArguments()[0];
-            }
-
-            d.pt = t;
-            d.Name = name;
-            d.changeType = GetChangeType(t);
-            d.Type = d_type;
-
-            return d;
-        }
-
-        private Type GetChangeType(Type conversionType)
-        {
-            if (conversionType.IsGenericType && conversionType.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
-                return Instance.GetGenericArguments(conversionType)[0];
-
-            return conversionType;
-        }
-
         internal void ResetPropertyCache()
         {
-            _propertycache = new SafeDictionary<string, Dictionary<string, myPropInfo>>();
         }
 
         internal void ClearReflectionCache()
         {
             _tyname = new SafeDictionary<Type, string>();
             _typecache = new SafeDictionary<string, Type>();
-            _constrcache = new SafeDictionary<Type, CreateObject>();
             _fieldsCache = new SafeDictionary<Type, FieldInfo[]>();
-            _propertycache = new SafeDictionary<string, Dictionary<string, myPropInfo>>();
             _genericTypes = new SafeDictionary<Type, Type[]>();
             _genericTypeDef = new SafeDictionary<Type, Type>();
         }
@@ -233,8 +115,6 @@ namespace fastJSON
         internal delegate object GenericSetter(object target, object value);
 
         internal delegate object GenericGetter(object obj);
-
-        private delegate object CreateObject();
 
         #region bjson custom types
 
@@ -281,7 +161,7 @@ namespace fastJSON
 
         internal string GetTypeAssemblyName(Type t)
         {
-            var val = "";
+            string val;
             if (_tyname.TryGetValue(t, out val))
                 return val;
             string s = t.AssemblyQualifiedName;
@@ -296,12 +176,6 @@ namespace fastJSON
                 return val;
 
             Type t = Type.GetType(typename);
-            //if (t == null) // RaptorDB : loading runtime assemblies
-            //{
-            //    t = Type.GetType(typename, (name) => {
-            //        return AppDomain.CurrentDomain.GetAssemblies().Where(z => z.FullName == name.FullName).FirstOrDefault();
-            //    }, null, true);
-            //}
             _typecache.Add(typename, t);
             return t;
         }
@@ -310,37 +184,11 @@ namespace fastJSON
         {
             try
             {
-                CreateObject c = null;
-                if (_constrcache.TryGetValue(objtype, out c))
-                    return c();
-                if (objtype.IsClass)
-                {
-                    var dynMethod = new DynamicMethod("_", objtype, null);
-                    ILGenerator ilGen = dynMethod.GetILGenerator();
-                    ilGen.Emit(OpCodes.Newobj, objtype.GetConstructor(Type.EmptyTypes));
-                    ilGen.Emit(OpCodes.Ret);
-                    c = (CreateObject)dynMethod.CreateDelegate(typeof(CreateObject));
-                    _constrcache.Add(objtype, c);
-                }
-                else// structs
-                {
-                    var dynMethod = new DynamicMethod("_", typeof(object), null);
-                    ILGenerator ilGen = dynMethod.GetILGenerator();
-                    LocalBuilder lv = ilGen.DeclareLocal(objtype);
-                    ilGen.Emit(OpCodes.Ldloca_S, lv);
-                    ilGen.Emit(OpCodes.Initobj, objtype);
-                    ilGen.Emit(OpCodes.Ldloc_0);
-                    ilGen.Emit(OpCodes.Box, objtype);
-                    ilGen.Emit(OpCodes.Ret);
-                    c = (CreateObject)dynMethod.CreateDelegate(typeof(CreateObject));
-                    _constrcache.Add(objtype, c);
-                }
-                return c();
+                return Activator.CreateInstance(objtype);
             }
             catch (Exception exc)
             {
-                throw new Exception(string.Format("Failed to fast create instance for type '{0}' from assembly '{1}'",
-                    objtype.FullName, objtype.AssemblyQualifiedName), exc);
+                throw new Exception(string.Format("Failed to fast create instance for type '{0}' from assembly '{1}'", objtype.FullName, objtype.AssemblyQualifiedName), exc);
             }
         }
 
@@ -551,6 +399,23 @@ namespace fastJSON
             _fieldsCache.Add(type, result);
 
             return result;
+        }
+
+        internal FieldInfo FindField(Type type, string name)
+        {
+            // Get type fields
+            var fields = GetFields(type);
+            int length = fields.Length;
+
+            // Iterate
+            for (int i = 0; i < length; i++)
+            {
+                if (fields[i].Name == name)
+                    return fields[i];
+            }
+
+            // Nothing found
+            return null;
         }
 
         #endregion

@@ -12,6 +12,7 @@ using System.Collections.Specialized;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Runtime.Serialization;
 
 namespace fastJSON
@@ -303,26 +304,28 @@ namespace fastJSON
         internal static long CreateLong(string s, int index, int count)
         {
             long num = 0;
-            var neg = false;
+            bool neg = false;
 
-            for (var x = 0; x < count; x++, index++)
+            for (int x = 0; x < count; x++, index++)
             {
                 char cc = s[index];
 
-                if (cc == '-')
-                    neg = true;
-                else if (cc == '+')
-                    neg = false;
-                else
+                switch (cc)
                 {
-                    num *= 10;
-                    num += cc - '0';
+                    case '-':
+                        neg = true;
+                        break;
+                    case '+':
+                        neg = false;
+                        break;
+                    default:
+                        num *= 10;
+                        num += cc - '0';
+                        break;
                 }
             }
-            if (neg)
-                num = -num;
 
-            return num;
+            return neg ? -num : num;
         }
     }
 
@@ -609,6 +612,14 @@ namespace fastJSON
             return null;
         }
 
+        private Type GetChangeType(Type conversionType)
+        {
+            if (conversionType.IsGenericType && conversionType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                return Reflection.Instance.GetGenericArguments(conversionType)[0];
+
+            return conversionType;
+        }
+
         internal object ParseDictionary(Dictionary<string, object> d, Dictionary<string, object> globaltypes, Type type, object input)
         {
             object tn = "";
@@ -649,14 +660,13 @@ namespace fastJSON
             if (type == null)
                 throw new Exception("Cannot determine type");
 
-            string typename = type.FullName;
             object o = input;
             if (o == null)
                 if (_params.ParametricConstructorOverride)
                     o = FormatterServices.GetUninitializedObject(type);
                 else
                     o = Reflection.Instance.FastCreateInstance(type);
-            var circount = 0;
+            int circount;
             if (_circobj.TryGetValue(o, out circount) == false)
             {
                 circount = _circobj.Count + 1;
@@ -664,102 +674,125 @@ namespace fastJSON
                 _cirrev.Add(circount, o);
             }
 
-            Dictionary<string, myPropInfo> props = Reflection.Instance.Getproperties(type, typename);//, Reflection.Instance.IsTypeRegistered(type));
-            foreach (KeyValuePair<string, object> kv in d)
+            foreach (KeyValuePair<string, object> e in d)
             {
-                string n = kv.Key;
-                object v = kv.Value;
-                string name = n.ToLower();
-                if (name == "$map")
+                // Cache data
+                FieldInfo field = Reflection.Instance.FindField(type, e.Key);
+                if(field == null)
+                    continue;
+                object v = e.Value;
+                object oset = null;
+                
+                // Create value for field from parsed JSON value (it depends on field type)
+                var fieldType = field.FieldType;
+                if ((fieldType == typeof(float)) || (fieldType == typeof(float?)))
                 {
-                    ProcessMap(o, props, (Dictionary<string, object>)d[name]);
-                    continue;
+                    // We want float type to be first since most of data in scripts is floating point
+
+                    if (v is long)
+                        oset = (float)(long)v;
+                    else
+                        oset = (float)v;
                 }
-                myPropInfo pi;
-                if (props.TryGetValue(name, out pi) == false)
-                    continue;
-                if (pi.CanWrite)
-                    if (v != null)
+                else if ((fieldType == typeof(int)) || (fieldType == typeof(int?)))
+                {
+                    oset = (int)(long)v;
+                }
+                else if ((fieldType == typeof(long)) || (fieldType == typeof(long?)))
+                {
+                    oset = (long)v;
+                }
+                else if (fieldType == typeof(string))
+                {
+                    oset = (string)v;
+                }
+                else if ((fieldType == typeof(bool)) || (fieldType == typeof(bool?)))
+                {
+                    oset = (bool)v;
+                }
+                else if ((fieldType == typeof(DateTime)) || (fieldType == typeof(DateTime?)))
+                {
+                    oset = CreateDateTime((string)v);
+                }
+                else if (fieldType.IsEnum)
+                {
+                    oset = CreateEnum(fieldType, v);
+                }
+                else if ((fieldType == typeof(Guid)) || (fieldType == typeof(Guid?)))
+                {
+                    oset = CreateGuid((string)v);
+                }
+                else if (fieldType == typeof(StringDictionary))
+                {
+                    oset = CreateSD((Dictionary<string, object>)v);
+                }
+                else if (fieldType == typeof(NameValueCollection))
+                {
+                    oset = CreateNV((Dictionary<string, object>)v);
+                }
+                else if (fieldType.IsArray)
+                {
+                    if (fieldType == typeof(byte[]))
                     {
-                        object oset = null;
-
-                        switch (pi.Type)
-                        {
-                            case myPropInfoType.Int:
-                                oset = (int)(long)v;
-                                break;
-                            case myPropInfoType.Long:
-                                oset = (long)v;
-                                break;
-                            case myPropInfoType.String:
-                                oset = (string)v;
-                                break;
-                            case myPropInfoType.Bool:
-                                oset = (bool)v;
-                                break;
-                            case myPropInfoType.DateTime:
-                                oset = CreateDateTime((string)v);
-                                break;
-                            case myPropInfoType.Enum:
-                                oset = CreateEnum(pi.pt, v);
-                                break;
-                            case myPropInfoType.Guid:
-                                oset = CreateGuid((string)v);
-                                break;
-
-                            case myPropInfoType.Array:
-                                if (!pi.IsValueType)
-                                    oset = CreateArray((List<object>)v, pi.pt, pi.bt, globaltypes);
-                                // what about 'else'?
-                                break;
-                            case myPropInfoType.ByteArray:
-                                oset = Convert.FromBase64String((string)v);
-                                break;
-                            case myPropInfoType.DataSet:
-                                oset = CreateDataset((Dictionary<string, object>)v, globaltypes);
-                                break;
-                            case myPropInfoType.DataTable:
-                                oset = CreateDataTable((Dictionary<string, object>)v, globaltypes);
-                                break;
-                            case myPropInfoType.Hashtable:// same case as Dictionary
-                            case myPropInfoType.Dictionary:
-                                oset = CreateDictionary((List<object>)v, pi.pt, pi.GenericTypes, globaltypes);
-                                break;
-                            case myPropInfoType.StringKeyDictionary:
-                                oset = CreateStringKeyDictionary((Dictionary<string, object>)v, pi.pt, pi.GenericTypes, globaltypes);
-                                break;
-                            case myPropInfoType.NameValue:
-                                oset = CreateNV((Dictionary<string, object>)v);
-                                break;
-                            case myPropInfoType.StringDictionary:
-                                oset = CreateSD((Dictionary<string, object>)v);
-                                break;
-                            case myPropInfoType.Custom:
-                                oset = Reflection.Instance.CreateCustom((string)v, pi.pt);
-                                break;
-                            default:
-                            {
-                                if (pi.IsGenericType && (pi.IsValueType == false) && v is List<object>)
-                                    oset = CreateGenericList((List<object>)v, pi.pt, pi.bt, globaltypes);
-
-                                else if ((pi.IsClass || pi.IsStruct || pi.IsInterface) && v is Dictionary<string, object>)
-                                    oset = ParseDictionary((Dictionary<string, object>)v, globaltypes, pi.pt, pi.getter(o));
-
-                                else if (v is List<object>)
-                                    oset = CreateArray((List<object>)v, pi.pt, typeof(object), globaltypes);
-
-                                else if (pi.IsValueType)
-                                    oset = ChangeType(v, pi.changeType);
-
-                                else
-                                    oset = v;
-                            }
-                                break;
-                        }
-
-                        o = pi.setter(o, oset);
+                        oset = Convert.FromBase64String((string)v);
                     }
+                    else if (!fieldType.IsValueType)
+                    {
+                        var bt = fieldType.IsGenericType ? fieldType.GetGenericArguments()[0] : fieldType.GetElementType();
+                        oset = CreateArray((List<object>)v, fieldType, bt, globaltypes);
+                    }
+                }
+                else if (fieldType.Name.Contains("Dictionary"))
+                {
+                    var genericTypes = Reflection.Instance.GetGenericArguments(fieldType);
+
+                    if ((genericTypes.Length > 0) && (genericTypes[0] == typeof(string)))
+                    {
+                        oset = CreateStringKeyDictionary((Dictionary<string, object>)v, fieldType, genericTypes, globaltypes);
+                    }
+                    else
+                    {
+                        oset = CreateDictionary((List<object>)v, fieldType, genericTypes, globaltypes);
+                    }
+                }
+                else if (fieldType == typeof(Hashtable))
+                {
+                    var genericTypes = Reflection.Instance.GetGenericArguments(fieldType);
+
+                    oset = CreateDictionary((List<object>)v, fieldType, genericTypes, globaltypes);
+                }
+                else if (fieldType == typeof(DataSet))
+                {
+                    oset = CreateDataset((Dictionary<string, object>)v, globaltypes);
+                }
+                else if (fieldType == typeof(DataTable))
+                {
+                    oset = CreateDataTable((Dictionary<string, object>)v, globaltypes);
+                }
+                else if (Reflection.Instance.IsTypeRegistered(fieldType))
+                {
+                    oset = Reflection.Instance.CreateCustom((string)v, fieldType);
+                }
+                else
+                {
+                    bool isStruct = fieldType.IsValueType && !fieldType.IsPrimitive && !fieldType.IsEnum && (fieldType != typeof(decimal));
+
+                    if (fieldType.IsGenericType && (fieldType.IsValueType == false) && v is List<object>)
+                        oset = CreateGenericList((List<object>)v, fieldType, fieldType.GetGenericArguments()[0], globaltypes);
+                    else if ((fieldType.IsClass || isStruct || fieldType.IsInterface) && v is Dictionary<string, object>)
+                        oset = ParseDictionary((Dictionary<string, object>)v, globaltypes, fieldType, field.GetValue(o));
+                    else if (v is List<object>)
+                        oset = CreateArray((List<object>)v, fieldType, typeof(object), globaltypes);
+                    else if (fieldType.IsValueType)
+                        oset = ChangeType(v, GetChangeType(fieldType));
+                    else
+                        oset = v;
+                }
+
+                // Set property value
+                field.SetValue(o, oset);
             }
+
             return o;
         }
 

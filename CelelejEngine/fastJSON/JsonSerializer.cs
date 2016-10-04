@@ -321,11 +321,7 @@ namespace fastJSON
         private void WriteDataset(DataSet ds)
         {
             _output.Append('{');
-            if (_params.UseExtensions)
-            {
-                WritePair("$schema", _params.UseOptimizedDatasetSchema ? (object)GetSchema(ds) : ds.GetXmlSchema());
-                _output.Append(',');
-            }
+
             var tablesep = false;
             foreach (DataTable table in ds.Tables)
             {
@@ -369,11 +365,6 @@ namespace fastJSON
         private void WriteDataTable(DataTable dt)
         {
             _output.Append('{');
-            if (_params.UseExtensions)
-            {
-                WritePair("$schema", _params.UseOptimizedDatasetSchema ? (object)GetSchema(dt) : GetXmlSchema(dt));
-                _output.Append(',');
-            }
 
             WriteDataTableData(dt);
 
@@ -415,32 +406,15 @@ namespace fastJSON
             if (_current_depth > _MAX_DEPTH)
                 throw new Exception("Serializer encountered maximum depth of " + _MAX_DEPTH);
 
-            var map = new Dictionary<string, string>();
             Type t = obj.GetType();
             var append = false;
-            if (_params.UseExtensions)
-            {
-                if (_params.UsingGlobalTypes == false)
-                    WritePairFast("$type", Reflection.Instance.GetTypeAssemblyName(t));
-                else
-                {
-                    int dt;
-                    string ct = Reflection.Instance.GetTypeAssemblyName(t);
-                    if (_globalTypes.TryGetValue(ct, out dt) == false)
-                    {
-                        dt = _globalTypes.Count + 1;
-                        _globalTypes.Add(ct, dt);
-                    }
-                    WritePairFast("$type", dt.ToString());
-                }
-                append = true;
-            }
 
             var fields = Reflection.Instance.GetFields(t);
             int length = fields.Length;
-            for (var ii = 0; ii < length; ii++)
+            for (int ii = 0; ii < length; ii++)
             {
                 var field = fields[ii];
+
                 object o = field.GetValue(obj);
                 if ((_params.SerializeNullValues == false) && ((o == null) || o is DBNull))
                 {
@@ -451,31 +425,11 @@ namespace fastJSON
                     if (append)
                         _output.Append(',');
                     WritePair(field.Name, o);
-                    if ((o != null) && _params.UseExtensions)
-                    {
-                        Type tt = o.GetType();
-                        if (tt == typeof(object))
-                            map.Add(field.Name, tt.ToString());
-                    }
                     append = true;
                 }
             }
-            if ((map.Count > 0) && _params.UseExtensions)
-            {
-                _output.Append(",\"$map\":");
-                WriteStringDictionary(map);
-            }
             _output.Append('}');
             _current_depth--;
-        }
-
-        private void WritePairFast(string name, string value)
-        {
-            WriteStringFast(name);
-
-            _output.Append(':');
-
-            WriteStringFast(value);
         }
 
         private void WritePair(string name, object value)

@@ -243,24 +243,6 @@ namespace fastJSON
             return p1 + p2 + p3 + p4;
         }
 
-        private long CreateLong(string s)
-        {
-            long num = 0;
-            var neg = false;
-            foreach (char cc in s)
-                if (cc == '-')
-                    neg = true;
-                else if (cc == '+')
-                    neg = false;
-                else
-                {
-                    num *= 10;
-                    num += cc - '0';
-                }
-
-            return neg ? -num : num;
-        }
-
         private object ParseNumber()
         {
             ConsumeToken();
@@ -287,9 +269,10 @@ namespace fastJSON
 
             if (dec)
             {
-                string s = json.Substring(startIndex, index - startIndex);
-                return double.Parse(s, NumberFormatInfo.InvariantInfo);
+                string substring = json.Substring(startIndex, index - startIndex);
+                return double.Parse(substring, NumberFormatInfo.InvariantInfo);
             }
+
             return JSON.CreateLong(json, startIndex, index - startIndex);
         }
 
