@@ -633,7 +633,7 @@ namespace fastJSON
                     if (v is long)
                         oset = (float)(long)v;
                     else
-                        oset = (float)v;
+                        oset = (float)(double)v;
                 }
                 else if ((fieldType == typeof(int)) || (fieldType == typeof(int?)))
                 {
