@@ -92,18 +92,16 @@ namespace fastJSON
             Serialize s;
             return _customSerializer.TryGetValue(t, out s);
         }
-        
-        internal FieldInfo[] GetFields(Type type)
+
+        private void findFields(List<FieldInfo> validFields, Type type)
         {
-            // Check if type has been laready cached
-            FieldInfo[] result;
-            if (_fieldsCache.TryGetValue(type, out result))
-                return result;
+            // Check base clases
+            if (type.BaseType != null)
+                findFields(validFields, type.BaseType);
 
             // Get fields to serialize
             FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             int length = fields.Length;
-            var validFields = new List<FieldInfo>(length);
             for (int i = 0; i < length; i++)
             {
                 FieldInfo field = fields[i];
@@ -125,6 +123,18 @@ namespace fastJSON
                 // Register field for serializaion
                 validFields.Add(field);
             }
+        }
+
+        internal FieldInfo[] GetFields(Type type)
+        {
+            // Check if type has been laready cached
+            FieldInfo[] result;
+            if (_fieldsCache.TryGetValue(type, out result))
+                return result;
+
+            // Get fields to serialize
+            var validFields = new List<FieldInfo>();
+            findFields(validFields, type);
 
             // Cache fields
             result = validFields.ToArray();
