@@ -8,7 +8,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace fastJSON
 {
@@ -57,13 +56,6 @@ namespace fastJSON
             _genericTypes.Clear();
             _genericTypeDef.Clear();
         }
-
-        internal delegate object GenericSetter(object target, object value);
-
-        internal delegate object GenericGetter(object obj);
-
-        internal UnicodeEncoding unicode = new UnicodeEncoding();
-        internal UTF8Encoding utf8 = new UTF8Encoding();
 
         // JSON custom
         internal SafeDictionary<Type, Serialize> _customSerializer = new SafeDictionary<Type, Serialize>();

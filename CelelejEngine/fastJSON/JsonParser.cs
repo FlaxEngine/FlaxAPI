@@ -13,8 +13,8 @@ using System.Text;
 namespace fastJSON
 {
     /// <summary>
-    ///   This class encodes and decodes JSON strings.
-    ///   Spec. details, see http://www.json.org/
+    /// This class encodes and decodes JSON strings.
+    /// Spec. details, see http://www.json.org/
     /// </summary>
     internal sealed class JsonParser
     {
