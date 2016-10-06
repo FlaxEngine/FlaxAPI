@@ -5,33 +5,33 @@ using System;
 namespace CelelejEngine
 {
     /// <summary>
-    ///   Representation of RGBA colors in 32 bit format.
+    /// Representation of RGBA colors in 32 bit format.
     /// </summary>
     [Serializable]
     public struct Color32
     {
         /// <summary>
-        ///   Red component of the color.
+        /// Red component of the color.
         /// </summary>
         public byte R;
 
         /// <summary>
-        ///   Green component of the color.
+        /// Green component of the color.
         /// </summary>
         public byte G;
 
         /// <summary>
-        ///   Blue component of the color.
+        /// Blue component of the color.
         /// </summary>
         public byte B;
 
         /// <summary>
-        ///   Alpha component of the color.
+        /// Alpha component of the color.
         /// </summary>
         public byte A;
 
         /// <summary>
-        ///   Constructs a new Color32 with given r, g, b, a components.
+        /// Constructs a new Color32 with given r, g, b, a components.
         /// </summary>
         /// <param name="r"></param>
         /// <param name="g"></param>
@@ -46,7 +46,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Linearly interpolates between colors a and b by t.
+        /// Linearly interpolates between colors a and b by t.
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -58,7 +58,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Linearly interpolates between colors a and b by t.
+        /// Linearly interpolates between colors a and b by t.
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -79,7 +79,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a nicely formatted string of this color.
+        /// Returns a nicely formatted string of this color.
         /// </summary>
         public override string ToString()
         {
@@ -87,7 +87,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a nicely formatted string of this color.
+        /// Returns a nicely formatted string of this color.
         /// </summary>
         /// <param name="format"></param>
         public string ToString(string format)

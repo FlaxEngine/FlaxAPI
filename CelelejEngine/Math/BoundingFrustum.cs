@@ -31,8 +31,8 @@ using System.Runtime.InteropServices;
 namespace CelelejEngine
 {
     /// <summary>
-    ///   Defines a frustum which can be used in frustum culling, zoom to Extents (zoom to fit) operations,
-    ///   (matrix, frustum, camera) interchange, and many kind of intersection testing.
+    /// Defines a frustum which can be used in frustum culling, zoom to Extents (zoom to fit) operations,
+    /// (matrix, frustum, camera) interchange, and many kind of intersection testing.
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -47,7 +47,7 @@ namespace CelelejEngine
         private Plane pBottom;
 
         /// <summary>
-        ///   Gets or sets the Matrix that describes this bounding frustum.
+        /// Gets or sets the Matrix that describes this bounding frustum.
         /// </summary>
         public Matrix Matrix
         {
@@ -60,7 +60,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets the near plane of the BoundingFrustum.
+        /// Gets the near plane of the BoundingFrustum.
         /// </summary>
         public Plane Near
         {
@@ -68,7 +68,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets the far plane of the BoundingFrustum.
+        /// Gets the far plane of the BoundingFrustum.
         /// </summary>
         public Plane Far
         {
@@ -76,7 +76,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets the left plane of the BoundingFrustum.
+        /// Gets the left plane of the BoundingFrustum.
         /// </summary>
         public Plane Left
         {
@@ -84,7 +84,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets the right plane of the BoundingFrustum.
+        /// Gets the right plane of the BoundingFrustum.
         /// </summary>
         public Plane Right
         {
@@ -92,7 +92,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets the top plane of the BoundingFrustum.
+        /// Gets the top plane of the BoundingFrustum.
         /// </summary>
         public Plane Top
         {
@@ -100,7 +100,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets the bottom plane of the BoundingFrustum.
+        /// Gets the bottom plane of the BoundingFrustum.
         /// </summary>
         public Plane Bottom
         {
@@ -108,7 +108,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a new instance of BoundingFrustum.
+        /// Creates a new instance of BoundingFrustum.
         /// </summary>
         /// <param name="matrix">Combined matrix that usually takes view × projection matrix.</param>
         public BoundingFrustum(Matrix matrix)
@@ -123,11 +123,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref="BoundingFrustum" /> is equal to this instance.
+        /// Determines whether the specified <see cref="BoundingFrustum" /> is equal to this instance.
         /// </summary>
         /// <param name="other">The <see cref="BoundingFrustum" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="BoundingFrustum" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="BoundingFrustum" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(ref BoundingFrustum other)
@@ -136,11 +136,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref="BoundingFrustum" /> is equal to this instance.
+        /// Determines whether the specified <see cref="BoundingFrustum" /> is equal to this instance.
         /// </summary>
         /// <param name="other">The <see cref="BoundingFrustum" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="BoundingFrustum" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="BoundingFrustum" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(BoundingFrustum other)
@@ -149,11 +149,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref="System.Object" /> is equal to this instance.
+        /// Determines whether the specified <see cref="System.Object" /> is equal to this instance.
         /// </summary>
         /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object obj)
         {
@@ -165,12 +165,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Implements the operator ==.
+        /// Implements the operator ==.
         /// </summary>
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
         /// <returns>
-        ///   The result of the operator.
+        /// The result of the operator.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(BoundingFrustum left, BoundingFrustum right)
@@ -179,12 +179,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Implements the operator !=.
+        /// Implements the operator !=.
         /// </summary>
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
         /// <returns>
-        ///   The result of the operator.
+        /// The result of the operator.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(BoundingFrustum left, BoundingFrustum right)
@@ -193,7 +193,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns one of the 6 planes related to this frustum.
+        /// Returns one of the 6 planes related to this frustum.
         /// </summary>
         /// <param name="index">Plane index where 0 fro Left, 1 for Right, 2 for Top, 3 for Bottom, 4 for Near, 5 for Far</param>
         /// <returns></returns>
@@ -277,7 +277,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a new frustum relaying on perspective camera parameters
+        /// Creates a new frustum relaying on perspective camera parameters
         /// </summary>
         /// <param name="cameraPos">The camera pos.</param>
         /// <param name="lookDir">The look dir.</param>
@@ -334,14 +334,14 @@ namespace CelelejEngine
         }
         
         /// <summary>
-        ///   Returns the 8 corners of the frustum, element0 is Near1 (near right down corner)
-        ///   , element1 is Near2 (near right top corner)
-        ///   , element2 is Near3 (near Left top corner)
-        ///   , element3 is Near4 (near Left down corner)
-        ///   , element4 is Far1 (far right down corner)
-        ///   , element5 is Far2 (far right top corner)
-        ///   , element6 is Far3 (far left top corner)
-        ///   , element7 is Far4 (far left down corner)
+        /// Returns the 8 corners of the frustum, element0 is Near1 (near right down corner)
+        /// , element1 is Near2 (near right top corner)
+        /// , element2 is Near3 (near Left top corner)
+        /// , element3 is Near4 (near Left down corner)
+        /// , element4 is Far1 (far right down corner)
+        /// , element5 is Far2 (far right top corner)
+        /// , element6 is Far3 (far left top corner)
+        /// , element7 is Far4 (far left down corner)
         /// </summary>
         /// <returns>The 8 corners of the frustum</returns>
         public Vector3[] GetCorners()
@@ -352,14 +352,14 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the 8 corners of the frustum, element0 is Near1 (near right down corner)
-        ///   , element1 is Near2 (near right top corner)
-        ///   , element2 is Near3 (near Left top corner)
-        ///   , element3 is Near4 (near Left down corner)
-        ///   , element4 is Far1 (far right down corner)
-        ///   , element5 is Far2 (far right top corner)
-        ///   , element6 is Far3 (far left top corner)
-        ///   , element7 is Far4 (far left down corner)
+        /// Returns the 8 corners of the frustum, element0 is Near1 (near right down corner)
+        /// , element1 is Near2 (near right top corner)
+        /// , element2 is Near3 (near Left top corner)
+        /// , element3 is Near4 (near Left down corner)
+        /// , element4 is Far1 (far right down corner)
+        /// , element5 is Far2 (far right top corner)
+        /// , element6 is Far3 (far left top corner)
+        /// , element7 is Far4 (far left down corner)
         /// </summary>
         /// <returns>The 8 corners of the frustum</returns>
         public void GetCorners(Vector3[] corners)
@@ -375,7 +375,7 @@ namespace CelelejEngine
         }
         
         /// <summary>
-        ///   Checks whether a point lay inside, intersects or lay outside the frustum.
+        /// Checks whether a point lay inside, intersects or lay outside the frustum.
         /// </summary>
         /// <param name="point">The point.</param>
         /// <returns>Type of the containment</returns>
@@ -425,7 +425,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Checks whether a point lay inside, intersects or lay outside the frustum.
+        /// Checks whether a point lay inside, intersects or lay outside the frustum.
         /// </summary>
         /// <param name="point">The point.</param>
         /// <returns>Type of the containment</returns>
@@ -435,8 +435,8 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Checks whether a group of points lay totally inside the frustum (Contains), or lay partially inside the frustum
-        ///   (Intersects), or lay outside the frustum (Disjoint).
+        /// Checks whether a group of points lay totally inside the frustum (Contains), or lay partially inside the frustum
+        /// (Intersects), or lay outside the frustum (Disjoint).
         /// </summary>
         /// <param name="points">The points.</param>
         /// <returns>Type of the containment</returns>
@@ -471,8 +471,8 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Checks whether a group of points lay totally inside the frustum (Contains), or lay partially inside the frustum
-        ///   (Intersects), or lay outside the frustum (Disjoint).
+        /// Checks whether a group of points lay totally inside the frustum (Contains), or lay partially inside the frustum
+        /// (Intersects), or lay outside the frustum (Disjoint).
         /// </summary>
         /// <param name="points">The points.</param>
         /// <param name="result">Type of the containment.</param>
@@ -501,7 +501,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the intersection relationship between the frustum and a bounding box.
+        /// Determines the intersection relationship between the frustum and a bounding box.
         /// </summary>
         /// <param name="box">The box.</param>
         /// <returns>Type of the containment</returns>
@@ -524,7 +524,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the intersection relationship between the frustum and a bounding box.
+        /// Determines the intersection relationship between the frustum and a bounding box.
         /// </summary>
         /// <param name="box">The box.</param>
         /// <returns>Type of the containment</returns>
@@ -534,7 +534,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the intersection relationship between the frustum and a bounding box.
+        /// Determines the intersection relationship between the frustum and a bounding box.
         /// </summary>
         /// <param name="box">The box.</param>
         /// <param name="result">Type of the containment.</param>
@@ -544,7 +544,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the intersection relationship between the frustum and a bounding sphere.
+        /// Determines the intersection relationship between the frustum and a bounding sphere.
         /// </summary>
         /// <param name="sphere">The sphere.</param>
         /// <returns>Type of the containment</returns>
@@ -594,7 +594,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the intersection relationship between the frustum and a bounding sphere.
+        /// Determines the intersection relationship between the frustum and a bounding sphere.
         /// </summary>
         /// <param name="sphere">The sphere.</param>
         /// <returns>Type of the containment</returns>
@@ -604,7 +604,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the intersection relationship between the frustum and a bounding sphere.
+        /// Determines the intersection relationship between the frustum and a bounding sphere.
         /// </summary>
         /// <param name="sphere">The sphere.</param>
         /// <param name="result">Type of the containment.</param>
@@ -614,7 +614,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the intersection relationship between the frustum and another bounding frustum.
+        /// Determines the intersection relationship between the frustum and another bounding frustum.
         /// </summary>
         /// <param name="frustum">The frustum.</param>
         /// <returns>Type of the containment</returns>
@@ -624,7 +624,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the intersection relationship between the frustum and another bounding frustum.
+        /// Determines the intersection relationship between the frustum and another bounding frustum.
         /// </summary>
         /// <param name="frustum">The frustum.</param>
         /// <returns>Type of the containment</returns>
@@ -634,7 +634,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the intersection relationship between the frustum and another bounding frustum.
+        /// Determines the intersection relationship between the frustum and another bounding frustum.
         /// </summary>
         /// <param name="frustum">The frustum.</param>
         /// <param name="result">Type of the containment.</param>
@@ -644,7 +644,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Checks whether the current BoundingFrustum intersects a BoundingSphere.
+        /// Checks whether the current BoundingFrustum intersects a BoundingSphere.
         /// </summary>
         /// <param name="sphere">The sphere.</param>
         /// <returns>Type of the containment</returns>
@@ -654,7 +654,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Checks whether the current BoundingFrustum intersects a BoundingSphere.
+        /// Checks whether the current BoundingFrustum intersects a BoundingSphere.
         /// </summary>
         /// <param name="sphere">The sphere.</param>
         /// <param name="result">Set to <c>true</c> if the current BoundingFrustum intersects a BoundingSphere.</param>
@@ -664,7 +664,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Checks whether the current BoundingFrustum intersects a BoundingBox.
+        /// Checks whether the current BoundingFrustum intersects a BoundingBox.
         /// </summary>
         /// <param name="box">The box.</param>
         /// <returns><c>true</c> if the current BoundingFrustum intersects a BoundingSphere.</returns>
@@ -674,7 +674,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Checks whether the current BoundingFrustum intersects a BoundingBox.
+        /// Checks whether the current BoundingFrustum intersects a BoundingBox.
         /// </summary>
         /// <param name="box">The box.</param>
         /// <param name="result"><c>true</c> if the current BoundingFrustum intersects a BoundingSphere.</param>
@@ -693,7 +693,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Checks whether the current BoundingFrustum intersects the specified Plane.
+        /// Checks whether the current BoundingFrustum intersects the specified Plane.
         /// </summary>
         /// <param name="plane">The plane.</param>
         /// <returns>Plane intersection type.</returns>
@@ -703,7 +703,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Checks whether the current BoundingFrustum intersects the specified Plane.
+        /// Checks whether the current BoundingFrustum intersects the specified Plane.
         /// </summary>
         /// <param name="plane">The plane.</param>
         /// <param name="result">Plane intersection type.</param>
@@ -713,7 +713,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Get the width of the frustum at specified depth.
+        /// Get the width of the frustum at specified depth.
         /// </summary>
         /// <param name="depth">the depth at which to calculate frustum width.</param>
         /// <returns>With of the frustum at the specified depth</returns>
@@ -724,7 +724,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Get the height of the frustum at specified depth.
+        /// Get the height of the frustum at specified depth.
         /// </summary>
         /// <param name="depth">the depth at which to calculate frustum height.</param>
         /// <returns>Height of the frustum at the specified depth</returns>
@@ -747,7 +747,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Checks whether the current BoundingFrustum intersects the specified Ray.
+        /// Checks whether the current BoundingFrustum intersects the specified Ray.
         /// </summary>
         /// <param name="ray">The ray.</param>
         /// <returns><c>true</c> if the current BoundingFrustum intersects the specified Ray.</returns>
@@ -758,12 +758,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Checks whether the current BoundingFrustum intersects the specified Ray.
+        /// Checks whether the current BoundingFrustum intersects the specified Ray.
         /// </summary>
         /// <param name="ray">The Ray to check for intersection with.</param>
         /// <param name="inDistance">
-        ///   The distance at which the ray enters the frustum if there is an intersection and the ray
-        ///   starts outside the frustum.
+        /// The distance at which the ray enters the frustum if there is an intersection and the ray
+        /// starts outside the frustum.
         /// </param>
         /// <param name="outDistance">The distance at which the ray exits the frustum if there is an intersection.</param>
         /// <returns><c>true</c> if the current BoundingFrustum intersects the specified Ray.</returns>
@@ -815,11 +815,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Get the distance which when added to camera position along the lookat direction will do the effect of zoom to extents
-        ///   (zoom to fit) operation,
-        ///   so all the passed points will fit in the current view.
-        ///   if the returned value is positive, the camera will move toward the lookat direction (ZoomIn).
-        ///   if the returned value is negative, the camera will move in the reverse direction of the lookat direction (ZoomOut).
+        /// Get the distance which when added to camera position along the lookat direction will do the effect of zoom to extents
+        /// (zoom to fit) operation,
+        /// so all the passed points will fit in the current view.
+        /// if the returned value is positive, the camera will move toward the lookat direction (ZoomIn).
+        /// if the returned value is negative, the camera will move in the reverse direction of the lookat direction (ZoomOut).
         /// </summary>
         /// <param name="points">The points.</param>
         /// <returns>The zoom to fit distance</returns>
@@ -847,11 +847,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Get the distance which when added to camera position along the lookat direction will do the effect of zoom to extents
-        ///   (zoom to fit) operation,
-        ///   so all the passed points will fit in the current view.
-        ///   if the returned value is positive, the camera will move toward the lookat direction (ZoomIn).
-        ///   if the returned value is negative, the camera will move in the reverse direction of the lookat direction (ZoomOut).
+        /// Get the distance which when added to camera position along the lookat direction will do the effect of zoom to extents
+        /// (zoom to fit) operation,
+        /// so all the passed points will fit in the current view.
+        /// if the returned value is positive, the camera will move toward the lookat direction (ZoomIn).
+        /// if the returned value is negative, the camera will move in the reverse direction of the lookat direction (ZoomOut).
         /// </summary>
         /// <param name="boundingBox">The bounding box.</param>
         /// <returns>The zoom to fit distance</returns>
@@ -861,9 +861,9 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Get the vector shift which when added to camera position will do the effect of zoom to extents (zoom to fit)
-        ///   operation,
-        ///   so all the passed points will fit in the current view.
+        /// Get the vector shift which when added to camera position will do the effect of zoom to extents (zoom to fit)
+        /// operation,
+        /// so all the passed points will fit in the current view.
         /// </summary>
         /// <param name="points">The points.</param>
         /// <returns>The zoom to fit vector</returns>
@@ -873,9 +873,9 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Get the vector shift which when added to camera position will do the effect of zoom to extents (zoom to fit)
-        ///   operation,
-        ///   so all the passed points will fit in the current view.
+        /// Get the vector shift which when added to camera position will do the effect of zoom to extents (zoom to fit)
+        /// operation,
+        /// so all the passed points will fit in the current view.
         /// </summary>
         /// <param name="boundingBox">The bounding box.</param>
         /// <returns>The zoom to fit vector</returns>
@@ -885,10 +885,10 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Indicate whether the current BoundingFrustrum is Orthographic.
+        /// Indicate whether the current BoundingFrustrum is Orthographic.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if the current BoundingFrustrum is Orthographic; otherwise, <c>false</c>.
+        /// <c>true</c> if the current BoundingFrustrum is Orthographic; otherwise, <c>false</c>.
         /// </value>
         public bool IsOrthographic
         {

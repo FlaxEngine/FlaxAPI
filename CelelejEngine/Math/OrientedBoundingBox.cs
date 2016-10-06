@@ -32,28 +32,28 @@ using System.Runtime.InteropServices;
 namespace CelelejEngine
 {
     /// <summary>
-    ///   OrientedBoundingBox (OBB) is a rectangular block, much like an AABB (BoundingBox) but with an arbitrary orientation.
+    /// OrientedBoundingBox (OBB) is a rectangular block, much like an AABB (BoundingBox) but with an arbitrary orientation.
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct OrientedBoundingBox : IEquatable<OrientedBoundingBox>, IFormattable
     {
         /// <summary>
-        ///   Half lengths of the box along each axis.
+        /// Half lengths of the box along each axis.
         /// </summary>
         public Vector3 Extents;
 
         /// <summary>
-        ///   The matrix which aligns and scales the box, and its translation vector represents the center of the box.
+        /// The matrix which aligns and scales the box, and its translation vector represents the center of the box.
         /// </summary>
         public Matrix Transformation;
 
         /// <summary>
-        ///   Creates an <see cref="OrientedBoundingBox" /> from a BoundingBox.
+        /// Creates an <see cref="OrientedBoundingBox" /> from a BoundingBox.
         /// </summary>
         /// <param name="bb">The BoundingBox to create from.</param>
         /// <remarks>
-        ///   Initially, the OBB is axis-aligned box, but it can be rotated and transformed later.
+        /// Initially, the OBB is axis-aligned box, but it can be rotated and transformed later.
         /// </remarks>
         public OrientedBoundingBox(BoundingBox bb)
         {
@@ -63,12 +63,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates an <see cref="OrientedBoundingBox" /> which contained between two minimum and maximum points.
+        /// Creates an <see cref="OrientedBoundingBox" /> which contained between two minimum and maximum points.
         /// </summary>
         /// <param name="minimum">The minimum vertex of the bounding box.</param>
         /// <param name="maximum">The maximum vertex of the bounding box.</param>
         /// <remarks>
-        ///   Initially, the OrientedBoundingBox is axis-aligned box, but it can be rotated and transformed later.
+        /// Initially, the OrientedBoundingBox is axis-aligned box, but it can be rotated and transformed later.
         /// </remarks>
         public OrientedBoundingBox(Vector3 minimum, Vector3 maximum)
         {
@@ -78,12 +78,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates an <see cref="OrientedBoundingBox" /> that fully contains the given points.
+        /// Creates an <see cref="OrientedBoundingBox" /> that fully contains the given points.
         /// </summary>
         /// <param name="points">The points that will be contained by the box.</param>
         /// <remarks>
-        ///   This method is not for computing the best tight-fitting OrientedBoundingBox.
-        ///   And initially, the OrientedBoundingBox is axis-aligned box, but it can be rotated and transformed later.
+        /// This method is not for computing the best tight-fitting OrientedBoundingBox.
+        /// And initially, the OrientedBoundingBox is axis-aligned box, but it can be rotated and transformed later.
         /// </remarks>
         public OrientedBoundingBox(Vector3[] points)
         {
@@ -105,7 +105,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Retrieves the eight corners of the bounding box.
+        /// Retrieves the eight corners of the bounding box.
         /// </summary>
         /// <returns>An array of points representing the eight corners of the bounding box.</returns>
         public Vector3[] GetCorners()
@@ -133,13 +133,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Transforms this box using a transformation matrix.
+        /// Transforms this box using a transformation matrix.
         /// </summary>
         /// <param name="mat">The transformation matrix.</param>
         /// <remarks>
-        ///   While any kind of transformation can be applied, it is recommended to apply scaling using scale method instead, which
-        ///   scales the Extents and keeps the Transformation matrix for rotation only, and that preserves collision detection
-        ///   accuracy.
+        /// While any kind of transformation can be applied, it is recommended to apply scaling using scale method instead, which
+        /// scales the Extents and keeps the Transformation matrix for rotation only, and that preserves collision detection
+        /// accuracy.
         /// </remarks>
         public void Transform(ref Matrix mat)
         {
@@ -147,13 +147,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Transforms this box using a transformation matrix.
+        /// Transforms this box using a transformation matrix.
         /// </summary>
         /// <param name="mat">The transformation matrix.</param>
         /// <remarks>
-        ///   While any kind of transformation can be applied, it is recommended to apply scaling using scale method instead, which
-        ///   scales the Extents and keeps the Transformation matrix for rotation only, and that preserves collision detection
-        ///   accuracy.
+        /// While any kind of transformation can be applied, it is recommended to apply scaling using scale method instead, which
+        /// scales the Extents and keeps the Transformation matrix for rotation only, and that preserves collision detection
+        /// accuracy.
         /// </remarks>
         public void Transform(Matrix mat)
         {
@@ -161,8 +161,8 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Scales the <see cref="OrientedBoundingBox" /> by scaling its Extents without affecting the Transformation matrix,
-        ///   By keeping Transformation matrix scaling-free, the collision detection methods will be more accurate.
+        /// Scales the <see cref="OrientedBoundingBox" /> by scaling its Extents without affecting the Transformation matrix,
+        /// By keeping Transformation matrix scaling-free, the collision detection methods will be more accurate.
         /// </summary>
         /// <param name="scaling"></param>
         public void Scale(ref Vector3 scaling)
@@ -171,8 +171,8 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Scales the <see cref="OrientedBoundingBox" /> by scaling its Extents without affecting the Transformation matrix,
-        ///   By keeping Transformation matrix scaling-free, the collision detection methods will be more accurate.
+        /// Scales the <see cref="OrientedBoundingBox" /> by scaling its Extents without affecting the Transformation matrix,
+        /// By keeping Transformation matrix scaling-free, the collision detection methods will be more accurate.
         /// </summary>
         /// <param name="scaling"></param>
         public void Scale(Vector3 scaling)
@@ -181,8 +181,8 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Scales the <see cref="OrientedBoundingBox" /> by scaling its Extents without affecting the Transformation matrix,
-        ///   By keeping Transformation matrix scaling-free, the collision detection methods will be more accurate.
+        /// Scales the <see cref="OrientedBoundingBox" /> by scaling its Extents without affecting the Transformation matrix,
+        /// By keeping Transformation matrix scaling-free, the collision detection methods will be more accurate.
         /// </summary>
         /// <param name="scaling"></param>
         public void Scale(float scaling)
@@ -191,7 +191,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Translates the <see cref="OrientedBoundingBox" /> to a new position using a translation vector;
+        /// Translates the <see cref="OrientedBoundingBox" /> to a new position using a translation vector;
         /// </summary>
         /// <param name="translation">the translation vector.</param>
         public void Translate(ref Vector3 translation)
@@ -200,7 +200,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Translates the <see cref="OrientedBoundingBox" /> to a new position using a translation vector;
+        /// Translates the <see cref="OrientedBoundingBox" /> to a new position using a translation vector;
         /// </summary>
         /// <param name="translation">the translation vector.</param>
         public void Translate(Vector3 translation)
@@ -209,11 +209,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   The size of the <see cref="OrientedBoundingBox" /> if no scaling is applied to the transformation matrix.
+        /// The size of the <see cref="OrientedBoundingBox" /> if no scaling is applied to the transformation matrix.
         /// </summary>
         /// <remarks>
-        ///   The property will return the actual size even if the scaling is applied using Scale method,
-        ///   but if the scaling is applied to transformation matrix, use GetSize Function instead.
+        /// The property will return the actual size even if the scaling is applied using Scale method,
+        /// but if the scaling is applied to transformation matrix, use GetSize Function instead.
         /// </remarks>
         public Vector3 Size
         {
@@ -221,13 +221,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the size of the <see cref="OrientedBoundingBox" /> taking into consideration the scaling applied to the
-        ///   transformation matrix.
+        /// Returns the size of the <see cref="OrientedBoundingBox" /> taking into consideration the scaling applied to the
+        /// transformation matrix.
         /// </summary>
         /// <returns>The size of the consideration</returns>
         /// <remarks>
-        ///   This method is computationally expensive, so if no scale is applied to the transformation matrix
-        ///   use <see cref="OrientedBoundingBox.Size" /> property instead.
+        /// This method is computationally expensive, so if no scale is applied to the transformation matrix
+        /// use <see cref="OrientedBoundingBox.Size" /> property instead.
         /// </remarks>
         public Vector3 GetSize()
         {
@@ -242,8 +242,8 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the square size of the <see cref="OrientedBoundingBox" /> taking into consideration the scaling applied to
-        ///   the transformation matrix.
+        /// Returns the square size of the <see cref="OrientedBoundingBox" /> taking into consideration the scaling applied to
+        /// the transformation matrix.
         /// </summary>
         /// <returns>The size of the consideration</returns>
         public Vector3 GetSizeSquared()
@@ -259,7 +259,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the center of the <see cref="OrientedBoundingBox" />.
+        /// Returns the center of the <see cref="OrientedBoundingBox" />.
         /// </summary>
         public Vector3 Center
         {
@@ -267,7 +267,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether a <see cref="OrientedBoundingBox" /> contains a point.
+        /// Determines whether a <see cref="OrientedBoundingBox" /> contains a point.
         /// </summary>
         /// <param name="point">The point to test.</param>
         /// <returns>The type of containment the two objects have.</returns>
@@ -293,7 +293,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether a <see cref="OrientedBoundingBox" /> contains a point.
+        /// Determines whether a <see cref="OrientedBoundingBox" /> contains a point.
         /// </summary>
         /// <param name="point">The point to test.</param>
         /// <returns>The type of containment the two objects have.</returns>
@@ -303,7 +303,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether a <see cref="OrientedBoundingBox" /> contains an array of points>.
+        /// Determines whether a <see cref="OrientedBoundingBox" /> contains an array of points>.
         /// </summary>
         /// <param name="points">The points array to test.</param>
         /// <returns>The type of containment.</returns>
@@ -343,18 +343,18 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether a <see cref="OrientedBoundingBox" /> contains a <see cref="BoundingSphere" />.
+        /// Determines whether a <see cref="OrientedBoundingBox" /> contains a <see cref="BoundingSphere" />.
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
         /// <param name="ignoreScale">
-        ///   Optimize the check operation by assuming that <see cref="OrientedBoundingBox" /> has no
-        ///   scaling applied
+        /// Optimize the check operation by assuming that <see cref="OrientedBoundingBox" /> has no
+        /// scaling applied
         /// </param>
         /// <returns>The type of containment the two objects have.</returns>
         /// <remarks>
-        ///   This method is not designed for <see cref="OrientedBoundingBox" /> which has a non-uniform scaling applied to its
-        ///   transformation matrix.
-        ///   But any type of scaling applied using Scale method will keep this method accurate.
+        /// This method is not designed for <see cref="OrientedBoundingBox" /> which has a non-uniform scaling applied to its
+        /// transformation matrix.
+        /// But any type of scaling applied using Scale method will keep this method accurate.
         /// </remarks>
         public ContainmentType Contains(BoundingSphere sphere, bool ignoreScale = false)
         {
@@ -402,14 +402,14 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Check the intersection between two <see cref="OrientedBoundingBox" />
+        /// Check the intersection between two <see cref="OrientedBoundingBox" />
         /// </summary>
         /// <param name="obb">The OrientedBoundingBoxs to test.</param>
         /// <returns>The type of containment the two objects have.</returns>
         /// <remarks>
-        ///   For accuracy, The transformation matrix for both <see cref="OrientedBoundingBox" /> must not have any scaling applied
-        ///   to it.
-        ///   Anyway, scaling using Scale method will keep this method accurate.
+        /// For accuracy, The transformation matrix for both <see cref="OrientedBoundingBox" /> must not have any scaling applied
+        /// to it.
+        /// Anyway, scaling using Scale method will keep this method accurate.
         /// </remarks>
         public ContainmentType Contains(ref OrientedBoundingBox obb)
         {
@@ -482,15 +482,15 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Check the intersection between an <see cref="OrientedBoundingBox" /> and a line defined by two points
+        /// Check the intersection between an <see cref="OrientedBoundingBox" /> and a line defined by two points
         /// </summary>
         /// <param name="L1">The first point in the line.</param>
         /// <param name="L2">The second point in the line.</param>
         /// <returns>The type of containment the two objects have.</returns>
         /// <remarks>
-        ///   For accuracy, The transformation matrix for the <see cref="OrientedBoundingBox" /> must not have any scaling applied
-        ///   to it.
-        ///   Anyway, scaling using Scale method will keep this method accurate.
+        /// For accuracy, The transformation matrix for the <see cref="OrientedBoundingBox" /> must not have any scaling applied
+        /// to it.
+        /// Anyway, scaling using Scale method will keep this method accurate.
         /// </remarks>
         public ContainmentType ContainsLine(ref Vector3 L1, ref Vector3 L2)
         {
@@ -533,14 +533,14 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Check the intersection between an <see cref="OrientedBoundingBox" /> and <see cref="BoundingBox" />
+        /// Check the intersection between an <see cref="OrientedBoundingBox" /> and <see cref="BoundingBox" />
         /// </summary>
         /// <param name="box">The BoundingBox to test.</param>
         /// <returns>The type of containment the two objects have.</returns>
         /// <remarks>
-        ///   For accuracy, The transformation matrix for the <see cref="OrientedBoundingBox" /> must not have any scaling applied
-        ///   to it.
-        ///   Anyway, scaling using Scale method will keep this method accurate.
+        /// For accuracy, The transformation matrix for the <see cref="OrientedBoundingBox" /> must not have any scaling applied
+        /// to it.
+        /// Anyway, scaling using Scale method will keep this method accurate.
         /// </remarks>
         public ContainmentType Contains(ref BoundingBox box)
         {
@@ -611,12 +611,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="OrientedBoundingBox" />.
+        /// Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="OrientedBoundingBox" />.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="point">
-        ///   When the method completes, contains the point of intersection,
-        ///   or <see cref="Vector3.Zero" /> if there was no intersection.
+        /// When the method completes, contains the point of intersection,
+        /// or <see cref="Vector3.Zero" /> if there was no intersection.
         /// </param>
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Ray ray, out Vector3 point)
@@ -641,7 +641,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="OrientedBoundingBox" />.
+        /// Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="OrientedBoundingBox" />.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -671,7 +671,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Get the axis-aligned <see cref="BoundingBox" /> which contains all <see cref="OrientedBoundingBox" /> corners.
+        /// Get the axis-aligned <see cref="BoundingBox" /> which contains all <see cref="OrientedBoundingBox" /> corners.
         /// </summary>
         /// <returns>The axis-aligned BoundingBox of this OrientedBoundingBox.</returns>
         public BoundingBox GetBoundingBox()
@@ -680,14 +680,14 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the matrix required to transfer any point from one <see cref="OrientedBoundingBox" /> local coordinates to
-        ///   another.
+        /// Calculates the matrix required to transfer any point from one <see cref="OrientedBoundingBox" /> local coordinates to
+        /// another.
         /// </summary>
         /// <param name="A">The source OrientedBoundingBox.</param>
         /// <param name="B">The target OrientedBoundingBox.</param>
         /// <param name="NoMatrixScaleApplied">
-        ///   If true, the method will use a fast algorithm which is inapplicable if a scale is applied to the transformation
-        ///   matrix of the OrientedBoundingBox.
+        /// If true, the method will use a fast algorithm which is inapplicable if a scale is applied to the transformation
+        /// matrix of the OrientedBoundingBox.
         /// </param>
         /// <returns></returns>
         public static Matrix GetBoxToBoxMatrix(ref OrientedBoundingBox A, ref OrientedBoundingBox B, bool NoMatrixScaleApplied = false)
@@ -721,18 +721,18 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Merge an OrientedBoundingBox B into another OrientedBoundingBox A, by expanding A to contain B and keeping A
-        ///   orientation.
+        /// Merge an OrientedBoundingBox B into another OrientedBoundingBox A, by expanding A to contain B and keeping A
+        /// orientation.
         /// </summary>
         /// <param name="A">The <see cref="OrientedBoundingBox" /> to merge into it.</param>
         /// <param name="B">The <see cref="OrientedBoundingBox" /> to be merged</param>
         /// <param name="NoMatrixScaleApplied">
-        ///   If true, the method will use a fast algorithm which is inapplicable if a scale is applied to the transformation
-        ///   matrix of the OrientedBoundingBox.
+        /// If true, the method will use a fast algorithm which is inapplicable if a scale is applied to the transformation
+        /// matrix of the OrientedBoundingBox.
         /// </param>
         /// <remarks>
-        ///   Unlike merging axis aligned boxes, The operation is not interchangeable, because it keeps A orientation and merge B
-        ///   into it.
+        /// Unlike merging axis aligned boxes, The operation is not interchangeable, because it keeps A orientation and merge B
+        /// into it.
         /// </remarks>
         public static void Merge(ref OrientedBoundingBox A, ref OrientedBoundingBox B, bool NoMatrixScaleApplied = false)
         {
@@ -760,12 +760,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Merge this OrientedBoundingBox into another OrientedBoundingBox, keeping the other OrientedBoundingBox orientation.
+        /// Merge this OrientedBoundingBox into another OrientedBoundingBox, keeping the other OrientedBoundingBox orientation.
         /// </summary>
         /// <param name="OBB">The other <see cref="OrientedBoundingBox" /> to merge into.</param>
         /// <param name="NoMatrixScaleApplied">
-        ///   If true, the method will use a fast algorithm which is inapplicable if a scale is applied to the transformation
-        ///   matrix of the OrientedBoundingBox.
+        /// If true, the method will use a fast algorithm which is inapplicable if a scale is applied to the transformation
+        /// matrix of the OrientedBoundingBox.
         /// </param>
         public void MergeInto(ref OrientedBoundingBox OBB, bool NoMatrixScaleApplied = false)
         {
@@ -773,12 +773,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Merge another OrientedBoundingBox into this OrientedBoundingBox.
+        /// Merge another OrientedBoundingBox into this OrientedBoundingBox.
         /// </summary>
         /// <param name="OBB">The other <see cref="OrientedBoundingBox" /> to merge into this OrientedBoundingBox.</param>
         /// <param name="NoMatrixScaleApplied">
-        ///   If true, the method will use a fast algorithm which is inapplicable if a scale is applied to the transformation
-        ///   matrix of the OrientedBoundingBox.
+        /// If true, the method will use a fast algorithm which is inapplicable if a scale is applied to the transformation
+        /// matrix of the OrientedBoundingBox.
         /// </param>
         public void Add(ref OrientedBoundingBox OBB, bool NoMatrixScaleApplied = false)
         {
@@ -786,11 +786,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref="Vector4" /> is equal to this instance.
+        /// Determines whether the specified <see cref="Vector4" /> is equal to this instance.
         /// </summary>
         /// <param name="value">The <see cref="Vector4" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="Vector4" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Vector4" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(ref OrientedBoundingBox value)
@@ -799,11 +799,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref="Vector4" /> is equal to this instance.
+        /// Determines whether the specified <see cref="Vector4" /> is equal to this instance.
         /// </summary>
         /// <param name="value">The <see cref="Vector4" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="Vector4" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Vector4" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(OrientedBoundingBox value)
@@ -812,11 +812,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref="System.Object" /> is equal to this instance.
+        /// Determines whether the specified <see cref="System.Object" /> is equal to this instance.
         /// </summary>
         /// <param name="value">The <see cref="System.Object" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object value)
         {
@@ -828,13 +828,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Tests for equality between two objects.
+        /// Tests for equality between two objects.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns>
-        ///   <c>true</c> if <paramref name="left" /> has the same value as <paramref name="right" />; otherwise,
-        ///   <c>false</c>.
+        /// <c>true</c> if <paramref name="left" /> has the same value as <paramref name="right" />; otherwise,
+        /// <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(OrientedBoundingBox left, OrientedBoundingBox right)
@@ -843,13 +843,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Tests for inequality between two objects.
+        /// Tests for inequality between two objects.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns>
-        ///   <c>true</c> if <paramref name="left" /> has a different value than <paramref name="right" />; otherwise,
-        ///   <c>false</c>.
+        /// <c>true</c> if <paramref name="left" /> has a different value than <paramref name="right" />; otherwise,
+        /// <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(OrientedBoundingBox left, OrientedBoundingBox right)
@@ -858,10 +858,10 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a hash code for this instance.
+        /// Returns a hash code for this instance.
         /// </summary>
         /// <returns>
-        ///   A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
         public override int GetHashCode()
         {
@@ -869,10 +869,10 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public override string ToString()
         {
@@ -880,11 +880,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <param name="format">The format.</param>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public string ToString(string format)
         {
@@ -896,11 +896,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <param name="formatProvider">The format provider.</param>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public string ToString(IFormatProvider formatProvider)
         {
@@ -908,12 +908,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <param name="format">The format.</param>
         /// <param name="formatProvider">The format provider.</param>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {

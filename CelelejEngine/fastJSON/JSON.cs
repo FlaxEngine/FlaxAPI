@@ -24,53 +24,53 @@ namespace fastJSON
     public sealed class JSONParameters
     {
         /// <summary>
-        ///   Serialize DateTime milliseconds i.e. yyyy-MM-dd HH:mm:ss.nnn (default = false)
+        /// Serialize DateTime milliseconds i.e. yyyy-MM-dd HH:mm:ss.nnn (default = false)
         /// </summary>
         public bool DateTimeMilliseconds = false;
 
         /// <summary>
-        ///   Output string key dictionaries as "k"/"v" format (default = False)
+        /// Output string key dictionaries as "k"/"v" format (default = False)
         /// </summary>
         public bool KVStyleStringDictionary = false;
 
         /// <summary>
-        ///   If you have parametric and no default constructor for you classes (default = False)
-        ///   IMPORTANT NOTE : If True then all initial values within the class will be ignored and will be not set
+        /// If you have parametric and no default constructor for you classes (default = False)
+        /// IMPORTANT NOTE : If True then all initial values within the class will be ignored and will be not set
         /// </summary>
         public bool ParametricConstructorOverride = false;
 
         /// <summary>
-        ///   Serialize null values to the output (default = True)
+        /// Serialize null values to the output (default = True)
         /// </summary>
         public bool SerializeNullValues = true;
 
         /// <summary>
-        ///   Maximum depth for circular references in inline mode (default = 12)
+        /// Maximum depth for circular references in inline mode (default = 12)
         /// </summary>
         public byte SerializerMaxDepth = 12;
 
         /// <summary>
-        ///   Use escaped unicode i.e. \uXXXX format for non ASCII characters (default = True)
+        /// Use escaped unicode i.e. \uXXXX format for non ASCII characters (default = True)
         /// </summary>
         public bool UseEscapedUnicode = true;
 
         /// <summary>
-        ///   Use the fast GUID format (default = True)
+        /// Use the fast GUID format (default = True)
         /// </summary>
         public bool UseFastGuid = true;
 
         /// <summary>
-        ///   Use the optimized fast Dataset Schema format (default = True)
+        /// Use the optimized fast Dataset Schema format (default = True)
         /// </summary>
         public bool UseOptimizedDatasetSchema = true;
 
         /// <summary>
-        ///   Use the UTC date format (default = True)
+        /// Use the UTC date format (default = True)
         /// </summary>
         public bool UseUTCDateTime = true;
 
         /// <summary>
-        ///   Output Enum values instead of names (default = False)
+        /// Output Enum values instead of names (default = False)
         /// </summary>
         public bool UseValuesOfEnums = false;
     }
@@ -81,12 +81,12 @@ namespace fastJSON
     public static class JSON
     {
         /// <summary>
-        ///   Globally set-able parameters for controlling the serializer
+        /// Globally set-able parameters for controlling the serializer
         /// </summary>
         public static JSONParameters Parameters = new JSONParameters();
 
         /// <summary>
-        ///   Create a formatted json string (beautified) from an object
+        /// Create a formatted json string (beautified) from an object
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -98,7 +98,7 @@ namespace fastJSON
         }
 
         /// <summary>
-        ///   Create a formatted json string (beautified) from an object
+        /// Create a formatted json string (beautified) from an object
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="param"></param>
@@ -111,7 +111,7 @@ namespace fastJSON
         }
 
         /// <summary>
-        ///   Create a json representation for an object
+        /// Create a json representation for an object
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -121,7 +121,7 @@ namespace fastJSON
         }
 
         /// <summary>
-        ///   Create a json representation for an object with parameter override on this call
+        /// Create a json representation for an object with parameter override on this call
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="param"></param>
@@ -138,7 +138,7 @@ namespace fastJSON
         }
 
         /// <summary>
-        ///   Parse a json string and generate a Dictionary&lt;string,object&gt; or List&lt;object&gt; structure
+        /// Parse a json string and generate a Dictionary&lt;string,object&gt; or List&lt;object&gt; structure
         /// </summary>
         /// <param name="json"></param>
         /// <returns></returns>
@@ -148,7 +148,7 @@ namespace fastJSON
         }
 
         /// <summary>
-        ///   Create a .net4 dynamic object from the json string
+        /// Create a .net4 dynamic object from the json string
         /// </summary>
         /// <param name="json"></param>
         /// <returns></returns>
@@ -158,7 +158,7 @@ namespace fastJSON
         }
 
         /// <summary>
-        ///   Create a typed generic object from the json
+        /// Create a typed generic object from the json
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="json"></param>
@@ -169,7 +169,7 @@ namespace fastJSON
         }
 
         /// <summary>
-        ///   Create a typed generic object from the json with parameter override on this call
+        /// Create a typed generic object from the json with parameter override on this call
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="json"></param>
@@ -181,7 +181,7 @@ namespace fastJSON
         }
 
         /// <summary>
-        ///   Create an object from the json
+        /// Create an object from the json
         /// </summary>
         /// <param name="json"></param>
         /// <returns></returns>
@@ -191,7 +191,7 @@ namespace fastJSON
         }
 
         /// <summary>
-        ///   Create an object from the json with parameter override on this call
+        /// Create an object from the json with parameter override on this call
         /// </summary>
         /// <param name="json"></param>
         /// <param name="param"></param>
@@ -202,7 +202,7 @@ namespace fastJSON
         }
 
         /// <summary>
-        ///   Create an object of type from the json
+        /// Create an object of type from the json
         /// </summary>
         /// <param name="json"></param>
         /// <param name="type"></param>
@@ -213,7 +213,7 @@ namespace fastJSON
         }
 
         /// <summary>
-        ///   Fill a given object with the json represenation
+        /// Fill a given object with the json represenation
         /// </summary>
         /// <param name="input"></param>
         /// <param name="json"></param>
@@ -227,7 +227,7 @@ namespace fastJSON
         }
 
         /// <summary>
-        ///   Deep copy an object i.e. clone to a new object
+        /// Deep copy an object i.e. clone to a new object
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -247,7 +247,7 @@ namespace fastJSON
         }
 
         /// <summary>
-        ///   Create a human readable string from the json
+        /// Create a human readable string from the json
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -257,7 +257,7 @@ namespace fastJSON
         }
 
         /// <summary>
-        ///   Register custom type handlers for your own types not natively handled by fastJSON
+        /// Register custom type handlers for your own types not natively handled by fastJSON
         /// </summary>
         /// <param name="type"></param>
         /// <param name="serializer"></param>
@@ -268,7 +268,7 @@ namespace fastJSON
         }
 
         /// <summary>
-        ///   Clear the internal reflection cache so you can start from new (you will loose performance)
+        /// Clear the internal reflection cache so you can start from new (you will loose performance)
         /// </summary>
         public static void ClearReflectionCache()
         {

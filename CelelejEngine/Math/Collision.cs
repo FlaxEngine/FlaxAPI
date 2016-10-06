@@ -54,43 +54,43 @@ using System;
 namespace CelelejEngine
 {
     /// <summary>
-    ///   Describes how one bounding volume contains another.
+    /// Describes how one bounding volume contains another.
     /// </summary>
     public enum ContainmentType
     {
         /// <summary>
-        ///   The two bounding volumes don't intersect at all.
+        /// The two bounding volumes don't intersect at all.
         /// </summary>
         Disjoint,
 
         /// <summary>
-        ///   One bounding volume completely contains another.
+        /// One bounding volume completely contains another.
         /// </summary>
         Contains,
 
         /// <summary>
-        ///   The two bounding volumes overlap.
+        /// The two bounding volumes overlap.
         /// </summary>
         Intersects
     }
 
     /// <summary>
-    ///   Describes the result of an intersection with a plane in three dimensions.
+    /// Describes the result of an intersection with a plane in three dimensions.
     /// </summary>
     public enum PlaneIntersectionType
     {
         /// <summary>
-        ///   The object is behind the plane.
+        /// The object is behind the plane.
         /// </summary>
         Back,
 
         /// <summary>
-        ///   The object is in front of the plane.
+        /// The object is in front of the plane.
         /// </summary>
         Front,
 
         /// <summary>
-        ///   The object is intersecting the plane.
+        /// The object is intersecting the plane.
         /// </summary>
         Intersecting
     }
@@ -120,12 +120,12 @@ namespace CelelejEngine
     */
 
     /// <summary>
-    ///   Contains static methods to help in determining intersections, containment, etc.
+    /// Contains static methods to help in determining intersections, containment, etc.
     /// </summary>
     public static class Collision
     {
         /// <summary>
-        ///   Determines the closest point between a point and a triangle.
+        /// Determines the closest point between a point and a triangle.
         /// </summary>
         /// <param name="point">The point to test.</param>
         /// <param name="vertex1">The first vertex to test.</param>
@@ -205,7 +205,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the closest point between a <see cref="Plane" /> and a point.
+        /// Determines the closest point between a <see cref="Plane" /> and a point.
         /// </summary>
         /// <param name="plane">The plane to test.</param>
         /// <param name="point">The point to test.</param>
@@ -223,7 +223,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the closest point between a <see cref="BoundingBox" /> and a point.
+        /// Determines the closest point between a <see cref="BoundingBox" /> and a point.
         /// </summary>
         /// <param name="box">The box to test.</param>
         /// <param name="point">The point to test.</param>
@@ -239,13 +239,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the closest point between a <see cref="BoundingSphere" /> and a point.
+        /// Determines the closest point between a <see cref="BoundingSphere" /> and a point.
         /// </summary>
         /// <param name="sphere"></param>
         /// <param name="point">The point to test.</param>
         /// <param name="result">
-        ///   When the method completes, contains the closest point between the two objects;
-        ///   or, if the point is directly in the center of the sphere, contains <see cref="Vector3.Zero" />.
+        /// When the method completes, contains the closest point between the two objects;
+        /// or, if the point is directly in the center of the sphere, contains <see cref="Vector3.Zero" />.
         /// </param>
         public static void ClosestPointSpherePoint(ref BoundingSphere sphere, ref Vector3 point, out Vector3 result)
         {
@@ -265,18 +265,18 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the closest point between a <see cref="BoundingSphere" /> and a <see cref="BoundingSphere" />.
+        /// Determines the closest point between a <see cref="BoundingSphere" /> and a <see cref="BoundingSphere" />.
         /// </summary>
         /// <param name="sphere1">The first sphere to test.</param>
         /// <param name="sphere2">The second sphere to test.</param>
         /// <param name="result">
-        ///   When the method completes, contains the closest point between the two objects;
-        ///   or, if the point is directly in the center of the sphere, contains <see cref="Vector3.Zero" />.
+        /// When the method completes, contains the closest point between the two objects;
+        /// or, if the point is directly in the center of the sphere, contains <see cref="Vector3.Zero" />.
         /// </param>
         /// <remarks>
-        ///   If the two spheres are overlapping, but not directly on top of each other, the closest point
-        ///   is the 'closest' point of intersection. This can also be considered is the deepest point of
-        ///   intersection.
+        /// If the two spheres are overlapping, but not directly on top of each other, the closest point
+        /// is the 'closest' point of intersection. This can also be considered is the deepest point of
+        /// intersection.
         /// </remarks>
         public static void ClosestPointSphereSphere(ref BoundingSphere sphere1, ref BoundingSphere sphere2, out Vector3 result)
         {
@@ -296,7 +296,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the distance between a <see cref="Plane" /> and a point.
+        /// Determines the distance between a <see cref="Plane" /> and a point.
         /// </summary>
         /// <param name="plane">The plane to test.</param>
         /// <param name="point">The point to test.</param>
@@ -312,7 +312,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the distance between a <see cref="BoundingBox" /> and a point.
+        /// Determines the distance between a <see cref="BoundingBox" /> and a point.
         /// </summary>
         /// <param name="box">The box to test.</param>
         /// <param name="point">The point to test.</param>
@@ -343,7 +343,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the distance between a <see cref="BoundingBox" /> and a <see cref="BoundingBox" />.
+        /// Determines the distance between a <see cref="BoundingBox" /> and a <see cref="BoundingBox" />.
         /// </summary>
         /// <param name="box1">The first box to test.</param>
         /// <param name="box2">The second box to test.</param>
@@ -395,7 +395,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the distance between a <see cref="BoundingSphere" /> and a point.
+        /// Determines the distance between a <see cref="BoundingSphere" /> and a point.
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
         /// <param name="point">The point to test.</param>
@@ -413,7 +413,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the distance between a <see cref="BoundingSphere" /> and a <see cref="BoundingSphere" />.
+        /// Determines the distance between a <see cref="BoundingSphere" /> and a <see cref="BoundingSphere" />.
         /// </summary>
         /// <param name="sphere1">The first sphere to test.</param>
         /// <param name="sphere2">The second sphere to test.</param>
@@ -431,7 +431,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="Ray" /> and a point.
+        /// Determines whether there is an intersection between a <see cref="Ray" /> and a point.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="point">The point to test.</param>
@@ -461,24 +461,24 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="Ray" />.
+        /// Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="Ray" />.
         /// </summary>
         /// <param name="ray1">The first ray to test.</param>
         /// <param name="ray2">The second ray to test.</param>
         /// <param name="point">
-        ///   When the method completes, contains the point of intersection,
-        ///   or <see cref="Vector3.Zero" /> if there was no intersection.
+        /// When the method completes, contains the point of intersection,
+        /// or <see cref="Vector3.Zero" /> if there was no intersection.
         /// </param>
         /// <returns>Whether the two objects intersect.</returns>
         /// <remarks>
-        ///   This method performs a ray vs ray intersection test based on the following formula
-        ///   from Goldman.
-        ///   <code>s = det([o_2 - o_1, d_2, d_1 x d_2]) / ||d_1 x d_2||^2</code>
-        ///   <code>t = det([o_2 - o_1, d_1, d_1 x d_2]) / ||d_1 x d_2||^2</code>
-        ///   Where o_1 is the position of the first ray, o_2 is the position of the second ray,
-        ///   d_1 is the normalized direction of the first ray, d_2 is the normalized direction
-        ///   of the second ray, det denotes the determinant of a matrix, x denotes the cross
-        ///   product, [ ] denotes a matrix, and || || denotes the length or magnitude of a vector.
+        /// This method performs a ray vs ray intersection test based on the following formula
+        /// from Goldman.
+        /// <code>s = det([o_2 - o_1, d_2, d_1 x d_2]) / ||d_1 x d_2||^2</code>
+        /// <code>t = det([o_2 - o_1, d_1, d_1 x d_2]) / ||d_1 x d_2||^2</code>
+        /// Where o_1 is the position of the first ray, o_2 is the position of the second ray,
+        /// d_1 is the normalized direction of the first ray, d_2 is the normalized direction
+        /// of the second ray, det denotes the determinant of a matrix, x denotes the cross
+        /// product, [ ] denotes a matrix, and || || denotes the length or magnitude of a vector.
         /// </remarks>
         public static bool RayIntersectsRay(ref Ray ray1, ref Ray ray2, out Vector3 point)
         {
@@ -558,13 +558,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="Plane" />.
+        /// Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="Plane" />.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="plane">The plane to test.</param>
         /// <param name="distance">
-        ///   When the method completes, contains the distance of the intersection,
-        ///   or 0 if there was no intersection.
+        /// When the method completes, contains the distance of the intersection,
+        /// or 0 if there was no intersection.
         /// </param>
         /// <returns>Whether the two objects intersect.</returns>
         public static bool RayIntersectsPlane(ref Ray ray, ref Plane plane, out float distance)
@@ -595,13 +595,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="Plane" />.
+        /// Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="Plane" />.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="plane">The plane to test</param>
         /// <param name="point">
-        ///   When the method completes, contains the point of intersection,
-        ///   or <see cref="Vector3.Zero" /> if there was no intersection.
+        /// When the method completes, contains the point of intersection,
+        /// or <see cref="Vector3.Zero" /> if there was no intersection.
         /// </param>
         /// <returns>Whether the two objects intersected.</returns>
         public static bool RayIntersectsPlane(ref Ray ray, ref Plane plane, out Vector3 point)
@@ -621,23 +621,23 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="Ray" /> and a triangle.
+        /// Determines whether there is an intersection between a <see cref="Ray" /> and a triangle.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
         /// <param name="vertex2">The second vertex of the triangle to test.</param>
         /// <param name="vertex3">The third vertex of the triangle to test.</param>
         /// <param name="distance">
-        ///   When the method completes, contains the distance of the intersection,
-        ///   or 0 if there was no intersection.
+        /// When the method completes, contains the distance of the intersection,
+        /// or 0 if there was no intersection.
         /// </param>
         /// <returns>Whether the two objects intersected.</returns>
         /// <remarks>
-        ///   This method tests if the ray intersects either the front or back of the triangle.
-        ///   If the ray is parallel to the triangle's plane, no intersection is assumed to have
-        ///   happened. If the intersection of the ray and the triangle is behind the origin of
-        ///   the ray, no intersection is assumed to have happened. In both cases of assumptions,
-        ///   this method returns false.
+        /// This method tests if the ray intersects either the front or back of the triangle.
+        /// If the ray is parallel to the triangle's plane, no intersection is assumed to have
+        /// happened. If the intersection of the ray and the triangle is behind the origin of
+        /// the ray, no intersection is assumed to have happened. In both cases of assumptions,
+        /// this method returns false.
         /// </remarks>
         public static bool RayIntersectsTriangle(ref Ray ray, ref Vector3 vertex1, ref Vector3 vertex2, ref Vector3 vertex3, out float distance)
         {
@@ -730,15 +730,15 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="Ray" /> and a triangle.
+        /// Determines whether there is an intersection between a <see cref="Ray" /> and a triangle.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
         /// <param name="vertex2">The second vertex of the triangle to test.</param>
         /// <param name="vertex3">The third vertex of the triangle to test.</param>
         /// <param name="point">
-        ///   When the method completes, contains the point of intersection,
-        ///   or <see cref="Vector3.Zero" /> if there was no intersection.
+        /// When the method completes, contains the point of intersection,
+        /// or <see cref="Vector3.Zero" /> if there was no intersection.
         /// </param>
         /// <returns>Whether the two objects intersected.</returns>
         public static bool RayIntersectsTriangle(ref Ray ray, ref Vector3 vertex1, ref Vector3 vertex2, ref Vector3 vertex3, out Vector3 point)
@@ -755,13 +755,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="BoundingBox" />.
+        /// Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="BoundingBox" />.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="box">The box to test.</param>
         /// <param name="distance">
-        ///   When the method completes, contains the distance of the intersection,
-        ///   or 0 if there was no intersection.
+        /// When the method completes, contains the distance of the intersection,
+        /// or 0 if there was no intersection.
         /// </param>
         /// <returns>Whether the two objects intersected.</returns>
         public static bool RayIntersectsBox(ref Ray ray, ref BoundingBox box, out float distance)
@@ -869,13 +869,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="Plane" />.
+        /// Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="Plane" />.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="box">The box to test.</param>
         /// <param name="point">
-        ///   When the method completes, contains the point of intersection,
-        ///   or <see cref="Vector3.Zero" /> if there was no intersection.
+        /// When the method completes, contains the point of intersection,
+        /// or <see cref="Vector3.Zero" /> if there was no intersection.
         /// </param>
         /// <returns>Whether the two objects intersected.</returns>
         public static bool RayIntersectsBox(ref Ray ray, ref BoundingBox box, out Vector3 point)
@@ -892,13 +892,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="BoundingSphere" />.
+        /// Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="BoundingSphere" />.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="sphere">The sphere to test.</param>
         /// <param name="distance">
-        ///   When the method completes, contains the distance of the intersection,
-        ///   or 0 if there was no intersection.
+        /// When the method completes, contains the distance of the intersection,
+        /// or 0 if there was no intersection.
         /// </param>
         /// <returns>Whether the two objects intersected.</returns>
         public static bool RayIntersectsSphere(ref Ray ray, ref BoundingSphere sphere, out float distance)
@@ -935,13 +935,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="BoundingSphere" />.
+        /// Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="BoundingSphere" />.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="sphere">The sphere to test.</param>
         /// <param name="point">
-        ///   When the method completes, contains the point of intersection,
-        ///   or <see cref="Vector3.Zero" /> if there was no intersection.
+        /// When the method completes, contains the point of intersection,
+        /// or <see cref="Vector3.Zero" /> if there was no intersection.
         /// </param>
         /// <returns>Whether the two objects intersected.</returns>
         public static bool RayIntersectsSphere(ref Ray ray, ref BoundingSphere sphere, out Vector3 point)
@@ -958,7 +958,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="Plane" /> and a point.
+        /// Determines whether there is an intersection between a <see cref="Plane" /> and a point.
         /// </summary>
         /// <param name="plane">The plane to test.</param>
         /// <param name="point">The point to test.</param>
@@ -979,7 +979,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="Plane" /> and a <see cref="Plane" />.
+        /// Determines whether there is an intersection between a <see cref="Plane" /> and a <see cref="Plane" />.
         /// </summary>
         /// <param name="plane1">The first plane to test.</param>
         /// <param name="plane2">The second plane to test.</param>
@@ -1001,19 +1001,19 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="Plane" /> and a <see cref="Plane" />.
+        /// Determines whether there is an intersection between a <see cref="Plane" /> and a <see cref="Plane" />.
         /// </summary>
         /// <param name="plane1">The first plane to test.</param>
         /// <param name="plane2">The second plane to test.</param>
         /// <param name="line">
-        ///   When the method completes, contains the line of intersection
-        ///   as a <see cref="Ray" />, or a zero ray if there was no intersection.
+        /// When the method completes, contains the line of intersection
+        /// as a <see cref="Ray" />, or a zero ray if there was no intersection.
         /// </param>
         /// <returns>Whether the two objects intersected.</returns>
         /// <remarks>
-        ///   Although a ray is set to have an origin, the ray returned by this method is really
-        ///   a line in three dimensions which has no real origin. The ray is considered valid when
-        ///   both the positive direction is used and when the negative direction is used.
+        /// Although a ray is set to have an origin, the ray returned by this method is really
+        /// a line in three dimensions which has no real origin. The ray is considered valid when
+        /// both the positive direction is used and when the negative direction is used.
         /// </remarks>
         public static bool PlaneIntersectsPlane(ref Plane plane1, ref Plane plane2, out Ray line)
         {
@@ -1049,7 +1049,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="Plane" /> and a triangle.
+        /// Determines whether there is an intersection between a <see cref="Plane" /> and a triangle.
         /// </summary>
         /// <param name="plane">The plane to test.</param>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
@@ -1075,7 +1075,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="Plane" /> and a <see cref="BoundingBox" />.
+        /// Determines whether there is an intersection between a <see cref="Plane" /> and a <see cref="BoundingBox" />.
         /// </summary>
         /// <param name="plane">The plane to test.</param>
         /// <param name="box">The box to test.</param>
@@ -1110,7 +1110,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="Plane" /> and a <see cref="BoundingSphere" />.
+        /// Determines whether there is an intersection between a <see cref="Plane" /> and a <see cref="BoundingSphere" />.
         /// </summary>
         /// <param name="plane">The plane to test.</param>
         /// <param name="sphere">The sphere to test.</param>
@@ -1158,7 +1158,7 @@ namespace CelelejEngine
         */
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="BoundingBox" /> and a <see cref="BoundingBox" />.
+        /// Determines whether there is an intersection between a <see cref="BoundingBox" /> and a <see cref="BoundingBox" />.
         /// </summary>
         /// <param name="box1">The first box to test.</param>
         /// <param name="box2">The second box to test.</param>
@@ -1178,7 +1178,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="BoundingBox" /> and a <see cref="BoundingSphere" />.
+        /// Determines whether there is an intersection between a <see cref="BoundingBox" /> and a <see cref="BoundingSphere" />.
         /// </summary>
         /// <param name="box">The box to test.</param>
         /// <param name="sphere">The sphere to test.</param>
@@ -1196,7 +1196,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="BoundingSphere" /> and a triangle.
+        /// Determines whether there is an intersection between a <see cref="BoundingSphere" /> and a triangle.
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
@@ -1219,8 +1219,8 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether there is an intersection between a <see cref="BoundingSphere" /> and a
-        ///   <see cref="BoundingSphere" />.
+        /// Determines whether there is an intersection between a <see cref="BoundingSphere" /> and a
+        /// <see cref="BoundingSphere" />.
         /// </summary>
         /// <param name="sphere1">First sphere to test.</param>
         /// <param name="sphere2">Second sphere to test.</param>
@@ -1232,7 +1232,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether a <see cref="BoundingBox" /> contains a point.
+        /// Determines whether a <see cref="BoundingBox" /> contains a point.
         /// </summary>
         /// <param name="box">The box to test.</param>
         /// <param name="point">The point to test.</param>
@@ -1273,7 +1273,7 @@ namespace CelelejEngine
         */
 
         /// <summary>
-        ///   Determines whether a <see cref="BoundingBox" /> contains a <see cref="BoundingBox" />.
+        /// Determines whether a <see cref="BoundingBox" /> contains a <see cref="BoundingBox" />.
         /// </summary>
         /// <param name="box1">The first box to test.</param>
         /// <param name="box2">The second box to test.</param>
@@ -1296,7 +1296,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether a <see cref="BoundingBox" /> contains a <see cref="BoundingSphere" />.
+        /// Determines whether a <see cref="BoundingBox" /> contains a <see cref="BoundingSphere" />.
         /// </summary>
         /// <param name="box">The box to test.</param>
         /// <param name="sphere">The sphere to test.</param>
@@ -1317,7 +1317,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether a <see cref="BoundingSphere" /> contains a point.
+        /// Determines whether a <see cref="BoundingSphere" /> contains a point.
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
         /// <param name="point">The point to test.</param>
@@ -1331,7 +1331,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether a <see cref="BoundingSphere" /> contains a triangle.
+        /// Determines whether a <see cref="BoundingSphere" /> contains a triangle.
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
@@ -1357,7 +1357,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether a <see cref="BoundingSphere" /> contains a <see cref="BoundingBox" />.
+        /// Determines whether a <see cref="BoundingSphere" /> contains a <see cref="BoundingBox" />.
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
         /// <param name="box">The box to test.</param>
@@ -1430,7 +1430,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether a <see cref="BoundingSphere" /> contains a <see cref="BoundingSphere" />.
+        /// Determines whether a <see cref="BoundingSphere" /> contains a <see cref="BoundingSphere" />.
         /// </summary>
         /// <param name="sphere1">The first sphere to test.</param>
         /// <param name="sphere2">The second sphere to test.</param>

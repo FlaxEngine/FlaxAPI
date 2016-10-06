@@ -57,109 +57,109 @@ using System.Runtime.InteropServices;
 namespace CelelejEngine
 {
     /// <summary>
-    ///   Represents a 4x4 mathematical matrix.
+    /// Represents a 4x4 mathematical matrix.
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Matrix : IEquatable<Matrix>, IFormattable
     {
         /// <summary>
-        ///   The size of the <see cref="Matrix" /> type, in bytes.
+        /// The size of the <see cref="Matrix" /> type, in bytes.
         /// </summary>
         public static readonly int SizeInBytes = 4 * 4 * sizeof(float);
 
         /// <summary>
-        ///   A <see cref="Matrix" /> with all of its components set to zero.
+        /// A <see cref="Matrix" /> with all of its components set to zero.
         /// </summary>
         public static readonly Matrix Zero;
 
         /// <summary>
-        ///   The identity <see cref="Matrix" />.
+        /// The identity <see cref="Matrix" />.
         /// </summary>
         public static readonly Matrix Identity = new Matrix {M11 = 1.0f, M22 = 1.0f, M33 = 1.0f, M44 = 1.0f};
 
         /// <summary>
-        ///   Value at row 1 column 1 of the matrix.
+        /// Value at row 1 column 1 of the matrix.
         /// </summary>
         public float M11;
 
         /// <summary>
-        ///   Value at row 1 column 2 of the matrix.
+        /// Value at row 1 column 2 of the matrix.
         /// </summary>
         public float M12;
 
         /// <summary>
-        ///   Value at row 1 column 3 of the matrix.
+        /// Value at row 1 column 3 of the matrix.
         /// </summary>
         public float M13;
 
         /// <summary>
-        ///   Value at row 1 column 4 of the matrix.
+        /// Value at row 1 column 4 of the matrix.
         /// </summary>
         public float M14;
 
         /// <summary>
-        ///   Value at row 2 column 1 of the matrix.
+        /// Value at row 2 column 1 of the matrix.
         /// </summary>
         public float M21;
 
         /// <summary>
-        ///   Value at row 2 column 2 of the matrix.
+        /// Value at row 2 column 2 of the matrix.
         /// </summary>
         public float M22;
 
         /// <summary>
-        ///   Value at row 2 column 3 of the matrix.
+        /// Value at row 2 column 3 of the matrix.
         /// </summary>
         public float M23;
 
         /// <summary>
-        ///   Value at row 2 column 4 of the matrix.
+        /// Value at row 2 column 4 of the matrix.
         /// </summary>
         public float M24;
 
         /// <summary>
-        ///   Value at row 3 column 1 of the matrix.
+        /// Value at row 3 column 1 of the matrix.
         /// </summary>
         public float M31;
 
         /// <summary>
-        ///   Value at row 3 column 2 of the matrix.
+        /// Value at row 3 column 2 of the matrix.
         /// </summary>
         public float M32;
 
         /// <summary>
-        ///   Value at row 3 column 3 of the matrix.
+        /// Value at row 3 column 3 of the matrix.
         /// </summary>
         public float M33;
 
         /// <summary>
-        ///   Value at row 3 column 4 of the matrix.
+        /// Value at row 3 column 4 of the matrix.
         /// </summary>
         public float M34;
 
         /// <summary>
-        ///   Value at row 4 column 1 of the matrix.
+        /// Value at row 4 column 1 of the matrix.
         /// </summary>
         public float M41;
 
         /// <summary>
-        ///   Value at row 4 column 2 of the matrix.
+        /// Value at row 4 column 2 of the matrix.
         /// </summary>
         public float M42;
 
         /// <summary>
-        ///   Value at row 4 column 3 of the matrix.
+        /// Value at row 4 column 3 of the matrix.
         /// </summary>
         public float M43;
 
         /// <summary>
-        ///   Value at row 4 column 4 of the matrix.
+        /// Value at row 4 column 4 of the matrix.
         /// </summary>
         public float M44;
 
         /// <summary>
-        ///   Gets or sets the up <see cref="Vector3" /> of the matrix; that is M21, M22, and M23.
+        /// Gets or sets the up <see cref="Vector3" /> of the matrix; that is M21, M22, and M23.
         /// </summary>
         public Vector3 Up
         {
@@ -180,7 +180,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the down <see cref="Vector3" /> of the matrix; that is -M21, -M22, and -M23.
+        /// Gets or sets the down <see cref="Vector3" /> of the matrix; that is -M21, -M22, and -M23.
         /// </summary>
         public Vector3 Down
         {
@@ -201,7 +201,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the right <see cref="Vector3" /> of the matrix; that is M11, M12, and M13.
+        /// Gets or sets the right <see cref="Vector3" /> of the matrix; that is M11, M12, and M13.
         /// </summary>
         public Vector3 Right
         {
@@ -222,7 +222,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the left <see cref="Vector3" /> of the matrix; that is -M11, -M12, and -M13.
+        /// Gets or sets the left <see cref="Vector3" /> of the matrix; that is -M11, -M12, and -M13.
         /// </summary>
         public Vector3 Left
         {
@@ -243,7 +243,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the forward <see cref="Vector3" /> of the matrix; that is -M31, -M32, and -M33.
+        /// Gets or sets the forward <see cref="Vector3" /> of the matrix; that is -M31, -M32, and -M33.
         /// </summary>
         public Vector3 Forward
         {
@@ -264,7 +264,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the backward <see cref="Vector3" /> of the matrix; that is M31, M32, and M33.
+        /// Gets or sets the backward <see cref="Vector3" /> of the matrix; that is M31, M32, and M33.
         /// </summary>
         public Vector3 Backward
         {
@@ -285,7 +285,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Matrix" /> struct.
+        /// Initializes a new instance of the <see cref="Matrix" /> struct.
         /// </summary>
         /// <param name="value">The value that will be assigned to all components.</param>
         public Matrix(float value)
@@ -297,7 +297,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Matrix" /> struct.
+        /// Initializes a new instance of the <see cref="Matrix" /> struct.
         /// </summary>
         /// <param name="M11">The value to assign at row 1 column 1 of the matrix.</param>
         /// <param name="M12">The value to assign at row 1 column 2 of the matrix.</param>
@@ -339,13 +339,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Matrix" /> struct.
+        /// Initializes a new instance of the <see cref="Matrix" /> struct.
         /// </summary>
         /// <param name="values">The values to assign to the components of the matrix. This must be an array with sixteen elements.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="values" /> is <c>null</c>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   Thrown when <paramref name="values" /> contains more or less than sixteen
-        ///   elements.
+        /// Thrown when <paramref name="values" /> contains more or less than sixteen
+        /// elements.
         /// </exception>
         public Matrix(float[] values)
         {
@@ -376,7 +376,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the first row in the matrix; that is M11, M12, M13, and M14.
+        /// Gets or sets the first row in the matrix; that is M11, M12, M13, and M14.
         /// </summary>
         public Vector4 Row1
         {
@@ -391,7 +391,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the second row in the matrix; that is M21, M22, M23, and M24.
+        /// Gets or sets the second row in the matrix; that is M21, M22, M23, and M24.
         /// </summary>
         public Vector4 Row2
         {
@@ -406,7 +406,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the third row in the matrix; that is M31, M32, M33, and M34.
+        /// Gets or sets the third row in the matrix; that is M31, M32, M33, and M34.
         /// </summary>
         public Vector4 Row3
         {
@@ -421,7 +421,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the fourth row in the matrix; that is M41, M42, M43, and M44.
+        /// Gets or sets the fourth row in the matrix; that is M41, M42, M43, and M44.
         /// </summary>
         public Vector4 Row4
         {
@@ -436,7 +436,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the first column in the matrix; that is M11, M21, M31, and M41.
+        /// Gets or sets the first column in the matrix; that is M11, M21, M31, and M41.
         /// </summary>
         public Vector4 Column1
         {
@@ -451,7 +451,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the second column in the matrix; that is M12, M22, M32, and M42.
+        /// Gets or sets the second column in the matrix; that is M12, M22, M32, and M42.
         /// </summary>
         public Vector4 Column2
         {
@@ -466,7 +466,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the third column in the matrix; that is M13, M23, M33, and M43.
+        /// Gets or sets the third column in the matrix; that is M13, M23, M33, and M43.
         /// </summary>
         public Vector4 Column3
         {
@@ -481,7 +481,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the fourth column in the matrix; that is M14, M24, M34, and M44.
+        /// Gets or sets the fourth column in the matrix; that is M14, M24, M34, and M44.
         /// </summary>
         public Vector4 Column4
         {
@@ -496,7 +496,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the translation of the matrix; that is M41, M42, and M43.
+        /// Gets or sets the translation of the matrix; that is M41, M42, and M43.
         /// </summary>
         public Vector3 TranslationVector
         {
@@ -510,7 +510,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the scale of the matrix; that is M11, M22, and M33.
+        /// Gets or sets the scale of the matrix; that is M11, M22, and M33.
         /// </summary>
         public Vector3 ScaleVector
         {
@@ -524,10 +524,10 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets a value indicating whether this instance is an identity matrix.
+        /// Gets a value indicating whether this instance is an identity matrix.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this instance is an identity matrix; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance is an identity matrix; otherwise, <c>false</c>.
         /// </value>
         public bool IsIdentity
         {
@@ -535,14 +535,14 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the component at the specified index.
+        /// Gets or sets the component at the specified index.
         /// </summary>
         /// <value>The value of the matrix component, depending on the index.</value>
         /// <param name="index">The zero-based index of the component to access.</param>
         /// <returns>The value of the component at the specified index.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">
-        ///   Thrown when the <paramref name="index" /> is out of the range [0,
-        ///   15].
+        /// Thrown when the <paramref name="index" /> is out of the range [0,
+        /// 15].
         /// </exception>
         public float this[int index]
         {
@@ -646,15 +646,15 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the component at the specified index.
+        /// Gets or sets the component at the specified index.
         /// </summary>
         /// <value>The value of the matrix component, depending on the index.</value>
         /// <param name="row">The row of the matrix to access.</param>
         /// <param name="column">The column of the matrix to access.</param>
         /// <returns>The value of the component at the specified index.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">
-        ///   Thrown when the <paramref name="row" /> or
-        ///   <paramref name="column" />is out of the range [0, 3].
+        /// Thrown when the <paramref name="row" /> or
+        /// <paramref name="column" />is out of the range [0, 3].
         /// </exception>
         public float this[int row, int column]
         {
@@ -680,7 +680,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the determinant of the matrix.
+        /// Calculates the determinant of the matrix.
         /// </summary>
         /// <returns>The determinant of the matrix.</returns>
         public float Determinant()
@@ -698,7 +698,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Inverts the matrix.
+        /// Inverts the matrix.
         /// </summary>
         public void Invert()
         {
@@ -706,7 +706,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Transposes the matrix.
+        /// Transposes the matrix.
         /// </summary>
         public void Transpose()
         {
@@ -714,24 +714,24 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Orthogonalizes the specified matrix.
+        /// Orthogonalizes the specified matrix.
         /// </summary>
         /// <remarks>
-        ///   <para>
-        ///     Orthogonalization is the process of making all rows orthogonal to each other. This
-        ///     means that any given row in the matrix will be orthogonal to any other given row in the
-        ///     matrix.
-        ///   </para>
-        ///   <para>
-        ///     Because this method uses the modified Gram-Schmidt process, the resulting matrix
-        ///     tends to be numerically unstable. The numeric stability decreases according to the rows
-        ///     so that the first row is the most stable and the last row is the least stable.
-        ///   </para>
-        ///   <para>
-        ///     This operation is performed on the rows of the matrix rather than the columns.
-        ///     If you wish for this operation to be performed on the columns, first transpose the
-        ///     input and than transpose the output.
-        ///   </para>
+        /// <para>
+        ///   Orthogonalization is the process of making all rows orthogonal to each other. This
+        ///   means that any given row in the matrix will be orthogonal to any other given row in the
+        ///   matrix.
+        /// </para>
+        /// <para>
+        ///   Because this method uses the modified Gram-Schmidt process, the resulting matrix
+        ///   tends to be numerically unstable. The numeric stability decreases according to the rows
+        ///   so that the first row is the most stable and the last row is the least stable.
+        /// </para>
+        /// <para>
+        ///   This operation is performed on the rows of the matrix rather than the columns.
+        ///   If you wish for this operation to be performed on the columns, first transpose the
+        ///   input and than transpose the output.
+        /// </para>
         /// </remarks>
         public void Orthogonalize()
         {
@@ -739,26 +739,26 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Orthonormalizes the specified matrix.
+        /// Orthonormalizes the specified matrix.
         /// </summary>
         /// <remarks>
-        ///   <para>
-        ///     Orthonormalization is the process of making all rows and columns orthogonal to each
-        ///     other and making all rows and columns of unit length. This means that any given row will
-        ///     be orthogonal to any other given row and any given column will be orthogonal to any other
-        ///     given column. Any given row will not be orthogonal to any given column. Every row and every
-        ///     column will be of unit length.
-        ///   </para>
-        ///   <para>
-        ///     Because this method uses the modified Gram-Schmidt process, the resulting matrix
-        ///     tends to be numerically unstable. The numeric stability decreases according to the rows
-        ///     so that the first row is the most stable and the last row is the least stable.
-        ///   </para>
-        ///   <para>
-        ///     This operation is performed on the rows of the matrix rather than the columns.
-        ///     If you wish for this operation to be performed on the columns, first transpose the
-        ///     input and than transpose the output.
-        ///   </para>
+        /// <para>
+        ///   Orthonormalization is the process of making all rows and columns orthogonal to each
+        ///   other and making all rows and columns of unit length. This means that any given row will
+        ///   be orthogonal to any other given row and any given column will be orthogonal to any other
+        ///   given column. Any given row will not be orthogonal to any given column. Every row and every
+        ///   column will be of unit length.
+        /// </para>
+        /// <para>
+        ///   Because this method uses the modified Gram-Schmidt process, the resulting matrix
+        ///   tends to be numerically unstable. The numeric stability decreases according to the rows
+        ///   so that the first row is the most stable and the last row is the least stable.
+        /// </para>
+        /// <para>
+        ///   This operation is performed on the rows of the matrix rather than the columns.
+        ///   If you wish for this operation to be performed on the columns, first transpose the
+        ///   input and than transpose the output.
+        /// </para>
         /// </remarks>
         public void Orthonormalize()
         {
@@ -766,7 +766,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Decomposes a matrix into an orthonormalized matrix Q and a right triangular matrix R.
+        /// Decomposes a matrix into an orthonormalized matrix Q and a right triangular matrix R.
         /// </summary>
         /// <param name="Q">When the method completes, contains the orthonormalized matrix of the decomposition.</param>
         /// <param name="R">When the method completes, contains the right triangular matrix of the decomposition.</param>
@@ -794,7 +794,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Decomposes a matrix into a lower triangular matrix L and an orthonormalized matrix Q.
+        /// Decomposes a matrix into a lower triangular matrix L and an orthonormalized matrix Q.
         /// </summary>
         /// <param name="L">When the method completes, contains the lower triangular matrix of the decomposition.</param>
         /// <param name="Q">When the method completes, contains the orthonormalized matrix of the decomposition.</param>
@@ -819,13 +819,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Decomposes a matrix into a scale, rotation, and translation.
+        /// Decomposes a matrix into a scale, rotation, and translation.
         /// </summary>
         /// <param name="scale">When the method completes, contains the scaling component of the decomposed matrix.</param>
         /// <param name="rotation">When the method completes, contains the rotation component of the decomposed matrix.</param>
         /// <param name="translation">When the method completes, contains the translation component of the decomposed matrix.</param>
         /// <remarks>
-        ///   This method is designed to decompose an SRT transformation matrix only.
+        /// This method is designed to decompose an SRT transformation matrix only.
         /// </remarks>
         public bool Decompose(out Vector3 scale, out Quaternion rotation, out Vector3 translation)
         {
@@ -872,14 +872,14 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Decomposes a uniform scale matrix into a scale, rotation, and translation.
-        ///   A uniform scale matrix has the same scale in every axis.
+        /// Decomposes a uniform scale matrix into a scale, rotation, and translation.
+        /// A uniform scale matrix has the same scale in every axis.
         /// </summary>
         /// <param name="scale">When the method completes, contains the scaling component of the decomposed matrix.</param>
         /// <param name="rotation">When the method completes, contains the rotation component of the decomposed matrix.</param>
         /// <param name="translation">When the method completes, contains the translation component of the decomposed matrix.</param>
         /// <remarks>
-        ///   This method is designed to decompose only an SRT transformation matrix that has the same scale in every axis.
+        /// This method is designed to decompose only an SRT transformation matrix that has the same scale in every axis.
         /// </remarks>
         public bool DecomposeUniformScale(out float scale, out Quaternion rotation, out Vector3 translation)
         {
@@ -920,7 +920,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Exchanges two rows in the matrix.
+        /// Exchanges two rows in the matrix.
         /// </summary>
         /// <param name="firstRow">The first row to exchange. This is an index of the row starting at zero.</param>
         /// <param name="secondRow">The second row to exchange. This is an index of the row starting at zero.</param>
@@ -955,7 +955,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Exchanges two columns in the matrix.
+        /// Exchanges two columns in the matrix.
         /// </summary>
         /// <param name="firstColumn">The first column to exchange. This is an index of the column starting at zero.</param>
         /// <param name="secondColumn">The second column to exchange. This is an index of the column starting at zero.</param>
@@ -990,7 +990,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates an array containing the elements of the matrix.
+        /// Creates an array containing the elements of the matrix.
         /// </summary>
         /// <returns>A sixteen-element array containing the components of the matrix.</returns>
         public float[] ToArray()
@@ -999,7 +999,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the sum of two matrices.
+        /// Determines the sum of two matrices.
         /// </summary>
         /// <param name="left">The first matrix to add.</param>
         /// <param name="right">The second matrix to add.</param>
@@ -1025,7 +1025,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the sum of two matrices.
+        /// Determines the sum of two matrices.
         /// </summary>
         /// <param name="left">The first matrix to add.</param>
         /// <param name="right">The second matrix to add.</param>
@@ -1038,7 +1038,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the difference between two matrices.
+        /// Determines the difference between two matrices.
         /// </summary>
         /// <param name="left">The first matrix to subtract.</param>
         /// <param name="right">The second matrix to subtract.</param>
@@ -1064,7 +1064,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the difference between two matrices.
+        /// Determines the difference between two matrices.
         /// </summary>
         /// <param name="left">The first matrix to subtract.</param>
         /// <param name="right">The second matrix to subtract.</param>
@@ -1077,7 +1077,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Scales a matrix by the given value.
+        /// Scales a matrix by the given value.
         /// </summary>
         /// <param name="left">The matrix to scale.</param>
         /// <param name="right">The amount by which to scale.</param>
@@ -1103,7 +1103,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Scales a matrix by the given value.
+        /// Scales a matrix by the given value.
         /// </summary>
         /// <param name="left">The matrix to scale.</param>
         /// <param name="right">The amount by which to scale.</param>
@@ -1116,7 +1116,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the product of two matrices.
+        /// Determines the product of two matrices.
         /// </summary>
         /// <param name="left">The first matrix to multiply.</param>
         /// <param name="right">The second matrix to multiply.</param>
@@ -1144,7 +1144,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the product of two matrices.
+        /// Determines the product of two matrices.
         /// </summary>
         /// <param name="left">The first matrix to multiply.</param>
         /// <param name="right">The second matrix to multiply.</param>
@@ -1157,7 +1157,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Scales a matrix by the given value.
+        /// Scales a matrix by the given value.
         /// </summary>
         /// <param name="left">The matrix to scale.</param>
         /// <param name="right">The amount by which to scale.</param>
@@ -1185,7 +1185,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Scales a matrix by the given value.
+        /// Scales a matrix by the given value.
         /// </summary>
         /// <param name="left">The matrix to scale.</param>
         /// <param name="right">The amount by which to scale.</param>
@@ -1198,7 +1198,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the quotient of two matrices.
+        /// Determines the quotient of two matrices.
         /// </summary>
         /// <param name="left">The first matrix to divide.</param>
         /// <param name="right">The second matrix to divide.</param>
@@ -1224,7 +1224,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines the quotient of two matrices.
+        /// Determines the quotient of two matrices.
         /// </summary>
         /// <param name="left">The first matrix to divide.</param>
         /// <param name="right">The second matrix to divide.</param>
@@ -1237,7 +1237,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Performs the exponential operation on a matrix.
+        /// Performs the exponential operation on a matrix.
         /// </summary>
         /// <param name="value">The matrix to perform the operation on.</param>
         /// <param name="exponent">The exponent to raise the matrix to.</param>
@@ -1283,7 +1283,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Performs the exponential operation on a matrix.
+        /// Performs the exponential operation on a matrix.
         /// </summary>
         /// <param name="value">The matrix to perform the operation on.</param>
         /// <param name="exponent">The exponent to raise the matrix to.</param>
@@ -1297,7 +1297,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Negates a matrix.
+        /// Negates a matrix.
         /// </summary>
         /// <param name="value">The matrix to be negated.</param>
         /// <param name="result">When the method completes, contains the negated matrix.</param>
@@ -1322,7 +1322,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Negates a matrix.
+        /// Negates a matrix.
         /// </summary>
         /// <param name="value">The matrix to be negated.</param>
         /// <returns>The negated matrix.</returns>
@@ -1334,15 +1334,15 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Performs a linear interpolation between two matrices.
+        /// Performs a linear interpolation between two matrices.
         /// </summary>
         /// <param name="start">Start matrix.</param>
         /// <param name="end">End matrix.</param>
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end" />.</param>
         /// <param name="result">When the method completes, contains the linear interpolation of the two matrices.</param>
         /// <remarks>
-        ///   Passing <paramref name="amount" /> a value of 0 will cause <paramref name="start" /> to be returned; a value of 1
-        ///   will cause <paramref name="end" /> to be returned.
+        /// Passing <paramref name="amount" /> a value of 0 will cause <paramref name="start" /> to be returned; a value of 1
+        /// will cause <paramref name="end" /> to be returned.
         /// </remarks>
         public static void Lerp(ref Matrix start, ref Matrix end, float amount, out Matrix result)
         {
@@ -1365,15 +1365,15 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Performs a linear interpolation between two matrices.
+        /// Performs a linear interpolation between two matrices.
         /// </summary>
         /// <param name="start">Start matrix.</param>
         /// <param name="end">End matrix.</param>
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end" />.</param>
         /// <returns>The linear interpolation of the two matrices.</returns>
         /// <remarks>
-        ///   Passing <paramref name="amount" /> a value of 0 will cause <paramref name="start" /> to be returned; a value of 1
-        ///   will cause <paramref name="end" /> to be returned.
+        /// Passing <paramref name="amount" /> a value of 0 will cause <paramref name="start" /> to be returned; a value of 1
+        /// will cause <paramref name="end" /> to be returned.
         /// </remarks>
         public static Matrix Lerp(Matrix start, Matrix end, float amount)
         {
@@ -1383,7 +1383,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Performs a cubic interpolation between two matrices.
+        /// Performs a cubic interpolation between two matrices.
         /// </summary>
         /// <param name="start">Start matrix.</param>
         /// <param name="end">End matrix.</param>
@@ -1396,7 +1396,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Performs a cubic interpolation between two matrices.
+        /// Performs a cubic interpolation between two matrices.
         /// </summary>
         /// <param name="start">Start matrix.</param>
         /// <param name="end">End matrix.</param>
@@ -1410,7 +1410,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the transpose of the specified matrix.
+        /// Calculates the transpose of the specified matrix.
         /// </summary>
         /// <param name="value">The matrix whose transpose is to be calculated.</param>
         /// <param name="result">When the method completes, contains the transpose of the specified matrix.</param>
@@ -1438,7 +1438,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the transpose of the specified matrix.
+        /// Calculates the transpose of the specified matrix.
         /// </summary>
         /// <param name="value">The matrix whose transpose is to be calculated.</param>
         /// <param name="result">When the method completes, contains the transpose of the specified matrix.</param>
@@ -1463,7 +1463,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the transpose of the specified matrix.
+        /// Calculates the transpose of the specified matrix.
         /// </summary>
         /// <param name="value">The matrix whose transpose is to be calculated.</param>
         /// <returns>The transpose of the specified matrix.</returns>
@@ -1475,7 +1475,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the inverse of the specified matrix.
+        /// Calculates the inverse of the specified matrix.
         /// </summary>
         /// <param name="value">The matrix whose inverse is to be calculated.</param>
         /// <param name="result">When the method completes, contains the inverse of the specified matrix.</param>
@@ -1543,7 +1543,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the inverse of the specified matrix.
+        /// Calculates the inverse of the specified matrix.
         /// </summary>
         /// <param name="value">The matrix whose inverse is to be calculated.</param>
         /// <returns>The inverse of the specified matrix.</returns>
@@ -1554,26 +1554,26 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Orthogonalizes the specified matrix.
+        /// Orthogonalizes the specified matrix.
         /// </summary>
         /// <param name="value">The matrix to orthogonalize.</param>
         /// <param name="result">When the method completes, contains the orthogonalized matrix.</param>
         /// <remarks>
-        ///   <para>
-        ///     Orthogonalization is the process of making all rows orthogonal to each other. This
-        ///     means that any given row in the matrix will be orthogonal to any other given row in the
-        ///     matrix.
-        ///   </para>
-        ///   <para>
-        ///     Because this method uses the modified Gram-Schmidt process, the resulting matrix
-        ///     tends to be numerically unstable. The numeric stability decreases according to the rows
-        ///     so that the first row is the most stable and the last row is the least stable.
-        ///   </para>
-        ///   <para>
-        ///     This operation is performed on the rows of the matrix rather than the columns.
-        ///     If you wish for this operation to be performed on the columns, first transpose the
-        ///     input and than transpose the output.
-        ///   </para>
+        /// <para>
+        ///   Orthogonalization is the process of making all rows orthogonal to each other. This
+        ///   means that any given row in the matrix will be orthogonal to any other given row in the
+        ///   matrix.
+        /// </para>
+        /// <para>
+        ///   Because this method uses the modified Gram-Schmidt process, the resulting matrix
+        ///   tends to be numerically unstable. The numeric stability decreases according to the rows
+        ///   so that the first row is the most stable and the last row is the least stable.
+        /// </para>
+        /// <para>
+        ///   This operation is performed on the rows of the matrix rather than the columns.
+        ///   If you wish for this operation to be performed on the columns, first transpose the
+        ///   input and than transpose the output.
+        /// </para>
         /// </remarks>
         public static void Orthogonalize(ref Matrix value, out Matrix result)
         {
@@ -1597,26 +1597,26 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Orthogonalizes the specified matrix.
+        /// Orthogonalizes the specified matrix.
         /// </summary>
         /// <param name="value">The matrix to orthogonalize.</param>
         /// <returns>The orthogonalized matrix.</returns>
         /// <remarks>
-        ///   <para>
-        ///     Orthogonalization is the process of making all rows orthogonal to each other. This
-        ///     means that any given row in the matrix will be orthogonal to any other given row in the
-        ///     matrix.
-        ///   </para>
-        ///   <para>
-        ///     Because this method uses the modified Gram-Schmidt process, the resulting matrix
-        ///     tends to be numerically unstable. The numeric stability decreases according to the rows
-        ///     so that the first row is the most stable and the last row is the least stable.
-        ///   </para>
-        ///   <para>
-        ///     This operation is performed on the rows of the matrix rather than the columns.
-        ///     If you wish for this operation to be performed on the columns, first transpose the
-        ///     input and than transpose the output.
-        ///   </para>
+        /// <para>
+        ///   Orthogonalization is the process of making all rows orthogonal to each other. This
+        ///   means that any given row in the matrix will be orthogonal to any other given row in the
+        ///   matrix.
+        /// </para>
+        /// <para>
+        ///   Because this method uses the modified Gram-Schmidt process, the resulting matrix
+        ///   tends to be numerically unstable. The numeric stability decreases according to the rows
+        ///   so that the first row is the most stable and the last row is the least stable.
+        /// </para>
+        /// <para>
+        ///   This operation is performed on the rows of the matrix rather than the columns.
+        ///   If you wish for this operation to be performed on the columns, first transpose the
+        ///   input and than transpose the output.
+        /// </para>
         /// </remarks>
         public static Matrix Orthogonalize(Matrix value)
         {
@@ -1626,28 +1626,28 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Orthonormalizes the specified matrix.
+        /// Orthonormalizes the specified matrix.
         /// </summary>
         /// <param name="value">The matrix to orthonormalize.</param>
         /// <param name="result">When the method completes, contains the orthonormalized matrix.</param>
         /// <remarks>
-        ///   <para>
-        ///     Orthonormalization is the process of making all rows and columns orthogonal to each
-        ///     other and making all rows and columns of unit length. This means that any given row will
-        ///     be orthogonal to any other given row and any given column will be orthogonal to any other
-        ///     given column. Any given row will not be orthogonal to any given column. Every row and every
-        ///     column will be of unit length.
-        ///   </para>
-        ///   <para>
-        ///     Because this method uses the modified Gram-Schmidt process, the resulting matrix
-        ///     tends to be numerically unstable. The numeric stability decreases according to the rows
-        ///     so that the first row is the most stable and the last row is the least stable.
-        ///   </para>
-        ///   <para>
-        ///     This operation is performed on the rows of the matrix rather than the columns.
-        ///     If you wish for this operation to be performed on the columns, first transpose the
-        ///     input and than transpose the output.
-        ///   </para>
+        /// <para>
+        ///   Orthonormalization is the process of making all rows and columns orthogonal to each
+        ///   other and making all rows and columns of unit length. This means that any given row will
+        ///   be orthogonal to any other given row and any given column will be orthogonal to any other
+        ///   given column. Any given row will not be orthogonal to any given column. Every row and every
+        ///   column will be of unit length.
+        /// </para>
+        /// <para>
+        ///   Because this method uses the modified Gram-Schmidt process, the resulting matrix
+        ///   tends to be numerically unstable. The numeric stability decreases according to the rows
+        ///   so that the first row is the most stable and the last row is the least stable.
+        /// </para>
+        /// <para>
+        ///   This operation is performed on the rows of the matrix rather than the columns.
+        ///   If you wish for this operation to be performed on the columns, first transpose the
+        ///   input and than transpose the output.
+        /// </para>
         /// </remarks>
         public static void Orthonormalize(ref Matrix value, out Matrix result)
         {
@@ -1678,28 +1678,28 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Orthonormalizes the specified matrix.
+        /// Orthonormalizes the specified matrix.
         /// </summary>
         /// <param name="value">The matrix to orthonormalize.</param>
         /// <returns>The orthonormalized matrix.</returns>
         /// <remarks>
-        ///   <para>
-        ///     Orthonormalization is the process of making all rows and columns orthogonal to each
-        ///     other and making all rows and columns of unit length. This means that any given row will
-        ///     be orthogonal to any other given row and any given column will be orthogonal to any other
-        ///     given column. Any given row will not be orthogonal to any given column. Every row and every
-        ///     column will be of unit length.
-        ///   </para>
-        ///   <para>
-        ///     Because this method uses the modified Gram-Schmidt process, the resulting matrix
-        ///     tends to be numerically unstable. The numeric stability decreases according to the rows
-        ///     so that the first row is the most stable and the last row is the least stable.
-        ///   </para>
-        ///   <para>
-        ///     This operation is performed on the rows of the matrix rather than the columns.
-        ///     If you wish for this operation to be performed on the columns, first transpose the
-        ///     input and than transpose the output.
-        ///   </para>
+        /// <para>
+        ///   Orthonormalization is the process of making all rows and columns orthogonal to each
+        ///   other and making all rows and columns of unit length. This means that any given row will
+        ///   be orthogonal to any other given row and any given column will be orthogonal to any other
+        ///   given column. Any given row will not be orthogonal to any given column. Every row and every
+        ///   column will be of unit length.
+        /// </para>
+        /// <para>
+        ///   Because this method uses the modified Gram-Schmidt process, the resulting matrix
+        ///   tends to be numerically unstable. The numeric stability decreases according to the rows
+        ///   so that the first row is the most stable and the last row is the least stable.
+        /// </para>
+        /// <para>
+        ///   This operation is performed on the rows of the matrix rather than the columns.
+        ///   If you wish for this operation to be performed on the columns, first transpose the
+        ///   input and than transpose the output.
+        /// </para>
         /// </remarks>
         public static Matrix Orthonormalize(Matrix value)
         {
@@ -1709,15 +1709,15 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Brings the matrix into upper triangular form using elementary row operations.
+        /// Brings the matrix into upper triangular form using elementary row operations.
         /// </summary>
         /// <param name="value">The matrix to put into upper triangular form.</param>
         /// <param name="result">When the method completes, contains the upper triangular matrix.</param>
         /// <remarks>
-        ///   If the matrix is not invertible (i.e. its determinant is zero) than the result of this
-        ///   method may produce Single.Nan and Single.Inf values. When the matrix represents a system
-        ///   of linear equations, than this often means that either no solution exists or an infinite
-        ///   number of solutions exist.
+        /// If the matrix is not invertible (i.e. its determinant is zero) than the result of this
+        /// method may produce Single.Nan and Single.Inf values. When the matrix represents a system
+        /// of linear equations, than this often means that either no solution exists or an infinite
+        /// number of solutions exist.
         /// </remarks>
         public static void UpperTriangularForm(ref Matrix value, out Matrix result)
         {
@@ -1767,15 +1767,15 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Brings the matrix into upper triangular form using elementary row operations.
+        /// Brings the matrix into upper triangular form using elementary row operations.
         /// </summary>
         /// <param name="value">The matrix to put into upper triangular form.</param>
         /// <returns>The upper triangular matrix.</returns>
         /// <remarks>
-        ///   If the matrix is not invertible (i.e. its determinant is zero) than the result of this
-        ///   method may produce Single.Nan and Single.Inf values. When the matrix represents a system
-        ///   of linear equations, than this often means that either no solution exists or an infinite
-        ///   number of solutions exist.
+        /// If the matrix is not invertible (i.e. its determinant is zero) than the result of this
+        /// method may produce Single.Nan and Single.Inf values. When the matrix represents a system
+        /// of linear equations, than this often means that either no solution exists or an infinite
+        /// number of solutions exist.
         /// </remarks>
         public static Matrix UpperTriangularForm(Matrix value)
         {
@@ -1785,15 +1785,15 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Brings the matrix into lower triangular form using elementary row operations.
+        /// Brings the matrix into lower triangular form using elementary row operations.
         /// </summary>
         /// <param name="value">The matrix to put into lower triangular form.</param>
         /// <param name="result">When the method completes, contains the lower triangular matrix.</param>
         /// <remarks>
-        ///   If the matrix is not invertible (i.e. its determinant is zero) than the result of this
-        ///   method may produce Single.Nan and Single.Inf values. When the matrix represents a system
-        ///   of linear equations, than this often means that either no solution exists or an infinite
-        ///   number of solutions exist.
+        /// If the matrix is not invertible (i.e. its determinant is zero) than the result of this
+        /// method may produce Single.Nan and Single.Inf values. When the matrix represents a system
+        /// of linear equations, than this often means that either no solution exists or an infinite
+        /// number of solutions exist.
         /// </remarks>
         public static void LowerTriangularForm(ref Matrix value, out Matrix result)
         {
@@ -1847,15 +1847,15 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Brings the matrix into lower triangular form using elementary row operations.
+        /// Brings the matrix into lower triangular form using elementary row operations.
         /// </summary>
         /// <param name="value">The matrix to put into lower triangular form.</param>
         /// <returns>The lower triangular matrix.</returns>
         /// <remarks>
-        ///   If the matrix is not invertible (i.e. its determinant is zero) than the result of this
-        ///   method may produce Single.Nan and Single.Inf values. When the matrix represents a system
-        ///   of linear equations, than this often means that either no solution exists or an infinite
-        ///   number of solutions exist.
+        /// If the matrix is not invertible (i.e. its determinant is zero) than the result of this
+        /// method may produce Single.Nan and Single.Inf values. When the matrix represents a system
+        /// of linear equations, than this often means that either no solution exists or an infinite
+        /// number of solutions exist.
         /// </remarks>
         public static Matrix LowerTriangularForm(Matrix value)
         {
@@ -1865,7 +1865,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Brings the matrix into row echelon form using elementary row operations;
+        /// Brings the matrix into row echelon form using elementary row operations;
         /// </summary>
         /// <param name="value">The matrix to put into row echelon form.</param>
         /// <param name="result">When the method completes, contains the row echelon form of the matrix.</param>
@@ -1923,7 +1923,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Brings the matrix into row echelon form using elementary row operations;
+        /// Brings the matrix into row echelon form using elementary row operations;
         /// </summary>
         /// <param name="value">The matrix to put into row echelon form.</param>
         /// <returns>When the method completes, contains the row echelon form of the matrix.</returns>
@@ -1935,27 +1935,27 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Brings the matrix into reduced row echelon form using elementary row operations.
+        /// Brings the matrix into reduced row echelon form using elementary row operations.
         /// </summary>
         /// <param name="value">The matrix to put into reduced row echelon form.</param>
         /// <param name="augment">The fifth column of the matrix.</param>
         /// <param name="result">When the method completes, contains the resultant matrix after the operation.</param>
         /// <param name="augmentResult">When the method completes, contains the resultant fifth column of the matrix.</param>
         /// <remarks>
-        ///   <para>
-        ///     The fifth column is often called the augmented part of the matrix. This is because the fifth
-        ///     column is really just an extension of the matrix so that there is a place to put all of the
-        ///     non-zero components after the operation is complete.
-        ///   </para>
-        ///   <para>
-        ///     Often times the resultant matrix will the identity matrix or a matrix similar to the identity
-        ///     matrix. Sometimes, however, that is not possible and numbers other than zero and one may appear.
-        ///   </para>
-        ///   <para>
-        ///     This method can be used to solve systems of linear equations. Upon completion of this method,
-        ///     the <paramref name="augmentResult" /> will contain the solution for the system. It is up to the user
-        ///     to analyze both the input and the result to determine if a solution really exists.
-        ///   </para>
+        /// <para>
+        ///   The fifth column is often called the augmented part of the matrix. This is because the fifth
+        ///   column is really just an extension of the matrix so that there is a place to put all of the
+        ///   non-zero components after the operation is complete.
+        /// </para>
+        /// <para>
+        ///   Often times the resultant matrix will the identity matrix or a matrix similar to the identity
+        ///   matrix. Sometimes, however, that is not possible and numbers other than zero and one may appear.
+        /// </para>
+        /// <para>
+        ///   This method can be used to solve systems of linear equations. Upon completion of this method,
+        ///   the <paramref name="augmentResult" /> will contain the solution for the system. It is up to the user
+        ///   to analyze both the input and the result to determine if a solution really exists.
+        /// </para>
         /// </remarks>
         public static void ReducedRowEchelonForm(ref Matrix value, ref Vector4 augment, out Matrix result, out Vector4 augmentResult)
         {
@@ -2063,7 +2063,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed spherical billboard that rotates around a specified object position.
+        /// Creates a left-handed spherical billboard that rotates around a specified object position.
         /// </summary>
         /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
         /// <param name="cameraPosition">The position of the camera.</param>
@@ -2105,7 +2105,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed spherical billboard that rotates around a specified object position.
+        /// Creates a left-handed spherical billboard that rotates around a specified object position.
         /// </summary>
         /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
         /// <param name="cameraPosition">The position of the camera.</param>
@@ -2120,7 +2120,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed spherical billboard that rotates around a specified object position.
+        /// Creates a right-handed spherical billboard that rotates around a specified object position.
         /// </summary>
         /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
         /// <param name="cameraPosition">The position of the camera.</param>
@@ -2162,7 +2162,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed spherical billboard that rotates around a specified object position.
+        /// Creates a right-handed spherical billboard that rotates around a specified object position.
         /// </summary>
         /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
         /// <param name="cameraPosition">The position of the camera.</param>
@@ -2177,7 +2177,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed, look-at matrix.
+        /// Creates a left-handed, look-at matrix.
         /// </summary>
         /// <param name="eye">The position of the viewer's eye.</param>
         /// <param name="target">The camera look-at target.</param>
@@ -2213,7 +2213,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed, look-at matrix.
+        /// Creates a left-handed, look-at matrix.
         /// </summary>
         /// <param name="eye">The position of the viewer's eye.</param>
         /// <param name="target">The camera look-at target.</param>
@@ -2227,7 +2227,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed, look-at matrix.
+        /// Creates a right-handed, look-at matrix.
         /// </summary>
         /// <param name="eye">The position of the viewer's eye.</param>
         /// <param name="target">The camera look-at target.</param>
@@ -2263,7 +2263,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed, look-at matrix.
+        /// Creates a right-handed, look-at matrix.
         /// </summary>
         /// <param name="eye">The position of the viewer's eye.</param>
         /// <param name="target">The camera look-at target.</param>
@@ -2277,7 +2277,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed, orthographic projection matrix.
+        /// Creates a left-handed, orthographic projection matrix.
         /// </summary>
         /// <param name="width">Width of the viewing volume.</param>
         /// <param name="height">Height of the viewing volume.</param>
@@ -2293,7 +2293,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed, orthographic projection matrix.
+        /// Creates a left-handed, orthographic projection matrix.
         /// </summary>
         /// <param name="width">Width of the viewing volume.</param>
         /// <param name="height">Height of the viewing volume.</param>
@@ -2308,7 +2308,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed, orthographic projection matrix.
+        /// Creates a right-handed, orthographic projection matrix.
         /// </summary>
         /// <param name="width">Width of the viewing volume.</param>
         /// <param name="height">Height of the viewing volume.</param>
@@ -2324,7 +2324,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed, orthographic projection matrix.
+        /// Creates a right-handed, orthographic projection matrix.
         /// </summary>
         /// <param name="width">Width of the viewing volume.</param>
         /// <param name="height">Height of the viewing volume.</param>
@@ -2339,7 +2339,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed, customized orthographic projection matrix.
+        /// Creates a left-handed, customized orthographic projection matrix.
         /// </summary>
         /// <param name="left">Minimum x-value of the viewing volume.</param>
         /// <param name="right">Maximum x-value of the viewing volume.</param>
@@ -2362,7 +2362,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed, customized orthographic projection matrix.
+        /// Creates a left-handed, customized orthographic projection matrix.
         /// </summary>
         /// <param name="left">Minimum x-value of the viewing volume.</param>
         /// <param name="right">Maximum x-value of the viewing volume.</param>
@@ -2379,7 +2379,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed, customized orthographic projection matrix.
+        /// Creates a right-handed, customized orthographic projection matrix.
         /// </summary>
         /// <param name="left">Minimum x-value of the viewing volume.</param>
         /// <param name="right">Maximum x-value of the viewing volume.</param>
@@ -2395,7 +2395,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed, customized orthographic projection matrix.
+        /// Creates a right-handed, customized orthographic projection matrix.
         /// </summary>
         /// <param name="left">Minimum x-value of the viewing volume.</param>
         /// <param name="right">Maximum x-value of the viewing volume.</param>
@@ -2412,7 +2412,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed, perspective projection matrix.
+        /// Creates a left-handed, perspective projection matrix.
         /// </summary>
         /// <param name="width">Width of the viewing volume.</param>
         /// <param name="height">Height of the viewing volume.</param>
@@ -2428,7 +2428,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed, perspective projection matrix.
+        /// Creates a left-handed, perspective projection matrix.
         /// </summary>
         /// <param name="width">Width of the viewing volume.</param>
         /// <param name="height">Height of the viewing volume.</param>
@@ -2443,7 +2443,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed, perspective projection matrix.
+        /// Creates a right-handed, perspective projection matrix.
         /// </summary>
         /// <param name="width">Width of the viewing volume.</param>
         /// <param name="height">Height of the viewing volume.</param>
@@ -2459,7 +2459,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed, perspective projection matrix.
+        /// Creates a right-handed, perspective projection matrix.
         /// </summary>
         /// <param name="width">Width of the viewing volume.</param>
         /// <param name="height">Height of the viewing volume.</param>
@@ -2474,7 +2474,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed, perspective projection matrix based on a field of view.
+        /// Creates a left-handed, perspective projection matrix based on a field of view.
         /// </summary>
         /// <param name="fov">Field of view in the y direction, in radians.</param>
         /// <param name="aspect">Aspect ratio, defined as view space width divided by height.</param>
@@ -2495,7 +2495,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed, perspective projection matrix based on a field of view.
+        /// Creates a left-handed, perspective projection matrix based on a field of view.
         /// </summary>
         /// <param name="fov">Field of view in the y direction, in radians.</param>
         /// <param name="aspect">Aspect ratio, defined as view space width divided by height.</param>
@@ -2510,7 +2510,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed, perspective projection matrix based on a field of view.
+        /// Creates a right-handed, perspective projection matrix based on a field of view.
         /// </summary>
         /// <param name="fov">Field of view in the y direction, in radians.</param>
         /// <param name="aspect">Aspect ratio, defined as view space width divided by height.</param>
@@ -2531,7 +2531,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed, perspective projection matrix based on a field of view.
+        /// Creates a right-handed, perspective projection matrix based on a field of view.
         /// </summary>
         /// <param name="fov">Field of view in the y direction, in radians.</param>
         /// <param name="aspect">Aspect ratio, defined as view space width divided by height.</param>
@@ -2546,7 +2546,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed, customized perspective projection matrix.
+        /// Creates a left-handed, customized perspective projection matrix.
         /// </summary>
         /// <param name="left">Minimum x-value of the viewing volume.</param>
         /// <param name="right">Maximum x-value of the viewing volume.</param>
@@ -2570,7 +2570,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed, customized perspective projection matrix.
+        /// Creates a left-handed, customized perspective projection matrix.
         /// </summary>
         /// <param name="left">Minimum x-value of the viewing volume.</param>
         /// <param name="right">Maximum x-value of the viewing volume.</param>
@@ -2587,7 +2587,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed, customized perspective projection matrix.
+        /// Creates a right-handed, customized perspective projection matrix.
         /// </summary>
         /// <param name="left">Minimum x-value of the viewing volume.</param>
         /// <param name="right">Maximum x-value of the viewing volume.</param>
@@ -2606,7 +2606,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed, customized perspective projection matrix.
+        /// Creates a right-handed, customized perspective projection matrix.
         /// </summary>
         /// <param name="left">Minimum x-value of the viewing volume.</param>
         /// <param name="right">Maximum x-value of the viewing volume.</param>
@@ -2623,7 +2623,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a matrix that scales along the x-axis, y-axis, and y-axis.
+        /// Creates a matrix that scales along the x-axis, y-axis, and y-axis.
         /// </summary>
         /// <param name="scale">Scaling factor for all three axes.</param>
         /// <param name="result">When the method completes, contains the created scaling matrix.</param>
@@ -2633,7 +2633,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a matrix that scales along the x-axis, y-axis, and y-axis.
+        /// Creates a matrix that scales along the x-axis, y-axis, and y-axis.
         /// </summary>
         /// <param name="scale">Scaling factor for all three axes.</param>
         /// <returns>The created scaling matrix.</returns>
@@ -2645,7 +2645,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a matrix that scales along the x-axis, y-axis, and y-axis.
+        /// Creates a matrix that scales along the x-axis, y-axis, and y-axis.
         /// </summary>
         /// <param name="x">Scaling factor that is applied along the x-axis.</param>
         /// <param name="y">Scaling factor that is applied along the y-axis.</param>
@@ -2660,7 +2660,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a matrix that scales along the x-axis, y-axis, and y-axis.
+        /// Creates a matrix that scales along the x-axis, y-axis, and y-axis.
         /// </summary>
         /// <param name="x">Scaling factor that is applied along the x-axis.</param>
         /// <param name="y">Scaling factor that is applied along the y-axis.</param>
@@ -2674,7 +2674,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a matrix that uniformly scales along all three axis.
+        /// Creates a matrix that uniformly scales along all three axis.
         /// </summary>
         /// <param name="scale">The uniform scale that is applied along all axis.</param>
         /// <param name="result">When the method completes, contains the created scaling matrix.</param>
@@ -2685,7 +2685,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a matrix that uniformly scales along all three axis.
+        /// Creates a matrix that uniformly scales along all three axis.
         /// </summary>
         /// <param name="scale">The uniform scale that is applied along all axis.</param>
         /// <returns>The created scaling matrix.</returns>
@@ -2697,11 +2697,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a matrix that rotates around the x-axis.
+        /// Creates a matrix that rotates around the x-axis.
         /// </summary>
         /// <param name="angle">
-        ///   Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis
-        ///   toward the origin.
+        /// Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis
+        /// toward the origin.
         /// </param>
         /// <param name="result">When the method completes, contains the created rotation matrix.</param>
         public static void RotationX(float angle, out Matrix result)
@@ -2717,11 +2717,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a matrix that rotates around the x-axis.
+        /// Creates a matrix that rotates around the x-axis.
         /// </summary>
         /// <param name="angle">
-        ///   Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis
-        ///   toward the origin.
+        /// Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis
+        /// toward the origin.
         /// </param>
         /// <returns>The created rotation matrix.</returns>
         public static Matrix RotationX(float angle)
@@ -2732,11 +2732,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a matrix that rotates around the y-axis.
+        /// Creates a matrix that rotates around the y-axis.
         /// </summary>
         /// <param name="angle">
-        ///   Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis
-        ///   toward the origin.
+        /// Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis
+        /// toward the origin.
         /// </param>
         /// <param name="result">When the method completes, contains the created rotation matrix.</param>
         public static void RotationY(float angle, out Matrix result)
@@ -2752,11 +2752,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a matrix that rotates around the y-axis.
+        /// Creates a matrix that rotates around the y-axis.
         /// </summary>
         /// <param name="angle">
-        ///   Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis
-        ///   toward the origin.
+        /// Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis
+        /// toward the origin.
         /// </param>
         /// <returns>The created rotation matrix.</returns>
         public static Matrix RotationY(float angle)
@@ -2767,11 +2767,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a matrix that rotates around the z-axis.
+        /// Creates a matrix that rotates around the z-axis.
         /// </summary>
         /// <param name="angle">
-        ///   Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis
-        ///   toward the origin.
+        /// Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis
+        /// toward the origin.
         /// </param>
         /// <param name="result">When the method completes, contains the created rotation matrix.</param>
         public static void RotationZ(float angle, out Matrix result)
@@ -2787,11 +2787,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a matrix that rotates around the z-axis.
+        /// Creates a matrix that rotates around the z-axis.
         /// </summary>
         /// <param name="angle">
-        ///   Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis
-        ///   toward the origin.
+        /// Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis
+        /// toward the origin.
         /// </param>
         /// <returns>The created rotation matrix.</returns>
         public static Matrix RotationZ(float angle)
@@ -2802,12 +2802,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a matrix that rotates around an arbitrary axis.
+        /// Creates a matrix that rotates around an arbitrary axis.
         /// </summary>
         /// <param name="axis">The axis around which to rotate. This parameter is assumed to be normalized.</param>
         /// <param name="angle">
-        ///   Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis
-        ///   toward the origin.
+        /// Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis
+        /// toward the origin.
         /// </param>
         /// <param name="result">When the method completes, contains the created rotation matrix.</param>
         public static void RotationAxis(ref Vector3 axis, float angle, out Matrix result)
@@ -2837,12 +2837,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a matrix that rotates around an arbitrary axis.
+        /// Creates a matrix that rotates around an arbitrary axis.
         /// </summary>
         /// <param name="axis">The axis around which to rotate. This parameter is assumed to be normalized.</param>
         /// <param name="angle">
-        ///   Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis
-        ///   toward the origin.
+        /// Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis
+        /// toward the origin.
         /// </param>
         /// <returns>The created rotation matrix.</returns>
         public static Matrix RotationAxis(Vector3 axis, float angle)
@@ -2853,7 +2853,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a rotation matrix from a quaternion.
+        /// Creates a rotation matrix from a quaternion.
         /// </summary>
         /// <param name="rotation">The quaternion to use to build the matrix.</param>
         /// <param name="result">The created rotation matrix.</param>
@@ -2882,7 +2882,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a rotation matrix from a quaternion.
+        /// Creates a rotation matrix from a quaternion.
         /// </summary>
         /// <param name="rotation">The quaternion to use to build the matrix.</param>
         /// <returns>The created rotation matrix.</returns>
@@ -2894,7 +2894,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a rotation matrix with a specified yaw, pitch, and roll.
+        /// Creates a rotation matrix with a specified yaw, pitch, and roll.
         /// </summary>
         /// <param name="yaw">Yaw around the y-axis, in radians.</param>
         /// <param name="pitch">Pitch around the x-axis, in radians.</param>
@@ -2908,7 +2908,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a rotation matrix with a specified yaw, pitch, and roll.
+        /// Creates a rotation matrix with a specified yaw, pitch, and roll.
         /// </summary>
         /// <param name="yaw">Yaw around the y-axis, in radians.</param>
         /// <param name="pitch">Pitch around the x-axis, in radians.</param>
@@ -2922,7 +2922,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a translation matrix using the specified offsets.
+        /// Creates a translation matrix using the specified offsets.
         /// </summary>
         /// <param name="value">The offset for all three coordinate planes.</param>
         /// <param name="result">When the method completes, contains the created translation matrix.</param>
@@ -2932,7 +2932,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a translation matrix using the specified offsets.
+        /// Creates a translation matrix using the specified offsets.
         /// </summary>
         /// <param name="value">The offset for all three coordinate planes.</param>
         /// <returns>The created translation matrix.</returns>
@@ -2944,7 +2944,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a translation matrix using the specified offsets.
+        /// Creates a translation matrix using the specified offsets.
         /// </summary>
         /// <param name="x">X-coordinate offset.</param>
         /// <param name="y">Y-coordinate offset.</param>
@@ -2959,7 +2959,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a translation matrix using the specified offsets.
+        /// Creates a translation matrix using the specified offsets.
         /// </summary>
         /// <param name="x">X-coordinate offset.</param>
         /// <param name="y">Y-coordinate offset.</param>
@@ -2973,10 +2973,10 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a skew/shear matrix by means of a translation vector, a rotation vector, and a rotation angle.
-        ///   shearing is performed in the direction of translation vector, where translation vector and rotation vector define the
-        ///   shearing plane.
-        ///   The effect is such that the skewed rotation vector has the specified angle with rotation itself.
+        /// Creates a skew/shear matrix by means of a translation vector, a rotation vector, and a rotation angle.
+        /// shearing is performed in the direction of translation vector, where translation vector and rotation vector define the
+        /// shearing plane.
+        /// The effect is such that the skewed rotation vector has the specified angle with rotation itself.
         /// </summary>
         /// <param name="angle">The rotation angle.</param>
         /// <param name="rotationVec">The rotation vector</param>
@@ -3018,7 +3018,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a 3D affine transformation matrix.
+        /// Creates a 3D affine transformation matrix.
         /// </summary>
         /// <param name="scaling">Scaling factor.</param>
         /// <param name="rotation">The rotation of the transformation.</param>
@@ -3030,7 +3030,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a 3D affine transformation matrix.
+        /// Creates a 3D affine transformation matrix.
         /// </summary>
         /// <param name="scaling">Scaling factor.</param>
         /// <param name="rotation">The rotation of the transformation.</param>
@@ -3044,7 +3044,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a 3D affine transformation matrix.
+        /// Creates a 3D affine transformation matrix.
         /// </summary>
         /// <param name="scaling">Scaling factor.</param>
         /// <param name="rotationCenter">The center of the rotation.</param>
@@ -3058,7 +3058,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a 3D affine transformation matrix.
+        /// Creates a 3D affine transformation matrix.
         /// </summary>
         /// <param name="scaling">Scaling factor.</param>
         /// <param name="rotationCenter">The center of the rotation.</param>
@@ -3073,7 +3073,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a 2D affine transformation matrix.
+        /// Creates a 2D affine transformation matrix.
         /// </summary>
         /// <param name="scaling">Scaling factor.</param>
         /// <param name="rotation">The rotation of the transformation.</param>
@@ -3085,7 +3085,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a 2D affine transformation matrix.
+        /// Creates a 2D affine transformation matrix.
         /// </summary>
         /// <param name="scaling">Scaling factor.</param>
         /// <param name="rotation">The rotation of the transformation.</param>
@@ -3099,7 +3099,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a 2D affine transformation matrix.
+        /// Creates a 2D affine transformation matrix.
         /// </summary>
         /// <param name="scaling">Scaling factor.</param>
         /// <param name="rotationCenter">The center of the rotation.</param>
@@ -3113,7 +3113,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a 2D affine transformation matrix.
+        /// Creates a 2D affine transformation matrix.
         /// </summary>
         /// <param name="scaling">Scaling factor.</param>
         /// <param name="rotationCenter">The center of the rotation.</param>
@@ -3128,7 +3128,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a transformation matrix.
+        /// Creates a transformation matrix.
         /// </summary>
         /// <param name="scalingCenter">Center point of the scaling operation.</param>
         /// <param name="scalingRotation">Scaling rotation amount.</param>
@@ -3146,7 +3146,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a transformation matrix.
+        /// Creates a transformation matrix.
         /// </summary>
         /// <param name="scalingCenter">Center point of the scaling operation.</param>
         /// <param name="scalingRotation">Scaling rotation amount.</param>
@@ -3163,7 +3163,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a 2D transformation matrix.
+        /// Creates a 2D transformation matrix.
         /// </summary>
         /// <param name="scalingCenter">Center point of the scaling operation.</param>
         /// <param name="scalingRotation">Scaling rotation amount.</param>
@@ -3182,7 +3182,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a 2D transformation matrix.
+        /// Creates a 2D transformation matrix.
         /// </summary>
         /// <param name="scalingCenter">Center point of the scaling operation.</param>
         /// <param name="scalingRotation">Scaling rotation amount.</param>
@@ -3199,7 +3199,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Adds two matrices.
+        /// Adds two matrices.
         /// </summary>
         /// <param name="left">The first matrix to add.</param>
         /// <param name="right">The second matrix to add.</param>
@@ -3212,7 +3212,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Assert a matrix (return it unchanged).
+        /// Assert a matrix (return it unchanged).
         /// </summary>
         /// <param name="value">The matrix to assert (unchanged).</param>
         /// <returns>The asserted (unchanged) matrix.</returns>
@@ -3222,7 +3222,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Subtracts two matrices.
+        /// Subtracts two matrices.
         /// </summary>
         /// <param name="left">The first matrix to subtract.</param>
         /// <param name="right">The second matrix to subtract.</param>
@@ -3235,7 +3235,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Negates a matrix.
+        /// Negates a matrix.
         /// </summary>
         /// <param name="value">The matrix to negate.</param>
         /// <returns>The negated matrix.</returns>
@@ -3247,7 +3247,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Scales a matrix by a given value.
+        /// Scales a matrix by a given value.
         /// </summary>
         /// <param name="right">The matrix to scale.</param>
         /// <param name="left">The amount by which to scale.</param>
@@ -3260,7 +3260,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Scales a matrix by a given value.
+        /// Scales a matrix by a given value.
         /// </summary>
         /// <param name="left">The matrix to scale.</param>
         /// <param name="right">The amount by which to scale.</param>
@@ -3273,7 +3273,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Multiplies two matrices.
+        /// Multiplies two matrices.
         /// </summary>
         /// <param name="left">The first matrix to multiply.</param>
         /// <param name="right">The second matrix to multiply.</param>
@@ -3286,7 +3286,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Scales a matrix by a given value.
+        /// Scales a matrix by a given value.
         /// </summary>
         /// <param name="left">The matrix to scale.</param>
         /// <param name="right">The amount by which to scale.</param>
@@ -3299,7 +3299,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Divides two matrices.
+        /// Divides two matrices.
         /// </summary>
         /// <param name="left">The first matrix to divide.</param>
         /// <param name="right">The second matrix to divide.</param>
@@ -3312,13 +3312,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Tests for equality between two objects.
+        /// Tests for equality between two objects.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns>
-        ///   <c>true</c> if <paramref name="left" /> has the same value as <paramref name="right" />; otherwise,
-        ///   <c>false</c>.
+        /// <c>true</c> if <paramref name="left" /> has the same value as <paramref name="right" />; otherwise,
+        /// <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Matrix left, Matrix right)
@@ -3327,13 +3327,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Tests for inequality between two objects.
+        /// Tests for inequality between two objects.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns>
-        ///   <c>true</c> if <paramref name="left" /> has a different value than <paramref name="right" />; otherwise,
-        ///   <c>false</c>.
+        /// <c>true</c> if <paramref name="left" /> has a different value than <paramref name="right" />; otherwise,
+        /// <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Matrix left, Matrix right)
@@ -3342,10 +3342,10 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public override string ToString()
         {
@@ -3354,11 +3354,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <param name="format">The format.</param>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public string ToString(string format)
         {
@@ -3373,11 +3373,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <param name="formatProvider">The format provider.</param>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public string ToString(IFormatProvider formatProvider)
         {
@@ -3389,12 +3389,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <param name="format">The format.</param>
         /// <param name="formatProvider">The format provider.</param>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
@@ -3409,10 +3409,10 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a hash code for this instance.
+        /// Returns a hash code for this instance.
         /// </summary>
         /// <returns>
-        ///   A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
         public override int GetHashCode()
         {
@@ -3439,11 +3439,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref="Matrix" /> is equal to this instance.
+        /// Determines whether the specified <see cref="Matrix" /> is equal to this instance.
         /// </summary>
         /// <param name="other">The <see cref="Matrix" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="Matrix" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Matrix" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(ref Matrix other)
         {
@@ -3466,11 +3466,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref="Matrix" /> is equal to this instance.
+        /// Determines whether the specified <see cref="Matrix" /> is equal to this instance.
         /// </summary>
         /// <param name="other">The <see cref="Matrix" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="Matrix" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Matrix" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Matrix other)
@@ -3479,11 +3479,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref="System.Object" /> is equal to this instance.
+        /// Determines whether the specified <see cref="System.Object" /> is equal to this instance.
         /// </summary>
         /// <param name="value">The <see cref="System.Object" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object value)
         {

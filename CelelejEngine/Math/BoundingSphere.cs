@@ -57,24 +57,24 @@ using System.Runtime.InteropServices;
 namespace CelelejEngine
 {
     /// <summary>
-    ///   Represents a bounding sphere in three dimensional space.
+    /// Represents a bounding sphere in three dimensional space.
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct BoundingSphere : IEquatable<BoundingSphere>, IFormattable
     {
         /// <summary>
-        ///   The center of the sphere in three dimensional space.
+        /// The center of the sphere in three dimensional space.
         /// </summary>
         public Vector3 Center;
 
         /// <summary>
-        ///   The radius of the sphere.
+        /// The radius of the sphere.
         /// </summary>
         public float Radius;
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="BoundingBox" /> struct.
+        /// Initializes a new instance of the <see cref="BoundingBox" /> struct.
         /// </summary>
         /// <param name="center">The center of the sphere in three dimensional space.</param>
         /// <param name="radius">The radius of the sphere.</param>
@@ -85,7 +85,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines if there is an intersection between the current object and a <see cref="Ray" />.
+        /// Determines if there is an intersection between the current object and a <see cref="Ray" />.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -96,12 +96,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines if there is an intersection between the current object and a <see cref="Ray" />.
+        /// Determines if there is an intersection between the current object and a <see cref="Ray" />.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="distance">
-        ///   When the method completes, contains the distance of the intersection,
-        ///   or 0 if there was no intersection.
+        /// When the method completes, contains the distance of the intersection,
+        /// or 0 if there was no intersection.
         /// </param>
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Ray ray, out float distance)
@@ -110,12 +110,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines if there is an intersection between the current object and a <see cref="Ray" />.
+        /// Determines if there is an intersection between the current object and a <see cref="Ray" />.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="point">
-        ///   When the method completes, contains the point of intersection,
-        ///   or <see cref="Vector3.Zero" /> if there was no intersection.
+        /// When the method completes, contains the point of intersection,
+        /// or <see cref="Vector3.Zero" /> if there was no intersection.
         /// </param>
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Ray ray, out Vector3 point)
@@ -124,7 +124,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines if there is an intersection between the current object and a <see cref="Plane" />.
+        /// Determines if there is an intersection between the current object and a <see cref="Plane" />.
         /// </summary>
         /// <param name="plane">The plane to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -134,7 +134,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines if there is an intersection between the current object and a triangle.
+        /// Determines if there is an intersection between the current object and a triangle.
         /// </summary>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
         /// <param name="vertex2">The second vertex of the triangle to test.</param>
@@ -146,7 +146,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines if there is an intersection between the current object and a <see cref="BoundingBox" />.
+        /// Determines if there is an intersection between the current object and a <see cref="BoundingBox" />.
         /// </summary>
         /// <param name="box">The box to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -156,7 +156,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines if there is an intersection between the current object and a <see cref="BoundingBox" />.
+        /// Determines if there is an intersection between the current object and a <see cref="BoundingBox" />.
         /// </summary>
         /// <param name="box">The box to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -166,7 +166,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines if there is an intersection between the current object and a <see cref="BoundingSphere" />.
+        /// Determines if there is an intersection between the current object and a <see cref="BoundingSphere" />.
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -176,7 +176,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines if there is an intersection between the current object and a <see cref="BoundingSphere" />.
+        /// Determines if there is an intersection between the current object and a <see cref="BoundingSphere" />.
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -186,7 +186,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the current objects contains a point.
+        /// Determines whether the current objects contains a point.
         /// </summary>
         /// <param name="point">The point to test.</param>
         /// <returns>The type of containment the two objects have.</returns>
@@ -196,7 +196,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the current objects contains a triangle.
+        /// Determines whether the current objects contains a triangle.
         /// </summary>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
         /// <param name="vertex2">The second vertex of the triangle to test.</param>
@@ -208,7 +208,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the current objects contains a <see cref="BoundingBox" />.
+        /// Determines whether the current objects contains a <see cref="BoundingBox" />.
         /// </summary>
         /// <param name="box">The box to test.</param>
         /// <returns>The type of containment the two objects have.</returns>
@@ -218,7 +218,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the current objects contains a <see cref="BoundingSphere" />.
+        /// Determines whether the current objects contains a <see cref="BoundingSphere" />.
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
         /// <returns>The type of containment the two objects have.</returns>
@@ -228,7 +228,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Constructs a <see cref="BoundingSphere" /> that fully contains the given points.
+        /// Constructs a <see cref="BoundingSphere" /> that fully contains the given points.
         /// </summary>
         /// <param name="points">The points that will be contained by the sphere.</param>
         /// <param name="start">The start index from points array to start compute the bounding sphere.</param>
@@ -236,9 +236,9 @@ namespace CelelejEngine
         /// <param name="result">When the method completes, contains the newly constructed bounding sphere.</param>
         /// <exception cref="System.ArgumentNullException">points</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">
-        ///   start
-        ///   or
-        ///   count
+        /// start
+        /// or
+        /// count
         /// </exception>
         public static void FromPoints(Vector3[] points, int start, int count, out BoundingSphere result)
         {
@@ -285,7 +285,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Constructs a <see cref="BoundingSphere" /> that fully contains the given points.
+        /// Constructs a <see cref="BoundingSphere" /> that fully contains the given points.
         /// </summary>
         /// <param name="points">The points that will be contained by the sphere.</param>
         /// <param name="result">When the method completes, contains the newly constructed bounding sphere.</param>
@@ -298,7 +298,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Constructs a <see cref="BoundingSphere" /> that fully contains the given points.
+        /// Constructs a <see cref="BoundingSphere" /> that fully contains the given points.
         /// </summary>
         /// <param name="points">The points that will be contained by the sphere.</param>
         /// <returns>The newly constructed bounding sphere.</returns>
@@ -310,7 +310,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Constructs a <see cref="BoundingSphere" /> from a given box.
+        /// Constructs a <see cref="BoundingSphere" /> from a given box.
         /// </summary>
         /// <param name="box">The box that will designate the extents of the sphere.</param>
         /// <param name="result">When the method completes, the newly constructed bounding sphere.</param>
@@ -327,7 +327,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Constructs a <see cref="BoundingSphere" /> from a given box.
+        /// Constructs a <see cref="BoundingSphere" /> from a given box.
         /// </summary>
         /// <param name="box">The box that will designate the extents of the sphere.</param>
         /// <returns>The newly constructed bounding sphere.</returns>
@@ -339,8 +339,8 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Constructs a <see cref="BoundingSphere" /> that is the as large as the total combined area of the two specified
-        ///   spheres.
+        /// Constructs a <see cref="BoundingSphere" /> that is the as large as the total combined area of the two specified
+        /// spheres.
         /// </summary>
         /// <param name="value1">The first sphere to merge.</param>
         /// <param name="value2">The second sphere to merge.</param>
@@ -377,8 +377,8 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Constructs a <see cref="BoundingSphere" /> that is the as large as the total combined area of the two specified
-        ///   spheres.
+        /// Constructs a <see cref="BoundingSphere" /> that is the as large as the total combined area of the two specified
+        /// spheres.
         /// </summary>
         /// <param name="value1">The first sphere to merge.</param>
         /// <param name="value2">The second sphere to merge.</param>
@@ -391,13 +391,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Tests for equality between two objects.
+        /// Tests for equality between two objects.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns>
-        ///   <c>true</c> if <paramref name="left" /> has the same value as <paramref name="right" />; otherwise,
-        ///   <c>false</c>.
+        /// <c>true</c> if <paramref name="left" /> has the same value as <paramref name="right" />; otherwise,
+        /// <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(BoundingSphere left, BoundingSphere right)
@@ -406,13 +406,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Tests for inequality between two objects.
+        /// Tests for inequality between two objects.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns>
-        ///   <c>true</c> if <paramref name="left" /> has a different value than <paramref name="right" />; otherwise,
-        ///   <c>false</c>.
+        /// <c>true</c> if <paramref name="left" /> has a different value than <paramref name="right" />; otherwise,
+        /// <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(BoundingSphere left, BoundingSphere right)
@@ -421,10 +421,10 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public override string ToString()
         {
@@ -432,11 +432,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <param name="format">The format.</param>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public string ToString(string format)
         {
@@ -448,11 +448,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <param name="formatProvider">The format provider.</param>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public string ToString(IFormatProvider formatProvider)
         {
@@ -460,12 +460,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <param name="format">The format.</param>
         /// <param name="formatProvider">The format provider.</param>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
@@ -477,10 +477,10 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a hash code for this instance.
+        /// Returns a hash code for this instance.
         /// </summary>
         /// <returns>
-        ///   A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
         public override int GetHashCode()
         {
@@ -491,11 +491,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref="Vector4" /> is equal to this instance.
+        /// Determines whether the specified <see cref="Vector4" /> is equal to this instance.
         /// </summary>
         /// <param name="value">The <see cref="Vector4" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="Vector4" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Vector4" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(ref BoundingSphere value)
@@ -504,11 +504,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref="Vector4" /> is equal to this instance.
+        /// Determines whether the specified <see cref="Vector4" /> is equal to this instance.
         /// </summary>
         /// <param name="value">The <see cref="Vector4" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="Vector4" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Vector4" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(BoundingSphere value)
@@ -517,11 +517,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref="System.Object" /> is equal to this instance.
+        /// Determines whether the specified <see cref="System.Object" /> is equal to this instance.
         /// </summary>
         /// <param name="value">The <see cref="System.Object" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object value)
         {

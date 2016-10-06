@@ -57,24 +57,24 @@ using System.Runtime.InteropServices;
 namespace CelelejEngine
 {
     /// <summary>
-    ///   Represents a plane in three dimensional space.
+    /// Represents a plane in three dimensional space.
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Plane : IEquatable<Plane>, IFormattable
     {
         /// <summary>
-        ///   The normal vector of the plane.
+        /// The normal vector of the plane.
         /// </summary>
         public Vector3 Normal;
 
         /// <summary>
-        ///   The distance of the plane along its normal from the origin.
+        /// The distance of the plane along its normal from the origin.
         /// </summary>
         public float D;
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Plane" /> struct.
+        /// Initializes a new instance of the <see cref="Plane" /> struct.
         /// </summary>
         /// <param name="value">The value that will be assigned to all components.</param>
         public Plane(float value)
@@ -83,7 +83,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Plane" /> struct.
+        /// Initializes a new instance of the <see cref="Plane" /> struct.
         /// </summary>
         /// <param name="a">The X component of the normal.</param>
         /// <param name="b">The Y component of the normal.</param>
@@ -98,7 +98,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="T:CelelejEngine.Plane" /> class.
+        /// Initializes a new instance of the <see cref="T:CelelejEngine.Plane" /> class.
         /// </summary>
         /// <param name="point">Any point that lies along the plane.</param>
         /// <param name="normal">The normal vector to the plane.</param>
@@ -109,7 +109,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Plane" /> struct.
+        /// Initializes a new instance of the <see cref="Plane" /> struct.
         /// </summary>
         /// <param name="value">The normal of the plane.</param>
         /// <param name="d">The distance of the plane along its normal from the origin</param>
@@ -120,7 +120,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Plane" /> struct.
+        /// Initializes a new instance of the <see cref="Plane" /> struct.
         /// </summary>
         /// <param name="point1">First point of a triangle defining the plane.</param>
         /// <param name="point2">Second point of a triangle defining the plane.</param>
@@ -145,16 +145,16 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Plane" /> struct.
+        /// Initializes a new instance of the <see cref="Plane" /> struct.
         /// </summary>
         /// <param name="values">
-        ///   The values to assign to the A, B, C, and D components of the plane. This must be an array with
-        ///   four elements.
+        /// The values to assign to the A, B, C, and D components of the plane. This must be an array with
+        /// four elements.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="values" /> is <c>null</c>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   Thrown when <paramref name="values" /> contains more or less than four
-        ///   elements.
+        /// Thrown when <paramref name="values" /> contains more or less than four
+        /// elements.
         /// </exception>
         public Plane(float[] values)
         {
@@ -170,17 +170,17 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the component at the specified index.
+        /// Gets or sets the component at the specified index.
         /// </summary>
         /// <value>The value of the A, B, C, or D component, depending on the index.</value>
         /// <param name="index">
-        ///   The index of the component to access. Use 0 for the A component, 1 for the B component, 2 for the C
-        ///   component, and 3 for the D component.
+        /// The index of the component to access. Use 0 for the A component, 1 for the B component, 2 for the C
+        /// component, and 3 for the D component.
         /// </param>
         /// <returns>The value of the component at the specified index.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">
-        ///   Thrown when the <paramref name="index" /> is out of the range [0,
-        ///   3].
+        /// Thrown when the <paramref name="index" /> is out of the range [0,
+        /// 3].
         /// </exception>
         public float this[int index]
         {
@@ -224,7 +224,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Changes the coefficients of the normal vector of the plane to make it of unit length.
+        /// Changes the coefficients of the normal vector of the plane to make it of unit length.
         /// </summary>
         public void Normalize()
         {
@@ -237,7 +237,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates an array containing the elements of the plane.
+        /// Creates an array containing the elements of the plane.
         /// </summary>
         /// <returns>A four-element array containing the components of the plane.</returns>
         public float[] ToArray()
@@ -246,7 +246,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines if there is an intersection between the current object and a point.
+        /// Determines if there is an intersection between the current object and a point.
         /// </summary>
         /// <param name="point">The point to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -256,7 +256,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines if there is an intersection between the current object and a <see cref="Ray" />.
+        /// Determines if there is an intersection between the current object and a <see cref="Ray" />.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -267,12 +267,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines if there is an intersection between the current object and a <see cref="Ray" />.
+        /// Determines if there is an intersection between the current object and a <see cref="Ray" />.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="distance">
-        ///   When the method completes, contains the distance of the intersection,
-        ///   or 0 if there was no intersection.
+        /// When the method completes, contains the distance of the intersection,
+        /// or 0 if there was no intersection.
         /// </param>
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Ray ray, out float distance)
@@ -281,12 +281,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines if there is an intersection between the current object and a <see cref="Ray" />.
+        /// Determines if there is an intersection between the current object and a <see cref="Ray" />.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
         /// <param name="point">
-        ///   When the method completes, contains the point of intersection,
-        ///   or <see cref="Vector3.Zero" /> if there was no intersection.
+        /// When the method completes, contains the point of intersection,
+        /// or <see cref="Vector3.Zero" /> if there was no intersection.
         /// </param>
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Ray ray, out Vector3 point)
@@ -295,7 +295,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines if there is an intersection between the current object and a <see cref="Plane" />.
+        /// Determines if there is an intersection between the current object and a <see cref="Plane" />.
         /// </summary>
         /// <param name="plane">The plane to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -305,12 +305,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines if there is an intersection between the current object and a <see cref="Plane" />.
+        /// Determines if there is an intersection between the current object and a <see cref="Plane" />.
         /// </summary>
         /// <param name="plane">The plane to test.</param>
         /// <param name="line">
-        ///   When the method completes, contains the line of intersection
-        ///   as a <see cref="Ray" />, or a zero ray if there was no intersection.
+        /// When the method completes, contains the line of intersection
+        /// as a <see cref="Ray" />, or a zero ray if there was no intersection.
         /// </param>
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Plane plane, out Ray line)
@@ -319,7 +319,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines if there is an intersection between the current object and a triangle.
+        /// Determines if there is an intersection between the current object and a triangle.
         /// </summary>
         /// <param name="vertex1">The first vertex of the triangle to test.</param>
         /// <param name="vertex2">The second vertex of the triangle to test.</param>
@@ -331,7 +331,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines if there is an intersection between the current object and a <see cref="BoundingBox" />.
+        /// Determines if there is an intersection between the current object and a <see cref="BoundingBox" />.
         /// </summary>
         /// <param name="box">The box to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -341,7 +341,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines if there is an intersection between the current object and a <see cref="BoundingSphere" />.
+        /// Determines if there is an intersection between the current object and a <see cref="BoundingSphere" />.
         /// </summary>
         /// <param name="sphere">The sphere to test.</param>
         /// <returns>Whether the two objects intersected.</returns>
@@ -351,7 +351,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Builds a matrix that can be used to reflect vectors about a plane.
+        /// Builds a matrix that can be used to reflect vectors about a plane.
         /// </summary>
         /// <param name="plane">The plane for which the reflection occurs. This parameter is assumed to be normalized.</param>
         /// <param name="result">When the method completes, contains the reflection matrix.</param>
@@ -383,7 +383,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Builds a matrix that can be used to reflect vectors about a plane.
+        /// Builds a matrix that can be used to reflect vectors about a plane.
         /// </summary>
         /// <returns>The reflection matrix.</returns>
         public Matrix Reflection()
@@ -394,13 +394,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a matrix that flattens geometry into a shadow from this the plane onto which to project the geometry as a
-        ///   shadow.
-        ///   This plane  is assumed to be normalized
+        /// Creates a matrix that flattens geometry into a shadow from this the plane onto which to project the geometry as a
+        /// shadow.
+        /// This plane  is assumed to be normalized
         /// </summary>
         /// <param name="light">
-        ///   The light direction. If the W component is 0, the light is directional light; if the
-        ///   W component is 1, the light is a point light.
+        /// The light direction. If the W component is 0, the light is directional light; if the
+        /// W component is 1, the light is a point light.
         /// </param>
         /// <param name="result">When the method completes, contains the shadow matrix.</param>
         public void Shadow(ref Vector4 light, out Matrix result)
@@ -430,13 +430,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a matrix that flattens geometry into a shadow from this the plane onto which to project the geometry as a
-        ///   shadow.
-        ///   This plane  is assumed to be normalized
+        /// Creates a matrix that flattens geometry into a shadow from this the plane onto which to project the geometry as a
+        /// shadow.
+        /// This plane  is assumed to be normalized
         /// </summary>
         /// <param name="light">
-        ///   The light direction. If the W component is 0, the light is directional light; if the
-        ///   W component is 1, the light is a point light.
+        /// The light direction. If the W component is 0, the light is directional light; if the
+        /// W component is 1, the light is a point light.
         /// </param>
         /// <returns>The shadow matrix.</returns>
         public Matrix Shadow(Vector4 light)
@@ -447,8 +447,8 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Builds a Matrix3x3 that can be used to reflect vectors about a plane for which the reflection occurs.
-        ///   This plane is assumed to be normalized
+        /// Builds a Matrix3x3 that can be used to reflect vectors about a plane for which the reflection occurs.
+        /// This plane is assumed to be normalized
         /// </summary>
         /// <param name="result">When the method completes, contains the reflection Matrix3x3.</param>
         public void Reflection(out Matrix3x3 result)
@@ -472,8 +472,8 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Builds a Matrix3x3 that can be used to reflect vectors about a plane for which the reflection occurs.
-        ///   This plane is assumed to be normalized
+        /// Builds a Matrix3x3 that can be used to reflect vectors about a plane for which the reflection occurs.
+        /// This plane is assumed to be normalized
         /// </summary>
         /// <returns>The reflection Matrix3x3.</returns>
         public Matrix3x3 Reflection3x3()
@@ -484,15 +484,15 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a Matrix3x3 that flattens geometry into a shadow.
+        /// Creates a Matrix3x3 that flattens geometry into a shadow.
         /// </summary>
         /// <param name="light">
-        ///   The light direction. If the W component is 0, the light is directional light; if the
-        ///   W component is 1, the light is a point light.
+        /// The light direction. If the W component is 0, the light is directional light; if the
+        /// W component is 1, the light is a point light.
         /// </param>
         /// <param name="plane">
-        ///   The plane onto which to project the geometry as a shadow. This parameter is assumed to be
-        ///   normalized.
+        /// The plane onto which to project the geometry as a shadow. This parameter is assumed to be
+        /// normalized.
         /// </param>
         /// <param name="result">When the method completes, contains the shadow Matrix3x3.</param>
         public static void Shadow(ref Vector4 light, ref Plane plane, out Matrix3x3 result)
@@ -515,15 +515,15 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a Matrix3x3 that flattens geometry into a shadow.
+        /// Creates a Matrix3x3 that flattens geometry into a shadow.
         /// </summary>
         /// <param name="light">
-        ///   The light direction. If the W component is 0, the light is directional light; if the
-        ///   W component is 1, the light is a point light.
+        /// The light direction. If the W component is 0, the light is directional light; if the
+        /// W component is 1, the light is a point light.
         /// </param>
         /// <param name="plane">
-        ///   The plane onto which to project the geometry as a shadow. This parameter is assumed to be
-        ///   normalized.
+        /// The plane onto which to project the geometry as a shadow. This parameter is assumed to be
+        /// normalized.
         /// </param>
         /// <returns>The shadow Matrix3x3.</returns>
         public static Matrix3x3 Shadow(Vector4 light, Plane plane)
@@ -534,7 +534,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Scales the plane by the given scaling factor.
+        /// Scales the plane by the given scaling factor.
         /// </summary>
         /// <param name="value">The plane to scale.</param>
         /// <param name="scale">The amount by which to scale the plane.</param>
@@ -548,7 +548,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Scales the plane by the given scaling factor.
+        /// Scales the plane by the given scaling factor.
         /// </summary>
         /// <param name="value">The plane to scale.</param>
         /// <param name="scale">The amount by which to scale the plane.</param>
@@ -559,7 +559,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the dot product of the specified vector and plane.
+        /// Calculates the dot product of the specified vector and plane.
         /// </summary>
         /// <param name="left">The source plane.</param>
         /// <param name="right">The source vector.</param>
@@ -570,7 +570,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the dot product of the specified vector and plane.
+        /// Calculates the dot product of the specified vector and plane.
         /// </summary>
         /// <param name="left">The source plane.</param>
         /// <param name="right">The source vector.</param>
@@ -581,13 +581,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the dot product of a specified vector and the normal of the plane plus the distance value of the plane.
+        /// Calculates the dot product of a specified vector and the normal of the plane plus the distance value of the plane.
         /// </summary>
         /// <param name="left">The source plane.</param>
         /// <param name="right">The source vector.</param>
         /// <param name="result">
-        ///   When the method completes, contains the dot product of a specified vector and the normal of the
-        ///   Plane plus the distance value of the plane.
+        /// When the method completes, contains the dot product of a specified vector and the normal of the
+        /// Plane plus the distance value of the plane.
         /// </param>
         public static void DotCoordinate(ref Plane left, ref Vector3 right, out float result)
         {
@@ -595,7 +595,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the dot product of a specified vector and the normal of the plane plus the distance value of the plane.
+        /// Calculates the dot product of a specified vector and the normal of the plane plus the distance value of the plane.
         /// </summary>
         /// <param name="left">The source plane.</param>
         /// <param name="right">The source vector.</param>
@@ -606,13 +606,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the dot product of the specified vector and the normal of the plane.
+        /// Calculates the dot product of the specified vector and the normal of the plane.
         /// </summary>
         /// <param name="left">The source plane.</param>
         /// <param name="right">The source vector.</param>
         /// <param name="result">
-        ///   When the method completes, contains the dot product of the specified vector and the normal of the
-        ///   plane.
+        /// When the method completes, contains the dot product of the specified vector and the normal of the
+        /// plane.
         /// </param>
         public static void DotNormal(ref Plane left, ref Vector3 right, out float result)
         {
@@ -620,7 +620,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the dot product of the specified vector and the normal of the plane.
+        /// Calculates the dot product of the specified vector and the normal of the plane.
         /// </summary>
         /// <param name="left">The source plane.</param>
         /// <param name="right">The source vector.</param>
@@ -631,7 +631,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Changes the coefficients of the normal vector of the plane to make it of unit length.
+        /// Changes the coefficients of the normal vector of the plane to make it of unit length.
         /// </summary>
         /// <param name="plane">The source plane.</param>
         /// <param name="result">When the method completes, contains the normalized plane.</param>
@@ -646,7 +646,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Changes the coefficients of the normal vector of the plane to make it of unit length.
+        /// Changes the coefficients of the normal vector of the plane to make it of unit length.
         /// </summary>
         /// <param name="plane">The source plane.</param>
         /// <returns>The normalized plane.</returns>
@@ -657,7 +657,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Transforms a normalized plane by a quaternion rotation.
+        /// Transforms a normalized plane by a quaternion rotation.
         /// </summary>
         /// <param name="plane">The normalized source plane.</param>
         /// <param name="rotation">The quaternion rotation.</param>
@@ -688,7 +688,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Transforms a normalized plane by a quaternion rotation.
+        /// Transforms a normalized plane by a quaternion rotation.
         /// </summary>
         /// <param name="plane">The normalized source plane.</param>
         /// <param name="rotation">The quaternion rotation.</param>
@@ -722,7 +722,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Transforms an array of normalized planes by a quaternion rotation.
+        /// Transforms an array of normalized planes by a quaternion rotation.
         /// </summary>
         /// <param name="planes">The array of normalized planes to transform.</param>
         /// <param name="rotation">The quaternion rotation.</param>
@@ -762,7 +762,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Transforms a normalized plane by a matrix.
+        /// Transforms a normalized plane by a matrix.
         /// </summary>
         /// <param name="plane">The normalized source plane.</param>
         /// <param name="transformation">The transformation matrix.</param>
@@ -784,7 +784,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Transforms a normalized plane by a matrix.
+        /// Transforms a normalized plane by a matrix.
         /// </summary>
         /// <param name="plane">The normalized source plane.</param>
         /// <param name="transformation">The transformation matrix.</param>
@@ -807,7 +807,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Transforms an array of normalized planes by a matrix.
+        /// Transforms an array of normalized planes by a matrix.
         /// </summary>
         /// <param name="planes">The array of normalized planes to transform.</param>
         /// <param name="transformation">The transformation matrix.</param>
@@ -825,7 +825,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Scales a plane by the given value.
+        /// Scales a plane by the given value.
         /// </summary>
         /// <param name="scale">The amount by which to scale the plane.</param>
         /// <param name="plane">The plane to scale.</param>
@@ -836,7 +836,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Scales a plane by the given value.
+        /// Scales a plane by the given value.
         /// </summary>
         /// <param name="plane">The plane to scale.</param>
         /// <param name="scale">The amount by which to scale the plane.</param>
@@ -847,13 +847,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Tests for equality between two objects.
+        /// Tests for equality between two objects.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns>
-        ///   <c>true</c> if <paramref name="left" /> has the same value as <paramref name="right" />; otherwise,
-        ///   <c>false</c>.
+        /// <c>true</c> if <paramref name="left" /> has the same value as <paramref name="right" />; otherwise,
+        /// <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Plane left, Plane right)
@@ -862,13 +862,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Tests for inequality between two objects.
+        /// Tests for inequality between two objects.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns>
-        ///   <c>true</c> if <paramref name="left" /> has a different value than <paramref name="right" />; otherwise,
-        ///   <c>false</c>.
+        /// <c>true</c> if <paramref name="left" /> has a different value than <paramref name="right" />; otherwise,
+        /// <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Plane left, Plane right)
@@ -877,10 +877,10 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public override string ToString()
         {
@@ -888,11 +888,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <param name="format">The format.</param>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public string ToString(string format)
         {
@@ -901,11 +901,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <param name="formatProvider">The format provider.</param>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public string ToString(IFormatProvider formatProvider)
         {
@@ -913,12 +913,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <param name="format">The format.</param>
         /// <param name="formatProvider">The format provider.</param>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
@@ -927,10 +927,10 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a hash code for this instance.
+        /// Returns a hash code for this instance.
         /// </summary>
         /// <returns>
-        ///   A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
         public override int GetHashCode()
         {
@@ -941,11 +941,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref="Vector4" /> is equal to this instance.
+        /// Determines whether the specified <see cref="Vector4" /> is equal to this instance.
         /// </summary>
         /// <param name="value">The <see cref="Vector4" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="Vector4" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Vector4" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(ref Plane value)
@@ -954,11 +954,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref="Vector4" /> is equal to this instance.
+        /// Determines whether the specified <see cref="Vector4" /> is equal to this instance.
         /// </summary>
         /// <param name="value">The <see cref="Vector4" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="Vector4" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Vector4" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Plane value)
@@ -967,11 +967,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref="System.Object" /> is equal to this instance.
+        /// Determines whether the specified <see cref="System.Object" /> is equal to this instance.
         /// </summary>
         /// <param name="value">The <see cref="System.Object" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object value)
         {

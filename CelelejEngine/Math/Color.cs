@@ -3,28 +3,28 @@ using System;
 namespace CelelejEngine
 {
     /// <summary>
-    ///   Representation of RGBA colors.
+    /// Representation of RGBA colors.
     /// </summary>
     [Serializable]
     public partial struct Color
     {
         /// <summary>
-        ///   Red component of the color.
+        /// Red component of the color.
         /// </summary>
         public float R;
 
         /// <summary>
-        ///   Green component of the color.
+        /// Green component of the color.
         /// </summary>
         public float G;
 
         /// <summary>
-        ///   Blue component of the color.
+        /// Blue component of the color.
         /// </summary>
         public float B;
 
         /// <summary>
-        ///   Alpha component of the color.
+        /// Alpha component of the color.
         /// </summary>
         public float A;
         
@@ -86,7 +86,7 @@ namespace CelelejEngine
         }
         
         /// <summary>
-        ///   Returns the minimum color component value: Min(r,g,b).
+        /// Returns the minimum color component value: Min(r,g,b).
         /// </summary>
         public float MinColorComponent
         {
@@ -94,7 +94,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the maximum color component value: Max(r,g,b).
+        /// Returns the maximum color component value: Max(r,g,b).
         /// </summary>
         public float MaxColorComponent
         {
@@ -102,7 +102,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Constructs a new Color with given r,g,b,a components.
+        /// Constructs a new Color with given r,g,b,a components.
         /// </summary>
         /// <param name="r">Red component.</param>
         /// <param name="g">Green component.</param>
@@ -117,7 +117,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Constructs a new Color with given r,g,b,a components.
+        /// Constructs a new Color with given r,g,b,a components.
         /// </summary>
         /// <param name="r">Red component.</param>
         /// <param name="g">Green component.</param>
@@ -132,7 +132,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Constructs a new Color with given r,g,b components and sets a to 1.
+        /// Constructs a new Color with given r,g,b components and sets a to 1.
         /// </summary>
         /// <param name="r">Red component.</param>
         /// <param name="g">Green component.</param>
@@ -197,13 +197,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates an RGB colour from HSV input.
+        /// Creates an RGB colour from HSV input.
         /// </summary>
         /// <param name="h">Hue [0..1].</param>
         /// <param name="s">Saturation [0..1].</param>
         /// <param name="v">Value [0..1].</param>
         /// <returns>
-        ///   An opaque colour with HSV matching the input.
+        /// An opaque colour with HSV matching the input.
         /// </returns>
         public static Color HSVToRGB(float h, float s, float v)
         {
@@ -211,14 +211,14 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates an RGB colour from HSV input.
+        /// Creates an RGB colour from HSV input.
         /// </summary>
         /// <param name="H">Hue [0..1].</param>
         /// <param name="S">Saturation [0..1].</param>
         /// <param name="V">Value [0..1].</param>
         /// <param name="hdr">Output HDR colours. If true, the returned colour will not be clamped to [0..1].</param>
         /// <returns>
-        ///   An opaque colour with HSV matching the input.
+        /// An opaque colour with HSV matching the input.
         /// </returns>
         public static Color HSVToRGB(float H, float S, float V, bool hdr)
         {
@@ -318,7 +318,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Linearly interpolates between colors a and b by t.
+        /// Linearly interpolates between colors a and b by t.
         /// </summary>
         /// <param name="a">Color a</param>
         /// <param name="b">Color b</param>
@@ -330,7 +330,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Linearly interpolates between colors a and b by t.
+        /// Linearly interpolates between colors a and b by t.
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -450,7 +450,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a nicely formatted string of this color.
+        /// Returns a nicely formatted string of this color.
         /// </summary>
         public override string ToString()
         {
@@ -458,7 +458,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a nicely formatted string of this color.
+        /// Returns a nicely formatted string of this color.
         /// </summary>
         /// <param name="format"></param>
         public string ToString(string format)

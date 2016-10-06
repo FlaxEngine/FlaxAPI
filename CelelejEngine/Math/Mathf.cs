@@ -4,57 +4,57 @@ using System.ComponentModel;
 namespace CelelejEngine
 {
     /// <summary>
-    ///   A collection of common math functions.
+    /// A collection of common math functions.
     /// </summary>
     public struct Mathf
     {
         /// <summary>
-        ///   The value for which all absolute numbers smaller than are considered equal to zero.
+        /// The value for which all absolute numbers smaller than are considered equal to zero.
         /// </summary>
         public const float Epsilon = 1e-6f;
 
         /// <summary>
-        ///   A value specifying the approximation of π which is 180 degrees.
+        /// A value specifying the approximation of π which is 180 degrees.
         /// </summary>
         public const float Pi = (float)Math.PI;
 
         /// <summary>
-        ///   A value specifying the approximation of 2π which is 360 degrees.
+        /// A value specifying the approximation of 2π which is 360 degrees.
         /// </summary>
         public const float TwoPi = (float)(2 * Math.PI);
 
         /// <summary>
-        ///   A value specifying the approximation of π/2 which is 90 degrees.
+        /// A value specifying the approximation of π/2 which is 90 degrees.
         /// </summary>
         public const float PiOverTwo = (float)(Math.PI / 2);
 
         /// <summary>
-        ///   A value specifying the approximation of π/4 which is 45 degrees.
+        /// A value specifying the approximation of π/4 which is 45 degrees.
         /// </summary>
         public const float PiOverFour = (float)(Math.PI / 4);
 
         /// <summary>
-        ///   A representation of positive infinity (Read Only).
+        /// A representation of positive infinity (Read Only).
         /// </summary>
         public const float Infinity = float.PositiveInfinity;
 
         /// <summary>
-        ///   A representation of negative infinity (Read Only).
+        /// A representation of negative infinity (Read Only).
         /// </summary>
         public const float NegativeInfinity = float.NegativeInfinity;
 
         /// <summary>
-        ///   Degrees-to-radians conversion constant (Read Only).
+        /// Degrees-to-radians conversion constant (Read Only).
         /// </summary>
         public const float Deg2Rad = 0.0174532924f;
 
         /// <summary>
-        ///   Radians-to-degrees conversion constant (Read Only).
+        /// Radians-to-degrees conversion constant (Read Only).
         /// </summary>
         public const float Rad2Deg = 57.29578f;
 
         /// <summary>
-        ///   Returns the absolute value of f.
+        /// Returns the absolute value of f.
         /// </summary>
         /// <param name="f"></param>
         public static float Abs(float f)
@@ -63,7 +63,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the absolute value of value.
+        /// Returns the absolute value of value.
         /// </summary>
         /// <param name="value"></param>
         public static int Abs(int value)
@@ -72,7 +72,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the arc-cosine of f - the angle in radians whose cosine is f.
+        /// Returns the arc-cosine of f - the angle in radians whose cosine is f.
         /// </summary>
         /// <param name="f"></param>
         public static float Acos(float f)
@@ -81,7 +81,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Compares two floating point values if they are similar.
+        /// Compares two floating point values if they are similar.
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -91,7 +91,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the arc-sine of f - the angle in radians whose sine is f.
+        /// Returns the arc-sine of f - the angle in radians whose sine is f.
         /// </summary>
         /// <param name="f"></param>
         public static float Asin(float f)
@@ -100,7 +100,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the arc-tangent of f - the angle in radians whose tangent is f.
+        /// Returns the arc-tangent of f - the angle in radians whose tangent is f.
         /// </summary>
         /// <param name="f"></param>
         public static float Atan(float f)
@@ -109,7 +109,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the angle in radians whose Tan is y/x.
+        /// Returns the angle in radians whose Tan is y/x.
         /// </summary>
         /// <param name="y"></param>
         /// <param name="x"></param>
@@ -119,7 +119,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the smallest integer greater to or equal to f.
+        /// Returns the smallest integer greater to or equal to f.
         /// </summary>
         /// <param name="f"></param>
         public static float Ceil(float f)
@@ -128,7 +128,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the smallest integer greater to or equal to f.
+        /// Returns the smallest integer greater to or equal to f.
         /// </summary>
         /// <param name="f"></param>
         public static int CeilToInt(float f)
@@ -137,7 +137,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Clamps value between 0 and 1 and returns value.
+        /// Clamps value between 0 and 1 and returns value.
         /// </summary>
         /// <param name="value"></param>
         public static float Clamp01(float value)
@@ -150,7 +150,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the cosine of angle f in radians.
+        /// Returns the cosine of angle f in radians.
         /// </summary>
         /// <param name="f"></param>
         public static float Cos(float f)
@@ -159,7 +159,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the shortest difference between two given angles given in degrees.
+        /// Calculates the shortest difference between two given angles given in degrees.
         /// </summary>
         /// <param name="current"></param>
         /// <param name="target"></param>
@@ -172,7 +172,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns e raised to the specified power.
+        /// Returns e raised to the specified power.
         /// </summary>
         /// <param name="power"></param>
         public static float Exp(float power)
@@ -181,7 +181,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the largest integer smaller to or equal to f.
+        /// Returns the largest integer smaller to or equal to f.
         /// </summary>
         /// <param name="f"></param>
         public static float Floor(float f)
@@ -190,7 +190,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the largest integer smaller to or equal to f.
+        /// Returns the largest integer smaller to or equal to f.
         /// </summary>
         /// <param name="f"></param>
         public static int FloorToInt(float f)
@@ -209,7 +209,7 @@ namespace CelelejEngine
         }
         
         /// <summary>
-        ///   Calculates the linear parameter t that produces the interpolant value within the range [a, b].
+        /// Calculates the linear parameter t that produces the interpolant value within the range [a, b].
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -222,7 +222,7 @@ namespace CelelejEngine
         }
         
         /// <summary>
-        ///   Same as Lerp but makes sure the values interpolate correctly when they wrap around 360 degrees.
+        /// Same as Lerp but makes sure the values interpolate correctly when they wrap around 360 degrees.
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -236,7 +236,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Linearly interpolates between a and b by t.
+        /// Linearly interpolates between a and b by t.
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -284,7 +284,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the logarithm of a specified number in a specified base.
+        /// Returns the logarithm of a specified number in a specified base.
         /// </summary>
         /// <param name="f"></param>
         /// <param name="p"></param>
@@ -294,7 +294,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the natural (base e) logarithm of a specified number.
+        /// Returns the natural (base e) logarithm of a specified number.
         /// </summary>
         /// <param name="f"></param>
         public static float Log(float f)
@@ -303,7 +303,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the base 10 logarithm of a specified number.
+        /// Returns the base 10 logarithm of a specified number.
         /// </summary>
         /// <param name="f"></param>
         public static float Log10(float f)
@@ -312,7 +312,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns largest of two or more values.
+        /// Returns largest of two or more values.
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -322,7 +322,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns largest of two or more values.
+        /// Returns largest of two or more values.
         /// </summary>
         /// <param name="values"></param>
         public static float Max(params float[] values)
@@ -340,7 +340,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the largest of two or more values.
+        /// Returns the largest of two or more values.
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -350,7 +350,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the largest of two or more values.
+        /// Returns the largest of two or more values.
         /// </summary>
         /// <param name="values"></param>
         public static int Max(params int[] values)
@@ -368,7 +368,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the smallest of two or more values.
+        /// Returns the smallest of two or more values.
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -378,7 +378,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the smallest of two or more values.
+        /// Returns the smallest of two or more values.
         /// </summary>
         /// <param name="values"></param>
         public static float Min(params float[] values)
@@ -396,7 +396,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the smallest of two or more values.
+        /// Returns the smallest of two or more values.
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -406,7 +406,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the smallest of two or more values.
+        /// Returns the smallest of two or more values.
         /// </summary>
         /// <param name="values"></param>
         public static int Min(params int[] values)
@@ -424,7 +424,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Moves a value current towards target.
+        /// Moves a value current towards target.
         /// </summary>
         /// <param name="current">The current value.</param>
         /// <param name="target">The value to move towards.</param>
@@ -437,7 +437,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Same as MoveTowards but makes sure the values interpolate correctly when they wrap around 360 degrees.
+        /// Same as MoveTowards but makes sure the values interpolate correctly when they wrap around 360 degrees.
         /// </summary>
         /// <param name="current"></param>
         /// <param name="target"></param>
@@ -452,7 +452,7 @@ namespace CelelejEngine
         }
         
         /// <summary>
-        ///   PingPongs the value t, so that it is never larger than length and never smaller than 0.
+        /// PingPongs the value t, so that it is never larger than length and never smaller than 0.
         /// </summary>
         /// <param name="t"></param>
         /// <param name="length"></param>
@@ -463,7 +463,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns f raised to power p.
+        /// Returns f raised to power p.
         /// </summary>
         /// <param name="f"></param>
         /// <param name="p"></param>
@@ -480,7 +480,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Loops the value t, so that it is never larger than length and never smaller than 0.
+        /// Loops the value t, so that it is never larger than length and never smaller than 0.
         /// </summary>
         /// <param name="t"></param>
         /// <param name="length"></param>
@@ -490,7 +490,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns f rounded to the nearest integer.
+        /// Returns f rounded to the nearest integer.
         /// </summary>
         /// <param name="f"></param>
         public static float Round(float f)
@@ -499,7 +499,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns f rounded to the nearest integer.
+        /// Returns f rounded to the nearest integer.
         /// </summary>
         /// <param name="f"></param>
         public static int RoundToInt(float f)
@@ -508,7 +508,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the sign of f.
+        /// Returns the sign of f.
         /// </summary>
         /// <param name="f"></param>
         public static float Sign(float f)
@@ -517,7 +517,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the sine of angle f in radians.
+        /// Returns the sine of angle f in radians.
         /// </summary>
         /// <param name="f"></param>
         public static float Sin(float f)
@@ -527,13 +527,13 @@ namespace CelelejEngine
 
         public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed)
         {
-            float single = Time.deltaTime;
+            float single = Time.DeltaTime;
             return SmoothDamp(current, target, ref currentVelocity, smoothTime, maxSpeed, single);
         }
 
         public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime)
         {
-            float single = Time.deltaTime;
+            float single = Time.DeltaTime;
             return SmoothDamp(current, target, ref currentVelocity, smoothTime, float.PositiveInfinity, single);
         }
 
@@ -561,13 +561,13 @@ namespace CelelejEngine
 
         public static float SmoothDampAngle(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed)
         {
-            float single = Time.deltaTime;
+            float single = Time.DeltaTime;
             return SmoothDampAngle(current, target, ref currentVelocity, smoothTime, maxSpeed, single);
         }
 
         public static float SmoothDampAngle(float current, float target, ref float currentVelocity, float smoothTime)
         {
-            float single = Time.deltaTime;
+            float single = Time.DeltaTime;
             return SmoothDampAngle(current, target, ref currentVelocity, smoothTime, float.PositiveInfinity, single);
         }
 
@@ -578,7 +578,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Interpolates between min and max with smoothing at the limits.
+        /// Interpolates between min and max with smoothing at the limits.
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
@@ -591,7 +591,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns square root of f.
+        /// Returns square root of f.
         /// </summary>
         /// <param name="f"></param>
         public static float Sqrt(float f)
@@ -600,7 +600,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns the tangent of angle f in radians.
+        /// Returns the tangent of angle f in radians.
         /// </summary>
         /// <param name="f"></param>
         public static float Tan(float f)
@@ -609,20 +609,20 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Checks if a and b are almost equals, taking into account the magnitude of floating point numbers (unlike
-        ///   <see cref="WithinEpsilon" /> method). See Remarks.
-        ///   See remarks.
+        /// Checks if a and b are almost equals, taking into account the magnitude of floating point numbers (unlike
+        /// <see cref="WithinEpsilon" /> method). See Remarks.
+        /// See remarks.
         /// </summary>
         /// <param name="a">The left value to compare.</param>
         /// <param name="b">The right value to compare.</param>
         /// <returns><c>true</c> if a almost equal to b, <c>false</c> otherwise</returns>
         /// <remarks>
-        ///   The code is using the technique described by Bruce Dawson in
-        ///   <a href="http://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/">
-        ///     Comparing
-        ///     Floating point numbers 2012 edition
-        ///   </a>
-        ///   .
+        /// The code is using the technique described by Bruce Dawson in
+        /// <a href="http://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/">
+        ///   Comparing
+        ///   Floating point numbers 2012 edition
+        /// </a>
+        /// .
         /// </remarks>
         public static unsafe bool NearEqual(float a, float b)
         {
@@ -649,7 +649,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified value is close to zero (0.0f).
+        /// Determines whether the specified value is close to zero (0.0f).
         /// </summary>
         /// <param name="a">The floating value.</param>
         /// <returns><c>true</c> if the specified value is close to zero (0.0f); otherwise, <c>false</c>.</returns>
@@ -659,7 +659,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified value is close to one (1.0f).
+        /// Determines whether the specified value is close to one (1.0f).
         /// </summary>
         /// <param name="a">The floating value.</param>
         /// <returns><c>true</c> if the specified value is close to one (1.0f); otherwise, <c>false</c>.</returns>
@@ -669,7 +669,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Checks if a - b are almost equals within a float epsilon.
+        /// Checks if a - b are almost equals within a float epsilon.
         /// </summary>
         /// <param name="a">The left value to compare.</param>
         /// <param name="b">The right value to compare.</param>
@@ -682,7 +682,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Converts revolutions to degrees.
+        /// Converts revolutions to degrees.
         /// </summary>
         /// <param name="revolution">The value to convert.</param>
         /// <returns>The converted value.</returns>
@@ -692,7 +692,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Converts revolutions to radians.
+        /// Converts revolutions to radians.
         /// </summary>
         /// <param name="revolution">The value to convert.</param>
         /// <returns>The converted value.</returns>
@@ -702,7 +702,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Converts revolutions to gradians.
+        /// Converts revolutions to gradians.
         /// </summary>
         /// <param name="revolution">The value to convert.</param>
         /// <returns>The converted value.</returns>
@@ -712,7 +712,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Converts degrees to revolutions.
+        /// Converts degrees to revolutions.
         /// </summary>
         /// <param name="degree">The value to convert.</param>
         /// <returns>The converted value.</returns>
@@ -722,7 +722,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Converts degrees to radians.
+        /// Converts degrees to radians.
         /// </summary>
         /// <param name="degree">The value to convert.</param>
         /// <returns>The converted value.</returns>
@@ -732,7 +732,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Converts radians to revolutions.
+        /// Converts radians to revolutions.
         /// </summary>
         /// <param name="radian">The value to convert.</param>
         /// <returns>The converted value.</returns>
@@ -742,7 +742,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Converts radians to gradians.
+        /// Converts radians to gradians.
         /// </summary>
         /// <param name="radian">The value to convert.</param>
         /// <returns>The converted value.</returns>
@@ -752,7 +752,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Converts gradians to revolutions.
+        /// Converts gradians to revolutions.
         /// </summary>
         /// <param name="gradian">The value to convert.</param>
         /// <returns>The converted value.</returns>
@@ -762,7 +762,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Converts gradians to degrees.
+        /// Converts gradians to degrees.
         /// </summary>
         /// <param name="gradian">The value to convert.</param>
         /// <returns>The converted value.</returns>
@@ -772,7 +772,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Converts gradians to radians.
+        /// Converts gradians to radians.
         /// </summary>
         /// <param name="gradian">The value to convert.</param>
         /// <returns>The converted value.</returns>
@@ -782,7 +782,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Converts radians to degrees.
+        /// Converts radians to degrees.
         /// </summary>
         /// <param name="radian">The value to convert.</param>
         /// <returns>The converted value.</returns>
@@ -792,7 +792,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Clamps the specified value.
+        /// Clamps the specified value.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="min">The min.</param>
@@ -804,7 +804,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Clamps the specified value.
+        /// Clamps the specified value.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="min">The min.</param>
@@ -816,11 +816,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Interpolates between two values using a linear function by a given amount.
+        /// Interpolates between two values using a linear function by a given amount.
         /// </summary>
         /// <remarks>
-        ///   See http://www.encyclopediaofmath.org/index.php/Linear_interpolation and
-        ///   http://fgiesen.wordpress.com/2012/08/15/linear-interpolation-past-present-and-future/
+        /// See http://www.encyclopediaofmath.org/index.php/Linear_interpolation and
+        /// http://fgiesen.wordpress.com/2012/08/15/linear-interpolation-past-present-and-future/
         /// </remarks>
         /// <param name="from">Value to interpolate from.</param>
         /// <param name="to">Value to interpolate to.</param>
@@ -832,11 +832,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Interpolates between two values using a linear function by a given amount.
+        /// Interpolates between two values using a linear function by a given amount.
         /// </summary>
         /// <remarks>
-        ///   See http://www.encyclopediaofmath.org/index.php/Linear_interpolation and
-        ///   http://fgiesen.wordpress.com/2012/08/15/linear-interpolation-past-present-and-future/
+        /// See http://www.encyclopediaofmath.org/index.php/Linear_interpolation and
+        /// http://fgiesen.wordpress.com/2012/08/15/linear-interpolation-past-present-and-future/
         /// </remarks>
         /// <param name="from">Value to interpolate from.</param>
         /// <param name="to">Value to interpolate to.</param>
@@ -848,11 +848,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Interpolates between two values using a linear function by a given amount.
+        /// Interpolates between two values using a linear function by a given amount.
         /// </summary>
         /// <remarks>
-        ///   See http://www.encyclopediaofmath.org/index.php/Linear_interpolation and
-        ///   http://fgiesen.wordpress.com/2012/08/15/linear-interpolation-past-present-and-future/
+        /// See http://www.encyclopediaofmath.org/index.php/Linear_interpolation and
+        /// http://fgiesen.wordpress.com/2012/08/15/linear-interpolation-past-present-and-future/
         /// </remarks>
         /// <param name="from">Value to interpolate from.</param>
         /// <param name="to">Value to interpolate to.</param>
@@ -864,10 +864,10 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Performs smooth (cubic Hermite) interpolation between 0 and 1.
+        /// Performs smooth (cubic Hermite) interpolation between 0 and 1.
         /// </summary>
         /// <remarks>
-        ///   See https://en.wikipedia.org/wiki/Smoothstep
+        /// See https://en.wikipedia.org/wiki/Smoothstep
         /// </remarks>
         /// <param name="amount">Value between 0 and 1 indicating interpolation amount.</param>
         public static float SmoothStep(float amount)
@@ -878,10 +878,10 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Performs a smooth(er) interpolation between 0 and 1 with 1st and 2nd order derivatives of zero at endpoints.
+        /// Performs a smooth(er) interpolation between 0 and 1 with 1st and 2nd order derivatives of zero at endpoints.
         /// </summary>
         /// <remarks>
-        ///   See https://en.wikipedia.org/wiki/Smoothstep
+        /// See https://en.wikipedia.org/wiki/Smoothstep
         /// </remarks>
         /// <param name="amount">Value between 0 and 1 indicating interpolation amount.</param>
         public static float SmootherStep(float amount)
@@ -892,7 +892,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the modulo of the specified value.
+        /// Calculates the modulo of the specified value.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="modulo">The modulo.</param>
@@ -906,7 +906,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the modulo 2*PI of the specified value.
+        /// Calculates the modulo 2*PI of the specified value.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the modulo applied to value</returns>
@@ -916,7 +916,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Wraps the specified value into a range [min, max]
+        /// Wraps the specified value into a range [min, max]
         /// </summary>
         /// <param name="value">The value to wrap.</param>
         /// <param name="min">The min.</param>
@@ -938,7 +938,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Wraps the specified value into a range [min, max]
+        /// Wraps the specified value into a range [min, max]
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="min">The min.</param>
@@ -962,8 +962,8 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gauss function.
-        ///   http://en.wikipedia.org/wiki/Gaussian_function#Two-dimensional_Gaussian_function
+        /// Gauss function.
+        /// http://en.wikipedia.org/wiki/Gaussian_function#Two-dimensional_Gaussian_function
         /// </summary>
         /// <param name="amplitude">Curve amplitude.</param>
         /// <param name="x">Position X.</param>
@@ -979,8 +979,8 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gauss function.
-        ///   http://en.wikipedia.org/wiki/Gaussian_function#Two-dimensional_Gaussian_function
+        /// Gauss function.
+        /// http://en.wikipedia.org/wiki/Gaussian_function#Two-dimensional_Gaussian_function
         /// </summary>
         /// <param name="amplitude">Curve amplitude.</param>
         /// <param name="x">Position X.</param>

@@ -57,7 +57,7 @@ using System.Runtime.InteropServices;
 namespace CelelejEngine
 {
     /// <summary>
-    ///   Represents a four dimensional mathematical quaternion.
+    /// Represents a four dimensional mathematical quaternion.
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -66,47 +66,47 @@ namespace CelelejEngine
         private static readonly string _formatString = "X:{0:F2} Y:{1:F2} Z:{2:F2} W:{3:F2}";
         
         /// <summary>
-        ///   The size of the <see cref="Quaternion" /> type, in bytes.
+        /// The size of the <see cref="Quaternion" /> type, in bytes.
         /// </summary>
         public static readonly int SizeInBytes = Marshal.SizeOf(typeof(Quaternion));
 
         /// <summary>
-        ///   A <see cref="Quaternion" /> with all of its components set to zero.
+        /// A <see cref="Quaternion" /> with all of its components set to zero.
         /// </summary>
         public static readonly Quaternion Zero;
 
         /// <summary>
-        ///   A <see cref="Quaternion" /> with all of its components set to one.
+        /// A <see cref="Quaternion" /> with all of its components set to one.
         /// </summary>
         public static readonly Quaternion One = new Quaternion(1.0f, 1.0f, 1.0f, 1.0f);
 
         /// <summary>
-        ///   The identity <see cref="Quaternion" /> (0, 0, 0, 1).
+        /// The identity <see cref="Quaternion" /> (0, 0, 0, 1).
         /// </summary>
         public static readonly Quaternion Identity = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 
         /// <summary>
-        ///   The X component of the quaternion.
+        /// The X component of the quaternion.
         /// </summary>
         public float X;
 
         /// <summary>
-        ///   The Y component of the quaternion.
+        /// The Y component of the quaternion.
         /// </summary>
         public float Y;
 
         /// <summary>
-        ///   The Z component of the quaternion.
+        /// The Z component of the quaternion.
         /// </summary>
         public float Z;
 
         /// <summary>
-        ///   The W component of the quaternion.
+        /// The W component of the quaternion.
         /// </summary>
         public float W;
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Quaternion" /> struct.
+        /// Initializes a new instance of the <see cref="Quaternion" /> struct.
         /// </summary>
         /// <param name="value">The value that will be assigned to all components.</param>
         public Quaternion(float value)
@@ -118,7 +118,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Quaternion" /> struct.
+        /// Initializes a new instance of the <see cref="Quaternion" /> struct.
         /// </summary>
         /// <param name="value">A vector containing the values with which to initialize the components.</param>
         public Quaternion(Vector4 value)
@@ -130,7 +130,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Quaternion" /> struct.
+        /// Initializes a new instance of the <see cref="Quaternion" /> struct.
         /// </summary>
         /// <param name="value">A vector containing the values with which to initialize the X, Y, and Z components.</param>
         /// <param name="w">Initial value for the W component of the quaternion.</param>
@@ -143,7 +143,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Quaternion" /> struct.
+        /// Initializes a new instance of the <see cref="Quaternion" /> struct.
         /// </summary>
         /// <param name="value">A vector containing the values with which to initialize the X and Y components.</param>
         /// <param name="z">Initial value for the Z component of the quaternion.</param>
@@ -157,7 +157,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Quaternion" /> struct.
+        /// Initializes a new instance of the <see cref="Quaternion" /> struct.
         /// </summary>
         /// <param name="x">Initial value for the X component of the quaternion.</param>
         /// <param name="y">Initial value for the Y component of the quaternion.</param>
@@ -172,16 +172,16 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Quaternion" /> struct.
+        /// Initializes a new instance of the <see cref="Quaternion" /> struct.
         /// </summary>
         /// <param name="values">
-        ///   The values to assign to the X, Y, Z, and W components of the quaternion. This must be an array
-        ///   with four elements.
+        /// The values to assign to the X, Y, Z, and W components of the quaternion. This must be an array
+        /// with four elements.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="values" /> is <c>null</c>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   Thrown when <paramref name="values" /> contains more or less than four
-        ///   elements.
+        /// Thrown when <paramref name="values" /> contains more or less than four
+        /// elements.
         /// </exception>
         public Quaternion(float[] values)
         {
@@ -197,10 +197,10 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets a value indicating whether this instance is equivalent to the identity quaternion.
+        /// Gets a value indicating whether this instance is equivalent to the identity quaternion.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this instance is an identity quaternion; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance is an identity quaternion; otherwise, <c>false</c>.
         /// </value>
         public bool IsIdentity
         {
@@ -208,7 +208,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets a value indicting whether this instance is normalized.
+        /// Gets a value indicting whether this instance is normalized.
         /// </summary>
         public bool IsNormalized
         {
@@ -216,7 +216,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets the angle of the quaternion.
+        /// Gets the angle of the quaternion.
         /// </summary>
         /// <value>The quaternion's angle.</value>
         public float Angle
@@ -232,7 +232,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets the axis components of the quaternion.
+        /// Gets the axis components of the quaternion.
         /// </summary>
         /// <value>The axis components of the quaternion.</value>
         public Vector3 Axis
@@ -249,17 +249,17 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Gets or sets the component at the specified index.
+        /// Gets or sets the component at the specified index.
         /// </summary>
         /// <value>The value of the X, Y, Z, or W component, depending on the index.</value>
         /// <param name="index">
-        ///   The index of the component to access. Use 0 for the X component, 1 for the Y component, 2 for the Z
-        ///   component, and 3 for the W component.
+        /// The index of the component to access. Use 0 for the X component, 1 for the Y component, 2 for the Z
+        /// component, and 3 for the W component.
         /// </param>
         /// <returns>The value of the component at the specified index.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">
-        ///   Thrown when the <paramref name="index" /> is out of the range [0,
-        ///   3].
+        /// Thrown when the <paramref name="index" /> is out of the range [0,
+        /// 3].
         /// </exception>
         public float this[int index]
         {
@@ -303,7 +303,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Conjugates the quaternion.
+        /// Conjugates the quaternion.
         /// </summary>
         public void Conjugate()
         {
@@ -313,7 +313,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Conjugates and renormalizes the quaternion.
+        /// Conjugates and renormalizes the quaternion.
         /// </summary>
         public void Invert()
         {
@@ -330,12 +330,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the length of the quaternion.
+        /// Calculates the length of the quaternion.
         /// </summary>
         /// <returns>The length of the quaternion.</returns>
         /// <remarks>
-        ///   <see cref="Quaternion.LengthSquared" /> may be preferred when only the relative length is needed
-        ///   and speed is of the essence.
+        /// <see cref="Quaternion.LengthSquared" /> may be preferred when only the relative length is needed
+        /// and speed is of the essence.
         /// </remarks>
         public float Length()
         {
@@ -343,12 +343,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the squared length of the quaternion.
+        /// Calculates the squared length of the quaternion.
         /// </summary>
         /// <returns>The squared length of the quaternion.</returns>
         /// <remarks>
-        ///   This method may be preferred to <see cref="Quaternion.Length" /> when only a relative length is needed
-        ///   and speed is of the essence.
+        /// This method may be preferred to <see cref="Quaternion.Length" /> when only a relative length is needed
+        /// and speed is of the essence.
         /// </remarks>
         public float LengthSquared()
         {
@@ -356,7 +356,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Converts the quaternion into a unit quaternion.
+        /// Converts the quaternion into a unit quaternion.
         /// </summary>
         public void Normalize()
         {
@@ -372,7 +372,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates an array containing the elements of the quaternion.
+        /// Creates an array containing the elements of the quaternion.
         /// </summary>
         /// <returns>A four-element array containing the components of the quaternion.</returns>
         public float[] ToArray()
@@ -381,7 +381,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Adds two quaternions.
+        /// Adds two quaternions.
         /// </summary>
         /// <param name="left">The first quaternion to add.</param>
         /// <param name="right">The second quaternion to add.</param>
@@ -395,7 +395,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Adds two quaternions.
+        /// Adds two quaternions.
         /// </summary>
         /// <param name="left">The first quaternion to add.</param>
         /// <param name="right">The second quaternion to add.</param>
@@ -408,7 +408,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Subtracts two quaternions.
+        /// Subtracts two quaternions.
         /// </summary>
         /// <param name="left">The first quaternion to subtract.</param>
         /// <param name="right">The second quaternion to subtract.</param>
@@ -422,7 +422,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Subtracts two quaternions.
+        /// Subtracts two quaternions.
         /// </summary>
         /// <param name="left">The first quaternion to subtract.</param>
         /// <param name="right">The second quaternion to subtract.</param>
@@ -435,7 +435,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Scales a quaternion by the given value.
+        /// Scales a quaternion by the given value.
         /// </summary>
         /// <param name="value">The quaternion to scale.</param>
         /// <param name="scale">The amount by which to scale the quaternion.</param>
@@ -449,7 +449,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Scales a quaternion by the given value.
+        /// Scales a quaternion by the given value.
         /// </summary>
         /// <param name="value">The quaternion to scale.</param>
         /// <param name="scale">The amount by which to scale the quaternion.</param>
@@ -462,7 +462,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Multiplies a quaternion by another.
+        /// Multiplies a quaternion by another.
         /// </summary>
         /// <param name="left">The first quaternion to multiply.</param>
         /// <param name="right">The second quaternion to multiply.</param>
@@ -488,7 +488,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Multiplies a quaternion by another.
+        /// Multiplies a quaternion by another.
         /// </summary>
         /// <param name="left">The first quaternion to multiply.</param>
         /// <param name="right">The second quaternion to multiply.</param>
@@ -501,7 +501,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Reverses the direction of a given quaternion.
+        /// Reverses the direction of a given quaternion.
         /// </summary>
         /// <param name="value">The quaternion to negate.</param>
         /// <param name="result">When the method completes, contains a quaternion facing in the opposite direction.</param>
@@ -514,7 +514,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Reverses the direction of a given quaternion.
+        /// Reverses the direction of a given quaternion.
         /// </summary>
         /// <param name="value">The quaternion to negate.</param>
         /// <returns>A quaternion facing in the opposite direction.</returns>
@@ -526,23 +526,23 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="Quaternion" /> containing the 4D Cartesian coordinates of a point specified in Barycentric
-        ///   coordinates relative to a 2D triangle.
+        /// Returns a <see cref="Quaternion" /> containing the 4D Cartesian coordinates of a point specified in Barycentric
+        /// coordinates relative to a 2D triangle.
         /// </summary>
         /// <param name="value1">A <see cref="Quaternion" /> containing the 4D Cartesian coordinates of vertex 1 of the triangle.</param>
         /// <param name="value2">A <see cref="Quaternion" /> containing the 4D Cartesian coordinates of vertex 2 of the triangle.</param>
         /// <param name="value3">A <see cref="Quaternion" /> containing the 4D Cartesian coordinates of vertex 3 of the triangle.</param>
         /// <param name="amount1">
-        ///   Barycentric coordinate b2, which expresses the weighting factor toward vertex 2 (specified in
-        ///   <paramref name="value2" />).
+        /// Barycentric coordinate b2, which expresses the weighting factor toward vertex 2 (specified in
+        /// <paramref name="value2" />).
         /// </param>
         /// <param name="amount2">
-        ///   Barycentric coordinate b3, which expresses the weighting factor toward vertex 3 (specified in
-        ///   <paramref name="value3" />).
+        /// Barycentric coordinate b3, which expresses the weighting factor toward vertex 3 (specified in
+        /// <paramref name="value3" />).
         /// </param>
         /// <param name="result">
-        ///   When the method completes, contains a new <see cref="Quaternion" /> containing the 4D Cartesian
-        ///   coordinates of the specified point.
+        /// When the method completes, contains a new <see cref="Quaternion" /> containing the 4D Cartesian
+        /// coordinates of the specified point.
         /// </param>
         public static void Barycentric(ref Quaternion value1, ref Quaternion value2, ref Quaternion value3, float amount1, float amount2, out Quaternion result)
         {
@@ -553,19 +553,19 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="Quaternion" /> containing the 4D Cartesian coordinates of a point specified in Barycentric
-        ///   coordinates relative to a 2D triangle.
+        /// Returns a <see cref="Quaternion" /> containing the 4D Cartesian coordinates of a point specified in Barycentric
+        /// coordinates relative to a 2D triangle.
         /// </summary>
         /// <param name="value1">A <see cref="Quaternion" /> containing the 4D Cartesian coordinates of vertex 1 of the triangle.</param>
         /// <param name="value2">A <see cref="Quaternion" /> containing the 4D Cartesian coordinates of vertex 2 of the triangle.</param>
         /// <param name="value3">A <see cref="Quaternion" /> containing the 4D Cartesian coordinates of vertex 3 of the triangle.</param>
         /// <param name="amount1">
-        ///   Barycentric coordinate b2, which expresses the weighting factor toward vertex 2 (specified in
-        ///   <paramref name="value2" />).
+        /// Barycentric coordinate b2, which expresses the weighting factor toward vertex 2 (specified in
+        /// <paramref name="value2" />).
         /// </param>
         /// <param name="amount2">
-        ///   Barycentric coordinate b3, which expresses the weighting factor toward vertex 3 (specified in
-        ///   <paramref name="value3" />).
+        /// Barycentric coordinate b3, which expresses the weighting factor toward vertex 3 (specified in
+        /// <paramref name="value3" />).
         /// </param>
         /// <returns>A new <see cref="Quaternion" /> containing the 4D Cartesian coordinates of the specified point.</returns>
         public static Quaternion Barycentric(Quaternion value1, Quaternion value2, Quaternion value3, float amount1, float amount2)
@@ -576,7 +576,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Conjugates a quaternion.
+        /// Conjugates a quaternion.
         /// </summary>
         /// <param name="value">The quaternion to conjugate.</param>
         /// <param name="result">When the method completes, contains the conjugated quaternion.</param>
@@ -589,7 +589,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Conjugates a quaternion.
+        /// Conjugates a quaternion.
         /// </summary>
         /// <param name="value">The quaternion to conjugate.</param>
         /// <returns>The conjugated quaternion.</returns>
@@ -601,7 +601,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the dot product of two quaternions.
+        /// Calculates the dot product of two quaternions.
         /// </summary>
         /// <param name="left">First source quaternion.</param>
         /// <param name="right">Second source quaternion.</param>
@@ -612,7 +612,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the dot product of two quaternions.
+        /// Calculates the dot product of two quaternions.
         /// </summary>
         /// <param name="left">First source quaternion.</param>
         /// <param name="right">Second source quaternion.</param>
@@ -623,7 +623,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Exponentiates a quaternion.
+        /// Exponentiates a quaternion.
         /// </summary>
         /// <param name="value">The quaternion to exponentiate.</param>
         /// <param name="result">When the method completes, contains the exponentiated quaternion.</param>
@@ -648,7 +648,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Exponentiates a quaternion.
+        /// Exponentiates a quaternion.
         /// </summary>
         /// <param name="value">The quaternion to exponentiate.</param>
         /// <returns>The exponentiated quaternion.</returns>
@@ -660,7 +660,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Conjugates and renormalizes the quaternion.
+        /// Conjugates and renormalizes the quaternion.
         /// </summary>
         /// <param name="value">The quaternion to conjugate and renormalize.</param>
         /// <param name="result">When the method completes, contains the conjugated and renormalized quaternion.</param>
@@ -671,7 +671,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Conjugates and renormalizes the quaternion.
+        /// Conjugates and renormalizes the quaternion.
         /// </summary>
         /// <param name="value">The quaternion to conjugate and renormalize.</param>
         /// <returns>The conjugated and renormalized quaternion.</returns>
@@ -683,17 +683,17 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Performs a linear interpolation between two quaternions.
+        /// Performs a linear interpolation between two quaternions.
         /// </summary>
         /// <param name="start">Start quaternion.</param>
         /// <param name="end">End quaternion.</param>
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end" />.</param>
         /// <param name="result">When the method completes, contains the linear interpolation of the two quaternions.</param>
         /// <remarks>
-        ///   This method performs the linear interpolation based on the following formula.
-        ///   <code>start + (end - start) * amount</code>
-        ///   Passing <paramref name="amount" /> a value of 0 will cause <paramref name="start" /> to be returned; a value of 1
-        ///   will cause <paramref name="end" /> to be returned.
+        /// This method performs the linear interpolation based on the following formula.
+        /// <code>start + (end - start) * amount</code>
+        /// Passing <paramref name="amount" /> a value of 0 will cause <paramref name="start" /> to be returned; a value of 1
+        /// will cause <paramref name="end" /> to be returned.
         /// </remarks>
         public static void Lerp(ref Quaternion start, ref Quaternion end, float amount, out Quaternion result)
         {
@@ -718,17 +718,17 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Performs a linear interpolation between two quaternion.
+        /// Performs a linear interpolation between two quaternion.
         /// </summary>
         /// <param name="start">Start quaternion.</param>
         /// <param name="end">End quaternion.</param>
         /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end" />.</param>
         /// <returns>The linear interpolation of the two quaternions.</returns>
         /// <remarks>
-        ///   This method performs the linear interpolation based on the following formula.
-        ///   <code>start + (end - start) * amount</code>
-        ///   Passing <paramref name="amount" /> a value of 0 will cause <paramref name="start" /> to be returned; a value of 1
-        ///   will cause <paramref name="end" /> to be returned.
+        /// This method performs the linear interpolation based on the following formula.
+        /// <code>start + (end - start) * amount</code>
+        /// Passing <paramref name="amount" /> a value of 0 will cause <paramref name="start" /> to be returned; a value of 1
+        /// will cause <paramref name="end" /> to be returned.
         /// </remarks>
         public static Quaternion Lerp(Quaternion start, Quaternion end, float amount)
         {
@@ -738,7 +738,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the natural logarithm of the specified quaternion.
+        /// Calculates the natural logarithm of the specified quaternion.
         /// </summary>
         /// <param name="value">The quaternion whose logarithm will be calculated.</param>
         /// <param name="result">When the method completes, contains the natural logarithm of the quaternion.</param>
@@ -770,7 +770,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Calculates the natural logarithm of the specified quaternion.
+        /// Calculates the natural logarithm of the specified quaternion.
         /// </summary>
         /// <param name="value">The quaternion whose logarithm will be calculated.</param>
         /// <returns>The natural logarithm of the quaternion.</returns>
@@ -782,7 +782,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Converts the quaternion into a unit quaternion.
+        /// Converts the quaternion into a unit quaternion.
         /// </summary>
         /// <param name="value">The quaternion to normalize.</param>
         /// <param name="result">When the method completes, contains the normalized quaternion.</param>
@@ -794,7 +794,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Converts the quaternion into a unit quaternion.
+        /// Converts the quaternion into a unit quaternion.
         /// </summary>
         /// <param name="value">The quaternion to normalize.</param>
         /// <returns>The normalized quaternion.</returns>
@@ -805,7 +805,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a quaternion given a rotation and an axis.
+        /// Creates a quaternion given a rotation and an axis.
         /// </summary>
         /// <param name="axis">The axis of rotation.</param>
         /// <param name="angle">The angle of rotation.</param>
@@ -826,7 +826,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a quaternion given a rotation and an axis.
+        /// Creates a quaternion given a rotation and an axis.
         /// </summary>
         /// <param name="axis">The axis of rotation.</param>
         /// <param name="angle">The angle of rotation.</param>
@@ -839,7 +839,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a quaternion given a rotation matrix.
+        /// Creates a quaternion given a rotation matrix.
         /// </summary>
         /// <param name="matrix">The rotation matrix.</param>
         /// <param name="result">When the method completes, contains the newly created quaternion.</param>
@@ -892,7 +892,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a quaternion given a rotation matrix.
+        /// Creates a quaternion given a rotation matrix.
         /// </summary>
         /// <param name="matrix">The rotation matrix.</param>
         /// <param name="result">When the method completes, contains the newly created quaternion.</param>
@@ -945,7 +945,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed, look-at quaternion.
+        /// Creates a left-handed, look-at quaternion.
         /// </summary>
         /// <param name="eye">The position of the viewer's eye.</param>
         /// <param name="target">The camera look-at target.</param>
@@ -959,7 +959,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed, look-at quaternion.
+        /// Creates a left-handed, look-at quaternion.
         /// </summary>
         /// <param name="eye">The position of the viewer's eye.</param>
         /// <param name="target">The camera look-at target.</param>
@@ -973,7 +973,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed, look-at quaternion.
+        /// Creates a left-handed, look-at quaternion.
         /// </summary>
         /// <param name="forward">The camera's forward direction.</param>
         /// <param name="up">The camera's up vector.</param>
@@ -985,7 +985,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed, look-at quaternion.
+        /// Creates a left-handed, look-at quaternion.
         /// </summary>
         /// <param name="forward">The camera's forward direction.</param>
         /// <param name="up">The camera's up vector.</param>
@@ -998,7 +998,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed, look-at quaternion.
+        /// Creates a right-handed, look-at quaternion.
         /// </summary>
         /// <param name="eye">The position of the viewer's eye.</param>
         /// <param name="target">The camera look-at target.</param>
@@ -1012,7 +1012,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed, look-at quaternion.
+        /// Creates a right-handed, look-at quaternion.
         /// </summary>
         /// <param name="eye">The position of the viewer's eye.</param>
         /// <param name="target">The camera look-at target.</param>
@@ -1026,7 +1026,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed, look-at quaternion.
+        /// Creates a right-handed, look-at quaternion.
         /// </summary>
         /// <param name="forward">The camera's forward direction.</param>
         /// <param name="up">The camera's up vector.</param>
@@ -1038,7 +1038,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed, look-at quaternion.
+        /// Creates a right-handed, look-at quaternion.
         /// </summary>
         /// <param name="forward">The camera's forward direction.</param>
         /// <param name="up">The camera's up vector.</param>
@@ -1051,7 +1051,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed spherical billboard that rotates around a specified object position.
+        /// Creates a left-handed spherical billboard that rotates around a specified object position.
         /// </summary>
         /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
         /// <param name="cameraPosition">The position of the camera.</param>
@@ -1066,7 +1066,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a left-handed spherical billboard that rotates around a specified object position.
+        /// Creates a left-handed spherical billboard that rotates around a specified object position.
         /// </summary>
         /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
         /// <param name="cameraPosition">The position of the camera.</param>
@@ -1081,7 +1081,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed spherical billboard that rotates around a specified object position.
+        /// Creates a right-handed spherical billboard that rotates around a specified object position.
         /// </summary>
         /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
         /// <param name="cameraPosition">The position of the camera.</param>
@@ -1096,7 +1096,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a right-handed spherical billboard that rotates around a specified object position.
+        /// Creates a right-handed spherical billboard that rotates around a specified object position.
         /// </summary>
         /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
         /// <param name="cameraPosition">The position of the camera.</param>
@@ -1111,7 +1111,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a quaternion given a rotation matrix.
+        /// Creates a quaternion given a rotation matrix.
         /// </summary>
         /// <param name="matrix">The rotation matrix.</param>
         /// <returns>The newly created quaternion.</returns>
@@ -1123,7 +1123,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a quaternion given a yaw, pitch, and roll value.
+        /// Creates a quaternion given a yaw, pitch, and roll value.
         /// </summary>
         /// <param name="yaw">The yaw of rotation.</param>
         /// <param name="pitch">The pitch of rotation.</param>
@@ -1149,7 +1149,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Creates a quaternion given a yaw, pitch, and roll value.
+        /// Creates a quaternion given a yaw, pitch, and roll value.
         /// </summary>
         /// <param name="yaw">The yaw of rotation.</param>
         /// <param name="pitch">The pitch of rotation.</param>
@@ -1163,7 +1163,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Interpolates between two quaternions, using spherical linear interpolation.
+        /// Interpolates between two quaternions, using spherical linear interpolation.
         /// </summary>
         /// <param name="start">Start quaternion.</param>
         /// <param name="end">End quaternion.</param>
@@ -1196,7 +1196,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Interpolates between two quaternions, using spherical linear interpolation.
+        /// Interpolates between two quaternions, using spherical linear interpolation.
         /// </summary>
         /// <param name="start">Start quaternion.</param>
         /// <param name="end">End quaternion.</param>
@@ -1210,7 +1210,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Interpolates between quaternions, using spherical quadrangle interpolation.
+        /// Interpolates between quaternions, using spherical quadrangle interpolation.
         /// </summary>
         /// <param name="value1">First source quaternion.</param>
         /// <param name="value2">Second source quaternion.</param>
@@ -1227,7 +1227,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Interpolates between quaternions, using spherical quadrangle interpolation.
+        /// Interpolates between quaternions, using spherical quadrangle interpolation.
         /// </summary>
         /// <param name="value1">First source quaternion.</param>
         /// <param name="value2">Second source quaternion.</param>
@@ -1243,7 +1243,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Sets up control points for spherical quadrangle interpolation.
+        /// Sets up control points for spherical quadrangle interpolation.
         /// </summary>
         /// <param name="value1">First source quaternion.</param>
         /// <param name="value2">Second source quaternion.</param>
@@ -1270,7 +1270,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Adds two quaternions.
+        /// Adds two quaternions.
         /// </summary>
         /// <param name="left">The first quaternion to add.</param>
         /// <param name="right">The second quaternion to add.</param>
@@ -1283,7 +1283,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Subtracts two quaternions.
+        /// Subtracts two quaternions.
         /// </summary>
         /// <param name="left">The first quaternion to subtract.</param>
         /// <param name="right">The second quaternion to subtract.</param>
@@ -1296,7 +1296,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Reverses the direction of a given quaternion.
+        /// Reverses the direction of a given quaternion.
         /// </summary>
         /// <param name="value">The quaternion to negate.</param>
         /// <returns>A quaternion facing in the opposite direction.</returns>
@@ -1308,7 +1308,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Scales a quaternion by the given value.
+        /// Scales a quaternion by the given value.
         /// </summary>
         /// <param name="value">The quaternion to scale.</param>
         /// <param name="scale">The amount by which to scale the quaternion.</param>
@@ -1321,7 +1321,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Scales a quaternion by the given value.
+        /// Scales a quaternion by the given value.
         /// </summary>
         /// <param name="value">The quaternion to scale.</param>
         /// <param name="scale">The amount by which to scale the quaternion.</param>
@@ -1334,7 +1334,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Multiplies a quaternion by another.
+        /// Multiplies a quaternion by another.
         /// </summary>
         /// <param name="left">The first quaternion to multiply.</param>
         /// <param name="right">The second quaternion to multiply.</param>
@@ -1347,13 +1347,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Tests for equality between two objects.
+        /// Tests for equality between two objects.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns>
-        ///   <c>true</c> if <paramref name="left" /> has the same value as <paramref name="right" />; otherwise,
-        ///   <c>false</c>.
+        /// <c>true</c> if <paramref name="left" /> has the same value as <paramref name="right" />; otherwise,
+        /// <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Quaternion left, Quaternion right)
@@ -1362,13 +1362,13 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Tests for inequality between two objects.
+        /// Tests for inequality between two objects.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns>
-        ///   <c>true</c> if <paramref name="left" /> has a different value than <paramref name="right" />; otherwise,
-        ///   <c>false</c>.
+        /// <c>true</c> if <paramref name="left" /> has a different value than <paramref name="right" />; otherwise,
+        /// <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Quaternion left, Quaternion right)
@@ -1377,10 +1377,10 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public override string ToString()
         {
@@ -1388,11 +1388,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <param name="format">The format.</param>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public string ToString(string format)
         {
@@ -1404,11 +1404,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <param name="formatProvider">The format provider.</param>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public string ToString(IFormatProvider formatProvider)
         {
@@ -1416,12 +1416,12 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <param name="format">The format.</param>
         /// <param name="formatProvider">The format provider.</param>
         /// <returns>
-        ///   A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
@@ -1433,10 +1433,10 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Returns a hash code for this instance.
+        /// Returns a hash code for this instance.
         /// </summary>
         /// <returns>
-        ///   A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
         public override int GetHashCode()
         {
@@ -1451,11 +1451,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref="Quaternion" /> is equal to this instance.
+        /// Determines whether the specified <see cref="Quaternion" /> is equal to this instance.
         /// </summary>
         /// <param name="other">The <see cref="Quaternion" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="Quaternion" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Quaternion" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(ref Quaternion other)
@@ -1464,11 +1464,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref="Quaternion" /> is equal to this instance.
+        /// Determines whether the specified <see cref="Quaternion" /> is equal to this instance.
         /// </summary>
         /// <param name="other">The <see cref="Quaternion" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="Quaternion" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Quaternion" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Quaternion other)
@@ -1477,11 +1477,11 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        ///   Determines whether the specified <see cref="System.Object" /> is equal to this instance.
+        /// Determines whether the specified <see cref="System.Object" /> is equal to this instance.
         /// </summary>
         /// <param name="value">The <see cref="System.Object" /> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object value)
         {
