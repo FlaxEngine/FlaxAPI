@@ -1,3 +1,5 @@
+// Celelej Game Engine scripting API
+
 namespace CelelejEngine
 {
     /// <summary>

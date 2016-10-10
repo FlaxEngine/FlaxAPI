@@ -1,3 +1,5 @@
+// Celelej Game Engine scripting API
+
 using System;
 using System.Runtime.CompilerServices;
 

@@ -1,3 +1,5 @@
+// Celelej Game Engine scripting API
+
 using System;
 
 namespace CelelejEngine
@@ -7,8 +9,7 @@ namespace CelelejEngine
     /// </summary>
     public class Logger : ILogger
     {
-        private const string kNoTagFormat = "{0}";
-        private const string kTagFormat = "{0}: {1}";
+        private const string TagFormat = "{0}: {1}";
 
         private Logger()
         {
@@ -96,7 +97,7 @@ namespace CelelejEngine
         public void Log(LogType logType, string tag, object message)
         {
             if (IsLogTypeAllowed(logType))
-                logHandler.Log(logType, null, string.Format(kTagFormat, tag, GetString(message)));
+                logHandler.Log(logType, null, string.Format(TagFormat, tag, GetString(message)));
         }
 
         /// <summary>
@@ -112,7 +113,7 @@ namespace CelelejEngine
         public void Log(LogType logType, string tag, object message, Object context)
         {
             if (IsLogTypeAllowed(logType))
-                logHandler.Log(logType, context, string.Format(kTagFormat, tag, GetString(message)));
+                logHandler.Log(logType, context, string.Format(TagFormat, tag, GetString(message)));
         }
 
         /// <summary>
@@ -137,7 +138,7 @@ namespace CelelejEngine
         public void Log(string tag, object message)
         {
             if (IsLogTypeAllowed(LogType.Log))
-                logHandler.Log(LogType.Log, null, string.Format(kTagFormat, tag, GetString(message)));
+                logHandler.Log(LogType.Log, null, string.Format(TagFormat, tag, GetString(message)));
         }
 
         /// <summary>
@@ -153,7 +154,7 @@ namespace CelelejEngine
         public void Log(string tag, object message, Object context)
         {
             if (IsLogTypeAllowed(LogType.Log))
-                logHandler.Log(LogType.Log, context, string.Format(kTagFormat, tag, GetString(message)));
+                logHandler.Log(LogType.Log, context, string.Format(TagFormat, tag, GetString(message)));
         }
 
         /// <summary>
@@ -167,7 +168,7 @@ namespace CelelejEngine
         public void LogError(string tag, object message)
         {
             if (IsLogTypeAllowed(LogType.Error))
-                logHandler.Log(LogType.Error, null, string.Format(kTagFormat, tag, GetString(message)));
+                logHandler.Log(LogType.Error, null, string.Format(TagFormat, tag, GetString(message)));
         }
 
         /// <summary>
@@ -182,7 +183,7 @@ namespace CelelejEngine
         public void LogError(string tag, object message, Object context)
         {
             if (IsLogTypeAllowed(LogType.Error))
-                logHandler.Log(LogType.Error, context, string.Format(kTagFormat, tag, GetString(message)));
+                logHandler.Log(LogType.Error, context, string.Format(TagFormat, tag, GetString(message)));
         }
 
         /// <summary>
@@ -255,7 +256,7 @@ namespace CelelejEngine
         public void LogWarning(string tag, object message)
         {
             if (IsLogTypeAllowed(LogType.Warning))
-                logHandler.Log(LogType.Warning, null, string.Format(kTagFormat, tag, GetString(message)));
+                logHandler.Log(LogType.Warning, null, string.Format(TagFormat, tag, GetString(message)));
         }
 
         /// <summary>
@@ -270,7 +271,7 @@ namespace CelelejEngine
         public void LogWarning(string tag, object message, Object context)
         {
             if (IsLogTypeAllowed(LogType.Warning))
-                logHandler.Log(LogType.Warning, context, string.Format(kTagFormat, tag, GetString(message)));
+                logHandler.Log(LogType.Warning, context, string.Format(TagFormat, tag, GetString(message)));
         }
     }
 }

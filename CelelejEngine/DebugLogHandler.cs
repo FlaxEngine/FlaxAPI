@@ -1,3 +1,5 @@
+// Celelej Game Engine scripting API
+
 using System;
 using System.Runtime.CompilerServices;
 
@@ -7,12 +9,12 @@ namespace CelelejEngine
     {
         public void LogException(Exception exception, Object context)
         {
-            Internal_LogException(exception, context != null ? context.UnmanagedPtr : IntPtr.Zero);
+            Internal_LogException(exception, context != null ? context.unmanagedPtr : IntPtr.Zero);
         }
 
         public void Log(LogType logType, Object context, string message)
         {
-            Internal_Log(logType, message, context != null ? context.UnmanagedPtr : IntPtr.Zero);
+            Internal_Log(logType, message, context != null ? context.unmanagedPtr : IntPtr.Zero);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
