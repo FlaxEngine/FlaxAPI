@@ -10,7 +10,8 @@ namespace CelelejEngine
     /// </summary>
     public abstract class Object
     {
-        internal IntPtr unmanagedPtr;
+        [NonSerialized]
+        internal IntPtr unmanagedPtr = IntPtr.Zero;
 
         /// <summary>
         /// Notifies the unmanaged interop object that the managed instance was finalized.

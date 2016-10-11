@@ -88,8 +88,8 @@ namespace fastJSON
         private void findFields(List<FieldInfo> validFields, Type type)
         {
             // Check base clases
-            if (type.BaseType != null)
-                findFields(validFields, type.BaseType);
+            //if (type.BaseType != null)
+            //    findFields(validFields, type.BaseType);
 
             // Get fields to serialize
             FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
@@ -97,6 +97,10 @@ namespace fastJSON
             for (int i = 0; i < length; i++)
             {
                 FieldInfo field = fields[i];
+
+                // Skip not serialized fields
+                if(field.IsNotSerialized)
+                    continue;
 
                 // Check if field is private
                 if (field.IsPrivate)
