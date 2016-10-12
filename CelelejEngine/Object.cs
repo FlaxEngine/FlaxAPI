@@ -37,6 +37,11 @@ namespace CelelejEngine
             return obj != null && obj.unmanagedPtr != IntPtr.Zero;
         }
 
+        internal static IntPtr GetUnmanagedPtr(Object obj)
+        {
+            return obj != null ? obj.unmanagedPtr : IntPtr.Zero;
+        }
+
         /// <inheritdoc />
         public override int GetHashCode()
         {

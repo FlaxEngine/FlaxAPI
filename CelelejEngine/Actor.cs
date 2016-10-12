@@ -15,8 +15,8 @@ namespace CelelejEngine
         /// </summary>
         public Actor Parent
         {
-            get { return Internal_GetParent(this); }
-            set { Internal_SetParent(this, value, false); }
+            get { return Internal_GetParent(unmanagedPtr); }
+            set { Internal_SetParent(unmanagedPtr, GetUnmanagedPtr(value), false); }
         }
 
         /// <summary>
@@ -24,8 +24,8 @@ namespace CelelejEngine
         /// </summary>
         public string Name
         {
-            get { return Internal_GetName(this); }
-            set { Internal_SetName(this, value); }
+            get { return Internal_GetName(unmanagedPtr); }
+            set { Internal_SetName(unmanagedPtr, value); }
         }
 
         /// <summary>
@@ -35,22 +35,28 @@ namespace CelelejEngine
         /// <param name="worldPositionStays">Should actor world positions remain the same after parent change?</param>
         public void SetParent(Actor newParent, bool worldPositionStays = true)
         {
-            Internal_SetParent(this, newParent, worldPositionStays);
+            Internal_SetParent(unmanagedPtr, GetUnmanagedPtr(newParent) , worldPositionStays);
+        }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return string.Format("{0} ({1})", Internal_GetName(unmanagedPtr), GetType().Name);
         }
 
         #region Internal Calls
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Actor Internal_GetParent(Actor obj);
+        internal static extern Actor Internal_GetParent(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetParent(Actor obj, Actor newParent, bool worldPositionStays);
+        internal static extern void Internal_SetParent(IntPtr obj, IntPtr newParent, bool worldPositionStays);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern String Internal_GetName(Actor obj);
+        internal static extern string Internal_GetName(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetName(Actor obj, string newName);
+        internal static extern void Internal_SetName(IntPtr obj, string newName);
 
         #endregion
     }
