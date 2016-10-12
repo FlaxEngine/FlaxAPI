@@ -20,6 +20,15 @@ namespace CelelejEngine
         }
 
         /// <summary>
+        /// Gets or sets actor name
+        /// </summary>
+        public string Name
+        {
+            get { return Internal_GetName(this); }
+            set { Internal_SetName(this, value); }
+        }
+
+        /// <summary>
         /// Sets parent actor
         /// </summary>
         /// <param name="newParent">New parent to assign</param>
@@ -36,6 +45,12 @@ namespace CelelejEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetParent(Actor obj, Actor newParent, bool worldPositionStays);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern String Internal_GetName(Actor obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetName(Actor obj, string newName);
 
         #endregion
     }

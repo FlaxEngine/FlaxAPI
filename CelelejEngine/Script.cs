@@ -19,6 +19,14 @@ namespace CelelejEngine
             set { Internal_SetEnabled(unmanagedPtr, value); }
         }
 
+        /// <summary>
+        /// Gets actor owning that script
+        /// </summary>
+        public Actor Actor
+        {
+            get { return Internal_GetActor(unmanagedPtr); }
+        }
+
         #region Internal Calls
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -26,6 +34,9 @@ namespace CelelejEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_SetEnabled(IntPtr ptr, bool value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern Actor Internal_GetActor(IntPtr ptr);
 
         #endregion
     }
