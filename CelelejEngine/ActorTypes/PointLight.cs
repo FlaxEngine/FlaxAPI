@@ -22,7 +22,7 @@ namespace CelelejEngine
         public Color Color
         {
             get { return Internal_GetColor(unmanagedPtr); }
-            set { Internal_SetColor(unmanagedPtr, value); }
+            set { Internal_SetColor(unmanagedPtr, ref value); }
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace CelelejEngine
             get { return Internal_GetRadius(unmanagedPtr); }
             set { Internal_SetRadius(unmanagedPtr, value); }
         }
-        /*
+        
         /// <summary>
         /// Gets light scaled radius parameter
         /// </summary>
@@ -50,7 +50,7 @@ namespace CelelejEngine
         {
             get { return Scale.MaxValue * Radius; }
         }
-        */
+        
         /// <summary>
         /// Gets or sets light source bulb radius parameter
         /// </summary>
@@ -86,15 +86,15 @@ namespace CelelejEngine
             get { return Internal_GetShadowsMode(unmanagedPtr); }
             set { Internal_SetShadowsMode(unmanagedPtr, value); }
         }
-        /*
+        
         /// <summary>
         /// Gets light direction vector
         /// </summary>
         public Vector3 Direction
         {
-            get { return Ortientation * Vector3.ForwardLH; }
+            get { return Vector3.ForwardLH * Orientation; }
         }
-        */
+        
         #region Internal Calls
         
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -109,7 +109,7 @@ namespace CelelejEngine
         internal static extern Color Internal_GetColor(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetColor(IntPtr obj, Color value);
+        internal static extern void Internal_SetColor(IntPtr obj, ref Color value);
 
         //
 

@@ -235,6 +235,22 @@ namespace CelelejEngine
         }
 
         /// <summary>
+        /// Gets a minimum component value
+        /// </summary>
+        public float MinValue
+        {
+            get { return Mathf.Min(X, Mathf.Min(Y, Z)); }
+        }
+
+        /// <summary>
+        /// Gets a maximum component value
+        /// </summary>
+        public float MaxValue
+        {
+            get { return Mathf.Max(X, Mathf.Max(Y, Z)); }
+        }
+
+        /// <summary>
         /// Gets or sets the component at the specified index.
         /// </summary>
         /// <value>The value of the X, Y, or Z component, depending on the index.</value>
@@ -1650,6 +1666,19 @@ namespace CelelejEngine
         public static Vector3 operator -(Vector3 value)
         {
             return new Vector3(-value.X, -value.Y, -value.Z);
+        }
+
+        /// <summary>
+        /// Transforms a vector by the given rotation.
+        /// </summary>
+        /// <param name="vector">The vector to transform.</param>
+        /// <param name="rotation">The quaternion.</param>
+        /// <returns>The scaled vector.</returns>
+        public static Vector3 operator *(Vector3 vector, Quaternion rotation)
+        {
+            Vector3 result;
+            Transform(ref vector, ref rotation, out result);
+            return result;
         }
 
         /// <summary>
