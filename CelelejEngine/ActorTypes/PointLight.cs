@@ -96,7 +96,7 @@ namespace CelelejEngine
         }
         */
         #region Internal Calls
-
+        
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetAffectsWorld(IntPtr obj);
 

@@ -82,6 +82,7 @@
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="Math\Matrix3x3.cs" />
     <Compile Include="Math\OrientedBoundingBox.cs" />
+    <Compile Include="Math\Transform.cs" />
     <Compile Include="MissingActorException.cs" />
     <Compile Include="MissingReferenceException.cs" />
     <Compile Include="Object.cs" />
