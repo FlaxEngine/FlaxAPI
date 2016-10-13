@@ -92,6 +92,7 @@
     <Compile Include="Math\Ray.cs" />
     <Compile Include="Script.cs" />
     <Compile Include="SerializeField.cs" />
+    <Compile Include="ShadowsCastingMode.cs" />
     <Compile Include="StackTraceLogType.cs" />
     <Compile Include="StackTraceUtility.cs" />
     <Compile Include="SystemInfo.cs" />
