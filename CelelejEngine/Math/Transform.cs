@@ -24,7 +24,7 @@ namespace CelelejEngine
         /// <summary>
         /// A identity <see cref="Transform" /> with all default values
         /// </summary>
-        public static readonly Vector3 Identity;
+        public static readonly Transform Identity = new Transform(Vector3.Zero);
 
         /// <summary>
         /// Translation vector of the transform

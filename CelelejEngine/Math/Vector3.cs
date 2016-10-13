@@ -223,7 +223,15 @@ namespace CelelejEngine
         /// </summary>
         public bool IsZero
         {
-            get { return (X == 0) && (Y == 0) && (Z == 0); }
+            get { return Mathf.IsZero(X) && Mathf.IsZero(Y) && Mathf.IsZero(Z); }
+        }
+
+        /// <summary>
+        /// Gets a value indicting whether this vector is one
+        /// </summary>
+        public bool IsOne
+        {
+            get { return Mathf.IsOne(X) && Mathf.IsOne(Y) && Mathf.IsOne(Z); }
         }
 
         /// <summary>
