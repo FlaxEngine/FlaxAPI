@@ -96,6 +96,7 @@
     <Compile Include="ShadowsCastingMode.cs" />
     <Compile Include="StackTraceLogType.cs" />
     <Compile Include="StackTraceUtility.cs" />
+    <Compile Include="StaticFlags.cs" />
     <Compile Include="SystemInfo.cs" />
     <Compile Include="UnassignedReferenceException.cs" />
     <Compile Include="UnhandledExceptionHandler.cs" />

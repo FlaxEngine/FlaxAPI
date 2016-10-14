@@ -54,6 +54,23 @@ namespace CelelejEngine
             Internal_SetParent(unmanagedPtr, GetUnmanagedPtr(newParent) , worldPositionStays);
         }
 
+        /// <summary>
+        /// Gets or sets actor static fags
+        /// </summary>
+        public StaticFlags StaticFlags
+        {
+            get { return Internal_GetStaticFlags(unmanagedPtr); }
+            set { Internal_SetStaticFlags(unmanagedPtr, value); }
+        }
+
+        /// <summary>
+        /// Returns true if object is fully static on the scene
+        /// </summary>
+        public bool IsStatic
+        {
+            get { return Internal_GetStaticFlags(unmanagedPtr) == StaticFlags.FullyStatic; }
+        }
+
         #region Transformation
 
         public Vector3 Position
@@ -115,6 +132,38 @@ namespace CelelejEngine
 
         #endregion
 
+        /// <summary>
+        /// Gets bounding box that contains actor object (single actor, no children included)
+        /// </summary>
+        public BoundingBox Box
+        {
+            get { return Internal_GetBox(unmanagedPtr); }
+        }
+
+        /// <summary>
+        /// Gets bounding box that contains actor object and all it's children (children included in recursive way)
+        /// </summary>
+        public BoundingBox BoxWithChildren
+        {
+            get { return Internal_GetBoxWithChildren(unmanagedPtr); }
+        }
+
+        /// <summary>
+        /// Returns true if actor has loaded content
+        /// </summary>
+        public bool HasContentLoaded
+        {
+            get { return Internal_HasContentLoaded(unmanagedPtr); }
+        }
+
+        /// <summary>
+        /// Returns true if actor has fully loaded content
+        /// </summary>
+        public bool HasContentFullyLoaded
+        {
+            get { return Internal_HasContentFullyLoaded(unmanagedPtr); }
+        }
+
         /// <inheritdoc />
         public override string ToString()
         {
@@ -141,6 +190,14 @@ namespace CelelejEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetName(IntPtr obj, string value);
+
+        //
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern StaticFlags Internal_GetStaticFlags(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetStaticFlags(IntPtr obj, StaticFlags value);
 
         //
 
@@ -206,6 +263,22 @@ namespace CelelejEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetLocalTransform(IntPtr obj, ref Transform value);
 
+        //
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern BoundingBox Internal_GetBox(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern BoundingBox Internal_GetBoxWithChildren(IntPtr obj);
+
+        //
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_HasContentLoaded(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_HasContentFullyLoaded(IntPtr obj);
+        
         #endregion
     }
 }
