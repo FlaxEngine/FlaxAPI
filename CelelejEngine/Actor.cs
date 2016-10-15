@@ -132,6 +132,77 @@ namespace CelelejEngine
 
         #endregion
 
+        #region Children
+
+        /// <summary>
+        /// Returns true if actor has any children
+        /// </summary>
+        public bool HasChildren
+        {
+            get { return Internal_GetChildCount(unmanagedPtr) > 0; }
+        }
+
+        /// <summary>
+        /// Gest amount of children
+        /// </summary>
+        public int ChildCount
+        {
+            get { return Internal_GetChildCount(unmanagedPtr); }
+        }
+
+        /// <summary>
+        /// Sets actor parent to this object
+        /// </summary>
+        /// <param name="actor">Actor to link</param>
+        /// <param name="worldPositionStays">Should actor world positions remain the same after parent change?</param>
+        public void AddChild(Actor actor, bool worldPositionStays = true)
+        {
+            if (actor != null)
+                actor.SetParent(this);
+        }
+
+        /// <summary>
+        /// Gets child actor at given index
+        /// </summary>
+        /// <param name="index">Child actor index</param>
+        /// <returns>Child actor</returns>
+        public Actor GetChild(int index)
+        {
+            return Internal_GetChildAtIndex(unmanagedPtr, index);
+        }
+
+        /// <summary>
+        /// Gets child actor with given name
+        /// </summary>
+        /// <param name="name">Child actor name</param>
+        /// <returns>Child actor</returns>
+        public Actor GetChild(string name)
+        {
+            return Internal_GetChildWithName(unmanagedPtr, name);
+        }
+
+        /// <summary>
+        /// Returns true if actor object has child actor with given name
+        /// </summary>
+        /// <param name="name">Actor name</param>
+        /// <returns></returns>
+        public bool HasChild(string name)
+        {
+            return Internal_GetChildWithName(unmanagedPtr, name) != null;
+        }
+
+        /// <summary>
+        /// Tries to find actor with given name in this actor tree
+        /// </summary>
+        /// <param name="name">Actor to find name</param>
+        /// <returns>Found actor or null if cannot find actor with specified name</returns>
+        public Actor FindActor(string name)
+        {
+            return Internal_FindActorWithName(unmanagedPtr, name);
+        }
+
+        #endregion
+
         /// <summary>
         /// Gets bounding box that contains actor object (single actor, no children included)
         /// </summary>
@@ -262,6 +333,20 @@ namespace CelelejEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetLocalTransform(IntPtr obj, ref Transform value);
+
+        //
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetChildCount(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Actor Internal_GetChildAtIndex(IntPtr obj, int index);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Actor Internal_GetChildWithName(IntPtr obj, string name);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Actor Internal_FindActorWithName(IntPtr obj, string name);
 
         //
 
