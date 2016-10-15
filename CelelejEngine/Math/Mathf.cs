@@ -524,16 +524,16 @@ namespace CelelejEngine
         {
             return (float)Math.Sin(f);
         }
-        /*
+        
         public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed)
         {
-            float single = Time.DeltaTime;
+            float single = Time.deltaTime;
             return SmoothDamp(current, target, ref currentVelocity, smoothTime, maxSpeed, single);
         }
 
         public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime)
         {
-            float single = Time.DeltaTime;
+            float single = Time.deltaTime;
             return SmoothDamp(current, target, ref currentVelocity, smoothTime, float.PositiveInfinity, single);
         }
 
@@ -561,13 +561,13 @@ namespace CelelejEngine
 
         public static float SmoothDampAngle(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed)
         {
-            float single = Time.DeltaTime;
+            float single = Time.deltaTime;
             return SmoothDampAngle(current, target, ref currentVelocity, smoothTime, maxSpeed, single);
         }
 
         public static float SmoothDampAngle(float current, float target, ref float currentVelocity, float smoothTime)
         {
-            float single = Time.DeltaTime;
+            float single = Time.deltaTime;
             return SmoothDampAngle(current, target, ref currentVelocity, smoothTime, float.PositiveInfinity, single);
         }
 
@@ -589,7 +589,7 @@ namespace CelelejEngine
             t = -2f * t * t * t + 3f * t * t;
             return to * t + from * (1f - t);
         }
-        */
+        
         /// <summary>
         /// Returns square root of f.
         /// </summary>

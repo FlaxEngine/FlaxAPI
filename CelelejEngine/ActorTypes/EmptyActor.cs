@@ -1,14 +1,12 @@
 ﻿// Celelej Game Engine scripting API
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace CelelejEngine
 {
+    /// <summary>
+    /// Actor without any custom properties
+    /// </summary>
     public sealed class EmptyActor : Actor
     {
+        // It's meant to be empty
     }
 }

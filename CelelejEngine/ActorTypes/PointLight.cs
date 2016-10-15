@@ -5,6 +5,9 @@ using System.Runtime.CompilerServices;
 
 namespace CelelejEngine
 {
+    /// <summary>
+    /// Point Light can emmit light from point in space
+    /// </summary>
     public sealed class PointLight : Actor
     {
         /// <summary>
