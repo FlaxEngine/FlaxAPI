@@ -95,8 +95,6 @@
     <Compile Include="Script.cs" />
     <Compile Include="SerializeField.cs" />
     <Compile Include="ShadowsCastingMode.cs" />
-    <Compile Include="StackTraceLogType.cs" />
-    <Compile Include="StackTraceUtility.cs" />
     <Compile Include="StaticFlags.cs" />
     <Compile Include="SystemInfo.cs" />
     <Compile Include="Time.cs" />

@@ -14,11 +14,15 @@ namespace CelelejEngine
 
         public void Log(LogType logType, Object context, string message)
         {
-            Internal_Log(logType, message, context != null ? context.unmanagedPtr : IntPtr.Zero);
+            string stackTrace;
+#if DEBUG
+            stackTrace = Environment.StackTrace;
+#endif
+            Internal_Log(logType, message, context != null ? context.unmanagedPtr : IntPtr.Zero, stackTrace);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_Log(LogType level, string msg, IntPtr obj);
+        internal static extern void Internal_Log(LogType level, string msg, IntPtr obj, string stackTrace);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_LogException(Exception exception, IntPtr obj);
