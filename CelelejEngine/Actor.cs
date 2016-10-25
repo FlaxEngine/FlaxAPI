@@ -11,14 +11,6 @@ namespace CelelejEngine
     public abstract class Actor : Object
     {
         /// <summary>
-        /// Gets unique actor ID
-        /// </summary>
-        public Guid ID
-        {
-            get { return Internal_GetID(unmanagedPtr); }
-        }
-
-        /// <summary>
         /// Gets or sets parent actor (or null if actor has no parent)
         /// </summary>
         public Actor Parent
@@ -242,11 +234,6 @@ namespace CelelejEngine
         }
 
         #region Internal Calls
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Guid Internal_GetID(IntPtr obj);
-
-        //
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Actor Internal_GetParent(IntPtr obj);

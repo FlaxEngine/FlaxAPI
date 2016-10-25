@@ -13,16 +13,23 @@ namespace CelelejEngine
         [NonSerialized]
         internal IntPtr unmanagedPtr = IntPtr.Zero;
 
+        [NonSerialized]
+        internal Guid id = Guid.Empty;
+
+        /// <summary>
+        /// Gets unique object ID
+        /// </summary>
+        public Guid ID
+        {
+            get { return id; }
+        }
+
         /// <summary>
         /// Notifies the unmanaged interop object that the managed instance was finalized.
         /// </summary>
         ~Object()
         {
-            if (unmanagedPtr == IntPtr.Zero)
-            {
-                Debug.LogError("Script object is being finalized but doesn't have a pointer to its interop object. Type: " + GetType());
-            }
-            else
+            if (unmanagedPtr != IntPtr.Zero)
             {
                 Internal_ManagedInstanceDeleted(unmanagedPtr);
             }
