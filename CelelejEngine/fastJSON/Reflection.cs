@@ -113,7 +113,7 @@ namespace fastJSON
 
                 // Check if can serialize that object type
                 var fieldType = field.FieldType;
-                if (fieldType.IsAbstract || !fieldType.IsSerializable)
+                if (!(fieldType.IsSerializable || fieldType.IsSubclassOf(typeof(CelelejEngine.Object))))
                     continue;
 
                 // Register field for serializaion

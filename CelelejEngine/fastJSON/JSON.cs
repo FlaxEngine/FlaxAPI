@@ -714,6 +714,14 @@ namespace fastJSON
                 {
                     oset = Reflection.Instance.CreateCustom((string)v, fieldType);
                 }
+                else if (fieldType.IsSubclassOf(typeof(CelelejEngine.Object)))
+                {
+                    Guid id = CreateGuid((string)v);
+                    CelelejEngine.Debug.Log("deserialzied id: " + id.ToString());
+
+                    // Get object with that ID from Celelej
+                    oset = CelelejEngine.Object.Internal_FindObject(ref id);
+                }
                 else
                 {
                     bool isStruct = fieldType.IsValueType && !fieldType.IsPrimitive && !fieldType.IsEnum && (fieldType != typeof(decimal));

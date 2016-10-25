@@ -58,7 +58,10 @@ namespace CelelejEngine
         #region Internal Calls
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_ManagedInstanceDeleted(IntPtr nativeInstance);
+        internal static extern void Internal_ManagedInstanceDeleted(IntPtr nativeInstance);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Object Internal_FindObject(ref Guid id);
 
         #endregion
     }
