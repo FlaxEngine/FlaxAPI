@@ -101,66 +101,66 @@ namespace CelelejEngine
         #region Internal Calls
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_GetAffectsWorld(IntPtr obj);
+        private static extern bool Internal_GetAffectsWorld(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetAffectsWorld(IntPtr obj, bool value);
+        private static extern void Internal_SetAffectsWorld(IntPtr obj, bool value);
 
         //
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Color Internal_GetColor(IntPtr obj);
+        private static extern Color Internal_GetColor(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetColor(IntPtr obj, ref Color value);
+        private static extern void Internal_SetColor(IntPtr obj, ref Color value);
 
         //
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Internal_GetBrightness(IntPtr obj);
+        private static extern float Internal_GetBrightness(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetBrightness(IntPtr obj, float value);
+        private static extern void Internal_SetBrightness(IntPtr obj, float value);
 
         //
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Internal_GetRadius(IntPtr obj);
+        private static extern float Internal_GetRadius(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetRadius(IntPtr obj, float value);
+        private static extern void Internal_SetRadius(IntPtr obj, float value);
 
         //
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Internal_GetSourceRadius(IntPtr obj);
+        private static extern float Internal_GetSourceRadius(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetSourceRadius(IntPtr obj, float value);
+        private static extern void Internal_SetSourceRadius(IntPtr obj, float value);
 
         //
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Internal_GetSourceLength(IntPtr obj);
+        private static extern float Internal_GetSourceLength(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetSourceLength(IntPtr obj, float value);
+        private static extern void Internal_SetSourceLength(IntPtr obj, float value);
 
         //
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Internal_GetMinimumRoughness(IntPtr obj);
+        private static extern float Internal_GetMinimumRoughness(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetMinimumRoughness(IntPtr obj, float value);
+        private static extern void Internal_SetMinimumRoughness(IntPtr obj, float value);
 
         //
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ShadowsCastingMode Internal_GetShadowsMode(IntPtr obj);
+        private static extern ShadowsCastingMode Internal_GetShadowsMode(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetShadowsMode(IntPtr obj, ShadowsCastingMode value);
+        private static extern void Internal_SetShadowsMode(IntPtr obj, ShadowsCastingMode value);
 
         #endregion
     }
