@@ -22,7 +22,7 @@ namespace CelelejEngine
         }
 
         /// <summary>
-        /// Gets or sets light color
+        /// Gets or sets skybox color
         /// </summary>
         public Color Color
         {
