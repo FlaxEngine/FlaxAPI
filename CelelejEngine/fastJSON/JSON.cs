@@ -622,11 +622,15 @@ namespace fastJSON
                 if(field == null)
                     continue;
                 object v = e.Value;
-                object oset = null;
-                
-                // Create value for field from parsed JSON value (it depends on field type)
                 var fieldType = field.FieldType;
-                if ((fieldType == typeof(float)) || (fieldType == typeof(float?)))
+                object oset = null;
+
+                // Create value for field from parsed JSON value (it depends on field type)
+                if (v == null)
+                {
+                    // Faster case for deserialized null value
+                }
+                else if ((fieldType == typeof(float)) || (fieldType == typeof(float?)))
                 {
                     // We want float type to be first since most of data in scripts is floating point
 
@@ -717,7 +721,6 @@ namespace fastJSON
                 else if (fieldType.IsSubclassOf(typeof(CelelejEngine.Object)))
                 {
                     Guid id = CreateGuid((string)v);
-                    CelelejEngine.Debug.Log("deserialzied id: " + id.ToString());
 
                     // Get object with that ID from Celelej
                     oset = CelelejEngine.Object.Internal_FindObject(ref id);

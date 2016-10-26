@@ -126,12 +126,12 @@ namespace fastJSON
                 var linkedObj = obj as CelelejEngine.Object;
                 if (isRoot == false && linkedObj != null)
                 {
-                   CelelejEngine.Debug.Log("serialize id: " + linkedObj.id.ToString() + ", obj: " + linkedObj);
-
                     WriteGuid(linkedObj.id);
                 }
                 else
+                {
                     WriteObject(obj);
+                }
             }
         }
 
