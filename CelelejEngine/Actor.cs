@@ -63,6 +63,17 @@ namespace CelelejEngine
             get { return Internal_GetStaticFlags(unmanagedPtr) == StaticFlags.FullyStatic; }
         }
 
+        public bool IsActive
+        {
+            get { return Internal_GetIsActive(unmanagedPtr); }
+            set { Internal_SetIsActive(unmanagedPtr, value); }
+        }
+
+        public bool IsActiveInHierarchy
+        {
+            get { return Internal_GetIsActiveInHierarchy(unmanagedPtr); }
+        }
+
         #region Transformation
 
         public Vector3 Position
@@ -256,6 +267,17 @@ namespace CelelejEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetStaticFlags(IntPtr obj, StaticFlags value);
+        
+        //
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetIsActive(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetIsActive(IntPtr obj, bool value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetIsActiveInHierarchy(IntPtr obj);
 
         //
 
