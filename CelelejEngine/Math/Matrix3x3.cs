@@ -76,7 +76,7 @@ namespace CelelejEngine
         /// <summary>
         /// The identity <see cref="Matrix3x3"/>.
         /// </summary>
-        public static readonly Matrix3x3 Identity = new Matrix3x3() { M11 = 1.0f, M22 = 1.0f, M33 = 1.0f };
+        public static readonly Matrix3x3 Identity = new Matrix3x3() {M11 = 1.0f, M22 = 1.0f, M33 = 1.0f};
 
         /// <summary>
         /// Value at row 1 column 1 of the Matrix3x3.
@@ -123,7 +123,6 @@ namespace CelelejEngine
         /// </summary>
         public float M33;
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix3x3"/> struct.
         /// </summary>
@@ -131,8 +130,8 @@ namespace CelelejEngine
         public Matrix3x3(float value)
         {
             M11 = M12 = M13 =
-            M21 = M22 = M23 =
-            M31 = M32 = M33 = value;
+                M21 = M22 = M23 =
+                    M31 = M32 = M33 = value;
         }
 
         /// <summary>
@@ -148,12 +147,18 @@ namespace CelelejEngine
         /// <param name="M32">The value to assign at row 3 column 2 of the Matrix3x3.</param>
         /// <param name="M33">The value to assign at row 3 column 3 of the Matrix3x3.</param>
         public Matrix3x3(float M11, float M12, float M13,
-            float M21, float M22, float M23,
-            float M31, float M32, float M33)
+                         float M21, float M22, float M23,
+                         float M31, float M32, float M33)
         {
-            this.M11 = M11; this.M12 = M12; this.M13 = M13;
-            this.M21 = M21; this.M22 = M22; this.M23 = M23;
-            this.M31 = M31; this.M32 = M32; this.M33 = M33;
+            this.M11 = M11;
+            this.M12 = M12;
+            this.M13 = M13;
+            this.M21 = M21;
+            this.M22 = M22;
+            this.M23 = M23;
+            this.M31 = M31;
+            this.M32 = M32;
+            this.M33 = M33;
         }
 
         /// <summary>
@@ -188,7 +193,12 @@ namespace CelelejEngine
         public Vector3 Row1
         {
             get { return new Vector3(M11, M12, M13); }
-            set { M11 = value.X; M12 = value.Y; M13 = value.Z; }
+            set
+            {
+                M11 = value.X;
+                M12 = value.Y;
+                M13 = value.Z;
+            }
         }
 
         /// <summary>
@@ -197,7 +207,12 @@ namespace CelelejEngine
         public Vector3 Row2
         {
             get { return new Vector3(M21, M22, M23); }
-            set { M21 = value.X; M22 = value.Y; M23 = value.Z; }
+            set
+            {
+                M21 = value.X;
+                M22 = value.Y;
+                M23 = value.Z;
+            }
         }
 
         /// <summary>
@@ -206,7 +221,12 @@ namespace CelelejEngine
         public Vector3 Row3
         {
             get { return new Vector3(M31, M32, M33); }
-            set { M31 = value.X; M32 = value.Y; M33 = value.Z; }
+            set
+            {
+                M31 = value.X;
+                M32 = value.Y;
+                M33 = value.Z;
+            }
         }
 
         /// <summary>
@@ -215,7 +235,12 @@ namespace CelelejEngine
         public Vector3 Column1
         {
             get { return new Vector3(M11, M21, M31); }
-            set { M11 = value.X; M21 = value.Y; M31 = value.Z; }
+            set
+            {
+                M11 = value.X;
+                M21 = value.Y;
+                M31 = value.Z;
+            }
         }
 
         /// <summary>
@@ -224,7 +249,12 @@ namespace CelelejEngine
         public Vector3 Column2
         {
             get { return new Vector3(M12, M22, M32); }
-            set { M12 = value.X; M22 = value.Y; M32 = value.Z; }
+            set
+            {
+                M12 = value.X;
+                M22 = value.Y;
+                M32 = value.Z;
+            }
         }
 
         /// <summary>
@@ -233,7 +263,12 @@ namespace CelelejEngine
         public Vector3 Column3
         {
             get { return new Vector3(M13, M23, M33); }
-            set { M13 = value.X; M23 = value.Y; M33 = value.Z; }
+            set
+            {
+                M13 = value.X;
+                M23 = value.Y;
+                M33 = value.Z;
+            }
         }
 
         /// <summary>
@@ -242,7 +277,12 @@ namespace CelelejEngine
         public Vector3 ScaleVector
         {
             get { return new Vector3(M11, M22, M33); }
-            set { M11 = value.X; M22 = value.Y; M33 = value.Z; }
+            set
+            {
+                M11 = value.X;
+                M22 = value.Y;
+                M33 = value.Z;
+            }
         }
 
         /// <summary>
@@ -269,15 +309,24 @@ namespace CelelejEngine
             {
                 switch (index)
                 {
-                    case 0: return M11;
-                    case 1: return M12;
-                    case 2: return M13;
-                    case 3: return M21;
-                    case 4: return M22;
-                    case 5: return M23;
-                    case 6: return M31;
-                    case 7: return M32;
-                    case 8: return M33;
+                    case 0:
+                        return M11;
+                    case 1:
+                        return M12;
+                    case 2:
+                        return M13;
+                    case 3:
+                        return M21;
+                    case 4:
+                        return M22;
+                    case 5:
+                        return M23;
+                    case 6:
+                        return M31;
+                    case 7:
+                        return M32;
+                    case 8:
+                        return M33;
                 }
 
                 throw new ArgumentOutOfRangeException("index", "Indices for Matrix3x3 run from 0 to 8, inclusive.");
@@ -287,16 +336,35 @@ namespace CelelejEngine
             {
                 switch (index)
                 {
-                    case 0: M11 = value; break;
-                    case 1: M12 = value; break;
-                    case 2: M13 = value; break;
-                    case 3: M21 = value; break;
-                    case 4: M22 = value; break;
-                    case 5: M23 = value; break;
-                    case 6: M31 = value; break;
-                    case 7: M32 = value; break;
-                    case 8: M33 = value; break;
-                    default: throw new ArgumentOutOfRangeException("index", "Indices for Matrix3x3 run from 0 to 8, inclusive.");
+                    case 0:
+                        M11 = value;
+                        break;
+                    case 1:
+                        M12 = value;
+                        break;
+                    case 2:
+                        M13 = value;
+                        break;
+                    case 3:
+                        M21 = value;
+                        break;
+                    case 4:
+                        M22 = value;
+                        break;
+                    case 5:
+                        M23 = value;
+                        break;
+                    case 6:
+                        M31 = value;
+                        break;
+                    case 7:
+                        M32 = value;
+                        break;
+                    case 8:
+                        M33 = value;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException("index", "Indices for Matrix3x3 run from 0 to 8, inclusive.");
                 }
             }
         }
@@ -595,7 +663,7 @@ namespace CelelejEngine
         /// <returns>A 9-element array containing the components of the Matrix3x3.</returns>
         public float[] ToArray()
         {
-            return new[] { M11, M12, M13, M21, M22, M23, M31, M32, M33 };
+            return new[] {M11, M12, M13, M21, M22, M23, M31, M32, M33};
         }
 
         /// <summary>
@@ -1030,9 +1098,15 @@ namespace CelelejEngine
             float d32 = (value.M11 * value.M23) - (value.M13 * value.M21);
             float d33 = (value.M11 * value.M22) - (value.M12 * value.M21);
 
-            result.M11 = +d11 * det; result.M12 = -d21 * det; result.M13 = +d31 * det;
-            result.M21 = -d12 * det; result.M22 = +d22 * det; result.M23 = -d32 * det;
-            result.M31 = +d13 * det; result.M32 = -d23 * det; result.M33 = +d33 * det;
+            result.M11 = +d11 * det;
+            result.M12 = -d21 * det;
+            result.M13 = +d31 * det;
+            result.M21 = -d12 * det;
+            result.M22 = +d22 * det;
+            result.M23 = -d32 * det;
+            result.M31 = +d13 * det;
+            result.M32 = -d23 * det;
+            result.M33 = +d33 * det;
         }
 
         /// <summary>
@@ -1414,7 +1488,7 @@ namespace CelelejEngine
             Vector3 final;
             Vector3 difference = cameraPosition - objectPosition;
 
-            float lengthSq = difference.LengthSquared();
+            float lengthSq = difference.LengthSquared;
             if (Mathf.IsZero(lengthSq))
                 difference = -cameraForwardVector;
             else
@@ -1464,7 +1538,7 @@ namespace CelelejEngine
             Vector3 final;
             Vector3 difference = objectPosition - cameraPosition;
 
-            float lengthSq = difference.LengthSquared();
+            float lengthSq = difference.LengthSquared;
             if (Mathf.IsZero(lengthSq))
                 difference = -cameraForwardVector;
             else
@@ -1510,14 +1584,22 @@ namespace CelelejEngine
         public static void LookAtLH(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Matrix3x3 result)
         {
             Vector3 xaxis, yaxis, zaxis;
-            Vector3.Subtract(ref target, ref eye, out zaxis); zaxis.Normalize();
-            Vector3.Cross(ref up, ref zaxis, out xaxis); xaxis.Normalize();
+            Vector3.Subtract(ref target, ref eye, out zaxis);
+            zaxis.Normalize();
+            Vector3.Cross(ref up, ref zaxis, out xaxis);
+            xaxis.Normalize();
             Vector3.Cross(ref zaxis, ref xaxis, out yaxis);
 
             result = Matrix3x3.Identity;
-            result.M11 = xaxis.X; result.M21 = xaxis.Y; result.M31 = xaxis.Z;
-            result.M12 = yaxis.X; result.M22 = yaxis.Y; result.M32 = yaxis.Z;
-            result.M13 = zaxis.X; result.M23 = zaxis.Y; result.M33 = zaxis.Z;
+            result.M11 = xaxis.X;
+            result.M21 = xaxis.Y;
+            result.M31 = xaxis.Z;
+            result.M12 = yaxis.X;
+            result.M22 = yaxis.Y;
+            result.M32 = yaxis.Z;
+            result.M13 = zaxis.X;
+            result.M23 = zaxis.Y;
+            result.M33 = zaxis.Z;
         }
 
         /// <summary>
@@ -1544,14 +1626,22 @@ namespace CelelejEngine
         public static void LookAtRH(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Matrix3x3 result)
         {
             Vector3 xaxis, yaxis, zaxis;
-            Vector3.Subtract(ref eye, ref target, out zaxis); zaxis.Normalize();
-            Vector3.Cross(ref up, ref zaxis, out xaxis); xaxis.Normalize();
+            Vector3.Subtract(ref eye, ref target, out zaxis);
+            zaxis.Normalize();
+            Vector3.Cross(ref up, ref zaxis, out xaxis);
+            xaxis.Normalize();
             Vector3.Cross(ref zaxis, ref xaxis, out yaxis);
 
             result = Matrix3x3.Identity;
-            result.M11 = xaxis.X; result.M21 = xaxis.Y; result.M31 = xaxis.Z;
-            result.M12 = yaxis.X; result.M22 = yaxis.Y; result.M32 = yaxis.Z;
-            result.M13 = zaxis.X; result.M23 = zaxis.Y; result.M33 = zaxis.Z;
+            result.M11 = xaxis.X;
+            result.M21 = xaxis.Y;
+            result.M31 = xaxis.Z;
+            result.M12 = yaxis.X;
+            result.M22 = yaxis.Y;
+            result.M32 = yaxis.Z;
+            result.M13 = zaxis.X;
+            result.M23 = zaxis.Y;
+            result.M33 = zaxis.Z;
         }
 
         /// <summary>
@@ -1991,7 +2081,7 @@ namespace CelelejEngine
                 value.M21, value.M22, value.M23, 0,
                 value.M31, value.M32, value.M33, 0,
                 0, 0, 0, 1
-                );
+            );
         }
 
         /// <summary>
@@ -2004,7 +2094,7 @@ namespace CelelejEngine
                 value.M11, value.M12, value.M13,
                 value.M21, value.M22, value.M23,
                 value.M31, value.M32, value.M33
-                );
+            );
         }
 
         /// <summary>
@@ -2104,14 +2194,14 @@ namespace CelelejEngine
         public bool Equals(ref Matrix3x3 other)
         {
             return (Mathf.NearEqual(other.M11, M11) &&
-                Mathf.NearEqual(other.M12, M12) &&
-                Mathf.NearEqual(other.M13, M13) &&
-                Mathf.NearEqual(other.M21, M21) &&
-                Mathf.NearEqual(other.M22, M22) &&
-                Mathf.NearEqual(other.M23, M23) &&
-                Mathf.NearEqual(other.M31, M31) &&
-                Mathf.NearEqual(other.M32, M32) &&
-                Mathf.NearEqual(other.M33, M33));
+                    Mathf.NearEqual(other.M12, M12) &&
+                    Mathf.NearEqual(other.M13, M13) &&
+                    Mathf.NearEqual(other.M21, M21) &&
+                    Mathf.NearEqual(other.M22, M22) &&
+                    Mathf.NearEqual(other.M23, M23) &&
+                    Mathf.NearEqual(other.M31, M31) &&
+                    Mathf.NearEqual(other.M32, M32) &&
+                    Mathf.NearEqual(other.M33, M33));
         }
 
         /// <summary>
@@ -2136,11 +2226,9 @@ namespace CelelejEngine
                 Mathf.NearEqual(a.M11, b.M11) &&
                 Mathf.NearEqual(a.M12, b.M12) &&
                 Mathf.NearEqual(a.M13, b.M13) &&
-
                 Mathf.NearEqual(a.M21, b.M21) &&
                 Mathf.NearEqual(a.M22, b.M22) &&
                 Mathf.NearEqual(a.M23, b.M23) &&
-
                 Mathf.NearEqual(a.M31, b.M31) &&
                 Mathf.NearEqual(a.M32, b.M32) &&
                 Mathf.NearEqual(a.M33, b.M33)

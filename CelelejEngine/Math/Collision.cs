@@ -488,7 +488,7 @@ namespace CelelejEngine
             Vector3 cross;
 
             Vector3.Cross(ref ray1.Direction, ref ray2.Direction, out cross);
-            float denominator = cross.Length();
+            float denominator = cross.Length;
 
             //Lines are parallel.
             if (Mathf.IsZero(denominator))
@@ -1374,56 +1374,56 @@ namespace CelelejEngine
             vector.Y = sphere.Center.Y - box.Maximum.Y;
             vector.Z = sphere.Center.Z - box.Maximum.Z;
 
-            if (vector.LengthSquared() > radiussquared)
+            if (vector.LengthSquared > radiussquared)
                 return ContainmentType.Intersects;
 
             vector.X = sphere.Center.X - box.Maximum.X;
             vector.Y = sphere.Center.Y - box.Maximum.Y;
             vector.Z = sphere.Center.Z - box.Maximum.Z;
 
-            if (vector.LengthSquared() > radiussquared)
+            if (vector.LengthSquared > radiussquared)
                 return ContainmentType.Intersects;
 
             vector.X = sphere.Center.X - box.Maximum.X;
             vector.Y = sphere.Center.Y - box.Minimum.Y;
             vector.Z = sphere.Center.Z - box.Maximum.Z;
 
-            if (vector.LengthSquared() > radiussquared)
+            if (vector.LengthSquared > radiussquared)
                 return ContainmentType.Intersects;
 
             vector.X = sphere.Center.X - box.Minimum.X;
             vector.Y = sphere.Center.Y - box.Minimum.Y;
             vector.Z = sphere.Center.Z - box.Maximum.Z;
 
-            if (vector.LengthSquared() > radiussquared)
+            if (vector.LengthSquared > radiussquared)
                 return ContainmentType.Intersects;
 
             vector.X = sphere.Center.X - box.Minimum.X;
             vector.Y = sphere.Center.Y - box.Maximum.Y;
             vector.Z = sphere.Center.Z - box.Minimum.Z;
 
-            if (vector.LengthSquared() > radiussquared)
+            if (vector.LengthSquared > radiussquared)
                 return ContainmentType.Intersects;
 
             vector.X = sphere.Center.X - box.Maximum.X;
             vector.Y = sphere.Center.Y - box.Maximum.Y;
             vector.Z = sphere.Center.Z - box.Minimum.Z;
 
-            if (vector.LengthSquared() > radiussquared)
+            if (vector.LengthSquared > radiussquared)
                 return ContainmentType.Intersects;
 
             vector.X = sphere.Center.X - box.Maximum.X;
             vector.Y = sphere.Center.Y - box.Minimum.Y;
             vector.Z = sphere.Center.Z - box.Minimum.Z;
 
-            if (vector.LengthSquared() > radiussquared)
+            if (vector.LengthSquared > radiussquared)
                 return ContainmentType.Intersects;
 
             vector.X = sphere.Center.X - box.Minimum.X;
             vector.Y = sphere.Center.Y - box.Minimum.Y;
             vector.Z = sphere.Center.Z - box.Minimum.Z;
 
-            if (vector.LengthSquared() > radiussquared)
+            if (vector.LengthSquared > radiussquared)
                 return ContainmentType.Intersects;
 
             return ContainmentType.Contains;

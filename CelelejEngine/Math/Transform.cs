@@ -138,9 +138,9 @@ namespace CelelejEngine
             if (format == null)
                 return ToString();
 
-            return string.Format(CultureInfo.CurrentCulture, _formatString, 
+            return string.Format(CultureInfo.CurrentCulture, _formatString,
                 Translation.ToString(format, CultureInfo.CurrentCulture),
-                Orientation.ToString(format, CultureInfo.CurrentCulture), 
+                Orientation.ToString(format, CultureInfo.CurrentCulture),
                 Scale.ToString(format, CultureInfo.CurrentCulture));
         }
 
@@ -203,8 +203,8 @@ namespace CelelejEngine
         public bool Equals(ref Transform other)
         {
             return Translation == other.Translation
-                && Orientation == other.Orientation
-                && Scale == other.Scale;
+                   && Orientation == other.Orientation
+                   && Scale == other.Scale;
         }
 
         /// <summary>

@@ -349,7 +349,7 @@ namespace CelelejEngine
         {
             Vector3 difference = value2.Center - value1.Center;
 
-            float length = difference.Length();
+            float length = difference.Length;
             float radius = value1.Radius;
             float radius2 = value2.Radius;
 

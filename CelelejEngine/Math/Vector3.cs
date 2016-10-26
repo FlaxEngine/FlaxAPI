@@ -307,9 +307,9 @@ namespace CelelejEngine
         /// <see cref="Vector3.LengthSquared" /> may be preferred when only the relative length is needed
         /// and speed is of the essence.
         /// </remarks>
-        public float Length()
+        public float Length
         {
-            return (float)Math.Sqrt(X * X + Y * Y + Z * Z);
+            get { return (float)Math.Sqrt(X * X + Y * Y + Z * Z); }
         }
 
         /// <summary>
@@ -320,9 +320,9 @@ namespace CelelejEngine
         /// This method may be preferred to <see cref="Vector3.Length" /> when only a relative length is needed
         /// and speed is of the essence.
         /// </remarks>
-        public float LengthSquared()
+        public float LengthSquared
         {
-            return X * X + Y * Y + Z * Z;
+            get { return X * X + Y * Y + Z * Z; }
         }
 
         /// <summary>
@@ -330,7 +330,7 @@ namespace CelelejEngine
         /// </summary>
         public void Normalize()
         {
-            float length = Length();
+            float length = Length;
             if (!Mathf.IsZero(length))
             {
                 float inv = 1.0f / length;
@@ -1369,9 +1369,9 @@ namespace CelelejEngine
         public static void Transform(ref Vector3 vector, ref Matrix3x3 transform, out Vector3 result)
         {
             result = new Vector3((vector.X * transform.M11) + (vector.Y * transform.M21) + (vector.Z * transform.M31),
-                                    (vector.X * transform.M12) + (vector.Y * transform.M22) + (vector.Z * transform.M32),
-                                    (vector.X * transform.M13) + (vector.Y * transform.M23) + (vector.Z * transform.M33)
-                                );
+                (vector.X * transform.M12) + (vector.Y * transform.M22) + (vector.Z * transform.M32),
+                (vector.X * transform.M13) + (vector.Y * transform.M23) + (vector.Z * transform.M33)
+            );
         }
 
         /// <summary>
@@ -1866,7 +1866,7 @@ namespace CelelejEngine
         /// </returns>
         public string ToString(IFormatProvider formatProvider)
         {
-            return string.Format(formatProvider,_formatString, X, Y, Z);
+            return string.Format(formatProvider, _formatString, X, Y, Z);
         }
 
         /// <summary>

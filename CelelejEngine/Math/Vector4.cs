@@ -277,9 +277,9 @@ namespace CelelejEngine
         /// <see cref="Vector4.LengthSquared" /> may be preferred when only the relative length is needed
         /// and speed is of the essence.
         /// </remarks>
-        public float Length()
+        public float Length
         {
-            return (float)Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
+            get { return (float)Math.Sqrt(X * X + Y * Y + Z * Z + W * W); }
         }
 
         /// <summary>
@@ -290,9 +290,9 @@ namespace CelelejEngine
         /// This method may be preferred to <see cref="Vector4.Length" /> when only a relative length is needed
         /// and speed is of the essence.
         /// </remarks>
-        public float LengthSquared()
+        public float LengthSquared
         {
-            return X * X + Y * Y + Z * Z + W * W;
+            get { return X * X + Y * Y + Z * Z + W * W; }
         }
 
         /// <summary>
@@ -300,7 +300,7 @@ namespace CelelejEngine
         /// </summary>
         public void Normalize()
         {
-            float length = Length();
+            float length = Length;
             if (!Mathf.IsZero(length))
             {
                 float inverse = 1.0f / length;
@@ -1195,7 +1195,7 @@ namespace CelelejEngine
             Transform(ref vector, ref transform, out result);
             return result;
         }
-        
+
         /// <summary>
         /// Transforms an array of 4D vectors by the given <see cref="Matrix" />.
         /// </summary>

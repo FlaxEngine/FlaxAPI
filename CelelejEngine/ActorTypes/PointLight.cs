@@ -45,7 +45,7 @@ namespace CelelejEngine
             get { return Internal_GetRadius(unmanagedPtr); }
             set { Internal_SetRadius(unmanagedPtr, value); }
         }
-        
+
         /// <summary>
         /// Gets light scaled radius parameter
         /// </summary>
@@ -53,7 +53,7 @@ namespace CelelejEngine
         {
             get { return Scale.MaxValue * Radius; }
         }
-        
+
         /// <summary>
         /// Gets or sets light source bulb radius parameter
         /// </summary>
@@ -89,7 +89,7 @@ namespace CelelejEngine
             get { return Internal_GetShadowsMode(unmanagedPtr); }
             set { Internal_SetShadowsMode(unmanagedPtr, value); }
         }
-        
+
         /// <summary>
         /// Gets light direction vector
         /// </summary>
@@ -97,9 +97,9 @@ namespace CelelejEngine
         {
             get { return Vector3.ForwardLH * Orientation; }
         }
-        
+
         #region Internal Calls
-        
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetAffectsWorld(IntPtr obj);
 
@@ -161,7 +161,7 @@ namespace CelelejEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetShadowsMode(IntPtr obj, ShadowsCastingMode value);
-        
+
         #endregion
     }
 }

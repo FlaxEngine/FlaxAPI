@@ -2076,7 +2076,7 @@ namespace CelelejEngine
             Vector3 final;
             Vector3 difference = cameraPosition - objectPosition;
 
-            float lengthSq = difference.LengthSquared();
+            float lengthSq = difference.LengthSquared;
             if (Mathf.IsZero(lengthSq))
                 difference = -cameraForwardVector;
             else
@@ -2133,7 +2133,7 @@ namespace CelelejEngine
             Vector3 final;
             Vector3 difference = objectPosition - cameraPosition;
 
-            float lengthSq = difference.LengthSquared();
+            float lengthSq = difference.LengthSquared;
             if (Mathf.IsZero(lengthSq))
                 difference = -cameraForwardVector;
             else

@@ -99,7 +99,7 @@ namespace fastJSON
                 FieldInfo field = fields[i];
 
                 // Skip not serialized fields
-                if(field.IsNotSerialized)
+                if (field.IsNotSerialized)
                     continue;
 
                 // Check if field is private

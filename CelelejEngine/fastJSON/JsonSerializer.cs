@@ -50,10 +50,10 @@ namespace fastJSON
                 WriteString(obj.ToString());
 
             else if (obj is Guid)
-                WriteGuid((Guid) obj);
+                WriteGuid((Guid)obj);
 
             else if (obj is bool)
-                _output.Append((bool) obj ? "true" : "false"); // conform to standard
+                _output.Append((bool)obj ? "true" : "false");// conform to standard
 
             else if (
                 obj is int || obj is long ||
@@ -62,60 +62,60 @@ namespace fastJSON
                 obj is sbyte || obj is ushort ||
                 obj is uint || obj is ulong
             )
-                _output.Append(((IConvertible) obj).ToString(NumberFormatInfo.InvariantInfo));
+                _output.Append(((IConvertible)obj).ToString(NumberFormatInfo.InvariantInfo));
 
             else if (obj is double)
             {
-                var d = (double) obj;
+                var d = (double)obj;
                 if (double.IsNaN(d))
                     _output.Append("\"NaN\"");
                 else
-                    _output.Append(((IConvertible) obj).ToString(NumberFormatInfo.InvariantInfo));
+                    _output.Append(((IConvertible)obj).ToString(NumberFormatInfo.InvariantInfo));
             }
             else if (obj is float)
             {
-                var d = (float) obj;
+                var d = (float)obj;
                 if (float.IsNaN(d))
                     _output.Append("\"NaN\"");
                 else
-                    _output.Append(((IConvertible) obj).ToString(NumberFormatInfo.InvariantInfo));
+                    _output.Append(((IConvertible)obj).ToString(NumberFormatInfo.InvariantInfo));
             }
 
             else if (obj is DateTime)
-                WriteDateTime((DateTime) obj);
+                WriteDateTime((DateTime)obj);
 
             else if (obj is DateTimeOffset)
-                WriteDateTimeOffset((DateTimeOffset) obj);
+                WriteDateTimeOffset((DateTimeOffset)obj);
 
             else if ((_params.KVStyleStringDictionary == false) && obj is IDictionary &&
                      obj.GetType().IsGenericType && (obj.GetType().GetGenericArguments()[0] == typeof(string)))
 
-                WriteStringDictionary((IDictionary) obj);
+                WriteStringDictionary((IDictionary)obj);
             else if ((_params.KVStyleStringDictionary == false) && obj is ExpandoObject)
-                WriteStringDictionary((IDictionary<string, object>) obj);
+                WriteStringDictionary((IDictionary<string, object>)obj);
             else if (obj is IDictionary)
-                WriteDictionary((IDictionary) obj);
+                WriteDictionary((IDictionary)obj);
 
             else if (obj is DataSet)
-                WriteDataset((DataSet) obj);
+                WriteDataset((DataSet)obj);
 
             else if (obj is DataTable)
-                WriteDataTable((DataTable) obj);
+                WriteDataTable((DataTable)obj);
 
             else if (obj is byte[])
-                WriteBytes((byte[]) obj);
+                WriteBytes((byte[])obj);
 
             else if (obj is StringDictionary)
-                WriteSD((StringDictionary) obj);
+                WriteSD((StringDictionary)obj);
 
             else if (obj is NameValueCollection)
-                WriteNV((NameValueCollection) obj);
+                WriteNV((NameValueCollection)obj);
 
             else if (obj is IEnumerable)
-                WriteArray((IEnumerable) obj);
+                WriteArray((IEnumerable)obj);
 
             else if (obj is Enum)
-                WriteEnum((Enum) obj);
+                WriteEnum((Enum)obj);
 
             else if (Reflection.Instance.IsTypeRegistered(obj.GetType()))
                 WriteCustom(obj);
@@ -185,7 +185,7 @@ namespace fastJSON
                     if (pendingSeparator)
                         _output.Append(',');
 
-                    var k = (string) entry.Key;
+                    var k = (string)entry.Key;
                     WritePair(k, entry.Value);
                     pendingSeparator = true;
                 }
@@ -244,7 +244,7 @@ namespace fastJSON
             _output.Append(dt.Month.ToString("00", NumberFormatInfo.InvariantInfo));
             _output.Append('-');
             _output.Append(dt.Day.ToString("00", NumberFormatInfo.InvariantInfo));
-            _output.Append('T'); // strict ISO date compliance 
+            _output.Append('T');// strict ISO date compliance 
             _output.Append(dt.Hour.ToString("00", NumberFormatInfo.InvariantInfo));
             _output.Append(':');
             _output.Append(dt.Minute.ToString("00", NumberFormatInfo.InvariantInfo));
@@ -401,7 +401,7 @@ namespace fastJSON
                     if (pendingSeparator)
                         _output.Append(',');
 
-                    var k = (string) entry.Key;
+                    var k = (string)entry.Key;
                     WritePair(k, entry.Value);
                     pendingSeparator = true;
                 }
@@ -514,7 +514,7 @@ namespace fastJSON
                         if (_useEscapedUnicode)
                         {
                             _output.Append("\\u");
-                            _output.Append(((int) c).ToString("X4", NumberFormatInfo.InvariantInfo));
+                            _output.Append(((int)c).ToString("X4", NumberFormatInfo.InvariantInfo));
                         }
                         else
                             _output.Append(c);

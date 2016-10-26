@@ -238,7 +238,7 @@ namespace CelelejEngine
             Vector3.TransformNormal(ref yv, ref Transformation, out yv);
             Vector3.TransformNormal(ref zv, ref Transformation, out zv);
 
-            return new Vector3(xv.Length(), yv.Length(), zv.Length());
+            return new Vector3(xv.Length, yv.Length, zv.Length);
         }
 
         /// <summary>
@@ -255,7 +255,7 @@ namespace CelelejEngine
             Vector3.TransformNormal(ref yv, ref Transformation, out yv);
             Vector3.TransformNormal(ref zv, ref Transformation, out zv);
 
-            return new Vector3(xv.LengthSquared(), yv.LengthSquared(), zv.LengthSquared());
+            return new Vector3(xv.LengthSquared, yv.LengthSquared, zv.LengthSquared);
         }
 
         /// <summary>
@@ -373,7 +373,7 @@ namespace CelelejEngine
                 // Transform sphere radius into the obb coordinates
                 Vector3 vRadius = Vector3.UnitX * sphere.Radius;
                 Vector3.TransformNormal(ref vRadius, ref invTrans, out vRadius);
-                locRadius = vRadius.Length();
+                locRadius = vRadius.Length;
             }
 
             //Perform regular BoundingBox to BoundingSphere containment check

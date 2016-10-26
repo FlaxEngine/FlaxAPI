@@ -27,7 +27,7 @@ namespace CelelejEngine
         /// Alpha component of the color.
         /// </summary>
         public float A;
-        
+
         public float this[int index]
         {
             get
@@ -84,7 +84,7 @@ namespace CelelejEngine
                 }
             }
         }
-        
+
         /// <summary>
         /// Returns the minimum color component value: Min(r,g,b).
         /// </summary>
@@ -359,7 +359,7 @@ namespace CelelejEngine
         {
             return new Vector3(c.R, c.G, c.B);
         }
-        
+
         public static implicit operator Vector4(Color c)
         {
             return new Vector4(c.R, c.G, c.B, c.A);

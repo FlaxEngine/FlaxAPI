@@ -124,7 +124,7 @@ namespace CelelejEngine
             if (!condition)
                 logger.Log(LogType.Assert, context, string.Format(format, args));
         }
-        
+
         /// <summary>
         /// Logs message to the Celelej Console.
         /// </summary>
@@ -267,7 +267,7 @@ namespace CelelejEngine
         {
             logger.Log(LogType.Log, context, string.Format(format, args));
         }
-        
+
         /// <summary>
         /// A variant of Debug.Log that logs a warning message to the console.
         /// </summary>

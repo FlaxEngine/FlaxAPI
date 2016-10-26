@@ -43,7 +43,7 @@ namespace CelelejEngine
         /// <param name="worldPositionStays">Should actor world positions remain the same after parent change?</param>
         public void SetParent(Actor newParent, bool worldPositionStays = true)
         {
-            Internal_SetParent(unmanagedPtr, GetUnmanagedPtr(newParent) , worldPositionStays);
+            Internal_SetParent(unmanagedPtr, GetUnmanagedPtr(newParent), worldPositionStays);
         }
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace CelelejEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetStaticFlags(IntPtr obj, StaticFlags value);
-        
+
         //
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -344,7 +344,7 @@ namespace CelelejEngine
         internal static extern void Internal_SetLocalTransform(IntPtr obj, ref Transform value);
 
         //
-        
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetChildCount(IntPtr obj);
 
@@ -372,7 +372,7 @@ namespace CelelejEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_HasContentFullyLoaded(IntPtr obj);
-        
+
         #endregion
     }
 }

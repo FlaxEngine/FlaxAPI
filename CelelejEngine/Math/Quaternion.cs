@@ -64,7 +64,7 @@ namespace CelelejEngine
     public struct Quaternion : IEquatable<Quaternion>, IFormattable
     {
         private static readonly string _formatString = "X:{0:F2} Y:{1:F2} Z:{2:F2} W:{3:F2}";
-        
+
         /// <summary>
         /// The size of the <see cref="Quaternion" /> type, in bytes.
         /// </summary>
@@ -317,7 +317,7 @@ namespace CelelejEngine
         /// </summary>
         public void Invert()
         {
-            float lengthSq = LengthSquared();
+            float lengthSq = LengthSquared;
             if (!Mathf.IsZero(lengthSq))
             {
                 lengthSq = 1.0f / lengthSq;
@@ -337,9 +337,9 @@ namespace CelelejEngine
         /// <see cref="Quaternion.LengthSquared" /> may be preferred when only the relative length is needed
         /// and speed is of the essence.
         /// </remarks>
-        public float Length()
+        public float Length
         {
-            return (float)Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
+            get { return (float)Math.Sqrt(X * X + Y * Y + Z * Z + W * W); }
         }
 
         /// <summary>
@@ -350,9 +350,9 @@ namespace CelelejEngine
         /// This method may be preferred to <see cref="Quaternion.Length" /> when only a relative length is needed
         /// and speed is of the essence.
         /// </remarks>
-        public float LengthSquared()
+        public float LengthSquared
         {
-            return X * X + Y * Y + Z * Z + W * W;
+            get { return X * X + Y * Y + Z * Z + W * W; }
         }
 
         /// <summary>
@@ -360,7 +360,7 @@ namespace CelelejEngine
         /// </summary>
         public void Normalize()
         {
-            float length = Length();
+            float length = Length;
             if (!Mathf.IsZero(length))
             {
                 float inverse = 1.0f / length;
@@ -1252,9 +1252,9 @@ namespace CelelejEngine
         /// <returns>An array of three quaternions that represent control points for spherical quadrangle interpolation.</returns>
         public static Quaternion[] SquadSetup(Quaternion value1, Quaternion value2, Quaternion value3, Quaternion value4)
         {
-            Quaternion q0 = (value1 + value2).LengthSquared() < (value1 - value2).LengthSquared() ? -value1 : value1;
-            Quaternion q2 = (value2 + value3).LengthSquared() < (value2 - value3).LengthSquared() ? -value3 : value3;
-            Quaternion q3 = (value3 + value4).LengthSquared() < (value3 - value4).LengthSquared() ? -value4 : value4;
+            Quaternion q0 = (value1 + value2).LengthSquared < (value1 - value2).LengthSquared ? -value1 : value1;
+            Quaternion q2 = (value2 + value3).LengthSquared < (value2 - value3).LengthSquared ? -value3 : value3;
+            Quaternion q3 = (value3 + value4).LengthSquared < (value3 - value4).LengthSquared ? -value4 : value4;
             Quaternion q1 = value2;
 
             Quaternion q1Exp, q2Exp;

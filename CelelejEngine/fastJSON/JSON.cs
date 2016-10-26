@@ -619,7 +619,7 @@ namespace fastJSON
             {
                 // Cache data
                 FieldInfo field = Reflection.Instance.FindField(type, e.Key);
-                if(field == null)
+                if (field == null)
                     continue;
                 object v = e.Value;
                 var fieldType = field.FieldType;
@@ -767,7 +767,7 @@ namespace fastJSON
 
             return nv;
         }
-        
+
         private int CreateInteger(string s, int index, int count)
         {
             var num = 0;

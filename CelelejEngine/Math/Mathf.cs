@@ -207,7 +207,7 @@ namespace CelelejEngine
             float single1 = Pow(single / absmax, gamma) * absmax;
             return !flag ? single1 : -single1;
         }
-        
+
         /// <summary>
         /// Calculates the linear parameter t that produces the interpolant value within the range [a, b].
         /// </summary>
@@ -220,7 +220,7 @@ namespace CelelejEngine
                 return 0f;
             return Clamp01((value - a) / (b - a));
         }
-        
+
         /// <summary>
         /// Same as Lerp but makes sure the values interpolate correctly when they wrap around 360 degrees.
         /// </summary>
@@ -245,7 +245,7 @@ namespace CelelejEngine
         {
             return a + (b - a) * t;
         }
-        
+
         internal static bool LineIntersection(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, ref Vector2 result)
         {
             float single = p2.X - p1.X;
@@ -450,7 +450,7 @@ namespace CelelejEngine
             target = current + single;
             return MoveTowards(current, target, maxDelta);
         }
-        
+
         /// <summary>
         /// PingPongs the value t, so that it is never larger than length and never smaller than 0.
         /// </summary>
@@ -524,7 +524,7 @@ namespace CelelejEngine
         {
             return (float)Math.Sin(f);
         }
-        
+
         public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed)
         {
             float single = Time.deltaTime;
@@ -589,7 +589,7 @@ namespace CelelejEngine
             t = -2f * t * t * t + 3f * t * t;
             return to * t + from * (1f - t);
         }
-        
+
         /// <summary>
         /// Returns square root of f.
         /// </summary>

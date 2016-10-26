@@ -53,7 +53,7 @@ namespace CelelejEngine
         HANGUEL = 0x15,
 
         // IME Hangul mode
-        HANGUL =  0x15,
+        HANGUL = 0x15,
 
         // IME Junja mode
         JUNJA = 0x17,
@@ -407,7 +407,7 @@ namespace CelelejEngine
         BROWSER_STOP = 0xA9,
 
         // Browser Search key
-        BROWSER_SEARCH =  0xAA,
+        BROWSER_SEARCH = 0xAA,
 
         // Browser Favorites key
         BROWSER_FAVORITES = 0xAB,

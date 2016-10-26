@@ -332,7 +332,7 @@ namespace CelelejEngine
 
             return result;
         }
-        
+
         /// <summary>
         /// Returns the 8 corners of the frustum, element0 is Near1 (near right down corner)
         /// , element1 is Near2 (near right top corner)
@@ -373,7 +373,7 @@ namespace CelelejEngine
             corners[6] = Get3PlanesInterPoint(ref pFar, ref pTop, ref pLeft);//Far3
             corners[7] = Get3PlanesInterPoint(ref pFar, ref pBottom, ref pLeft);//Far3
         }
-        
+
         /// <summary>
         /// Checks whether a point lay inside, intersects or lay outside the frustum.
         /// </summary>
