@@ -73,14 +73,6 @@ namespace CelelejEngine
             set { Internal_SetMinimumRoughness(unmanagedPtr, value); }
         }
 
-        /// <summary>
-        /// Gets light direction vector
-        /// </summary>
-        public Vector3 Direction
-        {
-            get { return Vector3.ForwardLH * Orientation; }
-        }
-
         #region Internal Calls
 
         [MethodImpl(MethodImplOptions.InternalCall)]

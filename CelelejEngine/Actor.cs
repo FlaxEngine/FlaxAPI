@@ -10,6 +10,8 @@ namespace CelelejEngine
     /// </summary>
     public abstract class Actor : Object
     {
+        // TODO: set direction
+
         /// <summary>
         /// Gets or sets parent actor (or null if actor has no parent)
         /// </summary>
@@ -122,6 +124,14 @@ namespace CelelejEngine
         {
             get { return Internal_GetLocalTransform(unmanagedPtr); }
             set { Internal_SetLocalTransform(unmanagedPtr, ref value); }
+        }
+
+        /// <summary>
+        /// Gets actor direction vector
+        /// </summary>
+        public Vector3 Direction
+        {
+            get { return Vector3.ForwardLH * Orientation; }
         }
 
         /// <summary>
