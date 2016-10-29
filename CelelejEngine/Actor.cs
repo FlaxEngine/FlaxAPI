@@ -13,6 +13,9 @@ namespace CelelejEngine
         // TODO: set direction
         // TODO: Instantiate from prefab
         // TODO: Destroy
+        // TODO: TransformDirection, TranformPoint
+        // TODO: InverseTransformDirection, InverseTransformPoint
+        // TODO: LootAt, Translate, Rotate
 
         /// <summary>
         /// Gets or sets parent actor (or null if actor has no parent)
@@ -237,6 +240,16 @@ namespace CelelejEngine
         {
             return Internal_GetChildWithName(unmanagedPtr, name) != null;
         }
+        
+        /// <summary>
+        /// Tries to find child actor with given name
+        /// </summary>
+        /// <param name="name">Actor to find name</param>
+        /// <returns>Found child actor or null if cannot find actor with specified name</returns>
+        public Actor FindChild(string name)
+        {
+            return Internal_GetChildWithName(unmanagedPtr, name);
+        }
 
         /// <summary>
         /// Tries to find actor with given name in this actor tree
@@ -246,6 +259,16 @@ namespace CelelejEngine
         public Actor FindActor(string name)
         {
             return Internal_FindActorWithName(unmanagedPtr, name);
+        }
+
+        /// <summary>
+        /// Tries to find actor with given name on the scene
+        /// </summary>
+        /// <param name="name">Actor to find name</param>
+        /// <returns>Found actor or null if cannot find actor with specified name</returns>
+        public static Actor Find(string name)
+        {
+            return Internal_FindActor(name);
         }
 
         #endregion
@@ -400,6 +423,9 @@ namespace CelelejEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Actor Internal_FindActorWithName(IntPtr obj, string name);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Actor Internal_FindActor(string name);
 
         //
 
