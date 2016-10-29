@@ -11,6 +11,8 @@ namespace CelelejEngine
     public abstract class Actor : Object
     {
         // TODO: set direction
+        // TODO: Instantiate from prefab
+        // TODO: Destroy
 
         /// <summary>
         /// Gets or sets parent actor (or null if actor has no parent)
@@ -90,6 +92,22 @@ namespace CelelejEngine
             set { Internal_SetOrientation(unmanagedPtr, ref value); }
         }
 
+        /// <summary>
+        /// The rotation as Euler angles in degrees.
+        /// The x, y, and z angles represent a rotation z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).
+        /// Angles order (xyz): pitch, yaw and roll.
+        /// </summary>
+        public Vector3 EulerAngles
+        {
+            get { return Internal_GetOrientation(unmanagedPtr).EulerAngles; }
+            set
+            {
+                Quaternion orientation;
+                Quaternion.Euler(ref value, out orientation);
+                Internal_SetOrientation(unmanagedPtr, ref orientation);
+            }
+        }
+
         public Vector3 Scale
         {
             get { return Internal_GetScale(unmanagedPtr); }
@@ -112,6 +130,22 @@ namespace CelelejEngine
         {
             get { return Internal_GetLocalOrientation(unmanagedPtr); }
             set { Internal_SetLocalOrientation(unmanagedPtr, ref value); }
+        }
+
+        /// <summary>
+        /// The local rotation as Euler angles in degrees.
+        /// The x, y, and z angles represent a rotation z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).
+        /// Angles order (xyz): pitch, yaw and roll.
+        /// </summary>
+        public Vector3 LocaEulerAngles
+        {
+            get { return Internal_GetLocalOrientation(unmanagedPtr).EulerAngles; }
+            set
+            {
+                Quaternion orientation;
+                Quaternion.Euler(ref value, out orientation);
+                Internal_SetLocalOrientation(unmanagedPtr, ref orientation);
+            }
         }
 
         public Vector3 LocalScale
