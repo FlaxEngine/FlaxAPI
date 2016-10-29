@@ -681,114 +681,107 @@ namespace CelelejEngine
             return (-epsilon <= num) && (num <= epsilon);
         }
 
+        #region Angle units conversions
+
         /// <summary>
         /// Converts revolutions to degrees.
         /// </summary>
-        /// <param name="revolution">The value to convert.</param>
-        /// <returns>The converted value.</returns>
-        public static float RevolutionsToDegrees(float revolution)
-        {
-            return revolution * 360.0f;
-        }
+        public static float RevolutionsToDegrees = 360.0f;
 
         /// <summary>
         /// Converts revolutions to radians.
         /// </summary>
-        /// <param name="revolution">The value to convert.</param>
-        /// <returns>The converted value.</returns>
-        public static float RevolutionsToRadians(float revolution)
-        {
-            return revolution * TwoPi;
-        }
+        public static float RevolutionsToRadians = TwoPi;
 
         /// <summary>
         /// Converts revolutions to gradians.
         /// </summary>
-        /// <param name="revolution">The value to convert.</param>
-        /// <returns>The converted value.</returns>
-        public static float RevolutionsToGradians(float revolution)
-        {
-            return revolution * 400.0f;
-        }
+        public static float RevolutionsToGradians = 400.0f;
 
         /// <summary>
         /// Converts degrees to revolutions.
         /// </summary>
-        /// <param name="degree">The value to convert.</param>
-        /// <returns>The converted value.</returns>
-        public static float DegreesToRevolutions(float degree)
-        {
-            return degree / 360.0f;
-        }
+        public static float DegreesToRevolutions = (1.0f / 360.0f);
 
         /// <summary>
         /// Converts degrees to radians.
         /// </summary>
-        /// <param name="degree">The value to convert.</param>
-        /// <returns>The converted value.</returns>
-        public static float DegreesToRadians(float degree)
-        {
-            return degree * (Pi / 180.0f);
-        }
+        public static float DegreesToRadians = (Pi / 180.0f);
 
         /// <summary>
         /// Converts radians to revolutions.
         /// </summary>
-        /// <param name="radian">The value to convert.</param>
-        /// <returns>The converted value.</returns>
-        public static float RadiansToRevolutions(float radian)
-        {
-            return radian / TwoPi;
-        }
+        public static float RadiansToRevolutions = (1.0f / TwoPi);
 
         /// <summary>
         /// Converts radians to gradians.
         /// </summary>
-        /// <param name="radian">The value to convert.</param>
-        /// <returns>The converted value.</returns>
-        public static float RadiansToGradians(float radian)
-        {
-            return radian * (200.0f / Pi);
-        }
+        public static float RadiansToGradians = (200.0f / Pi);
 
         /// <summary>
         /// Converts gradians to revolutions.
         /// </summary>
-        /// <param name="gradian">The value to convert.</param>
-        /// <returns>The converted value.</returns>
-        public static float GradiansToRevolutions(float gradian)
-        {
-            return gradian / 400.0f;
-        }
+        public static float GradiansToRevolutions = (1.0f / 400.0f);
 
         /// <summary>
         /// Converts gradians to degrees.
         /// </summary>
-        /// <param name="gradian">The value to convert.</param>
-        /// <returns>The converted value.</returns>
-        public static float GradiansToDegrees(float gradian)
-        {
-            return gradian * (9.0f / 10.0f);
-        }
+        public static float GradiansToDegrees = (9.0f / 10.0f);
 
         /// <summary>
         /// Converts gradians to radians.
         /// </summary>
-        /// <param name="gradian">The value to convert.</param>
-        /// <returns>The converted value.</returns>
-        public static float GradiansToRadians(float gradian)
-        {
-            return gradian * (Pi / 200.0f);
-        }
+        public static float GradiansToRadians = (Pi / 200.0f);
 
         /// <summary>
         /// Converts radians to degrees.
         /// </summary>
-        /// <param name="radian">The value to convert.</param>
-        /// <returns>The converted value.</returns>
-        public static float RadiansToDegrees(float radian)
+        public static float RadiansToDegrees = (180.0f / Pi);
+
+        #endregion
+
+        /// <summary>
+        /// Given a heading which may be outside the +/- PI range, 'unwind' it back into that range.
+        /// </summary>
+        /// <param name="angle">Angle in radians to unwind.</param>
+        /// <returns>Valid angle in radians.</returns>
+        public static float UnwindRadians(float angle)
         {
-            return radian * (180.0f / Pi);
+            // TODO: make it faster?
+
+            while (angle > Pi)
+            {
+                angle -= TwoPi;
+            }
+
+            while (angle < -Pi)
+            {
+                angle += TwoPi;
+            }
+
+            return angle;
+        }
+
+        /// <summary>
+        /// Utility to ensure angle is between +/- 180 degrees by unwinding
+        /// </summary>
+        /// <param name="angle">Angle in degrees to unwind.</param>
+        /// <returns>Valid angle in degrees.</returns>
+        public static float UnwindDegrees(float angle)
+        {
+            // TODO: make it faster?
+
+            while (angle > 180.0f)
+            {
+                angle -= 360.0f;
+            }
+
+            while (angle < -180.0f)
+            {
+                angle += 360.0f;
+            }
+
+            return angle;
         }
 
         /// <summary>

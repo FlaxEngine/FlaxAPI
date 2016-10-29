@@ -215,6 +215,52 @@ namespace CelelejEngine
             get { return Mathf.IsOne(X * X + Y * Y + Z * Z + W * W); }
         }
 
+        public Vector3 EulerAngles
+        {
+            get
+            {
+                Vector3 result;
+                float sqw = W * W;
+                float sqx = X * X;
+                float sqy = Y * Y;
+                float sqz = Z * Z;
+                float unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
+                float test = X * W - Y * Z;
+
+                if (test > 0.499995f * unit)
+                {
+                    // singularity at north pole
+
+                    // yaw picth roll
+                    result.Y = 2.0f * Mathf.Atan2(Y, X);
+                    result.X = Mathf.PiOverTwo;
+                    result.Z = 0;
+                }
+                else if (test < -0.499995f * unit)
+                {
+                    // singularity at south pole
+
+                    // yaw picth roll
+                    result.Y = -2.0f * Mathf.Atan2(Y, X);
+                    result.X = -Mathf.PiOverTwo;
+                    result.Z = 0;
+                }
+                else
+                {
+                    Quaternion q = new Quaternion(W, Z, X, Y);// TOOD: optimize this (remove additional allocation)
+
+                    // yaw picth roll
+                    result.Y = Mathf.Atan2(2.0f * q.X * q.W + 2.0f * q.Y * q.Z, 1 - 2.0f * (q.Z * q.Z + q.W * q.W));
+                    result.X = Mathf.Asin(2.0f * (q.X * q.Z - q.W * q.Y));
+                    result.Z = Mathf.Atan2(2.0f * q.X * q.Y + 2.0f * q.Z * q.W, 1 - 2.0f * (q.Y * q.Y + q.Z * q.Z));
+                }
+
+                result *= Mathf.RadiansToDegrees;
+                result.UnwindEuler();
+                return result;
+            }
+        }
+
         /// <summary>
         /// Gets the angle of the quaternion.
         /// </summary>
@@ -258,8 +304,7 @@ namespace CelelejEngine
         /// </param>
         /// <returns>The value of the component at the specified index.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">
-        /// Thrown when the <paramref name="index" /> is out of the range [0,
-        /// 3].
+        /// Thrown when the <paramref name="index" /> is out of the range [0, 3].
         /// </exception>
         public float this[int index]
         {
@@ -1123,7 +1168,46 @@ namespace CelelejEngine
         }
 
         /// <summary>
+        /// Creates a quaternion given a pitch, yaw and roll values.
+        /// Angles are in degrees.
+        /// </summary>
+        /// <param name="eulerAngles">The pitahc, yaw and roll angles of rotation.</param>
+        /// <returns>When the method completes, contains the newly created quaternion.</returns>
+        public static Quaternion Euler(Vector3 eulerAngles)
+        {
+            Quaternion result;
+            Euler(ref eulerAngles, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a quaternion given a pitch, yaw and roll values.
+        /// Angles are in degrees.
+        /// </summary>
+        /// <param name="eulerAngles">The pitahc, yaw and roll angles of rotation.</param>
+        /// <param name="result">When the method completes, contains the newly created quaternion.</param>
+        public static void Euler(ref Vector3 eulerAngles, out Quaternion result)
+        {
+            float halfRoll = eulerAngles.Z * (0.5f * Mathf.DegreesToRadians);
+            float halfPitch = eulerAngles.X * (0.5f * Mathf.DegreesToRadians);
+            float halfYaw = eulerAngles.Y * (0.5f * Mathf.DegreesToRadians);
+
+            var sinRoll = (float)Math.Sin(halfRoll);
+            var cosRoll = (float)Math.Cos(halfRoll);
+            var sinPitch = (float)Math.Sin(halfPitch);
+            var cosPitch = (float)Math.Cos(halfPitch);
+            var sinYaw = (float)Math.Sin(halfYaw);
+            var cosYaw = (float)Math.Cos(halfYaw);
+
+            result.X = cosYaw * sinPitch * cosRoll + sinYaw * cosPitch * sinRoll;
+            result.Y = sinYaw * cosPitch * cosRoll - cosYaw * sinPitch * sinRoll;
+            result.Z = cosYaw * cosPitch * sinRoll - sinYaw * sinPitch * cosRoll;
+            result.W = cosYaw * cosPitch * cosRoll + sinYaw * sinPitch * sinRoll;
+        }
+
+        /// <summary>
         /// Creates a quaternion given a yaw, pitch, and roll value.
+        /// Angles are in radians.
         /// </summary>
         /// <param name="yaw">The yaw of rotation.</param>
         /// <param name="pitch">The pitch of rotation.</param>
@@ -1150,6 +1234,7 @@ namespace CelelejEngine
 
         /// <summary>
         /// Creates a quaternion given a yaw, pitch, and roll value.
+        /// Angles are in radians.
         /// </summary>
         /// <param name="yaw">The yaw of rotation.</param>
         /// <param name="pitch">The pitch of rotation.</param>

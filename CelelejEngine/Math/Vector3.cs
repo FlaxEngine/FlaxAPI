@@ -341,6 +341,16 @@ namespace CelelejEngine
         }
 
         /// <summary>
+        /// When this vector contains Euler angles (degrees), ensure that angles are between +/-180
+        /// </summary>
+        public void UnwindEuler()
+        {
+            X = Mathf.UnwindDegrees(X);
+            Y = Mathf.UnwindDegrees(Y);
+            Z = Mathf.UnwindDegrees(Z);
+        }
+
+        /// <summary>
         /// Creates an array containing the elements of the vector.
         /// </summary>
         /// <returns>A three-element array containing the components of the vector.</returns>
