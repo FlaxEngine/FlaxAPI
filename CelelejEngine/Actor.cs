@@ -308,6 +308,37 @@ namespace CelelejEngine
         #region Scripts
 
 
+        /// <summary>
+        /// Searches for a child script of a specific type. If there are multiple scripts matching the type, only the first one found is returned.
+        /// </summary>
+        /// <typeparam name="T">Type of the actor to search for. Includes any scripts derived from the type.
+        /// </typeparam>
+        /// <returns>Script instance if found, null otherwise.</returns>
+        public T GetScript<T>() where T : Script
+        {
+            return (T)Internal_GetScript(unmanagedPtr, typeof(T));
+        }
+
+        /// <summary>
+        /// Searches for all scripts of a specific type. 
+        /// </summary>
+        /// <typeparam name="T">Type of the script to search for. Includes any scripts derived from the type.
+        /// </typeparam>
+        /// <returns>All scripts matching the specified type.</returns>
+        public T[] GetScripts<T>() where T : Script
+        {
+            Script[] scripts = Internal_GetScriptsPerType(unmanagedPtr, typeof(T));
+            return Array.ConvertAll(scripts, x => (T)x);
+        }
+
+        /// <summary>
+        /// Returns a list of all scripts attached to this object.
+        /// </summary>
+        /// <returns>All scripts attached to this object.</returns>
+        public Script[] GetScripts()
+        {
+            return Internal_GetScripts(unmanagedPtr);
+        }
 
         #endregion
 
@@ -475,6 +506,17 @@ namespace CelelejEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Actor[] Internal_GetChildren(IntPtr obj);
+
+        //
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Script Internal_GetScript(IntPtr obj, Type type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Script[] Internal_GetScriptsPerType(IntPtr obj, Type type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Script[] Internal_GetScripts(IntPtr obj);
 
         //
 
