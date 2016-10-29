@@ -271,6 +271,44 @@ namespace CelelejEngine
             return Internal_FindActor(name);
         }
 
+        /// <summary>
+        /// Searches for a child actor of a specific type. If there are multiple actors matching the type, only the first one found is returned.
+        /// </summary>
+        /// <typeparam name="T">Type of the actor to search for. Includes any actors derived from the type.
+        /// </typeparam>
+        /// <returns>Actor instance if found, null otherwise.</returns>
+        public T GetChild<T>() where T : Actor
+        {
+            return (T)Internal_GetChild(unmanagedPtr, typeof(T));
+        }
+
+        /// <summary>
+        /// Searches for all actors of a specific type. 
+        /// </summary>
+        /// <typeparam name="T">Type of the actor to search for. Includes any actors derived from the type.
+        /// </typeparam>
+        /// <returns>All actors matching the specified type.</returns>
+        public T[] GetChildren<T>() where T : Actor
+        {
+            Actor[] actors = Internal_GetChildrenPerType(unmanagedPtr, typeof(T));
+            return Array.ConvertAll(actors, x => (T)x);
+        }
+
+        /// <summary>
+        /// Returns a list of all actors attached to this object.
+        /// </summary>
+        /// <returns>All actors attached to this object.</returns>
+        public Actor[] GetChildren()
+        {
+            return Internal_GetChildren(unmanagedPtr);
+        }
+
+        #endregion
+
+        #region Scripts
+
+
+
         #endregion
 
         /// <summary>
@@ -426,6 +464,17 @@ namespace CelelejEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Actor Internal_FindActor(string name);
+
+        //
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Actor Internal_GetChild(IntPtr obj, Type type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Actor[] Internal_GetChildrenPerType(IntPtr obj, Type type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Actor[] Internal_GetChildren(IntPtr obj);
 
         //
 
