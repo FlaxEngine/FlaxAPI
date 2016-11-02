@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿// Celelej Game Engine scripting API
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 

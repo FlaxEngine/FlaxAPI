@@ -14,9 +14,10 @@ namespace CelelejEngine
 
         public void Log(LogType logType, Object context, string message)
         {
-            string stackTrace;
 #if DEBUG
-            stackTrace = Environment.StackTrace;
+            string stackTrace = Environment.StackTrace;
+#else
+            string stackTrace = string.Empty;
 #endif
             Internal_Log(logType, message, context != null ? context.unmanagedPtr : IntPtr.Zero, stackTrace);
         }

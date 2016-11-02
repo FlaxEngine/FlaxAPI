@@ -54,6 +54,17 @@
     <Compile Include="Assertions\AssertionException.cs" />
     <Compile Include="Assertions\AssertionMessageUtil.cs" />
     <Compile Include="Assertions\FloatComparer.cs" />
+    <Compile Include="Asset.cs" />
+    <Compile Include="AssetTypes\CubeTexture.cs" />
+    <Compile Include="AssetTypes\Document.cs" />
+    <Compile Include="AssetTypes\Font.cs" />
+    <Compile Include="AssetTypes\Material.cs" />
+    <Compile Include="AssetTypes\MaterialBase.cs" />
+    <Compile Include="AssetTypes\MaterialInstance.cs" />
+    <Compile Include="AssetTypes\Model.cs" />
+    <Compile Include="AssetTypes\Shader.cs" />
+    <Compile Include="AssetTypes\SpriteAtlas.cs" />
+    <Compile Include="AssetTypes\Texture.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="fastJSON\dynamic.cs" />
     <Compile Include="fastJSON\Formatter.cs" />
