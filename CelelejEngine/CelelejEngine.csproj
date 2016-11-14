@@ -48,6 +48,7 @@
     <Compile Include="ActorTypes\EmptyActor.cs" />
     <Compile Include="ActorTypes\EnvironmentProbe.cs" />
     <Compile Include="ActorTypes\ModelActor.cs" />
+    <Compile Include="ActorTypes\PhysicalActor.cs" />
     <Compile Include="ActorTypes\Sky.cs" />
     <Compile Include="ActorTypes\Skybox.cs" />
     <Compile Include="Assertions\Assert.cs" />
