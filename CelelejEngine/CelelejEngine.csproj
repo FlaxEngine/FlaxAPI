@@ -66,6 +66,7 @@
     <Compile Include="AssetTypes\Shader.cs" />
     <Compile Include="AssetTypes\SpriteAtlas.cs" />
     <Compile Include="AssetTypes\Texture.cs" />
+    <Compile Include="Bodies\BoxBody.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="fastJSON\dynamic.cs" />
     <Compile Include="fastJSON\Formatter.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Object.cs" />
     <Compile Include="Math\Plane.cs" />
     <Compile Include="ActorTypes\PointLight.cs" />
+    <Compile Include="PhysicBody.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Math\Quaternion.cs" />
     <Compile Include="Math\Ray.cs" />
