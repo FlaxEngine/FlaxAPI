@@ -1,0 +1,31 @@
+// Flax Engine scripting API
+
+using System;
+using System.Runtime.Serialization;
+
+namespace FlaxEngine
+{
+    [Serializable]
+    public class CelelejException : SystemException
+    {
+        public CelelejException()
+            : base("A Celelej Runtime error occurred!")
+        {
+        }
+
+        public CelelejException(string message)
+            : base(message)
+        {
+        }
+
+        public CelelejException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        protected CelelejException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+    }
+}

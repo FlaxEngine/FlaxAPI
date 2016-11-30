@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7A23ADF2-CAB0-4ED9-9EDC-D9A2B9E51B21}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FlaxEngine</RootNamespace>
+    <AssemblyName>FlaxEngine</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;FLAX_ASSERTIONS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Debug\FlaxEngine.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Release\FlaxEngine.xml</DocumentationFile>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Actor.cs" />
+    <Compile Include="ActorTypes\BoxBrush.cs" />
+    <Compile Include="ActorTypes\Camera.cs" />
+    <Compile Include="ActorTypes\DirectionalLight.cs" />
+    <Compile Include="ActorTypes\EmptyActor.cs" />
+    <Compile Include="ActorTypes\EnvironmentProbe.cs" />
+    <Compile Include="ActorTypes\ModelActor.cs" />
+    <Compile Include="ActorTypes\PhysicalActor.cs" />
+    <Compile Include="ActorTypes\Sky.cs" />
+    <Compile Include="ActorTypes\Skybox.cs" />
+    <Compile Include="Assertions\Assert.cs" />
+    <Compile Include="Assertions\AssertionException.cs" />
+    <Compile Include="Assertions\AssertionMessageUtil.cs" />
+    <Compile Include="Assertions\FloatComparer.cs" />
+    <Compile Include="Asset.cs" />
+    <Compile Include="AssetTypes\CubeTexture.cs" />
+    <Compile Include="AssetTypes\Document.cs" />
+    <Compile Include="AssetTypes\Font.cs" />
+    <Compile Include="AssetTypes\Material.cs" />
+    <Compile Include="AssetTypes\MaterialBase.cs" />
+    <Compile Include="AssetTypes\MaterialInstance.cs" />
+    <Compile Include="AssetTypes\Model.cs" />
+    <Compile Include="AssetTypes\Shader.cs" />
+    <Compile Include="AssetTypes\SpriteAtlas.cs" />
+    <Compile Include="AssetTypes\Texture.cs" />
+    <Compile Include="Bodies\BoxBody.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="fastJSON\dynamic.cs" />
+    <Compile Include="fastJSON\Formatter.cs" />
+    <Compile Include="fastJSON\Getters.cs" />
+    <Compile Include="fastJSON\JSON.cs" />
+    <Compile Include="fastJSON\JsonParser.cs" />
+    <Compile Include="fastJSON\JsonSerializer.cs" />
+    <Compile Include="fastJSON\Reflection.cs" />
+    <Compile Include="fastJSON\SafeDictionary.cs" />
+    <Compile Include="Input.cs" />
+    <Compile Include="Math\BoundingBox.cs" />
+    <Compile Include="Math\BoundingFrustum.cs" />
+    <Compile Include="Math\BoundingSphere.cs" />
+    <Compile Include="ClassLibraryInitializer.cs" />
+    <Compile Include="Math\Collision.cs" />
+    <Compile Include="Math\Color.cs" />
+    <Compile Include="Math\Color.Palette.cs" />
+    <Compile Include="Math\Color32.cs" />
+    <Compile Include="Debug.cs" />
+    <Compile Include="DebugLogHandler.cs" />
+    <Compile Include="ExecuteInEditMode.cs" />
+    <Compile Include="HideInInspector.cs" />
+    <Compile Include="ILogger.cs" />
+    <Compile Include="ILogHandler.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="LogType.cs" />
+    <Compile Include="Math\Mathf.cs" />
+    <Compile Include="Math\Matrix.cs" />
+    <Compile Include="Math\Matrix3x3.cs" />
+    <Compile Include="Math\OrientedBoundingBox.cs" />
+    <Compile Include="Math\Rectangle.cs" />
+    <Compile Include="Math\Transform.cs" />
+    <Compile Include="Math\Viewport.cs" />
+    <Compile Include="MissingActorException.cs" />
+    <Compile Include="MissingReferenceException.cs" />
+    <Compile Include="Object.cs" />
+    <Compile Include="Math\Plane.cs" />
+    <Compile Include="ActorTypes\PointLight.cs" />
+    <Compile Include="PhysicBody.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Math\Quaternion.cs" />
+    <Compile Include="Math\Ray.cs" />
+    <Compile Include="Script.cs" />
+    <Compile Include="SerializeField.cs" />
+    <Compile Include="ShadowsCastingMode.cs" />
+    <Compile Include="StaticFlags.cs" />
+    <Compile Include="SystemInfo.cs" />
+    <Compile Include="Time.cs" />
+    <Compile Include="UnassignedReferenceException.cs" />
+    <Compile Include="UnhandledExceptionHandler.cs" />
+    <Compile Include="FlaxException.cs" />
+    <Compile Include="FlaxLogWriter.cs" />
+    <Compile Include="Math\Vector2.cs" />
+    <Compile Include="Math\Vector3.cs" />
+    <Compile Include="Math\Vector4.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

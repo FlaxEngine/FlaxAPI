@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlaxEngine", "FlaxEngine\FlaxEngine.csproj", "{7A23ADF2-CAB0-4ED9-9EDC-D9A2B9E51B21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlaxEditor", "FlaxEditor\FlaxEditor.csproj", "{D534E201-9DC6-4A26-B7FB-CEB3E16A58B1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7A23ADF2-CAB0-4ED9-9EDC-D9A2B9E51B21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A23ADF2-CAB0-4ED9-9EDC-D9A2B9E51B21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A23ADF2-CAB0-4ED9-9EDC-D9A2B9E51B21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A23ADF2-CAB0-4ED9-9EDC-D9A2B9E51B21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D534E201-9DC6-4A26-B7FB-CEB3E16A58B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D534E201-9DC6-4A26-B7FB-CEB3E16A58B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D534E201-9DC6-4A26-B7FB-CEB3E16A58B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D534E201-9DC6-4A26-B7FB-CEB3E16A58B1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
