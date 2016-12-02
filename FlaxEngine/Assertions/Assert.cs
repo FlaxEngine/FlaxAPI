@@ -23,7 +23,7 @@ namespace FlaxEngine.Assertions
         /// </summary>
         /// <param name="expected"></param>
         /// <param name="actual"></param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void AreApproximatelyEqual(float expected, float actual)
         {
             AreEqual(expected, actual, null, FloatComparer.ComparerWithDefaultTolerance);
@@ -39,7 +39,7 @@ namespace FlaxEngine.Assertions
         /// <param name="expected"></param>
         /// <param name="actual"></param>
         /// <param name="message"></param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void AreApproximatelyEqual(float expected, float actual, string message)
         {
             AreEqual(expected, actual, message, FloatComparer.ComparerWithDefaultTolerance);
@@ -55,7 +55,7 @@ namespace FlaxEngine.Assertions
         /// <param name="tolerance">Tolerance of approximation.</param>
         /// <param name="expected"></param>
         /// <param name="actual"></param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void AreApproximatelyEqual(float expected, float actual, float tolerance)
         {
             AreApproximatelyEqual(expected, actual, tolerance, null);
@@ -72,25 +72,25 @@ namespace FlaxEngine.Assertions
         /// <param name="expected"></param>
         /// <param name="actual"></param>
         /// <param name="message"></param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void AreApproximatelyEqual(float expected, float actual, float tolerance, string message)
         {
             AreEqual(expected, actual, message, new FloatComparer(tolerance));
         }
 
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void AreEqual <T>(T expected, T actual)
         {
             AreEqual(expected, actual, null);
         }
 
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void AreEqual <T>(T expected, T actual, string message)
         {
             AreEqual(expected, actual, message, EqualityComparer<T>.Default);
         }
 
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void AreEqual <T>(T expected, T actual, string message, IEqualityComparer<T> comparer)
         {
             if (typeof(Object).IsAssignableFrom(typeof(T)))
@@ -102,7 +102,7 @@ namespace FlaxEngine.Assertions
                 Fail(AssertionMessageUtil.GetEqualityMessage(actual, expected, true), message);
         }
 
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void AreEqual(Object expected, Object actual, string message)
         {
             if (actual != expected)
@@ -115,7 +115,7 @@ namespace FlaxEngine.Assertions
         /// </summary>
         /// <param name="expected"></param>
         /// <param name="actual"></param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void AreNotApproximatelyEqual(float expected, float actual)
         {
             AreNotEqual(expected, actual, null, FloatComparer.ComparerWithDefaultTolerance);
@@ -128,7 +128,7 @@ namespace FlaxEngine.Assertions
         /// <param name="expected"></param>
         /// <param name="actual"></param>
         /// <param name="message"></param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void AreNotApproximatelyEqual(float expected, float actual, string message)
         {
             AreNotEqual(expected, actual, message, FloatComparer.ComparerWithDefaultTolerance);
@@ -141,7 +141,7 @@ namespace FlaxEngine.Assertions
         /// <param name="tolerance">Tolerance of approximation.</param>
         /// <param name="expected"></param>
         /// <param name="actual"></param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void AreNotApproximatelyEqual(float expected, float actual, float tolerance)
         {
             AreNotApproximatelyEqual(expected, actual, tolerance, null);
@@ -155,25 +155,25 @@ namespace FlaxEngine.Assertions
         /// <param name="expected"></param>
         /// <param name="actual"></param>
         /// <param name="message"></param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void AreNotApproximatelyEqual(float expected, float actual, float tolerance, string message)
         {
             AreNotEqual(expected, actual, message, new FloatComparer(tolerance));
         }
 
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void AreNotEqual <T>(T expected, T actual)
         {
             AreNotEqual(expected, actual, null);
         }
 
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void AreNotEqual <T>(T expected, T actual, string message)
         {
             AreNotEqual(expected, actual, message, EqualityComparer<T>.Default);
         }
 
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void AreNotEqual <T>(T expected, T actual, string message, IEqualityComparer<T> comparer)
         {
             if (typeof(Object).IsAssignableFrom(typeof(T)))
@@ -185,7 +185,7 @@ namespace FlaxEngine.Assertions
                 Fail(AssertionMessageUtil.GetEqualityMessage(actual, expected, false), message);
         }
 
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void AreNotEqual(Object expected, Object actual, string message)
         {
             if (actual == expected)
@@ -209,7 +209,7 @@ namespace FlaxEngine.Assertions
         /// Asserts that the condition is false.
         /// </summary>
         /// <param name="condition"></param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void IsFalse(bool condition)
         {
             IsFalse(condition, null);
@@ -220,21 +220,21 @@ namespace FlaxEngine.Assertions
         /// </summary>
         /// <param name="condition"></param>
         /// <param name="message"></param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void IsFalse(bool condition, string message)
         {
             if (condition)
                 Fail(AssertionMessageUtil.BooleanFailureMessage(false), message);
         }
 
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void IsNotNull <T>(T value)
             where T : class
         {
             IsNotNull(value, null);
         }
 
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void IsNotNull <T>(T value, string message)
             where T : class
         {
@@ -244,21 +244,21 @@ namespace FlaxEngine.Assertions
                 Fail(AssertionMessageUtil.NullFailureMessage(null, false), message);
         }
 
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void IsNotNull(Object value, string message)
         {
             if (value == null)
                 Fail(AssertionMessageUtil.NullFailureMessage(null, false), message);
         }
 
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void IsNull <T>(T value)
             where T : class
         {
             IsNull(value, null);
         }
 
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void IsNull <T>(T value, string message)
             where T : class
         {
@@ -268,7 +268,7 @@ namespace FlaxEngine.Assertions
                 Fail(AssertionMessageUtil.NullFailureMessage(value, true), message);
         }
 
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void IsNull(Object value, string message)
         {
             if (value != null)
@@ -279,7 +279,7 @@ namespace FlaxEngine.Assertions
         /// Asserts that the condition is true.
         /// </summary>
         /// <param name="condition"></param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void IsTrue(bool condition)
         {
             IsTrue(condition, null);
@@ -290,7 +290,7 @@ namespace FlaxEngine.Assertions
         /// </summary>
         /// <param name="condition"></param>
         /// <param name="message"></param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void IsTrue(bool condition, string message)
         {
             if (!condition)

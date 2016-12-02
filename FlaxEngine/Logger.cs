@@ -59,7 +59,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Logs message to the Celelej Console using default logger.
+        /// Logs message to the Flax Console using default logger.
         /// </summary>
         /// <param name="logType">The type of the log message.</param>
         /// <param name="message">String or object to be converted to string representation for display.</param>
@@ -70,7 +70,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Logs message to the Celelej Console using default logger.
+        /// Logs message to the Flax Console using default logger.
         /// </summary>
         /// <param name="logType">The type of the log message.</param>
         /// <param name="tag">
@@ -86,7 +86,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Logs message to the Celelej Console using default logger.
+        /// Logs message to the Flax Console using default logger.
         /// </summary>
         /// <param name="logType">The type of the log message.</param>
         /// <param name="tag">
@@ -101,7 +101,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Logs message to the Celelej Console using default logger.
+        /// Logs message to the Flax Console using default logger.
         /// </summary>
         /// <param name="logType">The type of the log message.</param>
         /// <param name="tag">
@@ -117,7 +117,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Logs message to the Celelej Console using default logger.
+        /// Logs message to the Flax Console using default logger.
         /// </summary>
         /// <param name="message">String or object to be converted to string representation for display.</param>
         public void Log(object message)
@@ -127,7 +127,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Logs message to the Celelej Console using default logger.
+        /// Logs message to the Flax Console using default logger.
         /// </summary>
         /// <param name="logType">The type of the log message.</param>
         /// <param name="tag">
@@ -142,7 +142,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Logs message to the Celelej Console using default logger.
+        /// Logs message to the Flax Console using default logger.
         /// </summary>
         /// <param name="logType">The type of the log message.</param>
         /// <param name="tag">

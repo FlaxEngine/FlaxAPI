@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// The interface to get time information from Celelej.
+    /// The interface to get time information from Flax.
     /// </summary>
     public static class Time
     {

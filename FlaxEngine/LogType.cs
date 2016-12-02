@@ -13,7 +13,7 @@ namespace FlaxEngine
         Error,
 
         /// <summary>
-        /// LogType used for Asserts. (These could also indicate an error inside Celelej itself.)
+        /// LogType used for Asserts. (These could also indicate an error inside Flax itself.)
         /// </summary>
         Assert,
 

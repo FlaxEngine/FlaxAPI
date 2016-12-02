@@ -5,7 +5,7 @@ using System;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Force Celelej to serialize a private field.
+    /// Force Flax to serialize a private field.
     /// </summary>
     public sealed class SerializeField : Attribute
     {

@@ -122,7 +122,7 @@ namespace fastJSON
 
             else
             {
-                // Special case for Celelej objects
+                // Special case for Flax objects
                 var linkedObj = obj as FlaxEngine.Object;
                 if (isRoot == false && linkedObj != null)
                 {

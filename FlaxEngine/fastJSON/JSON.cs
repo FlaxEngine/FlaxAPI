@@ -722,7 +722,7 @@ namespace fastJSON
                 {
                     Guid id = CreateGuid((string)v);
 
-                    // Get object with that ID from Celelej
+                    // Get object with that ID from Flax
                     oset = FlaxEngine.Object.Internal_FindObject(ref id);
                 }
                 else

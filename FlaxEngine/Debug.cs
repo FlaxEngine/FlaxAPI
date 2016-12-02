@@ -26,10 +26,10 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Assert a condition and logs a formatted error message to the Celelej console on failure.
+        /// Assert a condition and logs a formatted error message to the Flax console on failure.
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void Assert(bool condition)
         {
             if (!condition)
@@ -37,11 +37,11 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Assert a condition and logs a formatted error message to the Celelej console on failure.
+        /// Assert a condition and logs a formatted error message to the Flax console on failure.
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="context">Object to which the message applies.</param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void Assert(bool condition, Object context)
         {
             if (!condition)
@@ -49,11 +49,11 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Assert a condition and logs a formatted error message to the Celelej console on failure.
+        /// Assert a condition and logs a formatted error message to the Flax console on failure.
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="message">String or object to be converted to string representation for display.</param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void Assert(bool condition, object message)
         {
             if (!condition)
@@ -61,11 +61,11 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Assert a condition and logs a formatted error message to the Celelej console on failure.
+        /// Assert a condition and logs a formatted error message to the Flax console on failure.
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="message">String to be converted to string representation for display.</param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void Assert(bool condition, string message)
         {
             if (!condition)
@@ -73,12 +73,12 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Assert a condition and logs a formatted error message to the Celelej console on failure.
+        /// Assert a condition and logs a formatted error message to the Flax console on failure.
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="context">Object to which the message applies.</param>
         /// <param name="message">String or object to be converted to string representation for display.</param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void Assert(bool condition, object message, Object context)
         {
             if (!condition)
@@ -86,12 +86,12 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Assert a condition and logs a formatted error message to the Celelej console on failure.
+        /// Assert a condition and logs a formatted error message to the Flax console on failure.
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="context">Object to which the message applies.</param>
         /// <param name="message">String to be converted to string representation for display.</param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void Assert(bool condition, string message, Object context)
         {
             if (!condition)
@@ -99,12 +99,12 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Assert a condition and logs a formatted error message to the Celelej console on failure.
+        /// Assert a condition and logs a formatted error message to the Flax console on failure.
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="format">A composite format string.</param>
         /// <param name="args">Format arguments.</param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void AssertFormat(bool condition, string format, params object[] args)
         {
             if (!condition)
@@ -112,13 +112,13 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Assert a condition and logs a formatted error message to the Celelej console on failure.
+        /// Assert a condition and logs a formatted error message to the Flax console on failure.
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="format">A composite format string.</param>
         /// <param name="args">Format arguments.</param>
         /// <param name="context">Object to which the message applies.</param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void AssertFormat(bool condition, Object context, string format, params object[] args)
         {
             if (!condition)
@@ -126,7 +126,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Logs message to the Celelej Console.
+        /// Logs message to the Flax Console.
         /// </summary>
         /// <param name="message">String or object to be converted to string representation for display.</param>
         public static void Log(object message)
@@ -135,7 +135,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Logs message to the Celelej Console.
+        /// Logs message to the Flax Console.
         /// </summary>
         /// <param name="message">String or object to be converted to string representation for display.</param>
         /// <param name="context">Object to which the message applies.</param>
@@ -148,7 +148,7 @@ namespace FlaxEngine
         /// A variant of Debug.Log that logs an assertion message to the console.
         /// </summary>
         /// <param name="message">String or object to be converted to string representation for display.</param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void LogAssertion(object message)
         {
             logger.Log(LogType.Assert, message);
@@ -159,30 +159,30 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="message">String or object to be converted to string representation for display.</param>
         /// <param name="context">Object to which the message applies.</param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void LogAssertion(object message, Object context)
         {
             logger.Log(LogType.Assert, message, context);
         }
 
         /// <summary>
-        /// Logs a formatted assertion message to the Celelej console.
+        /// Logs a formatted assertion message to the Flax console.
         /// </summary>
         /// <param name="format">A composite format string.</param>
         /// <param name="args">Format arguments.</param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void LogAssertionFormat(string format, params object[] args)
         {
             logger.LogFormat(LogType.Assert, format, args);
         }
 
         /// <summary>
-        /// Logs a formatted assertion message to the Celelej console.
+        /// Logs a formatted assertion message to the Flax console.
         /// </summary>
         /// <param name="format">A composite format string.</param>
         /// <param name="args">Format arguments.</param>
         /// <param name="context">Object to which the message applies.</param>
-        [Conditional("CELELEJ_ASSERTIONS")]
+        [Conditional("FLAX_ASSERTIONS")]
         public static void LogAssertionFormat(Object context, string format, params object[] args)
         {
             logger.Log(LogType.Assert, context, string.Format(format, args));
@@ -208,7 +208,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Logs a formatted error message to the Celelej console.
+        /// Logs a formatted error message to the Flax console.
         /// </summary>
         /// <param name="format">A composite format string.</param>
         /// <param name="args">Format arguments.</param>
@@ -218,7 +218,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Logs a formatted error message to the Celelej console.
+        /// Logs a formatted error message to the Flax console.
         /// </summary>
         /// <param name="format">A composite format string.</param>
         /// <param name="args">Format arguments.</param>
@@ -248,7 +248,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Logs a formatted message to the Celelej Console.
+        /// Logs a formatted message to the Flax Console.
         /// </summary>
         /// <param name="format">A composite format string.</param>
         /// <param name="args">Format arguments.</param>
@@ -258,7 +258,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Logs a formatted message to the Celelej Console.
+        /// Logs a formatted message to the Flax Console.
         /// </summary>
         /// <param name="format">A composite format string.</param>
         /// <param name="args">Format arguments.</param>
@@ -288,7 +288,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Logs a formatted warning message to the Celelej Console.
+        /// Logs a formatted warning message to the Flax Console.
         /// </summary>
         /// <param name="format">A composite format string.</param>
         /// <param name="args">Format arguments.</param>
@@ -298,7 +298,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Logs a formatted warning message to the Celelej Console.
+        /// Logs a formatted warning message to the Flax Console.
         /// </summary>
         /// <param name="format">A composite format string.</param>
         /// <param name="args">Format arguments.</param>

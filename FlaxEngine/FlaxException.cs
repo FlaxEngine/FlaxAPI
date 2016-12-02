@@ -6,24 +6,24 @@ using System.Runtime.Serialization;
 namespace FlaxEngine
 {
     [Serializable]
-    public class CelelejException : SystemException
+    public class FlaxException : SystemException
     {
-        public CelelejException()
-            : base("A Celelej Runtime error occurred!")
+        public FlaxException()
+            : base("A Flax Runtime error occurred!")
         {
         }
 
-        public CelelejException(string message)
+        public FlaxException(string message)
             : base(message)
         {
         }
 
-        public CelelejException(string message, Exception innerException)
+        public FlaxException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
-        protected CelelejException(SerializationInfo info, StreamingContext context)
+        protected FlaxException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Base class for all objects Celelej can reference.
+    /// Base class for all objects Flax can reference.
     /// </summary>
     public abstract class Object
     {

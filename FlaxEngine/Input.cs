@@ -519,7 +519,7 @@ namespace FlaxEngine
     }
 
     /// <summary>
-    /// The interface to get input information from Celelej.
+    /// The interface to get input information from Flax.
     /// </summary>
     public static class Input
     {

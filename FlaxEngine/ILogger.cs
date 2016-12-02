@@ -31,14 +31,14 @@ namespace FlaxEngine
         bool IsLogTypeAllowed(LogType logType);
 
         /// <summary>
-        /// <para>Logs message to the Celelej Console using default logger.</para>
+        /// <para>Logs message to the Flax Console using default logger.</para>
         /// </summary>
         /// <param name="logType"></param>
         /// <param name="message"></param>
         void Log(LogType logType, object message);
 
         /// <summary>
-        /// <para>Logs message to the Celelej Console using default logger.</para>
+        /// <para>Logs message to the Flax Console using default logger.</para>
         /// </summary>
         /// <param name="logType"></param>
         /// <param name="message"></param>
@@ -46,7 +46,7 @@ namespace FlaxEngine
         void Log(LogType logType, object message, Object context);
 
         /// <summary>
-        /// <para>Logs message to the Celelej Console using default logger.</para>
+        /// <para>Logs message to the Flax Console using default logger.</para>
         /// </summary>
         /// <param name="logType"></param>
         /// <param name="message"></param>
@@ -54,7 +54,7 @@ namespace FlaxEngine
         void Log(LogType logType, string tag, object message);
 
         /// <summary>
-        /// <para>Logs message to the Celelej Console using default logger.</para>
+        /// <para>Logs message to the Flax Console using default logger.</para>
         /// </summary>
         /// <param name="logType"></param>
         /// <param name="message"></param>
@@ -63,20 +63,20 @@ namespace FlaxEngine
         void Log(LogType logType, string tag, object message, Object context);
 
         /// <summary>
-        /// <para>Logs message to the Celelej Console using default logger.</para>
+        /// <para>Logs message to the Flax Console using default logger.</para>
         /// </summary>
         /// <param name="message"></param>
         void Log(object message);
 
         /// <summary>
-        /// <para>Logs message to the Celelej Console using default logger.</para>
+        /// <para>Logs message to the Flax Console using default logger.</para>
         /// </summary>
         /// <param name="message"></param>
         /// <param name="tag"></param>
         void Log(string tag, object message);
 
         /// <summary>
-        /// <para>Logs message to the Celelej Console using default logger.</para>
+        /// <para>Logs message to the Flax Console using default logger.</para>
         /// </summary>
         /// <param name="message"></param>
         /// <param name="context"></param>
