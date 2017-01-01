@@ -6,9 +6,9 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Point Light can emmit light from point in space
+    /// Spot Light can emmit light from point in space in a given direction
     /// </summary>
-    public sealed class PointLight : Actor
+    public sealed class SpotLight : Actor
     {
         // TODO: expose ShadowsSharpness
 
@@ -64,16 +64,7 @@ namespace FlaxEngine
             get { return Internal_GetSourceRadius(unmanagedPtr); }
             set { Internal_SetSourceRadius(unmanagedPtr, value); }
         }
-
-        /// <summary>
-        /// Gets or sets light source bulb length parameter
-        /// </summary>
-        public float SourceLength
-        {
-            get { return Internal_GetSourceLength(unmanagedPtr); }
-            set { Internal_SetSourceLength(unmanagedPtr, value); }
-        }
-
+        
         /// <summary>
         /// Gets or sets light source minimum roughness parameter
         /// </summary>
@@ -131,15 +122,7 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_SetSourceRadius(IntPtr obj, float value);
-
-        //
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float Internal_GetSourceLength(IntPtr obj);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_SetSourceLength(IntPtr obj, float value);
-
+        
         //
 
         [MethodImpl(MethodImplOptions.InternalCall)]

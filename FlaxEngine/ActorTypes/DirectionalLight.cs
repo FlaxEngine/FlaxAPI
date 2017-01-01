@@ -10,6 +10,8 @@ namespace FlaxEngine
     /// </summary>
     public sealed class DirectionalLight : Actor
     {
+        // TODO: expose ShadowsSharpness
+
         /// <summary>
         /// Gets or sets value indicating if visual element affects the world
         /// </summary>
