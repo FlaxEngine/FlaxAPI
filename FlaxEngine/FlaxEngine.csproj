@@ -111,11 +111,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Math\Quaternion.cs" />
     <Compile Include="Math\Ray.cs" />
+    <Compile Include="RequireChildActor.cs" />
     <Compile Include="Script.cs" />
     <Compile Include="SerializeField.cs" />
     <Compile Include="ShadowsCastingMode.cs" />
     <Compile Include="StaticFlags.cs" />
-    <Compile Include="SystemInfo.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="UnassignedReferenceException.cs" />
     <Compile Include="UnhandledExceptionHandler.cs" />

@@ -23,9 +23,14 @@ namespace FlaxEngine
         Lightmap = 1 << 1,
 
         /// <summary>
+        /// Object is considered to have static transformation in space (no dynamic physics and any movement at runtime)
+        /// </summary>
+        Transform = 1 << 2,
+
+        /// <summary>
         /// Objects is fully static on the scene
         /// </summary>
-        FullyStatic = ReflectionProbe | Lightmap,
+        FullyStatic = Transform | ReflectionProbe | Lightmap,
 
         /// <summary>
         /// Maximum value of the enum (force to int)

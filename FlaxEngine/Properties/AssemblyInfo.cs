@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("FlaxEngine")]
-[assembly: AssemblyCopyright("Copyright © 2016 Wojciech Figat")]
+[assembly: AssemblyCopyright("Copyright © 2016-2017 Wojciech Figat")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

@@ -10,6 +10,9 @@ namespace FlaxEngine
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public sealed class RequireChildActor : Attribute
     {
+        /// <summary>
+        /// Type of the actor to require
+        /// </summary>
         public Type Type;
 
         /// <summary>

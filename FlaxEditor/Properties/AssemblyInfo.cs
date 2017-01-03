@@ -1,5 +1,6 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
+﻿// Flax Engine scripting API
+
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("FlaxEditor")]
@@ -7,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("FlaxEditor")]
-[assembly: AssemblyCopyright("Copyright © 2016 Wojciech Figat")]
+[assembly: AssemblyCopyright("Copyright © 2016-2017 Wojciech Figat")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
