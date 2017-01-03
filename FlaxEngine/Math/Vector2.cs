@@ -157,7 +157,23 @@ namespace FlaxEngine
         /// </summary>
         public bool IsZero
         {
-            get { return (X == 0) && (Y == 0); }
+            get { return Mathf.IsZero(X) && Mathf.IsZero(Y); }
+        }
+
+        /// <summary>
+        /// Gets a minimum component value
+        /// </summary>
+        public float MinValue
+        {
+            get { return Mathf.Min(X, Y); }
+        }
+
+        /// <summary>
+        /// Gets a maximum component value
+        /// </summary>
+        public float MaxValue
+        {
+            get { return Mathf.Max(X, Y); }
         }
 
         /// <summary>
