@@ -31,6 +31,19 @@ namespace FlaxEngine
 			}
 
 			/// <summary>
+			/// Gets time in seconds it took to complete the last frame in ticks, <see cref="TimeScale"/> dependent
+			/// </summary>
+			[UnmanagedCall]
+			public static long DeltaTimeTicks
+			{
+#if UNIT_TEST_COMPILANT
+				get; set;
+#else
+				get { return Internal_GetDeltaTimeTicks(); }
+#endif
+			}
+
+			/// <summary>
 			/// Gets real time in seconds since the game started
 			/// </summary>
 			[UnmanagedCall]
@@ -44,6 +57,19 @@ namespace FlaxEngine
 			}
 
 			/// <summary>
+			/// Gets real time in seconds since the game started in ticks
+			/// </summary>
+			[UnmanagedCall]
+			public static long RealtimeSinceStartupTicks
+			{
+#if UNIT_TEST_COMPILANT
+				get; set;
+#else
+				get { return Internal_GetRealtimeSinceStartupTicks(); }
+#endif
+			}
+
+			/// <summary>
 			/// Gets time at the beginning of this frame. This is the time in seconds since the start of the game. <see cref="TimeScale"/> dependent
 			/// </summary>
 			[UnmanagedCall]
@@ -53,6 +79,19 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetTime(); }
+#endif
+			}
+
+			/// <summary>
+			/// Gets time at the beginning of this frame  in ticks. This is the time in seconds since the start of the game. <see cref="TimeScale"/> dependent
+			/// </summary>
+			[UnmanagedCall]
+			public static long TotalTimeSinceStartupTicks
+			{
+#if UNIT_TEST_COMPILANT
+				get; set;
+#else
+				get { return Internal_GetTimeTicks(); }
 #endif
 			}
 
@@ -84,6 +123,19 @@ namespace FlaxEngine
 			}
 
 			/// <summary>
+			/// The time this frame has started in ticks. This is the time in seconds since the last level has been loaded.
+			/// </summary>
+			[UnmanagedCall]
+			public static long TimeSinceLevelLoadTicks
+			{
+#if UNIT_TEST_COMPILANT
+				get; set;
+#else
+				get { return Internal_GetTimeSinceLevelLoadTicks(); }
+#endif
+			}
+
+			/// <summary>
 			/// Gets timeScale-independent time in seconds it took to complete the last frame.
 			/// </summary>
 			[UnmanagedCall]
@@ -93,6 +145,19 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetUnscaledDeltaTime(); }
+#endif
+			}
+
+			/// <summary>
+			/// Gets timeScale-independent time in seconds it took to complete the last frame in ticks.
+			/// </summary>
+			[UnmanagedCall]
+			public static long UnscaledDeltaTimeTicks
+			{
+#if UNIT_TEST_COMPILANT
+				get; set;
+#else
+				get { return Internal_GetUnscaledDeltaTimeTicks(); }
 #endif
 			}
 
@@ -109,14 +174,33 @@ namespace FlaxEngine
 #endif
 			}
 
+			/// <summary>
+			/// Gets timeScale-independant time at the beginning of this frame in ticks. This is the time in seconds since the start of the game.
+			/// </summary>
+			[UnmanagedCall]
+			public static long UnscaledTimeTicks
+			{
+#if UNIT_TEST_COMPILANT
+				get; set;
+#else
+				get { return Internal_GetUnscaledTimeTicks(); }
+#endif
+			}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetDeltaTime();
 		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern long Internal_GetDeltaTimeTicks();
+		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetRealtimeSinceStartup();
 		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern long Internal_GetRealtimeSinceStartupTicks();
+		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetTime();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern long Internal_GetTimeTicks();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetTimeScale();
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -124,9 +208,15 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetTimeSinceLevelLoad();
 		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern long Internal_GetTimeSinceLevelLoadTicks();
+		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetUnscaledDeltaTime();
 		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern long Internal_GetUnscaledDeltaTimeTicks();
+		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetUnscaledTime();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern long Internal_GetUnscaledTimeTicks();
 #endif
 #endregion
 	}
