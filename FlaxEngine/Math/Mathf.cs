@@ -527,13 +527,13 @@ namespace FlaxEngine
 
         public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed)
         {
-            float single = Time.deltaTime;
+            float single = Time.DeltaTime;
             return SmoothDamp(current, target, ref currentVelocity, smoothTime, maxSpeed, single);
         }
 
         public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime)
         {
-            float single = Time.deltaTime;
+            float single = Time.DeltaTime;
             return SmoothDamp(current, target, ref currentVelocity, smoothTime, float.PositiveInfinity, single);
         }
 
@@ -561,13 +561,13 @@ namespace FlaxEngine
 
         public static float SmoothDampAngle(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed)
         {
-            float single = Time.deltaTime;
+            float single = Time.DeltaTime;
             return SmoothDampAngle(current, target, ref currentVelocity, smoothTime, maxSpeed, single);
         }
 
         public static float SmoothDampAngle(float current, float target, ref float currentVelocity, float smoothTime)
         {
-            float single = Time.deltaTime;
+            float single = Time.DeltaTime;
             return SmoothDampAngle(current, target, ref currentVelocity, smoothTime, float.PositiveInfinity, single);
         }
 
