@@ -1,14 +1,14 @@
 ﻿// Flax Engine scripting API
 
+using System;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-    /// <summary>
-    /// The interface to get input information from Flax.
-    /// </summary>
-    public static partial class Input
+    public partial class Input
     {
+        public static event Action<KeyCode> OnKeyPressed;
+
         /// <summary>
         /// Gets current mouse position in pixel coordinates.
         /// </summary>
@@ -24,6 +24,10 @@ namespace FlaxEngine
                 Internal_GetMousePosition(out result);
                 return result;
             }
+            set
+            {
+                Internal_SetMousePosition(ref value);
+            }
 #endif
         }
 
@@ -33,7 +37,8 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetMousePosition(out Vector2 result);
-
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetMousePosition(ref Vector2 result);
 #endif
     }
 }
