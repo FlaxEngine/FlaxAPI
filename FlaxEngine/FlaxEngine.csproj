@@ -47,6 +47,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssetTypes\IESProfile.cs" />
     <Compile Include="Generated\_EnvironmentProbe.cs" />
     <Compile Include="Generated\_Input.cs" />
     <Compile Include="Generated\_ModelActor.cs" />
