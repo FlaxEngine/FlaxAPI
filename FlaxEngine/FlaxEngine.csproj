@@ -139,6 +139,7 @@
     <Compile Include="Math\Vector2.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Math\Vector4.cs" />
+    <Compile Include="Partial\Render2D.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
