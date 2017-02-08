@@ -105,7 +105,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetTimeScale(); }
-				set { Internal_SetTimeScale(ref value); }
+				set { Internal_SetTimeScale(value); }
 #endif
 			}
 
@@ -204,7 +204,7 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetTimeScale();
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetTimeScale(ref float val);
+		internal static extern void Internal_SetTimeScale(float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetTimeSinceLevelLoad();
 		[MethodImpl(MethodImplOptions.InternalCall)]

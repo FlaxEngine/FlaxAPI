@@ -27,7 +27,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetAffectsWorld(unmanagedPtr); }
-				set { Internal_SetAffectsWorld(unmanagedPtr, ref value); }
+				set { Internal_SetAffectsWorld(unmanagedPtr, value); }
 #endif
 			}
 
@@ -55,7 +55,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetBrightness(unmanagedPtr); }
-				set { Internal_SetBrightness(unmanagedPtr, ref value); }
+				set { Internal_SetBrightness(unmanagedPtr, value); }
 #endif
 			}
 
@@ -69,7 +69,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetRadius(unmanagedPtr); }
-				set { Internal_SetRadius(unmanagedPtr, ref value); }
+				set { Internal_SetRadius(unmanagedPtr, value); }
 #endif
 			}
 
@@ -83,7 +83,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetSourceRadius(unmanagedPtr); }
-				set { Internal_SetSourceRadius(unmanagedPtr, ref value); }
+				set { Internal_SetSourceRadius(unmanagedPtr, value); }
 #endif
 			}
 
@@ -97,7 +97,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetSourceLength(unmanagedPtr); }
-				set { Internal_SetSourceLength(unmanagedPtr, ref value); }
+				set { Internal_SetSourceLength(unmanagedPtr, value); }
 #endif
 			}
 
@@ -111,7 +111,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetMinimumRoughness(unmanagedPtr); }
-				set { Internal_SetMinimumRoughness(unmanagedPtr, ref value); }
+				set { Internal_SetMinimumRoughness(unmanagedPtr, value); }
 #endif
 			}
 
@@ -125,7 +125,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetShadowsMode(unmanagedPtr); }
-				set { Internal_SetShadowsMode(unmanagedPtr, ref value); }
+				set { Internal_SetShadowsMode(unmanagedPtr, value); }
 #endif
 			}
 
@@ -134,7 +134,7 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetAffectsWorld(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetAffectsWorld(IntPtr obj, ref bool val);
+		internal static extern void Internal_SetAffectsWorld(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Color Internal_GetColor(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -142,27 +142,27 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetBrightness(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetBrightness(IntPtr obj, ref float val);
+		internal static extern void Internal_SetBrightness(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetRadius(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetRadius(IntPtr obj, ref float val);
+		internal static extern void Internal_SetRadius(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetSourceRadius(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetSourceRadius(IntPtr obj, ref float val);
+		internal static extern void Internal_SetSourceRadius(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetSourceLength(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetSourceLength(IntPtr obj, ref float val);
+		internal static extern void Internal_SetSourceLength(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetMinimumRoughness(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetMinimumRoughness(IntPtr obj, ref float val);
+		internal static extern void Internal_SetMinimumRoughness(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern ShadowsCastingMode Internal_GetShadowsMode(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetShadowsMode(IntPtr obj, ref ShadowsCastingMode val);
+		internal static extern void Internal_SetShadowsMode(IntPtr obj, ShadowsCastingMode val);
 #endif
 #endregion
 	}

@@ -27,7 +27,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetAffectsWorld(unmanagedPtr); }
-				set { Internal_SetAffectsWorld(unmanagedPtr, ref value); }
+				set { Internal_SetAffectsWorld(unmanagedPtr, value); }
 #endif
 			}
 
@@ -41,7 +41,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetBrightness(unmanagedPtr); }
-				set { Internal_SetBrightness(unmanagedPtr, ref value); }
+				set { Internal_SetBrightness(unmanagedPtr, value); }
 #endif
 			}
 
@@ -55,7 +55,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetRadius(unmanagedPtr); }
-				set { Internal_SetRadius(unmanagedPtr, ref value); }
+				set { Internal_SetRadius(unmanagedPtr, value); }
 #endif
 			}
 
@@ -64,15 +64,15 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetAffectsWorld(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetAffectsWorld(IntPtr obj, ref bool val);
+		internal static extern void Internal_SetAffectsWorld(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetBrightness(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetBrightness(IntPtr obj, ref float val);
+		internal static extern void Internal_SetBrightness(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetRadius(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetRadius(IntPtr obj, ref float val);
+		internal static extern void Internal_SetRadius(IntPtr obj, float val);
 #endif
 #endregion
 	}

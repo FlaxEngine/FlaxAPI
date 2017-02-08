@@ -52,6 +52,7 @@
     <Compile Include="Generated\_Input.cs" />
     <Compile Include="Generated\_ModelActor.cs" />
     <Compile Include="Generated\_PointLight.cs" />
+    <Compile Include="Generated\_Render2D.cs" />
     <Compile Include="Generated\_Script.cs" />
     <Compile Include="Generated\_Sky.cs" />
     <Compile Include="Generated\_Skybox.cs" />

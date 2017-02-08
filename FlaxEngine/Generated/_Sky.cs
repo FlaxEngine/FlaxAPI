@@ -27,7 +27,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetAffectsWorld(unmanagedPtr); }
-				set { Internal_SetAffectsWorld(unmanagedPtr, ref value); }
+				set { Internal_SetAffectsWorld(unmanagedPtr, value); }
 #endif
 			}
 
@@ -41,7 +41,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetSunLight(unmanagedPtr); }
-				set { Internal_SetSunLight(unmanagedPtr, ref value); }
+				set { Internal_SetSunLight(unmanagedPtr, value); }
 #endif
 			}
 
@@ -50,11 +50,11 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetAffectsWorld(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetAffectsWorld(IntPtr obj, ref bool val);
+		internal static extern void Internal_SetAffectsWorld(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern DirectionalLight Internal_GetSunLight(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetSunLight(IntPtr obj, ref DirectionalLight val);
+		internal static extern void Internal_SetSunLight(IntPtr obj, DirectionalLight val);
 #endif
 #endregion
 	}

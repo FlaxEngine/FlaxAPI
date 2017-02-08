@@ -27,7 +27,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetAffectsWorld(unmanagedPtr); }
-				set { Internal_SetAffectsWorld(unmanagedPtr, ref value); }
+				set { Internal_SetAffectsWorld(unmanagedPtr, value); }
 #endif
 			}
 
@@ -55,7 +55,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetBrightness(unmanagedPtr); }
-				set { Internal_SetBrightness(unmanagedPtr, ref value); }
+				set { Internal_SetBrightness(unmanagedPtr, value); }
 #endif
 			}
 
@@ -69,7 +69,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetShadowsDistance(unmanagedPtr); }
-				set { Internal_SetShadowsDistance(unmanagedPtr, ref value); }
+				set { Internal_SetShadowsDistance(unmanagedPtr, value); }
 #endif
 			}
 
@@ -83,7 +83,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetShadowsFadeDistance(unmanagedPtr); }
-				set { Internal_SetShadowsFadeDistance(unmanagedPtr, ref value); }
+				set { Internal_SetShadowsFadeDistance(unmanagedPtr, value); }
 #endif
 			}
 
@@ -97,7 +97,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetMinimumRoughness(unmanagedPtr); }
-				set { Internal_SetMinimumRoughness(unmanagedPtr, ref value); }
+				set { Internal_SetMinimumRoughness(unmanagedPtr, value); }
 #endif
 			}
 
@@ -111,7 +111,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetShadowsMode(unmanagedPtr); }
-				set { Internal_SetShadowsMode(unmanagedPtr, ref value); }
+				set { Internal_SetShadowsMode(unmanagedPtr, value); }
 #endif
 			}
 
@@ -120,7 +120,7 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetAffectsWorld(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetAffectsWorld(IntPtr obj, ref bool val);
+		internal static extern void Internal_SetAffectsWorld(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Color Internal_GetColor(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -128,23 +128,23 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetBrightness(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetBrightness(IntPtr obj, ref float val);
+		internal static extern void Internal_SetBrightness(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetShadowsDistance(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetShadowsDistance(IntPtr obj, ref float val);
+		internal static extern void Internal_SetShadowsDistance(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetShadowsFadeDistance(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetShadowsFadeDistance(IntPtr obj, ref float val);
+		internal static extern void Internal_SetShadowsFadeDistance(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern ShadowsCastingMode Internal_GetMinimumRoughness(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetMinimumRoughness(IntPtr obj, ref ShadowsCastingMode val);
+		internal static extern void Internal_SetMinimumRoughness(IntPtr obj, ShadowsCastingMode val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetShadowsMode(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetShadowsMode(IntPtr obj, ref float val);
+		internal static extern void Internal_SetShadowsMode(IntPtr obj, float val);
 #endif
 #endregion
 	}

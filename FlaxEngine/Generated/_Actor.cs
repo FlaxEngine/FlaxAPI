@@ -72,7 +72,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetName(unmanagedPtr); }
-				set { Internal_SetName(unmanagedPtr, ref value); }
+				set { Internal_SetName(unmanagedPtr, value); }
 #endif
 			}
 
@@ -86,7 +86,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetStaticFlags(unmanagedPtr); }
-				set { Internal_SetStaticFlags(unmanagedPtr, ref value); }
+				set { Internal_SetStaticFlags(unmanagedPtr, value); }
 #endif
 			}
 
@@ -100,7 +100,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetIsActive(unmanagedPtr); }
-				set { Internal_SetIsActive(unmanagedPtr, ref value); }
+				set { Internal_SetIsActive(unmanagedPtr, value); }
 #endif
 			}
 
@@ -483,15 +483,15 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern String Internal_GetName(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetName(IntPtr obj, ref String val);
+		internal static extern void Internal_SetName(IntPtr obj, String val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern StaticFlags Internal_GetStaticFlags(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetStaticFlags(IntPtr obj, ref StaticFlags val);
+		internal static extern void Internal_SetStaticFlags(IntPtr obj, StaticFlags val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetIsActive(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetIsActive(IntPtr obj, ref bool val);
+		internal static extern void Internal_SetIsActive(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetIsActiveInHierarchy(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]

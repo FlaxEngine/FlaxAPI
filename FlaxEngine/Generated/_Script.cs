@@ -27,7 +27,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetEnabled(unmanagedPtr); }
-				set { Internal_SetEnabled(unmanagedPtr, ref value); }
+				set { Internal_SetEnabled(unmanagedPtr, value); }
 #endif
 			}
 
@@ -49,7 +49,7 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetEnabled(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetEnabled(IntPtr obj, ref bool val);
+		internal static extern void Internal_SetEnabled(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Actor Internal_GetActor(IntPtr obj);
 #endif

@@ -27,7 +27,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetScaleInLightmap(unmanagedPtr); }
-				set { Internal_SetScaleInLightmap(unmanagedPtr, ref value); }
+				set { Internal_SetScaleInLightmap(unmanagedPtr, value); }
 #endif
 			}
 
@@ -41,7 +41,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetModel(unmanagedPtr); }
-				set { Internal_SetModel(unmanagedPtr, ref value); }
+				set { Internal_SetModel(unmanagedPtr, value); }
 #endif
 			}
 
@@ -50,11 +50,11 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetScaleInLightmap(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetScaleInLightmap(IntPtr obj, ref float val);
+		internal static extern void Internal_SetScaleInLightmap(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Model Internal_GetModel(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetModel(IntPtr obj, ref Model val);
+		internal static extern void Internal_SetModel(IntPtr obj, Model val);
 #endif
 #endregion
 	}

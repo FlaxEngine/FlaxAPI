@@ -27,7 +27,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetUsePerspective(unmanagedPtr); }
-				set { Internal_SetUsePerspective(unmanagedPtr, ref value); }
+				set { Internal_SetUsePerspective(unmanagedPtr, value); }
 #endif
 			}
 
@@ -41,7 +41,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetFOV(unmanagedPtr); }
-				set { Internal_SetFOV(unmanagedPtr, ref value); }
+				set { Internal_SetFOV(unmanagedPtr, value); }
 #endif
 			}
 
@@ -55,7 +55,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetNearPlane(unmanagedPtr); }
-				set { Internal_SetNearPlane(unmanagedPtr, ref value); }
+				set { Internal_SetNearPlane(unmanagedPtr, value); }
 #endif
 			}
 
@@ -69,7 +69,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetFarPlane(unmanagedPtr); }
-				set { Internal_GetFarPlane(unmanagedPtr, ref value); }
+				set { Internal_GetFarPlane(unmanagedPtr, value); }
 #endif
 			}
 
@@ -91,19 +91,19 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetUsePerspective(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetUsePerspective(IntPtr obj, ref bool val);
+		internal static extern void Internal_SetUsePerspective(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetFOV(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetFOV(IntPtr obj, ref float val);
+		internal static extern void Internal_SetFOV(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetNearPlane(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetNearPlane(IntPtr obj, ref float val);
+		internal static extern void Internal_SetNearPlane(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetFarPlane(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetFarPlane(IntPtr obj, ref float val);
+		internal static extern void Internal_GetFarPlane(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Viewport Internal_GetViewport(IntPtr obj);
 #endif
