@@ -40,7 +40,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetParent(unmanagedPtr); }
-				set { Internal_SetParent(unmanagedPtr, GetUnmanagedPtr(value), false); }
+				set { Internal_SetParent(unmanagedPtr, Object.GetUnmanagedPtr(value), false); }
 #endif
 			}
 
@@ -58,7 +58,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 				throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-				Internal_SetParent(unmanagedPtr, GetUnmanagedPtr(newParent), worldPositionLock);
+				Internal_SetParent(unmanagedPtr, Object.GetUnmanagedPtr(newParent), worldPositionLock);
 #endif
 			}
 

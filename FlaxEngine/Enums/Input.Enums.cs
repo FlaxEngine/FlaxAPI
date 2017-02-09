@@ -2,7 +2,7 @@
 
 namespace FlaxEngine
 {
-    public enum MouseButtons
+    public enum MouseButtons : byte
     {
         None = 0,
         Left = 1,
@@ -12,7 +12,7 @@ namespace FlaxEngine
         XButton2 = 16,
     }
 
-    public enum KeyCode
+    public enum KeyCode : byte
     {
         // TODO: create more platform independent key mappings, without OEM stuff etc.
         // Note: these are just raw values copied right from C++ source

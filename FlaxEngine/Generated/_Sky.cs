@@ -41,7 +41,7 @@ namespace FlaxEngine
 				get; set;
 #else
 				get { return Internal_GetSunLight(unmanagedPtr); }
-				set { Internal_SetSunLight(unmanagedPtr, value); }
+				set { Internal_SetSunLight(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
 #endif
 			}
 
@@ -54,7 +54,7 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern DirectionalLight Internal_GetSunLight(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetSunLight(IntPtr obj, DirectionalLight val);
+		internal static extern void Internal_SetSunLight(IntPtr obj, IntPtr val);
 #endif
 #endregion
 	}
