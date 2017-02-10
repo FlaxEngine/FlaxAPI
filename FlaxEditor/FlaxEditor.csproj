@@ -39,6 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="History\HistoryStack.cs" />
+    <Compile Include="History\HistoryController.cs" />
+    <Compile Include="History\IHistoryAction.cs" />
     <Compile Include="PreviewsCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

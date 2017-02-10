@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -12,7 +13,7 @@ namespace FlaxEngine.Assertions
         /// <summary>
         /// Should an exception be thrown on a failure.
         /// </summary>
-        public static bool raiseExceptions;
+        public static bool RaiseExceptions = true;
 
         /// <summary>
         /// Asserts that the values are approximately equal. An absolute error check is used for approximate equality check
@@ -192,11 +193,11 @@ namespace FlaxEngine.Assertions
                 Fail(AssertionMessageUtil.GetEqualityMessage(actual, expected, false), message);
         }
 
-        private static void Fail(string message, string userMessage)
+        public static void Fail(string message = "", string userMessage = "")
         {
             if (Debugger.IsAttached)
                 throw new AssertionException(message, userMessage);
-            if (raiseExceptions)
+            if (RaiseExceptions)
                 throw new AssertionException(message, userMessage);
             if (message == null)
                 message = "Assertion has failed\n";
@@ -295,6 +296,30 @@ namespace FlaxEngine.Assertions
         {
             if (!condition)
                 Fail(AssertionMessageUtil.BooleanFailureMessage(true), message);
+        }
+
+        /// <summary>
+        /// Expect action to fail
+        /// </summary>
+        /// <param name="exceptionType">Type of expeption to expect</param>
+        /// <param name="action">Action to expect</param>
+        /// <param name="message">User custom message to display</param>
+        [Conditional("FLAX_ASSERTIONS")]
+        public static void ExceptionExpected(Type exceptionType, Action action, string message = "")
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception e)
+            {
+                if(exceptionType != e.GetType())
+                {
+                    Fail(AssertionMessageUtil.GetMessage("Expected exception of type " + exceptionType.FullName + " got " + e.GetType().FullName), message);
+                }
+                return;
+            }
+            Fail(AssertionMessageUtil.GetMessage("Expected exception of type " + exceptionType.FullName), message);
         }
     }
 }
