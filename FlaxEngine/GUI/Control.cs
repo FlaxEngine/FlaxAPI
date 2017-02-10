@@ -5,7 +5,7 @@
 namespace FlaxEngine.GUI
 {
     /// <summary>
-    /// Base interface for all GUI controls that can contain controls
+    /// Base class for all GUI controls
     /// </summary>
     public class Control
     {
@@ -26,6 +26,9 @@ namespace FlaxEngine.GUI
 
         #region Public Properties
 
+        /// <summary>
+        /// Parent control (the one above in the tree hierachy)
+        /// </summary>
         public ContainerControl Parent
         {
             get { return _parent; }
@@ -44,6 +47,8 @@ namespace FlaxEngine.GUI
                     // Link
                     if (_parent != null)
                         _parent.addChild(this);
+
+                    OnParentChanged();
                 }
             }
         }
@@ -312,8 +317,8 @@ namespace FlaxEngine.GUI
                         _dragOver = false;*/
                         // TODO: call events?
                     }
-
-                    // Call event
+                    
+                    OnVisibleChanged();
                     if (HasParent)
                         _parent.PerformLayout();
                 }
@@ -326,6 +331,14 @@ namespace FlaxEngine.GUI
         public bool IsDisposing
         {
             get { return _isDisposing; }
+        }
+
+        /// <summary>
+        /// Gets window which contains that control (or null if not linked to any)
+        /// </summary>
+        public virtual Window ParentWindow
+        {
+            get { return HasParent ? _parent.ParentWindow : null; }
         }
 
         #endregion
@@ -450,8 +463,8 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void Focus()
         {
-            if (!IsFocused && HasParent)
-                _parent.focus(this);
+            if (!IsFocused)
+                focus(this);
         }
 
         /// <summary>
@@ -459,8 +472,8 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void Defocus()
         {
-            if (IsFocused && HasParent)
-                _parent.deFocus(this);
+            if (IsFocused)
+                focus(null);
         }
 
         /// <summary>
@@ -494,17 +507,7 @@ namespace FlaxEngine.GUI
         public virtual void OnEndContainsFocus()
         {
         }
-
-        /// <summary>
-        /// Remove focus from that control
-        /// </summary>
-        /// <param name="c">Control to defocus</param>
-        /// <returns>True if control lost a focus</returns>
-        protected virtual bool deFocus(Control c)
-        {
-            return _parent != null && _parent.deFocus(c);
-        }
-
+        
         /// <summary>
         /// Focus that control
         /// </summary>
@@ -756,6 +759,14 @@ namespace FlaxEngine.GUI
         {
             _width = width;
             _height = height;
+        }
+
+        protected virtual void OnParentChanged()
+        {
+        }
+
+        protected virtual void OnVisibleChanged()
+        {
         }
 
         /// <summary>
