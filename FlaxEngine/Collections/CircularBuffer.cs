@@ -13,28 +13,63 @@ namespace FlaxEngine.Collections
         private int _frontItem = 0;
         private int _backItem = 0;
 
+        /// <summary>
+        /// Amount of items currently in buffer
+        /// </summary>
         public int Count { get; private set; }
 
+        /// <summary>
+        /// Current capacity of internal buffer
+        /// </summary>
         public int Capacity => _buffer.Length;
 
+        /// <summary>
+        /// Returns true if there are no items in sturcutre, or false if there are
+        /// </summary>
         public bool IsEmpty => Count == 0;
 
+        /// <summary>
+        /// Creates new instance of object with given capacity
+        /// </summary>
+        /// <param name="capacity">Capacity of internal structure</param>
         public CircularBuffer(int capacity)
             : this(capacity, new T[] { })
         {
         }
 
-        public CircularBuffer(int capacity, T[] items)
+        /// <summary>
+        /// Creates new instance of object with given capacity and adds array of items to internall buffer
+        /// </summary>
+        /// <param name="capacity">Capacity of internal structure</param>
+        /// <param name="items">Items to input</param>
+        /// <param name="arrayIndex">Index of items to input at in internal buffer</param>
+        public CircularBuffer(int capacity, T[] items, int arrayIndex = 0)
         {
             if(capacity <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(capacity), "argument cannot be lower or equal zero");
             }
+            if(items.Length + arrayIndex > capacity)
+            {
+                throw new ArgumentOutOfRangeException(nameof(items), "argument cannot be larger then requested capaclity with moved arrayIndex");
+            }
             _buffer = new T[capacity];
-            items.CopyTo(_buffer, 0);
-
+            items.CopyTo(_buffer, arrayIndex);
+            _backItem = arrayIndex;
+            _frontItem = items.Length + arrayIndex;
+            if(items.Length > 0)
+            {
+                // Move items back if there are any items in provided array
+                _frontItem -= 1;
+            }
+            Count = items.Length;
         }
 
+        /// <summary>
+        /// Gets or sets item from list at given index.
+        /// <remarks>All items are in order of input regardless of overlow that may occur</remarks>
+        /// </summary>
+        /// <param name="index">Index to item required</param>
         public T this[int index]
         {
             get

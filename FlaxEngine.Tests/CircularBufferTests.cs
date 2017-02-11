@@ -349,5 +349,21 @@ namespace FlaxEngine.TestMethods
                 buffer.PopBack();
             }
         }
+
+        [TestMethod]
+        public void TestMethodConstructors()
+        {
+            var array = new long[5];
+            for (int i = 0; i < 5; i++)
+            {
+                array[i] = i + 10;
+            }
+            var buffer = new CircularBuffer<long>(15, array, 5);
+            Assert.AreEqual(10, buffer.Back());
+            Assert.AreEqual(14, buffer.Front());
+            Assert.AreEqual(5, buffer.Count);
+            Assert.AreEqual(15, buffer.Capacity);
+            Assert.AreEqual(false, buffer.IsEmpty);
+        }
     }
 }
