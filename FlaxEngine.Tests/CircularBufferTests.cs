@@ -7,7 +7,7 @@ using Assert = FlaxEngine.Assertions.Assert;
 namespace FlaxEngine.TestMethods
 {
     [TestClass]
-    public class CircularBufferTestMethods
+    public class CircularBufferTests
     {
         [TestMethod]
         public void TestMethodFrontOverwrite()
@@ -364,6 +364,43 @@ namespace FlaxEngine.TestMethods
             Assert.AreEqual(5, buffer.Count);
             Assert.AreEqual(15, buffer.Capacity);
             Assert.AreEqual(false, buffer.IsEmpty);
+        }
+
+        [TestMethod]
+        public void TestMethodClear()
+        {
+            var buffer = new CircularBuffer<long>(15);
+            for (int i = 0; i < 5; i++)
+            {
+                buffer.PushFront(i);
+            }
+            buffer.Clear();
+            Assert.ExceptionExpected(typeof(IndexOutOfRangeException), () => { buffer.PopBack(); });
+            Assert.ExceptionExpected(typeof(IndexOutOfRangeException), () => { buffer.PopFront(); });
+            Assert.AreEqual(0, buffer.Count);
+            Assert.AreEqual(15, buffer.Capacity);
+        }
+
+        [TestMethod]
+        public void TestMethodMultipleIterations()
+        {
+            var buffer = new CircularBuffer<long>(50);
+            for (int i = 0; i < 80; i++)
+            {
+                buffer.PushFront(i);
+            }
+            for (int i = 0; i < 50; i++)
+            {
+                Assert.AreEqual(79 - i, buffer.PopFront());
+            }
+            for (int i = 0; i < 20; i++)
+            {
+                buffer.PushFront(i);
+            }
+            for (int i = 0; i < 20; i++)
+            {
+                Assert.AreEqual(i, buffer[i]);
+            }
         }
     }
 }

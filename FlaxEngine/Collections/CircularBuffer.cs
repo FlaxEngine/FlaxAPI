@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine.Collections
 {
+    /// <summary>
+    /// Creates new structure array like, with fast front and back insertion.
+    /// <para>Every overflow of this buffer removes last item form other side of insertion</para>
+    /// </summary>
+    /// <typeparam name="T">Type of items to insert into buffer</typeparam>
     public class CircularBuffer<T> : IEnumerable<T>, IReadOnlyCollection<T>
     {
         private T[] _buffer;
@@ -27,6 +32,11 @@ namespace FlaxEngine.Collections
         /// Returns true if there are no items in sturcutre, or false if there are
         /// </summary>
         public bool IsEmpty => Count == 0;
+
+        /// <summary>
+        /// Returns true if buffer is filled with whole of its capacity with items
+        /// </summary>
+        public bool IsFull => Count == Capacity;
 
         /// <summary>
         /// Creates new instance of object with given capacity
@@ -160,6 +170,10 @@ namespace FlaxEngine.Collections
             return _buffer[_backItem];
         }
 
+        /// <summary>
+        /// Removes first item from the front of the buffer
+        /// </summary>
+        /// <returns></returns>
         public T PopFront()
         {
             if (IsEmpty)
@@ -167,11 +181,23 @@ namespace FlaxEngine.Collections
                 throw new IndexOutOfRangeException("You cannot remove item from empty collection");
             }
             var result = Front();
-            DecreaseFrontIndex();
             Count--;
+            if (!IsEmpty)
+            {
+                DecreaseFrontIndex();
+            }
+            else
+            {
+                _frontItem = 0;
+                _backItem = 0;
+            }
             return result;
         }
 
+        /// <summary>
+        /// Removes first item from the back of the buffer
+        /// </summary>
+        /// <returns></returns>
         public T PopBack()
         {
             if (IsEmpty)
@@ -179,8 +205,16 @@ namespace FlaxEngine.Collections
                 throw new IndexOutOfRangeException("You cannot remove item from empty collection");
             }
             var result = Back();
-            IncreaseBackIndex();
             Count--;
+            if (!IsEmpty)
+            {
+                IncreaseBackIndex();
+            }
+            else
+            {
+                _frontItem = 0;
+                _backItem = 0;
+            }
             return result;
         }
 
@@ -219,6 +253,17 @@ namespace FlaxEngine.Collections
             ToArray().CopyTo(array, arrayIndex);
         }
 
+        /// <summary>
+        /// Clears buffer and remains capacity
+        /// </summary>
+        public void Clear()
+        {
+            _buffer = new T[Capacity];
+            _frontItem = 0;
+            _backItem = 0;
+            Count = 0;
+        }
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
@@ -246,7 +291,7 @@ namespace FlaxEngine.Collections
                 currentIndex = Capacity + currentIndex;
             }
             _backItem = currentIndex;
-            if (_backItem == _frontItem)
+            if (_backItem == _frontItem && IsFull)
             {
                 DecreaseFrontIndex();
             }
@@ -264,7 +309,7 @@ namespace FlaxEngine.Collections
                 currentIndex = Capacity + currentIndex;
             }
             _frontItem = currentIndex;
-            if (_backItem == _frontItem)
+            if (_backItem == _frontItem && IsFull)
             {
                 DecreaseBackIndex();
             }
