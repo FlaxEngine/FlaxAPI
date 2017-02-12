@@ -59,7 +59,51 @@ namespace FlaxEngine.GUI
         protected ContainerControl(bool canFocus, float x, float y, float width, float height)
             : base(canFocus, x, y, width, height)
         {
+            IsLayoutLocked = true;
         }
+
+        #region Layout locking
+
+        /// <summary>
+        /// True if automatic updates for control layout are locked (usefull when createing a lot of GUI control to prevent lags)
+        /// </summary>
+        public bool IsLayoutLocked;
+
+        /// <summary>
+        /// Lock all child controls and itself
+        /// </summary>
+        public virtual void LockChildrenRecursive()
+        {
+            // Itself
+            IsLayoutLocked = true;
+
+            // Every child container control
+            for (int i = 0; i < _children.Count; i++)
+            {
+                var cc = _children[i] as ContainerControl;
+                if (cc != null)
+                    cc.LockChildrenRecursive();
+            }
+        }
+
+        /// <summary>
+        /// Unlocks all child controls and itself
+        /// </summary>
+        public virtual void UnlockChildrenRecursive()
+        {            
+            // Itself
+            IsLayoutLocked = false;
+
+            // Every child container control
+            for (int i = 0; i < _children.Count; i++)
+            {
+                var cc = _children[i] as ContainerControl;
+                if (cc != null)
+                    cc.UnlockChildrenRecursive();
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// Unlink all child controls
@@ -603,12 +647,20 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void PerformLayout()
         {
+            // Check if update is locked
+            if (IsLayoutLocked)
+                return;
+
+            IsLayoutLocked = true;
+
             // Update itself
             performLayoutSelf();
 
             // Update children
             for (int i = 0; i < _children.Count; i++)
                 _children[i].PerformLayout();
+
+            IsLayoutLocked = false;
         }
 
         /// <inheritdoc />
@@ -919,6 +971,10 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void setSize(float width, float height)
         {
+            // Lock updates to revent form additional layout calculations
+            bool wasLocked = IsLayoutLocked;
+            IsLayoutLocked = true;
+
             // Cache previous size
             Vector2 prevSize = Size;
 
@@ -928,6 +984,9 @@ namespace FlaxEngine.GUI
             // Fire event
             for (int i = 0; i < _children.Count; i++)
                 _children[i].OnParentResized(ref prevSize);
+
+            // Restore state
+            IsLayoutLocked = wasLocked;
 
             // Arrange child controls
             PerformLayout();
