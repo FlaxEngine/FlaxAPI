@@ -10,7 +10,7 @@ namespace FlaxEngine.TestMethods
     public class CircularBufferTests
     {
         [TestMethod]
-        public void TestMethodFrontOverwrite()
+        public void CircularBufferTestFrontOverwrite()
         {
             var buffer = new CircularBuffer<long>(3);
             for (int i = 0; i < 5; i++)
@@ -28,7 +28,7 @@ namespace FlaxEngine.TestMethods
         }
 
         [TestMethod]
-        public void TestMethodBackOverwrite()
+        public void CircularBufferTestBackOverwrite()
         {
             var buffer = new CircularBuffer<long>(3);
             for (int i = 0; i < 5; i++)
@@ -46,7 +46,7 @@ namespace FlaxEngine.TestMethods
         }
 
         [TestMethod]
-        public void TestMethodMixedOverwrite()
+        public void CircularBufferTestMixedOverwrite()
         {
             var buffer = new CircularBuffer<long>(3);
             buffer.PushFront(0);
@@ -75,7 +75,7 @@ namespace FlaxEngine.TestMethods
         }
 
         [TestMethod]
-        public void TestMethodFrontUnderwrite()
+        public void CircularBufferTestFrontUnderwrite()
         {
             var buffer = new CircularBuffer<long>(5);
             for (int i = 0; i < 4; i++)
@@ -103,7 +103,7 @@ namespace FlaxEngine.TestMethods
         }
 
         [TestMethod]
-        public void TestMethodBackUnderwrite()
+        public void CircularBufferTestBackUnderwrite()
         {
             var buffer = new CircularBuffer<long>(5);
             for (int i = 0; i < 4; i++)
@@ -131,7 +131,7 @@ namespace FlaxEngine.TestMethods
         }
 
         [TestMethod]
-        public void TestMethodMixedUnderwrite()
+        public void CircularBufferTestMixedUnderwrite()
         {
             var buffer = new CircularBuffer<long>(5);
             buffer.PushFront(0);
@@ -165,7 +165,7 @@ namespace FlaxEngine.TestMethods
         }
 
         [TestMethod]
-        public void TestMethodEnumerationFrontWhenOverflown()
+        public void CircularBufferTestEnumerationFrontWhenOverflown()
         {
             var buffer = new CircularBuffer<long>(5);
             int i;
@@ -191,7 +191,7 @@ namespace FlaxEngine.TestMethods
         }
 
         [TestMethod]
-        public void TestMethodEnumerationBackWhenOverflown()
+        public void CircularBufferTestEnumerationBackWhenOverflown()
         {
             var buffer = new CircularBuffer<long>(5);
             int i;
@@ -217,7 +217,7 @@ namespace FlaxEngine.TestMethods
         }
 
         [TestMethod]
-        public void TestMethodEnumerationWhenPartiallyFull()
+        public void CircularBufferTestEnumerationWhenPartiallyFull()
         {
             var buffer = new CircularBuffer<long>(3);
             buffer.PushFront(1);
@@ -233,7 +233,7 @@ namespace FlaxEngine.TestMethods
         }
 
         [TestMethod]
-        public void TestMethodEnumerationWhenPartiallyFullLarge()
+        public void CircularBufferTestEnumerationWhenPartiallyFullLarge()
         {
             var buffer = new CircularBuffer<long>(20000);
             int i = 0;
@@ -253,7 +253,7 @@ namespace FlaxEngine.TestMethods
         }
 
         [TestMethod]
-        public void TestMethodEnumerationWhenEmpty()
+        public void CircularBufferTestEnumerationWhenEmpty()
         {
             var buffer = new CircularBuffer<long>(3);
             foreach (var value in buffer)
@@ -263,7 +263,7 @@ namespace FlaxEngine.TestMethods
         }
 
         [TestMethod]
-        public void TestMethodCopyToArray()
+        public void CircularBufferTestCopyToArray()
         {
             var buffer = new CircularBuffer<long>(3);
             for (int i = 0; i < 5; i++)
@@ -287,7 +287,7 @@ namespace FlaxEngine.TestMethods
         }
 
         [TestMethod]
-        public void TestMethodExceptions()
+        public void CircularBufferTestExceptions()
         {
             Assert.ExceptionExpected(typeof(ArgumentOutOfRangeException), () => { new CircularBuffer<long>(0); });
             Assert.ExceptionExpected(typeof(ArgumentOutOfRangeException), () => { new CircularBuffer<long>(-5); });
@@ -303,7 +303,7 @@ namespace FlaxEngine.TestMethods
         }
         
         [TestMethod]
-        public void TestMethodForceSet()
+        public void CircularBufferTestForceSet()
         {
             var buffer = new CircularBuffer<long>(15);
             for (int i = 0; i < 5; i++)
@@ -330,7 +330,7 @@ namespace FlaxEngine.TestMethods
         }
 
         [TestMethod]
-        public void TestMethodFrontAndBack()
+        public void CircularBufferTestFrontAndBack()
         {
             var rand = new Random();
             var buffer = new CircularBuffer<long>(3);
@@ -351,7 +351,7 @@ namespace FlaxEngine.TestMethods
         }
 
         [TestMethod]
-        public void TestMethodConstructors()
+        public void CircularBufferTestConstructors()
         {
             var array = new long[5];
             for (int i = 0; i < 5; i++)
@@ -367,7 +367,7 @@ namespace FlaxEngine.TestMethods
         }
 
         [TestMethod]
-        public void TestMethodClear()
+        public void CircularBufferTestClear()
         {
             var buffer = new CircularBuffer<long>(15);
             for (int i = 0; i < 5; i++)
@@ -382,7 +382,7 @@ namespace FlaxEngine.TestMethods
         }
 
         [TestMethod]
-        public void TestMethodMultipleIterations()
+        public void CircularBufferTestMultipleIterations()
         {
             var buffer = new CircularBuffer<long>(50);
             for (int i = 0; i < 80; i++)
@@ -401,6 +401,84 @@ namespace FlaxEngine.TestMethods
             {
                 Assert.AreEqual(i, buffer[i]);
             }
+        }
+
+        [TestMethod]
+        public void CircularBufferTestEvents()
+        {
+            //Front
+            var buffer = new CircularBuffer<long>(5);
+            var overflown = 0;
+            var added = 0;
+            var removed = 7;
+
+            var overflownHandler = new CircularBuffer<long>.ItemOverflownEventHandler((sender, args) =>
+            {
+                Assert.AreEqual(overflown++, args.Item);
+                Assert.AreEqual(false, args.WasFrontItem);
+            });
+            buffer.OnItemOverflown += overflownHandler;
+            var addHandler = new CircularBuffer<long>.ItemAddedEventHandler((sender, args) =>
+            {
+                Assert.AreEqual(added++, args.Item);
+                Assert.AreEqual(buffer.Count - 1, args.Index);
+            });
+            buffer.OnItemAdded += addHandler;
+            var removeHandler = new CircularBuffer<long>.ItemRemovedEventHandler((sender, args) =>
+            {
+                Assert.AreEqual(removed--, args.Item);
+                Assert.AreEqual(true, args.WasFrontItem);
+            });
+            buffer.OnItemRemoved += removeHandler;
+
+            for (int i = 0; i < 8; i++)
+            {
+                buffer.PushFront(i);
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                buffer.PopFront();
+            }
+            buffer.OnItemOverflown -= overflownHandler;
+            buffer.OnItemAdded -= addHandler;
+            buffer.OnItemRemoved -= removeHandler;
+
+            //Back
+            buffer.Clear();
+            overflown = 0;
+            added = 0;
+            removed = 7;
+
+            overflownHandler = (sender, args) =>
+            {
+                Assert.AreEqual(overflown++, args.Item);
+                Assert.AreEqual(true, args.WasFrontItem);
+            };
+            buffer.OnItemOverflown += overflownHandler;
+            addHandler = (sender, args) =>
+            {
+                Assert.AreEqual(added++, args.Item);
+                Assert.AreEqual(0, args.Index);
+            };
+            buffer.OnItemAdded += addHandler;
+            removeHandler = (sender, args) =>
+            {
+                Assert.AreEqual(removed--, args.Item);
+                Assert.AreEqual(false, args.WasFrontItem);
+            };
+            buffer.OnItemRemoved += removeHandler;
+
+            for (int i = 0; i < 8; i++)
+            {
+                buffer.PushBack(i);
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                buffer.PopBack();
+            }
+            buffer.OnItemOverflown -= overflownHandler;
+            buffer.OnItemAdded -= addHandler;
+            buffer.OnItemRemoved -= removeHandler;
         }
     }
 }
