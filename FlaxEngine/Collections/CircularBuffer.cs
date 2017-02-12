@@ -89,7 +89,7 @@ namespace FlaxEngine.Collections
         /// </summary>
         public event ItemRemovedEventHandler OnItemRemoved;
 
-        /// <see cref="ItemRemovedEventHandler"/>
+        /// <see cref="ItemRemovedEventHandler" />
         public delegate void ItemRemovedEventHandler(object sender, ItemRemovedEventArgs e);
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace FlaxEngine.Collections
         /// </summary>
         public event ItemAddedEventHandler OnItemAdded;
 
-        /// <see cref="ItemAddedEventHandler"/>
+        /// <see cref="ItemAddedEventHandler" />
         public delegate void ItemAddedEventHandler(object sender, ItemAddedEventArgs e);
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace FlaxEngine.Collections
         /// </summary>
         public event ItemOverflownEventHandler OnItemOverflown;
 
-        /// <see cref="ItemOverflownEventHandler"/>
+        /// <see cref="ItemOverflownEventHandler" />
         public delegate void ItemOverflownEventHandler(object sender, ItemOverflownEventArgs e);
 
         /// <summary>

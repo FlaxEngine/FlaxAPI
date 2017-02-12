@@ -8,5 +8,9 @@ namespace FlaxEditor.History
 {
     public interface IHistoryAction
     {
+        /// <summary>
+        /// Id of made action
+        /// </summary>
+        Guid Id { get; set; }
     }
 }
