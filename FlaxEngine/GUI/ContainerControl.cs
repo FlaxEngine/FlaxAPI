@@ -917,13 +917,13 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        protected override void OnSizeChange(float width, float height)
+        protected override void setSize(float width, float height)
         {
             // Cache previous size
             Vector2 prevSize = Size;
 
             // Base
-            base.OnSizeChange(width, height);
+            base.setSize(width, height);
 
             // Fire event
             for (int i = 0; i < _children.Count; i++)

@@ -78,7 +78,7 @@ namespace FlaxEngine.GUI
             set
             {
                 if (_x != value)
-                    OnLocationChange(value, _y);
+                    setLocation(value, _y);
             }
         }
 
@@ -91,7 +91,7 @@ namespace FlaxEngine.GUI
             set
             {
                 if (_y != value)
-                    OnLocationChange(_x, value);
+                    setLocation(_x, value);
             }
         }
 
@@ -104,7 +104,7 @@ namespace FlaxEngine.GUI
             set
             {
                 if (_x != value.X || _y != value.Y)
-                    OnLocationChange(value.X, value.Y);
+                    setLocation(value.X, value.Y);
             }
         }
 
@@ -117,7 +117,7 @@ namespace FlaxEngine.GUI
             set
             {
                 if (_width != value)
-                    OnSizeChange(value, _height);
+                    setSize(value, _height);
             }
         }
 
@@ -130,7 +130,7 @@ namespace FlaxEngine.GUI
             set
             {
                 if (_height != value)
-                    OnSizeChange(_width, value);
+                    setSize(_width, value);
             }
         }
 
@@ -143,7 +143,7 @@ namespace FlaxEngine.GUI
             set
             {
                 if (_width != value.X || _height != value.Y)
-                    OnSizeChange(value.X, value.Y);
+                    setSize(value.X, value.Y);
             }
         }
 
@@ -415,7 +415,7 @@ namespace FlaxEngine.GUI
         public virtual void SetLocation(float x, float y)
         {
             if (_y != x || _y != y)
-                OnLocationChange(x, y);
+                setLocation(x, y);
         }
 
         /// <summary>
@@ -426,7 +426,7 @@ namespace FlaxEngine.GUI
         public virtual void SetSize(float width, float height)
         {
             if (_width != width || _height != height)
-                OnSizeChange(width, height);
+                setSize(width, height);
         }
 
         #region Focus
@@ -749,16 +749,25 @@ namespace FlaxEngine.GUI
 
         #region Control Action
 
-        protected virtual void OnLocationChange(float x, float y)
+        protected virtual void setLocation(float x, float y)
         {
             _x = x;
             _y = y;
+            OnLocationChanged();
         }
 
-        protected virtual void OnSizeChange(float width, float height)
+        protected virtual void setSize(float width, float height)
         {
             _width = width;
             _height = height;
+            OnSizeChanged();
+        }
+
+        protected virtual void OnLocationChanged()
+        {
+        }
+        protected virtual void OnSizeChanged()
+        {
         }
 
         protected virtual void OnParentChanged()

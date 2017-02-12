@@ -42,13 +42,13 @@ namespace FlaxEngine.GUI
 	    //Vector2 ClientToScreen(const Vector2& location);
         
          /// <inheritdoc />
-        protected override void OnLocationChange(float x, float y)
+        protected override void OnLocationChanged()
         {
             throw new NotImplementedException("Change window position");
         }
 
         /// <inheritdoc />
-        protected override void OnSizeChange(float width, float height)
+        protected override void OnSizeChanged()
         {
             throw new NotImplementedException("Change window size");
         }
