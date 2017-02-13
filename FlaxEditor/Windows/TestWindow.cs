@@ -4,6 +4,7 @@
 
 using FlaxEngine;
 using FlaxEngine.GUI;
+using FlaxEngine.GUI.Common;
 
 namespace FlaxEditor.Windows
 {
@@ -11,21 +12,15 @@ namespace FlaxEditor.Windows
     {
         protected override void Initialize()
         {
-            BackgroundColor = Color.Red;
-        }
+            //BackgroundColor = Color.Red;
 
-        public override bool OnKeyDown(KeyCode key)
-        {
-            Debug.Log("Key down: " + key);
+            Button b1 = new Button(10, 10);
+            b1.Text = "Click me!";
+            b1.Parent = this;
 
-            return base.OnKeyDown(key);
-        }
-
-        public override void OnKeyUp(KeyCode key)
-        {
-            Debug.Log("Key up: " + key);
-
-            base.OnKeyDown(key);
+            Button b2 = new Button(10, b1.Bottom + 4);
+            b2.Text = "Click me!";
+            b2.Parent = this;
         }
     }
 }

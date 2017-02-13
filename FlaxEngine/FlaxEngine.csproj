@@ -58,9 +58,11 @@
     <Compile Include="Generated\_Skybox.cs" />
     <Compile Include="Generated\_SpotLight.cs" />
     <Compile Include="Generated\_Time.cs" />
+    <Compile Include="GUI\Common\Button.cs" />
     <Compile Include="GUI\ContainerControl.cs" />
     <Compile Include="GUI\Control.cs" />
     <Compile Include="GUI\Enums.cs" />
+    <Compile Include="GUI\GUIStyle.cs" />
     <Compile Include="GUI\Window.cs" />
     <Compile Include="Partial\Actor.cs" />
     <Compile Include="Partial\ActorTypes\BoxBrush.cs" />
