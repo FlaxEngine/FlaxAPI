@@ -88,6 +88,33 @@ namespace FlaxEditor
         }
 
         /// <summary>
+        ///     Creates new undo action for provided instance of object.
+        /// </summary>
+        /// <param name="snapshotInstance">Instance of an object to record</param>
+        /// <param name="actionString">Name of action to be displayed in undo stack.</param>
+        /// <param name="actionsToSave">Action in after witch recording will be finished.</param>
+        public static void RecordAction<T>(T snapshotInstance, string actionString, Action<T> actionsToSave)
+            where T : new()
+        {
+            RecordBegin(snapshotInstance, actionString);
+            actionsToSave?.Invoke(snapshotInstance);
+            RecordEnd(snapshotInstance);
+        }
+
+        /// <summary>
+        ///     Creates new undo action for provided instance of object.
+        /// </summary>
+        /// <param name="snapshotInstance">Instance of an object to record</param>
+        /// <param name="actionString">Name of action to be displayed in undo stack.</param>
+        /// <param name="actionsToSave">Action in after witch recording will be finished.</param>
+        public static void RecordAction(object snapshotInstance, string actionString, Action<object> actionsToSave)
+        {
+            RecordBegin(snapshotInstance, actionString);
+            actionsToSave?.Invoke(snapshotInstance);
+            RecordEnd(snapshotInstance);
+        }
+
+        /// <summary>
         ///     Undo last recorded action
         /// </summary>
         public static void PerformUndo()

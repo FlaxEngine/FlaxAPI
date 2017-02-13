@@ -67,6 +67,59 @@ namespace FlaxEditor.Tests
             instance.PorpertyInteger = 0;
             instance.PorpertyObject = null;
             Undo.RecordEnd();
+            BasicUndoRedo(instance);
+
+            instance = new UndoObject(true);
+            Undo.RecordAction(instance, "Basic", () =>
+            {
+                instance.FieldFloat = 0;
+                instance.FieldInteger = 0;
+                instance.FieldObject = null;
+                instance.PorpertyFloat = 0;
+                instance.PorpertyInteger = 0;
+                instance.PorpertyObject = null;
+            });
+            BasicUndoRedo(instance);
+
+            object generic = new UndoObject(true);
+            Undo.RecordAction(generic, "Basic", (i) =>
+            {
+                ((UndoObject)i).FieldFloat = 0;
+                ((UndoObject)i).FieldInteger = 0;
+                ((UndoObject)i).FieldObject = null;
+                ((UndoObject)i).PorpertyFloat = 0;
+                ((UndoObject)i).PorpertyInteger = 0;
+                ((UndoObject)i).PorpertyObject = null;
+            });
+            BasicUndoRedo((UndoObject)generic);
+
+            instance = new UndoObject(true);
+            Undo.RecordAction(instance, "Basic", (i) =>
+            {
+                i.FieldFloat = 0;
+                i.FieldInteger = 0;
+                i.FieldObject = null;
+                i.PorpertyFloat = 0;
+                i.PorpertyInteger = 0;
+                i.PorpertyObject = null;
+            });
+            BasicUndoRedo(instance);
+
+            instance = new UndoObject(true);
+            using(new Undo(instance, "Basic"))
+            {
+                instance.FieldFloat = 0;
+                instance.FieldInteger = 0;
+                instance.FieldObject = null;
+                instance.PorpertyFloat = 0;
+                instance.PorpertyInteger = 0;
+                instance.PorpertyObject = null;
+            }
+            BasicUndoRedo(instance);
+        }
+
+        private static void BasicUndoRedo(UndoObject instance)
+        {
             Undo.PerformUndo();
             Assert.AreEqual(10, instance.FieldInteger);
             Assert.AreEqual(0.1f, instance.FieldFloat);
