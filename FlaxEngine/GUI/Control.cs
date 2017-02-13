@@ -23,6 +23,7 @@ namespace FlaxEngine.GUI
         protected bool _isVisible, _canFocus, _isEnabled;
         protected string _tooltipText;
         protected DockStyle _dockStyle;
+        protected Color _backgroundColor;
 
         #region Public Properties
 
@@ -241,6 +242,15 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Gets or sets control background color (transparent color (alpha=0) means no background rendering)
+        /// </summary>
+        public Color BackgroundColor
+        {
+            get { return _backgroundColor; }
+            set { _backgroundColor = value; }
+        }
+
+        /// <summary>
         /// Gets the docking style of the control
         /// </summary>
         /// <returns>Dock style of the control</returns>
@@ -286,7 +296,7 @@ namespace FlaxEngine.GUI
                         // Clear flags
                         //_mouseOver = false;
                         //_dragOver = false;
-                        // TODO: shoul we call mosue leave or sth?
+                        // TODO: should we call mosue leave or sth?
                     }
                 }
             }
@@ -360,6 +370,7 @@ namespace FlaxEngine.GUI
             _y = y;
             _width = width;
             _height = height;
+            _backgroundColor = Color.Transparent;
         }
 
         /// <summary>
@@ -397,7 +408,9 @@ namespace FlaxEngine.GUI
         /// <param name="root">Root position of the upper-left corner in the global-coordinates. Used internally.</param>
         public virtual void Draw(ref Vector2 root)
         {
-            // TODO: could we use background color or sth?
+            // Paint Background
+            if (_backgroundColor.A > 0.0f)
+                Render2D.FillRectangle(new Rectangle(0, 0, _width, _height), _backgroundColor, true);
         }
 
         /// <summary>
