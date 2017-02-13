@@ -586,6 +586,8 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void OnMouseLeave()
         {
+            // Clear flag
+            _isMouseOver = false;
         }
 
         /// <summary>

@@ -18,6 +18,66 @@ namespace FlaxEngine
 		public static partial class Render2D
 		{
 			/// <summary>
+			/// Gets or sets transform applied to all rendering operations (only offset).
+			/// </summary>
+			[UnmanagedCall]
+			public static Vector2 Transform
+			{
+#if UNIT_TEST_COMPILANT
+				get; set;
+#else
+				get { return Internal_GetTransform(); }
+				set { Internal_SetTransform(ref value); }
+#endif
+			}
+
+			/// <summary>
+			/// Push clipping rectangle mask
+			/// </summary>
+			/// <param name="clipRect">Axis aligned clipping mask rectangle</param>
+#if UNIT_TEST_COMPILANT
+			[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+			[UnmanagedCall]
+			public static void PushClip(Rectangle clipRect) 
+			{
+#if UNIT_TEST_COMPILANT
+				throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+				Internal_PushClip(ref clipRect);
+#endif
+			}
+
+			/// <summary>
+			/// Pop clippng rectangle mask
+			/// </summary>
+#if UNIT_TEST_COMPILANT
+			[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+			[UnmanagedCall]
+			public static void PopClip() 
+			{
+#if UNIT_TEST_COMPILANT
+				throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+				Internal_PopClip();
+#endif
+			}
+
+			/// <summary>
+			/// Gets current clipping mask (transformed).
+			/// </summary>
+			[UnmanagedCall]
+			public static Rectangle ClipMask
+			{
+#if UNIT_TEST_COMPILANT
+				get; set;
+#else
+				get { return Internal_GetClipMask(); }
+#endif
+			}
+
+			/// <summary>
 			/// Fill rectangle area
 			/// </summary>
 			/// <param name="rect">Rectangle to fill</param>
@@ -144,6 +204,16 @@ namespace FlaxEngine
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern Vector2 Internal_GetTransform();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetTransform(ref Vector2 val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_PushClip(ref Rectangle clipRect);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_PopClip();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern Rectangle Internal_GetClipMask();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_FillRectangle1(ref Rectangle rect, ref Color color, bool withAlpha);
 		[MethodImpl(MethodImplOptions.InternalCall)]

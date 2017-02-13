@@ -150,20 +150,18 @@ namespace FlaxEngine.GUI
         /// <param name="c">Control to add</param>
         public void AddChild(Control c)
         {
-            throw new NotImplementedException();
-            //ASSERT(c);
-            //c->SetParent(this);
+            Debug.Assert(c != null && c.Parent != this);
+            c.Parent = this;
         }
 
         /// <summary>
         /// Remove control from the container
         /// </summary>
         /// <param name="c">Control to remove</param>
-        public void RemvoeChild(Control c)
+        public void RemoveChild(Control c)
         {
-            throw new NotImplementedException();
-            //ASSERT(c && c->GetParent() == this);
-            //c->SetParent(nullptr);
+            Debug.Assert(c != null && c.Parent == this);
+            c.Parent = null;
         }
 
         /// <summary>
@@ -613,9 +611,12 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void Draw(ref Vector2 root)
         {
-            // TODO: finish render2D interop
+            Vector2 transform = Render2D.Transform;
 
-            /*// Push clipping mask
+            // Base
+            base.Draw(ref root);
+
+            // Push clipping mask
             Rectangle clientArea;
             getDesireClientArea(out clientArea);
             Render2D.PushClip(clientArea);
@@ -626,12 +627,12 @@ namespace FlaxEngine.GUI
                 Control c = _children[i];
                 if (c.Visible)
                 {
-                    Vector2 cRoot = root + c.Location;
+                    Vector2 childTransform = transform + c.Location;
                     if (c.IsScrollable)
-                        cRoot += _viewOffset;
+                        childTransform += _viewOffset;
 
-                    Render2D.SetTransform(cRoot);
-                    c.Draw(render, cRoot);
+                    Render2D.Transform = childTransform;
+                    c.Draw(ref childTransform);
                 }
             }
 
@@ -639,10 +640,7 @@ namespace FlaxEngine.GUI
             Render2D.PopClip();
 
             // Restore render transform
-            Render2D.SetTransform(ref root);*/
-
-            // Base
-            base.Draw(ref root);
+            Render2D.Transform = root;
         }
 
         /// <inheritdoc />
