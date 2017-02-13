@@ -102,6 +102,18 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Constructs a new Color with given r,g,b,a component.
+        /// </summary>
+        /// <param name="rgba">RGBA component.</param>
+        public Color(float rgba)
+        {
+            R = rgba;
+            G = rgba;
+            B = rgba;
+            A = rgba;
+        }
+
+        /// <summary>
         /// Constructs a new Color with given r,g,b,a components.
         /// </summary>
         /// <param name="r">Red component.</param>

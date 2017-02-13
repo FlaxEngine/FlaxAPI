@@ -609,12 +609,12 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override void Draw(ref Vector2 root)
+        public override void Draw()
         {
             Vector2 transform = Render2D.Transform;
 
             // Base
-            base.Draw(ref root);
+            base.Draw();
 
             // Push clipping mask
             Rectangle clientArea;
@@ -632,7 +632,7 @@ namespace FlaxEngine.GUI
                         childTransform += _viewOffset;
 
                     Render2D.Transform = childTransform;
-                    c.Draw(ref childTransform);
+                    c.Draw();
                 }
             }
 
@@ -640,7 +640,7 @@ namespace FlaxEngine.GUI
             Render2D.PopClip();
 
             // Restore render transform
-            Render2D.Transform = root;
+            Render2D.Transform = transform;
         }
 
         /// <inheritdoc />

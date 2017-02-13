@@ -405,8 +405,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Draw control
         /// </summary>
-        /// <param name="root">Root position of the upper-left corner in the global-coordinates. Used internally.</param>
-        public virtual void Draw(ref Vector2 root)
+        public virtual void Draw()
         {
             // Paint Background
             if (_backgroundColor.A > 0.0f)
