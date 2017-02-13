@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="PreviewsCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Windows\TestWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlaxEngine\FlaxEngine.csproj">
