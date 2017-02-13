@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlaxEditor.History
+namespace FlaxEngine.Utils
 {
-    public static class HistoryController
+    public static class Utils
     {
-        public static HistoryStack Stack;
     }
 }

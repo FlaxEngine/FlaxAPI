@@ -12,6 +12,7 @@ namespace FlaxEngine.Collections
     ///     <para>Every overflow of this buffer removes last item form other side of insertion</para>
     /// </summary>
     /// <typeparam name="T">Type of items inserted into buffer</typeparam>
+    [Serializable]
     public class CircularBuffer<T> : IEnumerable<T>, IReadOnlyCollection<T>
     {
         /// <summary>

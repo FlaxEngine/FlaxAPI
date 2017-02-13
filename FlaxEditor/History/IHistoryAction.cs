@@ -11,6 +11,11 @@ namespace FlaxEditor.History
         /// <summary>
         /// Id of made action
         /// </summary>
-        Guid Id { get; set; }
+        Guid Id { get; }
+
+        /// <summary>
+        /// Name or key of performed action
+        /// </summary>
+        String ActionString { get; }
     }
 }

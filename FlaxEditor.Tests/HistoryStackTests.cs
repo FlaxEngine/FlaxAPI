@@ -38,6 +38,7 @@ namespace FlaxEditor.Tests
             }
 
             public Guid Id { get; set; }
+            public string ActionString { get; set; }
         }
 
         [TestMethod]

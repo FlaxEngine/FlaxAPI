@@ -40,10 +40,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="History\HistoryStack.cs" />
-    <Compile Include="History\HistoryController.cs" />
     <Compile Include="History\IHistoryAction.cs" />
+    <Compile Include="History\UndoActionObject.cs" />
     <Compile Include="PreviewsCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Undo.cs" />
+    <Compile Include="Utilities\Extenstions.cs" />
+    <Compile Include="Utilities\MemberComparison.cs" />
+    <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlaxEngine\FlaxEngine.csproj">
