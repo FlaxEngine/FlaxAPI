@@ -19,14 +19,15 @@ namespace FlaxEditor.Utilities
         /// <returns>Returns list of <see cref="MemberComparison" /> structs with all diffrent fields and properties.</returns>
         public static List<MemberComparison> ReflectiveCompare<T>(this T first, T second)
         {
-            if(first.GetType() != second.GetType())
+            if (first.GetType() != second.GetType())
             {
                 throw new ArgumentException("both first and second parameters has to be of the same type");
             }
 
             List<MemberComparison> list = new List<MemberComparison>(); //The list to be returned
 
-            var members = first.GetType().GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            var members =
+                first.GetType().GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             foreach (MemberInfo m in members)
             {
                 if (m.MemberType == MemberTypes.Field)
@@ -35,9 +36,9 @@ namespace FlaxEditor.Utilities
                     var xValue = field.GetValue(first);
                     var yValue = field.GetValue(second);
                     if (!object.Equals(xValue, yValue))
-                        //Add a new comparison to the list if the value of the member defined on 'first' isn't equal to the value of the member defined on 'second'.
                     {
-                        list.Add(new MemberComparison(field, yValue, xValue));
+                        //Add a new comparison to the list if the value of the member defined on 'first' isn't equal to the value of the member defined on 'second'.
+                        list.Add(new MemberComparison(field, xValue, yValue));
                     }
                 }
                 else if (m.MemberType == MemberTypes.Property)

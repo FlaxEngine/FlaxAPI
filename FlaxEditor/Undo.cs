@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,8 +19,10 @@ namespace FlaxEditor
         /// <summary>
         ///     Stack of undo actions for future disposal.
         /// </summary>
-        private static readonly OrderedDictionary<object, UndoInternal> _snapshoots =
+        private static readonly OrderedDictionary<object, UndoInternal> _snapshots =
             new OrderedDictionary<object, UndoInternal>();
+
+        public static HistoryStack UndoOperationsStack { get; } = new HistoryStack();
 
         /// <summary>
         ///     Internal class for keeping reference of undo action.
@@ -29,50 +32,59 @@ namespace FlaxEditor
             public Guid Id { get; }
             public string ActionString { get; }
             public object CopyOfInstance { get; }
+            public object SnapshotInstance { get; }
 
-            public UndoInternal(object snapshootInstance, string actionString)
+            public UndoInternal(object snapshotInstance, string actionString)
             {
                 ActionString = actionString;
                 Id = Guid.NewGuid();
-                CopyOfInstance = snapshootInstance.DeepClone();
+                SnapshotInstance = snapshotInstance;
+                CopyOfInstance = snapshotInstance.DeepClone();
             }
+
+            public UndoActionObject CreateUndoActionObject(List<MemberComparison> diff)
+            {
+                return new UndoActionObject(diff, ActionString, Id, SnapshotInstance);
+            }
+
         }
 
         /// <summary>
         ///     Begins recording for undo action.
         /// </summary>
-        /// <param name="snapshootInstance">Instance of an object to record.</param>
+        /// <param name="snapshotInstance">Instance of an object to record.</param>
         /// <param name="actionString">Name of action to be displayed in undo stack.</param>
-        public static void RecordBegin(object snapshootInstance, string actionString)
+        public static void RecordBegin(object snapshotInstance, string actionString)
         {
-            _snapshoots.Add(snapshootInstance, new UndoInternal(snapshootInstance, actionString));
+            _snapshots.Add(snapshotInstance, new UndoInternal(snapshotInstance, actionString));
         }
 
         /// <summary>
         ///     Ends recording for undo action.
         /// </summary>
-        /// <param name="snapshootInstance">Instance of an object to finish recording, if null take last provided.</param>
-        public static void RecordEnd(object snapshootInstance = null)
+        /// <param name="snapshotInstance">Instance of an object to finish recording, if null take last provided.</param>
+        public static void RecordEnd(object snapshotInstance = null)
         {
-            if (snapshootInstance == null)
+            if (snapshotInstance == null)
             {
-                snapshootInstance = _snapshoots.Last().Key;
+                snapshotInstance = _snapshots.Last().Key;
             }
-            var changes = snapshootInstance.ReflectiveCompare(_snapshoots[snapshootInstance].CopyOfInstance);
-            _snapshoots.Remove(snapshootInstance);
+            var changes = snapshotInstance.ReflectiveCompare(_snapshots[snapshotInstance].CopyOfInstance);
+            UndoOperationsStack.Push(_snapshots[snapshotInstance].CreateUndoActionObject(changes));
+            _snapshots.Remove(snapshotInstance);
         }
 
         /// <summary>
         ///     Creates new undo action for provided instance of object.
         /// </summary>
-        /// <param name="snapshootInstance">Instance of an object to record</param>
+        /// <param name="snapshotInstance">Instance of an object to record</param>
         /// <param name="actionString">Name of action to be displayed in undo stack.</param>
         /// <param name="actionsToSave">Action in after witch recording will be finished.</param>
-        public static void RecordAction(object snapshootInstance, string actionString, Action actionsToSave)
+        public static void RecordAction(object snapshotInstance, string actionString, Action actionsToSave)
         {
-            RecordBegin(snapshootInstance, actionString);
+            RecordBegin(snapshotInstance, actionString);
             actionsToSave?.Invoke();
-            RecordEnd(snapshootInstance);
+            RecordEnd(snapshotInstance);
         }
 
         /// <summary>
@@ -80,7 +92,18 @@ namespace FlaxEditor
         /// </summary>
         public static void PerformUndo()
         {
-            throw new NotImplementedException();
+            UndoActionObject operation = (UndoActionObject)UndoOperationsStack.PopHistory();
+            foreach (var diff in operation.Diff)
+            {
+                if (diff.Member.MemberType == MemberTypes.Field)
+                {
+                    ((FieldInfo)diff.Member).SetValue(operation.TargetInstance, diff.Value2);
+                }
+                else
+                {
+                    ((PropertyInfo)diff.Member).SetValue(operation.TargetInstance, diff.Value2);
+                }
+            }
         }
 
         /// <summary>
@@ -96,12 +119,12 @@ namespace FlaxEditor
         /// <summary>
         ///     Creates new undo object for recording actions with using pattern.
         /// </summary>
-        /// <param name="snapshootInstance">Instance of an object to record.</param>
+        /// <param name="snapshotInstance">Instance of an object to record.</param>
         /// <param name="actionString">Name of action to be displayed in undo stack.</param>
-        public Undo(object snapshootInstance, string actionString)
+        public Undo(object snapshotInstance, string actionString)
         {
-            RecordBegin(snapshootInstance, actionString);
-            SnapshotUndoInternal = snapshootInstance;
+            RecordBegin(snapshotInstance, actionString);
+            SnapshotUndoInternal = snapshotInstance;
         }
 
         /// <inheritdoc />
