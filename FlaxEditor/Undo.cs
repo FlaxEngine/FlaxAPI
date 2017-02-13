@@ -111,7 +111,18 @@ namespace FlaxEditor
         /// </summary>
         public static void PerformRedo()
         {
-            throw new NotImplementedException();
+            UndoActionObject operation = (UndoActionObject)UndoOperationsStack.PopReverse();
+            foreach (var diff in operation.Diff)
+            {
+                if (diff.Member.MemberType == MemberTypes.Field)
+                {
+                    ((FieldInfo)diff.Member).SetValue(operation.TargetInstance, diff.Value1);
+                }
+                else
+                {
+                    ((PropertyInfo)diff.Member).SetValue(operation.TargetInstance, diff.Value1);
+                }
+            }
         }
 
         private object SnapshotUndoInternal { get; }

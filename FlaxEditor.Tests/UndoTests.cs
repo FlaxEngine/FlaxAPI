@@ -74,6 +74,13 @@ namespace FlaxEditor.Tests
             Assert.AreEqual(-10, instance.PorpertyInteger);
             Assert.AreEqual(-0.1f, instance.PorpertyFloat);
             Assert.AreNotEqual(null, instance.PorpertyObject);
+            Undo.PerformRedo();
+            Assert.AreEqual(0, instance.FieldInteger);
+            Assert.AreEqual(0, instance.FieldFloat);
+            Assert.AreEqual(null, instance.FieldObject);
+            Assert.AreEqual(0, instance.PorpertyInteger);
+            Assert.AreEqual(0, instance.PorpertyFloat);
+            Assert.AreEqual(null, instance.PorpertyObject);
         }
     }
 }
