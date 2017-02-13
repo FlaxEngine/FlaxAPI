@@ -59,6 +59,7 @@ namespace FlaxEngine.GUI
         protected ContainerControl(bool canFocus, float x, float y, float width, float height)
             : base(canFocus, x, y, width, height)
         {
+            _children = new List<Control>();
             IsLayoutLocked = true;
         }
 

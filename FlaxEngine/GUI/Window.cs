@@ -9,7 +9,7 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// Window root control. Main control that is represented by a window and can contain children but has no parent at all.
     /// </summary>
-    public sealed class Window : ContainerControl
+    public abstract class Window : ContainerControl
     {
         private Control _focusedControl;
 
@@ -21,10 +21,18 @@ namespace FlaxEngine.GUI
             get { return _focusedControl; }
         }
 
-        private Window()
-            : base(false, 0, 0, 1, 1)
+        /// <summary>
+        /// Init
+        /// </summary>
+        protected Window()
+            : base(false, 0, 0, 100, 60)
         {
         }
+
+        /// <summary>
+        /// Function called before window popup used to initialize it's controls
+        /// </summary>
+        protected abstract void Initialize();
 
         #region ContainerControl
 
@@ -44,13 +52,13 @@ namespace FlaxEngine.GUI
          /// <inheritdoc />
         protected override void OnLocationChanged()
         {
-            throw new NotImplementedException("Change window position");
+            // No support to change window bounds from C#
         }
 
         /// <inheritdoc />
         protected override void OnSizeChanged()
         {
-            throw new NotImplementedException("Change window size");
+            // No support to change window bounds from C#
         }
 
         /// <inheritdoc />

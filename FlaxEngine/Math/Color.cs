@@ -177,6 +177,7 @@ namespace FlaxEngine
             }
         }
 
+        /// <summary>
         /// Converts the color from a packed BGRA integer.
         /// </summary>
         /// <param name="color">A packed integer containing all four color components in BGRA order</param>
