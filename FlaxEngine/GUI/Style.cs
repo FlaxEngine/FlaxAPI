@@ -7,21 +7,19 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// Describes GUI controls style (which fonts and colors use etc.)
     /// </summary>
-    public class GUIStyle
+    public class Style
     {
         /// <summary>
         /// Global GUI style used by all the control
         /// </summary>
-        public static GUIStyle Current { get; set; } = CreateDefault();
+        public static Style Current { get; set; } = CreateDefault();
 
-        /*
-                // Fonts
-                public FontProperty PrimaryFont;
-                public Font* FontTitle1;
-                public Font* FontLarge;
-                public Font* FontMedium;
-                public Font* FontSmall;
-                */
+        // Fonts
+        public Font FontTitle;
+        public Font FontLarge;
+        public Font FontMedium;
+        public Font FontSmall;
+
         // Background
         public Color Background;
         public Color LightBackground;
@@ -45,28 +43,32 @@ namespace FlaxEngine.GUI
 
         // Progress bar
         public Color ProgressNormal;
+
         /*
         // Icons
-        public SpriteHandle ArrowRight;
-        public SpriteHandle ArrowDown;
-        public SpriteHandle Search;
-        public SpriteHandle Settings;
-        public SpriteHandle Cross;
-        public SpriteHandle CheckBoxIntermediate;
-        public SpriteHandle CheckBoxTick;
-        public SpriteHandle StatusBarSizeGrip;
-        public SpriteHandle Translate16;
-        public SpriteHandle Rotate16;
-        public SpriteHandle Scale16;
+        public Sprite ArrowRight;
+        public Sprite ArrowDown;
+        public Sprite Search;
+        public Sprite Settings;
+        public Sprite Cross;
+        public Sprite CheckBoxIntermediate;
+        public Sprite CheckBoxTick;
+        public Sprite StatusBarSizeGrip;
+        public Sprite Translate16;
+        public Sprite Rotate16;
+        public Sprite Scale16;
         */
 
         /// <summary>
         /// Creates default GUI style
         /// </summary>
         /// <returns>GUI style</returns>
-        public static GUIStyle CreateDefault()
+        public static Style CreateDefault()
         {
-            GUIStyle style = new GUIStyle();
+            Style style = new Style();
+
+            // Font
+            //var primaryFont = 
 
             // Metro Style colors
             style.Background = Color.FromBgra(0x1C1C1C);

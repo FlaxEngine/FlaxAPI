@@ -48,6 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetTypes\IESProfile.cs" />
+    <Compile Include="Enums\UI.cs" />
+    <Compile Include="Generated\_Content.cs" />
     <Compile Include="Attributes\Editor\CustomEditorAttribute.cs" />
     <Compile Include="Attributes\Editor\EditorIndexAttribute.cs" />
     <Compile Include="Collections\CircularBuffer.cs" />
@@ -67,7 +69,7 @@
     <Compile Include="GUI\ContainerControl.cs" />
     <Compile Include="GUI\Control.cs" />
     <Compile Include="GUI\Enums.cs" />
-    <Compile Include="GUI\GUIStyle.cs" />
+    <Compile Include="GUI\Style.cs" />
     <Compile Include="GUI\Window.cs" />
     <Compile Include="Partial\Actor.cs" />
     <Compile Include="Partial\ActorTypes\BoxBrush.cs" />
@@ -93,7 +95,7 @@
     <Compile Include="Assertions\FloatComparer.cs" />
     <Compile Include="AssetTypes\CubeTexture.cs" />
     <Compile Include="AssetTypes\Document.cs" />
-    <Compile Include="AssetTypes\Font.cs" />
+    <Compile Include="AssetTypes\FontAsset.cs" />
     <Compile Include="AssetTypes\Material.cs" />
     <Compile Include="AssetTypes\MaterialBase.cs" />
     <Compile Include="AssetTypes\MaterialInstance.cs" />
@@ -103,6 +105,8 @@
     <Compile Include="AssetTypes\Texture.cs" />
     <Compile Include="Bodies\BoxBody.cs" />
     <Compile Include="Enums\BrushMode.cs" />
+    <Compile Include="Partial\Content.cs" />
+    <Compile Include="Partial\Font.cs" />
     <Compile Include="Partial\Input.cs" />
     <Compile Include="Enums\Input.Enums.cs" />
     <Compile Include="Json\InternalJsonSerializer.cs" />

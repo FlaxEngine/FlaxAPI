@@ -33,7 +33,7 @@ namespace FlaxEngine.GUI
     /// </summary>
     public enum DragItemPositioning
     {
-        None,
+        None = 0,
         At,
         Above,
         Below
@@ -44,7 +44,7 @@ namespace FlaxEngine.GUI
     /// </summary>
     public enum Orientation
     {
-        Horizontal,
+        Horizontal = 0,
         Vertical
     }
 
@@ -53,7 +53,7 @@ namespace FlaxEngine.GUI
     /// </summary>
     public enum DialogResult
     {
-        Abort,
+        Abort = 0,
         Cancel,
         Ignore,
         No,
