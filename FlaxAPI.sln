@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlaxEngine", "FlaxEngine\Fl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlaxEditor", "FlaxEditor\FlaxEditor.csproj", "{D534E201-9DC6-4A26-B7FB-CEB3E16A58B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlaxEngine.Tests", "FlaxEngine.Tests\FlaxEngine.Tests.csproj", "{4AAED6A2-38B1-4A31-AB04-9264A94A8ECA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlaxEditor.Tests", "FlaxEditor.Tests\FlaxEditor.Tests.csproj", "{D020E37B-853F-4ECB-9FDB-E60CD58E0CD9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{D534E201-9DC6-4A26-B7FB-CEB3E16A58B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D534E201-9DC6-4A26-B7FB-CEB3E16A58B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D534E201-9DC6-4A26-B7FB-CEB3E16A58B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AAED6A2-38B1-4A31-AB04-9264A94A8ECA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AAED6A2-38B1-4A31-AB04-9264A94A8ECA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AAED6A2-38B1-4A31-AB04-9264A94A8ECA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AAED6A2-38B1-4A31-AB04-9264A94A8ECA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D020E37B-853F-4ECB-9FDB-E60CD58E0CD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D020E37B-853F-4ECB-9FDB-E60CD58E0CD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D020E37B-853F-4ECB-9FDB-E60CD58E0CD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D020E37B-853F-4ECB-9FDB-E60CD58E0CD9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -24,7 +24,7 @@ namespace FlaxEngine.Assertions
 
         public static string GetMessage(string failureMessage, string expected)
         {
-            return GetMessage(string.Format("{0}{1}{2} {3}", failureMessage, Environment.NewLine, "Expected:", expected));
+            return GetMessage($"{failureMessage}{Environment.NewLine}Expected: {expected}");
         }
 
         public static string NullFailureMessage(object value, bool expectNull)
