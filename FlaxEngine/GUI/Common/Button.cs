@@ -47,7 +47,7 @@ namespace FlaxEngine.GUI.Common
             base.Draw();
 
             // Cache data
-            var style = GUIStyle.Current;
+            var style = Style.Current;
             Rectangle clientRect = new Rectangle(0, 0, _width, _height);
 
             // Background
@@ -69,10 +69,10 @@ namespace FlaxEngine.GUI.Common
                 borderColor = style.BorderHighlighted;
             }
             Render2D.FillRectangle(clientRect, backgroundColor);
-            Render2D. DrawRectangle(clientRect, borderColor);
+            Render2D.DrawRectangle(clientRect, borderColor);
 
             // Text
-            //Render2D.DrawText(style.FontMedium, Text, clientRect, Enabled ? style->Foreground : style->ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
+            //Render2D.DrawText(style.FontMedium, Text, clientRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
         }
 
         /// <inheritdoc />
