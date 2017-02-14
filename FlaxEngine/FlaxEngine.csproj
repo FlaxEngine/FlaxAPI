@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetTypes\IESProfile.cs" />
+    <Compile Include="Enums\UI.cs" />
     <Compile Include="Generated\_EnvironmentProbe.cs" />
     <Compile Include="Generated\_Input.cs" />
     <Compile Include="Generated\_ModelActor.cs" />
@@ -88,7 +89,7 @@
     <Compile Include="Assertions\FloatComparer.cs" />
     <Compile Include="AssetTypes\CubeTexture.cs" />
     <Compile Include="AssetTypes\Document.cs" />
-    <Compile Include="AssetTypes\Font.cs" />
+    <Compile Include="AssetTypes\FontAsset.cs" />
     <Compile Include="AssetTypes\Material.cs" />
     <Compile Include="AssetTypes\MaterialBase.cs" />
     <Compile Include="AssetTypes\MaterialInstance.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="AssetTypes\Texture.cs" />
     <Compile Include="Bodies\BoxBody.cs" />
     <Compile Include="Enums\BrushMode.cs" />
+    <Compile Include="Partial\Font.cs" />
     <Compile Include="Partial\Input.cs" />
     <Compile Include="Enums\Input.Enums.cs" />
     <Compile Include="Json\InternalJsonSerializer.cs" />

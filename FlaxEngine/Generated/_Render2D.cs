@@ -78,6 +78,31 @@ namespace FlaxEngine
 			}
 
 			/// <summary>
+			/// Draw text
+			/// </summary>
+			/// <param name="font">Font to use</param>
+			/// <param name="text">Text to render</param>
+			/// <param name="layoutRect">The size and position of the area in which the text is drawn</param>
+			/// <param name="color">Text color</param>
+			/// <param name="horizontalAlignment">Horizontal alignment of the text in a layout rectangle</param>
+			/// <param name="verticalAlignment">Vetical alignment of the text in a layout rectangle</param>
+			/// <param name="textWrapping">Describes how wrap text inside a layout rectangle</param>
+			/// <param name="baseLinesGapScale">Scale for distance one baseline from another. Default is 1.</param>
+			/// <param name="scale">Text drawing scale. Default is 1.</param>
+#if UNIT_TEST_COMPILANT
+			[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+			[UnmanagedCall]
+			public static void DrawText(Font font, string text, Rectangle layoutRect, Color color, TextAlignment horizontalAlignment = TextAlignment.Near, TextAlignment verticalAlignment = TextAlignment.Near, TextWrapping textWrapping = TextWrapping.NoWrap, float baseLinesGapScale = 1.0f, float scale = 1.0f) 
+			{
+#if UNIT_TEST_COMPILANT
+				throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+				Internal_DrawText(Object.GetUnmanagedPtr(font), text, ref layoutRect, ref color, horizontalAlignment, verticalAlignment, textWrapping, baseLinesGapScale, scale);
+#endif
+			}
+
+			/// <summary>
 			/// Fill rectangle area
 			/// </summary>
 			/// <param name="rect">Rectangle to fill</param>
@@ -214,6 +239,8 @@ namespace FlaxEngine
 		internal static extern void Internal_PopClip();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Rectangle Internal_GetClipMask();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_DrawText(IntPtr font, string text, ref Rectangle layoutRect, ref Color color, TextAlignment horizontalAlignment, TextAlignment verticalAlignment, TextWrapping textWrapping, float baseLinesGapScale, float scale);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_FillRectangle1(ref Rectangle rect, ref Color color, bool withAlpha);
 		[MethodImpl(MethodImplOptions.InternalCall)]

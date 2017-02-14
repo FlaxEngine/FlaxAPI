@@ -17,10 +17,12 @@ namespace FlaxEditor.Windows
             Button b1 = new Button(10, 10);
             b1.Text = "Click me!";
             b1.Parent = this;
+            b1.Clicked += () => { Debug.Log("Pressed button #1"); };
 
             Button b2 = new Button(10, b1.Bottom + 4);
             b2.Text = "Click me!";
             b2.Parent = this;
+            b2.Clicked += () => { Debug.Log("Pressed button #2");};
         }
     }
 }
