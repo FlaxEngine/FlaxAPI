@@ -48,6 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetTypes\IESProfile.cs" />
+    <Compile Include="Attributes\Editor\CustomEditorAttribute.cs" />
+    <Compile Include="Attributes\Editor\EditorIndexAttribute.cs" />
+    <Compile Include="Collections\CircularBuffer.cs" />
+    <Compile Include="Collections\IOrderedDictionary.cs" />
+    <Compile Include="Collections\OrderedDictionary.cs" />
     <Compile Include="Generated\_EnvironmentProbe.cs" />
     <Compile Include="Generated\_Input.cs" />
     <Compile Include="Generated\_ModelActor.cs" />
@@ -147,6 +152,8 @@
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Math\Vector4.cs" />
     <Compile Include="Partial\Render2D.cs" />
+    <Compile Include="Utilities\Extenstions.cs" />
+    <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
