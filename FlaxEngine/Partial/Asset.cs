@@ -11,7 +11,7 @@ namespace FlaxEngine
         /// <inheritdoc />
         public override string ToString()
         {
-            return $"{GetName} ({GetType().Name})";
+            return $"{Name} ({GetType().Name})";
         }
     }
 }
