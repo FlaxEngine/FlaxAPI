@@ -117,7 +117,7 @@ namespace FlaxEditor
         /// <summary>
         ///     Undo last recorded action
         /// </summary>
-        public static void PerformUndo()
+        public static UndoActionObject PerformUndo()
         {
             UndoActionObject operation = (UndoActionObject)UndoOperationsStack.PopHistory();
             foreach (var diff in operation.Diff)
@@ -131,12 +131,13 @@ namespace FlaxEditor
                     ((PropertyInfo)diff.Member).SetValue(operation.TargetInstance, diff.Value2);
                 }
             }
+            return operation;
         }
 
         /// <summary>
         ///     Redo last undone action
         /// </summary>
-        public static void PerformRedo()
+        public static UndoActionObject PerformRedo()
         {
             UndoActionObject operation = (UndoActionObject)UndoOperationsStack.PopReverse();
             foreach (var diff in operation.Diff)
@@ -150,6 +151,7 @@ namespace FlaxEditor
                     ((PropertyInfo)diff.Member).SetValue(operation.TargetInstance, diff.Value1);
                 }
             }
+            return operation;
         }
 
         private object SnapshotUndoInternal { get; }

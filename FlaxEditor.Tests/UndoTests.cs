@@ -20,9 +20,9 @@ namespace FlaxEditor.Tests
             public float FieldFloat = 0.1f;
             public UndoObject FieldObject;
 
-            public int PorpertyInteger { get; set; } = -10;
-            public float PorpertyFloat { get; set; } = -0.1f;
-            public UndoObject PorpertyObject { get; set; }
+            public int PropertyInteger { get; set; } = -10;
+            public float PropertyFloat { get; set; } = -0.1f;
+            public UndoObject PropertyObject { get; set; }
 
             public UndoObject()
             {
@@ -39,35 +39,35 @@ namespace FlaxEditor.Tests
                     FieldInteger = 1,
                     FieldFloat = 1.1f,
                     FieldObject = new UndoObject(),
-                    PorpertyFloat = 1.1f,
-                    PorpertyInteger = 1,
-                    PorpertyObject = null
+                    PropertyFloat = 1.1f,
+                    PropertyInteger = 1,
+                    PropertyObject = null
                 };
-                PorpertyObject = new UndoObject
+                PropertyObject = new UndoObject
                 {
                     FieldInteger = -1,
                     FieldFloat = -1.1f,
                     FieldObject = null,
-                    PorpertyFloat = -1.1f,
-                    PorpertyInteger = -1,
-                    PorpertyObject = new UndoObject()
+                    PropertyFloat = -1.1f,
+                    PropertyInteger = -1,
+                    PropertyObject = new UndoObject()
                 };
             }
         }
 
         [TestMethod]
-        public void UndoBasic()
+        public void UndoTestBasic()
         {
             var instance = new UndoObject(true);
             Undo.RecordBegin(instance, "Basic");
             instance.FieldFloat = 0;
             instance.FieldInteger = 0;
             instance.FieldObject = null;
-            instance.PorpertyFloat = 0;
-            instance.PorpertyInteger = 0;
-            instance.PorpertyObject = null;
+            instance.PropertyFloat = 0;
+            instance.PropertyInteger = 0;
+            instance.PropertyObject = null;
             Undo.RecordEnd();
-            BasicUndoRedo(instance);
+            var id = BasicUndoRedo(instance, new Guid());
 
             instance = new UndoObject(true);
             Undo.RecordAction(instance, "Basic", () =>
@@ -75,11 +75,11 @@ namespace FlaxEditor.Tests
                 instance.FieldFloat = 0;
                 instance.FieldInteger = 0;
                 instance.FieldObject = null;
-                instance.PorpertyFloat = 0;
-                instance.PorpertyInteger = 0;
-                instance.PorpertyObject = null;
+                instance.PropertyFloat = 0;
+                instance.PropertyInteger = 0;
+                instance.PropertyObject = null;
             });
-            BasicUndoRedo(instance);
+            id = BasicUndoRedo(instance, id);
 
             object generic = new UndoObject(true);
             Undo.RecordAction(generic, "Basic", (i) =>
@@ -87,11 +87,11 @@ namespace FlaxEditor.Tests
                 ((UndoObject)i).FieldFloat = 0;
                 ((UndoObject)i).FieldInteger = 0;
                 ((UndoObject)i).FieldObject = null;
-                ((UndoObject)i).PorpertyFloat = 0;
-                ((UndoObject)i).PorpertyInteger = 0;
-                ((UndoObject)i).PorpertyObject = null;
+                ((UndoObject)i).PropertyFloat = 0;
+                ((UndoObject)i).PropertyInteger = 0;
+                ((UndoObject)i).PropertyObject = null;
             });
-            BasicUndoRedo((UndoObject)generic);
+            id = BasicUndoRedo((UndoObject)generic, id);
 
             instance = new UndoObject(true);
             Undo.RecordAction(instance, "Basic", (i) =>
@@ -99,11 +99,11 @@ namespace FlaxEditor.Tests
                 i.FieldFloat = 0;
                 i.FieldInteger = 0;
                 i.FieldObject = null;
-                i.PorpertyFloat = 0;
-                i.PorpertyInteger = 0;
-                i.PorpertyObject = null;
+                i.PropertyFloat = 0;
+                i.PropertyInteger = 0;
+                i.PropertyObject = null;
             });
-            BasicUndoRedo(instance);
+            id = BasicUndoRedo(instance, id);
 
             instance = new UndoObject(true);
             using(new Undo(instance, "Basic"))
@@ -111,29 +111,71 @@ namespace FlaxEditor.Tests
                 instance.FieldFloat = 0;
                 instance.FieldInteger = 0;
                 instance.FieldObject = null;
-                instance.PorpertyFloat = 0;
-                instance.PorpertyInteger = 0;
-                instance.PorpertyObject = null;
+                instance.PropertyFloat = 0;
+                instance.PropertyInteger = 0;
+                instance.PropertyObject = null;
             }
-            BasicUndoRedo(instance);
+            id = BasicUndoRedo(instance, id);
         }
 
-        private static void BasicUndoRedo(UndoObject instance)
+        private static Guid BasicUndoRedo(UndoObject instance, Guid lastGuid)
         {
-            Undo.PerformUndo();
+            Assert.AreEqual("Basic", Undo.PerformUndo().ActionString);
             Assert.AreEqual(10, instance.FieldInteger);
             Assert.AreEqual(0.1f, instance.FieldFloat);
             Assert.AreNotEqual(null, instance.FieldObject);
-            Assert.AreEqual(-10, instance.PorpertyInteger);
-            Assert.AreEqual(-0.1f, instance.PorpertyFloat);
-            Assert.AreNotEqual(null, instance.PorpertyObject);
-            Undo.PerformRedo();
+            Assert.AreEqual(-10, instance.PropertyInteger);
+            Assert.AreEqual(-0.1f, instance.PropertyFloat);
+            Assert.AreNotEqual(null, instance.PropertyObject);
+            var redo = Undo.PerformRedo();
+            Assert.AreNotEqual(redo.Id, lastGuid);
+            Assert.AreEqual("Basic", redo.ActionString);
             Assert.AreEqual(0, instance.FieldInteger);
             Assert.AreEqual(0, instance.FieldFloat);
             Assert.AreEqual(null, instance.FieldObject);
-            Assert.AreEqual(0, instance.PorpertyInteger);
-            Assert.AreEqual(0, instance.PorpertyFloat);
-            Assert.AreEqual(null, instance.PorpertyObject);
+            Assert.AreEqual(0, instance.PropertyInteger);
+            Assert.AreEqual(0, instance.PropertyFloat);
+            Assert.AreEqual(null, instance.PropertyObject);
+            return redo.Id;
+        }
+
+        [TestMethod]
+        public void UndoTestRecursive()
+        {
+            var instance = new UndoObject(true);
+            Undo.RecordAction(instance, "Basic", (i) =>
+            {
+                i.FieldObject = new UndoObject();
+                i.FieldObject.FieldObject = new UndoObject();
+                i.FieldObject.FieldObject.FieldObject = new UndoObject();
+                i.FieldObject.FieldObject.PropertyObject = new UndoObject();
+                i.FieldObject.FieldObject.PropertyObject.FieldInteger = 99;
+                i.PropertyObject = new UndoObject();
+                i.PropertyObject.PropertyObject = new UndoObject();
+                i.PropertyObject.PropertyObject.PropertyObject = new UndoObject();
+                i.PropertyObject.PropertyObject.FieldObject = new UndoObject();
+                i.PropertyObject.PropertyObject.FieldObject.FieldInteger = 99;
+            });
+            Undo.PerformUndo();
+            Assert.AreNotEqual(null, instance.FieldObject);
+            Assert.AreNotEqual(null, instance.FieldObject.FieldObject);
+            Assert.AreEqual(null, instance.FieldObject.FieldObject.FieldObject);
+            Assert.AreEqual(null, instance.FieldObject.FieldObject.PropertyObject);
+            Assert.AreNotEqual(null, instance.PropertyObject);
+            Assert.AreNotEqual(null, instance.PropertyObject.PropertyObject);
+            Assert.AreEqual(null, instance.PropertyObject.PropertyObject.PropertyObject);
+            Assert.AreEqual(null, instance.PropertyObject.PropertyObject.FieldObject);
+            Undo.PerformRedo();
+            Assert.AreNotEqual(null, instance.FieldObject);
+            Assert.AreNotEqual(null, instance.FieldObject.FieldObject);
+            Assert.AreNotEqual(null, instance.FieldObject.FieldObject.FieldObject);
+            Assert.AreNotEqual(null, instance.FieldObject.FieldObject.PropertyObject);
+            Assert.AreNotEqual(null, instance.PropertyObject);
+            Assert.AreNotEqual(null, instance.PropertyObject.PropertyObject);
+            Assert.AreNotEqual(null, instance.PropertyObject.PropertyObject.PropertyObject);
+            Assert.AreNotEqual(null, instance.PropertyObject.PropertyObject.FieldObject);
+            Assert.AreEqual(99, instance.FieldObject.FieldObject.PropertyObject.FieldInteger);
+            Assert.AreEqual(99, instance.PropertyObject.PropertyObject.FieldObject.FieldInteger);
         }
     }
 }
