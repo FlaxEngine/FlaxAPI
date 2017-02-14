@@ -58,7 +58,7 @@ namespace FlaxEngine
 			/// <summary>
 			/// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
 			/// </summary>
-			/// <param name="internalPath">Internal path to the asset. Without asset file extension. Relative to the Engine startup folder.</param>
+			/// <param name="internalPath">Intenral path to the asset. Relative to the Engine startup folder.</param>
 			/// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
 			/// <returns>Asset instance if loaded, null otherwise</returns>
 #if UNIT_TEST_COMPILANT
