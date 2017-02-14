@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="AssetTypes\IESProfile.cs" />
     <Compile Include="Enums\UI.cs" />
+    <Compile Include="Generated\_Content.cs" />
     <Compile Include="Generated\_EnvironmentProbe.cs" />
     <Compile Include="Generated\_Input.cs" />
     <Compile Include="Generated\_ModelActor.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="AssetTypes\Texture.cs" />
     <Compile Include="Bodies\BoxBody.cs" />
     <Compile Include="Enums\BrushMode.cs" />
+    <Compile Include="Partial\Content.cs" />
     <Compile Include="Partial\Font.cs" />
     <Compile Include="Partial\Input.cs" />
     <Compile Include="Enums\Input.Enums.cs" />
