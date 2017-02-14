@@ -1,4 +1,8 @@
-﻿using System;
+﻿////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +15,7 @@ namespace FlaxEngine
         /// <inheritdoc />
         public override string ToString()
         {
-            return $"{GetName} ({GetType().Name})";
+            return $"{Name} ({GetType().Name})";
         }
     }
 }
