@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using FlaxEngine.Utilities;
 
 namespace FlaxEngine.GUI
 {
@@ -126,9 +127,10 @@ namespace FlaxEngine.GUI
             set
             {
                 // Ensure to use only single line
-                if (_isMultiline == false)
+                if (_isMultiline == false && value.Length > 0)
                 {
-
+                    // Extract only the first line
+                    value = value.GetLines()[0];
                 }
 
                 if (_text != value)
