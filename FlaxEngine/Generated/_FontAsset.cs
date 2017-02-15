@@ -18,6 +18,32 @@ namespace FlaxEngine
 		public partial class FontAsset : Asset
 		{
 			/// <summary>
+			/// Gets font family name
+			/// </summary>
+			[UnmanagedCall]
+			public string FamilyName
+			{
+#if UNIT_TEST_COMPILANT
+				get; set;
+#else
+				get { return Internal_GetFamilyName(unmanagedPtr); }
+#endif
+			}
+
+			/// <summary>
+			/// Gets font style name
+			/// </summary>
+			[UnmanagedCall]
+			public string StyleName
+			{
+#if UNIT_TEST_COMPILANT
+				get; set;
+#else
+				get { return Internal_GetStyleName(unmanagedPtr); }
+#endif
+			}
+
+			/// <summary>
 			/// Creates font object of given characters size.
 			/// </summary>
 			/// <param name="size">Characters size.</param>
@@ -37,6 +63,10 @@ namespace FlaxEngine
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern string Internal_GetFamilyName(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern string Internal_GetStyleName(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Font Internal_CreateFont(IntPtr obj, int size);
 #endif
