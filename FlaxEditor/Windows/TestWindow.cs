@@ -4,7 +4,6 @@
 
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.GUI.Common;
 
 namespace FlaxEditor.Windows
 {

@@ -4,7 +4,7 @@
 
 using System;
 
-namespace FlaxEngine.GUI.Common
+namespace FlaxEngine.GUI
 {
     /// <summary>
     /// Button control
