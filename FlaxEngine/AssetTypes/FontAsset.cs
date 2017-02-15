@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-    public sealed class FontAsset : Asset
+    public sealed partial class FontAsset : Asset
     {
     }
 }
