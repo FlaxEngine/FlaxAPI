@@ -451,12 +451,12 @@ namespace FlaxEngine.GUI
 
         protected virtual Rectangle GetTextClipRect()
         {
-            return new Rectangle(1, 1, _width - 2, _height - 2);
+            return new Rectangle(1, 1, Width - 2, Height - 2);
         }
 
         protected virtual Rectangle GetTextRect()
         {
-            return new Rectangle(DefaultMargin, 1, _width - 2 * DefaultMargin, _height - 2);
+            return new Rectangle(DefaultMargin, 1, Width - 2 * DefaultMargin, Height - 2);
         }
 
         protected Rectangle GetTextRectView()
@@ -496,9 +496,9 @@ namespace FlaxEngine.GUI
                 backColor = style.TextBoxBackgroundSelected;
             if (_backgroundColor.A > 0)
                 backColor = _backgroundColor;
-            Render2D.FillRectangle(new Rectangle(0, 0, _width, _height), backColor);
+            Render2D.FillRectangle(new Rectangle(0, 0, Size), backColor);
             if (IsFocused)
-                Render2D.DrawRectangle(new Rectangle(0, 0, _width, _height), style.BackgroundSelected);
+                Render2D.DrawRectangle(new Rectangle(0, 0, Size), style.BackgroundSelected);
 
             // Apply view offset and clip mask
             var trans = Render2D.Transform;

@@ -48,7 +48,7 @@ namespace FlaxEngine.GUI
 
             // Cache data
             var style = Style.Current;
-            Rectangle clientRect = new Rectangle(0, 0, _width, _height);
+            Rectangle clientRect = new Rectangle(0, 0, Size);
 
             // Background
             Color backgroundColor = style.BackgroundNormal;
