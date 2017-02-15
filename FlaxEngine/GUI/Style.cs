@@ -2,6 +2,8 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+
 namespace FlaxEngine.GUI
 {
     /// <summary>
@@ -12,7 +14,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Global GUI style used by all the control
         /// </summary>
-        public static Style Current { get; set; } = CreateDefault();
+        public static Style Current { get; set; }
 
         // Fonts
         public Font FontTitle;
@@ -68,7 +70,25 @@ namespace FlaxEngine.GUI
             Style style = new Style();
 
             // Font
-            //var primaryFont = 
+            string primaryFontNameInternal = "Editor/Segoe Media Center Regular";
+            var primaryFont = Content.LoadInternal<FontAsset>(primaryFontNameInternal);
+            if (primaryFont)
+            {
+                // Create fonts
+                style.FontTitle = primaryFont.CreateFont(18);
+                style.FontLarge = primaryFont.CreateFont(14);
+                style.FontMedium = primaryFont.CreateFont(9);
+                style.FontSmall = primaryFont.CreateFont(9);
+
+                Debug.Assert(style.FontTitle, "Missing Title font.");
+                Debug.Assert(style.FontLarge, "Missing Large font.");
+                Debug.Assert(style.FontMedium, "Missing Medium font.");
+                Debug.Assert(style.FontSmall, "Missing Small font.");
+            }
+            else
+            {
+                Debug.LogError("Cannot load primary GUI Style font " + primaryFontNameInternal);
+            }
 
             // Metro Style colors
             style.Background = Color.FromBgra(0x1C1C1C);

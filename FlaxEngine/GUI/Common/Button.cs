@@ -72,7 +72,7 @@ namespace FlaxEngine.GUI.Common
             Render2D.DrawRectangle(clientRect, borderColor);
 
             // Text
-            //Render2D.DrawText(style.FontMedium, Text, clientRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
+            Render2D.DrawText(style.FontMedium, Text, clientRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
         }
 
         /// <inheritdoc />
