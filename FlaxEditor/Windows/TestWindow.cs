@@ -22,6 +22,20 @@ namespace FlaxEditor.Windows
             b2.Text = "Click me!";
             b2.Parent = this;
             b2.Clicked += () => { Debug.Log("Pressed button #2");};
+
+            TextBox t1 = new TextBox(false, 10, b2.Bottom + 4);
+            t1.Text = "This is a text box";
+            t1.Parent = this;
+
+            TextBox t2 = new TextBox(false, 10, t1.Bottom + 4);
+            t2.Height = 100;
+            t2.Text = "This is a text box\nWithout multiline support";
+            t2.Parent = this;
+
+            TextBox t3 = new TextBox(true, 10, t2.Bottom + 4);
+            t3.Height = 100;
+            t3.Text = "This is a text box\nWith multiline support";
+            t3.Parent = this;
         }
     }
 }
