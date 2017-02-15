@@ -139,14 +139,25 @@ namespace FlaxEngine
         /// <summary>
         /// Clamps value between 0 and 1 and returns value.
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">Value to clamp</param>
+        /// <returns>Result value</returns>
         public static float Clamp01(float value)
         {
             if (value < 0f)
                 return 0f;
-            if (value > 1f)
-                return 1f;
-            return value;
+            return value > 1f ? 1f : value;
+        }
+
+        /// <summary>
+        /// Clamps value between 0 and 1 and returns value.
+        /// </summary>
+        /// <param name="value">Value to clamp</param>
+        /// <returns>Result value</returns>
+        public static float Saturate(float value)
+        {
+            if (value < 0f)
+                return 0f;
+            return value > 1f ? 1f : value;
         }
 
         /// <summary>

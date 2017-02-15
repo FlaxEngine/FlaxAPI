@@ -309,6 +309,20 @@ namespace FlaxEngine
             return new Rectangle(upperLeft, Vector2.Max(rightBottom - upperLeft, Vector2.Zero));
         }
 
+        #region Operators
+
+        public static Rectangle operator+(Rectangle rectangle, Vector2 offset)
+        {
+            return new Rectangle(rectangle.Location + offset, rectangle.Size);
+        }
+
+        public static Rectangle operator-(Rectangle rectangle, Vector2 offset)
+        {
+            return new Rectangle(rectangle.Location - offset, rectangle.Size);
+        }
+
+        #endregion
+
         /// <inheritdoc />
         public bool Equals(Rectangle other)
         {
