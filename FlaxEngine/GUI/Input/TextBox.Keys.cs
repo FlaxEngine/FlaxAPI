@@ -87,7 +87,7 @@ namespace FlaxEngine.GUI
                     if (IsMultiline)
                     {
                         // Insert new line
-                        insertText("\n");
+                        Insert('\n');
                     }
                     else
                     {
@@ -290,7 +290,7 @@ namespace FlaxEngine.GUI
             }
             if (ascii > 0)
             {
-                insertText(ascii.ToString());
+                Insert(ascii);
                 return true;
             }
 

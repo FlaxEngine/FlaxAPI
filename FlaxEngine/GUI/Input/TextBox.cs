@@ -64,6 +64,7 @@ namespace FlaxEngine.GUI
                 {
                     _isMultiline = value;
                     
+            Deselect();
             update _layout settings
                 }
             }*/
@@ -129,6 +130,10 @@ namespace FlaxEngine.GUI
             {
                 if(IsReadOnly)
                     throw new AccessViolationException("Text Box is readonly.");
+
+                // Clamp length
+                if (value.Length > MaxLength)
+                    value = value.Substring(0, MaxLength);
 
                 // Ensure to use only single line
                 if (_isMultiline == false && value.Length > 0)
@@ -436,7 +441,7 @@ namespace FlaxEngine.GUI
             _layout.Bounds = TextRectangle;
         }
 
-        private int charIndexAtPoint(ref Vector2 location)
+        private int CharIndexAtPoint(ref Vector2 location)
         {
             Debug.Assert(Font, "Missing font.");
 
@@ -444,23 +449,36 @@ namespace FlaxEngine.GUI
             return Font.HitTestText(_text, location, _layout);
         }
 
-        private void insertText(string text)
+        private void Insert(char c)
+        {
+            Insert(c.ToString());
+        }
+
+        private void Insert(string str)
         {
             if (IsReadOnly)
                 throw new AccessViolationException("Text Box is readonly.");
-            
+
+            int selectionLength = SelectionLength;
+            int charactersLeft = MaxLength - _text.Length + selectionLength;
+            Debug.Assert(charactersLeft >= 0);
+            if (charactersLeft == 0)
+                return;
+            if (charactersLeft < str.Length)
+                str = str.Substring(0, charactersLeft);
+
             if (TextLength == 0)
             {
-                _text = text;
+                _text = str;
                 setSelection(TextLength);
             }
             else
             {
                 if (HasSelection)
-                    _text = _text.Remove(SelectionLeft, SelectionLength);
+                    _text = _text.Remove(SelectionLeft, selectionLength);
 
-                _text = _text.Insert(SelectionLeft, text);
-                setSelection(SelectionLeft + text.Length);
+                _text = _text.Insert(SelectionLeft, str);
+                setSelection(SelectionLeft + 1);
             }
         }
 
@@ -695,6 +713,15 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Set text value
+        /// </summary>
+        /// <param name="value">Value to assign</param>
+        protected virtual void SetTextInternal(ref string value)
+        {
+            
+        }
+
+        /// <summary>
         /// Action called when text gets modified
         /// </summary>
         protected virtual void OnTextChanged()
@@ -846,7 +873,7 @@ namespace FlaxEngine.GUI
             if (_isSelecting)
             {
                 // Find char index at current mosue location
-                int currentIndex = charIndexAtPoint(ref location);
+                int currentIndex = CharIndexAtPoint(ref location);
 
                 // Modify selection end
                 setSelection(_selectionStart, currentIndex);
@@ -861,7 +888,7 @@ namespace FlaxEngine.GUI
                 OnSelectingBegin();
 
                 // Calculate char index under the mouse location
-                setSelection(charIndexAtPoint(ref location));
+                setSelection(CharIndexAtPoint(ref location));
             }
 
             // Base
