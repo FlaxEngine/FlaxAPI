@@ -36,6 +36,11 @@ namespace FlaxEditor.Windows
             t3.Height = 100;
             t3.Text = "This is a text box\nWith multiline support\nAnother line";
             t3.Parent = this;
+
+            TextBox t4 = new TextBox(true, 10, t3.Bottom + 4);
+            t4.Height = 100;
+            t4.Text = "This is a text box  r rehjbekjhcvnzsek jbjh bmi ba lkjah mjhhbe wemfbl ewf nwefj bnf \nWith multiline support sf rddnytxes ddrs b dr dbfr  edrxdg eg srg rtdh rg srg \nAnother line sdf  ffsjbn idfjv dfjhv bdv jdfv dfj dfj bdszkjd nlL\nscsr dg bdrse \nfrg ewef\na fgsczea rszsvcfwa\nccsrzsecxzcesv\nefcesrvcw";
+            t4.Parent = this;
         }
     }
 }

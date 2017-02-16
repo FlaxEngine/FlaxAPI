@@ -31,7 +31,7 @@ namespace FlaxEngine.GUI
         // State
         private string _onStartEditValue;
         private bool _isEditing;
-        private Vector2 _viewOffset;
+        private Vector2 _viewOffset, _targetViewOffset;
 
         // Options
         private bool _isMultiline, _isReadOnly;
@@ -403,16 +403,13 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void ScrollToCaret()
         {
-            //throw new NotImplementedException("ScrollToCaret");
+            Rectangle caretBounds = CaretBounds;
+            Rectangle textArea = TextRectangle;
 
-            /*// Update view offset (caret needs to be in a view)
-            // TODO: update this code for multiline case
-            Vector2 caretInView = new Vector2(caretPosX, caretPosY) - _viewOffset;
+            // Update view offset (caret needs to be in a view)
+            Vector2 caretInView = caretBounds.Location - _targetViewOffset;
             Vector2 clampedCaretInView = Vector2.Clamp(caretInView, textArea.UpperLeft, textArea.BottomRight);
-            _viewOffset += caretInView - clampedCaretInView;*/
-
-            // TODO: update view offset
-            _viewOffset = Vector2.Zero;
+            _targetViewOffset += caretInView - clampedCaretInView;
         }
 
         /// <summary>
@@ -446,7 +443,7 @@ namespace FlaxEngine.GUI
             Debug.Assert(Font, "Missing font.");
 
             // Perform test using Font API
-            return Font.HitTestText(_text, location, _layout);
+            return Font.HitTestText(_text, location + _viewOffset, _layout);
         }
 
         private void Insert(char c)
@@ -736,16 +733,10 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void Update(float dt)
         {
-            // Update
             _animateTime += dt;
 
-            // Ensure to keep selection rectangle valid during scalling
-            /*if (!Vector2.NearEqual(Size, _cachedSize))
-            {
-                calSelectionRect();
-            }*/
-
-            // TODO: animate viewOffset??
+            // Animate view offset
+            _viewOffset = Vector2.Lerp(_viewOffset, _targetViewOffset, dt * 20.0f);
 
             base.Update(dt);
         }
