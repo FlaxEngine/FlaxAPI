@@ -278,6 +278,8 @@ namespace FlaxEngine.GUI
             _layout.TextWrapping = TextWrapping.NoWrap;
 
             UpdateTextRect();
+
+            OnSizeChanged += ActionOnSizeChanged;
         }
 
         /// <summary>
@@ -749,8 +751,8 @@ namespace FlaxEngine.GUI
             Color backColor = style.TextBoxBackground;
             if (IsMouseOver)
                 backColor = style.TextBoxBackgroundSelected;
-            if (_backgroundColor.A > 0)
-                backColor = _backgroundColor;
+            if (BackgroundColor.A > 0)
+                backColor = BackgroundColor;
             Render2D.FillRectangle(rect, backColor);
             if (IsFocused)
                 Render2D.DrawRectangle(rect, style.BackgroundSelected);
@@ -890,11 +892,8 @@ namespace FlaxEngine.GUI
             return base.OnMouseUp(buttons, location);
         }
 
-        /// <inheritdoc />
-        protected override void OnSizeChanged()
+        private void ActionOnSizeChanged(Control control)
         {
-            base.OnSizeChanged();
-
             UpdateTextRect();
         }
 

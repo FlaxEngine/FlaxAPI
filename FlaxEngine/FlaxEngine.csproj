@@ -125,13 +125,20 @@
     <Compile Include="Attributes\Editor\EditorIndexAttribute.cs" />
     <Compile Include="Collections\CircularBuffer.cs" />
     <Compile Include="Collections\IOrderedDictionary.cs" />
-    <Compile Include="Collections\OrderedDictionary.cs" />
+    <Compile Include="Collections\OrderedDictionary.cs">
+      <DependentUpon>IOrderedDictionary.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Common\Button.cs" />
     <Compile Include="GUI\ContainerControl.cs" />
+    <Compile Include="GUI\Control.Bounds.cs">
+      <DependentUpon>Control.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Control.cs" />
     <Compile Include="GUI\Enums.cs" />
     <Compile Include="GUI\Input\TextBox.cs" />
-    <Compile Include="GUI\Input\TextBox.Keys.cs" />
+    <Compile Include="GUI\Input\TextBox.Keys.cs">
+      <DependentUpon>TextBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Style.cs" />
     <Compile Include="GUI\Window.cs" />
     <Compile Include="API\Actors\EmptyActor.cs" />
@@ -142,7 +149,6 @@
     <Compile Include="Assertions\FloatComparer.cs" />
     <Compile Include="AssetTypes\CubeTexture.cs" />
     <Compile Include="AssetTypes\Document.cs" />
-    <Compile Include="AssetTypes\FontAsset.cs" />
     <Compile Include="AssetTypes\Material.cs" />
     <Compile Include="AssetTypes\MaterialBase.cs" />
     <Compile Include="AssetTypes\MaterialInstance.cs" />
@@ -161,7 +167,9 @@
     <Compile Include="Internals\ClassLibraryInitializer.cs" />
     <Compile Include="Math\Collision.cs" />
     <Compile Include="Math\Color.cs" />
-    <Compile Include="Math\Color.Palette.cs" />
+    <Compile Include="Math\Color.Palette.cs">
+      <DependentUpon>Color.cs</DependentUpon>
+    </Compile>
     <Compile Include="Math\Color32.cs" />
     <Compile Include="Engine\Debug.cs" />
     <Compile Include="Internals\DebugLogHandler.cs" />
@@ -169,7 +177,9 @@
     <Compile Include="Attributes\HideInInspectorAttribute.cs" />
     <Compile Include="Engine\ILogger.cs" />
     <Compile Include="Engine\ILogHandler.cs" />
-    <Compile Include="Engine\Logger.cs" />
+    <Compile Include="Engine\Logger.cs">
+      <DependentUpon>ILogger.cs</DependentUpon>
+    </Compile>
     <Compile Include="Enums\LogType.cs" />
     <Compile Include="Math\Mathf.cs" />
     <Compile Include="Math\Matrix.cs" />

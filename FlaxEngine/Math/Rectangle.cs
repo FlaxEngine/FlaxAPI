@@ -60,74 +60,47 @@ namespace FlaxEngine
         /// <summary>
         /// Gets Y coordinate of the top edge of the rectangle
         /// </summary>
-        public float Top
-        {
-            get { return Location.Y; }
-        }
+        public float Top => Location.Y;
 
         /// <summary>
         /// Gets Y coordinate of the bottom edge of the rectangle
         /// </summary>
-        public float Bottom
-        {
-            get { return Location.Y + Size.Y; }
-        }
+        public float Bottom => Location.Y + Size.Y;
 
         /// <summary>
         /// Gets X coordinate of the left edge of the rectangle
         /// </summary>
-        public float Left
-        {
-            get { return Location.X; }
-        }
+        public float Left => Location.X;
 
         /// <summary>
         /// Gets X coordinate of the right edge of the rectangle
         /// </summary>
-        public float Right
-        {
-            get { return Location.X + Size.X; }
-        }
+        public float Right => Location.X + Size.X;
 
         /// <summary>
         /// Gets position of the upper left corner of the rectangle
         /// </summary>
-        public Vector2 UpperLeft
-        {
-            get { return Location; }
-        }
+        public Vector2 UpperLeft => Location;
 
         /// <summary>
         /// Gets position of the upper right corner of the rectangle
         /// </summary>
-        public Vector2 UpperRight
-        {
-            get { return new Vector2(Location.X + Size.X, Location.Y); }
-        }
+        public Vector2 UpperRight => new Vector2(Location.X + Size.X, Location.Y);
 
         /// <summary>
         /// Gets position of the bottom right corner of the rectangle
         /// </summary>
-        public Vector2 BottomRight
-        {
-            get { return Location + Size; }
-        }
+        public Vector2 BottomRight => Location + Size;
 
         /// <summary>
         /// Gets position of the bottom left corner of the rectangle
         /// </summary>
-        public Vector2 BottomLeft
-        {
-            get { return new Vector2(Location.X, Location.Y + Size.Y); }
-        }
+        public Vector2 BottomLeft => new Vector2(Location.X, Location.Y + Size.Y);
 
         /// <summary>
         /// Gets center position of the rectangle
         /// </summary>
-        public Vector2 Center
-        {
-            get { return Location + Size * 0.5f; }
-        }
+        public Vector2 Center => Location + Size * 0.5f;
 
         /// <summary>
         /// Init

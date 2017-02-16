@@ -4,7 +4,7 @@ using FlaxEngine.Collections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Assert = FlaxEngine.Assertions.Assert;
 
-namespace FlaxEngine.TestMethods
+namespace FlaxEngine.Tests
 {
     [TestClass]
     public class CircularBufferTests

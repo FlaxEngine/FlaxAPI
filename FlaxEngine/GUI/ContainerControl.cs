@@ -63,6 +63,16 @@ namespace FlaxEngine.GUI
             IsLayoutLocked = true;
         }
 
+        ///<inheritdoc />
+        protected ContainerControl(bool canFocus, Vector2 location, Vector2 size) : base(canFocus, location, size)
+        {
+        }
+
+        ///<inheritdoc />
+        protected ContainerControl(bool canFocus, Rectangle bounds) : base(canFocus, bounds)
+        {
+        }
+
         #region Layout locking
 
         /// <summary>

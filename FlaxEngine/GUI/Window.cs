@@ -48,25 +48,6 @@ namespace FlaxEngine.GUI
 
         //Vector2 ScreenToClient(const Vector2& location);
 	    //Vector2 ClientToScreen(const Vector2& location);
-        
-         /// <inheritdoc />
-        protected override void OnLocationChanged()
-        {
-            // No support to change window bounds from C#
-        }
-
-        /// <inheritdoc />
-        protected override void OnSizeChanged()
-        {
-            // No support to change window bounds from C#
-        }
-
-        /// <inheritdoc />
-        protected override void OnVisibleChanged()
-        {
-            // TODO: should we show/hide the window?
-            throw new NotImplementedException();
-        }
 
         /// <inheritdoc />
         public override void Focus()
