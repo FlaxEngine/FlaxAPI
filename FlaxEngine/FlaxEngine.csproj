@@ -47,26 +47,85 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Actors\BoxBrush.cs" />
+    <Compile Include="API\Actors\BoxBrush.Gen.cs">
+      <DependentUpon>BoxBrush.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Actors\Camera.cs" />
+    <Compile Include="API\Actors\Camera.Gen.cs">
+      <DependentUpon>Camera.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Actors\DirectionalLight.cs" />
+    <Compile Include="API\Actors\DirectionalLight.Gen.cs">
+      <DependentUpon>DirectionalLight.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Actors\EnvironmentProbe.cs" />
+    <Compile Include="API\Actors\EnvironmentProbe.Gen.cs">
+      <DependentUpon>EnvironmentProbe.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Actors\ModelActor.cs" />
+    <Compile Include="API\Actors\ModelActor.Gen.cs">
+      <DependentUpon>ModelActor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Actors\PointLight.cs" />
+    <Compile Include="API\Actors\PointLight.Gen.cs">
+      <DependentUpon>PointLight.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Actors\Sky.cs" />
+    <Compile Include="API\Actors\Sky.Gen.cs">
+      <DependentUpon>Sky.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Actors\Skybox.cs" />
+    <Compile Include="API\Actors\Skybox.Gen.cs">
+      <DependentUpon>Skybox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Actors\SpotLight.cs" />
+    <Compile Include="API\Actors\SpotLight.Gen.cs">
+      <DependentUpon>SpotLight.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Assets\FontAsset.cs" />
+    <Compile Include="API\Assets\FontAsset.Gen.cs">
+      <DependentUpon>FontAsset.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Objects\Actor.cs" />
+    <Compile Include="API\Objects\Actor.Gen.cs">
+      <DependentUpon>Actor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Objects\Asset.cs" />
+    <Compile Include="API\Objects\Asset.Gen.cs">
+      <DependentUpon>Asset.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Objects\Font.cs" />
+    <Compile Include="API\Objects\Font.Gen.cs">
+      <DependentUpon>Font.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Objects\Script.cs" />
+    <Compile Include="API\Objects\Script.Gen.cs">
+      <DependentUpon>Script.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Static\Content.cs" />
+    <Compile Include="API\Static\Content.Gen.cs">
+      <DependentUpon>Content.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Static\Input.cs" />
+    <Compile Include="API\Static\Input.Gen.cs">
+      <DependentUpon>Input.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Static\Render2D.cs" />
+    <Compile Include="API\Static\Render2D.Gen.cs">
+      <DependentUpon>Render2D.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Static\Time.cs" />
+    <Compile Include="API\Static\Time.Gen.cs">
+      <DependentUpon>Time.cs</DependentUpon>
+    </Compile>
     <Compile Include="AssetTypes\IESProfile.cs" />
     <Compile Include="Enums\UI.cs" />
-    <Compile Include="Generated\_Content.cs" />
     <Compile Include="Attributes\Editor\CustomEditorAttribute.cs" />
     <Compile Include="Attributes\Editor\EditorIndexAttribute.cs" />
     <Compile Include="Collections\CircularBuffer.cs" />
     <Compile Include="Collections\IOrderedDictionary.cs" />
     <Compile Include="Collections\OrderedDictionary.cs" />
-    <Compile Include="Generated\_EnvironmentProbe.cs" />
-    <Compile Include="Generated\_Font.cs" />
-    <Compile Include="Generated\_FontAsset.cs" />
-    <Compile Include="Generated\_Input.cs" />
-    <Compile Include="Generated\_ModelActor.cs" />
-    <Compile Include="Generated\_PointLight.cs" />
-    <Compile Include="Generated\_Render2D.cs" />
-    <Compile Include="Generated\_Script.cs" />
-    <Compile Include="Generated\_Sky.cs" />
-    <Compile Include="Generated\_Skybox.cs" />
-    <Compile Include="Generated\_SpotLight.cs" />
-    <Compile Include="Generated\_Time.cs" />
     <Compile Include="GUI\Common\Button.cs" />
     <Compile Include="GUI\ContainerControl.cs" />
     <Compile Include="GUI\Control.cs" />
@@ -75,24 +134,8 @@
     <Compile Include="GUI\Input\TextBox.Keys.cs" />
     <Compile Include="GUI\Style.cs" />
     <Compile Include="GUI\Window.cs" />
-    <Compile Include="Partial\Actor.cs" />
-    <Compile Include="Partial\ActorTypes\BoxBrush.cs" />
-    <Compile Include="Partial\ActorTypes\Camera.cs" />
-    <Compile Include="Partial\ActorTypes\DirectionalLight.cs" />
-    <Compile Include="Partial\ActorTypes\EnvironmentProbe.cs" />
-    <Compile Include="Partial\ActorTypes\Skybox.cs" />
-    <Compile Include="Partial\ActorTypes\SpotLight.cs" />
-    <Compile Include="Generated\_Actor.cs" />
-    <Compile Include="Generated\_Asset.cs" />
-    <Compile Include="Generated\_Camera.cs" />
-    <Compile Include="Generated\_BoxBrush.cs" />
-    <Compile Include="Generated\_DirectionalLight.cs" />
-    <Compile Include="Partial\ActorTypes\EmptyActor.cs" />
-    <Compile Include="Partial\ActorTypes\ModelActor.cs" />
-    <Compile Include="Partial\ActorTypes\PhysicalActor.cs" />
-    <Compile Include="Partial\ActorTypes\PointLight.cs" />
-    <Compile Include="Partial\ActorTypes\Sky.cs" />
-    <Compile Include="Partial\Asset.cs" />
+    <Compile Include="API\Actors\EmptyActor.cs" />
+    <Compile Include="API\Actors\PhysicalActor.cs" />
     <Compile Include="Assertions\Assert.cs" />
     <Compile Include="Assertions\AssertionException.cs" />
     <Compile Include="Assertions\AssertionMessageUtil.cs" />
@@ -109,9 +152,6 @@
     <Compile Include="AssetTypes\Texture.cs" />
     <Compile Include="Bodies\BoxBody.cs" />
     <Compile Include="Enums\BrushMode.cs" />
-    <Compile Include="Partial\Content.cs" />
-    <Compile Include="Partial\Font.cs" />
-    <Compile Include="Partial\Input.cs" />
     <Compile Include="Enums\Input.Enums.cs" />
     <Compile Include="Json\InternalJsonSerializer.cs" />
     <Compile Include="Json\JsonCustomSerializers\ExtendedDefaultContractResolver.cs" />
@@ -147,11 +187,9 @@
     <Compile Include="Math\Quaternion.cs" />
     <Compile Include="Math\Ray.cs" />
     <Compile Include="Attributes\RequireChildActorAttribute.cs" />
-    <Compile Include="Partial\Script.cs" />
     <Compile Include="Attributes\SerializeFieldAttribute.cs" />
     <Compile Include="Enums\ShadowsCastingMode.cs" />
     <Compile Include="Enums\StaticFlags.cs" />
-    <Compile Include="Partial\Time.cs" />
     <Compile Include="Engine\Exceptions\UnassignedReferenceException.cs" />
     <Compile Include="Internals\UnhandledExceptionHandler.cs" />
     <Compile Include="Engine\Exceptions\FlaxException.cs" />
@@ -159,7 +197,6 @@
     <Compile Include="Math\Vector2.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Math\Vector4.cs" />
-    <Compile Include="Partial\Render2D.cs" />
     <Compile Include="Utilities\Extenstions.cs" />
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
