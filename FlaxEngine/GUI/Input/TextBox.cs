@@ -400,6 +400,12 @@ namespace FlaxEngine.GUI
         {
             //throw new NotImplementedException("ScrollToCaret");
 
+            /*// Update view offset (caret needs to be in a view)
+            // TODO: update this code for multiline case
+            Vector2 caretInView = new Vector2(caretPosX, caretPosY) - _viewOffset;
+            Vector2 clampedCaretInView = Vector2.Clamp(caretInView, textArea.UpperLeft, textArea.BottomRight);
+            _viewOffset += caretInView - clampedCaretInView;*/
+
             // TODO: update view offset
             _viewOffset = Vector2.Zero;
         }
@@ -682,29 +688,42 @@ namespace FlaxEngine.GUI
             {
                 // TODO: maybe we could use ProcessText Font API to render selection faster?
 
-                /*
-                string[] lines = _text.GetLines();
-                
-                // Calcuate selection rectangle
-                // TODO: cache text trails and reuse it during MeasureText and HitTestTextPosition as well as mouse events?
-                float beforeSelectionWidth = _selectionLeft == 0 ? 0 : font.HitTestText(_text, _selectionLeft, _layout).X;
-                float selectionWidth = selectionLength == 0 ? 0 : font.MeasureText(_text.Substring(_selectionLeft, selectionLength), _layout).X;
-                _selectionRect = new Rectangle(beforeSelectionWidth, 0, selectionWidth, fontHeight); // TODO: update this code for multiline case
-                _selectionRect += textArea.Location;
+                Vector2 leftEdge = Font.GetCharPosition(_text, SelectionLeft, _layout);
+                Vector2 rightEdge = Font.GetCharPosition(_text, SelectionRight, _layout);
+                float fontHeight = font.Height;
 
                 // Draw selection background
                 float alpha = Mathf.Min(1.0f, Mathf.Cos(_animateTime * 6.0f) * 0.5f + 1.3f);
                 alpha = alpha * alpha;
                 if (!IsFocused)
                     alpha = 0.1f;
-                Render2D.FillRectangle(_selectionRect, style.BackgroundSelected * alpha, true);
-                */
+                Color selectionColor = style.BackgroundSelected * alpha;
+                //
+                int selectedLinesCount = 1 + Mathf.FloorToInt((rightEdge.Y - leftEdge.Y) / fontHeight);
+                if (selectedLinesCount == 1)
+                {
+                    // Selected is part of single line
+                    Rectangle r1 = new Rectangle(leftEdge.X, leftEdge.Y, rightEdge.X - leftEdge.X, fontHeight);
+                    Render2D.FillRectangle(r1, selectionColor, true);
+                }
+                else
+                {
+                    float leftMargin = _layout.Bounds.Location.X;
 
-                /*// Update view offset (caret needs to be in a view)
-                // TODO: update this code for multiline case
-                Vector2 caretInView = new Vector2(caretPosX, caretPosY) - _viewOffset;
-                Vector2 clampedCaretInView = Vector2.Clamp(caretInView, textArea.UpperLeft, textArea.BottomRight);
-                _viewOffset += caretInView - clampedCaretInView;*/
+                    // Selected is more than one line
+                    Rectangle r1 = new Rectangle(leftEdge.X, leftEdge.Y, _layout.Bounds.Width - leftEdge.X + leftMargin, fontHeight);
+                    Render2D.FillRectangle(r1, selectionColor, true);
+                    //
+                    for (int i = 3; i <= selectedLinesCount; i++)
+                    {
+                        leftEdge.Y += fontHeight;
+                        Rectangle r = new Rectangle(leftMargin, leftEdge.Y, _layout.Bounds.Width, fontHeight);
+                        Render2D.FillRectangle(r, selectionColor, true);
+                    }
+                    //
+                    Rectangle r2 = new Rectangle(leftMargin, rightEdge.Y, rightEdge.X - leftMargin, fontHeight);
+                    Render2D.FillRectangle(r2, selectionColor, true);
+                }
             }
 
             // Text
