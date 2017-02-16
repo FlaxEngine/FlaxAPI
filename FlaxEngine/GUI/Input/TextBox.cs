@@ -52,6 +52,8 @@ namespace FlaxEngine.GUI
 
         #endregion
 
+        #region Public Properties
+
         /// <summary>
         /// Gets or sets a value indicating whether this is a multiline text box control.
         /// </summary>
@@ -187,6 +189,8 @@ namespace FlaxEngine.GUI
         {
             get { return SelectionLength > 0; }
         }
+
+        #endregion
 
         /// <summary>
         /// Index of the character on left edge of the selection
@@ -707,15 +711,6 @@ namespace FlaxEngine.GUI
             _onStartEditValue = string.Empty;
 
             ClearSelection();
-        }
-
-        /// <summary>
-        /// Set text value
-        /// </summary>
-        /// <param name="value">Value to assign</param>
-        protected virtual void SetTextInternal(ref string value)
-        {
-            
         }
 
         /// <summary>
