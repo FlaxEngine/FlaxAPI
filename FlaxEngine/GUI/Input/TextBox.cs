@@ -10,39 +10,38 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// Text Box control which can gather text input from the user
     /// </summary>
-    public class TextBox : Control
+    public partial class TextBox : Control
     {
+        private static readonly char[] Separators = { ' ', '.', ',', '\t', '\r', '\n' };
+
         /// <summary>
         /// Default height of the text box
         /// </summary>
-        protected static int DefaultHeight = 18;
+        private static int DefaultHeight = 18;
 
         /// <summary>
         /// Left and right margin for text inside the text box bounds rectangle
         /// </summary>
-        protected static int DefaultMargin = 4;
+        private static int DefaultMargin = 4;
 
         // TODO: support password protected text box
 
-        protected string _text;
+        private string _text;
 
         // State
         private string _onStartEditValue;
         private bool _isEditing;
-        private Vector2 _cachedSize;
         private Vector2 _viewOffset;
 
         // Options
         private bool _isMultiline, _isReadOnly;
         private int _maxLength;
+        private TextLayoutOptions _layout;
 
         // Selecting
-        private bool _isSelecting, _isCaretOnLeft;
-        private int _selectionLeft, _selectionRight;
-        private Rectangle _selectionRect;
-        private Rectangle _caretRect;
-        private float _caretTime;
-        private float _selectionTime;
+        private bool _isSelecting;
+        private int _selectionStart, _selectionEnd;
+        private float _animateTime;
 
         #region Events
 
@@ -64,6 +63,8 @@ namespace FlaxEngine.GUI
                 if (_isMultiline != value)
                 {
                     _isMultiline = value;
+                    
+            update _layout settings
                 }
             }*/
         }
@@ -126,6 +127,9 @@ namespace FlaxEngine.GUI
             get { return _text; }
             set
             {
+                if(IsReadOnly)
+                    throw new AccessViolationException("Text Box is readonly.");
+
                 // Ensure to use only single line
                 if (_isMultiline == false && value.Length > 0)
                 {
@@ -158,9 +162,8 @@ namespace FlaxEngine.GUI
         {
             get
             {
-                int selectedChars = _selectionRight - _selectionLeft;
-                Debug.Assert(selectedChars >= 0);
-                return _text.Substring(_selectionLeft, selectedChars);
+                int length = SelectionLength;
+                return length > 0 ? _text.Substring(SelectionLeft, length) : string.Empty;
             }
         }
 
@@ -169,15 +172,74 @@ namespace FlaxEngine.GUI
         /// </summary>
         public int SelectionLength
         {
-            get { return _selectionLeft != -1 ? _selectionRight - _selectionLeft : 0; }
+            get { return Mathf.Abs(_selectionEnd - _selectionStart); }
+        }
+
+        /// <summary>
+        /// Returns true if any text is selected, otherwise false
+        /// </summary>
+        public bool HasSelection
+        {
+            get { return SelectionLength > 0; }
+        }
+
+        /// <summary>
+        /// Index of the character on left edge of the selection
+        /// </summary>
+        private int SelectionLeft
+        {
+            get { return Mathf.Min(_selectionStart, _selectionEnd); }
+        }
+
+        /// <summary>
+        /// Index of the character on right edge of the selection
+        /// </summary>
+        private int SelectionRight
+        {
+            get { return Mathf.Max(_selectionStart, _selectionEnd); }
+        }
+
+        /// <summary>
+        /// Gets current caret position (index of the character)
+        /// </summary>
+        private int CaretPosition
+        {
+            get { return _selectionEnd; }
+        }
+
+        /// <summary>
+        /// Calculates caret rectangle
+        /// </summary>
+        private Rectangle CaretBounds
+        {
+            get
+            {
+                const float caretWidth = 1.2f;
+
+                Vector2 caretPos = Font.GetCharPosition(_text, CaretPosition, _layout);
+
+                return new Rectangle(
+                    caretPos.X - (caretWidth * 0.5f),
+                    caretPos.Y,
+                    caretWidth,
+                    Font.Height);
+            }
         }
 
         /// <summary>
         /// Gets text font
         /// </summary>
-        protected virtual Font Font
+        private Font Font
         {
             get { return Style.Current.FontMedium; }
+        }
+
+        /// <summary>
+        /// Gets rectangle with area for text
+        /// </summary>
+        protected virtual Rectangle TextRectangle
+        {
+            get { return new Rectangle(DefaultMargin, 1, Width - 2 * DefaultMargin, Height - 2); }
         }
 
         /// <summary>
@@ -192,8 +254,13 @@ namespace FlaxEngine.GUI
         {
             _isMultiline = isMultiline;
             _maxLength = 32000;
-            _selectionLeft = -1;
-            _selectionRight = -1;
+            _selectionStart = _selectionEnd = -1;
+
+            _layout = TextLayoutOptions.Default;
+            _layout.VerticalAlignment = IsMultiline ? TextAlignment.Near : TextAlignment.Center;
+            _layout.TextWrapping = TextWrapping.NoWrap;
+
+            UpdateTextRect();
         }
 
         /// <summary>
@@ -209,9 +276,9 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void ClearSelection()
         {
-            endSelecting();
-            _selectionLeft = _selectionLeft = -1;
-            calSelectionRect();
+            if (_isSelecting)
+                OnSelectingEnd();
+            setSelection(-1);
         }
 
         /// <summary>
@@ -221,6 +288,16 @@ namespace FlaxEngine.GUI
         {
             throw new NotImplementedException("Copy textbox text");
             // TODO: we need to support Clipboard via Flax API
+
+            /*// Check if sth is selected
+            if (SelectionLength > 0)
+            {
+                // Get selection
+                String selectedText = GetSelection();
+
+                // Copy
+                Application::ClipboardSetData(selectedText);
+            }*/
         }
 
         /// <summary>
@@ -230,6 +307,27 @@ namespace FlaxEngine.GUI
         {
             throw new NotImplementedException("Cut textbox text");
             // TODO: we need to support Clipboard via Flax API
+
+            // Check if sth is selected
+            /*if (SelectionLength > 0)
+            {
+                // Get selection
+                String selectedText = GetSelection();
+
+                // Copy
+                Application::ClipboardSetData(selectedText);
+
+                // Delete selected text
+                _text.Remove(Math::Max(0, _selectionLeft), SelectionLength);
+                _selectionRight = _selectionLeft;
+                _isCaretOnLeft = false;
+
+                // Fire event
+                //OnValueChanged.TryCall(this);
+
+                // Update
+                calSelectionRect();
+            }*/
         }
 
         /// <summary>
@@ -239,6 +337,52 @@ namespace FlaxEngine.GUI
         {
             throw new NotImplementedException("Paste textbox text");
             // TODO: we need to support Clipboard via Flax API
+
+            // Get clipboard data
+            /*String clipboardText = Application::ClipboardGetData();
+
+            // Check clipboad text length
+            if (clipboardText.HasChars())
+            {
+                // Check if sth is selected
+                int32 left = Math::Max(0, _selectionLeft);
+                int32 selectedChars = _selectionRight - left;
+                if (selectedChars > 0)
+                {
+                    // Delete selected text
+                    _text.Remove(left, selectedChars);
+                    _selectionRight = _selectionLeft;
+                    _isCaretOnLeft = false;
+                }
+
+                // Insert text
+                insertText(clipboardText);
+            }*/
+        }
+
+        /// <summary>
+        /// Duplicates the current selection in the text box.
+        /// </summary>
+        public void Duplicate()
+        {
+            throw new NotImplementedException("Duplicate textbox text");
+            // TODO: we need to support Clipboard via Flax API
+
+            // Check if sth is selected
+            /*if (GetSelectionLength() > 0)
+            {
+                // Get selection text
+                String selection = GetSelection();
+
+                // Duplicate selected text
+                int32 right = _selectionRight;
+                _text.Insert(_selectionRight, selection);
+
+                // Selected inserted text
+                _selectionLeft = right;
+                _selectionRight = right + selection.Length();
+                calSelectionRect();
+            }*/
         }
 
         /// <summary>
@@ -246,7 +390,10 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void ScrollToCaret()
         {
-            throw new NotImplementedException("ScrollToCaret");
+            //throw new NotImplementedException("ScrollToCaret");
+
+            // TODO: update view offset
+            _viewOffset = Vector2.Zero;
         }
 
         /// <summary>
@@ -254,18 +401,10 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void SelectAll()
         {
-            _isCaretOnLeft = true;
             if (TextLength > 0)
             {
-                _selectionLeft = 0;
-                _selectionRight = TextLength;
+                setSelection(0, TextLength);
             }
-            else
-            {
-                _selectionLeft = _selectionRight = -1;
-            }
-            _viewOffset = Vector2.Zero;
-            calSelectionRect();
         }
 
         /// <summary>
@@ -273,142 +412,159 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void Deselect()
         {
-            _isCaretOnLeft = true;
-            _selectionLeft = _selectionRight = -1;
-            _viewOffset = Vector2.Zero;
-            calSelectionRect();
+            setSelection(-1);
         }
 
         #region Logic
 
-        private int charIndexAtPoint(Vector2 location)
+        private int charIndexAtPoint(ref Vector2 location)
         {
-            // Take into account text rectangle left margin
-            var textRect = GetTextRectView();
-            location.X -= textRect.Left;
+            Debug.Assert(Font, "Missing font.");
 
-            // Early out
-            if (location.X < 0 || _text.Length == 0)
-            {
-                return 0;
-            }
-
-            // Cache data
-            var font = Font;
-            Debug.Assert(font, "Missing font.");
-
-            // Early out
-            // TODO: improve searching and remove that eraly out
-            /*float fullWidth = font.MeasureText(_text).X;
-            if (location.X > fullWidth)
-            {
-                return _text.Length;
-            }
-
-            // Find char at point
-            // TODO: maybe call font to calculate all chanracters widths in array and then use binary search???
-            for (int i = 0; i < _text.Length; i++)
-            {
-                if (location.X <= font.MeasureText(_text.Left(i + 1)).X)
-                    return i;
-            }*/
-
-            return 0;
-        }
-
-        private void calSelectionRect()
-        {
-            // Check if need to perform that calculation
-            /*if (_selectionLeft != -1)
-            {
-                // Cache data
-                var textArea = GetTextRect();
-                int selectedChars = _selectionRight - _selectionLeft;
-                var font = Font;
-                Debug.Assert(font, "Missing font.");
-
-                // Calcuate selection rectangle
-                // TODO: cache text trails and reuse it during MeasureText and HitTestTextPosition as well as mouse events?
-                float beforeSelectionWidth = _selectionLeft == 0 ? 0 : font.HitTestTextPosition(_text, _selectionLeft).X;
-                float selectionWidth = selectedChars == 0 ? 0 : font.MeasureText(_text.Substring(_selectionLeft, selectedChars)).X;
-                _selectionRect = new Rectangle(beforeSelectionWidth, 0, selectionWidth, textArea.GetHeight()); // TODO: update this code for multiline case
-                _selectionRect += textArea.Location;
-
-                // Calculate caret rectangle
-                const float caretWidth = 1.4f;
-                float caretPosX = _isCaretOnLeft ? _selectionRect.Left : _selectionRect.Right;
-                float caretPosY = _selectionRect.Y;
-                _caretRect = new Rectangle(
-                    caretPosX - (caretWidth * 0.5f),
-                    caretPosY,
-                    caretWidth,
-                    _selectionRect.Height);
-
-                // Update view offset (caret needs to be in a view)
-                // TODO: update this code for multiline case
-                Vector2 caretInView = new Vector2(caretPosX, caretPosY) - _viewOffset;
-                Vector2 clampedCaretInView = Vector2.Clamp(caretInView, textArea.UpperLeft, textArea.BottomRight);
-                _viewOffset += caretInView - clampedCaretInView;
-            }
-            else*/
-            {
-                // Clear values
-                _caretRect = _selectionRect = new Rectangle(-1, 0, 0, 0);
-                _viewOffset = Vector2.Zero;
-            }
-
-            // Reset caret visibility and cache textbox size
-            _caretTime = 0;
-            _cachedSize = Size;
+            // Perform test using Font API
+            return Font.HitTestText(_text, location, _layout);
         }
 
         private void insertText(string text)
         {
-            if (_selectionLeft == -1)
+            if (IsReadOnly)
+                throw new AccessViolationException("Text Box is readonly.");
+            
+            if (TextLength == 0)
             {
                 _text = text;
-                _selectionLeft = 0;
-                _selectionRight = 1;
+                setSelection(TextLength);
             }
             else
             {
-                int left = Mathf.Min(_selectionRight, _selectionLeft);
-                int right = Mathf.Max(_selectionRight, _selectionLeft);
-                int selectedChars = right - left;
-                if (selectedChars > 0)
-                    _text = _text.Remove(_selectionLeft, selectedChars);
-                _text = _text.Insert(_selectionLeft, text);
-                _selectionLeft += text.Length;
-                _selectionRight = _selectionLeft;
-            }
+                if (HasSelection)
+                    _text = _text.Remove(SelectionLeft, SelectionLength);
 
-            // Update selection
-            calSelectionRect();
+                _text = _text.Insert(SelectionLeft, text);
+                setSelection(SelectionLeft + text.Length);
+            }
         }
 
-        private void rollSelection()
+        private void MoveRight(bool shift, bool ctrl)
         {
-            int selectedChars = Mathf.Abs(_selectionRight - _selectionLeft);
-            if (selectedChars > 0)
+            if (HasSelection && !shift)
             {
-                if (_isCaretOnLeft)
-                    _selectionRight = _selectionLeft;
+                setSelection(SelectionRight);
+            }
+            else if(SelectionRight < TextLength)
+            {
+                int position;
+                if (ctrl)
+                    position = FindtNextWordBegin();
                 else
-                    _selectionLeft = _selectionRight;
+                    position = _selectionEnd + 1;
+
+                if (shift)
+                {
+                    setSelection(_selectionStart, position);
+                }
+                else
+                {
+                    setSelection(position);
+                }
             }
         }
 
-        private void endSelecting()
-        {   
-            // Check if user was selecting
-            if (_isSelecting)
+        private void MoveLeft(bool shift, bool ctrl)
+        {
+            if (HasSelection && !shift)
             {
-                // Clear flag
-                _isSelecting = false;
-
-                // Stop tracking mouse
-                //GetParentWindow()->GetWin()->EndTrackingMouse();
+                setSelection(SelectionLeft);
             }
+            else if(SelectionLeft > 0)
+            {
+                int position;
+                if (ctrl)
+                    position = FindtPrevWordBegin();
+                else
+                    position = _selectionEnd - 1;
+
+                if (shift)
+                {
+                    setSelection(_selectionStart, position);
+                }
+                else
+                {
+                    setSelection(position);
+                }
+            }
+        }
+
+        private void setSelection(int caret)
+        {
+            setSelection(caret, caret);
+        }
+
+        private void setSelection(int start, int end)
+        {
+            _selectionStart = Mathf.Clamp(start, -1, _text.Length);
+            _selectionEnd = Mathf.Clamp(end, -1, _text.Length);
+
+            Debug.Log("set sel: " + _selectionStart + " -> " + _selectionEnd);
+
+            // Update view on caret modified
+            ScrollToCaret();
+
+            // Reset caret and selection animation
+            _animateTime = 0.0f;
+        }
+
+        private int FindtNextWordBegin()
+        {
+            int textLength = TextLength;
+            int caretPos = CaretPosition;
+
+            if (caretPos + 1 >= textLength)
+                return textLength;
+
+            int spaceLoc = Text.IndexOfAny(Separators, caretPos + 1);
+
+            if (spaceLoc == -1)
+                spaceLoc = textLength;
+            else
+                spaceLoc++;
+
+            return spaceLoc;
+        }
+
+        private int FindtPrevWordBegin()
+        {
+            int caretPos = CaretPosition;
+
+            if (caretPos - 2 < 0)
+                return 0;
+
+            int spaceLoc = _text.LastIndexOfAny(Separators, caretPos - 2);
+
+            if (spaceLoc == -1)
+                spaceLoc = 0;
+            else
+                spaceLoc++;
+
+            return spaceLoc;
+        }
+
+        protected virtual void OnSelectingBegin()
+        {
+            // Set flag
+            _isSelecting = true;
+
+            // Start tracking mouse
+            //GetParentWindow()->GetWin()->StartTrackingMouse(false);
+        }
+
+        protected virtual void OnSelectingEnd()
+        {
+            // Clear flag
+            _isSelecting = false;
+
+            // Stop tracking mouse
+            //GetParentWindow()->GetWin()->EndTrackingMouse();
         }
 
         #endregion
@@ -422,6 +578,9 @@ namespace FlaxEngine.GUI
 
             _isEditing = true;
             _onStartEditValue = _text;
+
+            // Reset caret visibility
+            _animateTime = 0;
         }
 
         protected virtual void OnEditEnd()
@@ -451,28 +610,28 @@ namespace FlaxEngine.GUI
 
         protected virtual Rectangle GetTextClipRect()
         {
-            return new Rectangle(1, 1, _width - 2, _height - 2);
+            return new Rectangle(1, 1, Width - 2, Height - 2);
         }
 
-        protected virtual Rectangle GetTextRect()
+        private Rectangle GetTextRectView()
         {
-            return new Rectangle(DefaultMargin, 1, _width - 2 * DefaultMargin, _height - 2);
+            return _layout.Bounds - _viewOffset;
         }
 
-        protected Rectangle GetTextRectView()
+        private void UpdateTextRect()
         {
-            return GetTextRect() - _viewOffset;
+            _layout.Bounds = TextRectangle;
         }
 
         #endregion
 
         #region Control
 
+        /// <inheritdoc />
         public override void Update(float dt)
         {
             // Update
-            _caretTime += dt;
-            _selectionTime += dt;
+            _animateTime += dt;
 
             // Ensure to keep selection rectangle valid during scalling
             /*if (!Vector2.NearEqual(Size, _cachedSize))
@@ -488,7 +647,11 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void Draw()
         {
+            // Cache data
             var style = Style.Current;
+            var rect = new Rectangle(0, 0, Width, Height);
+            var font = Font;
+            Debug.Assert(font, "Missing font.");
 
             // Background
             Color backColor = style.TextBoxBackground;
@@ -496,39 +659,66 @@ namespace FlaxEngine.GUI
                 backColor = style.TextBoxBackgroundSelected;
             if (_backgroundColor.A > 0)
                 backColor = _backgroundColor;
-            Render2D.FillRectangle(new Rectangle(0, 0, _width, _height), backColor);
+            Render2D.FillRectangle(rect, backColor);
             if (IsFocused)
-                Render2D.DrawRectangle(new Rectangle(0, 0, _width, _height), style.BackgroundSelected);
+                Render2D.DrawRectangle(rect, style.BackgroundSelected);
 
             // Apply view offset and clip mask
             var trans = Render2D.Transform;
-            Render2D.Transform = trans - _viewOffset;
             Render2D.PushClip(GetTextClipRect());
+            Render2D.Transform = trans - _viewOffset;
+
+            // Check if sth is selected
+            int selectionLength = SelectionLength;
+            /*if (selectionLength > 0)
+            {
+                // Cache data
+                
+
+                // Calcuate selection rectangle
+                // TODO: cache text trails and reuse it during MeasureText and HitTestTextPosition as well as mouse events?
+                float beforeSelectionWidth = _selectionLeft == 0 ? 0 : font.HitTestText(_text, _selectionLeft, _layout).X;
+                float selectionWidth = selectionLength == 0 ? 0 : font.MeasureText(_text.Substring(_selectionLeft, selectionLength), _layout).X;
+                _selectionRect = new Rectangle(beforeSelectionWidth, 0, selectionWidth, fontHeight); // TODO: update this code for multiline case
+                _selectionRect += textArea.Location;
+
+                // Update view offset (caret needs to be in a view)
+                // TODO: update this code for multiline case
+                Vector2 caretInView = new Vector2(caretPosX, caretPosY) - _viewOffset;
+                Vector2 clampedCaretInView = Vector2.Clamp(caretInView, textArea.UpperLeft, textArea.BottomRight);
+                _viewOffset += caretInView - clampedCaretInView;
+            }
+            else
+            {
+                // Clear values
+                _caretRect = _selectionRect = new Rectangle(-1, 0, 0, 0);
+                _viewOffset = Vector2.Zero;
+            }
 
             // Selection background
             if (_selectionRect.Width > 1)
             {
-                float alpha = Mathf.Min(1.0f, Mathf.Cos(_selectionTime * 6.0f) * 0.5f + 1.3f);
+                float alpha = Mathf.Min(1.0f, Mathf.Cos(_animateTime * 6.0f) * 0.5f + 1.3f);
                 alpha = alpha * alpha;
                 if (!IsFocused)
                     alpha = 0.1f;
                 Render2D.FillRectangle(_selectionRect, style.BackgroundSelected * alpha, true);
-            }
+            }*/
 
-            // Draw text (use clipping)
-            Render2D.DrawText(style.FontMedium, _text, GetTextRect(), Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, 1.0f);
+            // Text
+            Render2D.DrawText(font, _text, _layout.Bounds, Enabled ? style.Foreground : style.ForegroundDisabled, _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
 
-            // Carret
-            if (_caretRect.Width > 1 && IsFocused)
+            // Caret
+            if (IsFocused && CaretPosition > -1)
             {
-                float alpha = Mathf.Saturate(Mathf.Cos(_caretTime * Mathf.TwoPi) * 0.5f + 0.7f);
+                float alpha = Mathf.Saturate(Mathf.Cos(_animateTime * Mathf.TwoPi) * 0.5f + 0.7f);
                 alpha = alpha * alpha * alpha * alpha * alpha * alpha;
-                Render2D.FillRectangle(_caretRect, style.Foreground * alpha, true);
+                Render2D.FillRectangle(CaretBounds, style.Foreground * alpha, true);
             }
 
             // Restore rendering state
-            Render2D.PopClip();
             Render2D.Transform = trans;
+            Render2D.PopClip();
         }
 
         /// <inheritdoc />
@@ -545,26 +735,30 @@ namespace FlaxEngine.GUI
             OnEditEnd();
         }
 
+        /// <inheritdoc />
         public override bool HasMouseCapture
         {
             get { return _isSelecting; }
         }
 
+        /// <inheritdoc />
         public override void OnLostMouseCapture()
         {
             OnEditEnd();
         }
 
+        /// <inheritdoc />
         public override bool OnMouseDoubleClick(MouseButtons buttons, Vector2 location)
         {
             SelectAll();
             return base.OnMouseDoubleClick(buttons, location);
         }
-
+        
+        /// <inheritdoc />
         public override void OnMouseMove(Vector2 location)
         {
-            /*// Check if user is selecting
-            if (_isSelecting)
+            // Check if user is selecting
+            /*if (_isSelecting)
             {
                 // Find char index at current mosue location
                 int currentIndex = charIndexAtPoint(location);
@@ -596,43 +790,39 @@ namespace FlaxEngine.GUI
                     _selectionLeft = _selectionRight;
                     _selectionRight = tmp;
                 }
-
-                // Update
-                calSelectionRect();
             }*/
         }
 
+        /// <inheritdoc />
         public override bool OnMouseDown(MouseButtons buttons, Vector2 location)
         {
-            // Check button
-            /*if (buttons & MouseButtons::Left)
+            if (buttons == MouseButtons.Left && _text.Length > 0)
             {
-                // Check if has any text
-                if (_text.HasChars())
-                {
-                    // Calculate char index under the mouse location
-                    _selectionLeft = _selectionRight = charIndexAtPoint(location);
+                OnSelectingBegin();
 
-                    // Update
-                    calSelectionRect();
-                }
-
-                // Start selecting
-                _isSelecting = true;
-
-                // Start tracking mouse
-                GetParentWindow()->GetWin()->StartTrackingMouse(true);
-            }*/
+                // Calculate char index under the mouse location
+                setSelection(charIndexAtPoint(ref location));
+            }
 
             // Base
             base.OnMouseDown(buttons, location);
             return true;
         }
-
+        
+        /// <inheritdoc />
         public override bool OnMouseUp(MouseButtons buttons, Vector2 location)
         {
-            endSelecting();
+            if (_isSelecting)
+                OnSelectingEnd();
             return base.OnMouseUp(buttons, location);
+        }
+
+        /// <inheritdoc />
+        protected override void OnSizeChanged()
+        {
+            base.OnSizeChanged();
+
+            UpdateTextRect();
         }
 
         #endregion

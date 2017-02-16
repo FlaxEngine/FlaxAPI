@@ -72,6 +72,7 @@
     <Compile Include="GUI\Control.cs" />
     <Compile Include="GUI\Enums.cs" />
     <Compile Include="GUI\Input\TextBox.cs" />
+    <Compile Include="GUI\Input\TextBox.Keys.cs" />
     <Compile Include="GUI\Style.cs" />
     <Compile Include="GUI\Window.cs" />
     <Compile Include="Partial\Actor.cs" />
