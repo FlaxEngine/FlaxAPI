@@ -793,13 +793,13 @@ namespace FlaxEngine.GUI
                     float leftMargin = _layout.Bounds.Location.X;
 
                     // Selected is more than one line
-                    Rectangle r1 = new Rectangle(leftEdge.X, leftEdge.Y, _layout.Bounds.Width - leftEdge.X + leftMargin, fontHeight);
+                    Rectangle r1 = new Rectangle(leftEdge.X, leftEdge.Y, 1000000000, fontHeight);
                     Render2D.FillRectangle(r1, selectionColor, true);
                     //
                     for (int i = 3; i <= selectedLinesCount; i++)
                     {
                         leftEdge.Y += fontHeight;
-                        Rectangle r = new Rectangle(leftMargin, leftEdge.Y, _layout.Bounds.Width, fontHeight);
+                        Rectangle r = new Rectangle(leftMargin, leftEdge.Y, 1000000000, fontHeight);
                         Render2D.FillRectangle(r, selectionColor, true);
                     }
                     //
