@@ -21,7 +21,7 @@ namespace FlaxEngine
 			/// Gets asset name
 			/// </summary>
 			[UnmanagedCall]
-			public String Name
+			public string Name
 			{
 #if UNIT_TEST_COMPILANT
 				get; set;
@@ -46,7 +46,7 @@ namespace FlaxEngine
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern String Internal_GetName(IntPtr obj);
+		internal static extern string Internal_GetName(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern int Internal_GetRefCount(IntPtr obj);
 #endif

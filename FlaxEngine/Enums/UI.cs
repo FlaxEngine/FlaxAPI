@@ -23,4 +23,50 @@ namespace FlaxEngine
         WrapWords,
         WrapChars
     };
+
+    /// <summary>
+    /// Structure which describes text layout properties
+    /// </summary>
+    public struct TextLayoutOptions
+    {
+        /// <summary>
+        /// Layout rectangle
+        /// </summary>
+        public Rectangle Bounds;
+
+        /// <summary>
+        /// Horizontal alignment
+        /// </summary>
+        public TextAlignment HorizontalAlignment;
+
+        /// <summary>
+        /// Vertical alignment
+        /// </summary>
+        public TextAlignment VerticalAlignment;
+
+        /// <summary>
+        /// Text wrapping mode
+        /// </summary>
+        public TextWrapping TextWrapping;
+
+        /// <summary>
+        /// Base line gap scale
+        /// </summary>
+        public float BaseLinesGapScale;
+
+        /// <summary>
+        /// Gets default layout
+        /// </summary>
+        public static TextLayoutOptions Default
+        {
+            get
+            {
+                return new TextLayoutOptions()
+                {
+                    Bounds = new Rectangle(0, 0, float.MaxValue, float.MaxValue),
+                    BaseLinesGapScale = 1.0f,
+                };
+            }
+        }
+    }
 }

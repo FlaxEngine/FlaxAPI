@@ -458,7 +458,7 @@ namespace FlaxEngine.GUI
         /// <returns>True if the control, or one of its child controls, currently has the input focus</returns>
         public virtual bool ContainsFocus
         {
-            get { return _canFocus; }
+            get { return _isFocused; }
         }
 
         /// <summary>
