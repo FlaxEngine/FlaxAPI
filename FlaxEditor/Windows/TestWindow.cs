@@ -34,7 +34,7 @@ namespace FlaxEditor.Windows
 
             TextBox t3 = new TextBox(true, 10, t2.Bottom + 4);
             t3.Height = 100;
-            t3.Text = "This is a text box\nWith multiline support";
+            t3.Text = "This is a text box\nWith multiline support\nAnother line";
             t3.Parent = this;
         }
     }

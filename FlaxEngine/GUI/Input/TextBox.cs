@@ -243,6 +243,14 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Gets rectangle used to clip text
+        /// </summary>
+        protected virtual Rectangle TextClipRectangle
+        {
+            get { return new Rectangle(1, 1, Width - 2, Height - 2); }
+        }
+        
+        /// <summary>
         /// Init
         /// </summary>
         /// <param name="isMultiline">Enable/disable multiline text input support</param>
@@ -417,6 +425,11 @@ namespace FlaxEngine.GUI
 
         #region Logic
 
+        private void UpdateTextRect()
+        {
+            _layout.Bounds = TextRectangle;
+        }
+
         private int charIndexAtPoint(ref Vector2 location)
         {
             Debug.Assert(Font, "Missing font.");
@@ -502,10 +515,10 @@ namespace FlaxEngine.GUI
 
         private void setSelection(int start, int end)
         {
-            _selectionStart = Mathf.Clamp(start, -1, _text.Length);
-            _selectionEnd = Mathf.Clamp(end, -1, _text.Length);
-
-            Debug.Log("set sel: " + _selectionStart + " -> " + _selectionEnd);
+            // Update parameters
+            int textLength = _text.Length;
+            _selectionStart = Mathf.Clamp(start, -1, textLength);
+            _selectionEnd = Mathf.Clamp(end, -1, textLength);
 
             // Update view on caret modified
             ScrollToCaret();
@@ -549,6 +562,9 @@ namespace FlaxEngine.GUI
             return spaceLoc;
         }
 
+        /// <summary>
+        /// Action called when user starts text selecting
+        /// </summary>
         protected virtual void OnSelectingBegin()
         {
             // Set flag
@@ -558,6 +574,9 @@ namespace FlaxEngine.GUI
             //GetParentWindow()->GetWin()->StartTrackingMouse(false);
         }
 
+        /// <summary>
+        /// Action called when user ends text selecting
+        /// </summary>
         protected virtual void OnSelectingEnd()
         {
             // Clear flag
@@ -571,6 +590,9 @@ namespace FlaxEngine.GUI
 
         #region Internal Events
 
+        /// <summary>
+        /// Action called when user starts text editing
+        /// </summary>
         protected virtual void OnEditBegin()
         {
             if (_isEditing)
@@ -583,6 +605,9 @@ namespace FlaxEngine.GUI
             _animateTime = 0;
         }
 
+        /// <summary>
+        /// Action called when user ends text editing
+        /// </summary>
         protected virtual void OnEditEnd()
         {
             if (!_isEditing)
@@ -599,28 +624,12 @@ namespace FlaxEngine.GUI
             ClearSelection();
         }
 
+        /// <summary>
+        /// Action called when text gets modified
+        /// </summary>
         protected virtual void OnTextChanged()
         {
             TextChanged?.Invoke();
-        }
-
-        #endregion
-
-        #region Appearance
-
-        protected virtual Rectangle GetTextClipRect()
-        {
-            return new Rectangle(1, 1, Width - 2, Height - 2);
-        }
-
-        private Rectangle GetTextRectView()
-        {
-            return _layout.Bounds - _viewOffset;
-        }
-
-        private void UpdateTextRect()
-        {
-            _layout.Bounds = TextRectangle;
         }
 
         #endregion
@@ -665,16 +674,17 @@ namespace FlaxEngine.GUI
 
             // Apply view offset and clip mask
             var trans = Render2D.Transform;
-            Render2D.PushClip(GetTextClipRect());
+            Render2D.PushClip(TextClipRectangle);
             Render2D.Transform = trans - _viewOffset;
 
-            // Check if sth is selected
-            int selectionLength = SelectionLength;
-            /*if (selectionLength > 0)
+            // Check if sth is selected to draw selection
+            if (HasSelection)
             {
-                // Cache data
-                
+                // TODO: maybe we could use ProcessText Font API to render selection faster?
 
+                /*
+                string[] lines = _text.GetLines();
+                
                 // Calcuate selection rectangle
                 // TODO: cache text trails and reuse it during MeasureText and HitTestTextPosition as well as mouse events?
                 float beforeSelectionWidth = _selectionLeft == 0 ? 0 : font.HitTestText(_text, _selectionLeft, _layout).X;
@@ -682,28 +692,20 @@ namespace FlaxEngine.GUI
                 _selectionRect = new Rectangle(beforeSelectionWidth, 0, selectionWidth, fontHeight); // TODO: update this code for multiline case
                 _selectionRect += textArea.Location;
 
-                // Update view offset (caret needs to be in a view)
-                // TODO: update this code for multiline case
-                Vector2 caretInView = new Vector2(caretPosX, caretPosY) - _viewOffset;
-                Vector2 clampedCaretInView = Vector2.Clamp(caretInView, textArea.UpperLeft, textArea.BottomRight);
-                _viewOffset += caretInView - clampedCaretInView;
-            }
-            else
-            {
-                // Clear values
-                _caretRect = _selectionRect = new Rectangle(-1, 0, 0, 0);
-                _viewOffset = Vector2.Zero;
-            }
-
-            // Selection background
-            if (_selectionRect.Width > 1)
-            {
+                // Draw selection background
                 float alpha = Mathf.Min(1.0f, Mathf.Cos(_animateTime * 6.0f) * 0.5f + 1.3f);
                 alpha = alpha * alpha;
                 if (!IsFocused)
                     alpha = 0.1f;
                 Render2D.FillRectangle(_selectionRect, style.BackgroundSelected * alpha, true);
-            }*/
+                */
+
+                /*// Update view offset (caret needs to be in a view)
+                // TODO: update this code for multiline case
+                Vector2 caretInView = new Vector2(caretPosX, caretPosY) - _viewOffset;
+                Vector2 clampedCaretInView = Vector2.Clamp(caretInView, textArea.UpperLeft, textArea.BottomRight);
+                _viewOffset += caretInView - clampedCaretInView;*/
+            }
 
             // Text
             Render2D.DrawText(font, _text, _layout.Bounds, Enabled ? style.Foreground : style.ForegroundDisabled, _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
@@ -758,39 +760,14 @@ namespace FlaxEngine.GUI
         public override void OnMouseMove(Vector2 location)
         {
             // Check if user is selecting
-            /*if (_isSelecting)
+            if (_isSelecting)
             {
                 // Find char index at current mosue location
-                int currentIndex = charIndexAtPoint(location);
+                int currentIndex = charIndexAtPoint(ref location);
 
-                // Switch state
-                if (currentIndex < _selectionLeft)
-                {
-                    _selectionLeft = currentIndex;
-                    _isCaretOnLeft = true;
-                }
-                else if (currentIndex > _selectionRight)
-                {
-                    _selectionRight = currentIndex;
-                    _isCaretOnLeft = false;
-                }
-                else if (_isCaretOnLeft)
-                {
-                    _selectionLeft = currentIndex;
-                }
-                else
-                {
-                    _selectionRight = currentIndex;
-                }
-
-                // Ensure to have left selection indexx smaller than right index
-                if (_selectionRight < _selectionLeft)
-                {
-                    int tmp = _selectionLeft;
-                    _selectionLeft = _selectionRight;
-                    _selectionRight = tmp;
-                }
-            }*/
+                // Modify selection end
+                setSelection(_selectionStart, currentIndex);
+            }
         }
 
         /// <inheritdoc />
