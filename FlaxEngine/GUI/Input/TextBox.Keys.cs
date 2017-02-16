@@ -122,9 +122,13 @@ namespace FlaxEngine.GUI
                     MoveLeft(shftDown, ctrDown);
                     return true;
 
-                // TODO: move up
+                case KeyCode.UP:
+                    MoveUp(shftDown, ctrDown);
+                    return true;
 
-                // TODO: move down
+                case KeyCode.DOWN:
+                    MoveDown(shftDown, ctrDown);
+                    return true;
             }
 
             // Character insert

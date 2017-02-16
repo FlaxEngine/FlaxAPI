@@ -514,6 +514,48 @@ namespace FlaxEngine.GUI
             }
         }
 
+        private void MoveDown(bool shift, bool ctrl)
+        {
+            if (HasSelection && !shift)
+            {
+                setSelection(SelectionRight);
+            }
+            else
+            {
+                int position = FindLineDownChar(CaretPosition);
+
+                if (shift)
+                {
+                    setSelection(_selectionStart, position);
+                }
+                else
+                {
+                    setSelection(position);
+                }
+            }
+        }
+
+        private void MoveUp(bool shift, bool ctrl)
+        {
+            if (HasSelection && !shift)
+            {
+                setSelection(SelectionLeft);
+            }
+            else
+            {
+                int position = FindLineUpChar(CaretPosition);
+
+                if (shift)
+                {
+                    setSelection(_selectionStart, position);
+                }
+                else
+                {
+                    setSelection(position);
+                }
+            }
+        }
+
         private void setSelection(int caret)
         {
             setSelection(caret, caret);
@@ -566,6 +608,28 @@ namespace FlaxEngine.GUI
                 spaceLoc++;
 
             return spaceLoc;
+        }
+
+        private int FindLineDownChar(int index)
+        {
+            if (!IsMultiline)
+                return 0;
+
+            Vector2 location = Font.GetCharPosition(_text, index, _layout);
+            location.Y += Font.Height;
+
+            return Font.HitTestText(_text, location, _layout);
+        }
+
+        private int FindLineUpChar(int index)
+        {
+            if (!IsMultiline)
+                return _text.Length;
+
+            Vector2 location = Font.GetCharPosition(_text, index, _layout);
+            location.Y -= Font.Height;
+
+            return Font.HitTestText(_text, location, _layout);
         }
 
         /// <summary>
