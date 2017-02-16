@@ -146,6 +146,30 @@ namespace FlaxEngine
         /// Init
         /// </summary>
         /// <param name="location">Location of the upper left corner</param>
+        /// <param name="width">Width</param>
+        /// <param name="height">Height</param>
+        public Rectangle(Vector2 location, float width, float height)
+        {
+            Location = location;
+            Size = new Vector2(width, height);
+        }
+
+        /// <summary>
+        /// Init
+        /// </summary>
+        /// <param name="x">X coordinate</param>
+        /// <param name="y">Y coordinate</param>
+        /// <param name="size">Size</param>
+        public Rectangle(float x, float y, Vector2 size)
+        {
+            Location = new Vector2(x, y);
+            Size = size;
+        }
+
+        /// <summary>
+        /// Init
+        /// </summary>
+        /// <param name="location">Location of the upper left corner</param>
         /// <param name="size">Size</param>
         public Rectangle(Vector2 location, Vector2 size)
         {

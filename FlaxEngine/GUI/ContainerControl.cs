@@ -385,7 +385,7 @@ namespace FlaxEngine.GUI
         /// <param name="rect">Rectangle for controls</param>
         protected virtual void getDesireClientArea(out Rectangle rect)
         {
-            rect = new Rectangle(0, 0, _width, _height);
+            rect = new Rectangle(0, 0, Size);
         }
 
         /// <summary>
@@ -968,7 +968,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        protected override void setSize(float width, float height)
+        protected override void SetSizeInternal(Vector2 size)
         {
             // Lock updates to revent form additional layout calculations
             bool wasLocked = IsLayoutLocked;
@@ -978,7 +978,7 @@ namespace FlaxEngine.GUI
             Vector2 prevSize = Size;
 
             // Base
-            base.setSize(width, height);
+            base.SetSizeInternal(size);
 
             // Fire event
             for (int i = 0; i < _children.Count; i++)

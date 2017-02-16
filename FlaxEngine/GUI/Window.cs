@@ -77,7 +77,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        protected override bool focus(Control c)
+        protected override bool Focus(Control c)
         {
             if (IsDisposing || _focusedControl == c)
                 return false;

@@ -16,8 +16,8 @@ namespace FlaxEngine.GUI
         protected bool _isMouseOver, _isDragOver;
 
         // Dimensions
-        protected float _x, _y;
-        protected float _width, _height;
+        protected Vector2 _location;
+        protected Vector2 _size;
 
         // Properties
         protected bool _isVisible, _canFocus, _isEnabled;
@@ -75,11 +75,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         public float X
         {
-            get { return _x; }
+            get { return _location.X; }
             set
             {
-                if (_x != value)
-                    setLocation(value, _y);
+                if (!Mathf.NearEqual(_location.X, value))
+                    SetLocationInternal(new Vector2(value, _location.Y));
             }
         }
 
@@ -88,11 +88,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         public float Y
         {
-            get { return _y; }
+            get { return _location.X; }
             set
             {
-                if (_y != value)
-                    setLocation(_x, value);
+                if (!Mathf.NearEqual(_location.Y, value))
+                    SetLocationInternal(new Vector2(_location.X, value));
             }
         }
 
@@ -101,11 +101,10 @@ namespace FlaxEngine.GUI
         /// </summary>
         public Vector2 Location
         {
-            get { return new Vector2(_x, _y); }
+            get { return _location; }
             set
             {
-                if (_x != value.X || _y != value.Y)
-                    setLocation(value.X, value.Y);
+                SetLocation(value);
             }
         }
 
@@ -114,11 +113,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         public float Width
         {
-            get { return _width; }
+            get { return _size.X; }
             set
             {
-                if (_width != value)
-                    setSize(value, _height);
+                if (!Mathf.NearEqual(_size.X, value))
+                    SetSizeInternal(new Vector2(value, _size.Y));
             }
         }
 
@@ -127,11 +126,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         public float Height
         {
-            get { return _height; }
+            get { return _size.Y; }
             set
             {
-                if (_height != value)
-                    setSize(_width, value);
+                if (!Mathf.NearEqual(_size.Y, value))
+                    SetSizeInternal(new Vector2(_size.X, value));
             }
         }
 
@@ -140,92 +139,64 @@ namespace FlaxEngine.GUI
         /// </summary>
         public Vector2 Size
         {
-            get { return new Vector2(_width, _height); }
+            get { return _size; }
             set
             {
-                if (_width != value.X || _height != value.Y)
-                    setSize(value.X, value.Y);
+                SetSize(value);
             }
         }
 
         /// <summary>
         /// Gets Y coordinate of the top edge of the control relative to the upper-left corner of its container
         /// </summary>
-        public float Top
-        {
-            get { return _y; }
-        }
+        public float Top => _location.Y;
 
         /// <summary>
         /// Gets Y coordinate of the bottom edge of the control relative to the upper-left corner of its container
         /// </summary>
-        public float Bottom
-        {
-            get { return _y + _height; }
-        }
+        public float Bottom => _location.Y + _size.Y;
 
         /// <summary>
         /// Gets X coordinate of the left edge of the control relative to the upper-left corner of its container
         /// </summary>
-        public float Left
-        {
-            get { return _x; }
-        }
+        public float Left => _location.X;
 
         /// <summary>
         /// Gets X coordinate of the right edge of the control relative to the upper-left corner of its container
         /// </summary>
-        public float Right
-        {
-            get { return _x + _width; }
-        }
+        public float Right => _location.X + _size.X;
 
         /// <summary>
         /// Gets X and Y coordinate of the bottom right corner of the control relative to the upper-left corner of its container
         /// </summary>
-        public Vector2 RightBottom
-        {
-            get { return new Vector2(_x + _width, _y + _height); }
-        }
+        public Vector2 RightBottom => new Vector2(Right, Bottom);
 
         /// <summary>
         /// Gets position of the upper left corner of the control relative to the upper-left corner of its container
         /// </summary>
-        public Vector2 UpperLeft
-        {
-            get { return new Vector2(_x, _y); }
-        }
+        public Vector2 UpperLeft => new Vector2(Left, Top);
 
         /// <summary>
         /// Gets position of the upper right corner of the control relative to the upper-left corner of its container
         /// </summary>
-        public Vector2 UpperRight
-        {
-            get { return new Vector2(_x + _width, _y); }
-        }
+        public Vector2 UpperRight => new Vector2(Right, Top);
 
         /// <summary>
         /// Gets position of the bottom right corner of the control relative to the upper-left corner of its container
         /// </summary>
-        public Vector2 BottomRight
-        {
-            get { return new Vector2(_x + _width, _y + _height); }
-        }
+        public Vector2 BottomRight => new Vector2(Right, Bottom);
 
         /// <summary>
         /// Gets position of the bottom left of the control relative to the upper-left corner of its container
         /// </summary>
-        public Vector2 BottomLeft
-        {
-            get { return new Vector2(_x, _y + _height); }
-        }
+        public Vector2 BottomLeft => new Vector2(Left, Bottom);
 
         /// <summary>
         /// Gets center position of the control relative to the upper-left corner of its container
         /// </summary>
         public Vector2 Center
         {
-            get { return new Vector2(_x + _width * 0.5f, _y + _height * 0.5f); }
+            get { return new Vector2(_location.X + _size.X * 0.5f, _location.Y + _location.X * 0.5f); }
         }
 
         /// <summary>
@@ -233,7 +204,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public Rectangle Bounds
         {
-            get { return new Rectangle(_x, _y, _width, _height); }
+            get { return new Rectangle(_location, _size); }
             set
             {
                 Location = value.Location;
@@ -362,14 +333,26 @@ namespace FlaxEngine.GUI
         /// <param name="width">Width</param>
         /// <param name="height">Height</param>
         protected Control(bool canFocus, float x, float y, float width, float height)
+            : this(canFocus, new Vector2(x, y), new Vector2(width, height))
+        {
+
+        }
+
+        /// <summary>
+        /// Init
+        /// </summary>
+        /// <param name="canFocus">True if control can accept user focus</param>
+        /// <param name="x">X coordinate</param>
+        /// <param name="y">Y coordinate</param>
+        /// <param name="width">Width</param>
+        /// <param name="height">Height</param>
+        protected Control(bool canFocus, Vector2 location, Vector2 size)
         {
             _isVisible = true;
             _isEnabled = true;
             _canFocus = canFocus;
-            _x = x;
-            _y = y;
-            _width = width;
-            _height = height;
+            _location = location;
+            _size = size;
             _backgroundColor = Color.Transparent;
         }
 
@@ -409,7 +392,7 @@ namespace FlaxEngine.GUI
         {
             // Paint Background
             if (_backgroundColor.A > 0.0f)
-                Render2D.FillRectangle(new Rectangle(0, 0, _width, _height), _backgroundColor, true);
+                Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), _backgroundColor, true);
         }
 
         /// <summary>
@@ -426,8 +409,17 @@ namespace FlaxEngine.GUI
         /// <param name="y">Y coordinate</param>
         public virtual void SetLocation(float x, float y)
         {
-            if (_y != x || _y != y)
-                setLocation(x, y);
+            SetLocation(new Vector2(x, y));
+        }
+
+        /// <summary>
+        /// Sets control's location
+        /// </summary>
+        /// <param name="location">Location coordinates of the upper left corner</param>
+        public virtual void SetLocation(Vector2 location)
+        {
+            if(!this._location.Equals(location))
+                SetLocationInternal(location);
         }
 
         /// <summary>
@@ -437,8 +429,17 @@ namespace FlaxEngine.GUI
         /// <param name="height">Control's height</param>
         public virtual void SetSize(float width, float height)
         {
-            if (_width != width || _height != height)
-                setSize(width, height);
+            SetSize(new Vector2(width, height));
+        }
+
+        /// <summary>
+        /// Sets control's size
+        /// </summary>
+        /// <param name="size">Control's size</param>
+        public virtual void SetSize(Vector2 size)
+        {
+            if (!this._size.Equals(size))
+                SetSizeInternal(size);
         }
 
         #region Focus
@@ -476,7 +477,7 @@ namespace FlaxEngine.GUI
         public virtual void Focus()
         {
             if (!IsFocused)
-                focus(this);
+                Focus(this);
         }
 
         /// <summary>
@@ -485,7 +486,7 @@ namespace FlaxEngine.GUI
         public virtual void Defocus()
         {
             if (IsFocused)
-                focus(null);
+                Focus(null);
         }
 
         /// <summary>
@@ -525,9 +526,9 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="c">Control to focus</param>
         /// <returns>True if control got a focus</returns>
-        protected virtual bool focus(Control c)
+        protected virtual bool Focus(Control c)
         {
-            return _parent != null && _parent.focus(c);
+            return _parent != null && _parent.Focus(c);
         }
 
         /// <summary>
@@ -608,7 +609,7 @@ namespace FlaxEngine.GUI
         /// <returns>True if event has been handled, otherwise false</returns>
         public virtual bool OnMouseDown(MouseButtons buttons, Vector2 location)
         {
-            return _canFocus && focus(this);
+            return _canFocus && Focus(this);
         }
 
         /// <summary>
@@ -698,7 +699,7 @@ namespace FlaxEngine.GUI
         /// <returns>Converted point location in parent control coordinates</returns>
         public virtual Vector2 PointToParent(Vector2 location)
         {
-            return location + new Vector2(_x, _y);
+            return location + _location;
         }
 
         /// <summary>
@@ -708,7 +709,7 @@ namespace FlaxEngine.GUI
         /// <returns>Converted point location in control's space</returns>
         public virtual Vector2 PointFromParent(Vector2 location)
         {
-            return location - new Vector2(_x, _y);
+            return location - _location;
         }
 
         /// <summary>
@@ -763,17 +764,15 @@ namespace FlaxEngine.GUI
 
         #region Control Action
 
-        protected virtual void setLocation(float x, float y)
+        protected virtual void SetLocationInternal(Vector2 location)
         {
-            _x = x;
-            _y = y;
+            _location = location;
             OnLocationChanged();
         }
 
-        protected virtual void setSize(float width, float height)
+        protected virtual void SetSizeInternal(Vector2 size)
         {
-            _width = width;
-            _height = height;
+            _size = size;
             OnSizeChanged();
         }
 
