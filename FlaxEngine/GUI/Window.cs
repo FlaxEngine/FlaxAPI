@@ -80,7 +80,7 @@ namespace FlaxEngine.GUI
             }
 
             // Update flags
-            updateContainsFocus();
+            UpdateContainsFocus();
 
             return true;
         }

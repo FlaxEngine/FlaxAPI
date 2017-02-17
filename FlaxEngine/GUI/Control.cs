@@ -9,7 +9,7 @@ namespace FlaxEngine.GUI
     /// <summary>
     ///     Base class for all GUI controls
     /// </summary>
-    public partial class Control
+    public partial class Control : Object
     {
         private ContainerControl _parent;
         private bool _isDisposing, _isFocused;
@@ -30,22 +30,22 @@ namespace FlaxEngine.GUI
         private Color _backgroundColor = Color.Transparent;
 
         /// <summary>
-        ///     Action is invoked when location is changed
+        ///     Action is invoked, when location is changed
         /// </summary>
         public event Action<Control> OnLocationChanged;
 
         /// <summary>
-        ///     Action is invoked when size is changed
+        ///     Action is invoked, when size is changed
         /// </summary>
         public event Action<Control> OnSizeChanged;
 
         /// <summary>
-        ///     Action is invoked when parent is changed
+        ///     Action is invoked, when parent is changed
         /// </summary>
         public event Action<Control> OnParentChanged;
 
         /// <summary>
-        ///     Action is invoked when visibility is changed
+        ///     Action is invoked, when visibility is changed
         /// </summary>
         public event Action<Control> OnVisibleChanged;
 
@@ -59,44 +59,27 @@ namespace FlaxEngine.GUI
             get { return _parent; }
             set
             {
-                if (_parent != value)
+                if (_parent == value)
                 {
-                    Defocus();
-
-                    // Unlink
-                    if (_parent != null)
-                    {
-                        _parent.removeChild(this);
-                    }
-
-                    _parent = value;
-
-                    // Link
-                    if (_parent != null)
-                    {
-                        _parent.addChild(this);
-                    }
-
-                    OnParentChanged?.Invoke(this);
+                    return;
                 }
+                Defocus();
+
+                _parent = value;
+
+                OnParentChanged?.Invoke(this);
             }
         }
 
         /// <summary>
         ///     Checks if control has parent container control
         /// </summary>
-        public bool HasParent
-        {
-            get { return _parent != null; }
-        }
+        public bool HasParent => _parent != null;
 
         /// <summary>
         ///     Gets zero-based index of the control inside the parent container list
         /// </summary>
-        public int IndexInParent
-        {
-            get { return HasParent ? _parent.GetChildIndex(this) : -1; }
-        }
+        public int IndexInParent => HasParent ? _parent.GetChildIndex(this) : -1;
 
         /// <summary>
         ///     Gets or sets control background color (transparent color (alpha=0) means no background rendering)
@@ -132,10 +115,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Returns true if control can use scrolling feature
         /// </summary>
-        public virtual bool IsScrollable
-        {
-            get { return _dockStyle == DockStyle.None; }
-        }
+        public virtual bool IsScrollable => _dockStyle == DockStyle.None;
 
         /// <summary>
         ///     Gets or sets a value indicating whether the control can respond to user interaction
@@ -199,18 +179,12 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Returns true if control is during disposing state (on destroy)
         /// </summary>
-        public bool IsDisposing
-        {
-            get { return _isDisposing; }
-        }
+        public bool IsDisposing => _isDisposing;
 
         /// <summary>
         ///     Gets window which contains that control (or null if not linked to any)
         /// </summary>
-        public virtual Window ParentWindow
-        {
-            get { return HasParent ? _parent.ParentWindow : null; }
-        }
+        public virtual Window ParentWindow => HasParent ? _parent.ParentWindow : null;
 
         #endregion
 
@@ -274,8 +248,8 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Perform control update and all its children
         /// </summary>
-        /// <param name="dt">Delta time in seconds</param>
-        public virtual void Update(float dt)
+        /// <param name="deltaTime">Delta time in seconds</param>
+        public virtual void Update(float deltaTime)
         {
             // Update tooltip
             //if (_tooltip && _mouseOver)
@@ -287,6 +261,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void Draw()
         {
+            if (!Visible)
+            {
+                return;
+            }
+
             // Paint Background
             if (_backgroundColor.A > 0.0f)
             {
@@ -351,28 +330,19 @@ namespace FlaxEngine.GUI
         ///     Gets a value indicating whether the control can receive focus
         /// </summary>
         /// <returns>True if the control can receive focus, otherwise false</returns>
-        public bool CanFocus
-        {
-            get { return _canFocus; }
-        }
+        public bool CanFocus => _canFocus;
 
         /// <summary>
-        ///     Gets a value indicating whether the control, or one of its child controls, currently has the input focus
+        ///     Gets a value indicating whether the control, currently has the input focus
         /// </summary>
-        /// <returns>True if the control, or one of its child controls, currently has the input focus</returns>
-        public virtual bool ContainsFocus
-        {
-            get { return _isFocused; }
-        }
+        /// <returns>True if the control, currently has the input focus</returns>
+        public virtual bool ContainsFocus => _isFocused;
 
         /// <summary>
         ///     Gets a value indicating whether the control has input focus
         /// </summary>
         /// <returns>True if control has input focus, otherwise false</returns>
-        public virtual bool IsFocused
-        {
-            get { return _isFocused; }
-        }
+        public virtual bool IsFocused => _isFocused;
 
         /// <summary>
         ///     Sets input focus to the control
@@ -442,10 +412,7 @@ namespace FlaxEngine.GUI
         ///     Returns true if user is using that control so OnMouseMove and other events will be send to that control even if
         ///     shouldn't be (used by scroll bars, sliders etc.)
         /// </summary>
-        public virtual bool HasMouseCapture
-        {
-            get { return false; }
-        }
+        public virtual bool HasMouseCapture => false;
 
         /// <summary>
         ///     When mouse goes up/down not over the control but it has user focus so remove that focus from it (used by scroll
@@ -463,10 +430,7 @@ namespace FlaxEngine.GUI
         ///     Check if mouse is over that item or its child items
         /// </summary>
         /// <returns>True if mouse is over</returns>
-        public virtual bool IsMouseOver
-        {
-            get { return _isMouseOver; }
-        }
+        public virtual bool IsMouseOver => _isMouseOver;
 
         /// <summary>
         ///     When mouse enters control's area
@@ -589,16 +553,6 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="location">Point location in Control Space to check</param>
         /// <returns>True if point is inside control's area</returns>
-        public virtual bool ContainsPoint(Vector2 location)
-        {
-            return Bounds.Contains(ref location);
-        }
-
-        /// <summary>
-        ///     Checks if control contains given point
-        /// </summary>
-        /// <param name="location">Point location in Control Space to check</param>
-        /// <returns>True if point is inside control's area</returns>
         public virtual bool ContainsPoint(ref Vector2 location)
         {
             return Bounds.Contains(ref location);
@@ -684,12 +638,22 @@ namespace FlaxEngine.GUI
 
         #region Control Action
 
+        /// <summary>
+        ///     Sets location of control and calls event
+        ///     <remarks>This method is called from engine when necessary</remarks>
+        /// </summary>
+        /// <param name="location">Location to set</param>
         protected virtual void SetLocationInternal(Vector2 location)
         {
             _bounds.Location = location;
             OnLocationChanged?.Invoke(this);
         }
 
+        /// <summary>
+        ///     Sets size of control and calls event
+        ///     <remarks>This method is called form engine when necessary</remarks>
+        /// </summary>
+        /// <param name="size"></param>
         protected virtual void SetSizeInternal(Vector2 size)
         {
             _bounds.Size = size;
@@ -706,6 +670,9 @@ namespace FlaxEngine.GUI
             // TODO: move C++ anchor styles or design better wayt for that
         }
 
+        /// <summary>
+        ///     Method called when managed instance should be destoryed
+        /// </summary>
         public virtual void OnDestroy()
         {
         }

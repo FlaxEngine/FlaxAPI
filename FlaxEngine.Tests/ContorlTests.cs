@@ -61,6 +61,8 @@ namespace FlaxEngine.Tests
             Assert.AreEqual(testRect.UpperLeft, rect.UpperLeft);
             Assert.AreEqual(testRect.UpperRight, rect.UpperRight);
 
+            Assert.AreEqual(testRect.Center, rect.Center);
+
             Assert.AreEqual(testRect.Width, rect.Width);
             Assert.AreEqual(testRect.Height, rect.Height);
 
