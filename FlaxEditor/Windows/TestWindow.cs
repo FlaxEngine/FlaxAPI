@@ -12,7 +12,6 @@ namespace FlaxEditor.Windows
         protected override void Initialize()
         {
             //BackgroundColor = Color.Red;
-
             Button b1 = new Button(10, 10)
             {
                 Text = "Click me!",

@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Threading;
 
 namespace FlaxEngine.GUI
 {
@@ -63,9 +64,11 @@ namespace FlaxEngine.GUI
                 {
                     return;
                 }
-                Defocus();
+                _parent?.RemoveChild(this);
 
+                Defocus();
                 _parent = value;
+                _parent?.AddChild(this);
 
                 OnParentChanged?.Invoke(this);
             }

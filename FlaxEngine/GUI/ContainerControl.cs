@@ -48,7 +48,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Gets amount of the children controls
         /// </summary>
-        public int ChuldrenCount => _children.Count;
+        public int ChildrenCount => _children.Count;
 
         /// <summary>
         ///     Checks if container has any child controls
@@ -153,16 +153,17 @@ namespace FlaxEngine.GUI
                 Debug.LogError("Argument child cannot be null.", this);
                 return;
             }
-            if(child.Parent == this)
+            if(child.Parent == this && _children.Contains(child))
             {
                 Debug.LogError("Argument child cannot be added, if current container is already its parent.", this);
                 return;
             }
 
             // Remove child from his old parent
-            child.Parent.RemoveChildInternal(child);
+            child.Parent?.RemoveChildInternal(child);
             // Set child new parent
             child.Parent = this;
+            
             // Add this child to current parent
             AddChildInternal(child);
         }
