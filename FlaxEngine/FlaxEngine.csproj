@@ -208,6 +208,8 @@
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Math\Vector4.cs" />
     <Compile Include="Utilities\Extenstions.cs" />
+    <Compile Include="Utilities\State.cs" />
+    <Compile Include="Utilities\StateMachine.cs" />
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
