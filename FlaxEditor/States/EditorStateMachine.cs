@@ -32,7 +32,21 @@ namespace FlaxEditor.States
         /// </summary>
         /// <returns>True if editor is in edit mode, otherwise false</returns>
         //bool IsEditMode => CurrentState == EditingSceneState;
-        
+
+        /// <summary>
+        /// Editor loading state.
+        /// </summary>
+        public LoadingState LoadingState = new LoadingState();
+
+        internal EditorStateMachine()
+        {
+            // Register all in-build states
+            AddState(LoadingState);
+
+            // Set initial state
+            GoToState(LoadingState);
+        }
+
         public void Update()
         {
             //Debug.Assert();// TODO: test main thread
