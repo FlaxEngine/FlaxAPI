@@ -44,6 +44,8 @@
     <Compile Include="History\UndoActionObject.cs" />
     <Compile Include="PreviewsCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="States\EditorState.cs" />
+    <Compile Include="States\EditorStateMachine.cs" />
     <Compile Include="Windows\TestWindow.cs" />
     <Compile Include="Undo\Undo.cs" />
     <Compile Include="Utilities\Extenstions.cs" />
@@ -55,6 +57,10 @@
       <Project>{7a23adf2-cab0-4ed9-9edc-d9a2b9e51b21}</Project>
       <Name>FlaxEngine</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\" />
+    <Folder Include="Viewport\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
