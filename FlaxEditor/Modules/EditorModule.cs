@@ -13,33 +13,47 @@ namespace FlaxEditor.Modules
         /// <value>
         /// The initialization order.
         /// </value>
-        public int InitOrder => 0;
+        public int InitOrder { get; protected set; }
+
+        /// <summary>
+        /// Gets the editor object.
+        /// </summary>
+        public readonly Editor Editor;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditorModule"/> class.
+        /// </summary>
+        /// <param name="editor">The editor.</param>
+        protected EditorModule(Editor editor)
+        {
+            Editor = editor;
+        }
 
         /// <summary>
         /// Called when Editor is startup up. Performs module initialization.
         /// </summary>
-        protected virtual void OnInit()
+        public virtual void OnInit()
         {
         }
 
         /// <summary>
         /// Called when Editor is ready and winn start work.
         /// </summary>
-        protected virtual void OnEndInit()
+        public virtual void OnEndInit()
         {
         }
-        
+
         /// <summary>
         /// Called when every Editor update tick.
         /// </summary>
-        protected virtual void OnUpdate()
+        public virtual void OnUpdate()
         {
         }
 
         /// <summary>
         /// Called when Editor is closing. Performs module cleanup.
         /// </summary>
-        protected virtual void OnExit()
+        public virtual void OnExit()
         {
         }
     }

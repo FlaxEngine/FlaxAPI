@@ -14,5 +14,9 @@ namespace FlaxEditor.Modules
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class ThumbnailsModule : EditorModule
     {
+        internal ThumbnailsModule(Editor editor)
+            : base(editor)
+        {
+        }
     }
 }

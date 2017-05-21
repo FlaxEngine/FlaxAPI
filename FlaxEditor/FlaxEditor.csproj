@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Editor.cs" />
     <Compile Include="History\HistoryStack.cs" />
     <Compile Include="History\IHistoryAction.cs" />
     <Compile Include="History\UndoActionObject.cs" />

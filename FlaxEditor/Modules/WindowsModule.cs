@@ -14,5 +14,11 @@ namespace FlaxEditor.Modules
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class WindowsModule : EditorModule
     {
+        internal WindowsModule(Editor editor)
+            : base(editor)
+        {
+            // Init windows module first
+            InitOrder = -100;
+        }
     }
 }

@@ -14,5 +14,9 @@ namespace FlaxEditor.Modules
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class ScriptingModule : EditorModule
     {
+        internal ScriptingModule(Editor editor)
+            : base(editor)
+        {
+        }
     }
 }
