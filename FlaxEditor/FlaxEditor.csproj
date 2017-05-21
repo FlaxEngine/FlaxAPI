@@ -42,6 +42,7 @@
     <Compile Include="History\HistoryStack.cs" />
     <Compile Include="History\IHistoryAction.cs" />
     <Compile Include="History\UndoActionObject.cs" />
+    <Compile Include="Modules\EditorModule.cs" />
     <Compile Include="PreviewsCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="States\BuildingLightingState.cs" />
