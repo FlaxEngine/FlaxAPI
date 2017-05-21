@@ -19,6 +19,11 @@ namespace FlaxEditor.States
         public new EditorStateMachine StateMachine => owner as EditorStateMachine;
 
         /// <summary>
+        /// Gets the editor object.
+        /// </summary>
+        public readonly Editor Editor;
+
+        /// <summary>
         /// Check if can edit assets in this state
         /// </summary>
         /// <returns>True if can edit content, otherwise false</returns>
@@ -65,6 +70,15 @@ namespace FlaxEditor.States
         /// </summary>
         /// <returns>True if state is valid for Editor UI calls and other stuff, otherwise false</returns>
         public virtual bool IsEditorReady => true;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditorState"/> class.
+        /// </summary>
+        /// <param name="editor">The editor.</param>
+        protected EditorState(Editor editor)
+        {
+            Editor = editor;
+        }
 
         /// <summary>
         /// Update state. Called every Engine tick.

@@ -27,5 +27,10 @@ namespace FlaxEditor.States
 
         /// <inheritdoc />
         public override bool CanReloadScripts => true;
+
+        internal EditingSceneState(Editor editor)
+            : base(editor)
+        {
+        }
     }
 }

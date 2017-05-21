@@ -15,6 +15,11 @@ namespace FlaxEditor.States
         private readonly List<String> _scenesToUnload = new List<string>();
         private bool _unlaodAllScenes;
 
+        internal ChangingScenesState(Editor editor)
+            : base(editor)
+        {
+        }
+
         /// <summary>
         /// Loads the scene. Unloads all previews scenes.
         /// </summary>

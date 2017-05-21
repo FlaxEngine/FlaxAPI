@@ -14,6 +14,11 @@ namespace FlaxEditor.States
         /// <inheritdoc />
         public override bool IsEditorReady => false;
 
+        internal ClosingState(Editor editor)
+            : base(editor)
+        {
+        }
+
         /// <inheritdoc />
         public override bool CanEnter()
         {

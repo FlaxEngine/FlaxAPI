@@ -36,48 +36,48 @@ namespace FlaxEditor.States
         /// <summary>
         /// Editor loading state.
         /// </summary>
-        public readonly LoadingState LoadingState = new LoadingState();
+        public readonly LoadingState LoadingState;
 
         /// <summary>
         /// Editor closing state.
         /// </summary>
-        public readonly ClosingState ClosingState = new ClosingState();
+        public readonly ClosingState ClosingState;
 
         /// <summary>
         /// Editor editing scene state.
         /// </summary>
-        public readonly EditingSceneState EditingSceneState = new EditingSceneState();
+        public readonly EditingSceneState EditingSceneState;
 
         /// <summary>
         /// Editor changing scenes state.
         /// </summary>
-        public readonly ChangingScenesState ChangingScenesState = new ChangingScenesState();
+        public readonly ChangingScenesState ChangingScenesState;
 
         /// <summary>
         /// Editor playing state.
         /// </summary>
-        public readonly PlayingState PlayingState = new PlayingState();
+        public readonly PlayingState PlayingState;
 
         /// <summary>
         /// Editor reloading scripts state.
         /// </summary>
-        public readonly ReloadingScriptsState ReloadingScriptsState = new ReloadingScriptsState();
+        public readonly ReloadingScriptsState ReloadingScriptsState;
 
         /// <summary>
         /// Editor building lighting state.
         /// </summary>
-        public readonly BuildingLightingState BuildingLightingState = new BuildingLightingState();
+        public readonly BuildingLightingState BuildingLightingState;
 
-        internal EditorStateMachine()
+        internal EditorStateMachine(Editor editor)
         {
             // Register all in-build states
-            AddState(LoadingState);
-            AddState(ClosingState);
-            AddState(EditingSceneState);
-            AddState(ChangingScenesState);
-            AddState(PlayingState);
-            AddState(ReloadingScriptsState);
-            AddState(BuildingLightingState);
+            AddState(LoadingState = new LoadingState(editor));
+            AddState(ClosingState = new ClosingState(editor));
+            AddState(EditingSceneState = new EditingSceneState(editor));
+            AddState(ChangingScenesState = new ChangingScenesState(editor));
+            AddState(PlayingState = new PlayingState(editor));
+            AddState(ReloadingScriptsState = new ReloadingScriptsState(editor));
+            AddState(BuildingLightingState = new BuildingLightingState(editor));
 
             // Set initial state
             GoToState(LoadingState);

@@ -12,6 +12,11 @@ namespace FlaxEditor.States
     {
         private bool _wasBuildFinished;
 
+        internal BuildingLightingState(Editor editor)
+            : base(editor)
+        {
+        }
+
         /// <inheritdoc />
         public override bool CanEditContent => false;
 

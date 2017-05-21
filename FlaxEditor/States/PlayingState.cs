@@ -48,6 +48,11 @@ namespace FlaxEditor.States
             }
         }
 
+        internal PlayingState(Editor editor)
+            : base(editor)
+        {
+        }
+
         /// <inheritdoc />
         public override void OnEnter()
         {

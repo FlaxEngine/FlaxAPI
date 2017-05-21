@@ -8,5 +8,9 @@ namespace FlaxEditor.States
     /// <seealso cref="FlaxEditor.States.EditorState" />
     public sealed class ReloadingScriptsState : EditorState
     {
+        internal ReloadingScriptsState(Editor editor)
+            : base(editor)
+        {
+        }
     }
 }
