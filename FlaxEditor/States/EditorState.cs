@@ -11,6 +11,14 @@ namespace FlaxEditor.States
     public abstract class EditorState : State
     {
         /// <summary>
+        /// Gets the editor state machine.
+        /// </summary>
+        /// <value>
+        /// The editor state machine.
+        /// </value>
+        public new EditorStateMachine StateMachine => owner as EditorStateMachine;
+
+        /// <summary>
         /// Check if can edit assets in this state
         /// </summary>
         /// <returns>True if can edit content, otherwise false</returns>

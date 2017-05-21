@@ -25,31 +25,67 @@ namespace FlaxEditor.States
         /// Checks if editor is in playing mode
         /// </summary>
         /// <returns>True if editor is in play mode, otherwise false</returns>
-        //bool IsPlayMode => CurrentState == PlayingState;
+        public bool IsPlayMode => CurrentState == PlayingState;
 
         /// <summary>
         /// Checks if editor is in editing mode
         /// </summary>
         /// <returns>True if editor is in edit mode, otherwise false</returns>
-        //bool IsEditMode => CurrentState == EditingSceneState;
+        public bool IsEditMode => CurrentState == EditingSceneState;
 
         /// <summary>
         /// Editor loading state.
         /// </summary>
-        public LoadingState LoadingState = new LoadingState();
+        public readonly LoadingState LoadingState = new LoadingState();
+
+        /// <summary>
+        /// Editor closing state.
+        /// </summary>
+        public readonly ClosingState ClosingState = new ClosingState();
+
+        /// <summary>
+        /// Editor editing scene state.
+        /// </summary>
+        public readonly EditingSceneState EditingSceneState = new EditingSceneState();
+
+        /// <summary>
+        /// Editor changing scenes state.
+        /// </summary>
+        public readonly ChangingScenesState ChangingScenesState = new ChangingScenesState();
+
+        /// <summary>
+        /// Editor playing state.
+        /// </summary>
+        public readonly PlayingState PlayingState = new PlayingState();
+
+        /// <summary>
+        /// Editor reloading scripts state.
+        /// </summary>
+        public readonly ReloadingScriptsState ReloadingScriptsState = new ReloadingScriptsState();
+
+        /// <summary>
+        /// Editor building lighting state.
+        /// </summary>
+        public readonly BuildingLightingState BuildingLightingState = new BuildingLightingState();
 
         internal EditorStateMachine()
         {
             // Register all in-build states
             AddState(LoadingState);
+            AddState(ClosingState);
+            AddState(EditingSceneState);
+            AddState(ChangingScenesState);
+            AddState(PlayingState);
+            AddState(ReloadingScriptsState);
+            AddState(BuildingLightingState);
 
             // Set initial state
             GoToState(LoadingState);
         }
 
-        public void Update()
+        internal void Update()
         {
-            //Debug.Assert();// TODO: test main thread
+            //Debug.Assert(IsInMainThread());// TODO: test main thread
 
             // Changing states
             while (_pendingStates.Count > 0)

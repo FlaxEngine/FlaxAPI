@@ -26,6 +26,7 @@ namespace FlaxEditor.States
         /// </summary>
         internal void StartInitEnding()
         {
+            // TODO: finish this
             throw new NotImplementedException();
             /*auto builder = ScriptsBuilder::Instance();
             builder->OnCompilationEnd.Bind<LoadingState, &LoadingState::onCompilationEnd>(this);
@@ -54,6 +55,7 @@ namespace FlaxEditor.States
 
         private void onCompilationEnd(bool success)
         {
+            // TODO: finish this
             throw new NotImplementedException();
             // Check if compilation success
             /*if (success)
@@ -76,6 +78,7 @@ namespace FlaxEditor.States
             {
                 _loadScritpsFlag = false;
 
+                // TODO: finish this
                 throw new NotImplementedException();
                 // Load scripts (we need use main thread for that action)
                 //bool result = ScriptingEngine::Instance()->Load();
@@ -88,6 +91,7 @@ namespace FlaxEditor.States
         /// <inheritdoc />
         public override void OnExit()
         {
+            // TODO: finish this
             throw new NotImplementedException();
             //ScriptsBuilder::Instance()->OnCompilationEnd.Unbind<LoadingState, &LoadingState::onCompilationEnd>(this);
         }
