@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using FlaxEditor.Modules;
+using FlaxEditor.States;
 
 namespace FlaxEditor
 {
@@ -58,6 +59,11 @@ namespace FlaxEditor
         /// </summary>
         public readonly ContentDatabaseModule ContentDatabase;
 
+        /// <summary>
+        /// The editor state machine.
+        /// </summary>
+        public readonly EditorStateMachine StateMachine;
+
         internal Editor()
         {
             // Create common editor modules
@@ -70,6 +76,9 @@ namespace FlaxEditor
             ProgressReporting = new ProgressReportingModule(this);
             ContentEditing = new ContentEditingModule(this);
             ContentDatabase = new ContentDatabaseModule(this);
+
+            // Create state machine
+            StateMachine = new EditorStateMachine(this);
         }
 
         internal void RegisterModule(EditorModule module)
