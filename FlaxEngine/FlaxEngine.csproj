@@ -71,6 +71,7 @@
     <Compile Include="API\Actors\PointLight.Gen.cs">
       <DependentUpon>PointLight.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Actors\Scene.cs" />
     <Compile Include="API\Actors\Sky.cs" />
     <Compile Include="API\Actors\Sky.Gen.cs">
       <DependentUpon>Sky.cs</DependentUpon>
