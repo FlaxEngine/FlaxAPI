@@ -181,11 +181,20 @@
       <DependentUpon>ILogger.cs</DependentUpon>
     </Compile>
     <Compile Include="Enums\LogType.cs" />
+    <Compile Include="Math\ColorHSV.cs" />
+    <Compile Include="Math\FloatR10G10B10A2.cs" />
+    <Compile Include="Math\FloatR11G11B10.cs" />
+    <Compile Include="Math\Half.cs" />
+    <Compile Include="Math\Half2.cs" />
+    <Compile Include="Math\Half3.cs" />
+    <Compile Include="Math\Half4.cs" />
+    <Compile Include="Math\HalfUtils.cs" />
     <Compile Include="Math\Mathf.cs" />
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="Math\Matrix3x3.cs" />
     <Compile Include="Math\OrientedBoundingBox.cs" />
     <Compile Include="Math\Rectangle.cs" />
+    <Compile Include="Math\SphericalHarmonics.cs" />
     <Compile Include="Math\Transform.cs" />
     <Compile Include="Math\Viewport.cs" />
     <Compile Include="Engine\Exceptions\MissingActorException.cs" />
