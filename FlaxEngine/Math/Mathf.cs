@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Flax Engine scripting API
+
+using System;
 using System.ComponentModel;
 
 namespace FlaxEngine
