@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEngine;
 
 namespace FlaxEditor.States
 {
@@ -11,9 +12,8 @@ namespace FlaxEditor.States
     /// <seealso cref="FlaxEditor.States.EditorState" />
     public sealed class ChangingScenesState : EditorState
     {
-        private readonly List<String> _scenesToLoad = new List<string>();
-        private readonly List<String> _scenesToUnload = new List<string>();
-        private bool _unlaodAllScenes;
+        private readonly List<Guid> _scenesToLoad = new List<Guid>();
+        private readonly List<Guid> _scenesToUnload = new List<Guid>();
 
         internal ChangingScenesState(Editor editor)
             : base(editor)
@@ -21,45 +21,70 @@ namespace FlaxEditor.States
         }
 
         /// <summary>
-        /// Loads the scene. Unloads all previews scenes.
+        /// Loads the scene.
         /// </summary>
-        /// <param name="path">The path to the scene.</param>
-        public void LoadScene(String path)
+        /// <param name="sceneId">The scene asset ID.</param>
+        /// <param name="additive">True if don't close opened scenes and just add new scene to the collection, otherwise will release current scenes and load single one.</param>
+        public void LoadScene(Guid sceneId, bool additive = false)
         {
-            // TODO: finish this
-            throw new NotImplementedException();
-
-            //LOG_EDITOR(Info, 75, path);
-
-            // Set request
+            // Clear request
             _scenesToLoad.Clear();
-            _scenesToLoad.Add(path);
             _scenesToUnload.Clear();
-            _unlaodAllScenes = true;
+
+            // Setup request
+            _scenesToLoad.Add(sceneId);
+            var scenes = SceneManager.Scenes;
+            for (int i = 0; i < scenes.Length; i++)
+                _scenesToUnload.Add(scenes[i].ID);
 
             // Request state change
             StateMachine.GoToState(this);
         }
 
         /// <summary>
+        /// Unloades the scene.
+        /// </summary>
+        /// <param name="scene">The scene.</param>
+        public void UnloadScene(Scene scene)
+        {
+            if (scene == null)
+                throw new ArgumentNullException();
+
+            UnloadScene(scene.ID);
+        }
+
+        /// <summary>
+        /// Unloades the scene.
+        /// </summary>
+        /// <param name="sceneId">The scene ID.</param>
+        public void UnloadScene(Guid sceneId)
+        {
+            // Clear request
+            _scenesToLoad.Clear();
+            _scenesToUnload.Clear();
+
+            // Setup request
+            _scenesToUnload.Add(sceneId);
+
+            // Request state change
+            StateMachine.GoToState(this);
+        }
+        
+        /// <summary>
         /// Changes the scenes.
         /// </summary>
-        /// <param name="toLoad">To load.</param>
-        /// <param name="toUnload">To unload.</param>
+        /// <param name="toLoad">Scenes to load.</param>
+        /// <param name="toUnload">Scenes to unload.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        public void ChangeScenes(IEnumerable<String> toLoad, IEnumerable<String> toUnload)
+        public void ChangeScenes(IEnumerable<Guid> toLoad, IEnumerable<Guid> toUnload)
         {
-            // TODO: finish this
-            throw new NotImplementedException();
-
-            //LOG_EDITOR(Info, 75, path);
-
-            // Set request
+            // Clear request
             _scenesToLoad.Clear();
-            _scenesToLoad.AddRange(toLoad);
             _scenesToUnload.Clear();
+
+            // Setup request
+            _scenesToLoad.AddRange(toLoad);
             _scenesToUnload.AddRange(toUnload);
-            _unlaodAllScenes = false;
 
             // Request state change
             StateMachine.GoToState(this);

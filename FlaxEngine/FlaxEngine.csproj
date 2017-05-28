@@ -72,6 +72,7 @@
       <DependentUpon>PointLight.cs</DependentUpon>
     </Compile>
     <Compile Include="API\Actors\Scene.cs" />
+    <Compile Include="API\Actors\Scene.Gen.cs" />
     <Compile Include="API\Actors\Sky.cs" />
     <Compile Include="API\Actors\Sky.Gen.cs">
       <DependentUpon>Sky.cs</DependentUpon>
@@ -116,6 +117,8 @@
     <Compile Include="API\Static\Render2D.Gen.cs">
       <DependentUpon>Render2D.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Static\SceneManager.cs" />
+    <Compile Include="API\Static\SceneManager.Gen.cs" />
     <Compile Include="API\Static\Time.cs" />
     <Compile Include="API\Static\Time.Gen.cs">
       <DependentUpon>Time.cs</DependentUpon>
