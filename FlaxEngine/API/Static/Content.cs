@@ -10,9 +10,6 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-    /// <summary>
-    /// Loads and manages assets that can be used by the Engine
-    /// </summary>
     public static partial class Content
     {
         // TODO: expose import files methods (only in editor?)

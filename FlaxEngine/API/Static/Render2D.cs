@@ -10,11 +10,7 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// The interface to render fast two dimensional graphics.
-	/// </summary>
 	public static partial class Render2D
 	{
-		//TODO: This was auto-generated template made to keep file structure flow strict. Please add your custom implementations if needed.
 	}
 }
