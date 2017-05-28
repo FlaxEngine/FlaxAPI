@@ -39,6 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Static\Editor.cs" />
+    <Compile Include="API\Static\Editor.Gen.cs" />
     <Compile Include="Editor.cs" />
     <Compile Include="History\HistoryStack.cs" />
     <Compile Include="History\IHistoryAction.cs" />
