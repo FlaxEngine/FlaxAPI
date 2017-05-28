@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-    /// <summary>
-    /// Scene actor is a root object for the level.
-    /// </summary>
-    public sealed partial class Scene
-    {
-        //TODO: This was auto-generated template made to keep file structure flow strict. Please add your custom implementations if needed.
-    }
+	/// <summary>
+	/// Scene root actor object
+	/// </summary>
+	public sealed partial class Scene
+	{
+		//TODO: This was auto-generated template made to keep file structure flow strict. Please add your custom implementations if needed.
+	}
 }
