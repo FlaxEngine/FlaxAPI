@@ -124,6 +124,7 @@
       <DependentUpon>Time.cs</DependentUpon>
     </Compile>
     <Compile Include="AssetTypes\IESProfile.cs" />
+    <Compile Include="Attributes\MemberCollectionAttribute.cs" />
     <Compile Include="Enums\UI.cs" />
     <Compile Include="Attributes\Editor\CustomEditorAttribute.cs" />
     <Compile Include="Attributes\Editor\EditorIndexAttribute.cs" />
