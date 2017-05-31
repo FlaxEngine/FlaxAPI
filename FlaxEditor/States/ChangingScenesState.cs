@@ -105,17 +105,7 @@ namespace FlaxEditor.States
             //SceneManager::Instance()->OnSceneLoading.Bind<ChangingSceneState, &ChangingSceneState::onSceneLoading>(this);
             //SceneManager::Instance()->OnSceneUnloaded.Bind<ChangingSceneState, &ChangingSceneState::onSceneUnloaded>(this);
             //SceneManager::Instance()->OnSceneUnloading.Bind<ChangingSceneState, &ChangingSceneState::onSceneUnloading>(this);
-
-            /*
-	// Check if has no scripting loaded
-	if (!ScriptingEngine::Instance()->IsEveryAssemblyLoaded() || ScriptingEngine::Instance()->IsAnyAssemblyLoading())
-	{
-#if USE_EDITOR
-		LOG_EDITOR(EditorError, 145);
-		return true;
-#endif
-	}
-	*/
+            
 
 
             // TODO: load more than one scene

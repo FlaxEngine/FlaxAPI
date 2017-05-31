@@ -1,6 +1,7 @@
 ﻿// Flax Engine scripting API
 
 using System;
+using FlaxEditor.Utilities;
 
 namespace FlaxEditor.States
 {
@@ -10,7 +11,7 @@ namespace FlaxEditor.States
     /// <seealso cref="FlaxEditor.States.EditorState" />
     public sealed class PlayingState : EditorState
     {
-        //private DuplicateScene _duplicateScene;
+        private DuplicateScenes _duplicateSceness;
 
         /// <inheritdoc />
         public override bool CanEditScene => true;
@@ -64,7 +65,7 @@ namespace FlaxEditor.States
             CEditor->GetMainGizmo()->Deselect();
 
             // Duplicate editor scene for simulation
-            _duplicateScene.GatherSceneData();
+            _duplicateScenes.GatherSceneData();
 
             // TODO: deserialize that scene data? and unlink edited scene??
 
@@ -94,7 +95,7 @@ namespace FlaxEditor.States
             CEditor->GetMainGizmo()->Deselect();
 
             // Restore editor scene
-            _duplicateScene.RestoreSceneData();
+            _duplicateScenes.RestoreSceneData();
 
             // Fire events
             for (int32 i = 0; i < CWindowsModule->Windows.Count(); i++)
