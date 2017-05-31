@@ -12,16 +12,21 @@ namespace FlaxEditor.Windows
         protected override void Initialize()
         {
             //BackgroundColor = Color.Red;
-
-            Button b1 = new Button(10, 10);
-            b1.Text = "Click me!";
-            b1.Parent = this;
+            Button b1 = new Button(10, 10)
+            {
+                Text = "Click me!",
+                Parent = this
+            };
             b1.Clicked += () => { Debug.Log("Pressed button #122"); };
 
-            Button b2 = new Button(10, b1.Bottom + 4);
-            b2.Text = "Click me!";
-            b2.Parent = this;
+            Button b2 = new Button(10, b1.Bottom + 4)
+            {
+                Text = "Click me!",
+                Parent = this,
+                Visible = false,
+            };
             b2.Clicked += () => { Debug.Log("Pressed button #2");};
+
 
             TextBox t1 = new TextBox(false, 10, b2.Bottom + 4);
             t1.Text = "This is a text box";

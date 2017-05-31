@@ -4,63 +4,29 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FlaxEngine.GUI
 {
     /// <summary>
-    /// Base interface for all GUI controls that can contain controls
+    ///     Base interface for all GUI controls that can contain controls
     /// </summary>
     public class ContainerControl : Control
     {
-        protected List<Control> _children;
+        protected readonly List<Control> _children = new List<Control>();
         protected Vector2 _viewOffset;
         protected bool _containsFocus;
 
         /// <summary>
-        /// Gets child controls list
+        ///      Action is invoked, when child control gets resized
         /// </summary>
-        public List<Control> Children
-        {
-            get { return _children; }
-        }
+        public event Action<Control> OnChildResized;
 
-        /// <summary>
-        /// Gets amount of the children controls
-        /// </summary>
-        public int ChuldrenCount
-        {
-            get { return _children.Count; }
-        }
 
-        /// <summary>
-        /// Checks if container has any child controls
-        /// </summary>
-        public bool HasChildren
-        {
-            get { return _children.Count > 0; }
-        }
-
-        /// <summary>
-        /// Gets current view offset for all the controls (used by the scroll bars)
-        /// </summary>
-        public Vector2 ViewOffset
-        {
-            get { return _viewOffset; }
-        }
-
-        /// <summary>
-        /// Init
-        /// </summary>
-        /// <param name="canFocus">True if control can accept user focus</param>
-        /// <param name="x">X coordinate</param>
-        /// <param name="y">Y coordinate</param>
-        /// <param name="width">Width</param>
-        /// <param name="height">Height</param>
+        ///<inheritdoc />
         protected ContainerControl(bool canFocus, float x, float y, float width, float height)
             : base(canFocus, x, y, width, height)
         {
-            _children = new List<Control>();
-            IsLayoutLocked = true;
         }
 
         ///<inheritdoc />
@@ -71,17 +37,43 @@ namespace FlaxEngine.GUI
         ///<inheritdoc />
         protected ContainerControl(bool canFocus, Rectangle bounds) : base(canFocus, bounds)
         {
+            IsLayoutLocked = true;
         }
 
-        #region Layout locking
-
         /// <summary>
-        /// True if automatic updates for control layout are locked (usefull when createing a lot of GUI control to prevent lags)
+        ///     Gets child controls list
         /// </summary>
-        public bool IsLayoutLocked;
+        public List<Control> Children => _children;
 
         /// <summary>
-        /// Lock all child controls and itself
+        ///     Gets amount of the children controls
+        /// </summary>
+        public int ChildrenCount => _children.Count;
+
+        /// <summary>
+        ///     Checks if container has any child controls
+        /// </summary>
+        public bool HasChildren => _children.Count > 0;
+
+        /// <summary>
+        ///     Gets current view offset for all the controls (used by the scroll bars)
+        /// </summary>
+        public Vector2 ViewOffset => _viewOffset;
+
+        /// <summary>
+        ///     Gets a value indicating whether the control, or one of its child controls, currently has the input focus
+        /// </summary>
+        /// <returns>True if the control, or one of its child controls, currently has the input focus</returns>
+        public override bool ContainsFocus => _containsFocus;
+
+        /// <summary>
+        ///     True if automatic updates for control layout are locked (usefull when createing a lot of GUI control to prevent
+        ///     lags)
+        /// </summary>
+        public bool IsLayoutLocked { get; set; }
+
+        /// <summary>
+        ///     Lock all child controls and itself
         /// </summary>
         public virtual void LockChildrenRecursive()
         {
@@ -91,33 +83,29 @@ namespace FlaxEngine.GUI
             // Every child container control
             for (int i = 0; i < _children.Count; i++)
             {
-                var cc = _children[i] as ContainerControl;
-                if (cc != null)
-                    cc.LockChildrenRecursive();
+                var containerControl = _children[i] as ContainerControl;
+                containerControl?.LockChildrenRecursive();
             }
         }
 
         /// <summary>
-        /// Unlocks all child controls and itself
+        ///     Unlocks all child controls and itself
         /// </summary>
         public virtual void UnlockChildrenRecursive()
-        {            
+        {
             // Itself
             IsLayoutLocked = false;
 
             // Every child container control
             for (int i = 0; i < _children.Count; i++)
             {
-                var cc = _children[i] as ContainerControl;
-                if (cc != null)
-                    cc.UnlockChildrenRecursive();
+                var containerControl = _children[i] as ContainerControl;
+                containerControl?.UnlockChildrenRecursive();
             }
         }
 
-        #endregion
-
         /// <summary>
-        /// Unlink all child controls
+        ///     Unlink all child controls
         /// </summary>
         public virtual void RemoveChildren()
         {
@@ -134,7 +122,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Remove and dispose all child controls
+        ///     Remove and dispose all child controls
         /// </summary>
         public virtual void DisposeChildren()
         {
@@ -155,27 +143,56 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Add control to the container
+        ///     Add control to the container
         /// </summary>
-        /// <param name="c">Control to add</param>
-        public void AddChild(Control c)
+        /// <param name="child">Control to add</param>
+        public void AddChild(Control child)
         {
-            Debug.Assert(c != null && c.Parent != this);
-            c.Parent = this;
+            if(child == null)
+            {
+                Debug.LogError("Argument child cannot be null.", this);
+                return;
+            }
+            if(child.Parent == this && _children.Contains(child))
+            {
+                Debug.LogError("Argument child cannot be added, if current container is already its parent.", this);
+                return;
+            }
+
+            // Remove child from his old parent
+            child.Parent?.RemoveChildInternal(child);
+            // Set child new parent
+            child.Parent = this;
+            
+            // Add this child to current parent
+            AddChildInternal(child);
         }
 
         /// <summary>
-        /// Remove control from the container
+        ///     Remove control from the container
         /// </summary>
-        /// <param name="c">Control to remove</param>
-        public void RemoveChild(Control c)
+        /// <param name="child">Control to remove</param>
+        public void RemoveChild(Control child)
         {
-            Debug.Assert(c != null && c.Parent == this);
-            c.Parent = null;
+            if (child == null)
+            {
+                Debug.LogError("Argument child cannot be null.", this);
+                return;
+            }
+            if (child.Parent != this)
+            {
+                Debug.LogError("Argument child cannot be removed, if current container is not its parent.", this);
+                return;
+            }
+
+            // Remove child from his current parent
+            RemoveChildInternal(child);
+            // Unlink
+            child.Parent = null;
         }
 
         /// <summary>
-        /// Gets child control at given idnex
+        ///     Gets child control at given idnex
         /// </summary>
         /// <param name="index">Control index</param>
         /// <returns>Control handle</returns>
@@ -185,17 +202,17 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets zero-based index in the list of control children
+        ///     Gets zero-based index in the list of control children
         /// </summary>
-        /// <param name="c">Child control</param>
+        /// <param name="child">Child control</param>
         /// <returns>Zero-based index in the list of control children</returns>
-        public int GetChildIndex(Control c)
+        public int GetChildIndex(Control child)
         {
-            return _children.IndexOf(c);
+            return _children.IndexOf(child);
         }
 
         /// <summary>
-        /// Tries to find any child contol at given point in control local coordinates
+        ///     Tries to find any child contol at given point in control local coordinates
         /// </summary>
         /// <param name="point">Local point to check</param>
         /// <returns>Found control or null</returns>
@@ -204,15 +221,17 @@ namespace FlaxEngine.GUI
             Control result = null;
             for (int i = 9; i < _children.Count; i++)
             {
-                var c = _children[i];
-                Vector2 location = point;
-                if (c.IsScrollable)
-                    location -= _viewOffset;
+                var child = _children[i];
+                Vector2 scrollOffsetLocation = point;
+                if (child.IsScrollable)
+                {
+                    scrollOffsetLocation -= _viewOffset;
+                }
 
                 // Check collision
-                if (isMouseOver(c, ref location))
+                if (child.ContainsPoint(ref scrollOffsetLocation))
                 {
-                    result = c;
+                    result = child;
                     break;
                 }
             }
@@ -220,7 +239,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Tries to find lowest child contol at given point in control local coordinates
+        ///     Tries to find lowest child contol at given point in control local coordinates
         /// </summary>
         /// <param name="point">Local point to check</param>
         /// <returns>Found control or null</returns>
@@ -229,22 +248,23 @@ namespace FlaxEngine.GUI
             Control result = null;
             for (int i = 0; i < _children.Count; i++)
             {
-                var c = _children[i];
-                Vector2 location = point;
-                if (c.IsScrollable)
-                    location -= _viewOffset;
+                var child = _children[i];
+                Vector2 scrollOffsetLocation = point;
+                if (child.IsScrollable)
+                {
+                    scrollOffsetLocation -= _viewOffset;
+                }
 
                 // Check collision
-                if (isMouseOver(c, ref location))
+                if (child.ContainsPoint(ref scrollOffsetLocation))
                 {
-                    var cc = c as ContainerControl;
-                    if (cc != null)
+                    var containerControl = child as ContainerControl;
+                    var childAtRecursive = containerControl?.GetChildAtRecursive(scrollOffsetLocation - child.Location);
+                    if (childAtRecursive != null)
                     {
-                        var ccc = cc.GetChildAtRecursive(location - c.Location);
-                        if (ccc != null)
-                            c = ccc;
+                        child = childAtRecursive;
                     }
-                    result = c;
+                    result = child;
                     break;
                 }
             }
@@ -252,56 +272,57 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets rectangle in local control coordinates with area for controls (without scroll bars, docked controls, etc.)
+        ///     Gets rectangle in local control coordinates with area for controls (without scroll bars, docked controls, etc.)
         /// </summary>
         /// <returns>Rectangle in local control coordinates with area for controls (without scroll bars etc.)</returns>
         public Rectangle GetClientArea()
         {
-            Control c;
             Rectangle clientArea;
-            getDesireClientArea(out clientArea);
+            GetDesireClientArea(out clientArea);
 
-            for (int i = 0; i < _children.Count; i++)
+            foreach (var control in _children)
             {
-                c = _children[i];
-                if (c.Visible)
+                if (!control.Visible)
                 {
-                    switch (c.DockStyle)
+                    continue;
+                }
+                switch (control.DockStyle)
+                {
+                    case DockStyle.None:
+                        break;
+                    case DockStyle.Top:
                     {
-                        case DockStyle.None:
-                            break;
-                        case DockStyle.Top:
-                        {
-                            float height = Mathf.Min(c.Height, clientArea.Height);
-                            clientArea.Location.Y += height;
-                            clientArea.Size.Y -= height;
-                            break;
-                        }
-                        case DockStyle.Bottom:
-                        {
-                            float height = Mathf.Min(c.Height, clientArea.Height);
-                            clientArea.Size.Y -= height;
-                            break;
-                        }
-                        case DockStyle.Fill:
-                        {
-                            getDesireClientArea(out clientArea);
-                            break;
-                        }
-                        case DockStyle.Left:
-                        {
-                            float width = Mathf.Min(c.Width, clientArea.Width);
-                            clientArea.Location.X += width;
-                            clientArea.Size.X -= width;
-                            break;
-                        }
-                        case DockStyle.Right:
-                        {
-                            float width = Mathf.Min(c.Width, clientArea.Width);
-                            clientArea.Size.X -= width;
-                            break;
-                        }
+                        float height = Mathf.Min(control.Height, clientArea.Height);
+                        clientArea.Location.Y += height;
+                        clientArea.Size.Y -= height;
+                        break;
                     }
+                    case DockStyle.Bottom:
+                    {
+                        float height = Mathf.Min(control.Height, clientArea.Height);
+                        clientArea.Size.Y -= height;
+                        break;
+                    }
+                    case DockStyle.Fill:
+                    {
+                        GetDesireClientArea(out clientArea);
+                        break;
+                    }
+                    case DockStyle.Left:
+                    {
+                        float width = Mathf.Min(control.Width, clientArea.Width);
+                        clientArea.Location.X += width;
+                        clientArea.Size.X -= width;
+                        break;
+                    }
+                    case DockStyle.Right:
+                    {
+                        float width = Mathf.Min(control.Width, clientArea.Width);
+                        clientArea.Size.X -= width;
+                        break;
+                    }
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
 
@@ -309,7 +330,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Sort child controls list
+        ///     Sort child controls list
         /// </summary>
         public void SortChildren()
         {
@@ -318,7 +339,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Sort children using recursion
+        ///     Sort children using recursion
         /// </summary>
         public void SortChildrenRecursive()
         {
@@ -326,41 +347,38 @@ namespace FlaxEngine.GUI
 
             for (int i = 0; i < _children.Count; i++)
             {
-                var c = _children[i] as ContainerControl;
-                if (c != null)
-                    c.SortChildrenRecursive();
+                var child = _children[i] as ContainerControl;
+                child?.SortChildrenRecursive();
             }
         }
 
         #region Internal Events
 
         /// <summary>
-        /// Add child control to the container
-        /// Note: no friend class support in C# so this must be public function, Control class will use it.
+        ///     Add child control to the container
         /// </summary>
-        /// <param name="c">Control to add</param>
-        public virtual void addChild(Control c)
+        /// <param name="child">Control to add</param>
+        protected virtual void AddChildInternal(Control child)
         {
-            Debug.Assert(c != null, "Invalid control.");
+            Debug.Assert(child != null, "Invalid control.");
 
             // Add child
-            _children.Add(c);
+            _children.Add(child);
 
             // Arragne child controls
             PerformLayout();
         }
 
         /// <summary>
-        /// Remove child control from this container
-        /// Note: no friend class support in C# so this must be public function, Control class will use it.
+        ///     Remove child control from this container
         /// </summary>
-        /// <param name="c">Control to remove</param>
-        public virtual void removeChild(Control c)
+        /// <param name="child">Control to remove</param>
+        protected virtual void RemoveChildInternal(Control child)
         {
-            Debug.Assert(c != null, "Invalid control.");
+            Debug.Assert(child != null, "Invalid control.");
 
             // Remove child
-            _children.Remove(c);
+            _children.Remove(child);
 
             // Check if control isn't durig disposing state
             if (!IsDisposing)
@@ -371,46 +389,26 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// When child control gets resized
-        /// </summary>
-        /// <param name="c">Child that has been resized</param>
-        protected virtual void onChildResized(Control c)
-        {
-        }
-
-        /// <summary>
-        /// Check if mouse is over given control
-        /// </summary>
-        /// <param name="c">Control to check</param>
-        /// <param name="location">Mouse location</param>
-        /// <returns>True if mouse is over the control</returns>
-        protected virtual bool isMouseOver(Control c, ref Vector2 location)
-        {
-            return c.ContainsPoint(ref location);
-        }
-
-        /// <summary>
-        /// Get desire cleint area rectangle for all controls
+        ///     Get desire cleint area rectangle for all controls
         /// </summary>
         /// <param name="rect">Rectangle for controls</param>
-        protected virtual void getDesireClientArea(out Rectangle rect)
+        protected virtual void GetDesireClientArea(out Rectangle rect)
         {
             rect = new Rectangle(0, 0, Size);
         }
 
         /// <summary>
-        /// Update contain focus state and all it's children
+        ///     Update contain focus state and all it's children
         /// </summary>
-        protected void updateContainsFocus()
+        protected void UpdateContainsFocus()
         {
             // Get current state and update all children
             bool result = base.ContainsFocus;
 
             for (int i = 0; i < _children.Count; i++)
             {
-                var c = _children[i] as ContainerControl;
-                if (c != null)
-                    c.updateContainsFocus();
+                var child = _children[i] as ContainerControl;
+                child?.UpdateContainsFocus();
                 if (_children[i].ContainsFocus)
                 {
                     result = true;
@@ -425,138 +423,146 @@ namespace FlaxEngine.GUI
 
                 // Fire event
                 if (result)
+                {
                     OnStartContainsFocus();
+                }
                 else
+                {
                     OnEndContainsFocus();
-            }
-        }
-
-        /// <summary>
-        /// Arrange docked controls and return final client area for other controls
-        /// </summary>
-        /// <param name="clientArea">Result client area</param>
-        protected void arrangeDockedControls(ref Rectangle clientArea)
-        {
-            for (int i = 0; i < _children.Count; i++)
-            {
-                Control c = _children[i];
-                if (c.Visible)
-                {
-                    switch (c.DockStyle)
-                    {
-                        case DockStyle.None:
-                            break;
-
-                        case DockStyle.Bottom:
-                        {
-                            float height = c.Height;
-                            float width = clientArea.Width;
-                            c.SetSize(width, height);
-                            c.SetLocation(clientArea.Left, clientArea.Bottom - height);
-                            clientArea.Size.Y -= height;
-                            break;
-                        }
-                        case DockStyle.Fill:
-                        {
-                            c.Size = clientArea.Size;
-                            c.Location = clientArea.Location;
-                            getDesireClientArea(out clientArea);
-                            break;
-                        }
-                        case DockStyle.Left:
-                        {
-                            float width = c.Width;
-                            float height = clientArea.Height;
-                            c.SetSize(width, height);
-                            c.SetLocation(clientArea.Left, clientArea.Top);
-                            clientArea.Location.X += width;
-                            clientArea.Size.X -= width;
-                            break;
-                        }
-                        case DockStyle.Right:
-                        {
-                            float width = c.Width;
-                            float height = clientArea.Height;
-                            c.SetSize(width, height);
-                            c.SetLocation(clientArea.Right - width, clientArea.Top);
-                            clientArea.Size.X -= width;
-                            break;
-                        }
-                        case DockStyle.Top:
-                        {
-                            float height = c.Height;
-                            float width = clientArea.Width;
-                            c.SetSize(width, height);
-                            c.SetLocation(clientArea.Left, clientArea.Top);
-                            clientArea.Location.Y += height;
-                            clientArea.Size.Y -= height;
-                            break;
-                        }
-                    }
                 }
             }
         }
 
         /// <summary>
-        /// Use docked controls to calculate return final client area for other controls
+        ///     Arrange docked controls and return final client area for other controls
         /// </summary>
         /// <param name="clientArea">Result client area</param>
-        protected void calculateDockedControlsClientRect(out Rectangle clientArea)
+        protected void ArrangeDockedControls(ref Rectangle clientArea)
         {
-            getDesireClientArea(out clientArea);
-
-            for (int i = 0; i < _children.Count; i++)
+            foreach (var child in _children)
             {
-                Control c = _children[i];
-                if (c.Visible)
+                if (!child.Visible)
                 {
-                    switch (c.DockStyle)
+                    continue;
+                }
+                switch (child.DockStyle)
+                {
+                    case DockStyle.None:
+                        break;
+
+                    case DockStyle.Bottom:
                     {
-                        case DockStyle.None:
-                            break;
-                        case DockStyle.Top:
-                        {
-                            float height = c.Height;
-                            clientArea.Location.Y += height;
-                            clientArea.Size.Y -= height;
-                            break;
-                        }
-                        case DockStyle.Bottom:
-                        {
-                            clientArea.Size.Y -= c.Height;
-                            break;
-                        }
-                        case DockStyle.Fill:
-                        {
-                            getDesireClientArea(out clientArea);
-                            break;
-                        }
-                        case DockStyle.Left:
-                        {
-                            float width = c.Width;
-                            clientArea.Location.X += width;
-                            clientArea.Size.X -= width;
-                            break;
-                        }
-                        case DockStyle.Right:
-                        {
-                            clientArea.Size.X -= c.Width;
-                            break;
-                        }
+                        float height = child.Height;
+                        float width = clientArea.Width;
+                        child.SetSize(width, height);
+                        child.SetLocation(clientArea.Left, clientArea.Bottom - height);
+                        clientArea.Size.Y -= height;
+                        break;
                     }
+                    case DockStyle.Fill:
+                    {
+                        child.Size = clientArea.Size;
+                        child.Location = clientArea.Location;
+                        GetDesireClientArea(out clientArea);
+                        break;
+                    }
+                    case DockStyle.Left:
+                    {
+                        float width = child.Width;
+                        float height = clientArea.Height;
+                        child.SetSize(width, height);
+                        child.SetLocation(clientArea.Left, clientArea.Top);
+                        clientArea.Location.X += width;
+                        clientArea.Size.X -= width;
+                        break;
+                    }
+                    case DockStyle.Right:
+                    {
+                        float width = child.Width;
+                        float height = clientArea.Height;
+                        child.SetSize(width, height);
+                        child.SetLocation(clientArea.Right - width, clientArea.Top);
+                        clientArea.Size.X -= width;
+                        break;
+                    }
+                    case DockStyle.Top:
+                    {
+                        float height = child.Height;
+                        float width = clientArea.Width;
+                        child.SetSize(width, height);
+                        child.SetLocation(clientArea.Left, clientArea.Top);
+                        clientArea.Location.Y += height;
+                        clientArea.Size.Y -= height;
+                        break;
+                    }
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
         }
 
         /// <summary>
-        /// Perform layout for that container control
+        ///     Use docked controls to calculate return final client area for other controls
         /// </summary>
-        protected virtual void performLayoutSelf()
+        /// <param name="clientArea">Result client area</param>
+        protected void CalculateDockedControlsClientRect(out Rectangle clientArea)
+        {
+            GetDesireClientArea(out clientArea);
+
+            foreach (var child in _children)
+            {
+                if (!child.Visible)
+                {
+                    continue;
+                }
+                switch (child.DockStyle)
+                {
+                    case DockStyle.None:
+                        break;
+                    case DockStyle.Top:
+                    {
+                        float height = child.Height;
+                        clientArea.Location.Y += height;
+                        clientArea.Size.Y -= height;
+                        break;
+                    }
+                    case DockStyle.Bottom:
+                    {
+                        clientArea.Size.Y -= child.Height;
+                        break;
+                    }
+                    case DockStyle.Fill:
+                    {
+                        GetDesireClientArea(out clientArea);
+                        break;
+                    }
+                    case DockStyle.Left:
+                    {
+                        float width = child.Width;
+                        clientArea.Location.X += width;
+                        clientArea.Size.X -= width;
+                        break;
+                    }
+                    case DockStyle.Right:
+                    {
+                        clientArea.Size.X -= child.Width;
+                        break;
+                    }
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Perform layout for that container control
+        /// </summary>
+        protected virtual void PerformLayoutSelf()
         {
             // By default we arrange only docked controls
             Rectangle clientArea;
-            getDesireClientArea(out clientArea);
-            arrangeDockedControls(ref clientArea);
+            GetDesireClientArea(out clientArea);
+            ArrangeDockedControls(ref clientArea);
         }
 
         #endregion
@@ -570,7 +576,9 @@ namespace FlaxEngine.GUI
             {
                 // Steal focus from children
                 if (ContainsFocus)
+                {
                     Focus();
+                }
 
                 // Base
                 base.Dispose();
@@ -581,8 +589,11 @@ namespace FlaxEngine.GUI
         public override void OnDestroy()
         {
             // Pass event futher
+            // ReSharper disable once ForCanBeConvertedToForeach
             for (int i = 0; i < _children.Count; i++)
+            {
                 _children[i].OnDestroy();
+            }
         }
 
         /// <inheritdoc />
@@ -591,58 +602,56 @@ namespace FlaxEngine.GUI
             get
             {
                 if (base.IsMouseOver)
-                    return true;
-
-                for (int i = 0; i < _children.Count; i++)
                 {
-                    if (_children[i].IsMouseOver)
-                        return true;
+                    return true;
                 }
 
-                return false;
+                return _children.Any(child => child.IsMouseOver);
             }
         }
 
         /// <inheritdoc />
-        public override void Update(float dt)
+        public override void Update(float deltaTime)
         {
             // Base
-            base.Update(dt);
+            base.Update(deltaTime);
 
             // Update all enabled child controls
-            for (int i = 0; i < _children.Count; i++)
+            foreach (var child in _children)
             {
-                var c = _children[i];
-                if (c.Enabled)
-                    c.Update(dt);
+                if (child.Enabled)
+                {
+                    child.Update(deltaTime);
+                }
             }
         }
 
         /// <inheritdoc />
         public override void Draw()
         {
-            Vector2 transform = Render2D.Transform;
-
             // Base
             base.Draw();
 
+            Vector2 transform = Render2D.Transform;
+
             // Push clipping mask
             Rectangle clientArea;
-            getDesireClientArea(out clientArea);
+            GetDesireClientArea(out clientArea);
             Render2D.PushClip(clientArea);
 
             // Draw all visible child controls
-            for (int i = 0; i < _children.Count; i++)
+            foreach (Control child in _children)
             {
-                Control c = _children[i];
-                if (c.Visible)
+                if (child.Visible)
                 {
-                    Vector2 childTransform = transform + c.Location;
-                    if (c.IsScrollable)
+                    Vector2 childTransform = transform + child.Location;
+                    if (child.IsScrollable)
+                    {
                         childTransform += _viewOffset;
+                    }
 
                     Render2D.Transform = childTransform;
-                    c.Draw();
+                    child.Draw();
                 }
             }
 
@@ -658,25 +667,24 @@ namespace FlaxEngine.GUI
         {
             // Check if update is locked
             if (IsLayoutLocked)
+            {
                 return;
+            }
 
             IsLayoutLocked = true;
 
             // Update itself
-            performLayoutSelf();
+            PerformLayoutSelf();
 
             // Update children
             for (int i = 0; i < _children.Count; i++)
+            {
                 _children[i].PerformLayout();
+            }
 
             IsLayoutLocked = false;
         }
 
-        /// <inheritdoc />
-        public override bool ContainsFocus
-        {
-            get { return _containsFocus; }
-        }
 
         /// <inheritdoc />
         public override void OnMouseEnter(Vector2 location)
@@ -684,21 +692,20 @@ namespace FlaxEngine.GUI
             // Check all children collsiions with mouse and fire events for them
             for (int i = 0; i < _children.Count; i++)
             {
-                var c = _children[i];
-                if (c.Visible && c.Enabled)
+                var child = _children[i];
+                if (child.Visible && child.Enabled)
                 {
-                    var cLocation = location;
-                    if (c.IsScrollable)
-                        cLocation -= _viewOffset;
-
-                    // Check collision
-                    bool isOver = isMouseOver(c, ref cLocation);
+                    var scrollOffsetLocation = location;
+                    if (child.IsScrollable)
+                    {
+                        scrollOffsetLocation -= _viewOffset;
+                    }
 
                     // Fire event
-                    if (isOver)
+                    if (child.ContainsPoint(ref scrollOffsetLocation))
                     {
                         // Enter
-                        c.OnMouseEnter(cLocation - c.Location);
+                        child.OnMouseEnter(scrollOffsetLocation - child.Location);
                     }
                 }
             }
@@ -713,34 +720,33 @@ namespace FlaxEngine.GUI
             // Check all children collsiions with mouse and fire events for them
             for (int i = 0; i < _children.Count; i++)
             {
-                var c = _children[i];
-                if (c.Visible && c.Enabled)
+                var child = _children[i];
+                if (child.Visible && child.Enabled)
                 {
-                    var cLocation = location;
-                    if (c.IsScrollable)
-                        cLocation -= _viewOffset;
-
-                    // Check collision
-                    bool isOver = isMouseOver(c, ref cLocation);
+                    var scrollOffsetLocation = location;
+                    if (child.IsScrollable)
+                    {
+                        scrollOffsetLocation -= _viewOffset;
+                    }
 
                     // Fire events
-                    if (isOver || c.HasMouseCapture)
+                    if (child.ContainsPoint(ref scrollOffsetLocation) || child.HasMouseCapture)
                     {
-                        if (c.IsMouseOver)
+                        if (child.IsMouseOver)
                         {
                             // Move
-                            c.OnMouseMove(cLocation - c.Location);
+                            child.OnMouseMove(scrollOffsetLocation - child.Location);
                         }
                         else
                         {
                             // Enter
-                            c.OnMouseEnter(cLocation - c.Location);
+                            child.OnMouseEnter(scrollOffsetLocation - child.Location);
                         }
                     }
-                    else if (c.IsMouseOver)
+                    else if (child.IsMouseOver)
                     {
                         // Leave
-                        c.OnMouseLeave();
+                        child.OnMouseLeave();
                     }
                 }
             }
@@ -752,11 +758,11 @@ namespace FlaxEngine.GUI
             // Check all children collsiions with mouse and fire events for them
             for (int i = 0; i < _children.Count; i++)
             {
-                var c = _children[i];
-                if (c.Visible && c.Enabled && c.IsMouseOver)
+                var child = _children[i];
+                if (child.Visible && child.Enabled && child.IsMouseOver)
                 {
                     // Leave
-                    c.OnMouseLeave();
+                    child.OnMouseLeave();
                 }
             }
 
@@ -770,22 +776,23 @@ namespace FlaxEngine.GUI
             // Check all children collsiions with mouse and fire events for them
             for (int i = 0; i < _children.Count; i++)
             {
-                var c = _children[i];
-                if (c.Visible && c.Enabled)
+                var child = _children[i];
+                if (child.Visible && child.Enabled)
                 {
-                    var cLocation = location;
-                    if (c.IsScrollable)
-                        cLocation -= _viewOffset;
-
-                    // Check collision
-                    bool isOver = isMouseOver(c, ref cLocation);
+                    var scrollOffsetLocation = location;
+                    if (child.IsScrollable)
+                    {
+                        scrollOffsetLocation -= _viewOffset;
+                    }
 
                     // Fire events
-                    if (isOver)
+                    if (child.ContainsPoint(ref scrollOffsetLocation))
                     {
                         // Wheel
-                        if (c.OnMouseWheel(cLocation - c.Location, delta))
+                        if (child.OnMouseWheel(scrollOffsetLocation - child.Location, delta))
+                        {
                             return true;
+                        }
                     }
                 }
             }
@@ -800,27 +807,28 @@ namespace FlaxEngine.GUI
             // Check all children collsiions with mouse and fire events for them
             for (int i = 0; i < _children.Count; i++)
             {
-                var c = _children[i];
-                if (c.Visible && c.Enabled)
+                var child = _children[i];
+                if (child.Visible && child.Enabled)
                 {
-                    var cLocation = location;
-                    if (c.IsScrollable)
-                        cLocation -= _viewOffset;
-
-                    // Check collision
-                    bool isOver = isMouseOver(c, ref cLocation);
+                    var scrollOffsetLocation = location;
+                    if (child.IsScrollable)
+                    {
+                        scrollOffsetLocation -= _viewOffset;
+                    }
 
                     // Fire event
-                    if (isOver)
+                    if (child.ContainsPoint(ref scrollOffsetLocation))
                     {
                         // Send event futher
-                        if (c.OnMouseDown(buttons, cLocation - c.Location))
+                        if (child.OnMouseDown(buttons, scrollOffsetLocation - child.Location))
+                        {
                             return true;
+                        }
                     }
-                    else if (c.HasMouseCapture)
+                    else if (child.HasMouseCapture)
                     {
                         // Cancel forced user focus
-                        c.OnLostMouseCapture();
+                        child.OnLostMouseCapture();
                     }
                 }
             }
@@ -835,40 +843,45 @@ namespace FlaxEngine.GUI
             // Check all children collsiions with mouse and fire events for them
             for (int i = 0; i < _children.Count; i++)
             {
-                var c = _children[i];
-                if (c.Visible && c.Enabled)
+                var child = _children[i];
+                if (child.Visible && child.Enabled)
                 {
-                    var cLocation = location;
-                    if (c.IsScrollable)
-                        cLocation -= _viewOffset;
+                    var scrollOffsetLocation = location;
+                    if (child.IsScrollable)
+                    {
+                        scrollOffsetLocation -= _viewOffset;
+                    }
 
                     // Fire event
-                    if (c.HasMouseCapture)
+                    if (child.HasMouseCapture)
                     {
                         // Send event futher
-                        if (c.OnMouseUp(buttons, cLocation - c.Location))
+                        if (child.OnMouseUp(buttons, scrollOffsetLocation - child.Location))
+                        {
                             return true;
+                        }
                     }
                 }
             }
             for (int i = 0; i < _children.Count; i++)
             {
-                var c = _children[i];
-                if (c.Visible && c.Enabled)
+                var child = _children[i];
+                if (child.Visible && child.Enabled)
                 {
-                    var cLocation = location;
-                    if (c.IsScrollable)
-                        cLocation -= _viewOffset;
-
-                    // Check collision
-                    bool isOver = isMouseOver(c, ref cLocation);
+                    var scrollOffsetLocation = location;
+                    if (child.IsScrollable)
+                    {
+                        scrollOffsetLocation -= _viewOffset;
+                    }
 
                     // Fire event
-                    if (isOver)
+                    if (child.ContainsPoint(ref scrollOffsetLocation))
                     {
                         // Send event futher
-                        if (c.OnMouseUp(buttons, cLocation - c.Location))
+                        if (child.OnMouseUp(buttons, scrollOffsetLocation - child.Location))
+                        {
                             return true;
+                        }
                     }
                 }
             }
@@ -883,22 +896,24 @@ namespace FlaxEngine.GUI
             // Check all children collsiions with mouse and fire events for them
             for (int i = 0; i < _children.Count; i++)
             {
-                var c = _children[i];
-                if (c.Visible && c.Enabled)
+                var child = _children[i];
+                if (child.Visible && child.Enabled)
                 {
-                    var cLocation = location;
-                    if (c.IsScrollable)
-                        cLocation -= _viewOffset;
+                    var scrollOffsetLocation = location;
+                    if (child.IsScrollable)
+                    {
+                        scrollOffsetLocation -= _viewOffset;
+                    }
 
-                    // Check collision
-                    bool isOver = isMouseOver(c, ref cLocation);
 
                     // Fire event
-                    if (isOver)
+                    if (child.ContainsPoint(ref scrollOffsetLocation))
                     {
                         // Send event futher
-                        if (c.OnMouseDoubleClick(buttons, cLocation - c.Location))
+                        if (child.OnMouseDoubleClick(buttons, scrollOffsetLocation - child.Location))
+                        {
                             return true;
+                        }
                     }
                 }
             }
@@ -912,10 +927,10 @@ namespace FlaxEngine.GUI
         {
             for (int i = 0; i < _children.Count; i++)
             {
-                var c = _children[i];
-                if (c.Enabled && (c.ContainsFocus || c.HasMouseCapture))
+                var child = _children[i];
+                if (child.Enabled && (child.ContainsFocus || child.HasMouseCapture))
                 {
-                    return c.OnKeyDown(key);
+                    return child.OnKeyDown(key);
                 }
             }
             return false;
@@ -926,10 +941,10 @@ namespace FlaxEngine.GUI
         {
             for (int i = 0; i < _children.Count; i++)
             {
-                var c = _children[i];
-                if (c.Enabled && (c.ContainsFocus || c.HasMouseCapture))
+                var child = _children[i];
+                if (child.Enabled && (child.ContainsFocus || child.HasMouseCapture))
                 {
-                    c.OnKeyUp(key);
+                    child.OnKeyUp(key);
                     break;
                 }
             }
@@ -980,7 +995,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void SetSizeInternal(Vector2 size)
         {
-            // Lock updates to revent form additional layout calculations
+            // Lock updates to prevent additional layout calculations
             bool wasLocked = IsLayoutLocked;
             IsLayoutLocked = true;
 
@@ -992,7 +1007,9 @@ namespace FlaxEngine.GUI
 
             // Fire event
             for (int i = 0; i < _children.Count; i++)
+            {
                 _children[i].OnParentResized(ref prevSize);
+            }
 
             // Restore state
             IsLayoutLocked = wasLocked;

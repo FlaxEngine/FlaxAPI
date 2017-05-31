@@ -9,17 +9,17 @@ namespace FlaxEngine
     {
         public void LogException(Exception exception, Object context)
         {
-            Internal_LogException(exception, context != null ? context.unmanagedPtr : IntPtr.Zero);
+            Internal_LogException(exception, context?.unmanagedPtr ?? IntPtr.Zero);
         }
 
         public void Log(LogType logType, Object context, string message)
         {
 #if DEBUG
-            string stackTrace = Environment.StackTrace;
+            string stackTrace = string.Empty;// Environment.StackTrace;
 #else
             string stackTrace = string.Empty;
 #endif
-            Internal_Log(logType, message, context != null ? context.unmanagedPtr : IntPtr.Zero, stackTrace);
+            Internal_Log(logType, message, context?.unmanagedPtr ?? IntPtr.Zero, stackTrace);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]

@@ -728,14 +728,14 @@ namespace FlaxEngine.GUI
         #region Control
 
         /// <inheritdoc />
-        public override void Update(float dt)
+        public override void Update(float deltaTime)
         {
-            _animateTime += dt;
+            _animateTime += deltaTime;
 
             // Animate view offset
-            _viewOffset = Vector2.Lerp(_viewOffset, _targetViewOffset, dt * 20.0f);
+            _viewOffset = Vector2.Lerp(_viewOffset, _targetViewOffset, deltaTime * 20.0f);
 
-            base.Update(dt);
+            base.Update(deltaTime);
         }
 
         /// <inheritdoc />

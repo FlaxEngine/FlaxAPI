@@ -1,6 +1,7 @@
 // Flax Engine scripting API
 
 using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine

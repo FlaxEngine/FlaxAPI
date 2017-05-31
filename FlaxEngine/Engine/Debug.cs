@@ -30,6 +30,7 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         [Conditional("FLAX_ASSERTIONS")]
+        [Obsolete("Please use verbose logging for all exceptions")]
         public static void Assert(bool condition)
         {
             if (!condition)
