@@ -26,7 +26,7 @@ namespace FlaxEditor.Utilities
         {
             if (HasData)
                 throw new InvalidOperationException("DuplicateScenes has already gathered scene data.");
-
+            /*
             LOG(Info, "Collecting scene data");
 
             // Note: old scene is that before play mode and new scene is that during play mode
@@ -80,7 +80,7 @@ namespace FlaxEditor.Utilities
                 duplicatedScenes[i].OnBeginPlay();
             }
 
-            LOG(Info, "Gathered {(scenesCount)} scene(s)!");
+            LOG(Info, "Gathered {(scenesCount)} scene(s)!");*/
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace FlaxEditor.Utilities
         {
             if (!HasData)
                 throw new InvalidOperationException("DuplicateScenes has not gathered scene data yet.");
-
+            /*
             LOG(Info, "Restoring scene data");
 
             var duplicatedScenes = SceneManager.Scenes;
@@ -111,7 +111,7 @@ namespace FlaxEditor.Utilities
             }
             _scenes.Clear();
 
-            LOG(Info, "Restored previous scenes");
+            LOG(Info, "Restored previous scenes");*/
         }
     }
 }

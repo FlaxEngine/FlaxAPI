@@ -16,12 +16,12 @@ namespace FlaxEngine
 {
 
 	/// <summary>
-	/// Environment Probe can capture space around the objects to provide reflections
+	/// Environment Probe can capture space around the objects to provide reflections.
 	/// </summary>
 	public sealed partial class EnvironmentProbe : Actor
 	{
 		/// <summary>
-		/// Gets or sets value indicating if visual element affects the world
+		/// Gets or sets value indicating if visual element affects the world.
 		/// </summary>
 		[UnmanagedCall]
 		public bool AffectsWorld
@@ -35,7 +35,7 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets probe brightness parameter
+		/// Gets or sets probe brightness parameter.
 		/// </summary>
 		[UnmanagedCall]
 		public float Brightness
@@ -49,7 +49,7 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// 
+		/// Gets or sets probe radius.
 		/// </summary>
 		[UnmanagedCall]
 		public float Radius
