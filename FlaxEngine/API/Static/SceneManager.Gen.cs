@@ -259,7 +259,7 @@ namespace FlaxEngine
 		/// <summary>
 		/// Loads scene from the asset.
 		/// </summary>
-		/// <param name="sceneId">he scene ID to load.</param>
+		/// <param name="sceneId">The scene ID to load.</param>
 		/// <returns>True if action fails, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
@@ -271,6 +271,25 @@ namespace FlaxEngine
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
 			return Internal_LoadScene(ref sceneId);
+#endif
+		}
+
+		/// <summary>
+		/// Loads scene from the bytes.
+		/// </summary>
+		/// <param name="sceneData">The scene data to load.</param>
+		/// <param name="autoInitialize">Enable/disable auto scene initialization, otherwise user should do it (in that situation scene is registered but not in a gameplay, call OnBeginPlay to start logic for it; it will deserialize scripts and references to the other objects).</param>
+		/// <returns>Loaded scene object, otherwise null if cannot load data (then see log for more information).</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static Scene LoadSceneFromBytes(byte[] sceneData, bool autoInitialize = true) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_LoadSceneFromBytes(sceneData, autoInitialize);
 #endif
 		}
 
@@ -411,6 +430,8 @@ namespace FlaxEngine
 		internal static extern void Internal_SaveAllScenesAsync();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_LoadScene(ref Guid sceneId);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern Scene Internal_LoadSceneFromBytes(byte[] sceneData, bool autoInitialize);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_LoadSceneAsync(ref Guid sceneId);
 		[MethodImpl(MethodImplOptions.InternalCall)]
