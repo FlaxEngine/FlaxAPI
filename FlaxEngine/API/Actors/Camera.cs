@@ -10,9 +10,6 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// TODO: Add comment
-	/// </summary>
 	public sealed partial class Camera
 	{
         // TODO: getMainCamera

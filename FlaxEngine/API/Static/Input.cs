@@ -11,9 +11,6 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-    /// <summary>
-    /// The interface to get input information from Flax.
-    /// </summary>
     public static partial class Input
     {
         public static event Action<KeyCode> OnKeyPressed;

@@ -39,11 +39,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Static\Editor.cs" />
+    <Compile Include="API\Static\Editor.Gen.cs" />
+    <Compile Include="Editor.cs" />
     <Compile Include="History\HistoryStack.cs" />
     <Compile Include="History\IHistoryAction.cs" />
     <Compile Include="History\UndoActionObject.cs" />
+    <Compile Include="Modules\ContentDatabaseModule.cs" />
+    <Compile Include="Modules\ContentEditingModule.cs" />
+    <Compile Include="Modules\EditorModule.cs" />
+    <Compile Include="Modules\ProgressReportingModule.cs" />
+    <Compile Include="Modules\SceneModule.cs" />
+    <Compile Include="Modules\ScriptingModule.cs" />
+    <Compile Include="Modules\SimulationModule.cs" />
+    <Compile Include="Modules\ThumbnailsModule.cs" />
+    <Compile Include="Modules\UIModule.cs" />
+    <Compile Include="Modules\WindowsModule.cs" />
     <Compile Include="PreviewsCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="States\BuildingLightingState.cs" />
+    <Compile Include="States\ChangingScenesState.cs" />
+    <Compile Include="States\ClosingState.cs" />
+    <Compile Include="States\EditingSceneState.cs" />
+    <Compile Include="States\EditorState.cs" />
+    <Compile Include="States\EditorStateMachine.cs" />
+    <Compile Include="States\LoadingState.cs" />
+    <Compile Include="States\PlayingState.cs" />
+    <Compile Include="States\ReloadingScriptsState.cs" />
+    <Compile Include="Utilities\DuplicateScenes.cs" />
     <Compile Include="Windows\TestWindow.cs" />
     <Compile Include="Undo\Undo.cs" />
     <Compile Include="Utilities\Extenstions.cs" />
@@ -55,6 +78,10 @@
       <Project>{7a23adf2-cab0-4ed9-9edc-d9a2b9e51b21}</Project>
       <Name>FlaxEngine</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\" />
+    <Folder Include="Viewport\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

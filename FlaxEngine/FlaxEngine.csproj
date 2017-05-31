@@ -71,6 +71,8 @@
     <Compile Include="API\Actors\PointLight.Gen.cs">
       <DependentUpon>PointLight.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Actors\Scene.cs" />
+    <Compile Include="API\Actors\Scene.Gen.cs" />
     <Compile Include="API\Actors\Sky.cs" />
     <Compile Include="API\Actors\Sky.Gen.cs">
       <DependentUpon>Sky.cs</DependentUpon>
@@ -115,11 +117,14 @@
     <Compile Include="API\Static\Render2D.Gen.cs">
       <DependentUpon>Render2D.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Static\SceneManager.cs" />
+    <Compile Include="API\Static\SceneManager.Gen.cs" />
     <Compile Include="API\Static\Time.cs" />
     <Compile Include="API\Static\Time.Gen.cs">
       <DependentUpon>Time.cs</DependentUpon>
     </Compile>
     <Compile Include="AssetTypes\IESProfile.cs" />
+    <Compile Include="Attributes\MemberCollectionAttribute.cs" />
     <Compile Include="Enums\UI.cs" />
     <Compile Include="Attributes\Editor\CustomEditorAttribute.cs" />
     <Compile Include="Attributes\Editor\EditorIndexAttribute.cs" />
@@ -217,6 +222,8 @@
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Math\Vector4.cs" />
     <Compile Include="Utilities\Extenstions.cs" />
+    <Compile Include="Utilities\State.cs" />
+    <Compile Include="Utilities\StateMachine.cs" />
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
   <ItemGroup>

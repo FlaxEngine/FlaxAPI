@@ -10,9 +10,6 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Environment Probe can capture space around the objects to provide reflections
-	/// </summary>
 	public sealed partial class EnvironmentProbe
 	{
         // TODO: HasProbe, IsUsingCustomProbe, SetCustomprobe

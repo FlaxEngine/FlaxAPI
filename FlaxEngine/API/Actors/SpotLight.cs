@@ -10,9 +10,6 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Spot Light can emmit light from point in space in a given direction
-	/// </summary>
 	public sealed partial class SpotLight
 	{
         // TODO: expose ShadowsSharpness

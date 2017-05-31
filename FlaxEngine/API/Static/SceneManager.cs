@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-	public partial class FontAsset
+	public static partial class SceneManager
 	{
 	}
 }

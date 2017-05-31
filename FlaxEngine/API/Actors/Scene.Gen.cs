@@ -16,66 +16,75 @@ namespace FlaxEngine
 {
 
 	/// <summary>
-	/// Environment Probe can capture space around the objects to provide reflections.
+	/// Scene root actor object
 	/// </summary>
-	public sealed partial class EnvironmentProbe : Actor
+	public sealed partial class Scene : Actor
 	{
 		/// <summary>
-		/// Gets or sets value indicating if visual element affects the world.
+		/// Gets path to the scene file. It's valid only in Editor.
 		/// </summary>
 		[UnmanagedCall]
-		public bool AffectsWorld
+		public string Path
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetAffectsWorld(unmanagedPtr); }
-			set { Internal_SetAffectsWorld(unmanagedPtr, value); }
+			get { return Internal_GetPath(unmanagedPtr); }
 #endif
 		}
 
 		/// <summary>
-		/// Gets or sets probe brightness parameter.
+		/// Gets filename of the scene file. It's valid only in Editor.
 		/// </summary>
 		[UnmanagedCall]
-		public float Brightness
+		public string Filename
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetBrightness(unmanagedPtr); }
-			set { Internal_SetBrightness(unmanagedPtr, value); }
+			get { return Internal_GetFilename(unmanagedPtr); }
 #endif
 		}
 
 		/// <summary>
-		/// Gets or sets probe radius.
+		/// Gets path to the scene data folder. It's valid only in Editor.
 		/// </summary>
 		[UnmanagedCall]
-		public float Radius
+		public string DataFolderPath
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetRadius(unmanagedPtr); }
-			set { Internal_SetRadius(unmanagedPtr, value); }
+			get { return Internal_GetDataFolderPath(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
+		/// Unloads given scene. Done in sync, in the end of the next engine tick.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static void Unload() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_Unload();
 #endif
 		}
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetAffectsWorld(IntPtr obj);
+		internal static extern string Internal_GetPath(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetAffectsWorld(IntPtr obj, bool val);
+		internal static extern string Internal_GetFilename(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetBrightness(IntPtr obj);
+		internal static extern string Internal_GetDataFolderPath(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetBrightness(IntPtr obj, float val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetRadius(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetRadius(IntPtr obj, float val);
+		internal static extern void Internal_Unload();
 #endif
 #endregion
 	}
