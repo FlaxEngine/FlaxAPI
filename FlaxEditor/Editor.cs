@@ -1,5 +1,6 @@
 ﻿// Flax Engine scripting API
 
+using System;
 using System.Collections.Generic;
 using FlaxEditor.Modules;
 using FlaxEditor.States;
@@ -118,10 +119,17 @@ namespace FlaxEditor
 
         internal void Update()
         {
-            // Update modules
-            for (int i = 0; i < _modules.Count; i++)
+            try
             {
-                _modules[i].OnUpdate();
+                // Update modules
+                for (int i = 0; i < _modules.Count; i++)
+                {
+                    _modules[i].OnUpdate();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
             }
         }
 
