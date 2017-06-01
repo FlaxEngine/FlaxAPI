@@ -3,13 +3,11 @@
 using System.Collections.Generic;
 using FlaxEditor.Modules;
 using FlaxEditor.States;
+using FlaxEngine;
 
 namespace FlaxEditor
 {
-    /// <summary>
-    /// Editor root object.
-    /// </summary>
-    public sealed class Editor
+    public sealed partial class Editor
     {
         private readonly List<EditorModule> _modules = new List<EditorModule>(16);
         private bool _isAfterInit;
@@ -66,6 +64,8 @@ namespace FlaxEditor
 
         internal Editor()
         {
+            Debug.Log("Setting up C# Editor...");
+
             // Create common editor modules
             Windows = new WindowsModule(this);
             UI = new UIModule(this);
@@ -83,6 +83,8 @@ namespace FlaxEditor
 
         internal void RegisterModule(EditorModule module)
         {
+            Debug.Log("Register Editor module " + module);
+
             _modules.Add(module);
             if (_isAfterInit)
                 _modules.Sort((a, b) => a.InitOrder - b.InitOrder);
@@ -90,6 +92,8 @@ namespace FlaxEditor
 
         internal void Init()
         {
+            Debug.Log("Editor init");
+
             // Note: we don't sort modules before Init (optimized)
             _modules.Sort((a, b) => a.InitOrder - b.InitOrder);
             _isAfterInit = true;
@@ -103,6 +107,8 @@ namespace FlaxEditor
 
         internal void EndInit()
         {
+            Debug.Log("Editor end init");
+
             // Initialize modules (from front to back)
             for (int i = 0; i < _modules.Count; i++)
             {
@@ -121,6 +127,8 @@ namespace FlaxEditor
 
         internal void Exit()
         {
+            Debug.Log("Editor exit");
+
             // Release modules (from back to front)
             for (int i = _modules.Count - 1; i >= 0; i--)
             {

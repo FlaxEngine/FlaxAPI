@@ -12,13 +12,13 @@
 using System;
 using System.Runtime.CompilerServices;
 
-namespace FlaxEngine
+namespace FlaxEditor
 {
 
 	/// <summary>
-	/// The main editor engine class.
+	/// The main managed editor class. Editor root object.
 	/// </summary>
-	public static partial class Editor
+	public partial class Editor
 	{
 		/// <summary>
 		/// Closes editor splash screen popup window.

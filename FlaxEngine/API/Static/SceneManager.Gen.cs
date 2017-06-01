@@ -207,6 +207,24 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Saves scene to the bytes array.
+		/// </summary>
+		/// <param name="scene">The scene to serialize.</param>
+		/// <returns>Bytes array with the serialized scene or null if operation failed (see log for error information).</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static byte[] SaveSceneToBytes(Scene scene) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_SaveSceneToBytes(Object.GetUnmanagedPtr(scene));
+#endif
+		}
+
+		/// <summary>
 		/// Saves scene to the asset. Done in the background.
 		/// </summary>
 		/// <param name="scene">The scene to serialize.</param>
@@ -275,7 +293,7 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Loads scene from the bytes.
+		/// Loads scene from the bytes array.
 		/// </summary>
 		/// <param name="sceneData">The scene data to load.</param>
 		/// <param name="autoInitialize">Enable/disable auto scene initialization, otherwise user should do it (in that situation scene is registered but not in a gameplay, call OnBeginPlay to start logic for it; it will deserialize scripts and references to the other objects).</param>
@@ -422,6 +440,8 @@ namespace FlaxEngine
 		internal static extern void Internal_DeleteActor(IntPtr actor);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_SaveScene(IntPtr scene);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern byte[] Internal_SaveSceneToBytes(IntPtr scene);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SaveSceneAsync(IntPtr scene);
 		[MethodImpl(MethodImplOptions.InternalCall)]
