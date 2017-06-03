@@ -66,7 +66,9 @@ namespace FlaxEngine.Utilities
         /// <param name="state">The state.</param>
         public virtual void AddState(State state)
         {
-            Debug.Assert(states.Contains(state) && state.owner == null, "Cannot add already registered state.");
+            if(state.owner == this)
+                throw new InvalidOperationException("Cannot add already registered state.");
+
             states.Add(state);
             state.owner = this;
         }
@@ -77,7 +79,9 @@ namespace FlaxEngine.Utilities
         /// <param name="state">The state.</param>
         public virtual void RemoveState(State state)
         {
-            Debug.Assert(!states.Contains(state) && state.owner == this, "Cannot remove unregistered state.");
+            if (state.owner == null)
+                throw new InvalidOperationException("Cannot remove unregistered state.");
+
             states.Remove(state);
             state.owner = null;
         }
