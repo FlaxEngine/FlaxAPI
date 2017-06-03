@@ -93,6 +93,7 @@ namespace FlaxEditor
 
         internal void Init()
         {
+            EnsureState<LoadingState>();
             Debug.Log("Editor init");
 
             // Note: we don't sort modules before Init (optimized)
@@ -108,7 +109,11 @@ namespace FlaxEditor
 
         internal void EndInit()
         {
+            EnsureState<LoadingState>();
             Debug.Log("Editor end init");
+
+            // Change state
+            StateMachine.GoToState<EditingSceneState>();
 
             // Initialize modules (from front to back)
             for (int i = 0; i < _modules.Count; i++)
@@ -142,6 +147,27 @@ namespace FlaxEditor
             {
                 _modules[i].OnExit();
             }
+        }
+
+        /// <summary>
+        /// Ensure that editor is in a given state, otherwise throws <see cref="InvalidStateException"/>.
+        /// </summary>
+        /// <param name="state">Valid state to check.</param>
+        /// <exception cref="InvalidStateException"></exception>
+        public void EnsureState(EditorState state)
+        {
+            if (StateMachine.CurrentState != state)
+                throw new InvalidStateException($"Operation cannot be performed in the current editor state. Current: {StateMachine.CurrentState}, Expected: {state}");
+        }
+
+        /// <summary>
+        /// Ensure that editor is in a state of given type, otherwise throws <see cref="InvalidStateException"/>.
+        /// </summary>
+        /// <typeparam name="TStateType">The type of the state type.</typeparam>
+        public void EnsureState<TStateType>()
+        {
+            var state = StateMachine.GetState<TStateType>() as EditorState;
+            EnsureState(state);
         }
     }
 }

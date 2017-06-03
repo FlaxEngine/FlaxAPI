@@ -22,15 +22,24 @@ namespace FlaxEngine.Utilities
         public State CurrentState => currentState;
 
         /// <summary>
+        /// Gets state of given type.
+        /// </summary>
+        /// <typeparam name="TStateType">The type of the state.</typeparam>
+        public State GetState<TStateType>()
+        {
+            return states.Find(x => x.GetType().IsSubclassOf(typeof(TStateType)));
+        }
+
+        /// <summary>
         /// Goes to the state.
         /// </summary>
-        /// <typeparam name="StateType">The type of the state.</typeparam>
+        /// <typeparam name="TStateType">The type of the state.</typeparam>
         /// <exception cref="InvalidOperationException">Cannot find state of given type.</exception>
-        public void GoToState<StateType>()
+        public void GoToState<TStateType>()
         {
-            var state = states.Find(x => x.GetType().IsSubclassOf(typeof(StateType)));
+            var state = states.Find(x => x.GetType().IsSubclassOf(typeof(TStateType)));
             if(state == null)
-                throw new InvalidOperationException($"Cannot find state {typeof(StateType)}.");
+                throw new InvalidOperationException($"Cannot find state {typeof(TStateType)}.");
             GoToState(state);
         }
 

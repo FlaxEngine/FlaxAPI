@@ -63,6 +63,7 @@
     <Compile Include="States\EditingSceneState.cs" />
     <Compile Include="States\EditorState.cs" />
     <Compile Include="States\EditorStateMachine.cs" />
+    <Compile Include="States\InvalidStateException.cs" />
     <Compile Include="States\LoadingState.cs" />
     <Compile Include="States\PlayingState.cs" />
     <Compile Include="States\ReloadingScriptsState.cs" />

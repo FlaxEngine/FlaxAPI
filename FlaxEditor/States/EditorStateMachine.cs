@@ -85,8 +85,6 @@ namespace FlaxEditor.States
 
         internal void Update()
         {
-            //Debug.Assert(IsInMainThread());// TODO: test main thread
-
             // Changing states
             while (_pendingStates.Count > 0)
             {
