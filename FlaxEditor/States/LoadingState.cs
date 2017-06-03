@@ -1,6 +1,7 @@
 // Flax Engine scripting API
 
 using System;
+using FlaxEditor.Scripting;
 
 namespace FlaxEditor.States
 {
@@ -31,16 +32,13 @@ namespace FlaxEditor.States
         /// </summary>
         internal void StartInitEnding()
         {
-            // TODO: finish this
-            throw new NotImplementedException();
-            /*auto builder = ScriptsBuilder::Instance();
-            builder->OnCompilationEnd.Bind<LoadingState, &LoadingState::onCompilationEnd>(this);
+            //ScriptsBuilder.OnCompilationEnd += onCompilationEnd;// TODO: expose event
 
             // Check source code has been cmpilled on start
-            if (builder->GetCompilationsCount() > 0)
+            if (ScriptsBuilder.CompilationsCount > 0)
             {
-                // Check compilation has been ended
-                if (builder->IsReady())
+                // Check if compilation has been ended
+                if (ScriptsBuilder.IsReady)
                 {
                     // We assume source code has been compilled before Editor init
                     onCompilationEnd(true);
@@ -48,22 +46,20 @@ namespace FlaxEditor.States
             }
             else
             {
-                // Compile scripts before loading scene
-                builder->Compile();
+                // Compile scripts before loading any scenes
+                ScriptsBuilder.Compile();
 
                 // Note:
                 // Here we wait for scripts compilation end
                 // Later we want to load scripts
                 // Finally enter normal state and load last opened scene
-            }*/
+            }
         }
 
         private void onCompilationEnd(bool success)
         {
-            // TODO: finish this
-            throw new NotImplementedException();
             // Check if compilation success
-            /*if (success)
+            if (success)
             {
                 // Request loading scripts (we need to do this on main thread)
                 _loadScritpsFlag = true;
@@ -71,8 +67,8 @@ namespace FlaxEditor.States
             else
             {
                 // Compilation failed so just end init
-                CEditor->OnEndInit();
-            }*/
+                Editor.EndInit();
+            }
         }
 
         /// <inheritdoc />
@@ -83,22 +79,15 @@ namespace FlaxEditor.States
             {
                 _loadScritpsFlag = false;
 
-                // TODO: finish this
-                throw new NotImplementedException();
-                // Load scripts (we need use main thread for that action)
-                //bool result = ScriptingEngine::Instance()->Load();
-
                 // End init
-                //CEditor->OnEndInit();
+                Editor.EndInit();
             }
         }
 
         /// <inheritdoc />
         public override void OnExit()
         {
-            // TODO: finish this
-            throw new NotImplementedException();
-            //ScriptsBuilder::Instance()->OnCompilationEnd.Unbind<LoadingState, &LoadingState::onCompilationEnd>(this);
+            //ScriptsBuilder.OnCompilationEnd -= onCompilationEnd;// TODO: expose event
         }
     }
 }

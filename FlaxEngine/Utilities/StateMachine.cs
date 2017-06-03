@@ -27,7 +27,7 @@ namespace FlaxEngine.Utilities
         /// <typeparam name="TStateType">The type of the state.</typeparam>
         public State GetState<TStateType>()
         {
-            return states.Find(x => x.GetType().IsSubclassOf(typeof(TStateType)));
+            return states.Find(x => x.GetType().IsAssignableFrom(typeof(TStateType)));
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace FlaxEngine.Utilities
         /// <exception cref="InvalidOperationException">Cannot find state of given type.</exception>
         public void GoToState<TStateType>()
         {
-            var state = states.Find(x => x.GetType().IsSubclassOf(typeof(TStateType)));
+            var state = states.Find(x => x.GetType().IsAssignableFrom(typeof(TStateType)));
             if(state == null)
                 throw new InvalidOperationException($"Cannot find state {typeof(TStateType)}.");
             GoToState(state);
