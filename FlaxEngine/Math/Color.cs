@@ -28,6 +28,13 @@ namespace FlaxEngine
         /// </summary>
         public float A;
 
+        /// <summary>
+        /// Gets or sets the component at the specified index.
+        /// </summary>
+        /// <value>The value of the red, green, blue, and alpha components, depending on the index.</value>
+        /// <param name="index">The index of the component to access. Use 0 for the alpha component, 1 for the red component, 2 for the green component, and 3 for the blue component.</param>
+        /// <returns>The value of the component at the specified index.</returns>
+        /// <exception cref="System.IndexOutOfRangeException">Thrown when the <paramref name="index"/> is out of the range [0, 3].</exception>
         public float this[int index]
         {
             get
@@ -51,7 +58,7 @@ namespace FlaxEngine
                         return A;
                     }
                 }
-                throw new IndexOutOfRangeException("Invalid Vector3 index!");
+                throw new IndexOutOfRangeException("Invalid Color index!");
             }
             set
             {
@@ -79,7 +86,7 @@ namespace FlaxEngine
                     }
                     default:
                     {
-                        throw new IndexOutOfRangeException("Invalid Vector3 index!");
+                        throw new IndexOutOfRangeException("Invalid Color index!");
                     }
                 }
             }
@@ -88,18 +95,12 @@ namespace FlaxEngine
         /// <summary>
         /// Returns the minimum color component value: Min(r,g,b).
         /// </summary>
-        public float MinColorComponent
-        {
-            get { return Mathf.Min(Mathf.Min(R, G), B); }
-        }
+        public float MinColorComponent => Mathf.Min(Mathf.Min(R, G), B);
 
         /// <summary>
         /// Returns the maximum color component value: Max(r,g,b).
         /// </summary>
-        public float MaxColorComponent
-        {
-            get { return Mathf.Max(Mathf.Max(R, G), B); }
-        }
+        public float MaxColorComponent => Mathf.Max(Mathf.Max(R, G), B);
 
         /// <summary>
         /// Constructs a new Color with given r,g,b,a component.
@@ -157,6 +158,25 @@ namespace FlaxEngine
             A = 1f;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Color"/> struct.
+        /// </summary>
+        /// <param name="values">The values to assign to the red, green, blue, and alpha components of the color. This must be an array with four elements.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="values"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="values"/> contains more or less than four elements.</exception>
+        public Color(float[] values)
+        {
+            if (values == null)
+                throw new ArgumentNullException(nameof(values));
+            if (values.Length != 4)
+                throw new ArgumentOutOfRangeException(nameof(values), "There must be four and only four input values for Color.");
+
+            R = values[0];
+            G = values[1];
+            B = values[2];
+            A = values[3];
+        }
+
         internal Color AlphaMultiplied(float multiplier)
         {
             return new Color(R, G, B, A * multiplier);
@@ -171,6 +191,13 @@ namespace FlaxEngine
             return R.Equals(color.R) && G.Equals(color.G) && B.Equals(color.B) && A.Equals(color.A);
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="Color"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="Color"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="Color"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
         public bool Equals(Color other)
         {
             return R.Equals(other.R) && G.Equals(other.G) && B.Equals(other.B) && A.Equals(other.A);
@@ -207,6 +234,101 @@ namespace FlaxEngine
         public static Color FromBgra(uint color)
         {
             return FromBgra(unchecked((int)color));
+        }
+
+        /// <summary>
+        /// Converts the color into a packed integer.
+        /// </summary>
+        /// <returns>A packed integer containing all four color components.</returns>
+        public int ToBgra()
+        {
+            uint a = (uint)(A * 255.0f) & 255;
+            uint r = (uint)(R * 255.0f) & 255;
+            uint g = (uint)(G * 255.0f) & 255;
+            uint b = (uint)(B * 255.0f) & 255;
+
+            uint value = b;
+            value |= g << 8;
+            value |= r << 16;
+            value |= a << 24;
+
+            return (int)value;
+        }
+
+        /// <summary>
+        /// Converts the color into a packed integer.
+        /// </summary>
+        /// <returns>A packed integer containing all four color components.</returns>
+        public void ToBgra(out byte r, out byte g, out byte b, out byte a)
+        {
+            a = (byte)(A * 255.0f);
+            r = (byte)(R * 255.0f);
+            g = (byte)(G * 255.0f);
+            b = (byte)(B * 255.0f);
+        }
+
+        /// <summary>
+        /// Converts the color into a packed integer.
+        /// </summary>
+        /// <returns>A packed integer containing all four color components.</returns>
+        public int ToRgba()
+        {
+            uint a = (uint)(A * 255.0f) & 255;
+            uint r = (uint)(R * 255.0f) & 255;
+            uint g = (uint)(G * 255.0f) & 255;
+            uint b = (uint)(B * 255.0f) & 255;
+
+            uint value = r;
+            value |= g << 8;
+            value |= b << 16;
+            value |= a << 24;
+
+            return (int)value;
+        }
+
+        /// <summary>
+        /// Converts the color into a three component vector.
+        /// </summary>
+        /// <returns>A three component vector containing the red, green, and blue components of the color.</returns>
+        public Vector3 ToVector3()
+        {
+            return new Vector3(R, G, B);
+        }
+
+        /// <summary>
+        /// Converts the color into a four component vector.
+        /// </summary>
+        /// <returns>A four component vector containing all four color components.</returns>
+        public Vector4 ToVector4()
+        {
+            return new Vector4(R, G, B, A);
+        }
+
+        /// <summary>
+        /// Creates an array containing the elements of the color.
+        /// </summary>
+        /// <returns>A four-element array containing the components of the color.</returns>
+        public float[] ToArray()
+        {
+            return new[] {R, G, B, A};
+        }
+
+        /// <summary>
+        /// Converts this color from linear space to sRGB space.
+        /// </summary>
+        /// <returns>A color3 in sRGB space.</returns>
+        public Color ToSRgb()
+        {
+            return new Color(Mathf.LinearToSRgb(R), Mathf.LinearToSRgb(G), Mathf.LinearToSRgb(B), A);
+        }
+
+        /// <summary>
+        /// Converts this color from sRGB space to linear space.
+        /// </summary>
+        /// <returns>A Color in linear space.</returns>
+        public Color ToLinear()
+        {
+            return new Color(Mathf.SRgbToLinear(R), Mathf.SRgbToLinear(G), Mathf.SRgbToLinear(B), A);
         }
 
         /// <summary>
@@ -460,6 +582,78 @@ namespace FlaxEngine
                 if (h < 0f)
                     h = h + 1f;
             }
+        }
+
+        /// <summary>
+        /// Adjusts the contrast of a color.
+        /// </summary>
+        /// <param name="value">The color whose contrast is to be adjusted.</param>
+        /// <param name="contrast">The amount by which to adjust the contrast.</param>
+        /// <param name="result">When the method completes, contains the adjusted color.</param>
+        public static void AdjustContrast(ref Color value, float contrast, out Color result)
+        {
+            result.A = value.A;
+            result.R = 0.5f + contrast * (value.R - 0.5f);
+            result.G = 0.5f + contrast * (value.G - 0.5f);
+            result.B = 0.5f + contrast * (value.B - 0.5f);
+        }
+
+        /// <summary>
+        /// Adjusts the contrast of a color.
+        /// </summary>
+        /// <param name="value">The color whose contrast is to be adjusted.</param>
+        /// <param name="contrast">The amount by which to adjust the contrast.</param>
+        /// <returns>The adjusted color.</returns>
+        public static Color AdjustContrast(Color value, float contrast)
+        {
+            return new Color(
+                0.5f + contrast * (value.R - 0.5f),
+                0.5f + contrast * (value.G - 0.5f),
+                0.5f + contrast * (value.B - 0.5f),
+                value.A);
+        }
+
+        /// <summary>
+        /// Adjusts the saturation of a color.
+        /// </summary>
+        /// <param name="value">The color whose saturation is to be adjusted.</param>
+        /// <param name="saturation">The amount by which to adjust the saturation.</param>
+        /// <param name="result">When the method completes, contains the adjusted color.</param>
+        public static void AdjustSaturation(ref Color value, float saturation, out Color result)
+        {
+            float grey = value.R * 0.2125f + value.G * 0.7154f + value.B * 0.0721f;
+
+            result.A = value.A;
+            result.R = grey + saturation * (value.R - grey);
+            result.G = grey + saturation * (value.G - grey);
+            result.B = grey + saturation * (value.B - grey);
+        }
+
+        /// <summary>
+        /// Adjusts the saturation of a color.
+        /// </summary>
+        /// <param name="value">The color whose saturation is to be adjusted.</param>
+        /// <param name="saturation">The amount by which to adjust the saturation.</param>
+        /// <returns>The adjusted color.</returns>
+        public static Color AdjustSaturation(Color value, float saturation)
+        {
+            float grey = value.R * 0.2125f + value.G * 0.7154f + value.B * 0.0721f;
+
+            return new Color(
+                grey + saturation * (value.R - grey),
+                grey + saturation * (value.G - grey),
+                grey + saturation * (value.B - grey),
+                value.A);
+        }
+
+        /// <summary>
+        /// Premultiplies the color components by the alpha value.
+        /// </summary>
+        /// <param name="value">The color to premultiply.</param>
+        /// <returns>A color with premultiplied alpha.</returns>
+        public static Color PremultiplyAlpha(Color value)
+        {
+            return new Color(value.R * value.A, value.G * value.A, value.B * value.A, value.A);
         }
 
         /// <summary>

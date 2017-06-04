@@ -604,6 +604,60 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Determines whether the specified x is pow of 2.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <returns><c>true</c> if the specified x is pow2; otherwise, <c>false</c>.</returns>
+        public static bool IsPow2(int x)
+        {
+            return ((x != 0) && (x & (x - 1)) == 0);
+        }
+
+        /// <summary>
+        /// Get the next power of two for a size.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <returns>System.Int32.</returns>
+        public static int NextPowerOfTwo(int size)
+        {
+            return 1 << (int)Math.Ceiling(Math.Log(size, 2));
+        }
+
+        /// <summary>
+        /// Get the next power of two for a size.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <returns>System.Int32.</returns>
+        public static float NextPowerOfTwo(float size)
+        {
+            return (float)Math.Pow(2, Math.Ceiling(Math.Log(size, 2)));
+        }
+
+        /// <summary>
+        /// Converts a float value from sRGB to linear.
+        /// </summary>
+        /// <param name="sRgbValue">The sRGB value.</param>
+        /// <returns>A linear value.</returns>
+        public static float SRgbToLinear(float sRgbValue)
+        {
+            if (sRgbValue < 0.04045f)
+                return sRgbValue / 12.92f;
+            return (float)Math.Pow((sRgbValue + 0.055) / 1.055, 2.4);
+        }
+
+        /// <summary>
+        /// Converts a float value from linear to sRGB.
+        /// </summary>
+        /// <param name="linearValue">The linear value.</param>
+        /// <returns>The encoded sRGB value.</returns>
+        public static float LinearToSRgb(float linearValue)
+        {
+            if (linearValue < 0.0031308f)
+                return linearValue * 12.92f;
+            return (float)(1.055 * Math.Pow(linearValue, 1 / 2.4) - 0.055);
+        }
+
+        /// <summary>
         /// Returns square root of f.
         /// </summary>
         /// <param name="f"></param>

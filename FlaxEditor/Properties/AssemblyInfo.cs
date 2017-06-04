@@ -1,6 +1,7 @@
 ﻿// Flax Engine scripting API
 
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("FlaxEditor")]
@@ -15,3 +16,5 @@ using System.Runtime.InteropServices;
 [assembly: Guid("be9ef022-e4dd-439d-b197-3a3c6058f479")]
 [assembly: AssemblyVersion("2.0.*")]
 [assembly: AssemblyFileVersion("2.0")]
+
+[assembly: InternalsVisibleTo("FlaxEditor.Tests")]
