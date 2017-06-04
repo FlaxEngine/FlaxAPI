@@ -49,6 +49,18 @@ namespace FlaxEngine.GUI
         //Vector2 ScreenToClient(const Vector2& location);
 	    //Vector2 ClientToScreen(const Vector2& location);
 
+        public override Vector2 ScreenToClient(Vector2 location)
+        {
+            throw new NotImplementedException();
+            return base.ScreenToClient(location);
+        }
+
+        public override Vector2 ClientToScreen(Vector2 location)
+        {
+            throw new NotImplementedException();
+            return base.ClientToScreen(location);
+        }
+
         /// <inheritdoc />
         public override void Focus()
         {

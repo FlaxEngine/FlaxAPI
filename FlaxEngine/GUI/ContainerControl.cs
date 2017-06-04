@@ -22,6 +22,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         public event Action<Control> OnChildResized;
 
+        ///<inheritdoc />
+        protected ContainerControl(bool canFocus)
+            : base(canFocus, 0, 0, 64, 64)
+        {
+        }
 
         ///<inheritdoc />
         protected ContainerControl(bool canFocus, float x, float y, float width, float height)
@@ -30,12 +35,14 @@ namespace FlaxEngine.GUI
         }
 
         ///<inheritdoc />
-        protected ContainerControl(bool canFocus, Vector2 location, Vector2 size) : base(canFocus, location, size)
+        protected ContainerControl(bool canFocus, Vector2 location, Vector2 size)
+            : base(canFocus, location, size)
         {
         }
 
         ///<inheritdoc />
-        protected ContainerControl(bool canFocus, Rectangle bounds) : base(canFocus, bounds)
+        protected ContainerControl(bool canFocus, Rectangle bounds)
+            : base(canFocus, bounds)
         {
             IsLayoutLocked = true;
         }

@@ -107,10 +107,7 @@ namespace FlaxEngine.GUI
                     _dockStyle = value;
 
                     // Update parent's container
-                    if (HasParent)
-                    {
-                        _parent.PerformLayout();
-                    }
+                    _parent?.PerformLayout();
                 }
             }
         }
