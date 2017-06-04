@@ -2,6 +2,8 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+
 namespace FlaxEngine.GUI
 {
     /// <summary>
@@ -20,6 +22,7 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// Specifies which scroll bars will be visible on a control
     /// </summary>
+    [Flags]
     public enum ScrollBars
     {
         None = 0,
