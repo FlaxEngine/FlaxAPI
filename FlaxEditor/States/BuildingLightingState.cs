@@ -1,5 +1,6 @@
 ﻿// Flax Engine scripting API
 
+using System;
 using FlaxEngine.Utilities;
 
 namespace FlaxEditor.States
@@ -35,6 +36,7 @@ namespace FlaxEditor.States
         /// <inheritdoc />
         public override void OnEnter()
         {
+            throw new NotImplementedException();
             // Clear flag
             _wasBuildFinished = false;
 
