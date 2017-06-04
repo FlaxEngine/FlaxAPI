@@ -748,6 +748,62 @@ namespace FlaxEngine
             return (-epsilon <= num) && (num <= epsilon);
         }
 
+        /// <summary>
+        /// Determines whether the specified value is in a given range [min; max].
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="min">The minimum.</param>
+        /// <param name="max">The maximum.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified value is in a given range; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsInRange(float value, float min, float max)
+        {
+            return value >= min && value <= max;
+        }
+
+        /// <summary>
+        /// Determines whether the specified value is NOT in a given range [min; max].
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="min">The minimum.</param>
+        /// <param name="max">The maximum.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified value is NOT in a given range; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsNotInRange(float value, float min, float max)
+        {
+            return value < min || value > max;
+        }
+
+        /// <summary>
+        /// Determines whether the specified value is in a given range [min; max].
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="min">The minimum.</param>
+        /// <param name="max">The maximum.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified value is in a given range; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsInRange(int value, int min, int max)
+        {
+            return value >= min && value <= max;
+        }
+
+        /// <summary>
+        /// Determines whether the specified value is NOT in a given range [min; max].
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="min">The minimum.</param>
+        /// <param name="max">The maximum.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified value is NOT in a given range; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsNotInRange(int value, int min, int max)
+        {
+            return value < min || value > max;
+        }
+
         #region Angle units conversions
 
         /// <summary>
