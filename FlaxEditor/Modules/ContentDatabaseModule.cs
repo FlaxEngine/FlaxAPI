@@ -17,6 +17,8 @@ namespace FlaxEditor.Modules
         internal ContentDatabaseModule(Editor editor)
             : base(editor)
         {
+            // Init content database after windows module
+            InitOrder = -90;
         }
     }
 }

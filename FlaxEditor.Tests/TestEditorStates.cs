@@ -31,9 +31,11 @@ namespace FlaxEditor.Tests
 
             editor.Init();
             editor.EnsureState<LoadingState>();
-
+            
             // Mock scripts compilation finish
+            editor.Update();
             Scripting.ScriptsBuilder.Internal_OnCompilationEnd(true);
+            editor.Update();
 
             editor.EnsureState<EditingSceneState>();
             editor.Exit();

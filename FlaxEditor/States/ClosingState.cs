@@ -1,5 +1,7 @@
 ﻿// Flax Engine scripting API
 
+using FlaxEngine.Utilities;
+
 namespace FlaxEditor.States
 {
     /// <summary>
@@ -20,10 +22,18 @@ namespace FlaxEditor.States
         }
 
         /// <inheritdoc />
-        public override bool CanEnter()
+        public override bool CanExit(State nextState)
         {
             // Disable exit from Closing state
             return false;
+        }
+
+        /// <inheritdoc />
+        public override void OnEnter()
+        {
+            Editor.CloseSplashScreen();
+
+            base.OnEnter();
         }
     }
 }

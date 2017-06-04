@@ -68,15 +68,15 @@ namespace FlaxEditor
             Debug.Log("Setting up C# Editor...");
 
             // Create common editor modules
-            Windows = new WindowsModule(this);
-            UI = new UIModule(this);
-            Thumbnails = new ThumbnailsModule(this);
-            Simulation = new SimulationModule(this);
-            Scripting = new ScriptingModule(this);
-            Scene = new SceneModule(this);
-            ProgressReporting = new ProgressReportingModule(this);
-            ContentEditing = new ContentEditingModule(this);
-            ContentDatabase = new ContentDatabaseModule(this);
+            RegisterModule(Windows = new WindowsModule(this));
+            RegisterModule(UI = new UIModule(this));
+            RegisterModule(Thumbnails = new ThumbnailsModule(this));
+            RegisterModule(Simulation = new SimulationModule(this));
+            RegisterModule(Scripting = new ScriptingModule(this));
+            RegisterModule(Scene = new SceneModule(this));
+            RegisterModule(ProgressReporting = new ProgressReportingModule(this));
+            RegisterModule(ContentEditing = new ContentEditingModule(this));
+            RegisterModule(ContentDatabase = new ContentDatabaseModule(this));
 
             // Create state machine
             StateMachine = new EditorStateMachine(this);
@@ -129,6 +129,9 @@ namespace FlaxEditor
         {
             try
             {
+                // Update state machine
+                StateMachine.Update();
+
                 // Update modules
                 for (int i = 0; i < _modules.Count; i++)
                 {
@@ -144,6 +147,9 @@ namespace FlaxEditor
         internal void Exit()
         {
             Debug.Log("Editor exit");
+
+            // Start exit
+            StateMachine.GoToState<ClosingState>();
 
             // Release modules (from back to front)
             for (int i = _modules.Count - 1; i >= 0; i--)
