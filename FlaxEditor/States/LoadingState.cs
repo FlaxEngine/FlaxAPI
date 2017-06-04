@@ -1,6 +1,5 @@
 // Flax Engine scripting API
 
-using System;
 using FlaxEditor.Scripting;
 
 namespace FlaxEditor.States
@@ -15,10 +14,10 @@ namespace FlaxEditor.States
 
         /// <inheritdoc />
         public override bool CanEditContent => false;
-        
+
         /// <inheritdoc />
         public override bool IsEditorReady => false;
-        
+
         /// <inheritdoc />
         public override bool CanReloadScripts => true;
 
@@ -32,7 +31,7 @@ namespace FlaxEditor.States
         /// </summary>
         internal void StartInitEnding()
         {
-            //ScriptsBuilder.OnCompilationEnd += onCompilationEnd;// TODO: expose event
+            ScriptsBuilder.OnCompilationEnd += onCompilationEnd;
 
             // Check source code has been cmpilled on start
             if (ScriptsBuilder.CompilationsCount > 0)
@@ -87,7 +86,7 @@ namespace FlaxEditor.States
         /// <inheritdoc />
         public override void OnExit()
         {
-            //ScriptsBuilder.OnCompilationEnd -= onCompilationEnd;// TODO: expose event
+            ScriptsBuilder.OnCompilationEnd -= onCompilationEnd;
         }
     }
 }
