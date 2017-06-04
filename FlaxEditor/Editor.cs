@@ -105,6 +105,9 @@ namespace FlaxEditor
             {
                 _modules[i].OnInit();
             }
+
+            // Start Editor initalization ending phrase (will wait for scripts compilation result)
+            StateMachine.LoadingState.StartInitEnding();
         }
 
         internal void EndInit()
