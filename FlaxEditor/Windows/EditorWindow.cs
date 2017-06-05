@@ -17,6 +17,11 @@ namespace FlaxEditor.Windows
     public class EditorWindow : DockWindow
     {
         /// <summary>
+        /// Gets the editor object.
+        /// </summary>
+        public readonly Editor Editor;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EditorWindow"/> class.
         /// </summary>
         /// <param name="editor">The editor.</param>
@@ -25,7 +30,19 @@ namespace FlaxEditor.Windows
         protected EditorWindow(Editor editor, bool hideOnClose, ScrollBars scrollBars)
             : base(editor.UI.MasterPanel, hideOnClose, scrollBars)
         {
-            todo: finish his
+            Editor = editor;
+
+            // Register
+            Editor.Windows.Windows.Add(this);
+        }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            // Unregister
+            Editor.Windows.Windows.Remove(this);
+
+            base.OnDestroy();
         }
     }
 }
