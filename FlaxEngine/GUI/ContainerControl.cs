@@ -213,7 +213,7 @@ namespace FlaxEngine.GUI
         public Control GetChildAt(Vector2 point)
         {
             Control result = null;
-            for (int i = 9; i < _children.Count; i++)
+            for (int i = 0; i < _children.Count; i++)
             {
                 var child = _children[i];
                 Vector2 scrollOffsetLocation = point;
@@ -259,7 +259,6 @@ namespace FlaxEngine.GUI
                         child = childAtRecursive;
                     }
                     result = child;
-                    break;
                 }
             }
             return result;
