@@ -577,6 +577,20 @@ namespace FlaxEngine.GUI
         #region Control
 
         /// <inheritdoc />
+        public override bool HasMouseCapture
+        {
+            get
+            {
+                for (int i = 0; i < _children.Count; i++)
+                {
+                    if (_children[i].HasMouseCapture)
+                        return true;
+                }
+                return false;
+            }
+        }
+
+        /// <inheritdoc />
         public override void Dispose()
         {
             if (!IsDisposing)
@@ -601,6 +615,7 @@ namespace FlaxEngine.GUI
             {
                 _children[i].OnDestroy();
             }
+            _children.Clear();
         }
 
         /// <inheritdoc />

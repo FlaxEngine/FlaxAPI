@@ -186,6 +186,22 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual Window ParentWindow => HasParent ? _parent.ParentWindow : null;
 
+        /// <summary>
+        /// Gets screen position of the control (upper left corner).
+        /// </summary>
+        /// <returns>Screen position of the control.</returns>
+        public Vector2 ScreenPos
+        {
+            get
+            {
+                var parentWin = ParentWindow;
+                if (parentWin == null)
+                    throw new InvalidOperationException("Missing parent window.");
+                var clientPos = PointToWindow(Vector2.Zero);
+                return parentWin.ClientToScreen(clientPos);
+            }
+        }
+
         #endregion
 
         /// <summary>
