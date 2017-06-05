@@ -22,6 +22,20 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Sets the window title.
+        /// </summary>
+        /// <value>
+        /// The title.
+        /// </value>
+        public string Title
+        {
+            set
+            {
+                throw new NotImplementedException("Window.Title");
+            }
+        }
+
+        /// <summary>
         /// Init
         /// </summary>
         protected Window()
@@ -33,6 +47,23 @@ namespace FlaxEngine.GUI
         /// Function called before window popup used to initialize it's controls
         /// </summary>
         protected abstract void Initialize();
+
+        /// <summary>
+        /// Starts the mouse tracking.
+        /// </summary>
+        /// <param name="useMouseScreenOffset">If set to <c>true</c> will apply screen offset to mouse position (during mouse tracing mouse can jump over screen edges).</param>
+        public void StartTrackingMouse(bool useMouseScreenOffset)
+        {
+            throw new NotImplementedException("Window.StartTrackingMouse");
+        }
+
+        /// <summary>
+        /// Ends the mouse tracking.
+        /// </summary>
+        public void EndTrackingMouse()
+        {
+            throw new NotImplementedException("Window.EndTrackingMouse");
+        }
 
         #region ContainerControl
 
