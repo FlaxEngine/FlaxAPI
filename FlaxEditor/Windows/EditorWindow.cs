@@ -23,7 +23,7 @@ namespace FlaxEditor.Windows
         /// <param name="hideOnClose">True if hide window on closing, otherwise it will be destroyed.</param>
         /// <param name="scrollBars">The scroll bars.</param>
         protected EditorWindow(Editor editor, bool hideOnClose, ScrollBars scrollBars)
-            : base(editor.MasterPanel, hideOnClose, scrollBars)
+            : base(editor.UI.MasterPanel, hideOnClose, scrollBars)
         {
             todo: finish his
         }
