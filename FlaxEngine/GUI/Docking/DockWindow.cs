@@ -42,7 +42,11 @@ namespace FlaxEngine.GUI.Docking
         /// <value>
         /// The parent dock panel.
         /// </value>
-        public DockPanel ParentDockPanel => _dockedTo;
+        public DockPanel ParentDockPanel
+        {
+            get => _dockedTo;
+            internal set { _dockedTo = value; }
+        }
 
         /// <summary>
         /// Gets a value indicating whether this window is docked.
@@ -84,7 +88,7 @@ namespace FlaxEngine.GUI.Docking
         /// </value>
         public string Title
         {
-            get { return _title; }
+            get => _title;
             protected set
             {
                 _title = value;
@@ -142,32 +146,25 @@ namespace FlaxEngine.GUI.Docking
 
             // Create window
             var winSize = size.LengthSquared > 4 ? size : DefaultSize;
-            var winLocation = centerMonitor ? Window::CalcCenteredWinPos(winSize) : location;
-            var window = FloatWindowDockPanel.CreateFloatWindow(
-                _masterPanel->GetParentWindow()->GetWin(),
-                winLocation,
-                winSize,
-                const_cast<Char*>(*_cachedTitle)
-            );
+            var window = FloatWindowDockPanel.CreateFloatWindow(_masterPanel.ParentWindow, new Vector2(200, 200), winSize, position, _title);
             
             // Create dock panel for the window
             var dockPanel = new FloatWindowDockPanel(_masterPanel, window);
-            dockPanel->dockWindow(DockFill, this);
+            dockPanel.DockWindowInternal(DockState.DockFill, this);
 
             Visible = true;
             
             // Perform layout
-            window->GUI->UnlockChildrenRecursive();
-            window->GUI->PerformLayout();
+            window.UnlockChildrenRecursive();
+            window.PerformLayout();
 
             // Show
-            window->Show();
-            window->Focus();
+            window.Show();
+            window.Focus();
             OnShow();
 
             // Perform layout again
-            //window->GUI->UnlockChildrenRecursive();
-            window->GUI->PerformLayout();
+            window.PerformLayout();
         }
 
         /// <summary>
@@ -193,7 +190,7 @@ namespace FlaxEngine.GUI.Docking
                 Undock();
 
                 // Then dock
-                (toDock != null ? toDock : _masterPanel).DockWindowInternal(state, this);
+                (toDock ?? _masterPanel).DockWindowInternal(state, this);
                 OnShow();
             }
         }
@@ -205,7 +202,7 @@ namespace FlaxEngine.GUI.Docking
         /// <param name="toDock">Window to dock to it.</param>
         public void Show(DockState state, DockWindow toDock = null)
         {
-            Show(state, toDock ? toDock.ParentDockPanel : null);
+            Show(state, toDock?.ParentDockPanel);
         }
 
         /// <summary>
@@ -279,9 +276,10 @@ namespace FlaxEngine.GUI.Docking
             Defocus();
 
             // Call undock
-            if (_dockedTo)
+            if (_dockedTo != null)
             {
                 _dockedTo.UndockWindowInternal(this);
+                Debug.Assert(_dockedTo == null);
             }
         }
 
@@ -317,13 +315,9 @@ namespace FlaxEngine.GUI.Docking
         public override void OnDestroy()
         {
             Undock();
-
-            // Check if master panel is valid
-            if (_masterPanel)
-            {
-                // Unlink from the master panel
-                _masterPanel.UnlinkWindow(this);
-            }
+            
+            // Unlink from the master panel
+            _masterPanel?.unlinkWindow(this);
 
             // Ensure that dock panel has no parent
             Debug.Assert(!HasParent);

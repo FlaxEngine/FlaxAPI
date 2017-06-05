@@ -183,7 +183,21 @@ namespace FlaxEngine.GUI
                 _thumbRect = new Rectangle(thumbPosition + 4, (Height - DefaultThickness) / 2, _thumbSize - 8, DefaultThickness);
         }
 
-        private void onLostFocus()
+        private void StartTracking()
+        {
+            // Remove focus
+            var parentWin = ParentWindow;
+            if(parentWin.FocusedControl != null)
+                parentWin.FocusedControl.Defocus();
+
+            // Start moving thumb
+            _thumbClicked = true;
+
+            // Start capturing mouse
+            parentWin.StartTrackingMouse(false);
+        }
+
+        private void EndTracking()
         {
             // Check flag
             if (_thumbClicked)
@@ -193,8 +207,8 @@ namespace FlaxEngine.GUI
 
                 // End capturing mouse
                 var parentWin = ParentWindow;
-                if (parentWin != null && parentWin->GetWin())
-                    parentWin->GetWin()->EndTrackingMouse();
+                if (parentWin != null)
+                    parentWin.EndTrackingMouse();
             }
         }
 
@@ -260,7 +274,7 @@ namespace FlaxEngine.GUI
         {
             base.OnLostFocus();
 
-            onLostFocus();
+            EndTracking();
         }
 
         /// <inheritdoc />
@@ -268,7 +282,7 @@ namespace FlaxEngine.GUI
         {
             if (_thumbClicked)
             {
-                Vector2 slidePosition = location + GetParentWindow()->GetWin()->GetTrackingMouseOffset();
+                Vector2 slidePosition = location + ParentWindow.TrackingMouseOffset;
                 float mousePosition = _orientation == Orientation.Vertical ? slidePosition.Y : slidePosition.X;
 
                 float perc = (mousePosition - _mouseOffset - _thumbSize / 2) / (TrackSize - _thumbSize);
@@ -289,20 +303,13 @@ namespace FlaxEngine.GUI
         {
             if (buttons == MouseButtons.Left)
             {
-                var parentWin = ParentWindow;
-                if (parentWin->GetFocused())
-                    parentWin->GetFocused()->Defocus();
-
                 float mousePosition = _orientation == Orientation.Vertical ? location.Y : location.X;
 
                 if (_thumbRect.Contains(location))
                 {
-                    // Start moving thumb
-                    _thumbClicked = true;
-                    _mouseOffset = mousePosition - _thumbCenter;
-
                     // Start capturing mouse
-                    parentWin->GetWin()->StartTrackingMouse(false);
+                    _mouseOffset = mousePosition - _thumbCenter;
+                    StartTracking();
                 }
                 else
                 {
@@ -317,8 +324,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override bool OnMouseUp(MouseButtons buttons, Vector2 location)
         {
-            // End
-            onLostFocus();
+            EndTracking();
 
             return base.OnMouseUp(buttons, location);
         }

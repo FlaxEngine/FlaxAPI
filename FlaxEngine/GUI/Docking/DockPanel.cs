@@ -211,7 +211,7 @@ namespace FlaxEngine.GUI.Docking
                     }
                 }
             }
-            if (result)
+            if (result != null)
                 return result;
 
             // Itself
@@ -230,19 +230,19 @@ namespace FlaxEngine.GUI.Docking
 
             if (HasParent)
             {
-                if (Parent.Parent as SplitPanel splitter)
+                if (Parent.Parent is SplitPanel splitter)
                 {
                     splitterValue = splitter.SplitterValue;
                     if (Parent == splitter.Panel1)
                     {
-                        if (splitter.GetOrienation == Orientation.Horizontal)
+                        if (splitter.Orientation == Orientation.Horizontal)
                             result = DockState.DockLeft;
                         else
                             result = DockState.DockTop;
                     }
                     else
                     {
-                        if (splitter.Orienation == Orientation.Horizontal)
+                        if (splitter.Orientation == Orientation.Horizontal)
                             result = DockState.DockRight;
                         else
                             result = DockState.DockBottom;
@@ -278,8 +278,9 @@ namespace FlaxEngine.GUI.Docking
                     o = Orientation.Vertical;
                     c1 = dockPanel;
                     c2 = _tabsProxy;
-                }
                     break;
+                }
+
 
                 case DockState.DockBottom:
                 {
@@ -287,16 +288,18 @@ namespace FlaxEngine.GUI.Docking
                     o = Orientation.Vertical;
                     c1 = _tabsProxy;
                     c2 = dockPanel;
-                }
                     break;
+                }
+
 
                 case DockState.DockLeft:
                 {
                     o = Orientation.Horizontal;
                     c1 = dockPanel;
                     c2 = _tabsProxy;
-                }
                     break;
+                }
+
 
                 case DockState.DockRight:
                 {
@@ -304,34 +307,33 @@ namespace FlaxEngine.GUI.Docking
                     o = Orientation.Horizontal;
                     c1 = _tabsProxy;
                     c2 = dockPanel;
-                }
                     break;
+                }
 
                 default: throw new ArgumentOutOfRangeException();
             }
 
             // Create splitter and link controls
-            var parent = _tabsProxy->GetParent();
+            var parent = _tabsProxy.Parent;
             SplitPanel splitter = new SplitPanel(o, ScrollBars.None, ScrollBars.None);
-            splitter->SetSplitterValue(splitterValue);
-            splitter->Panel1->AddControl(c1);
-            splitter->Panel2->AddControl(c2);
-            parent->AddControl(splitter);
+            splitter.SplitterValue = splitterValue;
+            splitter.Panel1.AddChild(c1);
+            splitter.Panel2.AddChild(c2);
+            parent.AddChild(splitter);
 
             // Update
-            splitter->UnlockChildrenRecursive();
-            splitter->PerformLayout();
+            splitter.UnlockChildrenRecursive();
+            splitter.PerformLayout();
 
             return dockPanel;
         }
 
-        public virtual void OnLastTabRemoved()
+        protected virtual void OnLastTabRemoved()
         {
             // Check if dock panel is linked to the split panel
             if (HasParent)
             {
-                var splitter = dynamic_cast<CSplitPanel*>(GetParent()->GetParent());
-                if (splitter != null)
+                if (Parent.Parent is SplitPanel splitter)
                 {
                     // Check if has any child panels
                     var childPanel = new List<DockPanel>(_childPanels);
@@ -348,21 +350,21 @@ namespace FlaxEngine.GUI.Docking
 
                     // Unlink splitter
                     var splitterParent = splitter.Parent;
-                    ASSERT(splitterParent);
+                    Debug.Assert(splitterParent != null);
                     splitter.Parent = null;
 
                     // Move controls from second split panel to the split panel parent
-                    CPanel* scrPanel = GetParent() == splitter->Panel2 ? splitter->Panel1 : splitter->Panel2;
-                    int32 srcPanelChildrenCount = scrPanel->GetChildrenCount();
-                    for (int32 i = srcPanelChildrenCount - 1; i >= 0 && scrPanel->HasChildren(); i--)
+                    var scrPanel = Parent == splitter.Panel2 ? splitter.Panel1 : splitter.Panel2;
+                    var srcPanelChildrenCount = scrPanel.ChildrenCount;
+                    for (int i = srcPanelChildrenCount - 1; i >= 0 && scrPanel.ChildrenCount > 0; i--)
                     {
-                        scrPanel->GetChild(i)->SetParent(splitterParent);
+                        scrPanel.GetChild(i).Parent = splitterParent;
                     }
-                    ASSERT(scrPanel->GetChildrenCount() == 0);
-                    ASSERT(splitterParent->GetChildrenCount() == srcPanelChildrenCount);
+                    Debug.Assert(scrPanel.ChildrenCount == 0);
+                    Debug.Assert(splitterParent.ChildrenCount == srcPanelChildrenCount);
 
                     // Delete
-                    splitter.Destroy();
+                    splitter.Dispose();
                 }
                 else if (!IsMaster)
                 {
@@ -412,10 +414,10 @@ namespace FlaxEngine.GUI.Docking
             if (index == -1)
                 throw new IndexOutOfRangeException();
             _tabs.RemoveAt(index);
-            window._dockedTo = null;
+            window.ParentDockPanel = null;
 
             // Check if tab was selected
-            if (window == _selectedTab)
+            if (window == SelectedTab)
             {
                 // Change selection
                 SelectTab(index - 1);
@@ -437,7 +439,7 @@ namespace FlaxEngine.GUI.Docking
         {
             // Dock
             _tabs.Add(window);
-            window->_dockedTo = this;
+            window.ParentDockPanel = this;
 
             // Select tab
             SelectTab(window);

@@ -34,7 +34,7 @@ namespace FlaxEngine.GUI.Docking
         /// </summary>
         /// <param name="masterPanel">The master panel.</param>
         /// <param name="window">The window.</param>
-        FloatWindowDockPanel(MasterDockPanel masterPanel, Window window)
+        public FloatWindowDockPanel(MasterDockPanel masterPanel, Window window)
             : base(null)
         {
             _masterPanel = masterPanel;
@@ -42,11 +42,10 @@ namespace FlaxEngine.GUI.Docking
 
             // Link
             _masterPanel.FloatingPanels.Add(this);
-            Control::SetParent(window->GUI);
-            window->OnClosing.Bind < CFloatWindowDockPanel, &CFloatWindowDockPanel::onClosing > (this);
-            window->OnLButtonHit.Bind < CFloatWindowDockPanel, &CFloatWindowDockPanel::onLButtonHit > (this);
+            Parent = window;
+            window.OnClosing += onClosing;
+            window.OnLButtonHit += onLButtonHit;
         }
-
 
         /// <summary>
         /// Begin drag operation on the window
@@ -54,15 +53,16 @@ namespace FlaxEngine.GUI.Docking
         public void BeginDrag()
         {
             // Filter invalid events
-            if (_window == nullptr)
+            if (_window == null)
                 return;
 
             // Check if window is maximized
-            if (_window->IsMaximized())
+            if (_window.IsMaximized)
                 return;
 
             // Create docking hint window
-            new CDockHintWindow(this);
+            throw new NotImplementedException("Add DockHintWindow");
+            //var hintWindow = new DockHintWindow(this);
         }
 
         /// <summary>
@@ -73,9 +73,11 @@ namespace FlaxEngine.GUI.Docking
         /// <param name="size">Window client area size.</param>
         /// <param name="startPosition">Window start position.</param>
         /// <param name="title">Initial window title.</param>
-        internal Window CreateFloatWindow(Window parent,  Vector2 location, Vector2 size, WindowStartPosition startPosition, string title)
+        internal static Window CreateFloatWindow(Window parent, Vector2 location, Vector2 size, WindowStartPosition startPosition, string title)
         {
-            // Setup initial window settings
+            throw new NotImplementedException("Add CreateFloatWindow");
+            return null;
+            /*// Setup initial window settings
             CreateWindowSettings settings;
             settings.Parent = parent;
             settings.Title = title;
@@ -99,7 +101,7 @@ namespace FlaxEngine.GUI.Docking
             settings.StartPosition = startPosition;
 
             // Create window
-            return Window::Create(settings);
+            return Window::Create(settings);*/
         }
 
         private bool onLButtonHit(WindowHitCodes hitTest)
@@ -127,6 +129,8 @@ namespace FlaxEngine.GUI.Docking
             }
 
             // Unlink
+            _window.OnClosing -= onClosing;
+            _window.OnLButtonHit -= onLButtonHit;
             _window = null;
         }
 
@@ -137,7 +141,7 @@ namespace FlaxEngine.GUI.Docking
             return DockState.Float;
         }
 
-        public override void OnLastTabRemoved()
+        protected override void OnLastTabRemoved()
         {
             // Close window
             if (_window != null)

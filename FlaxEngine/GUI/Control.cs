@@ -688,6 +688,8 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void OnDestroy()
         {
+            if(IsFocused)
+                Defocus();
         }
 
         #endregion
