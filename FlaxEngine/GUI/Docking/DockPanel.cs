@@ -34,11 +34,12 @@ namespace FlaxEngine.GUI.Docking
         /// The default splitters value.
         /// </summary>
         public const float DefaultSplitterValue = 0.3f;
-        
+
         protected readonly DockPanel _parentPanel;
         protected readonly List<DockPanel> _childPanels = new List<DockPanel>();
         protected readonly List<DockWindow> _tabs = new List<DockWindow>();
         protected int _selectedTabIndex;
+        protected Proxy _tabsProxy;
 
         /// <summary>
         /// Returns true if this panel is a master panel.
@@ -53,37 +54,21 @@ namespace FlaxEngine.GUI.Docking
         public virtual bool IsFloating => false;
 
         /// <summary>
-        /// Gets screen position of the dock panel (upper left corner).
-        /// </summary>
-        /// <returns>Screen position of the dock panel.</returns>
-        public Vector2 GetScreenPos
-        {
-            get
-            {
-                var parentWin = ParentWindow;
-                if(parentWin == null)
-                    throw new InvalidOperationException("Missing parent window.");
-                Vector2 clientPos = PointToWindow(Vector2.Zero);
-                return parentWin.ClientToScreen(clientPos);
-            }
-        }
-
-        /// <summary>
         /// Gets docking area bounds (tabs rectangle) in a screen space.
         /// </summary>
         /// <returns>Tabs rectangle area.</returns>
-        /*public Rectangle GetDockAreaBounds
+        public Rectangle DockAreaBounds
         {
             get
             {
                 var parentWin = ParentWindow;
                 if (parentWin == null)
                     throw new InvalidOperationException("Missing parent window.");
-                const Control* control = _tabsProxy ? static_cast <const Control*> (_tabsProxy) : this;
-                Vector2 clientPos = control.PointToWindow(Vector2.Zero);
+                var control = _tabsProxy != null ? (Control)_tabsProxy : this;
+                var clientPos = control.PointToWindow(Vector2.Zero);
                 return new Rectangle(parentWin.ClientToScreen(clientPos), control.Size);
             }
-        }*/
+        }
 
         /// <summary>
         /// Gets amount of the tabs in a dock panel.
@@ -102,6 +87,14 @@ namespace FlaxEngine.GUI.Docking
         /// </summary>
         /// <returns>The selected tab.</returns>
         public DockWindow SelectedTab => _selectedTabIndex >= 0 ? _tabs[_selectedTabIndex] : null;
+
+        /// <summary>
+        /// Gets the parent panel.
+        /// </summary>
+        /// <value>
+        /// The parent panel.
+        /// </value>
+        public DockPanel ParentDockPanel => _parentPanel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DockPanel"/> class.
@@ -237,8 +230,7 @@ namespace FlaxEngine.GUI.Docking
 
             if (HasParent)
             {
-                var splitter = dynamic_cast<CSplitPanel*>(GetParent()->GetParent());
-                if (splitter)
+                if (Parent.Parent as SplitPanel splitter)
                 {
                     splitterValue = splitter.SplitterValue;
                     if (Parent == splitter.Panel1)
@@ -383,19 +375,12 @@ namespace FlaxEngine.GUI.Docking
             }
         }
 
-        private void createTabsProxy()
+        internal virtual void DockWindowInternal(DockState state, DockWindow window)
         {
-            // Check if has no tabs proxy created
-            if (_tabsProxy == null)
-            {
-                // Create proxy and make set simple full dock
-                _tabsProxy = new Proxy(this);
-                _tabsProxy.Parent = this;
-                _tabsProxy->IsUpdateLocked = false;
-            }
+            DockWindow(state, window);
         }
 
-        protected virtual void dockWindow(DockState state, DockWindow win)
+        protected virtual void DockWindow(DockState state, DockWindow window)
         {
             createTabsProxy();
 
@@ -403,36 +388,41 @@ namespace FlaxEngine.GUI.Docking
             if (state == DockState.DockFill)
             {
                 // Add tab
-                addTab(win);
+                addTab(window);
             }
             else
             {
-                // Create panel
+                // Create child panel
                 var dockPanel = CreateChildPanel(state, DefaultSplitterValue);
 
                 // Dock window as a tab in a child panel
-                dockPanel.dockWindow(DockState.DockFill, win);
+                dockPanel.DockWindow(DockState.DockFill, window);
             }
         }
 
-        protected virtual void undockWindow(DockWindow win)
+        internal void UndockWindowInternal(DockWindow window)
+        {
+            UndockWindow(window);
+        }
+
+        protected virtual void UndockWindow(DockWindow window)
         {
             // Undock
-            var index = GetTabIndex(win);
-            if(index == -1)
+            var index = GetTabIndex(window);
+            if (index == -1)
                 throw new IndexOutOfRangeException();
             _tabs.RemoveAt(index);
-            win->_dockedTo = nullptr;
+            window._dockedTo = null;
 
             // Check if tab was selected
-            if (win == _selectedTab)
+            if (window == _selectedTab)
             {
                 // Change selection
                 SelectTab(index - 1);
             }
 
             // Check if has no more tabs
-            if (_tabs.IsEmpty())
+            if (_tabs.Count == 0)
             {
                 OnLastTabRemoved();
             }
@@ -443,23 +433,72 @@ namespace FlaxEngine.GUI.Docking
             }
         }
 
-        protected virtual void addTab(DockWindow win)
+        protected virtual void addTab(DockWindow window)
         {
             // Dock
-            _tabs.Add(win);
-            win->_dockedTo = this;
+            _tabs.Add(window);
+            window->_dockedTo = this;
 
             // Select tab
-            SelectTab(win);
+            SelectTab(window);
+        }
+
+        private void createTabsProxy()
+        {
+            // Check if has no tabs proxy created
+            if (_tabsProxy == null)
+            {
+                // Create proxy and make set simple full dock
+                _tabsProxy = new Proxy(this);
+                _tabsProxy.Parent = this;
+                _tabsProxy.IsLayoutLocked = false;
+            }
         }
 
         /// <inheritdoc />
         public override void OnDestroy()
         {
             _parentPanel?._childPanels.Remove(this);
-
-            // Base
+            
             base.OnDestroy();
+        }
+
+        protected class Proxy : ContainerControl
+        {
+            public DockPanel Panel;
+            public bool IsMouseDown;
+            public bool IsMouseDownOverCross;
+            public DockWindow MouseDownWindow;
+            public Vector2 MousePosition;
+            public DockWindow StartDragAsyncWindow;
+
+            public Proxy(DockPanel panel)
+                : base(false, 0, 0, 0, 0)
+            {
+            }
+
+
+            /*   private DockWindow getTabAtPos(Vector2 position, out bool closeButton) const;
+               private void getTabRect(DockWindow win, out Rectangle bounds) const;
+               private void startDrag(DockWindow win);
+               private void startDragAsync(float dt);
+   
+           public:
+   
+           // [ContainerControl]
+           String ToString() const override;
+           void Draw(Render2D* render, const Vector2& root) override;
+           void OnLostFocus() override;
+           void OnMouseEnter(const Vector2& location) override;
+           void OnMouseMove(const Vector2& location) override;
+           bool OnMouseDown(MouseButtons buttons, const Vector2& location) override;
+           bool OnMouseUp(MouseButtons buttons, const Vector2& location) override;
+           void OnMouseLeave() override;
+   
+           protected:
+   
+           // [ContainerControl]
+           void getDesireClientArea(Rectangle rect) const override;*/
         }
     }
 }
