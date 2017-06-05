@@ -151,6 +151,7 @@
     <Compile Include="GUI\Panels\HScrollBar.cs" />
     <Compile Include="GUI\Panels\ScrollBar.cs" />
     <Compile Include="GUI\Panels\Panel.cs" />
+    <Compile Include="GUI\Panels\SplitPanel.cs" />
     <Compile Include="GUI\Panels\VScrollBar.cs" />
     <Compile Include="GUI\Style.cs" />
     <Compile Include="GUI\Window.cs" />
