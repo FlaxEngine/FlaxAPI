@@ -14,7 +14,6 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEditor.Scripting
 {
-
 	/// <summary>
 	/// Game scrips building service. Compiles user C# scripts into binary assemblies.
 	/// </summary>

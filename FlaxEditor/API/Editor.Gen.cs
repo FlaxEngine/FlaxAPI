@@ -14,7 +14,6 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEditor
 {
-
 	/// <summary>
 	/// The main managed editor class. Editor root object.
 	/// </summary>

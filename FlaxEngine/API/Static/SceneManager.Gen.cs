@@ -14,7 +14,6 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-
 	/// <summary>
 	/// The scene manager handles the scenes collection and spawns/deleted actors.
 	/// </summary>
