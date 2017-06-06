@@ -9,7 +9,7 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// Window root control. Main control that is represented by a window and can contain children but has no parent at all.
     /// </summary>
-    public abstract class Window : ContainerControl
+    public class Window : ContainerControl
     {
         /// <summary>
         /// Closing window delegate.
@@ -108,17 +108,12 @@ namespace FlaxEngine.GUI
         public Vector2 TrackingMouseOffset => throw new NotImplementedException("Window.TrackingMouseOffset");
 
         /// <summary>
-        /// Init
+        /// Initializes a new instance of the <see cref="Window"/> class.
         /// </summary>
-        protected Window()
+        internal Window()
             : base(false, 0, 0, 100, 60)
         {
         }
-
-        /// <summary>
-        /// Function called before window popup used to initialize it's controls
-        /// </summary>
-        protected abstract void Initialize();
 
         /// <summary>
         /// Shows this window.

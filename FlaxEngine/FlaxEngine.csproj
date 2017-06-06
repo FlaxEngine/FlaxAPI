@@ -105,6 +105,8 @@
     <Compile Include="API\Objects\Script.Gen.cs">
       <DependentUpon>Script.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Objects\Window.cs" />
+    <Compile Include="API\Objects\Window.Gen.cs" />
     <Compile Include="API\Static\Content.cs" />
     <Compile Include="API\Static\Content.Gen.cs">
       <DependentUpon>Content.cs</DependentUpon>

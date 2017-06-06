@@ -71,7 +71,6 @@
     <Compile Include="States\ReloadingScriptsState.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
     <Compile Include="Windows\EditorWindow.cs" />
-    <Compile Include="Windows\TestWindow.cs" />
     <Compile Include="Undo\Undo.cs" />
     <Compile Include="Utilities\Extenstions.cs" />
     <Compile Include="Utilities\MemberComparison.cs" />
