@@ -32,10 +32,91 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets or sets a value that indicates whether a window is visible (hidden or shown).
+		/// </summary>
+		[UnmanagedCall]
+		public bool IsVisible
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetIsVisible(unmanagedPtr); }
+			set { Internal_SetIsVisible(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets a value that indicates whether a window is minimized.
+		/// </summary>
+		[UnmanagedCall]
+		public bool IsMinimized
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetIsMinimized(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets a value that indicates whether a window is maximized.
+		/// </summary>
+		[UnmanagedCall]
+		public bool IsMaximized
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetIsMaximized(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the position of the mouse in the window space coordinates.
+		/// </summary>
+		[UnmanagedCall]
+		public bool MousePosition
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetMousePosition(unmanagedPtr); }
+			set { Internal_SetMousePosition(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets the native window handle (platform specific).
+		/// </summary>
+		[UnmanagedCall]
+		public IntPtr Handle
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetHandle(unmanagedPtr); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetIsFullscreen(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_GetIsVisible(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetIsVisible(IntPtr obj, bool val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_GetIsMinimized(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_GetIsMaximized(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_GetMousePosition(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetMousePosition(IntPtr obj, bool val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern IntPtr Internal_GetHandle(IntPtr obj);
 #endif
 #endregion
 	}

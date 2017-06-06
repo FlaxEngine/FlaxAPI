@@ -20,6 +20,7 @@ namespace FlaxEngine.GUI
         public delegate void ClosingDelegate(Window window, ClosingReason reason, ref bool cancel);
 
         private Control _focusedControl;
+        private FlaxEngine.Window _window;
 
         /// <summary>
         /// Event fired when windows wants to be closed. Should return true if suspend window closing, otherwise returns false.
@@ -65,7 +66,7 @@ namespace FlaxEngine.GUI
         /// <value>
         ///   <c>true</c> if this window is in fullscreen mode; otherwise, <c>false</c>.
         /// </value>
-        public bool IsFullscreen => throw new NotImplementedException("Window.IsFullscreen");
+        public bool IsFullscreen => _window.IsFullscreen;
 
         /// <summary>
         /// Gets a value indicating whether this window is in widowed mode.
@@ -73,7 +74,7 @@ namespace FlaxEngine.GUI
         /// <value>
         ///   <c>true</c> if this window is in widowed mode; otherwise, <c>false</c>.
         /// </value>
-        public bool IsWidowed => !IsFullscreen;
+        public bool IsWidowed => _window.IsWidowed;
 
         /// <summary>
         /// Gets a value indicating whether this instance is visible.
@@ -81,7 +82,7 @@ namespace FlaxEngine.GUI
         /// <value>
         ///   <c>true</c> if this instance is visible; otherwise, <c>false</c>.
         /// </value>
-        public bool IsShown => throw new NotImplementedException("Window.IsShown");
+        public bool IsShown => _window.IsVisible;
 
         /// <summary>
         /// Gets a value indicating whether this window is minimized.
@@ -89,7 +90,7 @@ namespace FlaxEngine.GUI
         /// <value>
         ///   <c>true</c> if this window is minimized; otherwise, <c>false</c>.
         /// </value>
-        public bool IsMinimized => throw new NotImplementedException("Window.IsMinimized");
+        public bool IsMinimized => _window.IsMinimized;
 
         /// <summary>
         /// Gets a value indicating whether this window is maximized.
@@ -97,7 +98,7 @@ namespace FlaxEngine.GUI
         /// <value>
         ///   <c>true</c> if this window is maximized; otherwise, <c>false</c>.
         /// </value>
-        public bool IsMaximized => throw new NotImplementedException("Window.IsMaximized");
+        public bool IsMaximized => _window.IsMaximized;
 
         /// <summary>
         /// Gets the tracking mouse offset.
@@ -108,11 +109,23 @@ namespace FlaxEngine.GUI
         public Vector2 TrackingMouseOffset => throw new NotImplementedException("Window.TrackingMouseOffset");
 
         /// <summary>
+        /// Gets the native window object.
+        /// </summary>
+        /// <value>
+        /// The native window object.
+        /// </value>
+        public FlaxEngine.Window NativeWindow => _window;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Window"/> class.
         /// </summary>
-        internal Window()
+        /// <param name="window">Native window object.</param>
+        internal Window(FlaxEngine.Window window)
             : base(false, 0, 0, 100, 60)
         {
+            if (window == null)
+                throw new ArgumentNullException(nameof(window));
+            _window = window;
         }
 
         /// <summary>

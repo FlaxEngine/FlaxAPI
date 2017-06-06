@@ -125,8 +125,22 @@ namespace FlaxEngine
     public partial class Window
     {
         /// <summary>
+        /// Gets a value indicating whether this window is in widowed mode.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this window is in widowed mode; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsWidowed => !IsFullscreen;
+
+        /// <summary>
         /// The window GUI root object.
         /// </summary>
-        public readonly GUI.Window GUI = new GUI.Window();
+        public readonly GUI.Window GUI;
+
+        // Hidden constructor. Object created from C++ side.
+        private Window()
+        {
+            GUI = new GUI.Window(this);
+        }
     }
 }
