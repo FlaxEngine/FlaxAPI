@@ -20,7 +20,7 @@ namespace FlaxEngine
 	public partial class Window : Object
 	{
 		/// <summary>
-		/// Gets a value that indicates whether a window is in a fullscreen mode.
+		/// Gets or sets a value that indicates whether a window is in a fullscreen mode.
 		/// </summary>
 		[UnmanagedCall]
 		public bool IsFullscreen
@@ -29,6 +29,7 @@ namespace FlaxEngine
 			get; set;
 #else
 			get { return Internal_GetIsFullscreen(unmanagedPtr); }
+			set { Internal_SetIsFullscreen(unmanagedPtr, value); }
 #endif
 		}
 
@@ -99,10 +100,214 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Shows the window.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void Show() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_Show(unmanagedPtr);
+#endif
+		}
+
+		/// <summary>
+		/// Hides the window.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void Hide() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_Hide(unmanagedPtr);
+#endif
+		}
+
+		/// <summary>
+		/// Minimizes the window.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void Minimize() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_Minimize(unmanagedPtr);
+#endif
+		}
+
+		/// <summary>
+		/// Maximizes the window.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void Maximize() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_Maximize(unmanagedPtr);
+#endif
+		}
+
+		/// <summary>
+		/// Restores the window state before minimizing or maximazing.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void Restore() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_Restore(unmanagedPtr);
+#endif
+		}
+
+		/// <summary>
+		/// Closes the window.
+		/// </summary>
+		/// <param name="reason">The closing reason.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void Close(ClosingReason reason = ClosingReason.CloseEvent) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_Close(unmanagedPtr, reason);
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the client bounds of the window (client area not including border).
+		/// </summary>
+		[UnmanagedCall]
+		public Rectangle ClientBounds
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetClientBounds(unmanagedPtr); }
+			set { Internal_SetClientBounds(unmanagedPtr, ref value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the window position (in screen coordinates).
+		/// </summary>
+		[UnmanagedCall]
+		public Vector2 Position
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetPosition(unmanagedPtr); }
+			set { Internal_SetPosition(unmanagedPtr, ref value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the client position of the window (client area not including border).
+		/// </summary>
+		[UnmanagedCall]
+		public Vector2 ClientPosition
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetClientPosition(unmanagedPtr); }
+			set { Internal_SetClientPosition(unmanagedPtr, ref value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets the window size (including border).
+		/// </summary>
+		[UnmanagedCall]
+		public Vector2 Size
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetSize(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the size of the client area of the window (not including border).
+		/// </summary>
+		[UnmanagedCall]
+		public Vector2 ClientSize
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetClientSize(unmanagedPtr); }
+			set { Internal_SetClientSize(unmanagedPtr, ref value); }
+#endif
+		}
+
+		/// <summary>
+		/// Converts screen space location into window space coordinates.
+		/// </summary>
+		/// <param name="screenPos">The screen position.</param>
+		/// <returns>The client space position.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public Vector2 ScreenToClient(Vector2 screenPos) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_ScreenToClient(unmanagedPtr, ref screenPos);
+#endif
+		}
+
+		/// <summary>
+		/// Converts window space location into screen space coordinates.
+		/// </summary>
+		/// <param name="clientPos">The client position.</param>
+		/// <returns>The screen space position.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public Vector2 ClientToScreen(Vector2 clientPos) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_ClientToScreen(unmanagedPtr, ref clientPos);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetIsFullscreen(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetIsFullscreen(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetIsVisible(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -117,6 +322,40 @@ namespace FlaxEngine
 		internal static extern void Internal_SetMousePosition(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern IntPtr Internal_GetHandle(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_Show(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_Hide(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_Minimize(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_Maximize(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_Restore(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_Close(IntPtr obj, ClosingReason reason);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern Rectangle Internal_GetClientBounds(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetClientBounds(IntPtr obj, ref Rectangle val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern Vector2 Internal_GetPosition(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetPosition(IntPtr obj, ref Vector2 val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern Vector2 Internal_GetClientPosition(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetClientPosition(IntPtr obj, ref Vector2 val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern Vector2 Internal_GetSize(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern Vector2 Internal_GetClientSize(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetClientSize(IntPtr obj, ref Vector2 val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern Vector2 Internal_ScreenToClient(IntPtr obj, ref Vector2 screenPos);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern Vector2 Internal_ClientToScreen(IntPtr obj, ref Vector2 clientPos);
 #endif
 #endregion
 	}
