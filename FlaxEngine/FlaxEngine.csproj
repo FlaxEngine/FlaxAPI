@@ -89,6 +89,7 @@
     <Compile Include="API\Assets\FontAsset.Gen.cs">
       <DependentUpon>FontAsset.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\CreateWindowSettings.cs" />
     <Compile Include="API\Objects\Actor.cs" />
     <Compile Include="API\Objects\Actor.Gen.cs">
       <DependentUpon>Actor.cs</DependentUpon>
