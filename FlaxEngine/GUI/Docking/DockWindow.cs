@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlaxEngine.Assertions;
 
 namespace FlaxEngine.GUI.Docking
 {
@@ -216,7 +217,7 @@ namespace FlaxEngine.GUI.Docking
             Visible = false;
 
             // Ensure that dock panel has no parent
-            Debug.Assert(!HasParent);
+            Assert.IsFalse(HasParent);
         }
 
         /// <summary>
@@ -279,7 +280,7 @@ namespace FlaxEngine.GUI.Docking
             if (_dockedTo != null)
             {
                 _dockedTo.UndockWindowInternal(this);
-                Debug.Assert(_dockedTo == null);
+                Assert.IsNull(_dockedTo);
             }
         }
 
@@ -320,7 +321,7 @@ namespace FlaxEngine.GUI.Docking
             _masterPanel?.unlinkWindow(this);
 
             // Ensure that dock panel has no parent
-            Debug.Assert(!HasParent);
+            Assert.IsFalse(HasParent);
 
             base.OnDestroy();
         }

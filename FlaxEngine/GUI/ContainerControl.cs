@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEngine.Assertions;
 
 namespace FlaxEngine.GUI
 {
@@ -353,7 +354,7 @@ namespace FlaxEngine.GUI
         /// <param name="child">Control to add</param>
         protected virtual void AddChildInternal(Control child)
         {
-            Debug.Assert(child != null, "Invalid control.");
+            Assert.IsNotNull(child, "Invalid control.");
 
             // Add child
             _children.Add(child);
@@ -368,7 +369,7 @@ namespace FlaxEngine.GUI
         /// <param name="child">Control to remove</param>
         protected virtual void RemoveChildInternal(Control child)
         {
-            Debug.Assert(child != null, "Invalid control.");
+            Assert.IsNotNull(child, "Invalid control.");
 
             // Remove child
             _children.Remove(child);

@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEngine.Assertions;
 
 namespace FlaxEngine.GUI.Docking
 {
@@ -350,7 +351,7 @@ namespace FlaxEngine.GUI.Docking
 
                     // Unlink splitter
                     var splitterParent = splitter.Parent;
-                    Debug.Assert(splitterParent != null);
+                    Assert.IsNotNull(splitterParent);
                     splitter.Parent = null;
 
                     // Move controls from second split panel to the split panel parent
@@ -360,8 +361,8 @@ namespace FlaxEngine.GUI.Docking
                     {
                         scrPanel.GetChild(i).Parent = splitterParent;
                     }
-                    Debug.Assert(scrPanel.ChildrenCount == 0);
-                    Debug.Assert(splitterParent.ChildrenCount == srcPanelChildrenCount);
+                    Assert.IsTrue(scrPanel.ChildrenCount == 0);
+                    Assert.IsTrue(splitterParent.ChildrenCount == srcPanelChildrenCount);
 
                     // Delete
                     splitter.Dispose();

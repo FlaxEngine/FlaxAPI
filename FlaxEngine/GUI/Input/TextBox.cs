@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using FlaxEngine.Assertions;
 using FlaxEngine.Utilities;
 
 namespace FlaxEngine.GUI
@@ -446,7 +447,7 @@ namespace FlaxEngine.GUI
 
         private int CharIndexAtPoint(ref Vector2 location)
         {
-            Debug.Assert(Font, "Missing font.");
+            Assert.IsNotNull(Font, "Missing font.");
 
             // Perform test using Font API
             return Font.HitTestText(_text, location + _viewOffset, _layout);
@@ -464,7 +465,7 @@ namespace FlaxEngine.GUI
 
             int selectionLength = SelectionLength;
             int charactersLeft = MaxLength - _text.Length + selectionLength;
-            Debug.Assert(charactersLeft >= 0);
+            Assert.IsTrue(charactersLeft >= 0);
             if (charactersLeft == 0)
                 return;
             if (charactersLeft < str.Length)
@@ -745,7 +746,7 @@ namespace FlaxEngine.GUI
             var style = Style.Current;
             var rect = new Rectangle(0, 0, Width, Height);
             var font = Font;
-            Debug.Assert(font, "Missing font.");
+            Assert.IsNotNull(font, "Missing font.");
 
             // Background
             Color backColor = style.TextBoxBackground;
