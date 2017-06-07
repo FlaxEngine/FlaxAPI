@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -142,5 +143,25 @@ namespace FlaxEngine
         {
             GUI = new GUI.Window(this);
         }
+
+        /// <summary>
+        /// Gets the mouse tracking offset.
+        /// </summary>
+        [UnmanagedCall]
+        public Vector2 TrackingMouseOffset
+        {
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+            get { return Internal_GetTrackingMouseOffset(unmanagedPtr); }
+#endif
+        }
+
+        #region Internal Calls
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Vector2 Internal_GetTrackingMouseOffset(IntPtr obj);
+#endif
+        #endregion
     }
 }

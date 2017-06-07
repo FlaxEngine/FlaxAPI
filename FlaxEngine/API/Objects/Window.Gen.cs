@@ -302,6 +302,161 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets or sets window title.
+		/// </summary>
+		[UnmanagedCall]
+		public string Title
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetTitle(unmanagedPtr); }
+			set { Internal_SetTitle(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or set window opacity value (vaild only for windows created with SupportsTransparency flag). Opacity values are normalized to range [0;1].
+		/// </summary>
+		[UnmanagedCall]
+		public float Opacity
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetOpacity(unmanagedPtr); }
+			set { Internal_SetOpacity(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Determines whether this window is focused.
+		/// </summary>
+		[UnmanagedCall]
+		public bool IsFocused
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetIsFocused(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
+		/// Focuses this window.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void Focus() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_Focus(unmanagedPtr);
+#endif
+		}
+
+		/// <summary>
+		/// Brings window to the front of the Z order.
+		/// </summary>
+		/// <param name="force">True if move to the front by force, otheriwse false.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void BringToFront(bool force = false) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_BringToFront(unmanagedPtr, force);
+#endif
+		}
+
+		/// <summary>
+		/// Flashes the window to bring use attention.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void FlashWindow() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_FlashWindow(unmanagedPtr);
+#endif
+		}
+
+		/// <summary>
+		/// Starts drag and drop operation
+		/// </summary>
+		/// <param name="data">The data.</param>
+		/// <returns>The result.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public DragDropEffect DoDragDrop(string data) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_DoDragDrop(unmanagedPtr, data);
+#endif
+		}
+
+		/// <summary>
+		/// Starts the mouse tracking.
+		/// </summary>
+		/// <param name="useMouseScreenOffset">If set to true will use mouse screen offset.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void StartTrackingMouse(bool useMouseScreenOffset) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_StartTrackingMouse(unmanagedPtr, useMouseScreenOffset);
+#endif
+		}
+
+		/// <summary>
+		/// Ends the mouse tracking.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void EndTrackingMouse() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_EndTrackingMouse(unmanagedPtr);
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the mouse cursor.
+		/// </summary>
+		[UnmanagedCall]
+		public CursorType Cursor
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetCursor(unmanagedPtr); }
+			set { Internal_SetCursor(unmanagedPtr, value); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -356,6 +511,32 @@ namespace FlaxEngine
 		internal static extern Vector2 Internal_ScreenToClient(IntPtr obj, ref Vector2 screenPos);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Vector2 Internal_ClientToScreen(IntPtr obj, ref Vector2 clientPos);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern string Internal_GetTitle(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetTitle(IntPtr obj, string val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetOpacity(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetOpacity(IntPtr obj, float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_GetIsFocused(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_Focus(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_BringToFront(IntPtr obj, bool force);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_FlashWindow(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern DragDropEffect Internal_DoDragDrop(IntPtr obj, string data);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_StartTrackingMouse(IntPtr obj, bool useMouseScreenOffset);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_EndTrackingMouse(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern CursorType Internal_GetCursor(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetCursor(IntPtr obj, CursorType val);
 #endif
 #endregion
 	}

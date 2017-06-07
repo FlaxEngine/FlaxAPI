@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using FlaxEngine.Assertions;
 
 namespace FlaxEngine.GUI
 {
@@ -54,10 +55,8 @@ namespace FlaxEngine.GUI
         /// </value>
         public string Title
         {
-            set
-            {
-                throw new NotImplementedException("Window.Title");
-            }
+            get { return _window.Title; }
+            set { _window.Title = value; }
         }
 
         /// <summary>
@@ -106,7 +105,21 @@ namespace FlaxEngine.GUI
         /// <value>
         /// The mouse tracking offset.
         /// </value>
-        public Vector2 TrackingMouseOffset => throw new NotImplementedException("Window.TrackingMouseOffset");
+        public Vector2 TrackingMouseOffset => _window.TrackingMouseOffset;
+        
+        /// <summary>
+        /// Gets or sets the position of the mouse in the window space coordinates.
+        /// </summary>
+        public bool MousePosition => _window.MousePosition;
+
+        /// <summary>
+        /// Gets or sets the mouse cursor.
+        /// </summary>
+        public CursorType Cursor
+        {
+            get { return _window.Cursor; }
+            set { _window.Cursor = value; }
+        }
 
         /// <summary>
         /// Gets the native window object.
@@ -129,29 +142,88 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Shows this window.
+        /// Shows the window.
         /// </summary>
         public void Show()
         {
-            throw new NotImplementedException("Window.Show");
+            _window.Show();
         }
 
         /// <summary>
-        /// Closes this window.
+        /// Hides the window.
         /// </summary>
-        /// <param name="reason">Window closing reason.</param>
-        public void Close(ClosingReason reason)
+        public void Hide()
         {
-            throw new NotImplementedException("Window.Close");
+            _window.Show();
+        }
+
+        /// <summary>
+        /// Minimizes the window.
+        /// </summary>
+        public void Minimize()
+        {
+            _window.Minimize();
+        }
+
+        /// <summary>
+        /// Maximizes the window.
+        /// </summary>
+        public void Maximize()
+        {
+            _window.Maximize();
+        }
+
+        /// <summary>
+        /// Restores the window state before minimizing or maximazing.
+        /// </summary>
+        public void Restore()
+        {
+            _window.Restore();
+        }
+
+        /// <summary>
+        /// Closes the window.
+        /// </summary>
+        /// <param name="reason">The closing reason.</param>
+        public void Close(ClosingReason reason = ClosingReason.CloseEvent)
+        {
+            _window.Close(reason);
+        }
+
+        /// <summary>
+        /// Brings window to the front of the Z order.
+        /// </summary>
+        /// <param name="force">True if move to the front by force, otheriwse false.</param>
+        public void BringToFront(bool force = false)
+        {
+            _window.BringToFront(force);
+        }
+
+        /// <summary>
+        /// Flashes the window to bring use attention.
+        /// </summary>
+        public void FlashWindow()
+        {
+            _window.FlashWindow();
+        }
+
+        /// <summary>
+        /// Starts drag and drop operation
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>The result.</returns>
+        public DragDropEffect DoDragDrop(string data)
+        {
+            return _window.DoDragDrop(data);
         }
 
         /// <summary>
         /// Starts the mouse tracking.
         /// </summary>
-        /// <param name="useMouseScreenOffset">If set to <c>true</c> will apply screen offset to mouse position (during mouse tracing mouse can jump over screen edges).</param>
+        /// <param name="useMouseScreenOffset">If set to <c>true</c> will use mouse screen offset.</param>
         public void StartTrackingMouse(bool useMouseScreenOffset)
         {
-            throw new NotImplementedException("Window.StartTrackingMouse");
+            _window.StartTrackingMouse(useMouseScreenOffset);
         }
 
         /// <summary>
@@ -159,13 +231,13 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void EndTrackingMouse()
         {
-            throw new NotImplementedException("Window.EndTrackingMouse");
+            _window.EndTrackingMouse();
         }
-
+        
         #region ContainerControl
 
         /// <inheritdoc />
-        public override Window ParentWindow { get { return this; } }
+        public override Window ParentWindow => this;
 
         /// <inheritdoc />
         public override void OnMouseLeave()
@@ -174,27 +246,22 @@ namespace FlaxEngine.GUI
             OnLostMouseCapture();
         }
 
-        //Vector2 ScreenToClient(const Vector2& location);
-	    //Vector2 ClientToScreen(const Vector2& location);
-
+        /// <inheritdoc />
         public override Vector2 ScreenToClient(Vector2 location)
         {
-            throw new NotImplementedException();
-            return base.ScreenToClient(location);
+            return _window.ScreenToClient(location);
         }
 
+        /// <inheritdoc />
         public override Vector2 ClientToScreen(Vector2 location)
         {
-            throw new NotImplementedException();
-            return base.ClientToScreen(location);
+            return _window.ClientToScreen(location);
         }
 
         /// <inheritdoc />
         public override void Focus()
         {
-            base.Focus();
-
-            // TODO: focus window
+            _window.Focus();
         }
 
         /// <inheritdoc />
@@ -211,12 +278,12 @@ namespace FlaxEngine.GUI
             if (prevous != null)
             {
                 prevous.OnLostFocus();
-                Debug.Assert(!prevous.IsFocused);
+                Assert.IsFalse(prevous.IsFocused);
             }
             if (_focusedControl != null)
             {
                 _focusedControl.OnGotFocus();
-                Debug.Assert(_focusedControl.IsFocused);
+                Assert.IsTrue(_focusedControl.IsFocused);
             }
 
             // Update flags
