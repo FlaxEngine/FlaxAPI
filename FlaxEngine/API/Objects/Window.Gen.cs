@@ -33,7 +33,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Create(settings);
+			return Internal_Create(ref settings);
 #endif
 		}
 
@@ -478,7 +478,7 @@ namespace FlaxEngine
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Window Internal_Create(CreateWindowSettings settings);
+		internal static extern Window Internal_Create(ref CreateWindowSettings settings);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetIsFullscreen(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]

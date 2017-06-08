@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using FlaxEditor.Modules;
 using FlaxEditor.States;
 using FlaxEngine;
+using FlaxEngine.Assertions;
 
 namespace FlaxEditor
 {
@@ -125,6 +126,12 @@ namespace FlaxEditor
             {
                 _modules[i].OnEndInit();
             }
+
+            // Close splash and show main window
+            CloseSplashScreen();
+            Assert.IsNotNull(Windows.MainWindow);
+            Windows.MainWindow.Show();
+            Windows.MainWindow.Focus();
         }
 
         internal void Update()

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FlaxEditor.Windows;
 using FlaxEngine;
+using FlaxEngine.Assertions;
 
 namespace FlaxEditor.Modules
 {
@@ -31,7 +32,7 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// The main editor window.
         /// </summary>
-        public FlaxEngine.Window MainWindow { get; private set; }
+        public Window MainWindow { get; private set; }
 
         /// <summary>
         /// List with all created editor windows.
@@ -108,6 +109,13 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnInit()
         {
+            Assert.IsNull(MainWindow);
+            
+            // Create main window
+            var settings = CreateWindowSettings.Default;
+            settings.Title = "Flax Editor";
+            MainWindow = Window.Create(settings);
+
             // TODO: create default editor windows here
 
             // Bind events
@@ -145,6 +153,10 @@ namespace FlaxEditor.Modules
             SceneManager.OnSceneSaving -= OnSceneSaving;
             SceneManager.OnSceneUnloaded -= OnSceneUnloaded;
             SceneManager.OnSceneUnloading -= OnSceneUnloading;
+
+            // Close main window
+            MainWindow?.Close(ClosingReason.EngineExit);
+            MainWindow = null;
         }
 
         #region Window Events
