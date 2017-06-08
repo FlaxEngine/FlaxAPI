@@ -2,17 +2,29 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+using System.Runtime.InteropServices;
+
 namespace FlaxEngine
 {
     /// <summary>
     /// Settings for new window creation.
     /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
     public struct CreateWindowSettings
     {
         /// <summary>
+        /// The native parent window pointer.
+        /// </summary>
+        public IntPtr ParentPtr;
+
+        /// <summary>
         /// The parent window.
         /// </summary>
-        public Window Parent;
+        public Window Parent
+        {
+            set => ParentPtr = Object.GetUnmanagedPtr(value);
+        }
 
         /// <summary>
         /// The title.
