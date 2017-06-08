@@ -43,7 +43,6 @@
     <Compile Include="API\Editor.Gen.cs" />
     <Compile Include="API\Static\ScriptsBuilder.cs" />
     <Compile Include="API\Static\ScriptsBuilder.Gen.cs" />
-    <Compile Include="Editor.cs" />
     <Compile Include="History\HistoryStack.cs" />
     <Compile Include="History\IHistoryAction.cs" />
     <Compile Include="History\UndoActionObject.cs" />
