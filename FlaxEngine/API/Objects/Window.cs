@@ -3,11 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
@@ -126,6 +122,118 @@ namespace FlaxEngine
     public partial class Window
     {
         /// <summary>
+        /// Window closing delegate.
+        /// </summary>
+        /// <param name="window">The window.</param>
+        /// <param name="reason">The closing reason.</param>
+        /// <param name="cancel">If set to <c>true</c> operation will be cancelled, otherwise window will be closed.</param>
+        public delegate void ClosingDelegate(Window window, ClosingReason reason, ref bool cancel);
+
+        /// <summary>
+        /// Perform window hit test delegate.
+        /// </summary>
+        /// <param name="mouse">The mouse position.</param>
+        /// <returns>Hit result.</returns>
+        public delegate WindowHitCodes HitTestDelegate(Vector2 mouse);
+
+        /// <summary>
+        /// Perform mouse buttons action.
+        /// </summary>
+        /// <param name="mouse">The mouse position.</param>
+        /// <param name="buttons">The mouse buttons state.</param>
+        public delegate void MouseButtonsDelegate(Vector2 mouse, MouseButtons buttons);
+
+        /// <summary>
+        /// Perform mouse move action.
+        /// </summary>
+        /// <param name="mouse">The mouse position.</param>
+        public delegate void MouseMoveDelegate(Vector2 mouse);
+
+        /// <summary>
+        /// Perform mouse wheel action.
+        /// </summary>
+        /// <param name="mouse">The mouse position.</param>
+        /// <param name="delta">The mouse wheel move delta (can be positive or negative).</param>
+        public delegate void MouseWheelDelegate(Vector2 mouse, int delta);
+
+        /// <summary>
+        /// Perform keyboard action.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        public delegate void KeyboardDelegate(KeyCode key);
+
+        /// <summary>
+        /// Event fired on key press
+        /// </summary>
+        public event KeyboardDelegate OnKeyPressed;
+
+        /// <summary>
+        /// Event fired on key release
+        /// </summary>
+        public event KeyboardDelegate OnKeyReleased;
+
+        /// <summary>
+        /// Event fired when mouse leaves window
+        /// </summary>
+        public event Action OnMouseLeave;
+
+        /// <summary>
+        /// Event fired when mouse goes down
+        /// </summary>
+        public event MouseButtonsDelegate OnMouseDown;
+
+        /// <summary>
+        /// Event fired when mouse goes up
+        /// </summary>
+        public event MouseButtonsDelegate OnMouseUp;
+
+        /// <summary>
+        /// Event fired when mouse double clicks
+        /// </summary>
+        public event MouseButtonsDelegate OnMouseDoubleClick;
+
+        /// <summary>
+        /// Event fired when mouse wheel is scrolling
+        /// </summary>
+        public event MouseWheelDelegate OnMouseWheel;
+
+        /// <summary>
+        /// Event fired when mouse moves
+        /// </summary>
+        public event MouseMoveDelegate OnMouseMove;
+
+        /// <summary>
+        /// Event fired when window gets focus
+        /// </summary>
+        public event Action OnGotFocus;
+
+        /// <summary>
+        /// Event fired when window losts focus
+        /// </summary>
+        public event Action OnLostFocus;
+
+        /// <summary>
+        /// Event fired when left mouse button goes down (hit test performed etc.).
+        /// Returns true if event has been processed and further actions should be canceled, otherwise false.
+        /// </summary>
+        //public Function<bool, WindowHitCodes> OnLButtonHit;
+
+        /// <summary>
+        /// Event fired when window performs hit test, parameter is a mouse position
+        /// </summary>
+        public HitTestDelegate OnHitTest;
+
+        /// <summary>
+        /// Event fired when windows wants to be closed. Should return true if suspend window closing, otherwise returns false
+        /// </summary>
+        public event ClosingDelegate OnClosing;
+
+        /// <summary>
+        /// Event fired when gets closed and deleted, all references to the window object should be removed at this point.
+        /// </summary>
+        public event Action OnClosed;
+
+        /// <summary>
         /// Gets a value indicating whether this window is in widowed mode.
         /// </summary>
         /// <value>
@@ -162,6 +270,79 @@ namespace FlaxEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Vector2 Internal_GetTrackingMouseOffset(IntPtr obj);
 #endif
+        #endregion
+
+        #region Internal Events
+
+        internal void Internal_OnKeyPressed(KeyCode key)
+        {
+            OnKeyPressed?.Invoke(key);
+        }
+
+        internal void Internal_OnKeyReleased(KeyCode key)
+        {
+            OnKeyReleased?.Invoke(key);
+        }
+
+        internal void Internal_OnMouseLeave()
+        {
+            OnMouseLeave?.Invoke();
+        }
+
+        internal void Internal_OnMouseDown(ref Vector2 mousePos, MouseButtons buttons)
+        {
+            OnMouseDown?.Invoke(mousePos, buttons);
+        }
+
+        internal void Internal_OnMouseUp(ref Vector2 mousePos, MouseButtons buttons)
+        {
+            OnMouseUp?.Invoke(mousePos, buttons);
+        }
+
+        internal void Internal_OnMouseDoubleClick(ref Vector2 mousePos, MouseButtons buttons)
+        {
+            OnMouseDoubleClick?.Invoke(mousePos, buttons);
+        }
+
+        internal void Internal_OnMouseWheel(ref Vector2 mousePos, int delta)
+        {
+            OnMouseWheel?.Invoke(mousePos, delta);
+        }
+
+        internal void Internal_OnMouseMove(ref Vector2 mousePos)
+        {
+            OnMouseMove?.Invoke(mousePos);
+        }
+
+        internal void Internal_OnGotFocus()
+        {
+            OnGotFocus?.Invoke();
+        }
+
+        internal void Internal_OnLostFocus()
+        {
+            OnLostFocus?.Invoke();
+        }
+
+        internal void Internal_OnHitTest(ref Vector2 mousePos, ref WindowHitCodes hit, ref bool result)
+        {
+            if (OnHitTest != null)
+            {
+                hit = OnHitTest(mousePos);
+                result = true;
+            }
+        }
+
+        internal void Internal_OnClosing(Window window, ClosingReason reason, ref bool cancel)
+        {
+            OnClosing?.Invoke(window, reason, ref cancel);
+        }
+
+        internal void Internal_OnClosed()
+        {
+            OnClosed?.Invoke();
+        }
+
         #endregion
     }
 }
