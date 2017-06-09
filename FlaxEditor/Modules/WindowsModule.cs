@@ -115,7 +115,18 @@ namespace FlaxEditor.Modules
             var settings = CreateWindowSettings.Default;
             settings.Title = "Flax Editor";
             MainWindow = Window.Create(settings);
+            if (MainWindow == null)
+            {
+                // Error
+                // TODO: make it fatal error
+                Debug.LogError("Failed to create editor main window!");
+                return;
+            }
 
+            // Link for main window events
+            MainWindow.OnClosing += MainWindow_OnClosing;
+            MainWindow.OnClosed += MainWindow_OnClosed;
+            
             // TODO: create default editor windows here
 
             // Bind events
@@ -129,6 +140,20 @@ namespace FlaxEditor.Modules
             SceneManager.OnSceneUnloading += OnSceneUnloading;
 
             // TODO: link for OnScriptsReloadStart/OnScriptsReloadEnd events and don't fire scene events on scripts reload?
+        }
+
+        private void MainWindow_OnClosing(Window window, ClosingReason reason, ref bool cancel)
+        {
+            Assert.IsTrue(window == MainWindow);
+            Debug.Log("Main window is closing, reason: " + reason);
+
+            // TODO: check if scenes/assets are unsaved and ask user if canel/save/sth
+        }
+
+        private void MainWindow_OnClosed()
+        {
+            Debug.Log("Main window is closed");
+            MainWindow = null;
         }
 
         /// <inheritdoc />
