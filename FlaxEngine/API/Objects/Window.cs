@@ -216,7 +216,7 @@ namespace FlaxEngine
         /// Event fired when left mouse button goes down (hit test performed etc.).
         /// Returns true if event has been processed and further actions should be canceled, otherwise false.
         /// </summary>
-        //public Function<bool, WindowHitCodes> OnLButtonHit;
+        public Func<WindowHitCodes, bool> OnLButtonHit;
 
         /// <summary>
         /// Event fired when window performs hit test, parameter is a mouse position
@@ -324,12 +324,20 @@ namespace FlaxEngine
             OnLostFocus?.Invoke();
         }
 
-        internal void Internal_OnHitTest(ref Vector2 mousePos, ref WindowHitCodes hit, ref bool result)
+        internal void Internal_OnHitTest(ref Vector2 mousePos, ref WindowHitCodes result, ref bool handled)
         {
             if (OnHitTest != null)
             {
-                hit = OnHitTest(mousePos);
-                result = true;
+                result = OnHitTest(mousePos);
+                handled = true;
+            }
+        }
+
+        internal void Internal_OnLButtonHit(WindowHitCodes hit, ref bool result)
+        {
+            if (OnLButtonHit != null)
+            {
+                result = OnLButtonHit(hit);
             }
         }
 
@@ -341,6 +349,22 @@ namespace FlaxEngine
         internal void Internal_OnClosed()
         {
             OnClosed?.Invoke();
+
+            // Force clear all events (we cannot window after close)
+            OnKeyPressed = null;
+            OnKeyReleased = null;
+            OnMouseLeave = null;
+            OnMouseDown = null;
+            OnMouseUp = null;
+            OnMouseDoubleClick = null;
+            OnMouseWheel = null;
+            OnMouseMove = null;
+            OnGotFocus = null;
+            OnLostFocus = null;
+            OnLButtonHit = null;
+            OnHitTest = null;
+            OnClosing = null;
+            OnClosed = null;
         }
 
         #endregion
