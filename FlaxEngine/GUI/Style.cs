@@ -2,7 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
+using FlaxEngine.Assertions;
 
 namespace FlaxEngine.GUI
 {
@@ -80,10 +80,10 @@ namespace FlaxEngine.GUI
                 style.FontMedium = primaryFont.CreateFont(9);
                 style.FontSmall = primaryFont.CreateFont(9);
 
-                Debug.Assert(style.FontTitle, "Missing Title font.");
-                Debug.Assert(style.FontLarge, "Missing Large font.");
-                Debug.Assert(style.FontMedium, "Missing Medium font.");
-                Debug.Assert(style.FontSmall, "Missing Small font.");
+                Assert.IsNotNull(style.FontTitle, "Missing Title font.");
+                Assert.IsNotNull(style.FontLarge, "Missing Large font.");
+                Assert.IsNotNull(style.FontMedium, "Missing Medium font.");
+                Assert.IsNotNull(style.FontSmall, "Missing Small font.");
             }
             else
             {

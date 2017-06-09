@@ -14,7 +14,6 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-
 	/// <summary>
 	/// Environment Probe can capture space around the objects to provide reflections.
 	/// </summary>

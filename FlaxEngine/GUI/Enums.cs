@@ -2,6 +2,8 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+
 namespace FlaxEngine.GUI
 {
     /// <summary>
@@ -20,6 +22,7 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// Specifies which scroll bars will be visible on a control
     /// </summary>
+    [Flags]
     public enum ScrollBars
     {
         None = 0,
@@ -46,20 +49,5 @@ namespace FlaxEngine.GUI
     {
         Horizontal = 0,
         Vertical
-    }
-
-    /// <summary>
-    /// Specifies identifiers to indicate the return value of a dialog box
-    /// </summary>
-    public enum DialogResult
-    {
-        Abort = 0,
-        Cancel,
-        Ignore,
-        No,
-        None,
-        OK,
-        Retry,
-        Yes
     }
 }

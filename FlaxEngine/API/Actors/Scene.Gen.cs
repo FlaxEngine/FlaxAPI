@@ -14,7 +14,6 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-
 	/// <summary>
 	/// Scene root actor object
 	/// </summary>

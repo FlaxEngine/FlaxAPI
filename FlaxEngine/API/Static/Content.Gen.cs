@@ -14,7 +14,6 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-
 	/// <summary>
 	/// Loads and manages assets that can be used by the Engine
 	/// </summary>

@@ -54,6 +54,7 @@
     <Compile Include="ContorlTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestColor.cs" />
+    <Compile Include="TestContainerControl.cs" />
     <Compile Include="TestFloatR10G10B10A2.cs" />
     <Compile Include="TestFloatR11G11B10.cs" />
   </ItemGroup>

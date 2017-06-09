@@ -129,7 +129,7 @@ namespace FlaxEditor.Modules
         /// <returns>True if action has been canceled, otherwise false</returns>
         public bool CheckSaveBeforeClose()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
             // TODO: suspend auto save for a while
             // Suspend auto saves
             //SuspendAutoSave();
@@ -172,7 +172,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         private void saveOpeneScenes()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
             // TODO: save collection of last scenes instead of single scene, use scene IDs
             /*MemoryWriteStream lastSceneStream(PLATFORM_MAX_FILEPATH_LENGTH);
 	        lastSceneStream.WriteString(SceneManager::Instance()->GetLastScenePath());
@@ -182,7 +182,7 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnEndInit()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
             // Check last opened scenes
             // TODO: load collection of last scenes instead of single scene, use scene IDs
             /*MemoryReadStream lastSceneStream;

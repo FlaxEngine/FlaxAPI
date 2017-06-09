@@ -43,7 +43,6 @@
     <Compile Include="API\Editor.Gen.cs" />
     <Compile Include="API\Static\ScriptsBuilder.cs" />
     <Compile Include="API\Static\ScriptsBuilder.Gen.cs" />
-    <Compile Include="Editor.cs" />
     <Compile Include="History\HistoryStack.cs" />
     <Compile Include="History\IHistoryAction.cs" />
     <Compile Include="History\UndoActionObject.cs" />
@@ -71,7 +70,6 @@
     <Compile Include="States\ReloadingScriptsState.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
     <Compile Include="Windows\EditorWindow.cs" />
-    <Compile Include="Windows\TestWindow.cs" />
     <Compile Include="Undo\Undo.cs" />
     <Compile Include="Utilities\Extenstions.cs" />
     <Compile Include="Utilities\MemberComparison.cs" />

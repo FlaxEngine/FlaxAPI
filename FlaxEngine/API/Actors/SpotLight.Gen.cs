@@ -14,7 +14,6 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-
 	/// <summary>
 	/// Spot Light can emmit light from point in space in a given direction
 	/// </summary>

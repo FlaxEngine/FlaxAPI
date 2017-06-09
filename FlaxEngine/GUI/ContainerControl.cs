@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEngine.Assertions;
 
 namespace FlaxEngine.GUI
 {
@@ -22,6 +23,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         public event Action<Control> OnChildResized;
 
+        ///<inheritdoc />
+        protected ContainerControl(bool canFocus)
+            : base(canFocus, 0, 0, 64, 64)
+        {
+        }
 
         ///<inheritdoc />
         protected ContainerControl(bool canFocus, float x, float y, float width, float height)
@@ -30,12 +36,14 @@ namespace FlaxEngine.GUI
         }
 
         ///<inheritdoc />
-        protected ContainerControl(bool canFocus, Vector2 location, Vector2 size) : base(canFocus, location, size)
+        protected ContainerControl(bool canFocus, Vector2 location, Vector2 size)
+            : base(canFocus, location, size)
         {
         }
 
         ///<inheritdoc />
-        protected ContainerControl(bool canFocus, Rectangle bounds) : base(canFocus, bounds)
+        protected ContainerControl(bool canFocus, Rectangle bounds)
+            : base(canFocus, bounds)
         {
             IsLayoutLocked = true;
         }
@@ -109,16 +117,17 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void RemoveChildren()
         {
-            throw new NotImplementedException();
-            /*// Delete children
-            bool wereUpdatesLocked = IsUpdateLocked;
-            IsUpdateLocked = true;
-            while (_children.Count() > 0)
+            bool wasLayoutLocked = IsLayoutLocked;
+            IsLayoutLocked = true;
+            
+            // Delete children
+            while (_children.Count > 0)
             {
-                _children[0]->SetParent(nullptr);
+                _children[0].Parent = null;
             }
-            IsUpdateLocked = wereUpdatesLocked;
-            PerformLayout();*/
+
+            IsLayoutLocked = wasLayoutLocked;
+            PerformLayout();
         }
 
         /// <summary>
@@ -126,20 +135,17 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void DisposeChildren()
         {
-            throw new NotImplementedException();
-            /*// Defocus any child
-            if (ContainsFocus() && !IsFocused())
-                Focus();
-
+            bool wasLayoutLocked = IsLayoutLocked;
+            IsLayoutLocked = true;
+            
             // Delete children
-            bool wereUpdatesLocked = IsUpdateLocked;
-            IsUpdateLocked = true;
-            while (_children.Count() > 0)
+            while (_children.Count > 0)
             {
-                _children[0]->Destroy(forceNow);
+                _children[0].Dispose();
             }
-            IsUpdateLocked = wereUpdatesLocked;
-            PerformLayout();*/
+
+            IsLayoutLocked = wasLayoutLocked;
+            PerformLayout();
         }
 
         /// <summary>
@@ -149,15 +155,9 @@ namespace FlaxEngine.GUI
         public void AddChild(Control child)
         {
             if(child == null)
-            {
-                Debug.LogError("Argument child cannot be null.", this);
-                return;
-            }
-            if(child.Parent == this && _children.Contains(child))
-            {
-                Debug.LogError("Argument child cannot be added, if current container is already its parent.", this);
-                return;
-            }
+                throw new ArgumentNullException();
+            if (child.Parent == this && _children.Contains(child))
+                throw new InvalidOperationException("Argument child cannot be added, if current container is already its parent.");
 
             // Remove child from his old parent
             child.Parent?.RemoveChildInternal(child);
@@ -175,18 +175,13 @@ namespace FlaxEngine.GUI
         public void RemoveChild(Control child)
         {
             if (child == null)
-            {
-                Debug.LogError("Argument child cannot be null.", this);
-                return;
-            }
+                throw new ArgumentNullException();
             if (child.Parent != this)
-            {
-                Debug.LogError("Argument child cannot be removed, if current container is not its parent.", this);
-                return;
-            }
+                throw new InvalidOperationException("Argument child cannot be removed, if current container is not its parent.");
 
             // Remove child from his current parent
             RemoveChildInternal(child);
+
             // Unlink
             child.Parent = null;
         }
@@ -219,7 +214,7 @@ namespace FlaxEngine.GUI
         public Control GetChildAt(Vector2 point)
         {
             Control result = null;
-            for (int i = 9; i < _children.Count; i++)
+            for (int i = 0; i < _children.Count; i++)
             {
                 var child = _children[i];
                 Vector2 scrollOffsetLocation = point;
@@ -265,7 +260,6 @@ namespace FlaxEngine.GUI
                         child = childAtRecursive;
                     }
                     result = child;
-                    break;
                 }
             }
             return result;
@@ -360,7 +354,7 @@ namespace FlaxEngine.GUI
         /// <param name="child">Control to add</param>
         protected virtual void AddChildInternal(Control child)
         {
-            Debug.Assert(child != null, "Invalid control.");
+            Assert.IsNotNull(child, "Invalid control.");
 
             // Add child
             _children.Add(child);
@@ -375,7 +369,7 @@ namespace FlaxEngine.GUI
         /// <param name="child">Control to remove</param>
         protected virtual void RemoveChildInternal(Control child)
         {
-            Debug.Assert(child != null, "Invalid control.");
+            Assert.IsNotNull(child, "Invalid control.");
 
             // Remove child
             _children.Remove(child);
@@ -570,19 +564,33 @@ namespace FlaxEngine.GUI
         #region Control
 
         /// <inheritdoc />
+        public override bool HasMouseCapture
+        {
+            get
+            {
+                for (int i = 0; i < _children.Count; i++)
+                {
+                    if (_children[i].HasMouseCapture)
+                        return true;
+                }
+                return false;
+            }
+        }
+
+        /// <inheritdoc />
         public override void Dispose()
         {
-            if (!IsDisposing)
-            {
-                // Steal focus from children
-                if (ContainsFocus)
-                {
-                    Focus();
-                }
+            if (IsDisposing)
+                return;
 
-                // Base
-                base.Dispose();
+            // Steal focus from children
+            if (ContainsFocus)
+            {
+                Focus();
             }
+
+            // Base
+            base.Dispose();
         }
 
         /// <inheritdoc />
@@ -594,6 +602,9 @@ namespace FlaxEngine.GUI
             {
                 _children[i].OnDestroy();
             }
+            _children.Clear();
+
+            base.OnDestroy();
         }
 
         /// <inheritdoc />

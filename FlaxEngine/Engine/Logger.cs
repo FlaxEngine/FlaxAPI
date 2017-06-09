@@ -21,9 +21,9 @@ namespace FlaxEngine
         /// <param name="logHandler">Pass in default log handler or custom log handler.</param>
         public Logger(ILogHandler logHandler)
         {
-            this.logHandler = logHandler;
-            logEnabled = true;
-            filterLogType = LogType.Log;
+            this.LogHandler = logHandler;
+            LogEnabled = true;
+            FilterLogType = LogType.Log;
         }
 
         private static string GetString(object message)
@@ -34,17 +34,17 @@ namespace FlaxEngine
         /// <summary>
         /// To selective enable debug log message.
         /// </summary>
-        public LogType filterLogType { get; set; }
+        public LogType FilterLogType { get; set; }
 
         /// <summary>
         /// To runtime toggle debug logging [ON/OFF].
         /// </summary>
-        public bool logEnabled { get; set; }
+        public bool LogEnabled { get; set; }
 
         /// <summary>
         /// Set  Logger.ILogHandler.
         /// </summary>
-        public ILogHandler logHandler { get; set; }
+        public ILogHandler LogHandler { get; set; }
 
         /// <summary>
         /// Check logging is enabled based on the LogType.
@@ -55,7 +55,7 @@ namespace FlaxEngine
         /// </returns>
         public bool IsLogTypeAllowed(LogType logType)
         {
-            return logEnabled && (logType <= filterLogType || logType == LogType.Exception);
+            return LogEnabled && (logType <= FilterLogType || logType == LogType.Exception);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace FlaxEngine
         public void Log(LogType logType, object message)
         {
             if (IsLogTypeAllowed(logType))
-                logHandler.Log(logType, null, GetString(message));
+                LogHandler.Log(logType, null, GetString(message));
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace FlaxEngine
         public void Log(LogType logType, object message, Object context)
         {
             if (IsLogTypeAllowed(logType))
-                logHandler.Log(logType, context, GetString(message));
+                LogHandler.Log(logType, context, GetString(message));
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace FlaxEngine
         public void Log(LogType logType, string tag, object message)
         {
             if (IsLogTypeAllowed(logType))
-                logHandler.Log(logType, null, string.Format(TagFormat, tag, GetString(message)));
+                LogHandler.Log(logType, null, string.Format(TagFormat, tag, GetString(message)));
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace FlaxEngine
         public void Log(LogType logType, string tag, object message, Object context)
         {
             if (IsLogTypeAllowed(logType))
-                logHandler.Log(logType, context, string.Format(TagFormat, tag, GetString(message)));
+                LogHandler.Log(logType, context, string.Format(TagFormat, tag, GetString(message)));
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace FlaxEngine
         public void Log(object message)
         {
             if (IsLogTypeAllowed(LogType.Log))
-                logHandler.Log(LogType.Log, null, GetString(message));
+                LogHandler.Log(LogType.Log, null, GetString(message));
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace FlaxEngine
         public void Log(string tag, object message)
         {
             if (IsLogTypeAllowed(LogType.Log))
-                logHandler.Log(LogType.Log, null, string.Format(TagFormat, tag, GetString(message)));
+                LogHandler.Log(LogType.Log, null, string.Format(TagFormat, tag, GetString(message)));
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace FlaxEngine
         public void Log(string tag, object message, Object context)
         {
             if (IsLogTypeAllowed(LogType.Log))
-                logHandler.Log(LogType.Log, context, string.Format(TagFormat, tag, GetString(message)));
+                LogHandler.Log(LogType.Log, context, string.Format(TagFormat, tag, GetString(message)));
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace FlaxEngine
         public void LogError(string tag, object message)
         {
             if (IsLogTypeAllowed(LogType.Error))
-                logHandler.Log(LogType.Error, null, string.Format(TagFormat, tag, GetString(message)));
+                LogHandler.Log(LogType.Error, null, string.Format(TagFormat, tag, GetString(message)));
         }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace FlaxEngine
         public void LogError(string tag, object message, Object context)
         {
             if (IsLogTypeAllowed(LogType.Error))
-                logHandler.Log(LogType.Error, context, string.Format(TagFormat, tag, GetString(message)));
+                LogHandler.Log(LogType.Error, context, string.Format(TagFormat, tag, GetString(message)));
         }
 
         /// <summary>
@@ -193,8 +193,8 @@ namespace FlaxEngine
         /// <param name="context">Object to which the message applies.</param>
         public void LogException(Exception exception)
         {
-            if (logEnabled)
-                logHandler.LogException(exception, null);
+            if (LogEnabled)
+                LogHandler.LogException(exception, null);
         }
 
         /// <summary>
@@ -204,20 +204,20 @@ namespace FlaxEngine
         /// <param name="context">Object to which the message applies.</param>
         public void LogException(Exception exception, Object context)
         {
-            if (logEnabled)
-                logHandler.LogException(exception, context);
+            if (LogEnabled)
+                LogHandler.LogException(exception, context);
         }
 
         public void Log(LogType logType, Object context, string message)
         {
             if (IsLogTypeAllowed(logType))
-                logHandler.Log(logType, context, message);
+                LogHandler.Log(logType, context, message);
         }
 
         public void LogFormat(LogType logType, string format, params object[] args)
         {
             if (IsLogTypeAllowed(logType))
-                logHandler.Log(logType, null, string.Format(format, args));
+                LogHandler.Log(logType, null, string.Format(format, args));
         }
 
         /// <summary>
@@ -229,7 +229,7 @@ namespace FlaxEngine
         public void Log(LogType logType, string format, params object[] args)
         {
             if (IsLogTypeAllowed(logType))
-                logHandler.Log(logType, null, string.Format(format, args));
+                LogHandler.Log(logType, null, string.Format(format, args));
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace FlaxEngine
         public void Log(LogType logType, Object context, string format, params object[] args)
         {
             if (IsLogTypeAllowed(logType))
-                logHandler.Log(logType, context, string.Format(format, args));
+                LogHandler.Log(logType, context, string.Format(format, args));
         }
 
         /// <summary>
@@ -256,7 +256,7 @@ namespace FlaxEngine
         public void LogWarning(string tag, object message)
         {
             if (IsLogTypeAllowed(LogType.Warning))
-                logHandler.Log(LogType.Warning, null, string.Format(TagFormat, tag, GetString(message)));
+                LogHandler.Log(LogType.Warning, null, string.Format(TagFormat, tag, GetString(message)));
         }
 
         /// <summary>
@@ -271,7 +271,7 @@ namespace FlaxEngine
         public void LogWarning(string tag, object message, Object context)
         {
             if (IsLogTypeAllowed(LogType.Warning))
-                logHandler.Log(LogType.Warning, context, string.Format(TagFormat, tag, GetString(message)));
+                LogHandler.Log(LogType.Warning, context, string.Format(TagFormat, tag, GetString(message)));
         }
     }
 }

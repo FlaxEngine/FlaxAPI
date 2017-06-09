@@ -9,6 +9,7 @@ namespace FlaxEngine.Assertions
     {
         private string _userMessage;
 
+        /// <inheritdoc />
         public override string Message
         {
             get
@@ -20,6 +21,28 @@ namespace FlaxEngine.Assertions
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssertionException"/> class.
+        /// </summary>
+        public AssertionException()
+            : this(string.Empty, string.Empty)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssertionException"/> class.
+        /// </summary>
+        /// <param name="userMessage">The user message.</param>
+        public AssertionException(string userMessage)
+            : this("Assertion failed!", userMessage)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssertionException"/> class.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="userMessage">The user message.</param>
         public AssertionException(string message, string userMessage)
             : base(message)
         {

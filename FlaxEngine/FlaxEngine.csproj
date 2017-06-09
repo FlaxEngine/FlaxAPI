@@ -89,6 +89,7 @@
     <Compile Include="API\Assets\FontAsset.Gen.cs">
       <DependentUpon>FontAsset.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\CreateWindowSettings.cs" />
     <Compile Include="API\Objects\Actor.cs" />
     <Compile Include="API\Objects\Actor.Gen.cs">
       <DependentUpon>Actor.cs</DependentUpon>
@@ -105,6 +106,8 @@
     <Compile Include="API\Objects\Script.Gen.cs">
       <DependentUpon>Script.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Objects\Window.cs" />
+    <Compile Include="API\Objects\Window.Gen.cs" />
     <Compile Include="API\Static\Content.cs" />
     <Compile Include="API\Static\Content.Gen.cs">
       <DependentUpon>Content.cs</DependentUpon>
@@ -139,11 +142,20 @@
       <DependentUpon>Control.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\Control.cs" />
+    <Compile Include="GUI\Docking\DockPanel.cs" />
+    <Compile Include="GUI\Docking\DockWindow.cs" />
+    <Compile Include="GUI\Docking\FloatWindowDockPanel.cs" />
+    <Compile Include="GUI\Docking\MasterDockPanel.cs" />
     <Compile Include="GUI\Enums.cs" />
     <Compile Include="GUI\Input\TextBox.cs" />
     <Compile Include="GUI\Input\TextBox.Keys.cs">
       <DependentUpon>TextBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Panels\HScrollBar.cs" />
+    <Compile Include="GUI\Panels\ScrollBar.cs" />
+    <Compile Include="GUI\Panels\Panel.cs" />
+    <Compile Include="GUI\Panels\SplitPanel.cs" />
+    <Compile Include="GUI\Panels\VScrollBar.cs" />
     <Compile Include="GUI\Style.cs" />
     <Compile Include="GUI\Window.cs" />
     <Compile Include="API\Actors\EmptyActor.cs" />

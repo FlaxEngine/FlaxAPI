@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using FlaxEngine;
+using FlaxEngine.Assertions;
 
 namespace FlaxEditor.States
 {
@@ -88,7 +89,7 @@ namespace FlaxEditor.States
         /// <inheritdoc />
         public override void OnEnter()
         {
-            Debug.Assert(_lastSceneFromRequest == Guid.Empty, "Invalid state.");
+            Assert.AreEqual(Guid.Empty, _lastSceneFromRequest, "Invalid state.");
 
             // Bind events
             SceneManager.OnSceneLoaded += onSceneEvent;
@@ -118,7 +119,7 @@ namespace FlaxEditor.States
         /// <inheritdoc />
         public override void OnExit()
         {
-            Debug.Assert(_lastSceneFromRequest == Guid.Empty, "Invalid state.");
+            Assert.AreEqual(Guid.Empty, _lastSceneFromRequest, "Invalid state.");
 
             // Unbind events
             SceneManager.OnSceneLoaded -= onSceneEvent;

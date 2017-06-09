@@ -14,7 +14,6 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-
 	/// <summary>
 	/// The interface to get input information from Flax.
 	/// </summary>

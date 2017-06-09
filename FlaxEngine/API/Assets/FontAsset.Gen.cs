@@ -14,7 +14,6 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-
 	/// <summary>
 	/// Font asset contains glyph collection and cached data used to render text
 	/// </summary>

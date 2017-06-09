@@ -3,14 +3,13 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Threading;
 
 namespace FlaxEngine.GUI
 {
     /// <summary>
     ///     Base class for all GUI controls
     /// </summary>
-    public partial class Control : Object
+    public partial class Control
     {
         private ContainerControl _parent;
         private bool _isDisposing, _isFocused;
@@ -107,10 +106,7 @@ namespace FlaxEngine.GUI
                     _dockStyle = value;
 
                     // Update parent's container
-                    if (HasParent)
-                    {
-                        _parent.PerformLayout();
-                    }
+                    _parent?.PerformLayout();
                 }
             }
         }
@@ -189,6 +185,22 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual Window ParentWindow => HasParent ? _parent.ParentWindow : null;
 
+        /// <summary>
+        /// Gets screen position of the control (upper left corner).
+        /// </summary>
+        /// <returns>Screen position of the control.</returns>
+        public Vector2 ScreenPos
+        {
+            get
+            {
+                var parentWin = ParentWindow;
+                if (parentWin == null)
+                    throw new InvalidOperationException("Missing parent window.");
+                var clientPos = PointToWindow(Vector2.Zero);
+                return parentWin.ClientToScreen(clientPos);
+            }
+        }
+
         #endregion
 
         /// <summary>
@@ -208,10 +220,8 @@ namespace FlaxEngine.GUI
         ///     Init
         /// </summary>
         /// <param name="canFocus">True if control can accept user focus</param>
-        /// <param name="x">X coordinate</param>
-        /// <param name="y">Y coordinate</param>
-        /// <param name="width">Width</param>
-        /// <param name="height">Height</param>
+        /// <param name="location">Upper left corner location.</param>
+        /// <param name="size">Bounds size.</param>
         protected Control(bool canFocus, Vector2 location, Vector2 size)
             : this(canFocus, new Rectangle(location, size))
         {
@@ -321,7 +331,7 @@ namespace FlaxEngine.GUI
         /// <param name="size">Control's size</param>
         public virtual void SetSize(Vector2 size)
         {
-            if (!this._bounds.Size.Equals(size))
+            if (!_bounds.Size.Equals(size))
             {
                 SetSizeInternal(size);
             }
@@ -678,6 +688,8 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void OnDestroy()
         {
+            if(IsFocused)
+                Defocus();
         }
 
         #endregion

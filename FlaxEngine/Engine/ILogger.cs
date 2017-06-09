@@ -4,22 +4,26 @@ using System;
 
 namespace FlaxEngine
 {
+    /// <summary>
+    /// Logger interface.
+    /// </summary>
+    /// <seealso cref="FlaxEngine.ILogHandler" />
     public interface ILogger : ILogHandler
     {
         /// <summary>
         /// <para>To selective enable debug log message.</para>
         /// </summary>
-        LogType filterLogType { get; set; }
+        LogType FilterLogType { get; set; }
 
         /// <summary>
         /// <para>To runtime toggle debug logging [ON/OFF].</para>
         /// </summary>
-        bool logEnabled { get; set; }
+        bool LogEnabled { get; set; }
 
         /// <summary>
         /// <para>Set Logger.ILogHandler.</para>
         /// </summary>
-        ILogHandler logHandler { get; set; }
+        ILogHandler LogHandler { get; set; }
 
         /// <summary>
         /// <para>Check logging is enabled based on the LogType.</para>
