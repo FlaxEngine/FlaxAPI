@@ -163,37 +163,32 @@ namespace FlaxEngine
         public delegate void KeyboardDelegate(KeyCode key);
 
         /// <summary>
-        /// Event fired on key press
+        /// Event fired on key pressed.
         /// </summary>
-        public event KeyboardDelegate OnKeyPressed;
+        public event KeyboardDelegate OnKeyDown;
 
         /// <summary>
-        /// Event fired on key release
+        /// Event fired on key released.
         /// </summary>
-        public event KeyboardDelegate OnKeyReleased;
+        public event KeyboardDelegate OnKeyUp;
 
         /// <summary>
-        /// Event fired when mouse leaves window
-        /// </summary>
-        public event Action OnMouseLeave;
-
-        /// <summary>
-        /// Event fired when mouse goes down
+        /// Event fired when mouse goes down.
         /// </summary>
         public event MouseButtonsDelegate OnMouseDown;
 
         /// <summary>
-        /// Event fired when mouse goes up
+        /// Event fired when mouse goes up.
         /// </summary>
         public event MouseButtonsDelegate OnMouseUp;
 
         /// <summary>
-        /// Event fired when mouse double clicks
+        /// Event fired when mouse double clicks.
         /// </summary>
         public event MouseButtonsDelegate OnMouseDoubleClick;
 
         /// <summary>
-        /// Event fired when mouse wheel is scrolling
+        /// Event fired when mouse wheel is scrolling.
         /// </summary>
         public event MouseWheelDelegate OnMouseWheel;
 
@@ -203,25 +198,30 @@ namespace FlaxEngine
         public event MouseMoveDelegate OnMouseMove;
 
         /// <summary>
-        /// Event fired when window gets focus
+        /// Event fired when mouse leaves window.
+        /// </summary>
+        public event Action OnMouseLeave;
+
+        /// <summary>
+        /// Event fired when window gets focus.
         /// </summary>
         public event Action OnGotFocus;
 
         /// <summary>
-        /// Event fired when window losts focus
+        /// Event fired when window losts focus.
         /// </summary>
         public event Action OnLostFocus;
+
+        /// <summary>
+        /// Event fired when window performs hit test, parameter is a mouse position
+        /// </summary>
+        public HitTestDelegate OnHitTest;
 
         /// <summary>
         /// Event fired when left mouse button goes down (hit test performed etc.).
         /// Returns true if event has been processed and further actions should be canceled, otherwise false.
         /// </summary>
         public Func<WindowHitCodes, bool> OnLButtonHit;
-
-        /// <summary>
-        /// Event fired when window performs hit test, parameter is a mouse position
-        /// </summary>
-        public HitTestDelegate OnHitTest;
 
         /// <summary>
         /// Event fired when windows wants to be closed. Should return true if suspend window closing, otherwise returns false
@@ -274,19 +274,30 @@ namespace FlaxEngine
 
         #region Internal Events
 
-        internal void Internal_OnKeyPressed(KeyCode key)
+        internal void Internal_OnShow()
         {
-            OnKeyPressed?.Invoke(key);
+            GUI.UnlockChildrenRecursive();
+            GUI.PerformLayout();
         }
 
-        internal void Internal_OnKeyReleased(KeyCode key)
+        internal void Internal_OnUpdate(float dt)
         {
-            OnKeyReleased?.Invoke(key);
+            GUI.Update(dt);
         }
 
-        internal void Internal_OnMouseLeave()
+        internal void Internal_OnResize(int width, int height)
         {
-            OnMouseLeave?.Invoke();
+            GUI.SetSize(width, height);
+        }
+
+        internal void Internal_OnKeyDown(KeyCode key)
+        {
+            OnKeyDown?.Invoke(key);
+        }
+
+        internal void Internal_OnKeyUp(KeyCode key)
+        {
+            OnKeyUp?.Invoke(key);
         }
 
         internal void Internal_OnMouseDown(ref Vector2 mousePos, MouseButtons buttons)
@@ -312,6 +323,11 @@ namespace FlaxEngine
         internal void Internal_OnMouseMove(ref Vector2 mousePos)
         {
             OnMouseMove?.Invoke(mousePos);
+        }
+
+        internal void Internal_OnMouseLeave()
+        {
+            OnMouseLeave?.Invoke();
         }
 
         internal void Internal_OnGotFocus()
@@ -341,9 +357,30 @@ namespace FlaxEngine
             }
         }
 
-        internal void Internal_OnClosing(Window window, ClosingReason reason, ref bool cancel)
+        // TODO: support drag and drop in C# GUI
+        /*internal DragDropEffect Internal_OnDragEnter(IGuiData* data, ref Vector2 location)
         {
-            OnClosing?.Invoke(window, reason, ref cancel);
+            return DragDropEffect.None;
+        }
+
+        internal DragDropEffect Internal_OnDragOver(IGuiData* data, ref Vector2 location)
+        {
+            return DragDropEffect.None;
+        }
+
+        internal DragDropEffect Internal_OnDragDrop(IGuiData* data, ref Vector2 location)
+        {
+            return DragDropEffect.None;
+        }
+
+        internal void Internal_OnDragLeave()
+        {
+        }
+        */
+
+        internal void Internal_OnClosing(ClosingReason reason, ref bool cancel)
+        {
+            OnClosing?.Invoke(this, reason, ref cancel);
         }
 
         internal void Internal_OnClosed()
@@ -351,8 +388,8 @@ namespace FlaxEngine
             OnClosed?.Invoke();
 
             // Force clear all events (we cannot window after close)
-            OnKeyPressed = null;
-            OnKeyReleased = null;
+            OnKeyDown = null;
+            OnKeyUp = null;
             OnMouseLeave = null;
             OnMouseDown = null;
             OnMouseUp = null;
