@@ -43,8 +43,8 @@ namespace FlaxEngine.GUI.Docking
             // Link
             _masterPanel.FloatingPanels.Add(this);
             Parent = window;
-            window.OnClosing += onClosing;
-            window.OnLButtonHit += onLButtonHit;
+            window.NativeWindow.OnClosing += onClosing;
+            window.NativeWindow.OnLButtonHit += onLButtonHit;
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace FlaxEngine.GUI.Docking
             return false;
         }
 
-        private void onClosing(Window window, ClosingReason reason, ref bool cancel)
+        private void onClosing(ClosingReason reason, ref bool cancel)
         {
             // Close all docked windows
             while (_tabs.Count > 0)
@@ -129,13 +129,15 @@ namespace FlaxEngine.GUI.Docking
             }
 
             // Unlink
-            _window.OnClosing -= onClosing;
-            _window.OnLButtonHit -= onLButtonHit;
+            _window.NativeWindow.OnClosing -= onClosing;
+            _window.NativeWindow.OnLButtonHit = null;
             _window = null;
         }
 
+        /// <inheritdoc />
         public override bool IsFloating => true;
 
+        /// <inheritdoc />
         public override DockState TryGetDockState(ref float splitterValue)
         {
             return DockState.Float;

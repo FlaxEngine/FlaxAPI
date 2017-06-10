@@ -12,7 +12,7 @@ namespace FlaxEngine.GUI
     public class Style
     {
         /// <summary>
-        /// Global GUI style used by all the control
+        /// Global GUI style used by all the controls.
         /// </summary>
         public static Style Current { get; set; }
 
@@ -91,20 +91,20 @@ namespace FlaxEngine.GUI
             }
 
             // Metro Style colors
-            style.Background = Color.FromBgra(0x1C1C1C);
-            style.LightBackground = Color.FromBgra(0x2D2D30);
-            style.Foreground = Color.FromBgra(0xFFFFFF);
+            style.Background = Color.FromBgra(0xFF1C1C1C);
+            style.LightBackground = Color.FromBgra(0xFF2D2D30);
+            style.Foreground = Color.FromBgra(0xFFFFFFFF);
             style.ForegroundDisabled = new Color(0.6f);
-            style.BackgroundHighlighted = Color.FromBgra(0x54545C);
-            style.BorderHighlighted = Color.FromBgra(0x6A6A75);
-            style.BackgroundSelected = Color.FromBgra(0x007ACC);
-            style.BorderSelected = Color.FromBgra(0x1C97EA);
-            style.BackgroundNormal = Color.FromBgra(0x3F3F46);
-            style.BorderNormal = Color.FromBgra(0x54545C);
-            style.TextBoxBackground = Color.FromBgra(0x333337);
-            style.TextBoxBackgroundSelected = Color.FromBgra(0x3F3F46);
+            style.BackgroundHighlighted = Color.FromBgra(0xFF54545C);
+            style.BorderHighlighted = Color.FromBgra(0xFF6A6A75);
+            style.BackgroundSelected = Color.FromBgra(0xFF007ACC);
+            style.BorderSelected = Color.FromBgra(0xFF1C97EA);
+            style.BackgroundNormal = Color.FromBgra(0xFF3F3F46);
+            style.BorderNormal = Color.FromBgra(0xFF54545C);
+            style.TextBoxBackground = Color.FromBgra(0xFF333337);
+            style.TextBoxBackgroundSelected = Color.FromBgra(0xFF3F3F46);
             style.DragWindow = style.BackgroundSelected * 0.7f;
-            style.ProgressNormal = Color.FromBgra(0x0ad328);
+            style.ProgressNormal = Color.FromBgra(0xFF0ad328);
 
             return style;
         }

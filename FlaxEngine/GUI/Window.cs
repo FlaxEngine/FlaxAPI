@@ -24,22 +24,6 @@ namespace FlaxEngine.GUI
         private FlaxEngine.Window _window;
 
         /// <summary>
-        /// Event fired when windows wants to be closed. Should return true if suspend window closing, otherwise returns false.
-        /// </summary>
-        public event ClosingDelegate OnClosing;
-        
-        /// <summary>
-        /// Event fired when left mouse button goes down (hit test performed etc.).
-        /// Returns true if event has been processed and further actions should be canceled, otherwise false.
-        /// </summary>
-        public event Func<WindowHitCodes, bool> OnLButtonHit;
-
-        /// <summary>
-        /// Event fired when window performs hit test, parameter is a mouse position
-        /// </summary>
-        public event Func<Vector2, WindowHitCodes> OnHitTest;
-        
-        /// <summary>
         /// Gets current focused control
         /// </summary>
         public Control FocusedControl
@@ -139,6 +123,8 @@ namespace FlaxEngine.GUI
             if (window == null)
                 throw new ArgumentNullException(nameof(window));
             _window = window;
+
+            BackgroundColor = Style.Current.Background;
         }
 
         /// <summary>

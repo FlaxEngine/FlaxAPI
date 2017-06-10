@@ -148,9 +148,8 @@ namespace FlaxEditor.Modules
             // TODO: link for OnScriptsReloadStart/OnScriptsReloadEnd events and don't fire scene events on scripts reload?
         }
 
-        private void MainWindow_OnClosing(Window window, ClosingReason reason, ref bool cancel)
+        private void MainWindow_OnClosing(ClosingReason reason, ref bool cancel)
         {
-            Assert.IsTrue(window == MainWindow);
             Debug.Log("Main window is closing, reason: " + reason);
 
             SaveCurrentLayout();

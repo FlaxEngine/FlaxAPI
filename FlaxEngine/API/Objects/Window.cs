@@ -124,10 +124,9 @@ namespace FlaxEngine
         /// <summary>
         /// Window closing delegate.
         /// </summary>
-        /// <param name="window">The window.</param>
         /// <param name="reason">The closing reason.</param>
         /// <param name="cancel">If set to <c>true</c> operation will be cancelled, otherwise window will be closed.</param>
-        public delegate void ClosingDelegate(Window window, ClosingReason reason, ref bool cancel);
+        public delegate void ClosingDelegate(ClosingReason reason, ref bool cancel);
 
         /// <summary>
         /// Perform window hit test delegate.
@@ -285,6 +284,11 @@ namespace FlaxEngine
             GUI.Update(dt);
         }
 
+        internal void Internal_OnDraw()
+        {
+            GUI.Draw();
+        }
+
         internal void Internal_OnResize(int width, int height)
         {
             GUI.SetSize(width, height);
@@ -380,7 +384,7 @@ namespace FlaxEngine
 
         internal void Internal_OnClosing(ClosingReason reason, ref bool cancel)
         {
-            OnClosing?.Invoke(this, reason, ref cancel);
+            OnClosing?.Invoke(reason, ref cancel);
         }
 
         internal void Internal_OnClosed()
