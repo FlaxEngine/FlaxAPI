@@ -16,5 +16,16 @@ namespace FlaxEditor.Content
     /// <seealso cref="FlaxEditor.Content.ContentItem" />
     public sealed class NewItem : ContentItem
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NewItem"/> class.
+        /// </summary>
+        /// <param name="path">The path for the new item.</param>
+        public NewItem(string path)
+            : base(path)
+        {
+        }
+
+        /// <inheritdoc />
+        public override ContentItemType ItemType => ContentItemType.Other;
     }
 }

@@ -2,11 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace FlaxEditor.Content
 {
@@ -16,7 +12,70 @@ namespace FlaxEditor.Content
     /// <seealso cref="FlaxEditor.Content.ContentItem" />
     public class ScriptItem : ContentItem
     {
+        /// <summary>
+        /// Gets the name of the script (deducted from the asset name).
+        /// </summary>
+        /// <value>
+        /// The name of the script.
+        /// </value>
+        public string ScriptName => FilterScriptName(ShortName);
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScriptItem"/> class.
+        /// </summary>
+        /// <param name="path">The path to the item.</param>
+        public ScriptItem(string path)
+            : base(path)
+        {
+        }
+
+        private static string FilterScriptName(string input)
+        {
+            var length = input.Length;
+            var sb = new StringBuilder(length);
+
+            // Skip leading '0-9' characters
+            for (int i = 0; i < length; i++)
+            {
+                var c = input[i];
+
+                if (char.IsLetterOrDigit(c) && !char.IsDigit(c))
+                    break;
+            }
+
+            // Remove all characters that are not '_' or 'a-z' or 'A-Z' or '0-9'
+            for (int i = 0; i < length; i++)
+            {
+                var c = input[i];
+
+                if (c == '_' || char.IsLetterOrDigit(c))
+                    sb.Append(c);
+            }
+
+            // Check for empty name
+            if (sb.Length == 0)
+                sb.Append("MyScript");
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Creates the name of the script for the given file.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>Script name</returns>
+        public static string CreateScriptName(string path)
+        {
+            return FilterScriptName(System.IO.Path.GetFileNameWithoutExtension(path));
+        }
+
         /// <inheritdoc />
         public override ContentItemType ItemType => ContentItemType.Script;
+
+        /// <inheritdoc />
+        public override ScriptItem FindScriptWitScriptName(string scriptName)
+        {
+            return scriptName == ScriptName ? this : null;
+        }
     }
 }

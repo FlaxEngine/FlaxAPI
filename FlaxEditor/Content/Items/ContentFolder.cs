@@ -15,6 +15,15 @@ namespace FlaxEditor.Content
     /// </summary>
     public class ContentFolder : ContentItem
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContentFolder"/> class.
+        /// </summary>
+        /// <param name="path">The path to the item.</param>
+        public ContentFolder(string path)
+            : base(path)
+        {
+        }
+
         /// <inheritdoc />
         public override ContentItemType ItemType => ContentItemType.Folder;
     }

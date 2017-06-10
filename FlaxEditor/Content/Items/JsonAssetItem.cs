@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlaxEngine;
 
 namespace FlaxEditor.Content
 {
@@ -16,5 +17,15 @@ namespace FlaxEditor.Content
     /// <seealso cref="FlaxEditor.Content.AssetItem" />
     public class JsonAssetItem : AssetItem
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JsonAssetItem"/> class.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="id">The identifier.</param>
+        /// <param name="typeName">Name of the resource type.</param>
+        public JsonAssetItem(string path, Guid id, string typeName)
+            : base(path, id)
+        {
+        }
     }
 }

@@ -3,10 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FlaxEngine;
 
 namespace FlaxEditor.Content
 {
@@ -16,6 +13,28 @@ namespace FlaxEditor.Content
     /// <seealso cref="FlaxEditor.Content.ContentItem" />
     public abstract class AssetItem : ContentItem
     {
+        /// <summary>
+        /// Gets the asset unique identifier.
+        /// </summary>
+        /// <value>
+        /// The identifier.
+        /// </value>
+        public Guid ID { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssetItem"/> class.
+        /// </summary>
+        /// <param name="path">The asset path.</param>
+        /// <param name="id">The asset identifier.</param>
+        protected AssetItem(string path, Guid id)
+            : base(path)
+        {
+            ID = id;
+        }
+
+        /// <inheritdoc />
+        public override ContentDomain ItemDomain => ContentDomain.Other;
+
         /// <inheritdoc />
         public override ContentItemType ItemType => ContentItemType.Asset;
     }

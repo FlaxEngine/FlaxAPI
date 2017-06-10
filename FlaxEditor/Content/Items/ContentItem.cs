@@ -4,9 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
@@ -120,6 +117,12 @@ namespace FlaxEditor.Content
         public bool CanHaveChildren => ItemType == ContentItemType.Folder;
 
         /// <summary>
+        /// Determines whether this item can be renamed.
+        /// </summary>
+        /// <returns>True if this item can be renamed, otherwise false.</returns>
+        public virtual bool CanRename => true;
+
+        /// <summary>
         /// Gets the parent folder.
         /// </summary>
         /// <value>
@@ -144,6 +147,20 @@ namespace FlaxEditor.Content
         public string ShortName { get; private set; }
 
         /// <summary>
+        /// Gets the asset name relative to the project root folder (without asset file extension)
+        /// </summary>
+        /// <value>
+        /// The name path.
+        /// </value>
+        public string NamePath
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
         /// Gets the amount of references to that item.
         /// </summary>
         /// <value>
@@ -158,6 +175,9 @@ namespace FlaxEditor.Content
         protected ContentItem(string path)
             : base(true, 0, 0, DefaultWidth, DefaultHeight)
         {
+            // Set path
+            Path = path;
+            ShortName = System.IO.Path.GetFileNameWithoutExtension(path);
         }
 
         /// <summary>
@@ -177,6 +197,54 @@ namespace FlaxEditor.Content
             {
                 _references[i].OnItemRenamed(this);
             }
+        }
+
+        /// <summary>
+        /// Refreshes the item preview.
+        /// </summary>
+        public virtual void RefreshPreview()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Trues to find the item at the specified path.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>Found item or null if missing.</returns>
+        public virtual ContentItem Find(string path)
+        {
+            return Path == path ? this : null;
+        }
+
+        /// <summary>
+        /// Tries to find a specified item in the assets tree.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>True if has been found, otherwise false.</returns>
+        public virtual bool Find(ContentItem item)
+        {
+            return this == item;
+        }
+
+        /// <summary>
+        /// Trues to find the item with the specified id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>Found item or null if missing.</returns>
+        public virtual ContentItem Find(Guid id)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Tries to find script with the given name.
+        /// </summary>
+        /// <param name="scriptName">Name of the script.</param>
+        /// <returns>Found script or null if missing.</returns>
+        public virtual ScriptItem FindScriptWitScriptName(string scriptName)
+        {
+            return null;
         }
     }
 }
