@@ -10,10 +10,29 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Assets objects base class
-	/// </summary>
-	public partial class Asset
+    /// <summary>
+    /// Basic types of the content assets base types
+    /// </summary>
+    public enum ContentDomain
+    {
+        Invalid,
+        Texture,
+        CubeTexture,
+        Material,
+        Model,
+        Prefab,
+        Document,
+        Other,
+        Shader,
+        Font,
+        IESProfile,
+        Scene
+    }
+
+    /// <summary>
+    /// Assets objects base class
+    /// </summary>
+    public partial class Asset
 	{
         /// <inheritdoc />
         public override string ToString()
