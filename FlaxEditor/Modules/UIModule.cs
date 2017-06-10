@@ -24,5 +24,19 @@ namespace FlaxEditor.Modules
             : base(editor)
         {
         }
+
+        /// <inheritdoc />
+        public override void OnInit()
+        {
+            Editor.Windows.OnMainWindowClosing += OnOnMainWindowClosing;
+            var mainWindow = Editor.Windows.MainWindow.GUI;
+
+
+        }
+
+        private void OnOnMainWindowClosing()
+        {
+            // TODO: clear ui references
+        }
     }
 }

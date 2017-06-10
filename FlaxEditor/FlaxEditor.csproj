@@ -43,6 +43,14 @@
     <Compile Include="API\Editor.Gen.cs" />
     <Compile Include="API\Static\ScriptsBuilder.cs" />
     <Compile Include="API\Static\ScriptsBuilder.Gen.cs" />
+    <Compile Include="Content\Items\AssetItem.cs" />
+    <Compile Include="Content\Items\BinaryAssetItem.cs" />
+    <Compile Include="Content\Items\ContentFolder.cs" />
+    <Compile Include="Content\Items\ContentItem.cs" />
+    <Compile Include="Content\Items\JsonAssetItem.cs" />
+    <Compile Include="Content\Items\NewItem.cs" />
+    <Compile Include="Content\Items\SceneItem.cs" />
+    <Compile Include="Content\Items\ScriptItem.cs" />
     <Compile Include="History\HistoryStack.cs" />
     <Compile Include="History\IHistoryAction.cs" />
     <Compile Include="History\UndoActionObject.cs" />
@@ -71,6 +79,7 @@
     <Compile Include="States\ReloadingScriptsState.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
     <Compile Include="Windows\Assets\AssetEditorWindow.cs" />
+    <Compile Include="Windows\ContentWindow.cs" />
     <Compile Include="Windows\EditorWindow.cs" />
     <Compile Include="Undo\Undo.cs" />
     <Compile Include="Utilities\Extenstions.cs" />
@@ -84,7 +93,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Content\" />
     <Folder Include="Viewport\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
