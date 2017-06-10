@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlaxEditor.Windows;
+using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 
@@ -33,6 +34,11 @@ namespace FlaxEditor.Modules
         /// The main editor window.
         /// </summary>
         public Window MainWindow { get; private set; }
+
+        /// <summary>
+        /// Occurs when main editor window is being closed.
+        /// </summary>
+        public event Action OnMainWindowClosing;
 
         /// <summary>
         /// List with all created editor windows.
@@ -147,7 +153,40 @@ namespace FlaxEditor.Modules
             Assert.IsTrue(window == MainWindow);
             Debug.Log("Main window is closing, reason: " + reason);
 
-            // TODO: check if scenes/assets are unsaved and ask user if canel/save/sth
+            SaveCurrentLayout();
+            
+            // Block closing only on user events
+            if (reason == ClosingReason.User)
+            {
+                // Check if cancel action or save scene before exit
+                if (Editor.Scene.CheckSaveBeforeClose())
+                {
+                    // Cancel
+                    cancel = true;
+                    return;
+                }
+
+                // Close all asset editor windows
+                for (int i = 0; i < Windows.Count; i++)
+                {
+                    var assetEditorWindow = Windows[i] as AssetEditorWindow;
+                    if (assetEditorWindow != null)
+                    {
+                        if (assetEditorWindow.Close(ClosingReason.User))
+                        {
+                            // Cancel
+                            cancel = true;
+                            return;
+                        }
+
+                        // Remove it
+                        Windows.Remove(assetEditorWindow);
+                        i--;
+                    }
+                }
+            }
+
+            OnMainWindowClosing?.Invoke();
         }
 
         private void MainWindow_OnClosed()
@@ -164,6 +203,17 @@ namespace FlaxEditor.Modules
 
             // Clear timer flag
             _lastLayoutSaveTime = DateTime.UtcNow;
+        }
+
+        /// <inheritdoc />
+        public override void OnUpdate()
+        {
+            // Auto save workspace layout every few seconds
+            var now = DateTime.UtcNow;
+            if (_lastLayoutSaveTime.Ticks > 10 && now - _lastLayoutSaveTime >= TimeSpan.FromSeconds(5))
+            {
+                SaveCurrentLayout();
+            }
         }
 
         /// <inheritdoc />
