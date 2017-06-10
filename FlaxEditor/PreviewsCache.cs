@@ -1,6 +1,7 @@
 ﻿// Flax Engine scripting API
 
 using FlaxEngine;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor
 {

@@ -233,6 +233,8 @@
     <Compile Include="Math\Vector2.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Math\Vector4.cs" />
+    <Compile Include="Rendering\PixelFormat.cs" />
+    <Compile Include="Rendering\PixelFormatExtensions.cs" />
     <Compile Include="Utilities\Extenstions.cs" />
     <Compile Include="Utilities\State.cs" />
     <Compile Include="Utilities\StateMachine.cs" />
