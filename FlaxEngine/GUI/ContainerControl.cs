@@ -678,9 +678,7 @@ namespace FlaxEngine.GUI
         {
             // Check if update is locked
             if (IsLayoutLocked)
-            {
                 return;
-            }
 
             IsLayoutLocked = true;
 

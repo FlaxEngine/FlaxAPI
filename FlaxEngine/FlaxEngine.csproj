@@ -138,6 +138,13 @@
     </Compile>
     <Compile Include="GUI\Common\Button.cs" />
     <Compile Include="GUI\ContainerControl.cs" />
+    <Compile Include="GUI\ContainerControlChildrenSized.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenu.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuBase.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuButton.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuChildMenu.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuItem.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuSeparator.cs" />
     <Compile Include="GUI\Control.Bounds.cs">
       <DependentUpon>Control.cs</DependentUpon>
     </Compile>
