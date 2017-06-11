@@ -15,7 +15,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
 	/// <summary>
-	/// Assets objects base class
+	/// Asset objects base class.
 	/// </summary>
 	public partial class Asset : Object
 	{
@@ -45,12 +45,32 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Stops the current thread execution and waits until asset will be loaded (loading will fail, success or be cancelled).
+		/// </summary>
+		/// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
+		/// <returns>True if cannot load that asset (failed or has been cancelled), otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public bool WaitForLoaded(double timeoutInMiliseconds = 10000.0) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_WaitForLoaded(unmanagedPtr, timeoutInMiliseconds);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern string Internal_GetName(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern int Internal_GetRefCount(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_WaitForLoaded(IntPtr obj, double timeoutInMiliseconds);
 #endif
 #endregion
 	}
