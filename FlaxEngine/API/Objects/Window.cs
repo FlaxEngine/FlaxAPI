@@ -297,51 +297,61 @@ namespace FlaxEngine
         internal void Internal_OnKeyDown(KeyCode key)
         {
             OnKeyDown?.Invoke(key);
+            GUI.OnKeyDown(key);
         }
 
         internal void Internal_OnKeyUp(KeyCode key)
         {
             OnKeyUp?.Invoke(key);
+            GUI.OnKeyDown(key);
         }
 
         internal void Internal_OnMouseDown(ref Vector2 mousePos, MouseButtons buttons)
         {
             OnMouseDown?.Invoke(mousePos, buttons);
+            GUI.OnMouseDown(mousePos, buttons);
         }
 
         internal void Internal_OnMouseUp(ref Vector2 mousePos, MouseButtons buttons)
         {
             OnMouseUp?.Invoke(mousePos, buttons);
+            GUI.OnMouseUp(mousePos, buttons);
         }
 
         internal void Internal_OnMouseDoubleClick(ref Vector2 mousePos, MouseButtons buttons)
         {
             OnMouseDoubleClick?.Invoke(mousePos, buttons);
+            GUI.OnMouseDoubleClick(mousePos, buttons);
         }
 
         internal void Internal_OnMouseWheel(ref Vector2 mousePos, int delta)
         {
             OnMouseWheel?.Invoke(mousePos, delta);
+            GUI.OnMouseWheel(mousePos, delta);
         }
 
         internal void Internal_OnMouseMove(ref Vector2 mousePos)
         {
             OnMouseMove?.Invoke(mousePos);
+            GUI.OnMouseMove(mousePos);
         }
 
         internal void Internal_OnMouseLeave()
         {
             OnMouseLeave?.Invoke();
+            GUI.OnMouseLeave();
         }
 
         internal void Internal_OnGotFocus()
         {
             OnGotFocus?.Invoke();
+            GUI.OnGotFocus();
         }
 
         internal void Internal_OnLostFocus()
         {
             OnLostFocus?.Invoke();
+            GUI.OnLostFocus();
         }
 
         internal void Internal_OnHitTest(ref Vector2 mousePos, ref WindowHitCodes result, ref bool handled)
