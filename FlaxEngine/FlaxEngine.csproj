@@ -89,6 +89,8 @@
     <Compile Include="API\Assets\FontAsset.Gen.cs">
       <DependentUpon>FontAsset.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Assets\SpriteAtlas.cs" />
+    <Compile Include="API\Assets\SpriteAtlas.Gen.cs" />
     <Compile Include="API\CreateWindowSettings.cs" />
     <Compile Include="API\Objects\Actor.cs" />
     <Compile Include="API\Objects\Actor.Gen.cs">
@@ -180,7 +182,6 @@
     <Compile Include="AssetTypes\MaterialInstance.cs" />
     <Compile Include="AssetTypes\Model.cs" />
     <Compile Include="AssetTypes\Shader.cs" />
-    <Compile Include="AssetTypes\SpriteAtlas.cs" />
     <Compile Include="AssetTypes\Texture.cs" />
     <Compile Include="Bodies\BoxBody.cs" />
     <Compile Include="Enums\BrushMode.cs" />
