@@ -62,6 +62,11 @@ namespace FlaxEngine.GUI
         public ContextMenuBase TopmostCM => _parentCM != null ? _parentCM.TopmostCM : this;
 
         /// <summary>
+        /// Event fired when context menu visiblity changes (window gets shown or hidden.
+        /// </summary>
+        public event Action<ContextMenuBase> OnVisibilityChanged;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ContextMenuBase"/> class.
         /// </summary>
         public ContextMenuBase()
@@ -120,7 +125,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         protected virtual void OnShow()
         {
-            throw new NotImplementedException();
+            // Nothing to do
         }
 
         /// <summary>
@@ -128,8 +133,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         protected virtual void OnHide()
         {
-            throw new NotImplementedException();
-
+            // Nothing to do
         }
     }
 }

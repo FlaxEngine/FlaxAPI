@@ -168,6 +168,18 @@ namespace FlaxEditor
         }
 
         /// <summary>
+        /// Saves all changes (scenes, assets, etc.).
+        /// </summary>
+        public void SaveAll()
+        {
+            throw new NotImplementedException();
+            
+            // TODO: save assets
+            
+            Scene.SaveScenes();
+        }
+
+        /// <summary>
         /// Ensure that editor is in a given state, otherwise throws <see cref="InvalidStateException"/>.
         /// </summary>
         /// <param name="state">Valid state to check.</param>
