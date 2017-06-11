@@ -2,6 +2,7 @@
 
 using FlaxEditor.GUI;
 using FlaxEngine;
+using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 using FlaxEngine.GUI.Docking;
 
@@ -13,6 +14,8 @@ namespace FlaxEditor.Modules
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class UIModule : EditorModule
     {
+        private SpriteAtlas _iconsAtlas;
+
         /// <summary>
         /// The main menu control.
         /// </summary>
@@ -28,13 +31,115 @@ namespace FlaxEditor.Modules
         {
         }
 
+        /// <summary>
+        /// Gets the editor icon sprite with given name.
+        /// </summary>
+        /// <param name="name">The icon name.</param>
+        /// <returns>Sprite handle (may be invalid if icon has not been found or cannot load the sprite atlas).</returns>
+        public Sprite GetIcon(string name)
+        {
+            // Load asset if needed
+            if (_iconsAtlas == null)
+            {
+                _iconsAtlas = FlaxEngine.Content.LoadInternal<SpriteAtlas>("Editor/IconsAtlas");
+                if (_iconsAtlas == null)
+                {
+                    // Error
+                    return Sprite.Invalid;
+                }
+            }
+
+            // Wait for asset loaded
+            if (_iconsAtlas.WaitForLoaded())
+            {
+                // Error
+                return Sprite.Invalid;
+            }
+
+            // Find icon
+            var result = _iconsAtlas.GetSprite(name);
+            if (!result.IsValid)
+            {
+                // Warning
+                Debug.LogWarning($"Failed to load sprite icon \'{name}\'.");
+            }
+
+            return result;
+        }
+
         /// <inheritdoc />
         public override void OnInit()
         {
             Editor.Windows.OnMainWindowClosing += OnOnMainWindowClosing;
             var mainWindow = Editor.Windows.MainWindow.GUI;
 
+            InitStyle(mainWindow);
             InitMainMenu(mainWindow);
+        }
+
+        /// <inheritdoc />
+        public override void OnExit()
+        {
+            _iconsAtlas = null;
+        }
+
+        private void InitStyle(FlaxEngine.GUI.Window mainWindow)
+        {
+            Style style = new Style();
+
+            // Font
+            string primaryFontNameInternal = "Editor/Segoe Media Center Regular";
+            var primaryFont = FlaxEngine.Content.LoadInternal<FontAsset>(primaryFontNameInternal);
+            if (primaryFont)
+            {
+                // Create fonts
+                style.FontTitle = primaryFont.CreateFont(18);
+                style.FontLarge = primaryFont.CreateFont(14);
+                style.FontMedium = primaryFont.CreateFont(9);
+                style.FontSmall = primaryFont.CreateFont(9);
+
+                Assert.IsNotNull(style.FontTitle, "Missing Title font.");
+                Assert.IsNotNull(style.FontLarge, "Missing Large font.");
+                Assert.IsNotNull(style.FontMedium, "Missing Medium font.");
+                Assert.IsNotNull(style.FontSmall, "Missing Small font.");
+            }
+            else
+            {
+                Debug.LogError("Cannot load primary GUI Style font " + primaryFontNameInternal);
+            }
+
+            // Metro Style colors
+            style.Background = Color.FromBgra(0xFF1C1C1C);
+            style.LightBackground = Color.FromBgra(0xFF2D2D30);
+            style.Foreground = Color.FromBgra(0xFFFFFFFF);
+            style.ForegroundDisabled = new Color(0.6f);
+            style.BackgroundHighlighted = Color.FromBgra(0xFF54545C);
+            style.BorderHighlighted = Color.FromBgra(0xFF6A6A75);
+            style.BackgroundSelected = Color.FromBgra(0xFF007ACC);
+            style.BorderSelected = Color.FromBgra(0xFF1C97EA);
+            style.BackgroundNormal = Color.FromBgra(0xFF3F3F46);
+            style.BorderNormal = Color.FromBgra(0xFF54545C);
+            style.TextBoxBackground = Color.FromBgra(0xFF333337);
+            style.TextBoxBackgroundSelected = Color.FromBgra(0xFF3F3F46);
+            style.DragWindow = style.BackgroundSelected * 0.7f;
+            style.ProgressNormal = Color.FromBgra(0xFF0ad328);
+
+            // Icons
+            style.ArrowDown = GetIcon("ArrowDown12");
+            style.ArrowRight = GetIcon("ArrowRight12");
+            style.Search = GetIcon("Search12");
+            style.Settings = GetIcon("Settings12");
+            style.Cross = GetIcon("Cross12");
+            style.CheckBoxIntermediate = GetIcon("CheckBoxIntermediate12");
+            style.CheckBoxTick = GetIcon("CheckBoxTick12");
+            style.StatusBarSizeGrip = GetIcon("StatusBarSizeGrip12");
+            style.Translate16 = GetIcon("Translate16");
+            style.Rotate16 = GetIcon("Rotate16");
+            style.Scale16 = GetIcon("Scale16");
+
+            // Set as default
+            Style.Current = style;
+            mainWindow.BackgroundColor = style.Background;
         }
 
         private void InitMainMenu(FlaxEngine.GUI.Window mainWindow)

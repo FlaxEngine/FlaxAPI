@@ -40,7 +40,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Item icon (best is 16x16).
         /// </summary>
-        //public SpriteHandle Icon;// TODO: Sprites support
+        public Sprite Icon;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContextMenuButton"/> class.
@@ -80,8 +80,8 @@ namespace FlaxEngine.GUI
 
             // Draw icon
             const float iconSize = 16;
-            //if (Icon.IsValid())
-            //    Render2D.DrawSprite(Icon, new Rectangle(-X, (Height - iconSize) / 2, iconSize, iconSize));// TODO: Sprites support
+            //if (Icon.IsValid)
+            //    Render2D.DrawSprite(Icon, new Rectangle(-X, (Height - iconSize) / 2, iconSize, iconSize));
         }
 
         /// <inheritdoc />

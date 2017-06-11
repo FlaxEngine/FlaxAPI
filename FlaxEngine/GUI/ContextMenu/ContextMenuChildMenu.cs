@@ -48,7 +48,7 @@ namespace FlaxEngine.GUI
             Render2D.DrawText(style.FontMedium, Text, clientRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
 
             // Draw arrow
-            //if (ContextMenu.HasChildren)// TODO: Sprites support
+            //if (ContextMenu.HasChildren)
             //    Render2D.DrawSprite(style.ArrowRight, new Rectangle(Width - 15, (Height - 12) / 2, 12, 12), Enabled ? isCMopened ? style.BackgroundSelected : Color.White : style.ForegroundDisabled);
         }
 

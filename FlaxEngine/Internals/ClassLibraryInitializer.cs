@@ -12,7 +12,6 @@ namespace FlaxEngine
         {
             UnhandledExceptionHandler.RegisterUECatcher();
             FlaxLogWriter.Init();
-            GUI.Style.Current = GUI.Style.CreateDefault();
         }
     }
 }

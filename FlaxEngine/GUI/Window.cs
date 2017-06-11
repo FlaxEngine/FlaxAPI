@@ -124,7 +124,8 @@ namespace FlaxEngine.GUI
                 throw new ArgumentNullException(nameof(window));
             _window = window;
 
-            BackgroundColor = Style.Current.Background;
+            if (Style.Current != null)
+                BackgroundColor = Style.Current.Background;
         }
 
         /// <summary>
