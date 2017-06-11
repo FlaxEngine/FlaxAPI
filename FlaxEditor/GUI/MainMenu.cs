@@ -19,8 +19,9 @@ namespace FlaxEditor.GUI
         /// Initializes a new instance of the <see cref="MainMenu"/> class.
         /// </summary>
         public MainMenu()
-            : base(false, 0, 0, 0, 0)
+            : base(false, 0, 0, 120, 20)
         {
+            DockStyle = DockStyle.Top;
         }
 
         /// <summary>

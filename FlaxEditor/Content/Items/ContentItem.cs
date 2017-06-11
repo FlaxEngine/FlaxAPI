@@ -381,7 +381,7 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(MouseButtons buttons, Vector2 location)
+        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
             Focus();
 
@@ -396,7 +396,7 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(MouseButtons buttons, Vector2 location)
+        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
         {
             if (buttons == MouseButtons.Left)
             {
@@ -407,11 +407,11 @@ namespace FlaxEditor.Content
                 (Parent as ContentView).OnItemClick(this);
             }
 
-            return base.OnMouseUp(buttons, location);
+            return base.OnMouseUp(location, buttons);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(MouseButtons buttons, Vector2 location)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButtons buttons)
         {
             Focus();
 

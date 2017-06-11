@@ -476,11 +476,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="delta">
-        ///     Mosue wheeel move delta. A positive value indicates that the wheel was rotated forward, away from
-        ///     the user; a negative value indicates that the wheel was rotated backward, toward the user
+        ///   Mosue wheeel move delta. A positive value indicates that the wheel was rotated forward, away from
+        ///   the user; a negative value indicates that the wheel was rotated backward, toward the user
         /// </param>
         /// <returns>True if event has been handled</returns>
-        public virtual bool OnMouseWheel(Vector2 location, short delta)
+        public virtual bool OnMouseWheel(Vector2 location, int delta)
         {
             return false;
         }
@@ -488,10 +488,10 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     When mouse goes down over control's area
         /// </summary>
-        /// <param name="buttons">Mouse buttons state (flags)</param>
         /// <param name="location">Mouse location in Control Space</param>
+        /// <param name="buttons">Mouse buttons state (flags)</param>
         /// <returns>True if event has been handled, otherwise false</returns>
-        public virtual bool OnMouseDown(MouseButtons buttons, Vector2 location)
+        public virtual bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
             return _canFocus && Focus(this);
         }
@@ -499,10 +499,10 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     When mouse goes up over control's area
         /// </summary>
-        /// <param name="buttons">Mouse buttons state (flags)</param>
         /// <param name="location">Mouse location in Control Space</param>
+        /// <param name="buttons">Mouse buttons state (flags)</param>
         /// <returns>True if event has been handled, oherwise false</returns>
-        public virtual bool OnMouseUp(MouseButtons buttons, Vector2 location)
+        public virtual bool OnMouseUp(Vector2 location, MouseButtons buttons)
         {
             return false;
         }
@@ -510,10 +510,10 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     When mouse double clicks over control's area
         /// </summary>
-        /// <param name="buttons">Mouse buttons state (flags)</param>
         /// <param name="location">Mouse location in Control Space</param>
+        /// <param name="buttons">Mouse buttons state (flags)</param>
         /// <returns>True if event has been handled, otherwise false</returns>
-        public virtual bool OnMouseDoubleClick(MouseButtons buttons, Vector2 location)
+        public virtual bool OnMouseDoubleClick(Vector2 location, MouseButtons buttons)
         {
             return false;
         }

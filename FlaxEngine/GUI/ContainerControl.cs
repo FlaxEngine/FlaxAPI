@@ -780,7 +780,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseWheel(Vector2 location, short delta)
+        public override bool OnMouseWheel(Vector2 location, int delta)
         {
             // Check all children collsiions with mouse and fire events for them
             for (int i = 0; i < _children.Count; i++)
@@ -811,7 +811,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(MouseButtons buttons, Vector2 location)
+        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
             // Check all children collsiions with mouse and fire events for them
             for (int i = 0; i < _children.Count; i++)
@@ -829,7 +829,7 @@ namespace FlaxEngine.GUI
                     if (child.ContainsPoint(ref scrollOffsetLocation))
                     {
                         // Send event futher
-                        if (child.OnMouseDown(buttons, scrollOffsetLocation - child.Location))
+                        if (child.OnMouseDown(scrollOffsetLocation - child.Location, buttons))
                         {
                             return true;
                         }
@@ -843,11 +843,11 @@ namespace FlaxEngine.GUI
             }
 
             // Base
-            return base.OnMouseDown(buttons, location);
+            return base.OnMouseDown(location, buttons);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(MouseButtons buttons, Vector2 location)
+        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
         {
             // Check all children collsiions with mouse and fire events for them
             for (int i = 0; i < _children.Count; i++)
@@ -865,7 +865,7 @@ namespace FlaxEngine.GUI
                     if (child.HasMouseCapture)
                     {
                         // Send event futher
-                        if (child.OnMouseUp(buttons, scrollOffsetLocation - child.Location))
+                        if (child.OnMouseUp(scrollOffsetLocation - child.Location, buttons))
                         {
                             return true;
                         }
@@ -887,7 +887,7 @@ namespace FlaxEngine.GUI
                     if (child.ContainsPoint(ref scrollOffsetLocation))
                     {
                         // Send event futher
-                        if (child.OnMouseUp(buttons, scrollOffsetLocation - child.Location))
+                        if (child.OnMouseUp(scrollOffsetLocation - child.Location, buttons))
                         {
                             return true;
                         }
@@ -896,11 +896,11 @@ namespace FlaxEngine.GUI
             }
 
             // Base
-            return base.OnMouseUp(buttons, location);
+            return base.OnMouseUp(location, buttons);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(MouseButtons buttons, Vector2 location)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButtons buttons)
         {
             // Check all children collsiions with mouse and fire events for them
             for (int i = 0; i < _children.Count; i++)
@@ -919,7 +919,7 @@ namespace FlaxEngine.GUI
                     if (child.ContainsPoint(ref scrollOffsetLocation))
                     {
                         // Send event futher
-                        if (child.OnMouseDoubleClick(buttons, scrollOffsetLocation - child.Location))
+                        if (child.OnMouseDoubleClick(scrollOffsetLocation - child.Location, buttons))
                         {
                             return true;
                         }
@@ -928,7 +928,7 @@ namespace FlaxEngine.GUI
             }
 
             // Base
-            return base.OnMouseDoubleClick(buttons, location);
+            return base.OnMouseDoubleClick(location, buttons);
         }
 
         /// <inheritdoc />

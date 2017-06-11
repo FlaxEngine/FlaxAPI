@@ -94,16 +94,16 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(MouseButtons buttons, Vector2 location)
+        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
             // Set flag
             _isMouseDown = true;
 
-            return base.OnMouseDown(buttons, location);
+            return base.OnMouseDown(location, buttons);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(MouseButtons buttons, Vector2 location)
+        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
         {
             // Check if mouse was pressing
             if (_isMouseDown)

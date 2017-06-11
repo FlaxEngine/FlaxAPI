@@ -849,10 +849,10 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(MouseButtons buttons, Vector2 location)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButtons buttons)
         {
             SelectAll();
-            return base.OnMouseDoubleClick(buttons, location);
+            return base.OnMouseDoubleClick(location, buttons);
         }
         
         /// <inheritdoc />
@@ -870,7 +870,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(MouseButtons buttons, Vector2 location)
+        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
             if (buttons == MouseButtons.Left && _text.Length > 0)
             {
@@ -881,16 +881,16 @@ namespace FlaxEngine.GUI
             }
 
             // Base
-            base.OnMouseDown(buttons, location);
+            base.OnMouseDown(location, buttons);
             return true;
         }
         
         /// <inheritdoc />
-        public override bool OnMouseUp(MouseButtons buttons, Vector2 location)
+        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
         {
             if (_isSelecting)
                 OnSelectingEnd();
-            return base.OnMouseUp(buttons, location);
+            return base.OnMouseUp(location, buttons);
         }
 
         private void ActionOnSizeChanged(Control control)

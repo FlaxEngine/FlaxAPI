@@ -51,7 +51,7 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(MouseButtons buttons, Vector2 location)
+        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
             Focus();
             (Parent as MainMenu)?.Select(this);

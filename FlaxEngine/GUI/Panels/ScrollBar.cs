@@ -291,7 +291,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseWheel(Vector2 location, short delta)
+        public override bool OnMouseWheel(Vector2 location, int delta)
         {
             // Scroll
             Value = _value + (delta > 0 ? -_scrollChange : _scrollChange);
@@ -299,7 +299,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(MouseButtons buttons, Vector2 location)
+        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
             if (buttons == MouseButtons.Left)
             {
@@ -318,15 +318,15 @@ namespace FlaxEngine.GUI
                 }
             }
 
-            return base.OnMouseDown(buttons, location);
+            return base.OnMouseDown(location, buttons);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(MouseButtons buttons, Vector2 location)
+        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
         {
             EndTracking();
 
-            return base.OnMouseUp(buttons, location);
+            return base.OnMouseUp(location, buttons);
         }
 
         /// <inheritdoc />

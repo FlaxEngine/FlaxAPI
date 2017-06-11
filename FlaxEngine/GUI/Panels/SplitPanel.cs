@@ -160,7 +160,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(MouseButtons buttons, Vector2 location)
+        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
             if (buttons == MouseButtons.Left)
             {
@@ -172,11 +172,11 @@ namespace FlaxEngine.GUI
                 }
             }
 
-            return base.OnMouseDown(buttons, location);
+            return base.OnMouseDown(location, buttons);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(MouseButtons buttons, Vector2 location)
+        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
         {
             if (_splitterClicked)
             {
@@ -184,7 +184,7 @@ namespace FlaxEngine.GUI
                 return true;
             }
 
-            return base.OnMouseUp(buttons, location);
+            return base.OnMouseUp(location, buttons);
         }
 
         /// <inheritdoc />
