@@ -159,13 +159,8 @@ namespace FlaxEngine.GUI
             if (child.Parent == this && _children.Contains(child))
                 throw new InvalidOperationException("Argument child cannot be added, if current container is already its parent.");
 
-            // Remove child from his old parent
-            child.Parent?.RemoveChildInternal(child);
             // Set child new parent
             child.Parent = this;
-            
-            // Add this child to current parent
-            AddChildInternal(child);
         }
 
         /// <summary>
@@ -178,9 +173,6 @@ namespace FlaxEngine.GUI
                 throw new ArgumentNullException();
             if (child.Parent != this)
                 throw new InvalidOperationException("Argument child cannot be removed, if current container is not its parent.");
-
-            // Remove child from his current parent
-            RemoveChildInternal(child);
 
             // Unlink
             child.Parent = null;
@@ -352,14 +344,14 @@ namespace FlaxEngine.GUI
         ///     Add child control to the container
         /// </summary>
         /// <param name="child">Control to add</param>
-        protected virtual void AddChildInternal(Control child)
+        internal virtual void AddChildInternal(Control child)
         {
             Assert.IsNotNull(child, "Invalid control.");
 
             // Add child
             _children.Add(child);
 
-            // Arragne child controls
+            // Arrange child controls
             PerformLayout();
         }
 
@@ -367,7 +359,7 @@ namespace FlaxEngine.GUI
         ///     Remove child control from this container
         /// </summary>
         /// <param name="child">Control to remove</param>
-        protected virtual void RemoveChildInternal(Control child)
+        internal virtual void RemoveChildInternal(Control child)
         {
             Assert.IsNotNull(child, "Invalid control.");
 
@@ -377,7 +369,7 @@ namespace FlaxEngine.GUI
             // Check if control isn't durig disposing state
             if (!IsDisposing)
             {
-                // Arragne child controls
+                // Arrange child controls
                 PerformLayout();
             }
         }

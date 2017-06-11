@@ -60,14 +60,13 @@ namespace FlaxEngine.GUI
             set
             {
                 if (_parent == value)
-                {
                     return;
-                }
-                _parent?.RemoveChild(this);
 
                 Defocus();
+
+                _parent?.RemoveChildInternal(this);
                 _parent = value;
-                _parent?.AddChild(this);
+                _parent?.AddChildInternal(this);
 
                 OnParentChanged?.Invoke(this);
             }
