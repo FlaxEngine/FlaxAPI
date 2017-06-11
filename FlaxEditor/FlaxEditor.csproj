@@ -52,6 +52,8 @@
     <Compile Include="Content\Items\NewItem.cs" />
     <Compile Include="Content\Items\SceneItem.cs" />
     <Compile Include="Content\Items\ScriptItem.cs" />
+    <Compile Include="GUI\MainMenu.cs" />
+    <Compile Include="GUI\MainMenuButton.cs" />
     <Compile Include="History\HistoryStack.cs" />
     <Compile Include="History\IHistoryAction.cs" />
     <Compile Include="History\UndoActionObject.cs" />
