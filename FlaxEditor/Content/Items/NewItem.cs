@@ -27,5 +27,11 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override ContentItemType ItemType => ContentItemType.Other;
+
+        /// <inheritdoc />
+        public override string DefaultPreviewName => "Document64";
+
+        /// <inheritdoc />
+        protected override bool DrawShadow => true;
     }
 }

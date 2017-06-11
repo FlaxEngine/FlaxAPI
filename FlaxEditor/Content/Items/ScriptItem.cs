@@ -73,6 +73,9 @@ namespace FlaxEditor.Content
         public override ContentItemType ItemType => ContentItemType.Script;
 
         /// <inheritdoc />
+        public override string DefaultPreviewName => "Script64";
+
+        /// <inheritdoc />
         public override ScriptItem FindScriptWitScriptName(string scriptName)
         {
             return scriptName == ScriptName ? this : null;

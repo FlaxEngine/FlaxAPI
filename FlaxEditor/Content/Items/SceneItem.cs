@@ -37,5 +37,8 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override ContentItemType ItemType => ContentItemType.Scene;
+
+        /// <inheritdoc />
+        public override string DefaultPreviewName => "Scene64";
     }
 }

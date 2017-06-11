@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.Content.GUI;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
@@ -58,10 +59,11 @@ namespace FlaxEditor.Content
         /// </summary>
         /// <param name="item">The item.</param>
         void OnItemRenamed(ContentItem item);
-    };
+    }
 
     /// <summary>
     /// Base class for all content items.
+    /// Item parent GUI control is always <see cref="ContentView"/> or null if not in a view.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.Control" />
     public abstract class ContentItem : Control
@@ -161,12 +163,13 @@ namespace FlaxEditor.Content
         }
 
         /// <summary>
-        /// Gets the amount of references to that item.
+        /// Gets the default name of the content item icon.
+        /// Returns null if not used.
         /// </summary>
         /// <value>
-        /// The references count.
+        /// The default name of the preview.
         /// </value>
-        public int ReferencesCount => _references.Count;
+        public virtual string DefaultPreviewName => null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContentItem"/> class.
@@ -245,6 +248,218 @@ namespace FlaxEditor.Content
         public virtual ScriptItem FindScriptWitScriptName(string scriptName)
         {
             return null;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether draw item shadow.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if draw shadow; otherwise, <c>false</c>.
+        /// </value>
+        protected virtual bool DrawShadow => false;
+
+        /// <summary>
+        /// Gets the local space rectangle for element name text area.
+        /// </summary>
+        /// <value>
+        /// The text rectangle.
+        /// </value>
+        public Rectangle TextRectangle
+        {
+            get
+            {
+                float textRectHeight = DefaultTextHeight * Width / DefaultWidth;
+                return new Rectangle(2, Height - textRectHeight, Width - 4, textRectHeight);
+            }
+        }
+
+        /// <summary>
+        /// Draws the item icon.
+        /// </summary>
+        /// <param name="iconRect">The icon rectangle.</param>
+        public void DrawIcon(ref Rectangle iconRect)
+        {
+            // Draw shadow
+            if (DrawShadow)
+            {
+                const float iconInShadowSize = 50.0f;
+                var shadowRect = iconRect.MakeExpanded((DefaultIconSize - iconInShadowSize) * iconRect.Width / DefaultIconSize * 1.3f);
+                //Render2D.DrawSprite(_shadow, shadowRect);
+            }
+
+            // Draw icon
+            /*if (_icon.IsValid())
+                Render2D . DrawSprite(_icon, iconRect);
+            else
+                Render2D.FillRectangle(iconRect, Color.Black);*/
+        }
+
+        /// <summary>
+        /// Gets the amount of references to that item.
+        /// </summary>
+        /// <value>
+        /// The references count.
+        /// </value>
+        public int ReferencesCount => _references.Count;
+
+        /// <summary>
+        /// Adds the reference to the item.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        public void AddReference(IContentItemOwner obj)
+        {
+            Assert.IsNotNull(obj);
+            Assert.IsFalse(_references.Contains(obj));
+
+            _references.Add(obj);
+
+            // Check if need to generate preview
+            /*if (_references.Count > 0 && !_icon.IsValid())
+            {
+                // Request icon
+                CWindowsModule->ContentWin->GetPreviewManager()->LoadPreview(this);
+            }*/
+        }
+
+        /// <summary>
+        /// Removes the reference from the item.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        public void RemoveReference(IContentItemOwner obj)
+        {
+            Assert.IsTrue(_references.Contains(obj));
+
+            _references.Remove(obj);
+
+            // Check if need to release the preview
+            /*if (CWindowsModule->ContentWin && _references.Count == 0)
+            {
+                // Release icon
+                CWindowsModule->ContentWin->GetPreviewManager()->ReleasePreview(this);
+            }*/
+        }
+
+        /// <summary>
+        /// Does the drag and drop operation with this asset.
+        /// </summary>
+        protected void DoDrag()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public override void Draw()
+        {
+            /*// Cache data
+            var width = Width;
+            var height = Height;
+            var style = Style.Current;
+            var view = Parent as ContentView;
+            bool isSelected = view.IsSelected(this);
+            var clientRect = new Rectangle(0, 0, width, height);
+            float iconSize = width - 2 * DefaultMarginSize;
+            var iconRect = new Rectangle(DefaultMarginSize, DefaultMarginSize, iconSize, iconSize);
+            var textRect = TextRectangle;
+
+            // Draw background
+            if (isSelected)
+                Render2D.FillRectangle(clientRect, Parent.ContainsFocus ? style.BackgroundSelected : style.LightBackground);
+            else if (IsMouseOver)
+                Render2D.FillRectangle(clientRect, style.BackgroundHighlighted);
+
+            // Draw preview
+            DrawIcon(ref iconRect);
+
+            // Draw short name
+            Render2D.DrawText(style.FontMedium, ShortName, textRect, style.Foreground, TextAlignment.Center, TextAlignment.Center, TextWrapping.WrapWords, 0.75f, 0.95f);*/
+
+            Render2D.FillRectangle(new Rectangle(0, 0, Width, Height), Color.Purple);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseDown(MouseButtons buttons, Vector2 location)
+        {
+            Focus();
+
+            if (buttons == MouseButtons.Left)
+            {
+                // Cache data
+                _isMouseDown = true;
+                _mouseDownStartPos = location;
+            }
+
+            return true;
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseUp(MouseButtons buttons, Vector2 location)
+        {
+            if (buttons == MouseButtons.Left)
+            {
+                // Clear flag
+                _isMouseDown = false;
+
+                // Fire event
+                (Parent as ContentView).OnItemClick(this);
+            }
+
+            return base.OnMouseUp(buttons, location);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseDoubleClick(MouseButtons buttons, Vector2 location)
+        {
+            Focus();
+
+            // Check if clicked on name area (and can be renamed)
+            if (CanRename && TextRectangle.Contains(location))
+            {
+                // Rename
+                (Parent as ContentView).OnRename(this);
+            }
+            else
+            {
+                // Open
+                (Parent as ContentView).OnOpen(this);
+            }
+
+            return true;
+        }
+
+        /// <inheritdoc />
+        public override void OnMouseMove(Vector2 location)
+        {
+            // Check if start drag and drop
+            if (_isMouseDown && Vector2.Distance(_mouseDownStartPos, location) > 10.0f)
+            {
+                // Clear flag
+                _isMouseDown = false;
+
+                // Start drag drop
+                DoDrag();
+            }
+        }
+
+        /// <inheritdoc />
+        public override void OnMouseLeave()
+        {
+            // Check if start drag and drop
+            if (_isMouseDown)
+            {
+                // Clear flag
+                _isMouseDown = false;
+
+                // Start drag drop
+                DoDrag();
+            }
+
+            base.OnMouseLeave();
+        }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return Path;
         }
     }
 }

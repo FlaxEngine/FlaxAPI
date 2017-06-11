@@ -37,5 +37,8 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override ContentItemType ItemType => ContentItemType.Asset;
+
+        /// <inheritdoc />
+        protected override bool DrawShadow => true;
     }
 }
