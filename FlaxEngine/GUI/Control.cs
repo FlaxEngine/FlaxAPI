@@ -274,11 +274,6 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void Draw()
         {
-            if (!Visible)
-            {
-                return;
-            }
-
             // Paint Background
             if (_backgroundColor.A > 0.0f)
             {
