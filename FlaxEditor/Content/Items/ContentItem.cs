@@ -207,6 +207,10 @@ namespace FlaxEditor.Content
         /// </summary>
         public virtual void RefreshPreview()
         {
+            // Skip if item has default preview
+            if (DefaultPreviewName != null)
+                return;
+
             throw new NotImplementedException();
         }
 

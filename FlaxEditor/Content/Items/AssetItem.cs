@@ -40,5 +40,11 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         protected override bool DrawShadow => true;
+
+        /// <inheritdoc />
+        public override ContentItem Find(Guid id)
+        {
+            return id == ID ? this : null;
+        }
     }
 }

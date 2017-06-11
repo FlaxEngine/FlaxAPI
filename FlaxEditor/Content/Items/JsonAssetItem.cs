@@ -27,5 +27,8 @@ namespace FlaxEditor.Content
             : base(path, id)
         {
         }
+
+        /// <inheritdoc />
+        public override string DefaultPreviewName => "Document64";
     }
 }
