@@ -108,6 +108,8 @@
     </Compile>
     <Compile Include="API\Objects\Window.cs" />
     <Compile Include="API\Objects\Window.Gen.cs" />
+    <Compile Include="API\Static\Application.cs" />
+    <Compile Include="API\Static\Application.Gen.cs" />
     <Compile Include="API\Static\Content.cs" />
     <Compile Include="API\Static\Content.Gen.cs">
       <DependentUpon>Content.cs</DependentUpon>
