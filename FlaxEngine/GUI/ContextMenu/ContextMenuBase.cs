@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using FlaxEngine.Assertions;
 
 namespace FlaxEngine.GUI
 {
@@ -29,7 +30,7 @@ namespace FlaxEngine.GUI
         private ContextMenuDirection _direction;
         private ContextMenuBase _parentCM;
         private ContextMenuBase _childCM;
-        private Window _window;
+        private FlaxEngine.Window _window;
 
         /// <summary>
         /// Returns true if context menu is opened
@@ -62,11 +63,6 @@ namespace FlaxEngine.GUI
         public ContextMenuBase TopmostCM => _parentCM != null ? _parentCM.TopmostCM : this;
 
         /// <summary>
-        /// Event fired when context menu visiblity changes (window gets shown or hidden.
-        /// </summary>
-        public event Action<ContextMenuBase> OnVisibilityChanged;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ContextMenuBase"/> class.
         /// </summary>
         public ContextMenuBase()
@@ -83,7 +79,65 @@ namespace FlaxEngine.GUI
         /// <param name="location">Popup menu orgin location in parent control coordinates.</param>
         public virtual void Show(Control parent, Vector2 location)
         {
-            throw new NotImplementedException();
+            Assert.IsNotNull(parent);
+
+            // Ensure to be closed
+            Hide();
+
+            // Unlock and perform controls update
+            UnlockChildrenRecursive();
+            PerformLayout();
+
+            // Calculate popup directinon and initial location
+            var parentWin = parent.ParentWindow;
+            if (parentWin == null)
+                return;
+            Vector2 locationWS = parent.PointToWindow(location);
+            Vector2 locationSS = parentWin.ClientToScreen(locationWS);
+            Location = Vector2.Zero;
+            Vector2 screenSize = Application.VirtualDesktopSize;
+            Vector2 rightBottomLocationSS = locationSS + Size;
+            if (screenSize.Y < rightBottomLocationSS.Y)
+            {
+                // Direction: up
+                locationSS.Y -= Height;
+            }
+            if (screenSize.X < rightBottomLocationSS.X)
+            {
+                // Direction: left
+                locationSS.X -= Width;
+            }
+
+            // Create window
+            var desc = CreateWindowSettings.Default;
+            desc.Position = locationSS;
+            desc.StartPosition = WindowStartPosition.Manual;
+            desc.Size = Size;
+            desc.Fullscreen = false;
+            desc.HasBorder = false;
+            desc.SupportsTransparency = false;
+            desc.ShowInTaskbar = false;
+            desc.ActivateWhenFirstShown = true;
+            desc.AllowInput = true;
+            desc.AllowMinimize = false;
+            desc.AllowMaximize = false;
+            desc.AllowDragAndDrop = false;
+            desc.IsTopmost = true;
+            desc.IsRegularWindow = false;
+            desc.HasSizingFrame = false;
+            _window = FlaxEngine.Window.Create(desc);
+            _window.OnLostFocus += onWindowLostFocus;
+
+            // Attach to the window
+            _parentCM = parent as ContextMenuBase;
+            Parent = _window.GUI;
+
+            // Show
+            Visible = true;
+            _window.Show();
+            PerformLayout();
+            Focus();
+            OnShow();
         }
 
         /// <summary>
@@ -91,7 +145,30 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void Hide()
         {
-            throw new NotImplementedException();
+            if (!Visible)
+                return;
+
+            // Lock update
+            IsLayoutLocked = true;
+
+            // Close child
+            HideChild();
+
+            // Unlink
+            _parentCM = null;
+            Parent = null;
+
+            // Close window
+            if (_window != null)
+            {
+                var win = _window;
+                _window = null;
+                win.Close();
+            }
+
+            // Hide
+            Visible = false;
+            OnHide();
         }
 
         /// <summary>
@@ -101,7 +178,15 @@ namespace FlaxEngine.GUI
         /// <param name="location">The child menu initial location.</param>
         public void ShowChild(ContextMenuBase child, Vector2 location)
         {
-            throw new NotImplementedException();
+            // Hide current child
+            HideChild();
+
+            // Set child
+            _childCM = child;
+            _childCM._parentCM = this;
+
+            // Show child
+            _childCM.Show(this, location);
         }
 
         /// <summary>
@@ -109,7 +194,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void HideChild()
         {
-            throw new NotImplementedException();
+            if (_childCM != null)
+            {
+                _childCM.Hide();
+                _childCM = null;
+            }
         }
 
         /// <summary>
@@ -117,7 +206,10 @@ namespace FlaxEngine.GUI
         /// </summary>
         protected void UpdateWindowSize()
         {
-            throw new NotImplementedException();
+            if (_window != null)
+            {
+                _window.ClientSize = Size;
+            }
         }
 
         /// <summary>
@@ -134,6 +226,76 @@ namespace FlaxEngine.GUI
         protected virtual void OnHide()
         {
             // Nothing to do
+        }
+
+        private void onWindowLostFocus()
+        {
+            // Check if user stopped using that popup menu
+            var root = TopmostCM;
+            if (_parentCM != null)
+            {
+                root.Hide();
+            }
+            else if (!HasMouseCapture)
+            {
+                Hide();
+            }
+        }
+
+        /// <inheritdoc />
+        public override bool HasMouseCapture => HasChildCMOpened || base.HasMouseCapture;
+
+        /// <inheritdoc />
+        public override bool IsMouseOver
+        {
+            get
+            {
+                bool result = false;
+                for (int i = 0; i < _children.Count; i++)
+                {
+                    var c = _children[i];
+                    if (c.Visible && c.IsMouseOver)
+                    {
+                        result = true;
+                        break;
+                    }
+                }
+                return result;
+            }
+        }
+
+        /// <inheritdoc />
+        public override void Draw()
+        {
+            // Draw background
+            var style = Style.Current;
+            Render2D.FillRectangle(new Rectangle(0, 0, Width, Height), style.Background);
+            Render2D.DrawRectangle(new Rectangle(0, 0, Width - 1.5f, Height - 1.5f), Color.LerpUnclamped(style.BackgroundSelected, style.Background, 0.6f));
+
+            base.Draw();
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
+        {
+            base.OnMouseDown(location, buttons);
+            return true;
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        {
+            base.OnMouseUp(location, buttons);
+            return true;
+        }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            // Ensure to be hidden
+            Hide();
+
+            base.OnDestroy();
         }
     }
 }

@@ -66,7 +66,7 @@ namespace FlaxEditor.Modules
             // Edit
             var mm_Edit = MainMenu.AddButton("Edit");
             mm_Edit.ContextMenu.OnButtonClicked += mm_Edit_Click;
-            mm_Edit.ContextMenu.OnVisibilityChanged += mm_Edit_ShowHide;
+            mm_Edit.ContextMenu.OnVisibleChanged += mm_Edit_ShowHide;
             mm_Edit.ContextMenu.AddButton(1, string.Empty, "Ctrl+Z");// Undo text is updated in mm_Edit_ShowHide
             mm_Edit.ContextMenu.AddButton(2, string.Empty, "Ctrl+Y");// Redo text is updated in mm_Edit_ShowHide
             mm_Edit.ContextMenu.AddSeparator();
@@ -88,10 +88,7 @@ namespace FlaxEditor.Modules
             mm_Scene.ContextMenu.AddButton(3, "Move actor to viewport");
             mm_Scene.ContextMenu.AddButton(4, "Align actor with viewport");
             mm_Scene.ContextMenu.AddButton(2, "Align viewport with actor");
-#if BUILD == BUILD_DEBUG
-            mm_Scene.ContextMenu.AddButton(10000, "[DEBUG] Select view camera");
-#endif
-
+            
             // Game
             var mm_Game = MainMenu.AddButton("Game");
             mm_Game.ContextMenu.OnButtonClicked += mm_Game_Click;
@@ -104,7 +101,7 @@ namespace FlaxEditor.Modules
             // Tools
             var mm_Tools = MainMenu.AddButton("Tools");
             mm_Tools.ContextMenu.OnButtonClicked += mm_Tools_Click;
-            mm_Tools.ContextMenu.OnVisibilityChanged += mm_Tools_ShowHide;
+            mm_Tools.ContextMenu.OnVisibleChanged += mm_Tools_ShowHide;
             //mm_Tools.ContextMenu.AddButton(1, "Scene statistics");
             mm_Tools.ContextMenu.AddButton(2, "Bake lightmaps", "Ctrl+F10");
             mm_Tools.ContextMenu.AddButton(3, "Clear lightmaps data");
@@ -124,10 +121,6 @@ namespace FlaxEditor.Modules
             mm_Window.ContextMenu.AddButton(12, "Editor");
             mm_Window.ContextMenu.AddButton(14, "Debug Log");
             mm_Window.ContextMenu.AddSeparator();
-#if BUILD == BUILD_DEBUG
-            mm_Window.ContextMenu.AddButton(10000, "Show test C# window");
-            mm_Window.ContextMenu.AddSeparator();
-#endif
             mm_Window.ContextMenu.AddButton(1, "Restore default layout");
 
             // Help
@@ -184,9 +177,9 @@ namespace FlaxEditor.Modules
             }
         }
 
-        private void mm_Edit_ShowHide(ContextMenuBase cm)
+        private void mm_Edit_ShowHide(Control c)
         {
-            if (cm.Visible == false)
+            if (c.Visible == false)
                 return;
 
             /*auto & undoRedo = CEditor->UndoRedo;
@@ -321,9 +314,9 @@ namespace FlaxEditor.Modules
             }
         }
 
-        private void mm_Tools_ShowHide(ContextMenuBase cm)
+        private void mm_Tools_ShowHide(Control c)
         {
-            if (cm.Visible == false)
+            if (c.Visible == false)
                 return;
 
             /*auto c = (CContextMenu*)cm;

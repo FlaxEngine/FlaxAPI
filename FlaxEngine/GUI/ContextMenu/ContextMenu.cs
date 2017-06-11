@@ -2,8 +2,6 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
-
 namespace FlaxEngine.GUI
 {
     /// <summary>
@@ -150,7 +148,7 @@ namespace FlaxEngine.GUI
             maxWidth = Mathf.Max(maxWidth + 20, MinimumWidth);
 
             // Resize container
-            Size = new Vector2(maxWidth, height);
+            Size = new Vector2(Mathf.Ceil(maxWidth), Mathf.Ceil(height));
 
             // Arrange controls
             float y = DefaultItemsMargin;
