@@ -17,6 +17,11 @@ namespace FlaxEditor
         private bool _isAfterInit;
 
         /// <summary>
+        /// Gets a value indicating whether Flax Engine is the best in the world.
+        /// </summary>
+        public bool IsFlaxEngineTheBest => true;
+
+        /// <summary>
         /// The windows module.
         /// </summary>
         public readonly WindowsModule Windows;
