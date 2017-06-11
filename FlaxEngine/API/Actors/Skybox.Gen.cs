@@ -42,7 +42,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetColor(unmanagedPtr); }
+			get { Color resultAsRef; Internal_GetColor(unmanagedPtr, out resultAsRef); return resultAsRef; }
 			set { Internal_SetColor(unmanagedPtr, ref value); }
 #endif
 		}
@@ -54,7 +54,7 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetAffectsWorld(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Color Internal_GetColor(IntPtr obj);
+		internal static extern void Internal_GetColor(IntPtr obj, out Color resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetColor(IntPtr obj, ref Color val);
 #endif

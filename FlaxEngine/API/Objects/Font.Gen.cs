@@ -121,6 +121,69 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Measures minimum size of the rectangle that will be needed to draw given text.
+		/// </summary>
+		/// <param name="text">Input text.</param>
+		/// <returns>Minimum size for that text and fot to render properly.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public Vector2 MeasureText(string text) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Vector2 resultAsRef;
+			Internal_MeasureText(unmanagedPtr, text, out resultAsRef);
+			return resultAsRef;
+#endif
+		}
+
+		/// <summary>
+		/// Calculates character position for given text and character index.
+		/// </summary>
+		/// <param name="text">Input text.</param>
+		/// <param name="index">The text position to get it's coordinates.</param>
+		/// <param name="layout">Layout properties.</param>
+		/// <returns>Character position (upper left corner which can be used for a caret position).</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public Vector2 GetCharPosition(string text, int index, TextLayoutOptions layout) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Vector2 resultAsRef;
+			Internal_GetCharPosition1(unmanagedPtr, text, index, ref layout, out resultAsRef);
+			return resultAsRef;
+#endif
+		}
+
+		/// <summary>
+		/// Calculates character position for given text and character index.
+		/// </summary>
+		/// <param name="text">Input text.</param>
+		/// <param name="index">The text position to get it's coordinates.</param>
+		/// <returns>Character position (upper left corner which can be used for a caret position).</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public Vector2 GetCharPosition(string text, int index) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Vector2 resultAsRef;
+			Internal_GetCharPosition2(unmanagedPtr, text, index, out resultAsRef);
+			return resultAsRef;
+#endif
+		}
+
+		/// <summary>
 		/// Calculates hited character index at given location.
 		/// </summary>
 		/// <param name="text">Input text to test.</param>
@@ -175,6 +238,12 @@ namespace FlaxEngine
 		internal static extern int Internal_GetKerning(IntPtr obj, char first, char second);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_CacheText(IntPtr obj, int size);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_MeasureText(IntPtr obj, string text, out Vector2 resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetCharPosition1(IntPtr obj, string text, int index, ref TextLayoutOptions layout, out Vector2 resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetCharPosition2(IntPtr obj, string text, int index, out Vector2 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern int Internal_HitTestText1(IntPtr obj, string text, ref Vector2 location, ref TextLayoutOptions layout);
 		[MethodImpl(MethodImplOptions.InternalCall)]

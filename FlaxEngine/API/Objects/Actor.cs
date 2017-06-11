@@ -54,7 +54,7 @@ namespace FlaxEngine
                 Orientation = orientation;
             }
 #else
-            get { return Internal_GetOrientation(unmanagedPtr).EulerAngles; }
+            get { return Orientation.EulerAngles; }
             set
             {
                 Quaternion orientation;
@@ -82,7 +82,7 @@ namespace FlaxEngine
                 LocalOrientation = orientation;
             }
 #else
-            get { return Internal_GetLocalOrientation(unmanagedPtr).EulerAngles; }
+            get { return LocalOrientation.EulerAngles; }
             set
             {
                 Quaternion orientation;

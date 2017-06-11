@@ -260,14 +260,19 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-            get { return Internal_GetTrackingMouseOffset(unmanagedPtr); }
+            get
+            {
+                Vector2 result;
+                Internal_GetTrackingMouseOffset(unmanagedPtr, out result);
+                return result;
+            }
 #endif
         }
-
+        
         #region Internal Calls
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Vector2 Internal_GetTrackingMouseOffset(IntPtr obj);
+        internal static extern void Internal_GetTrackingMouseOffset(IntPtr obj, out Vector2 result);
 #endif
         #endregion
 

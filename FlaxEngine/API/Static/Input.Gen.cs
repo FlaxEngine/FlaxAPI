@@ -20,10 +20,24 @@ namespace FlaxEngine
 	public static partial class Input
 	{
 		/// <summary>
-		/// Get keyboard key state
+		/// Gets or sets the current mouse position.
 		/// </summary>
-		/// <param name="key">Key to check</param>
-		/// <returns>True while the user holds down the key identified by id</returns>
+		[UnmanagedCall]
+		public static Vector2 MousePosition
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { Vector2 resultAsRef; Internal_GetMousePosition(out resultAsRef); return resultAsRef; }
+			set { Internal_SetMousePosition(ref value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets keyboard key state.
+		/// </summary>
+		/// <param name="key">Key to check.</param>
+		/// <returns>True while the user holds down the key identified by id.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -38,10 +52,10 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Get keyboard key down state
+		/// Gets keyboard key down state.
 		/// </summary>
-		/// <param name="key">Key to check</param>
-		/// <returns>True during the frame the user releases the key</returns>
+		/// <param name="key">Key to check.</param>
+		/// <returns>True during the frame the user releases the key.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -56,10 +70,10 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Get keyboard key up state
+		/// Gets keyboard key up state.
 		/// </summary>
-		/// <param name="key">Key to check</param>
-		/// <returns>True during the frame the user starts pressing down the key</returns>
+		/// <param name="key">Key to check.</param>
+		/// <returns>True during the frame the user starts pressing down the key.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -74,10 +88,10 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Get mouse button state
+		/// Gets mouse button state.
 		/// </summary>
-		/// <param name="button">Mouse button to check</param>
-		/// <returns>True while the user holds down the button</returns>
+		/// <param name="button">Mouse button to check.</param>
+		/// <returns>True while the user holds down the button.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -92,10 +106,10 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Get mouse button down state
+		/// Gets mouse button down state.
 		/// </summary>
-		/// <param name="button">Mouse button to check</param>
-		/// <returns>True during the frame the user starts pressing down the button</returns>
+		/// <param name="button">Mouse button to check.</param>
+		/// <returns>True during the frame the user starts pressing down the button.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -110,10 +124,10 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Get mouse button up state
+		/// Gets mouse button up state.
 		/// </summary>
-		/// <param name="button">Mouse button to check</param>
-		/// <returns>True during the frame the user releases the button</returns>
+		/// <param name="button">Mouse button to check.</param>
+		/// <returns>True during the frame the user releases the button.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -129,6 +143,10 @@ namespace FlaxEngine
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetMousePosition(out Vector2 resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetMousePosition(ref Vector2 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetKey(KeyCode key);
 		[MethodImpl(MethodImplOptions.InternalCall)]

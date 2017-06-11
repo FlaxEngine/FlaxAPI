@@ -34,7 +34,7 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets brush surfaces scale in lightmap parameter.
+		/// Gets or sets brush size.
 		/// </summary>
 		[UnmanagedCall]
 		public Vector3 Size
@@ -42,13 +42,13 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetSize(unmanagedPtr); }
+			get { Vector3 resultAsRef; Internal_GetSize(unmanagedPtr, out resultAsRef); return resultAsRef; }
 			set { Internal_SetSize(unmanagedPtr, ref value); }
 #endif
 		}
 
 		/// <summary>
-		/// Gets or sets brush surfaces scale in lightmap parameter.
+		/// Gets or sets CSG brush mode.
 		/// </summary>
 		[UnmanagedCall]
 		public BrushMode Mode
@@ -68,7 +68,7 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetScaleInLightmap(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Vector3 Internal_GetSize(IntPtr obj);
+		internal static extern void Internal_GetSize(IntPtr obj, out Vector3 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetSize(IntPtr obj, ref Vector3 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]

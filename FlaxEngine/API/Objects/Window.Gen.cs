@@ -224,7 +224,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetClientBounds(unmanagedPtr); }
+			get { Rectangle resultAsRef; Internal_GetClientBounds(unmanagedPtr, out resultAsRef); return resultAsRef; }
 			set { Internal_SetClientBounds(unmanagedPtr, ref value); }
 #endif
 		}
@@ -238,7 +238,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetPosition(unmanagedPtr); }
+			get { Vector2 resultAsRef; Internal_GetPosition(unmanagedPtr, out resultAsRef); return resultAsRef; }
 			set { Internal_SetPosition(unmanagedPtr, ref value); }
 #endif
 		}
@@ -252,7 +252,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetClientPosition(unmanagedPtr); }
+			get { Vector2 resultAsRef; Internal_GetClientPosition(unmanagedPtr, out resultAsRef); return resultAsRef; }
 			set { Internal_SetClientPosition(unmanagedPtr, ref value); }
 #endif
 		}
@@ -266,7 +266,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetSize(unmanagedPtr); }
+			get { Vector2 resultAsRef; Internal_GetSize(unmanagedPtr, out resultAsRef); return resultAsRef; }
 #endif
 		}
 
@@ -279,7 +279,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetClientSize(unmanagedPtr); }
+			get { Vector2 resultAsRef; Internal_GetClientSize(unmanagedPtr, out resultAsRef); return resultAsRef; }
 			set { Internal_SetClientSize(unmanagedPtr, ref value); }
 #endif
 		}
@@ -298,7 +298,9 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_ScreenToClient(unmanagedPtr, ref screenPos);
+			Vector2 resultAsRef;
+			Internal_ScreenToClient(unmanagedPtr, ref screenPos, out resultAsRef);
+			return resultAsRef;
 #endif
 		}
 
@@ -316,7 +318,9 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_ClientToScreen(unmanagedPtr, ref clientPos);
+			Vector2 resultAsRef;
+			Internal_ClientToScreen(unmanagedPtr, ref clientPos, out resultAsRef);
+			return resultAsRef;
 #endif
 		}
 
@@ -510,27 +514,27 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_Close(IntPtr obj, ClosingReason reason);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Rectangle Internal_GetClientBounds(IntPtr obj);
+		internal static extern void Internal_GetClientBounds(IntPtr obj, out Rectangle resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetClientBounds(IntPtr obj, ref Rectangle val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Vector2 Internal_GetPosition(IntPtr obj);
+		internal static extern void Internal_GetPosition(IntPtr obj, out Vector2 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetPosition(IntPtr obj, ref Vector2 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Vector2 Internal_GetClientPosition(IntPtr obj);
+		internal static extern void Internal_GetClientPosition(IntPtr obj, out Vector2 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetClientPosition(IntPtr obj, ref Vector2 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Vector2 Internal_GetSize(IntPtr obj);
+		internal static extern void Internal_GetSize(IntPtr obj, out Vector2 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Vector2 Internal_GetClientSize(IntPtr obj);
+		internal static extern void Internal_GetClientSize(IntPtr obj, out Vector2 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetClientSize(IntPtr obj, ref Vector2 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Vector2 Internal_ScreenToClient(IntPtr obj, ref Vector2 screenPos);
+		internal static extern void Internal_ScreenToClient(IntPtr obj, ref Vector2 screenPos, out Vector2 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Vector2 Internal_ClientToScreen(IntPtr obj, ref Vector2 clientPos);
+		internal static extern void Internal_ClientToScreen(IntPtr obj, ref Vector2 clientPos, out Vector2 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern string Internal_GetTitle(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]

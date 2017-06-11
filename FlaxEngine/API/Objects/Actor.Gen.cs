@@ -115,7 +115,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetPosition(unmanagedPtr); }
+			get { Vector3 resultAsRef; Internal_GetPosition(unmanagedPtr, out resultAsRef); return resultAsRef; }
 			set { Internal_SetPosition(unmanagedPtr, ref value); }
 #endif
 		}
@@ -129,7 +129,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetOrientation(unmanagedPtr); }
+			get { Quaternion resultAsRef; Internal_GetOrientation(unmanagedPtr, out resultAsRef); return resultAsRef; }
 			set { Internal_SetOrientation(unmanagedPtr, ref value); }
 #endif
 		}
@@ -143,7 +143,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetScale(unmanagedPtr); }
+			get { Vector3 resultAsRef; Internal_GetScale(unmanagedPtr, out resultAsRef); return resultAsRef; }
 			set { Internal_SetScale(unmanagedPtr, ref value); }
 #endif
 		}
@@ -157,7 +157,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetTransform(unmanagedPtr); }
+			get { Transform resultAsRef; Internal_GetTransform(unmanagedPtr, out resultAsRef); return resultAsRef; }
 			set { Internal_SetTransform(unmanagedPtr, ref value); }
 #endif
 		}
@@ -171,7 +171,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetLocalPosition(unmanagedPtr); }
+			get { Vector3 resultAsRef; Internal_GetLocalPosition(unmanagedPtr, out resultAsRef); return resultAsRef; }
 			set { Internal_SetLocalPosition(unmanagedPtr, ref value); }
 #endif
 		}
@@ -185,7 +185,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetLocalOrientation(unmanagedPtr); }
+			get { Quaternion resultAsRef; Internal_GetLocalOrientation(unmanagedPtr, out resultAsRef); return resultAsRef; }
 			set { Internal_SetLocalOrientation(unmanagedPtr, ref value); }
 #endif
 		}
@@ -199,7 +199,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetLocalScale(unmanagedPtr); }
+			get { Vector3 resultAsRef; Internal_GetLocalScale(unmanagedPtr, out resultAsRef); return resultAsRef; }
 			set { Internal_SetLocalScale(unmanagedPtr, ref value); }
 #endif
 		}
@@ -213,7 +213,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetLocalTransform(unmanagedPtr); }
+			get { Transform resultAsRef; Internal_GetLocalTransform(unmanagedPtr, out resultAsRef); return resultAsRef; }
 			set { Internal_SetLocalTransform(unmanagedPtr, ref value); }
 #endif
 		}
@@ -418,7 +418,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetBox(unmanagedPtr); }
+			get { BoundingBox resultAsRef; Internal_GetBox(unmanagedPtr, out resultAsRef); return resultAsRef; }
 #endif
 		}
 
@@ -431,7 +431,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetBoxWithChildren(unmanagedPtr); }
+			get { BoundingBox resultAsRef; Internal_GetBoxWithChildren(unmanagedPtr, out resultAsRef); return resultAsRef; }
 #endif
 		}
 
@@ -482,35 +482,35 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetIsActiveInHierarchy(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Vector3 Internal_GetPosition(IntPtr obj);
+		internal static extern void Internal_GetPosition(IntPtr obj, out Vector3 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetPosition(IntPtr obj, ref Vector3 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Quaternion Internal_GetOrientation(IntPtr obj);
+		internal static extern void Internal_GetOrientation(IntPtr obj, out Quaternion resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetOrientation(IntPtr obj, ref Quaternion val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Vector3 Internal_GetScale(IntPtr obj);
+		internal static extern void Internal_GetScale(IntPtr obj, out Vector3 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetScale(IntPtr obj, ref Vector3 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Transform Internal_GetTransform(IntPtr obj);
+		internal static extern void Internal_GetTransform(IntPtr obj, out Transform resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetTransform(IntPtr obj, ref Transform val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Vector3 Internal_GetLocalPosition(IntPtr obj);
+		internal static extern void Internal_GetLocalPosition(IntPtr obj, out Vector3 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetLocalPosition(IntPtr obj, ref Vector3 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Quaternion Internal_GetLocalOrientation(IntPtr obj);
+		internal static extern void Internal_GetLocalOrientation(IntPtr obj, out Quaternion resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetLocalOrientation(IntPtr obj, ref Quaternion val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Vector3 Internal_GetLocalScale(IntPtr obj);
+		internal static extern void Internal_GetLocalScale(IntPtr obj, out Vector3 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetLocalScale(IntPtr obj, ref Vector3 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Transform Internal_GetLocalTransform(IntPtr obj);
+		internal static extern void Internal_GetLocalTransform(IntPtr obj, out Transform resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetLocalTransform(IntPtr obj, ref Transform val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -536,9 +536,9 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Script[] Internal_GetScripts(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern BoundingBox Internal_GetBox(IntPtr obj);
+		internal static extern void Internal_GetBox(IntPtr obj, out BoundingBox resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern BoundingBox Internal_GetBoxWithChildren(IntPtr obj);
+		internal static extern void Internal_GetBoxWithChildren(IntPtr obj, out BoundingBox resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_HasContentLoaded(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]

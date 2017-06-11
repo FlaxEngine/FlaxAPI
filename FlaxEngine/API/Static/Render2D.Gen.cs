@@ -28,7 +28,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetTransform(); }
+			get { Vector2 resultAsRef; Internal_GetTransform(out resultAsRef); return resultAsRef; }
 			set { Internal_SetTransform(ref value); }
 #endif
 		}
@@ -75,7 +75,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetClipMask(); }
+			get { Rectangle resultAsRef; Internal_GetClipMask(out resultAsRef); return resultAsRef; }
 #endif
 		}
 
@@ -232,7 +232,7 @@ namespace FlaxEngine
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Vector2 Internal_GetTransform();
+		internal static extern void Internal_GetTransform(out Vector2 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetTransform(ref Vector2 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -240,7 +240,7 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_PopClip();
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Rectangle Internal_GetClipMask();
+		internal static extern void Internal_GetClipMask(out Rectangle resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_DrawText(IntPtr font, string text, ref Rectangle layoutRect, ref Color color, TextAlignment horizontalAlignment, TextAlignment verticalAlignment, TextWrapping textWrapping, float baseLinesGapScale, float scale);
 		[MethodImpl(MethodImplOptions.InternalCall)]

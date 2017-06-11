@@ -80,7 +80,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetDesktopSize(); }
+			get { Vector2 resultAsRef; Internal_GetDesktopSize(out resultAsRef); return resultAsRef; }
 #endif
 		}
 
@@ -93,7 +93,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetVirtualDesktopSize(); }
+			get { Vector2 resultAsRef; Internal_GetVirtualDesktopSize(out resultAsRef); return resultAsRef; }
 #endif
 		}
 
@@ -108,9 +108,9 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern string Internal_GetUserLocaleName();
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Vector2 Internal_GetDesktopSize();
+		internal static extern void Internal_GetDesktopSize(out Vector2 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Vector2 Internal_GetVirtualDesktopSize();
+		internal static extern void Internal_GetVirtualDesktopSize(out Vector2 resultAsRef);
 #endif
 #endregion
 	}

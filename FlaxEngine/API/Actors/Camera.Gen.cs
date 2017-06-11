@@ -84,7 +84,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetViewport(unmanagedPtr); }
+			get { Viewport resultAsRef; Internal_GetViewport(unmanagedPtr, out resultAsRef); return resultAsRef; }
 #endif
 		}
 
@@ -107,7 +107,7 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetFarPlane(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Viewport Internal_GetViewport(IntPtr obj);
+		internal static extern void Internal_GetViewport(IntPtr obj, out Viewport resultAsRef);
 #endif
 #endregion
 	}
