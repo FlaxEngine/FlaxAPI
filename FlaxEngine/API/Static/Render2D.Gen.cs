@@ -171,7 +171,7 @@ namespace FlaxEngine
 		/// <param name="t">Texture to draw</param>
 		/// <param name="rect">Rectangle to draw</param>
 		/// <param name="color">Color to use</param>
-		/// <param name="withAlpha">True if use alpha blending, otherwise it will be disabled</param>
+		/// <param name="withAlpha">True if use alpha blending, otherwise it will be disabled.</param>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -192,7 +192,7 @@ namespace FlaxEngine
 		/// <param name="p2">End point</param>
 		/// <param name="color">Color to use</param>
 		/// <param name="thickness">Lines thickness (in pixels)</param>
-		/// <param name="withAlpha">True if use alpha blending, otherwise it will be disabled</param>
+		/// <param name="withAlpha">True if use alpha blending, otherwise it will be disabled.</param>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -215,7 +215,7 @@ namespace FlaxEngine
 		/// <param name="p4">End point</param>
 		/// <param name="color">Color to use</param>
 		/// <param name="thickness">Lines thickness (in pixels)</param>
-		/// <param name="withAlpha">True if use alpha blending, otherwise it will be disabled</param>
+		/// <param name="withAlpha">True if use alpha blending, otherwise it will be disabled.</param>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif

@@ -80,8 +80,8 @@ namespace FlaxEngine.GUI
 
             // Draw icon
             const float iconSize = 16;
-            //if (Icon.IsValid)
-            //    Render2D.DrawSprite(Icon, new Rectangle(-X, (Height - iconSize) / 2, iconSize, iconSize));
+            if (Icon.IsValid)
+                Render2D.DrawSprite(Icon, new Rectangle(-X, (Height - iconSize) / 2, iconSize, iconSize));
         }
 
         /// <inheritdoc />
