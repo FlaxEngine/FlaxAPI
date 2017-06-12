@@ -22,6 +22,11 @@ namespace FlaxEditor.Modules
         public MainMenu MainMenu;
 
         /// <summary>
+        /// The tool strip control.
+        /// </summary>
+        public ToolStrip ToolStrip;
+
+        /// <summary>
         /// The master dock panel for all Editor windows.
         /// </summary>
         public MasterDockPanel MasterPanel = new MasterDockPanel();
@@ -75,6 +80,7 @@ namespace FlaxEditor.Modules
 
             InitStyle(mainWindow);
             InitMainMenu(mainWindow);
+            InitToolstrip(mainWindow);
         }
 
         /// <inheritdoc />
@@ -242,6 +248,97 @@ namespace FlaxEditor.Modules
             //mm_Help.ContextMenu.AddButton(6, "Information about Flax");
         }
 
+        private void InitToolstrip(FlaxEngine.GUI.Window mainWindow)
+        {
+            ToolStrip = new ToolStrip();
+            ToolStrip.OnButtonClicked += onTootlstripButtonClicked;
+            ToolStrip.Parent = mainWindow;
+
+            // TODO: add tooltips support like in c++
+            ToolStrip.AddButton(0, GetIcon("Logo32"));//.LinkTooltip(SharedToolTip, "Flax Engine");// Welcome screen
+            ToolStrip.AddButton(2, GetIcon("Save32"));//.LinkTooltip(SharedToolTip, "Save all (Ctrl+S)");// Save all
+            ToolStrip.AddSeparator();
+            ToolStrip.AddButton(3, GetIcon("Undo32"));//.LinkTooltip(SharedToolTip, "Undo (Ctrl+Z)");// Undo
+            ToolStrip.AddButton(4, GetIcon("Redo32"));//.LinkTooltip(SharedToolTip, "Redo (Ctrl+Y)");// Redo
+            ToolStrip.AddSeparator();
+            ToolStrip.AddButton(5, GetIcon("Translate32"));//.LinkTooltip(SharedToolTip, "Change Gizmo tool mode to Translate (1)");// Translate mode
+            ToolStrip.AddButton(6, GetIcon("Rotate32"));//.LinkTooltip(SharedToolTip, "Change Gizmo tool mode to Rotate (2)");// Rotate mode
+            ToolStrip.AddButton(7, GetIcon("Scale32"));//.LinkTooltip(SharedToolTip, "Change Gizmo tool mode to Scale (3)");// Scale mode
+            ToolStrip.AddSeparator();
+            ToolStrip.AddButton(8, GetIcon("Play32"));//.LinkTooltip(SharedToolTip, "Start/Stop simulation (F5)");// Play
+            ToolStrip.AddButton(9, GetIcon("Pause32"));//.LinkTooltip(SharedToolTip, "Pause simulation");// Pause
+            ToolStrip.AddButton(10, GetIcon("Step32"));//.LinkTooltip(SharedToolTip, "Step one frame in simulation");// Step
+        }
+
+        private void onTootlstripButtonClicked(int id)
+        {
+            switch (id)
+            {
+                // Welcome screen
+                /*case 0:
+                    // TODO: Welcome screen
+                    break;
+
+                // Save scene(s)
+                case 1: CSceneModule->SaveScenes(); break;
+
+                // Save all
+                case 2: CEditor->SaveAll(); break;
+
+                // Undo
+                case 3: CEditor->UndoRedo.Undo(); break;
+
+                // Redo
+                case 4: CEditor->UndoRedo.Redo(); break;
+
+                // Translate mode
+                case 5: CEditor->GetMainGizmo()->SetMode(GizmoMode::Translate); break;
+
+                // Rotate mode
+                case 6: CEditor->GetMainGizmo()->SetMode(GizmoMode::Rotate); break;
+
+                // Scale mode
+                case 7: CEditor->GetMainGizmo()->SetMode(GizmoMode::Scale); break;
+
+                // Play
+                case 8:
+                {
+                    // Check if Editor is in play mode
+                    if (CEditor->StateMachine->IsPlayMode())
+                    {
+                        // Stop game
+                        CSimulationModule->RequestStopPlay();
+                    }
+                    else
+                    {
+                        // Start playing (will validate state)
+                        CSimulationModule->RequestStartPlay();
+                    }
+                }
+                    break;
+
+                // Pause
+                case 9:
+                {
+                    // Check if Editor is in pause state
+                    if (CEditor->StateMachine->PlayingState.IsPaused())
+                    {
+                        // Resume game
+                        CSimulationModule->RequestResumePlay();
+                    }
+                    else
+                    {
+                        // Pause game
+                        CSimulationModule->RequestPausePlay();
+                    }
+                }
+                    break;
+
+                // Step
+                case 10: CSimulationModule->RequestPlayOneFrame(); break;*/
+            }
+        }
+
         private void mm_File_Click(int id, ContextMenu cm)
         {
             switch (id)
@@ -293,11 +390,11 @@ namespace FlaxEditor.Modules
 
             auto undoButton = c->GetButton(1);// Undo
             undoButton->SetEnabled(undoRedo.HasUndo());
-            undoButton->Text = undoRedo.HasUndo() ? LocalizationData::FormatEditorMessage(93, undoRedo.GetFirstUndo()->GetText()) : LocalizationData::GetEditorMessage(95);
+            undoButton->Text = undoRedo.HasUndo() ? LocalizationData::FormatEditorMessage(93, undoRedo.GetFirstUndo()->Get)) : LocalizationData::GetEditorMessage(95);
 
             auto redoButton = c->GetButton(2);// Redo
             redoButton->SetEnabled(undoRedo.HasRedo());
-            redoButton->Text = undoRedo.HasRedo() ? LocalizationData::FormatEditorMessage(94, undoRedo.GetFirstRedo()->GetText()) : LocalizationData::GetEditorMessage(96);
+            redoButton->Text = undoRedo.HasRedo() ? LocalizationData::FormatEditorMessage(94, undoRedo.GetFirstRedo()->Get)) : LocalizationData::GetEditorMessage(96);
 
             c->GetButton(3)->SetEnabled(gizmo->HasSthSelected());// Cut
             c->GetButton(4)->SetEnabled(gizmo->HasSthSelected());// Copy
@@ -430,7 +527,7 @@ namespace FlaxEditor.Modules
             bool canEdit = SceneManager::Instance()->IsAnySceneLoaded() && CEditor->GetCurrentStateType() == EditorStates::EditingScene;
             bool isBakingLightmaps = ProgressManager::Instance()->BakeLightmaps.IsActive();
             c->GetButton(2)->SetEnabled((canEdit && canBakeLightmaps) || isBakingLightmaps);// Bake lightmaps
-            c->GetButton(2)->Text = isBakingLightmaps ? TEXT("Cancel baking lightmaps") : TEXT("Bake lightmaps");
+            c->GetButton(2)->Text = isBakingLightmaps ? "Cancel baking lightmaps") : "Bake lightmaps");
             c->GetButton(3)->SetEnabled(canEdit);// Clear lightmaps data
             c->GetButton(5)->SetEnabled(canEdit);// Bake all env probes
 
@@ -457,28 +554,28 @@ namespace FlaxEditor.Modules
             /*switch (id)
             {
                 // Forum
-                case 1: Application::StartProcess(TEXT("http://answers.flaxengine.com/")); break;
+                case 1: Application::StartProcess("http://answers.flaxengine.com/")); break;
 
                 // Documentation
-                case 2: Application::StartProcess(TEXT("http://docs.flaxengine.com/")); break;
+                case 2: Application::StartProcess("http://docs.flaxengine.com/")); break;
 
                 // Report a bug
                 case 3:
                     MISSING_CODE("report a bug feature");
-                    //Application::StartProcess(TEXT("http://celelej.com/documentation/report-a-bug/"));
+                    //Application::StartProcess("http://celelej.com/documentation/report-a-bug/"));
                     break;
 
                 // Facebook Fanpage
-                case 4: Application::StartProcess(TEXT("https://facebook.com/FlaxEngine")); break;
+                case 4: Application::StartProcess("https://facebook.com/FlaxEngine")); break;
 
                 // Youtube Channel
-                case 5: Application::StartProcess(TEXT("https://youtube.com/Celelej")); break;
+                case 5: Application::StartProcess("https://youtube.com/Celelej")); break;
 
                 // Informations about Flax
                 case 6: MISSING_EDITOR_FEATURE("Show info window"); break;
 
                 // Official Website
-                case 7: Application::StartProcess(TEXT("http://flaxengine.com")); break;
+                case 7: Application::StartProcess("http://flaxengine.com")); break;
             }*/
         }
 
@@ -486,6 +583,7 @@ namespace FlaxEditor.Modules
         {
             // Clear UI references (GUI cannot be used after window closing)
             MainMenu = null;
+            ToolStrip = null;
             MasterPanel = null;
         }
     }
