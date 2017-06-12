@@ -21,7 +21,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///      Action is invoked, when child control gets resized
         /// </summary>
-        public event Action<Control> OnChildResized;
+        public event Action<Control> OnChildControlResized;
 
         ///<inheritdoc />
         protected ContainerControl(bool canFocus)
@@ -152,7 +152,8 @@ namespace FlaxEngine.GUI
         ///     Add control to the container
         /// </summary>
         /// <param name="child">Control to add</param>
-        public void AddChild(Control child)
+        /// <returns>Added control.</returns>
+        public T AddChild<T>(T child) where T: Control
         {
             if(child == null)
                 throw new ArgumentNullException();
@@ -161,6 +162,8 @@ namespace FlaxEngine.GUI
 
             // Set child new parent
             child.Parent = this;
+
+            return child;
         }
 
         /// <summary>
@@ -336,6 +339,15 @@ namespace FlaxEngine.GUI
                 var child = _children[i] as ContainerControl;
                 child?.SortChildrenRecursive();
             }
+        }
+
+        /// <summary>
+        /// Called when child control gets resized.
+        /// </summary>
+        /// <param name="control">The resized control.</param>
+        public virtual void OnChildResized(Control control)
+        {
+            OnChildControlResized?.Invoke(control);
         }
 
         #region Internal Events

@@ -664,10 +664,11 @@ namespace FlaxEngine.GUI
         protected virtual void SetSizeInternal(Vector2 size)
         {
             _bounds.Size = size;
+
             OnSizeChanged?.Invoke(this);
+            _parent?.OnChildResized(this);
         }
-
-
+        
         /// <summary>
         ///     Action fred when parent control gets resized (also when control gets non-null parent)
         /// </summary>

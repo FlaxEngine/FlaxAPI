@@ -31,9 +31,7 @@ namespace FlaxEditor.GUI
         /// <returns>Created button control.</returns>
         public MainMenuButton AddButton(string text)
         {
-            var button = new MainMenuButton(text);
-            button.Parent = this;
-            return button;
+            return AddChild(new MainMenuButton(text));
         }
 
         /// <summary>
