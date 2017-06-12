@@ -54,6 +54,9 @@
     <Compile Include="Content\Items\ScriptItem.cs" />
     <Compile Include="GUI\MainMenu.cs" />
     <Compile Include="GUI\MainMenuButton.cs" />
+    <Compile Include="GUI\ToolStrip.cs" />
+    <Compile Include="GUI\ToolStripButton.cs" />
+    <Compile Include="GUI\ToolStripSeparator.cs" />
     <Compile Include="History\HistoryStack.cs" />
     <Compile Include="History\IHistoryAction.cs" />
     <Compile Include="History\UndoActionObject.cs" />
