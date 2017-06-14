@@ -127,7 +127,7 @@ namespace FlaxEditor.GUI
             // Draw icon
             if (_icon.IsValid)
             {
-                Render2D.DrawSprite(_icon, iconRect, Enabled ? Color.White : style.ForegroundDisabled, true);
+                Render2D.DrawSprite(_icon, iconRect, Enabled ? Color.White : style.ForegroundDisabled);
                 textRect.Location.X += iconSize + DefaultMargin;
             }
 

@@ -24,7 +24,7 @@ namespace FlaxEngine
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
             Color color = Color.White;
-	        Internal_DrawSprite(Object.GetUnmanagedPtr(sprite.Atlas), sprite.Index, ref rect, ref color, false);
+	        Internal_DrawSprite(Object.GetUnmanagedPtr(sprite.Atlas), sprite.Index, ref rect, ref color, true);
 #endif
 	    }
 
@@ -39,7 +39,7 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 	    [UnmanagedCall]
-	    public static void DrawSprite(Sprite sprite, Rectangle rect, Color color, bool withAlpha = false)
+	    public static void DrawSprite(Sprite sprite, Rectangle rect, Color color, bool withAlpha = true)
 	    {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
