@@ -31,6 +31,11 @@ namespace FlaxEditor.Modules
         /// </summary>
         public MasterDockPanel MasterPanel = new MasterDockPanel();
 
+        /// <summary>
+        /// The status strip control.
+        /// </summary>
+        public StatusBar StatusBar;
+
         internal UIModule(Editor editor)
             : base(editor)
         {
@@ -72,6 +77,26 @@ namespace FlaxEditor.Modules
             return result;
         }
 
+        /// <summary>
+        /// Updates the status bar.
+        /// </summary>
+        public void UpdateStatusBar()
+        {
+            if (StatusBar == null)
+                return;
+
+            Color color;
+            if (Editor.StateMachine.IsPlayMode)
+            {
+                color = Color.OrangeRed;
+            }
+            else
+            {
+                color = Style.Current.BackgroundSelected;
+            }
+            StatusBar.StatusColor = color;
+        }
+
         /// <inheritdoc />
         public override void OnInit()
         {
@@ -81,6 +106,7 @@ namespace FlaxEditor.Modules
             InitStyle(mainWindow);
             InitMainMenu(mainWindow);
             InitToolstrip(mainWindow);
+            InitStatusBar(mainWindow);
         }
 
         /// <inheritdoc />
@@ -268,6 +294,16 @@ namespace FlaxEditor.Modules
             ToolStrip.AddButton(8, GetIcon("Play32"));//.LinkTooltip(SharedToolTip, "Start/Stop simulation (F5)");// Play
             ToolStrip.AddButton(9, GetIcon("Pause32"));//.LinkTooltip(SharedToolTip, "Pause simulation");// Pause
             ToolStrip.AddButton(10, GetIcon("Step32"));//.LinkTooltip(SharedToolTip, "Step one frame in simulation");// Step
+        }
+
+        private void InitStatusBar(FlaxEngine.GUI.Window mainWindow)
+        {
+            // Status Bar
+            StatusBar = new StatusBar();
+            StatusBar.Parent = mainWindow;
+
+            StatusBar.Text = "Ready";
+            UpdateStatusBar();
         }
 
         private void onTootlstripButtonClicked(int id)
@@ -585,6 +621,7 @@ namespace FlaxEditor.Modules
             MainMenu = null;
             ToolStrip = null;
             MasterPanel = null;
+            StatusBar = null;
         }
     }
 }

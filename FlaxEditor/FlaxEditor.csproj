@@ -54,6 +54,7 @@
     <Compile Include="Content\Items\ScriptItem.cs" />
     <Compile Include="GUI\MainMenu.cs" />
     <Compile Include="GUI\MainMenuButton.cs" />
+    <Compile Include="GUI\StatusBar.cs" />
     <Compile Include="GUI\ToolStrip.cs" />
     <Compile Include="GUI\ToolStripButton.cs" />
     <Compile Include="GUI\ToolStripSeparator.cs" />
