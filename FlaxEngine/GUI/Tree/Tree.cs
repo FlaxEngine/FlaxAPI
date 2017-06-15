@@ -22,11 +22,18 @@ namespace FlaxEngine.GUI
         public static float KeyUpdateTimeout = 0.12f;
 
         /// <summary>
-        /// 
+        /// Delegate for selected tree nodes collection change.
         /// </summary>
         /// <param name="before">The before state.</param>
         /// <param name="after">The after state.</param>
         public delegate void SelectionChangedDelegate(List<TreeNode> before, List<TreeNode> after);
+
+        /// <summary>
+        /// Delegate for node click events.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="location">The location.</param>
+        public delegate void NodeClickDelegate(TreeNode node, Vector2 location);
 
         private float _keyUpdateTime;
         private bool _supportMultiSelect;
@@ -39,8 +46,8 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Action fired when ouse goes right click up on node.
         /// </summary>
-        //public event Delegate<Control*, const Vector2&> OnRightClick;
-        
+        public event NodeClickDelegate OnRightClick;
+
         /// <summary>
         /// List with all selected nodes
         /// </summary>
@@ -60,6 +67,11 @@ namespace FlaxEngine.GUI
         {
             _supportMultiSelect = supportMultiSelect;
             _keyUpdateTime = KeyUpdateTimeout * 10;
+        }
+
+        internal void OnRightClickInternal(TreeNode node, ref Vector2 location)
+        {
+            OnRightClick?.Invoke(node, location);
         }
 
         /// <summary>
@@ -267,7 +279,10 @@ namespace FlaxEngine.GUI
             }
         }
 
-        private void updateWidth()
+        /// <summary>
+        /// Updates the tree width.
+        /// </summary>
+        public void UpdateWidth()
         {
             // Use max of parent clint area width and root node width
             float width = 1;
@@ -286,6 +301,7 @@ namespace FlaxEngine.GUI
         {
             var node = SelectedNode;
             /*
+            // TODO: finish input per window
             // Check if has focus and if any node is focused and it isn't a root
             if (ContainsFocus && node != null && !node.IsRoot)
             {
@@ -463,7 +479,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void OnParentResized(ref Vector2 oldSize)
         {
-            updateWidth();
+            UpdateWidth();
 
             base.OnParentResized(ref oldSize);
         }
@@ -471,7 +487,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
-            updateWidth();
+            UpdateWidth();
         }
     }
 }

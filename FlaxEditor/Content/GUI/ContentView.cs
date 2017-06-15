@@ -3,12 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FlaxEditor.Windows;
-using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Content.GUI
@@ -64,11 +59,13 @@ namespace FlaxEditor.Content.GUI
         /// <inheritdoc />
         void IContentItemOwner.OnItemRenamed(ContentItem item)
         {
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
         void IContentItemOwner.OnItemDispose(ContentItem item)
         {
+            throw new NotImplementedException();
         }
     }
 }
