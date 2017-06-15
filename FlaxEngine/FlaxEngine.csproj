@@ -168,6 +168,8 @@
     <Compile Include="GUI\Panels\SplitPanel.cs" />
     <Compile Include="GUI\Panels\VScrollBar.cs" />
     <Compile Include="GUI\Style.cs" />
+    <Compile Include="GUI\Tree\Tree.cs" />
+    <Compile Include="GUI\Tree\TreeNode.cs" />
     <Compile Include="GUI\Window.cs" />
     <Compile Include="API\Actors\EmptyActor.cs" />
     <Compile Include="API\Actors\PhysicalActor.cs" />

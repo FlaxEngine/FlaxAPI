@@ -544,6 +544,13 @@ namespace FlaxEngine.GUI
         #region Drag&Drop
 
         // TODO: move drag and drop support from C++
+        
+        /// <summary>
+        ///     Check if mouse dragging is over that item or its child items.
+        /// </summary>
+        /// <returns>True if drag is over</returns>
+        public virtual bool IsDragOver => _isDragOver;
+
 
         #endregion
 
