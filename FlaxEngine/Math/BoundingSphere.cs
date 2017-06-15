@@ -64,6 +64,11 @@ namespace FlaxEngine
     public struct BoundingSphere : IEquatable<BoundingSphere>, IFormattable
     {
         /// <summary>
+        /// A <see cref="BoundingSphere"/> which represents an empty space.
+        /// </summary>
+        public static readonly BoundingSphere Empty = new BoundingSphere(Vector3.Zero, 0.0f);
+
+        /// <summary>
         /// The center of the sphere in three dimensional space.
         /// </summary>
         public Vector3 Center;

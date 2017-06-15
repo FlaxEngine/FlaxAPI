@@ -12,6 +12,11 @@ namespace FlaxEngine
     public struct Rectangle : IEquatable<Rectangle>
     {
         /// <summary>
+        /// A <see cref="Rectangle"/> which represents an empty space.
+        /// </summary>
+        public static readonly Rectangle Empty = new Rectangle(Vector2.Zero, Vector2.Zero);
+
+        /// <summary>
         /// Rectangle location (coordinates of the upper-left corner)
         /// </summary>
         public Vector2 Location;

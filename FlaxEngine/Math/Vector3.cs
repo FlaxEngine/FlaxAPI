@@ -136,6 +136,16 @@ namespace FlaxEngine
         public static readonly Vector3 BackwardLH = new Vector3(0.0f, 0.0f, -1.0f);
 
         /// <summary>
+        /// A <see cref="Vector3" /> with all components equal to <see cref="float.MinValue"/>.
+        /// </summary>
+        public static readonly Vector3 Minimum = new Vector3(float.MinValue);
+
+        /// <summary>
+        /// A <see cref="Vector3" /> with all components equal to <see cref="float.MaxValue"/>.
+        /// </summary>
+        public static readonly Vector3 Maximum = new Vector3(float.MaxValue);
+
+        /// <summary>
         /// The X component of the vector.
         /// </summary>
         public float X;

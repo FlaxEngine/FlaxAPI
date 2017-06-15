@@ -64,6 +64,11 @@ namespace FlaxEngine
     public struct BoundingBox : IEquatable<BoundingBox>, IFormattable
     {
         /// <summary>
+        /// A <see cref="BoundingBox"/> which represents an empty space.
+        /// </summary>
+        public static readonly BoundingBox Empty = new BoundingBox(Vector3.Maximum, Vector3.Minimum);
+
+        /// <summary>
         /// The minimum point of the box.
         /// </summary>
         public Vector3 Minimum;
