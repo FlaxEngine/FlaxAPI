@@ -65,5 +65,10 @@ namespace FlaxEditor.Content.GUI
         void IContentItemOwner.OnItemRenamed(ContentItem item)
         {
         }
+
+        /// <inheritdoc />
+        void IContentItemOwner.OnItemDispose(ContentItem item)
+        {
+        }
     }
 }

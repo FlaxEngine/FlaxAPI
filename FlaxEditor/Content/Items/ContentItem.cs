@@ -59,6 +59,13 @@ namespace FlaxEditor.Content
         /// </summary>
         /// <param name="item">The item.</param>
         void OnItemRenamed(ContentItem item);
+
+        /// <summary>
+        /// Called when referenced item gets disposed (editor closing, database inetrnal changes, etc.).
+        /// Item should not be used after that.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        void OnItemDispose(ContentItem item);
     }
 
     /// <summary>
@@ -74,9 +81,14 @@ namespace FlaxEditor.Content
         public const int DefaultWidth = (DefaultIconSize + 2 * DefaultMarginSize);
         public const int DefaultHeight = (DefaultIconSize + 2 * DefaultMarginSize + DefaultTextHeight);
 
+        private ContentFolder _parentFolder;
+
         protected bool _isMouseDown;
         protected Vector2 _mouseDownStartPos;
         protected readonly List<IContentItemOwner> _references = new List<IContentItemOwner>(4);
+
+        protected Sprite _icon;
+        protected Sprite _shadow;
 
         /// <summary>
         /// Gets the item domain.
@@ -130,7 +142,24 @@ namespace FlaxEditor.Content
         /// <value>
         /// The parent folder.
         /// </value>
-        public ContentFolder ParentFolder { get; private set; }
+        public ContentFolder ParentFolder
+        {
+            get => _parentFolder;
+            set
+            {
+                if (_parentFolder == value)
+                    return;
+
+                // Remove from old
+                _parentFolder?.Children.Remove(this);
+
+                // Link
+                _parentFolder = value;
+
+                // Add to new
+                _parentFolder?.Children.Add(this);
+            }
+        }
 
         /// <summary>
         /// Gets the path to the item.
@@ -159,6 +188,12 @@ namespace FlaxEditor.Content
             get
             {
                 throw new NotImplementedException();
+                /*string result = Path;
+                if (result.StartsWith(Globals::Paths::ProjectFolder))
+                {
+                    result = result.Substring(Globals::Paths::ProjectFolder.Length() + 1);
+                }
+                return StringUtils::GetPathWithoutExtension(result);*/
             }
         }
 
@@ -170,6 +205,18 @@ namespace FlaxEditor.Content
         /// The default name of the preview.
         /// </value>
         public virtual string DefaultPreviewName => null;
+
+        /// <summary>
+        /// Gets or sets the icon. Warning, icon may not be available if item has no references (<see cref="ReferencesCount"/>).
+        /// </summary>
+        /// <value>
+        /// The icon.
+        /// </value>
+        public Sprite Icon
+        {
+            get => _icon;
+            set => _icon = value;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContentItem"/> class.
@@ -212,6 +259,14 @@ namespace FlaxEditor.Content
                 return;
 
             throw new NotImplementedException();
+
+            /*auto manager = CWindowsModule->ContentWin->GetPreviewManager();
+
+            // Delete preview and remove it from cache
+            manager->DeletePreview(this);
+
+            // Request icon
+            manager->LoadPreview(this);*/
         }
 
         /// <summary>
@@ -284,18 +339,20 @@ namespace FlaxEditor.Content
         public void DrawIcon(ref Rectangle iconRect)
         {
             // Draw shadow
-            if (DrawShadow)
+            /*if (DrawShadow)
             {
                 const float iconInShadowSize = 50.0f;
                 var shadowRect = iconRect.MakeExpanded((DefaultIconSize - iconInShadowSize) * iconRect.Width / DefaultIconSize * 1.3f);
-                //Render2D.DrawSprite(_shadow, shadowRect);
+                if (!_shadow.IsValid)
+                    _shadow = CUIModule->GetIcon(TEXT("AssetShadow"));
+                Render2D.DrawSprite(_shadow, shadowRect);
             }
 
             // Draw icon
-            /*if (_icon.IsValid())
-                Render2D . DrawSprite(_icon, iconRect);
-            else
-                Render2D.FillRectangle(iconRect, Color.Black);*/
+            if (_icon.IsValid)
+                Render2D.DrawSprite(_icon, iconRect);
+            else*/
+                Render2D.FillRectangle(iconRect, Color.Black);
         }
 
         /// <summary>
@@ -318,11 +375,10 @@ namespace FlaxEditor.Content
             _references.Add(obj);
 
             // Check if need to generate preview
-            /*if (_references.Count > 0 && !_icon.IsValid())
+            if (_references.Count > 0 && !_icon.IsValid)
             {
-                // Request icon
-                CWindowsModule->ContentWin->GetPreviewManager()->LoadPreview(this);
-            }*/
+                RequestIcon();
+            }
         }
 
         /// <summary>
@@ -336,11 +392,48 @@ namespace FlaxEditor.Content
             _references.Remove(obj);
 
             // Check if need to release the preview
-            /*if (CWindowsModule->ContentWin && _references.Count == 0)
+            if (_references.Count == 0 && _icon.IsValid)
             {
-                // Release icon
-                CWindowsModule->ContentWin->GetPreviewManager()->ReleasePreview(this);
-            }*/
+                ReleaseIcon();
+            }
+        }
+
+        /// <summary>
+        /// Called when content item gets removed (by the user or externally).
+        /// </summary>
+        public virtual void OnDelete()
+        {
+            // Fire event
+            while (_references.Count > 0)
+            {
+                var reference = _references[0];
+                reference.OnItemDeleted(this);
+                RemoveReference(reference);
+            }
+
+            // Release icon
+            if (_icon.IsValid)
+            {
+                ReleaseIcon();
+            }
+        }
+
+        /// <summary>
+        /// Requests the icon.
+        /// </summary>
+        protected void RequestIcon()
+        {
+            // TODO: call previews manager
+            //CWindowsModule->ContentWin->GetPreviewManager()->LoadPreview(this);
+        }
+
+        /// <summary>
+        /// Releases the icon.
+        /// </summary>
+        protected void ReleaseIcon()
+        {
+            // TODO: call previews manager
+            //CWindowsModule->ContentWin->GetPreviewManager()->ReleasePreview(this);
         }
 
         /// <summary>
@@ -458,6 +551,26 @@ namespace FlaxEditor.Content
             }
 
             base.OnMouseLeave();
+        }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            // Fire event
+            while (_references.Count > 0)
+            {
+                var reference = _references[0];
+                reference.OnItemDispose(this);
+                RemoveReference(reference);
+            }
+
+            // Release icon
+            if (_icon.IsValid)
+            {
+                ReleaseIcon();
+            }
+
+            base.OnDestroy();
         }
 
         /// <inheritdoc />
