@@ -100,6 +100,8 @@
     <Compile Include="API\Objects\Asset.Gen.cs">
       <DependentUpon>Asset.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Objects\BasePersistentData.cs" />
+    <Compile Include="API\Objects\BasePersistentData.Gen.cs" />
     <Compile Include="API\Objects\Font.cs" />
     <Compile Include="API\Objects\Font.Gen.cs">
       <DependentUpon>Font.cs</DependentUpon>
