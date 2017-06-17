@@ -36,9 +36,15 @@ namespace FlaxEditor.Modules
         /// </summary>
         public StatusBar StatusBar;
 
+        // Cached internally to improve performance
+        internal Sprite FolderClosed12;
+        internal Sprite FolderOpened12;
+        
         internal UIModule(Editor editor)
             : base(editor)
         {
+            // Init content database after Widows module
+            InitOrder = -90;
         }
 
         /// <summary>
@@ -107,6 +113,10 @@ namespace FlaxEditor.Modules
             InitMainMenu(mainWindow);
             InitToolstrip(mainWindow);
             InitStatusBar(mainWindow);
+
+            // Cache icons
+            FolderClosed12 = Editor.Instance.UI.GetIcon("FolderClosed12");
+            FolderOpened12 = Editor.Instance.UI.GetIcon("FolderOpened12");
         }
 
         /// <inheritdoc />
