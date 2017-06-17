@@ -252,6 +252,7 @@
     <Compile Include="Utilities\Extenstions.cs" />
     <Compile Include="Utilities\State.cs" />
     <Compile Include="Utilities\StateMachine.cs" />
+    <Compile Include="Utilities\StringUtils.cs" />
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
