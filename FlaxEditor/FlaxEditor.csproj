@@ -44,7 +44,8 @@
     <Compile Include="API\Static\ScriptsBuilder.cs" />
     <Compile Include="API\Static\ScriptsBuilder.Gen.cs" />
     <Compile Include="Content\GUI\ContentView.cs" />
-    <Compile Include="Content\ContentProxy.cs" />
+    <Compile Include="Content\Proxy\BinaryAssetProxy.cs" />
+    <Compile Include="Content\Proxy\ContentProxy.cs" />
     <Compile Include="Content\Items\AssetItem.cs" />
     <Compile Include="Content\Items\BinaryAssetItem.cs" />
     <Compile Include="Content\Items\ContentFolder.cs" />
@@ -53,6 +54,9 @@
     <Compile Include="Content\Items\NewItem.cs" />
     <Compile Include="Content\Items\SceneItem.cs" />
     <Compile Include="Content\Items\ScriptItem.cs" />
+    <Compile Include="Content\Proxy\AssetProxy.cs" />
+    <Compile Include="Content\Proxy\JsonAssetProxy.cs" />
+    <Compile Include="Content\Proxy\SceneItemProxy.cs" />
     <Compile Include="Content\Tree\ContentTreeNode.cs" />
     <Compile Include="Content\Tree\MainContentTreeNode.cs" />
     <Compile Include="GUI\MainMenu.cs" />
