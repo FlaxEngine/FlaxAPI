@@ -1,3 +1,7 @@
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
+
 using System;
 
 namespace FlaxEngine
@@ -136,7 +140,7 @@ namespace FlaxEngine
         /// <param name="g">Green component.</param>
         /// <param name="b">Blue component.</param>
         /// <param name="a">Alpha component.</param>
-        public Color(byte r, byte g, byte b, byte a)
+        public Color(byte r, byte g, byte b, byte a = 255)
         {
             R = r / 255.0f;
             G = g / 255.0f;
@@ -214,6 +218,85 @@ namespace FlaxEngine
                 hashCode = (hashCode * 397) ^ A.GetHashCode();
                 return hashCode;
             }
+        }
+
+        /// <summary>
+        /// Creates <see cref="Color"/> from the RGB value and separate alpha channel.
+        /// </summary>
+        /// <param name="rgb">The packed RGB value.</param>
+        /// <param name="a">The alpha channel value.</param>
+        /// <returns>The color.</returns>
+        public static Color FromRGB(uint rgb, float a = 1.0f)
+        {
+            return new Color(
+                ((rgb >> 8) & 0xff) / 255.0f,
+                ((rgb >> 4) & 0xff) / 255.0f,
+                (rgb & 0xff) / 255.0f,
+                a);
+        }
+
+        /// <summary>
+        /// Creates <see cref="Color"/> from the hexadecimal string.
+        /// </summary>
+        /// <param name="hexString">The hexadecimal string.</param>
+        /// <returns>The color.</returns>
+        public static Color ParseHex(string hexString)
+        {
+            Color value;
+            if (TryParseHex(hexString, out value))
+            {
+                return value;
+            }
+            throw new FormatException();
+        }
+
+        /// <summary>
+        /// Creates <see cref="Color"/> from the hexadecimal string.
+        /// </summary>
+        /// <param name="hexString">The hexadecimal string.</param>
+        /// <param name="value">Output value.</param>
+        /// <returns>True if value has benn parsed, otherwise false..</returns>
+        static bool TryParseHex(string hexString, out Color value)
+        {
+            value = Black;
+
+            if (string.IsNullOrEmpty(hexString))
+                return false;
+
+            int r, g, b, a = 255;
+
+            int startIndex = hexString[0] == '#' ? 1 : 0;
+
+            if (hexString.Length == 3 + startIndex)
+            {
+                r = StringUtils.HexDigit(hexString[startIndex++]);
+                g = StringUtils.HexDigit(hexString[startIndex++]);
+                b = StringUtils.HexDigit(hexString[startIndex]);
+
+                r = (r << 4) + r;
+                g = (g << 4) + g;
+                b = (b << 4) + b;
+            }
+            else if (hexString.Length == 6 + startIndex)
+            {
+                r = (StringUtils.HexDigit(hexString[startIndex + 0]) << 4) + StringUtils.HexDigit(hexString[startIndex + 1]);
+                g = (StringUtils.HexDigit(hexString[startIndex + 2]) << 4) + StringUtils.HexDigit(hexString[startIndex + 3]);
+                b = (StringUtils.HexDigit(hexString[startIndex + 4]) << 4) + StringUtils.HexDigit(hexString[startIndex + 5]);
+            }
+            else if (hexString.Length == 8 + startIndex)
+            {
+                r = (StringUtils.HexDigit(hexString[startIndex + 0]) << 4) + StringUtils.HexDigit(hexString[startIndex + 1]);
+                g = (StringUtils.HexDigit(hexString[startIndex + 2]) << 4) + StringUtils.HexDigit(hexString[startIndex + 3]);
+                b = (StringUtils.HexDigit(hexString[startIndex + 4]) << 4) + StringUtils.HexDigit(hexString[startIndex + 5]);
+                a = (StringUtils.HexDigit(hexString[startIndex + 6]) << 4) + StringUtils.HexDigit(hexString[startIndex + 7]);
+            }
+            else
+            {
+                return false;
+            }
+
+            value = new Color(r, g, b, a);
+            return true;
         }
 
         /// <summary>
