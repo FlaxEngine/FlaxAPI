@@ -137,6 +137,14 @@ namespace FlaxEditor.Content
         public virtual bool CanRename => true;
 
         /// <summary>
+        /// Gets a value indicating whether this <see cref="ContentItem"/> exists on drive.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if exists; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool Exists => System.IO.File.Exists(Path);
+
+        /// <summary>
         /// Gets the parent folder.
         /// </summary>
         /// <value>

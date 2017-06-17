@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Content
@@ -63,6 +64,14 @@ namespace FlaxEditor.Content
         public ContentTreeNode ParentNode => Parent as ContentTreeNode;
 
         /// <summary>
+        /// Gets the folderpath.
+        /// </summary>
+        /// <value>
+        /// The path.
+        /// </value>
+        public string Path => _folder.Path;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ContentTreeNode"/> class.
         /// </summary>
         /// <param name="parent">The parent node.</param>
@@ -84,9 +93,18 @@ namespace FlaxEditor.Content
         /// <param name="type">The folder type.</param>
         /// <param name="path">The folder path.</param>
         protected ContentTreeNode(ContentFolderType type, string path)
-            : base(false, Editor.Instance.UI.GetIcon("FolderClosed12"), Editor.Instance.UI.GetIcon("FolderOpened12"))
+            : base(false, Editor.Instance.UI.FolderClosed12, Editor.Instance.UI.FolderOpened12)
         {
             _folder = new ContentFolder(type, path, this);
+        }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            // Delete folder item
+            _folder.Dispose();
+
+            base.OnDestroy();
         }
     }
 }
