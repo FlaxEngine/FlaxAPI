@@ -1,4 +1,6 @@
-// Flax Engine scripting API
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
 
 using System;
 using System.IO;
@@ -12,6 +14,7 @@ namespace FlaxEngine
         {
             UnhandledExceptionHandler.RegisterUECatcher();
             FlaxLogWriter.Init();
+            Globals.Init();
         }
     }
 }
