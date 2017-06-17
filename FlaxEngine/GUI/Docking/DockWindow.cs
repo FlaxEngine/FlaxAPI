@@ -129,6 +129,7 @@ namespace FlaxEngine.GUI.Docking
         {
             _masterPanel = masterPanel;
             HideOnClose = hideOnClose;
+            DockStyle = DockStyle.Fill;
         }
 
         /// <summary>
@@ -210,6 +211,18 @@ namespace FlaxEngine.GUI.Docking
         public void Show(DockState state, DockWindow toDock)
         {
             Show(state, toDock?.ParentDockPanel);
+        }
+
+        /// <summary>
+        /// Focuses or shows the window.
+        /// </summary>
+        /// <param name="state">The state.</param>
+        public void FocusOrShow(DockState state = DockState.Float)
+        {
+            if (Visible)
+                Focus();
+            else
+                Show(state);
         }
 
         /// <summary>

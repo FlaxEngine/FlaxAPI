@@ -42,7 +42,7 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// The content window.
         /// </summary>
-        public ContentWindow Content;
+        public ContentWindow ContentWin;
 
         /// <summary>
         /// List with all created editor windows.
@@ -107,9 +107,7 @@ namespace FlaxEditor.Modules
             // TODO: finish this
 
             // for now just show default windows
-            Content.BackgroundColor = Color.Blue;
-            Content.Show(DockState.Float);
-            Debug.Log("dock content");
+            ContentWin.Show(DockState.Float);
         }
 
         /// <summary>
@@ -143,7 +141,7 @@ namespace FlaxEditor.Modules
             MainWindow.OnClosed += MainWindow_OnClosed;
 
             // Create default editor windows
-            Content = new ContentWindow(Editor);
+            ContentWin = new ContentWindow(Editor);
 
             // Bind events
             SceneManager.OnSceneSaveError += OnSceneSaveError;

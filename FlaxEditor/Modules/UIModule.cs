@@ -263,11 +263,14 @@ namespace FlaxEditor.Modules
             // Window
             var mm_Window = MainMenu.AddButton("Window");
             mm_Window.ContextMenu.OnButtonClicked += mm_Window_Click;
-            mm_Window.ContextMenu.AddButton(13, "Scene Properties");
-            mm_Window.ContextMenu.AddButton(10, "Quality");
-            mm_Window.ContextMenu.AddButton(11, "Game");
-            mm_Window.ContextMenu.AddButton(12, "Editor");
-            mm_Window.ContextMenu.AddButton(14, "Debug Log");
+            mm_Window.ContextMenu.AddButton(10, "Content");
+            mm_Window.ContextMenu.AddButton(11, "Scene Tree");
+            mm_Window.ContextMenu.AddButton(12, "Toolbox");
+            mm_Window.ContextMenu.AddButton(13, "Properties");
+            mm_Window.ContextMenu.AddButton(14, "Quality");
+            mm_Window.ContextMenu.AddButton(15, "Game");
+            mm_Window.ContextMenu.AddButton(16, "Editor");
+            mm_Window.ContextMenu.AddButton(17, "Debug Log");
             mm_Window.ContextMenu.AddSeparator();
             mm_Window.ContextMenu.AddButton(1, "Restore default layout");
 
@@ -594,12 +597,16 @@ namespace FlaxEditor.Modules
             {
                 // Restore default layout
                 case 1: Editor.Windows.LoadDefaultLayout(); break;
-
-                /*case 10: Editor.Windows.QualityWin->FocusOrShow(); break;
-                case 11: Editor.Windows.GameWin->FocusOrShow(); break;
-                case 12: Editor.Windows.Frame->FocusOrShow(); break;
-                case 13: CWindowsModule.ScenePropertiesWin->FocusOrShow(); break;
-                case 14: Editor.Windows.DebugLogWin->FocusOrShow(); break;*/
+                
+                // Windows
+                case 10: Editor.Windows.ContentWin.FocusOrShow(); break;
+                //case 11: Editor.Windows.SceneTreeWin.FocusOrShow(); break;
+                //case 12: Editor.Windows.ToolboxWin.FocusOrShow(); break;
+                //case 13: Editor.Windows.PropertiesWin.FocusOrShow(); break;
+                //case 14: Editor.Windows.QualityWin.FocusOrShow(); break;
+                //case 15: Editor.Windows.GameWin.FocusOrShow(); break;
+                //case 16: Editor.Windows.EditorWin.FocusOrShow(); break;
+                //case 17: Editor.Windows.DebugWin.FocusOrShow(); break;
             }
         }
 
