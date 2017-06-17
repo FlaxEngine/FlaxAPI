@@ -2,13 +2,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FlaxEditor.Content;
 using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.Assertions;
+using FlaxEngine.GUI.Docking;
 
 namespace FlaxEditor.Modules
 {
@@ -41,6 +40,11 @@ namespace FlaxEditor.Modules
         public event Action OnMainWindowClosing;
 
         /// <summary>
+        /// The content window.
+        /// </summary>
+        public ContentWindow Content;
+
+        /// <summary>
         /// List with all created editor windows.
         /// </summary>
         public readonly List<EditorWindow> Windows = new List<EditorWindow>(32);
@@ -61,21 +65,21 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
-        /// Closes all windows that are using given element to view/edit
+        /// Closes all windows that are using given element to view/edit it.
         /// </summary>
-        /// TODO: finsih this
-        /*public void CloseAllEditors(ContentElement el);
+        /// <param name="item">The item.</param>
+        public void CloseAllEditors(ContentItem item)
         {
             for (int i = 0; i < Windows.Count; i++)
             {
-                auto win = Windows[i];
-                if (win.IsEditingElement(el))
+                var win = Windows[i];
+                if (win.IsEditingItem(item))
                 {
                     win.Close();
+                    i--;
                 }
             }
         }
-        */
 
         /// <summary>
         /// Saves the current workspace layout.
@@ -101,6 +105,9 @@ namespace FlaxEditor.Modules
         public void LoadLayout(string name)
         {
             // TODO: finish this
+
+            // for now just show default windows
+            Content.Show(DockState.DockBottom);
         }
 
         /// <summary>
@@ -132,9 +139,10 @@ namespace FlaxEditor.Modules
             // Link for main window events
             MainWindow.OnClosing += MainWindow_OnClosing;
             MainWindow.OnClosed += MainWindow_OnClosed;
-            
-            // TODO: create default editor windows here
 
+            // Create default editor windows
+            Content = new ContentWindow(Editor);
+            
             // Bind events
             SceneManager.OnSceneSaveError += OnSceneSaveError;
             SceneManager.OnSceneLoaded += OnSceneLoaded;

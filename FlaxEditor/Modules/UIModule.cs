@@ -113,6 +113,7 @@ namespace FlaxEditor.Modules
             InitMainMenu(mainWindow);
             InitToolstrip(mainWindow);
             InitStatusBar(mainWindow);
+            InitDockPanel(mainWindow);
 
             // Cache icons
             FolderClosed12 = Editor.Instance.UI.GetIcon("FolderClosed12");
@@ -314,6 +315,13 @@ namespace FlaxEditor.Modules
 
             StatusBar.Text = "Ready";
             UpdateStatusBar();
+        }
+
+        private void InitDockPanel(FlaxEngine.GUI.Window mainWindow)
+        {
+            // Dock Panel
+            MasterPanel = new MasterDockPanel();
+            MasterPanel.Parent = mainWindow;
         }
 
         private void onTootlstripButtonClicked(int id)

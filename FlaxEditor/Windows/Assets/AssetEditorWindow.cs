@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlaxEditor.Content;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Windows.Assets
@@ -15,9 +16,25 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.EditorWindow" />
     public abstract class AssetEditorWindow : EditorWindow, IEditable
     {
-        protected AssetEditorWindow(Editor editor)
+        protected AssetItem _item;
+
+        /// <summary>
+        /// Gets the item.
+        /// </summary>
+        /// <value>
+        /// The item.
+        /// </value>
+        public AssetItem Item => _item;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssetEditorWindow"/> class.
+        /// </summary>
+        /// <param name="editor">The editor.</param>
+        /// <param name="item">The item.</param>
+        protected AssetEditorWindow(Editor editor, AssetItem item)
             : base(editor, false, ScrollBars.None)
         {
+            _item = item;
         }
 
         /// <summary>
@@ -92,5 +109,11 @@ namespace FlaxEditor.Windows.Assets
         }
 
         #endregion
+
+        /// <inheritdoc />
+        public override bool IsEditingItem(ContentItem item)
+        {
+            return item == _item;
+        }
     }
 }

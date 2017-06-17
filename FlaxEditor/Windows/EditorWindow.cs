@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlaxEditor.Content;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.GUI.Docking;
@@ -35,6 +36,18 @@ namespace FlaxEditor.Windows
 
             // Register
             Editor.Windows.Windows.Add(this);
+        }
+
+        /// <summary>
+        /// Determines whether this window is holding reference to the specified item.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>
+        ///   <c>true</c> if window is editing the specified item; otherwise, <c>false</c>.
+        /// </returns>
+        public virtual bool IsEditingItem(ContentItem item)
+        {
+            return false;
         }
 
         #region Window Events

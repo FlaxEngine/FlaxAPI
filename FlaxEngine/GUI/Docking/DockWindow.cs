@@ -201,7 +201,7 @@ namespace FlaxEngine.GUI.Docking
         /// </summary>
         /// <param name="state">Initial window state.</param>
         /// <param name="toDock">Window to dock to it.</param>
-        public void Show(DockState state, DockWindow toDock = null)
+        public void Show(DockState state, DockWindow toDock)
         {
             Show(state, toDock?.ParentDockPanel);
         }
