@@ -19,6 +19,11 @@ namespace FlaxEditor.Content
         /// The script files extension.
         /// </summary>
         public static readonly string Extension = "cs";
+        
+        /// <summary>
+        /// The script files extension filter.
+        /// </summary>
+        public static readonly string ExtensionFiler = "*.cs";
 
         /// <inheritdoc />
         public override string Name => "Script";

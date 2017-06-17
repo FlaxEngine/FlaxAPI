@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using FlaxEditor.Content;
 using FlaxEngine;
 using FlaxEngine.Assertions;
@@ -18,6 +19,8 @@ namespace FlaxEditor.Modules
     {
         private bool _enableEvents;
         private bool _isDuringFastSetup;
+        private int _itemsCreated;
+        private int _itemsDeleted;
         private readonly Queue<MainContentTreeNode> _dirtyNodes = new Queue<MainContentTreeNode>();
 
         /// <summary>
@@ -220,6 +223,7 @@ namespace FlaxEditor.Modules
             item.OnDelete();
             if (_enableEvents)
                 OnItemRemoved?.Invoke(item);
+            _itemsDeleted++;
 
             var path = item.Path;
 
@@ -292,14 +296,15 @@ namespace FlaxEditor.Modules
             }
 
             // Find elements
+            // TODO: we could make it more modular
             if (node.CanHaveAssets)
             {
-                //addFiles2Tree(node, list, path, ASSET_FILES_EXTENSION_ASTERIX, &addAsset2Tree);
-                //addFiles2Tree(node, list, path, DEFAULT_SCENE_EXTENSION_FILTER, &addScene2Tree);
+                //addFiles2Tree(node, path, ASSET_FILES_EXTENSION_ASTERIX, &addAsset2Tree);
+                //addFiles2Tree(node, path, DEFAULT_SCENE_EXTENSION_FILTER, &addScene2Tree);
             }
             if (node.CanHaveScripts)
             {
-                //addFiles2Tree(node, list, path, SCRIPT_FILES_EXTENSION_ASTERIX, &addScript2Tree);
+                addFiles2Tree(node, path, ScriptProxy.ExtensionFiler, x => new ScriptItem(x));
             }
 
             // Get child directories
@@ -326,6 +331,7 @@ namespace FlaxEditor.Modules
                     // Fire event
                     if (_enableEvents)
                         OnItemAdded?.Invoke(n.Folder);
+                    _itemsCreated++;
                 }
                 else if (checkSubDirs)
                 {
@@ -335,6 +341,35 @@ namespace FlaxEditor.Modules
             }
             if (sortChildren)
                 node.SortChildren();
+        }
+
+        private void addFiles2Tree(ContentTreeNode parent, string directory, string filter, Func<string, ContentItem> createFunc)
+        {
+            // Find files
+            var files = System.IO.Directory.GetFiles(directory, filter, SearchOption.TopDirectoryOnly);
+
+            // Add them
+            for (int i = 0; i < files.Length; i++)
+            {
+                var filepath = files[i];
+
+                // Check if node already has that element (skip during init when we want to walk project dir very fast)
+                if (_isDuringFastSetup || !parent.Folder.ContaisnChild(filepath))
+                {
+                    // Create item object
+                    var item = createFunc(filepath);
+                    if (item != null)
+                    {
+                        // Link
+                        item.ParentFolder = parent.Folder;
+
+                        // Fire event
+                        if (_enableEvents)
+                            OnItemAdded?.Invoke(item);
+                        _itemsCreated++;
+                    }
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -353,8 +388,6 @@ namespace FlaxEditor.Modules
             Proxy.Add(new SceneProxy());
             //Proxy.Add(new IESProfileProxy());
 
-            Debug.Log("start database init");
-
             // Create content folders nodes
             ProjectContent = new MainContentTreeNode(ContentFolderType.Content, Globals.ContentFolder);
             ProjectSource = new MainContentTreeNode(ContentFolderType.Source, Globals.SourceFolder);
@@ -370,10 +403,10 @@ namespace FlaxEditor.Modules
             loadFolder(EditorPrivate, true);
             _isDuringFastSetup = false;
 
-            Debug.Log("end database init");
-
             // Enable events
             _enableEvents = true;
+
+            Debug.Log("Project database created. Items count: " + _itemsCreated);
         }
 
         /// <inheritdoc />
