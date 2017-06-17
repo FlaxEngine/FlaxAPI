@@ -1,4 +1,6 @@
-﻿// Flax Engine scripting API
+﻿////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
 
 using System;
 using System.Collections.Generic;
@@ -31,16 +33,22 @@ namespace FlaxEngine.GUI.Docking
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class DockPanel : ContainerControl
     {
+        public const float DefaultHeaderHeight = 20;
+        public const float DefaultLeftTextMargin = 4;
+        public const float DefaultRightTextMargin = 8;
+        public const float DefaultButtonsSize = 12;
+        public const float DefaultButtonsMargin = 2;
+
         /// <summary>
         /// The default splitters value.
         /// </summary>
-        public const float DefaultSplitterValue = 0.3f;
+        public const float DefaultSplitterValue = 0.25f;
 
         protected readonly DockPanel _parentPanel;
         protected readonly List<DockPanel> _childPanels = new List<DockPanel>();
         protected readonly List<DockWindow> _tabs = new List<DockWindow>();
-        protected int _selectedTabIndex;
-        protected Proxy _tabsProxy;
+        protected DockWindow _selectedTab;
+        protected DockPanelProxy _tabsProxy;
 
         /// <summary>
         /// Returns true if this panel is a master panel.
@@ -81,13 +89,33 @@ namespace FlaxEngine.GUI.Docking
         /// Gets index of the selected tab.
         /// </summary>
         /// <returns>The selected tab index.</returns>
-        public int SelectedTabIndex => _selectedTabIndex;
+        public int SelectedTabIndex
+        {
+            get => _tabs.IndexOf(_selectedTab);
+            private set => _selectedTab = value >= 0 ? _tabs[value] : null;
+        }
 
         /// <summary>
         /// Gets the selected tab.
         /// </summary>
         /// <returns>The selected tab.</returns>
-        public DockWindow SelectedTab => _selectedTabIndex >= 0 ? _tabs[_selectedTabIndex] : null;
+        public DockWindow SelectedTab => _selectedTab;
+
+        /// <summary>
+        /// Gets the first tab.
+        /// </summary>
+        /// <value>
+        /// The first tab.
+        /// </value>
+        public DockWindow FirstTab => _tabs.Count > 0 ? _tabs[0] : null;
+
+        /// <summary>
+        /// Gets the last tab.
+        /// </summary>
+        /// <value>
+        /// The last tab.
+        /// </value>
+        public DockWindow LastTab => _tabs.Count > 0 ? _tabs[_tabs.Count - 1] : null;
 
         /// <summary>
         /// Gets the parent panel.
@@ -130,6 +158,18 @@ namespace FlaxEngine.GUI.Docking
         }
 
         /// <summary>
+        /// Determines whether panel contains the specifiedtab.
+        /// </summary>
+        /// <param name="tab">The tab.</param>
+        /// <returns>
+        ///   <c>true</c> if panel contains the specified tab; otherwise, <c>false</c>.
+        /// </returns>
+        public bool ContainsTab(DockWindow tab)
+        {
+            return _tabs.Contains(tab);
+        }
+
+        /// <summary>
         /// Selects the tab page.
         /// </summary>
         /// <param name="tabIndex">The index of the tab page to select.</param>
@@ -139,7 +179,7 @@ namespace FlaxEngine.GUI.Docking
                 throw new InvalidOperationException("Cannot select tab.");
 
             // Check if tab will change
-            if (_selectedTabIndex != tabIndex)
+            if (SelectedTabIndex != tabIndex)
             {
                 var oldSelected = SelectedTab;
                 var newSelected = tabIndex != -1 ? _tabs[tabIndex] : null;
@@ -156,7 +196,7 @@ namespace FlaxEngine.GUI.Docking
                     createTabsProxy();
                     proxy = _tabsProxy;
                 }
-                _selectedTabIndex = tabIndex;
+                SelectedTabIndex = tabIndex;
                 if (newSelected != null)
                 {
                     newSelected.UnlockChildrenRecursive();
@@ -452,9 +492,29 @@ namespace FlaxEngine.GUI.Docking
             if (_tabsProxy == null)
             {
                 // Create proxy and make set simple full dock
-                _tabsProxy = new Proxy(this);
+                _tabsProxy = new DockPanelProxy(this);
                 _tabsProxy.Parent = this;
                 _tabsProxy.IsLayoutLocked = false;
+            }
+        }
+
+        internal void MoveTabLeft(int index)
+        {
+            if (index > 0)
+            {
+                var tab = _tabs[index];
+                _tabs.RemoveAt(index);
+                _tabs.Insert(index - 1, tab);
+            }
+        }
+
+        internal void MoveTabRight(int index)
+        {
+            if (index < _tabs.Count - 2)
+            {
+                var tab = _tabs[index];
+                _tabs.RemoveAt(index);
+                _tabs.Insert(index + 1, tab);
             }
         }
 
@@ -462,46 +522,8 @@ namespace FlaxEngine.GUI.Docking
         public override void OnDestroy()
         {
             _parentPanel?._childPanels.Remove(this);
-            
+
             base.OnDestroy();
-        }
-
-        protected class Proxy : ContainerControl
-        {
-            public DockPanel Panel;
-            public bool IsMouseDown;
-            public bool IsMouseDownOverCross;
-            public DockWindow MouseDownWindow;
-            public Vector2 MousePosition;
-            public DockWindow StartDragAsyncWindow;
-
-            public Proxy(DockPanel panel)
-                : base(false, 0, 0, 0, 0)
-            {
-            }
-
-
-            /*   private DockWindow getTabAtPos(Vector2 position, out bool closeButton) const;
-               private void getTabRect(DockWindow win, out Rectangle bounds) const;
-               private void startDrag(DockWindow win);
-               private void startDragAsync(float dt);
-   
-           public:
-   
-           // [ContainerControl]
-           String ToString() const override;
-           void Draw(Render2D* render, const Vector2& root) override;
-           void OnLostFocus() override;
-           void OnMouseEnter(const Vector2& location) override;
-           void OnMouseMove(const Vector2& location) override;
-           bool OnMouseDown(MouseButtons buttons, const Vector2& location) override;
-           bool OnMouseUp(MouseButtons buttons, const Vector2& location) override;
-           void OnMouseLeave() override;
-   
-           protected:
-   
-           // [ContainerControl]
-           void getDesireClientArea(Rectangle rect) const override;*/
         }
     }
 }

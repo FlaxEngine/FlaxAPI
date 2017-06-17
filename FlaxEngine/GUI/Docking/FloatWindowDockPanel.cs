@@ -73,18 +73,16 @@ namespace FlaxEngine.GUI.Docking
         /// <param name="size">Window client area size.</param>
         /// <param name="startPosition">Window start position.</param>
         /// <param name="title">Initial window title.</param>
-        internal static Window CreateFloatWindow(Window parent, Vector2 location, Vector2 size, WindowStartPosition startPosition, string title)
+        internal static FlaxEngine.Window CreateFloatWindow(Window parent, Vector2 location, Vector2 size, WindowStartPosition startPosition, string title)
         {
-            throw new NotImplementedException("Add CreateFloatWindow");
-            return null;
-            /*// Setup initial window settings
-            CreateWindowSettings settings;
-            settings.Parent = parent;
+            // Setup initial window settings
+            var settings = CreateWindowSettings.Default;
+            settings.Parent = parent?.NativeWindow;
             settings.Title = title;
             settings.Size = size;
             settings.Position = location;
-            settings.SizeMinWidth = settings.SizeMinHeight = 1;
-            settings.SizeMaxWidth = settings.SizeMaxHeight = 2000;
+            settings.MinimumSize = new Vector2(1);
+            settings.MaximumSize = new Vector2(2000);
             settings.Fullscreen = false;
             settings.HasBorder = true;
             settings.SupportsTransparency = false;
@@ -101,7 +99,7 @@ namespace FlaxEngine.GUI.Docking
             settings.StartPosition = startPosition;
 
             // Create window
-            return Window::Create(settings);*/
+            return FlaxEngine.Window.Create(settings);
         }
 
         private bool onLButtonHit(WindowHitCodes hitTest)

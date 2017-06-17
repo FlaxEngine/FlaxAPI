@@ -1,10 +1,7 @@
-﻿// Flax Engine scripting API
+﻿////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FlaxEngine.Assertions;
 
 namespace FlaxEngine.GUI.Docking
@@ -114,6 +111,14 @@ namespace FlaxEngine.GUI.Docking
         }
 
         /// <summary>
+        /// Gets the size of the title.
+        /// </summary>
+        /// <value>
+        /// The size of the title.
+        /// </value>
+        public Vector2 TitleSize => _titleSize;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DockWindow"/> class.
         /// </summary>
         /// <param name="masterPanel">The master docking panel.</param>
@@ -148,16 +153,17 @@ namespace FlaxEngine.GUI.Docking
             // Create window
             var winSize = size.LengthSquared > 4 ? size : DefaultSize;
             var window = FloatWindowDockPanel.CreateFloatWindow(_masterPanel.ParentWindow, new Vector2(200, 200), winSize, position, _title);
-            
+            var windowGUI = window.GUI;
+
             // Create dock panel for the window
-            var dockPanel = new FloatWindowDockPanel(_masterPanel, window);
+            var dockPanel = new FloatWindowDockPanel(_masterPanel, windowGUI);
             dockPanel.DockWindowInternal(DockState.DockFill, this);
 
             Visible = true;
-            
+
             // Perform layout
-            window.UnlockChildrenRecursive();
-            window.PerformLayout();
+            windowGUI.UnlockChildrenRecursive();
+            windowGUI.PerformLayout();
 
             // Show
             window.Show();
@@ -165,7 +171,7 @@ namespace FlaxEngine.GUI.Docking
             OnShow();
 
             // Perform layout again
-            window.PerformLayout();
+            windowGUI.PerformLayout();
         }
 
         /// <summary>

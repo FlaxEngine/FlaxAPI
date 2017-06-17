@@ -158,6 +158,7 @@
     </Compile>
     <Compile Include="GUI\Control.cs" />
     <Compile Include="GUI\Docking\DockPanel.cs" />
+    <Compile Include="GUI\Docking\DockPanelProxy.cs" />
     <Compile Include="GUI\Docking\DockWindow.cs" />
     <Compile Include="GUI\Docking\FloatWindowDockPanel.cs" />
     <Compile Include="GUI\Docking\MasterDockPanel.cs" />
