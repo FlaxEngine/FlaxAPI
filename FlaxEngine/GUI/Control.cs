@@ -9,7 +9,7 @@ namespace FlaxEngine.GUI
     /// <summary>
     ///     Base class for all GUI controls
     /// </summary>
-    public partial class Control
+    public partial class Control : IComparable
     {
         private ContainerControl _parent;
         private bool _isDisposing, _isFocused;
@@ -22,6 +22,7 @@ namespace FlaxEngine.GUI
 
         // Properties
         private bool _isVisible = true;
+
         private bool _isEnabled = true;
         private bool _canFocus;
 
@@ -544,7 +545,7 @@ namespace FlaxEngine.GUI
         #region Drag&Drop
 
         // TODO: move drag and drop support from C++
-        
+
         /// <summary>
         ///     Check if mouse dragging is over that item or its child items.
         /// </summary>
@@ -675,7 +676,7 @@ namespace FlaxEngine.GUI
             OnSizeChanged?.Invoke(this);
             _parent?.OnChildResized(this);
         }
-        
+
         /// <summary>
         ///     Action fred when parent control gets resized (also when control gets non-null parent)
         /// </summary>
@@ -690,10 +691,28 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void OnDestroy()
         {
-            if(IsFocused)
+            if (IsFocused)
                 Defocus();
         }
 
         #endregion
+
+        /// <inheritdoc />
+        public int CompareTo(object obj)
+        {
+            if (obj is Control c)
+                return Compare(c);
+            return 0;
+        }
+
+        /// <summary>
+        /// Compares this control with the otheer control.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns>Comparision result.</returns>
+        public virtual int Compare(Control other)
+        {
+            return (int)(Y - other.Y);
+        }
     }
 }
