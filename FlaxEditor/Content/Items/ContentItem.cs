@@ -187,13 +187,12 @@ namespace FlaxEditor.Content
         {
             get
             {
-                throw new NotImplementedException();
-                /*string result = Path;
-                if (result.StartsWith(Globals::Paths::ProjectFolder))
+                string result = Path;
+                if (result.StartsWith(Globals.ProjectFolder))
                 {
-                    result = result.Substring(Globals::Paths::ProjectFolder.Length() + 1);
+                    result = result.Substring(Globals.ProjectFolder.Length + 1);
                 }
-                return StringUtils::GetPathWithoutExtension(result);*/
+                return StringUtils.GetPathWithoutExtension(result);
             }
         }
 
