@@ -561,6 +561,19 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
+        public override int Compare(Control other)
+        {
+            if (other is ContentItem otherItem)
+            {
+                if (otherItem.IsFolder)
+                    return -1;
+                return string.CompareOrdinal(ShortName, otherItem.ShortName);
+            }
+
+            return base.Compare(other);
+        }
+
+        /// <inheritdoc />
         public override void OnDestroy()
         {
             // Fire event

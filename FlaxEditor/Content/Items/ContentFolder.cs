@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.Content
 {
@@ -196,6 +197,19 @@ namespace FlaxEditor.Content
             }
 
             return null;
+        }
+
+        /// <inheritdoc />
+        public override int Compare(Control other)
+        {
+            if (other is ContentItem otherItem)
+            {
+                if (!otherItem.IsFolder)
+                    return 1;
+                return string.CompareOrdinal(ShortName, otherItem.ShortName);
+            }
+
+            return base.Compare(other);
         }
     }
 }
