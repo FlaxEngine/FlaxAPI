@@ -11,7 +11,7 @@ namespace FlaxEditor.Content
     /// Content proxy for <see cref="SceneItem"/>.
     /// </summary>
     /// <seealso cref="FlaxEditor.Content.JsonAssetProxy" />
-    public sealed class SceneItemProxy : JsonAssetProxy
+    public sealed class SceneProxy : JsonAssetProxy
     {
         /// <summary>
         /// The scene files extension.
@@ -31,6 +31,18 @@ namespace FlaxEditor.Content
         public override bool IsProxyFor(ContentItem item)
         {
             return item is SceneItem;
+        }
+
+        /// <inheritdoc />
+        public override bool CanCreate(ContentFolder targetLocation)
+        {
+            return targetLocation.CanHaveAssets;
+        }
+
+        /// <inheritdoc />
+        public override void Create(string outputPath)
+        {
+            Editor.Instance.Scene.CreateSceneFile(outputPath);
         }
 
         /// <inheritdoc />

@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using FlaxEditor.Windows;
 using FlaxEngine;
 
@@ -65,10 +66,9 @@ namespace FlaxEditor.Content
         /// </summary>
         /// <param name="item">The item.</param>
         /// <param name="outputPath">The output path.</param>
-        /// <returns>True if fails, otherwise false.</returns>
-        public virtual bool Export(ContentItem item, string outputPath)
+        public virtual void Export(ContentItem item, string outputPath)
         {
-            return true;
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -99,10 +99,9 @@ namespace FlaxEditor.Content
         /// Creates new item at the specified output path.
         /// </summary>
         /// <param name="outputPath">The output path.</param>
-        /// <returns>True if fails, otherwise false.</returns>
-        public virtual bool Create(string outputPath)
+        public virtual void Create(string outputPath)
         {
-            return true;
+            throw new NotImplementedException();
         }
 
         /// <summary>

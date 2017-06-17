@@ -56,7 +56,8 @@
     <Compile Include="Content\Items\ScriptItem.cs" />
     <Compile Include="Content\Proxy\AssetProxy.cs" />
     <Compile Include="Content\Proxy\JsonAssetProxy.cs" />
-    <Compile Include="Content\Proxy\SceneItemProxy.cs" />
+    <Compile Include="Content\Proxy\SceneProxy.cs" />
+    <Compile Include="Content\Proxy\ScriptProxy.cs" />
     <Compile Include="Content\Tree\ContentTreeNode.cs" />
     <Compile Include="Content\Tree\MainContentTreeNode.cs" />
     <Compile Include="GUI\MainMenu.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="History\IHistoryAction.cs" />
     <Compile Include="History\UndoActionObject.cs" />
     <Compile Include="IEditable.cs" />
+    <Compile Include="Modules\CodeEditingModule.cs" />
     <Compile Include="Modules\ContentDatabaseModule.cs" />
     <Compile Include="Modules\ContentEditingModule.cs" />
     <Compile Include="Modules\EditorModule.cs" />
