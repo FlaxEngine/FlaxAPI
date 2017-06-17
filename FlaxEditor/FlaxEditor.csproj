@@ -96,6 +96,7 @@
     <Compile Include="Utilities\DuplicateScenes.cs" />
     <Compile Include="Windows\Assets\AssetEditorWindow.cs" />
     <Compile Include="Windows\ContentWindow.cs" />
+    <Compile Include="Windows\ContentWindow.Navigation.cs" />
     <Compile Include="Windows\EditorWindow.cs" />
     <Compile Include="Undo\Undo.cs" />
     <Compile Include="Utilities\Extenstions.cs" />
