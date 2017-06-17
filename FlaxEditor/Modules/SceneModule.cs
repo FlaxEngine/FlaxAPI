@@ -62,6 +62,15 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
+        /// Creates the scene file.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        public void CreateSceneFile(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Saves scene (async).
         /// </summary>
         /// <param name="scene">Scene to save.</param>

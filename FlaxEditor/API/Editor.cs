@@ -75,6 +75,11 @@ namespace FlaxEditor
         public readonly ContentDatabaseModule ContentDatabase;
 
         /// <summary>
+        /// The content editing
+        /// </summary>
+        public readonly CodeEditingModule CodeEditing;
+
+        /// <summary>
         /// The editor state machine.
         /// </summary>
         public readonly EditorStateMachine StateMachine;
@@ -95,15 +100,10 @@ namespace FlaxEditor
             RegisterModule(ProgressReporting = new ProgressReportingModule(this));
             RegisterModule(ContentEditing = new ContentEditingModule(this));
             RegisterModule(ContentDatabase = new ContentDatabaseModule(this));
+            RegisterModule(CodeEditing = new CodeEditingModule(this));
 
             // Create state machine
             StateMachine = new EditorStateMachine(this);
-        }
-
-        /// <inheritdoc />
-        ~Editor()
-        {
-            Instance = null;
         }
 
         internal void RegisterModule(EditorModule module)
@@ -186,6 +186,8 @@ namespace FlaxEditor
             {
                 _modules[i].OnExit();
             }
+
+            Instance = null;
         }
 
         /// <summary>
