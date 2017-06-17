@@ -52,6 +52,8 @@
     <Compile Include="Content\Items\NewItem.cs" />
     <Compile Include="Content\Items\SceneItem.cs" />
     <Compile Include="Content\Items\ScriptItem.cs" />
+    <Compile Include="Content\Tree\ContentTreeNode.cs" />
+    <Compile Include="Content\Tree\MainContentTreeNode.cs" />
     <Compile Include="GUI\MainMenu.cs" />
     <Compile Include="GUI\MainMenuButton.cs" />
     <Compile Include="GUI\StatusBar.cs" />

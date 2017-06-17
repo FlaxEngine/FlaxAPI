@@ -76,6 +76,14 @@ namespace FlaxEditor.Content
         public bool IsEnginePrivate => FolderType == ContentFolderType.Editor || FolderType == ContentFolderType.Engine;
 
         /// <summary>
+        /// Gets the content node.
+        /// </summary>
+        /// <value>
+        /// The node.
+        /// </value>
+        public ContentTreeNode Node { get; }
+
+        /// <summary>
         /// The subitems of this folder.
         /// </summary>
         public readonly List<ContentItem> Children = new List<ContentItem>();
@@ -83,12 +91,14 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Initializes a new instance of the <see cref="ContentFolder"/> class.
         /// </summary>
-        /// <param name="path">The path to the item.</param>
         /// <param name="type">The folder type.</param>
-        public ContentFolder(string path, ContentFolderType type)
+        /// <param name="path">The path to the item.</param>
+        /// <param name="node">The folder parent node.</param>
+        internal ContentFolder(ContentFolderType type, string path, ContentTreeNode node)
             : base(path)
         {
             FolderType = type;
+            Node = node;
         }
 
         /// <summary>
