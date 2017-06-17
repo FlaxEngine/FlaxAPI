@@ -44,5 +44,19 @@ namespace FlaxEngine
             return result;
         }
 
+        /// <summary>
+        /// Removes extension from the file path.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>Path without extension.</returns>
+        public static string GetPathWithoutExtension(string path)
+        {
+            int num = path.LastIndexOf('.');
+            if(num != -1)
+            {
+                return path.Substring(0, num);
+            }
+            return path;
+        }
     }
 }
