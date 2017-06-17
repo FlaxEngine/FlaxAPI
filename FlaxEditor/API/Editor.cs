@@ -13,6 +13,14 @@ namespace FlaxEditor
 {
     public sealed partial class Editor
     {
+        /// <summary>
+        /// Gets the Editor instance.
+        /// </summary>
+        /// <value>
+        /// The Editor instance.
+        /// </value>
+        public static Editor Instance { get; private set; }
+
         private readonly List<EditorModule> _modules = new List<EditorModule>(16);
         private bool _isAfterInit;
 
@@ -73,6 +81,8 @@ namespace FlaxEditor
 
         internal Editor()
         {
+            Instance = this;
+
             Debug.Log("Setting up C# Editor...");
 
             // Create common editor modules
@@ -88,6 +98,12 @@ namespace FlaxEditor
 
             // Create state machine
             StateMachine = new EditorStateMachine(this);
+        }
+
+        /// <inheritdoc />
+        ~Editor()
+        {
+            Instance = null;
         }
 
         internal void RegisterModule(EditorModule module)
