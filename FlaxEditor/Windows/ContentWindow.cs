@@ -42,6 +42,8 @@ namespace FlaxEditor.Windows
         internal ContentWindow(Editor editor)
             : base(editor, true, ScrollBars.None)
         {
+            Title = "Content";
+
             // Tool strip
             _toolStrip = new ToolStrip();
             _toolStrip.AddButton(0, Editor.UI.GetIcon("Import32"));//.LinkTooltip(GetSharedTooltip(), "Import content");// Import

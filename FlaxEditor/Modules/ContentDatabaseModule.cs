@@ -63,6 +63,22 @@ namespace FlaxEditor.Modules
         /// </summary>
         public event Action OnWorkspaceModified;
 
+        /// <summary>
+        /// Gets the amount of created items.
+        /// </summary>
+        /// <value>
+        /// The items created.
+        /// </value>
+        public int ItemsCreated => _itemsCreated;
+
+        /// <summary>
+        /// Gets the amount of deleted items.
+        /// </summary>
+        /// <value>
+        /// The items deleted.
+        /// </value>
+        public int ItemsDeleted => _itemsDeleted;
+
         internal ContentDatabaseModule(Editor editor)
             : base(editor)
         {
@@ -432,16 +448,12 @@ namespace FlaxEditor.Modules
             // Disable events
             _enableEvents = false;
 
-            Debug.Log("start database exit");
-
             // Cleanup
             ProjectContent.Dispose();
             ProjectSource.Dispose();
             EnginePrivate.Dispose();
             EditorPrivate.Dispose();
             Proxy.Clear();
-
-            Debug.Log("end database exit");
         }
     }
 }

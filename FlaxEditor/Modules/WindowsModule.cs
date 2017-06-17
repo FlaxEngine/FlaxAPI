@@ -107,7 +107,9 @@ namespace FlaxEditor.Modules
             // TODO: finish this
 
             // for now just show default windows
-            Content.Show(DockState.DockBottom);
+            Content.BackgroundColor = Color.Blue;
+            Content.Show(DockState.Float);
+            Debug.Log("dock content");
         }
 
         /// <summary>
@@ -142,7 +144,7 @@ namespace FlaxEditor.Modules
 
             // Create default editor windows
             Content = new ContentWindow(Editor);
-            
+
             // Bind events
             SceneManager.OnSceneSaveError += OnSceneSaveError;
             SceneManager.OnSceneLoaded += OnSceneLoaded;
