@@ -89,11 +89,7 @@ namespace FlaxEngine.GUI.Docking
         /// Gets index of the selected tab.
         /// </summary>
         /// <returns>The selected tab index.</returns>
-        public int SelectedTabIndex
-        {
-            get => _tabs.IndexOf(_selectedTab);
-            private set => _selectedTab = value >= 0 ? _tabs[value] : null;
-        }
+        public int SelectedTabIndex => _tabs.IndexOf(_selectedTab);
 
         /// <summary>
         /// Gets the selected tab.
@@ -175,35 +171,10 @@ namespace FlaxEngine.GUI.Docking
         /// <param name="tabIndex">The index of the tab page to select.</param>
         public void SelectTab(int tabIndex)
         {
-            if (tabIndex < -1 || tabIndex >= _tabs.Count)
-                throw new InvalidOperationException("Cannot select tab.");
-
-            // Check if tab will change
-            if (SelectedTabIndex != tabIndex)
-            {
-                var oldSelected = SelectedTab;
-                var newSelected = tabIndex != -1 ? _tabs[tabIndex] : null;
-
-                // Change
-                ContainerControl proxy;
-                if (oldSelected != null)
-                {
-                    proxy = oldSelected.Parent;
-                    oldSelected.Parent = null;
-                }
-                else
-                {
-                    createTabsProxy();
-                    proxy = _tabsProxy;
-                }
-                SelectedTabIndex = tabIndex;
-                if (newSelected != null)
-                {
-                    newSelected.UnlockChildrenRecursive();
-                    newSelected.Parent = proxy;
-                    newSelected.Focus();
-                }
-            }
+            DockWindow tab = null;
+            if (tabIndex >= 0 && _tabs.Count > tabIndex && _tabs.Count > 0)
+                tab = _tabs[tabIndex];
+            SelectTab(tab);
         }
 
         /// <summary>
@@ -212,8 +183,29 @@ namespace FlaxEngine.GUI.Docking
         /// <param name="tab">The tab page to select.</param>
         public void SelectTab(DockWindow tab)
         {
-            int tabIndex = GetTabIndex(tab);
-            SelectTab(tabIndex);
+            // Check if tab will change
+            if (SelectedTab != tab)
+            {
+                // Change
+                ContainerControl proxy;
+                if (_selectedTab != null)
+                {
+                    proxy = _selectedTab.Parent;
+                    _selectedTab.Parent = null;
+                }
+                else
+                {
+                    createTabsProxy();
+                    proxy = _tabsProxy;
+                }
+                _selectedTab = tab;
+                if (_selectedTab != null)
+                {
+                    _selectedTab.UnlockChildrenRecursive();
+                    _selectedTab.Parent = proxy;
+                    _selectedTab.Focus();
+                }
+            }
         }
 
         /// <summary>
@@ -450,19 +442,23 @@ namespace FlaxEngine.GUI.Docking
 
         protected virtual void UndockWindow(DockWindow window)
         {
-            // Undock
             var index = GetTabIndex(window);
             if (index == -1)
                 throw new IndexOutOfRangeException();
-            _tabs.RemoveAt(index);
-            window.ParentDockPanel = null;
 
             // Check if tab was selected
             if (window == SelectedTab)
             {
                 // Change selection
-                SelectTab(index - 1);
+                if (index == 0 && TabsCount > 1)
+                    SelectTab(1);
+                else
+                    SelectTab(index - 1);
             }
+
+            // Undock
+            _tabs.RemoveAt(index);
+            window.ParentDockPanel = null;
 
             // Check if has no more tabs
             if (_tabs.Count == 0)
