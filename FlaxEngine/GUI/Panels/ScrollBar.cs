@@ -55,7 +55,7 @@ namespace FlaxEngine.GUI
         /// <value>
         ///   <c>true</c> if use scroll value smoothing; otherwise, <c>false</c>.
         /// </value>
-        public bool UseSmoothing => Mathf.IsZero(SmoothingScale);
+        public bool UseSmoothing => !Mathf.IsZero(SmoothingScale);
 
         /// <summary>
         /// Gets or sets the minimum value.
@@ -113,7 +113,9 @@ namespace FlaxEngine.GUI
 
                     // Check if skip smoothing
                     if (!UseSmoothing)
-                        _value = value;
+                    {
+                        setValue(value);
+                    }
                 }
             }
         }
@@ -168,14 +170,15 @@ namespace FlaxEngine.GUI
                 Value = max - viewSize;
             }
         }
-        
+
         private void updateThumb()
         {
             // Cache data
             float trackSize = TrackSize;
-            _thumbSize = Mathf.Min(trackSize, Mathf.Max(trackSize / _maximum * 10.0f, 30.0f));
+            float range = _maximum - _minimum;
+            _thumbSize = Mathf.Min(trackSize, Mathf.Max(trackSize / range * 10.0f, 30.0f));
             float pixelRange = trackSize - _thumbSize;
-            float perc = _value / _maximum;
+            float perc = (_value - _minimum) / range;
             float thumbPosition = (int)(perc * pixelRange);
             _thumbCenter = thumbPosition + _thumbSize / 2;
 
@@ -227,10 +230,22 @@ namespace FlaxEngine.GUI
             _value = _targetValue = 0;
         }
 
+        private void setValue(float value)
+        {
+            _value = value;
+
+            // Update
+            updateThumb();
+
+            // Change parent panel view offset
+            var panel = Parent as Panel;
+            panel.setViewOffset(_orientation, _value);
+        }
+
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
-            bool isDeltaSlow = deltaTime < (1 / 20.0f);
+            bool isDeltaSlow = deltaTime > (1 / 20.0f);
 
             // Opacity smoothing
             float targetOpacity = Parent.IsMouseOver ? 1.0f : DefaultMinimumOpacity;
@@ -246,17 +261,12 @@ namespace FlaxEngine.GUI
                 if (Mathf.Abs(_targetValue - _value) > 0.01f)
                 {
                     // Lerp or not if running slow
-                    if (isDeltaSlow)
-                        _value = Mathf.Lerp(_value, _targetValue, deltaTime * 20.0f);
+                    float value;
+                    if (!isDeltaSlow && UseSmoothing)
+                        value = Mathf.Lerp(_value, _targetValue, deltaTime * 20.0f * SmoothingScale);
                     else
-                        _value = _targetValue;
-
-                    // Update
-                    updateThumb();
-
-                    // Change parent panel view offset
-                    var panel = Parent as Panel;
-                    panel.setViewOffset(_orientation, _value);
+                        value = _targetValue;
+                    setValue(value);
                 }
             }
         }
