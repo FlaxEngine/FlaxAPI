@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using FlaxEditor.Content;
 using FlaxEditor.Content.GUI;
 using FlaxEditor.GUI;
+using FlaxEngine;
+using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Windows
@@ -55,6 +57,7 @@ namespace FlaxEditor.Windows
             _toolStrip.Parent = this;
 
             // Navigation bar
+            // TODO: finish content window navigation
             //_navigationBar = new CNavigationBar();
             //_navigationBar.SetHeight(32);
             //_navigationBar.Parent = this;
@@ -123,6 +126,69 @@ namespace FlaxEditor.Windows
 
             // Update navigation path
             navigationBarUpdate();
+        }
+
+        private void addFolder2Root(MainContentTreeNode node)
+        {
+            // Add to the root
+            _root.AddChild(node);
+        }
+
+        private void removeFolder2Root(MainContentTreeNode node)
+        {
+            // Remove from the root
+            _root.RemoveChild(node);
+        }
+
+        /// <inheritdoc />
+        public override void OnInit()
+        {
+            const bool ShowFlaxFolders = true;
+
+            // Setup content root node
+            _root = new ContentTreeNode(null, string.Empty);
+            _root.Expand();
+            addFolder2Root(Editor.ContentDatabase.ProjectContent);
+            addFolder2Root(Editor.ContentDatabase.ProjectSource);
+            if (ShowFlaxFolders)
+            {
+                addFolder2Root(Editor.ContentDatabase.EnginePrivate);
+                addFolder2Root(Editor.ContentDatabase.EditorPrivate);
+            }
+            _tree.AddChild(_root);
+            _root.SortChildrenRecursive();
+
+            // Setup navigation
+            _navigationUnlocked = true;
+            _tree.Select(_root);
+            navigationClearHistory();
+
+            // Update UI layout
+            UnlockChildrenRecursive();
+            PerformLayout();
+
+            // Mark as ready
+            _isReady = true;
+
+            // TODO: load last viewed folder
+        }
+
+        /// <inheritdoc />
+        public override void OnExit()
+        {
+            // Enter uneady mode
+            _isReady = false;
+
+            // TODO: save last viewed folder
+
+            // Unlink used directories
+            while (_root.HasChildren)
+            {
+                removeFolder2Root((MainContentTreeNode)_root.GetChild(0));
+            }
+
+            // Clear view
+            _view.ClearItems();
         }
     }
 }

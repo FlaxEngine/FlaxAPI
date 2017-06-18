@@ -23,6 +23,22 @@ namespace FlaxEditor.Content.GUI
         {
         }
 
+        public void ClearItems()
+        {
+            // TODO: finish this
+            /*ClearSelection();
+
+            for (int i = 0; i < _elements.Count; i++)
+            {
+                _elements[i]->SetParent(nullptr);
+                _elements[i]->RemoveUIRef(this);
+            }
+
+            _elements.Clear();
+
+            PerformLayout();*/
+        }
+
         /// <summary>
         /// Called when user clicks on an item.
         /// </summary>

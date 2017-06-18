@@ -453,6 +453,10 @@ namespace FlaxEditor.Modules
             ProjectSource.Dispose();
             EnginePrivate.Dispose();
             EditorPrivate.Dispose();
+            ProjectContent = null;
+            ProjectSource = null;
+            EnginePrivate = null;
+            EditorPrivate = null;
             Proxy.Clear();
         }
     }
