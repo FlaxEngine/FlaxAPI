@@ -4,6 +4,8 @@
 
 using System.Collections.Generic;
 using FlaxEditor.Content;
+using FlaxEditor.Content.GUI;
+using FlaxEditor.GUI;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Windows
@@ -29,8 +31,7 @@ namespace FlaxEditor.Windows
 
         private void navigate(ContentTreeNode source, ContentTreeNode target)
         {
-            // TODO: finish this
-            /*// Check if can do this action
+            // Check if can do this action
             if (target != null && _navigationUnlocked && source != target)
             {
                 // Lock navigation
@@ -47,20 +48,20 @@ namespace FlaxEditor.Windows
                 if (target == _root)
                 {
                     // Special case for root folder
-                    List<ContentItem> elements = new List<ContentItem>(8);
+                    List<ContentItem> items = new List<ContentItem>(8);
                     for (int i = 0; i < _root.ChildrenCount; i++)
                     {
                         if (_root.GetChild(i) is ContentTreeNode node)
                         {
-                            elements.Add(node.Folder);
+                            items.Add(node.Folder);
                         }
                     }
-                    _view.ShowElements(elements);
+                    _view.ShowItems(items);
                 }
                 else
                 {
                     // Show folder contents
-                    _view.ShowElements(target.Folder.Children);
+                    _view.ShowItems(target.Folder.Children);
                 }
                 _tree.Select(target);
                 target.ExpandAllParents();
@@ -76,10 +77,10 @@ namespace FlaxEditor.Windows
                 _navigationUnlocked = true;
 
                 // Update UI
-                updateToolstrip();
+                UpdateUI();
             }
 
-            _view.Focus();*/
+            _view.Focus();
         }
 
         /// <summary>
@@ -87,13 +88,12 @@ namespace FlaxEditor.Windows
         /// </summary>
         public void NavigateBackward()
         {
-            // TODO: finish this
-            /*// Check if navigation is unlocked
+            // Check if navigation is unlocked
             if (_navigationUnlocked && _navigationUndo.Count > 0)
             {
                 // Pop node
                 ContentTreeNode node = _navigationUndo[0];
-                _navigationUndo.RemoveAtKeepOrder(0);
+                _navigationUndo.RemoveAt(0);
 
                 // Lock navigation
                 _navigationUnlocked = false;
@@ -102,7 +102,7 @@ namespace FlaxEditor.Windows
                 _navigationRedo.Insert(0, SelectedNode);
 
                 // Select node
-                _view.ShowElements(node.Folder.Children);
+                _view.ShowItems(node.Folder.Children);
                 _tree.Select(node);
                 node.ExpandAllParents();
 
@@ -117,12 +117,12 @@ namespace FlaxEditor.Windows
                 _navigationUnlocked = true;
 
                 // Update UI
-                updateToolstrip();
+                UpdateUI();
 
                 // TODO: select that folder to use arrows to navigate easly
             }
 
-            _view.Focus();*/
+            _view.Focus();
         }
 
         /// <summary>
@@ -130,13 +130,12 @@ namespace FlaxEditor.Windows
         /// </summary>
         public void NavigateForward()
         {
-            // TODO: finish this
-            /*// Check if navigation is unlocked
+            // Check if navigation is unlocked
             if (_navigationUnlocked && _navigationRedo.Count > 0)
             {
                 // Pop node
                 ContentTreeNode node = _navigationRedo[0];
-                _navigationRedo.RemoveAtKeepOrder(0);
+                _navigationRedo.RemoveAt(0);
 
                 // Lock navigation
                 _navigationUnlocked = false;
@@ -145,7 +144,7 @@ namespace FlaxEditor.Windows
                 _navigationUndo.Insert(0, SelectedNode);
 
                 // Select node
-                _view.ShowElements(node.Folder.Children);
+                _view.ShowItems(node.Folder.Children);
                 _tree.Select(node);
                 node.ExpandAllParents();
 
@@ -160,10 +159,10 @@ namespace FlaxEditor.Windows
                 _navigationUnlocked = true;
 
                 // Update UI
-                updateToolstrip();
+                UpdateUI();
             }
 
-            _view.Focus();*/
+            _view.Focus();
         }
 
         /// <summary>
@@ -189,35 +188,37 @@ namespace FlaxEditor.Windows
         {
             _navigationUndo.Clear();
             _navigationRedo.Clear();
-            updateToolstrip();
+            UpdateUI();
         }
 
-        private void navigationBarUpdate()
+        private void UpdateNavigationBar()
         {
-            // TODO: finish this
+            if (_navigationBar == null)
+                return;
+
             // Remove previous buttons
-            /*_navigationBar.DeleteChildren();
+            _navigationBar.DisposeChildren();
 
             // Spawn buttons
-            Array<ContentTreeNode*> nodes(8);
-            ContentTreeNode* node = GetSelectedNode();
-            while (node != _root && node)
+            List<ContentTreeNode> nodes = new List<ContentTreeNode>(8);
+            ContentTreeNode node = SelectedNode;
+            while (node != _root && node != null)
             {
                 nodes.Add(node);
-                node = node.GetParentNode();
+                node = node.ParentNode;
             }
             float x = 1;
-            float h = _toolStrip.GetItemsHeight();
-            for (int32 i = nodes.Count() - 1; i >= 0; i--)
+            float h = _toolStrip.ItemsHeight;
+            for (int i = nodes.Count - 1; i >= 0; i--)
             {
-                var button = new CContentNavigationButton(h, nodes[i], x, CToolStrip_MarginV);
+                var button = new NavigationButton(nodes[i], x, ToolStrip.DefaultMarginV, h);
                 button.PerformLayout();
-                x += button.GetWidth() + 2;
-                _navigationBar.AddControl(button);
+                x += button.Width + 2;
+                _navigationBar.AddChild(button);
             }
 
             // Update
-            _navigationBar.PerformLayout();*/
+            _navigationBar.PerformLayout();
         }
 
         /// <summary>

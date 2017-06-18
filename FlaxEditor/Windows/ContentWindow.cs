@@ -29,7 +29,7 @@ namespace FlaxEditor.Windows
 
         private ToolStrip _toolStrip;
 
-        //private NavigationBar _navigationBar;
+        private NavigationBar _navigationBar;
         private Tree _tree;
 
         private ContentTreeNode _root;
@@ -57,10 +57,9 @@ namespace FlaxEditor.Windows
             _toolStrip.Parent = this;
 
             // Navigation bar
-            // TODO: finish content window navigation
-            //_navigationBar = new CNavigationBar();
-            //_navigationBar.SetHeight(32);
-            //_navigationBar.Parent = this;
+            _navigationBar = new NavigationBar();
+            _navigationBar.Height = 32;
+            _navigationBar.Parent = this;
 
             // Split panel
             _split = new SplitPanel(Orientation.Horizontal, ScrollBars.Both, ScrollBars.Vertical);
@@ -85,20 +84,20 @@ namespace FlaxEditor.Windows
 
         private void toolstripButtonClicked(int id)
         {
-            /*switch (id)
+            switch (id)
             {
                 // Import
-		        case 0: import(); break;
+		        //case 0: import(); break; // TODO: importing
 
                 // Backward
-                case 1: navigateBackward(); break;
+                case 1: NavigateBackward(); break;
 
                 // Forward
-                case 2: navigateForward(); break;
+                case 2: NavigateForward(); break;
 
                 // Up
-                case 3: navigateUp(); break;
-            }*/
+                case 3: NavigateUp(); break;
+            }
         }
 
         private void viewOnOpen(ContentItem item)
@@ -112,7 +111,13 @@ namespace FlaxEditor.Windows
             //Delete(_view.Selection);
         }
 
-        private void updateToolstrip()
+        private void UpdateUI()
+        {
+            UpdateToolstrip();
+            UpdateNavigationBar();
+        }
+
+        private void UpdateToolstrip()
         {
             if (_toolStrip == null)
                 return;
@@ -123,9 +128,6 @@ namespace FlaxEditor.Windows
             _toolStrip.GetButton(1).Enabled = _navigationUndo.Count > 0;
             _toolStrip.GetButton(2).Enabled = _navigationRedo.Count > 0;
             _toolStrip.GetButton(3).Enabled = folder != null && _tree.SelectedNode != _root;
-
-            // Update navigation path
-            navigationBarUpdate();
         }
 
         private void addFolder2Root(MainContentTreeNode node)
@@ -189,6 +191,25 @@ namespace FlaxEditor.Windows
 
             // Clear view
             _view.ClearItems();
+        }
+
+        /// <inheritdoc />
+        protected override void PerformLayoutSelf()
+        {
+            // Update navigation panel
+            if (_toolStrip != null && _navigationBar != null)
+            {
+                var lastTiilstripButton = _toolStrip.LastButton;
+                var bounds = new Rectangle(lastTiilstripButton.PointToParent(new Vector2(
+                        lastTiilstripButton.Width + 8.0f,
+                        0
+                    )),
+                    new Vector2(Width - _navigationBar.X - 8.0f, _navigationBar.Height)
+                );
+                _navigationBar.Bounds = bounds;
+            }
+
+            base.PerformLayoutSelf();
         }
     }
 }

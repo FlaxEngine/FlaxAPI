@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 using FlaxEditor.Windows;
 using FlaxEngine.GUI;
 
@@ -23,6 +24,9 @@ namespace FlaxEditor.Content.GUI
         {
         }
 
+        /// <summary>
+        /// Clears the items in the view.
+        /// </summary>
         public void ClearItems()
         {
             // TODO: finish this
@@ -37,6 +41,15 @@ namespace FlaxEditor.Content.GUI
             _elements.Clear();
 
             PerformLayout();*/
+        }
+
+        /// <summary>
+        /// Shows the items collection in the view.
+        /// </summary>
+        /// <param name="items">The items to show.</param>
+        public void ShowItems(List<ContentItem> items)
+        {
+            // TODO: finish this
         }
 
         /// <summary>

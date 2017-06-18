@@ -121,7 +121,7 @@ namespace FlaxEditor.GUI
             var textRect = new Rectangle(DefaultMargin, 0, 0, Height);
 
             // Draw background
-            if (IsMouseOver || Checked)
+            if (Enabled && (IsMouseOver || Checked))
                 Render2D.FillRectangle(clientRect, Checked ? style.BackgroundSelected : _mouseDown ? style.BackgroundHighlighted : (style.LightBackground * 1.3f));
 
             // Draw icon
