@@ -73,7 +73,7 @@ namespace FlaxEngine.GUI
         /// <param name="c">The control.</param>
         public void ScrollViewTo(Control c)
         {
-            if(c == null)
+            if (c == null)
                 throw new ArgumentNullException();
 
             Vector2 location = c.Location;
@@ -123,6 +123,175 @@ namespace FlaxEngine.GUI
                 _viewOffset.Y = -value;
             else
                 _viewOffset.X = -value;
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseWheel(Vector2 location, int delta)
+        {
+            // Base
+            if (base.OnMouseWheel(location, delta))
+                return true;
+
+            // Roll back to scroll bars
+            if (VScrollBar != null && VScrollBar.Visible && VScrollBar.OnMouseWheel(location - VScrollBar.Location, delta))
+                return true;
+            if (HScrollBar != null && HScrollBar.Visible && HScrollBar.OnMouseWheel(location - HScrollBar.Location, delta))
+                return true;
+
+            // No event handled
+            return false;
+        }
+
+        /// <inheritdoc />
+        public override void RemoveChildren()
+        {
+            // Keep scroll bars alive
+            if (VScrollBar != null)
+                _children.Remove(VScrollBar);
+            if (HScrollBar != null)
+                _children.Remove(HScrollBar);
+
+            base.RemoveChildren();
+
+            // Restore scrollbars
+            if (VScrollBar != null)
+                _children.Add(VScrollBar);
+            if (HScrollBar != null)
+                _children.Add(HScrollBar);
+            PerformLayout();
+        }
+
+        /// <inheritdoc />
+        public override void DisposeChildren()
+        {
+            // Keep scroll bars alive
+            if (VScrollBar != null)
+                _children.Remove(VScrollBar);
+            if (HScrollBar != null)
+                _children.Remove(HScrollBar);
+
+            base.DisposeChildren();
+
+            // Restore scrollbars
+            if (VScrollBar != null)
+                _children.Add(VScrollBar);
+            if (HScrollBar != null)
+                _children.Add(HScrollBar);
+            PerformLayout();
+        }
+
+        /// <inheritdoc />
+        public override void OnChildResized(Control control)
+        {
+            base.OnChildResized(control);
+            PerformLayout();
+        }
+
+        /// <inheritdoc />
+        protected override bool IsMouseOverChild(Control child, ref Vector2 location)
+        {
+            // Scroll bars are always allowed to check
+            if (child != VScrollBar && child != HScrollBar)
+            {
+                Vector2 parentSpaceLocation = location;
+                if (child.IsScrollable)
+                    parentSpaceLocation += _viewOffset;
+
+                // Check if has v scroll bar to reject points on it
+                if (VScrollBar != null && VScrollBar.Visible && VScrollBar.ContainsPoint(ref parentSpaceLocation))
+                    return false;
+
+                // Check if has h scroll bar to reject points on it
+                if (HScrollBar != null && HScrollBar.Visible && HScrollBar.ContainsPoint(ref parentSpaceLocation))
+                    return false;
+            }
+
+            return base.IsMouseOverChild(child, ref location);
+        }
+
+        /// <inheritdoc />
+        internal override void AddChildInternal(Control child)
+        {
+            base.AddChildInternal(child);
+            PerformLayout();
+        }
+
+        /// <inheritdoc />
+        protected override void PerformLayoutSelf()
+        {
+            const float ScrollSpaceLeft = 0.1f;
+
+            // Arrange controls and get scroll bounds
+            arrageAndGetBounds();
+
+            // Scroll bars
+            if (VScrollBar != null)
+            {
+                float height = Height;
+                bool vScrollEnabled = _scrollRightCorner.Y > height + 0.01f && height > ScrollBar.DefaultMinimumSize;
+
+                if (VScrollBar.Visible != vScrollEnabled)
+                {
+                    // Set scroll bar visibility 
+                    VScrollBar.Visible = vScrollEnabled;
+
+                    // Clear scroll state
+                    VScrollBar.Reset();
+                    _viewOffset.Y = 0;
+
+                    // Update
+                    arrageAndGetBounds();
+                }
+
+                if (vScrollEnabled)
+                {
+                    VScrollBar.Maximum = _scrollRightCorner.Y - height * (1 - ScrollSpaceLeft);
+                }
+            }
+            if (HScrollBar != null)
+            {
+                float width = Width;
+                bool hScrollEnabled = _scrollRightCorner.X > width + 0.01f && width > ScrollBar.DefaultMinimumSize;
+
+                if (HScrollBar.Visible != hScrollEnabled)
+                {
+                    // Set scroll bar visibility 
+                    HScrollBar.Visible = hScrollEnabled;
+
+                    // Clear scroll state
+                    HScrollBar.Reset();
+
+                    _viewOffset.X = 0;
+
+                    // Update
+                    arrageAndGetBounds();
+                }
+
+                if (hScrollEnabled)
+                {
+                    HScrollBar.Maximum = _scrollRightCorner.X - width * (1 - ScrollSpaceLeft);
+                }
+            }
+        }
+
+        private void arrageAndGetBounds()
+        {
+            // Base
+            base.PerformLayoutSelf();
+
+            // Calculate scroll area bounds
+            Vector2 rigthBottom = Vector2.Zero;
+            for (int i = 0; i < _children.Count; i++)
+            {
+                var c = _children[i];
+                if (c.Visible && c.IsScrollable)
+                {
+                    rigthBottom = Vector2.Max(rigthBottom, c.BottomRight);
+                }
+            }
+
+            // Cache result
+            _scrollRightCorner = rigthBottom;
         }
     }
 }

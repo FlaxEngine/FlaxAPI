@@ -219,7 +219,7 @@ namespace FlaxEngine.GUI
                 }
 
                 // Check collision
-                if (child.ContainsPoint(ref scrollOffsetLocation))
+                if (IsMouseOverChild(child, ref scrollOffsetLocation))
                 {
                     result = child;
                     break;
@@ -246,7 +246,7 @@ namespace FlaxEngine.GUI
                 }
 
                 // Check collision
-                if (child.ContainsPoint(ref scrollOffsetLocation))
+                if (IsMouseOverChild(child, ref scrollOffsetLocation))
                 {
                     var containerControl = child as ContainerControl;
                     var childAtRecursive = containerControl?.GetChildAtRecursive(scrollOffsetLocation - child.Location);
@@ -393,6 +393,17 @@ namespace FlaxEngine.GUI
         protected virtual void GetDesireClientArea(out Rectangle rect)
         {
             rect = new Rectangle(0, 0, Size);
+        }
+
+        /// <summary>
+        /// Checks if mouse is over given control.
+        /// </summary>
+        /// <param name="child">The child control to check.</param>
+        /// <param name="location">The mouse location.</param>
+        /// <returns>True if mouse is over the control, otherwise false.</returns>
+        protected virtual bool IsMouseOverChild(Control child, ref Vector2 location)
+        {
+            return child.ContainsPoint(ref location);
         }
 
         /// <summary>
@@ -715,7 +726,7 @@ namespace FlaxEngine.GUI
                     }
 
                     // Fire event
-                    if (child.ContainsPoint(ref scrollOffsetLocation))
+                    if (IsMouseOverChild(child, ref scrollOffsetLocation))
                     {
                         // Enter
                         child.OnMouseEnter(scrollOffsetLocation - child.Location);
@@ -743,7 +754,7 @@ namespace FlaxEngine.GUI
                     }
 
                     // Fire events
-                    if (child.ContainsPoint(ref scrollOffsetLocation) || child.HasMouseCapture)
+                    if (IsMouseOverChild(child, ref scrollOffsetLocation) || child.HasMouseCapture)
                     {
                         if (child.IsMouseOver)
                         {
@@ -799,7 +810,7 @@ namespace FlaxEngine.GUI
                     }
 
                     // Fire events
-                    if (child.ContainsPoint(ref scrollOffsetLocation))
+                    if (IsMouseOverChild(child, ref scrollOffsetLocation))
                     {
                         // Wheel
                         if (child.OnMouseWheel(scrollOffsetLocation - child.Location, delta))
@@ -830,7 +841,7 @@ namespace FlaxEngine.GUI
                     }
 
                     // Fire event
-                    if (child.ContainsPoint(ref scrollOffsetLocation))
+                    if (IsMouseOverChild(child, ref scrollOffsetLocation))
                     {
                         // Send event futher
                         if (child.OnMouseDown(scrollOffsetLocation - child.Location, buttons))
@@ -888,7 +899,7 @@ namespace FlaxEngine.GUI
                     }
 
                     // Fire event
-                    if (child.ContainsPoint(ref scrollOffsetLocation))
+                    if (IsMouseOverChild(child, ref scrollOffsetLocation))
                     {
                         // Send event futher
                         if (child.OnMouseUp(scrollOffsetLocation - child.Location, buttons))
@@ -917,10 +928,9 @@ namespace FlaxEngine.GUI
                     {
                         scrollOffsetLocation -= _viewOffset;
                     }
-
-
+                    
                     // Fire event
-                    if (child.ContainsPoint(ref scrollOffsetLocation))
+                    if (IsMouseOverChild(child, ref scrollOffsetLocation))
                     {
                         // Send event futher
                         if (child.OnMouseDoubleClick(scrollOffsetLocation - child.Location, buttons))

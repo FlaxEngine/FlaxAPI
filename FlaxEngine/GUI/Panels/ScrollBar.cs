@@ -72,6 +72,7 @@ namespace FlaxEngine.GUI
                     throw new ArgumentOutOfRangeException("Invalid minimum value.");
                 _minimum = value;
                 Value = value;
+                updateThumb();
             }
         }
 
@@ -90,6 +91,7 @@ namespace FlaxEngine.GUI
                     throw new ArgumentOutOfRangeException("Invalid maximum value.");
                 _maximum = value;
                 Value = value;
+                updateThumb();
             }
         }
 
@@ -219,6 +221,11 @@ namespace FlaxEngine.GUI
         /// The size of the track.
         /// </value>
         protected abstract float TrackSize { get; }
+
+        internal void Reset()
+        {
+            _value = _targetValue = 0;
+        }
 
         /// <inheritdoc />
         public override void Update(float deltaTime)
