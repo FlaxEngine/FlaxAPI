@@ -224,7 +224,7 @@ namespace FlaxEngine.GUI.Docking
             else
                 Show(state);
         }
-
+        
         /// <summary>
         /// Hides the window.
         /// </summary>

@@ -141,6 +141,15 @@ namespace FlaxEditor.Content
         public override string DefaultPreviewName => "Folder64";
 
         /// <inheritdoc />
+        public override void UpdatePath(string value)
+        {
+            base.UpdatePath(value);
+
+            // Update node text
+            Node.Text = ShortName;
+        }
+
+        /// <inheritdoc />
         public override ContentItem Find(string path)
         {
             // TODO: split name into parts and check each going tree sructure level down - make it faster

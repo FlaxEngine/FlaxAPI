@@ -364,7 +364,7 @@ namespace FlaxEngine.GUI
         public override void Draw()
         {
             // Check if it's a root
-            if (!IsRoot)
+            if (IsRoot)
             {
                 // Base
                 if (_opened)

@@ -13,8 +13,8 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// Tree control.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.ContainerControlChildrenSized" />
-    public class Tree : ContainerControlChildrenSized
+    /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    public class Tree : ContainerControl
     {
         /// <summary>
         /// The key updates timeout in seconds.
@@ -436,7 +436,8 @@ namespace FlaxEngine.GUI
             // Check if can use multi selection
             if (_supportMultiSelect)
             {
-                throw new NotImplementedException("Tree.OnKeyDown -> Ctrl+A action");
+                // TODO: finish this
+                //throw new NotImplementedException("Tree.OnKeyDown -> Ctrl+A action");
                 /*bool isCtrlDown = Input.GetKey(KEY_CONTROL);
                 
                 // Select all expanded nodes

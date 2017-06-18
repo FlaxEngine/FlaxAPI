@@ -96,6 +96,7 @@ namespace FlaxEditor.Content
             : base(false, Editor.Instance.UI.FolderClosed12, Editor.Instance.UI.FolderOpened12)
         {
             _folder = new ContentFolder(type, path, this);
+            Text = _folder.ShortName;
         }
 
         /// <inheritdoc />

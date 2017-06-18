@@ -241,7 +241,7 @@ namespace FlaxEditor.Content
         /// Updates the item path. Use with caution or even don't use it. It's dangerous.
         /// </summary>
         /// <param name="value">The new path.</param>
-        public void UpdatePath(string value)
+        public virtual void UpdatePath(string value)
         {
             Assert.AreNotEqual(Path, value);
 
