@@ -80,6 +80,14 @@ namespace FlaxEngine.GUI.Docking
         }
 
         /// <summary>
+        /// Gets the child panels count.
+        /// </summary>
+        /// <value>
+        /// The child panels count.
+        /// </value>
+        public int ChildPanelsCount => _childPanels.Count;
+
+        /// <summary>
         /// Gets amount of the tabs in a dock panel.
         /// </summary>
         /// <returns>The amount of tabs.</returns>
