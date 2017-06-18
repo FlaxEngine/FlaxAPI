@@ -103,33 +103,33 @@ namespace FlaxEngine.GUI.Docking
 
         private void startDrag(DockWindow win)
         {
-            throw new NotImplementedException("startDragAsync");
-            /*// Clear cache
+            // Clear cache
             MouseDownWindow = null;
             StartDragAsyncWindow = win;
 
             // Register for late update in an async manner (to prevent from crash due to changing UI structure on window undock)
-            CEngine.OnLateUpdate.Bind < Proxy, &Proxy::startDragAsync > (this);*/
+            Scripting.OnLateUpdate += startDragAsync;
         }
 
-        private void startDragAsync(float dt)
+        private void startDragAsync()
         {
-            throw new NotImplementedException("startDragAsync");
+            Scripting.OnLateUpdate -= startDragAsync;
+
             /*if (StartDragAsyncWindow != null)
             {
                 var win = StartDragAsyncWindow;
                 StartDragAsyncWindow = null;
 
                 // Check if has only one window docked and is floating
-                if (_panel._childPanels.Count == 0 && _panel.TabsCount == 1 && _panel.IsFloating)
+                if (_panel.ChildPanelsCount == 0 && _panel.TabsCount == 1 && _panel.IsFloating)
                 {
                     // Create docking hint window but in an async manner
-                    new DockHintWindow(static_cast<CFloatWindowDockPanel*>(Panel));
+                    new DockHintWindow(_panel as FloatWindowDockPanel);
                 }
                 else
                 {
                     // Select another tab
-                    int index = _panel._tabs.IndexOf(win);
+                    int index = _panel.GetTabIndex(win);
                     if (index == 0)
                         index = _panel.TabsCount;
                     _panel.SelectTab(index - 1);
@@ -137,9 +137,7 @@ namespace FlaxEngine.GUI.Docking
                     // Create docking hint window
                     new DockHintWindow(win);
                 }
-            }
-
-            CEngine.OnLateUpdate.Unbind < Proxy, &Proxy::startDragAsync > (this);*/
+            }*/
         }
 
         /// <inheritdoc />

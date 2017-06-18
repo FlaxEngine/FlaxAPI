@@ -15,7 +15,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
 	/// <summary>
-	/// Provides interop class used to access Flax global variables via C# API.
+	/// Interop class used to access Flax global variables via C# API.
 	/// </summary>
 	public static partial class Globals
 	{

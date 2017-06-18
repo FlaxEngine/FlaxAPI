@@ -130,6 +130,7 @@
     </Compile>
     <Compile Include="API\Static\SceneManager.cs" />
     <Compile Include="API\Static\SceneManager.Gen.cs" />
+    <Compile Include="API\Static\Scripting.cs" />
     <Compile Include="API\Static\Time.cs" />
     <Compile Include="API\Static\Time.Gen.cs">
       <DependentUpon>Time.cs</DependentUpon>
