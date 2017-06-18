@@ -84,6 +84,37 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
+        /// Unchecks toolstrip pause button.
+        /// </summary>
+        public void UncheckPauseButton()
+        {
+            if (ToolStrip != null)
+                ToolStrip.GetButton(9).Checked = false;
+        }
+
+        /// <summary>
+        /// Checks if toolstrip pause button is checked/
+        /// </summary>
+        /// <returns>True if toolstrip pause button is checked, otherwise false.</returns>
+        public bool IsPauseButtonChecked()
+        {
+            if (ToolStrip != null)
+                return ToolStrip.GetButton(9).Checked;
+            return false;
+        }
+
+        /// <summary>
+        /// Updates the toolstrip.
+        /// </summary>
+        public void UpdateToolstrip()
+        {
+            if (ToolStrip == null)
+                return;
+
+            // TODO: update all toolstrip buttons
+        }
+
+        /// <summary>
         /// Updates the status bar.
         /// </summary>
         public void UpdateStatusBar()
@@ -308,6 +339,8 @@ namespace FlaxEditor.Modules
             ToolStrip.AddButton(8, GetIcon("Play32"));//.LinkTooltip(SharedToolTip, "Start/Stop simulation (F5)");// Play
             ToolStrip.AddButton(9, GetIcon("Pause32"));//.LinkTooltip(SharedToolTip, "Pause simulation");// Pause
             ToolStrip.AddButton(10, GetIcon("Step32"));//.LinkTooltip(SharedToolTip, "Step one frame in simulation");// Step
+
+            UpdateToolstrip();
         }
 
         private void InitStatusBar(FlaxEngine.GUI.Window mainWindow)

@@ -205,6 +205,10 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnEndInit()
         {
+            // Initialize windows
+            for (int i = 0; i < Windows.Count; i++)
+                Windows[i].OnInit();
+
             // Load current workspace layout
             LoadLayout(WorkingLayoutName);
 
@@ -226,6 +230,10 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnExit()
         {
+            // Shutdown windows
+            for (int i = 0; i < Windows.Count; i++)
+                Windows[i].OnExit();
+
             // Unbind events
             SceneManager.OnSceneSaveError -= OnSceneSaveError;
             SceneManager.OnSceneLoaded -= OnSceneLoaded;

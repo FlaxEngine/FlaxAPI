@@ -124,6 +124,21 @@ namespace FlaxEditor.Windows
         {
         }
 
+        /// <summary>
+        /// Called when window should be initializated.
+        /// At this point, main window, content database, default editor windows are ready.
+        /// </summary>
+        public virtual void OnInit()
+        {
+        }
+
+        /// <summary>
+        /// Called when editor is being closed and window should perform release data operations.
+        /// </summary>
+        public virtual void OnExit()
+        {
+        }
+
         #endregion
 
         /// <inheritdoc />
