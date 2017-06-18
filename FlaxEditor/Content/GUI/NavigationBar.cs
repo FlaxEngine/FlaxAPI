@@ -14,6 +14,11 @@ namespace FlaxEditor.Content.GUI
     public class NavigationBar : Panel
     {
         /// <summary>
+        /// The default buttons margin.
+        /// </summary>
+        public const float DefaultButtonsMargin = 2;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="NavigationBar"/> class.
         /// </summary>
         public NavigationBar()
@@ -25,13 +30,12 @@ namespace FlaxEditor.Content.GUI
         protected override void Arrage()
         {
             // Arrange buttons
-            float x = 1;
+            float x = DefaultButtonsMargin;
             for (int i = 0; i < _children.Count; i++)
             {
                 var child = _children[i];
-                child.PerformLayout();
                 child.X = x;
-                x += child.Width + 2;
+                x += child.Width + DefaultButtonsMargin;
             }
         }
     }

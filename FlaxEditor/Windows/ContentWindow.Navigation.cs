@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using FlaxEditor.Content;
 using FlaxEditor.Content.GUI;
 using FlaxEditor.GUI;
+using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Windows
@@ -196,6 +197,9 @@ namespace FlaxEditor.Windows
             if (_navigationBar == null)
                 return;
 
+            bool wasLayoutLocked = _navigationBar.IsLayoutLocked;
+            _navigationBar.IsLayoutLocked = true;
+
             // Remove previous buttons
             _navigationBar.DisposeChildren();
 
@@ -207,17 +211,18 @@ namespace FlaxEditor.Windows
                 nodes.Add(node);
                 node = node.ParentNode;
             }
-            float x = 1;
-            float h = _toolStrip.ItemsHeight;
+            float x = NavigationBar.DefaultButtonsMargin;
+            float h = _toolStrip.ItemsHeight - 2 * ToolStrip.DefaultMarginV;
             for (int i = nodes.Count - 1; i >= 0; i--)
             {
                 var button = new NavigationButton(nodes[i], x, ToolStrip.DefaultMarginV, h);
                 button.PerformLayout();
-                x += button.Width + 2;
+                x += button.Width + NavigationBar.DefaultButtonsMargin;
                 _navigationBar.AddChild(button);
             }
 
             // Update
+            _navigationBar.IsLayoutLocked = wasLayoutLocked;
             _navigationBar.PerformLayout();
         }
 

@@ -196,20 +196,18 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
+            base.PerformLayoutSelf();
+
             // Update navigation panel
             if (_toolStrip != null && _navigationBar != null)
             {
                 var lastTiilstripButton = _toolStrip.LastButton;
-                var bounds = new Rectangle(lastTiilstripButton.PointToParent(new Vector2(
-                        lastTiilstripButton.Width + 8.0f,
-                        0
-                    )),
+                var bounds = new Rectangle(
+                    new Vector2(lastTiilstripButton.Right + 8.0f, 0),
                     new Vector2(Width - _navigationBar.X - 8.0f, _navigationBar.Height)
                 );
                 _navigationBar.Bounds = bounds;
             }
-
-            base.PerformLayoutSelf();
         }
     }
 }

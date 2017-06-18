@@ -38,6 +38,7 @@ namespace FlaxEditor.Content.GUI
         {
             TargetNode = targetNode;
             Height = height;
+            Text = targetNode.Folder.ShortName + "/";
         }
 
         /// <inheritdoc />

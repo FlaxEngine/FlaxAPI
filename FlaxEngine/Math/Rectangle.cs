@@ -1,6 +1,7 @@
 ﻿// Flax Engine scripting API
 
 using System;
+using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace FlaxEngine
@@ -346,6 +347,12 @@ namespace FlaxEngine
             {
                 return (Location.GetHashCode() * 397) ^ Size.GetHashCode();
             }
+        }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1} Width:{2} Height:{3}", X, Y, Width, Height);
         }
     }
 }
