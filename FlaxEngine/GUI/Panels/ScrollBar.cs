@@ -71,8 +71,8 @@ namespace FlaxEngine.GUI
                 if (value > _maximum)
                     throw new ArgumentOutOfRangeException("Invalid minimum value.");
                 _minimum = value;
-                Value = value;
-                updateThumb();
+                if (Value < _minimum)
+                    Value = _minimum;
             }
         }
 
@@ -90,8 +90,8 @@ namespace FlaxEngine.GUI
                 if (value < _minimum)
                     throw new ArgumentOutOfRangeException("Invalid maximum value.");
                 _maximum = value;
-                Value = value;
-                updateThumb();
+                if(Value > _maximum)
+                    Value = _maximum;
             }
         }
 
