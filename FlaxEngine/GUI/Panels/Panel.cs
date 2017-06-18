@@ -222,7 +222,7 @@ namespace FlaxEngine.GUI
             const float ScrollSpaceLeft = 0.1f;
 
             // Arrange controls and get scroll bounds
-            arrageAndGetBounds();
+            ArrageAndGetBounds();
 
             // Scroll bars
             if (VScrollBar != null)
@@ -240,7 +240,7 @@ namespace FlaxEngine.GUI
                     _viewOffset.Y = 0;
 
                     // Update
-                    arrageAndGetBounds();
+                    ArrageAndGetBounds();
                 }
 
                 if (vScrollEnabled)
@@ -264,7 +264,7 @@ namespace FlaxEngine.GUI
                     _viewOffset.X = 0;
 
                     // Update
-                    arrageAndGetBounds();
+                    ArrageAndGetBounds();
                 }
 
                 if (hScrollEnabled)
@@ -274,10 +274,12 @@ namespace FlaxEngine.GUI
             }
         }
 
-        private void arrageAndGetBounds()
+        /// <summary>
+        /// Arrages the child controls and gets their bounds.
+        /// </summary>
+        protected virtual void ArrageAndGetBounds()
         {
-            // Base
-            base.PerformLayoutSelf();
+            Arrage();
 
             // Calculate scroll area bounds
             Vector2 rigthBottom = Vector2.Zero;
@@ -292,6 +294,14 @@ namespace FlaxEngine.GUI
 
             // Cache result
             _scrollRightCorner = rigthBottom;
+        }
+
+        /// <summary>
+        /// Arrages the child controls.
+        /// </summary>
+        protected virtual void Arrage()
+        {
+            base.PerformLayoutSelf();
         }
     }
 }
