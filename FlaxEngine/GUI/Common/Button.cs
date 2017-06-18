@@ -34,6 +34,9 @@ namespace FlaxEngine.GUI
         {
         }
 
+        /// <summary>
+        /// Called when mouse clicks button.
+        /// </summary>
         protected virtual void onClick()
         {
             Clicked?.Invoke();

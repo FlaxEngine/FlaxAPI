@@ -161,7 +161,7 @@ namespace FlaxEditor.Windows
             // Setup navigation
             _navigationUnlocked = true;
             _tree.Select(_root);
-            navigationClearHistory();
+            NavigationClearHistory();
 
             // Update UI layout
             UnlockChildrenRecursive();

@@ -18,7 +18,11 @@ namespace FlaxEditor.Windows
             navigate(source, target);
         }
 
-        private void navigate(ContentTreeNode target)
+        /// <summary>
+        /// Navigates to the specified target content location.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        public void Navigate(ContentTreeNode target)
         {
             navigate(SelectedNode, target);
         }
@@ -78,7 +82,10 @@ namespace FlaxEditor.Windows
             _view.Focus();*/
         }
 
-        private void navigateBackward()
+        /// <summary>
+        /// Navigates backward.
+        /// </summary>
+        public void NavigateBackward()
         {
             // TODO: finish this
             /*// Check if navigation is unlocked
@@ -118,7 +125,10 @@ namespace FlaxEditor.Windows
             _view.Focus();*/
         }
 
-        private void navigateForward()
+        /// <summary>
+        /// Navigates forward.
+        /// </summary>
+        public void NavigateForward()
         {
             // TODO: finish this
             /*// Check if navigation is unlocked
@@ -156,7 +166,10 @@ namespace FlaxEditor.Windows
             _view.Focus();*/
         }
 
-        private void navigateUp()
+        /// <summary>
+        /// Navigates directory up.
+        /// </summary>
+        public void NavigateUp()
         {
             ContentTreeNode target = _root;
             ContentTreeNode current = SelectedNode;
@@ -166,10 +179,13 @@ namespace FlaxEditor.Windows
                 target = current.Folder.ParentFolder.Node;
             }
 
-            navigate(target);
+            Navigate(target);
         }
 
-        private  void navigationClearHistory()
+        /// <summary>
+        /// Clears the navigation history.
+        /// </summary>
+        public void NavigationClearHistory()
         {
             _navigationUndo.Clear();
             _navigationRedo.Clear();

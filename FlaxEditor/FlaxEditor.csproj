@@ -44,6 +44,7 @@
     <Compile Include="API\Static\ScriptsBuilder.cs" />
     <Compile Include="API\Static\ScriptsBuilder.Gen.cs" />
     <Compile Include="Content\GUI\ContentView.cs" />
+    <Compile Include="Content\GUI\NavigationButton.cs" />
     <Compile Include="Content\Proxy\BinaryAssetProxy.cs" />
     <Compile Include="Content\Proxy\ContentProxy.cs" />
     <Compile Include="Content\Items\AssetItem.cs" />
