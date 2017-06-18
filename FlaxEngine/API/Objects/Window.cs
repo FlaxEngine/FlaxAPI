@@ -250,7 +250,7 @@ namespace FlaxEngine
         {
             GUI = new GUI.Window(this);
         }
-
+        
         /// <summary>
         /// Gets the mouse tracking offset.
         /// </summary>

@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Runtime.CompilerServices;
 using FlaxEngine.Assertions;
 
 namespace FlaxEngine.GUI
@@ -221,6 +222,72 @@ namespace FlaxEngine.GUI
             _window.EndTrackingMouse();
         }
         
+        /// <summary>
+        /// Gets keyboard key state.
+        /// </summary>
+        /// <param name="key">Key to check.</param>
+        /// <returns>True while the user holds down the key identified by id.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool GetKey(KeyCode key)
+        {
+            return _window.GetKey(key);
+        }
+
+        /// <summary>
+        /// Gets keyboard key down state.
+        /// </summary>
+        /// <param name="key">Key to check.</param>
+        /// <returns>True during the frame the user releases the key.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool GetKeyDown(KeyCode key)
+        {
+            return _window.GetKeyDown(key);
+        }
+
+        /// <summary>
+        /// Gets keyboard key up state.
+        /// </summary>
+        /// <param name="key">Key to check.</param>
+        /// <returns>True during the frame the user starts pressing down the key.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool GetKeyUp(KeyCode key)
+        {
+            return _window.GetKeyUp(key);
+        }
+
+        /// <summary>
+        /// Gets mouse button state.
+        /// </summary>
+        /// <param name="button">Mouse button to check.</param>
+        /// <returns>True while the user holds down the button.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool GetMouseButton(MouseButtons button)
+        {
+            return _window.GetMouseButton(button);
+        }
+
+        /// <summary>
+        /// Gets mouse button down state.
+        /// </summary>
+        /// <param name="button">Mouse button to check.</param>
+        /// <returns>True during the frame the user starts pressing down the button.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool GetMouseButtonDown(MouseButtons button)
+        {
+            return _window.GetMouseButtonDown(button);
+        }
+
+        /// <summary>
+        /// Gets mouse button up state.
+        /// </summary>
+        /// <param name="button">Mouse button to check.</param>
+        /// <returns>True during the frame the user releases the button.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool GetMouseButtonUp(MouseButtons button)
+        {
+            return _window.GetMouseButtonUp(button);
+        }
+
         #region ContainerControl
 
         /// <inheritdoc />
