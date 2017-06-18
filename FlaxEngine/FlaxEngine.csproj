@@ -136,6 +136,8 @@
     </Compile>
     <Compile Include="AssetTypes\IESProfile.cs" />
     <Compile Include="Attributes\MemberCollectionAttribute.cs" />
+    <Compile Include="Attributes\PersisitentDataAttribute.cs" />
+    <Compile Include="Configurations\PersistentDataConfig.cs" />
     <Compile Include="Enums\UI.cs" />
     <Compile Include="Attributes\Editor\CustomEditorAttribute.cs" />
     <Compile Include="Attributes\Editor\EditorIndexAttribute.cs" />
