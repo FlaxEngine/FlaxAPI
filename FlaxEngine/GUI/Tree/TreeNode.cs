@@ -481,16 +481,16 @@ namespace FlaxEngine.GUI
                 {
                     // Focus
                     Focus();
-
+                    
                     // Check if user is pressing control key
                     var tree = ParentTree;
-                    // TODO: finish input per window
-                    /*if (Input::GetKey(KEY_SHIFT))
+                    var window = tree.ParentWindow;
+                    if (window.GetKey(KeyCode.SHIFT))
                     {
                         // Select range
                         tree.SelectRange(this);
                     }
-                    else if (Input::GetKey(KEY_CONTROL))
+                    else if (window.GetKey(KeyCode.CONTROL))
                     {
                         // Add/Remove
                         tree.AddOrRemoveSelection(this);
@@ -499,7 +499,7 @@ namespace FlaxEngine.GUI
                     {
                         // Select
                         tree.Select(this);
-                    }*/
+                    }
                 }
 
                 // Check if mosue hits arrow

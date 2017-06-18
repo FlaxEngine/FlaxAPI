@@ -5,8 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FlaxEngine.Assertions;
 
 namespace FlaxEngine.GUI
 {
@@ -300,24 +299,25 @@ namespace FlaxEngine.GUI
         public override void Update(float deltaTime)
         {
             var node = SelectedNode;
-            /*
-            // TODO: finish input per window
+
             // Check if has focus and if any node is focused and it isn't a root
             if (ContainsFocus && node != null && !node.IsRoot)
             {
+                var window = ParentWindow;
+
                 // Check if can perform update
                 if (_keyUpdateTime >= KeyUpdateTimeout)
                 {
-                    bool keyUpArrow = Input::GetKeyUp(KEY_UP, this);
-                    bool keyDownArrow = Input::GetKeyUp(KEY_DOWN, this);
+                    bool keyUpArrow = window.GetKeyUp(KeyCode.UP);
+                    bool keyDownArrow = window.GetKeyUp(KeyCode.DOWN);
 
                     // Check if arrow flags are dffrent
                     if (keyDownArrow != keyUpArrow)
                     {
                         var nodeParent = node.Parent;
-                        var parentNode = dynamic_cast<CTreeNode*>(nodeParent);
+                        var parentNode = nodeParent as TreeNode;
                         var myIndex = nodeParent.GetChildIndex(node);
-                        ASSERT(myIndex != INVALID_INDEX);
+                        Assert.AreNotEqual(-1, myIndex);
 
                         // Up
                         if (keyUpArrow)
@@ -326,25 +326,25 @@ namespace FlaxEngine.GUI
                             if (myIndex == 0)
                             {
                                 // Select parent (if it exists and it isn't a root)
-                                if (parentNode && !parentNode.IsRoot)
+                                if (parentNode != null && !parentNode.IsRoot)
                                     toSelect = parentNode;
                             }
                             else
                             {
                                 // Select previous parent child
-                                toSelect = dynamic_cast<CTreeNode*>(nodeParent->GetChild(myIndex - 1));
-
+                                toSelect = nodeParent.GetChild(myIndex - 1) as TreeNode;
+                                
                                 // Check if is valid and expanded and has any children
-                                if (toSelect && toSelect->IsExpanded() && toSelect->HasChildren())
+                                if (toSelect != null && toSelect.IsExpanded && toSelect.HasChildren)
                                 {
                                     // Select last child
-                                    toSelect = dynamic_cast<CTreeNode*>(toSelect->GetChild(toSelect->GetChildrenCount() - 1));
+                                    toSelect = toSelect.GetChild(toSelect.ChildrenCount - 1) as TreeNode;
                                 }
                             }
-                            if (toSelect)
+                            if (toSelect != null)
                             {
                                 // Focus
-                                toSelect->Focus();
+                                toSelect.Focus();
 
                                 // Select
                                 Select(toSelect);
@@ -353,33 +353,33 @@ namespace FlaxEngine.GUI
                         // Down
                         else
                         {
-                            CTreeNode* toSelect = nullptr;
-                            if (node->IsExpanded() && node->HasChildren())
+                            TreeNode toSelect = null;
+                            if (node.IsExpanded && node.HasChildren)
                             {
-                                // Select first child
-                                toSelect = dynamic_cast<CTreeNode*>(node->GetChild(0));
+                                // Select the first child
+                                toSelect = node.GetChild(0) as TreeNode;
                             }
-                            else if (myIndex == nodeParent->GetChildrenCount() - 1)
+                            else if (myIndex == nodeParent.ChildrenCount - 1)
                             {
                                 // Select next node after parent
-                                if (parentNode)
+                                if (parentNode != null)
                                 {
-                                    int32 parentIndex = parentNode->GetIndexInParent();
-                                    if (parentIndex != INVALID_INDEX && parentIndex < parentNode->GetParent()->GetChildrenCount() - 1)
+                                    int parentIndex = parentNode.IndexInParent;
+                                    if (parentIndex != -1 && parentIndex < parentNode.Parent.ChildrenCount - 1)
                                     {
-                                        toSelect = dynamic_cast<CTreeNode*>(parentNode->GetParent()->GetChild(parentIndex + 1));
+                                        toSelect = parentNode.Parent.GetChild(parentIndex + 1) as TreeNode;
                                     }
                                 }
                             }
                             else
                             {
                                 // Select next parent child
-                                toSelect = dynamic_cast<CTreeNode*>(nodeParent->GetChild(myIndex + 1));
+                                toSelect = nodeParent.GetChild(myIndex + 1) as TreeNode;
                             }
-                            if (toSelect)
+                            if (toSelect != null)
                             {
                                 // Focus
-                                toSelect->Focus();
+                                toSelect.Focus();
 
                                 // Select
                                 Select(toSelect);
@@ -396,37 +396,37 @@ namespace FlaxEngine.GUI
                     _keyUpdateTime += deltaTime;
                 }
 
-                if (Input::GetKeyDown(KEY_RIGHT))
+                if (window.GetKeyDown(KeyCode.RIGHT))
                 {
                     // Check if is expanded
-                    if (node->IsExpanded())
+                    if (node.IsExpanded)
                     {
                         // Select first child if has
-                        if (node->HasChildren())
-                            Select((CTreeNode*)node->GetChild(0));
+                        if (node.HasChildren)
+                            Select(node.GetChild(0) as TreeNode);
                     }
                     else
                     {
                         // Expand selected node
-                        node->Expand();
+                        node.Expand();
                     }
                 }
-                else if (Input::GetKeyDown(KEY_LEFT))
+                else if (window.GetKeyDown(KeyCode.LEFT))
                 {
-                    if (node->IsCollapsed())
+                    if (node.IsCollapsed)
                     {
                         // Select parent if has and is not a root
-                        if (node->HasParent() && !((CTreeNode*)node->GetParent())->isRoot())
-                            Select((CTreeNode*)node->GetParent());
+                        if (node.HasParent && node.Parent is TreeNode nodeParentNode && !nodeParentNode.IsRoot)
+                            Select(nodeParentNode);
                     }
                     else
                     {
                         // Collapse selected node
-                        node->Collapse();
+                        node.Collapse();
                     }
                 }
             }
-            */
+            
             base.Update(deltaTime);
         }
 
@@ -436,16 +436,14 @@ namespace FlaxEngine.GUI
             // Check if can use multi selection
             if (_supportMultiSelect)
             {
-                // TODO: finish this
-                //throw new NotImplementedException("Tree.OnKeyDown -> Ctrl+A action");
-                /*bool isCtrlDown = Input.GetKey(KEY_CONTROL);
+                bool isCtrlDown = ParentWindow.GetKey(KeyCode.CONTROL);
                 
                 // Select all expanded nodes
                 if (key == KeyCode.A && isCtrlDown)
                 {
                     SelectAllExpaned();
                     return true;
-                }*/
+                }
             }
 
             return base.OnKeyDown(key);

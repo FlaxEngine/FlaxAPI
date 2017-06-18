@@ -10,12 +10,12 @@ namespace FlaxEngine.GUI
         public override bool OnKeyDown(KeyCode key)
         {
             // Check if use lowercase or uppercase
-            // TODO: for controls we could provide GetKey via interop that will use parent window
-            bool shftDown = false;//Input.GetKey(KeyCode.SHIFT);
-            bool ctrDown = false;//Input.GetKey(KeyCode.CONTROL;
+            var window = ParentWindow;
+            bool shftDown = window.GetKey(KeyCode.SHIFT);
+            bool ctrDown = window.GetKey(KeyCode.CONTROL);
             bool uppercase = shftDown;
-            //if (Input::GetKey(KEY_CAPITAL, this))
-            //	uppercase = !lowercase;// TODO: capslock
+            if (window.GetKey(KeyCode.CAPITAL))
+            	uppercase = !uppercase;// TODO: capslock
 
             // Check if use combination with a control key
             if (ctrDown)
