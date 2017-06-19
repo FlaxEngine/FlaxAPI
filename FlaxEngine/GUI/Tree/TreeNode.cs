@@ -3,11 +3,6 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.PerformanceData;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlaxEngine.GUI
 {
@@ -694,9 +689,17 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
+        protected override void OnParentChangedInternal()
+        {
+            // Clear cached tree
+            _tree = null;
+
+            base.OnParentChangedInternal();
+        }
+
+        /// <inheritdoc />
         public override void OnDestroy()
         {
-            // Deselect
             ParentTree?.Selection.Remove(this);
 
             base.OnDestroy();

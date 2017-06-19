@@ -68,8 +68,8 @@ namespace FlaxEngine.GUI
                 _parent?.RemoveChildInternal(this);
                 _parent = value;
                 _parent?.AddChildInternal(this);
-
-                OnParentChanged?.Invoke(this);
+                
+                OnParentChangedInternal();
             }
         }
 
@@ -675,6 +675,14 @@ namespace FlaxEngine.GUI
 
             OnSizeChanged?.Invoke(this);
             _parent?.OnChildResized(this);
+        }
+
+        /// <summary>
+        ///     Action fred when parent control gets changed.
+        /// </summary>
+        protected virtual void OnParentChangedInternal()
+        {
+            OnParentChanged?.Invoke(this);
         }
 
         /// <summary>
