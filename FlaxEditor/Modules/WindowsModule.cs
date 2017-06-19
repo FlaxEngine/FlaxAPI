@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 using System;
 using System.Collections.Generic;
@@ -107,7 +107,7 @@ namespace FlaxEditor.Modules
             // TODO: finish this
 
             // for now just show default windows
-            ContentWin.Show(DockState.Float);
+            //ContentWin.Show(DockState.Float);
         }
 
         /// <summary>
