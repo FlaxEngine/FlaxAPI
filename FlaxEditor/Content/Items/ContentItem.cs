@@ -519,12 +519,12 @@ namespace FlaxEditor.Content
             if (CanRename && TextRectangle.Contains(location))
             {
                 // Rename
-                (Parent as ContentView).OnRename(this);
+                (Parent as ContentView).OnItemDoubleClickName(this);
             }
             else
             {
                 // Open
-                (Parent as ContentView).OnOpen(this);
+                (Parent as ContentView).OnItemDoubleClick(this);
             }
 
             return true;
