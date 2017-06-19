@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.Windows;
+using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 
@@ -315,6 +316,94 @@ namespace FlaxEditor.Content.GUI
 
         /// <inheritdoc />
         public override bool IsScrollable => true;
+
+        /// <inheritdoc />
+        public override bool OnMouseWheel(Vector2 location, int delta)
+        {
+            // Check if pressing control key
+            if (ParentWindow.GetKey(KeyCode.CONTROL))
+            {
+                // Zoom
+                _scale = Mathf.Clamp(_scale + (delta > 0 ? 1 : -1) * 0.05f, 0.3f, 3.0f);
+                PerformLayout();
+
+                // Handled
+                return true;
+            }
+
+            return base.OnMouseWheel(location, delta);
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(KeyCode key)
+        {
+            // Navigate backward
+            if (key == KeyCode.BACK)
+            {
+                OnNavigateBack?.Invoke();
+                return true;
+            }
+
+            // Check if sth is selected
+            if (HasSelection)
+            {
+                // Delete selection
+                if (key == KeyCode.DELETE)
+                {
+                    OnDelete?.Invoke(_selection);
+                    return true;
+                }
+
+                // Open
+                if (key == KeyCode.RETURN && _selection.Count == 1)
+                {
+                    OnOpen?.Invoke(_selection[0]);
+                    return true;
+                }
+
+                // Duplicate
+                if (key == KeyCode.D && ParentWindow.GetKey(KeyCode.CONTROL))
+                {
+                    OnDuplicate?.Invoke(_selection);
+                    return true;
+                }
+
+                // Movement with arrows
+                {
+                    var root = _selection[0];
+                    Vector2 size = root.Size;
+                    Vector2 offset = Vector2.Minimum;
+                    ContentItem item = null;
+                    if (key == KeyCode.UP)
+                    {
+                        offset = new Vector2(0, -size.Y);
+                    }
+                    else if (key == KeyCode.DOWN)
+                    {
+                        offset = new Vector2(0, size.Y);
+                    }
+                    else if (key == KeyCode.RIGHT)
+                    {
+                        offset = new Vector2(size.X, 0);
+                    }
+                    else if (key == KeyCode.LEFT)
+                    {
+                        offset = new Vector2(-size.X, 0);
+                    }
+                    if (offset != Vector2.Minimum)
+                    {
+                        item = GetChildAt(root.Location + size / 2 + offset) as ContentItem;
+                    }
+                    if (item != null)
+                    {
+                        OnItemClick(item);
+                        return true;
+                    }
+                }
+            }
+            
+            return base.OnKeyDown(key);
+        }
 
         /// <inheritdoc />
         public override void OnDestroy()

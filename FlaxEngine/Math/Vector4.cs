@@ -101,6 +101,16 @@ namespace FlaxEngine
         public static readonly Vector4 One = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 
         /// <summary>
+        /// A <see cref="Vector4" /> with all components equal to <see cref="float.MinValue"/>.
+        /// </summary>
+        public static readonly Vector4 Minimum = new Vector4(float.MinValue);
+
+        /// <summary>
+        /// A <see cref="Vector4" /> with all components equal to <see cref="float.MaxValue"/>.
+        /// </summary>
+        public static readonly Vector4 Maximum = new Vector4(float.MaxValue);
+
+        /// <summary>
         /// The X component of the vector.
         /// </summary>
         public float X;

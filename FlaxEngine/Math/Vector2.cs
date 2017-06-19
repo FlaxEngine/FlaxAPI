@@ -91,6 +91,16 @@ namespace FlaxEngine
         public static readonly Vector2 One = new Vector2(1.0f, 1.0f);
 
         /// <summary>
+        /// A <see cref="Vector2" /> with all components equal to <see cref="float.MinValue"/>.
+        /// </summary>
+        public static readonly Vector2 Minimum = new Vector2(float.MinValue);
+
+        /// <summary>
+        /// A <see cref="Vector2" /> with all components equal to <see cref="float.MaxValue"/>.
+        /// </summary>
+        public static readonly Vector2 Maximum = new Vector2(float.MaxValue);
+
+        /// <summary>
         /// The X component of the vector.
         /// </summary>
         public float X;
