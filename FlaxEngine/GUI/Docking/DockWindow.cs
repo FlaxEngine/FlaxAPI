@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -168,6 +168,7 @@ namespace FlaxEngine.GUI.Docking
 
             // Show
             window.Show();
+            window.BringToFront();
             window.Focus();
             OnShow();
 
@@ -219,10 +220,17 @@ namespace FlaxEngine.GUI.Docking
         /// <param name="state">The state.</param>
         public void FocusOrShow(DockState state = DockState.Float)
         {
-            if (Visible)
+            var window = ParentWindow;
+            if (Visible && window != null)
+            {
+                window.BringToFront();
+                window.Focus();
                 Focus();
+            }
             else
+            {
                 Show(state);
+            }
         }
         
         /// <summary>
