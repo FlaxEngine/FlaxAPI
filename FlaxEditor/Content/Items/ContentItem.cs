@@ -346,17 +346,17 @@ namespace FlaxEditor.Content
         public void DrawIcon(ref Rectangle iconRect)
         {
             // Draw shadow
-            /*if (DrawShadow)
+            if (DrawShadow)
             {
                 const float iconInShadowSize = 50.0f;
                 var shadowRect = iconRect.MakeExpanded((DefaultIconSize - iconInShadowSize) * iconRect.Width / DefaultIconSize * 1.3f);
                 if (!_shadow.IsValid)
-                    _shadow = CUIModule->GetIcon(TEXT("AssetShadow"));
+                    _shadow = Editor.Instance.UI.GetIcon("AssetShadow");
                 Render2D.DrawSprite(_shadow, shadowRect);
             }
 
             // Draw icon
-            if (_icon.IsValid)
+            /*if (_icon.IsValid)
                 Render2D.DrawSprite(_icon, iconRect);
             else*/
                 Render2D.FillRectangle(iconRect, Color.Black);
@@ -454,7 +454,7 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override void Draw()
         {
-            /*// Cache data
+            // Cache data
             var width = Width;
             var height = Height;
             var style = Style.Current;
@@ -475,9 +475,7 @@ namespace FlaxEditor.Content
             DrawIcon(ref iconRect);
 
             // Draw short name
-            Render2D.DrawText(style.FontMedium, ShortName, textRect, style.Foreground, TextAlignment.Center, TextAlignment.Center, TextWrapping.WrapWords, 0.75f, 0.95f);*/
-
-            Render2D.FillRectangle(new Rectangle(0, 0, Width, Height), Color.Purple);
+            Render2D.DrawText(style.FontMedium, ShortName, textRect, style.Foreground, TextAlignment.Center, TextAlignment.Center, TextWrapping.WrapWords, 0.75f, 0.95f);
         }
 
         /// <inheritdoc />
