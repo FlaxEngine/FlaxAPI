@@ -74,12 +74,40 @@ namespace FlaxEditor.Windows
 
             // Content View
             _view = new ContentView();
+            // TODO: bind for content view events
             //_view.OnOpen.Bind < ContentWindow, &ContentWindow::view_OnOpen > (this);
             //_view.OnRename.Bind < ContentWindow, &ContentWindow::Rename > (this);
             //_view.OnDelete.Bind < ContentWindow, &ContentWindow::view_OnDelete > (this);
             //_view.OnDuplicate.Bind < ContentWindow, &ContentWindow::CloneSelection > (this);
             //_view.OnNavigateBack.Bind < ContentWindow, &ContentWindow::navigateBackward > (this);
             _view.Parent = _split.Panel2;
+        }
+
+        /// <summary>
+        /// Selects the specified item in the content view.
+        /// </summary>
+        /// <param name="item">The item to select.</param>
+        public void Select(ContentItem item)
+        {
+            if (item == null)
+                throw new ArgumentNullException();
+
+            var parent = item.ParentFolder;
+            if (parent == null || !parent.Visible)
+                return;
+
+            // Ensure that window is visible
+            FocusOrShow();
+
+            // Navigate to the parent directory
+            Navigate(parent.Node);
+
+            // Select and scroll to cover in view
+            _view.Select(item);
+            _split.Panel2.ScrollViewTo(item);
+
+            // Focus
+            _view.Focus();
         }
 
         private void toolstripButtonClicked(int id)
@@ -183,14 +211,14 @@ namespace FlaxEditor.Windows
 
             // TODO: save last viewed folder
 
+            // Clear view
+            _view.ClearItems();
+            
             // Unlink used directories
             while (_root.HasChildren)
             {
                 removeFolder2Root((MainContentTreeNode)_root.GetChild(0));
             }
-
-            // Clear view
-            _view.ClearItems();
         }
 
         /// <inheritdoc />

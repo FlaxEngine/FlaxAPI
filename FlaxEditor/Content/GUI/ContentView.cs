@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using FlaxEditor.Windows;
 using FlaxEngine;
 using FlaxEngine.Assertions;
@@ -255,6 +254,28 @@ namespace FlaxEditor.Content.GUI
             IsLayoutLocked = wasLayoutLocked;
             PerformLayout();
         }
+        
+        /// <summary>
+        /// Deselects the specified item.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        public void Deselect(ContentItem item)
+        {
+            if (item == null)
+                throw new ArgumentNullException();
+
+            // Lock layout
+            var wasLayoutLocked = IsLayoutLocked;
+            IsLayoutLocked = true;
+
+            // Deselect item
+            Assert.IsTrue(_selection.Contains(item));
+            _selection.Remove(item);
+
+            // Unload and perform UI layout
+            IsLayoutLocked = wasLayoutLocked;
+            PerformLayout();
+        }
 
         /// <summary>
         /// Refreshes thumbnails of all itmes in the <see cref="ContentView"/>.
@@ -273,7 +294,20 @@ namespace FlaxEditor.Content.GUI
         /// <param name="item">The item.</param>
         public void OnItemClick(ContentItem item)
         {
-            throw new NotImplementedException();
+            bool isSelected = _selection.Contains(item);
+
+            // Switch based on input (control, alt and shift keys)
+            if (ParentWindow.GetKey(KeyCode.CONTROL))
+            {
+                if (isSelected)
+                    Deselect(item);
+                else
+                    Select(item, true);
+            }
+            else
+            {
+                Select(item);
+            }
         }
 
         /// <summary>
@@ -282,7 +316,7 @@ namespace FlaxEditor.Content.GUI
         /// <param name="item">The item.</param>
         public void OnItemDoubleClickName(ContentItem item)
         {
-            throw new NotImplementedException();
+            OnRename?.Invoke(item);
         }
 
         /// <summary>
@@ -291,28 +325,33 @@ namespace FlaxEditor.Content.GUI
         /// <param name="item">The item.</param>
         public void OnItemDoubleClick(ContentItem item)
         {
-            throw new NotImplementedException();
+            OnOpen?.Invoke(item);
         }
 
         #endregion
 
+        #region IContentItemOwner
+
         /// <inheritdoc />
         void IContentItemOwner.OnItemDeleted(ContentItem item)
         {
-            throw new NotImplementedException();
+            _selection.Remove(item);
+            _items.Remove(item);
         }
 
         /// <inheritdoc />
         void IContentItemOwner.OnItemRenamed(ContentItem item)
         {
-            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
         void IContentItemOwner.OnItemDispose(ContentItem item)
         {
-            throw new NotImplementedException();
+            _selection.Remove(item);
+            _items.Remove(item);
         }
+
+        #endregion
 
         /// <inheritdoc />
         public override bool IsScrollable => true;
@@ -403,6 +442,40 @@ namespace FlaxEditor.Content.GUI
             }
             
             return base.OnKeyDown(key);
+        }
+
+        /// <inheritdoc />
+        protected override void PerformLayoutSelf()
+        {
+            // Calculate items size
+            float width = Width;
+            float defaultItemsWidth = ContentItem.DefaultWidth * _scale;
+            int itemsToFit = Mathf.FloorToInt(width / defaultItemsWidth);
+            float itemsWidth = width / Mathf.Max(itemsToFit, 1);
+            float itemsHeight = itemsWidth / defaultItemsWidth * (ContentItem.DefaultHeight * _scale);
+
+            // Arrange controls
+            float x = 0, y = 0;
+            for (int i = 0; i < _children.Count; i++)
+            {
+                var c = _children[i];
+
+                c.Bounds = new Rectangle(x, y, itemsWidth, itemsHeight);
+
+                x += itemsWidth;
+                if (x + itemsWidth > width)
+                {
+                    x = 0;
+                    y += itemsHeight;
+                }
+            }
+            if (x > 0)
+                y += itemsHeight;
+
+            // Set maximum size and fit the parent container
+            if (HasParent)
+                y = Mathf.Max(y, Parent.Height);
+            Height = y;
         }
 
         /// <inheritdoc />
