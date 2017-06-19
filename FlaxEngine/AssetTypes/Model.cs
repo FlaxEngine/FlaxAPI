@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-    public sealed class Model : Asset
+    public sealed class Model : BinaryAsset
     {
     }
 }

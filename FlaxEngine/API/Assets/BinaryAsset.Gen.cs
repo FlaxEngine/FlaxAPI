@@ -15,34 +15,45 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
 	/// <summary>
-	/// Sprite atlas texture made of collection of sprites.
+	/// Base class for all binary assets.
 	/// </summary>
-	public partial class SpriteAtlas : Asset
+	public partial class BinaryAsset : Asset
 	{
 		/// <summary>
-		/// Gets the sprite by name.
+		/// Reimports asset from the source file.
 		/// </summary>
-		/// <param name="name">The sprite name.</param>
-		/// <returns>Sprite handle (may be invalid if cannot find it).</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public Sprite GetSprite(string name) 
+		public void Reimport() 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Sprite resultAsRef;
-			Internal_GetSprite(unmanagedPtr, name, out resultAsRef);
-			return resultAsRef;
+			Internal_Reimport(unmanagedPtr);
+#endif
+		}
+
+		/// <summary>
+		/// Gets imported file path from the asset metadata (may be null or empty if not available).
+		/// </summary>
+		[UnmanagedCall]
+		public string ImportPath
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetImportPath(unmanagedPtr); }
 #endif
 		}
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetSprite(IntPtr obj, string name, out Sprite resultAsRef);
+		internal static extern void Internal_Reimport(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern string Internal_GetImportPath(IntPtr obj);
 #endif
 #endregion
 	}

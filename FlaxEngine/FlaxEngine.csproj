@@ -85,12 +85,12 @@
     <Compile Include="API\Actors\SpotLight.Gen.cs">
       <DependentUpon>SpotLight.cs</DependentUpon>
     </Compile>
-    <Compile Include="API\Assets\FontAsset.cs" />
-    <Compile Include="API\Assets\FontAsset.Gen.cs">
-      <DependentUpon>FontAsset.cs</DependentUpon>
-    </Compile>
-    <Compile Include="API\Assets\SpriteAtlas.cs" />
-    <Compile Include="API\Assets\SpriteAtlas.Gen.cs" />
+    <Compile Include="API\Assets\BinaryAsset.cs" />
+    <Compile Include="API\Assets\BinaryAsset.Gen.cs" />
+    <Compile Include="API\BinaryAssets\FontAsset.cs" />
+    <Compile Include="API\BinaryAssets\FontAsset.Gen.cs" />
+    <Compile Include="API\BinaryAssets\SpriteAtlas.cs" />
+    <Compile Include="API\BinaryAssets\SpriteAtlas.Gen.cs" />
     <Compile Include="API\CreateWindowSettings.cs" />
     <Compile Include="API\Objects\Actor.cs" />
     <Compile Include="API\Objects\Actor.Gen.cs">

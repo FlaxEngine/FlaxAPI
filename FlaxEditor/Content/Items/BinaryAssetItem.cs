@@ -32,7 +32,16 @@ namespace FlaxEditor.Content
         /// <returns>True if failes, otherwise false.</returns>
         public bool GetImportPath(out string importPath)
         {
-            throw new NotImplementedException();
+            var asset = FlaxEngine.Content.Load(ID);
+            if (asset is BinaryAsset binaryAsset)
+            {
+                // Get meta from loaded asset
+                importPath = binaryAsset.ImportPath;
+                return !string.IsNullOrEmpty(importPath);
+            }
+
+            importPath = string.Empty;
+            return true;
         }
 
         /// <inheritdoc />

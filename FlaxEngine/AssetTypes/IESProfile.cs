@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-    public sealed class IESProfile : Asset
+    public sealed class IESProfile : BinaryAsset
     {
     }
 }

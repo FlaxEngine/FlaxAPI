@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-    public abstract class MaterialBase : Asset
+    public abstract class MaterialBase : BinaryAsset
     {
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-    public sealed class CubeTexture : Asset
+    public sealed class CubeTexture : BinaryAsset
     {
     }
 }

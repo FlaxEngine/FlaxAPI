@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-    public sealed class Shader : Asset
+    public sealed class Shader : BinaryAsset
     {
     }
 }

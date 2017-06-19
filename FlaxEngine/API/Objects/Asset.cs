@@ -30,7 +30,7 @@ namespace FlaxEngine
     }
 
     /// <summary>
-    /// Assets objects base class
+    /// Assets objects base class.
     /// </summary>
     public partial class Asset
 	{
