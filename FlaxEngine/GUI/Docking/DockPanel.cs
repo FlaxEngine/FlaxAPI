@@ -381,7 +381,7 @@ namespace FlaxEngine.GUI.Docking
                     for (int i = 0; i < childPanel.Count; i++)
                     {
                         // Undock all tabs
-                        var panel = childPanel[0];
+                        var panel = childPanel[i];
                         int count = panel.TabsCount;
                         while (count-- > 0)
                         {

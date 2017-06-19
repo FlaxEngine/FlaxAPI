@@ -283,7 +283,7 @@ namespace FlaxEngine.GUI.Docking
                 var tab = getTabAtPos(location, out overCross);
 
                 // Check if tabs are the same and cross was pressed
-                if (tab != null && tab == MouseDownWindow && IsMouseDownOverCross & overCross)
+                if (tab != null && tab == MouseDownWindow && IsMouseDownOverCross && overCross)
                     tab.Close(ClosingReason.User);
                 MouseDownWindow = null;
             }

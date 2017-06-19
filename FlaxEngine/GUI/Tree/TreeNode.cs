@@ -194,9 +194,9 @@ namespace FlaxEngine.GUI
             ExpandAllParents();
 
             // Chnage state
-            bool prevStae = _opened;
+            bool prevState = _opened;
             _opened = true;
-            if (prevStae != _opened)
+            if (prevState != _opened)
                 _animationProgress = 1.0f - _animationProgress;
 
             // Check if drag is over
@@ -216,9 +216,9 @@ namespace FlaxEngine.GUI
         public void Collapse()
         {
             // Chnage state
-            bool prevStae = _opened;
+            bool prevState = _opened;
             _opened = false;
-            if (prevStae != _opened)
+            if (prevState != _opened)
                 _animationProgress = 1.0f - _animationProgress;
 
             // Check if drag is over

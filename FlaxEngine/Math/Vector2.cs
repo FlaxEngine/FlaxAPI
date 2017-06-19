@@ -1580,7 +1580,7 @@ namespace FlaxEngine
         public string ToString(string format, IFormatProvider formatProvider)
         {
             if (format == null)
-                ToString(formatProvider);
+                return ToString(formatProvider);
 
             return string.Format(formatProvider, _formatString, X.ToString(format, formatProvider), Y.ToString(format, formatProvider));
         }

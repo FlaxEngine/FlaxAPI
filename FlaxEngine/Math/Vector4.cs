@@ -1479,7 +1479,7 @@ namespace FlaxEngine
         public string ToString(string format, IFormatProvider formatProvider)
         {
             if (format == null)
-                ToString(formatProvider);
+                return ToString(formatProvider);
 
             return string.Format(formatProvider, "X:{0} Y:{1} Z:{2} W:{3}", X.ToString(format, formatProvider),
                 Y.ToString(format, formatProvider), Z.ToString(format, formatProvider), W.ToString(format, formatProvider));

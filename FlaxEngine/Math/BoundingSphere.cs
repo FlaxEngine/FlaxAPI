@@ -255,7 +255,7 @@ namespace FlaxEngine
                 throw new ArgumentOutOfRangeException("start", start, string.Format("Must be in the range [0, {0}]", points.Length - 1));
 
             // Check that count is in the correct range
-            if ((count < 0) || (start + count > points.Length))
+            if ((count <= 0) || (start + count > points.Length))
                 throw new ArgumentOutOfRangeException("count", count, string.Format("Must be in the range <= {0}", points.Length));
 
             int upperEnd = start + count;
