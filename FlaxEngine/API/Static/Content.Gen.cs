@@ -15,75 +15,75 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
 	/// <summary>
-	/// Loads and manages assets that can be used by the Engine
+	/// Loads and manages asset objects.
 	/// </summary>
 	public static partial class Content
 	{
 		/// <summary>
-		/// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
+		/// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not created (see log for error info).
 		/// </summary>
 		/// <param name="id">Asset unique ID.</param>
 		/// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
-		/// <returns>Asset instance if loaded, null otherwise</returns>
+		/// <returns>Asset instance if loaded, null otherwise.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static T Load<T>(Guid id) where T : Asset
+		public static T LoadAsync<T>(Guid id) where T : Asset
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return (T)Internal_Load1(ref id, typeof(T));
+			return (T)Internal_LoadAsync1(ref id, typeof(T));
 #endif
 		}
 
 		/// <summary>
-		/// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
+		/// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not created (see log for error info).
 		/// </summary>
 		/// <param name="path">Path to the asset.</param>
 		/// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
-		/// <returns>Asset instance if loaded, null otherwise</returns>
+		/// <returns>Asset instance if loaded, null otherwise.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static T Load<T>(string path) where T : Asset
+		public static T LoadAsync<T>(string path) where T : Asset
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return (T)Internal_Load2(path, typeof(T));
+			return (T)Internal_LoadAsync2(path, typeof(T));
 #endif
 		}
 
 		/// <summary>
-		/// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
+		/// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not created (see log for error info).
 		/// </summary>
 		/// <param name="internalPath">Intenral path to the asset. Relative to the Engine startup folder and without an asset file extension.</param>
 		/// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
-		/// <returns>Asset instance if loaded, null otherwise</returns>
+		/// <returns>Asset instance if loaded, null otherwise.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static T LoadInternal<T>(string internalPath) where T : Asset
+		public static T LoadAsyncInternal<T>(string internalPath) where T : Asset
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return (T)Internal_Load3(internalPath, typeof(T));
+			return (T)Internal_LoadAsync3(internalPath, typeof(T));
 #endif
 		}
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Asset Internal_Load1(ref Guid id, Type type);
+		internal static extern Asset Internal_LoadAsync1(ref Guid id, Type type);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Asset Internal_Load2(string path, Type type);
+		internal static extern Asset Internal_LoadAsync2(string path, Type type);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Asset Internal_Load3(string internalPath, Type type);
+		internal static extern Asset Internal_LoadAsync3(string internalPath, Type type);
 #endif
 #endregion
 	}

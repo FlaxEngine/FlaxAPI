@@ -3,10 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
@@ -26,13 +23,10 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="id">Asset unique ID.</param>
         /// <returns>Asset instance if loaded, null otherwise</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
-        public static Asset Load(Guid id)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Asset LoadAsync(Guid id)
         {
-            return Load<Asset>(id);
+            return LoadAsync<Asset>(id);
         }
 
         /// <summary>
@@ -40,12 +34,10 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="path">Path to the asset.</param>
         /// <returns>Asset instance if loaded, null otherwise</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        public static Asset Load(string path)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Asset LoadAsync(string path)
         {
-            return Load<Asset>(path);
+            return LoadAsync<Asset>(path);
         }
 
         /// <summary>
@@ -53,12 +45,97 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="internalPath">Intenral path to the asset. Relative to the Engine startup folder.</param>
         /// <returns>Asset instance if loaded, null otherwise</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        public static Asset LoadInternal(string internalPath)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Asset LoadAsyncInternal(string internalPath)
         {
-            return LoadInternal<Asset>(internalPath);
+            return LoadAsyncInternal<Asset>(internalPath);
+        }
+
+        /// <summary>
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
+        /// Waits until asset will be loaded. It's equivalent to LoadAsync + WaitForLoaded.
+        /// </summary>
+        /// <param name="id">Asset unique ID.</param>
+        /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
+        /// <returns>Asset instance if loaded, null otherwise</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Asset Load(Guid id, double timeoutInMiliseconds = 10000.0)
+        {
+            return Load<Asset>(id, timeoutInMiliseconds);
+        }
+
+        /// <summary>
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
+        /// Waits until asset will be loaded. It's equivalent to LoadAsync + WaitForLoaded.
+        /// </summary>
+        /// <param name="path">Path to the asset.</param>
+        /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
+        /// <returns>Asset instance if loaded, null otherwise</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Asset Load(string path, double timeoutInMiliseconds = 10000.0)
+        {
+            return Load<Asset>(path, timeoutInMiliseconds);
+        }
+
+        /// <summary>
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
+        /// Waits until asset will be loaded. It's equivalent to LoadAsync + WaitForLoaded.
+        /// </summary>
+        /// <param name="internalPath">Intenral path to the asset. Relative to the Engine startup folder.</param>
+        /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
+        /// <returns>Asset instance if loaded, null otherwise</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Asset LoadInternal(string internalPath, double timeoutInMiliseconds = 10000.0)
+        {
+            return LoadInternal<Asset>(internalPath, timeoutInMiliseconds);
+        }
+
+        /// <summary>
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
+        /// Waits until asset will be loaded. It's equivalent to LoadAsync + WaitForLoaded.
+        /// </summary>
+        /// <param name="id">Asset unique ID.</param>
+        /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
+        /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
+        /// <returns>Asset instance if loaded, null otherwise</returns>
+        public static T Load<T>(Guid id, double timeoutInMiliseconds = 10000.0) where T : Asset
+        {
+            var asset = LoadAsync<T>(id);
+            if (asset && asset.WaitForLoaded(timeoutInMiliseconds) == false)
+                return asset;
+            return null;
+        }
+
+        /// <summary>
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
+        /// Waits until asset will be loaded. It's equivalent to LoadAsync + WaitForLoaded.
+        /// </summary>
+        /// <param name="path">Path to the asset.</param>
+        /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
+        /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
+        /// <returns>Asset instance if loaded, null otherwise</returns>
+        public static T Load<T>(string path, double timeoutInMiliseconds = 10000.0) where T : Asset
+        {
+            var asset = LoadAsync<T>(path);
+            if (asset && asset.WaitForLoaded(timeoutInMiliseconds) == false)
+                return asset;
+            return null;
+        }
+
+        /// <summary>
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
+        /// Waits until asset will be loaded. It's equivalent to LoadAsync + WaitForLoaded.
+        /// </summary>
+        /// <param name="internalPath">Intenral path to the asset. Relative to the Engine startup folder and without an asset file extension.</param>
+        /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
+        /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
+        /// <returns>Asset instance if loaded, null otherwise</returns>
+        public static T LoadInternal<T>(string internalPath, double timeoutInMiliseconds = 10000.0) where T : Asset
+        {
+            var asset = LoadAsyncInternal<T>(internalPath);
+            if (asset && asset.WaitForLoaded(timeoutInMiliseconds) == false)
+                return asset;
+            return null;
         }
     }
 }

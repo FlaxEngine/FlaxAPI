@@ -33,6 +33,19 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Returns true if asset is loaded.
+		/// </summary>
+		[UnmanagedCall]
+		public bool IsLoaded
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetIsLoaded(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
 		/// Gets amount of references to that asset
 		/// </summary>
 		[UnmanagedCall]
@@ -67,6 +80,8 @@ namespace FlaxEngine
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern string Internal_GetName(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_GetIsLoaded(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern int Internal_GetRefCount(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]

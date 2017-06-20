@@ -1,4 +1,4 @@
-// Flax Engine scripting API
+﻿// Flax Engine scripting API
 
 using FlaxEditor.GUI;
 using FlaxEngine;
@@ -63,13 +63,7 @@ namespace FlaxEditor.Modules
                     // Error
                     return Sprite.Invalid;
                 }
-            }
-
-            // Wait for asset loaded
-            if (_iconsAtlas.WaitForLoaded())
-            {
-                // Error
-                return Sprite.Invalid;
+                Assert.IsTrue(_iconsAtlas.IsLoaded);
             }
 
             // Find icon
