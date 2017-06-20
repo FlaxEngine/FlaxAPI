@@ -265,15 +265,16 @@ namespace FlaxEditor.Content
             if (DefaultThumbnailName != null)
                 return;
 
-            throw new NotImplementedException();
-
-            /*auto manager = CWindowsModule->ContentWin->GetPreviewManager();
+            var thumbnails = Editor.Instance.Thumbnails;
 
             // Delete old thumbnail and remove it from the cache
-            manager->DeletePreview(this);
+            thumbnails.DeletePreview(this);
 
-            // Request new wone
-            manager->LoadPreview(this);*/
+            // Request new one (if need to)
+            if (_references.Count > 0)
+            {
+                thumbnails.RequestPreview(this);
+            }
         }
 
         /// <summary>
@@ -430,8 +431,7 @@ namespace FlaxEditor.Content
         /// </summary>
         protected void RequestThumbnail()
         {
-            // TODO: call previews manager
-            //CWindowsModule->ContentWin->GetPreviewManager()->LoadPreview(this);
+            Editor.Instance.Thumbnails.RequestPreview(this);
         }
 
         /// <summary>
@@ -439,8 +439,8 @@ namespace FlaxEditor.Content
         /// </summary>
         protected void ReleaseThumbnail()
         {
-            // TODO: call previews manager
-            //CWindowsModule->ContentWin->GetPreviewManager()->ReleasePreview(this);
+            // Simply unlink sprite
+            _thumbnail = Sprite.Invalid;
         }
 
         /// <summary>
