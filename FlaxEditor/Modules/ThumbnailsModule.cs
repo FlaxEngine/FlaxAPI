@@ -12,7 +12,7 @@ namespace FlaxEditor.Modules
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class ThumbnailsModule : EditorModule, IContentItemOwner
     {
-        private List<PreviewsCache> _cache;
+        private readonly List<PreviewsCache> _cache = new List<PreviewsCache>();
         private string _cacheFolder;
 
         private readonly List<ContentItem> _requests = new List<ContentItem>(128);

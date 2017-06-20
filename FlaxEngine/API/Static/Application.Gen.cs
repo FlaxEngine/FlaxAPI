@@ -97,6 +97,20 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets or sets the current mouse position in the screen coordinates.
+		/// </summary>
+		[UnmanagedCall]
+		public static Vector2 MousePosition
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { Vector2 resultAsRef; Internal_GetMousePosition(out resultAsRef); return resultAsRef; }
+			set { Internal_SetMousePosition(ref value); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -111,6 +125,10 @@ namespace FlaxEngine
 		internal static extern void Internal_GetDesktopSize(out Vector2 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetVirtualDesktopSize(out Vector2 resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetMousePosition(out Vector2 resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetMousePosition(ref Vector2 val);
 #endif
 #endregion
 	}
