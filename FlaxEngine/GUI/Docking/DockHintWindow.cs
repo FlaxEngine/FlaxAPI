@@ -101,23 +101,21 @@ namespace FlaxEngine.GUI.Docking
             }
             else
             {
-                throw new NotImplementedException("dock floating window");
-
-                /*bool hasNoChildPanels = _toMove->_childPanels.Count() == 0;
+                bool hasNoChildPanels = _toMove.ChildPanelsCount == 0;
 
                 // Check if window has only single tab
-                if (hasNoChildPanels && _toMove->_tabs.Count() == 1)
+                if (hasNoChildPanels && _toMove.TabsCount == 1)
                 {
                     // Dock window
-                    _toMove->_tabs[0]->Show(_toSet, _toDock);
+                    _toMove.GetTab(0).Show(_toSet, _toDock);
                 }
                 // Check if dock as tab and has no child panels
-                else if (hasNoChildPanels && _toSet == DockState::DockFill)
+                else if (hasNoChildPanels && _toSet == DockState.DockFill)
                 {
                     // Dock all tabs
-                    while (_toMove->_tabs.Count() > 0)
+                    while (_toMove.TabsCount > 0)
                     {
-                        _toMove->_tabs[0]->Show(DockState::DockFill, _toDock);
+                        _toMove.GetTab(0).Show(DockState.DockFill, _toDock);
                     }
                 }
                 else
@@ -132,7 +130,7 @@ namespace FlaxEngine.GUI.Docking
                 }
 
                 // Focus target window
-                _toDock.ParentWindow.Focus();*/
+                _toDock.ParentWindow.Focus();
             }
         }
 
