@@ -1,6 +1,11 @@
 @echo off
 
-start /MIN xcopy /s /y "FlaxEditor\bin" "..\Source\Bin\Editor\Assemblies"
-start /MIN xcopy /s /y "FlaxEngine\bin" "..\Source\Bin\Editor\Assemblies"
+set outputDir="..\Source\Bin\Editor\Assemblies"
 
-echo Done!
+if exist %outputDir% (
+	echo Copy Flax assemblies
+	start /MIN xcopy /s /y "FlaxEditor\bin" %outputDir%
+	start /MIN xcopy /s /y "FlaxEngine\bin" %outputDir%
+	echo Done!
+)
+
