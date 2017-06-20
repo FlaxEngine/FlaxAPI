@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -280,10 +280,10 @@ namespace FlaxEditor.Content.GUI
         /// <summary>
         /// Refreshes thumbnails of all itmes in the <see cref="ContentView"/>.
         /// </summary>
-        public void RefreshPreviews()
+        public void RefreshThumbnails()
         {
             for (int i = 0; i < _items.Count; i++)
-                _items[i].RefreshPreview();
+                _items[i].RefreshThumbnail();
         }
 
         #region Internal events

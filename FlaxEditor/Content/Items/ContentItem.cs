@@ -77,9 +77,9 @@ namespace FlaxEditor.Content
     {
         public const int DefaultMarginSize = 4;
         public const int DefaultTextHeight = 42;
-        public const int DefaultIconSize = PreviewsCache.AssetIconSize;
-        public const int DefaultWidth = (DefaultIconSize + 2 * DefaultMarginSize);
-        public const int DefaultHeight = (DefaultIconSize + 2 * DefaultMarginSize + DefaultTextHeight);
+        public const int DefaultThumbnailSize = PreviewsCache.AssetIconSize;
+        public const int DefaultWidth = (DefaultThumbnailSize + 2 * DefaultMarginSize);
+        public const int DefaultHeight = (DefaultThumbnailSize + 2 * DefaultMarginSize + DefaultTextHeight);
 
         private ContentFolder _parentFolder;
 
@@ -87,8 +87,8 @@ namespace FlaxEditor.Content
         protected Vector2 _mouseDownStartPos;
         protected readonly List<IContentItemOwner> _references = new List<IContentItemOwner>(4);
 
-        protected Sprite _icon;
-        protected Sprite _shadow;
+        protected Sprite _thumbnail;
+        protected Sprite _shadowIcon;
 
         /// <summary>
         /// Gets the item domain.
@@ -205,24 +205,24 @@ namespace FlaxEditor.Content
         }
 
         /// <summary>
-        /// Gets the default name of the content item icon.
+        /// Gets the default name of the content item thumbnail.
         /// Returns null if not used.
         /// </summary>
         /// <value>
         /// The default name of the preview.
         /// </value>
-        public virtual string DefaultPreviewName => null;
+        public virtual string DefaultThumbnailName => null;
 
         /// <summary>
-        /// Gets or sets the icon. Warning, icon may not be available if item has no references (<see cref="ReferencesCount"/>).
+        /// Gets or sets the item thumbnail. Warning, thumbnail may not be available if item has no references (<see cref="ReferencesCount"/>).
         /// </summary>
         /// <value>
-        /// The icon.
+        /// The thumbnail.
         /// </value>
-        public Sprite Icon
+        public Sprite Thumbnail
         {
-            get => _icon;
-            set => _icon = value;
+            get => _thumbnail;
+            set => _thumbnail = value;
         }
 
         /// <summary>
@@ -257,22 +257,22 @@ namespace FlaxEditor.Content
         }
 
         /// <summary>
-        /// Refreshes the item preview.
+        /// Refreshes the item thumbnail.
         /// </summary>
-        public virtual void RefreshPreview()
+        public virtual void RefreshThumbnail()
         {
-            // Skip if item has default preview
-            if (DefaultPreviewName != null)
+            // Skip if item has default thumbnail
+            if (DefaultThumbnailName != null)
                 return;
 
             throw new NotImplementedException();
 
             /*auto manager = CWindowsModule->ContentWin->GetPreviewManager();
 
-            // Delete preview and remove it from cache
+            // Delete old thumbnail and remove it from the cache
             manager->DeletePreview(this);
 
-            // Request icon
+            // Request new wone
             manager->LoadPreview(this);*/
         }
 
@@ -340,26 +340,26 @@ namespace FlaxEditor.Content
         }
 
         /// <summary>
-        /// Draws the item icon.
+        /// Draws the item thumbnail.
         /// </summary>
-        /// <param name="iconRect">The icon rectangle.</param>
-        public void DrawIcon(ref Rectangle iconRect)
+        /// <param name="rectangle">The thumbnail rectangle.</param>
+        public void DrawThumbnail(ref Rectangle rectangle)
         {
             // Draw shadow
             if (DrawShadow)
             {
-                const float iconInShadowSize = 50.0f;
-                var shadowRect = iconRect.MakeExpanded((DefaultIconSize - iconInShadowSize) * iconRect.Width / DefaultIconSize * 1.3f);
-                if (!_shadow.IsValid)
-                    _shadow = Editor.Instance.UI.GetIcon("AssetShadow");
-                Render2D.DrawSprite(_shadow, shadowRect);
+                const float thumbnailInShadowSize = 50.0f;
+                var shadowRect = rectangle.MakeExpanded((DefaultThumbnailSize - thumbnailInShadowSize) * rectangle.Width / DefaultThumbnailSize * 1.3f);
+                if (!_shadowIcon.IsValid)
+                    _shadowIcon = Editor.Instance.UI.GetIcon("AssetShadow");
+                Render2D.DrawSprite(_shadowIcon, shadowRect);
             }
 
-            // Draw icon
-            if (_icon.IsValid)
-                Render2D.DrawSprite(_icon, iconRect);
+            // Draw thumbnail
+            if (_thumbnail.IsValid)
+                Render2D.DrawSprite(_thumbnail, rectangle);
             else
-                Render2D.FillRectangle(iconRect, Color.Black);
+                Render2D.FillRectangle(rectangle, Color.Black);
         }
 
         /// <summary>
@@ -382,9 +382,9 @@ namespace FlaxEditor.Content
             _references.Add(obj);
 
             // Check if need to generate preview
-            if (_references.Count > 0 && !_icon.IsValid)
+            if (_references.Count > 0 && !_thumbnail.IsValid)
             {
-                RequestIcon();
+                RequestThumbnail();
             }
         }
 
@@ -399,9 +399,9 @@ namespace FlaxEditor.Content
             _references.Remove(obj);
 
             // Check if need to release the preview
-            if (_references.Count == 0 && _icon.IsValid)
+            if (_references.Count == 0 && _thumbnail.IsValid)
             {
-                ReleaseIcon();
+                ReleaseThumbnail();
             }
         }
 
@@ -418,26 +418,26 @@ namespace FlaxEditor.Content
                 RemoveReference(reference);
             }
 
-            // Release icon
-            if (_icon.IsValid)
+            // Release thumbnail
+            if (_thumbnail.IsValid)
             {
-                ReleaseIcon();
+                ReleaseThumbnail();
             }
         }
 
         /// <summary>
-        /// Requests the icon.
+        /// Requests the thumbnail.
         /// </summary>
-        protected void RequestIcon()
+        protected void RequestThumbnail()
         {
             // TODO: call previews manager
             //CWindowsModule->ContentWin->GetPreviewManager()->LoadPreview(this);
         }
 
         /// <summary>
-        /// Releases the icon.
+        /// Releases the thumbnail.
         /// </summary>
-        protected void ReleaseIcon()
+        protected void ReleaseThumbnail()
         {
             // TODO: call previews manager
             //CWindowsModule->ContentWin->GetPreviewManager()->ReleasePreview(this);
@@ -461,8 +461,8 @@ namespace FlaxEditor.Content
             var view = Parent as ContentView;
             bool isSelected = view.IsSelected(this);
             var clientRect = new Rectangle(0, 0, width, height);
-            float iconSize = width - 2 * DefaultMarginSize;
-            var iconRect = new Rectangle(DefaultMarginSize, DefaultMarginSize, iconSize, iconSize);
+            float thumbnailSize = width - 2 * DefaultMarginSize;
+            var thumbnailRect = new Rectangle(DefaultMarginSize, DefaultMarginSize, thumbnailSize, thumbnailSize);
             var textRect = TextRectangle;
 
             // Draw background
@@ -472,7 +472,7 @@ namespace FlaxEditor.Content
                 Render2D.FillRectangle(clientRect, style.BackgroundHighlighted);
 
             // Draw preview
-            DrawIcon(ref iconRect);
+            DrawThumbnail(ref thumbnailRect);
 
             // Draw short name
             Render2D.DrawText(style.FontMedium, ShortName, textRect, style.Foreground, TextAlignment.Center, TextAlignment.Center, TextWrapping.WrapWords, 0.75f, 0.95f);
@@ -582,10 +582,10 @@ namespace FlaxEditor.Content
                 RemoveReference(reference);
             }
 
-            // Release icon
-            if (_icon.IsValid)
+            // Release thumbnail
+            if (_thumbnail.IsValid)
             {
-                ReleaseIcon();
+                ReleaseThumbnail();
             }
 
             base.OnDestroy();

@@ -33,6 +33,6 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
-        public override string DefaultPreviewName => "Document64";
+        public override string DefaultThumbnailName => "Document64";
     }
 }

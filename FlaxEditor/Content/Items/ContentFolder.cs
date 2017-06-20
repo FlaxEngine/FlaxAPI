@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -138,7 +138,7 @@ namespace FlaxEditor.Content
         public override bool Exists => System.IO.Directory.Exists(Path);
 
         /// <inheritdoc />
-        public override string DefaultPreviewName => "Folder64";
+        public override string DefaultThumbnailName => "Folder64";
 
         /// <inheritdoc />
         public override void UpdatePath(string value)

@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -73,7 +73,7 @@ namespace FlaxEditor.Content
         public override ContentItemType ItemType => ContentItemType.Script;
 
         /// <inheritdoc />
-        public override string DefaultPreviewName => "Script64";
+        public override string DefaultThumbnailName => "Script64";
 
         /// <inheritdoc />
         public override ScriptItem FindScriptWitScriptName(string scriptName)
