@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -356,9 +356,9 @@ namespace FlaxEditor.Content
             }
 
             // Draw icon
-            /*if (_icon.IsValid)
+            if (_icon.IsValid)
                 Render2D.DrawSprite(_icon, iconRect);
-            else*/
+            else
                 Render2D.FillRectangle(iconRect, Color.Black);
         }
 

@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -17,12 +17,22 @@ namespace FlaxEditor.Content
     public sealed class NewItem : ContentItem
     {
         /// <summary>
+        /// Gets the proxy object related to the created asset.
+        /// </summary>
+        /// <value>
+        /// The content proxy.
+        /// </value>
+        public ContentProxy Proxy { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="NewItem"/> class.
         /// </summary>
         /// <param name="path">The path for the new item.</param>
-        public NewItem(string path)
+        /// <param name="proxy">The content proxy object.</param>
+        public NewItem(string path, ContentProxy proxy)
             : base(path)
         {
+            Proxy = proxy;
         }
 
         /// <inheritdoc />

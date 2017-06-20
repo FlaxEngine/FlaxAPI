@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -29,7 +29,7 @@ namespace FlaxEditor.Content
         /// Gets the asset import path.
         /// </summary>
         /// <param name="importPath">The import path.</param>
-        /// <returns>True if failes, otherwise false.</returns>
+        /// <returns>True if fails, otherwise false.</returns>
         public bool GetImportPath(out string importPath)
         {
             var asset = FlaxEngine.Content.Load(ID);

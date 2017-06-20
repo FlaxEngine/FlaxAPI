@@ -1,13 +1,8 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FlaxEngine;
 
 namespace FlaxEditor.Content
 {
@@ -18,6 +13,14 @@ namespace FlaxEditor.Content
     public class JsonAssetItem : AssetItem
     {
         /// <summary>
+        /// Gets the name of the asset type.
+        /// </summary>
+        /// <value>
+        /// The name of the type.
+        /// </value>
+        public string TypeName { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="JsonAssetItem"/> class.
         /// </summary>
         /// <param name="path">The path.</param>
@@ -26,6 +29,7 @@ namespace FlaxEditor.Content
         public JsonAssetItem(string path, Guid id, string typeName)
             : base(path, id)
         {
+            TypeName = typeName;
         }
 
         /// <inheritdoc />
