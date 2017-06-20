@@ -65,7 +65,7 @@ namespace FlaxEngine.GUI.Docking
             window.Hide();
 
             // Enable hit window presentation
-            Proxy.Window.RenderTask->Enabled = true;
+            Proxy.Window.RenderingEnabled = true;
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace FlaxEngine.GUI.Docking
             Proxy.Window.EndTrackingMouse();
 
             // Disable rendering
-            Proxy.Window.RenderTask->Enabled = false;
+            Proxy.Window.RenderingEnabled = false;
 
             // Unbind events
             Proxy.Window.OnMouseUp -= onMouseUp;

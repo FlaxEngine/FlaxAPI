@@ -587,6 +587,20 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets or sets value indicating whenever window rendering is enabled.
+		/// </summary>
+		[UnmanagedCall]
+		public bool RenderingEnabled
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetRenderingEnabled(unmanagedPtr); }
+			set { Internal_SetRenderingEnabled(unmanagedPtr, value); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -681,6 +695,10 @@ namespace FlaxEngine
 		internal static extern bool Internal_GetMouseButtonDown(IntPtr obj, MouseButtons button);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetMouseButtonUp(IntPtr obj, MouseButtons button);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_GetRenderingEnabled(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetRenderingEnabled(IntPtr obj, bool val);
 #endif
 #endregion
 	}
