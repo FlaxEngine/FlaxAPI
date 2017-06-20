@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -53,12 +53,12 @@ namespace FlaxEngine.GUI
         public bool IsFullscreen => _window.IsFullscreen;
 
         /// <summary>
-        /// Gets a value indicating whether this window is in widowed mode.
+        /// Gets a value indicating whether this window is in windowed mode.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this window is in widowed mode; otherwise, <c>false</c>.
+        ///   <c>true</c> if this window is in windowed mode; otherwise, <c>false</c>.
         /// </value>
-        public bool IsWidowed => _window.IsWidowed;
+        public bool IsWindowed => _window.IsWindowed;
 
         /// <summary>
         /// Gets a value indicating whether this instance is visible.

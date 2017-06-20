@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 using FlaxEditor.GUI;
 using FlaxEngine;
@@ -147,8 +147,8 @@ namespace FlaxEditor.Modules
             InitDockPanel(mainWindow);
 
             // Cache icons
-            FolderClosed12 = Editor.Instance.UI.GetIcon("FolderClosed12");
-            FolderOpened12 = Editor.Instance.UI.GetIcon("FolderOpened12");
+            FolderClosed12 = GetIcon("FolderClosed12");
+            FolderOpened12 = GetIcon("FolderOpened12");
         }
 
         /// <inheritdoc />
@@ -356,7 +356,6 @@ namespace FlaxEditor.Modules
         private void InitDockPanel(FlaxEngine.GUI.Window mainWindow)
         {
             // Dock Panel
-            MasterPanel = new MasterDockPanel();
             MasterPanel.Parent = mainWindow;
         }
 

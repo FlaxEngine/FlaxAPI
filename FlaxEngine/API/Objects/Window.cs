@@ -233,12 +233,12 @@ namespace FlaxEngine
         public event Action OnClosed;
 
         /// <summary>
-        /// Gets a value indicating whether this window is in widowed mode.
+        /// Gets a value indicating whether this window is in windowed mode.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this window is in widowed mode; otherwise, <c>false</c>.
+        ///   <c>true</c> if this window is in windowed mode; otherwise, <c>false</c>.
         /// </value>
-        public bool IsWidowed => !IsFullscreen;
+        public bool IsWindowed => !IsFullscreen;
 
         /// <summary>
         /// The window GUI root object.
@@ -308,7 +308,7 @@ namespace FlaxEngine
         internal void Internal_OnKeyUp(KeyCode key)
         {
             OnKeyUp?.Invoke(key);
-            GUI.OnKeyDown(key);
+            GUI.OnKeyUp(key);
         }
 
         internal void Internal_OnMouseDown(ref Vector2 mousePos, MouseButtons buttons)
@@ -406,7 +406,7 @@ namespace FlaxEngine
         {
             OnClosed?.Invoke();
 
-            // Force clear all events (we cannot window after close)
+            // Force clear all events (we cannot use window after close)
             OnKeyDown = null;
             OnKeyUp = null;
             OnMouseLeave = null;
