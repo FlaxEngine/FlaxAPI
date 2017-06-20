@@ -160,6 +160,7 @@
       <DependentUpon>Control.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\Control.cs" />
+    <Compile Include="GUI\Docking\DockHintWindow.cs" />
     <Compile Include="GUI\Docking\DockPanel.cs" />
     <Compile Include="GUI\Docking\DockPanelProxy.cs" />
     <Compile Include="GUI\Docking\DockWindow.cs" />

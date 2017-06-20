@@ -264,7 +264,7 @@ namespace FlaxEngine.GUI.Docking
         /// </summary>
         /// <param name="splitterValue">Splitter value</param>
         /// <returns>Dock State</returns>
-        public virtual DockState TryGetDockState(ref float splitterValue)
+        public virtual DockState TryGetDockState(out float splitterValue)
         {
             DockState result = DockState.Unknown;
             splitterValue = DefaultSplitterValue;

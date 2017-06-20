@@ -61,8 +61,7 @@ namespace FlaxEngine.GUI.Docking
                 return;
 
             // Create docking hint window
-            throw new NotImplementedException("Add DockHintWindow");
-            //var hintWindow = new DockHintWindow(this);
+            DockHintWindow.Create(this);
         }
 
         /// <summary>
@@ -130,14 +129,19 @@ namespace FlaxEngine.GUI.Docking
             _window.NativeWindow.OnClosing -= onClosing;
             _window.NativeWindow.OnLButtonHit = null;
             _window = null;
+
+            // Remove object
+            Assertions.Assert.IsTrue(_tabs.Count == 0 && _childPanels.Count == 0);
+            Dispose();
         }
 
         /// <inheritdoc />
         public override bool IsFloating => true;
 
         /// <inheritdoc />
-        public override DockState TryGetDockState(ref float splitterValue)
+        public override DockState TryGetDockState(out float splitterValue)
         {
+            splitterValue = 0.5f;
             return DockState.Float;
         }
 

@@ -99,7 +99,7 @@ namespace FlaxEngine.GUI.Docking
         /// <param name="position">Screen space position to test.</param>
         /// <param name="excluded">Floating window to ommit during searching (and all docked to that one).</param>
         /// <returns>Dock panel that has been hitted or null if nothing found.</returns>
-        public DockPanel HitTest(Vector2 position, FloatWindowDockPanel excluded)
+        public DockPanel HitTest(ref Vector2 position, FloatWindowDockPanel excluded)
         {
             // Check all floating windows
             // TODO: gather windows order and take it into account when performing test
@@ -150,8 +150,9 @@ namespace FlaxEngine.GUI.Docking
         }
 
         /// <inheritdoc />
-        public override DockState TryGetDockState(ref float splitterValue)
+        public override DockState TryGetDockState(out float splitterValue)
         {
+            splitterValue = 0.5f;
             return DockState.Unknown;
         }
     }

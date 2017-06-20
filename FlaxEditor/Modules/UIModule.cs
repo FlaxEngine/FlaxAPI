@@ -149,6 +149,9 @@ namespace FlaxEditor.Modules
         public override void OnExit()
         {
             _iconsAtlas = null;
+
+            // Cleanup dock panel hint proxy windows (Flax will destroy them by auto but it's better to clear them earlier)
+            DockHintWindow.Proxy.Dispsoe();
         }
 
         private void InitStyle(FlaxEngine.GUI.Window mainWindow)

@@ -115,7 +115,7 @@ namespace FlaxEngine.GUI.Docking
         {
             Scripting.OnLateUpdate -= startDragAsync;
 
-            /*if (StartDragAsyncWindow != null)
+            if (StartDragAsyncWindow != null)
             {
                 var win = StartDragAsyncWindow;
                 StartDragAsyncWindow = null;
@@ -124,7 +124,7 @@ namespace FlaxEngine.GUI.Docking
                 if (_panel.ChildPanelsCount == 0 && _panel.TabsCount == 1 && _panel.IsFloating)
                 {
                     // Create docking hint window but in an async manner
-                    new DockHintWindow(_panel as FloatWindowDockPanel);
+                    DockHintWindow.Create(_panel as FloatWindowDockPanel);
                 }
                 else
                 {
@@ -135,9 +135,9 @@ namespace FlaxEngine.GUI.Docking
                     _panel.SelectTab(index - 1);
 
                     // Create docking hint window
-                    new DockHintWindow(win);
+                    DockHintWindow.Create(win);
                 }
-            }*/
+            }
         }
 
         /// <inheritdoc />
