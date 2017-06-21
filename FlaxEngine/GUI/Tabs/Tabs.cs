@@ -18,6 +18,7 @@ namespace FlaxEngine.GUI.Tabs
         protected Vector2 _mosuePosition;
         protected Vector2 _mouseDownPos;
         protected bool _isMouseDown;
+        protected Orientation _orientation;
 
         /// <summary>
         /// Gets the size of the tabs.
@@ -28,12 +29,40 @@ namespace FlaxEngine.GUI.Tabs
         public virtual Vector2 TabsSize => new Vector2(70, 16);
 
         /// <summary>
+        /// Gets or sets the orientation.
+        /// </summary>
+        /// <value>
+        /// The orientation.
+        /// </value>
+        public Orientation Orientation
+        {
+            get => _orientation;
+            set
+            {
+                _orientation = value;
+                PerformLayout();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the color of the tab strip background.
+        /// </summary>
+        /// <value>
+        /// The color of the tab strip.
+        /// </value>
+        public Color TabStripColor { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Tabs"/> class.
         /// </summary>
         public Tabs()
             : base(false)
         {
             _selectedIndex = -1;
+            _orientation = Orientation.Horizontal;
+
+            BackgroundColor = Style.Current.Background;
+            TabStripColor = Style.Current.LightBackground;
         }
 
         /// <summary>
@@ -105,27 +134,54 @@ namespace FlaxEngine.GUI.Tabs
         public override void Draw()
         {
             base.Draw();
-
+            
             // Cache data
             var style = Style.Current;
             var tabSize = TabsSize;
             var tabRect = new Rectangle(Vector2.Zero, tabSize);
+            Rectangle tabStripRect;
+            Vector2 tabStripOffset;
+            if (_orientation == Orientation.Horizontal)
+            {
+                tabStripRect = new Rectangle(0, 0, Width, tabSize.Y);
+                tabStripOffset = new Vector2(tabSize.X, 0);
+            }
+            else
+            {
+                tabStripRect = new Rectangle(0, 0, tabSize.X, Height);
+                tabStripOffset = new Vector2(0, tabSize.Y);
+            }
 
-            // Draw bar background
-            Render2D.FillRectangle(new Rectangle(0, 0, Width, tabSize.Y), style.LightBackground);
+            // Draw tab strip background
+            Render2D.FillRectangle(tabStripRect, TabStripColor);
 
             // Draw all tabs
             for (int i = 0; i < _tabs.Count; i++)
             {
-                // Chek if is selected
-                bool isSelected = i == _selectedIndex;
+                var tab = _tabs[i];
+                bool isTabSelected = i == _selectedIndex;
+                bool isMouseOverTab = IsMouseOver && tabRect.MakeExpanded(-1).Contains(_mosuePosition);
 
                 // Draw bar
-                if (isSelected)
+                if (isTabSelected)
                     Render2D.FillRectangle(tabRect, style.BackgroundSelected);
+                else if (isMouseOverTab)
+                    Render2D.FillRectangle(tabRect, style.BackgroundHighlighted);
+
+                // Draw icon
+                if (tab.Icon.IsValid)
+                {
+                    Render2D.DrawSprite(tab.Icon, tabRect.MakeExpanded(-8));
+                }
+
+                // Draw text
+                if (!string.IsNullOrEmpty(tab.Text))
+                {
+
+                }
 
                 // Move
-                tabRect.Offset(tabSize.X, 0);
+                tabRect.Offset(tabStripOffset);
             }
         }
 
@@ -187,6 +243,9 @@ namespace FlaxEngine.GUI.Tabs
         {
             // Hide all pages except selected one
             var tabSize = TabsSize;
+            var clientArea = _orientation == Orientation.Horizontal
+                ? new Rectangle(0, tabSize.Y, Width, Height - tabSize.Y)
+                : new Rectangle(tabSize.X, 0, Width - tabSize.X, Height);
             for (int i = 0; i < _tabs.Count; i++)
             {
                 var tab = _tabs[i];
@@ -195,7 +254,7 @@ namespace FlaxEngine.GUI.Tabs
                 if (i == _selectedIndex)
                 {
                     // Show and fit size
-                    tab.Bounds = new Rectangle(0, tabSize.Y, Width, Height - tabSize.Y);
+                    tab.Bounds = clientArea;
                     tab.UnlockChildrenRecursive();
                     tab.Visible = true;
                 }
