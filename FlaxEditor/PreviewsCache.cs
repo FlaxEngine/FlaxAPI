@@ -30,5 +30,10 @@ namespace FlaxEditor
         /// The default format of previews atlas.
         /// </summary>
         public const PixelFormat AssetIconsAtlasFormat = PixelFormat.R8G8B8A8_UNorm;
+
+        /// <summary>
+        /// The previews cache asset type unique ID.
+        /// </summary>
+        public const int TypeID = 11;
     }
 }

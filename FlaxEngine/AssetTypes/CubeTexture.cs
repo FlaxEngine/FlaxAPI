@@ -10,5 +10,9 @@ namespace FlaxEngine
 {
     public sealed class CubeTexture : BinaryAsset
     {
+        /// <summary>
+        /// The cube texture asset type unique ID.
+        /// </summary>
+        public const int TypeID = 8;
     }
 }

@@ -10,5 +10,9 @@ namespace FlaxEngine
 {
     public sealed class Texture : BinaryAsset
     {
+        /// <summary>
+        /// The texture asset type unique ID.
+        /// </summary>
+        public const int TypeID = 1;
     }
 }

@@ -10,8 +10,11 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-	public partial class FontAsset
-	{
-		// TODO: This was auto-generated template made to keep file structure flow strict. Please add your custom implementations if needed.
-	}
+    public partial class FontAsset
+    {
+        /// <summary>
+        /// The font asset type unique ID.
+        /// </summary>
+        public const int TypeID = 6;
+    }
 }

@@ -11,5 +11,9 @@ namespace FlaxEngine
 {
     public sealed class Model : BinaryAsset
     {
+        /// <summary>
+        /// The model asset type unique ID.
+        /// </summary>
+        public const int TypeID = 3;
     }
 }

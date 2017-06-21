@@ -39,6 +39,9 @@ namespace FlaxEngine
 
     public partial class SpriteAtlas
     {
-        // TODO: This was auto-generated template made to keep file structure flow strict. Please add your custom implementations if needed.
+        /// <summary>
+        /// The sprite atlas asset type unique ID.
+        /// </summary>
+        public const int TypeID = 10;
     }
 }

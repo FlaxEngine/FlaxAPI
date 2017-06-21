@@ -10,5 +10,9 @@ namespace FlaxEngine
 {
     public sealed class Material : MaterialBase
     {
+        /// <summary>
+        /// The material asset type unique ID.
+        /// </summary>
+        public const int TypeID = 2;
     }
 }

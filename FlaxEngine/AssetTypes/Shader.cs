@@ -10,5 +10,9 @@ namespace FlaxEngine
 {
     public sealed class Shader : BinaryAsset
     {
+        /// <summary>
+        /// The shader asset type unique ID.
+        /// </summary>
+        public const int TypeID = 7;
     }
 }

@@ -10,5 +10,9 @@ namespace FlaxEngine
 {
     public sealed class IESProfile : BinaryAsset
     {
+        /// <summary>
+        /// The IES Profile asset type unique ID.
+        /// </summary>
+        public const int TypeID = 12;
     }
 }
