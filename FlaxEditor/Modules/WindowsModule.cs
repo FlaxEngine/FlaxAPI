@@ -45,6 +45,11 @@ namespace FlaxEditor.Modules
         public ContentWindow ContentWin;
 
         /// <summary>
+        /// The toolbox window.
+        /// </summary>
+        public ToolboxWindow ToolboxWin;
+
+        /// <summary>
         /// List with all created editor windows.
         /// </summary>
         public readonly List<EditorWindow> Windows = new List<EditorWindow>(32);
@@ -142,6 +147,7 @@ namespace FlaxEditor.Modules
 
             // Create default editor windows
             ContentWin = new ContentWindow(Editor);
+            ToolboxWin = new ToolboxWindow(Editor);
 
             // Bind events
             SceneManager.OnSceneSaveError += OnSceneSaveError;

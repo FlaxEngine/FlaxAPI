@@ -155,6 +155,7 @@ namespace FlaxEngine.GUI.Tabs
                 // TODO: drag and drop pages like ContentItem or TreeNode....
 
                 // Handled
+                Focus();
                 return true;
             }
 
@@ -174,6 +175,7 @@ namespace FlaxEngine.GUI.Tabs
                     SelectTab(index);
 
                 // Handled
+                Focus();
                 return true;
             }
 

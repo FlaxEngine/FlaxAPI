@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 using FlaxEditor.GUI;
 using FlaxEngine;
@@ -630,7 +630,7 @@ namespace FlaxEditor.Modules
                 // Windows
                 case 10: Editor.Windows.ContentWin.FocusOrShow(); break;
                 //case 11: Editor.Windows.SceneTreeWin.FocusOrShow(); break;
-                //case 12: Editor.Windows.ToolboxWin.FocusOrShow(); break;
+                case 12: Editor.Windows.ToolboxWin.FocusOrShow(); break;
                 //case 13: Editor.Windows.PropertiesWin.FocusOrShow(); break;
                 //case 14: Editor.Windows.QualityWin.FocusOrShow(); break;
                 //case 15: Editor.Windows.GameWin.FocusOrShow(); break;
