@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -655,9 +655,15 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void Draw()
         {
-            // Base
             base.Draw();
+            DrawChildren();
+        }
 
+        /// <summary>
+        /// Draws all the children.
+        /// </summary>
+        protected void DrawChildren()
+        {
             Vector2 transform = Render2D.Transform;
 
             // Push clipping mask
