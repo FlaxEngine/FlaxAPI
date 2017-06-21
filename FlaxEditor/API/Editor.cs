@@ -177,10 +177,10 @@ namespace FlaxEditor
         internal void Exit()
         {
             Debug.Log("Editor exit");
-
+            
             // Start exit
             StateMachine.GoToState<ClosingState>();
-
+            
             // Release modules (from back to front)
             for (int i = _modules.Count - 1; i >= 0; i--)
             {

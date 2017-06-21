@@ -38,6 +38,8 @@ namespace FlaxEditor.Windows
             _tree.Parent = this;
 
             // TODO: create context menu
+
+            // TODO: disable node action if scene editing is not allowed
         }
 
         private void Tree_OnOnSelectedChanged(List<TreeNode> before, List<TreeNode> after)

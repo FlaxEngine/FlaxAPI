@@ -14,14 +14,24 @@ namespace FlaxEditor.Content
     public class BinaryAssetItem : AssetItem
     {
         /// <summary>
+        /// Gets the asset type identifier.
+        /// </summary>
+        /// <value>
+        /// The asset type identifier.
+        /// </value>
+        public int TypeID { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="BinaryAssetItem"/> class.
         /// </summary>
         /// <param name="path">The asset path.</param>
         /// <param name="id">The asset identifier.</param>
+        /// <param name="typeId">The asset type identifier.</param>
         /// <param name="domain">The asset domain.</param>
-        public BinaryAssetItem(string path, Guid id, ContentDomain domain)
+        public BinaryAssetItem(string path, Guid id, int typeId, ContentDomain domain)
             : base(path, id)
         {
+            TypeID = typeId;
             ItemDomain = domain;
         }
 

@@ -18,14 +18,19 @@ namespace FlaxEditor.Content
         /// </summary>
         public static readonly string Extension = "flax";
         
-        // Check if proxy supports given asset type name id
-        //virtual bool IsTypeNameID(uint32 typeNameID) const = 0;
-
-        /*public override bool IsProxyFor(ContentItem item)
+        /// <summary>
+        /// Checks if this proxy supports the given asset type id.
+        /// </summary>
+        /// <param name="typeID">The asset type identifier.</param>
+        /// <returns>True if proxy supports assets of the given type id.</returns>
+        public abstract bool AcceptsTypeID(int typeID);
+        
+        /// <inheritdoc />
+        public override bool IsProxyFor(ContentItem item)
         {
-            return item != null && item.IsAsset && IsTypeNameID(static_cast<AssetElement*>(el)->GetTypeID());
+            return item is BinaryAssetItem binaryAssetItem && AcceptsTypeID(binaryAssetItem.TypeID);
         }
-        */
+
         /// <inheritdoc />
         public override string FileExtension => Extension;
     }
