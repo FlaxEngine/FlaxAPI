@@ -29,6 +29,24 @@ namespace FlaxEngine.GUI.Tabs
         /// <summary>
         /// Initializes a new instance of the <see cref="Tab"/> class.
         /// </summary>
+        /// <param name="icon">The icon.</param>
+        public Tab(Sprite icon)
+            : this(string.Empty, icon)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Tab"/> class.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        public Tab(string text)
+            : this(text, Sprite.Invalid)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Tab"/> class.
+        /// </summary>
         /// <param name="text">The text.</param>
         /// <param name="icon">The icon.</param>
         public Tab(string text, Sprite icon)

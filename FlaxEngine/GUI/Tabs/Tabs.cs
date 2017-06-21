@@ -18,6 +18,7 @@ namespace FlaxEngine.GUI.Tabs
         protected Vector2 _mosuePosition;
         protected Vector2 _mouseDownPos;
         protected bool _isMouseDown;
+        protected Vector2 _tabsSize;
         protected Orientation _orientation;
 
         /// <summary>
@@ -26,7 +27,15 @@ namespace FlaxEngine.GUI.Tabs
         /// <value>
         /// The size of the tabs.
         /// </value>
-        public virtual Vector2 TabsSize => new Vector2(70, 16);
+        public Vector2 TabsSize
+        {
+            get => _tabsSize;
+            set
+            {
+                _tabsSize = value;
+                PerformLayout();
+            }
+        } 
 
         /// <summary>
         /// Gets or sets the orientation.
@@ -59,6 +68,7 @@ namespace FlaxEngine.GUI.Tabs
             : base(false)
         {
             _selectedIndex = -1;
+            _tabsSize = new Vector2(70, 16);
             _orientation = Orientation.Horizontal;
 
             BackgroundColor = Style.Current.Background;
@@ -137,19 +147,18 @@ namespace FlaxEngine.GUI.Tabs
             
             // Cache data
             var style = Style.Current;
-            var tabSize = TabsSize;
-            var tabRect = new Rectangle(Vector2.Zero, tabSize);
+            var tabRect = new Rectangle(Vector2.Zero, _tabsSize);
             Rectangle tabStripRect;
             Vector2 tabStripOffset;
             if (_orientation == Orientation.Horizontal)
             {
-                tabStripRect = new Rectangle(0, 0, Width, tabSize.Y);
-                tabStripOffset = new Vector2(tabSize.X, 0);
+                tabStripRect = new Rectangle(0, 0, Width, _tabsSize.Y);
+                tabStripOffset = new Vector2(_tabsSize.X, 0);
             }
             else
             {
-                tabStripRect = new Rectangle(0, 0, tabSize.X, Height);
-                tabStripOffset = new Vector2(0, tabSize.Y);
+                tabStripRect = new Rectangle(0, 0, _tabsSize.X, Height);
+                tabStripOffset = new Vector2(0, _tabsSize.Y);
             }
 
             // Draw tab strip background
@@ -164,9 +173,27 @@ namespace FlaxEngine.GUI.Tabs
 
                 // Draw bar
                 if (isTabSelected)
-                    Render2D.FillRectangle(tabRect, style.BackgroundSelected);
+                {
+                    if (_orientation == Orientation.Horizontal)
+                    {
+                        Render2D.FillRectangle(tabRect, style.BackgroundSelected);
+                    }
+                    else
+                    {
+                        const float lefEdgeWidth = 4;
+                        var leftEdgeRect = tabRect;
+                        leftEdgeRect.Size.X = lefEdgeWidth;
+                        var fillRect = tabRect;
+                        fillRect.Size.X -= lefEdgeWidth;
+                        fillRect.Location.X += lefEdgeWidth;
+                        Render2D.FillRectangle(fillRect, style.Background);
+                        Render2D.FillRectangle(leftEdgeRect, style.BackgroundSelected);
+                    }
+                }
                 else if (isMouseOverTab)
+                {
                     Render2D.FillRectangle(tabRect, style.BackgroundHighlighted);
+                }
 
                 // Draw icon
                 if (tab.Icon.IsValid)
@@ -177,7 +204,7 @@ namespace FlaxEngine.GUI.Tabs
                 // Draw text
                 if (!string.IsNullOrEmpty(tab.Text))
                 {
-
+                    // TODO: draw text
                 }
 
                 // Move
@@ -205,8 +232,7 @@ namespace FlaxEngine.GUI.Tabs
         public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
             // Check if mosue is over the header
-            var tabSize = TabsSize;
-            if (location.Y <= tabSize.Y)
+            if (location.Y <= _tabsSize.Y)
             {
                 // TODO: drag and drop pages like ContentItem or TreeNode....
 
@@ -222,11 +248,10 @@ namespace FlaxEngine.GUI.Tabs
         public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
         {
             // Check if mosue is over the header
-            var tabSize = TabsSize;
-            if (location.Y <= tabSize.Y)
+            if (location.Y <= _tabsSize.Y)
             {
                 // Check if any tab is being selected
-                int index = Mathf.FloorToInt(location.X / tabSize.X);
+                int index = Mathf.FloorToInt(location.X / _tabsSize.X);
                 if (index < _tabs.Count)
                     SelectTab(index);
 
@@ -242,10 +267,9 @@ namespace FlaxEngine.GUI.Tabs
         protected override void PerformLayoutSelf()
         {
             // Hide all pages except selected one
-            var tabSize = TabsSize;
             var clientArea = _orientation == Orientation.Horizontal
-                ? new Rectangle(0, tabSize.Y, Width, Height - tabSize.Y)
-                : new Rectangle(tabSize.X, 0, Width - tabSize.X, Height);
+                ? new Rectangle(0, _tabsSize.Y, Width, Height - _tabsSize.Y)
+                : new Rectangle(_tabsSize.X, 0, Width - _tabsSize.X, Height);
             for (int i = 0; i < _tabs.Count; i++)
             {
                 var tab = _tabs[i];
