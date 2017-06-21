@@ -19,6 +19,7 @@ namespace FlaxEditor.Windows
         public GameWindow(Editor editor)
             : base(editor, true, ScrollBars.None)
         {
+            Title = "Game";
         }
     }
 }

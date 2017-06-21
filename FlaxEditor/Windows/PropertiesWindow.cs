@@ -19,6 +19,7 @@ namespace FlaxEditor.Windows
         public PropertiesWindow(Editor editor)
             : base(editor, true, ScrollBars.None)
         {
+            Title = "Properties";
         }
     }
 }
