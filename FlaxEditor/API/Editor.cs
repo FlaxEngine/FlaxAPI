@@ -191,6 +191,22 @@ namespace FlaxEditor
         }
 
         /// <summary>
+        /// Undo last action.
+        /// </summary>
+        public void Undo()
+        {
+            // TODO: undo/redo
+        }
+
+        /// <summary>
+        /// Redo last action.
+        /// </summary>
+        public void Redo()
+        {
+            // TODO: undo/redo
+        }
+
+        /// <summary>
         /// Saves all changes (scenes, assets, etc.).
         /// </summary>
         public void SaveAll()

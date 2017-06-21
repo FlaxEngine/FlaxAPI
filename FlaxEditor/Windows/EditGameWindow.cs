@@ -9,8 +9,8 @@ namespace FlaxEditor.Windows
     /// <summary>
     /// Main editor window used to modify scene objects. Provides Gizmos and camera viewport navigation.
     /// </summary>
-    /// <seealso cref="FlaxEditor.Windows.EditorWindow" />
-    public class EditGameWindow : EditorWindow
+    /// <seealso cref="FlaxEditor.Windows.SceneEditorWindow" />
+    public class EditGameWindow : SceneEditorWindow
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EditGameWindow"/> class.
