@@ -45,6 +45,8 @@ namespace FlaxEditor.Modules
         {
             // Init content database after Widows module
             InitOrder = -90;
+
+            CreateStyle();
         }
 
         /// <summary>
@@ -133,16 +135,12 @@ namespace FlaxEditor.Modules
         {
             Editor.Windows.OnMainWindowClosing += OnOnMainWindowClosing;
             var mainWindow = Editor.Windows.MainWindow.GUI;
-
+            
             InitStyle(mainWindow);
             InitMainMenu(mainWindow);
             InitToolstrip(mainWindow);
             InitStatusBar(mainWindow);
             InitDockPanel(mainWindow);
-
-            // Cache icons
-            FolderClosed12 = GetIcon("FolderClosed12");
-            FolderOpened12 = GetIcon("FolderOpened12");
         }
 
         /// <inheritdoc />
@@ -154,9 +152,35 @@ namespace FlaxEditor.Modules
             DockHintWindow.Proxy.Dispsoe();
         }
 
+        private void CreateStyle()
+        {
+            var style = new Style();
+
+            // Note: we pre-create editor style in constructor and load icons/fonts during editor init.
+            
+            // Metro Style colors
+            style.Background = Color.FromBgra(0xFF1C1C1C);
+            style.LightBackground = Color.FromBgra(0xFF2D2D30);
+            style.Foreground = Color.FromBgra(0xFFFFFFFF);
+            style.ForegroundDisabled = new Color(0.6f);
+            style.BackgroundHighlighted = Color.FromBgra(0xFF54545C);
+            style.BorderHighlighted = Color.FromBgra(0xFF6A6A75);
+            style.BackgroundSelected = Color.FromBgra(0xFF007ACC);
+            style.BorderSelected = Color.FromBgra(0xFF1C97EA);
+            style.BackgroundNormal = Color.FromBgra(0xFF3F3F46);
+            style.BorderNormal = Color.FromBgra(0xFF54545C);
+            style.TextBoxBackground = Color.FromBgra(0xFF333337);
+            style.TextBoxBackgroundSelected = Color.FromBgra(0xFF3F3F46);
+            style.DragWindow = style.BackgroundSelected * 0.7f;
+            style.ProgressNormal = Color.FromBgra(0xFF0ad328);
+            
+            // Set as default
+            Style.Current = style;
+        }
+
         private void InitStyle(FlaxEngine.GUI.Window mainWindow)
         {
-            Style style = new Style();
+            var style = Style.Current;
 
             // Font
             string primaryFontNameInternal = "Editor/Segoe Media Center Regular";
@@ -178,23 +202,7 @@ namespace FlaxEditor.Modules
             {
                 Debug.LogError("Cannot load primary GUI Style font " + primaryFontNameInternal);
             }
-
-            // Metro Style colors
-            style.Background = Color.FromBgra(0xFF1C1C1C);
-            style.LightBackground = Color.FromBgra(0xFF2D2D30);
-            style.Foreground = Color.FromBgra(0xFFFFFFFF);
-            style.ForegroundDisabled = new Color(0.6f);
-            style.BackgroundHighlighted = Color.FromBgra(0xFF54545C);
-            style.BorderHighlighted = Color.FromBgra(0xFF6A6A75);
-            style.BackgroundSelected = Color.FromBgra(0xFF007ACC);
-            style.BorderSelected = Color.FromBgra(0xFF1C97EA);
-            style.BackgroundNormal = Color.FromBgra(0xFF3F3F46);
-            style.BorderNormal = Color.FromBgra(0xFF54545C);
-            style.TextBoxBackground = Color.FromBgra(0xFF333337);
-            style.TextBoxBackgroundSelected = Color.FromBgra(0xFF3F3F46);
-            style.DragWindow = style.BackgroundSelected * 0.7f;
-            style.ProgressNormal = Color.FromBgra(0xFF0ad328);
-
+            
             // Icons
             style.ArrowDown = GetIcon("ArrowDown12");
             style.ArrowRight = GetIcon("ArrowRight12");
@@ -208,8 +216,11 @@ namespace FlaxEditor.Modules
             style.Rotate16 = GetIcon("Rotate16");
             style.Scale16 = GetIcon("Scale16");
 
-            // Set as default
-            Style.Current = style;
+            // Cache icons
+            FolderClosed12 = GetIcon("FolderClosed12");
+            FolderOpened12 = GetIcon("FolderOpened12");
+
+            // Update window background
             mainWindow.BackgroundColor = style.Background;
         }
 
