@@ -1,10 +1,8 @@
-﻿// Flax Engine scripting API
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FlaxEditor.Content;
 using FlaxEngine;
 using FlaxEngine.GUI;

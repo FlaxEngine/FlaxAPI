@@ -99,11 +99,17 @@
     <Compile Include="Windows\Assets\AssetEditorWindow.cs" />
     <Compile Include="Windows\ContentWindow.cs" />
     <Compile Include="Windows\ContentWindow.Navigation.cs" />
+    <Compile Include="Windows\DebugLogWindow.cs" />
+    <Compile Include="Windows\EditGameWindow.cs" />
     <Compile Include="Windows\EditorWindow.cs" />
     <Compile Include="Undo\Undo.cs" />
     <Compile Include="Utilities\Extenstions.cs" />
     <Compile Include="Utilities\MemberComparison.cs" />
     <Compile Include="Utilities\Utils.cs" />
+    <Compile Include="Windows\GameWindow.cs" />
+    <Compile Include="Windows\PropertiesWindow.cs" />
+    <Compile Include="Windows\SceneTreeWindow.cs" />
+    <Compile Include="Windows\ToolboxWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlaxEngine\FlaxEngine.csproj">

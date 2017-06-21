@@ -1,17 +1,13 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FlaxEditor.Content;
 using FlaxEditor.Content.GUI;
 using FlaxEditor.GUI;
 using FlaxEngine;
-using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Windows
@@ -41,7 +37,11 @@ namespace FlaxEditor.Windows
         private NewItem _newElement;
         //private AssetsPreviewManager _previewManager;
 
-        internal ContentWindow(Editor editor)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContentWindow"/> class.
+        /// </summary>
+        /// <param name="editor">The editor.</param>
+        public ContentWindow(Editor editor)
             : base(editor, true, ScrollBars.None)
         {
             Title = "Content";

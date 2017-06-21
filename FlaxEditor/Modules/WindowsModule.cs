@@ -7,7 +7,6 @@ using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.Assertions;
-using FlaxEngine.GUI.Docking;
 
 namespace FlaxEditor.Modules
 {
@@ -43,6 +42,31 @@ namespace FlaxEditor.Modules
         /// The content window.
         /// </summary>
         public ContentWindow ContentWin;
+
+        /// <summary>
+        /// The edit game window.
+        /// </summary>
+        public EditGameWindow EditWin;
+
+        /// <summary>
+        /// The game window.
+        /// </summary>
+        public GameWindow GameWin;
+
+        /// <summary>
+        /// The properties window.
+        /// </summary>
+        public PropertiesWindow PropertiesWin;
+
+        /// <summary>
+        /// The scene tree window.
+        /// </summary>
+        public SceneTreeWindow SceneWin;
+
+        /// <summary>
+        /// The debug log window.
+        /// </summary>
+        public DebugLogWindow DebugWin;
 
         /// <summary>
         /// The toolbox window.
@@ -147,6 +171,11 @@ namespace FlaxEditor.Modules
 
             // Create default editor windows
             ContentWin = new ContentWindow(Editor);
+            EditWin = new EditGameWindow(Editor);
+            GameWin = new GameWindow(Editor);
+            PropertiesWin = new PropertiesWindow(Editor);
+            SceneWin = new SceneTreeWindow(Editor);
+            DebugWin = new DebugLogWindow(Editor);
             ToolboxWin = new ToolboxWindow(Editor);
 
             // Bind events
