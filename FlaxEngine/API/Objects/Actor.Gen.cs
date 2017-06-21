@@ -52,10 +52,24 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets actor name
+		/// Gets or sets zero-based index in parent actor children list.
 		/// </summary>
 		[UnmanagedCall]
-		public String Name
+		public int OrderInParent
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetOrderInParent(unmanagedPtr); }
+			set { Internal_SetOrderInParent(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the actor name.
+		/// </summary>
+		[UnmanagedCall]
+		public string Name
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
@@ -468,9 +482,13 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetParent(IntPtr obj, IntPtr val, bool worldPositionLock);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern String Internal_GetName(IntPtr obj);
+		internal static extern int Internal_GetOrderInParent(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetName(IntPtr obj, String val);
+		internal static extern void Internal_SetOrderInParent(IntPtr obj, int val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern string Internal_GetName(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetName(IntPtr obj, string val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern StaticFlags Internal_GetStaticFlags(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
