@@ -42,14 +42,16 @@ namespace FlaxEditor
         public ActorTreeNode(Actor actor)
             : base(true)
         {
+            _actor = actor;
+
             if (_actor != null)
             {
                 Text = actor.Name;
             }
         }
-        
+
         /// <summary>
-        /// Tries to find the tree node for the speficied actor.
+        /// Tries to find the tree node for the specified actor.
         /// </summary>
         /// <param name="actor">The actor.</param>
         /// <returns>Tree node or null if cannot find it.</returns>
@@ -67,6 +69,24 @@ namespace FlaxEditor
                     var result = node.Find(actor);
                     if (result != null)
                         return result;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Tries to find the tree node for the specified actor in child nodes collection.
+        /// </summary>
+        /// <param name="actor">The actor.</param>
+        /// <returns>Tree node or null if cannot find it.</returns>
+        public ActorTreeNode FindChild(Actor actor)
+        {
+            for (int i = 0; i < _children.Count; i++)
+            {
+                if (_children[i] is ActorTreeNode node && node.Actor == actor)
+                {
+                    return node;
                 }
             }
 
