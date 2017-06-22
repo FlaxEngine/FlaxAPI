@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Windows
@@ -20,6 +21,27 @@ namespace FlaxEditor.Windows
             : base(editor, true, ScrollBars.None)
         {
             Title = "Properties";
+        }
+
+        public override void Draw()
+        {
+            // TODO: remove this temp code, finish properties window
+            string text;
+            var selection = Editor.SceneEditing.SelectedActors;
+            if (selection.Count == 0)
+            {
+                text = "No actors selected";
+            }
+            else
+            {
+                text = "Selected:\n";
+                foreach (var e in selection)
+                {
+                    text += e.Name + "\n";
+                }
+            }
+            Render2D.DrawText(Style.Current.FontMedium, text, new Rectangle(Vector2.Zero, Size), Color.White, TextAlignment.Center, TextAlignment.Center);
+            base.Draw();
         }
     }
 }
