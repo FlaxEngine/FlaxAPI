@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 // -----------------------------------------------------------------------------
 // Original code from SharpDX project. https://github.com/sharpdx/SharpDX/
@@ -969,6 +969,16 @@ namespace FlaxEngine
             Vector4 result;
             Min(ref left, ref right, out result);
             return result;
+        }
+
+        /// <summary>
+        /// Returns the absolute value of a vector.
+        /// </summary>
+        /// <param name="v">The value.</param>
+        /// <returns> A vector which components are less or equal to 0.</returns>
+        public static Vector4 Abs(Vector4 v)
+        {
+            return new Vector4(Math.Abs(v.X), Math.Abs(v.Y), Math.Abs(v.Z), Math.Abs(v.W));
         }
 
         /// <summary>
