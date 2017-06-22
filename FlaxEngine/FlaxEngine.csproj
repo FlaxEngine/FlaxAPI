@@ -106,6 +106,8 @@
     <Compile Include="API\Objects\Font.Gen.cs">
       <DependentUpon>Font.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Objects\RenderTask.cs" />
+    <Compile Include="API\Objects\RenderTask.Gen.cs" />
     <Compile Include="API\Objects\Script.cs" />
     <Compile Include="API\Objects\Script.Gen.cs">
       <DependentUpon>Script.cs</DependentUpon>
