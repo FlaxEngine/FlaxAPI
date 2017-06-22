@@ -75,12 +75,36 @@ namespace FlaxEditor.Windows
             // Content View
             _view = new ContentView();
             // TODO: bind for content view events
+            _view.OnOpen += Open;
             //_view.OnOpen.Bind < ContentWindow, &ContentWindow::view_OnOpen > (this);
             //_view.OnRename.Bind < ContentWindow, &ContentWindow::Rename > (this);
             //_view.OnDelete.Bind < ContentWindow, &ContentWindow::view_OnDelete > (this);
             //_view.OnDuplicate.Bind < ContentWindow, &ContentWindow::CloneSelection > (this);
             //_view.OnNavigateBack.Bind < ContentWindow, &ContentWindow::navigateBackward > (this);
             _view.Parent = _split.Panel2;
+        }
+
+        /// <summary>
+        /// Opens the specified content item.
+        /// </summary>
+        /// <param name="item">The content item.</param>
+        public void Open(ContentItem item)
+        {
+            if (item == null)
+                throw new ArgumentNullException();
+
+            // Check if it's a folder
+            if (item.IsFolder)
+            {
+                // Show folder
+                var folder = (ContentFolder) item;
+                folder.Node.Expand();
+                _tree.Select(folder.Node);
+                return;
+            }
+
+            // Open it
+            Editor.ContentEditing.Open(item);
         }
 
         /// <summary>

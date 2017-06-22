@@ -94,6 +94,25 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
+        /// Finds the first window that is using given element to view/edit it.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>Editor window or null if cannot find any window.</returns>
+        public EditorWindow FindEditor(ContentItem item)
+        {
+            for (int i = 0; i < Windows.Count; i++)
+            {
+                var win = Windows[i];
+                if (win.IsEditingItem(item))
+                {
+                    return win;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Closes all windows that are using given element to view/edit it.
         /// </summary>
         /// <param name="item">The item.</param>
