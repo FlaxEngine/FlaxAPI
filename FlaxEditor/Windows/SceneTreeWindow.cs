@@ -18,6 +18,7 @@ namespace FlaxEditor.Windows
     {
         private Tree _tree;
         private RootTreeNode _root;
+        private bool _isUpdatingSelection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneTreeWindow"/> class.
@@ -44,7 +45,20 @@ namespace FlaxEditor.Windows
 
         private void Tree_OnOnSelectedChanged(List<TreeNode> before, List<TreeNode> after)
         {
-            // TODO: change selected objects collection
+            // Check if lock events
+            if (_isUpdatingSelection)
+                return;
+
+            // Get actors from nodes
+            List<Actor> actors = new List<Actor>(after.Count);
+            for (int i = 0; i < after.Count; i++)
+            {
+                if (after[i] is ActorTreeNode node && node.Actor)
+                    actors.Add(node.Actor);
+            }
+
+            // Select
+            Editor.SceneEditing.Select(actors);
         }
 
         private void Tree_OnOnRightClick(TreeNode node, Vector2 location)
@@ -55,6 +69,37 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void OnInit()
         {
+            Editor.SceneEditing.OnSelectionChanged += SceneEditingOnOnSelectionChanged;
+        }
+
+        private void selectNodesHelper(List<TreeNode> nodes, List<Actor> selection, TreeNode node)
+        {
+            for (int i = 0; i < node.ChildrenCount; i++)
+            {
+                if (node.GetChild(i) is ActorTreeNode actorNode)
+                {
+                    if (selection.Contains(actorNode.Actor))
+                        nodes.Add(actorNode);
+
+                    selectNodesHelper(nodes, selection, actorNode);
+                }
+            }
+        }
+
+        private void SceneEditingOnOnSelectionChanged()
+        {
+            _isUpdatingSelection = true;
+
+            // Find nodes to select
+            // TODO: if it takes too long let's cache hash set: (key: Actor.ID, value: SceneTreeNode) and use faster lookup
+            var selection = Editor.SceneEditing.SelectedActors;
+            var nodes = new List<TreeNode>(selection.Count);
+            selectNodesHelper(nodes, selection, _root);
+
+            // Select nodes
+            _tree.Select(nodes);
+
+            _isUpdatingSelection = false;
         }
 
         /// <inheritdoc />
