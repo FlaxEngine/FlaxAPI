@@ -278,6 +278,22 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <summary>
+        /// Gives focus and selects the first item in the view.
+        /// </summary>
+        public void SelectFirstItem()
+        {
+            if (_items.Count > 0)
+            {
+                _items[0].Focus();
+                Select(_items[0]);
+            }
+            else
+            {
+                Focus();
+            }
+        }
+
+        /// <summary>
         /// Refreshes thumbnails of all itmes in the <see cref="ContentView"/>.
         /// </summary>
         public void RefreshThumbnails()

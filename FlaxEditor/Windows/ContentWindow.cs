@@ -31,8 +31,8 @@ namespace FlaxEditor.Windows
         private ContentTreeNode _root;
 
         private bool _navigationUnlocked;
-        private readonly List<ContentTreeNode> _navigationUndo = new List<ContentTreeNode>(32);
-        private readonly List<ContentTreeNode> _navigationRedo = new List<ContentTreeNode>(32);
+        private readonly Stack<ContentTreeNode> _navigationUndo = new Stack<ContentTreeNode>(32);
+        private readonly Stack<ContentTreeNode> _navigationRedo = new Stack<ContentTreeNode>(32);
 
         private NewItem _newElement;
         //private AssetsPreviewManager _previewManager;
@@ -76,11 +76,10 @@ namespace FlaxEditor.Windows
             _view = new ContentView();
             // TODO: bind for content view events
             _view.OnOpen += Open;
-            //_view.OnOpen.Bind < ContentWindow, &ContentWindow::view_OnOpen > (this);
+            _view.OnNavigateBack += NavigateBackward;
             //_view.OnRename.Bind < ContentWindow, &ContentWindow::Rename > (this);
             //_view.OnDelete.Bind < ContentWindow, &ContentWindow::view_OnDelete > (this);
             //_view.OnDuplicate.Bind < ContentWindow, &ContentWindow::CloneSelection > (this);
-            //_view.OnNavigateBack.Bind < ContentWindow, &ContentWindow::navigateBackward > (this);
             _view.Parent = _split.Panel2;
         }
 

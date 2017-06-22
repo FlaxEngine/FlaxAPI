@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -35,7 +35,7 @@ namespace FlaxEngine.GUI
         public delegate void NodeClickDelegate(TreeNode node, Vector2 location);
 
         private float _keyUpdateTime;
-        private bool _supportMultiSelect;
+        private readonly bool _supportMultiSelect;
         
         /// <summary>
         /// Action fired when tree nodes selection gets changed.
@@ -96,10 +96,10 @@ namespace FlaxEngine.GUI
             // Ensure that node can be visible (all it's parents are expanded)
             node.ExpandAllParents();
 
+            Focus();
+
             // Fire event
             OnSelectedChanged?.Invoke(prev, Selection);
-
-            Focus();
         }
 
         /// <summary>
@@ -132,10 +132,10 @@ namespace FlaxEngine.GUI
                 Selection[i].ExpandAllParents();
             }
 
+            Focus();
+
             // Fire event
             OnSelectedChanged?.Invoke(prev, Selection);
-
-            Focus();
         }
 
         /// <summary>
@@ -163,10 +163,10 @@ namespace FlaxEngine.GUI
                 Selection.Add(node);
             }
 
+            Focus();
+
             // Fire event
             OnSelectedChanged?.Invoke(prev, Selection);
-
-            Focus();
         }
 
         private void walkSelectRangeExpandedTree(List<TreeNode> selection, TreeNode node, ref Rectangle range)
@@ -225,14 +225,14 @@ namespace FlaxEngine.GUI
                 Selection.Clear();
                 walkSelectRangeExpandedTree(Selection, _children[0] as TreeNode, ref selectionRect);
 
+                Focus();
+
                 // Check if changed
                 if (Selection.Count != prev.Count || !Selection.SequenceEqual(prev))
                 {
                     // Fire event
                     OnSelectedChanged?.Invoke(prev, Selection);
                 }
-
-                Focus();
             }
             else
             {
@@ -267,14 +267,14 @@ namespace FlaxEngine.GUI
                 Selection.Clear();
                 walkSelectExpandedTree(Selection, _children[0] as TreeNode);
 
+                Focus();
+
                 // Check if changed
                 if (Selection.Count != prev.Count || !Selection.SequenceEqual(prev))
                 {
                     // Fire event
                     OnSelectedChanged?.Invoke(prev, Selection);
                 }
-
-                Focus();
             }
         }
 

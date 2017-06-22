@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -39,10 +39,10 @@ namespace FlaxEditor.Windows
                 _navigationUnlocked = false;
 
                 // Check if already added to the Undo on the top
-                if (source != null && (_navigationUndo.Count == 0 || _navigationUndo[0] != source))
+                if (source != null && (_navigationUndo.Count == 0 || _navigationUndo.Peek() != source))
                 {
                     // Add to Undo list
-                    _navigationUndo.Insert(0, source);
+                    _navigationUndo.Push(source);
                 }
 
                 // Show folder contents and select tree node
@@ -79,9 +79,8 @@ namespace FlaxEditor.Windows
 
                 // Update UI
                 UpdateUI();
+                _view.SelectFirstItem();
             }
-
-            _view.Focus();
         }
 
         /// <summary>
@@ -93,14 +92,13 @@ namespace FlaxEditor.Windows
             if (_navigationUnlocked && _navigationUndo.Count > 0)
             {
                 // Pop node
-                ContentTreeNode node = _navigationUndo[0];
-                _navigationUndo.RemoveAt(0);
+                ContentTreeNode node = _navigationUndo.Pop();
 
                 // Lock navigation
                 _navigationUnlocked = false;
 
                 // Add to Redo list
-                _navigationRedo.Insert(0, SelectedNode);
+                _navigationRedo.Push(SelectedNode);
 
                 // Select node
                 _view.ShowItems(node.Folder.Children);
@@ -119,11 +117,8 @@ namespace FlaxEditor.Windows
 
                 // Update UI
                 UpdateUI();
-
-                // TODO: select that folder to use arrows to navigate easly
+                _view.SelectFirstItem();
             }
-
-            _view.Focus();
         }
 
         /// <summary>
@@ -135,14 +130,13 @@ namespace FlaxEditor.Windows
             if (_navigationUnlocked && _navigationRedo.Count > 0)
             {
                 // Pop node
-                ContentTreeNode node = _navigationRedo[0];
-                _navigationRedo.RemoveAt(0);
+                ContentTreeNode node = _navigationRedo.Pop();
 
                 // Lock navigation
                 _navigationUnlocked = false;
 
                 // Add to Undo list
-                _navigationUndo.Insert(0, SelectedNode);
+                _navigationUndo.Push(SelectedNode);
 
                 // Select node
                 _view.ShowItems(node.Folder.Children);
@@ -161,9 +155,8 @@ namespace FlaxEditor.Windows
 
                 // Update UI
                 UpdateUI();
+                _view.SelectFirstItem();
             }
-
-            _view.Focus();
         }
 
         /// <summary>
