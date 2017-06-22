@@ -60,6 +60,11 @@ namespace FlaxEditor
         public readonly SceneModule Scene;
 
         /// <summary>
+        /// The scene editing module.
+        /// </summary>
+        public readonly SceneEditingModule SceneEditing;
+
+        /// <summary>
         /// The progress reporting module.
         /// </summary>
         public readonly ProgressReportingModule ProgressReporting;
@@ -97,6 +102,7 @@ namespace FlaxEditor
             RegisterModule(Simulation = new SimulationModule(this));
             RegisterModule(Scripting = new ScriptingModule(this));
             RegisterModule(Scene = new SceneModule(this));
+            RegisterModule(SceneEditing = new SceneEditingModule(this));
             RegisterModule(ProgressReporting = new ProgressReportingModule(this));
             RegisterModule(ContentEditing = new ContentEditingModule(this));
             RegisterModule(ContentDatabase = new ContentDatabaseModule(this));

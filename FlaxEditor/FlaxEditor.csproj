@@ -86,6 +86,7 @@
     <Compile Include="Modules\ContentEditingModule.cs" />
     <Compile Include="Modules\EditorModule.cs" />
     <Compile Include="Modules\ProgressReportingModule.cs" />
+    <Compile Include="Modules\SceneEditingModule.cs" />
     <Compile Include="Modules\SceneModule.cs" />
     <Compile Include="Modules\ScriptingModule.cs" />
     <Compile Include="Modules\SimulationModule.cs" />
