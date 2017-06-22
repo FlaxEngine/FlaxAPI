@@ -43,5 +43,10 @@ namespace FlaxEngine
         /// The sprite atlas asset type unique ID.
         /// </summary>
         public const int TypeID = 10;
+
+        /// <summary>
+        /// The asset type content domain.
+        /// </summary>
+        public const ContentDomain Domain = ContentDomain.Texture;
     }
 }

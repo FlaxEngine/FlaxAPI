@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 using FlaxEngine;
 using FlaxEngine.Rendering;
@@ -35,5 +35,10 @@ namespace FlaxEditor
         /// The previews cache asset type unique ID.
         /// </summary>
         public const int TypeID = 11;
+
+        /// <summary>
+        /// The asset type content domain.
+        /// </summary>
+        public const ContentDomain Domain = ContentDomain.Texture;
     }
 }

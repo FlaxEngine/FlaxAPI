@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 using System;
 using System.Collections.Generic;
@@ -15,5 +15,10 @@ namespace FlaxEngine
         /// The model asset type unique ID.
         /// </summary>
         public const int TypeID = 3;
+
+        /// <summary>
+        /// The asset type content domain.
+        /// </summary>
+        public const ContentDomain Domain = ContentDomain.Model;
     }
 }

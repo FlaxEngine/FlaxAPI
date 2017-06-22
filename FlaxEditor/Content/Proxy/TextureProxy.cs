@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -6,7 +6,7 @@ using System;
 using FlaxEditor.Windows;
 using FlaxEngine;
 
-namespace FlaxEditor.Content.Proxy
+namespace FlaxEditor.Content
 {
     /// <summary>
     /// A <see cref="Texture"/> asset proxy object.
@@ -33,6 +33,6 @@ namespace FlaxEditor.Content.Proxy
         public override Color AccentColor => Color.FromRGB(0x25B84C);
 
         /// <inheritdoc />
-        public override ContentDomain Domain => ContentDomain.Texture;
+        public override ContentDomain Domain => Texture.Domain;
     }
 }
