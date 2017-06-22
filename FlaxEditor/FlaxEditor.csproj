@@ -57,10 +57,17 @@
     <Compile Include="Content\Items\SceneItem.cs" />
     <Compile Include="Content\Items\ScriptItem.cs" />
     <Compile Include="Content\Proxy\AssetProxy.cs" />
+    <Compile Include="Content\Proxy\CubeTextureProxy.cs" />
+    <Compile Include="Content\Proxy\FontProxy.cs" />
+    <Compile Include="Content\Proxy\IESProfileProxy.cs" />
     <Compile Include="Content\Proxy\JsonAssetProxy.cs" />
+    <Compile Include="Content\Proxy\MaterialInstanceProxy.cs" />
+    <Compile Include="Content\Proxy\MaterialProxy.cs" />
     <Compile Include="Content\Proxy\ModelProxy.cs" />
+    <Compile Include="Content\Proxy\PreviewsCacheProxy.cs" />
     <Compile Include="Content\Proxy\SceneProxy.cs" />
     <Compile Include="Content\Proxy\ScriptProxy.cs" />
+    <Compile Include="Content\Proxy\SpriteAtlasProxy.cs" />
     <Compile Include="Content\Proxy\TextureProxy.cs" />
     <Compile Include="Content\Tree\ContentTreeNode.cs" />
     <Compile Include="Content\Tree\MainContentTreeNode.cs" />

@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -392,17 +392,17 @@ namespace FlaxEditor.Modules
         public override void OnInit()
         {
             // Setup content proxies
-            //Proxy.Add(new TextureProxy());
-            //Proxy.Add(new ModelProxy());
-            //Proxy.Add(new MaterialProxy());
-            //Proxy.Add(new MaterialInstanceProxy());
-            //Proxy.Add(new SpriteAtlasProxy());
-            //Proxy.Add(new CubeTextureProxy());
-            //Proxy.Add(new PreviewsCacheProxy());
-            //Proxy.Add(new FontProxy());
+            Proxy.Add(new TextureProxy());
+            Proxy.Add(new ModelProxy());
+            Proxy.Add(new MaterialProxy());
+            Proxy.Add(new MaterialInstanceProxy());
+            Proxy.Add(new SpriteAtlasProxy());
+            Proxy.Add(new CubeTextureProxy());
+            Proxy.Add(new PreviewsCacheProxy());
+            Proxy.Add(new FontProxy());
             Proxy.Add(new ScriptProxy());
             Proxy.Add(new SceneProxy());
-            //Proxy.Add(new IESProfileProxy());
+            Proxy.Add(new IESProfileProxy());
 
             // Create content folders nodes
             ProjectContent = new MainContentTreeNode(ContentFolderType.Content, Globals.ContentFolder);
