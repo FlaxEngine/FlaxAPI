@@ -49,16 +49,24 @@ namespace FlaxEditor.Windows
             if (_isUpdatingSelection)
                 return;
 
-            // Get actors from nodes
-            List<Actor> actors = new List<Actor>(after.Count);
-            for (int i = 0; i < after.Count; i++)
+            if (after.Count > 0)
             {
-                if (after[i] is ActorTreeNode node && node.Actor)
-                    actors.Add(node.Actor);
-            }
+                // Get actors from nodes
+                List<Actor> actors = new List<Actor>(after.Count);
+                for (int i = 0; i < after.Count; i++)
+                {
+                    if (after[i] is ActorTreeNode node && node.Actor)
+                        actors.Add(node.Actor);
+                }
 
-            // Select
-            Editor.SceneEditing.Select(actors);
+                // Select
+                Editor.SceneEditing.Select(actors);
+            }
+            else
+            {
+                // Deselect
+                Editor.SceneEditing.Deselect();
+            }
         }
 
         private void Tree_OnOnRightClick(TreeNode node, Vector2 location)
@@ -90,14 +98,27 @@ namespace FlaxEditor.Windows
         {
             _isUpdatingSelection = true;
 
-            // Find nodes to select
-            // TODO: if it takes too long let's cache hash set: (key: Actor.ID, value: SceneTreeNode) and use faster lookup
             var selection = Editor.SceneEditing.SelectedActors;
-            var nodes = new List<TreeNode>(selection.Count);
-            selectNodesHelper(nodes, selection, _root);
+            if (selection.Count == 0)
+            {
+                _tree.Deselect();
+            }
+            else if (selection.Count == 1)
+            {
+                var node = _root.Find(selection[0]);
 
-            // Select nodes
-            _tree.Select(nodes);
+                _tree.Select(node);
+            }
+            else
+            {
+                // Find nodes to select
+                // TODO: if it takes too long let's cache hash set: (key: Actor.ID, value: SceneTreeNode) and use faster lookup
+                var nodes = new List<TreeNode>(selection.Count);
+                selectNodesHelper(nodes, selection, _root);
+
+                // Select nodes
+                _tree.Select(nodes);
+            }
 
             _isUpdatingSelection = false;
         }

@@ -139,6 +139,27 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Clears the selection.
+        /// </summary>
+        public void Deselect()
+        {
+            // Check if won't change
+            if (Selection.Count == 0)
+                return;
+
+            // Cache previous state
+            var prev = new List<TreeNode>(Selection);
+
+            // Update selection
+            Selection.Clear();
+            
+            Focus();
+
+            // Fire event
+            OnSelectedChanged?.Invoke(prev, Selection);
+        }
+
+        /// <summary>
         /// Adds or removes node to/from the selection
         /// </summary>
         /// <param name="node">The node.</param>
