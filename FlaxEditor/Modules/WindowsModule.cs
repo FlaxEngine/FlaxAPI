@@ -136,7 +136,15 @@ namespace FlaxEditor.Modules
             // TODO: finish this
 
             // for now just show default windows
-            //ContentWin.Show(DockState.Float);
+            ContentWin.Show(FlaxEngine.GUI.Docking.DockState.DockBottom);
+            DebugWin.Show(FlaxEngine.GUI.Docking.DockState.DockFill, ContentWin);
+            ContentWin.SelectTab();
+            SceneWin.Show(FlaxEngine.GUI.Docking.DockState.DockLeft);
+            PropertiesWin.Show(FlaxEngine.GUI.Docking.DockState.DockRight);
+            ToolboxWin.Show(FlaxEngine.GUI.Docking.DockState.DockTop, PropertiesWin);
+            EditWin.Show(FlaxEngine.GUI.Docking.DockState.DockFill);
+            GameWin.Show(FlaxEngine.GUI.Docking.DockState.DockFill);
+            EditWin.SelectTab();
         }
 
         /// <summary>
