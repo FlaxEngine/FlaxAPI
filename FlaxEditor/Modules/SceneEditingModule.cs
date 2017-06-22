@@ -36,6 +36,7 @@ namespace FlaxEditor.Modules
         internal SceneEditingModule(Editor editor)
             : base(editor)
         {
+            _selectedActors = new List<Actor>();
         }
 
         /// <summary>
