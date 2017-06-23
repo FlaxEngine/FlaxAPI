@@ -95,7 +95,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the position of the mouse in the window space coordinates.
         /// </summary>
-        public bool MousePosition => _window.MousePosition;
+        public Vector2 MousePosition => _window.MousePosition;
 
         /// <summary>
         /// Gets or sets the mouse cursor.

@@ -95,13 +95,13 @@ namespace FlaxEngine
 		/// Gets or sets the position of the mouse in the window space coordinates.
 		/// </summary>
 		[UnmanagedCall]
-		public bool MousePosition
+		public Vector2 MousePosition
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetMousePosition(unmanagedPtr); }
-			set { Internal_SetMousePosition(unmanagedPtr, value); }
+			get { Vector2 resultAsRef; Internal_GetMousePosition(unmanagedPtr, out resultAsRef); return resultAsRef; }
+			set { Internal_SetMousePosition(unmanagedPtr, ref value); }
 #endif
 		}
 
@@ -618,9 +618,9 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetIsMaximized(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetMousePosition(IntPtr obj);
+		internal static extern void Internal_GetMousePosition(IntPtr obj, out Vector2 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetMousePosition(IntPtr obj, bool val);
+		internal static extern void Internal_SetMousePosition(IntPtr obj, ref Vector2 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern IntPtr Internal_GetHandle(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
