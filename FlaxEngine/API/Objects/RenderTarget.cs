@@ -21,4 +21,3 @@ namespace FlaxEngine.Rendering
         }
     }
 }
-
