@@ -143,6 +143,7 @@
     <Compile Include="Attributes\MemberCollectionAttribute.cs" />
     <Compile Include="Attributes\PersisitentDataAttribute.cs" />
     <Compile Include="Configurations\PersistentDataConfig.cs" />
+    <Compile Include="Enums\Quality.cs" />
     <Compile Include="Enums\UI.cs" />
     <Compile Include="Attributes\Editor\CustomEditorAttribute.cs" />
     <Compile Include="Attributes\Editor\EditorIndexAttribute.cs" />
@@ -261,10 +262,13 @@
     <Compile Include="Math\Vector2.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Math\Vector4.cs" />
+    <Compile Include="Rendering\CullMode.cs" />
     <Compile Include="Rendering\MSAALevel.cs" />
     <Compile Include="Rendering\PixelFormat.cs" />
     <Compile Include="Rendering\PixelFormatExtensions.cs" />
     <Compile Include="Rendering\PostProcessEffect.cs" />
+    <Compile Include="Rendering\RenderPass.cs" />
+    <Compile Include="Rendering\RenderView.cs" />
     <Compile Include="Rendering\TextureFlags.cs" />
     <Compile Include="Rendering\ViewFlags.cs" />
     <Compile Include="Rendering\ViewMode.cs" />
