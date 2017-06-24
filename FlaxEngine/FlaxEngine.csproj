@@ -264,6 +264,7 @@
     <Compile Include="Rendering\MSAALevel.cs" />
     <Compile Include="Rendering\PixelFormat.cs" />
     <Compile Include="Rendering\PixelFormatExtensions.cs" />
+    <Compile Include="Rendering\PostProcessEffect.cs" />
     <Compile Include="Rendering\TextureFlags.cs" />
     <Compile Include="Rendering\ViewFlags.cs" />
     <Compile Include="Rendering\ViewMode.cs" />
