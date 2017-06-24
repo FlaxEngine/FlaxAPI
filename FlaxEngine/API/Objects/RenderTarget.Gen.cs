@@ -15,30 +15,27 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine.Rendering
 {
 	/// <summary>
-	/// Allows to perform custom rendering using graphics pipeline.
+	/// Allows to perform custom rendering to texture.
 	/// </summary>
-	public partial class RenderTask : Object
+	public partial class RenderTarget : Object
 	{
 		/// <summary>
-		/// Gets or sets a value indicating whether task is enabled.
+		/// Gets texture surface format.
 		/// </summary>
 		[UnmanagedCall]
-		public bool Enabled
+		public PixelFormat Format
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetEnabled(unmanagedPtr); }
-			set { Internal_SetEnabled(unmanagedPtr, value); }
+			get { return Internal_GetFormat(unmanagedPtr); }
 #endif
 		}
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetEnabled(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetEnabled(IntPtr obj, bool val);
+		internal static extern PixelFormat Internal_GetFormat(IntPtr obj);
 #endif
 #endregion
 	}
