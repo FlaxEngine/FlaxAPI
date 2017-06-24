@@ -10,8 +10,15 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine.Rendering
 {
-	public partial class RenderTarget
-	{
-		// TODO: This was auto-generated template made to keep file structure flow strict. Please add your custom implementations if needed.
-	}
+    public partial class RenderTarget
+    {
+        /// <summary>
+        /// Returns true if texture has size that is power of two.
+        /// </summary>
+        public bool IsPowerOfTwwo
+        {
+            get { return Mathf.IsPowerOfTwo(Width) && Mathf.IsPowerOfTwo(Height); }
+        }
+    }
 }
+
