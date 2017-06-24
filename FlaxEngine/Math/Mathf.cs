@@ -602,13 +602,13 @@ namespace FlaxEngine
             t = -2f * t * t * t + 3f * t * t;
             return to * t + from * (1f - t);
         }
-
+        
         /// <summary>
         /// Determines whether the specified x is pow of 2.
         /// </summary>
         /// <param name="x">The x.</param>
         /// <returns><c>true</c> if the specified x is pow2; otherwise, <c>false</c>.</returns>
-        public static bool IsPow2(int x)
+        public static bool IsPowerOfTwo(int x)
         {
             return ((x != 0) && (x & (x - 1)) == 0);
         }
