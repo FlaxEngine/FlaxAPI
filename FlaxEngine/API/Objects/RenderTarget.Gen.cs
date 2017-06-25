@@ -90,21 +90,37 @@ namespace FlaxEngine.Rendering
 		/// <summary>
 		/// Creates the new render target object.
 		/// </summary>
-		/// <param name="format">The surface pixels format.</param>
-		/// <param name="width">The surface width in pixels.</param>
-		/// <param name="height">The surface height in pixels.</param>
-		/// <param name="flags">The surface usage flags.</param>
 		/// <returns>Created render target object which is already allocated or null if cannot perform this action.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static RenderTarget Create(PixelFormat format, int width, int height, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget) 
+		public static RenderTarget Create() 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Create(format, width, height, flags);
+			return Internal_Create();
+#endif
+		}
+
+		/// <summary>
+		/// Initializes render target texture.
+		/// </summary>
+		/// <param name="format">The surface pixels format.</param>
+		/// <param name="width">The surface width in pixels.</param>
+		/// <param name="height">The surface height in pixels.</param>
+		/// <param name="flags">The surface usage flags.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void Init(PixelFormat format, int width, int height, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_Init(unmanagedPtr, format, width, height, flags);
 #endif
 		}
 
@@ -143,7 +159,9 @@ namespace FlaxEngine.Rendering
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetSize(IntPtr obj, ref Vector2 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern RenderTarget Internal_Create(PixelFormat format, int width, int height, TextureFlags flags);
+		internal static extern RenderTarget Internal_Create();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_Init(IntPtr obj, PixelFormat format, int width, int height, TextureFlags flags);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_Dispose(IntPtr obj);
 #endif

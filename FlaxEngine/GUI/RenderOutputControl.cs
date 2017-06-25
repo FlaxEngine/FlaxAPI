@@ -44,7 +44,7 @@ namespace FlaxEngine.GUI
             if (task == null)
                 throw new ArgumentNullException();
 
-            BackBuffer = RenderTarget.Create(DefaultBackBufferFormat, 1, 1);
+            BackBuffer = RenderTarget.Create();
             _task = task;
             _task.Output = BackBuffer;
         }
@@ -62,13 +62,30 @@ namespace FlaxEngine.GUI
         {
             base.SetSizeInternal(size);
 
-            if (size.MinValue >= 1)
+            SyncBackBufferSize();
+        }
+
+        /// <inheritdoc />
+        protected override void PerformLayoutSelf()
+        {
+            base.PerformLayoutSelf();
+            SyncBackBufferSize();
+        }
+
+        /// <summary>
+        /// Synchronizes size of the back buffer.
+        /// </summary>
+        protected void SyncBackBufferSize()
+        {
+            int width = (int)Width;
+            int height = (int)Height;
+            if (width >= 1 && height >= 1)
             {
-                BackBuffer.Size = size;
+                BackBuffer.Init(DefaultBackBufferFormat, width, height);
             }
             else
             {
-                //Output.Dispose();
+                BackBuffer.Dispose();
             }
         }
     }
