@@ -15,7 +15,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Returns true if texture has size that is power of two.
         /// </summary>
-        public bool IsPowerOfTwwo
+        public bool IsPowerOfTwo
         {
             get { return Mathf.IsPowerOfTwo(Width) && Mathf.IsPowerOfTwo(Height); }
         }

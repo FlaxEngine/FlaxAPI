@@ -26,7 +26,7 @@ namespace FlaxEditor.Windows
             Title = "Game";
 
             // Setup viewport
-            _viewport = new RenderOutputControl(RenderTask.Create<MainRenderTask>());
+            _viewport = new RenderOutputControl(RenderTask.Create<SceneRenderTask>());
             _viewport.DockStyle = DockStyle.Fill;
             _viewport.Parent = this;
         }

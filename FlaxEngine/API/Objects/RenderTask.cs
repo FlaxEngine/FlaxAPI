@@ -3,11 +3,12 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 
 namespace FlaxEngine.Rendering
 {
-	public partial class RenderTask
-	{
+    public partial class RenderTask
+    {
         /// <summary>
         /// The view flags.
         /// </summary>
@@ -19,27 +20,28 @@ namespace FlaxEngine.Rendering
         public ViewMode Mode = ViewMode.Default;
 
         /// <summary>
-        /// The rendering output surface.
+        /// Disposes render task data and child components (output and buffers).
         /// </summary>
-        public RenderTarget Output;
+        public virtual void Dispose()
+        {
+        }
+
+        internal RenderTask()
+        {
+        }
         
-	    internal RenderTask()
-	    {
-	    }
+        internal virtual bool Internal_Begin(out IntPtr outputPtr, out ViewFlags flags, out ViewMode mode, out Actor[] customActors)
+        {
+            outputPtr = IntPtr.Zero;
+            flags = Flags;
+            mode = Mode;
+            customActors = null;
 
-	    internal Actor[] CustomActors => null;
+            return true;
+        }
 
-        internal void Internal_Begin(out IntPtr outputPtr, out ViewFlags flags, out ViewMode mode)//, out Actor[] customActors)
-	    {
-	        outputPtr = GetUnmanagedPtr(Output);
-	        flags = Flags;
-	        mode = Mode;
-	        //customActors = CustomActors;
-	    }
-
-	    internal virtual void Internal_Render(GPUContext context)
-	    {
-            context.Clear(Output, Color.Blue);
-	    }
-	}
+        internal virtual void Internal_Render(GPUContext context)
+        {
+        }
+    }
 }

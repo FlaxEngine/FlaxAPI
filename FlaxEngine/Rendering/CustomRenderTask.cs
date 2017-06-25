@@ -21,9 +21,17 @@ namespace FlaxEngine.Rendering
         {
         }
 
+        internal override bool Internal_Begin(out IntPtr outputPtr, out ViewFlags flags, out ViewMode mode, out Actor[] customActors)
+        {
+            base.Internal_Begin(out outputPtr, out flags, out mode, out customActors);
+
+            // Allow to render only if has linked callback
+            return OnRender != null;
+        }
+
         internal override void Internal_Render(GPUContext context)
         {
-            OnRender?.Invoke(context);
+            OnRender(context);
         }
     }
 }

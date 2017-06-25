@@ -18,7 +18,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public const PixelFormat DefaultBackBufferFormat = PixelFormat.R8G8B8A8_UNorm;
 
-        protected RenderTask _task;
+        protected SceneRenderTask _task;
 
         /// <summary>
         /// Gets the task.
@@ -26,7 +26,15 @@ namespace FlaxEngine.GUI
         /// <value>
         /// The task.
         /// </value>
-        public RenderTask Task => _task;
+        public SceneRenderTask Task => _task;
+
+        /// <summary>
+        /// Gets a value indicating whether render to that output only if parent window exists, otherwise false.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if render only with window attached; otherwise, <c>false</c>.
+        /// </value>
+        public bool RenderOnlyWithWindow { get; }
 
         /// <summary>
         /// The output buffer.
@@ -37,13 +45,15 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="RenderOutputControl"/> class.
         /// </summary>
         /// <param name="task">The task. Cannot be null.</param>
+        /// <param name="renderOnlyWithWindow">True if render to that output only if parent window exists, otherwise false.</param>
         /// <exception cref="System.ArgumentNullException">Invalid task.</exception>
-        public RenderOutputControl(RenderTask task)
+        public RenderOutputControl(SceneRenderTask task, bool renderOnlyWithWindow = true)
             : base(true)
         {
             if (task == null)
                 throw new ArgumentNullException();
-
+            
+            RenderOnlyWithWindow = renderOnlyWithWindow;
             BackBuffer = RenderTarget.Create();
             _task = task;
             _task.Output = BackBuffer;
@@ -52,6 +62,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void Draw()
         {
+            // Draw backbuffer texture
             Render2D.DrawRenderTarget(BackBuffer, new Rectangle(Vector2.Zero, Size), Color.White);
 
             base.Draw();
@@ -69,6 +80,13 @@ namespace FlaxEngine.GUI
         protected override void PerformLayoutSelf()
         {
             base.PerformLayoutSelf();
+
+            // Disable task rendering if control is not used in a window (has issing ParentWindow)
+            if (RenderOnlyWithWindow)
+            {
+                Task.Enabled = ParentWindow != null;
+            }
+
             SyncBackBufferSize();
         }
 
