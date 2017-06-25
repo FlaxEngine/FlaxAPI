@@ -57,6 +57,33 @@ namespace FlaxEngine.GUI
             BackBuffer = RenderTarget.Create();
             _task = task;
             _task.Output = BackBuffer;
+            _task.CanSkipRendering += CanSkipRendering;
+        }
+
+        private bool walkTree(Control c)
+        {
+            while (c != null)
+            {
+                if (c is Window win)
+                {
+                    return false;
+                }
+                if (c.Visible == false)
+                    break;
+                c = c.Parent;
+            }
+            return true;
+        }
+
+        private bool CanSkipRendering()
+        {
+            // Disable task rendering if control is not used in a window (has issing ParentWindow)
+            if (RenderOnlyWithWindow)
+            {
+                return walkTree(Parent);
+            }
+
+            return false;
         }
 
         /// <inheritdoc />
@@ -80,12 +107,6 @@ namespace FlaxEngine.GUI
         protected override void PerformLayoutSelf()
         {
             base.PerformLayoutSelf();
-
-            // Disable task rendering if control is not used in a window (has issing ParentWindow)
-            if (RenderOnlyWithWindow)
-            {
-                Task.Enabled = ParentWindow != null;
-            }
 
             SyncBackBufferSize();
         }

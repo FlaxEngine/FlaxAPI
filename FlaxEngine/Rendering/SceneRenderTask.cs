@@ -35,6 +35,11 @@ namespace FlaxEngine.Rendering
         /// </summary>
         public Camera Camera;
 
+        /// <summary>
+        /// The custom event to can skip rendering if need to. Returns true if should skip rendering a frame.
+        /// </summary>
+        public Func<bool> CanSkipRendering;
+
         internal SceneRenderTask()
         {
         }
@@ -52,6 +57,9 @@ namespace FlaxEngine.Rendering
         {
             base.Internal_Begin(out outputPtr, out flags, out mode, out customActors);
 
+            if (CanSkipRendering != null && CanSkipRendering())
+                return false;
+            
             outputPtr = GetUnmanagedPtr(Output);
             if (CustomActors.Count > 0)
                 customActors = CustomActors.ToArray();
