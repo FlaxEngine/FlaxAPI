@@ -19,5 +19,9 @@ namespace FlaxEngine.Rendering
         {
             get { return Mathf.IsPowerOfTwo(Width) && Mathf.IsPowerOfTwo(Height); }
         }
+
+        private RenderTarget()
+        {
+        }
     }
 }

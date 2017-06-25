@@ -263,12 +263,14 @@
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Math\Vector4.cs" />
     <Compile Include="Rendering\CullMode.cs" />
+    <Compile Include="Rendering\MainRenderTask.cs" />
     <Compile Include="Rendering\MSAALevel.cs" />
     <Compile Include="Rendering\PixelFormat.cs" />
     <Compile Include="Rendering\PixelFormatExtensions.cs" />
     <Compile Include="Rendering\PostProcessEffect.cs" />
     <Compile Include="Rendering\RenderPass.cs" />
     <Compile Include="Rendering\RenderView.cs" />
+    <Compile Include="Rendering\SceneRenderTask.cs" />
     <Compile Include="Rendering\TextureFlags.cs" />
     <Compile Include="Rendering\ViewFlags.cs" />
     <Compile Include="Rendering\ViewMode.cs" />

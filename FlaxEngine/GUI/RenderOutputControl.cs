@@ -13,6 +13,11 @@ namespace FlaxEngine.GUI
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class RenderOutputControl : ContainerControl
     {
+        /// <summary>
+        /// The default back buffer format used by the GUI controls presenting rendered frames.
+        /// </summary>
+        public const PixelFormat DefaultBackBufferFormat = PixelFormat.R8G8B8A8_UNorm;
+
         protected RenderTask _task;
 
         /// <summary>
@@ -24,6 +29,11 @@ namespace FlaxEngine.GUI
         public RenderTask Task => _task;
 
         /// <summary>
+        /// The output buffer.
+        /// </summary>
+        public readonly RenderTarget BackBuffer;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RenderOutputControl"/> class.
         /// </summary>
         /// <param name="task">The task. Cannot be null.</param>
@@ -31,10 +41,35 @@ namespace FlaxEngine.GUI
         public RenderOutputControl(RenderTask task)
             : base(true)
         {
-            if(task == null)
+            if (task == null)
                 throw new ArgumentNullException();
 
+            BackBuffer = RenderTarget.Create(DefaultBackBufferFormat, 1, 1);
             _task = task;
+            _task.Output = BackBuffer;
+        }
+
+        /// <inheritdoc />
+        public override void Draw()
+        {
+            Render2D.DrawRenderTarget(BackBuffer, new Rectangle(Vector2.Zero, Size), Color.White);
+
+            base.Draw();
+        }
+
+        /// <inheritdoc />
+        protected override void SetSizeInternal(Vector2 size)
+        {
+            base.SetSizeInternal(size);
+
+            if (size.MinValue >= 1)
+            {
+                BackBuffer.Size = size;
+            }
+            else
+            {
+                //Output.Dispose();
+            }
         }
     }
 }
