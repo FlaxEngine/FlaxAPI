@@ -109,6 +109,9 @@
     <Compile Include="States\PlayingState.cs" />
     <Compile Include="States\ReloadingScriptsState.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
+    <Compile Include="Viewport\EditorViewport.cs" />
+    <Compile Include="Viewport\Widgets\ViewportWidgetButton.cs" />
+    <Compile Include="Viewport\Widgets\ViewportWidgetsContainer.cs" />
     <Compile Include="Windows\Assets\AssetEditorWindow.cs" />
     <Compile Include="Windows\ContentWindow.cs" />
     <Compile Include="Windows\ContentWindow.Navigation.cs" />
@@ -131,9 +134,7 @@
       <Name>FlaxEngine</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Viewport\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /i /s /y "$(TargetDir)..\." "$(SolutionDir)..\Source\Bin\Editor\Assemblies" /exclude:$(SolutionDir)excludedFileList.txt</PostBuildEvent>
