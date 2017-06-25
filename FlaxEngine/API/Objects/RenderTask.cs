@@ -36,5 +36,10 @@ namespace FlaxEngine.Rendering
 	        mode = Mode;
 	        //customActors = CustomActors;
 	    }
+
+	    internal virtual void Internal_Render(GPUContext context)
+	    {
+            context.Clear(Output, Color.Blue);
+	    }
 	}
 }

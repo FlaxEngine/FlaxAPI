@@ -2,23 +2,28 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+
 namespace FlaxEngine.Rendering
 {
     /// <summary>
-    /// Render task which draws scene actors into the output buffer.
+    /// Provides ability to perform custom rendering using <see cref="GPUContext"/>.
     /// </summary>
     /// <seealso cref="FlaxEngine.Rendering.RenderTask" />
-    public class SceneRenderTask : RenderTask
+    public class CustomRenderTask : RenderTask
     {
-        // TODO: override 'void DrawActors(GPUContext* context, RenderView& view)'
+        /// <summary>
+        /// The custom action to perform during rendering.
+        /// </summary>
+        public Action<GPUContext> OnRender;
 
-        internal SceneRenderTask()
+        internal CustomRenderTask()
         {
         }
 
         internal override void Internal_Render(GPUContext context)
         {
-            context.Clear(Output, Color.Pink);
+            OnRender?.Invoke(context);
         }
     }
 }
