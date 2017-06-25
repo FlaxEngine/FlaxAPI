@@ -91,11 +91,15 @@ namespace FlaxEngine.GUI
         /// The mouse tracking offset.
         /// </value>
         public Vector2 TrackingMouseOffset => _window.TrackingMouseOffset;
-        
+
         /// <summary>
         /// Gets or sets the position of the mouse in the window space coordinates.
         /// </summary>
-        public Vector2 MousePosition => _window.MousePosition;
+        public Vector2 MousePosition
+        {
+            get => _window.MousePosition;
+            set => _window.MousePosition = value;
+        }
 
         /// <summary>
         /// Gets or sets the mouse cursor.

@@ -60,6 +60,14 @@ namespace FlaxEngine.GUI
             _task.CanSkipRendering += CanSkipRendering;
         }
 
+        /// <summary>
+        /// Request to resize the buffers.
+        /// </summary>
+        public void RequestResize()
+        {
+            // TODO: finish this
+        }
+
         private bool walkTree(Control c)
         {
             while (c != null)
@@ -75,7 +83,7 @@ namespace FlaxEngine.GUI
             return true;
         }
 
-        private bool CanSkipRendering()
+        protected virtual bool CanSkipRendering()
         {
             // Disable task rendering if control is not used in a window (has issing ParentWindow)
             if (RenderOnlyWithWindow)

@@ -204,6 +204,11 @@ namespace FlaxEngine.GUI
         #endregion
 
         /// <summary>
+        /// The custom tag object value linked to the control.
+        /// </summary>
+        public object Tag;
+
+        /// <summary>
         ///     Init
         /// </summary>
         /// <param name="canFocus">True if control can accept user focus</param>
@@ -701,6 +706,8 @@ namespace FlaxEngine.GUI
         {
             if (IsFocused)
                 Defocus();
+
+            Tag = null;
         }
 
         #endregion
