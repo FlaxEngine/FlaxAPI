@@ -19,6 +19,8 @@ namespace FlaxEditor.Windows
             var source = from.Count > 0 ? from[0] as ContentTreeNode : null;
             var target = to.Count > 0 ? to[0] as ContentTreeNode : null;
             navigate(source, target);
+
+            target?.Focus();
         }
 
         /// <summary>

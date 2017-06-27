@@ -96,9 +96,10 @@ namespace FlaxEditor.Windows
             if (item.IsFolder)
             {
                 // Show folder
-                var folder = (ContentFolder) item;
+                var folder = (ContentFolder)item;
                 folder.Node.Expand();
                 _tree.Select(folder.Node);
+                _view.SelectFirstItem();
                 return;
             }
 
