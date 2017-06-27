@@ -66,6 +66,11 @@ namespace FlaxEditor.Viewport
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditorViewport"/> class.
+        /// </summary>
+        /// <param name="task">The task.</param>
+        /// <param name="useWidgets">Enable/disable viewport widgets.</param>
         public EditorViewport(SceneRenderTask task, bool useWidgets)
             : base(task)
         {
