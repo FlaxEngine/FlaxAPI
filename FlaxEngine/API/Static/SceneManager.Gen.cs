@@ -87,6 +87,19 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets amount of loaded scenes.
+		/// </summary>
+		[UnmanagedCall]
+		public static int LoadedScenesCount
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetLoadedScenesCount(); }
+#endif
+		}
+
+		/// <summary>
 		/// Checks if any scene has been loaded. Loaded scene means deserialzied and added to the scenes collection.
 		/// </summary>
 		[UnmanagedCall]
@@ -421,6 +434,8 @@ namespace FlaxEngine
 		internal static extern Actor Internal_FindActorByName(string name);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Scene Internal_FindScene(ref Guid id);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern int Internal_GetLoadedScenesCount();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_IsAnySceneLoaded();
 		[MethodImpl(MethodImplOptions.InternalCall)]
