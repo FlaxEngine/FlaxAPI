@@ -546,6 +546,33 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Divides a quaternion by another.
+        /// </summary>
+        /// <param name="left">The first quaternion to multiply.</param>
+        /// <param name="right">The second quaternion to multiply.</param>
+        /// <param name="result">When the method completes, contains the divided quaternion.</param>
+        public static void Divide(ref Quaternion left, ref Quaternion right, out Quaternion result)
+        {
+            float single = right.X * right.X + right.Y * right.Y + right.Z * right.Z + right.W * right.W;
+            float single1 = 1.0f / single;
+
+            float x1 = -right.X * single1;
+            float y1 = -right.Y * single1;
+            float z1 = -right.Z * single1;
+            float w1 = right.W * single1;
+
+            float single2 = left.Y * z1 - left.Z * y1;
+            float single3 = left.Z * x1 - left.X * z1;
+            float single4 = left.X * y1 - left.Y * x1;
+            float single5 = left.X * x1 + left.Y * y1 + left.Z * z1;
+
+            result = new Quaternion(left.X * w1 + x1 * left.W + single2,
+                left.Y * w1 + y1 * left.W + single3,
+                left.Z * w1 + z1 * left.W + single4,
+                left.W * w1 - single5);
+        }
+
+        /// <summary>
         /// Reverses the direction of a given quaternion.
         /// </summary>
         /// <param name="value">The quaternion to negate.</param>
@@ -1164,6 +1191,75 @@ namespace FlaxEngine
         {
             Quaternion result;
             RotationMatrix(ref matrix, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a quaternion that rotates around the x-axis.
+        /// </summary>
+        /// <param name="angle">Angle of rotation in radians.</param>
+        /// <param name="result">When the method completes, contains the newly created quaternion.</param>
+        public static void RotationX(float angle, out Quaternion result)
+        {
+            float halfAngle = angle * 0.5f;
+            result = new Quaternion((float)Math.Sin(halfAngle), 0.0f, 0.0f, (float)Math.Cos(halfAngle));
+        }
+
+        /// <summary>
+        /// Creates a quaternion that rotates around the x-axis.
+        /// </summary>
+        /// <param name="angle">Angle of rotation in radians.</param>
+        /// <returns>The created rotation quaternion.</returns>
+        public static Quaternion RotationX(float angle)
+        {
+            Quaternion result;
+            RotationX(angle, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a quaternion that rotates around the y-axis.
+        /// </summary>
+        /// <param name="angle">Angle of rotation in radians.</param>
+        /// <param name="result">When the method completes, contains the newly created quaternion.</param>
+        public static void RotationY(float angle, out Quaternion result)
+        {
+            float halfAngle = angle * 0.5f;
+            result = new Quaternion(0.0f, (float)Math.Sin(halfAngle), 0.0f, (float)Math.Cos(halfAngle));
+        }
+
+        /// <summary>
+        /// Creates a quaternion that rotates around the y-axis.
+        /// </summary>
+        /// <param name="angle">Angle of rotation in radians.</param>
+        /// <returns>The created rotation quaternion.</returns>
+        public static Quaternion RotationY(float angle)
+        {
+            Quaternion result;
+            RotationY(angle, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a quaternion that rotates around the z-axis.
+        /// </summary>
+        /// <param name="angle">Angle of rotation in radians.</param>
+        /// <param name="result">When the method completes, contains the newly created quaternion.</param>
+        public static void RotationZ(float angle, out Quaternion result)
+        {
+            float halfAngle = angle * 0.5f;
+            result = new Quaternion(0.0f, 0.0f, (float)Math.Sin(halfAngle), (float)Math.Cos(halfAngle));
+        }
+
+        /// <summary>
+        /// Creates a quaternion that rotates around the z-axis.
+        /// </summary>
+        /// <param name="angle">Angle of rotation in radians.</param>
+        /// <returns>The created rotation quaternion.</returns>
+        public static Quaternion RotationZ(float angle)
+        {
+            Quaternion result;
+            RotationZ(angle, out result);
             return result;
         }
 

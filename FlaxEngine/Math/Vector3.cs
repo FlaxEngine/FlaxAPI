@@ -524,6 +524,28 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Divides a vector by the given value.
+        /// </summary>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="scale">The amount by which to scale the vector (per component).</param>
+        /// <param name="result">When the method completes, contains the divided vector.</param>
+        public static void Divide(ref Vector3 value, ref Vector3 scale, out Vector3 result)
+        {
+            result = new Vector3(value.X / scale.X, value.Y / scale.Y, value.Z / scale.Z);
+        }
+
+        /// <summary>
+        /// Divies a vector by the given value.
+        /// </summary>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="scale">The amount by which to scale the vector (per component).</param>
+        /// <returns>The divided vector.</returns>
+        public static Vector3 Divide(Vector3 value, Vector3 scale)
+        {
+            return new Vector3(value.X / scale.X, value.Y / scale.Y, value.Z / scale.Z);
+        }
+
+        /// <summary>
         /// Scales a vector by the given value.
         /// </summary>
         /// <param name="value">The vector to scale.</param>
@@ -1425,9 +1447,10 @@ namespace FlaxEngine
         /// <param name="result">When the method completes, contains the transformed <see cref="Vector3" />.</param>
         public static void Transform(ref Vector3 vector, ref Matrix transform, out Vector3 result)
         {
-            Vector4 intermediate;
-            Transform(ref vector, ref transform, out intermediate);
-            result = (Vector3)intermediate;
+            result = new Vector3(
+                vector.X * transform.M11 + vector.Y * transform.M21 + vector.Z * transform.M31 + transform.M41,
+                vector.X * transform.M12 + vector.Y * transform.M22 + vector.Z * transform.M32 + transform.M42,
+                vector.X * transform.M13 + vector.Y * transform.M23 + vector.Z * transform.M33 + transform.M43);
         }
 
         /// <summary>

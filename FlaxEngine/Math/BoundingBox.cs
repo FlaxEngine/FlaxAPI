@@ -69,6 +69,40 @@ namespace FlaxEngine
         public static readonly BoundingBox Empty = new BoundingBox(Vector3.Maximum, Vector3.Minimum);
 
         /// <summary>
+        /// Gets or sets the size.
+        /// </summary>
+        /// <value>
+        /// The size.
+        /// </value>
+        public Vector3 Size
+        {
+            get => Maximum - Minimum;
+            set
+            {
+                var center = Center;
+                Minimum = center - value;
+                Maximum = center + value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the center point location.
+        /// </summary>
+        /// <value>
+        /// The center.
+        /// </value>
+        public Vector3 Center
+        {
+            get => Minimum + (Maximum - Minimum) * 0.5f;
+            set
+            {
+                var sizeHalf = Size * 0.5f;
+                Minimum = value - sizeHalf;
+                Maximum = value + sizeHalf;
+            }
+        }
+
+        /// <summary>
         /// The minimum point of the box.
         /// </summary>
         public Vector3 Minimum;
