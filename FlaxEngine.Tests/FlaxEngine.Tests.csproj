@@ -57,6 +57,7 @@
     <Compile Include="TestContainerControl.cs" />
     <Compile Include="TestFloatR10G10B10A2.cs" />
     <Compile Include="TestFloatR11G11B10.cs" />
+    <Compile Include="TestTransform.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlaxEngine\FlaxEngine.csproj">
