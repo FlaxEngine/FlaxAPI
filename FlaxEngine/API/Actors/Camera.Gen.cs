@@ -88,6 +88,32 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets camera view matrix.
+		/// </summary>
+		[UnmanagedCall]
+		public Matrix View
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { Matrix resultAsRef; Internal_GetView(unmanagedPtr, out resultAsRef); return resultAsRef; }
+#endif
+		}
+
+		/// <summary>
+		/// Gets camera projection matrix.
+		/// </summary>
+		[UnmanagedCall]
+		public Matrix Projection
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { Matrix resultAsRef; Internal_GetProjection(unmanagedPtr, out resultAsRef); return resultAsRef; }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -108,6 +134,10 @@ namespace FlaxEngine
 		internal static extern void Internal_GetFarPlane(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetViewport(IntPtr obj, out Viewport resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetView(IntPtr obj, out Matrix resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetProjection(IntPtr obj, out Matrix resultAsRef);
 #endif
 #endregion
 	}
