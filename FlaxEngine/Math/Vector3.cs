@@ -1317,6 +1317,19 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Makes vectors normalized and orthogonal to each other
+        /// </summary>
+        /// <param name="normal">Normal vector</param>
+        /// <param name="tangent">Tangent vector</param>
+        public static void OrthoNormalize(ref Vector3 normal, ref Vector3 tangent)
+        {
+            normal.Normalize();
+            Vector3 proj = normal * Dot(tangent, normal);
+            tangent = tangent - proj;
+            tangent.Normalize();
+        }
+
+        /// <summary>
         /// Transforms a 3D vector by the given <see cref="Quaternion" /> rotation.
         /// </summary>
         /// <param name="vector">The vector to rotate.</param>

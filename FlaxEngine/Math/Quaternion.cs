@@ -1123,6 +1123,28 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Creates a rotation with the specified forward and upwards directions
+        /// </summary>
+        /// <param name="forward">Forward direction</param>
+        /// <param name="up">Up direction</param>
+        /// <returns>Calculated quaternion</returns>
+        public static Quaternion LookRotation(Vector3 forward, Vector3 up)
+        {
+            Vector3.OrthoNormalize(ref forward, ref up);
+            Vector3 right;
+            Vector3.Cross(ref up, ref forward, out right);
+
+            Quaternion result;
+            result.W = Mathf.Sqrt(1.0f + right.X + up.Y + forward.Z) * 0.5f;
+            float w4_recip = 1.0f / (4.0f * result.W);
+            result.X = (up.Z - forward.Y) * w4_recip;
+            result.Y = (forward.X - right.Z) * w4_recip;
+            result.Z = (right.Y - up.X) * w4_recip;
+            
+            return result;
+        }
+
+        /// <summary>
         /// Creates a left-handed spherical billboard that rotates around a specified object position.
         /// </summary>
         /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>

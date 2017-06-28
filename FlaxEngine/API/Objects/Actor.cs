@@ -16,7 +16,6 @@ namespace FlaxEngine
 	/// </summary>
 	public abstract partial class Actor
 	{
-        // TODO: set direction
         // TODO: Instantiate from prefab
         // TODO: Destroy
         // TODO: TransformDirection, TranformPoint
@@ -62,7 +61,6 @@ namespace FlaxEngine
                 Internal_SetOrientation(unmanagedPtr, ref orientation);
             }
 #endif
-
         }
 
         /// <summary>
@@ -92,15 +90,22 @@ namespace FlaxEngine
 #endif
         }
 
-        /// <summary>
-        /// Gets actor direction vector
-        /// </summary>
-        public Vector3 Direction
-        {
-            get { return Vector3.ForwardLH * Orientation; }
-        }
+	    /// <summary>
+	    /// Gets or sets the actor direction vector (aka forward direction).
+	    /// </summary>
+	    public Vector3 Direction
+	    {
+	        get { return Vector3.ForwardLH * Orientation; }
+	        set
+	        {
+	            Vector3 right = Vector3.Cross(value, Vector3.Up);
+	            Vector3 up = Vector3.Cross(right, value);
+	            //up = Vector3.Up;
+	            Orientation = Quaternion.LookRotation(value, up);
+	        }
+	    }
 
-        /// <summary>
+	    /// <summary>
         /// Resets actor local transform
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
