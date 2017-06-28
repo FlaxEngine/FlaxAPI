@@ -19,12 +19,14 @@ namespace FlaxEditor.Viewport
         // how much frames we want to keep in the buffer to calculate the avg. delta currently hardcoded
         public const int FpsCameraFilteringFrames = 3;
 
+        // Movement
         protected ViewportWidgetButton _speedWidget;
         protected float _movementSpeed;
         protected float _mouseAccelerationScale;
         protected bool _useMouseFiltering;
         protected bool _useMouseAcceleration;
 
+        // Mouse
         protected bool _isMouseRightDown;
         protected bool _isMouseLeftDown;
         protected int _deltaFilteringStep;
@@ -36,6 +38,10 @@ namespace FlaxEditor.Viewport
         protected Vector2 _startPosLeft;
         protected Vector2 _mouseDeltaRightLast;
         protected Vector2[] _deltaFilteringBuffer = new Vector2[FpsCameraFilteringFrames];
+
+        // Camera
+        protected float _nearPlane = 0.1f;
+        protected float _farPlane = 10000.0f;
 
         /// <summary>
         /// Speed of the mouse.
@@ -64,6 +70,61 @@ namespace FlaxEditor.Viewport
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Camera's pitch angle clamp range (in degrees).
+        /// </summary>
+        public Vector2 CamPitchAngles = new Vector2(-80, 80);
+
+        /// <summary>
+        /// Gets the view transform.
+        /// </summary>
+        /// <value>
+        /// The view transform.
+        /// </value>
+        public Transform ViewTransform => new Transform(ViewPosition, ViewOrientation);
+        
+        /// <summary>
+        /// Gets or sets the view position.
+        /// </summary>
+        /// <value>
+        /// The view position.
+        /// </value>
+        public Vector3 ViewPosition { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the view orientation.
+        /// </summary>
+        /// <value>
+        /// The view orientation.
+        /// </value>
+        public Quaternion ViewOrientation { get; protected set; } = Quaternion.Identity;
+
+        /// <summary>
+        /// Gets or sets the view direction vector.
+        /// </summary>
+        public Vector3 ViewDirection
+        {
+            get { return Vector3.ForwardLH * ViewOrientation; }
+            protected set
+            {
+                Vector3 right = Vector3.Cross(value, Vector3.Up);
+                Vector3 up = Vector3.Cross(right, value);
+                ViewOrientation = Quaternion.LookRotation(value, up);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the absolute mouse position (normalized, not in pixels).
+        /// </summary>
+        /// <value>
+        /// The absolute mouse position.
+        /// </value>
+        protected Vector2 AbsMousePosition
+        {
+            get => _absMousePos;
+            set => _absMousePos = new Vector2(value.X, Mathf.Clamp(_absMousePos.Y, CamPitchAngles.X, CamPitchAngles.Y));
         }
 
         /// <summary>
@@ -113,6 +174,8 @@ namespace FlaxEditor.Viewport
                 var viewModeButton = new ViewportWidgetButton("View", Sprite.Invalid, viewModeCM);
                 viewModeButton.Parent = viewMode;
                 viewMode.Parent = this;
+
+                // TODO: provide widget for chaging near and far plane
             }
         }
 
@@ -223,7 +286,7 @@ namespace FlaxEditor.Viewport
                 }
 
                 // Accumulate position
-                _absMousePos += delta * (200.0f * MouseSpeed);
+                AbsMousePosition += delta * (200.0f * MouseSpeed);
 
                 // Update
                 var dt = Time.UnscaledDeltaTime;

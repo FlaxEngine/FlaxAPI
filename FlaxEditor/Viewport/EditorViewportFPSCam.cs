@@ -18,11 +18,6 @@ namespace FlaxEditor.Viewport
         private float _moveStartTime;
 
         /// <summary>
-        /// Camera's pitch angle clamp range (in degrees)
-        /// </summary>
-        public Vector2 CamPitchAngles;
-
-        /// <summary>
         /// Gets a value indicating whether this viewport is animating movement.
         /// </summary>
         /// <value>
@@ -39,14 +34,12 @@ namespace FlaxEditor.Viewport
             : base(task, useWidgets)
         {
             _moveStartTime = -1;
-            CamPitchAngles = new Vector2(-80, 80);
 
-            // TODO: provide widget for chaging near and far plane
-            //_camera.SetNearPlane(1);
-            //_camera.SetFarPlane(10000);
+            _nearPlane = 1;
+            _farPlane = 10000;
         }
 
-        /*/// <summary>
+        /// <summary>
         /// Sets view.
         /// </summary>
         /// <param name="position">The view position.</param>
@@ -57,8 +50,8 @@ namespace FlaxEditor.Viewport
                 return;
 
             // Rotate and move
-            _camera.SetPosition(position);
-            _camera.SetDirection(direction);
+            ViewPosition = position;
+            ViewDirection = direction;
             updateMouseAbs();
         }
 
@@ -73,8 +66,8 @@ namespace FlaxEditor.Viewport
                 return;
 
             // Rotate and move
-            _camera.SetPosition(position);
-            _camera.SetOrientation(orientation);
+            ViewPosition = position;
+            ViewOrientation = orientation;
             updateMouseAbs();
         }
 
@@ -94,17 +87,16 @@ namespace FlaxEditor.Viewport
         /// <param name="target">The target transform.</param>
         public void MoveViewport(Transform target)
         {
-            _startMove = GetCamera()->GetTransform();
+            _startMove = ViewTransform;
             _endMove = target;
-            _moveStartTime = CEngine->GetTickService()->UnscaledTime.GetTotalSeconds();
+            _moveStartTime = Time.UnscaledTime;
         }
 
         private void updateMouseAbs()
         {
             // Change mouse position
-            Vector3 euler = _camera.GetOrientation().GetEuler();
-            _absMousePos.X = euler.Y;
-            _absMousePos.Y = Mathf.Clamp(euler.X, CamPitchAngles.X, CamPitchAngles.Y);
+            Vector3 euler = ViewOrientation.EulerAngles;
+            AbsMousePosition = new Vector2(euler.Y, euler.X);
         }
 
         /// <inheritdoc />
@@ -117,7 +109,7 @@ namespace FlaxEditor.Viewport
             {
                 // Calculate linear progress
                 float animationDuration = 0.5f;
-                float time = CEngine->GetTickService()->UnscaledTime.GetTotalSeconds();
+                float time = Time.UnscaledTime;
                 float progress = (time - _moveStartTime) / animationDuration;
 
                 // Check for end
@@ -132,9 +124,26 @@ namespace FlaxEditor.Viewport
                 a = a * a * a;
                 Transform targetTransform = Transform.Lerp(_startMove, _endMove, a);
                 targetTransform.Scale = Vector3.Zero;
-                _camera.SetTransform(targetTransform);
+                ViewPosition = targetTransform.Translation;
+                ViewOrientation = targetTransform.Orientation;
                 updateMouseAbs();
             }
-        }*/
+        }
+
+        protected override void UpdateMouse(float dt, ref Vector3 move)
+        {
+            if (IsAnimatingMove)
+                return;
+
+            // Rotate
+            Quaternion rotation;
+            Quaternion.RotationYawPitchRoll(_absMousePos.X * Mathf.DegreesToRadians, _absMousePos.Y * Mathf.DegreesToRadians, 0, out rotation);
+            ViewOrientation = rotation;
+
+            // Move
+            Vector3 moveLocal;
+            Vector3.Transform(ref move, ref rotation, out moveLocal);
+            ViewPosition += moveLocal;
+        }
     }
 }
