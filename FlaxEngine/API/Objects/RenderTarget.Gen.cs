@@ -90,7 +90,7 @@ namespace FlaxEngine.Rendering
 		/// <summary>
 		/// Creates the new render target object.
 		/// </summary>
-		/// <returns>Created render target object which is already allocated or null if cannot perform this action.</returns>
+		/// <returns>Created render target object or null if cannot perform this action.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif

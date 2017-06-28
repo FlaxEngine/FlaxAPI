@@ -27,8 +27,25 @@ namespace FlaxEngine.Rendering
 
         /// <summary>
         /// The rendering output surface.
+        /// It needs to be assigned by the user to perform rendering.
         /// </summary>
         public RenderTarget Output;
+
+        /// <summary>
+        /// The frame rendering buffers.
+        /// Task is creating and resizing them during rendering.
+        /// </summary>
+        public RenderBuffers Buffers;
+
+        /// <summary>
+        /// The view flags.
+        /// </summary>
+        public ViewFlags Flags = ViewFlags.DefaultGame;
+
+        /// <summary>
+        /// The view mode.
+        /// </summary>
+        public ViewMode Mode = ViewMode.Default;
 
         /// <summary>
         /// The rendering view description.
@@ -64,16 +81,14 @@ namespace FlaxEngine.Rendering
             base.Dispose();
         }
 
-        internal override bool Internal_Begin(out IntPtr outputPtr, out ViewFlags flags, out ViewMode mode, out Actor[] customActors)
+        internal override bool Internal_Begin(out IntPtr outputPtr)
         {
-            base.Internal_Begin(out outputPtr, out flags, out mode, out customActors);
+            base.Internal_Begin(out outputPtr);
 
             if (CanSkipRendering != null && CanSkipRendering())
                 return false;
 
             outputPtr = GetUnmanagedPtr(Output);
-            if (CustomActors.Count > 0)
-                customActors = CustomActors.ToArray();
 
             // Allow to render only if has buffers and the output
             return Output && Output.IsAllocated;
@@ -85,10 +100,23 @@ namespace FlaxEngine.Rendering
             View.Flags = Flags;
             View.Mode = Mode;
 
-            // Prepare
+            // Create buffers if missing
+            if (Buffers == null)
+                Buffers = RenderBuffers.Create();
+
+            // Prepare view
             if (Camera != null)
                 View.CopyFrom(Camera);
             OnBegin?.Invoke(this);
+
+            // Resize buffers
+            Buffers.Size = Output.Size;
+
+            // Call scene rendering
+            //if (CustomActors.Count > 0)
+            //    customActors = CustomActors.ToArray();
+
+
 
             // TODO: draw scene
             context.Clear(Output, new Color(View.Direction.X, View.Direction.Y, View.Direction.Z, 1.0f));
