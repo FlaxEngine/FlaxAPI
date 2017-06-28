@@ -110,6 +110,7 @@
     <Compile Include="States\ReloadingScriptsState.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
     <Compile Include="Viewport\EditorViewport.cs" />
+    <Compile Include="Viewport\EditorViewportArcBallCam.cs" />
     <Compile Include="Viewport\EditorViewportFPSCam.cs" />
     <Compile Include="Viewport\MainGizmoEditorViewport.cs" />
     <Compile Include="Viewport\Widgets\ViewportWidgetButton.cs" />
