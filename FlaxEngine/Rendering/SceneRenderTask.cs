@@ -14,6 +14,12 @@ namespace FlaxEngine.Rendering
     public class SceneRenderTask : RenderTask
     {
         /// <summary>
+        /// Action delegate called before scene rendering. Should prepare <see cref="SceneRenderTask.View"/> structure for rendering.
+        /// </summary>
+        /// <param name="task">The task.</param>
+        public delegate void BeginDelegate(SceneRenderTask task);
+
+        /// <summary>
         /// The custom set of actors to render.
         /// If collection is empty whole scene actors will be used.
         /// </summary>
@@ -40,6 +46,11 @@ namespace FlaxEngine.Rendering
         /// </summary>
         public Func<bool> CanSkipRendering;
 
+        /// <summary>
+        /// The action called on rendering begin.
+        /// </summary>
+        public BeginDelegate OnBegin;
+
         internal SceneRenderTask()
         {
         }
@@ -47,7 +58,7 @@ namespace FlaxEngine.Rendering
         /// <inheritdoc />
         public override void Dispose()
         {
-            if(Output)
+            if (Output)
                 Output.Dispose();
 
             base.Dispose();
@@ -59,7 +70,7 @@ namespace FlaxEngine.Rendering
 
             if (CanSkipRendering != null && CanSkipRendering())
                 return false;
-            
+
             outputPtr = GetUnmanagedPtr(Output);
             if (CustomActors.Count > 0)
                 customActors = CustomActors.ToArray();
@@ -70,8 +81,17 @@ namespace FlaxEngine.Rendering
 
         internal override void Internal_Render(GPUContext context)
         {
+            // Copy flags
+            View.Flags = Flags;
+            View.Mode = Mode;
+
+            // Prepare
+            if (Camera != null)
+                View.CopyFrom(Camera);
+            OnBegin?.Invoke(this);
+
             // TODO: draw scene
-            context.Clear(Output, Color.Brown);
+            context.Clear(Output, new Color(View.Direction.X, View.Direction.Y, View.Direction.Z, 1.0f));
         }
     }
 }

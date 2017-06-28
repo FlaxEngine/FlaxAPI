@@ -40,6 +40,7 @@ namespace FlaxEditor.Viewport
         protected Vector2[] _deltaFilteringBuffer = new Vector2[FpsCameraFilteringFrames];
 
         // Camera
+        protected float _fieldOfView = 60.0f;
         protected float _nearPlane = 0.1f;
         protected float _farPlane = 10000.0f;
 
@@ -177,6 +178,9 @@ namespace FlaxEditor.Viewport
 
                 // TODO: provide widget for chaging near and far plane
             }
+
+            // Link for task event
+            task.OnBegin += x => CopyViewData(ref x.View);
         }
 
         /// <summary>
@@ -187,6 +191,31 @@ namespace FlaxEditor.Viewport
         {
             //CaptureScreenshot.Capture(Task, path);
             throw new NotImplementedException();// TODO: taking screenshots
+        }
+
+        /// <summary>
+        /// Copies the render view data to <see cref="RenderView"/> structure.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        public void CopyViewData(ref RenderView view)
+        {
+            // Create projection matrix
+            float aspect = Width / Height;
+            Matrix.PerspectiveFovLH(_fieldOfView * Mathf.DegreesToRadians, aspect, _nearPlane, _farPlane, out view.Projection);
+
+            // Create view matrix
+            Vector3 position = ViewPosition;
+            Vector3 direction = ViewDirection;
+            Vector3 target = position + direction;
+            Vector3 right = Vector3.Normalize(Vector3.Cross(Vector3.Up, direction));
+            Vector3 up = Vector3.Normalize(Vector3.Cross(direction, right));
+            Matrix.LookAtLH(ref position, ref target, ref up, out view.View);
+
+            // Copy data
+            view.Position = ViewPosition;
+            view.Direction = ViewDirection;
+            view.Near = _nearPlane;
+            view.Far = _farPlane;
         }
 
         protected virtual void UpdateMouse(float dt, ref Vector3 move)
