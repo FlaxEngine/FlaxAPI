@@ -51,7 +51,7 @@ namespace FlaxEditor.Windows
         /// <summary>
         /// The viewport control.
         /// </summary>
-        public readonly MainGizmoEditorViewport Viewport;
+        public readonly MainEditorGizmoViewport Viewport;
         
         /// <summary>
         /// Initializes a new instance of the <see cref="EditGameWindow"/> class.
@@ -63,7 +63,7 @@ namespace FlaxEditor.Windows
             Title = "Editor";
 
             // Create viewport
-            Viewport = new MainGizmoEditorViewport();
+            Viewport = new MainEditorGizmoViewport();
             Viewport.Parent = this;
             Viewport.Task.Flags = ViewFlags.DefaultEditor;
         }
