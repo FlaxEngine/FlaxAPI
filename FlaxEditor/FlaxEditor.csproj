@@ -71,6 +71,9 @@
     <Compile Include="Content\Proxy\TextureProxy.cs" />
     <Compile Include="Content\Tree\ContentTreeNode.cs" />
     <Compile Include="Content\Tree\MainContentTreeNode.cs" />
+    <Compile Include="Gizmo\GizmoBase.cs" />
+    <Compile Include="Gizmo\GizmosCollection.cs" />
+    <Compile Include="Gizmo\IGizmoOwner.cs" />
     <Compile Include="GUI\MainMenu.cs" />
     <Compile Include="GUI\MainMenuButton.cs" />
     <Compile Include="GUI\StatusBar.cs" />
