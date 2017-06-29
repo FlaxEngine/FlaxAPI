@@ -15,7 +15,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
 	/// <summary>
-	/// TODO: Add comment
+	/// Describes the camera projection and view. Provides information about how to render scene (viewport location and direction, etc.).
 	/// </summary>
 	public sealed partial class Camera : Actor
 	{
@@ -71,7 +71,7 @@ namespace FlaxEngine
 			get; set;
 #else
 			get { return Internal_GetFarPlane(unmanagedPtr); }
-			set { Internal_GetFarPlane(unmanagedPtr, value); }
+			set { Internal_SetFarPlane(unmanagedPtr, value); }
 #endif
 		}
 
@@ -114,6 +114,19 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets the current main camera. This object is used for scene rendering. May be null if no camera is available.
+		/// </summary>
+		[UnmanagedCall]
+		public static Camera MainCamera
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetMainCamera(); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -131,13 +144,15 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetFarPlane(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetFarPlane(IntPtr obj, float val);
+		internal static extern void Internal_SetFarPlane(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetViewport(IntPtr obj, out Viewport resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetView(IntPtr obj, out Matrix resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetProjection(IntPtr obj, out Matrix resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern Camera Internal_GetMainCamera();
 #endif
 #endregion
 	}
