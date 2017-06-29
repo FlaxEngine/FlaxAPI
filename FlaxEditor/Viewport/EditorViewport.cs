@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -125,7 +125,7 @@ namespace FlaxEditor.Viewport
         protected Vector2 AbsMousePosition
         {
             get => _absMousePos;
-            set => _absMousePos = new Vector2(value.X, Mathf.Clamp(_absMousePos.Y, CamPitchAngles.X, CamPitchAngles.Y));
+            set => _absMousePos = new Vector2(value.X, Mathf.Clamp(value.Y, CamPitchAngles.X, CamPitchAngles.Y));
         }
 
         /// <summary>
