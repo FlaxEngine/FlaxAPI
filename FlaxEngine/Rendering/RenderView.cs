@@ -1,12 +1,15 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
+
+using System.Runtime.InteropServices;
 
 namespace FlaxEngine.Rendering
 {
     /// <summary>
     /// Rendering view description object. Contains information about viewport location and orientation in space.
     /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
     public struct RenderView
     {
         /// <summary>
@@ -15,14 +18,14 @@ namespace FlaxEngine.Rendering
         public Vector3 Position;
 
         /// <summary>
-        /// The direction of the view.
-        /// </summary>
-        public Vector3 Direction;
-
-        /// <summary>
         /// The near plane.
         /// </summary>
         public float Near;
+
+        /// <summary>
+        /// The direction of the view.
+        /// </summary>
+        public Vector3 Direction;
 
         /// <summary>
         /// The far plane.

@@ -55,12 +55,37 @@ namespace FlaxEngine.Rendering
 #endif
 		}
 
+		/// <summary>
+		/// Draws scene.
+		/// </summary>
+		/// <param name="task">Calling render task.</param>
+		/// <param name="output">Output texture.</param>
+		/// <param name="buffers">Frame rendering buffers.</param>
+		/// <param name="view">Rendering view description structure.</param>
+		/// <param name="flags">Custom view flags collection.</param>
+		/// <param name="mode">Custom view mode option.</param>
+		/// <param name="customActors">Custom set of actors to render. If set to null default scene will be rendered.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void DrawScene(RenderTask task, RenderTarget output, RenderBuffers buffers, RenderView view, ViewFlags flags, ViewMode mode, IntPtr[] customActors = null) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_DrawScene(unmanagedPtr, Object.GetUnmanagedPtr(task), Object.GetUnmanagedPtr(output), Object.GetUnmanagedPtr(buffers), ref view, flags, mode, customActors);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_Clear(IntPtr obj, IntPtr rt, ref Color color);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_ClearDepth(IntPtr obj, IntPtr depthBuffer, float depthValue);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_DrawScene(IntPtr obj, IntPtr task, IntPtr output, IntPtr buffers, ref RenderView view, ViewFlags flags, ViewMode mode, IntPtr[] customActors);
 #endif
 #endregion
 	}
