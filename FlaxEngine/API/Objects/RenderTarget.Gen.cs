@@ -17,7 +17,7 @@ namespace FlaxEngine.Rendering
 	/// <summary>
 	/// Allows to perform custom rendering to texture.
 	/// </summary>
-	public partial class RenderTarget : Object
+	public sealed partial class RenderTarget : Object
 	{
 		/// <summary>
 		/// Gets texture surface format.

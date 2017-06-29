@@ -17,7 +17,7 @@ namespace FlaxEngine.Rendering
 	/// <summary>
 	/// Allows to perform custom rendering to texture.
 	/// </summary>
-	public partial class RenderBuffers : Object
+	public sealed partial class RenderBuffers : Object
 	{
 		/// <summary>
 		/// Gets buffer textures width (in pixels).

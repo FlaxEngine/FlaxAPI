@@ -17,7 +17,7 @@ namespace FlaxEngine.Rendering
 	/// <summary>
 	/// Allows to perform custom graphics commands using GPU device and rendering pipeline.
 	/// </summary>
-	public partial class GPUContext : Object
+	public sealed partial class GPUContext : Object
 	{
 		/// <summary>
 		/// Clears texture surface with a color.
