@@ -17,9 +17,9 @@ namespace FlaxEditor.Gizmo
         private bool _isCloning;
         private bool _isActive;
         private readonly List<Transform> _startTransforms = new List<Transform>();
-        private readonly List<Actor> _selection = new List<Actor>();
-        private readonly List<Actor> _selectionParents = new List<Actor>();
-        
+        private readonly List<ITransformable> _selection = new List<ITransformable>();
+        private readonly List<ITransformable> _selectionParents = new List<ITransformable>();
+
         private Matrix _screenScaleMatrix;
         private float _screenScale;
 
@@ -27,17 +27,17 @@ namespace FlaxEditor.Gizmo
         private Vector3 _accMoveDelta;
         private Matrix _rotationMatrix;
 
-        private Vector3 _localForward;
-        private Vector3 _localUp;
-        private Vector3 _localRight;
+        private Vector3 _localForward = Vector3.ForwardLH;
+        private Vector3 _localUp = Vector3.Up;
+        private Vector3 _localRight = Vector3.Right;
 
-        private Matrix _objectOrientedWorld;
-        private Matrix _axisAlignedWorld;
+        private Matrix _objectOrientedWorld = Matrix.Identity;
+        private Matrix _axisAlignedWorld = Matrix.Identity;
 
-        private Matrix _gizmoWorld;
+        private Matrix _gizmoWorld = Matrix.Identity;
 
         private Vector3 _translationDelta;
-        private Matrix _rotationDelta;
+        private Matrix _rotationDelta = Matrix.Identity;
         private Vector3 _scaleDelta;
 
         private Vector3 _tDelta;
@@ -54,6 +54,49 @@ namespace FlaxEditor.Gizmo
         public TransformGizmo(IGizmoOwner owner)
             : base(owner)
         {
+        }
+
+        private void StartTransforming()
+        {
+            // Check if can start new action
+            int count = _selectionParents.Count;
+            if (count <= 0 || _isTransforming)
+            {
+                // Back
+                return;
+            }
+
+            // Start
+            _isTransforming = true;
+
+            // Cache 'before' state
+            _startTransforms.Clear();
+            if (_startTransforms.Capacity < count)
+                _startTransforms.Capacity = Mathf.NextPowerOfTwo(count);
+            for (int i = 0; i < count; i++)
+                _startTransforms.Add(_selectionParents[i].Transform);
+        }
+
+        private void EndTransforming()
+        {
+            // Check if wasn't working at all
+            if (!_isTransforming)
+            {
+                // Back
+                return;
+            }
+
+            /*// End action
+            auto ur = _parent->GetUndoRedo();
+            if (!ur->IsDisabled())
+            {
+                ur->AddAction(new TransformActors(this, _startTransforms));
+            }
+            _startTransforms.Clear();
+            _isTransforming = false;
+            _isCloning = false;
+            _parent->OnTransfomingEnd();
+            _parent->OnTransformObject();*/
         }
     }
 }

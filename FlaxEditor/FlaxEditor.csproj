@@ -75,6 +75,7 @@
     <Compile Include="Gizmo\GizmosCollection.cs" />
     <Compile Include="Gizmo\IGizmoOwner.cs" />
     <Compile Include="Gizmo\TransformGizmo.cs" />
+    <Compile Include="Gizmo\TransformGizmo.Selection.cs" />
     <Compile Include="Gizmo\TransformGizmo.Settings.cs" />
     <Compile Include="Gizmo\TransformGizmo.Types.cs" />
     <Compile Include="GUI\MainMenu.cs" />
