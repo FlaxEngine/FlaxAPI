@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -186,13 +186,13 @@ namespace FlaxEditor.Viewport
         /// <summary>
         /// Takes the screenshot of the current viewport.
         /// </summary>
-        /// <param name="path">The output file path.</param>
-        public void TakeScreenshot(string path)
+        /// <param name="path">The output file path. Set null to use default value.</param>
+        public void TakeScreenshot(string path = null)
         {
             //CaptureScreenshot.Capture(Task, path);
             throw new NotImplementedException();// TODO: taking screenshots
         }
-
+        
         /// <summary>
         /// Copies the render view data to <see cref="RenderView"/> structure.
         /// </summary>

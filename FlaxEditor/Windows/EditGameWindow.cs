@@ -82,10 +82,10 @@ namespace FlaxEditor.Windows
             BoundingSphere.FromBox(ref box, out sphere);
             sphere.Radius = Math.Max(sphere.Radius, 10.0f);
             Quaternion orientation = new Quaternion(0.424461186f, -0.0940724313f, 0.0443938486f, 0.899451137f);
-            Vector3 position = sphere.Center - (Vector3.ForwardLH * orientation * (sphere.Radius * 2.5f));
-            
+            Vector3 position = sphere.Center - Vector3.ForwardLH * orientation * (sphere.Radius * 2.5f);
+
             // Move vieport
-            //Viewport.MoveView(position, orientation);
+            Viewport.MoveViewport(position, orientation);
         }
 
         /// <inheritdoc />
@@ -104,7 +104,7 @@ namespace FlaxEditor.Windows
         {
             if (ParentWindow.GetKeyDown(KeyCode.F12))
             {
-                // TODO: capture screenshot
+                Viewport.TakeScreenshot();
             }
 
             base.Update(deltaTime);
