@@ -37,7 +37,13 @@ namespace FlaxEditor.Windows
         private void OnBegin(SceneRenderTask sceneRenderTask)
         {
             // Use the main camera for the game preview
-            sceneRenderTask.Camera = Camera.MainCamera;
+            var camera = Camera.MainCamera;
+            if (camera)
+            {
+                // Fix aspect ratio to fit the current output dimensions
+                camera.CustomAspectRatio = Width / Height;
+            }
+            sceneRenderTask.Camera = camera;
         }
 
         /// <inheritdoc />

@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -85,6 +85,11 @@ namespace FlaxEngine.GUI
 
         protected virtual bool CanSkipRendering()
         {
+            // Disable task rendering if control is very small
+            const float MinRenderSize = 4;
+            if (Width < MinRenderSize || Height < MinRenderSize)
+                return true;
+
             // Disable task rendering if control is not used in a window (has issing ParentWindow)
             if (RenderOnlyWithWindow)
             {
