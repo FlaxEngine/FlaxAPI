@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -70,6 +70,7 @@ namespace FlaxEngine.Rendering
 
         internal SceneRenderTask()
         {
+            View.MaxShadowsQuality = Quality.Ultra;
         }
 
         /// <inheritdoc />
@@ -113,13 +114,8 @@ namespace FlaxEngine.Rendering
             Buffers.Size = Output.Size;
 
             // Call scene rendering
-            //if (CustomActors.Count > 0)
-            //    customActors = CustomActors.ToArray();
-
-
-
-            // TODO: draw scene
-            context.Clear(Output, new Color(View.Direction.X, View.Direction.Y, View.Direction.Z, 1.0f));
+            var customActors = CustomActors.Count > 0 ? CustomActors.ToArray() : null;
+            context.DrawScene(this, Output, Buffers, View, Flags, Mode, customActors);
         }
     }
 }
