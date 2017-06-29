@@ -147,6 +147,7 @@
     <Compile Include="Attributes\MemberCollectionAttribute.cs" />
     <Compile Include="Attributes\PersisitentDataAttribute.cs" />
     <Compile Include="Configurations\PersistentDataConfig.cs" />
+    <Compile Include="Engine\ITransformable.cs" />
     <Compile Include="Enums\Quality.cs" />
     <Compile Include="Enums\UI.cs" />
     <Compile Include="Attributes\Editor\CustomEditorAttribute.cs" />

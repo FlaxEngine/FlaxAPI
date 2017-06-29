@@ -14,8 +14,8 @@ namespace FlaxEngine
 	/// <summary>
 	/// Base class for all actor types on the scene
 	/// </summary>
-	public abstract partial class Actor
-	{
+	public abstract partial class Actor : ITransformable
+    {
         // TODO: Instantiate from prefab
         // TODO: Destroy
         // TODO: TransformDirection, TranformPoint
