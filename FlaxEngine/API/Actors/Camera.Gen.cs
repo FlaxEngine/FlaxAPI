@@ -48,6 +48,20 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets or sets the custom aspect ratio. 0 if not use custom value.
+		/// </summary>
+		[UnmanagedCall]
+		public float CustomAspectRatio
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetCustomAspectRatio(unmanagedPtr); }
+			set { Internal_SetCustomAspectRatio(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
 		/// Gets or sets camera's near plane distance
 		/// </summary>
 		[UnmanagedCall]
@@ -137,6 +151,10 @@ namespace FlaxEngine
 		internal static extern float Internal_GetFOV(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetFOV(IntPtr obj, float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetCustomAspectRatio(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetCustomAspectRatio(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetNearPlane(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
