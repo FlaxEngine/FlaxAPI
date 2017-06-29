@@ -25,10 +25,19 @@ namespace FlaxEditor.Windows
         {
             Title = "Game";
 
+            var task = RenderTask.Create<SceneRenderTask>();
+            task.OnBegin += OnBegin;
+
             // Setup viewport
-            _viewport = new RenderOutputControl(RenderTask.Create<SceneRenderTask>());
+            _viewport = new RenderOutputControl(task);
             _viewport.DockStyle = DockStyle.Fill;
             _viewport.Parent = this;
+        }
+
+        private void OnBegin(SceneRenderTask sceneRenderTask)
+        {
+            // Use the main camera for the game preview
+            sceneRenderTask.Camera = Camera.MainCamera;
         }
 
         /// <inheritdoc />
