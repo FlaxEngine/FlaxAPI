@@ -74,6 +74,9 @@
     <Compile Include="Gizmo\GizmoBase.cs" />
     <Compile Include="Gizmo\GizmosCollection.cs" />
     <Compile Include="Gizmo\IGizmoOwner.cs" />
+    <Compile Include="Gizmo\TransformGizmo.cs" />
+    <Compile Include="Gizmo\TransformGizmo.Settings.cs" />
+    <Compile Include="Gizmo\TransformGizmo.Types.cs" />
     <Compile Include="GUI\MainMenu.cs" />
     <Compile Include="GUI\MainMenuButton.cs" />
     <Compile Include="GUI\StatusBar.cs" />
@@ -141,7 +144,6 @@
       <Name>FlaxEngine</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /i /s /y "$(TargetDir)..\." "$(SolutionDir)..\Source\Bin\Editor\Assemblies" /exclude:$(SolutionDir)excludedFileList.txt</PostBuildEvent>
