@@ -63,7 +63,7 @@ namespace FlaxEditor.Windows
             Title = "Editor";
 
             // Create viewport
-            Viewport = new MainEditorGizmoViewport();
+            Viewport = new MainEditorGizmoViewport(editor);
             Viewport.Parent = this;
             Viewport.Task.Flags = ViewFlags.DefaultEditor;
         }

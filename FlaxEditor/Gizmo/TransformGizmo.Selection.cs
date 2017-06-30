@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -110,12 +110,10 @@ namespace FlaxEditor.Gizmo
             _lastIntersectionPosition = Vector3.Zero;
         }
 
-        /// <summary>
-        /// Select all objects.
-        /// </summary>
-        public void SelectAll()
+        /// <inheritdoc />
+        public override void OnSelectionChanged(List<object> newSelection)
         {
-            
+            // ... 
         }
 
         /// <summary>

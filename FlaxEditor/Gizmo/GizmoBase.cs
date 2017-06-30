@@ -1,6 +1,8 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
+
+using System.Collections.Generic;
 
 namespace FlaxEditor.Gizmo
 {
@@ -34,6 +36,14 @@ namespace FlaxEditor.Gizmo
             // Link
             Owner = owner;
             Owner.Gizmos.Add(this);
+        }
+
+        /// <summary>
+        /// Called when selected objects collection gets changed.
+        /// </summary>
+        /// <param name="newSelection">The new selection pool.</param>
+        public virtual void OnSelectionChanged(List<object> newSelection)
+        {
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 using FlaxEngine.Utilities;
 
@@ -32,6 +32,9 @@ namespace FlaxEditor.States
         public override void OnEnter()
         {
             Editor.CloseSplashScreen();
+
+            // Cleanup selection
+            Editor.Instance.SceneEditing.Deselect();
 
             base.OnEnter();
         }
