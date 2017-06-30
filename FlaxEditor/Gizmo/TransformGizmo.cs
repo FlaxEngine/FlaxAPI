@@ -17,8 +17,8 @@ namespace FlaxEditor.Gizmo
         private bool _isCloning;
         private bool _isActive;
         private readonly List<Transform> _startTransforms = new List<Transform>();
-        private readonly List<ITransformable> _selection = new List<ITransformable>();
-        private readonly List<ITransformable> _selectionParents = new List<ITransformable>();
+        private readonly List<ISceneTreeNode> _selection = new List<ISceneTreeNode>();
+        private readonly List<ISceneTreeNode> _selectionParents = new List<ISceneTreeNode>();
 
         private Matrix _screenScaleMatrix;
         private float _screenScale;

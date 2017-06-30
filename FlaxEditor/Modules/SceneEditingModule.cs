@@ -13,20 +13,10 @@ namespace FlaxEditor.Modules
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class SceneEditingModule : EditorModule
     {
-        private List<Actor> _selectedActors;
-
         /// <summary>
         /// The selected objects.
         /// </summary>
-        public readonly List<object> Selection = new List<object>(64);
-
-        /// <summary>
-        /// Gets the selected actors collection.
-        /// </summary>
-        /// <value>
-        /// The selected actors.
-        /// </value>
-        public List<Actor> SelectedActors => _selectedActors;
+        public readonly List<ISceneTreeNode> Selection = new List<ISceneTreeNode>(64);
 
         /// <summary>
         /// Occurs when selected objects colelction gets changed.
@@ -36,7 +26,6 @@ namespace FlaxEditor.Modules
         internal SceneEditingModule(Editor editor)
             : base(editor)
         {
-            _selectedActors = new List<Actor>();
         }
 
         /// <summary>
@@ -44,8 +33,8 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void SelectAllScenes()
         {
-            // Select them
-            Select(SceneManager.Scenes);
+            // Select all sccenes (linked to the root node)
+            Select(Editor.Windows.SceneWin.Root.ChildNodes);
         }
 
         /// <summary>
@@ -53,8 +42,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         /// <param name="selection">The selection.</param>
         /// <param name="additive">if set to <c>true</c> will use additive mode, otherwise will clear previous selection.</param>
-        public void Select<T>(List<T> selection, bool additive = false)
-            where T : class
+        public void Select <T>(List<ISceneTreeNode> selection, bool additive = false)
         {
             if (selection == null)
                 throw new ArgumentNullException();
@@ -75,8 +63,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         /// <param name="selection">The selection.</param>
         /// <param name="additive">if set to <c>true</c> will use additive mode, otherwise will clear previous selection.</param>
-        public void Select<T>(T[] selection, bool additive = false)
-            where T : class
+        public void Select(ISceneTreeNode[] selection, bool additive = false)
         {
             if (selection == null)
                 throw new ArgumentNullException();
@@ -97,8 +84,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         /// <param name="selection">The selection.</param>
         /// <param name="additive">if set to <c>true</c> will use additive mode, otherwise will clear previous selection.</param>
-        public void Select<T>(IEnumerable<T> selection, bool additive = false)
-            where T : class
+        public void Select(IEnumerable<ISceneTreeNode> selection, bool additive = false)
         {
             if (selection == null)
                 throw new ArgumentNullException();
@@ -119,7 +105,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         /// <param name="selection">The selection.</param>
         /// <param name="additive">if set to <c>true</c> will use additive mode, otherwise will clear previous selection.</param>
-        public void Select(object selection, bool additive = false)
+        public void Select(ISceneTreeNode selection, bool additive = false)
         {
             if (selection == null)
                 throw new ArgumentNullException();
@@ -151,9 +137,6 @@ namespace FlaxEditor.Modules
 
         private void SelectionChanged()
         {
-            // Cache data
-            _selectedActors = Selection.OfType<Actor>().ToList();
-
             OnSelectionChanged?.Invoke();
         }
     }

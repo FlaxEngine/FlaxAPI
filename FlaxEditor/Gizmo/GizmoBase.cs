@@ -42,7 +42,7 @@ namespace FlaxEditor.Gizmo
         /// Called when selected objects collection gets changed.
         /// </summary>
         /// <param name="newSelection">The new selection pool.</param>
-        public virtual void OnSelectionChanged(List<object> newSelection)
+        public virtual void OnSelectionChanged(List<ISceneTreeNode> newSelection)
         {
         }
     }

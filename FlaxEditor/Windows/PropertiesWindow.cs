@@ -27,7 +27,7 @@ namespace FlaxEditor.Windows
         {
             // TODO: remove this temp code, finish properties window
             string text;
-            var selection = Editor.SceneEditing.SelectedActors;
+            var selection = Editor.SceneEditing.Selection;
             if (selection.Count == 0)
             {
                 text = "No actors selected";

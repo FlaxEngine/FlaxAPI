@@ -10,16 +10,6 @@ namespace FlaxEditor.Gizmo
     public partial class TransformGizmo
     {
         /// <summary>
-        /// Checks if given actor is selected.
-        /// </summary>
-        /// <param name="actor">Actor to check</param>
-        /// <returns>True if is selected, otherwise false.</returns>
-        public bool IsActorSelected(Actor actor)
-        {
-            return _selection.Contains(actor);
-        }
-
-        /// <summary>
         /// Tries to select any actor.
         /// </summary>
         /// <param name="addRemove">True if use add/remove mode.</param>
@@ -111,12 +101,8 @@ namespace FlaxEditor.Gizmo
         }
 
         /// <inheritdoc />
-        public override void OnSelectionChanged(List<object> newSelection)
+        public override void OnSelectionChanged(List<ISceneTreeNode> newSelection)
         {
-            // Check if gismo is disaled
-            if (!IsActive)
-                return;
-
             // End current action
             EndTransforming();
 
@@ -129,13 +115,9 @@ namespace FlaxEditor.Gizmo
                 _selection.Capacity = Mathf.NextPowerOfTwo(count);
                 _selectionParents.Capacity = Mathf.NextPowerOfTwo(count);
             }
-            
+
             // Cache selected objects
-            for (int i = 0; i < newSelection.Count; i++)
-            {
-                if (newSelection[i] is ITransformable obj)
-                    _selection.Add(obj);
-            }
+            _selection.AddRange(newSelection);
 
             // Build selected objects parents list.
             // Note: because selection may contain objects and their children we have to split them and get only parents.
@@ -160,7 +142,7 @@ namespace FlaxEditor.Gizmo
                     _selectionParents.Add(target);
             }
         }
-        
+
         /// <summary>
         /// Selects actor.
         /// </summary>
