@@ -7,7 +7,7 @@ namespace FlaxEditor
     /// <summary>
     /// Actor tree node for <see cref="FlaxEngine.Scene"/> objects.
     /// </summary>
-    /// <seealso cref="FlaxEditor.ActorTreeNode" />
+    /// <seealso cref="ActorTreeNode" />
     public sealed class SceneTreeNode : ActorTreeNode
     {
         /// <summary>

@@ -7,7 +7,7 @@ namespace FlaxEditor
     /// <summary>
     /// Represents root node of the whole scene graph.
     /// </summary>
-    /// <seealso cref="FlaxEditor.ActorTreeNode" />
+    /// <seealso cref="ActorTreeNode" />
     public sealed class RootTreeNode : ActorTreeNode
     {
         /// <summary>

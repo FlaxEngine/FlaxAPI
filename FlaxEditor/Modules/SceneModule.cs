@@ -12,18 +12,11 @@ namespace FlaxEditor.Modules
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class SceneModule : EditorModule
     {
-        private readonly HashSet<Scene> editedScenes = new HashSet<Scene>();
-
-        /// <summary>
-        /// The root tree node for the whole scene graph.
-        /// </summary>
-        public readonly RootTreeNode Root;
-
         internal SceneModule(Editor editor)
             : base(editor)
         {
         }
-
+        /*
         /// <summary>
         /// Marks the scene as modified.
         /// </summary>
@@ -64,7 +57,7 @@ namespace FlaxEditor.Modules
         public bool IsEdited()
         {
             return editedScenes.Count != 0;
-        }
+        }*/
 
         /// <summary>
         /// Creates the scene file.
@@ -81,23 +74,23 @@ namespace FlaxEditor.Modules
         /// <param name="scene">Scene to save.</param>
         public void SaveScene(Scene scene)
         {
-            // Early out
+            /*// Early out
             if (IsEdited(scene) == false)
                 return;
 
-            SceneManager.SaveSceneAsync(scene);
+            SceneManager.SaveSceneAsync(scene);*/
         }
-
+        
         /// <summary>
         /// Saves all open scenes (async).
         /// </summary>
         public void SaveScenes()
         {
-            // Early out
+            /*// Early out
             if (IsEdited() == false)
                 return;
 
-            SceneManager.SaveAllScenesAsync();
+            SceneManager.SaveAllScenesAsync();*/
         }
 
         /// <summary>
@@ -192,7 +185,7 @@ namespace FlaxEditor.Modules
 	        lastSceneStream.WriteString(SceneManager::Instance()->GetLastScenePath());
 	        EditorCache::Instance()->Set(TEXT("LastScene"), false, &lastSceneStream);*/
         }
-
+        
         /// <inheritdoc />
         public override void OnEndInit()
         {
