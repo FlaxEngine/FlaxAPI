@@ -475,6 +475,42 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Determines whether the specified object is in a hierarchy (one of the children or lower).
+		/// </summary>
+		/// <param name="actor">The actor to check,</param>
+		/// <returns>True if given actor is part of the hierarchy, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public bool ContainsInHierarchy(Actor actor) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_ContainsInHierarchy(unmanagedPtr, actor);
+#endif
+		}
+
+		/// <summary>
+		/// Determines whether the specified object is one of the children.
+		/// </summary>
+		/// <param name="actor">The actor to check,</param>
+		/// <returns>True if given actor is a child, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public bool ContainsChild(Actor actor) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_ContainsChild(unmanagedPtr, actor);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -561,6 +597,10 @@ namespace FlaxEngine
 		internal static extern bool Internal_HasContentLoaded(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_HasContentFullyLoaded(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_ContainsInHierarchy(IntPtr obj, Actor actor);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_ContainsChild(IntPtr obj, Actor actor);
 #endif
 #endregion
 	}
