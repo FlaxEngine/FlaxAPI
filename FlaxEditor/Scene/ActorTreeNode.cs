@@ -1,7 +1,8 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System.Collections.Generic;
 using FlaxEditor.Windows;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -10,9 +11,11 @@ namespace FlaxEditor
 {
     /// <summary>
     /// A tree node used to visalize scene actors structure in <see cref="SceneTreeWindow"/>. It's a ViewModel object for <see cref="Actor"/>.
+    /// It's part of the Scene Graph.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.TreeNode" />
-    public class ActorTreeNode : TreeNode
+    /// <seealso cref="FlaxEditor.ISceneTreeNode" />
+    public class ActorTreeNode : TreeNode, ISceneTreeNode
     {
         /// <summary>
         /// The linked actor object.
@@ -105,5 +108,46 @@ namespace FlaxEditor
             }
             return base.Compare(other);
         }
+
+        #region [ISceneTreeNode] implementation
+
+        /// <inheritdoc />
+        public Transform Transform
+        {
+            get => _actor.Transform;
+            set => _actor.Transform = value;
+        }
+
+        /// <inheritdoc />
+        public Vector3 Position
+        {
+            get => _actor.Position;
+            set => _actor.Position = value;
+        }
+
+        /// <inheritdoc />
+        public Quaternion Orientation
+        {
+            get => _actor.Orientation;
+            set => _actor.Orientation = value;
+        }
+
+        /// <inheritdoc />
+        public Vector3 Scale
+        {
+            get => _actor.Scale;
+            set => _actor.Scale = value;
+        }
+
+        /// <inheritdoc />
+        ISceneTreeNode ISceneTreeNode.ParentNode
+        {
+            get { return Parent as ISceneTreeNode; }
+        }
+
+        /// <inheritdoc />
+        public List<ISceneTreeNode> ChildNodes { get; } = new List<ISceneTreeNode>();
+
+        #endregion
     }
 }

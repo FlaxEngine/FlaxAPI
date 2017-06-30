@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,11 @@ namespace FlaxEditor.Modules
     public sealed class SceneModule : EditorModule
     {
         private readonly HashSet<Scene> editedScenes = new HashSet<Scene>();
+
+        /// <summary>
+        /// The root tree node for the whole scene graph.
+        /// </summary>
+        public readonly RootTreeNode Root;
 
         internal SceneModule(Editor editor)
             : base(editor)
