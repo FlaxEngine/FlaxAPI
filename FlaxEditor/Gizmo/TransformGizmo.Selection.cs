@@ -113,9 +113,54 @@ namespace FlaxEditor.Gizmo
         /// <inheritdoc />
         public override void OnSelectionChanged(List<object> newSelection)
         {
-            // ... 
-        }
+            // Check if gismo is disaled
+            if (!IsActive)
+                return;
 
+            // End current action
+            EndTransforming();
+
+            // Prepare collections
+            _selection.Clear();
+            _selectionParents.Clear();
+            int count = newSelection.Count;
+            if (_selection.Capacity < count)
+            {
+                _selection.Capacity = Mathf.NextPowerOfTwo(count);
+                _selectionParents.Capacity = Mathf.NextPowerOfTwo(count);
+            }
+            
+            // Cache selected objects
+            for (int i = 0; i < newSelection.Count; i++)
+            {
+                if (newSelection[i] is ITransformable obj)
+                    _selection.Add(obj);
+            }
+
+            // Build selected objects parents list.
+            // Note: because selection may contain objects and their children we have to split them and get only parents.
+            // Later during transformation we apply translation/scale/rotation only on them (children inherit transformations)
+            for (int i = 0; i < _selection.Count; i++)
+            {
+                var target = _selection[i];
+
+                // Check if any other object in selection is parent object of this one
+                bool isChild = false;
+                for (int j = 0; j < _selection.Count; j++)
+                {
+                    var test = _selection[j];
+                    if (test != target && test.ContainsInHierarchy(target))
+                    {
+                        isChild = true;
+                        break;
+                    }
+                }
+
+                if (!isChild)
+                    _selectionParents.Add(target);
+            }
+        }
+        
         /// <summary>
         /// Selects actor.
         /// </summary>
