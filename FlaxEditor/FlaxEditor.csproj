@@ -103,6 +103,7 @@
     <Compile Include="PreviewsCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scene\ActorTreeNode.cs" />
+    <Compile Include="Scene\ISceneTreeNode.cs" />
     <Compile Include="Scene\RootTreeNode.cs" />
     <Compile Include="Scene\SceneTreeNode.cs" />
     <Compile Include="States\BuildingLightingState.cs" />
