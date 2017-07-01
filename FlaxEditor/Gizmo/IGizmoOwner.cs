@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System.Collections.Generic;
 using FlaxEngine;
 
 namespace FlaxEditor.Gizmo
@@ -52,6 +53,14 @@ namespace FlaxEditor.Gizmo
         Quaternion ViewOrientation { get; }
 
         /// <summary>
+        /// Gets the view far clipping plane.
+        /// </summary>
+        /// <value>
+        /// The view far plane.
+        /// </value>
+        float ViewFarPlane { get; }
+
+        /// <summary>
         /// Gets the mouse ray (in world space of the viewport).
         /// </summary>
         /// <value>
@@ -59,19 +68,23 @@ namespace FlaxEditor.Gizmo
         /// </value>
         Ray MouseRay { get; }
 
+        /// <summary>
+        /// Gets the mouse movement delta.
+        /// </summary>
+        /// <value>
+        /// The mouse movement delta.
+        /// </value>
+        Vector2 MouseDelta { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether use grid snapping during gizmo operations.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if use grid snapping; otherwise, <c>false</c>.
+        /// </value>
+        bool UseSnapping { get; }
+
         /*
-        /// <summary>
-        /// Gets maximum distance to translate objects using gizmo during single move
-        /// </summary>
-        /// <returns>Maximu mdistance</returns>
-        virtual float GetMaxMoveDistance() const = 0;
-
-        /// <summary>
-        /// Gets mouse movement delta
-        /// </summary>
-        /// <returns>Mouse movement delta</returns>
-        virtual Vector2 GetMosueDelta() const = 0;
-
         /// <summary>
         /// Gets viewport ro use during gizmo rendering
         /// </summary>
@@ -99,24 +112,6 @@ namespace FlaxEditor.Gizmo
         virtual URContext* GetUndoRedo() const = 0;
 
         /// <summary>
-        /// True if use snap mode by force
-        /// </summary>
-        /// <returns>True if use snap mode</returns>
-        virtual bool UseForceSnapping() const
-        {
-            return false;
-        }
-
-        /// <summary>
-        /// True if gizmo is now disabled
-        /// </summary>
-        /// <returns>True if disable gizmo, otherwise false</returns>
-        virtual bool IsGizmoDisabled() const
-        {
-            return false;
-        }
-
-        /// <summary>
         /// Action fired when any Gizmo tool option gets changes
         /// </summary>
         virtual void OnGizmoOptionsChanged();
@@ -134,30 +129,6 @@ namespace FlaxEditor.Gizmo
         /// <summary>
         /// Action fired when gizmo (or child undo/redo system) changes actor(s) transform
         /// </summary>
-        virtual void OnTransformObject();
-
-        public:
-
-        /// <summary>
-        /// Apply translation to the selected objects pool
-        /// </summary>
-        /// <param name="selection">Selected objects pool</param>
-        /// <param name="translationDelta">Translation delta</param>
-        virtual void ApplyTranslation(const Array<Actor*>& selection, const Vector3& translationDelta);
-
-        /// <summary>
-        /// Apply translation to the selected objects pool
-        /// </summary>
-        /// <param name="selection">Selected objects pool</param>
-        /// <param name="rotationDelta">Rotation delta</param>
-        virtual void ApplyRotation(const Array<Actor*>& selection, const Matrix& rotationDelta);
-
-        /// <summary>
-        /// Apply translation to the selected objects pool
-        /// </summary>
-        /// <param name="selection">Selected objects pool</param>
-        /// <param name="scaleDelta">Scale delta</param>
-        /// <param name="uniform">True if scale objects uniformly, otherwise false</param>
-        virtual void ApplyScale(const Array<Actor*>& selection, const Vector3& scaleDelta, bool uniform);*/
+        virtual void OnTransformObject();*/
     }
 }

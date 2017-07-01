@@ -109,9 +109,14 @@ namespace FlaxEditor.Gizmo
         public float ScaleSnapValue = 4.0f;
 
         /// <summary>
-        /// Gets or sets the current pivot type.
+        /// Gets the current pivot type.
         /// </summary>
-        public PivotType ActivePivot { get; set; }
+        public PivotType ActivePivot => _activePivotType;
+
+        /// <summary>
+        /// Gets the current axis type.
+        /// </summary>
+        public Axis ActiveAxis => _activeAxis;
         
         /// <summary>
         /// Gets or sts the current gizmo mode.

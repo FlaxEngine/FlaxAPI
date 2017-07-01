@@ -49,7 +49,8 @@ namespace FlaxEditor.Gizmo
         /// <summary>
         /// Updates the gizmo logic (called even if not active).
         /// </summary>
-        public virtual void Update()
+        /// <param name="dt">Update delta time (in seconds).</param>
+        public virtual void Update(float dt)
         {
         }
     }

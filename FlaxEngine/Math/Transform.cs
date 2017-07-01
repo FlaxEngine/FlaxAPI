@@ -161,6 +161,15 @@ namespace FlaxEngine
         {
             Quaternion.RotationMatrix(ref value, out Orientation);
         }
+        
+        /// <summary>
+        /// Sets rotation matrix (from Orientation).
+        /// </summary>
+        /// <param name="value">Rotation matrix</param>
+        public void SetRotation(ref Matrix value)
+        {
+            Quaternion.RotationMatrix(ref value, out Orientation);
+        }
 
         /// <summary>
         /// Gets world matrix that describes transformation as a 4 by 4 matrix.
