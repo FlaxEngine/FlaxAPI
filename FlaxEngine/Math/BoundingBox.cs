@@ -424,6 +424,55 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Transforms bounding box using the given transformatin matrix.
+        /// </summary>
+        /// <param name="box">The bounding box to transform.</param>
+        /// <param name="transform">The transformation matrix.</param>
+        /// <returns>The result of the transformation.</returns>
+        public static BoundingBox Transform(BoundingBox box, Matrix transform)
+        {
+            BoundingBox result;
+            Transform(ref box, ref transform, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Transforms bounding box using the given transformatin matrix.
+        /// </summary>
+        /// <param name="box">The bounding box to transform.</param>
+        /// <param name="transform">The transformation matrix.</param>
+        /// <param name="result">The result of the transformation.</param>
+        public static void Transform(ref BoundingBox box, ref Matrix transform, out BoundingBox result)
+        {
+            // Get box corners
+            var corners = new Vector3[8];
+            box.GetCorners(corners);
+
+            // Transform them
+            for (int i = 0; i < 8; i++)
+            {
+                Vector3.Transform(ref corners[i], ref transform, out corners[i]);
+            }
+
+            // Construct box from the points
+            FromPoints(corners, out result);
+        }
+
+        /// <summary>
+        /// Transforms bounding box using the given transformatin matrix.
+        /// </summary>
+        /// <param name="box">The bounding box to transform.</param>
+        /// <param name="transform">The transformation matrix.</param>
+        /// <returns>The result of the transformation.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BoundingBox operator *(BoundingBox box, Matrix transform)
+        {
+            BoundingBox result;
+            Transform(ref box, ref transform, out result);
+            return result;
+        }
+
+        /// <summary>
         /// Tests for equality between two objects.
         /// </summary>
         /// <param name="left">The first value to compare.</param>

@@ -1497,9 +1497,9 @@ namespace FlaxEngine
         /// <param name="vector">The source vector.</param>
         /// <param name="transform">The transformation <see cref="Matrix" />.</param>
         /// <returns>The transformed <see cref="Vector4" />.</returns>
-        public static Vector4 Transform(Vector3 vector, Matrix transform)
+        public static Vector3 Transform(Vector3 vector, Matrix transform)
         {
-            Vector4 result;
+            Vector3 result;
             Transform(ref vector, ref transform, out result);
             return result;
         }

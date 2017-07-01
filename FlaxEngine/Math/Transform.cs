@@ -246,7 +246,7 @@ namespace FlaxEngine
             Matrix.RotationQuaternion(ref Orientation, out rotation);
             Matrix.Multiply(ref scale, ref rotation, out scaleRotation);
             for (int i = 0; i < points.Length; i++)
-                result[i] = (Vector3)Vector3.Transform(points[i], scaleRotation) + Translation;
+                result[i] = Vector3.Transform(points[i], scaleRotation) + Translation;
         }
 
         /// <summary>
