@@ -76,6 +76,7 @@ namespace FlaxEditor.Gizmo
         public TransformGizmo(IGizmoOwner owner)
             : base(owner)
         {
+            InitDrawing();
         }
 
         private void StartTransforming()
