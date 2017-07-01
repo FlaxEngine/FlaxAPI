@@ -16,6 +16,8 @@ namespace FlaxEditor.Viewport
     /// <seealso cref="FlaxEngine.GUI.RenderOutputControl" />
     public class EditorViewport : RenderOutputControl
     {
+        // TODO: maybe cache view/projection matricies to reuse them
+
         // how much frames we want to keep in the buffer to calculate the avg. delta currently hardcoded
         public const int FpsCameraFilteringFrames = 3;
 
@@ -199,23 +201,85 @@ namespace FlaxEditor.Viewport
         /// <param name="view">The view.</param>
         public void CopyViewData(ref RenderView view)
         {
-            // Create projection matrix
-            float aspect = Width / Height;
-            Matrix.PerspectiveFovLH(_fieldOfView * Mathf.DegreesToRadians, aspect, _nearPlane, _farPlane, out view.Projection);
-
-            // Create view matrix
-            Vector3 position = ViewPosition;
-            Vector3 direction = ViewDirection;
-            Vector3 target = position + direction;
-            Vector3 right = Vector3.Normalize(Vector3.Cross(Vector3.Up, direction));
-            Vector3 up = Vector3.Normalize(Vector3.Cross(direction, right));
-            Matrix.LookAtLH(ref position, ref target, ref up, out view.View);
+            // Ceate matricies
+            CreateProjectionMatrix(out view.Projection);
+            CreateViewMatrix(out view.View);
 
             // Copy data
             view.Position = ViewPosition;
             view.Direction = ViewDirection;
             view.Near = _nearPlane;
             view.Far = _farPlane;
+        }
+
+        /// <summary>
+        /// Creates the projection matrix.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        protected virtual void CreateProjectionMatrix(out Matrix result)
+        {
+            // Create projection matrix
+            float aspect = Width / Height;
+            Matrix.PerspectiveFovLH(_fieldOfView * Mathf.DegreesToRadians, aspect, _nearPlane, _farPlane, out result);
+        }
+
+        /// <summary>
+        /// Creates the view matrix.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        protected virtual void CreateViewMatrix(out Matrix result)
+        {
+            // Create view matrix
+            Vector3 position = ViewPosition;
+            Vector3 direction = ViewDirection;
+            Vector3 target = position + direction;
+            Vector3 right = Vector3.Normalize(Vector3.Cross(Vector3.Up, direction));
+            Vector3 up = Vector3.Normalize(Vector3.Cross(direction, right));
+            Matrix.LookAtLH(ref position, ref target, ref up, out result);
+        }
+
+        /// <summary>
+        /// Gets the mouse ray.
+        /// </summary>
+        /// <value>
+        /// The mouse ray.
+        /// </value>
+        public Ray MouseRay
+        {
+            get
+            {
+                if (IsMouseOver)
+                    return ConvertMouseToRay(ref _viewMousePos);
+                return new Ray(Vector3.Maximum, Vector3.Up);
+            }
+        }
+
+        /// <summary>
+        /// Converts the mouse position to the ray (in world space of the viewport).
+        /// </summary>
+        /// <param name="mousePosition">The mouse position.</param>
+        /// <returns>The result ray.</returns>
+        public Ray ConvertMouseToRay(ref Vector2 mousePosition)
+        {
+            // Prepare
+            var viewport = new FlaxEngine.Viewport(0, 0, Width, Height);
+            Matrix v, p, ivp;
+            CreateProjectionMatrix(out p);
+            CreateViewMatrix(out v);
+            Matrix.Multiply(ref v, ref p, out ivp);
+            ivp.Invert();
+
+            // Create near and far points
+            Vector3 nearPoint = new Vector3(mousePosition, 0.0f);
+            Vector3 farPoint = new Vector3(mousePosition, 1.0f);
+            viewport.Unproject(ref nearPoint, ref ivp, out nearPoint);
+            viewport.Unproject(ref farPoint, ref ivp, out farPoint);
+
+            // Create direction vector
+            Vector3 direction = farPoint - nearPoint;
+            direction.Normalize();
+
+            return new Ray(nearPoint, direction);
         }
 
         protected virtual void UpdateMouse(float dt, ref Vector3 move)
