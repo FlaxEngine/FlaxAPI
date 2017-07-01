@@ -89,6 +89,8 @@
     <Compile Include="API\Assets\BinaryAsset.Gen.cs" />
     <Compile Include="API\BinaryAssets\FontAsset.cs" />
     <Compile Include="API\BinaryAssets\FontAsset.Gen.cs" />
+    <Compile Include="API\BinaryAssets\Model.cs" />
+    <Compile Include="API\BinaryAssets\Model.Gen.cs" />
     <Compile Include="API\BinaryAssets\SpriteAtlas.cs" />
     <Compile Include="API\BinaryAssets\SpriteAtlas.Gen.cs" />
     <Compile Include="API\CreateWindowSettings.cs" />
@@ -148,6 +150,8 @@
     <Compile Include="Attributes\PersisitentDataAttribute.cs" />
     <Compile Include="Configurations\PersistentDataConfig.cs" />
     <Compile Include="Engine\ITransformable.cs" />
+    <Compile Include="Engine\Mesh.cs" />
+    <Compile Include="Engine\ModelLOD.cs" />
     <Compile Include="Enums\Quality.cs" />
     <Compile Include="Enums\UI.cs" />
     <Compile Include="Attributes\Editor\CustomEditorAttribute.cs" />
@@ -204,7 +208,6 @@
     <Compile Include="AssetTypes\Material.cs" />
     <Compile Include="AssetTypes\MaterialBase.cs" />
     <Compile Include="AssetTypes\MaterialInstance.cs" />
-    <Compile Include="AssetTypes\Model.cs" />
     <Compile Include="AssetTypes\Shader.cs" />
     <Compile Include="AssetTypes\Texture.cs" />
     <Compile Include="Bodies\BoxBody.cs" />
