@@ -10,6 +10,27 @@ namespace FlaxEditor.Gizmo
     public partial class TransformGizmo
     {
         /// <summary>
+        /// Gets the selection center point (in world space).
+        /// </summary>
+        /// <returns>Center point or <see cref="Vector3.Zero"/> if no object selectd.</returns>
+        public Vector3 GetSelectionCenter()
+        {
+            int count = _selectionParents.Count;
+
+            // Check if there is no objects selected at all
+            if (count == 0)
+                return Vector3.Zero;
+
+            // Get center point
+            Vector3 center = Vector3.Zero;
+            for (int i = 0; i < count; i++)
+                center += _selectionParents[i].Position;
+
+            // Return arithmetic average or whatever it means
+            return center / count;
+        }
+
+        /// <summary>
         /// Tries to select any actor.
         /// </summary>
         /// <param name="addRemove">True if use add/remove mode.</param>
@@ -22,7 +43,7 @@ namespace FlaxEditor.Gizmo
             // Ensure player is not moving objects
             if (_activeAxis != Axis.None)
                 return;
-            
+
             // End current action
             EndTransforming();
 
@@ -143,48 +164,115 @@ namespace FlaxEditor.Gizmo
             }
         }
 
-        /// <summary>
-        /// Selects actor.
-        /// </summary>
-        /// <param name="actor">Actor</param>
-        public void Select(Actor actor)
+        private void SelectAxis()
         {
-            
-        }
+            // Get mouse ray
+            Ray ray = Owner.MouseRay;
 
-        /// <summary>
-        /// Selects actors.
-        /// </summary>
-        /// <param name="a">Actors</param>
-        public void Select(List<Actor> a)
-        {
-            
-        }
+            // Find gizmo collisions with mouse
+            float closestintersection = float.MaxValue;
+            float intersection;
+            _activeAxis = Axis.None;
+            switch (_activeMode)
+            {
+                case Mode.Translate:
+                {
+                    // Transform ray into local space of the bounding boxes
+                    Matrix invGizmoWorld;
+                    Matrix.Invert(ref _gizmoWorld, out invGizmoWorld);
+                    Vector3.TransformNormal(ref ray.Direction, ref invGizmoWorld, out ray.Direction);
+                    Vector3.Transform(ref ray.Position, ref invGizmoWorld, out ray.Position);
 
-        /// <summary>
-        /// Removes actor from the selection
-        /// </summary>
-        /// <param name="actor">Actor to deselect.</param>
-        public void Deselect(Actor actor)
-        {
-            
-        }
+                    // Axis boxes collision
+                    if (XAxisBox.Intersects(ref ray, out intersection) && intersection < closestintersection)
+                    {
+                        _activeAxis = Axis.X;
+                        closestintersection = intersection;
+                    }
+                    if (YAxisBox.Intersects(ref ray, out intersection) && intersection < closestintersection)
+                    {
+                        _activeAxis = Axis.Y;
+                        closestintersection = intersection;
+                    }
+                    if (ZAxisBox.Intersects(ref ray, out intersection) && intersection < closestintersection)
+                    {
+                        _activeAxis = Axis.Z;
+                        closestintersection = intersection;
+                    }
 
-        /// <summary>
-        /// Removes actors from the selection.
-        /// </summary>
-        /// <param name="actors">Actors to deselect.</param>
-        public void Deselect(IEnumerable<Actor> actors)
-        {
-            
-        }
+                    // Quad planes collision
+                    if (closestintersection >= float.MaxValue)
+                        closestintersection = float.MinValue;
+                    if (XYBox.Intersects(ref ray, out intersection) && intersection > closestintersection)
+                    {
+                        _activeAxis = Axis.XY;
+                        closestintersection = intersection;
+                    }
+                    if (XZBox.Intersects(ref ray, out intersection) && intersection > closestintersection)
+                    {
+                        _activeAxis = Axis.ZX;
+                        closestintersection = intersection;
+                    }
+                    if (YZBox.Intersects(ref ray, out intersection) && intersection > closestintersection)
+                    {
+                        _activeAxis = Axis.YZ;
+                        closestintersection = intersection;
+                    }
 
-        /// <summary>
-        /// Deselect all actors.
-        /// </summary>
-        public void Deselect()
-        {
-            
+                    break;
+                }
+
+                case Mode.Rotate:
+                {
+                    // Spheres collision
+                    if (RotateXSphere.Intersects(ref ray, out intersection) && intersection < closestintersection)
+                    {
+                        _activeAxis = Axis.X;
+                        closestintersection = intersection;
+                    }
+                    if (RotateYSphere.Intersects(ref ray, out intersection) && intersection < closestintersection)
+                    {
+                        _activeAxis = Axis.Y;
+                        closestintersection = intersection;
+                    }
+                    if (RotateZSphere.Intersects(ref ray, out intersection) && intersection < closestintersection)
+                    {
+                        _activeAxis = Axis.Z;
+                        closestintersection = intersection;
+                    }
+
+                    break;
+                }
+
+                case Mode.Scale:
+                {
+                    // Spheres collision
+                    if (ScaleXSphere.Intersects(ref ray, out intersection) && intersection < closestintersection)
+                    {
+                        _activeAxis = Axis.X;
+                        closestintersection = intersection;
+                    }
+                    if (ScaleYSphere.Intersects(ref ray, out intersection) && intersection < closestintersection)
+                    {
+                        _activeAxis = Axis.Y;
+                        closestintersection = intersection;
+                    }
+                    if (ScaleZSphere.Intersects(ref ray, out intersection) && intersection < closestintersection)
+                    {
+                        _activeAxis = Axis.Z;
+                        closestintersection = intersection;
+                    }
+
+                    // Center
+                    if (CenterBox.Intersects(ref ray, out intersection) && intersection < closestintersection)
+                    {
+                        _activeAxis = Axis.Center;
+                        closestintersection = intersection;
+                    }
+
+                    break;
+                }
+            }
         }
     }
 }

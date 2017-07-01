@@ -98,5 +98,74 @@ namespace FlaxEditor.Gizmo
             _parent->OnTransfomingEnd();
             _parent->OnTransformObject();*/
         }
+
+        private void UpdateGizmoPosition()
+        {
+            switch (_activePivotType)
+            {
+                case PivotType.ObjectCenter:
+                    if (_selection.Count > 0)
+                        _position = _selection[0].Position;
+                    break;
+                case PivotType.SelectionCenter:
+                    _position = GetSelectionCenter();
+                    break;
+                case PivotType.WorldOrigin:
+                    _position = Vector3.Zero;
+                    break;
+            }
+            _position += _translationDelta;
+        }
+
+        private void UpdateMatricies()
+        {
+            // Check there is no need to perform update
+            if (_selection.Count == 0)
+                return;
+
+            // Set positions of the gizmo
+            UpdateGizmoPosition();
+
+            // Scale Gizmo to fit on-screen
+            Vector3 vLength = Owner.ViewPosition - _position;
+            _screenScale = vLength.Length / GizmoScaleFactor;
+            Matrix.Scaling(_screenScale, out _screenScaleMatrix);
+
+            // TODO: use quaternion instead of matrix?
+            Matrix rotation;
+            var orientation = _selection[0].Orientation;
+            Matrix.RotationQuaternion(ref orientation, out rotation);
+            _localForward = rotation.Forward;
+            _localUp = rotation.Up;
+
+            // Vector Rotation (Local/World)
+            _localForward.Normalize();
+            Vector3.Cross(ref _localForward, ref _localUp, out _localRight);
+            Vector3.Cross(ref _localRight, ref _localForward, out _localUp);
+            _localRight.Normalize();
+            _localUp.Normalize();
+
+            // Create both world matrices
+            _objectOrientedWorld = _screenScaleMatrix * Matrix.CreateWorld(_position, _localForward, _localUp);
+            _axisAlignedWorld = _screenScaleMatrix * Matrix.CreateWorld(_position, Vector3.ForwardRH, Vector3.Up);
+            
+            // Assign world
+            if (_activeTransformSpace == TransformSpace.World || _activeMode == Mode.Rotate || _activeMode == Mode.Scale)
+            {
+                _gizmoWorld = _axisAlignedWorld;
+
+                // Align lines, boxes etc. with the grid-lines
+                _rotationMatrix = Matrix.Identity;
+            }
+            else
+            {
+                _gizmoWorld = _objectOrientedWorld;
+
+                // Align lines, boxes etc. with the selected object
+                _rotationMatrix.Forward = _localForward;
+                _rotationMatrix.Up = _localUp;
+                _rotationMatrix.Right = _localRight;
+            }
+        }
     }
 }

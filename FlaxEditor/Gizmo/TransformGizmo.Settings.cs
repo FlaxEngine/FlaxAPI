@@ -52,7 +52,15 @@ namespace FlaxEditor.Gizmo
         private BoundingBox XZBox = new BoundingBox(Vector3.Zero, new Vector3(LineOffset, MultiAxisThickness, LineOffset));
         private BoundingBox XYBox = new BoundingBox(Vector3.Zero, new Vector3(LineOffset, LineOffset, MultiAxisThickness));
         private BoundingBox YZBox = new BoundingBox(Vector3.Zero, new Vector3(MultiAxisThickness, LineOffset, LineOffset));
-        private BoundingBox CenterBox = new BoundingBox(new Vector3(-0.5f) * CenterBoxSize, new Vector3(0.5f) * CenterBoxSize);
+        private BoundingBox CenterBoxRaw = new BoundingBox(new Vector3(-0.5f) * CenterBoxSize, new Vector3(0.5f) * CenterBoxSize);
+
+        private BoundingSphere RotateXSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[1], _gizmoWorld), RotateSpheresRadius* _screenScale);
+        private BoundingSphere RotateYSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[7], _gizmoWorld), RotateSpheresRadius* _screenScale);
+        private BoundingSphere RotateZSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[13], _gizmoWorld), RotateSpheresRadius* _screenScale);
+        private BoundingSphere ScaleXSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[1], _gizmoWorld), ScaleSpheresRadius* _screenScale);
+        private BoundingSphere ScaleYSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[7], _gizmoWorld), ScaleSpheresRadius* _screenScale);
+        private BoundingSphere ScaleZSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[13], _gizmoWorld), ScaleSpheresRadius* _screenScale);
+        private BoundingBox CenterBox => CenterBoxRaw * _gizmoWorld;
 
         private bool _precisionModeEnabled = false;
         private Mode _activeMode = Mode.Translate;
