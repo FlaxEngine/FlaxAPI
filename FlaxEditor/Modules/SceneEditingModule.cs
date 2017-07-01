@@ -19,6 +19,19 @@ namespace FlaxEditor.Modules
         public readonly List<ISceneTreeNode> Selection = new List<ISceneTreeNode>(64);
 
         /// <summary>
+        /// Gets the amount of the selected objects.
+        /// </summary>
+        public int SelectionCount => Selection.Count;
+
+        /// <summary>
+        /// Gets a value indicating whether any object is selected.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if any object is selected; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasSthSelected => Selection.Count > 0;
+
+        /// <summary>
         /// Occurs when selected objects colelction gets changed.
         /// </summary>
         public event Action OnSelectionChanged;

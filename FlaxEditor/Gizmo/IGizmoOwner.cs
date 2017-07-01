@@ -51,6 +51,14 @@ namespace FlaxEditor.Gizmo
         /// </value>
         Quaternion ViewOrientation { get; }
 
+        /// <summary>
+        /// Gets the mouse ray (in world space of the viewport).
+        /// </summary>
+        /// <value>
+        /// The mouse ray.
+        /// </value>
+        Ray MouseRay { get; }
+
         /*
         /// <summary>
         /// Gets maximum distance to translate objects using gizmo during single move
@@ -63,12 +71,6 @@ namespace FlaxEditor.Gizmo
         /// </summary>
         /// <returns>Mouse movement delta</returns>
         virtual Vector2 GetMosueDelta() const = 0;
-
-        /// <summary>
-        /// Gets mouse ray in world-space
-        /// </summary>
-        /// <returns>Mouse ray in world-space</returns>
-        virtual Ray GetMouseRay() const = 0;
 
         /// <summary>
         /// Gets viewport ro use during gizmo rendering

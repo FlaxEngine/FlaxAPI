@@ -45,5 +45,12 @@ namespace FlaxEditor.Gizmo
         public virtual void OnSelectionChanged(List<ISceneTreeNode> newSelection)
         {
         }
+
+        /// <summary>
+        /// Updates the gizmo logic (called even if not active).
+        /// </summary>
+        public virtual void Update()
+        {
+        }
     }
 }

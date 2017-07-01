@@ -34,7 +34,7 @@ namespace FlaxEditor.Gizmo
                 if (_active == value)
                     return;
                 if (value != null && !Contains(value))
-                    throw new InvalidOperationException("Invlaid Gizmo.");
+                    throw new InvalidOperationException("Invalid Gizmo.");
 
                 _active = value;
                 OnActiveChanged?.Invoke();
