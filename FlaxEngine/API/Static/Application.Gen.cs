@@ -111,6 +111,39 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Requests normal engine exit.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static void Exit() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_Exit();
+#endif
+		}
+
+		/// <summary>
+		/// Immediately released all the engine resources and closes the application. Used when fatal error occurred.
+		/// </summary>
+		/// <param name="msg">Fatal error message. Will be saved to the log. Should contain basic information about the error.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static void Fatal(string msg) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_Fatal(msg);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -129,6 +162,10 @@ namespace FlaxEngine
 		internal static extern void Internal_GetMousePosition(out Vector2 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetMousePosition(ref Vector2 val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_Exit();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_Fatal(string msg);
 #endif
 #endregion
 	}
