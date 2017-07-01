@@ -351,6 +351,16 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Reverses the direction of the vector.
+        /// </summary>
+        public void Negate()
+        {
+            X *= -1;
+            Y *= -1;
+            Z *= -1;
+        }
+
+        /// <summary>
         /// When this vector contains Euler angles (degrees), ensure that angles are between +/-180
         /// </summary>
         public void UnwindEuler()

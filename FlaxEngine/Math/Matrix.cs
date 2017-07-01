@@ -3199,6 +3199,124 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Creates the world matrix from the specified parameters
+        /// </summary>
+        /// <param name="position">The position of the object. This value is used in translation operations.</param>
+        /// <param name="forward">The forward direction of the object.</param>
+        /// <param name="up">The upward direction of the object; usually [0, 1, 0].</param>
+        /// <returns>The created world matrix of given transformation world</returns>
+        public static Matrix CreateWorld(Vector3 position, Vector3 forward, Vector3 up)
+        {
+            Matrix result;
+            CreateWorld(ref position, ref forward, ref up, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates the world matrix from the specified parameters
+        /// </summary>
+        /// <param name="position">The position of the object. This value is used in translation operations.</param>
+        /// <param name="forward">The forward direction of the object.</param>
+        /// <param name="up">The upward direction of the object; usually [0, 1, 0].</param>
+        /// <param name="result">>When the method completes, contains the created world matrix of given transformation world.</param>
+        public static void CreateWorld(ref Vector3 position, ref Vector3 forward, ref Vector3 up, out Matrix result)
+        {
+            Vector3 vector3, vector32;
+
+            Vector3.Normalize(ref forward, out vector3);
+            vector3.Negate();
+            Vector3 vector31 = Vector3.Cross(up, vector3);
+            vector31.Normalize();
+            Vector3.Cross(ref vector3, ref vector31, out vector32);
+
+            result = new Matrix(
+
+                // M11-M14
+                vector31.X,
+                vector31.Y,
+                vector31.Z,
+                0.0f,
+
+                // M21-M24
+                vector32.X,
+                vector32.Y,
+                vector32.Z,
+                0.0f,
+
+                // M31-M34
+                vector3.X,
+                vector3.Y,
+                vector3.Z,
+                0.0f,
+
+                // M41-M44
+                position.X,
+                position.Y,
+                position.Z,
+                1.0f);
+        }
+
+        /// <summary>
+        /// Creates a new matrix that rotates around an arbitrary vector.
+        /// </summary>
+        /// <param name="axis">The axis to rotate around.</param>
+        /// <param name="angle">The angle to rotate around the vector.</param>
+        /// <returns>The created rotation matrix.</returns>
+        public static Matrix CreateFromAxisAngle(Vector3 axis, float angle)
+        {
+            Matrix result;
+            CreateFromAxisAngle(ref axis, angle, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a new matrix that rotates around an arbitrary vector.
+        /// </summary>
+        /// <param name="axis">The axis to rotate around.</param>
+        /// <param name="angle">The angle to rotate around the vector.</param>
+        /// <param name="result">When the method completes, contains the created rotation matrix.</param>
+        public static void CreateFromAxisAngle(ref Vector3 axis, float angle, out Matrix result)
+        {
+            float x = axis.X;
+            float y = axis.Y;
+            float z = axis.Z;
+            float single = Mathf.Sin(angle);
+            float single1 = Mathf.Cos(angle);
+            float single2 = x * x;
+            float single3 = y * y;
+            float single4 = z * z;
+            float single5 = x * y;
+            float single6 = x * z;
+            float single7 = y * z;
+
+            result = new Matrix(
+
+                // M11-M14
+                single2 + single1 * (1.0f - single2),
+                single5 - single1 * single5 + single * z,
+                single6 - single1 * single6 - single * y,
+                0.0f,
+
+                // M21-M24
+                single5 - single1 * single5 - single * z,
+                single3 + single1 * (1.0f - single3),
+                single7 - single1 * single7 + single * x,
+                0.0f,
+
+                // M31-M34
+                single6 - single1 * single6 + single * y,
+                single7 - single1 * single7 - single * x,
+                single4 + single1 * (1.0f - single4),
+                0.0f,
+
+                // M41-M44
+                0.0f,
+                0.0f,
+                0.0f,
+                1.0f);
+        }
+
+        /// <summary>
         /// Adds two matrices.
         /// </summary>
         /// <param name="left">The first matrix to add.</param>
