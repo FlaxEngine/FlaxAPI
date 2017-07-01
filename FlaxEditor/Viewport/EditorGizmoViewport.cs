@@ -36,8 +36,8 @@ namespace FlaxEditor.Viewport
         {
             base.Update(deltaTime);
 
-            // Update gizmos
-            Gizmos.ForEach(x => x.Update(deltaTime));
+            // Update gizmo
+            Gizmos.Active?.Update(deltaTime);
         }
     }
 }
