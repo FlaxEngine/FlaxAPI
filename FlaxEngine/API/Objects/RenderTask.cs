@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace FlaxEngine.Rendering
 {
@@ -28,6 +29,23 @@ namespace FlaxEngine.Rendering
 
         internal virtual void Internal_Render(GPUContext context)
         {
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct DrawCall
+        {
+            public StaticFlags Flags;
+            public int LodIndex;
+            public int MeshIndex;
+            public int Padding;
+            public IntPtr AssetModel;
+            public IntPtr AssetMaterial;
+            public Matrix World;
+        }
+
+        internal virtual DrawCall[] Internal_Draw()
+        {
+            return null;
         }
     }
 }

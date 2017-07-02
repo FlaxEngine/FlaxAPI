@@ -272,6 +272,7 @@
     <Compile Include="Math\Vector4.cs" />
     <Compile Include="Rendering\CullMode.cs" />
     <Compile Include="Rendering\CustomRenderTask.cs" />
+    <Compile Include="Rendering\DrawCallsCollector.cs" />
     <Compile Include="Rendering\MSAALevel.cs" />
     <Compile Include="Rendering\PixelFormat.cs" />
     <Compile Include="Rendering\PixelFormatExtensions.cs" />
