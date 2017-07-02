@@ -30,7 +30,15 @@ namespace FlaxEditor
         /// <value>
         ///   <c>true</c> if active; otherwise, <c>false</c>.
         /// </value>
-        bool Active { get; }
+        bool IsActive { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="ISceneTreeNode"/> is active and all parent nodes are also active.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if active in hierarchy; otherwise, <c>false</c>.
+        /// </value>
+        bool IsActiveInHierarchy { get; }
 
         /// <summary>
         /// Gets the parent node.
@@ -62,6 +70,12 @@ namespace FlaxEditor
         /// <returns>True if given object is a child, otherwise false.</returns>
         bool ContainsChild(ISceneTreeNode node);
 
-        ISceneTreeNode RayCast(ref Ray ray, ref float minDistance);
+        /// <summary>
+        /// Performs raycasting over nodes hierarchy trying to get the closest object hited by the given ray.
+        /// </summary>
+        /// <param name="ray">The ray.</param>
+        /// <param name="distance">The result distance.</param>
+        /// <returns>Hitted object or null if there is no interseciotn at all.</returns>
+        ISceneTreeNode RayCast(ref Ray ray, ref float distance);
     }
 }

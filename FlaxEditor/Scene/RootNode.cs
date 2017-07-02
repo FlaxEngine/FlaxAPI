@@ -26,7 +26,10 @@ namespace FlaxEditor
         public override string Name => "Root";
 
         /// <inheritdoc />
-        public override bool Active => true;
+        public override bool IsActive => true;
+        
+        /// <inheritdoc />
+        public override bool IsActiveInHierarchy => true;
 
         /// <inheritdoc />
         public override Transform Transform
@@ -54,6 +57,12 @@ namespace FlaxEditor
         {
             get => Vector3.One;
             set { }
+        }
+
+        /// <inheritdoc />
+        public override bool RayCastSelf(ref Ray ray, ref float distance)
+        {
+            return false;
         }
 
         #endregion

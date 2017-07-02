@@ -162,7 +162,7 @@ namespace FlaxEditor.Windows
             var rootNode = Root.TreeNode;
             bool wasLayoutLocked = rootNode.IsLayoutLocked;
             rootNode.IsLayoutLocked = true;
-            rootNode.AddChild(sceneNode.TreeNode);
+            sceneNode.ParentNode = Root;
             rootNode.SortChildren();
             rootNode.IsLayoutLocked = wasLayoutLocked;
             rootNode.PerformLayout();

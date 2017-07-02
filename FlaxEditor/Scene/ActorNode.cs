@@ -101,7 +101,10 @@ namespace FlaxEditor
         public override string Name => _actor.Name;
 
         /// <inheritdoc />
-        public override bool Active => _actor.IsActive;
+        public override bool IsActive => _actor.IsActive;
+        
+        /// <inheritdoc />
+        public override bool IsActiveInHierarchy => _actor.IsActiveInHierarchy;
 
         /// <inheritdoc />
         public override Transform Transform
@@ -141,6 +144,12 @@ namespace FlaxEditor
 
                 base.ParentNode = value;
             }
+        }
+
+        /// <inheritdoc />
+        public override bool RayCastSelf(ref Ray ray, ref float distance)
+        {
+            return _actor.IntersectsItself(ref ray, ref distance);
         }
 
         /// <inheritdoc />

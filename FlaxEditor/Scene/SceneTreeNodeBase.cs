@@ -15,6 +15,9 @@ namespace FlaxEditor
     /// <seealso cref="FlaxEditor.ISceneTreeNode" />
     public abstract class SceneTreeNodeBase : ISceneTreeNode
     {
+        /// <summary>
+        /// The parent node.
+        /// </summary>
         protected ISceneTreeNode parentNode;
 
         /// <inheritdoc />
@@ -33,7 +36,10 @@ namespace FlaxEditor
         public abstract string Name { get; }
 
         /// <inheritdoc />
-        public abstract bool Active { get; }
+        public abstract bool IsActive { get; }
+
+        /// <inheritdoc />
+        public abstract bool IsActiveInHierarchy { get; }
 
         /// <inheritdoc />
         public virtual ISceneTreeNode ParentNode
@@ -79,11 +85,53 @@ namespace FlaxEditor
         }
 
         /// <inheritdoc />
-        public ISceneTreeNode RayCast(ref Ray ray, ref float minDistance)
+        public ISceneTreeNode RayCast(ref Ray ray, ref float distance)
         {
-            throw new NotImplementedException();
+            if (!IsActive)
+                return null;
+
+            // Check itself
+            ISceneTreeNode minTarget = null;
+            float minDistance = float.MaxValue;
+            if (RayCastSelf(ref ray, ref distance))
+            {
+                minTarget = this;
+                minDistance = distance;
+            }
+
+            // Check all children
+            for (int i = 0; i < ChildNodes.Count; i++)
+            {
+                var hit = ChildNodes[i].RayCast(ref ray, ref distance);
+                if (hit != null)
+                {
+                    if (minDistance > distance)
+                    {
+                        minDistance = distance;
+                        minTarget = hit;
+                    }
+                }
+            }
+
+            // Return result
+            distance = minDistance;
+            return minTarget;
         }
 
+        /// <summary>
+        /// Checks if given ray intersects with the node.
+        /// </summary>
+        /// <param name="ray">The ray.</param>
+        /// <param name="distance">The distance.</param>
+        /// <returns>True ray hits this node, otherwise false.</returns>
+        public virtual bool RayCastSelf(ref Ray ray, ref float distance)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Called when parent node gets changed.
+        /// </summary>
         protected virtual void OnParentChanged()
         {
         }
