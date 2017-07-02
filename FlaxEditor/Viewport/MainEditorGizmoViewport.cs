@@ -111,11 +111,28 @@ namespace FlaxEditor.Viewport
             float closest = float.MaxValue;
             var hit = Editor.Instance.Windows.SceneWin.Root.RayCast(ref ray, ref closest);
 
+            // Update selection
+            var sceneEditing = Editor.Instance.SceneEditing;
             if (hit != null)
             {
                 bool addRemove = ParentWindow.GetKey(KeyCode.CONTROL);
+                bool isSelected = sceneEditing.Selection.Contains(hit);
                 
-
+                if (addRemove)
+                {
+                    if (isSelected)
+                        sceneEditing.Deselect(hit);
+                    else
+                        sceneEditing.Select(hit, true);
+                }
+                else
+                {
+                    sceneEditing.Select(hit);
+                }
+            }
+            else
+            {
+                sceneEditing.Deselect();
             }
 
             base.OnLeftMouseButtonUp();

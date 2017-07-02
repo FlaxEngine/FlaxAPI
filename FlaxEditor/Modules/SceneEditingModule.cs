@@ -135,6 +135,17 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
+        /// Deselects given object.
+        /// </summary>
+        public void Deselect(ISceneTreeNode node)
+        {
+            if (!Selection.Remove(node))
+                return;
+
+            SelectionChanged();
+        }
+
+        /// <summary>
         /// Clears selected objects collection.
         /// </summary>
         public void Deselect()
