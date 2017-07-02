@@ -2,11 +2,6 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace FlaxEngine
 {
     /// <summary>
@@ -15,8 +10,16 @@ namespace FlaxEngine
     /// </summary>
     public sealed class ModelLOD
     {
-        private Model _model;
-        private int _lodIndex;
+        internal readonly Model _model;
+        internal readonly int _lodIndex;
+
+        /// <summary>
+        /// Gets the parent model asset.
+        /// </summary>
+        /// <value>
+        /// The parent model.
+        /// </value>
+        public Model ParentModel => _model;
 
         /// <summary>
         /// The meshes array.

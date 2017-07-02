@@ -2,12 +2,6 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace FlaxEngine
 {
     /// <summary>
@@ -15,9 +9,25 @@ namespace FlaxEngine
     /// </summary>
     public sealed class Mesh
     {
-        private Model _model;
-        private int _lodIndex;
-        private int _meshIndex;
+        internal Model _model;
+        internal readonly int _lodIndex;
+        internal readonly int _meshIndex;
+
+        /// <summary>
+        /// Gets the parent model asset.
+        /// </summary>
+        /// <value>
+        /// The parent model.
+        /// </value>
+        public Model ParentModel => _model;
+
+        /// <summary>
+        /// Gets the parent level of detail object.
+        /// </summary>
+        /// <value>
+        /// The parent LOD object.
+        /// </value>
+        public ModelLOD ParentLOD => _model.LODs[_lodIndex];
 
         internal Mesh(Model model, int lodIndex, int meshIndex)
         {
