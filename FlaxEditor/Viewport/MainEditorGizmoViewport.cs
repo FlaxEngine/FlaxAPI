@@ -73,16 +73,19 @@ namespace FlaxEditor.Viewport
                 trans.Scale = Vector3.Clamp(trans.Scale, new Vector3(-scaleLimit), new Vector3(scaleLimit));
 
                 // Apply rotation
-                Matrix localRot = Matrix.Identity;
-                Vector3 rotationCenter = useObjCenter ? trans.Translation : gizmoPosition;
-                localRot.Forward = trans.Forward;
-                localRot.Up = trans.Up;
-                localRot.Right = Vector3.Normalize(Vector3.Cross(trans.Forward, trans.Up));
-                localRot.TranslationVector = trans.Translation - rotationCenter;
-                Matrix newRot = localRot * rotationDelta;
-                trans.SetRotation(ref newRot);
-                if (newRot.TranslationVector.LengthSquared > 0.0001f)
-                    trans.Translation = newRot.TranslationVector + rotationCenter;
+                if (!rotationDelta.IsIdentity)
+                {
+                    Matrix localRot = Matrix.Identity;
+                    Vector3 rotationCenter = useObjCenter ? trans.Translation : gizmoPosition;
+                    localRot.Forward = trans.Forward;
+                    localRot.Up = trans.Up;
+                    localRot.Right = Vector3.Normalize(Vector3.Cross(trans.Forward, trans.Up));
+                    localRot.TranslationVector = trans.Translation - rotationCenter;
+                    Matrix newRot = localRot * rotationDelta;
+                    trans.SetRotation(ref newRot);
+                    if (newRot.TranslationVector.LengthSquared > 0.0001f)
+                        trans.Translation = newRot.TranslationVector + rotationCenter;
+                }
 
                 obj.Transform = trans;
             }
