@@ -39,7 +39,7 @@ namespace FlaxEngine.Rendering
             public int MeshIndex;
             public int Padding;
             public IntPtr AssetModel;
-            public IntPtr AssetMaterial;
+            public IntPtr AssetMaterialBase;
             public Matrix World;
         }
 

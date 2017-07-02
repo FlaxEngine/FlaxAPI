@@ -36,7 +36,7 @@ namespace FlaxEngine.Rendering
                 LodIndex = mesh._lodIndex,
                 MeshIndex = mesh._meshIndex,
                 AssetModel = Object.GetUnmanagedPtr(mesh.ParentModel),
-                AssetMaterial = Object.GetUnmanagedPtr(material),
+                AssetMaterialBase = Object.GetUnmanagedPtr(material),
                 World = world
             };
 
