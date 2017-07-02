@@ -177,11 +177,33 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Determines if there is an intersection between the actor and a ray.
+        /// </summary>
+        /// <param name="ray">The ray to test.</param>
+        /// <param name="distance">When the method completes and returns true, contains the distance of the intersection.</param>
+        /// <returns>True if the actor is intersected by the ray, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public bool IntersectsItself(ref Ray ray, ref float distance)
+        {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_IntersectsItself(unmanagedPtr, ref ray, ref distance);
+#endif
+        }
+
         /// <inheritdoc />
         [UnmanagedCall]
         public override string ToString()
         {
             return $"{Name} ({GetType().Name})";
         }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_IntersectsItself(IntPtr obj, ref Ray ray, ref float distance);
     }
 }
