@@ -16,10 +16,22 @@ namespace FlaxEngine
     public sealed class ModelLOD
     {
         private Model _model;
+        private int _lodIndex;
 
-        internal ModelLOD(Model model)
+        /// <summary>
+        /// The meshes array.
+        /// </summary>
+        public readonly Mesh[] Meshes;
+
+        internal ModelLOD(Model model, int lodIndex, int meshesCount)
         {
             _model = model;
+            _lodIndex = lodIndex;
+            Meshes = new Mesh[meshesCount];
+            for (int i = 0; i < meshesCount; i++)
+            {
+                Meshes[i] = new Mesh(model, lodIndex, i);
+            }
         }
     }
 }

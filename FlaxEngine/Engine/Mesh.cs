@@ -16,10 +16,14 @@ namespace FlaxEngine
     public sealed class Mesh
     {
         private Model _model;
+        private int _lodIndex;
+        private int _meshIndex;
 
-        internal Mesh(Model model)
+        internal Mesh(Model model, int lodIndex, int meshIndex)
         {
             _model = model;
+            _lodIndex = lodIndex;
+            _meshIndex = meshIndex;
         }
     }
 }
