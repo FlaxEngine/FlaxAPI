@@ -120,13 +120,20 @@ namespace FlaxEngine.GUI.Docking
                 }
                 else
                 {
-                    // Steps:
-                    // - create new dock panel and insert there _toDock panel
-                    // - unlink UI structure from _toMove into created new panel (move childPanels + windows)
-                    // - clear _toMove from old UI linkage
-                    // - remove _toMove
+                    var selectedTab = _toMove.SelectedTab;
 
-                    throw new NotImplementedException("Dock floating window with docked windows inside.");
+                    // Dock the first tab into the target location
+                    var firstTab = _toMove.GetTab(0);
+                    firstTab.Show(_toSet, _toDock);
+
+                    // Dock rest of the tabs
+                    while (_toMove.TabsCount > 0)
+                    {
+                        _toMove.GetTab(0).Show(DockState.DockFill, firstTab);
+                    }
+
+                    // Keep selected tab being selected
+                    selectedTab?.SelectTab();
                 }
 
                 // Focus target window
