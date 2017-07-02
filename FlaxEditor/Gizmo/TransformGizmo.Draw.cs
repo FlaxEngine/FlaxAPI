@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using FlaxEngine;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Gizmo
 {
@@ -37,6 +38,11 @@ namespace FlaxEditor.Gizmo
                 // Error
                 Application.Fatal("Failed to load Transform Gizmo resources.");
             }
+        }
+
+        /// <inheritdoc />
+        public override void Draw(DrawCallsCollector collector)
+        {
         }
     }
 }

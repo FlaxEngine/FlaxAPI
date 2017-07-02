@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Collections.Generic;
 using FlaxEditor.Gizmo;
 using FlaxEngine;
@@ -22,6 +23,13 @@ namespace FlaxEditor.Viewport
         public EditorGizmoViewport(SceneRenderTask task)
             : base(task, true)
         {
+            task.OnDraw += OnDraw;
+        }
+
+        private void OnDraw(DrawCallsCollector collector)
+        {
+            // Draw gizmo
+            Gizmos.Active?.Draw(collector);
         }
 
         public GizmosCollection Gizmos { get; } = new GizmosCollection();

@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System.Collections.Generic;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Gizmo
 {
@@ -51,6 +52,14 @@ namespace FlaxEditor.Gizmo
         /// </summary>
         /// <param name="dt">Update delta time (in seconds).</param>
         public virtual void Update(float dt)
+        {
+        }
+
+        /// <summary>
+        /// Draws the gizmo.
+        /// </summary>
+        /// <param name="collector">The draw calls collector.</param>
+        public virtual void Draw(DrawCallsCollector collector)
         {
         }
     }
