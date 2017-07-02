@@ -25,6 +25,14 @@ namespace FlaxEditor
         string Name { get; }
 
         /// <summary>
+        /// Gets a value indicating whether this <see cref="ISceneTreeNode"/> is active.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if active; otherwise, <c>false</c>.
+        /// </value>
+        bool Active { get; }
+
+        /// <summary>
         /// Gets the parent node.
         /// </summary>
         /// <value>
@@ -53,5 +61,7 @@ namespace FlaxEditor
         /// <param name="node">The node to check,</param>
         /// <returns>True if given object is a child, otherwise false.</returns>
         bool ContainsChild(ISceneTreeNode node);
+
+        ISceneTreeNode RayCast(ref Ray ray, ref float minDistance);
     }
 }

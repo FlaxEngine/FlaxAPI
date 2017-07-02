@@ -3,11 +3,8 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using FlaxEditor.Windows;
 using FlaxEngine;
-using FlaxEngine.GUI;
 
 namespace FlaxEditor
 {
@@ -17,12 +14,17 @@ namespace FlaxEditor
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.TreeNode" />
     /// <seealso cref="ISceneTreeNode" />
-    public class ActorTreeNode : TreeNode, ISceneTreeNode
+    public class ActorNode : SceneTreeNodeBase
     {
         /// <summary>
         /// The linked actor object.
         /// </summary>
-        protected Actor _actor;
+        protected readonly Actor _actor;
+
+        /// <summary>
+        /// The tree node used to present hierachy structure in GUI.
+        /// </summary>
+        protected readonly ActorTreeNode _treeNode;
 
         /// <summary>
         /// Gets the actor.
@@ -33,26 +35,21 @@ namespace FlaxEditor
         public Actor Actor => _actor;
 
         /// <summary>
-        /// Gets the parent node.
+        /// Gets the tree node (part of the GUI).
         /// </summary>
         /// <value>
-        /// The parent node.
+        /// The tree node.
         /// </value>
-        public ActorTreeNode ParentNode => Parent as ActorTreeNode;
+        public ActorTreeNode TreeNode => _treeNode;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ActorTreeNode"/> class.
+        /// Initializes a new instance of the <see cref="ActorNode"/> class.
         /// </summary>
         /// <param name="actor">The actor.</param>
-        public ActorTreeNode(Actor actor)
-            : base(true)
+        public ActorNode(Actor actor)
         {
             _actor = actor;
-
-            if (_actor != null)
-            {
-                Text = actor.Name;
-            }
+            _treeNode = new ActorTreeNode(this);
         }
 
         /// <summary>
@@ -60,16 +57,16 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="actor">The actor.</param>
         /// <returns>Tree node or null if cannot find it.</returns>
-        public ActorTreeNode Find(Actor actor)
+        public ActorNode Find(Actor actor)
         {
             // Check itself
             if (_actor == actor)
                 return this;
 
             // Check deeper
-            for (int i = 0; i < _children.Count; i++)
+            for (int i = 0; i < ChildNodes.Count; i++)
             {
-                if (_children[i] is ActorTreeNode node)
+                if (ChildNodes[i] is ActorNode node)
                 {
                     var result = node.Find(actor);
                     if (result != null)
@@ -85,11 +82,11 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="actor">The actor.</param>
         /// <returns>Tree node or null if cannot find it.</returns>
-        public ActorTreeNode FindChild(Actor actor)
+        public ActorNode FindChild(Actor actor)
         {
-            for (int i = 0; i < _children.Count; i++)
+            for (int i = 0; i < ChildNodes.Count; i++)
             {
-                if (_children[i] is ActorTreeNode node && node.Actor == actor)
+                if (ChildNodes[i] is ActorNode node && node.Actor == actor)
                 {
                     return node;
                 }
@@ -98,93 +95,61 @@ namespace FlaxEditor
             return null;
         }
 
-        /// <inheritdoc />
-        internal override void AddChildInternal(Control child)
-        {
-            base.AddChildInternal(child);
-
-            if (child is ISceneTreeNode node)
-            {
-                ChildNodes.Add(node);
-                node.ParentNode = this;
-            }
-        }
+        #region [SceneTreeNodeBase] implementation
 
         /// <inheritdoc />
-        public override int Compare(Control other)
-        {
-            if (other is ActorTreeNode node)
-            {
-                if (_actor != null && node._actor != null)
-                {
-                    return _actor.OrderInParent - node._actor.OrderInParent;
-                }
-            }
-            return base.Compare(other);
-        }
-
-        #region [ISceneTreeNode] implementation
+        public override string Name => _actor.Name;
 
         /// <inheritdoc />
-        public string Name => _actor.Name;
+        public override bool Active => _actor.IsActive;
 
         /// <inheritdoc />
-        public Transform Transform
+        public override Transform Transform
         {
             get => _actor.Transform;
             set => _actor.Transform = value;
         }
 
         /// <inheritdoc />
-        public Vector3 Position
+        public override Vector3 Position
         {
             get => _actor.Position;
             set => _actor.Position = value;
         }
 
         /// <inheritdoc />
-        public Quaternion Orientation
+        public override Quaternion Orientation
         {
             get => _actor.Orientation;
             set => _actor.Orientation = value;
         }
 
         /// <inheritdoc />
-        public Vector3 Scale
+        public override Vector3 Scale
         {
             get => _actor.Scale;
             set => _actor.Scale = value;
         }
 
         /// <inheritdoc />
-        ISceneTreeNode ISceneTreeNode.ParentNode
+        public override ISceneTreeNode ParentNode
         {
-            get { return Parent as ISceneTreeNode; }
             set
             {
-                if (value is ActorTreeNode control)
-                    Parent = control;
-                else
-                    throw new InvalidOperationException("ActorTreeNode can have only ActorTreeNode as a parent node.");
+                if (!(value is ActorNode))
+                    throw new InvalidOperationException("ActorNode can have only ActorNode as a parent node.");
+
+                base.ParentNode = value;
             }
         }
 
         /// <inheritdoc />
-        public List<ISceneTreeNode> ChildNodes { get; } = new List<ISceneTreeNode>();
-
-        /// <inheritdoc />
-        bool ISceneTreeNode.ContainsInHierarchy(ISceneTreeNode node)
+        protected override void OnParentChanged()
         {
-            if (ChildNodes.Contains(node))
-                return true;
+            // Update UI node connections
+            _treeNode.Parent = (ParentNode as ActorNode)?.TreeNode;
 
-            return ChildNodes.Any(x => x.ContainsInHierarchy(node));
-        }
-
-        /// <inheritdoc />
-        bool ISceneTreeNode.ContainsChild(ISceneTreeNode node)
-        {
-            return ChildNodes.Contains(node);
+            base.OnParentChanged();
         }
 
         #endregion

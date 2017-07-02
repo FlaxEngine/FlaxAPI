@@ -7,8 +7,8 @@ namespace FlaxEditor
     /// <summary>
     /// Actor tree node for <see cref="FlaxEngine.Scene"/> objects.
     /// </summary>
-    /// <seealso cref="ActorTreeNode" />
-    public sealed class SceneTreeNode : ActorTreeNode
+    /// <seealso cref="ActorNode" />
+    public sealed class SceneNode : ActorNode
     {
         /// <summary>
         /// Gets the scene.
@@ -19,10 +19,10 @@ namespace FlaxEditor
         public FlaxEngine.Scene Scene => _actor as FlaxEngine.Scene;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SceneTreeNode"/> class.
+        /// Initializes a new instance of the <see cref="SceneNode"/> class.
         /// </summary>
         /// <param name="scene">The scene.</param>
-        public SceneTreeNode(FlaxEngine.Scene scene)
+        public SceneNode(FlaxEngine.Scene scene)
             : base(scene)
         {
         }

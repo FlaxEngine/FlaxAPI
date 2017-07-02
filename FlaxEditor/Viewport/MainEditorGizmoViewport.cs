@@ -90,5 +90,35 @@ namespace FlaxEditor.Viewport
             // Fire event
             // TODO: mark scene as edited (all parent scenes of the selected objects)
         }
+
+        /// <inheritdoc />
+        protected override void OnLeftMouseButtonUp()
+        {
+            if (TransformGizmo.IsActive)
+            {
+                // Ensure player is not moving objects
+                if (TransformGizmo.ActiveAxis != TransformGizmo.Axis.None)
+                    return;
+            }
+            else
+            {
+                // For now just pick objects in transform gizmo mode
+                return;
+            }
+
+            // Get mouse ray and try to hit any object
+            var ray = MouseRay;
+            float closest = float.MaxValue;
+            var hit = Editor.Instance.Windows.SceneWin.Root.RayCast(ref ray, ref closest);
+
+            if (hit != null)
+            {
+                bool addRemove = ParentWindow.GetKey(KeyCode.CONTROL);
+                
+
+            }
+
+            base.OnLeftMouseButtonUp();
+        }
     }
 }

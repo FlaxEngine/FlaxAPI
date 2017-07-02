@@ -103,10 +103,12 @@
     <Compile Include="Modules\WindowsModule.cs" />
     <Compile Include="PreviewsCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scene\ActorTreeNode.cs" />
+    <Compile Include="Scene\ActorNode.cs" />
+    <Compile Include="Scene\GUI\ActorTreeNode.cs" />
     <Compile Include="Scene\ISceneTreeNode.cs" />
-    <Compile Include="Scene\RootTreeNode.cs" />
-    <Compile Include="Scene\SceneTreeNode.cs" />
+    <Compile Include="Scene\RootNode.cs" />
+    <Compile Include="Scene\SceneNode.cs" />
+    <Compile Include="Scene\SceneTreeNodeBase.cs" />
     <Compile Include="States\BuildingLightingState.cs" />
     <Compile Include="States\ChangingScenesState.cs" />
     <Compile Include="States\ClosingState.cs" />
@@ -147,6 +149,7 @@
       <Name>FlaxEngine</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /i /s /y "$(TargetDir)..\." "$(SolutionDir)..\Source\Bin\Editor\Assemblies" /exclude:$(SolutionDir)excludedFileList.txt</PostBuildEvent>

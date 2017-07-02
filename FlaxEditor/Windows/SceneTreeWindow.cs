@@ -22,7 +22,7 @@ namespace FlaxEditor.Windows
         /// <summary>
         /// The root tree node for the whole scene graph.
         /// </summary>
-        public readonly RootTreeNode Root;
+        public readonly RootNode Root;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneTreeWindow"/> class.
@@ -34,10 +34,10 @@ namespace FlaxEditor.Windows
             Title = "Scene";
             
             // Create scene structure tree
-            Root = new RootTreeNode();
-            Root.Expand();
+            Root = new RootNode();
+            Root.TreeNode.Expand();
             _tree = new Tree(true);
-            _tree.AddChild(Root);
+            _tree.AddChild(Root.TreeNode);
             _tree.OnSelectedChanged += Tree_OnOnSelectedChanged;
             _tree.OnRightClick += Tree_OnOnRightClick;
             _tree.Parent = this;
@@ -60,7 +60,7 @@ namespace FlaxEditor.Windows
                 for (int i = 0; i < after.Count; i++)
                 {
                     if (after[i] is ActorTreeNode node && node.Actor)
-                        actors.Add(node);
+                        actors.Add(node.ActorNode);
                 }
 
                 // Select
@@ -90,7 +90,7 @@ namespace FlaxEditor.Windows
             {
                 if (node.GetChild(i) is ActorTreeNode actorNode)
                 {
-                    if (selection.Contains(actorNode))
+                    if (selection.Contains(actorNode.ActorNode))
                         nodes.Add(actorNode);
 
                     selectNodesHelper(nodes, selection, actorNode);
@@ -109,16 +109,16 @@ namespace FlaxEditor.Windows
             }
             else if (selection.Count == 1)
             {
-                var node = selection[0] as ActorTreeNode;
+                var node = selection[0] as ActorNode;
 
-                _tree.Select(node);
+                _tree.Select(node?.TreeNode);
             }
             else
             {
                 // Find nodes to select
-                // TODO: if it takes too long let's cache hash set: (key: Actor.ID, value: SceneTreeNode) and use faster lookup
+                // TODO: if it takes too long let's cache hash set: (key: Actor.ID, value: SceneNode) and use faster lookup
                 var nodes = new List<TreeNode>(selection.Count);
-                selectNodesHelper(nodes, selection, Root);
+                selectNodesHelper(nodes, selection, Root.TreeNode);
 
                 // Select nodes
                 _tree.Select(nodes);
@@ -131,15 +131,17 @@ namespace FlaxEditor.Windows
         public override void OnExit()
         {
             // Cleanup tree
-            Root.DisposeChildren();
+            Root.TreeNode.DisposeChildren();
         }
 
-        private void BuildSceneTree(ActorTreeNode node)
+        private void BuildSceneTree(ActorNode node)
         {
             var children = node.Actor.GetChildren();
             for (int i = 0; i < children.Length; i++)
             {
-                BuildSceneTree(node.AddChild(new ActorTreeNode(children[i])));
+                var childNode = new ActorNode(children[i]);
+                childNode.ParentNode = node;
+                BuildSceneTree(childNode);
             }
         }
 
@@ -150,19 +152,20 @@ namespace FlaxEditor.Windows
 
             // Build scene tree
             // TODO: make it faster by calling engine internaly only once to gather optimzied scene tree
-            var sceneNode = new SceneTreeNode(scene);
+            var sceneNode = new SceneNode(scene);
             BuildSceneTree(sceneNode);
-            sceneNode.Expand();
+            sceneNode.TreeNode.Expand();
 
             // TODO: cache expanded/colapsed nodes per scene tree
 
             // Add to the tree
-            bool wasLayoutLocked = Root.IsLayoutLocked;
-            Root.IsLayoutLocked = true;
-            Root.AddChild(sceneNode);
-            Root.SortChildren();
-            Root.IsLayoutLocked = wasLayoutLocked;
-            Root.PerformLayout();
+            var rootNode = Root.TreeNode;
+            bool wasLayoutLocked = rootNode.IsLayoutLocked;
+            rootNode.IsLayoutLocked = true;
+            rootNode.AddChild(sceneNode.TreeNode);
+            rootNode.SortChildren();
+            rootNode.IsLayoutLocked = wasLayoutLocked;
+            rootNode.PerformLayout();
 
             var endTime = DateTime.UtcNow;
             var milliseconds = (int)(endTime - startTime).TotalMilliseconds;
@@ -179,7 +182,7 @@ namespace FlaxEditor.Windows
                 Debug.Log($"Cleanup UI tree for scene \'{scene.Name}\'");
 
                 // Cleanup
-                node.Dispose();
+                node.TreeNode.Dispose();
             }
         }
 
@@ -197,7 +200,7 @@ namespace FlaxEditor.Windows
             {
                 overlayText = "Loading scene...";
             }
-            else if (Root.ChildrenCount == 0)
+            else if (Root.TreeNode.ChildrenCount == 0)
             {
                 overlayText = "No scene";
             }
