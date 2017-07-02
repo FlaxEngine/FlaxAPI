@@ -31,6 +31,7 @@ namespace FlaxEngine.GUI
         protected bool _isMouseDown;
         protected float _mouseDownTime;
         protected Vector2 _mouseDownPos;
+        protected Color _cachedTextColor;
 
         protected DragItemPositioning _dragOverMode;
         protected bool _isDragOverHeader;
@@ -116,14 +117,6 @@ namespace FlaxEngine.GUI
         ///   <c>true</c> if this node is root; otherwise, <c>false</c>.
         /// </value>
         public bool IsRoot => !(Parent is TreeNode);
-
-        /// <summary>
-        /// Gets the color of the text.
-        /// </summary>
-        /// <value>
-        /// The color of the text.
-        /// </value>
-        public virtual Color TextColor => Enabled ? Style.Current.Foreground : Style.Current.ForegroundDisabled;
 
         /// <summary>
         /// Gets the minimum width of the node sub-tree.
@@ -327,11 +320,23 @@ namespace FlaxEngine.GUI
                 _dragOverMode = DragItemPositioning.At;
         }
 
+        /// <summary>
+        /// Caches the color of the text for this node. Called during update before children nodes but after parent node so it can reuse parent tree node data.
+        /// </summary>
+        /// <returns>Text color.</returns>
+        protected virtual Color CacheTextColor()
+        {
+            return Enabled ? Style.Current.Foreground : Style.Current.ForegroundDisabled;
+        }
+
         // TODO: support drag and drop for tree nodes
 
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
+            // Cache text color
+            _cachedTextColor = CacheTextColor();
+
             // Drop/down animation
             if (_animationProgress < 1.0f)
             {
@@ -352,7 +357,9 @@ namespace FlaxEngine.GUI
                 OnLongPress();
             }
 
-            base.Update(deltaTime);
+            // Base
+            if (_opened)
+                base.Update(deltaTime);
         }
 
         /// <inheritdoc />
@@ -391,7 +398,7 @@ namespace FlaxEngine.GUI
                 }
 
                 // Draw text
-                Render2D.DrawText(style.FontSmall, _text, textRect, TextColor, TextAlignment.Near, TextAlignment.Center);
+                Render2D.DrawText(style.FontSmall, _text, textRect, _cachedTextColor, TextAlignment.Near, TextAlignment.Center);
 
                 // Draw drag and drop effect
                 if (IsDragOver)

@@ -13,6 +13,8 @@ namespace FlaxEditor
     /// <seealso cref="FlaxEngine.GUI.TreeNode" />
     public class ActorTreeNode : TreeNode
     {
+        private bool _isActive;
+
         /// <summary>
         /// The actor node that owns this node.
         /// </summary>
@@ -43,6 +45,29 @@ namespace FlaxEditor
         {
             actorNode = node;
             Text = actorNode.Name;
+            _isActive = true;
+        }
+
+        /// <inheritdoc />
+        protected override Color CacheTextColor()
+        {
+            // Update node text color (based on ActorNode.IsActiveInHierarchy but with optimized logic a little)
+            if (Parent is ActorTreeNode parent)
+            {
+                var style = Style.Current;
+                if (parent._isActive)
+                {
+                    _isActive = actorNode.Actor.IsActive;
+
+                    if (_isActive)
+                        return style.Foreground;
+                }
+
+                _isActive = false;
+                return style.ForegroundDisabled;
+            }
+
+            return base.CacheTextColor();
         }
 
         /// <inheritdoc />
