@@ -45,14 +45,17 @@ namespace FlaxEditor.Gizmo
         {
             // Check if has no model or is inactive
             if (!_isActive
-                /*|| _modelTranslateAxis == null || !_modelTranslateAxis.IsLoaded
-                || _modelScaleAxis == ńull || !_modelScaleAxis.IsLoaded
+                /*
                 || view.Pass != RenderPass.GBufferFill*/
             )
                 return;
 
             // Temorary data
             Matrix m1, m2, m3;
+
+            bool isXAxis = _activeAxis == Axis.X || _activeAxis == Axis.XY || _activeAxis == Axis.ZX;
+            bool isYAxis = _activeAxis == Axis.Y || _activeAxis == Axis.XY || _activeAxis == Axis.YZ;
+            bool isZAxis = _activeAxis == Axis.Z || _activeAxis == Axis.YZ || _activeAxis == Axis.ZX;
 
             // Switch mode
             const float gizmoModelsScale2RealGizmoSize = 0.075f;
@@ -69,57 +72,54 @@ namespace FlaxEditor.Gizmo
                     var mesh = _modelTranslateAxis.LODs[0].Meshes[0];
 
                     // X axis
-                    bool isXAxis = _activeAxis == Axis.X || _activeAxis == Axis.XY || _activeAxis == Axis.ZX;
                     collector.AddDrawCall(mesh, isXAxis ? _materialAxisFocus : _materialAxisX, ref m1);
 
                     // Y axis
                     Matrix.RotationZ(Mathf.PiOverTwo, out m2);
                     Matrix.Multiply(ref m2, ref m1, out m3);
-                    bool isYAxis = _activeAxis == Axis.Y || _activeAxis == Axis.XY || _activeAxis == Axis.YZ;
                     collector.AddDrawCall(mesh, isYAxis ? _materialAxisFocus : _materialAxisY, ref m3);
 
                     // Z axis
                     Matrix.RotationY(-Mathf.PiOverTwo, out m2);
                     Matrix.Multiply(ref m2, ref m1, out m3);
-                    bool isZAxis = _activeAxis == Axis.Z || _activeAxis == Axis.YZ || _activeAxis == Axis.ZX;
                     collector.AddDrawCall(mesh, isZAxis ? _materialAxisFocus : _materialAxisZ, ref m3);
 
                     break;
                 }
 
-                /*case Mode.Rotate:
+                case Mode.Rotate:
                 {
-                // TODO: render rotation gizmo
-                break;
+                    // TODO: render rotation gizmo
+                    break;
                 }
-
 
                 case Mode.Scale:
                 {
-                // Cache data
-                Matrix.Scaling(gizmoModelsScale2RealGizmoSize, out m3);
-                Matrix.Multiply(ref m3, ref _gizmoWorld, out m1);
-                var model = _modelScaleAxis->GetModel();
-                var mesh = model->LODs[0].Meshes[0];
+                    if (!_modelScaleAxis || !_modelScaleAxis.IsLoaded)
+                        break;
 
-                // X axis
-                Matrix.RotationY(-Mathf.PiOverTwo, out m2);
-                Matrix.Multiply(ref m2, ref m1, out m3);
-                view.Cache->AddDrawCall(StaticFlags.None, mesh, _activeAxis == X ? _materialAxisFocus->GetMaterialBase() : _materialAxisX->GetMaterialBase(), m3);
+                    // Cache data
+                    Matrix.Scaling(gizmoModelsScale2RealGizmoSize, out m3);
+                    Matrix.Multiply(ref m3, ref _gizmoWorld, out m1);
+                    var mesh = _modelScaleAxis.LODs[0].Meshes[0];
 
-                // Y axis
-                Matrix.RotationX(Mathf.PiOverTwo, out m2);
-                Matrix.Multiply(ref m2, ref m1, out m3);
-                view.Cache->AddDrawCall(StaticFlags.None, mesh, _activeAxis == Y ? _materialAxisFocus->GetMaterialBase() : _materialAxisY->GetMaterialBase(), m3);
+                    // X axis
+                    Matrix.RotationY(-Mathf.PiOverTwo, out m2);
+                    Matrix.Multiply(ref m2, ref m1, out m3);
+                    collector.AddDrawCall(mesh, isXAxis ? _materialAxisFocus : _materialAxisX, ref m3);
 
-                // Z axis
-                Matrix.RotationX(PI, out m2);
-                Matrix.Multiply(ref m2, ref m1, out m3);
-                view.Cache->AddDrawCall(StaticFlags.None, mesh, _activeAxis == Z ? _materialAxisFocus->GetMaterialBase() : _materialAxisZ->GetMaterialBase(), m3);
+                    // Y axis
+                    Matrix.RotationX(Mathf.PiOverTwo, out m2);
+                    Matrix.Multiply(ref m2, ref m1, out m3);
+                    collector.AddDrawCall(mesh, isYAxis ? _materialAxisFocus : _materialAxisY, ref m3);
 
-                break;
+                    // Z axis
+                    Matrix.RotationX(Mathf.Pi, out m2);
+                    Matrix.Multiply(ref m2, ref m1, out m3);
+                    collector.AddDrawCall(mesh, isZAxis ? _materialAxisFocus : _materialAxisZ, ref m3);
+
+                    break;
                 }
-                */
             }
 
             // Draw selected sub-object
