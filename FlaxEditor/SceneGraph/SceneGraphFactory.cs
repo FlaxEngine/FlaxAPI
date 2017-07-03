@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -28,6 +28,10 @@ namespace FlaxEditor.SceneGraph
             CustomNodesTypes.Add(typeof(Camera), typeof(CameraNode));
             CustomNodesTypes.Add(typeof(EnvironmentProbe), typeof(EnvironmentProbeNode));
             CustomNodesTypes.Add(typeof(PointLight), typeof(PointLightNode));
+            CustomNodesTypes.Add(typeof(DirectionalLight), typeof(DirectionalLightNode));
+            CustomNodesTypes.Add(typeof(SpotLight), typeof(SpotLightNode));
+            CustomNodesTypes.Add(typeof(Skybox), typeof(SkyboxNode));
+            CustomNodesTypes.Add(typeof(Sky), typeof(SkyNode));
         }
 
         /// <summary>
