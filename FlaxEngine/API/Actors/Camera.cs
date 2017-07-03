@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,5 +23,9 @@ namespace FlaxEngine
         {
             return $"{Name} ({GetType().Name})";
         }
+
+        // Hacky internal call to get proper camera preview model intersection (works only in editor)
+	    [MethodImpl(MethodImplOptions.InternalCall)]
+	    internal static extern bool Internal_IntersectsItselfEditor(IntPtr obj, ref Ray ray, ref float distance);
     }
 }
