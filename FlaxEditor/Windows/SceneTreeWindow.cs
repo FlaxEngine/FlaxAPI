@@ -27,6 +27,11 @@ namespace FlaxEditor.Windows
         public readonly RootNode Root;
 
         /// <summary>
+        /// The scene graph nodes factory.
+        /// </summary>
+        public readonly  SceneGraphFactory Factory = new SceneGraphFactory();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SceneTreeWindow"/> class.
         /// </summary>
         /// <param name="editor">The editor.</param>
@@ -144,26 +149,13 @@ namespace FlaxEditor.Windows
             Root.TreeNode.DisposeChildren();
         }
 
-        private void BuildSceneTree(ActorNode node)
-        {
-            var children = node.Actor.GetChildren();
-            for (int i = 0; i < children.Length; i++)
-            {
-                var childNode = new ActorNode(children[i]);
-                childNode.ParentNode = node;
-                BuildSceneTree(childNode);
-            }
-        }
-
         /// <inheritdoc />
         public override void OnSceneLoaded(Scene scene, Guid sceneId)
         {
             var startTime = DateTime.UtcNow;
 
             // Build scene tree
-            // TODO: make it faster by calling engine internaly only once to gather optimzied scene tree
-            var sceneNode = new SceneNode(scene);
-            BuildSceneTree(sceneNode);
+            var sceneNode = Factory.BuildSceneTree(scene);
             sceneNode.TreeNode.Expand();
 
             // TODO: cache expanded/colapsed nodes per scene tree

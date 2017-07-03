@@ -110,6 +110,7 @@
     <Compile Include="SceneGraph\GUI\ActorTreeNode.cs" />
     <Compile Include="SceneGraph\ISceneTreeNode.cs" />
     <Compile Include="SceneGraph\RootNode.cs" />
+    <Compile Include="SceneGraph\SceneGraphFactory.cs" />
     <Compile Include="SceneGraph\SceneNode.cs" />
     <Compile Include="SceneGraph\SceneTreeNodeBase.cs" />
     <Compile Include="States\BuildingLightingState.cs" />
