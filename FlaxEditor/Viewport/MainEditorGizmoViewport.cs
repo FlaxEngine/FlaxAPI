@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using FlaxEditor.Gizmo;
+using FlaxEditor.SceneGraph;
 using FlaxEditor.Viewport.Widgets;
 using FlaxEditor.Windows;
 using FlaxEngine;

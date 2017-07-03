@@ -1,18 +1,17 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using FlaxEngine;
 
-namespace FlaxEditor
+namespace FlaxEditor.SceneGraph
 {
     /// <summary>
     /// Base class for objects implementing <see cref="ISceneTreeNode"/>.
     /// </summary>
-    /// <seealso cref="FlaxEditor.ISceneTreeNode" />
+    /// <seealso cref="ISceneTreeNode" />
     public abstract class SceneTreeNodeBase : ISceneTreeNode
     {
         /// <summary>

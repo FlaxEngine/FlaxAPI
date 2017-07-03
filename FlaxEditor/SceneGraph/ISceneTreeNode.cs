@@ -3,11 +3,10 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System.Collections.Generic;
-using FlaxEditor.Modules;
 using FlaxEditor.Windows;
 using FlaxEngine;
 
-namespace FlaxEditor
+namespace FlaxEditor.SceneGraph
 {
     /// <summary>
     /// Base interface for all node objects which belong to scene graph used by the Editor.

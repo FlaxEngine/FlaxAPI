@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System.Collections.Generic;
+using FlaxEditor.SceneGraph;
 using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Gizmo

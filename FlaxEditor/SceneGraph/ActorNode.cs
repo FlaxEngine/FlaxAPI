@@ -3,10 +3,11 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using FlaxEditor.SceneGraph.GUI;
 using FlaxEditor.Windows;
 using FlaxEngine;
 
-namespace FlaxEditor
+namespace FlaxEditor.SceneGraph
 {
     /// <summary>
     /// A tree node used to visalize scene actors structure in <see cref="SceneTreeWindow"/>. It's a ViewModel object for <see cref="Actor"/>.
@@ -94,9 +95,7 @@ namespace FlaxEditor
 
             return null;
         }
-
-        #region [SceneTreeNodeBase] implementation
-
+        
         /// <inheritdoc />
         public override string Name => _actor.Name;
 
@@ -160,7 +159,5 @@ namespace FlaxEditor
 
             base.OnParentChanged();
         }
-
-        #endregion
     }
 }

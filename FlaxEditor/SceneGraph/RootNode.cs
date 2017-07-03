@@ -1,10 +1,10 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
 using FlaxEngine;
 
-namespace FlaxEditor
+namespace FlaxEditor.SceneGraph
 {
     /// <summary>
     /// Represents root node of the whole scene graph.
@@ -19,9 +19,7 @@ namespace FlaxEditor
             : base(null)
         {
         }
-
-        #region [SceneTreeNodeBase] implementation
-
+        
         /// <inheritdoc />
         public override string Name => "Root";
 
@@ -64,7 +62,5 @@ namespace FlaxEditor
         {
             return false;
         }
-
-        #endregion
     }
 }
