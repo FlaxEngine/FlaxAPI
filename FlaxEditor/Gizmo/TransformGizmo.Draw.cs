@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -69,17 +69,20 @@ namespace FlaxEditor.Gizmo
                     var mesh = _modelTranslateAxis.LODs[0].Meshes[0];
 
                     // X axis
-                    collector.AddDrawCall(mesh, _activeAxis == Axis.X ? _materialAxisFocus : _materialAxisX, ref m1);
+                    bool isXAxis = _activeAxis == Axis.X || _activeAxis == Axis.XY || _activeAxis == Axis.ZX;
+                    collector.AddDrawCall(mesh, isXAxis ? _materialAxisFocus : _materialAxisX, ref m1);
 
                     // Y axis
                     Matrix.RotationZ(Mathf.PiOverTwo, out m2);
                     Matrix.Multiply(ref m2, ref m1, out m3);
-                    collector.AddDrawCall(mesh, _activeAxis == Axis.Y ? _materialAxisFocus : _materialAxisY, ref m3);
+                    bool isYAxis = _activeAxis == Axis.Y || _activeAxis == Axis.XY || _activeAxis == Axis.YZ;
+                    collector.AddDrawCall(mesh, isYAxis ? _materialAxisFocus : _materialAxisY, ref m3);
 
                     // Z axis
                     Matrix.RotationY(-Mathf.PiOverTwo, out m2);
                     Matrix.Multiply(ref m2, ref m1, out m3);
-                    collector.AddDrawCall(mesh, _activeAxis == Axis.Z ? _materialAxisFocus : _materialAxisZ, ref m3);
+                    bool isZAxis = _activeAxis == Axis.Z || _activeAxis == Axis.YZ || _activeAxis == Axis.ZX;
+                    collector.AddDrawCall(mesh, isZAxis ? _materialAxisFocus : _materialAxisZ, ref m3);
 
                     break;
                 }
