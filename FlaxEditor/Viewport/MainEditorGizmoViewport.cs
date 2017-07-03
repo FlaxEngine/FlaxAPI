@@ -2,11 +2,12 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using System.Collections.Generic;
 using FlaxEditor.Gizmo;
+using FlaxEditor.Viewport.Widgets;
 using FlaxEditor.Windows;
 using FlaxEngine;
+using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Viewport
@@ -17,7 +18,11 @@ namespace FlaxEditor.Viewport
     /// <seealso cref="FlaxEditor.Viewport.EditorGizmoViewport" />
     public class MainEditorGizmoViewport : EditorGizmoViewport
     {
-        private Editor _editor;
+        private readonly Editor _editor;
+
+        private readonly ViewportWidgetButton _gizmoModeTranslate;
+        private readonly ViewportWidgetButton _gizmoModeRotate;
+        private readonly ViewportWidgetButton _gizmoModeScale;
 
         /// <summary>
         /// The transform gizmo.
@@ -36,12 +41,239 @@ namespace FlaxEditor.Viewport
             Task.Flags = ViewFlags.DefaultEditor;
             TransformGizmo = new TransformGizmo(this);
             TransformGizmo.OnApplyTransformation += ApplyTransform;
+            TransformGizmo.OnModeChanged += OnGizmoModeChanged;
             Gizmos.Active = TransformGizmo;
 
-            editor.SceneEditing.OnSelectionChanged += OnOnSelectionChanged;
+            editor.SceneEditing.OnSelectionChanged += OnSelectionChanged;
+
+            // Transform space widget
+            var transformSpaceWidget = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperRight);
+            var transformSpaceToggle = new ViewportWidgetButton(string.Empty, editor.UI.GetIcon("World16"), null, true)
+            {
+                Checked = TransformGizmo.ActiveTransformSpace == TransformGizmo.TransformSpace.World,
+                Parent = transformSpaceWidget
+            };
+            transformSpaceToggle.OnToggle += onTransformSpaceToggle;
+            transformSpaceWidget.Parent = this;
+
+            // Scale snapping widget
+            var scaleSnappingWidget = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperRight);
+            var enableScaleSnapping = new ViewportWidgetButton(string.Empty, editor.UI.GetIcon("ScaleStep16"), null, true)
+            {
+                Checked = TransformGizmo.ScaleSnapEnabled,
+                Parent = scaleSnappingWidget
+            };
+            enableScaleSnapping.OnToggle += onScaleSnappingToggle;
+            var scaleSnappingCM = new ContextMenu();
+            var scaleSnappng = new ViewportWidgetButton(TransformGizmo.ScaleSnapValue.ToString(), Sprite.Invalid,
+                scaleSnappingCM);
+            for (int i = 0; i < EditorViewportScaleSnapValues.Length; i++)
+            {
+                var button = scaleSnappingCM.AddButton(i, EditorViewportScaleSnapValues[i].ToString());
+                button.Tag = scaleSnappng;
+            }
+            scaleSnappingCM.OnButtonClicked += widgetScaleSnapClick;
+            scaleSnappingCM.OnVisibleChanged += widgetScaleSnapShowHide;
+            scaleSnappng.Parent = scaleSnappingWidget;
+            scaleSnappingWidget.Parent = this;
+
+            // Rotation snapping widget
+            var rotateSnappingWidget = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperRight);
+            var enableRotateSnapping = new ViewportWidgetButton(string.Empty, editor.UI.GetIcon("RotateStep16"), null, true)
+            {
+                Checked = TransformGizmo.RotationSnapEnabled,
+                Parent = rotateSnappingWidget
+            };
+            enableRotateSnapping.OnToggle += onRotateSnappingToggle;
+            var rotateSnappingCM = new ContextMenu();
+            var rotateSnappng = new ViewportWidgetButton(TransformGizmo.RotationSnapValue.ToString(), Sprite.Invalid, rotateSnappingCM);
+            for (int i = 0; i < EditorViewportRotateSnapValues.Length; i++)
+            {
+                var button = rotateSnappingCM.AddButton(i, EditorViewportRotateSnapValues[i].ToString());
+                button.Tag = rotateSnappng;
+            }
+            rotateSnappingCM.OnButtonClicked += widgetRotateSnapClick;
+            rotateSnappingCM.OnVisibleChanged += widgetRotateSnapShowHide;
+            rotateSnappng.Parent = rotateSnappingWidget;
+            rotateSnappingWidget.Parent = this;
+
+            // Translation snapping widget
+            var translateSnappingWidget = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperRight);
+            var enableTranslateSnapping = new ViewportWidgetButton(string.Empty, editor.UI.GetIcon("Grid16"), null, true)
+            {
+                Checked = TransformGizmo.TranslationSnapEnable,
+                Parent = translateSnappingWidget
+            };
+            enableTranslateSnapping.OnToggle += onTranslateSnappingToggle;
+            var translateSnappingCM = new ContextMenu();
+            var translateSnappng = new ViewportWidgetButton(TransformGizmo.TranslationSnapValue.ToString(), Sprite.Invalid, translateSnappingCM);
+            for (int i = 0; i < EditorViewportTranslateSnapValues.Length; i++)
+            {
+                var button = translateSnappingCM.AddButton(i, EditorViewportTranslateSnapValues[i].ToString());
+                button.Tag = translateSnappng;
+            }
+            translateSnappingCM.OnButtonClicked += widgetTranslateSnapClick;
+            translateSnappingCM.OnVisibleChanged += widgetTranslateSnapShowHide;
+            translateSnappng.Parent = translateSnappingWidget;
+            translateSnappingWidget.Parent = this;
+
+            // Gizmo mode widget
+            var gizmoMode = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperRight);
+            _gizmoModeTranslate = new ViewportWidgetButton(string.Empty, editor.UI.GetIcon("Translate16"), null, true)
+            {
+                Tag = TransformGizmo.Mode.Translate,
+                Checked = true,
+                Parent = gizmoMode
+            };
+            _gizmoModeTranslate.OnToggle += onGizmoModeToggle;
+            _gizmoModeRotate = new ViewportWidgetButton(string.Empty, editor.UI.GetIcon("Rotate16"), null, true)
+            {
+                Tag = TransformGizmo.Mode.Rotate,
+                Parent = gizmoMode
+            };
+            _gizmoModeRotate.OnToggle += onGizmoModeToggle;
+            _gizmoModeScale = new ViewportWidgetButton(string.Empty, editor.UI.GetIcon("Scale16"), null, true)
+            {
+                Tag = TransformGizmo.Mode.Scale,
+                Parent = gizmoMode
+            };
+            _gizmoModeScale.OnToggle += onGizmoModeToggle;
+            gizmoMode.Parent = this;
         }
 
-        private void OnOnSelectionChanged()
+        private void onGizmoModeToggle(ViewportWidgetButton button)
+        {
+            TransformGizmo.ActiveMode = (TransformGizmo.Mode) (int) button.Tag;
+        }
+
+        private void onTranslateSnappingToggle(ViewportWidgetButton button)
+        {
+            TransformGizmo.TranslationSnapEnable = !TransformGizmo.TranslationSnapEnable;
+        }
+
+        private void onRotateSnappingToggle(ViewportWidgetButton button)
+        {
+            TransformGizmo.RotationSnapEnabled = !TransformGizmo.RotationSnapEnabled;
+        }
+
+        private void onScaleSnappingToggle(ViewportWidgetButton button)
+        {
+            TransformGizmo.ScaleSnapEnabled = !TransformGizmo.ScaleSnapEnabled;
+        }
+
+        private void onTransformSpaceToggle(ViewportWidgetButton button)
+        {
+            TransformGizmo.ToggleTransformSpace();
+        }
+
+        private void OnGizmoModeChanged()
+        {
+            // Update all viewport widgets status
+            var mode = TransformGizmo.ActiveMode;
+            _gizmoModeTranslate.Checked = mode == TransformGizmo.Mode.Translate;
+            _gizmoModeRotate.Checked = mode == TransformGizmo.Mode.Rotate;
+            _gizmoModeScale.Checked = mode == TransformGizmo.Mode.Scale;
+        }
+
+        private static readonly float[] EditorViewportScaleSnapValues =
+        {
+            0.1f,
+            0.25f,
+            0.5f,
+            1.0f,
+            2.0f,
+            4.0f,
+            6.0f,
+            8.0f,
+        };
+
+        private void widgetScaleSnapClick(int id, ContextMenu contextMenu)
+        {
+            var button = (ViewportWidgetButton) contextMenu.GetButton(id).Tag;
+            TransformGizmo.ScaleSnapValue = EditorViewportScaleSnapValues[id];
+            button.Text = EditorViewportScaleSnapValues[id].ToString();
+        }
+
+        private void widgetScaleSnapShowHide(Control control)
+        {
+            if (control.Visible == false)
+                return;
+
+            var ccm = (ContextMenu) control;
+            for (int i = 0; i < EditorViewportScaleSnapValues.Length; i++)
+            {
+                ccm.GetButton(i).Icon = Mathf.Abs(TransformGizmo.ScaleSnapValue - EditorViewportScaleSnapValues[i]) < 0.001f
+                    ? Style.Current.CheckBoxTick
+                    : Sprite.Invalid;
+            }
+        }
+
+        private static readonly float[] EditorViewportRotateSnapValues =
+        {
+            1.0f,
+            5.0f,
+            10.0f,
+            15.0f,
+            30.0f,
+            45.0f,
+            60.0f,
+            90.0f,
+        };
+
+        private void widgetRotateSnapClick(int id, ContextMenu contextMenu)
+        {
+            var button = (ViewportWidgetButton) contextMenu.GetButton(id).Tag;
+            TransformGizmo.RotationSnapValue = EditorViewportRotateSnapValues[id];
+            button.Text = EditorViewportRotateSnapValues[id].ToString();
+        }
+
+        private void widgetRotateSnapShowHide(Control control)
+        {
+            if (control.Visible == false)
+                return;
+
+            var ccm = (ContextMenu) control;
+            for (int i = 0; i < EditorViewportRotateSnapValues.Length; i++)
+            {
+                ccm.GetButton(i).Icon = Mathf.Abs(TransformGizmo.RotationSnapValue - EditorViewportRotateSnapValues[i]) < 0.001f
+                    ? Style.Current.CheckBoxTick
+                    : Sprite.Invalid;
+            }
+        }
+
+        private static readonly float[] EditorViewportTranslateSnapValues =
+        {
+            0.1f,
+            0.5f,
+            1.0f,
+            5.0f,
+            10.0f,
+            100.0f,
+            1000.0f,
+        };
+
+        private void widgetTranslateSnapClick(int id, ContextMenu contextMenu)
+        {
+            var button = (ViewportWidgetButton) contextMenu.GetButton(id).Tag;
+            TransformGizmo.TranslationSnapValue = EditorViewportTranslateSnapValues[id];
+            button.Text = EditorViewportTranslateSnapValues[id].ToString();
+        }
+
+        private void widgetTranslateSnapShowHide(Control control)
+        {
+            if (control.Visible == false)
+                return;
+
+            var ccm = (ContextMenu) control;
+            for (int i = 0; i < EditorViewportTranslateSnapValues.Length; i++)
+            {
+                ccm.GetButton(i).Icon = Mathf.Abs(TransformGizmo.TranslationSnapValue - EditorViewportTranslateSnapValues[i]) < 0.001f
+                    ? Style.Current.CheckBoxTick
+                    : Sprite.Invalid;
+            }
+        }
+
+        private void OnSelectionChanged()
         {
             var selection = _editor.SceneEditing.Selection;
             Gizmos.ForEach(x => x.OnSelectionChanged(selection));
@@ -120,7 +352,7 @@ namespace FlaxEditor.Viewport
             {
                 bool addRemove = ParentWindow.GetKey(KeyCode.CONTROL);
                 bool isSelected = sceneEditing.Selection.Contains(hit);
-                
+
                 if (addRemove)
                 {
                     if (isSelected)
