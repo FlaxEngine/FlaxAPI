@@ -828,6 +828,20 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Transforms bounding box using the given transformation matrix.
+        /// </summary>
+        /// <param name="box">The bounding box to transform.</param>
+        /// <param name="transform">The transformation matrix.</param>
+        /// <returns>The result of the transformation.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static OrientedBoundingBox operator *(OrientedBoundingBox box, Matrix transform)
+        {
+            OrientedBoundingBox result = box;
+            result.Transform(ref transform);
+            return result;
+        }
+
+        /// <summary>
         /// Tests for equality between two objects.
         /// </summary>
         /// <param name="left">The first value to compare.</param>

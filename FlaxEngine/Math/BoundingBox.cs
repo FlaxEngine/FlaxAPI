@@ -459,7 +459,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Transforms bounding box using the given transformatin matrix.
+        /// Transforms bounding box using the given transformation matrix.
         /// </summary>
         /// <param name="box">The bounding box to transform.</param>
         /// <param name="transform">The transformation matrix.</param>
