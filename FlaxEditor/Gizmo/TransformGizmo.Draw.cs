@@ -50,7 +50,7 @@ namespace FlaxEditor.Gizmo
             )
                 return;
 
-            // Temorary data
+            // Temporary data
             Matrix m1, m2, m3;
 
             bool isXAxis = _activeAxis == Axis.X || _activeAxis == Axis.XY || _activeAxis == Axis.ZX;
