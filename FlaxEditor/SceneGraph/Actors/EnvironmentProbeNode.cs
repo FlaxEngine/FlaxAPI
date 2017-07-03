@@ -9,8 +9,8 @@ namespace FlaxEditor.SceneGraph.Actors
     /// <summary>
     /// Scene tree node for <see cref="EnvironmentProbe"/> actor type.
     /// </summary>
-    /// <seealso cref="ActorNode" />
-    public sealed class EnvironmentProbeNode : ActorNode
+    /// <seealso cref="ActorNodeWithIcon" />
+    public sealed class EnvironmentProbeNode : ActorNodeWithIcon
     {
         /// <inheritdoc />
         public EnvironmentProbeNode(Actor actor)
