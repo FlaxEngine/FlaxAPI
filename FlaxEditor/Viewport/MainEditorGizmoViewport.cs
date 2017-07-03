@@ -372,5 +372,56 @@ namespace FlaxEditor.Viewport
 
             base.OnLeftMouseButtonUp();
         }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(KeyCode key)
+        {
+            if (key == KeyCode.DELETE)
+            {
+                _editor.SceneEditing.Delete();
+                return true;
+            }
+            if (key == KeyCode.Alpha1)
+            {
+                TransformGizmo.ActiveMode = TransformGizmo.Mode.Translate;
+                return true;
+            }
+            if (key == KeyCode.Alpha2)
+            {
+                TransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate;
+                return true;
+            }
+            if (key == KeyCode.Alpha3)
+            {
+                TransformGizmo.ActiveMode = TransformGizmo.Mode.Scale;
+                return true;
+            }
+            if (ParentWindow.GetKey(KeyCode.CONTROL))
+            {
+                switch (key)
+                {
+                    case KeyCode.X:
+                        _editor.SceneEditing.Cut();
+                        return true;
+                    case KeyCode.C:
+                        _editor.SceneEditing.Copy();
+                        return true;
+                    case KeyCode.V:
+                        _editor.SceneEditing.Paste();
+                        return true;
+                    case KeyCode.D:
+                        _editor.SceneEditing.Duplicate();
+                        return true;
+                    case KeyCode.F:
+                        _editor.Windows.SceneWin.Search();
+                        return true;
+                    case KeyCode.A:
+                        _editor.SceneEditing.SelectAllScenes();
+                        return true;
+                }
+            }
+
+            return base.OnKeyDown(key);
+        }
     }
 }
