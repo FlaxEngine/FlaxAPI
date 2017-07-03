@@ -47,6 +47,14 @@ namespace FlaxEditor.Windows
             // TODO: disable node action if scene editing is not allowed
         }
 
+        /// <summary>
+        /// Focuses search box.
+        /// </summary>
+        public void Search()
+        {
+            throw new NotImplementedException("TODO: scene tree window searching");
+        }
+
         private void Tree_OnOnSelectedChanged(List<TreeNode> before, List<TreeNode> after)
         {
             // Check if lock events
