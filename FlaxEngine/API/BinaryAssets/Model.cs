@@ -54,8 +54,6 @@ namespace FlaxEngine
 	    {
 	        // Clear cached data
 	        _lods = null;
-
-            Debug.Log("clear managed LOD cache");
 	    }
 
 #if !UNIT_TEST_COMPILANT
