@@ -356,7 +356,7 @@ namespace FlaxEditor.Gizmo
                         case Mode.Rotate:
                         {
                             float delta = Owner.MouseDelta.X * dt;
-                                
+
                             if (RotationSnapEnabled || Owner.UseSnapping)
                             {
                                 float snapValue = RotationSnapValue * Mathf.DegreesToRadians;
@@ -505,34 +505,34 @@ namespace FlaxEditor.Gizmo
 
             // Update
             UpdateMatricies();
-            
-            // TODO: draw gizmo planes
-            /*if (_activeMode == Mode.Translate)
-            {
-                //DebugDraw.Instance()->DrawBox(XAxisBox * _gizmoWorld, _activeAxis == X ? Color.Yellow : Color.Magenta, 0, false);
-                //DebugDraw.Instance()->DrawBox(YAxisBox * _gizmoWorld, _activeAxis == Y ? Color.Yellow : Color.Magenta, 0, false);
-                //DebugDraw.Instance()->DrawBox(ZAxisBox * _gizmoWorld, _activeAxis == Z ? Color.Yellow : Color.Magenta, 0, false);
 
-                DebugDraw.Instance()->DrawBox(OrientedBoundingBox(XYBox) * _gizmoWorld, _activeAxis == XY ? Color.Yellow : Color.Gray, 0, false);
-                DebugDraw.Instance()->DrawBox(OrientedBoundingBox(XZBox) * _gizmoWorld, _activeAxis == ZX ? Color.Yellow : Color.Gray, 0, false);
-                DebugDraw.Instance()->DrawBox(OrientedBoundingBox(YZBox) * _gizmoWorld, _activeAxis == YZ ? Color.Yellow : Color.Gray, 0, false);
+            // TODO: draw gizmo planes using models
+            if (_activeMode == Mode.Translate)
+            {
+                //DebugDraw.DrawBox(XAxisBox * _gizmoWorld, _activeAxis == X ? Color.Yellow : Color.Magenta, 0, false);
+                //DebugDraw.DrawBox(YAxisBox * _gizmoWorld, _activeAxis == Y ? Color.Yellow : Color.Magenta, 0, false);
+                //DebugDraw.DrawBox(ZAxisBox * _gizmoWorld, _activeAxis == Z ? Color.Yellow : Color.Magenta, 0, false);
+                
+                DebugDraw.DrawBox(new OrientedBoundingBox(XYBox) * _gizmoWorld, _activeAxis == Axis.XY ? Color.Yellow : Color.Gray, 0, false);
+                DebugDraw.DrawBox(new OrientedBoundingBox(XZBox) * _gizmoWorld, _activeAxis == Axis.ZX ? Color.Yellow : Color.Gray, 0, false);
+                DebugDraw.DrawBox(new OrientedBoundingBox(YZBox) * _gizmoWorld, _activeAxis == Axis.YZ ? Color.Yellow : Color.Gray, 0, false);
             }
             else if (_activeMode == Mode.Scale)
             {
-                DebugDraw.Instance()->DrawBox(OrientedBoundingBox(CenterBox) * _gizmoWorld, _activeAxis == Center ? Color.Yellow : Color.Gray, 0, false);
+                DebugDraw.DrawBox(new OrientedBoundingBox(CenterBox) * _gizmoWorld, _activeAxis == Axis.Center ? Color.Yellow : Color.Gray, 0, false);
 
-                //DebugDraw.Instance()->DrawSphere(getScaleXSphere(), _activeAxis == X ? Color.Yellow : Color.Magenta, 0, false);
-                //DebugDraw.Instance()->DrawSphere(getScaleYSphere(), _activeAxis == Y ? Color.Yellow : Color.Magenta, 0, false);
-                //DebugDraw.Instance()->DrawSphere(getScaleZSphere(), _activeAxis == Z ? Color.Yellow : Color.Magenta, 0, false);
+                //DebugDraw.DrawSphere(getScaleXSphere(), _activeAxis == X ? Color.Yellow : Color.Magenta, 0, false);
+                //DebugDraw.DrawSphere(getScaleYSphere(), _activeAxis == Y ? Color.Yellow : Color.Magenta, 0, false);
+                //DebugDraw.DrawSphere(getScaleZSphere(), _activeAxis == Z ? Color.Yellow : Color.Magenta, 0, false);
             }
             else
             {
-                //DebugDraw.Instance()->DrawSphere(getRotateXSphere(), _activeAxis == X ? Color.Yellow : Color.Magenta, 0, false);
+                //DebugDraw.DrawSphere(getRotateXSphere(), _activeAxis == X ? Color.Yellow : Color.Magenta, 0, false);
 
-                DebugDraw.Instance()->DrawSphere(getRotateXSphere(), _activeAxis == X ? Color.Yellow : Color.Magenta, 0, false);
-                DebugDraw.Instance()->DrawSphere(getRotateYSphere(), _activeAxis == Y ? Color.Yellow : Color.Magenta, 0, false);
-                DebugDraw.Instance()->DrawSphere(getRotateZSphere(), _activeAxis == Z ? Color.Yellow : Color.Magenta, 0, false);
-            }*/
+                DebugDraw.DrawSphere(RotateXSphere, _activeAxis == Axis.X ? Color.Yellow : Color.Magenta, 0, false);
+                DebugDraw.DrawSphere(RotateYSphere, _activeAxis == Axis.Y ? Color.Yellow : Color.Magenta, 0, false);
+                DebugDraw.DrawSphere(RotateZSphere, _activeAxis == Axis.Z ? Color.Yellow : Color.Magenta, 0, false);
+            }
         }
     }
 }
