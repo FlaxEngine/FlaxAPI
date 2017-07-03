@@ -128,6 +128,8 @@
     <Compile Include="API\Static\Content.Gen.cs">
       <DependentUpon>Content.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Static\DebugDraw.cs" />
+    <Compile Include="API\Static\DebugDraw.Gen.cs" />
     <Compile Include="API\Static\Globals.cs" />
     <Compile Include="API\Static\Globals.Gen.cs" />
     <Compile Include="API\Static\Input.cs" />
