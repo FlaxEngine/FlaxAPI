@@ -55,7 +55,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         /// <param name="selection">The selection.</param>
         /// <param name="additive">if set to <c>true</c> will use additive mode, otherwise will clear previous selection.</param>
-        public void Select <T>(List<ISceneTreeNode> selection, bool additive = false)
+        public void Select<T>(List<ISceneTreeNode> selection, bool additive = false)
         {
             if (selection == null)
                 throw new ArgumentNullException();
@@ -162,6 +162,46 @@ namespace FlaxEditor.Modules
         private void SelectionChanged()
         {
             OnSelectionChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// Deletes the selected objects. Supports undo/redo.
+        /// </summary>
+        public void Delete()
+        {
+            throw new NotImplementedException("TODO: implement Delete");
+        }
+
+        /// <summary>
+        /// Copies the selected objects.
+        /// </summary>
+        public void Copy()
+        {
+            throw new NotImplementedException("TODO: implement Copy");
+        }
+
+        /// <summary>
+        /// Pastes the copied objects.
+        /// </summary>
+        public void Paste()
+        {
+            throw new NotImplementedException("TODO: implement Paste");
+        }
+
+        /// <summary>
+        /// Cuts the selected objects.
+        /// </summary>
+        public void Cut()
+        {
+            throw new NotImplementedException("TODO: implement Cut");
+        }
+
+        /// <summary>
+        /// Duplicates the selected objects.
+        /// </summary>
+        public void Duplicate()
+        {
+            throw new NotImplementedException("TODO: implement duplicate");
         }
     }
 }
