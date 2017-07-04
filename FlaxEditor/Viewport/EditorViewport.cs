@@ -32,8 +32,19 @@ namespace FlaxEditor.Viewport
             public bool IsMouseRightDown;
             public bool IsMouseMiddleDown;
             public bool IsMouseLeftDown;
+
             public int MouseWheelDelta;
-        };
+
+            public void GatherInput(FlaxEngine.Window window)
+            {
+                IsControlDown = window.GetKey(KeyCode.CONTROL);
+                IsShiftDown = window.GetKey(KeyCode.SHIFT);
+                IsAltDown = window.GetKey(KeyCode.ALT);
+                IsMouseRightDown = window.GetMouseButton(MouseButtons.Right);
+                IsMouseMiddleDown = window.GetMouseButton(MouseButtons.Middle);
+                IsMouseLeftDown = window.GetMouseButton(MouseButtons.Left);
+            }
+        }
 
         // how much frames we want to keep in the buffer to calculate the avg. delta currently hardcoded
         public const int FpsCameraFilteringFrames = 3;
@@ -45,11 +56,11 @@ namespace FlaxEditor.Viewport
         protected bool _useMouseFiltering;
         protected bool _useMouseAcceleration;
 
-        // Mouse
+        // Input
+        private bool _isTrackingMouse;
         protected Input _input;
         protected int _deltaFilteringStep;
         protected Vector2 _viewMousePos;
-        protected Vector2 _yawPitch;
         protected Vector2 _mouseDeltaRight;
         protected Vector2 _mouseDeltaLeft;
         protected Vector2 _startPosRight;
@@ -58,10 +69,12 @@ namespace FlaxEditor.Viewport
         protected Vector2[] _deltaFilteringBuffer = new Vector2[FpsCameraFilteringFrames];
 
         // Camera
+        protected float _yaw;
+        protected float _pitch;
         protected float _fieldOfView = 60.0f;
         protected float _nearPlane = 0.1f;
         protected float _farPlane = 10000.0f;
-
+        
         /// <summary>
         /// Speed of the mouse.
         /// </summary>
@@ -123,20 +136,42 @@ namespace FlaxEditor.Viewport
         /// <value>
         /// The view orientation.
         /// </value>
-        public Quaternion ViewOrientation { get; protected set; } = Quaternion.Identity;
+        public Quaternion ViewOrientation
+        {
+            get => Quaternion.RotationYawPitchRoll(_yaw * Mathf.DegreesToRadians, _pitch * Mathf.DegreesToRadians, 0);
+            protected set => EulerAngles = value.EulerAngles;
+        }
 
         /// <summary>
         /// Gets or sets the view direction vector.
         /// </summary>
         public Vector3 ViewDirection
         {
-            get { return Vector3.ForwardLH * ViewOrientation; }
+            get => Vector3.ForwardLH * ViewOrientation;
             protected set
             {
                 Vector3 right = Vector3.Cross(value, Vector3.Up);
                 Vector3 up = Vector3.Cross(right, value);
                 ViewOrientation = Quaternion.LookRotation(value, up);
             }
+        }
+
+        /// <summary>
+        /// Gets or sets the yaw angle (in degrees).
+        /// </summary>
+        protected float Yaw
+        {
+            get => _yaw;
+            set => _yaw = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the pitch angle (in degrees).
+        /// </summary>
+        protected float Pitch
+        {
+            get => _pitch;
+            set => _pitch = Mathf.Clamp(value, CamPitchAngles.X, CamPitchAngles.Y);
         }
 
         /// <summary>
@@ -147,8 +182,28 @@ namespace FlaxEditor.Viewport
         /// </value>
         protected Vector2 YawPitch
         {
-            get => _yawPitch;
-            set => _yawPitch = new Vector2(value.X, Mathf.Clamp(value.Y, CamPitchAngles.X, CamPitchAngles.Y));
+            get => new Vector2(_yaw, _pitch);
+            set
+            {
+                Yaw = value.X;
+                Pitch = value.Y;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the euler angles (pitch, yaw, roll).
+        /// </summary>
+        /// <value>
+        /// The euler angles.
+        /// </value>
+        protected Vector3 EulerAngles
+        {
+            get => new Vector3(_pitch, _yaw, 0);
+            set
+            {
+                Pitch = value.X;
+                Yaw = value.Y;
+            }
         }
 
         /// <summary>
@@ -160,7 +215,7 @@ namespace FlaxEditor.Viewport
             : base(task)
         {
             _movementSpeed = 1;
-            _mouseAccelerationScale = 0.2f;
+            _mouseAccelerationScale = 0.1f;
             _useMouseFiltering = true;
             _useMouseAcceleration = true;
             
@@ -302,18 +357,42 @@ namespace FlaxEditor.Viewport
             return new Ray(nearPoint, direction);
         }
 
-        protected virtual void UpdateMouse(float dt, ref Vector3 move)
+        /// <summary>
+        /// Updates the view.
+        /// </summary>
+        /// <param name="dt">The delta time (in seconds).</param>
+        /// <param name="moveDelta">The move delta (scaled).</param>
+        /// <param name="mouseDelta">The mouse delta (scaled).</param>
+        protected virtual void UpdateView(float dt, ref Vector3 moveDelta, ref Vector2 mouseDelta)
         {
         }
 
+        /// <summary>
+        /// Called when left mouse button goes down (on press).
+        /// </summary>
+        protected virtual void OnLeftMouseButtonDown()
+        {
+            _startPosLeft = _viewMousePos;
+        }
+
+        /// <summary>
+        /// Called when left mouse button goes up (on release).
+        /// </summary>
         protected virtual void OnLeftMouseButtonUp()
         {
         }
 
-        protected virtual void OnMiddleMouseButtonUp()
+        /// <summary>
+        /// Called when right mouse button goes down (on press).
+        /// </summary>
+        protected virtual void OnRightMouseButtonDown()
         {
+            _startPosRight = _viewMousePos;
         }
 
+        /// <summary>
+        /// Called when right mouse button goes up (on release).
+        /// </summary>
         protected virtual void OnRightMouseButtonUp()
         {
         }
@@ -328,10 +407,39 @@ namespace FlaxEditor.Viewport
 
             // Get current mouse position in the view
             _viewMousePos = PointFromWindow(win.MousePosition);
-            
+
+            // Update input
+            bool isControllingMouse;
+            {
+                // Get input buttons and keys
+                var prevInput = _input;
+                _input.GatherInput(win.NativeWindow);
+
+                // Track controlling mouse state change
+                bool wasControllingMouse = prevInput.IsMouseRightDown || prevInput.IsMouseMiddleDown;
+                isControllingMouse = _input.IsMouseRightDown || _input.IsMouseMiddleDown;
+                if (wasControllingMouse != isControllingMouse)
+                {
+                    if (isControllingMouse)
+                        win.StartTrackingMouse(false);
+                    else
+                        win.EndTrackingMouse();
+                }
+
+                // Track mouse buttons state change
+                if (!prevInput.IsMouseLeftDown && _input.IsMouseLeftDown)
+                    OnLeftMouseButtonDown();
+                else if (prevInput.IsMouseLeftDown && !_input.IsMouseLeftDown)
+                    OnLeftMouseButtonUp();
+                //
+                if (!prevInput.IsMouseRightDown && _input.IsMouseRightDown)
+                    OnRightMouseButtonDown();
+                else if (prevInput.IsMouseRightDown && !_input.IsMouseRightDown)
+                    OnRightMouseButtonUp();
+            }
+
             // Check if update mouse
             Vector2 size = Size;
-            bool isControllingMouse = _input.IsMouseRightDown || _input.IsMouseMiddleDown;
             if (isControllingMouse)
             {
                 // Gather input
@@ -340,48 +448,50 @@ namespace FlaxEditor.Viewport
                     bool lbDown = _input.IsMouseLeftDown;
                     bool mbDown = _input.IsMouseMiddleDown;
                     bool rbDown = _input.IsMouseRightDown;
+                    bool wheelInUse = Math.Abs(_input.MouseWheelDelta) > Mathf.Epsilon;
 
                     _input.IsPanning = !isAltDown && mbDown && !rbDown;
                     _input.IsRotating = !isAltDown && !mbDown && rbDown;
-                    _input.IsMoving = !isAltDown && !mbDown && rbDown;
-                    _input.IsZooming = (isAltDown && !lbDown && !mbDown && rbDown) || (Math.Abs(_input.MouseWheelDelta) > Mathf.Epsilon);
+                    _input.IsMoving = !isAltDown && mbDown && rbDown;
+                    //_input.IsZooming = (isAltDown && !lbDown && !mbDown && rbDown) || wheelInUse;
+                    _input.IsZooming = wheelInUse;
                     _input.IsOrbiting = isAltDown && lbDown && !mbDown && !rbDown;
                 }
 
                 // Get input movement
-                Vector3 move = Vector3.Zero;
+                Vector3 moveDelta = Vector3.Zero;
                 if (win.GetKey(KeyCode.W))
                 {
-                    move += Vector3.ForwardLH;
+                    moveDelta += Vector3.ForwardLH;
                 }
                 if (win.GetKey(KeyCode.S))
                 {
-                    move += Vector3.BackwardLH;
+                    moveDelta += Vector3.BackwardLH;
                 }
                 if (win.GetKey(KeyCode.D))
                 {
-                    move += Vector3.Right;
+                    moveDelta += Vector3.Right;
                 }
                 if (win.GetKey(KeyCode.A))
                 {
-                    move += Vector3.Left;
+                    moveDelta += Vector3.Left;
                 }
                 if (win.GetKey(KeyCode.E))
                 {
-                    move += Vector3.Up;
+                    moveDelta += Vector3.Up;
                 }
                 if (win.GetKey(KeyCode.Q))
                 {
-                    move += Vector3.Down;
+                    moveDelta += Vector3.Down;
                 }
-                move.Normalize();// normalize direction
-                move *= _movementSpeed;
+                moveDelta.Normalize();// normalize direction
+                moveDelta *= _movementSpeed;
 
                 // Speed up or speed down
                 if (_input.IsShiftDown)
-                    move *= 4.0f;
+                    moveDelta *= 4.0f;
                 if (_input.IsControlDown)
-                    move *= 0.3f;
+                    moveDelta *= 0.3f;
 
                 // Calculate smooth mouse delta not dependant on viewport size
                 Vector2 offset = _viewMousePos - _startPosRight;
@@ -390,7 +500,7 @@ namespace FlaxEditor.Viewport
                 _mouseDeltaRight = offset / size;
                 _mouseDeltaRight.Y *= size.Y / size.X;
 
-                Vector2 delta = Vector2.Zero;
+                Vector2 mouseDelta = Vector2.Zero;
                 if (_useMouseFiltering)// mouse filtering
                 {
                     // update delta filtering buffer
@@ -403,33 +513,28 @@ namespace FlaxEditor.Viewport
 
                     // calculate filtered delta(avg)
                     for (int i = 0; i < FpsCameraFilteringFrames; i++)
-                        delta += _deltaFilteringBuffer[i];
+                        mouseDelta += _deltaFilteringBuffer[i];
 
-                    delta /= FpsCameraFilteringFrames;
+                    mouseDelta /= FpsCameraFilteringFrames;
                 }
                 else
-                    delta = _mouseDeltaRight;
+                    mouseDelta = _mouseDeltaRight;
 
                 if (_useMouseAcceleration)// mouse acceleration
                 {
                     // accelerate the delta
-                    var currentDelta = delta;
-                    delta = delta + _mouseDeltaRightLast * _mouseAccelerationScale;
+                    var currentDelta = mouseDelta;
+                    mouseDelta = mouseDelta + _mouseDeltaRightLast * _mouseAccelerationScale;
                     _mouseDeltaRightLast = currentDelta;
-                }
-
-                if (_input.IsRotating)
-                {
-                    // Accumulate position
-                    YawPitch += delta * (200.0f * MouseSpeed);
                 }
 
                 // Get clamped delta time (more stable during lags)
                 var dt = Math.Min(Time.UnscaledDeltaTime, 1.0f);
 
                 // Update
-                move *= dt * 60.0f;
-                UpdateMouse(dt, ref move);
+                moveDelta *= dt * 60.0f;
+                mouseDelta *= 200.0f * MouseSpeed;
+                UpdateView(dt, ref moveDelta, ref mouseDelta);
 
                 // Move mouse back to the root position
                 Vector2 center = PointToWindow(_startPosRight);
@@ -437,7 +542,7 @@ namespace FlaxEditor.Viewport
             }
             else
             {
-                _mouseDeltaRight = Vector2.Zero;
+                _mouseDeltaRight = _mouseDeltaRightLast = Vector2.Zero;
             }
             if (_input.IsMouseLeftDown)
             {
@@ -459,81 +564,10 @@ namespace FlaxEditor.Viewport
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
-            // Focus
             Focus();
 
-            // Base
-            if (base.OnMouseDown(location, buttons))
-                return true;
-
-            // Update buttons
-            if (buttons == MouseButtons.Right)
-            {
-                _input.IsMouseRightDown = true;
-
-                // Get start mouse position
-                var win = ParentWindow;
-                _startPosRight = PointFromWindow(win.MousePosition);
-                win.StartTrackingMouse(false);
-
-                // Request buffers resize
-                RequestResize();
-
-                // Event handled
-                return true;
-            }
-            if (buttons == MouseButtons.Middle)
-            {
-                _input.IsMouseMiddleDown = true;
-
-                // Get start mouse position
-                var win = ParentWindow;
-                _startPosRight = PointFromWindow(win.MousePosition);
-                win.StartTrackingMouse(false);
-
-                // Request buffers resize
-                RequestResize();
-
-                // Event handled
-                return true;
-            }
-            if (buttons == MouseButtons.Left)
-            {
-                _input.IsMouseLeftDown = true;
-
-                // Get start mouse position
-                _startPosLeft = PointFromWindow(ParentWindow.MousePosition);
-
-                // Event handled
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
-        {
-            // Update flags
-            if (buttons == MouseButtons.Right && _input.IsMouseRightDown)
-            {
-                _input.IsMouseRightDown = false;
-                ParentWindow.EndTrackingMouse();
-                OnRightMouseButtonUp();
-            }
-            if (buttons == MouseButtons.Middle && _input.IsMouseMiddleDown)
-            {
-                _input.IsMouseMiddleDown = false;
-                ParentWindow.EndTrackingMouse();
-                OnMiddleMouseButtonUp();
-            }
-            if (buttons == MouseButtons.Left && _input.IsMouseLeftDown)
-            {
-                _input.IsMouseLeftDown = false;
-                OnLeftMouseButtonUp();
-            }
-
-            return base.OnMouseUp(location, buttons);
+            base.OnMouseDown(location, buttons);
+            return true;
         }
 
         /// <inheritdoc />
@@ -625,7 +659,7 @@ namespace FlaxEditor.Viewport
             }
         }
 
-        float[] EditorViewportCameraSpeedValues =
+        private float[] EditorViewportCameraSpeedValues =
         {
             0.1f,
             0.25f,
@@ -637,7 +671,7 @@ namespace FlaxEditor.Viewport
             8.0f,
         };
 
-        struct ViewModeOptions
+        private struct ViewModeOptions
         {
             public ViewMode Mode;
             public string Name;
@@ -667,7 +701,7 @@ namespace FlaxEditor.Viewport
             new ViewModeOptions(ViewMode.AmbientOcclusion, "Ambient Occlusion"),
         };
 
-        void widgetCamSpeedClick(int id, ContextMenuBase cm)
+        private void widgetCamSpeedClick(int id, ContextMenuBase cm)
         {
             var ccm = (ContextMenu)cm;
             var viewport = (EditorViewport)cm.Tag;
@@ -676,7 +710,7 @@ namespace FlaxEditor.Viewport
             button.Text = EditorViewportCameraSpeedValues[id].ToString();
         }
 
-        void widgetCamSpeedShowHide(Control cm)
+        private void widgetCamSpeedShowHide(Control cm)
         {
             if (cm.Visible == false)
                 return;
@@ -689,14 +723,14 @@ namespace FlaxEditor.Viewport
             }
         }
 
-        void widgetViewModeClick(int id, ContextMenuBase cm)
+        private void widgetViewModeClick(int id, ContextMenuBase cm)
         {
             var ccm = (ContextMenu)cm;
             var viewport = (EditorViewport)cm.Tag;
             viewport.Task.Mode = EditorViewportViewModeValues[id].Mode;
         }
 
-        void widgetViewModeShowHide(Control cm)
+        private void widgetViewModeShowHide(Control cm)
         {
             if (cm.Visible == false)
                 return;

@@ -215,6 +215,11 @@ namespace FlaxEngine
             get { return Mathf.IsOne(X * X + Y * Y + Z * Z + W * W); }
         }
 
+        /// <summary>
+        /// The rotation as Euler angles in degrees.
+        /// The x, y, and z angles represent a rotation z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).
+        /// Angles order (xyz): pitch, yaw and roll.
+        /// </summary>
         public Vector3 EulerAngles
         {
             get

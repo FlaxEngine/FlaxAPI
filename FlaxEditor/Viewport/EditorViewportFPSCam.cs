@@ -52,7 +52,6 @@ namespace FlaxEditor.Viewport
             // Rotate and move
             ViewPosition = position;
             ViewDirection = direction;
-            updateMouseAbs();
         }
 
         /// <summary>
@@ -68,7 +67,6 @@ namespace FlaxEditor.Viewport
             // Rotate and move
             ViewPosition = position;
             ViewOrientation = orientation;
-            updateMouseAbs();
         }
 
         /// <summary>
@@ -90,13 +88,6 @@ namespace FlaxEditor.Viewport
             _startMove = ViewTransform;
             _endMove = target;
             _moveStartTime = Time.UnscaledTime;
-        }
-
-        private void updateMouseAbs()
-        {
-            // Change mouse position
-            Vector3 euler = ViewOrientation.EulerAngles;
-            YawPitch = new Vector2(euler.Y, euler.X);
         }
 
         /// <inheritdoc />
@@ -126,40 +117,55 @@ namespace FlaxEditor.Viewport
                 targetTransform.Scale = Vector3.Zero;
                 ViewPosition = targetTransform.Translation;
                 ViewOrientation = targetTransform.Orientation;
-                updateMouseAbs();
             }
         }
 
-        protected override void UpdateMouse(float dt, ref Vector3 move)
+        protected override void UpdateView(float dt, ref Vector3 moveDelta, ref Vector2 mouseDelta)
         {
             if (IsAnimatingMove)
                 return;
 
-            Vector3 position = ViewPosition;
-
-            // Rotate
-            Quaternion rotation;
-            Quaternion.RotationYawPitchRoll(_yawPitch.X * Mathf.DegreesToRadians, _yawPitch.Y * Mathf.DegreesToRadians, 0, out rotation);
+            // Get current view properties
+            float yaw = _yaw;
+            float pitch = _pitch;
+            var position = ViewPosition;
+            var rotation = ViewOrientation;
 
             // Compute base vectors for camera movement
             var forward = Vector3.ForwardLH * rotation;
             var up = Vector3.Up * rotation;
             var right = Vector3.Cross(forward, up);
-            
+
+            // Dolly
+            if (_input.IsPanning || _input.IsMoving || _input.IsRotating)
+            {
+                Vector3 move;
+                Vector3.Transform(ref moveDelta, ref rotation, out move);
+                position += move;
+            }
+
             // Pan
             if (_input.IsPanning)
             {
-                var panningSpeed = MouseSpeed * 80;
-                position -= right * _mouseDeltaRight.X * panningSpeed;
-                position -= up * _mouseDeltaRight.Y * panningSpeed;
+                var panningSpeed = 0.8f;
+                position -= right * (mouseDelta.X * panningSpeed);
+                position -= up * (mouseDelta.Y * panningSpeed);
             }
 
             // Move
-            if (_input.IsPanning || _input.IsMoving || _input.IsRotating)
+            if (_input.IsMoving)
             {
-                Vector3 moveLocal;
-                Vector3.Transform(ref move, ref rotation, out moveLocal);
-                position += moveLocal;
+                // Move camera over XZ plane
+                var projectedForward = Vector3.Normalize(new Vector3(forward.X, 0, forward.Z));
+                position -= projectedForward * mouseDelta.Y;
+                yaw += mouseDelta.X;
+            }
+
+            // Rotate or orbit
+            if (_input.IsRotating || _input.IsOrbiting)
+            {
+                yaw += mouseDelta.X;
+                pitch += mouseDelta.Y;
             }
 
             // Zoom in/out
@@ -174,7 +180,8 @@ namespace FlaxEditor.Viewport
 
             // Update view
             ViewPosition = position;
-            ViewOrientation = rotation;
+            Yaw = yaw;
+            Pitch = pitch;
         }
     }
 }
