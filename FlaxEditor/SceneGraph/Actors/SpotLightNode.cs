@@ -7,7 +7,7 @@ using FlaxEngine;
 namespace FlaxEditor.SceneGraph.Actors
 {
     /// <summary>
-    /// Scene tree node for <see cref="SpotLigh"/> actor type.
+    /// Scene tree node for <see cref="SpotLight"/> actor type.
     /// </summary>
     /// <seealso cref="ActorNodeWithIcon" />
     public sealed class SpotLightNode : ActorNodeWithIcon
