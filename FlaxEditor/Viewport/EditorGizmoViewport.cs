@@ -32,8 +32,8 @@ namespace FlaxEditor.Viewport
 
         public GizmosCollection Gizmos { get; } = new GizmosCollection();
         public float ViewFarPlane => _farPlane;
-        public bool IsLeftMouseButtonDown => _isMouseLeftDown;
-        public bool IsRightMouseButtonDown => _isMouseRightDown;
+        public bool IsLeftMouseButtonDown => _input.IsMouseLeftDown;
+        public bool IsRightMouseButtonDown => _input.IsMouseRightDown;
         public Vector2 MouseDelta => _mouseDeltaLeft * 1000;
         public bool UseSnapping => ParentWindow.GetKey(KeyCode.CONTROL);
 

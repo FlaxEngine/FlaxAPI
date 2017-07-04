@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -96,7 +96,7 @@ namespace FlaxEditor.Viewport
         {
             // Change mouse position
             Vector3 euler = ViewOrientation.EulerAngles;
-            AbsMousePosition = new Vector2(euler.Y, euler.X);
+            YawPitch = new Vector2(euler.Y, euler.X);
         }
 
         /// <inheritdoc />
@@ -135,15 +135,46 @@ namespace FlaxEditor.Viewport
             if (IsAnimatingMove)
                 return;
 
+            Vector3 position = ViewPosition;
+
             // Rotate
             Quaternion rotation;
-            Quaternion.RotationYawPitchRoll(_absMousePos.X * Mathf.DegreesToRadians, _absMousePos.Y * Mathf.DegreesToRadians, 0, out rotation);
-            ViewOrientation = rotation;
+            Quaternion.RotationYawPitchRoll(_yawPitch.X * Mathf.DegreesToRadians, _yawPitch.Y * Mathf.DegreesToRadians, 0, out rotation);
+
+            // Compute base vectors for camera movement
+            var forward = Vector3.ForwardLH * rotation;
+            var up = Vector3.Up * rotation;
+            var right = Vector3.Cross(forward, up);
+            
+            // Pan
+            if (_input.IsPanning)
+            {
+                var panningSpeed = MouseSpeed * 80;
+                position -= right * _mouseDeltaRight.X * panningSpeed;
+                position -= up * _mouseDeltaRight.Y * panningSpeed;
+            }
 
             // Move
-            Vector3 moveLocal;
-            Vector3.Transform(ref move, ref rotation, out moveLocal);
-            ViewPosition += moveLocal;
+            if (_input.IsPanning || _input.IsMoving || _input.IsRotating)
+            {
+                Vector3 moveLocal;
+                Vector3.Transform(ref move, ref rotation, out moveLocal);
+                position += moveLocal;
+            }
+
+            // Zoom in/out
+            if (_input.IsZooming)
+            {
+                position += forward * (MouseWheelZoomSpeedFactor * _input.MouseWheelDelta * 0.1f);
+                if (_input.IsAltDown)
+                {
+                    position += forward * (MouseSpeed * 40 * _mouseDeltaRight.ValuesSum);
+                }
+            }
+
+            // Update view
+            ViewPosition = position;
+            ViewOrientation = rotation;
         }
     }
 }

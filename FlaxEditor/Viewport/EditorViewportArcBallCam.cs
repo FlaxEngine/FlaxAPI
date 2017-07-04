@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -44,7 +44,7 @@ namespace FlaxEditor.Viewport
             // Change mouse position
             Quaternion orientation = Quaternion.LookRotation(direction, Vector3.Up);
             Vector3 euler = orientation.EulerAngles;
-            AbsMousePosition = new Vector2(euler.Y, euler.X);
+            YawPitch = new Vector2(euler.Y, euler.X);
 
             // Rotate
             ViewDirection = direction;
@@ -61,7 +61,7 @@ namespace FlaxEditor.Viewport
         {
             // Change mouse position
             Vector3 euler = orientation.EulerAngles;
-            AbsMousePosition = new Vector2(euler.Y, euler.X);
+            YawPitch = new Vector2(euler.Y, euler.X);
 
             // Rotate
             ViewOrientation = orientation;
@@ -81,7 +81,7 @@ namespace FlaxEditor.Viewport
         {
             // Rotate
             Quaternion rotation;
-            Quaternion.RotationYawPitchRoll(_absMousePos.X * Mathf.DegreesToRadians, _absMousePos.Y * Mathf.DegreesToRadians, 0, out rotation);
+            Quaternion.RotationYawPitchRoll(_yawPitch.X * Mathf.DegreesToRadians, _yawPitch.Y * Mathf.DegreesToRadians, 0, out rotation);
             ViewOrientation = rotation;
 
             // Move
