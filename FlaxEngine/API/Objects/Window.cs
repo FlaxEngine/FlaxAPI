@@ -49,7 +49,12 @@ namespace FlaxEngine
         SizeNESW,
         SizeNS,
         SizeNWSE,
-        SizeWE
+        SizeWE,
+
+        /// <summary>
+        /// The cursor is hidden.
+        /// </summary>
+        Hidden
     }
 
     /// <summary>
