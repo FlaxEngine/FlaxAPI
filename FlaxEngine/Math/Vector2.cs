@@ -185,6 +185,11 @@ namespace FlaxEngine
         {
             get { return Mathf.Max(X, Y); }
         }
+        
+        /// <summary>
+        /// Gets a sum of the component values.
+        /// </summary>
+        public float ValuesSum => X + Y;
 
         /// <summary>
         /// Gets or sets the component at the specified index.

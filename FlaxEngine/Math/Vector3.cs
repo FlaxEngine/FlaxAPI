@@ -261,6 +261,11 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets a sum of the component values.
+        /// </summary>
+        public float ValuesSum => X + Y + Z;
+
+        /// <summary>
         /// Gets or sets the component at the specified index.
         /// </summary>
         /// <value>The value of the X, Y, or Z component, depending on the index.</value>
