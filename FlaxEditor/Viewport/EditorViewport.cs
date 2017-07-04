@@ -35,6 +35,8 @@ namespace FlaxEditor.Viewport
 
             public int MouseWheelDelta;
 
+            public bool IsControllingMouse => IsMouseMiddleDown || IsMouseRightDown || (IsAltDown && IsMouseLeftDown);
+            
             public void GatherInput(FlaxEngine.Window window)
             {
                 IsControlDown = window.GetKey(KeyCode.CONTROL);
@@ -216,8 +218,8 @@ namespace FlaxEditor.Viewport
         {
             _movementSpeed = 1;
             _mouseAccelerationScale = 0.1f;
-            _useMouseFiltering = true;
-            _useMouseAcceleration = true;
+            _useMouseFiltering = false;
+            _useMouseAcceleration = false;
             
             DockStyle = DockStyle.Fill;
 
@@ -358,13 +360,26 @@ namespace FlaxEditor.Viewport
         }
 
         /// <summary>
-        /// Updates the view.
+        /// Called when mouse control begins.
         /// </summary>
-        /// <param name="dt">The delta time (in seconds).</param>
-        /// <param name="moveDelta">The move delta (scaled).</param>
-        /// <param name="mouseDelta">The mouse delta (scaled).</param>
-        protected virtual void UpdateView(float dt, ref Vector3 moveDelta, ref Vector2 mouseDelta)
+        /// <param name="win">The parent window.</param>
+        protected virtual void OnControlMouseBegin(FlaxEngine.Window win)
         {
+            win.StartTrackingMouse(false);
+            win.Cursor = CursorType.Hidden;
+
+            _viewMousePos = Center;
+            win.MousePosition = PointToWindow(_viewMousePos);
+        }
+
+        /// <summary>
+        /// Called when mouse control ends.
+        /// </summary>
+        /// <param name="win">The parent window.</param>
+        protected virtual void OnControlMouseEnd(FlaxEngine.Window win)
+        {
+            win.Cursor = CursorType.Default;
+            win.EndTrackingMouse();
         }
 
         /// <summary>
@@ -397,6 +412,16 @@ namespace FlaxEditor.Viewport
         {
         }
 
+        /// <summary>
+        /// Updates the view.
+        /// </summary>
+        /// <param name="dt">The delta time (in seconds).</param>
+        /// <param name="moveDelta">The move delta (scaled).</param>
+        /// <param name="mouseDelta">The mouse delta (scaled).</param>
+        protected virtual void UpdateView(float dt, ref Vector3 moveDelta, ref Vector2 mouseDelta)
+        {
+        }
+
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
@@ -416,14 +441,14 @@ namespace FlaxEditor.Viewport
                 _input.GatherInput(win.NativeWindow);
 
                 // Track controlling mouse state change
-                bool wasControllingMouse = prevInput.IsMouseRightDown || prevInput.IsMouseMiddleDown;
-                isControllingMouse = _input.IsMouseRightDown || _input.IsMouseMiddleDown;
+                bool wasControllingMouse = prevInput.IsControllingMouse;
+                isControllingMouse = _input.IsControllingMouse;
                 if (wasControllingMouse != isControllingMouse)
                 {
                     if (isControllingMouse)
-                        win.StartTrackingMouse(false);
+                        OnControlMouseBegin(win.NativeWindow);
                     else
-                        win.EndTrackingMouse();
+                        OnControlMouseEnd(win.NativeWindow);
                 }
 
                 // Track mouse buttons state change
