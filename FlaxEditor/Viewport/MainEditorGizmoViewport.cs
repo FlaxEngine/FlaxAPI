@@ -416,6 +416,11 @@ namespace FlaxEditor.Viewport
                 TransformGizmo.ActiveMode = TransformGizmo.Mode.Scale;
                 return true;
             }
+            if (key == KeyCode.F)
+            {
+                _editor.Windows.EditWin.ShowSelectedActors();
+                return true;
+            }
             if (ParentWindow.GetKey(KeyCode.CONTROL))
             {
                 switch (key)

@@ -56,7 +56,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         /// <param name="selection">The selection.</param>
         /// <param name="additive">if set to <c>true</c> will use additive mode, otherwise will clear previous selection.</param>
-        public void Select<T>(List<ISceneTreeNode> selection, bool additive = false)
+        public void Select(List<ISceneTreeNode> selection, bool additive = false)
         {
             if (selection == null)
                 throw new ArgumentNullException();
@@ -92,28 +92,7 @@ namespace FlaxEditor.Modules
 
             SelectionChanged();
         }
-
-        /// <summary>
-        /// Selects the specified collection of objects.
-        /// </summary>
-        /// <param name="selection">The selection.</param>
-        /// <param name="additive">if set to <c>true</c> will use additive mode, otherwise will clear previous selection.</param>
-        public void Select(IEnumerable<ISceneTreeNode> selection, bool additive = false)
-        {
-            if (selection == null)
-                throw new ArgumentNullException();
-
-            // Check if won't change
-            if (!additive && Selection.Count == selection.Count() && Selection.SequenceEqual(selection))
-                return;
-
-            if (!additive)
-                Selection.Clear();
-            Selection.AddRange(selection);
-
-            SelectionChanged();
-        }
-
+        
         /// <summary>
         /// Selects the specified object.
         /// </summary>
@@ -142,7 +121,7 @@ namespace FlaxEditor.Modules
         {
             if (!Selection.Remove(node))
                 return;
-
+            
             SelectionChanged();
         }
 

@@ -26,6 +26,11 @@ namespace FlaxEditor.Viewport
         public bool IsAnimatingMove => _moveStartTime > Mathf.Epsilon;
 
         /// <summary>
+        /// The target point location. It's used to orbit around it whe user clicks Alt+LMB.
+        /// </summary>
+        public Vector3 TargetPoint;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EditorViewportFPSCam"/> class.
         /// </summary>
         /// <param name="task">The task.</param>
