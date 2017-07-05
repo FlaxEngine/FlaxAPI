@@ -48,24 +48,7 @@ namespace FlaxEditor.Windows
                 }
 
                 // Show folder contents and select tree node
-                if (target == _root)
-                {
-                    // Special case for root folder
-                    List<ContentItem> items = new List<ContentItem>(8);
-                    for (int i = 0; i < _root.ChildrenCount; i++)
-                    {
-                        if (_root.GetChild(i) is ContentTreeNode node)
-                        {
-                            items.Add(node.Folder);
-                        }
-                    }
-                    _view.ShowItems(items);
-                }
-                else
-                {
-                    // Show folder contents
-                    _view.ShowItems(target.Folder.Children);
-                }
+                RefreshView();
                 _tree.Select(target);
                 target.ExpandAllParents();
 

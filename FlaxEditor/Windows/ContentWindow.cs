@@ -46,6 +46,10 @@ namespace FlaxEditor.Windows
         {
             Title = "Content";
 
+            // Content database events
+            editor.ContentDatabase.OnWorkspaceModified += RefreshView;
+            editor.ContentDatabase.OnItemRemoved += ContentDatabaseOnOnItemRemoved;
+
             // Tool strip
             _toolStrip = new ToolStrip();
             _toolStrip.AddButton(0, Editor.UI.GetIcon("Import32"));//.LinkTooltip(GetSharedTooltip(), "Import content");// Import
@@ -81,6 +85,30 @@ namespace FlaxEditor.Windows
             //_view.OnDelete.Bind < ContentWindow, &ContentWindow::view_OnDelete > (this);
             //_view.OnDuplicate.Bind < ContentWindow, &ContentWindow::CloneSelection > (this);
             _view.Parent = _split.Panel2;
+        }
+
+        private void ContentDatabaseOnOnItemRemoved(ContentItem contentItem)
+        {
+            if (contentItem is ContentFolder folder)
+            {
+                var node = folder.Node;
+
+                // Check if current location contains it as a parent
+                if (contentItem.Find(CurrentViewFolder))
+                {
+                    // Navigate to root to prevent leaks
+                    ShowRoot();
+                }
+
+                // Check if folder is in navigation
+                if (_navigationRedo.Contains(node) || _navigationUndo.Contains(node))
+                {
+                    Debug.Log("clear navigation");
+
+                    // Clear all to prevent leaks
+                    NavigationClearHistory();
+                }
+            }
         }
 
         /// <summary>
@@ -161,6 +189,33 @@ namespace FlaxEditor.Windows
         {
             // Check if has any selected items
             //Delete(_view.Selection);
+        }
+
+        private void RefreshView()
+        {
+            RefreshView(SelectedNode);
+        }
+
+        private void RefreshView(ContentTreeNode target)
+        {
+            if (target == _root)
+            {
+                // Special case for root folder
+                List<ContentItem> items = new List<ContentItem>(8);
+                for (int i = 0; i < _root.ChildrenCount; i++)
+                {
+                    if (_root.GetChild(i) is ContentTreeNode node)
+                    {
+                        items.Add(node.Folder);
+                    }
+                }
+                _view.ShowItems(items);
+            }
+            else
+            {
+                // Show folder contents
+                _view.ShowItems(target.Folder.Children);
+            }
         }
 
         private void UpdateUI()
