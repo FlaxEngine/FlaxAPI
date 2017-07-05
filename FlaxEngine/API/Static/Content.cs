@@ -98,7 +98,7 @@ namespace FlaxEngine
         /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
         /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
         /// <returns>Asset instance if loaded, null otherwise</returns>
-        public static T Load<T>(Guid id, double timeoutInMiliseconds = 10000.0) where T : Asset
+        public static T Load <T>(Guid id, double timeoutInMiliseconds = 10000.0) where T : Asset
         {
             var asset = LoadAsync<T>(id);
             if (asset && asset.WaitForLoaded(timeoutInMiliseconds) == false)
@@ -114,7 +114,7 @@ namespace FlaxEngine
         /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
         /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
         /// <returns>Asset instance if loaded, null otherwise</returns>
-        public static T Load<T>(string path, double timeoutInMiliseconds = 10000.0) where T : Asset
+        public static T Load <T>(string path, double timeoutInMiliseconds = 10000.0) where T : Asset
         {
             var asset = LoadAsync<T>(path);
             if (asset && asset.WaitForLoaded(timeoutInMiliseconds) == false)
@@ -130,12 +130,58 @@ namespace FlaxEngine
         /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
         /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
         /// <returns>Asset instance if loaded, null otherwise</returns>
-        public static T LoadInternal<T>(string internalPath, double timeoutInMiliseconds = 10000.0) where T : Asset
+        public static T LoadInternal <T>(string internalPath, double timeoutInMiliseconds = 10000.0) where T : Asset
         {
             var asset = LoadAsyncInternal<T>(internalPath);
             if (asset && asset.WaitForLoaded(timeoutInMiliseconds) == false)
                 return asset;
             return null;
         }
+
+        /// <summary>
+        /// Find asset info by id.
+        /// </summary>
+        /// <param name="id">The asset path (full path).</param>
+        /// <param name="typeId">If method returns true, this contains found asset type id.</param>
+        /// <param name="path">If method returns true, this contains found asset path.</param>
+        /// <returns>True if found any asset, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool GetAssetInfo(Guid id, out int typeId, out string path)
+        {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_GetAssetInfo1(ref id, out typeId, out path);
+#endif
+        }
+
+        /// <summary>
+        /// Find asset info by path.
+        /// </summary>
+        /// <param name="path">The asset id.</param>
+        /// <param name="typeId">If method returns true, this contains found asset type id.</param>
+        /// <param name="id">If method returns true, this contains found asset id.</param>
+        /// <returns>True if found any asset, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool GetAssetInfo(string path, out int typeId, out Guid id)
+        {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_GetAssetInfo2(path, out typeId, out id);
+#endif
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetAssetInfo1(ref Guid id, out int typeId, out string path);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetAssetInfo2(string path, out int typeId, out Guid id);
     }
 }

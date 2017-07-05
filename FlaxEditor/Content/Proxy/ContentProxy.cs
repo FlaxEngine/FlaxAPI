@@ -40,6 +40,7 @@ namespace FlaxEditor.Content
 
         /// <summary>
         /// Gets the file extension used by the items managed by this proxy.
+        /// ALL LOWERCASE! WITHOUT A DOT! example: for 'myFile.TxT' proper extension is 'txt'
         /// </summary>
         /// <value>
         /// The file extension.
