@@ -18,6 +18,12 @@ namespace FlaxEngine.Rendering
         /// </summary>
         /// <param name="task">The task.</param>
         public delegate void BeginDelegate(SceneRenderTask task);
+        
+        /// <summary>
+        /// Action delegate called after scene rendering.
+        /// </summary>
+        /// <param name="task">The task.</param>
+        public delegate void EndDelegate(SceneRenderTask task);
 
         /// <summary>
         /// Action delegate called during rendering scene part to the view. Should submit custom draw calls using <see cref="DrawCallsCollector"/>.
@@ -75,6 +81,11 @@ namespace FlaxEngine.Rendering
         public BeginDelegate OnBegin;
 
         /// <summary>
+        /// The action called on rendering end.
+        /// </summary>
+        public EndDelegate OnEnd;
+
+        /// <summary>
         /// The action called on view rendering to collect draw calls. It allows to extend rendering pipeline and draw custom geometry non-existing in the scene or custom actors set.
         /// </summary>
         public DrawDelegate OnDraw;
@@ -127,6 +138,9 @@ namespace FlaxEngine.Rendering
             // Call scene rendering
             var customActors = CustomActors.Count > 0 ? CustomActors.ToArray() : null;
             context.DrawScene(this, Output, Buffers, View, Flags, Mode, customActors);
+
+            // Finish
+            OnEnd?.Invoke(this);
         }
 
         /// <inheritdoc />
