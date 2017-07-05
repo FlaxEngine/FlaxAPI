@@ -17,7 +17,7 @@ namespace FlaxEditor.Content
         /// The binary asset files extension.
         /// </summary>
         public static readonly string Extension = "flax";
-        
+
         /// <summary>
         /// Checks if this proxy supports the given asset type id.
         /// </summary>
@@ -32,6 +32,19 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
+        public override bool AcceptsAsset(int typeID, string path)
+        {
+            // Just check type id
+            return AcceptsTypeID(typeID);
+        }
+
+        /// <inheritdoc />
         public override string FileExtension => Extension;
+
+        /// <inheritdoc />
+        public override AssetItem ConstructItem(string path, int typeId, ref Guid id)
+        {
+            return new BinaryAssetItem(path, id, typeId, Domain);
+        }
     }
 }

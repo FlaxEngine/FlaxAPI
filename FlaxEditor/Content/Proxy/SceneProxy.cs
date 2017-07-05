@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using FlaxEditor.Windows;
 using FlaxEngine;
 
@@ -57,5 +58,10 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override Color AccentColor => Color.FromRGB(0xbb37ef);
 
+        /// <inheritdoc />
+        public override AssetItem ConstructItem(string path, int typeId, ref Guid id)
+        {
+            return new SceneItem(path, id);
+        }
     }
 }
