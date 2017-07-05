@@ -28,7 +28,7 @@ namespace FlaxEditor.Viewport
         /// <summary>
         /// The target point location. It's used to orbit around it whe user clicks Alt+LMB.
         /// </summary>
-        public Vector3 TargetPoint;
+        public Vector3 TargetPoint = new Vector3(-200);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EditorViewportFPSCam"/> class.
@@ -184,9 +184,19 @@ namespace FlaxEditor.Viewport
             }
 
             // Update view
-            ViewPosition = position;
             Yaw = yaw;
             Pitch = pitch;
+            if (_input.IsOrbiting)
+            {
+                float orbitRadius = Vector3.Distance(position, TargetPoint);
+                Vector3 localPosition = ViewDirection * (-1 * orbitRadius);
+                ViewPosition = TargetPoint + localPosition;
+            }
+            else
+            {
+                TargetPoint += position - ViewPosition;
+                ViewPosition = position;
+            }
         }
     }
 }
