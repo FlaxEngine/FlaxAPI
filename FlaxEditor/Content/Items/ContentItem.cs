@@ -554,7 +554,7 @@ namespace FlaxEditor.Content
                 // Start drag drop
                 DoDrag();
             }
-
+            
             base.OnMouseLeave();
         }
 
@@ -564,7 +564,7 @@ namespace FlaxEditor.Content
             if (other is ContentItem otherItem)
             {
                 if (otherItem.IsFolder)
-                    return -1;
+                    return 1;
                 return string.CompareOrdinal(ShortName, otherItem.ShortName);
             }
 
