@@ -183,6 +183,8 @@ namespace FlaxEditor.Modules
             // Create main window
             var settings = CreateWindowSettings.Default;
             settings.Title = "Flax Editor";
+            settings.Size = new Vector2(1300, 900);
+            settings.StartPosition = WindowStartPosition.CenterScreen;
             MainWindow = Window.Create(settings);
             if (MainWindow == null)
             {
