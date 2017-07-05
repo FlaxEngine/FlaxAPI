@@ -71,6 +71,20 @@ namespace FlaxEditor.SceneGraph.GUI
         }
 
         /// <inheritdoc />
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButtons buttons)
+        {
+            var actor = Actor;
+            if (actor && testHeaderHit(ref location))
+            {
+                Select();
+                Editor.Instance.Windows.EditWin.ShowActor(actor);
+                return true;
+            }
+
+            return base.OnMouseDoubleClick(location, buttons);
+        }
+
+        /// <inheritdoc />
         public override int Compare(Control other)
         {
             if (other is ActorTreeNode node)
