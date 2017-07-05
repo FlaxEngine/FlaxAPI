@@ -108,6 +108,25 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
+        /// Gets the proxy object for the given asset type id.
+        /// </summary>
+        /// <param name="typeId">The asset type id.</param>
+        /// <param name="path">The asset path.</param>
+        /// <returns>Asset proxy or null if cannot find.</returns>
+        public AssetProxy GetAssetProxy(int typeId, string path)
+        {
+            for (int i = 0; i < Proxy.Count; i++)
+            {
+                if (Proxy[i] is AssetProxy proxy && proxy.AcceptsAsset(typeId, path))
+                {
+                    return proxy;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Refreshes the given item folder. Tries to find new content items and remove not existing ones.
         /// </summary>
         /// <param name="item">Folder to refresh</param>
@@ -313,16 +332,15 @@ namespace FlaxEditor.Modules
                 }
             }
 
-            // Find elements
+            // Find elements (use separate path for scripts and assets - perf stuff)
             // TODO: we could make it more modular
             if (node.CanHaveAssets)
             {
-                //addFiles2Tree(node, path, ASSET_FILES_EXTENSION_ASTERIX, &addAsset2Tree);
-                //addFiles2Tree(node, path, DEFAULT_SCENE_EXTENSION_FILTER, &addScene2Tree);
+                LoadAssets(node, path);
             }
             if (node.CanHaveScripts)
             {
-                addFiles2Tree(node, path, ScriptProxy.ExtensionFiler, x => new ScriptItem(x));
+                LoadScripts(node, path);
             }
 
             // Get child directories
@@ -361,30 +379,67 @@ namespace FlaxEditor.Modules
                 node.SortChildren();
         }
 
-        private void addFiles2Tree(ContentTreeNode parent, string directory, string filter, Func<string, ContentItem> createFunc)
+        private void LoadScripts(ContentTreeNode parent, string directory)
         {
             // Find files
-            var files = System.IO.Directory.GetFiles(directory, filter, SearchOption.TopDirectoryOnly);
+            var files = Directory.GetFiles(directory, ScriptProxy.ExtensionFiler, SearchOption.TopDirectoryOnly);
 
             // Add them
             for (int i = 0; i < files.Length; i++)
             {
-                var filepath = files[i];
+                var path = files[i];
 
                 // Check if node already has that element (skip during init when we want to walk project dir very fast)
-                if (_isDuringFastSetup || !parent.Folder.ContaisnChild(filepath))
+                if (_isDuringFastSetup || !parent.Folder.ContaisnChild(path))
                 {
                     // Create item object
-                    var item = createFunc(filepath);
-                    if (item != null)
-                    {
-                        // Link
-                        item.ParentFolder = parent.Folder;
+                    var item = new ScriptItem(path);
 
-                        // Fire event
-                        if (_enableEvents)
-                            OnItemAdded?.Invoke(item);
-                        _itemsCreated++;
+                    // Link
+                    item.ParentFolder = parent.Folder;
+
+                    // Fire event
+                    if (_enableEvents)
+                        OnItemAdded?.Invoke(item);
+                    _itemsCreated++;
+                }
+            }
+        }
+
+        private void LoadAssets(ContentTreeNode parent, string directory)
+        {
+            // Find files
+            var files = Directory.GetFiles(directory, "*.*", SearchOption.TopDirectoryOnly);
+
+            // Add them
+            for (int i = 0; i < files.Length; i++)
+            {
+                var path = files[i];
+
+                // Check if node already has that element (skip during init when we want to walk project dir very fast)
+                if (_isDuringFastSetup || !parent.Folder.ContaisnChild(path))
+                {
+                    // It can be any type of asset: binary, text, cooked, package, etc.
+                    // The best idea is to just ask Flax.
+                    // Flax isn't John Snow. Flax knows something :)
+                    // Also Flax Content Layer is using smart caching so this query gonna be fast.
+
+                    int typeId;
+                    Guid id;
+                    if (FlaxEngine.Content.GetAssetInfo(path, out typeId, out id))
+                    {
+                        var proxy = GetAssetProxy(typeId, path);
+                        var item = proxy?.ConstructItem(path, typeId, ref id);
+                        if (item != null)
+                        {
+                            // Link
+                            item.ParentFolder = parent.Folder;
+
+                            // Fire event
+                            if (_enableEvents)
+                                OnItemAdded?.Invoke(item);
+                            _itemsCreated++;
+                        }
                     }
                 }
             }
