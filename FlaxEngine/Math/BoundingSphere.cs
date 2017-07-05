@@ -352,6 +352,18 @@ namespace FlaxEngine
         /// <param name="result">When the method completes, contains the newly constructed bounding sphere.</param>
         public static void Merge(ref BoundingSphere value1, ref BoundingSphere value2, out BoundingSphere result)
         {
+            // Pre-exit if one of the bounding sphere by assuming that a merge with an empty sphere is equivalent at taking the non-empty sphere
+            if (value1 == Empty)
+            {
+                result = value2;
+                return;
+            }
+            if (value2 == Empty)
+            {
+                result = value1;
+                return;
+            }
+
             Vector3 difference = value2.Center - value1.Center;
 
             float length = difference.Length;
