@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
 
@@ -10,6 +11,14 @@ namespace FlaxEditor.Gizmo
 {
     public partial class TransformGizmo
     {
+        /// <summary>
+        /// Gets the array of selected parent objects (as actors).
+        /// </summary>
+        /// <value>
+        /// The selected parents.
+        /// </value>
+        public List<ISceneTreeNode> SelectedParents => _selectionParents;
+
         /// <summary>
         /// Gets the selection center point (in world space).
         /// </summary>

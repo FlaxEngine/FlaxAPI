@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Collections.Generic;
 using FlaxEditor.Gizmo;
 using FlaxEditor.SceneGraph;
@@ -40,6 +41,24 @@ namespace FlaxEditor.Viewport
             _editor = editor;
 
             Task.Flags = ViewFlags.DefaultEditor;
+            Task.OnEnd += task =>
+            {
+                IntPtr[] selectedActors = null;
+                var selectedParents = TransformGizmo.SelectedParents;
+                if (selectedParents.Count > 0)
+                {
+                    var actors = new List<IntPtr>(selectedParents.Count);
+                    for (int i = 0; i < selectedParents.Count; i++)
+                    {
+                        if (selectedParents[i] is ActorNode actor)
+                            actors.Add(FlaxEngine.Object.GetUnmanagedPtr(actor.Actor));
+                    }
+                    if (actors.Count > 0)
+                        selectedActors = actors.ToArray();
+                }
+                DebugDraw.Draw(task, selectedActors);
+            };
+
             TransformGizmo = new TransformGizmo(this);
             TransformGizmo.OnApplyTransformation += ApplyTransform;
             TransformGizmo.OnModeChanged += OnGizmoModeChanged;
