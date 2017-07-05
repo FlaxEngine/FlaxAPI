@@ -232,13 +232,13 @@ namespace FlaxEditor.Modules
         /// <param name="item">The item.</param>
         public void Delete(ContentItem item)
         {
-            if(item == null)
+            if (item == null)
                 throw new ArgumentNullException();
 
             // Fire events
-            item.OnDelete();
             if (_enableEvents)
                 OnItemRemoved?.Invoke(item);
+            item.OnDelete();
             _itemsDeleted++;
 
             var path = item.Path;
@@ -255,7 +255,8 @@ namespace FlaxEditor.Modules
                 }
 
                 // Remove directory
-                System.IO.Directory.Delete(path);
+                if (Directory.Exists(path))
+                    Directory.Delete(path);
 
                 // Unlink from the parent
                 item.ParentFolder = null;
@@ -275,7 +276,8 @@ namespace FlaxEditor.Modules
                 else
                 {
                     // Delete file
-                    System.IO.File.Delete(path);
+                    if (File.Exists(path))
+                        File.Delete(path);
                 }
 
                 // Unlink from the parent
@@ -340,7 +342,7 @@ namespace FlaxEditor.Modules
                     ContentTreeNode n = new ContentTreeNode(node, childPath);
                     if (!_isDuringFastSetup)
                         sortChildren = true;
-
+                    
                     // Load child folder
                     loadFolder(n, true);
 
@@ -423,6 +425,32 @@ namespace FlaxEditor.Modules
             _enableEvents = true;
 
             Debug.Log("Project database created. Items count: " + _itemsCreated);
+        }
+
+        internal void OnDirectoryEvent(MainContentTreeNode node, FileSystemEventArgs e)
+        {
+            // Ensure to be ready for external events
+            if (_isDuringFastSetup)
+                return;
+
+            // TODO: maybe we could make it faster! since we have a path so it would be easy to just create or delete given file
+            // TODO: but remember about subdirectories!
+
+            // Switch type
+            switch (e.ChangeType)
+            {
+                case WatcherChangeTypes.Created:
+                case WatcherChangeTypes.Deleted:
+                {
+                    // We want to enqueue dir modification events for better stability
+                    if (!_dirtyNodes.Contains(node))
+                        _dirtyNodes.Enqueue(node);
+
+                    break;
+                }
+
+                default: break;
+            }
         }
 
         /// <inheritdoc />

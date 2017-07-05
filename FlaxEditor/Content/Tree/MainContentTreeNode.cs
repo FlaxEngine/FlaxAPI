@@ -2,6 +2,9 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System.IO;
+using FlaxEngine;
+
 namespace FlaxEditor.Content
 {
     /// <summary>
@@ -10,6 +13,8 @@ namespace FlaxEditor.Content
     /// <seealso cref="FlaxEditor.Content.ContentTreeNode" />
     public class MainContentTreeNode : ContentTreeNode
     {
+        private FileSystemWatcher _watcher;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MainContentTreeNode"/> class.
         /// </summary>
@@ -18,6 +23,28 @@ namespace FlaxEditor.Content
         public MainContentTreeNode(ContentFolderType type, string path)
             : base(type, path)
         {
+            _watcher = new FileSystemWatcher(path)
+            {
+                IncludeSubdirectories = true,
+                EnableRaisingEvents = true
+            };
+            _watcher.Changed += onEvent;
+            _watcher.Created += onEvent;
+            _watcher.Deleted += onEvent;
+            _watcher.Renamed += onEvent;
+        }
+
+        private void onEvent(object sender, FileSystemEventArgs e)
+        {
+            Editor.Instance.ContentDatabase.OnDirectoryEvent(this, e);
+        }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            _watcher.EnableRaisingEvents = false;
+
+            base.OnDestroy();
         }
     }
 }
