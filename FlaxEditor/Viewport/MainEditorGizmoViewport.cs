@@ -349,6 +349,10 @@ namespace FlaxEditor.Viewport
         /// <inheritdoc />
         protected override void OnLeftMouseButtonUp()
         {
+            // Skip if was controlling mouse
+            if (_prevInput.IsControllingMouse)
+                return;
+
             if (TransformGizmo.IsActive)
             {
                 // Ensure player is not moving objects
@@ -389,6 +393,9 @@ namespace FlaxEditor.Viewport
             {
                 sceneEditing.Deselect();
             }
+
+            // Keep focus
+            Focus();
 
             base.OnLeftMouseButtonUp();
         }

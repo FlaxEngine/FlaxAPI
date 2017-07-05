@@ -45,6 +45,10 @@ namespace FlaxEditor.Viewport
                 IsMouseRightDown = window.GetMouseButton(MouseButtons.Right);
                 IsMouseMiddleDown = window.GetMouseButton(MouseButtons.Middle);
                 IsMouseLeftDown = window.GetMouseButton(MouseButtons.Left);
+
+                IsControlDown = window.GetKey(KeyCode.CONTROL);
+                IsShiftDown = window.GetKey(KeyCode.SHIFT);
+                IsAltDown = window.GetKey(KeyCode.ALT);
             }
 
             public void Clear()
@@ -55,6 +59,10 @@ namespace FlaxEditor.Viewport
                 IsMouseRightDown = false;
                 IsMouseMiddleDown = false;
                 IsMouseLeftDown = false;
+
+                IsControlDown = false;
+                IsShiftDown = false;
+                IsAltDown = false;
             }
         }
 
@@ -69,7 +77,8 @@ namespace FlaxEditor.Viewport
         protected bool _useMouseAcceleration;
 
         // Input
-        private bool _isTrackingMouse;
+        private bool _isControllingMouse;
+        protected Input _prevInput;
         protected Input _input;
         protected int _deltaFilteringStep;
         protected Vector2 _viewMousePos;
@@ -444,41 +453,40 @@ namespace FlaxEditor.Viewport
             _viewMousePos = PointFromWindow(win.MousePosition);
 
             // Update input
-            bool isControllingMouse;
             {
                 // Get input buttons and keys
-                var prevInput = _input;
+                _prevInput = _input;
                 if(ContainsFocus)
                     _input.Gather(win.NativeWindow);
                 else
                     _input.Clear();
 
                 // Track controlling mouse state change
-                bool wasControllingMouse = prevInput.IsControllingMouse;
-                isControllingMouse = _input.IsControllingMouse;
-                if (wasControllingMouse != isControllingMouse)
+                bool wasControllingMouse = _prevInput.IsControllingMouse;
+                _isControllingMouse = _input.IsControllingMouse;
+                if (wasControllingMouse != _isControllingMouse)
                 {
-                    if (isControllingMouse)
+                    if (_isControllingMouse)
                         OnControlMouseBegin(win.NativeWindow);
                     else
                         OnControlMouseEnd(win.NativeWindow);
                 }
 
                 // Track mouse buttons state change
-                if (!prevInput.IsMouseLeftDown && _input.IsMouseLeftDown)
+                if (!_prevInput.IsMouseLeftDown && _input.IsMouseLeftDown)
                     OnLeftMouseButtonDown();
-                else if (prevInput.IsMouseLeftDown && !_input.IsMouseLeftDown)
+                else if (_prevInput.IsMouseLeftDown && !_input.IsMouseLeftDown)
                     OnLeftMouseButtonUp();
                 //
-                if (!prevInput.IsMouseRightDown && _input.IsMouseRightDown)
+                if (!_prevInput.IsMouseRightDown && _input.IsMouseRightDown)
                     OnRightMouseButtonDown();
-                else if (prevInput.IsMouseRightDown && !_input.IsMouseRightDown)
+                else if (_prevInput.IsMouseRightDown && !_input.IsMouseRightDown)
                     OnRightMouseButtonUp();
             }
 
             // Check if update mouse
             Vector2 size = Size;
-            if (isControllingMouse)
+            if (_isControllingMouse)
             {
                 // Gather input
                 {
@@ -615,53 +623,13 @@ namespace FlaxEditor.Viewport
 
             return base.OnMouseWheel(location, delta);
         }
-
-        /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
-        {
-            if (key == KeyCode.SHIFT)
-                _input.IsShiftDown = true;
-            else if (key == KeyCode.ALT)
-                _input.IsAltDown = true;
-            else if (key == KeyCode.CONTROL)
-                _input.IsControlDown = true;
-
-            return base.OnKeyDown(key);
-        }
-
-        /// <inheritdoc />
-        public override void OnKeyUp(KeyCode key)
-        {
-            if (key == KeyCode.SHIFT)
-                _input.IsShiftDown = false;
-            else if (key == KeyCode.ALT)
-                _input.IsAltDown = false;
-            else if (key == KeyCode.CONTROL)
-                _input.IsControlDown = false;
-
-            base.OnKeyUp(key);
-        }
-
+        
         /// <inheritdoc />
         public override void OnChildResized(Control control)
         {
             base.OnChildResized(control);
 
             PerformLayout();
-        }
-
-        /// <inheritdoc />
-        public override void OnLostFocus()
-        {
-            // Clear flags
-            _input.IsMouseLeftDown = false;
-            _input.IsMouseMiddleDown = false;
-            _input.IsMouseRightDown = false;
-            _input.IsControlDown = false;
-            _input.IsShiftDown = false;
-            _input.IsAltDown = false;
-
-            base.OnLostFocus();
         }
 
         /// <inheritdoc />
