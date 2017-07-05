@@ -37,7 +37,7 @@ namespace FlaxEditor.Viewport
 
             public bool IsControllingMouse => IsMouseMiddleDown || IsMouseRightDown || (IsAltDown && IsMouseLeftDown);
             
-            public void GatherInput(FlaxEngine.Window window)
+            public void Gather(FlaxEngine.Window window)
             {
                 IsControlDown = window.GetKey(KeyCode.CONTROL);
                 IsShiftDown = window.GetKey(KeyCode.SHIFT);
@@ -45,6 +45,16 @@ namespace FlaxEditor.Viewport
                 IsMouseRightDown = window.GetMouseButton(MouseButtons.Right);
                 IsMouseMiddleDown = window.GetMouseButton(MouseButtons.Middle);
                 IsMouseLeftDown = window.GetMouseButton(MouseButtons.Left);
+            }
+
+            public void Clear()
+            {
+                IsControlDown = false;
+                IsShiftDown = false;
+                IsAltDown = false;
+                IsMouseRightDown = false;
+                IsMouseMiddleDown = false;
+                IsMouseLeftDown = false;
             }
         }
 
@@ -438,7 +448,10 @@ namespace FlaxEditor.Viewport
             {
                 // Get input buttons and keys
                 var prevInput = _input;
-                _input.GatherInput(win.NativeWindow);
+                if(ContainsFocus)
+                    _input.Gather(win.NativeWindow);
+                else
+                    _input.Clear();
 
                 // Track controlling mouse state change
                 bool wasControllingMouse = prevInput.IsControllingMouse;

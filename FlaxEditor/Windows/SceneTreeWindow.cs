@@ -96,7 +96,7 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void OnInit()
         {
-            Editor.SceneEditing.OnSelectionChanged += SceneEditingOnOnSelectionChanged;
+            Editor.SceneEditing.OnSelectionChanged += OnOnSelectionChanged;
         }
 
         private void selectNodesHelper(List<TreeNode> nodes, List<ISceneTreeNode> selection, TreeNode node)
@@ -113,7 +113,7 @@ namespace FlaxEditor.Windows
             }
         }
 
-        private void SceneEditingOnOnSelectionChanged()
+        private void OnOnSelectionChanged()
         {
             _isUpdatingSelection = true;
 
