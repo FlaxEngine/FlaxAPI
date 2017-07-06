@@ -140,5 +140,14 @@ namespace FlaxEngine.GUI
                 BackBuffer.Dispose();
             }
         }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            // Cleanup
+            _task.Dispose();
+
+            base.OnDestroy();
+        }
     }
 }
