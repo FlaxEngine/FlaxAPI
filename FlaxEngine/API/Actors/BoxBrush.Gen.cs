@@ -20,6 +20,13 @@ namespace FlaxEngine
 	public sealed partial class BoxBrush : Actor
 	{
 		/// <summary>
+		/// Creates new <see cref="BoxBrush"/> object.
+		/// </summary>
+		public BoxBrush() : base()
+		{
+		}
+
+		/// <summary>
 		/// Gets or sets brush surfaces scale in lightmap parameter.
 		/// </summary>
 		[UnmanagedCall]

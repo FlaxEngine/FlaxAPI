@@ -20,6 +20,13 @@ namespace FlaxEngine
 	public sealed partial class PointLight : Actor
 	{
 		/// <summary>
+		/// Creates new <see cref="PointLight"/> object.
+		/// </summary>
+		public PointLight() : base()
+		{
+		}
+
+		/// <summary>
 		/// Gets or sets value indicating if visual element affects the world
 		/// </summary>
 		[UnmanagedCall]

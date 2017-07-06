@@ -20,6 +20,13 @@ namespace FlaxEngine
 	public sealed partial class DirectionalLight : Actor
 	{
 		/// <summary>
+		/// Creates new <see cref="DirectionalLight"/> object.
+		/// </summary>
+		public DirectionalLight() : base()
+		{
+		}
+
+		/// <summary>
 		/// Gets or sets value indicating if visual element affects the world
 		/// </summary>
 		[UnmanagedCall]

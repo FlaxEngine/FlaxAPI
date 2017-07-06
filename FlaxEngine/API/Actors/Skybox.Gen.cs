@@ -20,6 +20,13 @@ namespace FlaxEngine
 	public sealed partial class Skybox : Actor
 	{
 		/// <summary>
+		/// Creates new <see cref="Skybox"/> object.
+		/// </summary>
+		public Skybox() : base()
+		{
+		}
+
+		/// <summary>
 		/// Gets or sets value indicating if visual element affects the world
 		/// </summary>
 		[UnmanagedCall]

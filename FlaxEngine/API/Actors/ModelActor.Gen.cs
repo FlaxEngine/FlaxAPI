@@ -15,10 +15,17 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
 	/// <summary>
-	/// TODO Comment
+	/// Renders model on the screen.
 	/// </summary>
 	public sealed partial class ModelActor : Actor
 	{
+		/// <summary>
+		/// Creates new <see cref="ModelActor"/> object.
+		/// </summary>
+		public ModelActor() : base()
+		{
+		}
+
 		/// <summary>
 		/// Gets or sets model scale in lightmap parameter
 		/// </summary>

@@ -20,6 +20,13 @@ namespace FlaxEngine
 	public abstract partial class Actor : Object
 	{
 		/// <summary>
+		/// Creates new <see cref="Actor"/> object.
+		/// </summary>
+		protected Actor() : base()
+		{
+		}
+
+		/// <summary>
 		/// Gets or sets parent actor (or null if actor has no parent)
 		/// </summary>
 		[UnmanagedCall]

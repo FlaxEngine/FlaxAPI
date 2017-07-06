@@ -20,6 +20,13 @@ namespace FlaxEngine
 	public sealed partial class Camera : Actor
 	{
 		/// <summary>
+		/// Creates new <see cref="Camera"/> object.
+		/// </summary>
+		public Camera() : base()
+		{
+		}
+
+		/// <summary>
 		/// Gets or sets value indicating if camera should use perspective rendering mode, otherwise it will use orthographic projection.
 		/// </summary>
 		[UnmanagedCall]

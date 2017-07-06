@@ -20,6 +20,13 @@ namespace FlaxEngine
 	public sealed partial class SpotLight : Actor
 	{
 		/// <summary>
+		/// Creates new <see cref="SpotLight"/> object.
+		/// </summary>
+		public SpotLight() : base()
+		{
+		}
+
+		/// <summary>
 		/// Gets or sets value indicating if visual element affects the world
 		/// </summary>
 		[UnmanagedCall]

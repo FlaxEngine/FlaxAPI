@@ -20,6 +20,13 @@ namespace FlaxEngine
 	public sealed partial class EnvironmentProbe : Actor
 	{
 		/// <summary>
+		/// Creates new <see cref="EnvironmentProbe"/> object.
+		/// </summary>
+		public EnvironmentProbe() : base()
+		{
+		}
+
+		/// <summary>
 		/// Gets or sets value indicating if visual element affects the world.
 		/// </summary>
 		[UnmanagedCall]

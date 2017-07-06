@@ -20,6 +20,13 @@ namespace FlaxEngine
 	public sealed partial class Sky : Actor
 	{
 		/// <summary>
+		/// Creates new <see cref="Sky"/> object.
+		/// </summary>
+		public Sky() : base()
+		{
+		}
+
+		/// <summary>
 		/// Gets or sets value indicating if visual element affects the world
 		/// </summary>
 		[UnmanagedCall]

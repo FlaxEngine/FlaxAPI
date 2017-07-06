@@ -20,6 +20,13 @@ namespace FlaxEngine
 	public sealed partial class Scene : Actor
 	{
 		/// <summary>
+		/// Creates new <see cref="Scene"/> object.
+		/// </summary>
+		private Scene() : base()
+		{
+		}
+
+		/// <summary>
 		/// Gets path to the scene file. It's valid only in Editor.
 		/// </summary>
 		[UnmanagedCall]
