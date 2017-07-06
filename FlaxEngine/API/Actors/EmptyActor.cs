@@ -1,11 +1,10 @@
-﻿// Flax Engine scripting API
+﻿////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
 
 namespace FlaxEngine
 {
-    /// <summary>
-    /// Actor without any custom properties. It's useful when designing scene hierarchy or to hold scripts.
-    /// </summary>
-    public sealed class EmptyActor : Actor
+    public partial class EmptyActor
     {
         // It's meant to be empty
     }

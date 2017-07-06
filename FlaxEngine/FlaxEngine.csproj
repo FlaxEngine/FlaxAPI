@@ -59,6 +59,7 @@
     <Compile Include="API\Actors\DirectionalLight.Gen.cs">
       <DependentUpon>DirectionalLight.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Actors\EmptyActor.Gen.cs" />
     <Compile Include="API\Actors\EnvironmentProbe.cs" />
     <Compile Include="API\Actors\EnvironmentProbe.Gen.cs">
       <DependentUpon>EnvironmentProbe.cs</DependentUpon>
