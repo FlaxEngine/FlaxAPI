@@ -68,6 +68,7 @@ namespace FlaxEditor.Viewport
             ViewPosition = _orbitCenter + localPosition;
         }
 
+        /// <inheritdoc />
         protected override void UpdateView(float dt, ref Vector3 moveDelta, ref Vector2 mouseDelta)
         {
             // Rotate

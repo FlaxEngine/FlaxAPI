@@ -731,7 +731,6 @@ namespace FlaxEditor.Viewport
 
         private void widgetViewModeClick(int id, ContextMenuBase cm)
         {
-            var ccm = (ContextMenu)cm;
             var viewport = (EditorViewport)cm.Tag;
             viewport.Task.Mode = EditorViewportViewModeValues[id].Mode;
         }
