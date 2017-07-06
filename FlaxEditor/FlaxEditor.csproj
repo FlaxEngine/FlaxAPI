@@ -137,6 +137,7 @@
     <Compile Include="Viewport\Widgets\ViewportWidgetButton.cs" />
     <Compile Include="Viewport\Widgets\ViewportWidgetsContainer.cs" />
     <Compile Include="Windows\Assets\AssetEditorWindow.cs" />
+    <Compile Include="Windows\Assets\IESProfileWindow.cs" />
     <Compile Include="Windows\ContentWindow.cs" />
     <Compile Include="Windows\ContentWindow.Navigation.cs" />
     <Compile Include="Windows\DebugLogWindow.cs" />
