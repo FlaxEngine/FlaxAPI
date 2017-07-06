@@ -1,11 +1,11 @@
-﻿// Flax Engine scripting API
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FlaxEditor.Content;
+using FlaxEditor.GUI;
+using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Windows.Assets
@@ -14,9 +14,10 @@ namespace FlaxEditor.Windows.Assets
     /// Base class for assets editing/viewing windows.
     /// </summary>
     /// <seealso cref="FlaxEditor.Windows.EditorWindow" />
-    public abstract class AssetEditorWindow : EditorWindow, IEditable
+    public abstract class AssetEditorWindow : EditorWindow, IEditable, IContentItemOwner
     {
         protected AssetItem _item;
+        protected readonly ToolStrip _toolstrip;
 
         /// <summary>
         /// Gets the item.
@@ -35,12 +36,154 @@ namespace FlaxEditor.Windows.Assets
             : base(editor, false, ScrollBars.None)
         {
             _item = item;
+            _item.AddReference(this);
+
+            _toolstrip = new ToolStrip();
+            _toolstrip.OnButtonClicked += OnToolstripButtonClicked;
+            _toolstrip.AddButton(1000, editor.UI.GetIcon("Find32")); //->LinkTooltip(GetSharedTooltip(), "Show and select in Content Window"); // TODO: tooltips support!
+            _toolstrip.Parent = this;
+
+            UpdateTitle();
+        }
+
+        /// <summary>
+        /// Unlinks the item. Removes reference to it and unbinds all events.
+        /// </summary>
+        protected virtual void UnlinkItem()
+        {
+            if (_item != null)
+            {
+                _item.RemoveReference(this);
+                _item = null;
+            }
+        }
+
+        /// <summary>
+        /// Updates the toolstrip buttons and other controls. Called after some window events.
+        /// </summary>
+        protected virtual void UpdateToolstrip()
+        {
+        }
+
+        /// <summary>
+        /// Called on toolstrip button clicked.
+        /// </summary>
+        /// <param name="id">Button id.</param>
+        protected virtual void OnToolstripButtonClicked(int id)
+        {
+            switch (id)
+            {
+                case 1000:
+                    Editor.Windows.ContentWin.Select(_item);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Gets the name of the window title.
+        /// </summary>
+        /// <value>
+        /// The name of the window title.
+        /// </value>
+        protected virtual string WindowTitleName => "Asset";
+
+        /// <summary>
+        /// Updates the window title text.
+        /// </summary>
+        protected void UpdateTitle()
+        {
+            string title = string.Format("{0} - {1}", WindowTitleName, _item?.ShortName ?? string.Empty);
+            if (IsEdited)
+                title += '*';
+            Title = title;
         }
 
         /// <summary>
         /// Tries to save asset changes if it has been edited.
         /// </summary>
-        public abstract void Save();
+        public virtual void Save()
+        {
+        }
+
+        /// <inheritdoc />
+        public override bool IsEditingItem(ContentItem item)
+        {
+            return item == _item;
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(KeyCode key)
+        {
+            // Base
+            bool result = base.OnKeyDown(key);
+            if (!result)
+            {
+                if (ParentWindow.GetKey(KeyCode.CONTROL))
+                {
+                    switch (key)
+                    {
+                        case KeyCode.S:
+                            Save();
+                            return true;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        protected override bool OnClosing(ClosingReason reason)
+        {
+            // Block closing only on user events
+            if (reason == ClosingReason.User)
+            {
+                // Check if asset has been edited and not saved (and stil has linked item)
+                if (IsEdited && _item != null)
+                {
+                    // TODO: editor popups support
+
+                    /*
+                    // Ask user for futher action
+                    var result = MessageBox.Show(
+                        string.Format("Asset \'{0}\' has been edited. Save before closing?", _item.Path),
+                        "Close without saving?",
+                        MessageBoxButtons.YesNoCancel,
+                        MessageBoxIcon.Question
+                    );
+                    if (result == DialogResult.OK || result == DialogResult.Yes)
+                    {
+                        // Save and close
+                        Save();
+                    }
+                    else if (result == DialogResult.Cancel || result == DialogResult.Abort)
+                    {
+                        // Cancel closing
+                        return true;
+                    }*/
+                }
+            }
+
+            return base.OnClosing(reason);
+        }
+
+        /// <inheritdoc />
+        protected override void OnClose()
+        {
+            // Ensure to remove linkage to the item
+            UnlinkItem();
+
+            base.OnClose();
+        }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            // Ensure to remove linkage to the item
+            UnlinkItem();
+
+            base.OnDestroy();
+        }
 
         #region IEditable Implementation
 
@@ -106,14 +249,99 @@ namespace FlaxEditor.Windows.Assets
         /// </summary>
         protected virtual void OnEditedStateChanged()
         {
+            UpdateTitle();
         }
 
         #endregion
 
+        #region IContentItemOwner Implementation
+
         /// <inheritdoc />
-        public override bool IsEditingItem(ContentItem item)
+        public void OnItemDeleted(ContentItem item)
         {
-            return item == _item;
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public void OnItemRenamed(ContentItem item)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public void OnItemDispose(ContentItem item)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Generic base class for asset editors.
+    /// </summary>
+    /// <typeparam name="T">Asset type.</typeparam>
+    /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
+    public abstract class AssetEditorWindowBase<T> : AssetEditorWindow where T : Asset
+    {
+        protected T _asset;
+
+        /// <summary>
+        /// Gets the asset.
+        /// </summary>
+        /// <value>
+        /// The asset.
+        /// </value>
+        public T Asset => _asset;
+
+        /// <inheritdoc />
+        protected AssetEditorWindowBase(Editor editor, AssetItem item)
+            : base(editor, item)
+        {
+        }
+
+        /// <summary>
+        /// Called when asset gets loaded and may setup window UI for it.
+        /// </summary>
+        protected virtual void OnAssetLoaded()
+        {
+        }
+
+        /// <inheritdoc />
+        protected override void OnShow()
+        {
+            // Check if has no asset (but has item linked)
+            if (_asset == null && _item != null)
+            {
+                // Load asset (but in async - we don't want to block user)
+                _asset = FlaxEngine.Content.LoadAsync<T>(_item.Path);
+                if (_asset == null)
+                {
+                    // Error
+                    Debug.LogError("Cannot load asset" + _item.Path);
+
+                    // Close window
+                    Close();
+                    return;
+                }
+                OnAssetLoaded();
+            }
+
+            // Base
+            base.OnShow();
+
+            // Update
+            UpdateTitle();
+            UpdateToolstrip();
+            PerformLayout();
+        }
+
+        /// <inheritdoc />
+        protected override void UnlinkItem()
+        {
+            _asset = null;
+
+            base.UnlinkItem();
         }
     }
 }

@@ -70,5 +70,14 @@ namespace FlaxEditor.Modules
 
             return window;
         }
+
+        /// <summary>
+        /// Reimports the specified asset.
+        /// </summary>
+        /// <param name="asset">The asset.</param>
+        public void Reimport(BinaryAssetItem asset)
+        {
+            throw new NotImplementedException("Reimporting binary assets");
+        }
     }
 }
