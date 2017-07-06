@@ -26,6 +26,21 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Object"/> class and calls backend to create unamanged object for ths instance.
+        /// </summary>
+        protected Object()
+        {
+            // Create unmanaged object
+            Internal_ManagedInstanceCreated(this, out unmanagedPtr, out id);
+        }
+
+        private Object(IntPtr unmanagedPtr, ref Guid id)
+        {
+            this.unmanagedPtr = unmanagedPtr;
+            this.id = id;
+        }
+
+        /// <summary>
         /// Notifies the unmanaged interop object that the managed instance was finalized.
         /// </summary>
         ~Object()
@@ -57,6 +72,9 @@ namespace FlaxEngine
         }
 
         #region Internal Calls
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_ManagedInstanceCreated(Object managedInstance, out IntPtr unmanagedPtr, out Guid id);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ManagedInstanceDeleted(IntPtr nativeInstance);
