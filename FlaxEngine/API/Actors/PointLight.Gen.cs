@@ -41,7 +41,7 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// 
+		/// Gets or sets the light color.
 		/// </summary>
 		[UnmanagedCall]
 		public Color Color
@@ -97,7 +97,7 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets light scaled radius parameter
+		/// Gets the light scaled radius parameter (radius * max scale vector component).
 		/// </summary>
 		[UnmanagedCall]
 		public float ScaledRadius
@@ -105,13 +105,12 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetSourceLength(unmanagedPtr); }
-			set { Internal_SetSourceLength(unmanagedPtr, value); }
+			get { return Internal_GetScaledRadius(unmanagedPtr); }
 #endif
 		}
 
 		/// <summary>
-		/// 
+		/// Gets or sets the minimum roughness value used to clamp material surface roughness during shading pixel.
 		/// </summary>
 		[UnmanagedCall]
 		public float MinimumRoughness
@@ -161,9 +160,7 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetSourceRadius(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetSourceLength(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetSourceLength(IntPtr obj, float val);
+		internal static extern float Internal_GetScaledRadius(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetMinimumRoughness(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]

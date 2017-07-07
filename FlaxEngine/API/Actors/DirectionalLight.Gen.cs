@@ -83,7 +83,7 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		///  Gets light shadows fade off distance
+		/// Gets light shadows fade off distance
 		/// </summary>
 		[UnmanagedCall]
 		public float ShadowsFadeDistance
@@ -97,10 +97,10 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets value indicating if how visual element casts shadows
+		/// Gets or sets the minimum roughness value used to clamp material surface roughness during shading pixel.
 		/// </summary>
 		[UnmanagedCall]
-		public ShadowsCastingMode ShadowsMode
+		public float MinimumRoughness
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
@@ -111,10 +111,10 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets light source minimum roughness parameter
+		/// Gets or sets value indicating if how visual element casts shadows
 		/// </summary>
 		[UnmanagedCall]
-		public float MinimumRoughness
+		public ShadowsCastingMode ShadowsMode
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
@@ -147,13 +147,13 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetShadowsFadeDistance(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern ShadowsCastingMode Internal_GetMinimumRoughness(IntPtr obj);
+		internal static extern float Internal_GetMinimumRoughness(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetMinimumRoughness(IntPtr obj, ShadowsCastingMode val);
+		internal static extern void Internal_SetMinimumRoughness(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetShadowsMode(IntPtr obj);
+		internal static extern ShadowsCastingMode Internal_GetShadowsMode(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetShadowsMode(IntPtr obj, float val);
+		internal static extern void Internal_SetShadowsMode(IntPtr obj, ShadowsCastingMode val);
 #endif
 #endregion
 	}

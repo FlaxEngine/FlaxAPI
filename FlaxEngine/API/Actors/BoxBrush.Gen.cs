@@ -30,7 +30,7 @@ namespace FlaxEngine
 		/// Gets or sets brush surfaces scale in lightmap parameter.
 		/// </summary>
 		[UnmanagedCall]
-		public float UsePerspective
+		public float ScaleInLightmap
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;

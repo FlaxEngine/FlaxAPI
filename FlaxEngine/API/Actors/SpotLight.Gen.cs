@@ -97,7 +97,7 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets light source minimum roughness parameter
+		/// Gets or sets the minimum roughness value used to clamp material surface roughness during shading pixel.
 		/// </summary>
 		[UnmanagedCall]
 		public float MinimumRoughness
