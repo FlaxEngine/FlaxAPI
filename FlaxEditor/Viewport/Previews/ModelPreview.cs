@@ -47,7 +47,7 @@ namespace FlaxEditor.Viewport.Previews
 
             SetView(new Quaternion(0.424461186f, -0.0940724313f, 0.0443938486f, 0.899451137f));
 
-            _previewModel = new ModelActor();
+            //_previewModel = new ModelActor();
         }
 
         /// <summary>
