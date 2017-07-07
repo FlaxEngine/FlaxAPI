@@ -22,7 +22,7 @@ namespace FlaxEngine
 		/// <summary>
 		/// Creates new <see cref="ModelActor"/> object.
 		/// </summary>
-		public ModelActor() : base()
+		private ModelActor() : base()
 		{
 		}
 

@@ -22,7 +22,7 @@ namespace FlaxEngine
 		/// <summary>
 		/// Creates new <see cref="EnvironmentProbe"/> object.
 		/// </summary>
-		public EnvironmentProbe() : base()
+		private EnvironmentProbe() : base()
 		{
 		}
 

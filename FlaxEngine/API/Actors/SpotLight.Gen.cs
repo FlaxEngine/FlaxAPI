@@ -22,7 +22,7 @@ namespace FlaxEngine
 		/// <summary>
 		/// Creates new <see cref="SpotLight"/> object.
 		/// </summary>
-		public SpotLight() : base()
+		private SpotLight() : base()
 		{
 		}
 

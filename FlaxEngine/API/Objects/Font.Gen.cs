@@ -20,6 +20,13 @@ namespace FlaxEngine
 	public partial class Font : Object
 	{
 		/// <summary>
+		/// Creates new <see cref="Font"/> object.
+		/// </summary>
+		private Font() : base()
+		{
+		}
+
+		/// <summary>
 		/// Gets font size.
 		/// </summary>
 		[UnmanagedCall]

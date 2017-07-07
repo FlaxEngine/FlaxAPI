@@ -20,6 +20,13 @@ namespace FlaxEngine
 	public partial class SpriteAtlas : BinaryAsset
 	{
 		/// <summary>
+		/// Creates new <see cref="SpriteAtlas"/> object.
+		/// </summary>
+		private SpriteAtlas() : base()
+		{
+		}
+
+		/// <summary>
 		/// Gets the sprite by name.
 		/// </summary>
 		/// <param name="name">The sprite name.</param>

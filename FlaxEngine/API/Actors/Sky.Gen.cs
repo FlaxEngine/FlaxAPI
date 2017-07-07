@@ -22,7 +22,7 @@ namespace FlaxEngine
 		/// <summary>
 		/// Creates new <see cref="Sky"/> object.
 		/// </summary>
-		public Sky() : base()
+		private Sky() : base()
 		{
 		}
 

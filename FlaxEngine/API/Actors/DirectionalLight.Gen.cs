@@ -22,7 +22,7 @@ namespace FlaxEngine
 		/// <summary>
 		/// Creates new <see cref="DirectionalLight"/> object.
 		/// </summary>
-		public DirectionalLight() : base()
+		private DirectionalLight() : base()
 		{
 		}
 

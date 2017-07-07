@@ -20,6 +20,13 @@ namespace FlaxEngine.Rendering
 	public sealed partial class RenderBuffers : Object
 	{
 		/// <summary>
+		/// Creates new <see cref="RenderBuffers"/> object.
+		/// </summary>
+		private RenderBuffers() : base()
+		{
+		}
+
+		/// <summary>
 		/// Gets buffer textures width (in pixels).
 		/// </summary>
 		[UnmanagedCall]

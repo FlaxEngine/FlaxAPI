@@ -17,8 +17,15 @@ namespace FlaxEngine
 	/// <summary>
 	/// Asset objects base class.
 	/// </summary>
-	public partial class Asset : Object
+	public abstract partial class Asset : Object
 	{
+		/// <summary>
+		/// Creates new <see cref="Asset"/> object.
+		/// </summary>
+		protected Asset() : base()
+		{
+		}
+
 		/// <summary>
 		/// Gets asset name
 		/// </summary>

@@ -20,6 +20,13 @@ namespace FlaxEngine.Rendering
 	public sealed partial class GPUContext : Object
 	{
 		/// <summary>
+		/// Creates new <see cref="GPUContext"/> object.
+		/// </summary>
+		private GPUContext() : base()
+		{
+		}
+
+		/// <summary>
 		/// Clears texture surface with a color.
 		/// </summary>
 		/// <param name="rt">Target surface.</param>

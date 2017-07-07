@@ -17,10 +17,6 @@ namespace FlaxEngine.Rendering
         {
         }
 
-        internal RenderTask()
-        {
-        }
-        
         internal virtual bool Internal_Begin(out IntPtr outputPtr)
         {
             outputPtr = IntPtr.Zero;

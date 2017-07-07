@@ -17,8 +17,15 @@ namespace FlaxEngine
 	/// <summary>
 	/// Base class for all binary assets.
 	/// </summary>
-	public partial class BinaryAsset : Asset
+	public abstract partial class BinaryAsset : Asset
 	{
+		/// <summary>
+		/// Creates new <see cref="BinaryAsset"/> object.
+		/// </summary>
+		protected BinaryAsset() : base()
+		{
+		}
+
 		/// <summary>
 		/// Reimports asset from the source file.
 		/// </summary>

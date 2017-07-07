@@ -22,7 +22,7 @@ namespace FlaxEngine
 		/// <summary>
 		/// Creates new <see cref="Camera"/> object.
 		/// </summary>
-		public Camera() : base()
+		private Camera() : base()
 		{
 		}
 

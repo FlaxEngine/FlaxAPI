@@ -20,6 +20,13 @@ namespace FlaxEngine.Rendering
 	public partial class RenderTask : Object
 	{
 		/// <summary>
+		/// Creates new <see cref="RenderTask"/> object.
+		/// </summary>
+		protected RenderTask() : base()
+		{
+		}
+
+		/// <summary>
 		/// Gets or sets a value indicating whether task is enabled.
 		/// </summary>
 		[UnmanagedCall]

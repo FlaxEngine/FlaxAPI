@@ -20,6 +20,13 @@ namespace FlaxEngine
 	public sealed partial class Model : BinaryAsset
 	{
 		/// <summary>
+		/// Creates new <see cref="Model"/> object.
+		/// </summary>
+		private Model() : base()
+		{
+		}
+
+		/// <summary>
 		/// Gets amount of loaded model LODs.
 		/// </summary>
 		[UnmanagedCall]

@@ -20,6 +20,13 @@ namespace FlaxEngine
 	public partial class FontAsset : BinaryAsset
 	{
 		/// <summary>
+		/// Creates new <see cref="FontAsset"/> object.
+		/// </summary>
+		private FontAsset() : base()
+		{
+		}
+
+		/// <summary>
 		/// Gets font family name
 		/// </summary>
 		[UnmanagedCall]

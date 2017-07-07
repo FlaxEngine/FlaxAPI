@@ -22,7 +22,7 @@ namespace FlaxEngine
 		/// <summary>
 		/// Creates new <see cref="BoxBrush"/> object.
 		/// </summary>
-		public BoxBrush() : base()
+		private BoxBrush() : base()
 		{
 		}
 

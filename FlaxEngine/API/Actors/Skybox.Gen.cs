@@ -22,7 +22,7 @@ namespace FlaxEngine
 		/// <summary>
 		/// Creates new <see cref="Skybox"/> object.
 		/// </summary>
-		public Skybox() : base()
+		private Skybox() : base()
 		{
 		}
 

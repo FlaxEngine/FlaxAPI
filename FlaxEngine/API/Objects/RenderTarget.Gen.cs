@@ -20,6 +20,13 @@ namespace FlaxEngine.Rendering
 	public sealed partial class RenderTarget : Object
 	{
 		/// <summary>
+		/// Creates new <see cref="RenderTarget"/> object.
+		/// </summary>
+		private RenderTarget() : base()
+		{
+		}
+
+		/// <summary>
 		/// Gets texture surface format.
 		/// </summary>
 		[UnmanagedCall]
