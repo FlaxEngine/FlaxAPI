@@ -39,6 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\BinaryAssets\PreviewsCache.cs" />
+    <Compile Include="API\BinaryAssets\PreviewsCache.Gen.cs" />
     <Compile Include="API\Editor.cs" />
     <Compile Include="API\Editor.Gen.cs" />
     <Compile Include="API\Static\ScriptsBuilder.cs" />
@@ -101,7 +103,6 @@
     <Compile Include="Modules\ThumbnailsModule.cs" />
     <Compile Include="Modules\UIModule.cs" />
     <Compile Include="Modules\WindowsModule.cs" />
-    <Compile Include="PreviewsCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SceneGraph\ActorNode.cs" />
     <Compile Include="SceneGraph\ActorNodeWithIcon.cs" />
