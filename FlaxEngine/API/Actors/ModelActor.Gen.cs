@@ -67,7 +67,7 @@ namespace FlaxEngine
 			get; set;
 #else
 			get { return Internal_GetModel(unmanagedPtr); }
-			set { Internal_SetModel(unmanagedPtr, value); }
+			set { Internal_SetModel(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
 #endif
 		}
 
@@ -80,7 +80,7 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Model Internal_GetModel(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetModel(IntPtr obj, Model val);
+		internal static extern void Internal_SetModel(IntPtr obj, IntPtr val);
 #endif
 #endregion
 	}
