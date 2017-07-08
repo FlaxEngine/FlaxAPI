@@ -54,7 +54,7 @@ namespace FlaxEngine.GUI
                 throw new ArgumentNullException();
             
             RenderOnlyWithWindow = renderOnlyWithWindow;
-            BackBuffer = RenderTarget.Create();
+            BackBuffer = RenderTarget.New();
             _task = task;
             _task.Output = BackBuffer;
             _task.CanSkipRendering += CanSkipRendering;

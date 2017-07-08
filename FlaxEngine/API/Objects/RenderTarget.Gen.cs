@@ -27,6 +27,23 @@ namespace FlaxEngine.Rendering
 		}
 
 		/// <summary>
+		/// Creates new instance of <see cref="RenderTarget"/> object.
+		/// </summary>
+		/// <returns>Created object.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static RenderTarget New() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_Create(typeof(RenderTarget)) as RenderTarget;
+#endif
+		}
+
+		/// <summary>
 		/// Gets texture surface format.
 		/// </summary>
 		[UnmanagedCall]
@@ -95,23 +112,6 @@ namespace FlaxEngine.Rendering
 		}
 
 		/// <summary>
-		/// Creates the new render target object.
-		/// </summary>
-		/// <returns>Created render target object or null if cannot perform this action.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-		[UnmanagedCall]
-		public static RenderTarget Create() 
-		{
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-			return Internal_Create();
-#endif
-		}
-
-		/// <summary>
 		/// Initializes render target texture.
 		/// </summary>
 		/// <param name="format">The surface pixels format.</param>
@@ -165,8 +165,6 @@ namespace FlaxEngine.Rendering
 		internal static extern void Internal_GetSize(IntPtr obj, out Vector2 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetSize(IntPtr obj, ref Vector2 val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern RenderTarget Internal_Create();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_Init(IntPtr obj, PixelFormat format, int width, int height, TextureFlags flags);
 		[MethodImpl(MethodImplOptions.InternalCall)]

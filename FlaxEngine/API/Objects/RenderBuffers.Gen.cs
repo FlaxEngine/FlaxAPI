@@ -27,6 +27,23 @@ namespace FlaxEngine.Rendering
 		}
 
 		/// <summary>
+		/// Creates new instance of <see cref="RenderBuffers"/> object.
+		/// </summary>
+		/// <returns>Created object.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static RenderBuffers New() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_Create(typeof(RenderBuffers)) as RenderBuffers;
+#endif
+		}
+
+		/// <summary>
 		/// Gets buffer textures width (in pixels).
 		/// </summary>
 		[UnmanagedCall]
@@ -76,23 +93,6 @@ namespace FlaxEngine.Rendering
 #else
 			get { Vector2 resultAsRef; Internal_GetSize(unmanagedPtr, out resultAsRef); return resultAsRef; }
 			set { Internal_SetSize(unmanagedPtr, ref value); }
-#endif
-		}
-
-		/// <summary>
-		/// Creates the new render buffers object.
-		/// </summary>
-		/// <returns>Created render buffers object.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-		[UnmanagedCall]
-		public static RenderBuffers Create() 
-		{
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-			return Internal_Create();
 #endif
 		}
 

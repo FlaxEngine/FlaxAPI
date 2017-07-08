@@ -27,6 +27,23 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Creates new instance of <see cref="Sky"/> object.
+		/// </summary>
+		/// <returns>Created object.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static Sky New() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_Create(typeof(Sky)) as Sky;
+#endif
+		}
+
+		/// <summary>
 		/// Gets or sets value indicating if visual element affects the world
 		/// </summary>
 		[UnmanagedCall]

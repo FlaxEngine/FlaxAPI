@@ -125,8 +125,8 @@ namespace FlaxEngine.Rendering
 
             // Create buffers if missing
             if (Buffers == null)
-                Buffers = RenderBuffers.Create();
-
+                Buffers = RenderBuffers.New();
+            
             // Prepare view
             if (Camera != null)
                 View.CopyFrom(Camera);

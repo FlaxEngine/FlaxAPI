@@ -27,6 +27,23 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Creates new instance of <see cref="ModelActor"/> object.
+		/// </summary>
+		/// <returns>Created object.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static ModelActor New() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_Create(typeof(ModelActor)) as ModelActor;
+#endif
+		}
+
+		/// <summary>
 		/// Gets or sets model scale in lightmap parameter
 		/// </summary>
 		[UnmanagedCall]
