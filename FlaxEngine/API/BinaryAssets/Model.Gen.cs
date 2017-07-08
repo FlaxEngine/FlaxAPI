@@ -39,10 +39,25 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets the model bounding box in local space (from LOD0).
+		/// </summary>
+		[UnmanagedCall]
+		public BoundingBox Box
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { BoundingBox resultAsRef; Internal_GetBox(unmanagedPtr, out resultAsRef); return resultAsRef; }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern int Internal_GetLoadedLODs(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetBox(IntPtr obj, out BoundingBox resultAsRef);
 #endif
 #endregion
 	}

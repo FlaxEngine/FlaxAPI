@@ -518,6 +518,22 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Updates the actor internal cached data.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void UpdateCache() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_UpdateCache(unmanagedPtr);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -608,6 +624,8 @@ namespace FlaxEngine
 		internal static extern bool Internal_ContainsInHierarchy(IntPtr obj, Actor actor);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_ContainsChild(IntPtr obj, Actor actor);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_UpdateCache(IntPtr obj);
 #endif
 #endregion
 	}
