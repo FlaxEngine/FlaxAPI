@@ -143,8 +143,6 @@ namespace FlaxEngine.Rendering
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetSize(IntPtr obj, ref Vector2 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern RenderBuffers Internal_Create();
-		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_Init(IntPtr obj, int width, int height);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_Dispose(IntPtr obj);
