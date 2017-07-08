@@ -250,6 +250,7 @@ namespace FlaxEditor.Windows.Assets
         protected virtual void OnEditedStateChanged()
         {
             UpdateTitle();
+            UpdateToolstrip();
         }
 
         #endregion
@@ -301,6 +302,13 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <summary>
+        /// Called when asset gets linked and may setup window UI for it.
+        /// </summary>
+        protected virtual void OnAssetLinked()
+        {
+        }
+        
+        /// <summary>
         /// Called when asset gets loaded and may setup window UI for it.
         /// </summary>
         protected virtual void OnAssetLoaded()
@@ -324,7 +332,17 @@ namespace FlaxEditor.Windows.Assets
                     Close();
                     return;
                 }
-                OnAssetLoaded();
+
+                // Fire events
+                OnAssetLinked();
+                if (_asset.IsLoaded)
+                {
+                    OnAssetLoaded();
+                }
+                else
+                {
+                    // TODO: expose loaded/reloaded/unload events to c# API
+                }
             }
 
             // Base
