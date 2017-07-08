@@ -45,6 +45,17 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Creates the new instance of the Object.
+        /// All unused objects should be released using <see cref="Destroy"/>.
+        /// </summary>
+        /// <typeparam name="T">Type of the object.</typeparam>
+        /// <returns>Create object.</returns>
+        public static T New <T>() where T : Object
+        {
+            return Internal_Create(typeof(T)) as T;
+        }
+
+        /// <summary>
         /// Destroys the specified object.
         /// The object obj will be destroyed now or ather the time specified in seconds from now.
         /// If obj is a Script it will remove the component from the Actor and destroy it.
@@ -79,6 +90,9 @@ namespace FlaxEngine
         }
 
         #region Internal Calls
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Object Internal_Create(Type type);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ManagedInstanceDeleted(IntPtr nativeInstance);
