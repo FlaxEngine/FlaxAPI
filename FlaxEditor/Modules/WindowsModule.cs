@@ -7,6 +7,7 @@ using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.Assertions;
+using Window = FlaxEngine.Window;
 
 namespace FlaxEditor.Modules
 {
@@ -158,6 +159,7 @@ namespace FlaxEditor.Modules
             ContentWin.Show(FlaxEngine.GUI.Docking.DockState.DockBottom);
             DebugWin.Show(FlaxEngine.GUI.Docking.DockState.DockFill, ContentWin);
             ContentWin.SelectTab();
+            ((FlaxEngine.GUI.SplitPanel)ContentWin.Parent.Parent.Parent.Parent).SplitterValue = 0.5f;
             SceneWin.Show(FlaxEngine.GUI.Docking.DockState.DockLeft);
             PropertiesWin.Show(FlaxEngine.GUI.Docking.DockState.DockRight);
             ToolboxWin.Show(FlaxEngine.GUI.Docking.DockState.DockTop, PropertiesWin);

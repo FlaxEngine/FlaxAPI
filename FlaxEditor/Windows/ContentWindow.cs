@@ -144,6 +144,8 @@ namespace FlaxEditor.Windows
             if (item == null)
                 throw new ArgumentNullException();
 
+            if (!_navigationUnlocked)
+                return;
             var parent = item.ParentFolder;
             if (parent == null || !parent.Visible)
                 return;

@@ -40,14 +40,15 @@ namespace FlaxEditor.Viewport.Previews
             : base(RenderTask.Create<SceneRenderTask>(), useWidgets, 50, Vector3.Zero)
         {
             DockStyle = DockStyle.Fill;
-
-            Task.Enabled = false;
+            
             Task.Flags = ViewFlags.DefaultModelPreview;
             Task.OnBegin += TaskOnBegin;
 
             SetView(new Quaternion(0.424461186f, -0.0940724313f, 0.0443938486f, 0.899451137f));
 
             // Setup preview scene
+            _previewModel = ModelActor.New();
+            //
             _previewLight = DirectionalLight.New();
             _previewLight.ShadowsMode = ShadowsCastingMode.None;
             _previewLight.Orientation = Quaternion.Euler(new Vector3(52.1477f, -109.109f, -111.739f));
@@ -56,6 +57,7 @@ namespace FlaxEditor.Viewport.Previews
             _envProbe.AutoUpdate = false;
             _envProbe.SetCustomProbe(FlaxEngine.Content.LoadAsyncInternal<CubeTexture>("Editor/SimplySky"));
             //
+            _sky = Sky.New();
             _sky.SunLight = _previewLight;
 
             // Link actors for rendering
