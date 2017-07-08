@@ -12,16 +12,12 @@ namespace FlaxEngine
 {
 	public sealed partial class EnvironmentProbe
 	{
-        // TODO: HasProbe, IsUsingCustomProbe, SetCustomprobe
-        // TODO: Bake()
-
         /// <summary>
-        /// Gets probe scaled radius parameter
+        /// Gets a value indicating whether this instance has probe texture assigned.
         /// </summary>
-        [UnmanagedCall]
-        public float ScaledRadius
-        {
-            get { return Scale.MaxValue * Radius; }
-        }
-    }
+        /// <value>
+        ///   <c>true</c> if this instance has probe; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasProbe => Probe;
+	}
 }

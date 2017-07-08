@@ -85,6 +85,92 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets the probe scaled radius parameter (radius * max scale vector component).
+		/// </summary>
+		[UnmanagedCall]
+		public float ScaledRadius
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetScaledRadius(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets value indicating if probe should be updated automaticlly on change.
+		/// </summary>
+		[UnmanagedCall]
+		public bool AutoUpdate
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetAutoUpdate(unmanagedPtr); }
+			set { Internal_SetAutoUpdate(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets the probe texture used during rendering (baked or custom one).
+		/// </summary>
+		[UnmanagedCall]
+		public CubeTexture Probe
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetProbe(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
+		/// Returns true if probe is using custom cube texture (not baked).
+		/// </summary>
+		[UnmanagedCall]
+		public bool IsUsingCustomProbe
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_IsUsingCustomProbe(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
+		/// Sets the custom probe texture to use during rendering.
+		/// </summary>
+		/// <param name="probe">Sets the custom probe texture to be using during reflections pass rendering. Use null if disable custom probe feature.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void SetCustomProbe(CubeTexture probe) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_SetCustomProbe(unmanagedPtr, Object.GetUnmanagedPtr(probe));
+#endif
+		}
+
+		/// <summary>
+		/// Requests probe texture baking. It won't be performed now but on async graphics rendering task.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void Bake() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_Bake(unmanagedPtr);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -99,6 +185,20 @@ namespace FlaxEngine
 		internal static extern float Internal_GetRadius(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetRadius(IntPtr obj, float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetScaledRadius(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_GetAutoUpdate(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetAutoUpdate(IntPtr obj, bool val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern CubeTexture Internal_GetProbe(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_IsUsingCustomProbe(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetCustomProbe(IntPtr obj, IntPtr probe);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_Bake(IntPtr obj);
 #endif
 #endregion
 	}
