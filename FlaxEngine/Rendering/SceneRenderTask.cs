@@ -78,17 +78,17 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// The action called on rendering begin.
         /// </summary>
-        public BeginDelegate OnBegin;
+        public event BeginDelegate OnBegin;
 
         /// <summary>
         /// The action called on rendering end.
         /// </summary>
-        public EndDelegate OnEnd;
+        public event EndDelegate OnEnd;
 
         /// <summary>
         /// The action called on view rendering to collect draw calls. It allows to extend rendering pipeline and draw custom geometry non-existing in the scene or custom actors set.
         /// </summary>
-        public DrawDelegate OnDraw;
+        public event DrawDelegate OnDraw;
 
         internal SceneRenderTask()
         {

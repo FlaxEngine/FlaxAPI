@@ -68,7 +68,25 @@ namespace FlaxEngine
         {
             Internal_Destroy(GetUnmanagedPtr(obj), timeLeft);
         }
-        
+
+        /// <summary>
+        /// Destroys the specified object and clears the reference variable.
+        /// The object obj will be destroyed now or ather the time specified in seconds from now.
+        /// If obj is a Script it will remove the component from the Actor and destroy it.
+        /// If obj is a Actor it will remove it from the Scene and destroy it and all its Scripts and all children of the Actor.
+        /// Actual object destruction is always delayed until after the current Update loop, but will always be done before rendering.
+        /// </summary>
+        /// <param name="obj">The object to destroy.</param>
+        /// <param name="timeLeft">The time left to destroy object (in seconds).</param>
+        public static void Destroy <T>(ref T obj, float timeLeft = 0.0f) where T : Object
+        {
+            if (obj)
+            {
+                Internal_Destroy(obj.unmanagedPtr, timeLeft);
+                obj = null;
+            }
+        }
+
         /// <summary>
         /// Check if object exists
         /// </summary>
