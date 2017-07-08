@@ -24,7 +24,7 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
-        public override EditorWindow Open(ContentItem item)
+        public override EditorWindow Open(Editor editor, ContentItem item)
         {
             throw new NotImplementedException();// TODO: cube texture window
         }

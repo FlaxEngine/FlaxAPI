@@ -4,6 +4,7 @@
 
 using System;
 using FlaxEditor.Windows;
+using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 
 namespace FlaxEditor.Content
@@ -24,9 +25,9 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
-        public override EditorWindow Open(ContentItem item)
+        public override EditorWindow Open(Editor editor, ContentItem item)
         {
-            throw new NotImplementedException();// TODO: model window
+            return new ModelWindow(editor, item as AssetItem);
         }
 
         /// <inheritdoc />

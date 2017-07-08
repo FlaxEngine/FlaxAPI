@@ -59,7 +59,7 @@ namespace FlaxEditor.Content
         public override string FileExtension => Extension;
 
         /// <inheritdoc />
-        public override EditorWindow Open(ContentItem item)
+        public override EditorWindow Open(Editor editor, ContentItem item)
         {
             Editor.Instance.CodeEditing.OpenFile(item.Path);
             return null;

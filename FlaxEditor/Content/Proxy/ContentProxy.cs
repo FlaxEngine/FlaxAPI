@@ -50,9 +50,10 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Opens the specified item.
         /// </summary>
+        /// <param name="editor"></param>
         /// <param name="item">The item.</param>
         /// <returns>Opened window or null if cannot do it.</returns>
-        public abstract EditorWindow Open(ContentItem item);
+        public abstract EditorWindow Open(Editor editor, ContentItem item);
 
         /// <summary>
         /// Gets a value indicating whether content items used by this proxy can be exported.
