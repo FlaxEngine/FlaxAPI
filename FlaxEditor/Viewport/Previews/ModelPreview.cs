@@ -21,7 +21,7 @@ namespace FlaxEditor.Viewport.Previews
         private Sky _sky;
 
         /// <summary>
-        /// Sets the model asset to preview.
+        /// Gets or sets the model asset to preview.
         /// </summary>
         /// <value>
         /// The model.
@@ -81,22 +81,6 @@ namespace FlaxEditor.Viewport.Previews
                 float maxSize = Mathf.Max(0.001f, model.Box.Size.MaxValue);
                 _previewModel.Scale = new Vector3(targetSize / maxSize);
             }
-        }
-        
-        /// <summary>
-        /// Enables this preview rendering.
-        /// </summary>
-        public void Enable()
-        {
-            Task.Enabled = true;
-        }
-
-        /// <summary>
-        /// Disables this preview rendering.
-        /// </summary>
-        public void Disable()
-        {
-            Task.Enabled = false;
         }
 
         /// <inheritdoc />

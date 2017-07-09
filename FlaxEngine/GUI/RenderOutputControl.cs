@@ -35,7 +35,7 @@ namespace FlaxEngine.GUI
         ///   <c>true</c> if render only with window attached; otherwise, <c>false</c>.
         /// </value>
         public bool RenderOnlyWithWindow { get; }
-
+        
         /// <summary>
         /// The output buffer.
         /// </summary>
@@ -58,6 +58,22 @@ namespace FlaxEngine.GUI
             _task = task;
             _task.Output = BackBuffer;
             _task.CanSkipRendering += CanSkipRendering;
+        }
+
+        /// <summary>
+        /// Enables this output rendering.
+        /// </summary>
+        public void Enable()
+        {
+            Task.Enabled = true;
+        }
+
+        /// <summary>
+        /// Disables this output rendering.
+        /// </summary>
+        public void Disable()
+        {
+            Task.Enabled = false;
         }
 
         /// <summary>
