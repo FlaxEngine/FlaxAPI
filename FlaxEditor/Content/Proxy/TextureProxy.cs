@@ -12,7 +12,7 @@ namespace FlaxEditor.Content
     /// A <see cref="Texture"/> asset proxy object.
     /// </summary>
     /// <seealso cref="FlaxEditor.Content.BinaryAssetProxy" />
-    public class TextureProxy : BinaryAssetProxy
+    public sealed class TextureProxy : BinaryAssetProxy
     {
         /// <inheritdoc />
         public override string Name => "Texture";

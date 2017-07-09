@@ -12,7 +12,7 @@ namespace FlaxEditor.Content
     /// A <see cref="SpriteAtlas"/> asset proxy object.
     /// </summary>
     /// <seealso cref="FlaxEditor.Content.BinaryAssetProxy" />
-    public class SpriteAtlasProxy : BinaryAssetProxy
+    public sealed class SpriteAtlasProxy : BinaryAssetProxy
     {
         /// <inheritdoc />
         public override string Name => "Sprite Atlas";
