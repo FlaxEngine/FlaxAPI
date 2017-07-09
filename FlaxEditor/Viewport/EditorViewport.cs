@@ -42,13 +42,10 @@ namespace FlaxEditor.Viewport
                 IsControlDown = window.GetKey(KeyCode.CONTROL);
                 IsShiftDown = window.GetKey(KeyCode.SHIFT);
                 IsAltDown = window.GetKey(KeyCode.ALT);
+
                 IsMouseRightDown = window.GetMouseButton(MouseButtons.Right);
                 IsMouseMiddleDown = window.GetMouseButton(MouseButtons.Middle);
                 IsMouseLeftDown = window.GetMouseButton(MouseButtons.Left);
-
-                IsControlDown = window.GetKey(KeyCode.CONTROL);
-                IsShiftDown = window.GetKey(KeyCode.SHIFT);
-                IsAltDown = window.GetKey(KeyCode.ALT);
             }
 
             public void Clear()
@@ -56,13 +53,10 @@ namespace FlaxEditor.Viewport
                 IsControlDown = false;
                 IsShiftDown = false;
                 IsAltDown = false;
+
                 IsMouseRightDown = false;
                 IsMouseMiddleDown = false;
                 IsMouseLeftDown = false;
-
-                IsControlDown = false;
-                IsShiftDown = false;
-                IsAltDown = false;
             }
         }
 
