@@ -19,7 +19,7 @@ namespace FlaxEditor.Viewport.Previews
         private DirectionalLight _previewLight;
         private EnvironmentProbe _envProbe;
         private Sky _sky;
-        /*
+
         /// <summary>
         /// Gets or sets the material asset to preview. It can be <see cref="FlaxEngine.Material"/> or <see cref="FlaxEngine.MaterialInstance"/>.
         /// </summary>
@@ -28,10 +28,10 @@ namespace FlaxEditor.Viewport.Previews
         /// </value>
         public MaterialBase Material
         {
-            get => _previewModel.GetMaterial(0);
-            set => _previewModel.SetMaterial(0, value);
+            get => _previewModel.Meshes[0].Material;
+            set => _previewModel.Meshes[0].Material = value;
         }
-        */
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MaterialPreview"/> class.
         /// </summary>
