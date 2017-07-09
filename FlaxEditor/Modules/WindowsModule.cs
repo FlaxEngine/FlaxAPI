@@ -266,6 +266,10 @@ namespace FlaxEditor.Modules
         {
             Debug.Log("Main window is closed");
             MainWindow = null;
+
+            // TODO: capture project icon screenshot before exit (like in c++ editor)
+            
+            Application.Exit();
         }
 
         /// <inheritdoc />
