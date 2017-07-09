@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using FlaxEditor.Content;
 using FlaxEditor.Content.GUI;
 using FlaxEditor.GUI;
-using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Windows
@@ -34,8 +33,11 @@ namespace FlaxEditor.Windows
 
         private void navigate(ContentTreeNode source, ContentTreeNode target)
         {
+            if (target == null)
+                target = _root;
+            
             // Check if can do this action
-            if (target != null && _navigationUnlocked && source != target)
+            if (_navigationUnlocked && source != target)
             {
                 // Lock navigation
                 _navigationUnlocked = false;
@@ -48,7 +50,7 @@ namespace FlaxEditor.Windows
                 }
 
                 // Show folder contents and select tree node
-                RefreshView();
+                RefreshView(target);
                 _tree.Select(target);
                 target.ExpandAllParents();
 
@@ -86,7 +88,7 @@ namespace FlaxEditor.Windows
                 _navigationRedo.Push(SelectedNode);
 
                 // Select node
-                _view.ShowItems(node.Folder.Children);
+                RefreshView(node);
                 _tree.Select(node);
                 node.ExpandAllParents();
 
@@ -124,7 +126,7 @@ namespace FlaxEditor.Windows
                 _navigationUndo.Push(SelectedNode);
 
                 // Select node
-                _view.ShowItems(node.Folder.Children);
+                RefreshView(node);
                 _tree.Select(node);
                 node.ExpandAllParents();
 
