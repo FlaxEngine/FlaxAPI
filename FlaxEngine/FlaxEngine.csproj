@@ -95,6 +95,10 @@
     <Compile Include="API\BinaryAssets\SpriteAtlas.cs" />
     <Compile Include="API\BinaryAssets\SpriteAtlas.Gen.cs" />
     <Compile Include="API\CreateWindowSettings.cs" />
+    <Compile Include="API\MaterialBases\Material.cs" />
+    <Compile Include="API\MaterialBases\Material.Gen.cs" />
+    <Compile Include="API\MaterialBases\MaterialInstance.cs" />
+    <Compile Include="API\MaterialBases\MaterialInstance.Gen.cs" />
     <Compile Include="API\Objects\Actor.cs" />
     <Compile Include="API\Objects\Actor.Gen.cs">
       <DependentUpon>Actor.cs</DependentUpon>
@@ -209,9 +213,7 @@
     <Compile Include="Assertions\FloatComparer.cs" />
     <Compile Include="AssetTypes\CubeTexture.cs" />
     <Compile Include="AssetTypes\Document.cs" />
-    <Compile Include="AssetTypes\Material.cs" />
     <Compile Include="AssetTypes\MaterialBase.cs" />
-    <Compile Include="AssetTypes\MaterialInstance.cs" />
     <Compile Include="AssetTypes\Shader.cs" />
     <Compile Include="AssetTypes\Texture.cs" />
     <Compile Include="Bodies\BoxBody.cs" />
