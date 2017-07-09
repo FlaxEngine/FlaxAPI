@@ -41,17 +41,29 @@ namespace FlaxEngine
 	        }
 	    }
 
-	    internal void Internal_OnModelChanged()
+        internal void Internal_OnModelChanged()
 	    {
             // Clear cached data
 	        _meshes = null;
 	    }
-        
+
 #if !UNIT_TEST_COMPILANT
+	    [MethodImpl(MethodImplOptions.InternalCall)]
+	    internal static extern void Internal_GetMeshTransform(IntPtr obj, int index, out Transform result);
+	    [MethodImpl(MethodImplOptions.InternalCall)]
+	    internal static extern void Internal_SetMeshTransform(IntPtr obj, int index, ref Transform value);
         [MethodImpl(MethodImplOptions.InternalCall)]
 	    internal static extern MaterialBase Internal_GetMeshMaterial(IntPtr obj, int index);
 	    [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetMeshMaterial(IntPtr obj, int index, IntPtr value);
+	    [MethodImpl(MethodImplOptions.InternalCall)]
+	    internal static extern float Internal_GetMeshScaleInLightmap(IntPtr obj, int index);
+	    [MethodImpl(MethodImplOptions.InternalCall)]
+	    internal static extern void Internal_SetMeshScaleInLightmap(IntPtr obj, int index, float value);
+	    [MethodImpl(MethodImplOptions.InternalCall)]
+	    internal static extern bool Internal_GetMeshVisible(IntPtr obj, int index);
+	    [MethodImpl(MethodImplOptions.InternalCall)]
+	    internal static extern void Internal_SetMeshVisible(IntPtr obj, int index, bool value);
 #endif
     }
 }

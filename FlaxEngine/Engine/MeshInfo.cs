@@ -21,6 +21,23 @@ namespace FlaxEngine
         public ModelActor ParentActor => _modelActor;
 
         /// <summary>
+        /// Gets or sets the mesh local transform.
+        /// </summary>
+        /// <value>
+        /// The lcoal transform.
+        /// </value>
+        public Transform Transform
+        {
+            get
+            {
+                Transform resultAsRef;
+                ModelActor.Internal_GetMeshTransform(_modelActor.unmanagedPtr, _index, out resultAsRef);
+                return resultAsRef;
+            }
+            set => ModelActor.Internal_SetMeshTransform(_modelActor.unmanagedPtr, _index, ref value);
+        }
+
+        /// <summary>
         /// Gets or sets the material used to render the mesh.
         /// If value if null then model asset mesh default material will be used as a fallback.
         /// </summary>
@@ -32,7 +49,32 @@ namespace FlaxEngine
             get => ModelActor.Internal_GetMeshMaterial(_modelActor.unmanagedPtr, _index);
             set => ModelActor.Internal_SetMeshMaterial(_modelActor.unmanagedPtr, _index, Object.GetUnmanagedPtr(value));
         }
-        
+
+        /// <summary>
+        /// Gets or sets the scale in lightmap (per mesh).
+        /// Final mesh scale in lightmap is alsow multiplied by <see cref="ModelActor.ScaleInLightmap"/> and global scene scale parameter.
+        /// </summary>
+        /// <value>
+        /// The scale in lightmap.
+        /// </value>
+        public float ScaleInLightmap
+        {
+            get => ModelActor.Internal_GetMeshScaleInLightmap(_modelActor.unmanagedPtr, _index);
+            set => ModelActor.Internal_SetMeshScaleInLightmap(_modelActor.unmanagedPtr, _index, value);
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="MeshInfo"/> is visible.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if visible; otherwise, <c>false</c>.
+        /// </value>
+        public bool Visible
+        {
+            get => ModelActor.Internal_GetMeshVisible(_modelActor.unmanagedPtr, _index);
+            set => ModelActor.Internal_SetMeshVisible(_modelActor.unmanagedPtr, _index, value);
+        }
+
         /// <summary>
         /// Gets the mesh index.
         /// </summary>

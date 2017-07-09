@@ -71,6 +71,41 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets material used to render mesh at given index (overriden by model instance buffer or model default).
+		/// </summary>
+		/// <param name="meshIndex">Mesh index</param>
+		/// <param name="lodIndex">Level of Detail index</param>
+		/// <returns>Material or null if not assigned.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public MaterialBase GetMaterial(int meshIndex, int lodIndex = 0) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_GetMaterial(unmanagedPtr, meshIndex, lodIndex);
+#endif
+		}
+
+		/// <summary>
+		/// Resets all meshes lcoal transformations.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void ResetMeshTransformations() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_ResetMeshTransformations(unmanagedPtr);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -81,6 +116,10 @@ namespace FlaxEngine
 		internal static extern Model Internal_GetModel(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetModel(IntPtr obj, IntPtr val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern MaterialBase Internal_GetMaterial(IntPtr obj, int meshIndex, int lodIndex);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_ResetMeshTransformations(IntPtr obj);
 #endif
 #endregion
 	}
