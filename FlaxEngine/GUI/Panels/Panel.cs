@@ -49,8 +49,9 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="Panel"/> class.
         /// </summary>
         /// <param name="scrollBars">The scroll bars.</param>
-        public Panel(ScrollBars scrollBars)
-            : base(false)
+        /// <param name="canFocus">True if control can accept user focus</param>
+        public Panel(ScrollBars scrollBars, bool canFocus = false)
+            : base(canFocus)
         {
             // Create scroll bars
             if ((scrollBars & ScrollBars.Vertical) == ScrollBars.Vertical)
