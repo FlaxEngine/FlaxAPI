@@ -40,12 +40,27 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets the material info, structure which describies material surface.
+		/// </summary>
+		[UnmanagedCall]
+		public override Rendering.MaterialInfo Info
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { Rendering.MaterialInfo resultAsRef; Internal_GetInfo(unmanagedPtr, out resultAsRef); return resultAsRef; }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Material Internal_GetBaseMaterial(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetBaseMaterial(IntPtr obj, IntPtr val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetInfo(IntPtr obj, out Rendering.MaterialInfo resultAsRef);
 #endif
 #endregion
 	}
