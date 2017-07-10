@@ -9,6 +9,7 @@ namespace FlaxEngine
     /// </summary>
     public sealed class Mesh
     {
+        // TODO: use hash to check if data is valid (like MaterialParameter)
         internal Model _model;
         internal readonly int _lodIndex;
         internal readonly int _meshIndex;

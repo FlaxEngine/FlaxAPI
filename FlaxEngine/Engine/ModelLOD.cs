@@ -10,6 +10,7 @@ namespace FlaxEngine
     /// </summary>
     public sealed class ModelLOD
     {
+        // TODO: use hash to check if data is valid (like MaterialParameter)
         internal readonly Model _model;
         internal readonly int _lodIndex;
 
