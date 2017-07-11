@@ -15,6 +15,8 @@ namespace FlaxEngine.Rendering
         /// </summary>
         public virtual void Dispose()
         {
+            // Disable it
+            Enabled = false;
         }
 
         internal virtual bool Internal_Begin(out IntPtr outputPtr)
