@@ -18,7 +18,16 @@ namespace FlaxEngine.GUI
         /// </summary>
         public const PixelFormat DefaultBackBufferFormat = PixelFormat.R8G8B8A8_UNorm;
 
+        /// <summary>
+        /// The resize check timeout (in seconds).
+        /// </summary>
+        public const float ResizeCheckTime = 0.9f;
+
         protected SceneRenderTask _task;
+        private RenderTarget _backBuffer;
+        private RenderTarget _backBufferOld;
+        private int _oldBackbufferLiveTimeLeft;
+        private float _resizeTime;
 
         /// <summary>
         /// Gets the task.
@@ -35,11 +44,7 @@ namespace FlaxEngine.GUI
         ///   <c>true</c> if render only with window attached; otherwise, <c>false</c>.
         /// </value>
         public bool RenderOnlyWithWindow { get; }
-        
-        /// <summary>
-        /// The output buffer.
-        /// </summary>
-        public readonly RenderTarget BackBuffer;
+       
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RenderOutputControl"/> class.
@@ -54,10 +59,13 @@ namespace FlaxEngine.GUI
                 throw new ArgumentNullException();
             
             RenderOnlyWithWindow = renderOnlyWithWindow;
-            BackBuffer = RenderTarget.New();
+
+            _backBuffer = RenderTarget.New();
+            _resizeTime = ResizeCheckTime;
+
             _task = task;
-            _task.Output = BackBuffer;
             _task.CanSkipRendering += CanSkipRendering;
+            _task.OnEnd += OnEnd;
         }
 
         /// <summary>
@@ -74,14 +82,6 @@ namespace FlaxEngine.GUI
         public void Disable()
         {
             Task.Enabled = false;
-        }
-
-        /// <summary>
-        /// Request to resize the buffers.
-        /// </summary>
-        public void RequestResize()
-        {
-            // TODO: finish this
         }
 
         private bool walkTree(Control c)
@@ -101,6 +101,8 @@ namespace FlaxEngine.GUI
 
         protected virtual bool CanSkipRendering()
         {
+            _task.Output = _backBuffer;
+
             // Disable task rendering if control is very small
             const float MinRenderSize = 4;
             if (Width < MinRenderSize || Height < MinRenderSize)
@@ -115,46 +117,73 @@ namespace FlaxEngine.GUI
             return false;
         }
 
+        protected virtual void OnEnd(SceneRenderTask task)
+        {
+            // Check if was using old backuffer
+            if (_backBufferOld)
+            {
+                _oldBackbufferLiveTimeLeft--;
+                if (_oldBackbufferLiveTimeLeft < 0)
+                {
+                    Object.Destroy(ref _backBufferOld);
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            // Check if need to resize the output
+            _resizeTime += deltaTime;
+            if (_resizeTime >= ResizeCheckTime)
+            {
+                _resizeTime = 0;
+
+                if (_backBuffer.Size != Size)
+                {
+                    Resize();
+                }
+            }
+            
+            base.Update(deltaTime);
+        }
+
         /// <inheritdoc />
         public override void Draw()
         {
             // Draw backbuffer texture
-            Render2D.DrawRenderTarget(BackBuffer, new Rectangle(Vector2.Zero, Size), Color.White);
+            var buffer = _backBufferOld ? _backBufferOld : _backBuffer;
+            Render2D.DrawRenderTarget(buffer, new Rectangle(Vector2.Zero, Size), Color.White);
 
             base.Draw();
         }
-
-        /// <inheritdoc />
-        protected override void SetSizeInternal(Vector2 size)
-        {
-            base.SetSizeInternal(size);
-
-            SyncBackBufferSize();
-        }
-
-        /// <inheritdoc />
-        protected override void PerformLayoutSelf()
-        {
-            base.PerformLayoutSelf();
-
-            SyncBackBufferSize();
-        }
-
+        
         /// <summary>
         /// Synchronizes size of the back buffer.
         /// </summary>
-        protected void SyncBackBufferSize()
+        protected void Resize()
         {
             int width = (int)Width;
             int height = (int)Height;
-            if (width >= 1 && height >= 1)
+            if (width < 1 || height < 1)
             {
-                BackBuffer.Init(DefaultBackBufferFormat, width, height);
+                _backBuffer.Dispose();
+                Object.Destroy(ref _backBufferOld);
+                return;
             }
-            else
+
+            // Cache old backuffer to remove flckering effect
+            if (_backBufferOld == null && _backBuffer.IsAllocated)
             {
-                BackBuffer.Dispose();
+                _backBufferOld = _backBuffer;
+                _backBuffer = RenderTarget.New();
             }
+
+            // Set timout to remove old buffer
+            _oldBackbufferLiveTimeLeft = 3;
+
+            // Resize backbuffer
+            _backBuffer.Init(DefaultBackBufferFormat, width, height);
         }
 
         /// <inheritdoc />
@@ -162,6 +191,8 @@ namespace FlaxEngine.GUI
         {
             // Cleanup
             _task.Dispose();
+            Object.Destroy(ref _backBuffer);
+            Object.Destroy(ref _backBufferOld);
 
             base.OnDestroy();
         }
