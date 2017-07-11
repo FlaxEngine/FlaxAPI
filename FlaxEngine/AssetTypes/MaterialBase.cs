@@ -75,7 +75,7 @@ namespace FlaxEngine
             }
         }
 
-        internal void ClearParams()
+        internal void Internal_ClearParams()
         {
             _parametersHash = 0;
             _parameters = null;
