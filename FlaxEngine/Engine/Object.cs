@@ -54,12 +54,12 @@ namespace FlaxEngine
         {
             return Internal_Create(typeof(T)) as T;
         }
-
+        
         /// <summary>
-        /// Destroys the specified object.
-        /// The object obj will be destroyed now or ather the time specified in seconds from now.
-        /// If obj is a Script it will remove the component from the Actor and destroy it.
-        /// If obj is a Actor it will remove it from the Scene and destroy it and all its Scripts and all children of the Actor.
+        /// Destroys the specified object and clears the reference variable.
+        /// The object obj will be destroyed now or after the time specified in seconds from now.
+        /// If obj is a Script it will be removed from the Actor and deleted.
+        /// If obj is an Actor it will be removed from the Scene and deleted as well as all its Scripts and all children of the Actor.
         /// Actual object destruction is always delayed until after the current Update loop, but will always be done before rendering.
         /// </summary>
         /// <param name="obj">The object to destroy.</param>
@@ -71,9 +71,9 @@ namespace FlaxEngine
 
         /// <summary>
         /// Destroys the specified object and clears the reference variable.
-        /// The object obj will be destroyed now or ather the time specified in seconds from now.
-        /// If obj is a Script it will remove the component from the Actor and destroy it.
-        /// If obj is a Actor it will remove it from the Scene and destroy it and all its Scripts and all children of the Actor.
+        /// The object obj will be destroyed now or after the time specified in seconds from now.
+        /// If obj is a Script it will be removed from the Actor and deleted.
+        /// If obj is an Actor it will be removed from the Scene and deleted as well as all its Scripts and all children of the Actor.
         /// Actual object destruction is always delayed until after the current Update loop, but will always be done before rendering.
         /// </summary>
         /// <param name="obj">The object to destroy.</param>
