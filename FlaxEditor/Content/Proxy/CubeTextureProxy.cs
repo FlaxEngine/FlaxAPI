@@ -2,8 +2,8 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using FlaxEditor.Windows;
+using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 
 namespace FlaxEditor.Content
@@ -26,7 +26,7 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override EditorWindow Open(Editor editor, ContentItem item)
         {
-            throw new NotImplementedException();// TODO: cube texture window
+            return new CubeTextureWindow(editor, item as AssetItem);
         }
 
         /// <inheritdoc />

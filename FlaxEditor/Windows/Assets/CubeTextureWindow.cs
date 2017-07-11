@@ -25,11 +25,10 @@ namespace FlaxEditor.Windows.Assets
             : base(editor, item)
         {
             // Create virtual material material
-            throw new NotImplementedException("expose api to create virtual assets to c#");
-            /*_material = FlaxEngine.Content.CreateVirtualAsset<MaterialInstance>();
-            _material->GetMaterialInstance()->Init();
-            _material.BaseMaterial = FlaxEngine.Content.LoadAsyncInternal<Material>("Editor/CubeTexturePreviewMaterial");
-            */
+            _material = FlaxEngine.Content.CreateVirtualAsset<MaterialInstance>();
+            if(_material != null)
+                _material.BaseMaterial = FlaxEngine.Content.LoadAsyncInternal<Material>("Editor/CubeTexturePreviewMaterial");
+
             // Material preview
             _preview = new MaterialPreview(true);
             _preview.Material = _material;
