@@ -1,11 +1,14 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using FlaxEditor.Content;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
-/*
+using FlaxEngine.Rendering;
+using Object = FlaxEngine.Object;
+
 namespace FlaxEditor.Windows.Assets
 {
     /// <summary>
@@ -22,10 +25,11 @@ namespace FlaxEditor.Windows.Assets
             : base(editor, item)
         {
             // Create virtual material material
-            _material = FlaxEngine.Content.CreateVirtualAsset<MaterialInstance>();
+            throw new NotImplementedException("expose api to create virtual assets to c#");
+            /*_material = FlaxEngine.Content.CreateVirtualAsset<MaterialInstance>();
             _material->GetMaterialInstance()->Init();
             _material.BaseMaterial = FlaxEngine.Content.LoadAsyncInternal<Material>("Editor/CubeTexturePreviewMaterial");
-
+            */
             // Material preview
             _preview = new MaterialPreview(true);
             _preview.Material = _material;
@@ -47,39 +51,31 @@ namespace FlaxEditor.Windows.Assets
         protected override void OnAssetLinked()
         {
             // Prepare material and assign texture asset as a parameter
-            if (_material.WaitForLoaded())
+            if (_material == null || _material.WaitForLoaded())
             {
                 // Error
-                LOG_EDITOR(EditorError, 109, "Cannot load it.");
+                Debug.LogError("Cannot load preview material.");
                 Close();
                 return;
             }
             var baseMaterial = _material.BaseMaterial;
-            if (!materialInstance->HasBaseMaterial())
+            if (baseMaterial == null || baseMaterial.WaitForLoaded())
             {
                 // Error
-                LOG_EDITOR(EditorError, 109, "Missing base material.");
+                Debug.LogError("Cannot load base material for preview material.");
                 Close();
                 return;
             }
-            materialInstance->GetBaseMaterial()->WaitForLoaded();
-            if (!materialInstance->HasBaseMaterial() || materialInstance->GetBaseMaterial()->LastLoadFailed())
+            var parameters = _material.Parameters;
+            if (parameters.Length != 1 || parameters[0].Type != MaterialParameterType.CubeTexture)
             {
                 // Error
-                LOG_EDITOR(EditorError, 109, "Cannot load base material.");
+                Debug.LogError("Invalid preview material parameters.");
                 Close();
                 return;
             }
-            auto params = materialInstance->GetParams();
-            if (params->Count() != 1 || params->Get(0)->GetType() != MaterialParamType::CubeTexture)
-            {
-                // Error
-                LOG_EDITOR(EditorError, 109, "Invalid parameters.");
-                Close();
-                return;
-            }
-            params->Get(0)->SetValue(_element->GetID());
-            
+            parameters[0].Value = _asset;
+
             base.OnAssetLinked();
         }
 
@@ -87,11 +83,9 @@ namespace FlaxEditor.Windows.Assets
         public override void OnDestroy()
         {
             _preview.Material = null;
-
-            Destroy instance
+            Object.Destroy(ref _material);
 
             base.OnDestroy();
         }
     }
 }
-*/
