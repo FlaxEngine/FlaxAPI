@@ -179,7 +179,9 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Creates temporary and virtual asset of the given type. Virtual assets have limited usage but allow to use custom assets data at runtime.
+        /// Creates temporary and virtual asset of the given type.
+        /// Virtual assets have limited usage but allow to use custom assets data at runtime.
+        /// Virtual assets are temporary and exist until application exit.
         /// </summary>
         /// <typeparam name="T">Type of the asset to create. Includes any asset types derived from the type.</typeparam>
         /// <returns>Asset instance if created, null otherwise. See log for error message if need to.</returns>

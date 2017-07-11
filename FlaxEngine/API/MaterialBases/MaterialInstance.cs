@@ -15,7 +15,7 @@ namespace FlaxEngine
 	    /// <summary>
 	    /// The material asset type unique ID.
 	    /// </summary>
-	    public const int TypeID = 2;
+	    public const int TypeID = 4;
 
 	    /// <summary>
 	    /// The asset type content domain.

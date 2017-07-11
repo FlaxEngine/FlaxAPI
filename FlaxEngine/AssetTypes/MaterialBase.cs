@@ -89,6 +89,8 @@ namespace FlaxEngine
         internal static extern ulong[] Internal_CacheParameters(IntPtr obj);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string Internal_GetParamName(IntPtr obj, int index);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern string Internal_SetParamValue(IntPtr obj, int index, IntPtr ptr);
 #endif
         #endregion
     }
