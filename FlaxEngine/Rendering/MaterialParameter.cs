@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -75,6 +75,24 @@ namespace FlaxEngine.Rendering
                     throw new InvalidOperationException("Cannot use invalid material parameter.");
                 
                 return MaterialBase.Internal_GetParamName(_material.unmanagedPtr, _index);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the parameter value.
+        /// </summary>
+        /// <value>
+        /// The value.
+        /// </value>
+        public object Value
+        {
+            get
+            {
+                throw new NotImplementedException("Finish get/set material parameter value.");
+            }
+            set
+            {
+                throw new NotImplementedException("Finish get/set material parameter value.");
             }
         }
 

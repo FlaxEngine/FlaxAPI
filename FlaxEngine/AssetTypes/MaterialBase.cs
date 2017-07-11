@@ -21,24 +21,61 @@ namespace FlaxEngine
         /// Gets the material info, structure which describies material surface.
         /// </summary>
         [UnmanagedCall]
-        public Rendering.MaterialInfo Info
+        public MaterialInfo Info
         {
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-            get { Rendering.MaterialInfo resultAsRef; Internal_GetInfo(unmanagedPtr, out resultAsRef); return resultAsRef; }
+            get { MaterialInfo resultAsRef; Internal_GetInfo(unmanagedPtr, out resultAsRef); return resultAsRef; }
 #endif
         }
 
-        private void CacheParams()
+        /// <summary>
+        /// Gets or sets the material parameters collection.
+        /// </summary>
+        /// <value>
+        /// The parameters.
+        /// </value>
+        public MaterialParameter[] Parameters
         {
-            // Get next hash #hashtag
-            _parametersHash++;
+            get
+            {
+                // Check if has cached value
+                if (_parameters != null)
+                    return _parameters;
 
-            // TODO: finsih _parameters caching and expose to api...
+                // Get next hash #hashtag
+                _parametersHash++;
+
+                // Get parameters metadata from the backend
+                var parameters = Internal_CacheParameters(unmanagedPtr);
+                if (parameters != null && parameters.Length > 0)
+                {
+                    _parameters = new MaterialParameter[parameters.Length];
+                    for (int i = 0; i < parameters.Length; i++)
+                    {
+                        var p = parameters[i];
+
+                        // Packed:
+                        // Bits 0-7: Type
+                        // Bit 8: IsPublic
+                        var type = (MaterialParameterType)(p & 0b1111);
+                        var isPublic = (p & 0b10000) != 0;
+
+                        _parameters[i] = new MaterialParameter(_parametersHash, this, i, type, isPublic);
+                    }
+                }
+                else
+                {
+                    // No parameters at all
+                    _parameters = new MaterialParameter[0];
+                }
+
+                return _parameters;
+            }
         }
 
-        private void ClearParams()
+        internal void ClearParams()
         {
             _parametersHash = 0;
             _parameters = null;
@@ -47,7 +84,9 @@ namespace FlaxEngine
         #region Internal Calls
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_GetInfo(IntPtr obj, out Rendering.MaterialInfo resultAsRef);
+        internal static extern void Internal_GetInfo(IntPtr obj, out MaterialInfo resultAsRef);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ulong[] Internal_CacheParameters(IntPtr obj);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string Internal_GetParamName(IntPtr obj, int index);
 #endif
