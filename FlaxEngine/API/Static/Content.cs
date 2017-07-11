@@ -178,10 +178,40 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Creates temporary and virtual asset of the given type. Virtual assets have limited usage but allow to use custom assets data at runtime.
+        /// </summary>
+        /// <typeparam name="T">Type of the asset to create. Includes any asset types derived from the type.</typeparam>
+        /// <returns>Asset instance if created, null otherwise. See log for error message if need to.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static T CreateVirtualAsset<T>() where T : Asset
+        {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            int typeId;
+            if (typeof(T) == typeof(MaterialInstance))
+                typeId = MaterialInstance.TypeID;
+            else
+                throw new InvalidOperationException("Asset type " + typeof(T).FullName + " does not support virtual assets.");
+
+            return (T)Internal_CreateVirtualAsset(typeof(T), typeId);
+#endif
+        }
+
+        #region Internal Calls
+#if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetAssetInfo1(ref Guid id, out int typeId, out string path);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetAssetInfo2(string path, out int typeId, out Guid id);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Asset Internal_CreateVirtualAsset(Type type, int typeId);
+#endif
+        #endregion
     }
 }
