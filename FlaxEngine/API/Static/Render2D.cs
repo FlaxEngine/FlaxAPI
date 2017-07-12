@@ -4,20 +4,47 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using FlaxEngine.GUI;
+using FlaxEngine.Rendering;
 
 namespace FlaxEngine
 {
 	public static partial class Render2D
 	{
 	    /// <summary>
-	    /// Draws sprite.
+	    /// Calls drawing GUI to the texture.
 	    /// </summary>
-	    /// <param name="sprite">Sprite to draw.</param>
-	    /// <param name="rect">Rectangle to draw.</param>
+	    /// <param name="context">The GPU context to handle graphics commands.</param>
+	    /// <param name="output">The output render target.</param>
+	    /// <param name="guiRoot">The root control of the GUI to draw.</param>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 	    [UnmanagedCall]
+	    public static void CallDrawing(GPUContext context, RenderTarget output, Control guiRoot)
+	    {
+	        if (context == null || output == null || guiRoot == null)
+	            throw new ArgumentNullException();
+
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+	        if (Internal_DrawBegin(context.unmanagedPtr, output.unmanagedPtr))
+	            throw new InvalidOperationException("Cannot perform GUI rendering.");
+	        guiRoot.Draw();
+	        Internal_DrawEnd();
+#endif
+	    }
+
+	    /// <summary>
+        /// Draws sprite.
+        /// </summary>
+        /// <param name="sprite">Sprite to draw.</param>
+        /// <param name="rect">Rectangle to draw.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
 	    public static void DrawSprite(Sprite sprite, Rectangle rect)
 	    {
 #if UNIT_TEST_COMPILANT
@@ -50,6 +77,10 @@ namespace FlaxEngine
 
         #region Internal Calls
 #if !UNIT_TEST_COMPILANT
+	    [MethodImpl(MethodImplOptions.InternalCall)]
+	    internal static extern bool Internal_DrawBegin(IntPtr context, IntPtr output);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+	    internal static extern void Internal_DrawEnd();
         [MethodImpl(MethodImplOptions.InternalCall)]
 	    internal static extern void Internal_DrawSprite(IntPtr atlas, int index, ref Rectangle rect, ref Color color, bool withAlpha);
 #endif
