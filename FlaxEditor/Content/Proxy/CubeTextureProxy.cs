@@ -2,9 +2,11 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using FlaxEditor.Viewport.Previews;
 using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.Content
 {
@@ -14,6 +16,8 @@ namespace FlaxEditor.Content
     /// <seealso cref="FlaxEditor.Content.BinaryAssetProxy" />
     public class CubeTextureProxy : BinaryAssetProxy
     {
+        private CubeTexturePreview _preview;
+
         /// <inheritdoc />
         public override string Name => "Cube Texture";
 
@@ -34,5 +38,46 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override ContentDomain Domain => CubeTexture.Domain;
+
+        /// <inheritdoc />
+        public override bool CanDrawThumbnail(AssetItem item)
+        {
+            if (_preview == null)
+            {
+                _preview = new CubeTexturePreview(false);
+            }
+            if (!_preview.HasLoadedAssets)
+                return false;
+
+            var asset = FlaxEngine.Content.LoadAsync<CubeTexture>(item.Path);
+            return asset.IsLoaded;
+        }
+
+        /// <inheritdoc />
+        public override void OnThumbnailDrawBegin(AssetItem item, ContainerControl guiRoot)
+        {
+            var asset = FlaxEngine.Content.LoadAsync<CubeTexture>(item.Path);
+            _preview.CubeTexture = asset;
+            _preview.Parent = guiRoot;
+        }
+
+        /// <inheritdoc />
+        public override void OnThumbnailDrawEnd(AssetItem item, ContainerControl guiRoot)
+        {
+            _preview.CubeTexture = null;
+            _preview.Parent = null;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            if (_preview != null)
+            {
+                _preview.Dispose();
+                _preview = null;
+            }
+
+            base.Dispose();
+        }
     }
 }

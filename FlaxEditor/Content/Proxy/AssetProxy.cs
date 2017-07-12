@@ -4,6 +4,7 @@
 
 using System;
 using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.Content
 {
@@ -43,5 +44,35 @@ namespace FlaxEditor.Content
         /// <param name="id">The asset identifier.</param>
         /// <returns>Created item.</returns>
         public abstract AssetItem ConstructItem(string path, int typeId, ref Guid id);
+
+        /// <summary>
+        /// Determines whether thumbnail can be drawn for the specified item.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>
+        ///   <c>true</c> if this thumbnail can be drawn for the specified item; otherwise, <c>false</c>.
+        /// </returns>
+        public virtual bool CanDrawThumbnail(AssetItem item)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Called when thumbnail drawing begins. Proxy should setup scene GUI for guiRoot.
+        /// </summary>
+        /// <param name="item">The item to render thumbnail for.</param>
+        /// <param name="guiRoot">The GUI root container control.</param>
+        public virtual void OnThumbnailDrawBegin(AssetItem item, ContainerControl guiRoot)
+        {
+        }
+
+        /// <summary>
+        /// Called when thumbnail drawing ends. Proxy should clear custom GUI from guiRoot from that should be not destroyed.
+        /// </summary>
+        /// <param name="item">The item to render thumbnail for.</param>
+        /// <param name="guiRoot">The GUI root container control.</param>
+        public virtual void OnThumbnailDrawEnd(AssetItem item, ContainerControl guiRoot)
+        {
+        }
     }
 }
