@@ -60,6 +60,8 @@ namespace FlaxEditor.Modules
                 return;
             }
 
+            return;// disable it for now
+
             // We cache previews only for items with 'ID', for now we support only AssetItems
             var assetItem = item as AssetItem;
             if (assetItem == null)
@@ -106,6 +108,8 @@ namespace FlaxEditor.Modules
         {
             if (item == null)
                 throw new ArgumentNullException();
+            
+            return;// disable it for now
 
             // We cache previews only for items with 'ID', for now we support only AssetItems
             var assetItem = item as AssetItem;
