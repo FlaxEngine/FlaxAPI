@@ -196,6 +196,18 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Destroys the children. Calls Object.Destroy on every child actor.
+        /// </summary>
+        public void DestroyChildren()
+        {
+            var children = GetChildren();
+            for (int i = 0; i < children.Length; i++)
+            {
+                Destroy(children[i]);
+            }
+        }
+
         /// <inheritdoc />
         [UnmanagedCall]
         public override string ToString()
