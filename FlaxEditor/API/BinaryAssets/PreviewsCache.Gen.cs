@@ -113,6 +113,24 @@ namespace FlaxEditor
 #endif
 		}
 
+		/// <summary>
+		/// Creates new previews cache atlas asset.
+		/// </summary>
+		/// <param name="path">The asset path.</param>
+		/// <returns>True if failed, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static bool Create(string path) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_Create(path);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -125,6 +143,8 @@ namespace FlaxEditor
 		internal static extern Sprite Internal_OccupySlot(IntPtr obj, IntPtr renderTarget, ref Guid assetId);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_ReleaseSlot(IntPtr obj, ref Guid assetId);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_Create(string path);
 #endif
 #endregion
 	}
