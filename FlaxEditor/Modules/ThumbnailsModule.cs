@@ -5,9 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using FlaxEditor.Content;
 using FlaxEngine;
-using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
 using Object = FlaxEngine.Object;
@@ -20,19 +20,26 @@ namespace FlaxEditor.Modules
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class ThumbnailsModule : EditorModule, IContentItemOwner
     {
+        // TODO: free atlas slots for deleted assets
+
         private readonly List<PreviewsCache> _cache = new List<PreviewsCache>(4);
         private string _cacheFolder;
 
         private readonly List<AssetItem> _requests = new List<AssetItem>(128);
         private readonly PreviewRoot _guiRoot = new PreviewRoot();
-        private EmptyActor _sceneRoot;
-        private SceneRenderTask _task;
+        private CustomRenderTask _task;
         private RenderTarget _output;
 
         internal ThumbnailsModule(Editor editor)
             : base(editor)
         {
             _cacheFolder = Path.Combine(Globals.ProjectCacheFolder, "Thumbnails");
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private AssetProxy GetProxy(AssetItem item)
+        {
+            return Editor.ContentDatabase.GetProxy(item) as AssetProxy;
         }
 
         /// <summary>
@@ -72,10 +79,10 @@ namespace FlaxEditor.Modules
                 if (!_requests.Contains(assetItem))
                 {
                     // Check each cache atlas
-                    Sprite sprite;
                     for (int i = 0; i < _cache.Count; i++)
                     {
-                        if (_cache[i].FindPreview(assetItem.ID, out sprite))
+                        var sprite = _cache[i].FindSlot(assetItem.ID);
+                        if (sprite.IsValid)
                         {
                             // Found!
                             item.Thumbnail = sprite;
@@ -192,14 +199,13 @@ namespace FlaxEditor.Modules
             // Create render task but disabled for now
             _output = RenderTarget.New();
             _output.Init(PreviewsCache.AssetIconsAtlasFormat, PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
-            _task = RenderTask.Create<SceneRenderTask>();
+            _task = RenderTask.Create<CustomRenderTask>();
+            _task.Order = 50; // Render this task later
             _task.Enabled = false;
-            _task.Output = _output;
-            _task.OnBegin += OnBegin;
-            _task.OnEnd += OnEnd;
+            _task.OnRender += OnRender;
         }
 
-        private void OnBegin(SceneRenderTask task)
+        private void OnRender(GPUContext context)
         {
             lock (_requests)
             {
@@ -209,70 +215,59 @@ namespace FlaxEditor.Modules
 
                 // Get asset to refresh
                 var item = _requests[0];
+                _requests.RemoveAt(0);
 
                 // Get proxy for that element
-                var proxy = Editor.ContentDatabase.GetProxy(item);
+                var proxy = GetProxy(item);
 
                 // Setup
                 _guiRoot.RemoveChildren();
                 _guiRoot.AccentColor = proxy.AccentColor;
-                Assert.IsFalse(_sceneRoot.HasChildren);
-
+                
                 // Call proxy to prepare for thumbnail rendering
                 // It can setup preview scene and additional GUI
-                proxy.OnThumbnailDrawBegin(item, _sceneRoot, _guiRoot);
-            }
-        }
+                proxy.OnThumbnailDrawBegin(item, _guiRoot);
 
-        private void OnEnd(SceneRenderTask task)
-        {
-            // Check if has no requests (maybe removed in async)
-            if (_requests.Count == 0)
-                return;
+Debug.Log("draw icon for " + item.Path);////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            // Get asset to flush with the cache atlas
-            var item = _requests[0];
-            _requests.RemoveAt(0);
+                // Draw preview
+                Render2D.CallDrawing(context, _output, _guiRoot);
 
-            // Get proxy for that element
-            var proxy = Editor.ContentDatabase.GetProxy(item);
+                // Call proxy and cleanup UI (delete create controls, shared controls should be unlinked during OnThumbnailDrawEnd event)
+                proxy.OnThumbnailDrawEnd(item, _guiRoot);
+                _guiRoot.DisposeChildren();
+                
+                // Find atlas with an free slot
+                var atlas = getValidAtlas();
+                if (atlas == null)
+                {
+                    // Error
+                    _task.Enabled = false;
+                    _requests.Clear();
+                    return;
+                }
 
-            // Call proxy and cleanup UI (delete create controls, shared controls should be unlinked during OnPreviewRenderEnd event)
-            proxy.OnThumbnailDrawEnd(item, _sceneRoot, _guiRoot);
-            _guiRoot.DisposeChildren();
-            _sceneRoot.DeleteChilden();
+                // Copy backbuffer with rendered preview into atlas
+                Sprite icon = atlas.OccupySlot(_output, item.ID);
+                if (!icon.IsValid)
+                {
+                    // Error
+                    _task.Enabled = false;
+                    _requests.Clear();
+                    Debug.LogError("Failed to occupy previews cache atlas slot.");
+                    return;
+                }
 
-            // Find atlas with an free slot
-            var atlas = getValidAtlas();
-            if (atlas == null)
-            {
-                // Error
-                _task.Enabled = false;
-                _requests.Clear();
-                return;
-            }
+                // Assign new preview icon
+                item.Thumbnail = icon;
 
-            // Copy backbuffer with rendered preview into atlas
-            Sprite icon;
-            int result = atlas.OccupySlot(_output, item.ID, out icon);
-            if (result)
-            {
-                // Error
-                _task.Enabled = false;
-                _requests.Clear();
-                LOG_EDITOR(Fatal, 24, result);
-                return;
-            }
-
-            // Assign new preview icon
-            item.Thumbnail = icon;
-
-            // Check if there is read next asset to render thumbnail
-            // But don't check whole queue, only a few items
-            if (!GetReadyItem(10))
-            {
-                // Disable task
-                _task.Enabled = false;
+                // Check if there is read next asset to render thumbnail
+                // But don't check whole queue, only a few items
+                if (!GetReadyItem(10))
+                {
+                    // Disable task
+                    _task.Enabled = false;
+                }
             }
         }
 
@@ -282,17 +277,28 @@ namespace FlaxEditor.Modules
             {
                 // Check if first item is ready
                 var item = _requests[i];
-                var proxy = Editor.ContentDatabase.GetProxy(item);
-                if (proxy.CanDrawThumbnail(item))
-                {
-                    // For non frst elements do the swap with keeping order
-                    if (i != 0)
-                    {
-                        _requests.RemoveAt(i);
-                        _requests.Insert(0, item);
-                    }
+                var proxy = GetProxy(item);
 
-                    return true;
+                try
+                {
+                    if (proxy.CanDrawThumbnail(item))
+                    {
+                        // For non frst elements do the swap with keeping order
+                        if (i != 0)
+                        {
+                            _requests.RemoveAt(i);
+                            _requests.Insert(0, item);
+                        }
+
+                        return true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Exception thrown during `CanDrawThumbnail` means we cannot render preview for it
+                    Debug.LogWarning($"Failed to prepare thumbnail rendering for {item.ShortName}.");
+                    _requests.RemoveAt(i);
+                    i--;
                 }
             }
 
@@ -301,6 +307,8 @@ namespace FlaxEditor.Modules
 
         private void startPreviewsQueue()
         {
+Debug.Log("startPreviewsQueue");/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
             // Ensure to have valid atlas
             getValidAtlas();
 
@@ -311,13 +319,13 @@ namespace FlaxEditor.Modules
         private PreviewsCache createAtlas()
         {
             // Create atlas path
-            var path = Path.Combine(_cacheFolder, string.Format("cache_{0}.flax", Guid.New().ToString(Guid::FormatType::D)));
-
+            var path = Path.Combine(_cacheFolder, string.Format("cache_{0:N}.flax", Guid.NewGuid()));
+            
             // Create atlas
             if (PreviewsCache.Create(path))
             {
                 // Error
-                LOG_EDITOR(Fatal, 24, 1);
+                Debug.LogError("Failed to create thumbnails atlas.");
                 return null;
             }
 
@@ -326,7 +334,7 @@ namespace FlaxEditor.Modules
             if (atlas == null)
             {
                 // Error
-                LOG_EDITOR(Fatal, 24, 2);
+                Debug.LogError("Failed to load thumbnails atlas.");
                 return null;
             }
 
@@ -389,7 +397,7 @@ namespace FlaxEditor.Modules
         public override void OnUpdate()
         {
             // Wait some frames before start generating previews (late init feature)
-            if (CEngine->FrameCount < 10 || hasAllAtlasesLoaded() == false)
+            if (Time.RealtimeSinceStartup < 1.0f || hasAllAtlasesLoaded() == false)
             {
                 // Back
                 return;
