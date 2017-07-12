@@ -112,8 +112,7 @@ namespace FlaxEditor.Windows.Assets
         protected override void UpdateToolstrip()
         {
             _toolstrip.GetButton(1).Enabled = IsEdited;
-
-
+            
             base.UpdateToolstrip();
         }
 

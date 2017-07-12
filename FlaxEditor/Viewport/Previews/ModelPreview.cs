@@ -42,7 +42,7 @@ namespace FlaxEditor.Viewport.Previews
             DockStyle = DockStyle.Fill;
             
             Task.Flags = ViewFlags.DefaultModelPreview;
-            Task.OnBegin += TaskOnBegin;
+            Task.OnBegin += OnBegin;
 
             SetView(new Quaternion(0.424461186f, -0.0940724313f, 0.0443938486f, 0.899451137f));
 
@@ -71,7 +71,7 @@ namespace FlaxEditor.Viewport.Previews
                 Task.CustomActors[i].UpdateCache();
         }
 
-        private void TaskOnBegin(SceneRenderTask task)
+        private void OnBegin(SceneRenderTask task)
         {
             // Update preview model scale to fit the preview
             var model = Model;
@@ -82,6 +82,9 @@ namespace FlaxEditor.Viewport.Previews
                 _previewModel.Scale = new Vector3(targetSize / maxSize);
             }
         }
+
+        /// <inheritdoc />
+        public override bool HasLoadedAssets => base.HasLoadedAssets && _envProbe.Probe.IsLoaded;
 
         /// <inheritdoc />
         public override void OnDestroy()

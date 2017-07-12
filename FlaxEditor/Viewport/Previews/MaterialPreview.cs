@@ -77,6 +77,9 @@ namespace FlaxEditor.Viewport.Previews
         }
 
         /// <inheritdoc />
+        public override bool HasLoadedAssets => base.HasLoadedAssets && _previewModel.Model.IsLoaded && _envProbe.Probe.IsLoaded;
+
+        /// <inheritdoc />
         public override void OnDestroy()
         {
             // Ensure to cleanup created actor objects

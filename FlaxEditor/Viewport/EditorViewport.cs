@@ -222,6 +222,14 @@ namespace FlaxEditor.Viewport
         }
 
         /// <summary>
+        /// Gets a value indicating whether this viewport has loaded dependant assets.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this viewport has loaded assets; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool HasLoadedAssets => true;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EditorViewport"/> class.
         /// </summary>
         /// <param name="task">The task.</param>
