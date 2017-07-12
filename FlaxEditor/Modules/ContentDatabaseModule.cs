@@ -532,6 +532,7 @@ namespace FlaxEditor.Modules
             _enableEvents = false;
 
             // Cleanup
+            Proxy.ForEach(x => x.Dispose());
             ProjectContent.Dispose();
             ProjectSource.Dispose();
             EnginePrivate.Dispose();

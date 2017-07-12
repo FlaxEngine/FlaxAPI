@@ -113,20 +113,12 @@ namespace FlaxEditor.Content
         /// The color of the accent.
         /// </value>
         public abstract Color AccentColor { get; }
-        /*
+
         /// <summary>
-        /// Determines whether proxy is ready to render a thumbnail for the specified item.
+        /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>
-        ///   <c>true</c> if is ready to render item preview otherwise, <c>false</c>.
-        /// </returns>
-        public abstract bool IsThumbnailRenderReady(ContentItem item);
-
-        public abstract bool OnPreviewRenderBegin(ContentItem item, CustomRenderTask* task, ContainerControl guiRoot);
-
-        public virtual void OnPreviewRenderEnd(ContentItem item, CustomRenderTask* task, ContainerControl guiRoot)
+        public virtual void Dispose()
         {
-        }*/
+        }
     }
 }
