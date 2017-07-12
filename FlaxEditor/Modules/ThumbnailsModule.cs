@@ -23,7 +23,7 @@ namespace FlaxEditor.Modules
         private readonly List<PreviewsCache> _cache = new List<PreviewsCache>(4);
         private string _cacheFolder;
 
-        private readonly List<ContentItem> _requests = new List<ContentItem>(128);
+        private readonly List<AssetItem> _requests = new List<AssetItem>(128);
         private readonly PreviewRoot _guiRoot = new PreviewRoot();
         private EmptyActor _sceneRoot;
         private SceneRenderTask _task;
@@ -53,30 +53,39 @@ namespace FlaxEditor.Modules
                 return;
             }
 
+            // We cache previews only for items with 'ID', for now we support only AssetItems
+            var assetItem = item as AssetItem;
+            if (assetItem == null)
+                return;
+
+            // Ensure that there is valid proxy for that item
+            var proxy = Editor.ContentDatabase.GetProxy(item);
+            if (proxy == null)
+            {
+                Debug.LogWarning($"Cannot generate preview for item {item.Path}. Cannot find proxy for it.");
+                return;
+            }
+
             lock (_requests)
             {
                 // Check if element hasn't been already processed for generating preview
-                if (!_requests.Contains(item))
+                if (!_requests.Contains(assetItem))
                 {
                     // Check each cache atlas
-                    // Note: we cache previews only for items with 'ID', for now we support only AssetItems
-                    if (item is AssetItem assetItem)
+                    Sprite sprite;
+                    for (int i = 0; i < _cache.Count; i++)
                     {
-                        Sprite sprite;
-                        for (int i = 0; i < _cache.Count; i++)
+                        if (_cache[i].FindPreview(assetItem.ID, out sprite))
                         {
-                            if (_cache[i].FindPreview(assetItem.ID, out sprite))
-                            {
-                                // Found!
-                                item.Thumbnail = sprite;
-                                return;
-                            }
+                            // Found!
+                            item.Thumbnail = sprite;
+                            return;
                         }
                     }
 
                     // Add request
                     item.AddReference(this);
-                    _requests.Add(item);
+                    _requests.Add(assetItem);
                 }
             }
         }
@@ -91,22 +100,23 @@ namespace FlaxEditor.Modules
             if (item == null)
                 throw new ArgumentNullException();
 
+            // We cache previews only for items with 'ID', for now we support only AssetItems
+            var assetItem = item as AssetItem;
+            if (assetItem == null)
+                return;
+
             lock (_requests)
             {
                 // Cancel loading
-                _requests.Remove(item);
+                _requests.Remove(assetItem);
                 item.RemoveReference(this);
 
                 // Find atlas with preview and remove it
-                // Note: we cache previews only for items with 'ID', for now we support only AssetItems
-                if (item is AssetItem assetItem)
+                for (int i = 0; i < _cache.Count; i++)
                 {
-                    for (int i = 0; i < _cache.Count; i++)
+                    if (_cache[i].ReleaseSlot(assetItem.ID))
                     {
-                        if (_cache[i].ReleaseSlot(assetItem.ID))
-                        {
-                            break;
-                        }
+                        break;
                     }
                 }
             }
@@ -117,9 +127,12 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         void IContentItemOwner.OnItemDeleted(ContentItem item)
         {
-            lock (_requests)
+            if (item is AssetItem assetItem)
             {
-                _requests.Remove(item);
+                lock (_requests)
+                {
+                    _requests.Remove(assetItem);
+                }
             }
         }
 
@@ -131,9 +144,12 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         void IContentItemOwner.OnItemDispose(ContentItem item)
         {
-            lock (_requests)
+            if (item is AssetItem assetItem)
             {
-                _requests.Remove(item);
+                lock (_requests)
+                {
+                    _requests.Remove(assetItem);
+                }
             }
         }
 
@@ -196,8 +212,6 @@ namespace FlaxEditor.Modules
 
                 // Get proxy for that element
                 var proxy = Editor.ContentDatabase.GetProxy(item);
-                if (proxy == null)
-                    return;
 
                 // Setup
                 _guiRoot.RemoveChildren();
@@ -240,7 +254,7 @@ namespace FlaxEditor.Modules
 
             // Copy backbuffer with rendered preview into atlas
             Sprite icon;
-            int result = atlas->OccupySlot(_output->GetBackBuffer(), el->GetID(), out icon);
+            int result = atlas.OccupySlot(_output, item.ID, out icon);
             if (result)
             {
                 // Error
@@ -251,11 +265,15 @@ namespace FlaxEditor.Modules
             }
 
             // Assign new preview icon
-            item.OnLoadPreview(icon);
+            item.Thumbnail = icon;
 
-            // Check if the is next 
-            // Disable task
-            _task.Enabled = false;
+            // Check if there is read next asset to render thumbnail
+            // But don't check whole queue, only a few items
+            if (!GetReadyItem(10))
+            {
+                // Disable task
+                _task.Enabled = false;
+            }
         }
 
         private bool GetReadyItem(int maxChecks)
@@ -265,7 +283,7 @@ namespace FlaxEditor.Modules
                 // Check if first item is ready
                 var item = _requests[i];
                 var proxy = Editor.ContentDatabase.GetProxy(item);
-                if (proxy != null && proxy.CanDrawThumbnail(item))
+                if (proxy.CanDrawThumbnail(item))
                 {
                     // For non frst elements do the swap with keeping order
                     if (i != 0)
@@ -279,6 +297,92 @@ namespace FlaxEditor.Modules
             }
 
             return false;
+        }
+
+        private void startPreviewsQueue()
+        {
+            // Ensure to have valid atlas
+            getValidAtlas();
+
+            // Enable task
+            _task.Enabled = true;
+        }
+
+        private PreviewsCache createAtlas()
+        {
+            // Create atlas path
+            var path = Path.Combine(_cacheFolder, string.Format("cache_{0}.flax", Guid.New().ToString(Guid::FormatType::D)));
+
+            // Create atlas
+            if (PreviewsCache.Create(path))
+            {
+                // Error
+                LOG_EDITOR(Fatal, 24, 1);
+                return null;
+            }
+
+            // Load atlas
+            var atlas = FlaxEngine.Content.Load<PreviewsCache>(path);
+            if (atlas == null)
+            {
+                // Error
+                LOG_EDITOR(Fatal, 24, 2);
+                return null;
+            }
+
+            // Register new atlas
+            _cache.Add(atlas);
+
+            return atlas;
+        }
+
+        private void flush()
+        {
+            for (int i = 0; i < _cache.Count; i++)
+            {
+                _cache[i].Flush();
+            }
+        }
+
+        private bool hasValidAtlas()
+        {
+            // Check if has no free slots
+            for (int i = 0; i < _cache.Count; i++)
+            {
+                if (_cache[i].HasFreeSlot)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool hasAllAtlasesLoaded()
+        {
+            for (int i = 0; i < _cache.Count; i++)
+            {
+                if (!_cache[i].IsLoaded)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private PreviewsCache getValidAtlas()
+        {
+            // Check if has no free slots
+            for (int i = 0; i < _cache.Count; i++)
+            {
+                if (_cache[i].HasFreeSlot)
+                {
+                    return _cache[i];
+                }
+            }
+
+            // Create new atlas
+            return createAtlas();
         }
 
         /// <inheritdoc />
