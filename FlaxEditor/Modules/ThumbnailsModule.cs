@@ -208,8 +208,6 @@ namespace FlaxEditor.Modules
 
         private void OnRender(GPUContext context)
         {
-            Debug.Log("  --- OnRender");////////////////////////////////////////////////////////////////////////////////////////////////////////
-
             lock (_requests)
             {
                 // Check if has no requests (maybe removed in async)
@@ -230,22 +228,16 @@ namespace FlaxEditor.Modules
                 // Call proxy to prepare for thumbnail rendering
                 // It can setup preview scene and additional GUI
                 proxy.OnThumbnailDrawBegin(item, _guiRoot);
-
                 _guiRoot.UnlockChildrenRecursive();
-                _guiRoot.Update(0);
-
-
-Debug.Log("draw icon for " + item.Path);////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 // Draw preview
+                context.Clear(_output, Color.Black);
                 Render2D.CallDrawing(context, _output, _guiRoot);
-
+                
                 // Call proxy and cleanup UI (delete create controls, shared controls should be unlinked during OnThumbnailDrawEnd event)
                 proxy.OnThumbnailDrawEnd(item, _guiRoot);
                 _guiRoot.DisposeChildren();
-                
-                context.Clear(_output, Color.Red);
-                
+
                 // Find atlas with an free slot
                 var atlas = getValidAtlas();
                 if (atlas == null)
@@ -279,8 +271,6 @@ Debug.Log("draw icon for " + item.Path);////////////////////////////////////////
                 {
                     // Disable task
                     _task.Enabled = false;
-
-                    Debug.LogError("Disable task.");
                 }
             }
         }
@@ -322,8 +312,6 @@ Debug.Log("draw icon for " + item.Path);////////////////////////////////////////
 
         private void startPreviewsQueue()
         {
-Debug.Log("startPreviewsQueue");/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
             // Ensure to have valid atlas
             getValidAtlas();
 
