@@ -383,7 +383,7 @@ namespace FlaxEditor.Content
             _references.Add(obj);
 
             // Check if need to generate preview
-            if (_references.Count > 0 && !_thumbnail.IsValid)
+            if (_references.Count == 1 && !_thumbnail.IsValid)
             {
                 RequestThumbnail();
             }
