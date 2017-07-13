@@ -30,11 +30,22 @@ namespace FlaxEditor.Viewport
             Gizmos.Active?.Draw(collector);
         }
 
+        /// <inheritdoc />
         public GizmosCollection Gizmos { get; } = new GizmosCollection();
+
+        /// <inheritdoc />
         public float ViewFarPlane => _farPlane;
+
+        /// <inheritdoc />
         public bool IsLeftMouseButtonDown => _input.IsMouseLeftDown;
+
+        /// <inheritdoc />
         public bool IsRightMouseButtonDown => _input.IsMouseRightDown;
+
+        /// <inheritdoc />
         public Vector2 MouseDelta => _mouseDeltaLeft * 1000;
+
+        /// <inheritdoc />
         public bool UseSnapping => ParentWindow.GetKey(KeyCode.CONTROL);
 
         /// <inheritdoc />

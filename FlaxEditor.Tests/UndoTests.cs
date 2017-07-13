@@ -1,13 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
 using NUnit.Framework;
 using Assert = FlaxEngine.Assertions.Assert;
-
 
 namespace FlaxEditor.Tests
 {

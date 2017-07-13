@@ -15,7 +15,7 @@ namespace FlaxEditor.Tests
             {
                 Item = item;
             }
-
+            
             public override bool Equals(object obj)
             {
                 var historyTestObject = (HistoryTestObject)obj;

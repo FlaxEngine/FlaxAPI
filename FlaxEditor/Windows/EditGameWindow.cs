@@ -4,7 +4,6 @@
 
 using System;
 using FlaxEditor.SceneGraph;
-using FlaxEditor.SceneGraph.GUI;
 using FlaxEditor.Viewport;
 using FlaxEngine;
 using FlaxEngine.GUI;
