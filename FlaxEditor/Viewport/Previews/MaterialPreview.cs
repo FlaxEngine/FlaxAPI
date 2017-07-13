@@ -28,8 +28,19 @@ namespace FlaxEditor.Viewport.Previews
         /// </value>
         public MaterialBase Material
         {
-            get => _previewModel.Meshes[0].Material;
-            set => _previewModel.Meshes[0].Material = value;
+            get
+            {
+                var meshes = _previewModel.Meshes;
+                if (meshes.Length == 1)
+                    return meshes[0].Material;
+                return null;
+            }
+            set
+            {
+                var meshes = _previewModel.Meshes;
+                if (meshes.Length == 1)
+                    meshes[0].Material = value;
+            }
         }
 
         /// <summary>
