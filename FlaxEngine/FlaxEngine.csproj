@@ -170,6 +170,7 @@
       <DependentUpon>IOrderedDictionary.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\Common\Button.cs" />
+    <Compile Include="GUI\Common\Label.cs" />
     <Compile Include="GUI\ContainerControl.cs" />
     <Compile Include="GUI\ContainerControlChildrenSized.cs" />
     <Compile Include="GUI\ContextMenu\ContextMenu.cs" />
