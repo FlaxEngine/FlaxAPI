@@ -45,6 +45,7 @@ namespace FlaxEditor.Content
             if (_preview == null)
             {
                 _preview = new CubeTexturePreview(false);
+                _preview.DockStyle = DockStyle.Fill;
             }
             if (!_preview.HasLoadedAssets)
                 return false;
