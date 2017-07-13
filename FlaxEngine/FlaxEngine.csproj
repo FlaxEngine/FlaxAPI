@@ -306,7 +306,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /i /s /y "$(TargetDir)..\." "$(SolutionDir)..\Source\Bin\Editor\Assemblies" /exclude:$(SolutionDir)excludedFileList.txt</PostBuildEvent>
+    <PostBuildEvent>call "$(SolutionDir)onbuild.bat"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
