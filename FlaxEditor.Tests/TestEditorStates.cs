@@ -1,12 +1,12 @@
-﻿using FlaxEditor.States;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using FlaxEditor.States;
+using NUnit.Framework;
 
 namespace FlaxEditor.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class TestEditorStates
     {
-        /*[TestMethod]
+        /*[Test]
         public void TestScriptsCompiledBeforeInit()
         {
             Editor editor = new Editor();
@@ -24,7 +24,7 @@ namespace FlaxEditor.Tests
             }
         }*/
 
-        [TestMethod]
+        [Test]
         public void TestStatesChain()
         {
             Editor editor = new Editor();

@@ -1,11 +1,11 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace FlaxEngine.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class TestColor
     {
-        [TestMethod]
+        [Test]
         public void TestRGB2HSVConversion()
         {
             Assert.AreEqual(new ColorHSV(312, 1, 1, 1), ColorHSV.FromColor(new Color(1, 0, 0.8f, 1)));
@@ -22,7 +22,7 @@ namespace FlaxEngine.Tests
             Assert.AreEqual(new ColorHSV(0, 1, 0.5019608f, 1), ColorHSV.FromColor(Color.Maroon));
         }
 
-        [TestMethod]
+        [Test]
         public void TestHSV2RGBConversion()
         {
             Assert.AreEqual(Color.Black, ColorHSV.FromColor(Color.Black).ToColor());

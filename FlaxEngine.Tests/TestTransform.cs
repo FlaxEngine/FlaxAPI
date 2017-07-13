@@ -1,18 +1,18 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace FlaxEngine.Tests
 {
     /// <summary>
     /// Tests for <see cref="Transform"/>.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class TestTransform
     {
         /// <summary>
         /// Test conversions between entity local/world space
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestWorldAndLocalSpace()
         {
             Transform trans = new Transform(new Vector3(1, 2, 3));

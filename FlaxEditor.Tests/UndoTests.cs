@@ -1,16 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
+using NUnit.Framework;
 using Assert = FlaxEngine.Assertions.Assert;
 
 
 namespace FlaxEditor.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class UndoTests
     {
         [Serializable]
@@ -55,7 +56,7 @@ namespace FlaxEditor.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void UndoTestBasic()
         {
             var instance = new UndoObject(true);
@@ -139,7 +140,7 @@ namespace FlaxEditor.Tests
             return redo.Id;
         }
 
-        [TestMethod]
+        [Test]
         public void UndoTestRecursive()
         {
             var instance = new UndoObject(true);

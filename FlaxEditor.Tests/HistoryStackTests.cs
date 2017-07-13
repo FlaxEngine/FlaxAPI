@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using FlaxEditor.History;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Assert = FlaxEngine.Assertions.Assert;
 
 namespace FlaxEditor.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class HistoryStackTests
     {
         public class HistoryTestObject : IHistoryAction
@@ -41,7 +41,7 @@ namespace FlaxEditor.Tests
             public string ActionString { get; set; }
         }
 
-        [TestMethod]
+        [Test]
         public void HistoryStackTestBasic()
         {
             var stack = new HistoryStack(50);
@@ -61,7 +61,7 @@ namespace FlaxEditor.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void HistoryStackTestEmptyHistory()
         {
             var stack = new HistoryStack(50);
@@ -69,7 +69,7 @@ namespace FlaxEditor.Tests
             Assert.AreEqual(null, stack.PopReverse());
         }
 
-        [TestMethod]
+        [Test]
         public void HistoryStackTestTravel()
         {
             var stack = new HistoryStack(50);
@@ -92,7 +92,7 @@ namespace FlaxEditor.Tests
             Assert.AreEqual(0, stack.HistoryCount);
         }
 
-        [TestMethod]
+        [Test]
         public void HistoryStackTestExceptions()
         {
             var stack = new HistoryStack(50);
@@ -106,7 +106,7 @@ namespace FlaxEditor.Tests
             Assert.ExceptionExpected(typeof(ArgumentOutOfRangeException), () => { stack.TravelReverse(0); });
         }
 
-        [TestMethod]
+        [Test]
         public void HistoryStackTestDropReverse()
         {
             var stack = new HistoryStack(50);

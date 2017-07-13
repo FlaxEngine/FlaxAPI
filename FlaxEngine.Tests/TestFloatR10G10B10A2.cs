@@ -1,11 +1,11 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace FlaxEngine.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class TestFloatR10G10B10A2
     {
-        [TestMethod]
+        [Test]
         public void TestConversion()
         {
             Assert.AreEqual(Vector4.Zero, new FloatR10G10B10A2(Vector4.Zero).ToVector4());

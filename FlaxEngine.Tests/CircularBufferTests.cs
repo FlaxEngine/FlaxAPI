@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections;
 using FlaxEngine.Collections;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Assert = FlaxEngine.Assertions.Assert;
 
 namespace FlaxEngine.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class CircularBufferTests
     {
-        [TestMethod]
+        [Test]
         public void CircularBufferTestFrontOverwrite()
         {
             var buffer = new CircularBuffer<long>(3);
@@ -27,7 +27,7 @@ namespace FlaxEngine.Tests
             Assert.AreEqual(buffer.Capacity, 3);
         }
 
-        [TestMethod]
+        [Test]
         public void CircularBufferTestBackOverwrite()
         {
             var buffer = new CircularBuffer<long>(3);
@@ -45,7 +45,7 @@ namespace FlaxEngine.Tests
             Assert.AreEqual(buffer.Capacity, 3);
         }
 
-        [TestMethod]
+        [Test]
         public void CircularBufferTestMixedOverwrite()
         {
             var buffer = new CircularBuffer<long>(3);
@@ -74,7 +74,7 @@ namespace FlaxEngine.Tests
             Assert.AreEqual(buffer.Capacity, 3);
         }
 
-        [TestMethod]
+        [Test]
         public void CircularBufferTestFrontUnderwrite()
         {
             var buffer = new CircularBuffer<long>(5);
@@ -102,7 +102,7 @@ namespace FlaxEngine.Tests
             Assert.AreEqual(buffer.Capacity, 5);
         }
 
-        [TestMethod]
+        [Test]
         public void CircularBufferTestBackUnderwrite()
         {
             var buffer = new CircularBuffer<long>(5);
@@ -130,7 +130,7 @@ namespace FlaxEngine.Tests
             Assert.AreEqual(buffer.Capacity, 5);
         }
 
-        [TestMethod]
+        [Test]
         public void CircularBufferTestMixedUnderwrite()
         {
             var buffer = new CircularBuffer<long>(5);
@@ -164,7 +164,7 @@ namespace FlaxEngine.Tests
             Assert.AreEqual(buffer.Capacity, 5);
         }
 
-        [TestMethod]
+        [Test]
         public void CircularBufferTestEnumerationFrontWhenOverflown()
         {
             var buffer = new CircularBuffer<long>(5);
@@ -190,7 +190,7 @@ namespace FlaxEngine.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CircularBufferTestEnumerationBackWhenOverflown()
         {
             var buffer = new CircularBuffer<long>(5);
@@ -216,7 +216,7 @@ namespace FlaxEngine.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CircularBufferTestEnumerationWhenPartiallyFull()
         {
             var buffer = new CircularBuffer<long>(3);
@@ -232,7 +232,7 @@ namespace FlaxEngine.Tests
             Assert.AreEqual(buffer.Capacity, 3);
         }
 
-        [TestMethod]
+        [Test]
         public void CircularBufferTestEnumerationWhenPartiallyFullLarge()
         {
             var buffer = new CircularBuffer<long>(20000);
@@ -252,7 +252,7 @@ namespace FlaxEngine.Tests
             Assert.AreEqual(buffer.Capacity, 20000);
         }
 
-        [TestMethod]
+        [Test]
         public void CircularBufferTestEnumerationWhenEmpty()
         {
             var buffer = new CircularBuffer<long>(3);
@@ -262,7 +262,7 @@ namespace FlaxEngine.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CircularBufferTestCopyToArray()
         {
             var buffer = new CircularBuffer<long>(3);
@@ -286,7 +286,7 @@ namespace FlaxEngine.Tests
             Assert.AreEqual(2, testArray[2]);
         }
 
-        [TestMethod]
+        [Test]
         public void CircularBufferTestExceptions()
         {
             Assert.ExceptionExpected(typeof(ArgumentOutOfRangeException), () => { new CircularBuffer<long>(0); });
@@ -302,7 +302,7 @@ namespace FlaxEngine.Tests
             Assert.ExceptionExpected(typeof(IndexOutOfRangeException), () => { buffer.PopFront(); });
         }
         
-        [TestMethod]
+        [Test]
         public void CircularBufferTestForceSet()
         {
             var buffer = new CircularBuffer<long>(15);
@@ -329,7 +329,7 @@ namespace FlaxEngine.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CircularBufferTestFrontAndBack()
         {
             var rand = new Random();
@@ -350,7 +350,7 @@ namespace FlaxEngine.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CircularBufferTestConstructors()
         {
             var array = new long[5];
@@ -366,7 +366,7 @@ namespace FlaxEngine.Tests
             Assert.AreEqual(false, buffer.IsEmpty);
         }
 
-        [TestMethod]
+        [Test]
         public void CircularBufferTestClear()
         {
             var buffer = new CircularBuffer<long>(15);
@@ -381,7 +381,7 @@ namespace FlaxEngine.Tests
             Assert.AreEqual(15, buffer.Capacity);
         }
 
-        [TestMethod]
+        [Test]
         public void CircularBufferTestMultipleIterations()
         {
             var buffer = new CircularBuffer<long>(50);
@@ -403,7 +403,7 @@ namespace FlaxEngine.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CircularBufferTestEvents()
         {
             //Front

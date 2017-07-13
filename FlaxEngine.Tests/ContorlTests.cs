@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlaxEngine.GUI;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Assert = FlaxEngine.Assertions.Assert;
 
 namespace FlaxEngine.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class ContorlTests
     {
         public class TestControl : Control
@@ -28,7 +28,7 @@ namespace FlaxEngine.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void ControlTestApi()
         {
             var testRect = new Rectangle(0, 5, 20, 25);
@@ -97,7 +97,7 @@ namespace FlaxEngine.Tests
             Assert.IsTrue(rect.Visible);
         }
 
-        [TestMethod]
+        [Test]
         public void ControlTestEvents()
         {
             //var control = new TestControl(true, new Rectangle(0, 5, 20, 25));

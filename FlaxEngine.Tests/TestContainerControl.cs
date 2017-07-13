@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlaxEngine.GUI;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Assert = FlaxEngine.Assertions.Assert;
 
 namespace FlaxEngine.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class TestContainerControl
     {
         public class MyControl : Control
@@ -28,7 +28,7 @@ namespace FlaxEngine.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestChildren()
         {
             var c1 = new MyControl(0, 0, 10, 20);
