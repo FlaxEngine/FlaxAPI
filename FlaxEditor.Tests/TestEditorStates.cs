@@ -25,6 +25,7 @@ namespace FlaxEditor.Tests
         }*/
 
         [Test]
+        [Ignore("TODO: finish building api for unit tests")]
         public void TestStatesChain()
         {
             Editor editor = new Editor();
