@@ -1,4 +1,4 @@
-# Flax Engine
+# Flax Engine API and Editor [![Build Status](https://travis-ci.org/FlaxEngine/FlaxAPI.svg?branch=master)](https://travis-ci.org/FlaxEngine/FlaxAPI)
 Flax Engine is a high quality modern game engine written in C++.
 This repository contains open source public API of the engine as well as Editor.
 The engine offers a wide variety of high level systems needed for game development.
