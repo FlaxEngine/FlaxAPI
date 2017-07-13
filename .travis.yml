@@ -1,2 +1,9 @@
 language: csharp
 solution: FlaxAPI.sln
+install:
+  - nuget restore FlaxAPI.sln
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory packages
+script:
+  - xbuild /p:Configuration=Debug FlaxAPI.sln
+  - mono ./packages/NUnit.Runners.2.6.4/tools/nunit-console.exe ./FlaxEngine.Tests/bin/Debug/FlaxEngine.Tests.dll
+  - mono ./packages/NUnit.Runners.2.6.4/tools/nunit-console.exe ./FlaxEditor.Tests/bin/Debug/FlaxEditor.Tests.dll
