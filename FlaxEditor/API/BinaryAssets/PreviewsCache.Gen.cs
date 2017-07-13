@@ -72,7 +72,9 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_FindSlot(unmanagedPtr, ref assetId);
+			Sprite resultAsRef;
+			Internal_FindSlot(unmanagedPtr, ref assetId, out resultAsRef);
+			return resultAsRef;
 #endif
 		}
 
@@ -91,7 +93,9 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_OccupySlot(unmanagedPtr, Object.GetUnmanagedPtr(renderTarget), ref assetId);
+			Sprite resultAsRef;
+			Internal_OccupySlot(unmanagedPtr, Object.GetUnmanagedPtr(renderTarget), ref assetId, out resultAsRef);
+			return resultAsRef;
 #endif
 		}
 
@@ -138,9 +142,9 @@ namespace FlaxEditor
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_Flush(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Sprite Internal_FindSlot(IntPtr obj, ref Guid assetId);
+		internal static extern void Internal_FindSlot(IntPtr obj, ref Guid assetId, out Sprite resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Sprite Internal_OccupySlot(IntPtr obj, IntPtr renderTarget, ref Guid assetId);
+		internal static extern void Internal_OccupySlot(IntPtr obj, IntPtr renderTarget, ref Guid assetId, out Sprite resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_ReleaseSlot(IntPtr obj, ref Guid assetId);
 		[MethodImpl(MethodImplOptions.InternalCall)]
