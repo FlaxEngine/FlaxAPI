@@ -210,9 +210,14 @@ namespace FlaxEditor.Modules
         {
             lock (_requests)
             {
-                // Check if has no requests (maybe removed in async)
-                if (_requests.Count == 0)
+                // Check if there is ready next asset to render thumbnail for it
+                // But don't check whole queue, only a few items
+                if (!GetReadyItem(10))
+                {
+                    // Disable task
+                    _task.Enabled = false;
                     return;
+                }
 
                 // Get asset to refresh
                 var item = _requests[0];
@@ -264,14 +269,6 @@ namespace FlaxEditor.Modules
                 item.Thumbnail = icon;
 
                 Debug.Log("icon " + icon.Index + " -> " + icon.Atlas?.Name);
-                
-                // Check if there is read next asset to render thumbnail
-                // But don't check whole queue, only a few items
-                if (!GetReadyItem(10))
-                {
-                    // Disable task
-                    _task.Enabled = false;
-                }
             }
         }
 
