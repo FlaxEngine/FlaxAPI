@@ -64,6 +64,10 @@ namespace FlaxEditor.Content
         /// <param name="guiRoot">The GUI root container control.</param>
         public virtual void OnThumbnailDrawBegin(AssetItem item, ContainerControl guiRoot)
         {
+            guiRoot.AddChild(new Label(false, Vector2.Zero, guiRoot.Size)
+            {
+                Text = Name
+            });
         }
 
         /// <summary>
