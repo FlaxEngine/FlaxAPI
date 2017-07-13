@@ -21,6 +21,7 @@ namespace FlaxEditor.Modules
     public sealed class ThumbnailsModule : EditorModule, IContentItemOwner
     {
         // TODO: free atlas slots for deleted assets
+        // TODO: dont flush atlases every frame - do it once per second
 
         private readonly List<PreviewsCache> _cache = new List<PreviewsCache>(4);
         private string _cacheFolder;
@@ -59,9 +60,7 @@ namespace FlaxEditor.Modules
                 item.Thumbnail = Editor.Instance.UI.GetIcon(defaultThumbnail);
                 return;
             }
-
-            return;// disable it for now
-
+            
             // We cache previews only for items with 'ID', for now we support only AssetItems
             var assetItem = item as AssetItem;
             if (assetItem == null)
@@ -109,8 +108,6 @@ namespace FlaxEditor.Modules
             if (item == null)
                 throw new ArgumentNullException();
             
-            return;// disable it for now
-
             // We cache previews only for items with 'ID', for now we support only AssetItems
             var assetItem = item as AssetItem;
             if (assetItem == null)
@@ -211,6 +208,8 @@ namespace FlaxEditor.Modules
 
         private void OnRender(GPUContext context)
         {
+            Debug.Log("  --- OnRender");////////////////////////////////////////////////////////////////////////////////////////////////////////
+
             lock (_requests)
             {
                 // Check if has no requests (maybe removed in async)
@@ -232,6 +231,10 @@ namespace FlaxEditor.Modules
                 // It can setup preview scene and additional GUI
                 proxy.OnThumbnailDrawBegin(item, _guiRoot);
 
+                _guiRoot.UnlockChildrenRecursive();
+                _guiRoot.Update(0);
+
+
 Debug.Log("draw icon for " + item.Path);////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 // Draw preview
@@ -241,6 +244,8 @@ Debug.Log("draw icon for " + item.Path);////////////////////////////////////////
                 proxy.OnThumbnailDrawEnd(item, _guiRoot);
                 _guiRoot.DisposeChildren();
                 
+                context.Clear(_output, Color.Red);
+                
                 // Find atlas with an free slot
                 var atlas = getValidAtlas();
                 if (atlas == null)
@@ -248,6 +253,7 @@ Debug.Log("draw icon for " + item.Path);////////////////////////////////////////
                     // Error
                     _task.Enabled = false;
                     _requests.Clear();
+                    Debug.LogError("Failed to get atlas.");
                     return;
                 }
 
@@ -265,24 +271,29 @@ Debug.Log("draw icon for " + item.Path);////////////////////////////////////////
                 // Assign new preview icon
                 item.Thumbnail = icon;
 
+                Debug.Log("icon " + icon.Index + " -> " + icon.Atlas?.Name);
+                
                 // Check if there is read next asset to render thumbnail
                 // But don't check whole queue, only a few items
                 if (!GetReadyItem(10))
                 {
                     // Disable task
                     _task.Enabled = false;
+
+                    Debug.LogError("Disable task.");
                 }
             }
         }
 
         private bool GetReadyItem(int maxChecks)
         {
+            maxChecks = Mathf.Min(maxChecks, _requests.Count);
             for (int i = 0; i < maxChecks; i++)
             {
                 // Check if first item is ready
                 var item = _requests[i];
                 var proxy = GetProxy(item);
-
+                
                 try
                 {
                     if (proxy.CanDrawThumbnail(item))
@@ -356,20 +367,6 @@ Debug.Log("startPreviewsQueue");////////////////////////////////////////////////
             }
         }
 
-        private bool hasValidAtlas()
-        {
-            // Check if has no free slots
-            for (int i = 0; i < _cache.Count; i++)
-            {
-                if (_cache[i].HasFreeSlot)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         private bool hasAllAtlasesLoaded()
         {
             for (int i = 0; i < _cache.Count; i++)
@@ -410,12 +407,13 @@ Debug.Log("startPreviewsQueue");////////////////////////////////////////////////
             lock (_requests)
             {
                 // Check if has any request pending
-                if (_requests.Count > 0)
+                int count = _requests.Count;
+                if (count > 0)
                 {
                     // Check if has no rendering task enabled
                     if (_task.Enabled == false)
                     {
-                        if (GetReadyItem(_requests.Count))
+                        if (GetReadyItem(count))
                         {
                             // Start generating preview
                             startPreviewsQueue();
