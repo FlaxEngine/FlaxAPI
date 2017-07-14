@@ -15,6 +15,38 @@ using Object = FlaxEngine.Object;
 namespace FlaxEditor.Modules
 {
     /// <summary>
+    /// Contains information about asset thumbnail rendering.
+    /// </summary>
+    public class ThumbnailRequest
+    {
+        /// <summary>
+        /// The item.
+        /// </summary>
+        public readonly AssetItem Item;
+
+        /// <summary>
+        /// The proxy object for the asset item.
+        /// </summary>
+        public readonly AssetProxy Proxy;
+
+        /// <summary>
+        /// Determines whether thumbnail can be drawn for the item.
+        /// </summary>
+        public bool CanDrawThumbnail => Proxy.CanDrawThumbnail(Item);
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThumbnailRequest"/> class.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="proxy">The proxy.</param>
+        public ThumbnailRequest(AssetItem item, AssetProxy proxy)
+        {
+            Item = item;
+            Proxy = proxy;
+        }
+    }
+
+    /// <summary>
     /// Manages asset thumbnails rendering and presentation.
     /// </summary>
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
@@ -26,11 +58,11 @@ namespace FlaxEditor.Modules
         private readonly List<PreviewsCache> _cache = new List<PreviewsCache>(4);
         private readonly string _cacheFolder;
 
-        private readonly List<AssetItem> _requests = new List<AssetItem>(128);
+        private readonly List<ThumbnailRequest> _requests = new List<ThumbnailRequest>(128);
         private readonly PreviewRoot _guiRoot = new PreviewRoot();
         private CustomRenderTask _task;
         private RenderTarget _output;
-        
+
         internal ThumbnailsModule(Editor editor)
             : base(editor)
         {
@@ -60,14 +92,14 @@ namespace FlaxEditor.Modules
                 item.Thumbnail = Editor.Instance.UI.GetIcon(defaultThumbnail);
                 return;
             }
-            
+
             // We cache previews only for items with 'ID', for now we support only AssetItems
             var assetItem = item as AssetItem;
             if (assetItem == null)
                 return;
 
             // Ensure that there is valid proxy for that item
-            var proxy = Editor.ContentDatabase.GetProxy(item);
+            var proxy = Editor.ContentDatabase.GetProxy(item) as AssetProxy;
             if (proxy == null)
             {
                 Debug.LogWarning($"Cannot generate preview for item {item.Path}. Cannot find proxy for it.");
@@ -77,7 +109,7 @@ namespace FlaxEditor.Modules
             lock (_requests)
             {
                 // Check if element hasn't been already processed for generating preview
-                if (!_requests.Contains(assetItem))
+                if (FindRequest(assetItem) == null)
                 {
                     // Check each cache atlas
                     for (int i = 0; i < _cache.Count; i++)
@@ -92,8 +124,7 @@ namespace FlaxEditor.Modules
                     }
 
                     // Add request
-                    item.AddReference(this);
-                    _requests.Add(assetItem);
+                    AddRequest(assetItem, proxy);
                 }
             }
         }
@@ -107,7 +138,7 @@ namespace FlaxEditor.Modules
         {
             if (item == null)
                 throw new ArgumentNullException();
-            
+
             // We cache previews only for items with 'ID', for now we support only AssetItems
             var assetItem = item as AssetItem;
             if (assetItem == null)
@@ -116,8 +147,7 @@ namespace FlaxEditor.Modules
             lock (_requests)
             {
                 // Cancel loading
-                _requests.Remove(assetItem);
-                item.RemoveReference(this);
+                RemoveRequest(assetItem);
 
                 // Find atlas with preview and remove it
                 for (int i = 0; i < _cache.Count; i++)
@@ -139,7 +169,7 @@ namespace FlaxEditor.Modules
             {
                 lock (_requests)
                 {
-                    _requests.Remove(assetItem);
+                    RemoveRequest(assetItem);
                 }
             }
         }
@@ -156,7 +186,7 @@ namespace FlaxEditor.Modules
             {
                 lock (_requests)
                 {
-                    _requests.Remove(assetItem);
+                    RemoveRequest(assetItem);
                 }
             }
         }
@@ -220,16 +250,13 @@ namespace FlaxEditor.Modules
                 }
 
                 // Get asset to refresh
-                var item = _requests[0];
-                _requests.RemoveAt(0);
-
-                // Get proxy for that element
-                var proxy = GetProxy(item);
+                var request = _requests[0];
+                    ..._requests.RemoveAt(0);
 
                 // Setup
                 _guiRoot.RemoveChildren();
-                _guiRoot.AccentColor = proxy.AccentColor;
-                
+                _guiRoot.AccentColor = request.Proxy.AccentColor;
+
                 // Call proxy to prepare for thumbnail rendering
                 // It can setup preview scene and additional GUI
                 proxy.OnThumbnailDrawBegin(item, _guiRoot, context);
@@ -238,7 +265,7 @@ namespace FlaxEditor.Modules
                 // Draw preview
                 context.Clear(_output, Color.Black);
                 Render2D.CallDrawing(context, _output, _guiRoot);
-                
+
                 // Call proxy and cleanup UI (delete create controls, shared controls should be unlinked during OnThumbnailDrawEnd event)
                 proxy.OnThumbnailDrawEnd(item, _guiRoot);
                 _guiRoot.DisposeChildren();
@@ -278,18 +305,17 @@ namespace FlaxEditor.Modules
             for (int i = 0; i < maxChecks; i++)
             {
                 // Check if first item is ready
-                var item = _requests[i];
-                var proxy = GetProxy(item);
-                
+                var request = _requests[i];
+
                 try
                 {
-                    if (proxy.CanDrawThumbnail(item))
+                    if (request.CanDrawThumbnail)
                     {
                         // For non frst elements do the swap with keeping order
                         if (i != 0)
                         {
                             _requests.RemoveAt(i);
-                            _requests.Insert(0, item);
+                            _requests.Insert(0, request);
                         }
 
                         return true;
@@ -299,7 +325,7 @@ namespace FlaxEditor.Modules
                 {
                     // Exception thrown during `CanDrawThumbnail` means we cannot render preview for it
                     Debug.LogException(ex);
-                    Debug.LogWarning($"Failed to prepare thumbnail rendering for {item.ShortName}.");
+                    Debug.LogWarning($"Failed to prepare thumbnail rendering for {request.Item.ShortName}.");
                     _requests.RemoveAt(i);
                     i--;
                 }
@@ -317,11 +343,47 @@ namespace FlaxEditor.Modules
             _task.Enabled = true;
         }
 
+        #region Requests Management
+
+        private ThumbnailRequest FindRequest(AssetItem item)
+        {
+            for (int i = 0; i < _requests.Count; i++)
+            {
+                if (_requests[i].Item == item)
+                    return _requests[i];
+            }
+            return null;
+        }
+
+        private void AddRequest(AssetItem item, AssetProxy proxy)
+        {
+            var request = new ThumbnailRequest(item, proxy);
+            _requests.Add(request);
+            item.AddReference(this);
+        }
+
+        private void RemoveRequest(ThumbnailRequest request)
+        {
+            _requests.Remove(request);
+            request.Item.RemoveReference(this);
+        }
+
+        private void RemoveRequest(AssetItem item)
+        {
+            var request = FindRequest(item);
+            if (request != null)
+                RemoveRequest(request);
+        }
+
+        #endregion
+
+        #region Atlas Management
+
         private PreviewsCache CreateAtlas()
         {
             // Create atlas path
             var path = Path.Combine(_cacheFolder, string.Format("cache_{0:N}.flax", Guid.NewGuid()));
-            
+
             // Create atlas
             if (PreviewsCache.Create(path))
             {
@@ -380,6 +442,8 @@ namespace FlaxEditor.Modules
             return CreateAtlas();
         }
 
+        #endregion
+
         /// <inheritdoc />
         public override void OnUpdate()
         {
@@ -422,11 +486,8 @@ namespace FlaxEditor.Modules
             lock (_requests)
             {
                 // Clear data
-                for (int i = 0; i < _requests.Count; i++)
-                {
-                    _requests[i].RemoveReference(this);
-                }
-                _requests.Clear();
+                while(_requests.Count > 0)
+                    RemoveRequest(_requests[0]);
                 _cache.Clear();
             }
 
