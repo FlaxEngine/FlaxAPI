@@ -2,11 +2,13 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System.Threading;
 using FlaxEditor.Viewport.Previews;
 using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Content
 {
@@ -45,21 +47,26 @@ namespace FlaxEditor.Content
             if (_preview == null)
             {
                 _preview = new CubeTexturePreview(false);
-                _preview.DockStyle = DockStyle.Fill;
+                _preview.RenderOnlyWithWindow = false;
+                _preview.Task.Enabled = false;
+                _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
+                _preview.Resize();
             }
             if (!_preview.HasLoadedAssets)
                 return false;
-
+            
             var asset = FlaxEngine.Content.LoadAsync<CubeTexture>(item.Path);
             return asset.IsLoaded;
         }
 
         /// <inheritdoc />
-        public override void OnThumbnailDrawBegin(AssetItem item, ContainerControl guiRoot)
+        public override void OnThumbnailDrawBegin(AssetItem item, ContainerControl guiRoot, GPUContext context)
         {
             var asset = FlaxEngine.Content.LoadAsync<CubeTexture>(item.Path);
             _preview.CubeTexture = asset;
             _preview.Parent = guiRoot;
+
+            _preview.Task.Internal_Render(context);
         }
 
         /// <inheritdoc />

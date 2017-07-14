@@ -43,27 +43,24 @@ namespace FlaxEngine.GUI
         /// <value>
         ///   <c>true</c> if render only with window attached; otherwise, <c>false</c>.
         /// </value>
-        public bool RenderOnlyWithWindow { get; }
-       
+        public bool RenderOnlyWithWindow { get; set; } = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RenderOutputControl"/> class.
         /// </summary>
         /// <param name="task">The task. Cannot be null.</param>
-        /// <param name="renderOnlyWithWindow">True if render to that output only if parent window exists, otherwise false.</param>
         /// <exception cref="System.ArgumentNullException">Invalid task.</exception>
-        public RenderOutputControl(SceneRenderTask task, bool renderOnlyWithWindow = true)
+        public RenderOutputControl(SceneRenderTask task)
             : base(true)
         {
             if (task == null)
                 throw new ArgumentNullException();
-            
-            RenderOnlyWithWindow = renderOnlyWithWindow;
 
             _backBuffer = RenderTarget.New();
             _resizeTime = ResizeCheckTime;
 
             _task = task;
+            _task.Output = _backBuffer;
             _task.CanSkipRendering += CanSkipRendering;
             _task.OnEnd += OnEnd;
         }
@@ -138,11 +135,7 @@ namespace FlaxEngine.GUI
             if (_resizeTime >= ResizeCheckTime)
             {
                 _resizeTime = 0;
-
-                if (_backBuffer.Size != Size)
-                {
-                    Resize();
-                }
+                Resize();
             }
             
             base.Update(deltaTime);
@@ -159,10 +152,13 @@ namespace FlaxEngine.GUI
         }
         
         /// <summary>
-        /// Synchronizes size of the back buffer.
+        /// Synchronizes size of the back buffer with the size of the control.
         /// </summary>
-        protected void Resize()
+        public void Resize()
         {
+            if (_backBuffer.Size == Size)
+                return;
+
             int width = (int)Width;
             int height = (int)Height;
             if (width < 1 || height < 1)
@@ -184,6 +180,7 @@ namespace FlaxEngine.GUI
 
             // Resize backbuffer
             _backBuffer.Init(DefaultBackBufferFormat, width, height);
+            _task.Output = _backBuffer;
         }
 
         /// <inheritdoc />

@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -88,7 +88,7 @@ namespace FlaxEditor.Viewport.Previews
         }
 
         /// <inheritdoc />
-        public override bool HasLoadedAssets => base.HasLoadedAssets && _previewModel.Model.IsLoaded && _envProbe.Probe.IsLoaded;
+        public override bool HasLoadedAssets => base.HasLoadedAssets && _sky.HasContentLoaded && _previewModel.Model.IsLoaded && _envProbe.Probe.IsLoaded;
 
         /// <inheritdoc />
         public override void OnDestroy()

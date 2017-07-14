@@ -24,13 +24,13 @@ namespace FlaxEditor.Modules
         // TODO: dont flush atlases every frame - do it once per second
 
         private readonly List<PreviewsCache> _cache = new List<PreviewsCache>(4);
-        private string _cacheFolder;
+        private readonly string _cacheFolder;
 
         private readonly List<AssetItem> _requests = new List<AssetItem>(128);
         private readonly PreviewRoot _guiRoot = new PreviewRoot();
         private CustomRenderTask _task;
         private RenderTarget _output;
-
+        
         internal ThumbnailsModule(Editor editor)
             : base(editor)
         {
@@ -173,7 +173,7 @@ namespace FlaxEditor.Modules
             }
 
             // Find atlases in a Editor cache directory
-            var files = Directory.GetFiles(_cacheFolder, "cache_*.flax", SearchOption.TopDirectoryOnly);
+            /*var files = Directory.GetFiles(_cacheFolder, "cache_*.flax", SearchOption.TopDirectoryOnly);
             int atlases = 0;
             for (int i = 0; i < files.Length; i++)
             {
@@ -196,7 +196,7 @@ namespace FlaxEditor.Modules
                 }
             }
             Debug.Log(string.Format("Previews cache count: {0} (capacity for {1} icons)", atlases, atlases * PreviewsCache.AssetIconsPerAtlas));
-
+            */
             // Create render task but disabled for now
             _output = RenderTarget.New();
             _output.Init(PreviewsCache.AssetIconsAtlasFormat, PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
@@ -212,7 +212,7 @@ namespace FlaxEditor.Modules
             {
                 // Check if there is ready next asset to render thumbnail for it
                 // But don't check whole queue, only a few items
-                if (!GetReadyItem(10))
+                if (!GetReadyItem(1))
                 {
                     // Disable task
                     _task.Enabled = false;
@@ -232,7 +232,7 @@ namespace FlaxEditor.Modules
                 
                 // Call proxy to prepare for thumbnail rendering
                 // It can setup preview scene and additional GUI
-                proxy.OnThumbnailDrawBegin(item, _guiRoot);
+                proxy.OnThumbnailDrawBegin(item, _guiRoot, context);
                 _guiRoot.UnlockChildrenRecursive();
 
                 // Draw preview
@@ -244,7 +244,7 @@ namespace FlaxEditor.Modules
                 _guiRoot.DisposeChildren();
 
                 // Find atlas with an free slot
-                var atlas = getValidAtlas();
+                var atlas = GetValidAtlas();
                 if (atlas == null)
                 {
                     // Error
@@ -268,7 +268,7 @@ namespace FlaxEditor.Modules
                 // Assign new preview icon
                 item.Thumbnail = icon;
 
-                Debug.Log("icon " + icon.Index + " -> " + icon.Atlas?.Name);
+                Debug.Log("icon " + icon.Index + " -> " + item.Path);
             }
         }
 
@@ -298,6 +298,7 @@ namespace FlaxEditor.Modules
                 catch (Exception ex)
                 {
                     // Exception thrown during `CanDrawThumbnail` means we cannot render preview for it
+                    Debug.LogException(ex);
                     Debug.LogWarning($"Failed to prepare thumbnail rendering for {item.ShortName}.");
                     _requests.RemoveAt(i);
                     i--;
@@ -307,16 +308,16 @@ namespace FlaxEditor.Modules
             return false;
         }
 
-        private void startPreviewsQueue()
+        private void StartPreviewsQueue()
         {
             // Ensure to have valid atlas
-            getValidAtlas();
+            GetValidAtlas();
 
             // Enable task
             _task.Enabled = true;
         }
 
-        private PreviewsCache createAtlas()
+        private PreviewsCache CreateAtlas()
         {
             // Create atlas path
             var path = Path.Combine(_cacheFolder, string.Format("cache_{0:N}.flax", Guid.NewGuid()));
@@ -344,7 +345,7 @@ namespace FlaxEditor.Modules
             return atlas;
         }
 
-        private void flush()
+        private void Flush()
         {
             for (int i = 0; i < _cache.Count; i++)
             {
@@ -352,7 +353,7 @@ namespace FlaxEditor.Modules
             }
         }
 
-        private bool hasAllAtlasesLoaded()
+        private bool HasAllAtlasesLoaded()
         {
             for (int i = 0; i < _cache.Count; i++)
             {
@@ -364,7 +365,7 @@ namespace FlaxEditor.Modules
             return true;
         }
 
-        private PreviewsCache getValidAtlas()
+        private PreviewsCache GetValidAtlas()
         {
             // Check if has no free slots
             for (int i = 0; i < _cache.Count; i++)
@@ -376,14 +377,14 @@ namespace FlaxEditor.Modules
             }
 
             // Create new atlas
-            return createAtlas();
+            return CreateAtlas();
         }
 
         /// <inheritdoc />
         public override void OnUpdate()
         {
             // Wait some frames before start generating previews (late init feature)
-            if (Time.RealtimeSinceStartup < 1.0f || hasAllAtlasesLoaded() == false)
+            if (Time.RealtimeSinceStartup < 1.0f || HasAllAtlasesLoaded() == false)
             {
                 // Back
                 return;
@@ -401,14 +402,14 @@ namespace FlaxEditor.Modules
                         if (GetReadyItem(count))
                         {
                             // Start generating preview
-                            startPreviewsQueue();
+                            StartPreviewsQueue();
                         }
                     }
                 }
                 else
                 {
                     // Flush data
-                    flush();
+                    Flush();
                 }
             }
         }

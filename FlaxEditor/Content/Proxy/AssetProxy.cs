@@ -1,10 +1,11 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Content
 {
@@ -54,7 +55,8 @@ namespace FlaxEditor.Content
         /// </returns>
         public virtual bool CanDrawThumbnail(AssetItem item)
         {
-            return false;
+            var asset = FlaxEngine.Content.LoadAsync<Asset>(item.Path);
+            return asset.IsLoaded;
         }
 
         /// <summary>
@@ -62,11 +64,13 @@ namespace FlaxEditor.Content
         /// </summary>
         /// <param name="item">The item to render thumbnail for.</param>
         /// <param name="guiRoot">The GUI root container control.</param>
-        public virtual void OnThumbnailDrawBegin(AssetItem item, ContainerControl guiRoot)
+        /// <param name="context">GPU context.</param>
+        public virtual void OnThumbnailDrawBegin(AssetItem item, ContainerControl guiRoot, GPUContext context)
         {
             guiRoot.AddChild(new Label(false, Vector2.Zero, guiRoot.Size)
             {
-                Text = Name
+                Text = Name,
+                Wrapping = TextWrapping.WrapWords
             });
         }
 
