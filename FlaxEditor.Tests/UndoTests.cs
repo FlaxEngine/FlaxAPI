@@ -170,7 +170,6 @@ namespace FlaxEditor.Tests
             Assert.AreNotEqual(null, instance.PropertyObject.PropertyObject.FieldObject);
             Assert.AreEqual(99, instance.FieldObject.FieldObject.PropertyObject.FieldInteger);
             Assert.AreEqual(99, instance.PropertyObject.PropertyObject.FieldObject.FieldInteger);
-            Assert.IsTrue(false);
         }
     }
 }
