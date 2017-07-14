@@ -88,6 +88,8 @@
     </Compile>
     <Compile Include="API\Assets\BinaryAsset.cs" />
     <Compile Include="API\Assets\BinaryAsset.Gen.cs" />
+    <Compile Include="API\BinaryAssets\CubeTexture.cs" />
+    <Compile Include="API\BinaryAssets\CubeTexture.Gen.cs" />
     <Compile Include="API\BinaryAssets\FontAsset.cs" />
     <Compile Include="API\BinaryAssets\FontAsset.Gen.cs" />
     <Compile Include="API\BinaryAssets\Model.cs" />
@@ -214,7 +216,6 @@
     <Compile Include="Assertions\AssertionException.cs" />
     <Compile Include="Assertions\AssertionMessageUtil.cs" />
     <Compile Include="Assertions\FloatComparer.cs" />
-    <Compile Include="AssetTypes\CubeTexture.cs" />
     <Compile Include="AssetTypes\Document.cs" />
     <Compile Include="AssetTypes\MaterialBase.cs" />
     <Compile Include="AssetTypes\Shader.cs" />
