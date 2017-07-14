@@ -94,6 +94,8 @@
     <Compile Include="API\BinaryAssets\Model.Gen.cs" />
     <Compile Include="API\BinaryAssets\SpriteAtlas.cs" />
     <Compile Include="API\BinaryAssets\SpriteAtlas.Gen.cs" />
+    <Compile Include="API\BinaryAssets\Texture.cs" />
+    <Compile Include="API\BinaryAssets\Texture.Gen.cs" />
     <Compile Include="API\CreateWindowSettings.cs" />
     <Compile Include="API\MaterialBases\Material.cs" />
     <Compile Include="API\MaterialBases\Material.Gen.cs" />
@@ -216,7 +218,6 @@
     <Compile Include="AssetTypes\Document.cs" />
     <Compile Include="AssetTypes\MaterialBase.cs" />
     <Compile Include="AssetTypes\Shader.cs" />
-    <Compile Include="AssetTypes\Texture.cs" />
     <Compile Include="Bodies\BoxBody.cs" />
     <Compile Include="Enums\BrushMode.cs" />
     <Compile Include="Enums\Input.Enums.cs" />

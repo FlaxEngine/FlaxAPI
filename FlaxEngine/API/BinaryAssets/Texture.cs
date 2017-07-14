@@ -1,4 +1,6 @@
-// Flax Engine scripting API
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
 
 using System;
 using System.Collections.Generic;
@@ -8,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-    public sealed class Texture : BinaryAsset
+    public partial class Texture
     {
         /// <summary>
         /// The texture asset type unique ID.
