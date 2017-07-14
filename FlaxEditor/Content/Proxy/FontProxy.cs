@@ -5,6 +5,8 @@
 using System;
 using FlaxEditor.Windows;
 using FlaxEngine;
+using FlaxEngine.GUI;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Content
 {
@@ -34,5 +36,16 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override ContentDomain Domain => FontAsset.Domain;
+        
+        /// <inheritdoc />
+        public override void OnThumbnailDrawBegin(AssetItem item, ContainerControl guiRoot, GPUContext context)
+        {
+            var asset = FlaxEngine.Content.Load<FontAsset>(item.Path);
+            guiRoot.AddChild(new Label(false, Vector2.Zero, guiRoot.Size)
+            {
+                Text = asset.FamilyName,
+                Wrapping = TextWrapping.WrapWords
+            });
+        }
     }
 }
