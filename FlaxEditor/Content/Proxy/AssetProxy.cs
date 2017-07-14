@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using FlaxEditor.Modules;
+using FlaxEditor.Content.Thumbnails;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;

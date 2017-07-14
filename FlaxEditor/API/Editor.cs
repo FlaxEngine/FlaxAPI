@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Modules;
 using FlaxEditor.States;
 using FlaxEngine;
