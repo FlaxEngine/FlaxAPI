@@ -216,7 +216,6 @@ namespace FlaxEditor.Content.Thumbnails
                 _guiRoot.AccentColor = request.Proxy.AccentColor;
 
                 // Call proxy to prepare for thumbnail rendering
-                // It can setup preview scene and additional GUI
                 request.Proxy.OnThumbnailDrawBegin(request, _guiRoot, context);
                 _guiRoot.UnlockChildrenRecursive();
 

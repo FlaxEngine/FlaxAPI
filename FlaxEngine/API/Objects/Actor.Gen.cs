@@ -470,19 +470,6 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Returns true if actor has fully loaded content
-		/// </summary>
-		[UnmanagedCall]
-		public bool HasContentFullyLoaded
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { return Internal_HasContentFullyLoaded(unmanagedPtr); }
-#endif
-		}
-
-		/// <summary>
 		/// Determines whether the specified object is in a hierarchy (one of the children or lower).
 		/// </summary>
 		/// <param name="actor">The actor to check,</param>
@@ -618,8 +605,6 @@ namespace FlaxEngine
 		internal static extern void Internal_GetBoxWithChildren(IntPtr obj, out BoundingBox resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_HasContentLoaded(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_HasContentFullyLoaded(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_ContainsInHierarchy(IntPtr obj, Actor actor);
 		[MethodImpl(MethodImplOptions.InternalCall)]
