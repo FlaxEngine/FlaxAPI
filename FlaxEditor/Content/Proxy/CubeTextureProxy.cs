@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using FlaxEditor.Modules;
 using FlaxEditor.Viewport.Previews;
 using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
@@ -41,7 +42,7 @@ namespace FlaxEditor.Content
         public override ContentDomain Domain => CubeTexture.Domain;
 
         /// <inheritdoc />
-        public override bool CanDrawThumbnail(AssetItem item)
+        public override void OnThumbnailDrawPrepare(ThumbnailRequest request)
         {
             if (_preview == null)
             {
@@ -51,25 +52,25 @@ namespace FlaxEditor.Content
                 _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
                 _preview.Resize();
             }
-            if (!_preview.HasLoadedAssets)
-                return false;
-            
-            var asset = FlaxEngine.Content.LoadAsync<CubeTexture>(item.Path);
-            return asset.IsLoaded;
         }
 
         /// <inheritdoc />
-        public override void OnThumbnailDrawBegin(AssetItem item, ContainerControl guiRoot, GPUContext context)
+        public override bool CanDrawThumbnail(ThumbnailRequest request)
         {
-            var asset = FlaxEngine.Content.LoadAsync<CubeTexture>(item.Path);
-            _preview.CubeTexture = asset;
+            return _preview.HasLoadedAssets;
+        }
+
+        /// <inheritdoc />
+        public override void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
+        {
+            _preview.CubeTexture = (CubeTexture)request.Asset;
             _preview.Parent = guiRoot;
 
             _preview.Task.Internal_Render(context);
         }
 
         /// <inheritdoc />
-        public override void OnThumbnailDrawEnd(AssetItem item, ContainerControl guiRoot)
+        public override void OnThumbnailDrawEnd(ThumbnailRequest request, ContainerControl guiRoot)
         {
             _preview.CubeTexture = null;
             _preview.Parent = null;

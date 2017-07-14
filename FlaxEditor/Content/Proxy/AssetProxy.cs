@@ -1,8 +1,9 @@
-////////////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using FlaxEditor.Modules;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
@@ -47,25 +48,32 @@ namespace FlaxEditor.Content
         public abstract AssetItem ConstructItem(string path, int typeId, ref Guid id);
 
         /// <summary>
+        /// Called when thumbnail request gets prepared for drawing.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        public virtual void OnThumbnailDrawPrepare(ThumbnailRequest request)
+        {
+        }
+
+        /// <summary>
         /// Determines whether thumbnail can be drawn for the specified item.
         /// </summary>
-        /// <param name="item">The item.</param>
+        /// <param name="request">The request.</param>
         /// <returns>
         ///   <c>true</c> if this thumbnail can be drawn for the specified item; otherwise, <c>false</c>.
         /// </returns>
-        public virtual bool CanDrawThumbnail(AssetItem item)
+        public virtual bool CanDrawThumbnail(ThumbnailRequest request)
         {
-            var asset = FlaxEngine.Content.LoadAsync<Asset>(item.Path);
-            return asset.IsLoaded;
+            return true;
         }
 
         /// <summary>
         /// Called when thumbnail drawing begins. Proxy should setup scene GUI for guiRoot.
         /// </summary>
-        /// <param name="item">The item to render thumbnail for.</param>
+        /// <param name="request">The request to render thumbnail.</param>
         /// <param name="guiRoot">The GUI root container control.</param>
         /// <param name="context">GPU context.</param>
-        public virtual void OnThumbnailDrawBegin(AssetItem item, ContainerControl guiRoot, GPUContext context)
+        public virtual void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
         {
             guiRoot.AddChild(new Label(false, Vector2.Zero, guiRoot.Size)
             {
@@ -77,9 +85,17 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Called when thumbnail drawing ends. Proxy should clear custom GUI from guiRoot from that should be not destroyed.
         /// </summary>
-        /// <param name="item">The item to render thumbnail for.</param>
+        /// <param name="request">The request to render thumbnail.</param>
         /// <param name="guiRoot">The GUI root container control.</param>
-        public virtual void OnThumbnailDrawEnd(AssetItem item, ContainerControl guiRoot)
+        public virtual void OnThumbnailDrawEnd(ThumbnailRequest request, ContainerControl guiRoot)
+        {
+        }
+
+        /// <summary>
+        /// Called when thumbnail requests cleans data after drawing.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        public virtual void OnThumbnailDrawCleanup(ThumbnailRequest request)
         {
         }
     }
