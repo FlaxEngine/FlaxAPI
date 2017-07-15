@@ -11,11 +11,34 @@ namespace FlaxEngine.GUI
     /// </summary>
     public enum DockStyle
     {
+        /// <summary>
+        /// The none.
+        /// </summary>
         None = 0,
+
+        /// <summary>
+        /// The top edge.
+        /// </summary>
         Top = 1,
+
+        /// <summary>
+        /// The bottom edge.
+        /// </summary>
         Bottom = 2,
+
+        /// <summary>
+        /// The left edge.
+        /// </summary>
         Left = 3,
+
+        /// <summary>
+        /// The right edge
+        /// </summary>
         Right = 4,
+        
+        /// <summary>
+        /// The whole area.
+        /// </summary>
         Fill = 5,
     }
 
@@ -76,9 +99,24 @@ namespace FlaxEngine.GUI
     [Flags]
     public enum ScrollBars
     {
+        /// <summary>
+        /// Don't use scroll bars.
+        /// </summary>
         None = 0,
+
+        /// <summary>
+        /// Use horizontal scrolllbar.
+        /// </summary>
         Horizontal = 1,
+
+        /// <summary>
+        /// Use vertical scrolllbar.
+        /// </summary>
         Vertical = 2,
+
+        /// <summary>
+        /// Use horizontal and vertical scrolllbar.
+        /// </summary>
         Both = Horizontal | Vertical
     }
 
@@ -98,7 +136,14 @@ namespace FlaxEngine.GUI
     /// </summary>
     public enum Orientation
     {
+        /// <summary>
+        /// The horizontal.
+        /// </summary>
         Horizontal = 0,
-        Vertical
+
+        /// <summary>
+        /// The vertical.
+        /// </summary>
+        Vertical = 1,
     }
 }
