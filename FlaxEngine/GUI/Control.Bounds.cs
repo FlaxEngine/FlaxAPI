@@ -1,4 +1,8 @@
-﻿using System;
+﻿////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,13 +13,12 @@ namespace FlaxEngine.GUI
     // Duplicate of Rectangle API for easier lookup
     public partial class Control
     {
-
         /// <summary>
         /// Gets or sets X coordinate of the upper-left corner of the control relative to the upper-left corner of its container
         /// </summary>
         public float X
         {
-            get { return _bounds.X; }
+            get => _bounds.X;
             set
             {
                 if (!Mathf.NearEqual(_bounds.X, value))
@@ -28,7 +31,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public float Y
         {
-            get { return _bounds.Y; }
+            get => _bounds.Y;
             set
             {
                 if (!Mathf.NearEqual(_bounds.Y, value))
@@ -41,10 +44,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         public Vector2 Location
         {
-            get { return _bounds.Location; }
+            get => _bounds.Location;
             set
             {
-                SetLocation(value);
+                if (!_bounds.Location.Equals(ref value))
+                    SetLocationInternal(value);
             }
         }
 
@@ -53,7 +57,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public float Width
         {
-            get { return _bounds.Width; }
+            get => _bounds.Width;
             set
             {
                 if (!Mathf.NearEqual(_bounds.Width, value))
@@ -66,7 +70,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public float Height
         {
-            get { return _bounds.Height; }
+            get => _bounds.Height;
             set
             {
                 if (!Mathf.NearEqual(_bounds.Height, value))
@@ -79,10 +83,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         public Vector2 Size
         {
-            get { return _bounds.Size; }
+            get => _bounds.Size;
             set
             {
-                SetSize(value);
+                if (!_bounds.Size.Equals(ref value))
+                    SetSizeInternal(value);
             }
         }
 
@@ -136,12 +141,14 @@ namespace FlaxEngine.GUI
         /// </summary>
         public Rectangle Bounds
         {
-            get { return _bounds; }
+            get => _bounds;
             set
             {
-                _bounds = value;
-                OnLocationChanged?.Invoke(this);
-                OnSizeChanged?.Invoke(this);
+                if (!_bounds.Equals(ref value))
+                {
+                    SetLocationInternal(_bounds.Location);
+                    SetSizeInternal(_bounds.Size);
+                }
             }
         }
     }

@@ -19,15 +19,15 @@ namespace FlaxEngine.GUI
 
         // Dimensions
         private Rectangle _bounds;
+        private DockStyle _dockStyle;
+        private AnchorStyle _anchorStyle;
 
         // Properties
         private bool _isVisible = true;
-
         private bool _isEnabled = true;
         private bool _canFocus;
 
         private string _tooltipText;
-        private DockStyle _dockStyle;
         private Color _backgroundColor = Color.Transparent;
 
         /// <summary>
@@ -112,6 +112,24 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Gets or sets the anchor style of the control.
+        /// </summary>
+        public AnchorStyle AnchorStyle
+        {
+            get => _anchorStyle;
+            set
+            {
+                if (_anchorStyle != value)
+                {
+                    _anchorStyle = value;
+
+                    // Update parent's container
+                    _parent?.PerformLayout();
+                }
+            }
+        }
+        
+        /// <summary>
         ///     Returns true if control can use scrolling feature
         /// </summary>
         public virtual bool IsScrollable => _dockStyle == DockStyle.None;
@@ -131,10 +149,13 @@ namespace FlaxEngine.GUI
                     // Check if control has been disabled
                     if (!_isEnabled)
                     {
+                        Defocus();
+
                         // Clear flags
-                        //_mouseOver = false;
-                        //_dragOver = false;
-                        // TODO: should we call mosue leave or sth?
+                        if(_isMouseOver)
+                            OnMouseLeave();
+                        if (_isDragOver)
+                            OnDragLeave();
                     }
                 }
             }
@@ -152,18 +173,16 @@ namespace FlaxEngine.GUI
                 {
                     _isVisible = value;
 
-                    // Check if control hasn't been hidden
+                    // Check on control hide event
                     if (!_isVisible)
                     {
-                        /*// Defocus itself
-                        if (ContainsFocus() && !IsFocused())
-                            Focus();
                         Defocus();
 
                         // Clear flags
-                        _mouseOver = false;
-                        _dragOver = false;*/
-                        // TODO: call events?
+                        if (_isMouseOver)
+                            OnMouseLeave();
+                        if (_isDragOver)
+                            OnDragLeave();
                     }
 
                     OnVisibleChanged?.Invoke(this);
@@ -298,21 +317,9 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="x">X coordinate</param>
         /// <param name="y">Y coordinate</param>
-        public virtual void SetLocation(float x, float y)
+        public void SetLocation(float x, float y)
         {
-            SetLocation(new Vector2(x, y));
-        }
-
-        /// <summary>
-        ///     Sets control's location
-        /// </summary>
-        /// <param name="location">Location coordinates of the upper left corner</param>
-        public virtual void SetLocation(Vector2 location)
-        {
-            if (!_bounds.Location.Equals(location))
-            {
-                SetLocationInternal(location);
-            }
+            Location = new Vector2(x, y);
         }
 
         /// <summary>
@@ -320,21 +327,9 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="width">Control's width</param>
         /// <param name="height">Control's height</param>
-        public virtual void SetSize(float width, float height)
+        public void SetSize(float width, float height)
         {
-            SetSize(new Vector2(width, height));
-        }
-
-        /// <summary>
-        ///     Sets control's size
-        /// </summary>
-        /// <param name="size">Control's size</param>
-        public virtual void SetSize(Vector2 size)
-        {
-            if (!_bounds.Size.Equals(size))
-            {
-                SetSizeInternal(size);
-            }
+            Size = new Vector2(width, height);
         }
 
         #region Focus
@@ -548,15 +543,54 @@ namespace FlaxEngine.GUI
         #endregion
 
         #region Drag&Drop
-
-        // TODO: move drag and drop support from C++
-
+        
         /// <summary>
         ///     Check if mouse dragging is over that item or its child items.
         /// </summary>
         /// <returns>True if drag is over</returns>
         public virtual bool IsDragOver => _isDragOver;
+        
+        /// <summary>
+        ///     When mouse dragging enters control's area
+        /// </summary>
+        /// <param name="location">Mouse location in Control Space</param>
+        public virtual DragDropEffect OnDragEnter(Vector2 location)
+        {
+            // Set flag
+            _isDragOver = true;
 
+            return DragDropEffect.None;
+        }
+
+        /// <summary>
+        ///     When mouse dragging moves over control's area
+        /// </summary>
+        /// <param name="location">Mouse location in Control Space</param>
+        public virtual DragDropEffect OnDragMove(Vector2 location)
+        {
+            return DragDropEffect.None;
+        }
+
+        /// <summary>
+        ///     When mouse dragging drops on control's area
+        /// </summary>
+        /// <param name="location">Mouse location in Control Space</param>
+        public virtual DragDropEffect OnDragDrop(Vector2 location)
+        {
+            // Clear flag
+            _isDragOver = false;
+            
+            return DragDropEffect.None;
+        }
+
+        /// <summary>
+        ///     When mosue dragging leaves control's area
+        /// </summary>
+        public virtual void OnDragLeave()
+        {
+            // Clear flag
+            _isDragOver = false;
+        }
 
         #endregion
 
