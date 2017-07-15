@@ -2,11 +2,13 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Viewport.Previews;
 using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Content
 {
@@ -40,29 +42,42 @@ namespace FlaxEditor.Content
         public override ContentDomain Domain => CubeTexture.Domain;
 
         /// <inheritdoc />
-        public override bool CanDrawThumbnail(AssetItem item)
+        public override void OnThumbnailDrawPrepare(ThumbnailRequest request)
         {
             if (_preview == null)
             {
                 _preview = new CubeTexturePreview(false);
+                _preview.RenderOnlyWithWindow = false;
+                _preview.Task.Enabled = false;
+                _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
+                _preview.Resize();
             }
+            
+            // TODO: disable streaming for asset during thumbnail rendering (and restore it after)
+        }
+
+        /// <inheritdoc />
+        public override bool CanDrawThumbnail(ThumbnailRequest request)
+        {
             if (!_preview.HasLoadedAssets)
                 return false;
 
-            var asset = FlaxEngine.Content.LoadAsync<CubeTexture>(item.Path);
-            return asset.IsLoaded;
+            // Check if all mip maps are streamed
+            var asset = (CubeTexture)request.Asset;
+            return asset.ResidentMipLevels >= (int)(asset.MipLevels * ThumbnailsModule.MinimumRequriedResourcesQuality);
         }
 
         /// <inheritdoc />
-        public override void OnThumbnailDrawBegin(AssetItem item, ContainerControl guiRoot)
+        public override void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
         {
-            var asset = FlaxEngine.Content.LoadAsync<CubeTexture>(item.Path);
-            _preview.CubeTexture = asset;
+            _preview.CubeTexture = (CubeTexture)request.Asset;
             _preview.Parent = guiRoot;
+
+            _preview.Task.Internal_Render(context);
         }
 
         /// <inheritdoc />
-        public override void OnThumbnailDrawEnd(AssetItem item, ContainerControl guiRoot)
+        public override void OnThumbnailDrawEnd(ThumbnailRequest request, ContainerControl guiRoot)
         {
             _preview.CubeTexture = null;
             _preview.Parent = null;

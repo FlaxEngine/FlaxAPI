@@ -395,14 +395,13 @@ namespace FlaxEditor.Content
         /// <param name="obj">The object.</param>
         public void RemoveReference(IContentItemOwner obj)
         {
-            Assert.IsTrue(_references.Contains(obj));
-
-            _references.Remove(obj);
-
-            // Check if need to release the preview
-            if (_references.Count == 0 && _thumbnail.IsValid)
+            if (_references.Remove(obj))
             {
-                ReleaseThumbnail();
+                // Check if need to release the preview
+                if (_references.Count == 0 && _thumbnail.IsValid)
+                {
+                    ReleaseThumbnail();
+                }
             }
         }
 

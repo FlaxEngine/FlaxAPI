@@ -5,14 +5,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
-using FlaxEditor.Content;
+using FlaxEditor.Modules;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
 using Object = FlaxEngine.Object;
 
-namespace FlaxEditor.Modules
+namespace FlaxEditor.Content.Thumbnails
 {
     /// <summary>
     /// Manages asset thumbnails rendering and presentation.
@@ -20,12 +19,19 @@ namespace FlaxEditor.Modules
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class ThumbnailsModule : EditorModule, IContentItemOwner
     {
+        /// <summary>
+        /// The minimum requried quality (in range [0;1]) for content streaming resources to be loaded in order to generate thumbnail for them.
+        /// </summary>
+        public const float MinimumRequriedResourcesQuality = 0.8f;
+
         // TODO: free atlas slots for deleted assets
 
         private readonly List<PreviewsCache> _cache = new List<PreviewsCache>(4);
-        private string _cacheFolder;
+        private readonly string _cacheFolder;
 
-        private readonly List<AssetItem> _requests = new List<AssetItem>(128);
+        private DateTime _lastFlushTime;
+
+        private readonly List<ThumbnailRequest> _requests = new List<ThumbnailRequest>(128);
         private readonly PreviewRoot _guiRoot = new PreviewRoot();
         private CustomRenderTask _task;
         private RenderTarget _output;
@@ -34,12 +40,7 @@ namespace FlaxEditor.Modules
             : base(editor)
         {
             _cacheFolder = Path.Combine(Globals.ProjectCacheFolder, "Thumbnails");
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private AssetProxy GetProxy(AssetItem item)
-        {
-            return Editor.ContentDatabase.GetProxy(item) as AssetProxy;
+            _lastFlushTime = DateTime.UtcNow;
         }
 
         /// <summary>
@@ -60,17 +61,16 @@ namespace FlaxEditor.Modules
                 return;
             }
 
-            return;// disable it for now
-
             // We cache previews only for items with 'ID', for now we support only AssetItems
             var assetItem = item as AssetItem;
             if (assetItem == null)
                 return;
 
             // Ensure that there is valid proxy for that item
-            var proxy = Editor.ContentDatabase.GetProxy(item);
+            var proxy = Editor.ContentDatabase.GetProxy(item) as AssetProxy;
             if (proxy == null)
             {
+                // Error
                 Debug.LogWarning($"Cannot generate preview for item {item.Path}. Cannot find proxy for it.");
                 return;
             }
@@ -78,7 +78,7 @@ namespace FlaxEditor.Modules
             lock (_requests)
             {
                 // Check if element hasn't been already processed for generating preview
-                if (!_requests.Contains(assetItem))
+                if (FindRequest(assetItem) == null)
                 {
                     // Check each cache atlas
                     for (int i = 0; i < _cache.Count; i++)
@@ -93,8 +93,7 @@ namespace FlaxEditor.Modules
                     }
 
                     // Add request
-                    item.AddReference(this);
-                    _requests.Add(assetItem);
+                    AddRequest(assetItem, proxy);
                 }
             }
         }
@@ -108,8 +107,6 @@ namespace FlaxEditor.Modules
         {
             if (item == null)
                 throw new ArgumentNullException();
-            
-            return;// disable it for now
 
             // We cache previews only for items with 'ID', for now we support only AssetItems
             var assetItem = item as AssetItem;
@@ -119,8 +116,7 @@ namespace FlaxEditor.Modules
             lock (_requests)
             {
                 // Cancel loading
-                _requests.Remove(assetItem);
-                item.RemoveReference(this);
+                RemoveRequest(assetItem);
 
                 // Find atlas with preview and remove it
                 for (int i = 0; i < _cache.Count; i++)
@@ -142,7 +138,7 @@ namespace FlaxEditor.Modules
             {
                 lock (_requests)
                 {
-                    _requests.Remove(assetItem);
+                    RemoveRequest(assetItem);
                 }
             }
         }
@@ -159,7 +155,7 @@ namespace FlaxEditor.Modules
             {
                 lock (_requests)
                 {
-                    _requests.Remove(assetItem);
+                    RemoveRequest(assetItem);
                 }
             }
         }
@@ -200,11 +196,14 @@ namespace FlaxEditor.Modules
             }
             Debug.Log(string.Format("Previews cache count: {0} (capacity for {1} icons)", atlases, atlases * PreviewsCache.AssetIconsPerAtlas));
 
+            // Prepare at least one atlas
+            GetValidAtlas();
+
             // Create render task but disabled for now
             _output = RenderTarget.New();
             _output.Init(PreviewsCache.AssetIconsAtlasFormat, PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
             _task = RenderTask.Create<CustomRenderTask>();
-            _task.Order = 50; // Render this task later
+            _task.Order = 50;// Render this task later
             _task.Enabled = false;
             _task.OnRender += OnRender;
         }
@@ -213,46 +212,45 @@ namespace FlaxEditor.Modules
         {
             lock (_requests)
             {
-                // Check if has no requests (maybe removed in async)
-                if (_requests.Count == 0)
+                // Check if there is ready next asset to render thumbnail for it
+                // But don't check whole queue, only a few items
+                var request = GetReadyRequest(10);
+                if (request == null)
+                {
+                    // Disable task
+                    _task.Enabled = false;
                     return;
-
-                // Get asset to refresh
-                var item = _requests[0];
-                _requests.RemoveAt(0);
-
-                // Get proxy for that element
-                var proxy = GetProxy(item);
+                }
 
                 // Setup
                 _guiRoot.RemoveChildren();
-                _guiRoot.AccentColor = proxy.AccentColor;
-                
-                // Call proxy to prepare for thumbnail rendering
-                // It can setup preview scene and additional GUI
-                proxy.OnThumbnailDrawBegin(item, _guiRoot);
+                _guiRoot.AccentColor = request.Proxy.AccentColor;
 
-Debug.Log("draw icon for " + item.Path);////////////////////////////////////////////////////////////////////////////////////////////////////////
+                // Call proxy to prepare for thumbnail rendering
+                request.Proxy.OnThumbnailDrawBegin(request, _guiRoot, context);
+                _guiRoot.UnlockChildrenRecursive();
 
                 // Draw preview
+                context.Clear(_output, Color.Black);
                 Render2D.CallDrawing(context, _output, _guiRoot);
 
                 // Call proxy and cleanup UI (delete create controls, shared controls should be unlinked during OnThumbnailDrawEnd event)
-                proxy.OnThumbnailDrawEnd(item, _guiRoot);
+                request.Proxy.OnThumbnailDrawEnd(request, _guiRoot);
                 _guiRoot.DisposeChildren();
-                
+
                 // Find atlas with an free slot
-                var atlas = getValidAtlas();
+                var atlas = GetValidAtlas();
                 if (atlas == null)
                 {
                     // Error
                     _task.Enabled = false;
                     _requests.Clear();
+                    Debug.LogError("Failed to get atlas.");
                     return;
                 }
 
                 // Copy backbuffer with rendered preview into atlas
-                Sprite icon = atlas.OccupySlot(_output, item.ID);
+                Sprite icon = atlas.OccupySlot(_output, request.Item.ID);
                 if (!icon.IsValid)
                 {
                     // Error
@@ -262,69 +260,88 @@ Debug.Log("draw icon for " + item.Path);////////////////////////////////////////
                     return;
                 }
 
-                // Assign new preview icon
-                item.Thumbnail = icon;
-
-                // Check if there is read next asset to render thumbnail
-                // But don't check whole queue, only a few items
-                if (!GetReadyItem(10))
-                {
-                    // Disable task
-                    _task.Enabled = false;
-                }
+                // End
+                request.FinishRender(ref icon);
+                RemoveRequest(request);
             }
         }
 
-        private bool GetReadyItem(int maxChecks)
+        private void StartPreviewsQueue()
         {
-            for (int i = 0; i < maxChecks; i++)
-            {
-                // Check if first item is ready
-                var item = _requests[i];
-                var proxy = GetProxy(item);
-
-                try
-                {
-                    if (proxy.CanDrawThumbnail(item))
-                    {
-                        // For non frst elements do the swap with keeping order
-                        if (i != 0)
-                        {
-                            _requests.RemoveAt(i);
-                            _requests.Insert(0, item);
-                        }
-
-                        return true;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Exception thrown during `CanDrawThumbnail` means we cannot render preview for it
-                    Debug.LogWarning($"Failed to prepare thumbnail rendering for {item.ShortName}.");
-                    _requests.RemoveAt(i);
-                    i--;
-                }
-            }
-
-            return false;
-        }
-
-        private void startPreviewsQueue()
-        {
-Debug.Log("startPreviewsQueue");/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
             // Ensure to have valid atlas
-            getValidAtlas();
+            GetValidAtlas();
 
             // Enable task
             _task.Enabled = true;
         }
 
-        private PreviewsCache createAtlas()
+        #region Requests Management
+
+        private ThumbnailRequest FindRequest(AssetItem item)
+        {
+            for (int i = 0; i < _requests.Count; i++)
+            {
+                if (_requests[i].Item == item)
+                    return _requests[i];
+            }
+            return null;
+        }
+
+        private void AddRequest(AssetItem item, AssetProxy proxy)
+        {
+            var request = new ThumbnailRequest(item, proxy);
+            _requests.Add(request);
+            item.AddReference(this);
+        }
+
+        private void RemoveRequest(ThumbnailRequest request)
+        {
+            request.Dispose();
+            _requests.Remove(request);
+            request.Item.RemoveReference(this);
+        }
+
+        private void RemoveRequest(AssetItem item)
+        {
+            var request = FindRequest(item);
+            if (request != null)
+                RemoveRequest(request);
+        }
+
+        private ThumbnailRequest GetReadyRequest(int maxChecks)
+        {
+            maxChecks = Mathf.Min(maxChecks, _requests.Count);
+            for (int i = 0; i < maxChecks; i++)
+            {
+                var request = _requests[i];
+
+                try
+                {
+                    if (request.IsReady)
+                    {
+                        return request;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Error
+                    Debug.LogException(ex);
+                    Debug.LogWarning($"Failed to prepare thumbnail rendering for {request.Item.ShortName}.");
+                }
+            }
+
+            return null;
+        }
+
+        #endregion
+
+        #region Atlas Management
+
+        private PreviewsCache CreateAtlas()
         {
             // Create atlas path
             var path = Path.Combine(_cacheFolder, string.Format("cache_{0:N}.flax", Guid.NewGuid()));
-            
+
             // Create atlas
             if (PreviewsCache.Create(path))
             {
@@ -348,7 +365,7 @@ Debug.Log("startPreviewsQueue");////////////////////////////////////////////////
             return atlas;
         }
 
-        private void flush()
+        private void Flush()
         {
             for (int i = 0; i < _cache.Count; i++)
             {
@@ -356,25 +373,11 @@ Debug.Log("startPreviewsQueue");////////////////////////////////////////////////
             }
         }
 
-        private bool hasValidAtlas()
-        {
-            // Check if has no free slots
-            for (int i = 0; i < _cache.Count; i++)
-            {
-                if (_cache[i].HasFreeSlot)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private bool hasAllAtlasesLoaded()
+        private bool HasAllAtlasesLoaded()
         {
             for (int i = 0; i < _cache.Count; i++)
             {
-                if (!_cache[i].IsLoaded)
+                if (!_cache[i].IsReady)
                 {
                     return false;
                 }
@@ -382,7 +385,7 @@ Debug.Log("startPreviewsQueue");////////////////////////////////////////////////
             return true;
         }
 
-        private PreviewsCache getValidAtlas()
+        private PreviewsCache GetValidAtlas()
         {
             // Check if has no free slots
             for (int i = 0; i < _cache.Count; i++)
@@ -394,14 +397,16 @@ Debug.Log("startPreviewsQueue");////////////////////////////////////////////////
             }
 
             // Create new atlas
-            return createAtlas();
+            return CreateAtlas();
         }
+
+        #endregion
 
         /// <inheritdoc />
         public override void OnUpdate()
         {
             // Wait some frames before start generating previews (late init feature)
-            if (Time.RealtimeSinceStartup < 1.0f || hasAllAtlasesLoaded() == false)
+            if (Time.RealtimeSinceStartup < 1.0f || HasAllAtlasesLoaded() == false)
             {
                 // Back
                 return;
@@ -409,23 +414,51 @@ Debug.Log("startPreviewsQueue");////////////////////////////////////////////////
 
             lock (_requests)
             {
+                var now = DateTime.UtcNow;
+
                 // Check if has any request pending
-                if (_requests.Count > 0)
+                int count = _requests.Count;
+                if (count > 0)
                 {
-                    // Check if has no rendering task enabled
-                    if (_task.Enabled == false)
+                    // Prepare requests
+                    bool isAnyReady = false;
+                    int checks = Mathf.Min(10, _requests.Count);
+                    for (int i = 0; i < checks; i++)
                     {
-                        if (GetReadyItem(_requests.Count))
+                        var request = _requests[i];
+
+                        try
                         {
-                            // Start generating preview
-                            startPreviewsQueue();
+                            if (request.IsReady)
+                            {
+                                isAnyReady = true;
+                            }
+                            else if (request.State == ThumbnailRequest.States.Created)
+                            {
+                                request.Prepare();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // Error
+                            Debug.LogException(ex);
+                            Debug.LogWarning($"Failed to prepare thumbnail rendering for {request.Item.ShortName}.");
                         }
                     }
+
+                    // Check if has no rendering task enabled but should be
+                    if (isAnyReady && _task.Enabled == false)
+                    {
+                        // Start generating preview
+                        StartPreviewsQueue();
+                    }
                 }
-                else
+                // Don't flush every frame
+                else if (now - _lastFlushTime >= TimeSpan.FromSeconds(1))
                 {
                     // Flush data
-                    flush();
+                    _lastFlushTime = now;
+                    Flush();
                 }
             }
         }
@@ -438,11 +471,8 @@ Debug.Log("startPreviewsQueue");////////////////////////////////////////////////
             lock (_requests)
             {
                 // Clear data
-                for (int i = 0; i < _requests.Count; i++)
-                {
-                    _requests[i].RemoveReference(this);
-                }
-                _requests.Clear();
+                while (_requests.Count > 0)
+                    RemoveRequest(_requests[0]);
                 _cache.Clear();
             }
 
@@ -451,6 +481,10 @@ Debug.Log("startPreviewsQueue");////////////////////////////////////////////////
             Object.Destroy(ref _output);
         }
 
+        /// <summary>
+        /// Thumbnails GUI root control.
+        /// </summary>
+        /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
         private class PreviewRoot : ContainerControl
         {
             /// <summary>

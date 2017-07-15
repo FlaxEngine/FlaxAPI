@@ -71,6 +71,7 @@
     <Compile Include="Content\Proxy\ScriptProxy.cs" />
     <Compile Include="Content\Proxy\SpriteAtlasProxy.cs" />
     <Compile Include="Content\Proxy\TextureProxy.cs" />
+    <Compile Include="Content\Thumbnails\ThumbnailRequest.cs" />
     <Compile Include="Content\Tree\ContentTreeNode.cs" />
     <Compile Include="Content\Tree\MainContentTreeNode.cs" />
     <Compile Include="Gizmo\GizmoBase.cs" />
@@ -100,7 +101,7 @@
     <Compile Include="Modules\SceneModule.cs" />
     <Compile Include="Modules\ScriptingModule.cs" />
     <Compile Include="Modules\SimulationModule.cs" />
-    <Compile Include="Modules\ThumbnailsModule.cs" />
+    <Compile Include="Content\Thumbnails\ThumbnailsModule.cs" />
     <Compile Include="Modules\UIModule.cs" />
     <Compile Include="Modules\WindowsModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

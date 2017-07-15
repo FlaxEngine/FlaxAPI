@@ -88,12 +88,16 @@
     </Compile>
     <Compile Include="API\Assets\BinaryAsset.cs" />
     <Compile Include="API\Assets\BinaryAsset.Gen.cs" />
+    <Compile Include="API\BinaryAssets\CubeTexture.cs" />
+    <Compile Include="API\BinaryAssets\CubeTexture.Gen.cs" />
     <Compile Include="API\BinaryAssets\FontAsset.cs" />
     <Compile Include="API\BinaryAssets\FontAsset.Gen.cs" />
     <Compile Include="API\BinaryAssets\Model.cs" />
     <Compile Include="API\BinaryAssets\Model.Gen.cs" />
     <Compile Include="API\BinaryAssets\SpriteAtlas.cs" />
     <Compile Include="API\BinaryAssets\SpriteAtlas.Gen.cs" />
+    <Compile Include="API\BinaryAssets\Texture.cs" />
+    <Compile Include="API\BinaryAssets\Texture.Gen.cs" />
     <Compile Include="API\CreateWindowSettings.cs" />
     <Compile Include="API\MaterialBases\Material.cs" />
     <Compile Include="API\MaterialBases\Material.Gen.cs" />
@@ -170,6 +174,7 @@
       <DependentUpon>IOrderedDictionary.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\Common\Button.cs" />
+    <Compile Include="GUI\Common\Label.cs" />
     <Compile Include="GUI\ContainerControl.cs" />
     <Compile Include="GUI\ContainerControlChildrenSized.cs" />
     <Compile Include="GUI\ContextMenu\ContextMenu.cs" />
@@ -211,11 +216,9 @@
     <Compile Include="Assertions\AssertionException.cs" />
     <Compile Include="Assertions\AssertionMessageUtil.cs" />
     <Compile Include="Assertions\FloatComparer.cs" />
-    <Compile Include="AssetTypes\CubeTexture.cs" />
     <Compile Include="AssetTypes\Document.cs" />
     <Compile Include="AssetTypes\MaterialBase.cs" />
     <Compile Include="AssetTypes\Shader.cs" />
-    <Compile Include="AssetTypes\Texture.cs" />
     <Compile Include="Bodies\BoxBody.cs" />
     <Compile Include="Enums\BrushMode.cs" />
     <Compile Include="Enums\Input.Enums.cs" />

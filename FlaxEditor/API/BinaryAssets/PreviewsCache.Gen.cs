@@ -30,6 +30,19 @@ namespace FlaxEditor
 		}
 
 		/// <summary>
+		/// Checks if previews atlas is ready to be used (is loaded and has texture streamed).
+		/// </summary>
+		[UnmanagedCall]
+		public bool IsReady
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_IsReady(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
 		/// Check if there is any free slot in the atlas.
 		/// </summary>
 		[UnmanagedCall]
@@ -137,6 +150,8 @@ namespace FlaxEditor
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_IsReady(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_HasFreeSlot(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]

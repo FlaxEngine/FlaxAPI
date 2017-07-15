@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -28,8 +28,19 @@ namespace FlaxEditor.Viewport.Previews
         /// </value>
         public MaterialBase Material
         {
-            get => _previewModel.Meshes[0].Material;
-            set => _previewModel.Meshes[0].Material = value;
+            get
+            {
+                var meshes = _previewModel.Meshes;
+                if (meshes.Length == 1)
+                    return meshes[0].Material;
+                return null;
+            }
+            set
+            {
+                var meshes = _previewModel.Meshes;
+                if (meshes.Length == 1)
+                    meshes[0].Material = value;
+            }
         }
 
         /// <summary>
@@ -77,7 +88,7 @@ namespace FlaxEditor.Viewport.Previews
         }
 
         /// <inheritdoc />
-        public override bool HasLoadedAssets => base.HasLoadedAssets && _previewModel.Model.IsLoaded && _envProbe.Probe.IsLoaded;
+        public override bool HasLoadedAssets => base.HasLoadedAssets && _sky.HasContentLoaded && _previewModel.Model.IsLoaded && _envProbe.Probe.IsLoaded;
 
         /// <inheritdoc />
         public override void OnDestroy()
