@@ -2,6 +2,7 @@
 
 using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace FlaxEngine
@@ -326,10 +327,23 @@ namespace FlaxEngine
 
         #endregion
 
+        /// <summary>
+        /// Determines whether the specified <see cref="Rectangle" /> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="Rectangle" /> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="Rectangle" /> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals(ref Rectangle other)
+        {
+            return Location.Equals(ref other.Location) && Size.Equals(ref other.Size);
+        }
+
         /// <inheritdoc />
         public bool Equals(Rectangle other)
         {
-            return Location.Equals(other.Location) && Size.Equals(other.Size);
+            return Location.Equals(ref other.Location) && Size.Equals(ref other.Size);
         }
 
         /// <inheritdoc />
