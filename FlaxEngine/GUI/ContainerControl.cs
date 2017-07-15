@@ -38,6 +38,7 @@ namespace FlaxEngine.GUI
         protected ContainerControl(bool canFocus)
             : base(canFocus, 0, 0, 64, 64)
         {
+            IsLayoutLocked = true;
         }
 
         ///<inheritdoc />
@@ -994,12 +995,12 @@ namespace FlaxEngine.GUI
                 }
             }
         }
-        
+
         /// <inheritdoc />
-        public override DragDropEffect OnDragEnter(Vector2 location)
+        public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
         {
             // Base
-            var result = base.OnDragEnter(location);
+            var result = base.OnDragEnter(ref location, data);
 
             // Check all children collisions with mouse and fire events for them
             for (int i = _children.Count - 1; i >= 0; i--)
@@ -1017,7 +1018,8 @@ namespace FlaxEngine.GUI
                     if (IsMouseOverChild(child, ref scrollOffsetLocation))
                     {
                         // Enter
-                        result = child.OnDragEnter(scrollOffsetLocation - child.Location);
+                        var pos = scrollOffsetLocation - child.Location;
+                        result = child.OnDragEnter(ref pos, data);
                         if(result != DragDropEffect.None)
                             break;
                     }
@@ -1028,10 +1030,10 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override DragDropEffect OnDragMove(Vector2 location)
+        public override DragDropEffect OnDragMove(ref Vector2 location, DragData data)
         {
             // Base
-            var result = base.OnDragEnter(location);
+            var result = base.OnDragMove(ref location, data);
 
             // Check all children collisions with mouse and fire events for them
             for (int i = _children.Count - 1; i >= 0; i--)
@@ -1048,17 +1050,18 @@ namespace FlaxEngine.GUI
                     // Fire events
                     if (IsMouseOverChild(child, ref scrollOffsetLocation))
                     {
+                        var pos = scrollOffsetLocation - child.Location;
                         if (child.IsDragOver)
                         {
                             // Move
-                            var tmpResult = child.OnDragMove(scrollOffsetLocation - child.Location);
+                            var tmpResult = child.OnDragMove(ref pos, data);
                             if (tmpResult != DragDropEffect.None)
                                 result = tmpResult;
                         }
                         else
                         {
                             // Enter
-                            var tmpResult = child.OnDragEnter(scrollOffsetLocation - child.Location);
+                            var tmpResult = child.OnDragEnter(ref pos, data);
                             if (tmpResult != DragDropEffect.None)
                                 result = tmpResult;
                         }

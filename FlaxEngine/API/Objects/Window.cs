@@ -398,7 +398,7 @@ namespace FlaxEngine
                 dragData = new DragDataText(data[0]);
             else
                 dragData = new DragDataFiles(data);
-            return GUI.OnDragEnter(mousePos);
+            return GUI.OnDragEnter(ref mousePos, dragData);
         }
 
         internal DragDropEffect Internal_OnDragOver(ref Vector2 mousePos, bool isText, string[] data)
@@ -408,9 +408,9 @@ namespace FlaxEngine
                 dragData = new DragDataText(data[0]);
             else
                 dragData = new DragDataFiles(data);
-            return GUI.OnDragMove(mousePos);
+            return GUI.OnDragMove(ref mousePos, dragData);
         }
-
+        
         internal DragDropEffect Internal_OnDragDrop(ref Vector2 mousePos, bool isText, string[] data)
         {
             DragData dragData;
@@ -418,7 +418,7 @@ namespace FlaxEngine
                 dragData = new DragDataText(data[0]);
             else
                 dragData = new DragDataFiles(data);
-            return GUI.OnDragDrop(mousePos);
+            return GUI.OnDragDrop(ref mousePos, dragData);
         }
 
         internal void Internal_OnDragLeave()

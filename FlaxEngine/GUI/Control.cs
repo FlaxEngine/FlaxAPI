@@ -549,12 +549,13 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <returns>True if drag is over</returns>
         public virtual bool IsDragOver => _isDragOver;
-        
+
         /// <summary>
         ///     When mouse dragging enters control's area
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
-        public virtual DragDropEffect OnDragEnter(Vector2 location)
+        /// <param name="data">The data. See <see cref="DragDataText"/> and <see cref="DragDataFiles"/>.</param>
+        public virtual DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
         {
             // Set flag
             _isDragOver = true;
@@ -566,7 +567,8 @@ namespace FlaxEngine.GUI
         ///     When mouse dragging moves over control's area
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
-        public virtual DragDropEffect OnDragMove(Vector2 location)
+        /// <param name="data">The data. See <see cref="DragDataText"/> and <see cref="DragDataFiles"/>.</param>
+        public virtual DragDropEffect OnDragMove(ref Vector2 location, DragData data)
         {
             return DragDropEffect.None;
         }
@@ -575,7 +577,8 @@ namespace FlaxEngine.GUI
         ///     When mouse dragging drops on control's area
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
-        public virtual DragDropEffect OnDragDrop(Vector2 location)
+        /// <param name="data">The data. See <see cref="DragDataText"/> and <see cref="DragDataFiles"/>.</param>
+        public virtual DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
         {
             // Clear flag
             _isDragOver = false;
