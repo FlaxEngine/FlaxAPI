@@ -14,8 +14,19 @@ namespace FlaxEngine.GUI
     /// </summary>
     public class ContainerControl : Control
     {
+        /// <summary>
+        /// The children collection.
+        /// </summary>
         protected readonly List<Control> _children = new List<Control>();
+
+        /// <summary>
+        /// The view offset. Usefull to offset contents of the container (used by the scrollbars and drop panels)
+        /// </summary>
         protected Vector2 _viewOffset;
+
+        /// <summary>
+        /// The contains focus cached flag.
+        /// </summary>
         protected bool _containsFocus;
 
         /// <summary>
@@ -33,12 +44,14 @@ namespace FlaxEngine.GUI
         protected ContainerControl(bool canFocus, float x, float y, float width, float height)
             : base(canFocus, x, y, width, height)
         {
+            IsLayoutLocked = true;
         }
 
         ///<inheritdoc />
         protected ContainerControl(bool canFocus, Vector2 location, Vector2 size)
             : base(canFocus, location, size)
         {
+            IsLayoutLocked = true;
         }
 
         ///<inheritdoc />
@@ -269,26 +282,26 @@ namespace FlaxEngine.GUI
             Rectangle clientArea;
             GetDesireClientArea(out clientArea);
 
-            foreach (var control in _children)
+            for (int i = 0; i < _children.Count; i++)
             {
-                if (!control.Visible)
-                {
+                var child = _children[i];
+                if (!child.Visible)
                     continue;
-                }
-                switch (control.DockStyle)
+
+                switch (child.DockStyle)
                 {
                     case DockStyle.None:
                         break;
                     case DockStyle.Top:
                     {
-                        float height = Mathf.Min(control.Height, clientArea.Height);
+                        float height = Mathf.Min(child.Height, clientArea.Height);
                         clientArea.Location.Y += height;
                         clientArea.Size.Y -= height;
                         break;
                     }
                     case DockStyle.Bottom:
                     {
-                        float height = Mathf.Min(control.Height, clientArea.Height);
+                        float height = Mathf.Min(child.Height, clientArea.Height);
                         clientArea.Size.Y -= height;
                         break;
                     }
@@ -299,14 +312,14 @@ namespace FlaxEngine.GUI
                     }
                     case DockStyle.Left:
                     {
-                        float width = Mathf.Min(control.Width, clientArea.Width);
+                        float width = Mathf.Min(child.Width, clientArea.Width);
                         clientArea.Location.X += width;
                         clientArea.Size.X -= width;
                         break;
                     }
                     case DockStyle.Right:
                     {
-                        float width = Mathf.Min(control.Width, clientArea.Width);
+                        float width = Mathf.Min(child.Width, clientArea.Width);
                         clientArea.Size.X -= width;
                         break;
                     }
@@ -448,12 +461,13 @@ namespace FlaxEngine.GUI
         /// <param name="clientArea">Result client area</param>
         protected void ArrangeDockedControls(ref Rectangle clientArea)
         {
-            foreach (var child in _children)
+            for (int i = 0; i < _children.Count; i++)
             {
+                var child = _children[i];
+
                 if (!child.Visible)
-                {
                     continue;
-                }
+
                 switch (child.DockStyle)
                 {
                     case DockStyle.None:
@@ -518,12 +532,13 @@ namespace FlaxEngine.GUI
         {
             GetDesireClientArea(out clientArea);
 
-            foreach (var child in _children)
+            for (int i = 0; i < _children.Count; i++)
             {
+                var child = _children[i];
+
                 if (!child.Visible)
-                {
                     continue;
-                }
+
                 switch (child.DockStyle)
                 {
                     case DockStyle.None:
@@ -672,8 +687,10 @@ namespace FlaxEngine.GUI
             Render2D.PushClip(clientArea);
 
             // Draw all visible child controls
-            foreach (Control child in _children)
+            for (int i = 0; i < _children.Count; i++)
             {
+                var child = _children[i];
+
                 if (child.Visible)
                 {
                     Vector2 childTransform = transform + child.Location;
@@ -714,13 +731,12 @@ namespace FlaxEngine.GUI
 
             IsLayoutLocked = false;
         }
-
-
+        
         /// <inheritdoc />
         public override void OnMouseEnter(Vector2 location)
         {
-            // Check all children collsiions with mouse and fire events for them
-            for (int i = 0; i < _children.Count; i++)
+            // Check all children collisions with mouse and fire events for them
+            for (int i = _children.Count - 1; i >= 0; i--)
             {
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
@@ -747,8 +763,8 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void OnMouseMove(Vector2 location)
         {
-            // Check all children collsiions with mouse and fire events for them
-            for (int i = 0; i < _children.Count; i++)
+            // Check all children collisions with mouse and fire events for them
+            for (int i = _children.Count - 1; i >= 0; i--)
             {
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
@@ -785,7 +801,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void OnMouseLeave()
         {
-            // Check all children collsiions with mouse and fire events for them
+            // Check all children collisions with mouse and fire events for them
             for (int i = 0; i < _children.Count; i++)
             {
                 var child = _children[i];
@@ -803,8 +819,8 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override bool OnMouseWheel(Vector2 location, int delta)
         {
-            // Check all children collsiions with mouse and fire events for them
-            for (int i = 0; i < _children.Count; i++)
+            // Check all children collisions with mouse and fire events for them
+            for (int i = _children.Count - 1; i >= 0; i--)
             {
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
@@ -834,8 +850,8 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
-            // Check all children collsiions with mouse and fire events for them
-            for (int i = 0; i < _children.Count; i++)
+            // Check all children collisions with mouse and fire events for them
+            for (int i = _children.Count - 1; i >= 0; i--)
             {
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
@@ -870,8 +886,8 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
         {
-            // Check all children collsiions with mouse and fire events for them
-            for (int i = 0; i < _children.Count; i++)
+            // Check all children collisions with mouse and fire events for them
+            for (int i = _children.Count - 1; i >= 0; i--)
             {
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
@@ -893,7 +909,7 @@ namespace FlaxEngine.GUI
                     }
                 }
             }
-            for (int i = 0; i < _children.Count; i++)
+            for (int i = _children.Count - 1; i >= 0; i--)
             {
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
@@ -923,8 +939,8 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override bool OnMouseDoubleClick(Vector2 location, MouseButtons buttons)
         {
-            // Check all children collsiions with mouse and fire events for them
-            for (int i = 0; i < _children.Count; i++)
+            // Check all children collisions with mouse and fire events for them
+            for (int i = _children.Count - 1; i >= 0; i--)
             {
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
@@ -978,12 +994,103 @@ namespace FlaxEngine.GUI
                 }
             }
         }
+        
+        /// <inheritdoc />
+        public override DragDropEffect OnDragEnter(Vector2 location)
+        {
+            // Base
+            var result = base.OnDragEnter(location);
 
-        // TODO: drag and drop support
-        //DragDropEffect OnDragEnter(IGuiData data, Vector2 location);
-        //DragDropEffect OnDragOver(IGuiData data, Vector2 location);
-        //void OnDragLeave() override;
-        //DragDropEffect OnDragDrop(IGuiData data, Vector2 location);
+            // Check all children collisions with mouse and fire events for them
+            for (int i = _children.Count - 1; i >= 0; i--)
+            {
+                var child = _children[i];
+                if (child.Visible && child.Enabled)
+                {
+                    var scrollOffsetLocation = location;
+                    if (child.IsScrollable)
+                    {
+                        scrollOffsetLocation -= _viewOffset;
+                    }
+
+                    // Fire event
+                    if (IsMouseOverChild(child, ref scrollOffsetLocation))
+                    {
+                        // Enter
+                        result = child.OnDragEnter(scrollOffsetLocation - child.Location);
+                        if(result != DragDropEffect.None)
+                            break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragMove(Vector2 location)
+        {
+            // Base
+            var result = base.OnDragEnter(location);
+
+            // Check all children collisions with mouse and fire events for them
+            for (int i = _children.Count - 1; i >= 0; i--)
+            {
+                var child = _children[i];
+                if (child.Visible && child.Enabled)
+                {
+                    var scrollOffsetLocation = location;
+                    if (child.IsScrollable)
+                    {
+                        scrollOffsetLocation -= _viewOffset;
+                    }
+
+                    // Fire events
+                    if (IsMouseOverChild(child, ref scrollOffsetLocation))
+                    {
+                        if (child.IsDragOver)
+                        {
+                            // Move
+                            var tmpResult = child.OnDragMove(scrollOffsetLocation - child.Location);
+                            if (tmpResult != DragDropEffect.None)
+                                result = tmpResult;
+                        }
+                        else
+                        {
+                            // Enter
+                            var tmpResult = child.OnDragEnter(scrollOffsetLocation - child.Location);
+                            if (tmpResult != DragDropEffect.None)
+                                result = tmpResult;
+                        }
+                    }
+                    else if (child.IsDragOver)
+                    {
+                        // Leave
+                        child.OnDragLeave();
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override void OnDragLeave()
+        {
+            // Base
+            base.OnDragLeave();
+
+            // Check all children collisions with mouse and fire events for them
+            for (int i = 0; i < _children.Count; i++)
+            {
+                var child = _children[i];
+                if (child.IsDragOver)
+                {
+                    // Leave
+                    child.OnDragLeave();
+                }
+            }
+        }
 
         /// <inheritdoc />
         public override Vector2 PointToParent(Vector2 location)
@@ -1046,10 +1153,6 @@ namespace FlaxEngine.GUI
             // Arrange child controls
             PerformLayout();
         }
-
-        // TODO: implement user focus like in C++ or do it in another way?
-        //bool hasUserFocus();
-        //void onLostUserFocus();
 
         #endregion
     }
