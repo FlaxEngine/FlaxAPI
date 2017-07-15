@@ -138,18 +138,8 @@ namespace FlaxEngine.GUI
             get => _bounds;
             set
             {
-                /*if (!_bounds.Equals(ref value))
-                {
-                    SetLocationInternal(_bounds.Location);
-                    SetSizeInternal(_bounds.Size);
-                }*/
-
                 Location = value.Location;
                 Size = value.Size;
-
-                /*_bounds = value;
-                OnLocationChanged?.Invoke(this);
-                OnSizeChanged?.Invoke(this);*/
             }
         }
     }

@@ -229,8 +229,8 @@ namespace FlaxEngine
         public static Color FromRGB(uint rgb, float a = 1.0f)
         {
             return new Color(
+                ((rgb >> 16) & 0xff) / 255.0f,
                 ((rgb >> 8) & 0xff) / 255.0f,
-                ((rgb >> 4) & 0xff) / 255.0f,
                 (rgb & 0xff) / 255.0f,
                 a);
         }
