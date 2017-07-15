@@ -52,12 +52,19 @@ namespace FlaxEditor.Content
                 _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
                 _preview.Resize();
             }
+            
+            // TODO: disable streaming for asset during thumbnail rendering (and restore it after)
         }
 
         /// <inheritdoc />
         public override bool CanDrawThumbnail(ThumbnailRequest request)
         {
-            return _preview.HasLoadedAssets;
+            if (!_preview.HasLoadedAssets)
+                return false;
+
+            // Check if all mip maps are streamed
+            var asset = (CubeTexture)request.Asset;
+            return asset.ResidentMipLevels == asset.MipLevels;
         }
 
         /// <inheritdoc />
