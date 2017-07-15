@@ -25,10 +25,11 @@ namespace FlaxEditor.Content.Thumbnails
         public const float MinimumRequriedResourcesQuality = 0.8f;
 
         // TODO: free atlas slots for deleted assets
-        // TODO: dont flush atlases every frame - do it once per second
-
+        
         private readonly List<PreviewsCache> _cache = new List<PreviewsCache>(4);
         private readonly string _cacheFolder;
+
+        private DateTime _lastFlushTime;
 
         private readonly List<ThumbnailRequest> _requests = new List<ThumbnailRequest>(128);
         private readonly PreviewRoot _guiRoot = new PreviewRoot();
@@ -39,6 +40,7 @@ namespace FlaxEditor.Content.Thumbnails
             : base(editor)
         {
             _cacheFolder = Path.Combine(Globals.ProjectCacheFolder, "Thumbnails");
+            _lastFlushTime = DateTime.UtcNow;
         }
 
         /// <summary>
@@ -409,6 +411,8 @@ namespace FlaxEditor.Content.Thumbnails
 
             lock (_requests)
             {
+                var now = DateTime.UtcNow;
+
                 // Check if has any request pending
                 int count = _requests.Count;
                 if (count > 0)
@@ -420,13 +424,21 @@ namespace FlaxEditor.Content.Thumbnails
                     {
                         var request = _requests[i];
 
-                        if (request.IsReady)
+                        try
                         {
-                            isAnyReady = true;
+                            if (request.IsReady)
+                            {
+                                isAnyReady = true;
+                            }
+                            else if (request.State == ThumbnailRequest.States.Created)
+                            {
+                                request.Prepare();
+                            }
                         }
-                        else if(request.State == ThumbnailRequest.States.Created)
+                        catch (Exception ex)
                         {
-                            request.Prepare();
+                            Debug.LogException(ex);
+                            Debug.LogWarning($"Failed to prepare thumbnail rendering for {request.Item.ShortName}.");
                         }
                     }
 
@@ -437,9 +449,11 @@ namespace FlaxEditor.Content.Thumbnails
                         StartPreviewsQueue();
                     }
                 }
-                else
+                // Don't flush every frame
+                else if (now - _lastFlushTime >= TimeSpan.FromSeconds(1))
                 {
                     // Flush data
+                    _lastFlushTime = now;
                     Flush();
                 }
             }
