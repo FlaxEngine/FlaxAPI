@@ -81,9 +81,7 @@ namespace FlaxEditor.Content.Thumbnails
         {
             if (State != States.Created)
                 throw new InvalidOperationException();
-
-            Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!! Prepare " + Item.Path);
-
+            
             // Prepare
             Asset = FlaxEngine.Content.LoadAsync(Item.Path);
             Proxy.OnThumbnailDrawPrepare(this);
@@ -99,9 +97,7 @@ namespace FlaxEditor.Content.Thumbnails
         {
             if (State != States.Prepared)
                 throw new InvalidOperationException();
-
-            Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!! FinishRender " + icon.Index + " -> " + Item.Path);
-
+            
             Item.Thumbnail = icon;
 
             State = States.Rendered;
@@ -112,8 +108,6 @@ namespace FlaxEditor.Content.Thumbnails
         /// </summary>
         public void Dispose()
         {
-            Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!! Dispose " + Item.Path);
-
             if (State == States.Disosed)
                 throw new InvalidOperationException();
 

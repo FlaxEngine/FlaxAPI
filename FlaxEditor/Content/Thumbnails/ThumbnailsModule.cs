@@ -25,7 +25,7 @@ namespace FlaxEditor.Content.Thumbnails
         public const float MinimumRequriedResourcesQuality = 0.8f;
 
         // TODO: free atlas slots for deleted assets
-        
+
         private readonly List<PreviewsCache> _cache = new List<PreviewsCache>(4);
         private readonly string _cacheFolder;
 
@@ -70,6 +70,7 @@ namespace FlaxEditor.Content.Thumbnails
             var proxy = Editor.ContentDatabase.GetProxy(item) as AssetProxy;
             if (proxy == null)
             {
+                // Error
                 Debug.LogWarning($"Cannot generate preview for item {item.Path}. Cannot find proxy for it.");
                 return;
             }
@@ -171,7 +172,7 @@ namespace FlaxEditor.Content.Thumbnails
             }
 
             // Find atlases in a Editor cache directory
-            /*var files = Directory.GetFiles(_cacheFolder, "cache_*.flax", SearchOption.TopDirectoryOnly);
+            var files = Directory.GetFiles(_cacheFolder, "cache_*.flax", SearchOption.TopDirectoryOnly);
             int atlases = 0;
             for (int i = 0; i < files.Length; i++)
             {
@@ -194,7 +195,6 @@ namespace FlaxEditor.Content.Thumbnails
                 }
             }
             Debug.Log(string.Format("Previews cache count: {0} (capacity for {1} icons)", atlases, atlases * PreviewsCache.AssetIconsPerAtlas));
-            */
 
             // Prepare at least one atlas
             GetValidAtlas();
@@ -203,7 +203,7 @@ namespace FlaxEditor.Content.Thumbnails
             _output = RenderTarget.New();
             _output.Init(PreviewsCache.AssetIconsAtlasFormat, PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
             _task = RenderTask.Create<CustomRenderTask>();
-            _task.Order = 50; // Render this task later
+            _task.Order = 50;// Render this task later
             _task.Enabled = false;
             _task.OnRender += OnRender;
         }
@@ -215,7 +215,7 @@ namespace FlaxEditor.Content.Thumbnails
                 // Check if there is ready next asset to render thumbnail for it
                 // But don't check whole queue, only a few items
                 var request = GetReadyRequest(10);
-                if(request == null)
+                if (request == null)
                 {
                     // Disable task
                     _task.Enabled = false;
@@ -259,7 +259,7 @@ namespace FlaxEditor.Content.Thumbnails
                     Debug.LogError("Failed to occupy previews cache atlas slot.");
                     return;
                 }
-                
+
                 // End
                 request.FinishRender(ref icon);
                 RemoveRequest(request);
@@ -268,8 +268,6 @@ namespace FlaxEditor.Content.Thumbnails
 
         private void StartPreviewsQueue()
         {
-            Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!! StartPreviewsQueue");
-
             // Ensure to have valid atlas
             GetValidAtlas();
 
@@ -326,6 +324,7 @@ namespace FlaxEditor.Content.Thumbnails
                 }
                 catch (Exception ex)
                 {
+                    // Error
                     Debug.LogException(ex);
                     Debug.LogWarning($"Failed to prepare thumbnail rendering for {request.Item.ShortName}.");
                 }
@@ -441,6 +440,7 @@ namespace FlaxEditor.Content.Thumbnails
                         }
                         catch (Exception ex)
                         {
+                            // Error
                             Debug.LogException(ex);
                             Debug.LogWarning($"Failed to prepare thumbnail rendering for {request.Item.ShortName}.");
                         }
@@ -471,7 +471,7 @@ namespace FlaxEditor.Content.Thumbnails
             lock (_requests)
             {
                 // Clear data
-                while(_requests.Count > 0)
+                while (_requests.Count > 0)
                     RemoveRequest(_requests[0]);
                 _cache.Clear();
             }
