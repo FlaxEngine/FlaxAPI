@@ -195,6 +195,10 @@ namespace FlaxEditor.Content.Thumbnails
             }
             Debug.Log(string.Format("Previews cache count: {0} (capacity for {1} icons)", atlases, atlases * PreviewsCache.AssetIconsPerAtlas));
             */
+
+            // Prepare at least one atlas
+            GetValidAtlas();
+
             // Create render task but disabled for now
             _output = RenderTarget.New();
             _output.Init(PreviewsCache.AssetIconsAtlasFormat, PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
@@ -374,7 +378,7 @@ namespace FlaxEditor.Content.Thumbnails
         {
             for (int i = 0; i < _cache.Count; i++)
             {
-                if (!_cache[i].IsLoaded)
+                if (!_cache[i].IsReady)
                 {
                     return false;
                 }
