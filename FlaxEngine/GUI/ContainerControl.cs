@@ -41,21 +41,21 @@ namespace FlaxEngine.GUI
             IsLayoutLocked = true;
         }
 
-        ///<inheritdoc />
+        /// <inheritdoc />
         protected ContainerControl(bool canFocus, float x, float y, float width, float height)
             : base(canFocus, x, y, width, height)
         {
             IsLayoutLocked = true;
         }
 
-        ///<inheritdoc />
+        /// <inheritdoc />
         protected ContainerControl(bool canFocus, Vector2 location, Vector2 size)
             : base(canFocus, location, size)
         {
             IsLayoutLocked = true;
         }
 
-        ///<inheritdoc />
+        /// <inheritdoc />
         protected ContainerControl(bool canFocus, Rectangle bounds)
             : base(canFocus, bounds)
         {
