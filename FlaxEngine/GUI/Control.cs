@@ -592,6 +592,15 @@ namespace FlaxEngine.GUI
             _isDragOver = false;
         }
 
+        /// <summary>
+        /// Starts the drag and drop operation.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        public void DoDragDrop(DragData data)
+        {
+            ParentWindow.NativeWindow.DoDragDrop(data);
+        }
+
         #endregion
 
         #region Tooltip

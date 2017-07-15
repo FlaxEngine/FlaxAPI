@@ -4,6 +4,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using FlaxEngine.GUI;
 
 namespace FlaxEngine
 {
@@ -272,6 +273,15 @@ namespace FlaxEngine
                 return result;
             }
 #endif
+        }
+
+        /// <summary>
+        /// Starts the drag and drop operation.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        public void DoDragDrop(DragData data)
+        {
+            throw new NotImplementedException("TODO: DoDragDrop");
         }
         
         #region Internal Calls

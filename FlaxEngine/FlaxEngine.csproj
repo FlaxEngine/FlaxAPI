@@ -193,6 +193,9 @@
     <Compile Include="GUI\Docking\DockWindow.cs" />
     <Compile Include="GUI\Docking\FloatWindowDockPanel.cs" />
     <Compile Include="GUI\Docking\MasterDockPanel.cs" />
+    <Compile Include="GUI\DragData.cs" />
+    <Compile Include="GUI\DragDataFiles.cs" />
+    <Compile Include="GUI\DragDataText.cs" />
     <Compile Include="GUI\Enums.cs" />
     <Compile Include="GUI\Input\TextBox.cs" />
     <Compile Include="GUI\Input\TextBox.Keys.cs">
