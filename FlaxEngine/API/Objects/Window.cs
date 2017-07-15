@@ -390,27 +390,41 @@ namespace FlaxEngine
                 result = OnLButtonHit(hit);
             }
         }
-
-        // TODO: support drag and drop in C# GUI
-        /*internal DragDropEffect Internal_OnDragEnter(IGuiData* data, ref Vector2 location)
+        
+        internal DragDropEffect Internal_OnDragEnter(ref Vector2 mousePos, bool isText, string[] data)
         {
-            return DragDropEffect.None;
+            DragData dragData;
+            if (isText)
+                dragData = new DragDataText(data[0]);
+            else
+                dragData = new DragDataFiles(data);
+            return GUI.OnDragEnter(mousePos);
         }
 
-        internal DragDropEffect Internal_OnDragOver(IGuiData* data, ref Vector2 location)
+        internal DragDropEffect Internal_OnDragOver(ref Vector2 mousePos, bool isText, string[] data)
         {
-            return DragDropEffect.None;
+            DragData dragData;
+            if (isText)
+                dragData = new DragDataText(data[0]);
+            else
+                dragData = new DragDataFiles(data);
+            return GUI.OnDragMove(mousePos);
         }
 
-        internal DragDropEffect Internal_OnDragDrop(IGuiData* data, ref Vector2 location)
+        internal DragDropEffect Internal_OnDragDrop(ref Vector2 mousePos, bool isText, string[] data)
         {
-            return DragDropEffect.None;
+            DragData dragData;
+            if (isText)
+                dragData = new DragDataText(data[0]);
+            else
+                dragData = new DragDataFiles(data);
+            return GUI.OnDragDrop(mousePos);
         }
 
         internal void Internal_OnDragLeave()
         {
+            GUI.OnDragLeave();
         }
-        */
 
         internal void Internal_OnClosing(ClosingReason reason, ref bool cancel)
         {
