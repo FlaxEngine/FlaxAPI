@@ -1936,6 +1936,58 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Creates 2D translation matrix.
+        /// </summary>
+        /// <param name="translation">The translation vector.</param>
+        /// <param name="result">The result.</param>
+        public static void Translation2D(ref Vector2 translation, out Matrix3x3 result)
+	    {
+		    result = new Matrix3x3(
+			    1, 0, 0,
+			    0, 1, 0,
+			    translation.X, translation.Y, 1
+		    );
+	    }
+
+        /// <summary>
+        /// Creates 2D translation matrix.
+        /// </summary>
+        /// <param name="translation">The translation vector.</param>
+        /// <returns>The result.</returns>
+        public static Matrix3x3 Translation2D(Vector2 translation)
+        {
+            Matrix3x3 result;
+            Translation2D(ref translation, out result);
+            return result;
+        }
+        
+	    /// <summary>
+	    /// Transforms given vector by the matrix (in 2D).
+	    /// </summary>
+	    /// <param name="vector">The vector.</param>
+	    /// <param name="transform">The transform.</param>
+	    /// <param name="result">The result.</param>
+	    public static void Transform2D(ref Vector2 vector, ref Matrix3x3 transform, out Vector2 result)
+	    {
+		    result = new Vector2(
+			    (vector.X * transform.M11) + (vector.Y * transform.M21) + transform.M31,
+			    (vector.X * transform.M12) + (vector.Y * transform.M22) + transform.M32);
+	    }
+
+        /// <summary>
+        /// Transforms given vector by the matrix (in 2D).
+        /// </summary>
+        /// <param name="vector">The vector.</param>
+        /// <param name="transform">The transform.</param>
+        /// <returns>The result.</returns>
+        public static Vector2 Transform2D(Vector2 vector, Matrix3x3 transform)
+        {
+            Vector2 result;
+            Transform2D(ref vector, ref transform, out result);
+            return result;
+        }
+
+        /// <summary>
         /// Adds two matrices.
         /// </summary>
         /// <param name="left">The first Matrix3x3 to add.</param>
