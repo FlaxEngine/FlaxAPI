@@ -680,36 +680,34 @@ namespace FlaxEngine.GUI
         /// </summary>
         protected void DrawChildren()
         {
-            Vector2 transform = Render2D.Transform;
-
             // Push clipping mask
             Rectangle clientArea;
             GetDesireClientArea(out clientArea);
-            Render2D.PushClip(clientArea);
-
+            Render2D.PushClip(ref clientArea);
+            
             // Draw all visible child controls
+            bool hasViewOffset = !_viewOffset.IsZero;
             for (int i = 0; i < _children.Count; i++)
             {
                 var child = _children[i];
 
                 if (child.Visible)
                 {
-                    Vector2 childTransform = transform + child.Location;
-                    if (child.IsScrollable)
+                    Matrix3x3 transform = child._cachedTransform;
+                    if (hasViewOffset && child.IsScrollable)
                     {
-                        childTransform += _viewOffset;
+                        transform.M31 += _viewOffset.X;
+                        transform.M32 += _viewOffset.Y;
                     }
 
-                    Render2D.Transform = childTransform;
+                    Render2D.PushTransform(ref transform);
                     child.Draw();
+                    Render2D.PopTransform();
                 }
             }
 
             // Pop clipping mask
             Render2D.PopClip();
-
-            // Restore render transform
-            Render2D.Transform = transform;
         }
 
         /// <inheritdoc />
