@@ -217,7 +217,13 @@ namespace FlaxEngine.GUI
             Matrix2x2.Shear(ref _shear, out m2);
             Matrix2x2.Multiply(ref m1, ref m2, out m1);
             Matrix2x2.Rotation(_rotation, out m2);
-            Matrix2x2.Multiply(ref m1, ref m2, out _cachedTransform);
+            Matrix2x2.Multiply(ref m1, ref m2, out m1);
+
+            // TODO: finish this
+
+            _cachedTransform = Matrix3x3.Identity;
+            _cachedTransform.M31 = _bounds.Location.X;
+            _cachedTransform.M32 = _bounds.Location.Y;
         }
     }
 }

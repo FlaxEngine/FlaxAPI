@@ -28,7 +28,7 @@ namespace FlaxEngine.GUI
         private Vector2 _pivot = new Vector2(0.5f);
         private Vector2 _shear;
         private float _rotation;
-        private Matrix2x2 _cachedTransform;
+        internal Matrix3x3 _cachedTransform;
 
         // Layout
         private DockStyle _dockStyle;
@@ -722,6 +722,8 @@ namespace FlaxEngine.GUI
         protected virtual void SetLocationInternal(Vector2 location)
         {
             _bounds.Location = location;
+
+            UpdateTransform();
             OnLocationChanged?.Invoke(this);
         }
 
@@ -757,7 +759,8 @@ namespace FlaxEngine.GUI
         protected virtual void SetPivotInternal(ref Vector2 pivot)
         {
             _pivot = pivot;
-            
+
+            UpdateTransform();
             _parent?.OnChildResized(this);
         }
 
