@@ -160,7 +160,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets the pivot location (used to transform control around it).
+        /// Gets or sets the normalized pivot location (used to transform control around it).
         /// </summary>
         /// <value>
         /// The pivot.
@@ -212,18 +212,44 @@ namespace FlaxEngine.GUI
         /// </summary>
         protected void UpdateTransform()
         {
+            // Transformation matrix building:
+            // - calculate 2D transformation (scale, rotation and shear)
+            // - calculate actual pivot location (pivot * size)
+            // - apply negative pivot offset
+            // - apply 2D transform
+            // - apply pivot offset
+            // - apply location offset
+
+            // 2D transformation
             Matrix2x2 m1, m2;
             Matrix2x2.Scale(ref _scale, out m1);
             Matrix2x2.Shear(ref _shear, out m2);
             Matrix2x2.Multiply(ref m1, ref m2, out m1);
-            Matrix2x2.Rotation(_rotation, out m2);
+            Matrix2x2.Rotation(Mathf.DegreesToRadians * _rotation, out m2);
             Matrix2x2.Multiply(ref m1, ref m2, out m1);
 
-            // TODO: finish this
+            // Actual pivot and negative pivot
+            Vector2 v1, v2;
+            Vector2.Multiply(ref _pivot, ref _bounds.Location, out v1);
+            Vector2.Negate(ref v1, out v2);
+            Vector2.Add(ref v1, ref _bounds.Location, out v1);
 
-            _cachedTransform = Matrix3x3.Identity;
-            _cachedTransform.M31 = _bounds.Location.X;
-            _cachedTransform.M32 = _bounds.Location.Y;
+            // Mix all the stuff
+            Matrix3x3 m3;
+            Matrix3x3.Translation2D(ref v2, out m3);
+            Matrix3x3 m4 = (Matrix3x3)m1;
+            Matrix3x3.Multiply(ref m3, ref m4, out m3);
+            Matrix3x3.Translation2D(ref v1, out m4);
+            Matrix3x3.Multiply(ref m3, ref m4, out _cachedTransform);
+
+            // TODO: Temp test code:
+            var pivot = _pivot * Size;
+            var mmm = Matrix.Translation(-pivot.X, -pivot.Y, 1) * Matrix.RotationZ(_rotation * Mathf.DegreesToRadians) * Matrix.Translation(pivot.X + X, pivot.Y + Y, 1);
+            _cachedTransform = new Matrix3x3(
+                mmm.M11, mmm.M12, mmm.M13,
+                mmm.M21, mmm.M22, mmm.M23,
+                mmm.M41, mmm.M42, 1.0f
+                );
         }
     }
 }

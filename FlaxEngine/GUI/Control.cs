@@ -313,6 +313,12 @@ namespace FlaxEngine.GUI
             {
                 Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), _backgroundColor, !Mathf.IsOne(_backgroundColor.A));
             }
+
+            if ((this is ContainerControl) == false)
+            {
+                var tx = Time.RealtimeSinceStartup * 1.5f;
+                Rotation = Mathf.Lerp(-20.5f, 20.5f, Mathf.Sin(tx));
+            }
         }
 
         /// <summary>
@@ -736,6 +742,7 @@ namespace FlaxEngine.GUI
         {
             _bounds.Size = size;
 
+            UpdateTransform();
             OnSizeChanged?.Invoke(this);
             _parent?.OnChildResized(this);
         }
