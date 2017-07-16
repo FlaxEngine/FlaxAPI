@@ -402,7 +402,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Convert the 3x3 Matrix to a 4x4 Matrix.
+        /// Convert the 2x2 Matrix to a 4x4 Matrix.
         /// </summary>
         /// <returns>A 4x4 Matrix with zero translation and M44=1</returns>
         public static explicit operator Matrix(Matrix2x2 value)
@@ -418,8 +418,33 @@ namespace FlaxEngine
         /// <summary>
         /// Convert the 4x4 Matrix to a 3x3 Matrix.
         /// </summary>
-        /// <returns>A 3x3 Matrix</returns>
+        /// <returns>A 2x2 Matrix</returns>
         public static explicit operator Matrix2x2(Matrix value)
+        {
+            return new Matrix2x2(
+                value.M11, value.M12,
+                value.M21, value.M22
+            );
+        }
+
+        /// <summary>
+        /// Convert the 2x2 Matrix to a 4x4 Matrix.
+        /// </summary>
+        /// <returns>A 3x3 Matrix with zero translation and M44=1</returns>
+        public static explicit operator Matrix3x3(Matrix2x2 value)
+        {
+            return new Matrix3x3(
+                value.M11, value.M12, 0,
+                value.M21, value.M22, 0,
+                0, 0, 1
+            );
+        }
+
+        /// <summary>
+        /// Convert the 3x3 Matrix to a 2x2 Matrix.
+        /// </summary>
+        /// <returns>A 2x2 Matrix</returns>
+        public static explicit operator Matrix2x2(Matrix3x3 value)
         {
             return new Matrix2x2(
                 value.M11, value.M12,
