@@ -12,15 +12,49 @@ namespace FlaxEngine
 	public static partial class Render2D
 	{
 	    /// <summary>
-	    /// Calls drawing GUI to the texture.
+	    /// Pushes 2D transformation matrix on the stack.
 	    /// </summary>
-	    /// <param name="context">The GPU context to handle graphics commands.</param>
-	    /// <param name="output">The output render target.</param>
-	    /// <param name="guiRoot">The root control of the GUI to draw.</param>
+	    /// <param name="transform">The transformation.</param>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 	    [UnmanagedCall]
+	    public static void PushTransform(ref Matrix3x3 transform)
+	    {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+	        Internal_PushTransform(ref transform);
+#endif
+	    }
+
+	    /// <summary>
+	    /// Push clipping rectangle mask
+	    /// </summary>
+	    /// <param name="clipRect">Axis aligned clipping mask rectangle</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+	    [UnmanagedCall]
+	    public static void PushClip(ref Rectangle clipRect)
+	    {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+	        Internal_PushClip(ref clipRect);
+#endif
+	    }
+
+        /// <summary>
+        /// Calls drawing GUI to the texture.
+        /// </summary>
+        /// <param name="context">The GPU context to handle graphics commands.</param>
+        /// <param name="output">The output render target.</param>
+        /// <param name="guiRoot">The root control of the GUI to draw.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
 	    public static void CallDrawing(GPUContext context, RenderTarget output, Control guiRoot)
 	    {
 	        if (context == null || output == null || guiRoot == null)

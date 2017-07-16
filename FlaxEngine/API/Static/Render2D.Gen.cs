@@ -20,16 +20,35 @@ namespace FlaxEngine
 	public static partial class Render2D
 	{
 		/// <summary>
-		/// Gets or sets transform applied to all rendering operations (only offset).
+		/// Pushes 2D transformation matrix on the stack.
 		/// </summary>
+		/// <param name="transform">The transformation.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
 		[UnmanagedCall]
-		public static Vector2 Transform
+		public static void PushTransform(Matrix3x3 transform) 
 		{
 #if UNIT_TEST_COMPILANT
-			get; set;
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			get { Vector2 resultAsRef; Internal_GetTransform(out resultAsRef); return resultAsRef; }
-			set { Internal_SetTransform(ref value); }
+			Internal_PushTransform(ref transform);
+#endif
+		}
+
+		/// <summary>
+		/// Pops transformation matrix from the stack.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static void PopTransform() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+		    Internal_PopTransform();
 #endif
 		}
 
@@ -256,7 +275,11 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetTransform(ref Vector2 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_PushClip(ref Rectangle clipRect);
+		internal static extern void Internal_PushTransform(ref Matrix3x3 transform);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_PopTransform();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_PushClip(ref Rectangle transform);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_PopClip();
 		[MethodImpl(MethodImplOptions.InternalCall)]
