@@ -48,7 +48,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-		    Internal_PopTransform();
+			Internal_PopTransform();
 #endif
 		}
 
@@ -82,19 +82,6 @@ namespace FlaxEngine
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
 			Internal_PopClip();
-#endif
-		}
-
-		/// <summary>
-		/// Gets current clipping mask (transformed).
-		/// </summary>
-		[UnmanagedCall]
-		public static Rectangle ClipMask
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { Rectangle resultAsRef; Internal_GetClipMask(out resultAsRef); return resultAsRef; }
 #endif
 		}
 
@@ -271,19 +258,13 @@ namespace FlaxEngine
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetTransform(out Vector2 resultAsRef);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetTransform(ref Vector2 val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_PushTransform(ref Matrix3x3 transform);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_PopTransform();
-        [MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_PushClip(ref Rectangle transform);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_PushClip(ref Rectangle clipRect);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_PopClip();
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetClipMask(out Rectangle resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_DrawText(IntPtr font, string text, ref Rectangle layoutRect, ref Color color, TextAlignment horizontalAlignment, TextAlignment verticalAlignment, TextWrapping textWrapping, float baseLinesGapScale, float scale);
 		[MethodImpl(MethodImplOptions.InternalCall)]
