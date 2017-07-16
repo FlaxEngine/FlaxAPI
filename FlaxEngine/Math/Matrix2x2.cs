@@ -17,6 +17,8 @@ namespace FlaxEngine
     // ReSharper disable once InconsistentNaming
     public struct Matrix2x2 : IEquatable<Matrix2x2>, IFormattable
     {
+        private const string FormatString = "[M11:{0} M12:{1}] [M21:{2} M22:{3}]";
+
         /// <summary>
         /// The size of the <see cref="Matrix2x2"/> type, in bytes.
         /// </summary>
@@ -270,10 +272,109 @@ namespace FlaxEngine
         /// <summary>
         /// Creates an array containing the elements of the Matrix2x2.
         /// </summary>
-        /// <returns>A 9-element array containing the components of the Matrix2x2.</returns>
+        /// <returns>A 4-element array containing the components of the Matrix2x2.</returns>
         public float[] ToArray()
         {
             return new[] {M11, M12, M21, M22};
+        }
+
+        /// <summary>
+        /// Creates the uniform scale metrix.
+        /// </summary>
+        /// <param name="scale">The scale.</param>
+        /// <param name="result">The result.</param>
+        public static void Scale(float scale, out Matrix2x2 result)
+        {
+            result = new Matrix2x2(scale, 0, 0, scale);
+        }
+
+        /// <summary>
+        /// Creates the scale metrix.
+        /// </summary>
+        /// <param name="scaleX">The scale x.</param>
+        /// <param name="scaleY">The scale y.</param>
+        /// <param name="result">The result.</param>
+        public static void Scale(float scaleX, float scaleY, out Matrix2x2 result)
+        {
+            result = new Matrix2x2(scaleX, 0, 0, scaleY);
+        }
+
+        /// <summary>
+        /// Creates the scale metrix.
+        /// </summary>
+        /// <param name="scale">The scale vector.</param>
+        /// <param name="result">The result.</param>
+        public static void Scale(ref Vector2 scale, out Matrix2x2 result)
+        {
+            result = new Matrix2x2(scale.X, 0, 0, scale.Y);
+        }
+
+        /// <summary>
+        /// Creates the shear matrix. Represented by:
+        /// [1 Y]
+        /// [X 1]
+        /// </summary>
+        /// <param name="shearAngles">The shear angles.</param>
+        /// <param name="result">The result.</param>
+        public static void Shear(ref Vector2 shearAngles, out Matrix2x2 result)
+        {
+            float shearX = shearAngles.X == 0 ? 0 : (1.0f / Mathf.Tan(Mathf.DegreesToRadians * (90 - Mathf.Clamp(shearAngles.X, -89.0f, 89.0f))));
+            float shearY = shearAngles.Y == 0 ? 0 : (1.0f / Mathf.Tan(Mathf.DegreesToRadians * (90 - Mathf.Clamp(shearAngles.Y, -89.0f, 89.0f))));
+            result = new Matrix2x2(1, shearY, shearX, 1);
+        }
+
+        /// <summary>
+        /// Creates the rotation metrix.
+        /// </summary>
+        /// <param name="rotationRadians">The rotation angle (in radians).</param>
+        /// <param name="result">The result.</param>
+        public static void Rotation(float rotationRadians, out Matrix2x2 result)
+        {
+            float sin = Mathf.Sin(rotationRadians);
+            float cos = Mathf.Cos(rotationRadians);
+            result = new Matrix2x2(cos, sin, -sin, cos);
+        }
+
+        /// <summary>
+        /// Transforms the specified vector by the given matrix.
+        /// </summary>
+        /// <param name="vector">The vector.</param>
+        /// <param name="matrix">The matrix.</param>
+        /// <param name="result">The result.</param>
+        public static void Transform(ref Vector2 vector, ref Matrix2x2 matrix, out Vector2 result)
+        {
+            result = new Vector2(
+                vector.X * matrix.M11 + vector.Y * matrix.M21,
+                vector.X * matrix.M12 + vector.Y * matrix.M22);
+        }
+
+        /// <summary>
+        /// Determines the product of two matrices.
+        /// </summary>
+        /// <param name="left">The first Matrix2x2 to multiply.</param>
+        /// <param name="right">The second Matrix2x2 to multiply.</param>
+        /// <param name="result">The product of the two matrices.</param>
+        public static void Multiply(ref Matrix2x2 left, ref Matrix2x2 right, out Matrix2x2 result)
+        {
+            result = new Matrix2x2(
+                (left.M11 * right.M11) + (left.M12 * right.M21),
+                (left.M11 * right.M12) + (left.M12 * right.M22),
+                (left.M21 * right.M11) + (left.M22 * right.M21),
+                (left.M21 * right.M12) + (left.M22 * right.M22)
+            );
+        }
+
+        /// <summary>
+        /// Calculates the inverse of the specified Matrix2x2.
+        /// </summary>
+        /// <param name="value">The Matrix2x2 whose inverse is to be calculated.</param>
+        /// <param name="result">When the method completes, contains the inverse of the specified Matrix2x2.</param>
+        public static void Invert(ref Matrix2x2 value, out Matrix2x2 result)
+        {
+            float invDet = value.InverseDeterminant();
+            result = new Matrix2x2(
+                value.M22 * invDet, -value.M12 * invDet,
+                -value.M21 * invDet, value.M11 * invDet);
         }
 
         /// <summary>
@@ -334,7 +435,7 @@ namespace FlaxEngine
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.CurrentCulture, "[M11:{0} M12:{1}] [M21:{2} M22:{3}]",
+            return string.Format(CultureInfo.CurrentCulture, FormatString,
                 M11, M12, M21, M22);
         }
 
@@ -350,7 +451,7 @@ namespace FlaxEngine
             if (format == null)
                 return ToString();
 
-            return string.Format(format, CultureInfo.CurrentCulture, "[M11:{0} M12:{1}] [M21:{2} M22:{3}]",
+            return string.Format(format, CultureInfo.CurrentCulture, FormatString,
                 M11.ToString(format, CultureInfo.CurrentCulture), M12.ToString(format, CultureInfo.CurrentCulture),
                 M21.ToString(format, CultureInfo.CurrentCulture), M22.ToString(format, CultureInfo.CurrentCulture));
         }
@@ -364,7 +465,7 @@ namespace FlaxEngine
         /// </returns>
         public string ToString(IFormatProvider formatProvider)
         {
-            return string.Format(formatProvider, "[M11:{0} M12:{1}] [M21:{2} M22:{3}]",
+            return string.Format(formatProvider, FormatString,
                 M11.ToString(formatProvider), M12.ToString(formatProvider),
                 M21.ToString(formatProvider), M22.ToString(formatProvider));
         }
@@ -382,7 +483,7 @@ namespace FlaxEngine
             if (format == null)
                 return ToString(formatProvider);
 
-            return string.Format(format, formatProvider, "[M11:{0} M12:{1}] [M21:{2} M22:{3}]",
+            return string.Format(format, formatProvider, FormatString,
                 M11.ToString(format, formatProvider), M12.ToString(format, formatProvider),
                 M21.ToString(format, formatProvider), M22.ToString(format, formatProvider));
         }
