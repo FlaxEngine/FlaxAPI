@@ -16,17 +16,25 @@ namespace FlaxEngine.GUI
 
         // State
         private bool _isMouseOver, _isDragOver;
-
-        // Dimensions
-        private Rectangle _bounds;
-        private DockStyle _dockStyle;
-        private AnchorStyle _anchorStyle;
-
-        // Properties
         private bool _isVisible = true;
         private bool _isEnabled = true;
         private bool _canFocus;
 
+        // Dimensions
+        private Rectangle _bounds;
+
+        // Transform
+        private Vector2 _scale = new Vector2(1.0f);
+        private Vector2 _pivot = new Vector2(0.5f);
+        private Vector2 _shear;
+        private float _rotation;
+        private Matrix2x2 _cachedTransform;
+
+        // Layout
+        private DockStyle _dockStyle;
+        private AnchorStyle _anchorStyle;
+
+        // Misc
         private string _tooltipText;
         private Color _backgroundColor = Color.Transparent;
 
@@ -260,6 +268,8 @@ namespace FlaxEngine.GUI
         {
             _canFocus = canFocus;
             _bounds = bounds;
+
+            UpdateTransform();
         }
 
         /// <summary>
@@ -725,6 +735,53 @@ namespace FlaxEngine.GUI
             _bounds.Size = size;
 
             OnSizeChanged?.Invoke(this);
+            _parent?.OnChildResized(this);
+        }
+
+        /// <summary>
+        /// Sets the scale and updates the transform.
+        /// </summary>
+        /// <param name="scale">The scale.</param>
+        protected virtual void SetScaleInternal(ref Vector2 scale)
+        {
+            _scale = scale;
+
+            UpdateTransform();
+            _parent?.OnChildResized(this);
+        }
+
+        /// <summary>
+        /// Sets the pivot and updates the transform.
+        /// </summary>
+        /// <param name="pivot">The pivot.</param>
+        protected virtual void SetPivotInternal(ref Vector2 pivot)
+        {
+            _pivot = pivot;
+            
+            _parent?.OnChildResized(this);
+        }
+
+        /// <summary>
+        /// Sets the shear and updates the transform.
+        /// </summary>
+        /// <param name="shear">The shear.</param>
+        protected virtual void SetShearInternal(ref Vector2 shear)
+        {
+            _shear = shear;
+
+            UpdateTransform();
+            _parent?.OnChildResized(this);
+        }
+
+        /// <summary>
+        /// Sets the rotation angle and updates the transform.
+        /// </summary>
+        /// <param name="rotation">The rotation (in degrees).</param>
+        protected virtual void SetRotationInternal(float rotation)
+        {
+            _rotation = rotation;
+
+            UpdateTransform();
             _parent?.OnChildResized(this);
         }
 

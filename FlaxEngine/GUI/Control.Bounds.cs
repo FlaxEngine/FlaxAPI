@@ -142,5 +142,82 @@ namespace FlaxEngine.GUI
                 Size = value.Size;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the scale.
+        /// </summary>
+        /// <value>
+        /// The scale.
+        /// </value>
+        public Vector2 Scale
+        {
+            get => _scale;
+            set
+            {
+                if (!_scale.Equals(ref value))
+                    SetScaleInternal(ref value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the pivot location (used to transform control around it).
+        /// </summary>
+        /// <value>
+        /// The pivot.
+        /// </value>
+        public Vector2 Pivot
+        {
+            get => _pivot;
+            set
+            {
+                if (!_pivot.Equals(ref value))
+                    SetPivotInternal(ref value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the shear.
+        /// </summary>
+        /// <value>
+        /// The shear.
+        /// </value>
+        public Vector2 Shear
+        {
+            get => _shear;
+            set
+            {
+                if (!_shear.Equals(ref value))
+                    SetShearInternal(ref value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the rotation angle (in degrees).
+        /// </summary>
+        /// <value>
+        /// The rotation.
+        /// </value>
+        public float Rotation
+        {
+            get => _rotation;
+            set
+            {
+                if (!Mathf.NearEqual(_rotation, value))
+                    SetRotationInternal(value);
+            }
+        }
+
+        /// <summary>
+        /// Updates the control transform.
+        /// </summary>
+        protected void UpdateTransform()
+        {
+            Matrix2x2 m1, m2;
+            Matrix2x2.Scale(ref _scale, out m1);
+            Matrix2x2.Shear(ref _shear, out m2);
+            Matrix2x2.Multiply(ref m1, ref m2, out m1);
+            Matrix2x2.Rotation(_rotation, out m2);
+            Matrix2x2.Multiply(ref m1, ref m2, out _cachedTransform);
+        }
     }
 }

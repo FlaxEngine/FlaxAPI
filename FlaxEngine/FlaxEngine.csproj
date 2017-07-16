@@ -257,6 +257,7 @@
     <Compile Include="Math\HalfUtils.cs" />
     <Compile Include="Math\Mathf.cs" />
     <Compile Include="Math\Matrix.cs" />
+    <Compile Include="Math\Matrix2x2.cs" />
     <Compile Include="Math\Matrix3x3.cs" />
     <Compile Include="Math\OrientedBoundingBox.cs" />
     <Compile Include="Math\Rectangle.cs" />
