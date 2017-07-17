@@ -20,11 +20,6 @@ namespace FlaxEngine.GUI
         protected readonly List<Control> _children = new List<Control>();
 
         /// <summary>
-        /// The view offset. Usefull to offset contents of the container (used by the scrollbars and drop panels)
-        /// </summary>
-        protected Vector2 _viewOffset;
-
-        /// <summary>
         /// The contains focus cached flag.
         /// </summary>
         protected bool _containsFocus;
@@ -84,11 +79,6 @@ namespace FlaxEngine.GUI
         public bool HasChildren => _children.Count > 0;
 
         /// <summary>
-        ///     Gets current view offset for all the controls (used by the scroll bars)
-        /// </summary>
-        public Vector2 ViewOffset => _viewOffset;
-
-        /// <summary>
         ///     Gets a value indicating whether the control, or one of its child controls, currently has the input focus
         /// </summary>
         /// <returns>True if the control, or one of its child controls, currently has the input focus</returns>
@@ -111,8 +101,8 @@ namespace FlaxEngine.GUI
             // Every child container control
             for (int i = 0; i < _children.Count; i++)
             {
-                var containerControl = _children[i] as ContainerControl;
-                containerControl?.LockChildrenRecursive();
+                if (_children[i] is ContainerControl child)
+                    child.LockChildrenRecursive();
             }
         }
 
@@ -127,8 +117,8 @@ namespace FlaxEngine.GUI
             // Every child container control
             for (int i = 0; i < _children.Count; i++)
             {
-                var containerControl = _children[i] as ContainerControl;
-                containerControl?.UnlockChildrenRecursive();
+                if (_children[i] is ContainerControl child)
+                    child.UnlockChildrenRecursive();
             }
         }
 
@@ -417,8 +407,6 @@ namespace FlaxEngine.GUI
         /// <returns>True if point is over the control content, otherwise false.</returns>
         protected virtual bool IntersectsChildContent(Control child, Vector2 location, out Vector2 childSpaceLocation)
         {
-            if (child.IsScrollable)
-                location -= _viewOffset;
             return child.IntersectsContent(ref location, out childSpaceLocation);
         }
 
@@ -679,29 +667,29 @@ namespace FlaxEngine.GUI
             GetDesireClientArea(out clientArea);
             Render2D.PushClip(ref clientArea);
 
+            DrawChildren();
+
+            // Pop clipping mask
+            Render2D.PopClip();
+        }
+
+        /// <summary>
+        /// Draws the children. Can be overriden to provide some customizations. Draw is performed with applied clipping mask fro the client area.
+        /// </summary>
+        protected virtual void DrawChildren()
+        {
             // Draw all visible child controls
-            bool hasViewOffset = !_viewOffset.IsZero;
             for (int i = 0; i < _children.Count; i++)
             {
                 var child = _children[i];
 
                 if (child.Visible)
                 {
-                    Matrix3x3 transform = child._cachedTransform;
-                    if (hasViewOffset && child.IsScrollable)
-                    {
-                        transform.M31 += _viewOffset.X;
-                        transform.M32 += _viewOffset.Y;
-                    }
-
-                    Render2D.PushTransform(ref transform);
+                    Render2D.PushTransform(ref child._cachedTransform);
                     child.Draw();
                     Render2D.PopTransform();
                 }
             }
-
-            // Pop clipping mask
-            Render2D.PopClip();
         }
 
         /// <inheritdoc />
@@ -1047,25 +1035,6 @@ namespace FlaxEngine.GUI
                     child.OnDragLeave();
                 }
             }
-        }
-
-        /// <inheritdoc />
-        public override bool IntersectsContent(ref Vector2 locationParent, out Vector2 location)
-        {
-            location = base.PointFromParent(locationParent);
-            return ContainsPoint(ref location);
-        }
-
-        /// <inheritdoc />
-        public override Vector2 PointToParent(Vector2 location)
-        {
-            return base.PointToParent(location) + _viewOffset;
-        }
-
-        /// <inheritdoc />
-        public override Vector2 PointFromParent(Vector2 location)
-        {
-            return base.PointFromParent(location) - _viewOffset;
         }
 
         /// <inheritdoc />

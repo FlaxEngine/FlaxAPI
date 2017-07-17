@@ -7,8 +7,8 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// Panel UI control.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
-    public class Panel : ContainerControl
+    /// <seealso cref="FlaxEngine.GUI.ScrollableControl" />
+    public class Panel : ScrollableControl
     {
         /// <summary>
         /// The scroll right corner. Used to scroll contents of the panel control.
