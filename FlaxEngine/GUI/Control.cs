@@ -16,6 +16,7 @@ namespace FlaxEngine.GUI
 
         // State
         private bool _isMouseOver, _isDragOver;
+
         private bool _isVisible = true;
         private bool _isEnabled = true;
         private bool _canFocus;
@@ -25,6 +26,7 @@ namespace FlaxEngine.GUI
 
         // Transform
         private Vector2 _scale = new Vector2(1.0f);
+
         private Vector2 _pivot = new Vector2(0.5f);
         private Vector2 _shear;
         private float _rotation;
@@ -33,10 +35,12 @@ namespace FlaxEngine.GUI
 
         // Layout
         private DockStyle _dockStyle;
+
         private AnchorStyle _anchorStyle;
 
         // Misc
         private string _tooltipText;
+
         private Color _backgroundColor = Color.Transparent;
 
         /// <summary>
@@ -77,7 +81,7 @@ namespace FlaxEngine.GUI
                 _parent?.RemoveChildInternal(this);
                 _parent = value;
                 _parent?.AddChildInternal(this);
-                
+
                 OnParentChangedInternal();
             }
         }
@@ -137,7 +141,7 @@ namespace FlaxEngine.GUI
                 }
             }
         }
-        
+
         /// <summary>
         ///     Returns true if control can use scrolling feature
         /// </summary>
@@ -161,7 +165,7 @@ namespace FlaxEngine.GUI
                         Defocus();
 
                         // Clear flags
-                        if(_isMouseOver)
+                        if (_isMouseOver)
                             OnMouseLeave();
                         if (_isDragOver)
                             OnDragLeave();
@@ -554,7 +558,7 @@ namespace FlaxEngine.GUI
         #endregion
 
         #region Drag&Drop
-        
+
         /// <summary>
         ///     Check if mouse dragging is over that item or its child items.
         /// </summary>
@@ -593,7 +597,7 @@ namespace FlaxEngine.GUI
         {
             // Clear flag
             _isDragOver = false;
-            
+
             return DragDropEffect.None;
         }
 
@@ -626,17 +630,28 @@ namespace FlaxEngine.GUI
         #region Helper Functions
 
         /// <summary>
-        ///     Checks if control contains given point
+        /// Checks if given location point in Parent Space intresects with the control content and calculates local position.
+        /// </summary>
+        /// <param name="locationParent">The location in Parent Space.</param>
+        /// <param name="location">The location of intersection in Control Space.</param>
+        /// <returns></returns>
+        public virtual bool IntersectsContent(ref Vector2 locationParent, out Vector2 location)
+        {
+            location = PointFromParent(locationParent);
+            return ContainsPoint(ref location);
+        }
+
+        /// <summary>
+        ///     Checks if control contains given point in local Control Space.
         /// </summary>
         /// <param name="location">Point location in Control Space to check</param>
         /// <returns>True if point is inside control's area</returns>
         public virtual bool ContainsPoint(ref Vector2 location)
         {
-            Vector2 localPosition = PointFromParent(location);
-            return localPosition.X >= 0 &&
-                   localPosition.Y >= 0 &&
-                   localPosition.X <= Size.X &&
-                   localPosition.Y <= Size.Y;
+            return location.X >= 0 &&
+                   location.Y >= 0 &&
+                   location.X <= Size.X &&
+                   location.Y <= Size.Y;
         }
 
         /// <summary>
@@ -654,12 +669,12 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Converts point in parent control coordinates into local control's space
         /// </summary>
-        /// <param name="location">Input location of the point to convert</param>
+        /// <param name="locationParent">Input location of the point to convert</param>
         /// <returns>Converted point location in control's space</returns>
-        public virtual Vector2 PointFromParent(Vector2 location)
+        public virtual Vector2 PointFromParent(Vector2 locationParent)
         {
             Vector2 result;
-            Matrix3x3.Transform2D(ref location, ref _cachedTransformInv, out result);
+            Matrix3x3.Transform2D(ref locationParent, ref _cachedTransformInv, out result);
             return result;
         }
 
@@ -670,9 +685,10 @@ namespace FlaxEngine.GUI
         /// <returns>Converted point location in window coordinates</returns>
         public virtual Vector2 PointToWindow(Vector2 location)
         {
+            location = PointToParent(location);
             if (HasParent)
             {
-                return _parent.PointToWindow(PointToParent(location));
+                return _parent.PointToWindow(location);
             }
             return location;
         }
@@ -684,23 +700,10 @@ namespace FlaxEngine.GUI
         /// <returns>Converted point location in control's space</returns>
         public virtual Vector2 PointFromWindow(Vector2 location)
         {
+            location = PointFromParent(location);
             if (HasParent)
             {
-                return _parent.PointFromWindow(PointFromParent(location));
-            }
-            return location;
-        }
-
-        /// <summary>
-        ///     Converts point in screen coordinates into the local control's space
-        /// </summary>
-        /// <param name="location">Input location of the point to convert</param>
-        /// <returns>Converted point location in local control's space</returns>
-        public virtual Vector2 ScreenToClient(Vector2 location)
-        {
-            if (HasParent)
-            {
-                return _parent.ScreenToClient(PointFromParent(location));
+                return _parent.PointFromWindow(location);
             }
             return location;
         }
@@ -712,9 +715,23 @@ namespace FlaxEngine.GUI
         /// <returns>Converted point location in screen coordinates</returns>
         public virtual Vector2 ClientToScreen(Vector2 location)
         {
+            location = PointToParent(location);
+            if (HasParent)
+                return _parent.ClientToScreen(location);
+            return location;
+        }
+
+        /// <summary>
+        ///     Converts point in screen coordinates into the local control's space
+        /// </summary>
+        /// <param name="location">Input location of the point to convert</param>
+        /// <returns>Converted point location in local control's space</returns>
+        public virtual Vector2 ScreenToClient(Vector2 location)
+        {
+            location = PointFromParent(location);
             if (HasParent)
             {
-                return _parent.ClientToScreen(PointToParent(location));
+                return _parent.ScreenToClient(location);
             }
             return location;
         }

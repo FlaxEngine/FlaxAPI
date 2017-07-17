@@ -36,7 +36,7 @@ namespace FlaxEngine.GUI
             get { return _scrollRightCorner; }
             internal set { _scrollRightCorner = value; }
         }
-
+        
         /// <summary>
         /// Gets the view bottom.
         /// </summary>
@@ -134,9 +134,9 @@ namespace FlaxEngine.GUI
                 return true;
 
             // Roll back to scroll bars
-            if (VScrollBar != null && VScrollBar.Visible && VScrollBar.OnMouseWheel(location - VScrollBar.Location, delta))
+            if (VScrollBar != null && VScrollBar.Visible && VScrollBar.OnMouseWheel(VScrollBar.PointFromParent(location), delta))
                 return true;
-            if (HScrollBar != null && HScrollBar.Visible && HScrollBar.OnMouseWheel(location - HScrollBar.Location, delta))
+            if (HScrollBar != null && HScrollBar.Visible && HScrollBar.OnMouseWheel(HScrollBar.PointFromParent(location), delta))
                 return true;
 
             // No event handled
@@ -189,25 +189,35 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        protected override bool IsMouseOverChild(Control child, ref Vector2 location)
+        protected override bool IntersectsChildContent(Control child, Vector2 location, out Vector2 childSpaceLocation)
         {
-            // Scroll bars are always allowed to check
+            // For not scroll bars we want to reject any collisions
             if (child != VScrollBar && child != HScrollBar)
             {
-                Vector2 parentSpaceLocation = location;
-                if (child.IsScrollable)
-                    parentSpaceLocation += _viewOffset;
-
                 // Check if has v scroll bar to reject points on it
-                if (VScrollBar != null && VScrollBar.Visible && VScrollBar.ContainsPoint(ref parentSpaceLocation))
-                    return false;
+                if (VScrollBar != null && VScrollBar.Visible)
+                {
+                    Vector2 pos = VScrollBar.PointFromParent(location);
+                    if (VScrollBar.ContainsPoint(ref pos))
+                    {
+                        childSpaceLocation = Vector2.Zero;
+                        return false;
+                    }
+                }
 
                 // Check if has h scroll bar to reject points on it
-                if (HScrollBar != null && HScrollBar.Visible && HScrollBar.ContainsPoint(ref parentSpaceLocation))
-                    return false;
+                if (HScrollBar != null && HScrollBar.Visible)
+                {
+                    Vector2 pos = HScrollBar.PointFromParent(location);
+                    if (HScrollBar.ContainsPoint(ref pos))
+                    {
+                        childSpaceLocation = Vector2.Zero;
+                        return false;
+                    }
+                }
             }
 
-            return base.IsMouseOverChild(child, ref location);
+            return base.IntersectsChildContent(child, location, out childSpaceLocation);
         }
 
         /// <inheritdoc />

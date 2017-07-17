@@ -133,7 +133,7 @@ namespace FlaxEngine.GUI
         {
             bool wasLayoutLocked = IsLayoutLocked;
             IsLayoutLocked = true;
-            
+
             // Delete children
             while (_children.Count > 0)
             {
@@ -151,7 +151,7 @@ namespace FlaxEngine.GUI
         {
             bool wasLayoutLocked = IsLayoutLocked;
             IsLayoutLocked = true;
-            
+
             // Delete children
             while (_children.Count > 0)
             {
@@ -167,9 +167,9 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="child">Control to add</param>
         /// <returns>Added control.</returns>
-        public T AddChild<T>(T child) where T: Control
+        public T AddChild <T>(T child) where T : Control
         {
-            if(child == null)
+            if (child == null)
                 throw new ArgumentNullException();
             if (child.Parent == this && _children.Contains(child))
                 throw new InvalidOperationException("Argument child cannot be added, if current container is already its parent.");
@@ -226,14 +226,10 @@ namespace FlaxEngine.GUI
             for (int i = 0; i < _children.Count; i++)
             {
                 var child = _children[i];
-                Vector2 scrollOffsetLocation = point;
-                if (child.IsScrollable)
-                {
-                    scrollOffsetLocation -= _viewOffset;
-                }
 
                 // Check collision
-                if (IsMouseOverChild(child, ref scrollOffsetLocation))
+                Vector2 childLocation;
+                if (IntersectsChildContent(child, point, out childLocation))
                 {
                     result = child;
                     break;
@@ -253,17 +249,13 @@ namespace FlaxEngine.GUI
             for (int i = 0; i < _children.Count; i++)
             {
                 var child = _children[i];
-                Vector2 scrollOffsetLocation = point;
-                if (child.IsScrollable)
-                {
-                    scrollOffsetLocation -= _viewOffset;
-                }
 
                 // Check collision
-                if (IsMouseOverChild(child, ref scrollOffsetLocation))
+                Vector2 childLocation;
+                if (IntersectsChildContent(child, point, out childLocation))
                 {
                     var containerControl = child as ContainerControl;
-                    var childAtRecursive = containerControl?.GetChildAtRecursive(scrollOffsetLocation - child.Location);
+                    var childAtRecursive = containerControl?.GetChildAtRecursive(childLocation);
                     if (childAtRecursive != null)
                     {
                         child = childAtRecursive;
@@ -410,14 +402,18 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Checks if mouse is over given control.
+        /// Checks if given point in thi container control space intersects with the child control content.
+        /// Also calculates result location in child control space which can be used to feed control with event at that point.
         /// </summary>
         /// <param name="child">The child control to check.</param>
-        /// <param name="location">The mouse location.</param>
-        /// <returns>True if mouse is over the control, otherwise false.</returns>
-        protected virtual bool IsMouseOverChild(Control child, ref Vector2 location)
+        /// <param name="location">The location in this container control space.</param>
+        /// <param name="childSpaceLocation">The output location in child control space.</param>
+        /// <returns>True if point is over the control content, otherwise false.</returns>
+        protected virtual bool IntersectsChildContent(Control child, Vector2 location, out Vector2 childSpaceLocation)
         {
-            return child.ContainsPoint(ref location);
+            if (child.IsScrollable)
+                location -= _viewOffset;
+            return child.IntersectsContent(ref location, out childSpaceLocation);
         }
 
         /// <summary>
@@ -430,12 +426,11 @@ namespace FlaxEngine.GUI
 
             for (int i = 0; i < _children.Count; i++)
             {
-                var child = _children[i] as ContainerControl;
-                child?.UpdateContainsFocus();
+                if (_children[i] is ContainerControl child)
+                    child.UpdateContainsFocus();
+
                 if (_children[i].ContainsFocus)
-                {
                     result = true;
-                }
             }
 
             // Check if state has been changed
@@ -672,19 +667,12 @@ namespace FlaxEngine.GUI
         public override void Draw()
         {
             base.Draw();
-            DrawChildren();
-        }
 
-        /// <summary>
-        /// Draws all the children.
-        /// </summary>
-        protected void DrawChildren()
-        {
             // Push clipping mask
             Rectangle clientArea;
             GetDesireClientArea(out clientArea);
             Render2D.PushClip(ref clientArea);
-            
+
             // Draw all visible child controls
             bool hasViewOffset = !_viewOffset.IsZero;
             for (int i = 0; i < _children.Count; i++)
@@ -730,7 +718,7 @@ namespace FlaxEngine.GUI
 
             IsLayoutLocked = false;
         }
-        
+
         /// <inheritdoc />
         public override void OnMouseEnter(Vector2 location)
         {
@@ -740,17 +728,12 @@ namespace FlaxEngine.GUI
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
                 {
-                    var scrollOffsetLocation = location;
-                    if (child.IsScrollable)
-                    {
-                        scrollOffsetLocation -= _viewOffset;
-                    }
-
                     // Fire event
-                    if (IsMouseOverChild(child, ref scrollOffsetLocation))
+                    Vector2 childLocation;
+                    if (IntersectsChildContent(child, location, out childLocation))
                     {
                         // Enter
-                        child.OnMouseEnter(scrollOffsetLocation - child.Location);
+                        child.OnMouseEnter(childLocation);
                     }
                 }
             }
@@ -768,24 +751,19 @@ namespace FlaxEngine.GUI
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
                 {
-                    var scrollOffsetLocation = location;
-                    if (child.IsScrollable)
-                    {
-                        scrollOffsetLocation -= _viewOffset;
-                    }
-
                     // Fire events
-                    if (IsMouseOverChild(child, ref scrollOffsetLocation) || child.HasMouseCapture)
+                    Vector2 childLocation;
+                    if (IntersectsChildContent(child, location, out childLocation) || child.HasMouseCapture)
                     {
                         if (child.IsMouseOver)
                         {
                             // Move
-                            child.OnMouseMove(scrollOffsetLocation - child.Location);
+                            child.OnMouseMove(childLocation);
                         }
                         else
                         {
                             // Enter
-                            child.OnMouseEnter(scrollOffsetLocation - child.Location);
+                            child.OnMouseEnter(childLocation);
                         }
                     }
                     else if (child.IsMouseOver)
@@ -824,17 +802,12 @@ namespace FlaxEngine.GUI
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
                 {
-                    var scrollOffsetLocation = location;
-                    if (child.IsScrollable)
-                    {
-                        scrollOffsetLocation -= _viewOffset;
-                    }
-
                     // Fire events
-                    if (IsMouseOverChild(child, ref scrollOffsetLocation))
+                    Vector2 childLocation;
+                    if (IntersectsChildContent(child, location, out childLocation))
                     {
                         // Wheel
-                        if (child.OnMouseWheel(scrollOffsetLocation - child.Location, delta))
+                        if (child.OnMouseWheel(childLocation, delta))
                         {
                             return true;
                         }
@@ -855,17 +828,12 @@ namespace FlaxEngine.GUI
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
                 {
-                    var scrollOffsetLocation = location;
-                    if (child.IsScrollable)
-                    {
-                        scrollOffsetLocation -= _viewOffset;
-                    }
-
                     // Fire event
-                    if (IsMouseOverChild(child, ref scrollOffsetLocation))
+                    Vector2 childLocation;
+                    if (IntersectsChildContent(child, location, out childLocation))
                     {
                         // Send event futher
-                        if (child.OnMouseDown(scrollOffsetLocation - child.Location, buttons))
+                        if (child.OnMouseDown(childLocation, buttons))
                         {
                             return true;
                         }
@@ -889,22 +857,15 @@ namespace FlaxEngine.GUI
             for (int i = _children.Count - 1; i >= 0; i--)
             {
                 var child = _children[i];
-                if (child.Visible && child.Enabled)
-                {
-                    var scrollOffsetLocation = location;
-                    if (child.IsScrollable)
-                    {
-                        scrollOffsetLocation -= _viewOffset;
-                    }
 
-                    // Fire event
-                    if (child.HasMouseCapture)
+                if (child.HasMouseCapture)
+                {
+                    // Send event futher
+                    Vector2 childLocation;
+                    IntersectsChildContent(child, location, out childLocation);
+                    if (child.OnMouseUp(childLocation, buttons))
                     {
-                        // Send event futher
-                        if (child.OnMouseUp(scrollOffsetLocation - child.Location, buttons))
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
@@ -913,17 +874,12 @@ namespace FlaxEngine.GUI
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
                 {
-                    var scrollOffsetLocation = location;
-                    if (child.IsScrollable)
-                    {
-                        scrollOffsetLocation -= _viewOffset;
-                    }
-
                     // Fire event
-                    if (IsMouseOverChild(child, ref scrollOffsetLocation))
+                    Vector2 childLocation;
+                    if (IntersectsChildContent(child, location, out childLocation))
                     {
                         // Send event futher
-                        if (child.OnMouseUp(scrollOffsetLocation - child.Location, buttons))
+                        if (child.OnMouseUp(childLocation, buttons))
                         {
                             return true;
                         }
@@ -944,17 +900,12 @@ namespace FlaxEngine.GUI
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
                 {
-                    var scrollOffsetLocation = location;
-                    if (child.IsScrollable)
-                    {
-                        scrollOffsetLocation -= _viewOffset;
-                    }
-                    
                     // Fire event
-                    if (IsMouseOverChild(child, ref scrollOffsetLocation))
+                    Vector2 childLocation;
+                    if (IntersectsChildContent(child, location, out childLocation))
                     {
                         // Send event futher
-                        if (child.OnMouseDoubleClick(scrollOffsetLocation - child.Location, buttons))
+                        if (child.OnMouseDoubleClick(childLocation, buttons))
                         {
                             return true;
                         }
@@ -1006,19 +957,13 @@ namespace FlaxEngine.GUI
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
                 {
-                    var scrollOffsetLocation = location;
-                    if (child.IsScrollable)
-                    {
-                        scrollOffsetLocation -= _viewOffset;
-                    }
-
                     // Fire event
-                    if (IsMouseOverChild(child, ref scrollOffsetLocation))
+                    Vector2 childLocation;
+                    if (IntersectsChildContent(child, location, out childLocation))
                     {
                         // Enter
-                        var pos = scrollOffsetLocation - child.Location;
-                        result = child.OnDragEnter(ref pos, data);
-                        if(result != DragDropEffect.None)
+                        result = child.OnDragEnter(ref childLocation, data);
+                        if (result != DragDropEffect.None)
                             break;
                     }
                 }
@@ -1039,27 +984,21 @@ namespace FlaxEngine.GUI
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
                 {
-                    var scrollOffsetLocation = location;
-                    if (child.IsScrollable)
-                    {
-                        scrollOffsetLocation -= _viewOffset;
-                    }
-
                     // Fire events
-                    if (IsMouseOverChild(child, ref scrollOffsetLocation))
+                    Vector2 childLocation;
+                    if (IntersectsChildContent(child, location, out childLocation))
                     {
-                        var pos = scrollOffsetLocation - child.Location;
                         if (child.IsDragOver)
                         {
                             // Move
-                            var tmpResult = child.OnDragMove(ref pos, data);
+                            var tmpResult = child.OnDragMove(ref childLocation, data);
                             if (tmpResult != DragDropEffect.None)
                                 result = tmpResult;
                         }
                         else
                         {
                             // Enter
-                            var tmpResult = child.OnDragEnter(ref pos, data);
+                            var tmpResult = child.OnDragEnter(ref childLocation, data);
                             if (tmpResult != DragDropEffect.None)
                                 result = tmpResult;
                         }
@@ -1094,6 +1033,13 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
+        public override bool IntersectsContent(ref Vector2 locationParent, out Vector2 location)
+        {
+            location = base.PointFromParent(locationParent);
+            return ContainsPoint(ref location);
+        }
+
+        /// <inheritdoc />
         public override Vector2 PointToParent(Vector2 location)
         {
             return base.PointToParent(location) + _viewOffset;
@@ -1103,30 +1049,6 @@ namespace FlaxEngine.GUI
         public override Vector2 PointFromParent(Vector2 location)
         {
             return base.PointFromParent(location) - _viewOffset;
-        }
-
-        /// <inheritdoc />
-        public override Vector2 PointToWindow(Vector2 location)
-        {
-            return base.PointToWindow(location) + _viewOffset;
-        }
-
-        /// <inheritdoc />
-        public override Vector2 PointFromWindow(Vector2 location)
-        {
-            return base.PointFromWindow(location) - _viewOffset;
-        }
-
-        /// <inheritdoc />
-        public override Vector2 ScreenToClient(Vector2 location)
-        {
-            return base.ScreenToClient(location) - _viewOffset;
-        }
-
-        /// <inheritdoc />
-        public override Vector2 ClientToScreen(Vector2 location)
-        {
-            return base.ClientToScreen(location) + _viewOffset;
         }
 
         /// <inheritdoc />
