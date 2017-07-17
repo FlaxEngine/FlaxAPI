@@ -48,14 +48,14 @@ namespace FlaxEngine
         /// <summary>
         /// Calls drawing GUI to the texture.
         /// </summary>
+        /// <param name="guiRoot">The root control of the GUI to draw.</param>
         /// <param name="context">The GPU context to handle graphics commands.</param>
         /// <param name="output">The output render target.</param>
-        /// <param name="guiRoot">The root control of the GUI to draw.</param>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-	    public static void CallDrawing(GPUContext context, RenderTarget output, Control guiRoot)
+	    public static void CallDrawing(Control guiRoot, GPUContext context, RenderTarget output)
 	    {
 	        if (context == null || output == null || guiRoot == null)
 	            throw new ArgumentNullException();
@@ -63,14 +63,49 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-	        if (Internal_DrawBegin(context.unmanagedPtr, output.unmanagedPtr))
+	        if (Internal_DrawBegin1(context.unmanagedPtr, output.unmanagedPtr))
+	            throw new InvalidOperationException("Cannot perform GUI rendering.");
+	        guiRoot.Draw();
+	        Internal_DrawEnd();
+#endif
+	    }
+        
+        /// <summary>
+        /// Calls drawing GUI to the texture using custom View*Projection matrix.
+        /// If depth buffer texture is provided there will be depth test performed during rendering.
+        /// </summary>
+        /// <param name="guiRoot">The root control of the GUI to draw.</param>
+        /// <param name="context">The GPU context to handle graphics commands.</param>
+        /// <param name="output">The output render target.</param>
+        /// <param name="depthBuffer">The depth buffer render target. It's optional parameter but if provided must match output texture.</param>
+        /// <param name="viewProjection">The View*Projection matrix used to transform all rendered verticies.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+	    public static void CallDrawing(Control guiRoot, GPUContext context, RenderTarget output, RenderTarget depthBuffer, Matrix viewProjection)
+	    {
+	        if (context == null || output == null || guiRoot == null)
+	            throw new ArgumentNullException();
+	        if (depthBuffer != null)
+	        {
+	            if (!depthBuffer.IsAllocated)
+	                throw new InvalidOperationException("Depth buffer is not allocated. Use RenderTarget.Init before rendering.");
+	            if (output.Size != depthBuffer.Size)
+	                throw new InvalidOperationException("Output buffer and depth buffer dimensions must be equal.");
+	        }
+            
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+	        if (Internal_DrawBegin2(context.unmanagedPtr, output.unmanagedPtr, Object.GetUnmanagedPtr(depthBuffer), ref viewProjection))
 	            throw new InvalidOperationException("Cannot perform GUI rendering.");
 	        guiRoot.Draw();
 	        Internal_DrawEnd();
 #endif
 	    }
 
-	    /// <summary>
+        /// <summary>
         /// Draws sprite.
         /// </summary>
         /// <param name="sprite">Sprite to draw.</param>
@@ -112,7 +147,9 @@ namespace FlaxEngine
         #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 	    [MethodImpl(MethodImplOptions.InternalCall)]
-	    internal static extern bool Internal_DrawBegin(IntPtr context, IntPtr output);
+	    internal static extern bool Internal_DrawBegin1(IntPtr context, IntPtr output);
+	    [MethodImpl(MethodImplOptions.InternalCall)]
+	    internal static extern bool Internal_DrawBegin2(IntPtr context, IntPtr output, IntPtr depth, ref Matrix viewProjection);
         [MethodImpl(MethodImplOptions.InternalCall)]
 	    internal static extern void Internal_DrawEnd();
         [MethodImpl(MethodImplOptions.InternalCall)]

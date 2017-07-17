@@ -232,7 +232,7 @@ namespace FlaxEditor.Content.Thumbnails
 
                 // Draw preview
                 context.Clear(_output, Color.Black);
-                Render2D.CallDrawing(context, _output, _guiRoot);
+                Render2D.CallDrawing(_guiRoot, context, _output);
 
                 // Call proxy and cleanup UI (delete create controls, shared controls should be unlinked during OnThumbnailDrawEnd event)
                 request.Proxy.OnThumbnailDrawEnd(request, _guiRoot);
