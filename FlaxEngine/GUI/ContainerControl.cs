@@ -30,6 +30,12 @@ namespace FlaxEngine.GUI
         protected bool _containsFocus;
 
         /// <summary>
+        /// The option to update child controls layout first before self.
+        /// Useful for controls which dimensions are based on children.
+        /// </summary>
+        protected bool _performChildrenLayoutFirst;
+
+        /// <summary>
         ///      Action is invoked, when child control gets resized
         /// </summary>
         public event Action<Control> OnChildControlResized;
@@ -707,13 +713,24 @@ namespace FlaxEngine.GUI
 
             IsLayoutLocked = true;
 
-            // Update itself
-            PerformLayoutSelf();
-
-            // Update children
-            for (int i = 0; i < _children.Count; i++)
+            // Switch based on current mode
+            if (_performChildrenLayoutFirst)
             {
-                _children[i].PerformLayout();
+                // Update children
+                for (int i = 0; i < _children.Count; i++)
+                    _children[i].PerformLayout();
+
+                // Update itself
+                PerformLayoutSelf();
+            }
+            else
+            {
+                // Update itself
+                PerformLayoutSelf();
+
+                // Update children
+                for (int i = 0; i < _children.Count; i++)
+                    _children[i].PerformLayout();
             }
 
             IsLayoutLocked = false;

@@ -176,7 +176,6 @@
     <Compile Include="GUI\Common\Button.cs" />
     <Compile Include="GUI\Common\Label.cs" />
     <Compile Include="GUI\ContainerControl.cs" />
-    <Compile Include="GUI\ContainerControlChildrenSized.cs" />
     <Compile Include="GUI\ContextMenu\ContextMenu.cs" />
     <Compile Include="GUI\ContextMenu\ContextMenuBase.cs" />
     <Compile Include="GUI\ContextMenu\ContextMenuButton.cs" />
@@ -207,6 +206,7 @@
     <Compile Include="GUI\Panels\SplitPanel.cs" />
     <Compile Include="GUI\Panels\VScrollBar.cs" />
     <Compile Include="GUI\RenderOutputControl.cs" />
+    <Compile Include="GUI\ScrollableControl.cs" />
     <Compile Include="GUI\Style.cs" />
     <Compile Include="GUI\Tabs\Tab.cs" />
     <Compile Include="GUI\Tabs\Tabs.cs" />

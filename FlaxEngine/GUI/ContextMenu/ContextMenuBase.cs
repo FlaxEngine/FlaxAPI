@@ -21,8 +21,8 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// Base class for all context menu controls.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.ContainerControlChildrenSized" />
-    public class ContextMenuBase : ContainerControlChildrenSized
+    /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    public class ContextMenuBase : ContainerControl
     {
         public const int DefaultItemsMargin = 2;
         public const int DefaultItemsLeftMargin = 16;
@@ -70,6 +70,8 @@ namespace FlaxEngine.GUI
         {
             _direction = ContextMenuDirection.RightDown;
             Visible = false;
+
+            _performChildrenLayoutFirst = true;
         }
 
         /// <summary>

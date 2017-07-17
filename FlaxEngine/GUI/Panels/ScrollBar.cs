@@ -290,7 +290,7 @@ namespace FlaxEngine.GUI
             {
                 Vector2 slidePosition = location + ParentWindow.TrackingMouseOffset;
                 float mousePosition = _orientation == Orientation.Vertical ? slidePosition.Y : slidePosition.X;
-
+                
                 float perc = (mousePosition - _mouseOffset - _thumbSize / 2) / (TrackSize - _thumbSize);
                 Value = perc * _maximum;
             }

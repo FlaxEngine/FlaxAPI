@@ -7,8 +7,8 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// Tree node control.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.ContainerControlChildrenSized" />
-    public class TreeNode : ContainerControlChildrenSized
+    /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    public class TreeNode : ContainerControl
     {
         /// <summary>
         /// The default node header height.
@@ -171,6 +171,8 @@ namespace FlaxEngine.GUI
             _iconCollaped = iconCollapsed;
             _iconOpened = iconOpened;
             _mouseDownTime = -1;
+
+            _performChildrenLayoutFirst = true;
         }
 
         /// <summary>

@@ -259,7 +259,7 @@ namespace FlaxEngine.GUI
             Matrix3x3.Multiply(ref m3, ref m4, out m3);
             Matrix3x3.Translation2D(ref v1, out m4);
             Matrix3x3.Multiply(ref m3, ref m4, out _cachedTransform);
-            
+
             // Cache inverted transform
             Matrix3x3.Invert(ref _cachedTransform, out _cachedTransformInv);
         }
