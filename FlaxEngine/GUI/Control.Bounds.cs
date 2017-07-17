@@ -212,13 +212,37 @@ namespace FlaxEngine.GUI
         /// </summary>
         protected void UpdateTransform()
         {
-            // Transformation matrix building:
-            // - calculate 2D transformation (scale, rotation and shear)
-            // - calculate actual pivot location (pivot * size)
-            // - apply negative pivot offset
-            // - apply 2D transform
-            // - apply pivot offset
-            // - apply location offset
+            // Actual pivot and negative pivot
+            Vector2 v1, v2;
+            Vector2.Multiply(ref _pivot, ref _bounds.Size, out v1);
+            Vector2.Negate(ref v1, out v2);
+            Vector2.Add(ref v1, ref _bounds.Location, out v1);
+
+            // ------ Matrix3x3 based version:
+
+            /*
+            // Negative pivot
+            Matrix3x3 m1, m2;
+            Matrix3x3.Translation2D(ref v2, out m1);
+
+            // Scale
+            Matrix3x3.Scaling(_scale.X, _scale.Y, 1, out m2);
+            Matrix3x3.Multiply(ref m1, ref m2, out m1);
+
+            // Shear
+            Matrix3x3.Shear(ref _shear, out m2);
+            Matrix3x3.Multiply(ref m1, ref m2, out m1);
+
+            // Rotation
+            Matrix3x3.RotationZ(_rotation * Mathf.DegreesToRadians, out m2);
+            Matrix3x3.Multiply(ref m1, ref m2, out m1);
+
+            // Pivot + Location
+            Matrix3x3.Translation2D(ref v1, out m2);
+            Matrix3x3.Multiply(ref m1, ref m2, out _cachedTransform);
+            */
+
+            // ------ Matrix2x2 based version:
 
             // 2D transformation
             Matrix2x2 m1, m2;
@@ -228,12 +252,6 @@ namespace FlaxEngine.GUI
             Matrix2x2.Rotation(Mathf.DegreesToRadians * _rotation, out m2);
             Matrix2x2.Multiply(ref m1, ref m2, out m1);
 
-            // Actual pivot and negative pivot
-            Vector2 v1, v2;
-            Vector2.Multiply(ref _pivot, ref _bounds.Location, out v1);
-            Vector2.Negate(ref v1, out v2);
-            Vector2.Add(ref v1, ref _bounds.Location, out v1);
-
             // Mix all the stuff
             Matrix3x3 m3;
             Matrix3x3.Translation2D(ref v2, out m3);
@@ -241,15 +259,6 @@ namespace FlaxEngine.GUI
             Matrix3x3.Multiply(ref m3, ref m4, out m3);
             Matrix3x3.Translation2D(ref v1, out m4);
             Matrix3x3.Multiply(ref m3, ref m4, out _cachedTransform);
-
-            // TODO: Temp test code:
-            var pivot = _pivot * Size;
-            var mmm = Matrix.Translation(-pivot.X, -pivot.Y, 1) * Matrix.RotationZ(_rotation * Mathf.DegreesToRadians) * Matrix.Translation(pivot.X + X, pivot.Y + Y, 1);
-            _cachedTransform = new Matrix3x3(
-                mmm.M11, mmm.M12, mmm.M13,
-                mmm.M21, mmm.M22, mmm.M23,
-                mmm.M41, mmm.M42, 1.0f
-                );
         }
     }
 }

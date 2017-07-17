@@ -1735,6 +1735,24 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Creates the 2D shear matrix. Represented by:
+        /// [1 Y 0]
+        /// [X 1 0]
+        /// [0 0 1]
+        /// </summary>
+        /// <param name="shearAngles">The shear angles (in degrees).</param>
+        /// <param name="result">The result.</param>
+        public static void Shear(ref Vector2 shearAngles, out Matrix3x3 result)
+        {
+            float shearX = shearAngles.X == 0 ? 0 : (1.0f / Mathf.Tan(Mathf.DegreesToRadians * (90 - Mathf.Clamp(shearAngles.X, -89.0f, 89.0f))));
+            float shearY = shearAngles.Y == 0 ? 0 : (1.0f / Mathf.Tan(Mathf.DegreesToRadians * (90 - Mathf.Clamp(shearAngles.Y, -89.0f, 89.0f))));
+
+            result = Identity;
+            result.M21 = shearX;
+            result.M12 = shearY;
+        }
+
+        /// <summary>
         /// Creates a Matrix3x3 that rotates around the x-axis.
         /// </summary>
         /// <param name="angle">Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis toward the origin.</param>
