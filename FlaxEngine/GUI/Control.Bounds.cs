@@ -88,47 +88,47 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets Y coordinate of the top edge of the control relative to the upper-left corner of its container
         /// </summary>
-        public float Top => Bounds.Top;
+        public float Top => _bounds.Top;
 
         /// <summary>
         /// Gets Y coordinate of the bottom edge of the control relative to the upper-left corner of its container
         /// </summary>
-        public float Bottom => Bounds.Bottom;
+        public float Bottom => _bounds.Bottom;
 
         /// <summary>
         /// Gets X coordinate of the left edge of the control relative to the upper-left corner of its container
         /// </summary>
-        public float Left => Bounds.Left;
+        public float Left => _bounds.Left;
 
         /// <summary>
         /// Gets X coordinate of the right edge of the control relative to the upper-left corner of its container
         /// </summary>
-        public float Right => Bounds.Right;
+        public float Right => _bounds.Right;
 
         /// <summary>
         /// Gets position of the upper left corner of the control relative to the upper-left corner of its container
         /// </summary>
-        public Vector2 UpperLeft => Bounds.UpperLeft;
+        public Vector2 UpperLeft => _bounds.UpperLeft;
 
         /// <summary>
         /// Gets position of the upper right corner of the control relative to the upper-left corner of its container
         /// </summary>
-        public Vector2 UpperRight => Bounds.UpperRight;
+        public Vector2 UpperRight => _bounds.UpperRight;
 
         /// <summary>
         /// Gets position of the bottom right corner of the control relative to the upper-left corner of its container
         /// </summary>
-        public Vector2 BottomRight => Bounds.BottomRight;
+        public Vector2 BottomRight => _bounds.BottomRight;
 
         /// <summary>
         /// Gets position of the bottom left of the control relative to the upper-left corner of its container
         /// </summary>
-        public Vector2 BottomLeft => Bounds.BottomLeft;
+        public Vector2 BottomLeft => _bounds.BottomLeft;
 
         /// <summary>
         /// Gets center position of the control relative to the upper-left corner of its container
         /// </summary>
-        public Vector2 Center => Bounds.Center;
+        public Vector2 Center => _bounds.Center;
 
         /// <summary>
         /// Gets or sets control's bounds retangle
@@ -259,6 +259,9 @@ namespace FlaxEngine.GUI
             Matrix3x3.Multiply(ref m3, ref m4, out m3);
             Matrix3x3.Translation2D(ref v1, out m4);
             Matrix3x3.Multiply(ref m3, ref m4, out _cachedTransform);
+            
+            // Cache inverted transform
+            Matrix3x3.Invert(ref _cachedTransform, out _cachedTransformInv);
         }
     }
 }

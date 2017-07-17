@@ -29,6 +29,7 @@ namespace FlaxEngine.GUI
         private Vector2 _shear;
         private float _rotation;
         internal Matrix3x3 _cachedTransform;
+        internal Matrix3x3 _cachedTransformInv;
 
         // Layout
         private DockStyle _dockStyle;
@@ -631,7 +632,11 @@ namespace FlaxEngine.GUI
         /// <returns>True if point is inside control's area</returns>
         public virtual bool ContainsPoint(ref Vector2 location)
         {
-            return Bounds.Contains(ref location);
+            Vector2 localPosition = PointFromParent(location);
+            return localPosition.X >= 0 &&
+                   localPosition.Y >= 0 &&
+                   localPosition.X <= Size.X &&
+                   localPosition.Y <= Size.Y;
         }
 
         /// <summary>
@@ -641,7 +646,9 @@ namespace FlaxEngine.GUI
         /// <returns>Converted point location in parent control coordinates</returns>
         public virtual Vector2 PointToParent(Vector2 location)
         {
-            return location + _bounds.Location;
+            Vector2 result;
+            Matrix3x3.Transform2D(ref location, ref _cachedTransform, out result);
+            return result;
         }
 
         /// <summary>
@@ -651,7 +658,9 @@ namespace FlaxEngine.GUI
         /// <returns>Converted point location in control's space</returns>
         public virtual Vector2 PointFromParent(Vector2 location)
         {
-            return location - _bounds.Location;
+            Vector2 result;
+            Matrix3x3.Transform2D(ref location, ref _cachedTransformInv, out result);
+            return result;
         }
 
         /// <summary>
@@ -663,7 +672,7 @@ namespace FlaxEngine.GUI
         {
             if (HasParent)
             {
-                return _parent.PointToWindow(location + Location);
+                return _parent.PointToWindow(PointToParent(location));
             }
             return location;
         }
@@ -677,7 +686,7 @@ namespace FlaxEngine.GUI
         {
             if (HasParent)
             {
-                return _parent.PointFromWindow(location - Location);
+                return _parent.PointFromWindow(PointFromParent(location));
             }
             return location;
         }
@@ -691,7 +700,7 @@ namespace FlaxEngine.GUI
         {
             if (HasParent)
             {
-                return _parent.ScreenToClient(location - Location);
+                return _parent.ScreenToClient(PointFromParent(location));
             }
             return location;
         }
@@ -705,7 +714,7 @@ namespace FlaxEngine.GUI
         {
             if (HasParent)
             {
-                return _parent.ClientToScreen(location + Location);
+                return _parent.ClientToScreen(PointToParent(location));
             }
             return location;
         }
@@ -811,8 +820,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void OnDestroy()
         {
-            if (IsFocused)
-                Defocus();
+            Defocus();
 
             Tag = null;
         }
