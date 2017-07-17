@@ -188,20 +188,6 @@ namespace FlaxEngine.GUI
                 _thumbRect = new Rectangle(thumbPosition + 4, (Height - DefaultThickness) / 2, _thumbSize - 8, DefaultThickness);
         }
 
-        private void StartTracking()
-        {
-            // Remove focus
-            var parentWin = ParentWindow;
-            if(parentWin.FocusedControl != null)
-                parentWin.FocusedControl.Defocus();
-
-            // Start moving thumb
-            _thumbClicked = true;
-
-            // Start capturing mouse
-            parentWin.StartTrackingMouse(false);
-        }
-
         private void EndTracking()
         {
             // Check flag
@@ -272,6 +258,9 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
+        public override bool HasMouseCapture => _thumbClicked;
+
+        /// <inheritdoc />
         public override void Draw()
         {
             base.Draw();
@@ -320,13 +309,21 @@ namespace FlaxEngine.GUI
         {
             if (buttons == MouseButtons.Left)
             {
+                // Remove focus
+                var parentWin = ParentWindow;
+                if (parentWin.FocusedControl != null)
+                    parentWin.FocusedControl.Defocus();
+
                 float mousePosition = _orientation == Orientation.Vertical ? location.Y : location.X;
 
                 if (_thumbRect.Contains(location))
                 {
-                    // Start capturing mouse
+                    // Start moving thumb
+                    _thumbClicked = true;
                     _mouseOffset = mousePosition - _thumbCenter;
-                    StartTracking();
+
+                    // Start capturing mouse
+                    parentWin.StartTrackingMouse(false);
                 }
                 else
                 {
