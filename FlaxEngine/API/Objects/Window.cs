@@ -256,7 +256,7 @@ namespace FlaxEngine
         {
             GUI = new GUI.Window(this);
         }
-        
+
         /// <summary>
         /// Gets the mouse tracking offset.
         /// </summary>
@@ -274,21 +274,32 @@ namespace FlaxEngine
             }
 #endif
         }
-
+        
         /// <summary>
         /// Starts the drag and drop operation.
         /// </summary>
         /// <param name="data">The data.</param>
         public void DoDragDrop(DragData data)
         {
-            throw new NotImplementedException("TODO: DoDragDrop");
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            if (data is DragDataText text)
+                Internal_DoDragDropText(unmanagedPtr, text.Text);
+            else
+                throw new NotImplementedException("Only DragDataText drag and drop is supported.");
+#endif
         }
-        
+
         #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetTrackingMouseOffset(IntPtr obj, out Vector2 result);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DoDragDropText(IntPtr obj, string text);
 #endif
+
         #endregion
 
         #region Internal Events
@@ -390,7 +401,7 @@ namespace FlaxEngine
                 result = OnLButtonHit(hit);
             }
         }
-        
+
         internal DragDropEffect Internal_OnDragEnter(ref Vector2 mousePos, bool isText, string[] data)
         {
             DragData dragData;
@@ -410,7 +421,7 @@ namespace FlaxEngine
                 dragData = new DragDataFiles(data);
             return GUI.OnDragMove(ref mousePos, dragData);
         }
-        
+
         internal DragDropEffect Internal_OnDragDrop(ref Vector2 mousePos, bool isText, string[] data)
         {
             DragData dragData;
