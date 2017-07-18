@@ -130,6 +130,12 @@
     <Compile Include="States\LoadingState.cs" />
     <Compile Include="States\PlayingState.cs" />
     <Compile Include="States\ReloadingScriptsState.cs" />
+    <Compile Include="Surface\IVisjectSurfaceOwner.cs" />
+    <Compile Include="Surface\NodeElementType.cs" />
+    <Compile Include="Surface\NodeFlags.cs" />
+    <Compile Include="Surface\SurfaceNode.cs" />
+    <Compile Include="Surface\SurfaceType.cs" />
+    <Compile Include="Surface\VisjectSurface.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
     <Compile Include="Viewport\EditorGizmoViewport.cs" />
     <Compile Include="Viewport\EditorViewport.cs" />
