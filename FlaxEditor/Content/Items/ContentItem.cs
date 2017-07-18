@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using FlaxEditor.Content.GUI;
+using FlaxEditor.GUI.Drag;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
@@ -445,9 +446,24 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Does the drag and drop operation with this asset.
         /// </summary>
-        protected void DoDrag()
+        protected virtual void DoDrag()
         {
-            throw new NotImplementedException();
+            DragData data;
+
+            // Check if is selected
+            if (Parent is ContentView view && view.IsSelected(this))
+            {
+                // Drag selected item
+                data = DragItems.GetDragData(view.Selection);
+            }
+            else
+            {
+                // Drag single item
+                data = DragItems.GetDragData(this);
+            }
+
+            // Start drag operation
+            DoDragDrop(data);
         }
 
         /// <inheritdoc />
