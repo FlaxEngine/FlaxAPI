@@ -1,4 +1,6 @@
-﻿// Flax Engine scripting API
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
 
 using System;
 
@@ -20,7 +22,7 @@ namespace FlaxEngine.GUI
         private float _clickChange = 20, _scrollChange = 30;
         private float _minimum, _maximum = 100;
         private float _value, _targetValue;
-        private Orientation _orientation;
+        private readonly Orientation _orientation;
 
         // Input
         private float _mouseOffset;
@@ -69,7 +71,7 @@ namespace FlaxEngine.GUI
             set
             {
                 if (value > _maximum)
-                    throw new ArgumentOutOfRangeException("Invalid minimum value.");
+                    throw new ArgumentOutOfRangeException();
                 _minimum = value;
                 if (Value < _minimum)
                     Value = _minimum;
@@ -88,7 +90,7 @@ namespace FlaxEngine.GUI
             set
             {
                 if (value < _minimum)
-                    throw new ArgumentOutOfRangeException("Invalid maximum value.");
+                    throw new ArgumentOutOfRangeException();
                 _maximum = value;
                 if(Value > _maximum)
                     Value = _maximum;
@@ -255,6 +257,8 @@ namespace FlaxEngine.GUI
                     setValue(value);
                 }
             }
+
+            base.Update(deltaTime);
         }
 
         /// <inheritdoc />
