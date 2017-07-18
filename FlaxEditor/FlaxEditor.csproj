@@ -82,6 +82,8 @@
     <Compile Include="Gizmo\TransformGizmo.Selection.cs" />
     <Compile Include="Gizmo\TransformGizmo.Settings.cs" />
     <Compile Include="Gizmo\TransformGizmo.Types.cs" />
+    <Compile Include="GUI\Drag\DragHelper.cs" />
+    <Compile Include="GUI\Drag\DragItems.cs" />
     <Compile Include="GUI\MainMenu.cs" />
     <Compile Include="GUI\MainMenuButton.cs" />
     <Compile Include="GUI\StatusBar.cs" />
