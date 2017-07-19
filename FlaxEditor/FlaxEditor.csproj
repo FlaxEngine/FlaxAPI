@@ -134,7 +134,10 @@
     <Compile Include="States\ReloadingScriptsState.cs" />
     <Compile Include="Surface\Elements\Box.cs" />
     <Compile Include="Surface\ConnectionType.cs" />
+    <Compile Include="Surface\GroupArchetype.cs" />
     <Compile Include="Surface\IVisjectSurfaceOwner.cs" />
+    <Compile Include="Surface\NodeArchetype.cs" />
+    <Compile Include="Surface\NodeElementArchetype.cs" />
     <Compile Include="Surface\NodeElementType.cs" />
     <Compile Include="Surface\NodeFlags.cs" />
     <Compile Include="Surface\SurfaceNode.cs" />
@@ -180,8 +183,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Surface\Archetypes\" />
     <Folder Include="Surface\ContextMenu\" />
-    <Folder Include="Surface\Prototypes\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
