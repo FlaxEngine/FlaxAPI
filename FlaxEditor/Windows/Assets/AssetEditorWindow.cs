@@ -40,7 +40,7 @@ namespace FlaxEditor.Windows.Assets
 
             _toolstrip = new ToolStrip();
             _toolstrip.OnButtonClicked += OnToolstripButtonClicked;
-            _toolstrip.AddButton(1000, editor.UI.GetIcon("Find32")); //->LinkTooltip(GetSharedTooltip(), "Show and select in Content Window"); // TODO: tooltips support!
+            _toolstrip.AddButton(1000, editor.UI.GetIcon("Find32"));//->LinkTooltip(GetSharedTooltip(), "Show and select in Content Window"); // TODO: tooltips support!
             _toolstrip.Parent = this;
 
             UpdateTitle();
@@ -310,14 +310,14 @@ namespace FlaxEditor.Windows.Assets
             // Load asset (but in async - we don't want to block user)
             return FlaxEngine.Content.LoadAsync<T>(_item.Path);
         }
-        
+
         /// <summary>
         /// Called when asset gets linked and may setup window UI for it.
         /// </summary>
         protected virtual void OnAssetLinked()
         {
         }
-        
+
         /// <summary>
         /// Called when asset gets loaded and may setup window UI for it.
         /// </summary>
@@ -372,7 +372,7 @@ namespace FlaxEditor.Windows.Assets
             base.UnlinkItem();
         }
     }
-    
+
     /// <summary>
     /// Generic base class for asset editors that modify cloned asset and update original asset on save.
     /// </summary>
@@ -441,11 +441,21 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         protected override T LoadAsset()
         {
-            throw new NotImplementedException();
+            // Clone asset
+            string clonePath;
+            if (Editor.ContentEditing.FastTempAssetClone(_item, out clonePath))
+                return null;
+            
+            // Load cloned asset
+            var asset = FlaxEngine.Content.LoadAsync<T>(clonePath);
+            if (asset == null)
+                return null;
 
-
-
-            return base.LoadAsset();
+            // Validate data
+            if (asset.ID == _item.ID)
+                throw new InvalidOperationException("Cloned asset has the same IDs.");
+            
+            return asset;
         }
     }
 }
