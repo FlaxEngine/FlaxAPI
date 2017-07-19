@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using FlaxEditor.Surface.Elements;
 using FlaxEngine;
+using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Surface
@@ -15,7 +16,6 @@ namespace FlaxEditor.Surface
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class SurfaceNode : ContainerControl
     {
-        private Rectangle _bounds;
         private Rectangle _headerRect;
         private Rectangle _closeButtonRect;
         private Rectangle _footerRect;
@@ -49,7 +49,7 @@ namespace FlaxEditor.Surface
         /// <param name="nodeArch">The node archetype.</param>
         /// <param name="groupArch">The group archetype.</param>
         public SurfaceNode(VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
-            : base(true, 0, 0, 100, 100)
+            : base(true, 0, 0, nodeArch.Size.X + Constants.NodeMarginX * 2, nodeArch.Size.Y + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize)
         {
             Surface = surface;
             Archetype = nodeArch;
@@ -61,11 +61,10 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void RemoveConnections()
         {
-            for (int i = 0; i < _elements.Count(); i++)
+            for (int i = 0; i < Elements.Count; i++)
             {
-                auto box = dynamic_cast<Box*>(_elements[i]);
-                if (box)
-                    box->RemoveConnections();
+                if(Elements[i] is Box box)
+                    box.RemoveConnections();
             }
 
             UpdateBoxesTypes();
@@ -136,16 +135,12 @@ namespace FlaxEditor.Surface
         public Box GetBox(int id)
         {
             // TODO: maybe create local cache for boxes? but not a dictionary, use lookup table because ids are usally small (less than 20)
-
-            Box result = null;
-            for (int i = 0; i < _elements.Count(); i++)
+            for (int i = 0; i < Elements.Count; i++)
             {
-                result = dynamic_cast <::Box *> (_elements[i]);
-                if (result && result->GetArchetype()->BoxID == id)
-                    break;
-                result = nullptr;
+                if (Elements[i] is Box box && box.ID == id)
+                    return box;
             }
-            return result;
+            return null;
         }
 
         /// <summary>
@@ -153,6 +148,7 @@ namespace FlaxEditor.Surface
         /// </summary>
         public virtual void OnSurfaceLoaded()
         {
+            UpdateRectangles();
             UpdateBoxesTypes();
         }
 
@@ -163,6 +159,121 @@ namespace FlaxEditor.Surface
         public virtual void ConnectionTick(Box box)
         {
             UpdateBoxesTypes();
+        }
+
+        internal void OnSelect()
+        {
+            Assert.IsFalse(_isSelected);
+            _isSelected = true;
+        }
+
+        internal void OnDeselect()
+        {
+            Assert.IsTrue(_isSelected);
+            _isSelected = false;
+        }
+        
+        /// <summary>
+        /// Updates the cached rectangles on node size change.
+        /// </summary>
+        protected virtual void UpdateRectangles()
+        {
+            const float footerSize = Constants.NodeFooterSize;
+            const float headerSize = Constants.NodeHeaderSize;
+            const float closeButtonMargin = Constants.NodeCloseButtonMargin;
+            const float closeButtonSize = Constants.NodeCloseButtonSize;
+            _headerRect = new Rectangle(0, 0, Width, headerSize);
+            _closeButtonRect = new Rectangle(Width - closeButtonSize - closeButtonMargin, closeButtonMargin, closeButtonSize, closeButtonSize);
+            _footerRect = new Rectangle(0, Height - footerSize, Width, footerSize);
+        }
+
+        /// <inheritdoc />
+        public override void Draw()
+        {
+            var style = Style.Current;
+            BackgroundColor = _isSelected ? Color.OrangeRed : style.BackgroundNormal;
+
+            base.Draw();
+
+            /*
+            // Node layout lines rendering
+            float marginX = SURFACE_NODE_MARGIN_X * _scale;
+            float marginY = SURFACE_NODE_MARGIN_Y * _scale;
+            float top = (SURFACE_NODE_HEADER_SIZE + SURFACE_NODE_MARGIN_Y) * _scale;
+            float footer = SURFACE_NODE_FOOTER_SIZE * _scale;
+            render.DrawRectangle(Rect(marginX, top, _width - 2 * marginX, _height - top - marginY - footer), Color::Red);
+            */
+
+            // Header
+            Render2D.FillRectangle(_headerRect, style.BackgroundHighlighted);
+            Render2D.DrawText(style.FontLarge, Archetype.Title, _headerRect, style.Foreground, TextAlignment.Center, TextAlignment.Center, TextWrapping.NoWrap, 1.0f);
+
+            // Close button
+            if ((Archetype.Flags & NodeFlags.CloseButton) != 0)
+            {
+                float alpha = _closeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
+                Render2D.DrawSprite(style.Cross, _closeButtonRect, new Color(alpha));
+            }
+
+            // Footer
+            Render2D.FillRectangle(_footerRect, GroupArchetype.Color);
+        }
+
+        /// <inheritdoc />
+        public override void OnMouseEnter(Vector2 location)
+        {
+            _mousePosition = location;
+
+            base.OnMouseEnter(location);
+        }
+
+        /// <inheritdoc />
+        public override void OnMouseMove(Vector2 location)
+        {
+            _mousePosition = location;
+
+            base.OnMouseMove(location);
+        }
+
+        /// <inheritdoc />
+        public override void OnMouseLeave()
+        {
+            _mousePosition = Vector2.Minimum;
+
+            base.OnMouseLeave();
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        {
+            if (base.OnMouseUp(location, buttons))
+                return true;
+
+            // Close
+            if ((Archetype.Flags & NodeFlags.CloseButton) != 0)
+            {
+                if (_closeButtonRect.Contains(location))
+                {
+                    Surface.Delete(this);
+                    return true;
+                }
+            }
+            // Secondary Context Menu
+            if (buttons == MouseButtons.Right)
+            {
+                Surface.ShowSecondaryCM(this, PointToParent(location));
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc />
+        protected override void SetScaleInternal(ref Vector2 scale)
+        {
+            base.SetScaleInternal(ref scale);
+
+            UpdateRectangles();
         }
     }
 }
