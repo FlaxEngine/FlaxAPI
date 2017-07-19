@@ -4,6 +4,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using FlaxEngine.GUI;
 
 namespace FlaxEngine
 {
@@ -255,7 +256,7 @@ namespace FlaxEngine
         {
             GUI = new GUI.Window(this);
         }
-        
+
         /// <summary>
         /// Gets the mouse tracking offset.
         /// </summary>
@@ -274,11 +275,31 @@ namespace FlaxEngine
 #endif
         }
         
+        /// <summary>
+        /// Starts the drag and drop operation.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        public void DoDragDrop(DragData data)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            if (data is DragDataText text)
+                Internal_DoDragDropText(unmanagedPtr, text.Text);
+            else
+                throw new NotImplementedException("Only DragDataText drag and drop is supported.");
+#endif
+        }
+
         #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetTrackingMouseOffset(IntPtr obj, out Vector2 result);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DoDragDropText(IntPtr obj, string text);
 #endif
+
         #endregion
 
         #region Internal Events
@@ -381,26 +402,40 @@ namespace FlaxEngine
             }
         }
 
-        // TODO: support drag and drop in C# GUI
-        /*internal DragDropEffect Internal_OnDragEnter(IGuiData* data, ref Vector2 location)
+        internal DragDropEffect Internal_OnDragEnter(ref Vector2 mousePos, bool isText, string[] data)
         {
-            return DragDropEffect.None;
+            DragData dragData;
+            if (isText)
+                dragData = new DragDataText(data[0]);
+            else
+                dragData = new DragDataFiles(data);
+            return GUI.OnDragEnter(ref mousePos, dragData);
         }
 
-        internal DragDropEffect Internal_OnDragOver(IGuiData* data, ref Vector2 location)
+        internal DragDropEffect Internal_OnDragOver(ref Vector2 mousePos, bool isText, string[] data)
         {
-            return DragDropEffect.None;
+            DragData dragData;
+            if (isText)
+                dragData = new DragDataText(data[0]);
+            else
+                dragData = new DragDataFiles(data);
+            return GUI.OnDragMove(ref mousePos, dragData);
         }
 
-        internal DragDropEffect Internal_OnDragDrop(IGuiData* data, ref Vector2 location)
+        internal DragDropEffect Internal_OnDragDrop(ref Vector2 mousePos, bool isText, string[] data)
         {
-            return DragDropEffect.None;
+            DragData dragData;
+            if (isText)
+                dragData = new DragDataText(data[0]);
+            else
+                dragData = new DragDataFiles(data);
+            return GUI.OnDragDrop(ref mousePos, dragData);
         }
 
         internal void Internal_OnDragLeave()
         {
+            GUI.OnDragLeave();
         }
-        */
 
         internal void Internal_OnClosing(ClosingReason reason, ref bool cancel)
         {

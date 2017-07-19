@@ -47,6 +47,9 @@ namespace FlaxEditor.SceneGraph
 
             BuildSceneTree(sceneNode);
 
+            // Unlock tree UI
+            sceneNode.TreeNode.UnlockChildrenRecursive();
+
             return sceneNode;
         }
 

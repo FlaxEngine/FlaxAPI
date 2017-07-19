@@ -82,6 +82,8 @@
     <Compile Include="Gizmo\TransformGizmo.Selection.cs" />
     <Compile Include="Gizmo\TransformGizmo.Settings.cs" />
     <Compile Include="Gizmo\TransformGizmo.Types.cs" />
+    <Compile Include="GUI\Drag\DragHelper.cs" />
+    <Compile Include="GUI\Drag\DragItems.cs" />
     <Compile Include="GUI\MainMenu.cs" />
     <Compile Include="GUI\MainMenuButton.cs" />
     <Compile Include="GUI\StatusBar.cs" />
@@ -130,6 +132,12 @@
     <Compile Include="States\LoadingState.cs" />
     <Compile Include="States\PlayingState.cs" />
     <Compile Include="States\ReloadingScriptsState.cs" />
+    <Compile Include="Surface\IVisjectSurfaceOwner.cs" />
+    <Compile Include="Surface\NodeElementType.cs" />
+    <Compile Include="Surface\NodeFlags.cs" />
+    <Compile Include="Surface\SurfaceNode.cs" />
+    <Compile Include="Surface\SurfaceType.cs" />
+    <Compile Include="Surface\VisjectSurface.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
     <Compile Include="Viewport\EditorGizmoViewport.cs" />
     <Compile Include="Viewport\EditorViewport.cs" />
@@ -166,7 +174,11 @@
       <Name>FlaxEngine</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Surface\ContextMenu\" />
+    <Folder Include="Surface\Elements\" />
+    <Folder Include="Surface\Prototypes\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <Exec Command="call &quot;$(SolutionDir)onbuild.bat&quot;" Condition=" '$(OS)' == 'Windows_NT' " />

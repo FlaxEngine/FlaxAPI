@@ -1,0 +1,50 @@
+﻿////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
+
+using System;
+
+namespace FlaxEditor.Surface
+{
+    /// <summary>
+    /// Custom node archetype flags.
+    /// </summary>
+    [Flags]
+    public enum NodeFlags
+    {
+        /// <summary>
+        /// Nothing at all. Nothing but thieves.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// Add close button.
+        /// </summary>
+        CloseButton = 1,
+
+        /// <summary>
+        /// Node should use dependant and independant boxes types.
+        /// </summary>
+        UseDependantBoxes = 2,
+
+        /// <summary>
+        /// Node cannot be spawned via GUI interface.
+        /// </summary>
+        NoSpawnViaGUI = 4,
+
+        /// <summary>
+        /// Node only for the materials.
+        /// </summary>
+        MaterialOnly = 8,
+
+        /// <summary>
+        /// Node only for the scripts.
+        /// </summary>
+        VisjectOnly = 16,
+
+        /// <summary>
+        /// Disable removing that node from the graph.
+        /// </summary>
+        NoRemove = 32,
+    }
+}

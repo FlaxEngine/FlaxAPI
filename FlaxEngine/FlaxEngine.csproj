@@ -174,9 +174,11 @@
       <DependentUpon>IOrderedDictionary.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\Common\Button.cs" />
+    <Compile Include="GUI\Common\CheckBox.cs" />
+    <Compile Include="GUI\Common\ComboBox.cs" />
     <Compile Include="GUI\Common\Label.cs" />
+    <Compile Include="GUI\Common\ProgressBar.cs" />
     <Compile Include="GUI\ContainerControl.cs" />
-    <Compile Include="GUI\ContainerControlChildrenSized.cs" />
     <Compile Include="GUI\ContextMenu\ContextMenu.cs" />
     <Compile Include="GUI\ContextMenu\ContextMenuBase.cs" />
     <Compile Include="GUI\ContextMenu\ContextMenuButton.cs" />
@@ -193,6 +195,9 @@
     <Compile Include="GUI\Docking\DockWindow.cs" />
     <Compile Include="GUI\Docking\FloatWindowDockPanel.cs" />
     <Compile Include="GUI\Docking\MasterDockPanel.cs" />
+    <Compile Include="GUI\DragData.cs" />
+    <Compile Include="GUI\DragDataFiles.cs" />
+    <Compile Include="GUI\DragDataText.cs" />
     <Compile Include="GUI\Enums.cs" />
     <Compile Include="GUI\Input\TextBox.cs" />
     <Compile Include="GUI\Input\TextBox.Keys.cs">
@@ -204,6 +209,7 @@
     <Compile Include="GUI\Panels\SplitPanel.cs" />
     <Compile Include="GUI\Panels\VScrollBar.cs" />
     <Compile Include="GUI\RenderOutputControl.cs" />
+    <Compile Include="GUI\ScrollableControl.cs" />
     <Compile Include="GUI\Style.cs" />
     <Compile Include="GUI\Tabs\Tab.cs" />
     <Compile Include="GUI\Tabs\Tabs.cs" />
@@ -254,6 +260,7 @@
     <Compile Include="Math\HalfUtils.cs" />
     <Compile Include="Math\Mathf.cs" />
     <Compile Include="Math\Matrix.cs" />
+    <Compile Include="Math\Matrix2x2.cs" />
     <Compile Include="Math\Matrix3x3.cs" />
     <Compile Include="Math\OrientedBoundingBox.cs" />
     <Compile Include="Math\Rectangle.cs" />

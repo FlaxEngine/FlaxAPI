@@ -20,16 +20,35 @@ namespace FlaxEngine
 	public static partial class Render2D
 	{
 		/// <summary>
-		/// Gets or sets transform applied to all rendering operations (only offset).
+		/// Pushes 2D transformation matrix on the stack.
 		/// </summary>
+		/// <param name="transform">The transformation.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
 		[UnmanagedCall]
-		public static Vector2 Transform
+		public static void PushTransform(Matrix3x3 transform) 
 		{
 #if UNIT_TEST_COMPILANT
-			get; set;
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			get { Vector2 resultAsRef; Internal_GetTransform(out resultAsRef); return resultAsRef; }
-			set { Internal_SetTransform(ref value); }
+			Internal_PushTransform(ref transform);
+#endif
+		}
+
+		/// <summary>
+		/// Pops transformation matrix from the stack.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static void PopTransform() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_PopTransform();
 #endif
 		}
 
@@ -63,19 +82,6 @@ namespace FlaxEngine
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
 			Internal_PopClip();
-#endif
-		}
-
-		/// <summary>
-		/// Gets current clipping mask (transformed).
-		/// </summary>
-		[UnmanagedCall]
-		public static Rectangle ClipMask
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { Rectangle resultAsRef; Internal_GetClipMask(out resultAsRef); return resultAsRef; }
 #endif
 		}
 
@@ -252,15 +258,13 @@ namespace FlaxEngine
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetTransform(out Vector2 resultAsRef);
+		internal static extern void Internal_PushTransform(ref Matrix3x3 transform);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetTransform(ref Vector2 val);
+		internal static extern void Internal_PopTransform();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_PushClip(ref Rectangle clipRect);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_PopClip();
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetClipMask(out Rectangle resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_DrawText(IntPtr font, string text, ref Rectangle layoutRect, ref Color color, TextAlignment horizontalAlignment, TextAlignment verticalAlignment, TextWrapping textWrapping, float baseLinesGapScale, float scale);
 		[MethodImpl(MethodImplOptions.InternalCall)]

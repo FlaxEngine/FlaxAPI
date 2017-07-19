@@ -2,15 +2,13 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
-
 namespace FlaxEngine.GUI
 {
     /// <summary>
     /// Tree node control.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.ContainerControlChildrenSized" />
-    public class TreeNode : ContainerControlChildrenSized
+    /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    public class TreeNode : ContainerControl
     {
         /// <summary>
         /// The default node header height.
@@ -20,7 +18,7 @@ namespace FlaxEngine.GUI
         public const float DefaultDragInsertPositionMargin = 2.0f;
         public const float DefaultNodeOffsetY = 1;
 
-        protected Tree _tree;
+        private Tree _tree;
         protected bool _opened, _canChangeOrder;
         protected float _animationProgress, _cachedHeight;
         protected bool _mouseOverArrow, _mouseOverHeader;
@@ -28,6 +26,7 @@ namespace FlaxEngine.GUI
         protected Rectangle _headerRect;
         protected Sprite _iconCollaped, _iconOpened;
         protected string _text;
+        protected bool _textChanged;
         protected bool _isMouseDown;
         protected float _mouseDownTime;
         protected Vector2 _mouseDownPos;
@@ -48,6 +47,7 @@ namespace FlaxEngine.GUI
             set
             {
                 _text = value;
+                _textChanged = true;
                 PerformLayout();
             }
         }
@@ -171,6 +171,8 @@ namespace FlaxEngine.GUI
             _iconCollaped = iconCollapsed;
             _iconOpened = iconOpened;
             _mouseDownTime = -1;
+
+            _performChildrenLayoutFirst = true;
         }
 
         /// <summary>
@@ -384,7 +386,7 @@ namespace FlaxEngine.GUI
 
                 // Draw background
                 if (isSelected || _mouseOverHeader)
-                    Render2D.FillRectangle(_headerRect, (isSelected && isFocused) ? style.BackgroundSelected : (IsMouseOver ? style.BackgroundHighlighted : style.LightBackground));
+                    Render2D.FillRectangle(_headerRect, (isSelected && isFocused) ? style.BackgroundSelected : (_mouseOverHeader ? style.BackgroundHighlighted : style.LightBackground));
 
                 // Draw arrow
                 if (hasChildren)
@@ -652,10 +654,16 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
-            // Calculate minimum width of that node
-            var style = Style.Current;
-            if (style.FontSmall)
-                _textWidth = style.FontSmall.MeasureText(_text).X;
+            if (_textChanged)
+            {
+                // Calculate minimum width of that node
+                var style = Style.Current;
+                if (style.FontSmall)
+                {
+                    _textWidth = style.FontSmall.MeasureText(_text).X;
+                    _textChanged = false;
+                }
+            }
 
             // Arrange children
             float y = DefaultHeaderHeight;

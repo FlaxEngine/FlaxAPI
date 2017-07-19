@@ -10,20 +10,20 @@ using Assert = FlaxEngine.Assertions.Assert;
 namespace FlaxEngine.Tests
 {
     [TestFixture]
-    public class ContorlTests
+    public class TextControl
     {
-        public class TestControl : Control
+        public class SimpleControl : Control
         {
-            public TestControl(bool canFocus, float x, float y, float width, float height)
+            public SimpleControl(bool canFocus, float x, float y, float width, float height)
                 : base(canFocus, x, y, width, height)
             {
             }
 
-            public TestControl(bool canFocus, Vector2 location, Vector2 size) : base(canFocus, location, size)
+            public SimpleControl(bool canFocus, Vector2 location, Vector2 size) : base(canFocus, location, size)
             {
             }
 
-            public TestControl(bool canFocus, Rectangle bounds) : base(canFocus, bounds)
+            public SimpleControl(bool canFocus, Rectangle bounds) : base(canFocus, bounds)
             {
             }
         }
@@ -32,9 +32,9 @@ namespace FlaxEngine.Tests
         public void ControlTestApi()
         {
             var testRect = new Rectangle(0, 5, 20, 25);
-            var basic = new TestControl(true, 0, 5, 20, 25);
-            var vec2 = new TestControl(true, new Vector2(0, 5), new Vector2(20, 25));
-            var rect = new TestControl(true, testRect);
+            var basic = new SimpleControl(true, 0, 5, 20, 25);
+            var vec2 = new SimpleControl(true, new Vector2(0, 5), new Vector2(20, 25));
+            var rect = new SimpleControl(true, testRect);
 
             Assert.AreEqual(testRect.Location, basic.Location);
             Assert.AreEqual(testRect.Location, vec2.Location);

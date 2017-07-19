@@ -61,6 +61,7 @@ namespace FlaxEngine
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    // ReSharper disable once InconsistentNaming
     public struct Matrix3x3 : IEquatable<Matrix3x3>, IFormattable
     {
         /// <summary>
@@ -71,7 +72,7 @@ namespace FlaxEngine
         /// <summary>
         /// A <see cref="Matrix3x3"/> with all of its components set to zero.
         /// </summary>
-        public static readonly Matrix3x3 Zero = new Matrix3x3();
+        public static readonly Matrix3x3 Zero;
 
         /// <summary>
         /// The identity <see cref="Matrix3x3"/>.
@@ -137,42 +138,42 @@ namespace FlaxEngine
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix3x3"/> struct.
         /// </summary>
-        /// <param name="M11">The value to assign at row 1 column 1 of the Matrix3x3.</param>
-        /// <param name="M12">The value to assign at row 1 column 2 of the Matrix3x3.</param>
-        /// <param name="M13">The value to assign at row 1 column 3 of the Matrix3x3.</param>
-        /// <param name="M21">The value to assign at row 2 column 1 of the Matrix3x3.</param>
-        /// <param name="M22">The value to assign at row 2 column 2 of the Matrix3x3.</param>
-        /// <param name="M23">The value to assign at row 2 column 3 of the Matrix3x3.</param>
-        /// <param name="M31">The value to assign at row 3 column 1 of the Matrix3x3.</param>
-        /// <param name="M32">The value to assign at row 3 column 2 of the Matrix3x3.</param>
-        /// <param name="M33">The value to assign at row 3 column 3 of the Matrix3x3.</param>
-        public Matrix3x3(float M11, float M12, float M13,
-                         float M21, float M22, float M23,
-                         float M31, float M32, float M33)
+        /// <param name="m11">The value to assign at row 1 column 1 of the Matrix3x3.</param>
+        /// <param name="m12">The value to assign at row 1 column 2 of the Matrix3x3.</param>
+        /// <param name="m13">The value to assign at row 1 column 3 of the Matrix3x3.</param>
+        /// <param name="m21">The value to assign at row 2 column 1 of the Matrix3x3.</param>
+        /// <param name="m22">The value to assign at row 2 column 2 of the Matrix3x3.</param>
+        /// <param name="m23">The value to assign at row 2 column 3 of the Matrix3x3.</param>
+        /// <param name="m31">The value to assign at row 3 column 1 of the Matrix3x3.</param>
+        /// <param name="m32">The value to assign at row 3 column 2 of the Matrix3x3.</param>
+        /// <param name="m33">The value to assign at row 3 column 3 of the Matrix3x3.</param>
+        public Matrix3x3(float m11, float m12, float m13,
+                         float m21, float m22, float m23,
+                         float m31, float m32, float m33)
         {
-            this.M11 = M11;
-            this.M12 = M12;
-            this.M13 = M13;
-            this.M21 = M21;
-            this.M22 = M22;
-            this.M23 = M23;
-            this.M31 = M31;
-            this.M32 = M32;
-            this.M33 = M33;
+            M11 = m11;
+            M12 = m12;
+            M13 = m13;
+            M21 = m21;
+            M22 = m22;
+            M23 = m23;
+            M31 = m31;
+            M32 = m32;
+            M33 = m33;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix3x3"/> struct.
         /// </summary>
-        /// <param name="values">The values to assign to the components of the Matrix3x3. This must be an array with sixteen elements.</param>
+        /// <param name="values">The values to assign to the components of the Matrix3x3. This must be an array with nine elements.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="values"/> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="values"/> contains more or less than sixteen elements.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="values"/> contains more or less than nine elements.</exception>
         public Matrix3x3(float[] values)
         {
             if (values == null)
-                throw new ArgumentNullException("values");
+                throw new ArgumentNullException(nameof(values));
             if (values.Length != 9)
-                throw new ArgumentOutOfRangeException("values", "There must be sixteen and only sixteen input values for Matrix3x3.");
+                throw new ArgumentOutOfRangeException(nameof(values), "There must be sixteen and only nine input values for Matrix3x3.");
 
             M11 = values[0];
             M12 = values[1];
@@ -192,7 +193,7 @@ namespace FlaxEngine
         /// </summary>
         public Vector3 Row1
         {
-            get { return new Vector3(M11, M12, M13); }
+            get => new Vector3(M11, M12, M13);
             set
             {
                 M11 = value.X;
@@ -206,7 +207,7 @@ namespace FlaxEngine
         /// </summary>
         public Vector3 Row2
         {
-            get { return new Vector3(M21, M22, M23); }
+            get => new Vector3(M21, M22, M23);
             set
             {
                 M21 = value.X;
@@ -220,7 +221,7 @@ namespace FlaxEngine
         /// </summary>
         public Vector3 Row3
         {
-            get { return new Vector3(M31, M32, M33); }
+            get => new Vector3(M31, M32, M33);
             set
             {
                 M31 = value.X;
@@ -234,7 +235,7 @@ namespace FlaxEngine
         /// </summary>
         public Vector3 Column1
         {
-            get { return new Vector3(M11, M21, M31); }
+            get => new Vector3(M11, M21, M31);
             set
             {
                 M11 = value.X;
@@ -248,7 +249,7 @@ namespace FlaxEngine
         /// </summary>
         public Vector3 Column2
         {
-            get { return new Vector3(M12, M22, M32); }
+            get => new Vector3(M12, M22, M32);
             set
             {
                 M12 = value.X;
@@ -262,7 +263,7 @@ namespace FlaxEngine
         /// </summary>
         public Vector3 Column3
         {
-            get { return new Vector3(M13, M23, M33); }
+            get => new Vector3(M13, M23, M33);
             set
             {
                 M13 = value.X;
@@ -276,7 +277,7 @@ namespace FlaxEngine
         /// </summary>
         public Vector3 ScaleVector
         {
-            get { return new Vector3(M11, M22, M33); }
+            get => new Vector3(M11, M22, M33);
             set
             {
                 M11 = value.X;
@@ -291,10 +292,7 @@ namespace FlaxEngine
         /// <value>
         /// <c>true</c> if this instance is an identity Matrix3x3; otherwise, <c>false</c>.
         /// </value>
-        public bool IsIdentity
-        {
-            get { return this.Equals(Identity); }
-        }
+        public bool IsIdentity => Equals(Identity);
 
         /// <summary>
         /// Gets or sets the component at the specified index.
@@ -329,9 +327,8 @@ namespace FlaxEngine
                         return M33;
                 }
 
-                throw new ArgumentOutOfRangeException("index", "Indices for Matrix3x3 run from 0 to 8, inclusive.");
+                throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix3x3 run from 0 to 8, inclusive.");
             }
-
             set
             {
                 switch (index)
@@ -364,7 +361,7 @@ namespace FlaxEngine
                         M33 = value;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException("index", "Indices for Matrix3x3 run from 0 to 8, inclusive.");
+                        throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix3x3 run from 0 to 8, inclusive.");
                 }
             }
         }
@@ -382,19 +379,18 @@ namespace FlaxEngine
             get
             {
                 if (row < 0 || row > 2)
-                    throw new ArgumentOutOfRangeException("row", "Rows and columns for matrices run from 0 to 2, inclusive.");
+                    throw new ArgumentOutOfRangeException(nameof(row), "Rows and columns for matrices run from 0 to 2, inclusive.");
                 if (column < 0 || column > 2)
-                    throw new ArgumentOutOfRangeException("column", "Rows and columns for matrices run from 0 to 2, inclusive.");
+                    throw new ArgumentOutOfRangeException(nameof(column), "Rows and columns for matrices run from 0 to 2, inclusive.");
 
                 return this[(row * 3) + column];
             }
-
             set
             {
                 if (row < 0 || row > 2)
-                    throw new ArgumentOutOfRangeException("row", "Rows and columns for matrices run from 0 to 2, inclusive.");
+                    throw new ArgumentOutOfRangeException(nameof(row), "Rows and columns for matrices run from 0 to 2, inclusive.");
                 if (column < 0 || column > 2)
-                    throw new ArgumentOutOfRangeException("column", "Rows and columns for matrices run from 0 to 2, inclusive.");
+                    throw new ArgumentOutOfRangeException(nameof(column), "Rows and columns for matrices run from 0 to 2, inclusive.");
 
                 this[(row * 3) + column] = value;
             }
@@ -466,46 +462,48 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Decomposes a Matrix3x3 into an orthonormalized Matrix3x3 Q and a right triangular Matrix3x3 R.
+        /// Decomposes a Matrix3x3 into an orthonormalized Matrix3x3 q and a right triangular Matrix3x3 r.
         /// </summary>
-        /// <param name="Q">When the method completes, contains the orthonormalized Matrix3x3 of the decomposition.</param>
-        /// <param name="R">When the method completes, contains the right triangular Matrix3x3 of the decomposition.</param>
-        public void DecomposeQR(out Matrix3x3 Q, out Matrix3x3 R)
+        /// <param name="q">When the method completes, contains the orthonormalized Matrix3x3 of the decomposition.</param>
+        /// <param name="r">When the method completes, contains the right triangular Matrix3x3 of the decomposition.</param>
+        // ReSharper disable once InconsistentNaming
+        public void DecomposeQR(out Matrix3x3 q, out Matrix3x3 r)
         {
             Matrix3x3 temp = this;
             temp.Transpose();
-            Orthonormalize(ref temp, out Q);
-            Q.Transpose();
+            Orthonormalize(ref temp, out q);
+            q.Transpose();
 
-            R = new Matrix3x3();
-            R.M11 = Vector3.Dot(Q.Column1, Column1);
-            R.M12 = Vector3.Dot(Q.Column1, Column2);
-            R.M13 = Vector3.Dot(Q.Column1, Column3);
-
-            R.M22 = Vector3.Dot(Q.Column2, Column2);
-            R.M23 = Vector3.Dot(Q.Column2, Column3);
-
-            R.M33 = Vector3.Dot(Q.Column3, Column3);
+            r = new Matrix3x3
+            {
+                M11 = Vector3.Dot(q.Column1, Column1),
+                M12 = Vector3.Dot(q.Column1, Column2),
+                M13 = Vector3.Dot(q.Column1, Column3),
+                M22 = Vector3.Dot(q.Column2, Column2),
+                M23 = Vector3.Dot(q.Column2, Column3),
+                M33 = Vector3.Dot(q.Column3, Column3)
+            };
         }
 
         /// <summary>
-        /// Decomposes a Matrix3x3 into a lower triangular Matrix3x3 L and an orthonormalized Matrix3x3 Q.
+        /// Decomposes a Matrix3x3 into a lower triangular Matrix3x3 l and an orthonormalized Matrix3x3 q.
         /// </summary>
-        /// <param name="L">When the method completes, contains the lower triangular Matrix3x3 of the decomposition.</param>
-        /// <param name="Q">When the method completes, contains the orthonormalized Matrix3x3 of the decomposition.</param>
-        public void DecomposeLQ(out Matrix3x3 L, out Matrix3x3 Q)
+        /// <param name="l">When the method completes, contains the lower triangular Matrix3x3 of the decomposition.</param>
+        /// <param name="q">When the method completes, contains the orthonormalized Matrix3x3 of the decomposition.</param>
+        // ReSharper disable once InconsistentNaming
+        public void DecomposeLQ(out Matrix3x3 l, out Matrix3x3 q)
         {
-            Orthonormalize(ref this, out Q);
+            Orthonormalize(ref this, out q);
 
-            L = new Matrix3x3();
-            L.M11 = Vector3.Dot(Q.Row1, Row1);
-
-            L.M21 = Vector3.Dot(Q.Row1, Row2);
-            L.M22 = Vector3.Dot(Q.Row2, Row2);
-
-            L.M31 = Vector3.Dot(Q.Row1, Row3);
-            L.M32 = Vector3.Dot(Q.Row2, Row3);
-            L.M33 = Vector3.Dot(Q.Row3, Row3);
+            l = new Matrix3x3
+            {
+                M11 = Vector3.Dot(q.Row1, Row1),
+                M21 = Vector3.Dot(q.Row1, Row2),
+                M22 = Vector3.Dot(q.Row2, Row2),
+                M31 = Vector3.Dot(q.Row1, Row3),
+                M32 = Vector3.Dot(q.Row2, Row3),
+                M33 = Vector3.Dot(q.Row3, Row3)
+            };
         }
 
         /// <summary>
@@ -536,20 +534,20 @@ namespace FlaxEngine
             }
 
             //The rotation is the left over Matrix3x3 after dividing out the scaling.
-            Matrix3x3 rotationMatrix3x3 = new Matrix3x3();
-            rotationMatrix3x3.M11 = M11 / scale.X;
-            rotationMatrix3x3.M12 = M12 / scale.X;
-            rotationMatrix3x3.M13 = M13 / scale.X;
-
-            rotationMatrix3x3.M21 = M21 / scale.Y;
-            rotationMatrix3x3.M22 = M22 / scale.Y;
-            rotationMatrix3x3.M23 = M23 / scale.Y;
-
-            rotationMatrix3x3.M31 = M31 / scale.Z;
-            rotationMatrix3x3.M32 = M32 / scale.Z;
-            rotationMatrix3x3.M33 = M33 / scale.Z;
-
-            Quaternion.RotationMatrix(ref rotationMatrix3x3, out rotation);
+            Matrix3x3 rotationMatrix = new Matrix3x3
+            {
+                M11 = M11 / scale.X,
+                M12 = M12 / scale.X,
+                M13 = M13 / scale.X,
+                M21 = M21 / scale.Y,
+                M22 = M22 / scale.Y,
+                M23 = M23 / scale.Y,
+                M31 = M31 / scale.Z,
+                M32 = M32 / scale.Z,
+                M33 = M33 / scale.Z
+            };
+            
+            Quaternion.RotationMatrix(ref rotationMatrix, out rotation);
             return true;
         }
 
@@ -576,19 +574,19 @@ namespace FlaxEngine
             }
 
             //The rotation is the left over matrix after dividing out the scaling.
-            Matrix3x3 rotationmatrix = new Matrix3x3();
-            rotationmatrix.M11 = M11 * invScale;
-            rotationmatrix.M12 = M12 * invScale;
-            rotationmatrix.M13 = M13 * invScale;
-
-            rotationmatrix.M21 = M21 * invScale;
-            rotationmatrix.M22 = M22 * invScale;
-            rotationmatrix.M23 = M23 * invScale;
-
-            rotationmatrix.M31 = M31 * invScale;
-            rotationmatrix.M32 = M32 * invScale;
-            rotationmatrix.M33 = M33 * invScale;
-
+            Matrix3x3 rotationmatrix = new Matrix3x3
+            {
+                M11 = M11 * invScale,
+                M12 = M12 * invScale,
+                M13 = M13 * invScale,
+                M21 = M21 * invScale,
+                M22 = M22 * invScale,
+                M23 = M23 * invScale,
+                M31 = M31 * invScale,
+                M32 = M32 * invScale,
+                M33 = M33 * invScale
+            };
+            
             Quaternion.RotationMatrix(ref rotationmatrix, out rotation);
             return true;
         }
@@ -601,13 +599,13 @@ namespace FlaxEngine
         public void ExchangeRows(int firstRow, int secondRow)
         {
             if (firstRow < 0)
-                throw new ArgumentOutOfRangeException("firstRow", "The parameter firstRow must be greater than or equal to zero.");
+                throw new ArgumentOutOfRangeException(nameof(firstRow), "The parameter firstRow must be greater than or equal to zero.");
             if (firstRow > 2)
-                throw new ArgumentOutOfRangeException("firstRow", "The parameter firstRow must be less than or equal to two.");
+                throw new ArgumentOutOfRangeException(nameof(firstRow), "The parameter firstRow must be less than or equal to two.");
             if (secondRow < 0)
-                throw new ArgumentOutOfRangeException("secondRow", "The parameter secondRow must be greater than or equal to zero.");
+                throw new ArgumentOutOfRangeException(nameof(secondRow), "The parameter secondRow must be greater than or equal to zero.");
             if (secondRow > 2)
-                throw new ArgumentOutOfRangeException("secondRow", "The parameter secondRow must be less than or equal to two.");
+                throw new ArgumentOutOfRangeException(nameof(secondRow), "The parameter secondRow must be less than or equal to two.");
 
             if (firstRow == secondRow)
                 return;
@@ -633,13 +631,13 @@ namespace FlaxEngine
         public void ExchangeColumns(int firstColumn, int secondColumn)
         {
             if (firstColumn < 0)
-                throw new ArgumentOutOfRangeException("firstColumn", "The parameter firstColumn must be greater than or equal to zero.");
+                throw new ArgumentOutOfRangeException(nameof(firstColumn), "The parameter firstColumn must be greater than or equal to zero.");
             if (firstColumn > 2)
-                throw new ArgumentOutOfRangeException("firstColumn", "The parameter firstColumn must be less than or equal to two.");
+                throw new ArgumentOutOfRangeException(nameof(firstColumn), "The parameter firstColumn must be less than or equal to two.");
             if (secondColumn < 0)
-                throw new ArgumentOutOfRangeException("secondColumn", "The parameter secondColumn must be greater than or equal to zero.");
+                throw new ArgumentOutOfRangeException(nameof(secondColumn), "The parameter secondColumn must be greater than or equal to zero.");
             if (secondColumn > 2)
-                throw new ArgumentOutOfRangeException("secondColumn", "The parameter secondColumn must be less than or equal to two.");
+                throw new ArgumentOutOfRangeException(nameof(secondColumn), "The parameter secondColumn must be less than or equal to two.");
 
             if (firstColumn == secondColumn)
                 return;
@@ -770,16 +768,18 @@ namespace FlaxEngine
         /// <param name="result">The product of the two matrices.</param>
         public static void Multiply(ref Matrix3x3 left, ref Matrix3x3 right, out Matrix3x3 result)
         {
-            Matrix3x3 temp = new Matrix3x3();
-            temp.M11 = (left.M11 * right.M11) + (left.M12 * right.M21) + (left.M13 * right.M31);
-            temp.M12 = (left.M11 * right.M12) + (left.M12 * right.M22) + (left.M13 * right.M32);
-            temp.M13 = (left.M11 * right.M13) + (left.M12 * right.M23) + (left.M13 * right.M33);
-            temp.M21 = (left.M21 * right.M11) + (left.M22 * right.M21) + (left.M23 * right.M31);
-            temp.M22 = (left.M21 * right.M12) + (left.M22 * right.M22) + (left.M23 * right.M32);
-            temp.M23 = (left.M21 * right.M13) + (left.M22 * right.M23) + (left.M23 * right.M33);
-            temp.M31 = (left.M31 * right.M11) + (left.M32 * right.M21) + (left.M33 * right.M31);
-            temp.M32 = (left.M31 * right.M12) + (left.M32 * right.M22) + (left.M33 * right.M32);
-            temp.M33 = (left.M31 * right.M13) + (left.M32 * right.M23) + (left.M33 * right.M33);
+            Matrix3x3 temp = new Matrix3x3
+            {
+                M11 = (left.M11 * right.M11) + (left.M12 * right.M21) + (left.M13 * right.M31),
+                M12 = (left.M11 * right.M12) + (left.M12 * right.M22) + (left.M13 * right.M32),
+                M13 = (left.M11 * right.M13) + (left.M12 * right.M23) + (left.M13 * right.M33),
+                M21 = (left.M21 * right.M11) + (left.M22 * right.M21) + (left.M23 * right.M31),
+                M22 = (left.M21 * right.M12) + (left.M22 * right.M22) + (left.M23 * right.M32),
+                M23 = (left.M21 * right.M13) + (left.M22 * right.M23) + (left.M23 * right.M33),
+                M31 = (left.M31 * right.M11) + (left.M32 * right.M21) + (left.M33 * right.M31),
+                M32 = (left.M31 * right.M12) + (left.M32 * right.M22) + (left.M33 * right.M32),
+                M33 = (left.M31 * right.M13) + (left.M32 * right.M23) + (left.M33 * right.M33)
+            };
             result = temp;
         }
 
@@ -875,11 +875,11 @@ namespace FlaxEngine
             //Reference: http://rosettacode.org/wiki/Matrix3x3-exponentiation_operator
 
             if (exponent < 0)
-                throw new ArgumentOutOfRangeException("exponent", "The exponent can not be negative.");
+                throw new ArgumentOutOfRangeException(nameof(exponent), "The exponent can not be negative.");
 
             if (exponent == 0)
             {
-                result = Matrix3x3.Identity;
+                result = Identity;
                 return;
             }
 
@@ -889,7 +889,7 @@ namespace FlaxEngine
                 return;
             }
 
-            Matrix3x3 identity = Matrix3x3.Identity;
+            Matrix3x3 identity = Identity;
             Matrix3x3 temp = value;
 
             while (true)
@@ -1026,16 +1026,18 @@ namespace FlaxEngine
         /// <param name="result">When the method completes, contains the transpose of the specified Matrix3x3.</param>
         public static void Transpose(ref Matrix3x3 value, out Matrix3x3 result)
         {
-            Matrix3x3 temp = new Matrix3x3();
-            temp.M11 = value.M11;
-            temp.M12 = value.M21;
-            temp.M13 = value.M31;
-            temp.M21 = value.M12;
-            temp.M22 = value.M22;
-            temp.M23 = value.M32;
-            temp.M31 = value.M13;
-            temp.M32 = value.M23;
-            temp.M33 = value.M33;
+            Matrix3x3 temp = new Matrix3x3
+            {
+                M11 = value.M11,
+                M12 = value.M21,
+                M13 = value.M31,
+                M21 = value.M12,
+                M22 = value.M22,
+                M23 = value.M32,
+                M31 = value.M13,
+                M32 = value.M23,
+                M33 = value.M33
+            };
 
             result = temp;
         }
@@ -1084,7 +1086,7 @@ namespace FlaxEngine
             float det = value.M11 * d11 - value.M12 * d12 + value.M13 * d13;
             if (Math.Abs(det) == 0.0f)
             {
-                result = Matrix3x3.Zero;
+                result = Zero;
                 return;
             }
 
@@ -1381,7 +1383,7 @@ namespace FlaxEngine
                 lead++;
             }
 
-            Matrix3x3.Transpose(ref result, out result);
+            Transpose(ref result, out result);
         }
 
         /// <summary>
@@ -1590,7 +1592,7 @@ namespace FlaxEngine
             xaxis.Normalize();
             Vector3.Cross(ref zaxis, ref xaxis, out yaxis);
 
-            result = Matrix3x3.Identity;
+            result = Identity;
             result.M11 = xaxis.X;
             result.M21 = xaxis.Y;
             result.M31 = xaxis.Z;
@@ -1632,7 +1634,7 @@ namespace FlaxEngine
             xaxis.Normalize();
             Vector3.Cross(ref zaxis, ref xaxis, out yaxis);
 
-            result = Matrix3x3.Identity;
+            result = Identity;
             result.M11 = xaxis.X;
             result.M21 = xaxis.Y;
             result.M31 = xaxis.Z;
@@ -1689,7 +1691,7 @@ namespace FlaxEngine
         /// <param name="result">When the method completes, contains the created scaling Matrix3x3.</param>
         public static void Scaling(float x, float y, float z, out Matrix3x3 result)
         {
-            result = Matrix3x3.Identity;
+            result = Identity;
             result.M11 = x;
             result.M22 = y;
             result.M33 = z;
@@ -1730,6 +1732,24 @@ namespace FlaxEngine
             Matrix3x3 result;
             Scaling(scale, out result);
             return result;
+        }
+
+        /// <summary>
+        /// Creates the 2D shear matrix. Represented by:
+        /// [1 Y 0]
+        /// [X 1 0]
+        /// [0 0 1]
+        /// </summary>
+        /// <param name="shearAngles">The shear angles (in degrees).</param>
+        /// <param name="result">The result.</param>
+        public static void Shear(ref Vector2 shearAngles, out Matrix3x3 result)
+        {
+            float shearX = shearAngles.X == 0 ? 0 : (1.0f / Mathf.Tan(Mathf.DegreesToRadians * (90 - Mathf.Clamp(shearAngles.X, -89.0f, 89.0f))));
+            float shearY = shearAngles.Y == 0 ? 0 : (1.0f / Mathf.Tan(Mathf.DegreesToRadians * (90 - Mathf.Clamp(shearAngles.Y, -89.0f, 89.0f))));
+
+            result = Identity;
+            result.M21 = shearX;
+            result.M12 = shearY;
         }
 
         /// <summary>
@@ -1930,6 +1950,58 @@ namespace FlaxEngine
         {
             Matrix3x3 result;
             RotationYawPitchRoll(yaw, pitch, roll, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates 2D translation matrix.
+        /// </summary>
+        /// <param name="translation">The translation vector.</param>
+        /// <param name="result">The result.</param>
+        public static void Translation2D(ref Vector2 translation, out Matrix3x3 result)
+	    {
+		    result = new Matrix3x3(
+			    1, 0, 0,
+			    0, 1, 0,
+			    translation.X, translation.Y, 1
+		    );
+	    }
+
+        /// <summary>
+        /// Creates 2D translation matrix.
+        /// </summary>
+        /// <param name="translation">The translation vector.</param>
+        /// <returns>The result.</returns>
+        public static Matrix3x3 Translation2D(Vector2 translation)
+        {
+            Matrix3x3 result;
+            Translation2D(ref translation, out result);
+            return result;
+        }
+        
+	    /// <summary>
+	    /// Transforms given vector by the matrix (in 2D).
+	    /// </summary>
+	    /// <param name="vector">The vector.</param>
+	    /// <param name="transform">The transform.</param>
+	    /// <param name="result">The result.</param>
+	    public static void Transform2D(ref Vector2 vector, ref Matrix3x3 transform, out Vector2 result)
+	    {
+		    result = new Vector2(
+			    (vector.X * transform.M11) + (vector.Y * transform.M21) + transform.M31,
+			    (vector.X * transform.M12) + (vector.Y * transform.M22) + transform.M32);
+	    }
+
+        /// <summary>
+        /// Transforms given vector by the matrix (in 2D).
+        /// </summary>
+        /// <param name="vector">The vector.</param>
+        /// <param name="transform">The transform.</param>
+        /// <returns>The result.</returns>
+        public static Vector2 Transform2D(Vector2 vector, Matrix3x3 transform)
+        {
+            Vector2 result;
+            Transform2D(ref vector, ref transform, out result);
             return result;
         }
 

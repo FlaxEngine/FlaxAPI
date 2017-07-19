@@ -759,9 +759,8 @@ namespace FlaxEngine.GUI
                 Render2D.DrawRectangle(rect, style.BackgroundSelected);
 
             // Apply view offset and clip mask
-            var trans = Render2D.Transform;
             Render2D.PushClip(TextClipRectangle);
-            Render2D.Transform = trans - _viewOffset;
+            Render2D.PushTransform(Matrix3x3.Translation2D(-_viewOffset));
 
             // Check if sth is selected to draw selection
             if (HasSelection)
@@ -818,7 +817,7 @@ namespace FlaxEngine.GUI
             }
 
             // Restore rendering state
-            Render2D.Transform = trans;
+            Render2D.PopTransform();
             Render2D.PopClip();
         }
 

@@ -1638,6 +1638,14 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Determines whether the specified <see cref="Vector2"/> are equal.
+        /// </summary>
+        public static bool Equals(ref Vector2 a, ref Vector2 b)
+        {
+            return Mathf.NearEqual(a.X, b.X) && Mathf.NearEqual(a.Y, b.Y);
+        }
+
+        /// <summary>
         /// Determines whether the specified <see cref="Vector2" /> is equal to this instance.
         /// </summary>
         /// <param name="other">The <see cref="Vector2" /> to compare with this instance.</param>

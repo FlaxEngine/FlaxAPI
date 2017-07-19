@@ -197,7 +197,10 @@ namespace FlaxEditor.Content.Thumbnails
             Debug.Log(string.Format("Previews cache count: {0} (capacity for {1} icons)", atlases, atlases * PreviewsCache.AssetIconsPerAtlas));
 
             // Prepare at least one atlas
-            GetValidAtlas();
+            if (_cache.Count == 0)
+            {
+                GetValidAtlas();
+            }
 
             // Create render task but disabled for now
             _output = RenderTarget.New();
@@ -232,7 +235,7 @@ namespace FlaxEditor.Content.Thumbnails
 
                 // Draw preview
                 context.Clear(_output, Color.Black);
-                Render2D.CallDrawing(context, _output, _guiRoot);
+                Render2D.CallDrawing(_guiRoot, context, _output);
 
                 // Call proxy and cleanup UI (delete create controls, shared controls should be unlinked during OnThumbnailDrawEnd event)
                 request.Proxy.OnThumbnailDrawEnd(request, _guiRoot);
