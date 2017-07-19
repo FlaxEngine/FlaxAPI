@@ -37,7 +37,7 @@ namespace FlaxEngine
         /// <inheritdoc />
         public override string ToString()
         {
-            return $"{Name} ({GetType().Name})";
+            return $"{Path} ({GetType().Name})";
         }
     }
 }

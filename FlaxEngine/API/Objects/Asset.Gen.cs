@@ -27,20 +27,20 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets asset name
+		/// Gets the asset path.
 		/// </summary>
 		[UnmanagedCall]
-		public string Name
+		public string Path
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetName(unmanagedPtr); }
+			get { return Internal_GetPath(unmanagedPtr); }
 #endif
 		}
 
 		/// <summary>
-		/// Returns true if asset is loaded.
+		/// Returns true if asset is loaded, otherwise false.
 		/// </summary>
 		[UnmanagedCall]
 		public bool IsLoaded
@@ -53,7 +53,7 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets amount of references to that asset
+		/// Gets amount of references to that asset.
 		/// </summary>
 		[UnmanagedCall]
 		public int RefCount
@@ -86,7 +86,7 @@ namespace FlaxEngine
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern string Internal_GetName(IntPtr obj);
+		internal static extern string Internal_GetPath(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetIsLoaded(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
