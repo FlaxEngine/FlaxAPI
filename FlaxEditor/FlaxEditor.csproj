@@ -132,6 +132,8 @@
     <Compile Include="States\LoadingState.cs" />
     <Compile Include="States\PlayingState.cs" />
     <Compile Include="States\ReloadingScriptsState.cs" />
+    <Compile Include="Surface\Elements\Box.cs" />
+    <Compile Include="Surface\ConnectionType.cs" />
     <Compile Include="Surface\IVisjectSurfaceOwner.cs" />
     <Compile Include="Surface\NodeElementType.cs" />
     <Compile Include="Surface\NodeFlags.cs" />
@@ -139,6 +141,7 @@
     <Compile Include="Surface\ISurfaceNodeElement.cs" />
     <Compile Include="Surface\SurfaceNodeElementControl.cs" />
     <Compile Include="Surface\SurfaceType.cs" />
+    <Compile Include="Surface\VisjectSurface.Connecting.cs" />
     <Compile Include="Surface\VisjectSurface.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
     <Compile Include="Viewport\EditorGizmoViewport.cs" />
@@ -178,7 +181,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Surface\ContextMenu\" />
-    <Folder Include="Surface\Elements\" />
     <Folder Include="Surface\Prototypes\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

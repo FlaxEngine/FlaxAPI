@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -10,7 +10,7 @@ namespace FlaxEditor.Surface
     /// Visject Surface control for editing Nodes Graph.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ScrollableControl" />
-    public class VisjectSurface : ScrollableControl
+    public partial class VisjectSurface : ScrollableControl
     {
         private IVisjectSurfaceOwner _owner;
         private SurfaceType _type;

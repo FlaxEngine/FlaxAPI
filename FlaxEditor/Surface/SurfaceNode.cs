@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -12,12 +12,15 @@ namespace FlaxEditor.Surface
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class SurfaceNode : ContainerControl
     {
-        protected readonly VisjectSurface _surface;
-
+        /// <summary>
+        /// The surface.
+        /// </summary>
+        public readonly VisjectSurface Surface;
+        
         public SurfaceNode(VisjectSurface surface)
             : base(true, 0, 0, 100, 100)
         {
-            _surface = surface;
+            Surface = surface;
         }
     }
 }
