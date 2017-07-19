@@ -132,6 +132,7 @@
     <Compile Include="States\LoadingState.cs" />
     <Compile Include="States\PlayingState.cs" />
     <Compile Include="States\ReloadingScriptsState.cs" />
+    <Compile Include="Surface\Constants.cs" />
     <Compile Include="Surface\Elements\Box.cs" />
     <Compile Include="Surface\ConnectionType.cs" />
     <Compile Include="Surface\GroupArchetype.cs" />
