@@ -63,6 +63,12 @@ namespace FlaxEditor.Surface.Elements
         /// </value>
         public abstract bool IsOutput { get; }
 
+        /// <summary>
+        /// Gets or sets the current type of the box connections.
+        /// </summary>
+        /// <value>
+        /// The current type.
+        /// </value>
         public ConnectionType CurrentType
         {
             get => _currentType;
@@ -261,7 +267,7 @@ namespace FlaxEditor.Surface.Elements
             get
             {
                 var boxes = ParentNode.Archetype.DependentBoxes;
-                for (int i = 0; i < boxes; i++)
+                for (int i = 0; i < boxes.Length; i++)
                 {
                     int index = boxes[i];
                     if (index == -1)
@@ -283,7 +289,7 @@ namespace FlaxEditor.Surface.Elements
             get
             {
                 var boxes = ParentNode.Archetype.IndependentBoxes;
-                for (int i = 0; i < boxes; i++)
+                for (int i = 0; i < boxes.Length; i++)
                 {
                     int index = boxes[i];
                     if (index == -1)
