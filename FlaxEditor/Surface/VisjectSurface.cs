@@ -67,5 +67,14 @@ namespace FlaxEditor.Surface
             if (Style == null)
                 throw new InvalidOperationException("Missing visject surface style.");
         }
+
+        /// <summary>
+        /// Deletes the specified node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        public void Delete(SurfaceNode node)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
