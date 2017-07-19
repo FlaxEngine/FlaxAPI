@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Modules;
 using FlaxEditor.States;
@@ -184,10 +185,10 @@ namespace FlaxEditor
         internal void Exit()
         {
             Debug.Log("Editor exit");
-            
+
             // Start exit
             StateMachine.GoToState<ClosingState>();
-            
+
             // Release modules (from back to front)
             for (int i = _modules.Count - 1; i >= 0; i--)
             {
@@ -219,9 +220,9 @@ namespace FlaxEditor
         public void SaveAll()
         {
             throw new NotImplementedException();
-            
+
             // TODO: save assets
-            
+
             Scene.SaveScenes();
         }
 
@@ -245,5 +246,14 @@ namespace FlaxEditor
             var state = StateMachine.GetState<TStateType>() as EditorState;
             EnsureState(state);
         }
+
+        #region Internal Calls
+
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_CloneAssetFile(string dstPath, string srcPath, ref Guid dstId);
+#endif
+
+        #endregion
     }
 }

@@ -79,5 +79,36 @@ namespace FlaxEditor.Modules
         {
             throw new NotImplementedException("Reimporting binary assets");
         }
+
+        /// <summary>
+        /// Clones the asset to the temporary folder.
+        /// </summary>
+        /// <param name="item">The item to clone.</param>
+        /// <param name="resultPath">The result path.</param>
+        /// <returns>True if failed, otherwise false.</returns>
+        public bool FastTempAssetClone(AssetItem item, out string resultPath)
+        {
+            var extension = System.IO.Path.GetExtension(item.Path);
+            var id = Guid.NewGuid();
+            resultPath = System.IO.Path.Combine(Globals.TemporaryFolder, id.ToString("N")) + extension;
+            
+            if (CloneAssetFile(resultPath, item.Path, id))
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Duplicates the asset file and changes it's ID.
+        /// </summary>
+        /// <param name="dstPath">The destination file path.</param>
+        /// <param name="srcPath">The source file path.</param>
+        /// <param name="dstId">The destination asset identifier.</param>
+        /// <returns>True if cannot perform that operation, otherwise false.</returns>
+        public bool CloneAssetFile(string dstPath, string srcPath, Guid dstId)
+        {
+            // Use internal call
+            return Editor.Internal_CloneAssetFile(dstPath, srcPath, ref dstId);
+        }
     }
 }
