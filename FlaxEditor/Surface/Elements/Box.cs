@@ -15,7 +15,7 @@ namespace FlaxEditor.Surface.Elements
     public abstract class Box : SurfaceNodeElementControl
     {
         /// <summary>
-        /// The current connection type. It's subset or equal to <see cref="Type"/>.
+        /// The current connection type. It's subset or equal to <see cref="DefaultType"/>.
         /// </summary>
         protected ConnectionType _currentType;
 
@@ -27,12 +27,12 @@ namespace FlaxEditor.Surface.Elements
         /// <summary>
         /// Unique box ID within single node.
         /// </summary>
-        public readonly int ID;
+        public int ID => Archetype.BoxID;
 
         /// <summary>
         /// Allowed connections type.
         /// </summary>
-        public readonly ConnectionType Type;
+        public ConnectionType DefaultType => Archetype.ConnectionsType;
 
         /// <summary>
         /// List with all connections to oher boxes.
@@ -86,23 +86,7 @@ namespace FlaxEditor.Surface.Elements
                     _currentType = value;
 
                     // Cache color
-                    switch (_currentType)
-                    {
-                        case ConnectionType.Impulse: _currentTypeColor = VisjectStyle::Colors::Impulse; break;
-                        case ConnectionType.Bool: _currentTypeColor = VisjectStyle::Colors::Box; break;
-                        case ConnectionType.Integer: _currentTypeColor = VisjectStyle::Colors::Integer; break;
-                        case ConnectionType.Float: _currentTypeColor = VisjectStyle::Colors::Float; break;
-                        case ConnectionType.Vector2:
-                        case ConnectionType.Vector3:
-                        case ConnectionType.Vector4:
-                        case ConnectionType.Vector: _currentTypeColor = VisjectStyle::Colors::Vector; break;
-                        case ConnectionType.String: _currentTypeColor = VisjectStyle::Colors::String; break;
-                        case ConnectionType.Object: _currentTypeColor = VisjectStyle::Colors::Object; break;
-                        case ConnectionType.Rotation: _currentTypeColor = VisjectStyle::Colors::Rotation; break;
-                        case ConnectionType.Transform: _currentTypeColor = VisjectStyle::Colors::Transform; break;
-                        case ConnectionType.Box: _currentTypeColor = VisjectStyle::Colors::Box; break;
-                        default: _currentTypeColor = VisjectStyle::Colors::Default; break;
-                    }
+                    Surface.Style.GetConnectionColor(_currentType, out _currentTypeColor);
 
                     // Fire event
                     OnCurrentTypeChanged();
@@ -111,11 +95,10 @@ namespace FlaxEditor.Surface.Elements
         }
 
         /// <inheritdoc />
-        protected Box(SurfaceNode parentNode, ref Vector2 location, ref Vector2 size, bool canFocus) 
-            : base(parentNode, ref location, ref size, canFocus)
+        protected Box(SurfaceNode parentNode, NodeElementArchetype archetype, ref Vector2 location, ref Vector2 size, bool canFocus)
+            : base(parentNode, archetype, ref location, ref size, canFocus)
         {
-            // TODO: set type and ID from archetype
-            _currentType = Type;
+            _currentType = DefaultType;
         }
 
         /// <summary>
@@ -128,7 +111,7 @@ namespace FlaxEditor.Surface.Elements
         public bool CanUseType(ConnectionType type)
         {
             // Check drect connection
-            if (ParentNode.Surface.CanUseDirectCast(_currentType, type))
+            if (Surface.CanUseDirectCast(_currentType, type))
             {
                 // Can
                 return true;
@@ -137,25 +120,28 @@ namespace FlaxEditor.Surface.Elements
             // Check independent and if there is box with bigger potencial because it may block current one from changing type
             var parentArch = ParentNode.Archetype;
             var boxes = parentArch.IndependentBoxes;
-            for (int i = 0; i < boxes.Length; i++)
+            if (boxes != null)
             {
-                if (boxes[i] == -1)
-                    break;
-
-                // Get box
-                var b = ParentNode.GetBox(boxes[i]);
-
-                // Check if its the same and tested type matches the default value type
-                if (b == this && (parentArch.DefaultType & type) != 0)
+                for (int i = 0; i < boxes.Length; i++)
                 {
-                    // Can
-                    return true;
-                }
-                // Check if box exists and has any connection
-                if (b != null && b.HasConnection)
-                {
-                    // Cannot
-                    return false;
+                    if (boxes[i] == -1)
+                        break;
+
+                    // Get box
+                    var b = ParentNode.GetBox(boxes[i]);
+
+                    // Check if its the same and tested type matches the default value type
+                    if (b == this && (parentArch.DefaultType & type) != 0)
+                    {
+                        // Can
+                        return true;
+                    }
+                    // Check if box exists and has any connection
+                    if (b != null && b.HasAnyConnection)
+                    {
+                        // Cannot
+                        return false;
+                    }
                 }
             }
 
@@ -256,7 +242,7 @@ namespace FlaxEditor.Surface.Elements
         /// True if box can use only single connection.
         /// </summary>
         /// <returns>True if only single conenction.</returns>
-        public bool IsSingle => true; // TODO: gather this from the box archetype!!!
+        public bool IsSingle => true;// TODO: gather this from the box archetype!!!
 
         /// <summary>
         /// True if box type depends on other boxes types of the node.
@@ -267,13 +253,16 @@ namespace FlaxEditor.Surface.Elements
             get
             {
                 var boxes = ParentNode.Archetype.DependentBoxes;
-                for (int i = 0; i < boxes.Length; i++)
+                if (boxes != null)
                 {
-                    int index = boxes[i];
-                    if (index == -1)
-                        break;
-                    if (index == ID)
-                        return true;
+                    for (int i = 0; i < boxes.Length; i++)
+                    {
+                        int index = boxes[i];
+                        if (index == -1)
+                            break;
+                        if (index == ID)
+                            return true;
+                    }
                 }
 
                 return false;
@@ -289,13 +278,16 @@ namespace FlaxEditor.Surface.Elements
             get
             {
                 var boxes = ParentNode.Archetype.IndependentBoxes;
-                for (int i = 0; i < boxes.Length; i++)
+                if (boxes != null)
                 {
-                    int index = boxes[i];
-                    if (index == -1)
-                        break;
-                    if (index == ID)
-                        return true;
+                    for (int i = 0; i < boxes.Length; i++)
+                    {
+                        int index = boxes[i];
+                        if (index == -1)
+                            break;
+                        if (index == ID)
+                            return true;
+                    }
                 }
 
                 return false;
@@ -314,40 +306,29 @@ namespace FlaxEditor.Surface.Elements
         /// </summary>
         protected void DrawBox()
         {
-            var r = new Rectangle(Vector2.Zero, Size);
+            var rect = new Rectangle(Vector2.Zero, Size);
 
             // Size culling
             const float minBoxSize = 5.0f;
-            if (r.Size.LengthSquared < minBoxSize * minBoxSize)
+            if (rect.Size.LengthSquared < minBoxSize * minBoxSize)
                 return;
 
             // Debuging boxes size
             //render->DrawRectangle(r, Color::Orange); return;
 
-            // Ensure to have sprites loaded
-            if (_shouldTryLoadIcons)
-            {
-                _shouldTryLoadIcons = false;
-                var ui = Editor.Instance.UI;
-                _boxOpen = ui.GetIcon(VisjectStyle::Icons::BoxOpen);
-                _boxClose = ui.GetIcon(VisjectStyle::Icons::BoxClose);
-                _arrowOpen = ui.GetIcon(VisjectStyle::Icons::ArowOpen);
-                _arrowClose = ui.GetIcon(VisjectStyle::Icons::ArowClose);
-            }
-
-            // Check if is impulse
+            // Draw icon
             bool hasConnections = HasAnyConnection;
             float alpha = Enabled ? 1.0f : 0.6f;
+            Color color = _currentTypeColor * alpha;
+            var style = Surface.Style;
+            Sprite icon;
             if (_currentType == ConnectionType.Impulse)
-            {
-                Render2D.DrawSprite(hasConnections ? _arrowClose : _arrowOpen, r, VisjectStyle::Colors::Impulse * alpha);
-            }
+                icon = hasConnections ? style.Icons.ArowClose : style.Icons.ArowOpen;
             else
-            {
-                Render2D.DrawSprite(hasConnections ? _boxClose : _boxOpen, r, getTypeColor() * alpha);
-            }
+                icon = hasConnections ? style.Icons.BoxClose : style.Icons.BoxOpen;
+            Render2D.DrawSprite(icon, rect, color);
         }
-        
+
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
@@ -355,7 +336,7 @@ namespace FlaxEditor.Surface.Elements
 
             if (buttons == MouseButtons.Left)
             {
-                ParentNode.Surface.ConnectingEnd(this);
+                Surface.ConnectingEnd(this);
             }
 
             return true;
@@ -368,7 +349,7 @@ namespace FlaxEditor.Surface.Elements
 
             if (buttons == MouseButtons.Left)
             {
-                ParentNode.Surface.ConnectingStart(this);
+                Surface.ConnectingStart(this);
                 result = true;
             }
 

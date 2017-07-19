@@ -2,7 +2,9 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System.Collections.Generic;
 using FlaxEditor.Surface.Elements;
+using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Surface
@@ -13,6 +15,13 @@ namespace FlaxEditor.Surface
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class SurfaceNode : ContainerControl
     {
+        private Rectangle _bounds;
+        private Rectangle _headerRect;
+        private Rectangle _closeButtonRect;
+        private Rectangle _footerRect;
+        private Vector2 _mousePosition;
+        private bool _isSelected;
+
         /// <summary>
         /// The surface.
         /// </summary>
@@ -27,6 +36,11 @@ namespace FlaxEditor.Surface
         /// The group archetype.
         /// </summary>
         public readonly GroupArchetype GroupArchetype;
+
+        /// <summary>
+        /// The elements collection.
+        /// </summary>
+        public readonly List<ISurfaceNodeElement> Elements = new List<ISurfaceNodeElement>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SurfaceNode"/> class.
@@ -63,53 +77,53 @@ namespace FlaxEditor.Surface
         public void UpdateBoxesTypes()
         {
             // Check there is no need to use box types depedency feature
-            if (_arch->DependentBoxes[0] == -1 || _arch->IndependentBoxes[0] == -1)
+            if (Archetype.DependentBoxes == null || Archetype.IndependentBoxes == null)
             {
                 // Back
                 return;
             }
 
             // Get type to assign to all dependent boxes
-            GraphConnectionType type = _arch->DefaultType;
-            for (int i = 0; i < SURFACE_NODE_MAX_BOX_DEPEDENCIES; i++)
+            ConnectionType type = Archetype.DefaultType;
+            for (int i = 0; i < Archetype.IndependentBoxes.Length; i++)
             {
-                if (_arch->IndependentBoxes[i] == -1)
+                if (Archetype.IndependentBoxes[i] == -1)
                     break;
-                SurfaceGraphBox* b = _node->GetBox(_arch->IndependentBoxes[i]);
-                if (b && b->HasConnection())
+                var b = GetBox(Archetype.IndependentBoxes[i]);
+                if (b != null && b.HasAnyConnection)
                 {
                     // Check if that type if part of default type
-                    if (_arch->DefaultType & b->Connections[0]->Type)
+                    if ((Archetype.DefaultType & b.Connections[0].DefaultType) != 0)
                     {
-                        type = b->Connections[0]->Data->GetCurrentType();
+                        type = b.Connections[0].CurrentType;
                         break;
                     }
                 }
             }
 
             // Assign connection type
-            for (int i = 0; i < SURFACE_NODE_MAX_BOX_DEPEDENCIES; i++)
+            for (int i = 0; i < Archetype.DependentBoxes.Length; i++)
             {
-                if (_arch->DependentBoxes[i] == -1)
+                if (Archetype.DependentBoxes[i] == -1)
                     break;
-                SurfaceGraphBox* b = _node->GetBox(_arch->DependentBoxes[i]);
-                if (b)
+                var b = GetBox(Archetype.DependentBoxes[i]);
+                if (b != null)
                 {
                     // Set new type
-                    b->Data->SetCurrentType(type);
+                    b.CurrentType = type;
                 }
             }
 
             // Validate minor independent boxes to fit main one
-            for (int i = 0; i < SURFACE_NODE_MAX_BOX_DEPEDENCIES; i++)
+            for (int i = 0; i < Archetype.IndependentBoxes.Length; i++)
             {
-                if (_arch->IndependentBoxes[i] == -1)
+                if (Archetype.IndependentBoxes[i] == -1)
                     break;
-                SurfaceGraphBox* b = _node->GetBox(_arch->IndependentBoxes[i]);
-                if (b)
+                var b = GetBox(Archetype.IndependentBoxes[i]);
+                if (b != null)
                 {
                     // Set new type
-                    b->Data->SetCurrentType(type);
+                    b.CurrentType = type;
                 }
             }
         }
@@ -121,6 +135,8 @@ namespace FlaxEditor.Surface
         /// <returns>Box or null if cannot find.</returns>
         public Box GetBox(int id)
         {
+            // TODO: maybe create local cache for boxes? but not a dictionary, use lookup table because ids are usally small (less than 20)
+
             Box result = null;
             for (int i = 0; i < _elements.Count(); i++)
             {
