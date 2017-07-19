@@ -136,6 +136,8 @@
     <Compile Include="Surface\NodeElementType.cs" />
     <Compile Include="Surface\NodeFlags.cs" />
     <Compile Include="Surface\SurfaceNode.cs" />
+    <Compile Include="Surface\ISurfaceNodeElement.cs" />
+    <Compile Include="Surface\SurfaceNodeElementControl.cs" />
     <Compile Include="Surface\SurfaceType.cs" />
     <Compile Include="Surface\VisjectSurface.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
