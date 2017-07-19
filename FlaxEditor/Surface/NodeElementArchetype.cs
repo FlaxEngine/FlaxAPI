@@ -45,5 +45,15 @@ namespace FlaxEditor.Surface
         /// Default connections type for that element (can be set of types).
         /// </summary>
         public ConnectionType ConnectionsType;
+
+        /// <summary>
+        /// Gets the actual element position on the x axis.
+        /// </summary>
+        public float ActualPositionX => Position.X + Constants.NodeMarginX;
+
+        /// <summary>
+        /// Gets the actual element position on the y axis.
+        /// </summary>
+        public float ActualPositionY => Position.Y + Constants.NodeMarginY + Constants.NodeHeaderSize;
     }
 }
