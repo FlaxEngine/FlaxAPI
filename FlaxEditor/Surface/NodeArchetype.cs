@@ -9,7 +9,7 @@ namespace FlaxEditor.Surface
     /// <summary>
     /// Surface node archetype description.
     /// </summary>
-    public class NodeArchetype
+    public sealed class NodeArchetype
     {
         /// <summary>
         /// Create custom node callback.

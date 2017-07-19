@@ -16,5 +16,13 @@ namespace FlaxEditor.Surface
         /// The parent node.
         /// </value>
         SurfaceNode ParentNode { get; }
+
+        /// <summary>
+        /// Gets the element archetype.
+        /// </summary>
+        /// <value>
+        /// The archetype.
+        /// </value>
+        NodeElementArchetype Archetype { get; }
     }
 }

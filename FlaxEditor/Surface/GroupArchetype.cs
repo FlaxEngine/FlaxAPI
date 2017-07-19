@@ -9,7 +9,7 @@ namespace FlaxEditor.Surface
     /// <summary>
     /// Surface nodes group archetype description.
     /// </summary>
-    public class GroupArchetype
+    public sealed class GroupArchetype
     {
         /// <summary>
         /// Unique group ID.

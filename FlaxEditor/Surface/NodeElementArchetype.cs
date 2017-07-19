@@ -9,7 +9,7 @@ namespace FlaxEditor.Surface
     /// <summary>
     /// Surface node element archetype description.
     /// </summary>
-    public class NodeElementArchetype
+    public sealed class NodeElementArchetype
     {
         /// <summary>
         /// The element type.
