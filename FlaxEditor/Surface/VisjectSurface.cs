@@ -54,6 +54,14 @@ namespace FlaxEditor.Surface
         public readonly SurfaceStyle Style;
 
         /// <summary>
+        /// Gets a value indicating whether surface is edited.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this surface is edited; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsEdited => _edited;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="VisjectSurface"/> class.
         /// </summary>
         /// <param name="owner">The owner.</param>

@@ -11,6 +11,7 @@ namespace FlaxEditor.Windows.Assets
     /// <summary>
     /// Editor window to view/modify <see cref="CubeTexture"/> asset.
     /// </summary>
+    /// <seealso cref="CubeTexture" />
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public sealed class CubeTextureWindow : AssetEditorWindowBase<CubeTexture>
     {
