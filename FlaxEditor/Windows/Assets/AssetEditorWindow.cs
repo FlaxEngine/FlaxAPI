@@ -35,7 +35,7 @@ namespace FlaxEditor.Windows.Assets
         protected AssetEditorWindow(Editor editor, AssetItem item)
             : base(editor, false, ScrollBars.None)
         {
-            _item = item;
+            _item = item ?? throw new ArgumentNullException(nameof(item));
             _item.AddReference(this);
 
             _toolstrip = new ToolStrip();
