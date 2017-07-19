@@ -143,6 +143,7 @@
     <Compile Include="Surface\SurfaceNode.cs" />
     <Compile Include="Surface\ISurfaceNodeElement.cs" />
     <Compile Include="Surface\SurfaceNodeElementControl.cs" />
+    <Compile Include="Surface\SurfaceStyle.cs" />
     <Compile Include="Surface\SurfaceType.cs" />
     <Compile Include="Surface\VisjectSurface.Connecting.cs" />
     <Compile Include="Surface\VisjectSurface.cs" />
