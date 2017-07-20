@@ -203,6 +203,7 @@
     <Compile Include="GUI\Input\TextBox.Keys.cs">
       <DependentUpon>TextBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Panels\DropPanel.cs" />
     <Compile Include="GUI\Panels\HScrollBar.cs" />
     <Compile Include="GUI\Panels\ScrollBar.cs" />
     <Compile Include="GUI\Panels\Panel.cs" />
