@@ -43,6 +43,18 @@ namespace FlaxEditor.Surface
         public readonly List<ISurfaceNodeElement> Elements = new List<ISurfaceNodeElement>();
 
         /// <summary>
+        /// Gets a value indicating whether this node is selected.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this node is selected; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsSelected
+        {
+            get => _isSelected;
+            internal set { _isSelected = value; }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SurfaceNode"/> class.
         /// </summary>
         /// <param name="surface">The surface.</param>
@@ -161,18 +173,6 @@ namespace FlaxEditor.Surface
             UpdateBoxesTypes();
         }
 
-        internal void OnSelect()
-        {
-            Assert.IsFalse(_isSelected);
-            _isSelected = true;
-        }
-
-        internal void OnDeselect()
-        {
-            Assert.IsTrue(_isSelected);
-            _isSelected = false;
-        }
-        
         /// <summary>
         /// Updates the cached rectangles on node size change.
         /// </summary>

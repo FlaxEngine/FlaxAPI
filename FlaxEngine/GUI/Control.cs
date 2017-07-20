@@ -236,6 +236,18 @@ namespace FlaxEngine.GUI
         #endregion
 
         /// <summary>
+        /// Gets or sets the cursor (per window). Control should restore cursor to the default value eg. when mouse leaves it's area.
+        /// </summary>
+        /// <value>
+        /// The cursor.
+        /// </value>
+        public CursorType Cursor
+        {
+            get => ParentWindow.Cursor;
+            set => ParentWindow.Cursor = value;
+        }
+
+        /// <summary>
         /// The custom tag object value linked to the control.
         /// </summary>
         public object Tag;
