@@ -204,10 +204,13 @@
       <DependentUpon>TextBox.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\Panels\DropPanel.cs" />
+    <Compile Include="GUI\Panels\HorizontalPanel.cs" />
     <Compile Include="GUI\Panels\HScrollBar.cs" />
+    <Compile Include="GUI\Panels\PanelWithMargins.cs" />
     <Compile Include="GUI\Panels\ScrollBar.cs" />
     <Compile Include="GUI\Panels\Panel.cs" />
     <Compile Include="GUI\Panels\SplitPanel.cs" />
+    <Compile Include="GUI\Panels\VerticalPanel.cs" />
     <Compile Include="GUI\Panels\VScrollBar.cs" />
     <Compile Include="GUI\RenderOutputControl.cs" />
     <Compile Include="GUI\ScrollableControl.cs" />
