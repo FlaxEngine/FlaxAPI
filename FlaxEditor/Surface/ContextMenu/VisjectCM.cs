@@ -40,8 +40,9 @@ namespace FlaxEditor.Surface.ContextMenu
             Size = new Vector2(320, 220);
 
             // Search box
-            _searchBox = new TextBox(false, 0, 0);
-            _searchBox.DockStyle = DockStyle.Top;
+            _searchBox = new TextBox(false, 1, 1);
+            _searchBox.Width = Width - 3;
+            _searchBox.WatermarkText = "Search...";
             _searchBox.TextChanged += OnSearchFilterChanged;
             _searchBox.Parent = this;
 
