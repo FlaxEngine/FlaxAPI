@@ -183,7 +183,7 @@ namespace FlaxEngine.GUI
         public bool HasSelection => SelectionLength > 0;
 
         /// <summary>
-        /// Gets or sets the watermark text to show greyed when textbox is empty.
+        /// Gets or sets the watermark text to show grayed when textbox is empty.
         /// </summary>
         /// <value>
         /// The watermark text.

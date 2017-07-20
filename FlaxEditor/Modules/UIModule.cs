@@ -36,6 +36,11 @@ namespace FlaxEditor.Modules
         /// </summary>
         public StatusBar StatusBar;
 
+        /// <summary>
+        /// The visject surface background texture. Cached to be used globally.
+        /// </summary>
+        public Texture VisjectSurfaceBackground;
+
         // Cached internally to improve performance
         internal Sprite FolderClosed12;
         internal Sprite FolderOpened12;
@@ -135,6 +140,8 @@ namespace FlaxEditor.Modules
         {
             Editor.Windows.OnMainWindowClosing += OnOnMainWindowClosing;
             var mainWindow = Editor.Windows.MainWindow.GUI;
+
+            VisjectSurfaceBackground = FlaxEngine.Content.LoadAsyncInternal<Texture>("Editor/VisjectSurface");
             
             InitStyle(mainWindow);
             InitMainMenu(mainWindow);

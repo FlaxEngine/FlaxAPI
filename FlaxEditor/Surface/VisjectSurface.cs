@@ -86,6 +86,8 @@ namespace FlaxEditor.Surface
         public VisjectSurface(IVisjectSurfaceOwner owner, SurfaceType type)
             : base(true, 0, 0, 100, 100)
         {
+            DockStyle = DockStyle.Fill;
+
             Owner = owner;
             Type = type;
             Style = SurfaceStyle.CreateStyleHandler(Editor.Instance, Type);
@@ -165,13 +167,41 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public override void Draw()
         {
+            // Cache data
             var style = FlaxEngine.GUI.Style.Current;
             var rect = new Rectangle(Vector2.Zero, Size);
 
+            // Draw background
+            var background = Owner.GetSurfaceBackground();
+            if (background && background.ResidentMipLevels > 0)
+            {
+                var bSize = background.Size;
+                float bw = bSize.X;
+                float bh = bSize.Y;
+                Vector2 pos = Vector2.Mod(bSize);
+
+                if (pos.X > 0)
+                    pos.X -= bw;
+                if (pos.Y > 0)
+                    pos.Y -= bh;
+
+                int maxI = Mathf.CeilToInt(rect.Width / bw + 1.0f);
+                int maxJ = Mathf.CeilToInt(rect.Height / bh + 1.0f);
+
+                for (int i = 0; i < maxI; i++)
+                {
+                    for (int j = 0; j < maxJ; j++)
+                    {
+                        Render2D.DrawTexture(background, new Rectangle(pos.X + i * bw, pos.Y + j * bh, bw, bh), Color.White, false);
+                    }
+                }
+            }
+
+            // Base
             base.Draw();
             
-            Render2D.DrawText(style.FontTitle, string.Format("Scale: {0}", Scale), rect, Color.Red);
-
+            Render2D.DrawText(style.FontTitle, string.Format("Scale: {0}", Scale), rect, Enabled ? Color.Red : Color.Black);
+            
             // Draw border
             if (ContainsFocus)
                 Render2D.DrawRectangle(new Rectangle(0, 0, rect.Width - 2, rect.Height - 2), style.BackgroundSelected);

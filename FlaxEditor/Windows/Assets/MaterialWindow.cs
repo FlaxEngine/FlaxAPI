@@ -216,6 +216,12 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
+        public Texture GetSurfaceBackground()
+        {
+            return Editor.UI.VisjectSurfaceBackground;
+        }
+
+        /// <inheritdoc />
         public override void Update(float deltaTime)
         {
             base.Update(deltaTime);
