@@ -132,6 +132,7 @@
     <Compile Include="States\LoadingState.cs" />
     <Compile Include="States\PlayingState.cs" />
     <Compile Include="States\ReloadingScriptsState.cs" />
+    <Compile Include="Surface\Archetypes\Constants.cs" />
     <Compile Include="Surface\Constants.cs" />
     <Compile Include="Surface\Elements\Box.cs" />
     <Compile Include="Surface\ConnectionType.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Surface\NodeArchetype.cs" />
     <Compile Include="Surface\NodeElementArchetype.cs" />
     <Compile Include="Surface\NodeElementType.cs" />
+    <Compile Include="Surface\NodeFactory.cs" />
     <Compile Include="Surface\NodeFlags.cs" />
     <Compile Include="Surface\SurfaceNode.cs" />
     <Compile Include="Surface\ISurfaceNodeElement.cs" />
@@ -187,7 +189,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Surface\Archetypes\" />
     <Folder Include="Surface\ContextMenu\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
