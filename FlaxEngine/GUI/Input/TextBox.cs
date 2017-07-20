@@ -78,7 +78,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public int MaxLength
         {
-            get { return _maxLength; }
+            get => _maxLength;
             set
             {
                 if (_maxLength <= 0 || _maxLength > 1000000)
@@ -158,10 +158,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets length of the text
         /// </summary>
-        public int TextLength
-        {
-            get { return _text.Length; }
-        }
+        public int TextLength => _text.Length;
 
         /// <summary>
         /// Gets the currently selected text in the control.
@@ -178,44 +175,37 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the number of characters selected in the text box.
         /// </summary>
-        public int SelectionLength
-        {
-            get { return Mathf.Abs(_selectionEnd - _selectionStart); }
-        }
+        public int SelectionLength => Mathf.Abs(_selectionEnd - _selectionStart);
 
         /// <summary>
         /// Returns true if any text is selected, otherwise false
         /// </summary>
-        public bool HasSelection
-        {
-            get { return SelectionLength > 0; }
-        }
+        public bool HasSelection => SelectionLength > 0;
+
+        /// <summary>
+        /// Gets or sets the watermark text to show greyed when textbox is empty.
+        /// </summary>
+        /// <value>
+        /// The watermark text.
+        /// </value>
+        public string WatermarkText { get; set; }
 
         #endregion
 
         /// <summary>
         /// Index of the character on left edge of the selection
         /// </summary>
-        private int SelectionLeft
-        {
-            get { return Mathf.Min(_selectionStart, _selectionEnd); }
-        }
+        private int SelectionLeft => Mathf.Min(_selectionStart, _selectionEnd);
 
         /// <summary>
         /// Index of the character on right edge of the selection
         /// </summary>
-        private int SelectionRight
-        {
-            get { return Mathf.Max(_selectionStart, _selectionEnd); }
-        }
+        private int SelectionRight => Mathf.Max(_selectionStart, _selectionEnd);
 
         /// <summary>
         /// Gets current caret position (index of the character)
         /// </summary>
-        private int CaretPosition
-        {
-            get { return _selectionEnd; }
-        }
+        private int CaretPosition => _selectionEnd;
 
         /// <summary>
         /// Calculates caret rectangle
@@ -663,7 +653,7 @@ namespace FlaxEngine.GUI
             _isSelecting = true;
 
             // Start tracking mouse
-            //GetParentWindow()->GetWin()->StartTrackingMouse(false);
+            ParentWindow.StartTrackingMouse(false);
         }
 
         /// <summary>
@@ -675,7 +665,7 @@ namespace FlaxEngine.GUI
             _isSelecting = false;
 
             // Stop tracking mouse
-            //GetParentWindow()->GetWin()->EndTrackingMouse();
+            ParentWindow.EndTrackingMouse();
         }
 
         #endregion
@@ -744,7 +734,7 @@ namespace FlaxEngine.GUI
         {
             // Cache data
             var style = Style.Current;
-            var rect = new Rectangle(0, 0, Width, Height);
+            var rect = new Rectangle(Vector2.Zero, Size);
             var font = Font;
             Assert.IsNotNull(font, "Missing font.");
 
@@ -805,8 +795,15 @@ namespace FlaxEngine.GUI
                 }
             }
 
-            // Text
-            Render2D.DrawText(font, _text, _layout.Bounds, Enabled ? style.Foreground : style.ForegroundDisabled, _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
+            // Text or watermark
+            if (_text.Length > 0)
+            {
+                Render2D.DrawText(font, _text, _layout.Bounds, Enabled ? style.Foreground : style.ForegroundDisabled, _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
+            }
+            else if (!string.IsNullOrEmpty(WatermarkText) && !IsFocused)
+            {
+                Render2D.DrawText(font, WatermarkText, _layout.Bounds, style.ForegroundDisabled, _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
+            }
 
             // Caret
             if (IsFocused && CaretPosition > -1)
