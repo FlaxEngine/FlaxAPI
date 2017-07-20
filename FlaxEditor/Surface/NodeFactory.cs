@@ -3,7 +3,9 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEngine;
+using FlaxEngine.Assertions;
 
 namespace FlaxEditor.Surface
 {
@@ -109,6 +111,26 @@ namespace FlaxEditor.Surface
             // Error
             Debug.LogError($"Failed to find Visject Surface node with id: {groupID}:{typeID}");
             return null;
+        }
+
+        /// <summary>
+        /// Creates the node.
+        /// </summary>
+        /// <param name="surface">The surface.</param>
+        /// <param name="groupArchetype">The group archetype.</param>
+        /// <param name="nodeArchetype">The node archetype.</param>
+        /// <returns>Created node or null if failed.</returns>
+        public static SurfaceNode CreateNode(VisjectSurface surface, GroupArchetype groupArchetype, NodeArchetype nodeArchetype)
+        {
+            Assert.IsTrue(groupArchetype.Archetypes.Contains(nodeArchetype));
+
+            // Create
+            SurfaceNode node;
+            if (nodeArchetype.Create != null)
+                node = nodeArchetype.Create(surface, nodeArchetype, groupArchetype);
+            else
+                node = new SurfaceNode(surface, nodeArchetype, groupArchetype);
+            return node;
         }
     }
 }

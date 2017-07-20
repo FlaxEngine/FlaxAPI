@@ -181,7 +181,12 @@ namespace FlaxEngine
             A = values[3];
         }
 
-        internal Color AlphaMultiplied(float multiplier)
+        /// <summary>
+        /// Duplicates color with multiplied alpha channel value.
+        /// </summary>
+        /// <param name="multiplier">The alpha channel multiplier.</param>
+        /// <returns>The color with scaled alpha.</returns>
+        public Color AlphaMultiplied(float multiplier)
         {
             return new Color(R, G, B, A * multiplier);
         }
