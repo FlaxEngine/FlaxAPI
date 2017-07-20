@@ -33,7 +33,7 @@ namespace FlaxEditor.Surface
         private Box _lastBoxUnderMouse;
 
         //private VisjectCM _cmPrimaryMenu;
-        private ContextMenu _cmSecondaryMenu;
+        private FlaxEngine.GUI.ContextMenu _cmSecondaryMenu;
         private Vector2 _cmStartPos;
 
         private DragItems _dragOverItems = new DragItems();

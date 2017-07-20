@@ -16,5 +16,10 @@ namespace FlaxEditor.Surface.ContextMenu
     /// <seealso cref="FlaxEngine.GUI.Control" />
     public sealed class VisjectCMItem : Control
     {
-    }
+        public VisjectCMItem(VisjectCMGroup group, NodeArchetype archetype)
+            : base(true, 0, 0, 120, 12)
+        {
+            
+        }
+}
 }
