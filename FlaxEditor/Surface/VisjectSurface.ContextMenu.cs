@@ -10,6 +10,15 @@ namespace FlaxEditor.Surface
     public partial class VisjectSurface
     {
         /// <summary>
+        /// Shows the primary menu.
+        /// </summary>
+        /// <param name="location">The location in teh Surface Space.</param>
+        public void ShowPrimaryMenu(Vector2 location)
+        {
+            _cmPrimaryMenu.Show(this, location);
+        }
+
+        /// <summary>
         /// Shows the secondary context menu for the given node.
         /// </summary>
         /// <param name="node">The node.</param>
