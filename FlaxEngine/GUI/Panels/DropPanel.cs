@@ -286,7 +286,7 @@ namespace FlaxEngine.GUI
             for (int i = 0; i < _children.Count; i++)
             {
                 Control c = _children[i];
-                if (c.DockStyle == DockStyle.None)
+                if (c.DockStyle == DockStyle.None && c.Visible)
                 {
                     var h = c.Height;
                     c.Bounds = new Rectangle(leftMargin, y, itemsWidth, h);

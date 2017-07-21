@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -26,9 +26,12 @@ namespace FlaxEngine.GUI
             for (int i = 0; i < _children.Count; i++)
             {
                 Control c = _children[i];
-                var w = c.Width;
-                c.Bounds = new Rectangle(x + _spacing, _topMargin, h, w);
-                x = c.Bottom;
+                if (c.Visible)
+                {
+                    var w = c.Width;
+                    c.Bounds = new Rectangle(x + _spacing, _topMargin, h, w);
+                    x = c.Bottom;
+                }
             }
             x += _rightMargin;
 
