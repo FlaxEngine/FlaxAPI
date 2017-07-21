@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -27,7 +27,7 @@ namespace FlaxEngine.GUI
 
         // TODO: support password protected text box
 
-        private string _text;
+        private string _text = string.Empty;
 
         // State
         private string _onStartEditValue;
@@ -49,12 +49,17 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Event fired when text gets changed
         /// </summary>
-        public Action TextChanged;
+        public event Action TextChanged;
+
+        /// <summary>
+        /// Event fired when text gets changed after editing (user accepted entered value).
+        /// </summary>
+        public event Action EditEnd;
 
         #endregion
 
         #region Public Properties
-
+        
         /// <summary>
         /// Gets or sets a value indicating whether this is a multiline text box control.
         /// </summary>
@@ -147,9 +152,10 @@ namespace FlaxEngine.GUI
 
                 if (_text != value)
                 {
+                    Deselect();
+
                     _text = value;
 
-                    Deselect();
                     OnTextChanged();
                 }
             }
@@ -474,6 +480,8 @@ namespace FlaxEngine.GUI
                 _text = _text.Insert(SelectionLeft, str);
                 setSelection(SelectionLeft + 1);
             }
+
+            OnTextChanged();
         }
 
         private void MoveRight(bool shift, bool ctrl)
@@ -688,7 +696,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Action called when user ends text editing
+        /// Action called when user ends text editing.
         /// </summary>
         protected virtual void OnEditEnd()
         {
@@ -699,7 +707,7 @@ namespace FlaxEngine.GUI
             if (_onStartEditValue != _text)
             {
                 _onStartEditValue = _text;
-                OnTextChanged();
+                EditEnd?.Invoke();
             }
             _onStartEditValue = string.Empty;
 
@@ -707,7 +715,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Action called when text gets modified
+        /// Action called when text gets modified.
         /// </summary>
         protected virtual void OnTextChanged()
         {
@@ -833,14 +841,12 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool HasMouseCapture
-        {
-            get { return _isSelecting; }
-        }
+        public override bool HasMouseCapture => _isSelecting;
 
         /// <inheritdoc />
         public override void OnLostMouseCapture()
         {
+            base.OnLostMouseCapture();
             OnEditEnd();
         }
 

@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -58,12 +58,14 @@ namespace FlaxEngine.GUI
                     {
                         _text = _text.Remove(left, SelectionLength);
                         setSelection(left);
-                    }
+                        OnTextChanged();
+                        }
                     else if (CaretPosition > 0)
                     {
                         left -= 1;
                         _text = _text.Remove(left, 1);
                         setSelection(left);
+                        OnTextChanged();
                     }
 
                     return true;
@@ -77,6 +79,7 @@ namespace FlaxEngine.GUI
                     _text = _onStartEditValue;
 
                     Defocus();
+                    OnTextChanged();
 
                     return true;
                 }
