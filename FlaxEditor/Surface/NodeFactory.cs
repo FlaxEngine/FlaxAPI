@@ -25,7 +25,7 @@ namespace FlaxEditor.Surface
                 GroupID = 1,
                 Name = "Material",
                 Color = new Color(231, 76, 60),
-                Archetypes = null // TODO: finish this
+                Archetypes = new NodeArchetype[0] // TODO: finish this
             },
             new GroupArchetype
             {
@@ -39,42 +39,42 @@ namespace FlaxEditor.Surface
                 GroupID = 3,
                 Name = "Math",
                 Color = new Color(52, 152, 219),
-                Archetypes = null // TODO: finish this
+                Archetypes = new NodeArchetype[0] // TODO: finish this
             },
             new GroupArchetype
             {
                 GroupID = 4,
                 Name = "Packing",
                 Color = new Color(155, 89, 182),
-                Archetypes = null // TODO: finish this
+                Archetypes = new NodeArchetype[0] // TODO: finish this
             },
             new GroupArchetype
             {
                 GroupID = 5,
                 Name = "Textures",
                 Color = new Color(46, 204, 113),
-                Archetypes = null // TODO: finish this
+                Archetypes = new NodeArchetype[0] // TODO: finish this
             },
             new GroupArchetype
             {
                 GroupID = 6,
                 Name = "Parameters",
                 Color = new Color(52, 73, 94),
-                Archetypes = null // TODO: finish this
+                Archetypes = new NodeArchetype[0] // TODO: finish this
             },
             new GroupArchetype
             {
                 GroupID = 7,
                 Name = "Tools",
                 Color = new Color(149, 165, 166),
-                Archetypes = null // TODO: finish this
+                Archetypes = new NodeArchetype[0] // TODO: finish this
             },
             new GroupArchetype
             {
                 GroupID = 8,
                 Name = "Layers",
                 Color = new Color(249, 105, 116),
-                Archetypes = null // TODO: finish this
+                Archetypes = new NodeArchetype[0] // TODO: finish this
             },
         };
 

@@ -48,13 +48,53 @@ namespace FlaxEditor.Surface.ContextMenu
 
             // Create first panel (for scrollbar)
             var panel1 = new Panel(ScrollBars.Vertical);
-            panel1.DockStyle = DockStyle.Fill;
+            panel1.Bounds = new Rectangle(0, _searchBox.Bottom + 1, Width, Height - _searchBox.Bottom - 2);
             panel1.Parent = this;
 
             // Create second panel (for groups arrangement)
             var panel2 = new VerticalPanel();
             panel2.Width = panel1.Width;
             panel2.Parent = panel1;
+            
+            // Init groups
+            var groups = NodeFactory.Groups;
+            var nodes = new List<NodeArchetype>();
+            foreach (var groupArchetype in groups)
+            {
+                // Get valid nodes
+                nodes.Clear();
+                foreach (var nodeArchetype in groupArchetype.Archetypes)
+                {
+                    if ((nodeArchetype.Flags & NodeFlags.NoSpawnViaGUI) != 0)
+                        continue;
+                    if (type == SurfaceType.Material)
+                    {
+                        if ((nodeArchetype.Flags & NodeFlags.VisjectOnly) != 0)
+                            continue;
+                    }
+                    else
+                    {
+                        if ((nodeArchetype.Flags & NodeFlags.MaterialOnly) != 0)
+                            continue;
+                    }
+
+                    nodes.Add(nodeArchetype);
+                }
+
+                // Check if can create group for them
+                if (nodes.Count > 0)
+                {
+                    var group = new VisjectCMGroup(this, groupArchetype);
+                    group.Close();
+                    group.EndAnimation();
+                    for (int i = 0; i < nodes.Count; i++)
+                    {
+                        var item = new VisjectCMItem(group, nodes[i]);
+                        item.Parent = group;
+                    }
+                    group.Parent = panel2;
+                }
+            }
         }
 
         private void OnSearchFilterChanged()
