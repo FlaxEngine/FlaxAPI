@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Surface.ContextMenu
@@ -47,6 +48,7 @@ namespace FlaxEditor.Surface.ContextMenu
             }
 
             Close();
+            EndAnimation();
             Visible = true;
         }
 
@@ -71,6 +73,7 @@ namespace FlaxEditor.Surface.ContextMenu
             if (isAnyVisible)
             {
                 Open();
+                EndAnimation();
                 Visible = true;
             }
             else

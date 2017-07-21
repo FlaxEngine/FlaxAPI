@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.Utilities;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -62,8 +63,30 @@ namespace FlaxEditor.Surface.ContextMenu
             }
             else
             {
-                // TODO: use regex or sth or sth or sth or sth else to apply on node text and check if it matches filter
-                throw new NotImplementedException("visject nodes spawning sreaching");
+                QueryFilterHelper.Range[] ranges;
+                if (QueryFilterHelper.Match(filterText, _archetype.Title, out ranges))
+                {
+                    // Update highlights
+                    if(_highlights == null)
+                        _highlights = new List<Rectangle>(ranges.Length);
+                    else
+                        _highlights.Clear();
+                    var style = Style.Current;
+                    var font = style.FontSmall;
+                    for (int i = 0; i < ranges.Length; i++)
+                    {
+                        var start = font.GetCharPosition(_archetype.Title, ranges[i].StartIndex);
+                        var end = font.GetCharPosition(_archetype.Title, ranges[i].EndIndex);
+                        _highlights.Add(new Rectangle(start.X + 2, 0, end.X - start.X, Height));
+                    }
+                    Visible = true;
+                }
+                else
+                {
+                    // Hide
+                    _highlights?.Clear();
+                    Visible = false;
+                }
             }
         }
 
@@ -80,7 +103,7 @@ namespace FlaxEditor.Surface.ContextMenu
             // Draw all highlights
             if (_highlights != null)
             {
-                var color = style.ProgressNormal.AlphaMultiplied(0.8f);
+                var color = style.ProgressNormal * 0.3f;
                 for (int i = 0; i < _highlights.Count; i++)
                     Render2D.FillRectangle(_highlights[i], color, true);
             }

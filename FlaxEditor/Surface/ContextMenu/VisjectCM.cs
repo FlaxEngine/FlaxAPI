@@ -16,7 +16,7 @@ namespace FlaxEditor.Surface.ContextMenu
     public sealed class VisjectCM : ContextMenuBase
     {
         private readonly List<VisjectCMGroup> _groups = new List<VisjectCMGroup>(16);
-        private TextBox _searchBox;
+        private readonly TextBox _searchBox;
 
         /// <summary>
         /// The type of the surface.
@@ -93,6 +93,7 @@ namespace FlaxEditor.Surface.ContextMenu
                         item.Parent = group;
                     }
                     group.Parent = panel2;
+                    _groups.Add(group);
                 }
             }
         }
@@ -143,6 +144,14 @@ namespace FlaxEditor.Surface.ContextMenu
             ResetView();
 
             base.OnShow();
+        }
+
+        /// <inheritdoc />
+        protected override void OnHide()
+        {
+            Focus(null);
+            
+            base.OnHide();
         }
     }
 }
