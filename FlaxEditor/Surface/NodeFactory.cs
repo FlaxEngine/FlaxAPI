@@ -39,7 +39,7 @@ namespace FlaxEditor.Surface
                 GroupID = 3,
                 Name = "Math",
                 Color = new Color(52, 152, 219),
-                Archetypes = new NodeArchetype[0] // TODO: finish this
+                Archetypes = Archetypes.Math.Nodes
             },
             new GroupArchetype
             {

@@ -135,6 +135,7 @@
     <Compile Include="Surface\Archetypes\Constants.cs" />
     <Compile Include="Surface\Archetypes\Layers.cs" />
     <Compile Include="Surface\Archetypes\Material.cs" />
+    <Compile Include="Surface\Archetypes\Math.cs" />
     <Compile Include="Surface\Archetypes\Textures.cs" />
     <Compile Include="Surface\Archetypes\Tools.cs" />
     <Compile Include="Surface\Constants.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="Surface\SurfaceNodeElementControl.cs" />
     <Compile Include="Surface\SurfaceStyle.cs" />
     <Compile Include="Surface\SurfaceType.cs" />
+    <Compile Include="Surface\TransformCoordinateSystem.cs" />
     <Compile Include="Surface\VisjectSurface.Connecting.cs" />
     <Compile Include="Surface\VisjectSurface.ContextMenu.cs" />
     <Compile Include="Surface\VisjectSurface.cs" />
