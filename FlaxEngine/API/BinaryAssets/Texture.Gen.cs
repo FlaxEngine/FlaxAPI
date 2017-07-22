@@ -104,6 +104,19 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Returns true if texture is a normal map, otherwise false.
+		/// </summary>
+		[UnmanagedCall]
+		public bool IsNormalMap
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetIsNormalMap(unmanagedPtr); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -118,6 +131,8 @@ namespace FlaxEngine
 		internal static extern int Internal_GetMipLevels(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern int Internal_GetResidentMipLevels(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_GetIsNormalMap(IntPtr obj);
 #endif
 #endregion
 	}
