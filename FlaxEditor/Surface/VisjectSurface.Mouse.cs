@@ -14,7 +14,7 @@ namespace FlaxEditor.Surface
         /// <returns>The node or null if no intersection.</returns>
         private SurfaceNode GetNodeUnderMouse()
         {
-            // TODO: optimize it later -> cals mouse pos in children space and perform box vs point test faster
+            // TODO: optimize it later -> calculate mouse pos in children space and perform box vs point test faster
             if (GetChildAt(_mousePos) is SurfaceNode node)
                 return node;
             return null;
@@ -22,14 +22,14 @@ namespace FlaxEditor.Surface
 
         private void UpdateSelectionRectangle()
         {
-            // TODO: finish selecting ndoes with rect
-            /*var selectionRect = Rectangle.FromPoints(_leftMouseDownPos, _mousePos) - _viewOffset;
-            
+            var selectionRect = Rectangle.FromPoints(_leftMouseDownPos, _mousePos) - _viewOffset;
+            var selectionRectNodesSpace = new Rectangle(selectionRect.Location * Scale, selectionRect.Size * Scale);
+
             // Find nodes to select
             for (int i = 0; i < _nodes.Count; i++)
             {
-                _nodes[i].IsSelected = _nodes[i]->GetBounds().Intersects(selectionRect);
-            }*/
+                _nodes[i].IsSelected = _nodes[i].Bounds.Intersects(ref selectionRectNodesSpace);
+            }
         }
 
         /// <inheritdoc />

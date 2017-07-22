@@ -24,7 +24,6 @@ namespace FlaxEditor.Surface
         // - surface scale animation
         // - set initial scale to 0.5
         // - nodes removing
-        // - nodes selecting
         // - zooming
         // - connecting nodes
         // - surface parameters tracking and editing
