@@ -31,7 +31,6 @@ namespace FlaxEditor.Surface
         // - surface parameters tracking and editing
         // - dragging asset items over
         // - undo/redo support
-        // - drawing backgroud
         // - drawing connections
 
         private bool _edited;
@@ -125,6 +124,24 @@ namespace FlaxEditor.Surface
             {
                 // Set nw target scale
                 _targeScale = scale;
+            }
+        }
+
+        /// <summary>
+        /// Mark surface as edited.
+        /// </summary>
+        /// <param name="graphEdited">True if graph has been edited (nodes structure or parameter value).</param>
+        public void MarkAsEdited(bool graphEdited = true)
+        {
+            if (!_edited)
+            {
+                _edited = true;
+                Owner.OnSurfaceEditedChanged();
+            }
+
+            if (graphEdited)
+            {
+                Owner.OnSurfaceGraphEdited();
             }
         }
 

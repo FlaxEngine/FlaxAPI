@@ -4,11 +4,19 @@
 
 using System;
 using FlaxEditor.Surface.Elements;
+using FlaxEngine;
 
 namespace FlaxEditor.Surface
 {
     public partial class VisjectSurface
     {
+        private static bool CanCast(ConnectionType oB, ConnectionType iB)
+        {
+            return (oB != ConnectionType.Impulse && oB != ConnectionType.Object) &&
+                   (iB != ConnectionType.Impulse && iB != ConnectionType.Object) &&
+                   (Mathf.IsPowerOfTwo((int)oB) && Mathf.IsPowerOfTwo((int)iB));
+        }
+
         /// <summary>
         /// Checks if can use direct conversion from one type to another.
         /// </summary>
@@ -58,16 +66,92 @@ namespace FlaxEditor.Surface
         /// <param name="box">The start box.</param>
         public void ConnectingStart(Box box)
         {
-            throw new NotImplementedException("TODO: connecting boxes");
+            _startBox = box;
         }
-        
+
         /// <summary>
         /// Ends connecting boxes action.
         /// </summary>
-        /// <param name="box">The end box.</param>
-        public void ConnectingEnd(Box box)
+        /// <param name="end">The end box.</param>
+        public void ConnectingEnd(Box end)
         {
-            throw new NotImplementedException("TODO: connecting boxes");
+            // Ensure that there was a proper start box
+            if (_startBox == null)
+                return;
+
+            Box start = _startBox;
+            _startBox = null;
+
+            // Check if boxes are diffrent and end box is specified
+            if (start == end || end == null)
+                return;
+
+            // Check if boxes are connected
+            bool areConnected = start.AreConnected(end);
+
+            // Check if boxes are diffrent or (one of them is disabled and both are disconnected)
+            if (end.IsOutput == start.IsOutput || !((end.Enabled && start.Enabled) || areConnected))
+            {
+                // Back
+                return;
+            }
+
+            // Check if they are already connected
+            if (areConnected)
+            {
+                // Break link
+                start.BreakConnection(end);
+
+                // Mark as edited
+                MarkAsEdited();
+
+                // Back
+                return;
+            }
+
+            // Cache Input and Output box (since connection may be made in a diffrent way)
+            InputBox iB;
+            OutputBox oB;
+            if (start.IsOutput)
+            {
+                iB = (InputBox)end;
+                oB = (OutputBox)start;
+            }
+            else
+            {
+                iB = (InputBox)start;
+                oB = (OutputBox)end;
+            }
+
+            // Validate connection type (also check if any of boxes parent can manage that connections types)
+            bool useCaster = false;
+            if (!iB.CanUseType(oB.CurrentType))
+            {
+                if (CanCast(oB.CurrentType, iB.CurrentType))
+                    useCaster = true;
+                else
+                    return;
+            }
+
+            // Connect boxes
+            if (useCaster)
+            {
+                // Connect via Caster
+                //AddCaster(oB, iB);
+                throw new NotImplementedException("AddCaster(..) function");
+            }
+            else
+            {
+                // Connect directly
+                iB.CreateConnection(oB);
+            }
+
+            // Update boxes
+            iB.ConnectionTick();
+            oB.ConnectionTick();
+
+            // Mark as edited
+            MarkAsEdited();
         }
     }
 }
