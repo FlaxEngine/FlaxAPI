@@ -62,6 +62,8 @@ namespace FlaxEditor.Surface
         public SurfaceNode(VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(true, 0, 0, nodeArch.Size.X + Constants.NodeMarginX * 2, nodeArch.Size.Y + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize)
         {
+            ClipChildren = false;
+
             Surface = surface;
             Archetype = nodeArch;
             GroupArchetype = groupArch;

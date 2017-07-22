@@ -21,7 +21,6 @@ namespace FlaxEditor.Surface
     public partial class VisjectSurface : ContainerControl
     {
         // TODO: stuff to finish
-        // - surface scale animation
         // - nodes removing
         // - connecting nodes
         // - surface parameters tracking and editing
@@ -35,7 +34,6 @@ namespace FlaxEditor.Surface
             public SurfaceControl(bool canFocus)
                 : base(canFocus)
             {
-                BackgroundColor = Color.Black;
                 ClipChildren = false;
             }
         }
@@ -140,7 +138,7 @@ namespace FlaxEditor.Surface
             _cmSecondaryMenu.OnButtonClicked += OnSecondaryMenuButtonClick;
 
             // Set initial scale to provide nice zoom in effect on startup
-            //_surface.Scale = new Vector2(0.5f); // TODO: fix this
+            _surface.Scale = new Vector2(0.5f);
         }
 
         private void SetScale(float scale)
@@ -263,8 +261,8 @@ namespace FlaxEditor.Surface
             // Intiialize
             OnNodeLoaded(node);
             node.OnSurfaceLoaded();
+            node.Location = location;
             // TODO: set values
-            // TODO: set location
             
             return node;
         }
@@ -365,7 +363,7 @@ namespace FlaxEditor.Surface
             if (Mathf.Abs(_targeScale - currentScale) > 0.001f)
             {
                 var scale = new Vector2(Mathf.Lerp(currentScale, _targeScale, deltaTime * 10.0f));
-                //_surface.Scale = scale;
+                _surface.Scale = scale;
             }
 
             base.Update(deltaTime);

@@ -23,14 +23,14 @@ namespace FlaxEditor.Surface
 
         private void UpdateSelectionRectangle()
         {
-            var selectionRect = Rectangle.FromPoints(_leftMouseDownPos, _mousePos) - ViewPosition;
-            var scale = _targeScale;
-            var selectionRectNodesSpace = new Rectangle(selectionRect.Location * scale, selectionRect.Size * scale);
+            var p1 = _surface.PointFromParent(_leftMouseDownPos);
+            var p2 = _surface.PointFromParent(_mousePos);
+            var selectionRect = Rectangle.FromPoints(p1, p2);
 
             // Find nodes to select
             for (int i = 0; i < _nodes.Count; i++)
             {
-                _nodes[i].IsSelected = _nodes[i].Bounds.Intersects(ref selectionRectNodesSpace);
+                _nodes[i].IsSelected = _nodes[i].Bounds.Intersects(ref selectionRect);
             }
         }
 
@@ -168,7 +168,7 @@ namespace FlaxEditor.Surface
 
             // Check if any node is under the mouse
             SurfaceNode nodeAtMouse = GetNodeUnderMouse();
-            Vector2 cLocation = location - ViewPosition;
+            Vector2 cLocation = _surface.PointFromParent(location);
             if (nodeAtMouse != null)
             {
                 // Check if mouse is over header and user is pressing mouse left button

@@ -32,7 +32,7 @@ namespace FlaxEditor.Surface
 
         private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem)
         {
-            SpawnNode(visjectCmItem.GroupArchetype, visjectCmItem.NodeArchetype, _cmStartPos + ViewPosition);
+            SpawnNode(visjectCmItem.GroupArchetype, visjectCmItem.NodeArchetype, _surface.PointFromParent(_cmStartPos));
         }
 
         private void OnSecondaryMenuButtonClick(int id, FlaxEngine.GUI.ContextMenu contextMenu)
