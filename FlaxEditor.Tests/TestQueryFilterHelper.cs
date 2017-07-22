@@ -72,9 +72,8 @@ namespace FlaxEditor.Tests
 
             // Sth more tricky
             Assert.IsTrue(QueryFilterHelper.Match("magic ma", "magic magic magic", out range));
-            Assert.AreEqual(2, range.Length);
+            Assert.AreEqual(1, range.Length);
             Assert.AreEqual(new QueryFilterHelper.Range(0, 8), range[0]);
-            Assert.AreEqual(new QueryFilterHelper.Range(12, 5), range[1]);
         }
     }
 }

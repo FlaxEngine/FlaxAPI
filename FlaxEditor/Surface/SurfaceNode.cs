@@ -5,7 +5,6 @@
 using System.Collections.Generic;
 using FlaxEditor.Surface.Elements;
 using FlaxEngine;
-using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Surface

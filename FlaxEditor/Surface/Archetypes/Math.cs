@@ -157,7 +157,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Vector Transform",
                 Description = "Transform vector from source space to destination space",
                 Flags = NodeFlags.MaterialOnly,
-                Size = new Vector2(110, 40),
+                Size = new Vector2(170, 40),
                 DefaultValues = new object[]
                 {
                     (int)TransformCoordinateSystem.World,

@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using FlaxEditor.GUI.Drag;
 using FlaxEditor.Surface.ContextMenu;
@@ -26,10 +25,7 @@ namespace FlaxEditor.Surface
         // - set initial scale to 0.5
         // - nodes removing
         // - nodes selecting
-        // - nodes spawning
-        // - nodes moving
         // - zooming
-        // - moving around the surface
         // - connecting nodes
         // - surface parameters tracking and editing
         // - dragging asset items over
@@ -266,30 +262,29 @@ namespace FlaxEditor.Surface
                         element = new OutputBox(node, arch);
                         break;
                     case NodeElementType.BoolValue:
-                        //element = new BoolValue(node, arch);
+                        //element = new BoolValue(node, arch); // TODO: finsih it
                         break;
                     case NodeElementType.FloatValue:
-                        //element = new FloatValue(node, arch);
+                        //element = new FloatValue(node, arch); // TODO: finsih it
                         break;
                     case NodeElementType.InteagerValue:
-                        //nelement = ew InteagerValue(node, arch);
+                        //nelement = ew InteagerValue(node, arch); // TODO: finsih it
                         break;
                     case NodeElementType.ColorValue:
-                        //element = new ColorValue(node, arch);
+                        //element = new ColorValue(node, arch); // TODO: finsih it
                         break;
                     case NodeElementType.ComboBox:
-                        //element = new Combobox(node, arch);
+                        //element = new Combobox(node, arch); // TODO: finsih it
                         break;
                     case NodeElementType.Asset:
-                        //element = new AssetSelect(node, arch);
+                        //element = new AssetSelect(node, arch); // TODO: finsih it
                         break;
                     case NodeElementType.Text:
-                        //element = new TextView(node, arch);
+                        //element = new TextView(node, arch); // TODO: finsih it
                         break;
                     case NodeElementType.RotationValue:
-                        //element = new RotationValue(node, arch);
+                        //element = new RotationValue(node, arch); // TODO: finsih it
                         break;
-                    default: break;
                 }
                 if (element != null)
                 {
@@ -310,6 +305,7 @@ namespace FlaxEditor.Surface
             */
 
             // Link node
+            _nodes.Add(node);
             node.OnLoaded();
             node.Parent = this;
 
@@ -380,7 +376,7 @@ namespace FlaxEditor.Surface
             // Base
             base.Draw();
             
-            Render2D.DrawText(style.FontTitle, string.Format("Scale: {0}", Scale), rect, Enabled ? Color.Red : Color.Black);
+            //Render2D.DrawText(style.FontTitle, string.Format("Scale: {0}", Scale), rect, Enabled ? Color.Red : Color.Black);
             
             // Draw border
             if (ContainsFocus)

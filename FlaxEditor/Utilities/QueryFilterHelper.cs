@@ -57,8 +57,9 @@ namespace FlaxEditor.Utilities
             {
                 int matchStartPos = -1;
                 int endPos = Mathf.Min(textLength, textPos + filterLength);
-                
-                for (int i = textPos, filterPos = 0; i < endPos; i++, filterPos++)
+                int filterPos = 0;
+
+                for (int i = textPos; i < endPos; i++, filterPos++)
                 {
                     var filterChar = char.ToLower(filter[filterPos]);
                     var textChar = char.ToLower(text[i]);
@@ -89,7 +90,7 @@ namespace FlaxEditor.Utilities
                 }
 
                 // Check sequence on the end
-                if (matchStartPos != -1)
+                if (matchStartPos != -1 && filterPos == filterLength)
                 {
                     var length = endPos - matchStartPos;
                     if (length >= MinLength)

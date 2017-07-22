@@ -132,7 +132,7 @@ namespace FlaxEditor.Surface
                 else
                     return;
             }
-
+            
             // Connect boxes
             if (useCaster)
             {

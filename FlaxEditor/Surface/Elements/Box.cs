@@ -99,6 +99,7 @@ namespace FlaxEditor.Surface.Elements
             : base(parentNode, archetype, location, new Vector2(Constants.BoxSize), false)
         {
             _currentType = DefaultType;
+            Surface.Style.GetConnectionColor(_currentType, out _currentTypeColor);
         }
 
         /// <summary>
@@ -314,8 +315,8 @@ namespace FlaxEditor.Surface.Elements
                 return;
 
             // Debuging boxes size
-            //render->DrawRectangle(r, Color::Orange); return;
-
+            //Render2D.DrawRectangle(rect, Color.Orange); return;
+            
             // Draw icon
             bool hasConnections = HasAnyConnection;
             float alpha = Enabled ? 1.0f : 0.6f;

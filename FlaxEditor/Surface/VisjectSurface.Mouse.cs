@@ -85,10 +85,9 @@ namespace FlaxEditor.Surface
                         delta /= Scale;
                         for (int i = 0; i < _nodes.Count; i++)
                         {
-                            var node = _nodes[i];
-                            if (node.IsSelected)
+                            if (_nodes[i].IsSelected)
                             {
-                                node.Location += delta;
+                                _nodes[i].Location += delta;
                             }
                         }
                         _leftMouseDownPos = location;
