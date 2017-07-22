@@ -133,6 +133,8 @@
     <Compile Include="States\PlayingState.cs" />
     <Compile Include="States\ReloadingScriptsState.cs" />
     <Compile Include="Surface\Archetypes\Constants.cs" />
+    <Compile Include="Surface\Archetypes\Textures.cs" />
+    <Compile Include="Surface\Archetypes\Tools.cs" />
     <Compile Include="Surface\Constants.cs" />
     <Compile Include="Surface\ContextMenu\VisjectCM.cs" />
     <Compile Include="Surface\ContextMenu\VisjectCMGroup.cs" />

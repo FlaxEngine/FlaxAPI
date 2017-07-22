@@ -80,7 +80,7 @@ namespace FlaxEditor.Surface.ContextMenu
 
                     nodes.Add(nodeArchetype);
                 }
-
+                
                 // Check if can create group for them
                 if (nodes.Count > 0)
                 {
