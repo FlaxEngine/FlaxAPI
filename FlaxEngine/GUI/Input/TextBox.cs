@@ -474,11 +474,13 @@ namespace FlaxEngine.GUI
             }
             else
             {
+                var left = SelectionLeft >= 0 ? SelectionLeft : 0;
                 if (HasSelection)
-                    _text = _text.Remove(SelectionLeft, selectionLength);
+                    _text = _text.Remove(left, selectionLength);
 
-                _text = _text.Insert(SelectionLeft, str);
-                setSelection(SelectionLeft + 1);
+                _text = _text.Insert(left, str);
+                
+                setSelection(left + 1);
             }
 
             OnTextChanged();
