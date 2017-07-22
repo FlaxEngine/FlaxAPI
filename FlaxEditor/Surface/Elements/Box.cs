@@ -95,8 +95,8 @@ namespace FlaxEditor.Surface.Elements
         }
 
         /// <inheritdoc />
-        protected Box(SurfaceNode parentNode, NodeElementArchetype archetype, ref Vector2 location, bool canFocus)
-            : base(parentNode, archetype, location, new Vector2(Constants.BoxSize), canFocus)
+        protected Box(SurfaceNode parentNode, NodeElementArchetype archetype, Vector2 location)
+            : base(parentNode, archetype, location, new Vector2(Constants.BoxSize), false)
         {
             _currentType = DefaultType;
         }
