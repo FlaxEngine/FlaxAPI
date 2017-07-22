@@ -342,10 +342,10 @@ namespace FlaxEditor.Surface
                         element = new AssetSelect(node, arch);
                         break;
                     case NodeElementType.Text:
-                        //element = new TextView(node, arch); // TODO: finsih it
+                        element = new TextView(node, arch);
                         break;
                     case NodeElementType.RotationValue:
-                        //element = new RotationValue(node, arch); // TODO: finsih it
+                        //element = new RotationValue(node, arch); // TODO: finish it
                         break;
                 }
                 if (element != null)

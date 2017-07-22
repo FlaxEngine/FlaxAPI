@@ -150,6 +150,7 @@
     <Compile Include="Surface\ConnectionType.cs" />
     <Compile Include="Surface\Elements\InputBox.cs" />
     <Compile Include="Surface\Elements\OutputBox.cs" />
+    <Compile Include="Surface\Elements\TextView.cs" />
     <Compile Include="Surface\GroupArchetype.cs" />
     <Compile Include="Surface\IVisjectSurfaceOwner.cs" />
     <Compile Include="Surface\NodeArchetype.cs" />
