@@ -68,6 +68,20 @@ namespace FlaxEditor.Surface
             GroupArchetype = groupArch;
         }
 
+        internal void AddElement(ISurfaceNodeElement element)
+        {
+            Elements.Add(element);
+            if (element is Control control)
+                AddChild(control);
+        }
+
+        internal void RemoveElemenet(ISurfaceNodeElement element)
+        {
+            if (element is Control control)
+                RemoveChild(control);
+            Elements.Remove(element);
+        }
+
         /// <summary>
         /// Remeove all connections from and to that node.
         /// </summary>
@@ -153,6 +167,13 @@ namespace FlaxEditor.Surface
                     return box;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Called when node gets loaded and elements are created.
+        /// </summary>
+        public virtual void OnLoaded()
+        {
         }
 
         /// <summary>

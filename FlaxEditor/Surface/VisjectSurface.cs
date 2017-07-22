@@ -4,10 +4,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using FlaxEditor.GUI.Drag;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEditor.Surface.Elements;
 using FlaxEngine;
+using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Surface
@@ -171,9 +174,127 @@ namespace FlaxEditor.Surface
             throw new NotImplementedException("TODO: delete selected nodes");
         }
 
+        /// <summary>
+        /// Spawns the node.
+        /// </summary>
+        /// <param name="groupArchetype">The group archetype.</param>
+        /// <param name="nodeArchetype">The node archetype.</param>
+        /// <param name="location">The location.</param>
+        /// <param name="customValues">The custom values array. Must match node archetype <see cref="NodeArchetype.DefaultValues"/> size. Pass null to use default values.</param>
+        /// <returns>Created node.</returns>
+        public SurfaceNode SpawnNode(GroupArchetype groupArchetype, NodeArchetype nodeArchetype, Vector2 location, object[] customValues = null)
+        {
+            if (groupArchetype == null || nodeArchetype == null)
+                throw new ArgumentNullException();
+            Assert.IsTrue(groupArchetype.Archetypes.Contains(nodeArchetype));
+
+            // Create node
+            var node = NodeFactory.CreateNode(this, groupArchetype, nodeArchetype);
+            if (node == null)
+            {
+                Debug.LogError("Failed to create node.");
+                return null;
+            }
+
+            // Intiialize
+            OnNodeLoaded(node);
+            // TODO: set values
+            // TODO: set location
+            
+            return node;
+        }
+
+        /// <summary>
+        /// Called when node gets loaded and should be added to the surface. Creates node elements from the archetype.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        private void OnNodeLoaded(SurfaceNode node)
+        {
+            // Create child elements of the node based on it's archetype
+            for (int i = 0; i < node.Archetype.Elements.Length; i++)
+            {
+                var arch = node.Archetype.Elements[i];
+                ISurfaceNodeElement element = null;
+                switch (arch.Type)
+                {
+                    case NodeElementType.Input:
+                        element = new InputBox(node, arch);
+                        break;
+                    case NodeElementType.Output:
+                        element = new OutputBox(node, arch);
+                        break;
+                    case NodeElementType.BoolValue:
+                        //element = new BoolValue(node, arch);
+                        break;
+                    case NodeElementType.FloatValue:
+                        //element = new FloatValue(node, arch);
+                        break;
+                    case NodeElementType.InteagerValue:
+                        //nelement = ew InteagerValue(node, arch);
+                        break;
+                    case NodeElementType.ColorValue:
+                        //element = new ColorValue(node, arch);
+                        break;
+                    case NodeElementType.ComboBox:
+                        //element = new Combobox(node, arch);
+                        break;
+                    case NodeElementType.Asset:
+                        //element = new AssetSelect(node, arch);
+                        break;
+                    case NodeElementType.Text:
+                        //element = new TextView(node, arch);
+                        break;
+                    case NodeElementType.RotationValue:
+                        //element = new RotationValue(node, arch);
+                        break;
+                    default: break;
+                }
+                if (element != null)
+                {
+                    // Link element
+                    node.AddElement(element);
+                }
+            }
+
+            // Load metadata
+            // TODO: finsih nodes metadata storage like in c++
+            /*auto meta = node.Meta.GetEntry(11);
+            if (meta && meta->IsLoaded)
+            {
+                VisjectSurfaceMeta11* meta11 = (VisjectSurfaceMeta11*)meta->Data.GetData();
+                node.Data->SetPosition(meta11->Position);
+                node.Data->_isSelected = meta11->Selected;
+            }
+            */
+
+            // Link node
+            node.OnLoaded();
+            node.Parent = this;
+
+            // TODO: add archetypes validation
+            /*
+#if DEBUG
+
+            // Validate achetype boxes ids (search for duplicates)
+            for (int i = 0; i < node.Boxes.Count - 1; i++)
+            {
+                byte id = node.Boxes[i]->ID;
+                for (int j = i + 1; j < node.Boxes.Count(); j++)
+                {
+                    if (id == node.Boxes[j]->ID)
+                    {
+                        // Data Leak
+                        throw new InvalidDataException("Invalid node archetype.");
+                    }
+                }
+            }
+
+#endif*/
+        }
+
         private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem)
         {
-            throw new NotImplementedException("TODO: spawn nodes");
+            SpawnNode(visjectCmItem.GroupArchetype, visjectCmItem.NodeArchetype, _cmStartPos);
         }
 
         private void OnSecondaryMenuButtonClick(int id, FlaxEngine.GUI.ContextMenu contextMenu)

@@ -61,11 +61,17 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
+            public override void OnLoaded()
+            {
+                base.OnLoaded();
+
+                UpdateBoxes();
+            }
+
+            /// <inheritdoc />
             public override void OnSurfaceLoaded()
             {
                 base.OnSurfaceLoaded();
-
-                UpdateBoxes();
 
                 // Fix emissive box (it's a strange error)
                 GetBox(3).CurrentType = ConnectionType.Vector3;
