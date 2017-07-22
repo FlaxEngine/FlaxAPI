@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Drag
@@ -26,6 +27,14 @@ namespace FlaxEditor.GUI.Drag
         ///   <c>true</c> if this instance has valid drag data; otherwise, <c>false</c>.
         /// </value>
         public bool HasValidDrag => Objects.Count > 0;
+
+        /// <summary>
+        /// Gets the current drag effect.
+        /// </summary>
+        /// <value>
+        /// The effect.
+        /// </value>
+        public DragDropEffect Effect => HasValidDrag ? DragDropEffect.Move : DragDropEffect.None;
 
         /// <summary>
         /// Invalids the drag data.
