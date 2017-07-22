@@ -99,6 +99,14 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Gets a value indicating whether user is selecting nodes.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if user is selecting nodes; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsSelecting => _leftMouseDown && !_isMovingSelection && _startBox == null;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="VisjectSurface"/> class.
         /// </summary>
         /// <param name="owner">The owner.</param>
@@ -394,6 +402,14 @@ namespace FlaxEditor.Surface
                         Render2D.DrawTexture(background, new Rectangle(pos.X + i * bw, pos.Y + j * bh, bw, bh), Color.White, false);
                     }
                 }
+            }
+
+            // Selection
+            if (IsSelecting)
+            {
+                var selectionRect = Rectangle.FromPoints(_leftMouseDownPos, _mousePos);
+                Render2D.FillRectangle(selectionRect, Color.Orange * 0.13f, true);
+                Render2D.DrawRectangle(selectionRect, Color.Orange);
             }
 
             // Base
