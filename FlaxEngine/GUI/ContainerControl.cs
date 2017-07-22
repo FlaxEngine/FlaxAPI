@@ -91,6 +91,14 @@ namespace FlaxEngine.GUI
         public bool IsLayoutLocked { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether apply clipping mask on children during rendering.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if clip children; otherwise, <c>false</c>.
+        /// </value>
+        public bool ClipChildren { get; set; } = true;
+
+        /// <summary>
         ///     Lock all child controls and itself
         /// </summary>
         public virtual void LockChildrenRecursive()
@@ -663,14 +671,20 @@ namespace FlaxEngine.GUI
             base.Draw();
 
             // Push clipping mask
-            Rectangle clientArea;
-            GetDesireClientArea(out clientArea);
-            Render2D.PushClip(ref clientArea);
+            if (ClipChildren)
+            {
+                Rectangle clientArea;
+                GetDesireClientArea(out clientArea);
+                Render2D.PushClip(ref clientArea);
+            }
 
             DrawChildren();
 
             // Pop clipping mask
-            Render2D.PopClip();
+            if (ClipChildren)
+            {
+                Render2D.PopClip();
+            }
         }
 
         /// <summary>
