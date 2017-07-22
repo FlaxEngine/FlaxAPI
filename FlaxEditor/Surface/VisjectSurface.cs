@@ -339,7 +339,7 @@ namespace FlaxEditor.Surface
                         //element = new Combobox(node, arch); // TODO: finsih it
                         break;
                     case NodeElementType.Asset:
-                        //element = new AssetSelect(node, arch); // TODO: finsih it
+                        element = new AssetSelect(node, arch);
                         break;
                     case NodeElementType.Text:
                         //element = new TextView(node, arch); // TODO: finsih it

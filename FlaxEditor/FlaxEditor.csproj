@@ -82,6 +82,7 @@
     <Compile Include="Gizmo\TransformGizmo.Selection.cs" />
     <Compile Include="Gizmo\TransformGizmo.Settings.cs" />
     <Compile Include="Gizmo\TransformGizmo.Types.cs" />
+    <Compile Include="GUI\Drag\DragAssets.cs" />
     <Compile Include="GUI\Drag\DragHelper.cs" />
     <Compile Include="GUI\Drag\DragItems.cs" />
     <Compile Include="GUI\MainMenu.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="Surface\ContextMenu\VisjectCM.cs" />
     <Compile Include="Surface\ContextMenu\VisjectCMGroup.cs" />
     <Compile Include="Surface\ContextMenu\VisjectCMItem.cs" />
+    <Compile Include="Surface\Elements\AssetSelect.cs" />
     <Compile Include="Surface\Elements\Box.cs" />
     <Compile Include="Surface\ConnectionType.cs" />
     <Compile Include="Surface\Elements\InputBox.cs" />

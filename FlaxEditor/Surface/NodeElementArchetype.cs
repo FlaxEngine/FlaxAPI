@@ -57,6 +57,11 @@ namespace FlaxEditor.Surface
         public float ActualPositionY => Position.Y + Constants.NodeMarginY + Constants.NodeHeaderSize;
 
         /// <summary>
+        /// Gets the actual element position.
+        /// </summary>
+        public Vector2 ActualPosition => new Vector2(Position.X + Constants.NodeMarginX, Position.Y + Constants.NodeMarginY + Constants.NodeHeaderSize);
+
+        /// <summary>
         /// Node element archetypes factory object. Helps to build surface nodes archetypes.
         /// </summary>
         public static class Factory
@@ -186,7 +191,7 @@ namespace FlaxEditor.Surface
             {
                 return new NodeElementArchetype
                 {
-                    Type = NodeElementType.ColorValue,
+                    Type = NodeElementType.Asset,
                     Position = new Vector2(x, y),
                     Text = null,
                     Single = false,
