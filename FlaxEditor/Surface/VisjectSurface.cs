@@ -225,7 +225,15 @@ namespace FlaxEditor.Surface
         /// <param name="node">The node.</param>
         public void Delete(SurfaceNode node)
         {
-            throw new NotImplementedException("TODO: delete nodes");
+            if ((node.Archetype.Flags & NodeFlags.NoRemove) == 0)
+            {
+                node.RemoveConnections();
+                node.Dispose();
+
+                _nodes.Remove(node);
+
+                MarkAsEdited();
+            }
         }
 
         /// <summary>
@@ -233,7 +241,26 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void DeleteSelection()
         {
-            throw new NotImplementedException("TODO: delete selected nodes");
+            bool edited = false;
+
+            for (int i = 0; i < _nodes.Count; i++)
+            {
+                var node = _nodes[i];
+
+                if (node.IsSelected && (node.Archetype.Flags & NodeFlags.NoRemove) == 0)
+                {
+                    node.RemoveConnections();
+                    node.Dispose();
+
+                    _nodes.RemoveAt(i);
+                    i--;
+
+                    edited = true;
+                }
+            }
+
+            if (edited)
+                MarkAsEdited();
         }
 
         /// <summary>
