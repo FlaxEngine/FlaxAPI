@@ -108,6 +108,7 @@ namespace FlaxEditor.Surface.ContextMenu
             for (int i = 0; i < _groups.Count; i++)
                 _groups[i].UpdateFilter(_searchBox.Text);
             PerformLayout();
+            _searchBox.Focus();
         }
 
         /// <summary>
@@ -143,7 +144,7 @@ namespace FlaxEditor.Surface.ContextMenu
             // Prepare
             ResetView();
             Focus();
-
+            
             base.OnShow();
         }
 

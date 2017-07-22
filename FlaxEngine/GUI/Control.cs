@@ -76,7 +76,7 @@ namespace FlaxEngine.GUI
                 if (_parent == value)
                     return;
 
-                Defocus();
+                Focus(null);
 
                 _parent?.RemoveChildInternal(this);
                 _parent = value;
@@ -826,7 +826,7 @@ namespace FlaxEngine.GUI
             UpdateTransform();
             _parent?.OnChildResized(this);
         }
-
+        
         /// <summary>
         ///     Action fred when parent control gets changed.
         /// </summary>
