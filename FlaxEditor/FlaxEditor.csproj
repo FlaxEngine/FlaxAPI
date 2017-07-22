@@ -136,6 +136,7 @@
     <Compile Include="Surface\Archetypes\Layers.cs" />
     <Compile Include="Surface\Archetypes\Material.cs" />
     <Compile Include="Surface\Archetypes\Math.cs" />
+    <Compile Include="Surface\Archetypes\Packing.cs" />
     <Compile Include="Surface\Archetypes\Textures.cs" />
     <Compile Include="Surface\Archetypes\Tools.cs" />
     <Compile Include="Surface\Constants.cs" />

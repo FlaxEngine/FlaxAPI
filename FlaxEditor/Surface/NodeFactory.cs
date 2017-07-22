@@ -46,7 +46,7 @@ namespace FlaxEditor.Surface
                 GroupID = 4,
                 Name = "Packing",
                 Color = new Color(155, 89, 182),
-                Archetypes = new NodeArchetype[0] // TODO: finish this
+                Archetypes = Archetypes.Packing.Nodes
             },
             new GroupArchetype
             {
