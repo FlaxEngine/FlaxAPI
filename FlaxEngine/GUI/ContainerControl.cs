@@ -1052,6 +1052,33 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
+        public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
+        {
+            // Base
+            var result = base.OnDragDrop(ref location, data);
+
+            // Check all children collisions with mouse and fire events for them
+            for (int i = _children.Count - 1; i >= 0; i--)
+            {
+                var child = _children[i];
+                if (child.Visible && child.Enabled)
+                {
+                    // Fire event
+                    Vector2 childLocation;
+                    if (IntersectsChildContent(child, location, out childLocation))
+                    {
+                        // Enter
+                        result = child.OnDragDrop(ref childLocation, data);
+                        if (result != DragDropEffect.None)
+                            break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc />
         protected override void SetSizeInternal(Vector2 size)
         {
             // Lock updates to prevent additional layout calculations
