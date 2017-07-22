@@ -262,8 +262,14 @@ namespace FlaxEditor.Surface
             OnNodeLoaded(node);
             node.OnSurfaceLoaded();
             node.Location = location;
-            // TODO: set values
-            
+            if (customValues != null)
+            {
+                if (node.Values != null && node.Values.Length == customValues.Length)
+                    Array.Copy(customValues, node.Values, customValues.Length);
+                else
+                    throw new InvalidOperationException("Invalid node custom values.");
+            }
+
             return node;
         }
 

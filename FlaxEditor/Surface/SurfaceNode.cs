@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Collections.Generic;
 using FlaxEditor.Surface.Elements;
 using FlaxEngine;
@@ -42,6 +43,11 @@ namespace FlaxEditor.Surface
         public readonly List<ISurfaceNodeElement> Elements = new List<ISurfaceNodeElement>();
 
         /// <summary>
+        /// The values (node paramaters in layout based on <see cref="NodeArchetype.DefaultValues"/>).
+        /// </summary>
+        public readonly object[] Values;
+
+        /// <summary>
         /// Gets a value indicating whether this node is selected.
         /// </summary>
         /// <value>
@@ -67,6 +73,12 @@ namespace FlaxEditor.Surface
             Surface = surface;
             Archetype = nodeArch;
             GroupArchetype = groupArch;
+
+            if (Archetype.DefaultValues != null)
+            {
+                Values = new object[Archetype.DefaultValues.Length];
+                Array.Copy(Archetype.DefaultValues, Values, Values.Length);
+            }
         }
 
         internal void AddElement(ISurfaceNodeElement element)
