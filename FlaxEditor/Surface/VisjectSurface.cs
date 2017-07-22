@@ -36,6 +36,13 @@ namespace FlaxEditor.Surface
             {
                 ClipChildren = false;
             }
+
+            /// <inheritdoc />
+            public override bool IntersectsContent(ref Vector2 locationParent, out Vector2 location)
+            {
+                location = PointFromParent(locationParent);
+                return true;
+            }
         }
 
         private SurfaceControl _surface;
@@ -465,19 +472,6 @@ namespace FlaxEditor.Surface
             _cmSecondaryMenu.Dispose();
 
             base.OnDestroy();
-        }
-
-        /// <inheritdoc />
-        protected override bool IntersectsChildContent(Control child, Vector2 location, out Vector2 childSpaceLocation)
-        {
-            // Always allow surface control to hadle events
-            if (_surface == child)
-            {
-                childSpaceLocation = PointFromParent(location);
-                return true;
-            }
-
-            return base.IntersectsChildContent(child, location, out childSpaceLocation);
         }
     }
 }
