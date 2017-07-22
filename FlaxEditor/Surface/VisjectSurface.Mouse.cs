@@ -216,7 +216,8 @@ namespace FlaxEditor.Surface
                 return true;
             }
 
-            return false;
+            Focus();
+            return true;
         }
 
         /// <inheritdoc />
@@ -283,14 +284,16 @@ namespace FlaxEditor.Surface
             }
 
             // Base
-            bool result = base.OnMouseUp(location, buttons);
-            
+            if (base.OnMouseUp(location, buttons))
+                return true;
+
             if (buttons == MouseButtons.Left)
             {
                 ConnectingEnd(null);
             }
 
-            return result;
+            Focus();
+            return true;
         }
 
         /// <inheritdoc />
