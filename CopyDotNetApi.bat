@@ -8,7 +8,7 @@ if exist %outputDir% (
 	if not exist "%outputAssembliesDir%" (
 		mkdir "%outputAssembliesDir%"
 	)
-	start /MIN xcopy /i /s /y "FlaxEngine\bin" "%outputAssembliesDir%" /exclude:excludedFileList.txt
-	start /MIN xcopy /i /s /y "FlaxEditor\bin" "%outputAssembliesDir%" /exclude:excludedFileList.txt
+	xcopy /i /s /y "FlaxEngine\bin" "%outputAssembliesDir%" /exclude:excludedFileList.txt
+	xcopy /i /s /y "FlaxEditor\bin" "%outputAssembliesDir%" /exclude:excludedFileList.txt
 	echo Done!
 )
