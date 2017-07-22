@@ -320,7 +320,7 @@ namespace FlaxEngine.GUI
 
                 float mousePosition = _orientation == Orientation.Vertical ? location.Y : location.X;
 
-                if (_thumbRect.Contains(location))
+                if (_thumbRect.Contains(ref location))
                 {
                     // Start moving thumb
                     _thumbClicked = true;

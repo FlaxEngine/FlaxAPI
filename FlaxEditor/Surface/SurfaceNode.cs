@@ -277,7 +277,7 @@ namespace FlaxEditor.Surface
             // Close
             if ((Archetype.Flags & NodeFlags.NoCloseButton) == 0)
             {
-                if (_closeButtonRect.Contains(location))
+                if (_closeButtonRect.Contains(ref location))
                 {
                     Surface.Delete(this);
                     return true;

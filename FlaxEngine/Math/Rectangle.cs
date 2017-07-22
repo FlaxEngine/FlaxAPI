@@ -188,11 +188,31 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Determines whether this rectangle entirely contains a specified rectangle
+        /// </summary>
+        /// <param name="value">The rectangle to evaluate</param>
+        /// <returns>True if this rectangle entirely contains the specified rectangle, or false if not</returns>
+        public bool Contains(ref Rectangle value)
+        {
+            return (Location.X <= value.Location.X) && (value.Right <= Right) && (Location.Y <= value.Location.Y) && (value.Bottom <= Bottom);
+        }
+
+        /// <summary>
         /// Determines whether a specified rectangle intersects with this rectangle
         /// </summary>
         /// <param name="value">The rectangle to evaluate</param>
         /// <returns>True if the specified rectangle intersects with this one, therwise false</returns>
         public bool Intersects(Rectangle value)
+        {
+            return (value.Location.X < Right) && (Location.X < value.Right) && (value.Location.Y < Bottom) && (Location.Y < value.Bottom);
+        }
+
+        /// <summary>
+        /// Determines whether a specified rectangle intersects with this rectangle
+        /// </summary>
+        /// <param name="value">The rectangle to evaluate</param>
+        /// <returns>True if the specified rectangle intersects with this one, therwise false</returns>
+        public bool Intersects(ref Rectangle value)
         {
             return (value.Location.X < Right) && (Location.X < value.Right) && (value.Location.Y < Bottom) && (Location.Y < value.Bottom);
         }
