@@ -324,7 +324,7 @@ namespace FlaxEditor.Surface
                         element = new OutputBox(node, arch);
                         break;
                     case NodeElementType.BoolValue:
-                        //element = new BoolValue(node, arch); // TODO: finsih it
+                        element = new BoolValue(node, arch);
                         break;
                     case NodeElementType.FloatValue:
                         //element = new FloatValue(node, arch); // TODO: finsih it

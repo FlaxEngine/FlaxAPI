@@ -145,6 +145,7 @@
     <Compile Include="Surface\ContextMenu\VisjectCMGroup.cs" />
     <Compile Include="Surface\ContextMenu\VisjectCMItem.cs" />
     <Compile Include="Surface\Elements\AssetSelect.cs" />
+    <Compile Include="Surface\Elements\BoolValue.cs" />
     <Compile Include="Surface\Elements\Box.cs" />
     <Compile Include="Surface\ConnectionType.cs" />
     <Compile Include="Surface\Elements\InputBox.cs" />
