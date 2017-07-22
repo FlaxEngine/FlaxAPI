@@ -4,6 +4,7 @@
 
 using System.Threading;
 using FlaxEditor.Content;
+using FlaxEditor.GUI.Drag;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -11,6 +12,8 @@ namespace FlaxEditor.Surface
 {
     public partial class VisjectSurface
     {
+        private DragAssets _dragOverItems = new DragAssets();
+
         /// <inheritdoc />
         public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
         {

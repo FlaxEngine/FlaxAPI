@@ -294,7 +294,7 @@ namespace FlaxEditor.Surface
             // Secondary Context Menu
             if (buttons == MouseButtons.Right)
             {
-                Surface.ShowSecondaryCM(this, PointToParent(location));
+                Surface.ShowSecondaryCM(this, Parent.PointToParent(PointToParent(location)));
                 return true;
             }
 

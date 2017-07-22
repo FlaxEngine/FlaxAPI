@@ -4,6 +4,7 @@
 
 using System;
 using FlaxEditor.Surface.ContextMenu;
+using FlaxEditor.Surface.Elements;
 using FlaxEngine;
 
 namespace FlaxEditor.Surface
@@ -27,7 +28,22 @@ namespace FlaxEditor.Surface
         /// <exception cref="System.NotImplementedException"></exception>
         public void ShowSecondaryCM(SurfaceNode node, Vector2 location)
         {
-            throw new NotImplementedException();
+            // Select that node
+            Select(node);
+
+            // Update context menu buttons
+            var deleteNodeButton = _cmSecondaryMenu.GetButton(2);
+            deleteNodeButton.Enabled = (node.Archetype.Flags & NodeFlags.NoRemove) == 0;
+            //
+            var removeBoxConnectionsButton = _cmSecondaryMenu.GetButton(4);
+            var boxUnderMouse = GetChildAtRecursive(location) as Box;
+            removeBoxConnectionsButton.Enabled = boxUnderMouse != null && boxUnderMouse.HasAnyConnection;
+            removeBoxConnectionsButton.Tag = boxUnderMouse;
+
+            // Show secondary context menu
+            _cmStartPos = location;
+            _cmSecondaryMenu.Tag = node;
+            _cmSecondaryMenu.Show(this, location);
         }
 
         private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem)
@@ -37,8 +53,27 @@ namespace FlaxEditor.Surface
 
         private void OnSecondaryMenuButtonClick(int id, FlaxEngine.GUI.ContextMenu contextMenu)
         {
-            throw new NotImplementedException("TODO: custom actions menu");
+            var nodeUnderMouse = (SurfaceNode)contextMenu.Tag;
+            switch (id)
+            {
+                case 1:
+                    Owner.OnSurfaceSave();
+                    break;
+                case 2:
+                    Delete(nodeUnderMouse);
+                    break;
+                case 3:
+                    nodeUnderMouse.RemoveConnections();
+                    MarkAsEdited();
+                    break;
+                case 4:
+                {
+                    var boxUnderMouse = (Box)_cmSecondaryMenu.GetButton(4).Tag;
+                    boxUnderMouse.RemoveConnections();
+                    MarkAsEdited();
+                    break;
+                }
+            }
         }
-
     }
 }

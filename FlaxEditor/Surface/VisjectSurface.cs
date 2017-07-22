@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FlaxEditor.GUI.Drag;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEditor.Surface.Elements;
 using FlaxEngine;
@@ -22,7 +21,6 @@ namespace FlaxEditor.Surface
     {
         // TODO: stuff to finish
         // - surface parameters tracking and editing
-        // - dragging asset items over
         // - undo/redo support
         
         private class SurfaceControl : ContainerControl
@@ -62,8 +60,6 @@ namespace FlaxEditor.Surface
         private VisjectCM _cmPrimaryMenu;
         private FlaxEngine.GUI.ContextMenu _cmSecondaryMenu;
         private Vector2 _cmStartPos = Vector2.Minimum;
-
-        private DragAssets _dragOverItems = new DragAssets();
 
         /// <summary>
         /// The owner.
