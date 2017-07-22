@@ -79,7 +79,7 @@ namespace FlaxEditor.Utilities
                         if (matchStartPos != -1)
                         {
                             var length = textPos - matchStartPos;
-                            if (length > MinLength)
+                            if (length >= MinLength)
                                 ranges.Add(new Range(matchStartPos, length));
                             textPos = matchStartPos + length;
                             matchStartPos = -1;
@@ -92,7 +92,7 @@ namespace FlaxEditor.Utilities
                 if (matchStartPos != -1)
                 {
                     var length = endPos - matchStartPos;
-                    if (length > MinLength)
+                    if (length >= MinLength)
                         ranges.Add(new Range(matchStartPos, length));
                     textPos = matchStartPos + length;
                 }
