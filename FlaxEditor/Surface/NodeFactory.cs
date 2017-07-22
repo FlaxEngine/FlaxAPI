@@ -79,6 +79,42 @@ namespace FlaxEditor.Surface
         };
 
         /// <summary>
+        /// Gets the archetypes for the node.
+        /// </summary>
+        /// <param name="groupID">The group identifier.</param>
+        /// <param name="typeID">The type identifier.</param>
+        /// <param name="gArch">The output group archetype.</param>
+        /// <param name="arch">The output node archetype.</param>
+        /// <returns>True if found it, otherwise false.</returns>
+        public static bool GetArchetype(ushort groupID, ushort typeID, out GroupArchetype gArch, out NodeArchetype arch)
+        {
+            gArch = null;
+            arch = null;
+
+            // Find archetype for that node
+            foreach (var groupArchetype in Groups)
+            {
+                if (groupArchetype.GroupID == groupID && groupArchetype.Archetypes != null)
+                {
+                    foreach (var nodeArchetype in groupArchetype.Archetypes)
+                    {
+                        if (nodeArchetype.TypeID == typeID)
+                        {
+                            // Found
+                            gArch = groupArchetype;
+                            arch = nodeArchetype;
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            // Error
+            Debug.LogError($"Failed to find Visject Surface node with id: {groupID}:{typeID}");
+            return false;
+        }
+
+        /// <summary>
         /// Creates the node.
         /// </summary>
         /// <param name="surface">The surface.</param>

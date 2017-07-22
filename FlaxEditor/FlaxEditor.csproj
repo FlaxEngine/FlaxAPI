@@ -168,6 +168,7 @@
     <Compile Include="Surface\VisjectSurface.Connecting.cs" />
     <Compile Include="Surface\VisjectSurface.ContextMenu.cs" />
     <Compile Include="Surface\VisjectSurface.cs" />
+    <Compile Include="Surface\VisjectSurface.DragDrop.cs" />
     <Compile Include="Surface\VisjectSurface.Mouse.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
     <Compile Include="Utilities\QueryFilterHelper.cs" />

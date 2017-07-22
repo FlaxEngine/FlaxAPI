@@ -63,7 +63,7 @@ namespace FlaxEditor.Surface
         private FlaxEngine.GUI.ContextMenu _cmSecondaryMenu;
         private Vector2 _cmStartPos = Vector2.Minimum;
 
-        private DragItems _dragOverItems = new DragItems();
+        private DragAssets _dragOverItems = new DragAssets();
 
         /// <summary>
         /// The owner.
@@ -270,6 +270,26 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Spawns the node.
         /// </summary>
+        /// <param name="groupID">The group archetype ID.</param>
+        /// <param name="typeID">The node archetype ID.</param>
+        /// <param name="location">The location.</param>
+        /// <param name="customValues">The custom values array. Must match node archetype <see cref="NodeArchetype.DefaultValues"/> size. Pass null to use default values.</param>
+        /// <returns>Created node.</returns>
+        public SurfaceNode SpawnNode(ushort groupID, ushort typeID, Vector2 location, object[] customValues = null)
+        {
+            GroupArchetype groupArchetype;
+            NodeArchetype nodeArchetype;
+            if (NodeFactory.GetArchetype(groupID, typeID, out groupArchetype, out nodeArchetype))
+            {
+                return SpawnNode(groupArchetype, nodeArchetype, location, customValues);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Spawns the node.
+        /// </summary>
         /// <param name="groupArchetype">The group archetype.</param>
         /// <param name="nodeArchetype">The node archetype.</param>
         /// <param name="location">The location.</param>
@@ -290,9 +310,6 @@ namespace FlaxEditor.Surface
             }
 
             // Intiialize
-            OnNodeLoaded(node);
-            node.OnSurfaceLoaded();
-            node.Location = location;
             if (customValues != null)
             {
                 if (node.Values != null && node.Values.Length == customValues.Length)
@@ -300,6 +317,9 @@ namespace FlaxEditor.Surface
                 else
                     throw new InvalidOperationException("Invalid node custom values.");
             }
+            OnNodeLoaded(node);
+            node.OnSurfaceLoaded();
+            node.Location = location;
 
             return node;
         }
@@ -327,13 +347,13 @@ namespace FlaxEditor.Surface
                         element = new BoolValue(node, arch);
                         break;
                     case NodeElementType.FloatValue:
-                        //element = new FloatValue(node, arch); // TODO: finsih it
+                        //element = new FloatValue(node, arch); // TODO: finish it
                         break;
                     case NodeElementType.InteagerValue:
-                        //nelement = ew InteagerValue(node, arch); // TODO: finsih it
+                        //nelement = ew InteagerValue(node, arch); // TODO: finish it
                         break;
                     case NodeElementType.ColorValue:
-                        //element = new ColorValue(node, arch); // TODO: finsih it
+                        //element = new ColorValue(node, arch); // TODO: finish it
                         break;
                     case NodeElementType.ComboBox:
                         element = new ComboBoxElement(node, arch);
@@ -434,7 +454,7 @@ namespace FlaxEditor.Surface
                 {
                     for (int j = 0; j < maxJ; j++)
                     {
-                        Render2D.DrawTexture(background, new Rectangle(pos.X + i * bw, pos.Y + j * bh, bw, bh), Color.White, false);
+                        Render2D.DrawTexture(background, new Rectangle(pos.X + i * bw, pos.Y + j * bh, bw, bh), Color.White);
                     }
                 }
             }
