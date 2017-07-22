@@ -125,13 +125,11 @@ namespace FlaxEditor.Surface
                 // Back
                 return;
             }
-
+            
             // Get type to assign to all dependent boxes
             ConnectionType type = Archetype.DefaultType;
             for (int i = 0; i < Archetype.IndependentBoxes.Length; i++)
             {
-                if (Archetype.IndependentBoxes[i] == -1)
-                    break;
                 var b = GetBox(Archetype.IndependentBoxes[i]);
                 if (b != null && b.HasAnyConnection)
                 {
@@ -147,8 +145,6 @@ namespace FlaxEditor.Surface
             // Assign connection type
             for (int i = 0; i < Archetype.DependentBoxes.Length; i++)
             {
-                if (Archetype.DependentBoxes[i] == -1)
-                    break;
                 var b = GetBox(Archetype.DependentBoxes[i]);
                 if (b != null)
                 {
@@ -160,8 +156,6 @@ namespace FlaxEditor.Surface
             // Validate minor independent boxes to fit main one
             for (int i = 0; i < Archetype.IndependentBoxes.Length; i++)
             {
-                if (Archetype.IndependentBoxes[i] == -1)
-                    break;
                 var b = GetBox(Archetype.IndependentBoxes[i]);
                 if (b != null)
                 {

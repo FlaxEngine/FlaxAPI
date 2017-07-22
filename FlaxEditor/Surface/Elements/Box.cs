@@ -77,7 +77,7 @@ namespace FlaxEditor.Surface.Elements
                 if (_currentType != value)
                 {
                     // Check if need to remove connections
-                    if ((value & _currentType) != 0)
+                    if ((value & _currentType) == 0)
                     {
                         RemoveConnections();
                     }
@@ -93,6 +93,11 @@ namespace FlaxEditor.Surface.Elements
                 }
             }
         }
+
+        /// <summary>
+        /// Gets the connection origin point (in surface space).
+        /// </summary>
+        internal Vector2 ConnectionOrigin => Parent.PointToParent(Center);
 
         /// <inheritdoc />
         protected Box(SurfaceNode parentNode, NodeElementArchetype archetype, Vector2 location)
@@ -243,7 +248,7 @@ namespace FlaxEditor.Surface.Elements
         /// True if box can use only single connection.
         /// </summary>
         /// <returns>True if only single conenction.</returns>
-        public bool IsSingle => true;// TODO: gather this from the box archetype!!!
+        public bool IsSingle => Archetype.Single;
 
         /// <summary>
         /// True if box type depends on other boxes types of the node.
@@ -333,14 +338,19 @@ namespace FlaxEditor.Surface.Elements
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
-            Focus();
-
             if (buttons == MouseButtons.Left)
             {
-                Surface.ConnectingEnd(this);
+                Surface.ConnectingStart(this);
             }
 
             return true;
+        }
+
+        /// <inheritdoc />
+        public override void OnMouseMove(Vector2 location)
+        {
+            Surface.OnMosueOverBox(this);
+            base.OnMouseMove(location);
         }
 
         /// <inheritdoc />
@@ -350,7 +360,7 @@ namespace FlaxEditor.Surface.Elements
 
             if (buttons == MouseButtons.Left)
             {
-                Surface.ConnectingStart(this);
+                Surface.ConnectingEnd(this);
                 result = true;
             }
 

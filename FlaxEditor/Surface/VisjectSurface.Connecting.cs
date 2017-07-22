@@ -17,6 +17,53 @@ namespace FlaxEditor.Surface
                    (Mathf.IsPowerOfTwo((int)oB) && Mathf.IsPowerOfTwo((int)iB));
         }
 
+        private static bool CanConnectBoxes(Box start, Box end)
+        {
+            // Disable for the same box
+            if (start == end)
+            {
+                // Cannot
+                return false;
+            }
+
+            // Check if boxes are connected
+            bool areConnected = start.AreConnected(end);
+
+            // Check if boxes are diffrent or (one of them is disabled and both are disconnected)
+            if (end.IsOutput == start.IsOutput || !((end.Enabled && start.Enabled) || areConnected))
+            {
+                // Cannot
+                return false;
+            }
+
+            // Cache Input and Output box (since connection may be made in a diffrent way)
+            InputBox iB;
+            OutputBox oB;
+            if (start.IsOutput)
+            {
+                iB = (InputBox)end;
+                oB = (OutputBox)start;
+            }
+            else
+            {
+                iB = (InputBox)start;
+                oB = (OutputBox)end;
+            }
+
+            // Validate connection type (also check if any of boxes parent can manage that connections types)
+            if (!iB.CanUseType(oB.CurrentType))
+            {
+                if (!CanCast(oB.CurrentType, iB.CurrentType))
+                {
+                    // Cannot
+                    return false;
+                }
+            }
+
+            // Can
+            return true;
+        }
+
         /// <summary>
         /// Checks if can use direct conversion from one type to another.
         /// </summary>
@@ -60,6 +107,11 @@ namespace FlaxEditor.Surface
             return result;
         }
 
+        internal void OnMosueOverBox(Box box)
+        {
+            _lastBoxUnderMouse = box;
+        }
+
         /// <summary>
         /// Begins connecting boxes action.
         /// </summary>
@@ -78,14 +130,14 @@ namespace FlaxEditor.Surface
             // Ensure that there was a proper start box
             if (_startBox == null)
                 return;
-
+            
             Box start = _startBox;
             _startBox = null;
 
             // Check if boxes are diffrent and end box is specified
             if (start == end || end == null)
                 return;
-
+            
             // Check if boxes are connected
             bool areConnected = start.AreConnected(end);
 
@@ -132,7 +184,7 @@ namespace FlaxEditor.Surface
                 else
                     return;
             }
-            
+
             // Connect boxes
             if (useCaster)
             {
@@ -145,10 +197,6 @@ namespace FlaxEditor.Surface
                 // Connect directly
                 iB.CreateConnection(oB);
             }
-
-            // Update boxes
-            iB.ConnectionTick();
-            oB.ConnectionTick();
 
             // Mark as edited
             MarkAsEdited();

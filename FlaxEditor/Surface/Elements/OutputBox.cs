@@ -20,45 +20,47 @@ namespace FlaxEditor.Surface.Elements
         }
 
         /// <summary>
+        /// Draws the connection between two boxes.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="color">The color.</param>
+        public static void DrawConnection(ref Vector2 start, ref Vector2 end, ref Color color)
+        {
+            // Calculate control points
+            var dst = (end - start) * new Vector2(0.5f, 0.05f);
+            Vector2 control1 = new Vector2(start.X + dst.X, start.Y + dst.Y);
+            Vector2 control2 = new Vector2(end.X - dst.X, end.Y + dst.Y);
+
+            // Draw line
+            Render2D.DrawBezier(start, control1, control2, end, color, 2.2f);
+
+            /*
+            // Debug drawing control points
+            Vector2 bSize = new Vector2(4, 4);
+            Render2D.FillRectangle(new Rectangle(control1 - bSize * 0.5f, bSize), Color.Blue);
+            Render2D.FillRectangle(new Rectangle(control2 - bSize * 0.5f, bSize), Color.Gold);
+            */
+        }
+
+        /// <summary>
         /// Draw all connections comming from this box.
         /// </summary>
         public void DrawConnections()
         {
             // Draw all the connections
-            var centerPos = Size * 0.5f;
+            var center = Size * 0.5f;
+            var startPos = Parent.PointToParent(PointToParent(center));
             for (int i = 0; i < Connections.Count; i++)
             {
-                // Find target box location in current box space
                 Box targetBox = Connections[i];
-                Vector2 targetPos = targetBox.Parent.PointToParent(targetBox.PointToParent(centerPos));
-                targetPos = Parent.PointFromParent(PointFromParent(targetPos));
-
-                // Calculate control points
-                var dst = (targetPos - centerPos) * new Vector2(0.5f, 0.05f);
-                //
-                //Vector2 control1 = new Vector2(centerPos.X + dst.X, centerPos.Y);
-                //Vector2 control2 = new Vector2(targetPos.X - dst.X, targetPos.Y);
-                //
-                //Vector2 control1 = control1 + dst;
-                //Vector2 control2 = targetPos - dst;
-                //
-                Vector2 control1 = new Vector2(centerPos.X + dst.X, centerPos.Y + dst.Y);
-                Vector2 control2 = new Vector2(targetPos.X - dst.X, targetPos.Y + dst.Y);
-
-                // Draw line
-                Render2D.DrawBezier(centerPos, control1, control2, targetPos, _currentTypeColor, 2.2f);
-                
-                /*
-                // Debug drawing control points
-                Vector2 bSize = Vector2(4, 4);
-                Render2D.FillRectangle(new Rectangle(control1 - bSize * 0.5f, bSize), Color.Blue);
-                Render2D.FillRectangle(new Rectangle(control2 - bSize * 0.5f, bSize), Color.Gold);
-                */
+                Vector2 endPos = targetBox.Parent.PointToParent(targetBox.PointToParent(center));
+                DrawConnection(ref startPos, ref endPos, ref _currentTypeColor);
             }
         }
 
         /// <inheritdoc />
-        public override bool IsOutput => false;
+        public override bool IsOutput => true;
 
         /// <inheritdoc />
         public override void Draw()

@@ -21,18 +21,15 @@ namespace FlaxEditor.Surface
     public partial class VisjectSurface : ContainerControl
     {
         // TODO: stuff to finish
-        // - nodes removing
-        // - connecting nodes
         // - surface parameters tracking and editing
         // - dragging asset items over
         // - undo/redo support
-        // - drawing connections
-
+        
         private class SurfaceControl : ContainerControl
         {
             /// <inheritdoc />
-            public SurfaceControl(bool canFocus)
-                : base(canFocus)
+            public SurfaceControl()
+                : base(false)
             {
                 ClipChildren = false;
             }
@@ -128,7 +125,7 @@ namespace FlaxEditor.Surface
                 throw new InvalidOperationException("Missing visject surface style.");
 
             // Surface control used to navigate around the view (scale and move it)
-            _surface = new SurfaceControl(false);
+            _surface = new SurfaceControl();
             _surface.Parent = this;
 
             // Create primary menu (for nodes spawning)
@@ -210,7 +207,7 @@ namespace FlaxEditor.Surface
         /// Selects the specified node.
         /// </summary>
         /// <param name="node">The node.</param>
-        public  void Select(SurfaceNode node)
+        public void Select(SurfaceNode node)
         {
             ClearSelection();
 
@@ -450,10 +447,49 @@ namespace FlaxEditor.Surface
                 Render2D.DrawRectangle(selectionRect, Color.Orange);
             }
 
+            // Push surface view transform (scale and offset)
+            Render2D.PushTransform(ref _surface._cachedTransform);
+
+            // Draw all connections at once to boost batching process
+            for (int i = 0; i < _nodes.Count; i++)
+            {
+                var node = _nodes[i];
+                for (int j = 0; j < node.Elements.Count; j++)
+                {
+                    if (node.Elements[j] is OutputBox ob && ob.HasAnyConnection)
+                    {
+                        ob.DrawConnections();
+                    }
+                }
+            }
+
+            // Draw connecting line
+            if (_startBox != null)
+            {
+                // Get start position
+                Vector2 startPos = _startBox.ConnectionOrigin;
+
+                // Check if mouse is over any of box
+                Vector2 endPos = _surface.PointFromParent(_mousePos);
+                Color lineColor = Style.Colors.Connecting;
+                if (_lastBoxUnderMouse != null)
+                {
+                    // Check if can connect boxes
+                    bool canConnect = CanConnectBoxes(_startBox, _lastBoxUnderMouse);
+                    lineColor = canConnect ? Style.Colors.ConnectingValid : Style.Colors.ConnectingInvalid;
+                    endPos = _lastBoxUnderMouse.ConnectionOrigin;
+                }
+
+                // Draw connection
+                OutputBox.DrawConnection(ref startPos, ref endPos, ref lineColor);
+            }
+
+            Render2D.PopTransform();
+
             // Base
             base.Draw();
 
-            Render2D.DrawText(style.FontTitle, string.Format("Scale: {0}", _surface.Scale), rect, Enabled ? Color.Red : Color.Black);
+            //Render2D.DrawText(style.FontTitle, string.Format("Scale: {0}", _surface.Scale), rect, Enabled ? Color.Red : Color.Black);
 
             // Draw border
             if (ContainsFocus)
