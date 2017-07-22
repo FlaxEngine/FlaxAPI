@@ -18,9 +18,9 @@ namespace FlaxEditor.Surface
         None = 0,
 
         /// <summary>
-        /// Add close button.
+        /// Don't adds a close button.
         /// </summary>
-        CloseButton = 1,
+        NoCloseButton = 1,
 
         /// <summary>
         /// Node should use dependant and independant boxes types.

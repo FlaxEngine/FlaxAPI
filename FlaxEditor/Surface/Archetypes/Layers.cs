@@ -22,7 +22,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 1,
                 Title = "Sample Layer",
                 Description = "Sample material or material instance",
-                Flags = NodeFlags.CloseButton | NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(160, 100),
                 DefaultValues = new object[]
                 {
@@ -40,7 +40,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 2,
                 Title = "Linear Layer Blend",
                 Description = "Create blended layer using linear math",
-                Flags = NodeFlags.CloseButton | NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(150, 80),
                 Elements = new[]
                 {

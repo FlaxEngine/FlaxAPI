@@ -209,7 +209,7 @@ namespace FlaxEditor.Surface
             Render2D.DrawText(style.FontLarge, Archetype.Title, _headerRect, style.Foreground, TextAlignment.Center, TextAlignment.Center, TextWrapping.NoWrap, 1.0f);
 
             // Close button
-            if ((Archetype.Flags & NodeFlags.CloseButton) != 0)
+            if ((Archetype.Flags & NodeFlags.NoCloseButton) == 0)
             {
                 float alpha = _closeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
                 Render2D.DrawSprite(style.Cross, _closeButtonRect, new Color(alpha));
@@ -250,7 +250,7 @@ namespace FlaxEditor.Surface
                 return true;
 
             // Close
-            if ((Archetype.Flags & NodeFlags.CloseButton) != 0)
+            if ((Archetype.Flags & NodeFlags.NoCloseButton) == 0)
             {
                 if (_closeButtonRect.Contains(location))
                 {

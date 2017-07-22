@@ -18,7 +18,6 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = id,
                 Title = title,
                 Description = desc,
-                Flags = NodeFlags.CloseButton,
                 Size = new Vector2(110, 20),
                 DefaultType = type,
                 IndependentBoxes = new[] { 0 },
@@ -38,7 +37,6 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = id,
                 Title = title,
                 Description = desc,
-                Flags = NodeFlags.CloseButton,
                 Size = new Vector2(110, 40),
                 DefaultType = inputType,
                 IndependentBoxes = new[] { 0, 1 },
@@ -91,7 +89,6 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 24,
                 Title = "Clamp",
                 Description = "Clamps value to the specified range",
-                Flags = NodeFlags.CloseButton,
                 Size = new Vector2(110, 50),
                 DefaultType = ConnectionType.Variable,
                 IndependentBoxes = new[] { 0 },
@@ -109,7 +106,6 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 25,
                 Title = "Lerp",
                 Description = "Performs a linear interpolation",
-                Flags = NodeFlags.CloseButton,
                 Size = new Vector2(110, 60),
                 DefaultType = ConnectionType.Variable,
                 IndependentBoxes = new[] { 0, 1 },
@@ -127,7 +123,6 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 26,
                 Title = "Reflect",
                 Description = "Returns reflected vector over the normal",
-                Flags = NodeFlags.CloseButton,
                 Size = new Vector2(110, 40),
                 DefaultType = ConnectionType.Variable,
                 IndependentBoxes = new[] { 0, 1 },
@@ -148,7 +143,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 29,
                 Title = "Derive Normal Z",
                 Description = "Derives the Z component of a tangent space normal given the X and Y components and outputs the resulting three-channel tangent space normal",
-                Flags = NodeFlags.CloseButton | NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(170, 30),
                 Elements = new[]
                 {
@@ -161,7 +156,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 30,
                 Title = "Vector Transform",
                 Description = "Transform vector from source space to destination space",
-                Flags = NodeFlags.CloseButton | NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(110, 40),
                 DefaultValues = new object[]
                 {

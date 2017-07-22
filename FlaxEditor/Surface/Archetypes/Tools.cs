@@ -21,7 +21,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 1,
                 Title = "Fresnel",
                 Description = "Calculates a falloff based on the dot product of the surface normal and the direction to the camera",
-                Flags = NodeFlags.CloseButton | NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(140, 60),
                 Elements = new[]
                 {

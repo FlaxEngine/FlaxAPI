@@ -22,7 +22,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 1,
                 Title = "Texture",
                 Description = "Two dimensional texture object",
-                Flags = NodeFlags.CloseButton | NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(140, 120),
                 DefaultValues = new object[]
                 {
@@ -45,7 +45,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 2,
                 Title = "Texcoords",
                 Description = "Texture coordinates",
-                Flags = NodeFlags.CloseButton | NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(110, 30),
                 Elements = new[]
                 {
@@ -57,7 +57,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 3,
                 Title = "Cube Texture",
                 Description = "Set of 6 textures arranged in a cube",
-                Flags = NodeFlags.CloseButton | NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(140, 120),
                 DefaultValues = new object[]
                 {
@@ -80,7 +80,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 4,
                 Title = "Normal Map",
                 Description = "Two dimensional texture object sampled as a normal map",
-                Flags = NodeFlags.CloseButton | NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(140, 120),
                 DefaultValues = new object[]
                 {
@@ -102,7 +102,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 5,
                 Title = "Parallax Occlusion Mapping",
                 Description = "Parallax occlusion mapping",
-                Flags = NodeFlags.CloseButton | NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(260, 120),
                 DefaultValues = new object[]
                 {

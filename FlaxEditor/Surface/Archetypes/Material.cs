@@ -91,7 +91,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = (surface, arch, groupArch) => new SurfaceNodeMaterial(surface, arch, groupArch),
                 Title = "Material",
                 Description = "Main material node",
-                Flags = NodeFlags.CloseButton | NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(150, 240),
                 Elements = new[]
                 {
@@ -114,7 +114,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 2,
                 Title = "World Position",
                 Description = "Absolute world space position",
-                Flags = NodeFlags.CloseButton | NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(150, 30),
                 Elements = new[]
                 {
@@ -126,7 +126,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 2,
                 Title = "View",
                 Description = "View properties",
-                Flags = NodeFlags.CloseButton | NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(150, 40),
                 Elements = new[]
                 {
@@ -139,7 +139,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 2,
                 Title = "Normal Vector",
                 Description = "World space normal vector",
-                Flags = NodeFlags.CloseButton | NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(150, 40),
                 Elements = new[]
                 {
@@ -151,7 +151,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 2,
                 Title = "Camera Vector",
                 Description = "Calculates camera vector",
-                Flags = NodeFlags.CloseButton | NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(150, 30),
                 Elements = new[]
                 {

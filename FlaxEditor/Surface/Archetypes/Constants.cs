@@ -21,7 +21,6 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 1,
                 Title = "Bool",
                 Description = "Constant boolean value",
-                Flags = NodeFlags.CloseButton,
                 Size = new Vector2(110, 20),
                 DefaultValues = new object[]
                 {
@@ -38,7 +37,6 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 2,
                 Title = "Inteager",
                 Description = "Constant inteager value",
-                Flags = NodeFlags.CloseButton,
                 Size = new Vector2(110, 20),
                 DefaultValues = new object[]
                 {
