@@ -2,7 +2,6 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using FlaxEngine;
 
 namespace FlaxEditor.Surface
@@ -19,6 +18,18 @@ namespace FlaxEditor.Surface
             if (GetChildAt(_mousePos) is SurfaceNode node)
                 return node;
             return null;
+        }
+
+        private void UpdateSelectionRectangle()
+        {
+            // TODO: finish selecting ndoes with rect
+            /*var selectionRect = Rectangle.FromPoints(_leftMouseDownPos, _mousePos) - _viewOffset;
+            
+            // Find nodes to select
+            for (int i = 0; i < _nodes.Count; i++)
+            {
+                _nodes[i].IsSelected = _nodes[i]->GetBounds().Intersects(selectionRect);
+            }*/
         }
 
         /// <inheritdoc />
@@ -41,7 +52,7 @@ namespace FlaxEditor.Surface
             _mousePos = location;
 
             // Moving around surface with mouse
-            /*if (_rightMouseDown)
+            if (_rightMouseDown)
             {
                 // Calculate delta
                 Vector2 delta = location - _rightMouseDownPos;
@@ -51,7 +62,7 @@ namespace FlaxEditor.Surface
                     _mouseMoveAmount += delta.Length;
                     _viewOffset += delta;
                     _rightMouseDownPos = location;
-                    SetCursor(CursorType.SizeAll);
+                    Cursor = CursorType.SizeAll;
                 }
 
                 // Handled
@@ -71,17 +82,17 @@ namespace FlaxEditor.Surface
                     if (delta.LengthSquared > 0.01f)
                     {
                         // Move selected nodes
-                        delta /= _scale;
-                        for (int i = 0; i < _nodes.Count(); i++)
+                        delta /= Scale;
+                        for (int i = 0; i < _nodes.Count; i++)
                         {
-                            auto node = _nodes[i];
-                            if (node->_isSelected)
+                            var node = _nodes[i];
+                            if (node.IsSelected)
                             {
-                                node->Move(delta);
+                                node.Location += delta;
                             }
                         }
                         _leftMouseDownPos = location;
-                        SetCursor(CursorType.SizeAll);
+                        Cursor = CursorType.SizeAll;
                         MarkAsEdited(false);
                     }
 
@@ -90,18 +101,12 @@ namespace FlaxEditor.Surface
                 }
                 else // Selecting
                 {
-                    var selectionRect = Rect::FromPoints(_leftMouseDownPos, _mousePos) - _viewOffset;
-
-                    // Find nodes to select
-                    for (int i = 0; i < _nodes.Count; i++)
-                    {
-                        _nodes[i]->_isSelected = _nodes[i]->GetBounds().Intersects(selectionRect);
-                    }
+                    UpdateSelectionRectangle();
                     
                     // Handled
                     return;
                 }
-            }*/
+            }
 
             base.OnMouseMove(location);
         }
@@ -160,14 +165,13 @@ namespace FlaxEditor.Surface
                 _rightMouseDownPos = location;
             }
 
-            // TODO: finsi hthis
-            /*// Check if any node is under the mouse
+            // Check if any node is under the mouse
             SurfaceNode nodeAtMouse = GetNodeUnderMouse();
             Vector2 cLocation = location - _viewOffset;
             if (nodeAtMouse != null)
             {
-                // Check if mouse is over header and user is pressing left key
-                if (_leftMouseDown && nodeAtMouse->_headerRect.MakeOffseted(nodeAtMouse->GetLocation()).Contains(cLocation))
+                // Check if mouse is over header and user is pressing mouse left button
+                if (_leftMouseDown && nodeAtMouse.HitsHeader(ref cLocation))
                 {
                     _isMovingSelection = true;
 
@@ -178,7 +182,7 @@ namespace FlaxEditor.Surface
                         AddToSelection(nodeAtMouse);
                     }
                     // Check if node isn't selected
-                    else if (!nodeAtMouse->_isSelected)
+                    else if (!nodeAtMouse.IsSelected)
                     {
                         // Select node
                         Select(nodeAtMouse);
@@ -206,7 +210,7 @@ namespace FlaxEditor.Surface
                     Focus();
                     return true;
                 }
-            }*/
+            }
 
             // Base
             if (base.OnMouseDown(location, buttons))
@@ -245,18 +249,7 @@ namespace FlaxEditor.Surface
 
                 if (!_isMovingSelection && _startBox == null)
                 {
-                    // TODO: finsih this
-                    /*var selectionRect = Rectangle.FromPoints(_leftMouseDownPos, _mousePos) - _viewOffset;
-
-                    // Find nodes to select
-                    if (_nodes.Count > 0)
-                    {
-                        var selectionRectChildrenSpace = 
-                        for (int i = 0; i < _nodes.Count; i++)
-                        {
-                            _nodes[i].IsSelected = _nodes[i]->GetBounds().Intersects(selectionRect);
-                        }
-                    }*/
+                    UpdateSelectionRectangle();
                 }
             }
             if (_rightMouseDown && buttons == MouseButtons.Right)

@@ -82,6 +82,11 @@ namespace FlaxEditor.Surface
             Elements.Remove(element);
         }
 
+        internal bool HitsHeader(ref Vector2 location)
+        {
+            return _headerRect.MakeOffseted(Location).Contains(ref location);
+        }
+        
         /// <summary>
         /// Remeove all connections from and to that node.
         /// </summary>

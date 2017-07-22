@@ -81,6 +81,18 @@ namespace FlaxEditor.Surface
         public bool IsEdited => _edited;
 
         /// <summary>
+        /// Gets or sets the view position (upper left corner of the view).
+        /// </summary>
+        /// <value>
+        /// The view position.
+        /// </value>
+        public Vector2 ViewPosition
+        {
+            get => -_viewOffset;
+            set => _viewOffset = -value;
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="VisjectSurface"/> class.
         /// </summary>
         /// <param name="owner">The owner.</param>
@@ -158,6 +170,35 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Adds the specified node to the selection.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        public void AddToSelection(SurfaceNode node)
+        {
+            node.IsSelected = true;
+        }
+
+        /// <summary>
+        /// Selects the specified node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        public  void Select(SurfaceNode node)
+        {
+            ClearSelection();
+
+            node.IsSelected = true;
+        }
+
+        /// <summary>
+        /// Deselects the specified node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        public void Deselect(SurfaceNode node)
+        {
+            node.IsSelected = false;
+        }
+
+        /// <summary>
         /// Deletes the specified node.
         /// </summary>
         /// <param name="node">The node.</param>
@@ -198,6 +239,7 @@ namespace FlaxEditor.Surface
 
             // Intiialize
             OnNodeLoaded(node);
+            node.OnSurfaceLoaded();
             // TODO: set values
             // TODO: set location
             
