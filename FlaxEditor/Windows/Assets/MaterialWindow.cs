@@ -113,8 +113,9 @@ namespace FlaxEditor.Windows.Assets
         /// Gets material info from UI.
         /// </summary>
         /// <param name="info">Output info.</param>
-        public void FillMaterialInfo(ref MaterialInfo info)
+        public void FillMaterialInfo(out MaterialInfo info)
         {
+            info = new MaterialInfo();
             info.Flags = MaterialFlags.None;
             info.BlendMode = MaterialBlendMode.Opaque;
             info.Domain = MaterialDomain.Surface;

@@ -142,6 +142,7 @@ namespace FlaxEditor.Surface.ContextMenu
         {
             // Prepare
             ResetView();
+            Focus();
 
             base.OnShow();
         }
