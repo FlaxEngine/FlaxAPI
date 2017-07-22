@@ -336,7 +336,7 @@ namespace FlaxEditor.Surface
                         //element = new ColorValue(node, arch); // TODO: finsih it
                         break;
                     case NodeElementType.ComboBox:
-                        //element = new Combobox(node, arch); // TODO: finsih it
+                        element = new ComboBoxElement(node, arch);
                         break;
                     case NodeElementType.Asset:
                         element = new AssetSelect(node, arch);
