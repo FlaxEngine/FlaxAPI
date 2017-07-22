@@ -15,15 +15,17 @@ namespace FlaxEditor.Surface
         private SurfaceNode GetNodeUnderMouse()
         {
             // TODO: optimize it later -> calculate mouse pos in children space and perform box vs point test faster
-            if (GetChildAt(_mousePos) is SurfaceNode node)
+            var pos = _surface.PointFromParent(_mousePos);
+            if (_surface.GetChildAt(pos) is SurfaceNode node)
                 return node;
             return null;
         }
 
         private void UpdateSelectionRectangle()
         {
-            var selectionRect = Rectangle.FromPoints(_leftMouseDownPos, _mousePos) - _viewOffset;
-            var selectionRectNodesSpace = new Rectangle(selectionRect.Location * Scale, selectionRect.Size * Scale);
+            var selectionRect = Rectangle.FromPoints(_leftMouseDownPos, _mousePos) - ViewPosition;
+            var scale = _targeScale;
+            var selectionRectNodesSpace = new Rectangle(selectionRect.Location * scale, selectionRect.Size * scale);
 
             // Find nodes to select
             for (int i = 0; i < _nodes.Count; i++)
@@ -60,7 +62,7 @@ namespace FlaxEditor.Surface
                 {
                     // Move view
                     _mouseMoveAmount += delta.Length;
-                    _viewOffset += delta;
+                    ViewPosition += delta;
                     _rightMouseDownPos = location;
                     Cursor = CursorType.SizeAll;
                 }
@@ -82,7 +84,7 @@ namespace FlaxEditor.Surface
                     if (delta.LengthSquared > 0.01f)
                     {
                         // Move selected nodes
-                        delta /= Scale;
+                        delta /= _targeScale;
                         for (int i = 0; i < _nodes.Count; i++)
                         {
                             if (_nodes[i].IsSelected)
@@ -137,7 +139,7 @@ namespace FlaxEditor.Surface
             if (IsMouseOver)
             {
                 // Change scale
-                SetScale(_targeScale + delta * 0.0008f);
+                AddScale(delta * 0.0008f);
             }
 
             return base.OnMouseWheel(location, delta);
@@ -166,7 +168,7 @@ namespace FlaxEditor.Surface
 
             // Check if any node is under the mouse
             SurfaceNode nodeAtMouse = GetNodeUnderMouse();
-            Vector2 cLocation = location - _viewOffset;
+            Vector2 cLocation = location - ViewPosition;
             if (nodeAtMouse != null)
             {
                 // Check if mouse is over header and user is pressing mouse left button
@@ -260,7 +262,7 @@ namespace FlaxEditor.Surface
                 if (_mouseMoveAmount < 3.0f)
                 {
                     // Check if any node is under the mouse
-                    _cmStartPos = location - _viewOffset;
+                    _cmStartPos = location;
                     if (nodeAtMouse != null)
                     {
                         // Show secondary context menu

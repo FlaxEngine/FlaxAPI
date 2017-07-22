@@ -17,19 +17,30 @@ namespace FlaxEditor.Surface
     /// <summary>
     /// Visject Surface control for editing Nodes Graph.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.ScrollableControl" />
-    public partial class VisjectSurface : ScrollableControl
+    /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    public partial class VisjectSurface : ContainerControl
     {
         // TODO: stuff to finish
         // - surface scale animation
-        // - set initial scale to 0.5
         // - nodes removing
-        // - zooming
         // - connecting nodes
         // - surface parameters tracking and editing
         // - dragging asset items over
         // - undo/redo support
         // - drawing connections
+
+        private class SurfaceControl : ContainerControl
+        {
+            /// <inheritdoc />
+            public SurfaceControl(bool canFocus)
+                : base(canFocus)
+            {
+                BackgroundColor = Color.Black;
+                ClipChildren = false;
+            }
+        }
+
+        private SurfaceControl _surface;
 
         private bool _edited;
         private float _targeScale = 1.0f;
@@ -83,8 +94,8 @@ namespace FlaxEditor.Surface
         /// </value>
         public Vector2 ViewPosition
         {
-            get => -_viewOffset;
-            set => _viewOffset = -value;
+            get => _surface.Location;
+            set => _surface.Location = value;
         }
 
         /// <summary>
@@ -103,6 +114,10 @@ namespace FlaxEditor.Surface
             if (Style == null)
                 throw new InvalidOperationException("Missing visject surface style.");
 
+            // Surface control used to navigate around the view (scale and move it)
+            _surface = new SurfaceControl(false);
+            _surface.Parent = this;
+
             // Create primary menu (for nodes spawning)
             _cmPrimaryMenu = new VisjectCM(type);
             _cmPrimaryMenu.OnItemClicked += OnPrimaryMenuButtonClick;
@@ -117,7 +132,7 @@ namespace FlaxEditor.Surface
             _cmSecondaryMenu.OnButtonClicked += OnSecondaryMenuButtonClick;
 
             // Set initial scale to provide nice zoom in effect on startup
-            //Scale = new Vector2(0.5f);
+            //_surface.Scale = new Vector2(0.5f); // TODO: fix this
         }
 
         private void SetScale(float scale)
@@ -132,9 +147,14 @@ namespace FlaxEditor.Surface
             // Check if value will change
             if (Mathf.Abs(scale - _targeScale) > 0.0001f)
             {
-                // Set nw target scale
+                // Set new target scale
                 _targeScale = scale;
             }
+        }
+
+        private void AddScale(float delta)
+        {
+            SetScale(_targeScale + delta);
         }
 
         /// <summary>
@@ -306,7 +326,7 @@ namespace FlaxEditor.Surface
             // Link node
             _nodes.Add(node);
             node.OnLoaded();
-            node.Parent = this;
+            node.Parent = _surface;
 
             // TODO: add archetypes validation
             /*
@@ -329,14 +349,18 @@ namespace FlaxEditor.Surface
 #endif*/
         }
 
-        private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem)
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
         {
-            SpawnNode(visjectCmItem.GroupArchetype, visjectCmItem.NodeArchetype, _cmStartPos);
-        }
+            // Update scale
+            var currentScale = _surface.Scale.X;
+            if (Mathf.Abs(_targeScale - currentScale) > 0.001f)
+            {
+                var scale = new Vector2(Mathf.Lerp(currentScale, _targeScale, deltaTime * 10.0f));
+                //_surface.Scale = scale;
+            }
 
-        private void OnSecondaryMenuButtonClick(int id, FlaxEngine.GUI.ContextMenu contextMenu)
-        {
-            throw new NotImplementedException("TODO: custom actions menu");
+            base.Update(deltaTime);
         }
 
         /// <inheritdoc />
@@ -374,9 +398,9 @@ namespace FlaxEditor.Surface
 
             // Base
             base.Draw();
-            
-            //Render2D.DrawText(style.FontTitle, string.Format("Scale: {0}", Scale), rect, Enabled ? Color.Red : Color.Black);
-            
+
+            Render2D.DrawText(style.FontTitle, string.Format("Scale: {0}", _surface.Scale), rect, Enabled ? Color.Red : Color.Black);
+
             // Draw border
             if (ContainsFocus)
                 Render2D.DrawRectangle(new Rectangle(0, 0, rect.Width - 2, rect.Height - 2), style.BackgroundSelected);
@@ -394,6 +418,19 @@ namespace FlaxEditor.Surface
             _cmSecondaryMenu.Dispose();
 
             base.OnDestroy();
+        }
+
+        /// <inheritdoc />
+        protected override bool IntersectsChildContent(Control child, Vector2 location, out Vector2 childSpaceLocation)
+        {
+            // Always allow surface control to hadle events
+            if (_surface == child)
+            {
+                childSpaceLocation = PointFromParent(location);
+                return true;
+            }
+
+            return base.IntersectsChildContent(child, location, out childSpaceLocation);
         }
     }
 }

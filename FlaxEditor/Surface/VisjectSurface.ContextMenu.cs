@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using FlaxEditor.Surface.ContextMenu;
 using FlaxEngine;
 
 namespace FlaxEditor.Surface
@@ -28,5 +29,16 @@ namespace FlaxEditor.Surface
         {
             throw new NotImplementedException();
         }
+
+        private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem)
+        {
+            SpawnNode(visjectCmItem.GroupArchetype, visjectCmItem.NodeArchetype, _cmStartPos + ViewPosition);
+        }
+
+        private void OnSecondaryMenuButtonClick(int id, FlaxEngine.GUI.ContextMenu contextMenu)
+        {
+            throw new NotImplementedException("TODO: custom actions menu");
+        }
+
     }
 }
