@@ -127,6 +127,28 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Vector_W(0, Surface.Constants.LayoutOffsetY, 0)
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 7,
+                Title = "Color",
+                Description = "RGBA color",
+                Size = new Vector2(70, 100),
+                DefaultValues = new object[]
+                {
+                    Color.White
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Vector4, 0),
+                    NodeElementArchetype.Factory.Output(1, "R", ConnectionType.Float, 1),
+                    NodeElementArchetype.Factory.Output(2, "G", ConnectionType.Float, 2),
+                    NodeElementArchetype.Factory.Output(3, "B", ConnectionType.Float, 3),
+                    NodeElementArchetype.Factory.Output(4, "A", ConnectionType.Float, 4),
+                    NodeElementArchetype.Factory.Color(0, 0, 0)
+                }
+            },
+            // TODO: 8 - Rotation (Yaw pitch roll)
+            // TODO: 9 - String
         };
     }
 }
