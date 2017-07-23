@@ -186,7 +186,7 @@ namespace FlaxEditor.Surface
             if (_leftMouseDown)
                 return;
 
-            Scale += delta;
+            ViewScale += delta;
         }
 
         /// <summary>
