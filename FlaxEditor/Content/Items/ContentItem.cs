@@ -529,7 +529,7 @@ namespace FlaxEditor.Content
             Focus();
 
             // Check if clicked on name area (and can be renamed)
-            if (CanRename && TextRectangle.Contains(location))
+            if (CanRename && TextRectangle.Contains(ref location))
             {
                 // Rename
                 (Parent as ContentView).OnItemDoubleClickName(this);

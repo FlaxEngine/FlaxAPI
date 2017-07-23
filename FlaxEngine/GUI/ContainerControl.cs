@@ -91,6 +91,14 @@ namespace FlaxEngine.GUI
         public bool IsLayoutLocked { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether apply clipping mask on children during rendering.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if clip children; otherwise, <c>false</c>.
+        /// </value>
+        public bool ClipChildren { get; set; } = true;
+
+        /// <summary>
         ///     Lock all child controls and itself
         /// </summary>
         public virtual void LockChildrenRecursive()
@@ -663,14 +671,20 @@ namespace FlaxEngine.GUI
             base.Draw();
 
             // Push clipping mask
-            Rectangle clientArea;
-            GetDesireClientArea(out clientArea);
-            Render2D.PushClip(ref clientArea);
+            if (ClipChildren)
+            {
+                Rectangle clientArea;
+                GetDesireClientArea(out clientArea);
+                Render2D.PushClip(ref clientArea);
+            }
 
             DrawChildren();
 
             // Pop clipping mask
-            Render2D.PopClip();
+            if (ClipChildren)
+            {
+                Render2D.PopClip();
+            }
         }
 
         /// <summary>
@@ -1035,6 +1049,33 @@ namespace FlaxEngine.GUI
                     child.OnDragLeave();
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
+        {
+            // Base
+            var result = base.OnDragDrop(ref location, data);
+
+            // Check all children collisions with mouse and fire events for them
+            for (int i = _children.Count - 1; i >= 0; i--)
+            {
+                var child = _children[i];
+                if (child.Visible && child.Enabled)
+                {
+                    // Fire event
+                    Vector2 childLocation;
+                    if (IntersectsChildContent(child, location, out childLocation))
+                    {
+                        // Enter
+                        result = child.OnDragDrop(ref childLocation, data);
+                        if (result != DragDropEffect.None)
+                            break;
+                    }
+                }
+            }
+
+            return result;
         }
 
         /// <inheritdoc />

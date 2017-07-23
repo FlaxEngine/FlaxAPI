@@ -713,6 +713,36 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Returns the vector with components rounded to the nearest integer.
+        /// </summary>
+        /// <param name="v">The value.</param>
+        /// <returns>The result.</returns>
+        public static Vector2 Round(Vector2 v)
+	    {
+		    return new Vector2(Mathf.Round(v.X), Mathf.Round(v.Y));
+	    }
+
+        /// <summary>
+        /// Returns the vector with components containing the smallest integer greater to or equal to the original value.
+        /// </summary>
+        /// <param name="v">The value.</param>
+        /// <returns>The result.</returns>
+        public static Vector2 Ceil(Vector2 v)
+	    {
+		    return new Vector2(Mathf.Ceil(v.X), Mathf.Ceil(v.Y));
+	    }
+
+        /// <summary>
+        /// Breaks the components of the vector into an integral and a fractional part. Returns vector made of fractional parts.
+        /// </summary>
+        /// <param name="v">The value.</param>
+        /// <returns>The result.</returns>
+        public static Vector2 Mod(Vector2 v)
+        {
+            return new Vector2(v.X - (int)v.X, v.Y - (int)v.Y);
+        }
+
+        /// <summary>
         /// Performs a linear interpolation between two vectors.
         /// </summary>
         /// <param name="start">Start vector.</param>

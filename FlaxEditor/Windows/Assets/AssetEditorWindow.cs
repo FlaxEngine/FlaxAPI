@@ -35,12 +35,12 @@ namespace FlaxEditor.Windows.Assets
         protected AssetEditorWindow(Editor editor, AssetItem item)
             : base(editor, false, ScrollBars.None)
         {
-            _item = item;
+            _item = item ?? throw new ArgumentNullException(nameof(item));
             _item.AddReference(this);
 
             _toolstrip = new ToolStrip();
             _toolstrip.OnButtonClicked += OnToolstripButtonClicked;
-            _toolstrip.AddButton(1000, editor.UI.GetIcon("Find32")); //->LinkTooltip(GetSharedTooltip(), "Show and select in Content Window"); // TODO: tooltips support!
+            _toolstrip.AddButton(1000, editor.UI.GetIcon("Find32"));//->LinkTooltip(GetSharedTooltip(), "Show and select in Content Window"); // TODO: tooltips support!
             _toolstrip.Parent = this;
 
             UpdateTitle();
@@ -302,12 +302,22 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <summary>
+        /// Loads the asset.
+        /// </summary>
+        /// <returns>Loaded asset or null if cannot do it.</returns>
+        protected virtual T LoadAsset()
+        {
+            // Load asset (but in async - we don't want to block user)
+            return FlaxEngine.Content.LoadAsync<T>(_item.Path);
+        }
+
+        /// <summary>
         /// Called when asset gets linked and may setup window UI for it.
         /// </summary>
         protected virtual void OnAssetLinked()
         {
         }
-        
+
         /// <summary>
         /// Called when asset gets loaded and may setup window UI for it.
         /// </summary>
@@ -321,8 +331,8 @@ namespace FlaxEditor.Windows.Assets
             // Check if has no asset (but has item linked)
             if (_asset == null && _item != null)
             {
-                // Load asset (but in async - we don't want to block user)
-                _asset = FlaxEngine.Content.LoadAsync<T>(_item.Path);
+                // Load asset
+                _asset = LoadAsset();
                 if (_asset == null)
                 {
                     // Error
@@ -360,6 +370,92 @@ namespace FlaxEditor.Windows.Assets
             _asset = null;
 
             base.UnlinkItem();
+        }
+    }
+
+    /// <summary>
+    /// Generic base class for asset editors that modify cloned asset and update original asset on save.
+    /// </summary>
+    /// <typeparam name="T">Asset type.</typeparam>
+    /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
+    public abstract class ClonedAssetEditorWindowBase<T> : AssetEditorWindowBase<T> where T : Asset
+    {
+        // TODO: maybe delete cloned asset on usage end?
+
+        /// <inheritdoc />
+        protected ClonedAssetEditorWindowBase(Editor editor, AssetItem item)
+            : base(editor, item)
+        {
+        }
+
+        /// <summary>
+        /// Saves the copy of the asset to the original location. This action cannot be undone!
+        /// </summary>
+        protected void SaveToOriginal()
+        {
+            // Wait until temporary asset fille be fully loaded
+            if (_asset.WaitForLoaded())
+            {
+                // Error
+                // TODO: log error?
+                return;
+            }
+
+            throw new NotImplementedException();
+
+            /*
+
+            // Cache data
+            var id = _item.ID;
+            String sourcePath = _asset.Path;
+            String destinationPath = _item.Path;
+
+            // Check if orginal asset is loaded
+            var originalAsset = FlaxEngine.Content.GetAsset(id);
+            if (originalAsset)
+            {
+                // Wait for loaded to prevent any issues
+                if (originalAsset.WaitForLoaded())
+                {
+                    // Error
+                    // TODO: log error?
+                    return;
+                }
+            }
+
+            // Copy temporary material to the final destination (and restore ID)
+            if (CWindowsModule.ContentWin.CloneAssetFile(destinationPath, sourcePath, id))
+            {
+                // Error
+                LOG_EDITOR(Error, 44, sourcePath, destinationPath);
+                return;
+            }
+
+            // Reload original asset
+            if (originalAsset)
+            {
+                originalAsset.Reload();
+            }*/
+        }
+
+        /// <inheritdoc />
+        protected override T LoadAsset()
+        {
+            // Clone asset
+            string clonePath;
+            if (Editor.ContentEditing.FastTempAssetClone(_item, out clonePath))
+                return null;
+            
+            // Load cloned asset
+            var asset = FlaxEngine.Content.LoadAsync<T>(clonePath);
+            if (asset == null)
+                return null;
+
+            // Validate data
+            if (asset.ID == _item.ID)
+                throw new InvalidOperationException("Cloned asset has the same IDs.");
+            
+            return asset;
         }
     }
 }

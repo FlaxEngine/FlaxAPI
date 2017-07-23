@@ -11,6 +11,7 @@
 //------------------------------------------------------------------------------
 using System;
 using System.Runtime.CompilerServices;
+using FlaxEngine.Rendering;
 
 namespace FlaxEngine
 {
@@ -26,8 +27,49 @@ namespace FlaxEngine
 		{
 		}
 
+		/// <summary>
+		/// Tries to load surface graph from the asset.
+		/// </summary>
+		/// <param name="createDefaultIfMissing">True if create default surface if missing, otherwise won't load anything.</param>
+		/// <returns>Loaded surface bytes or null if cannot load it or it's missing.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public byte[] LoadSurface(bool createDefaultIfMissing) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_LoadSurface(unmanagedPtr, createDefaultIfMissing);
+#endif
+		}
+
+		/// <summary>
+		/// Update material surface (save new one, discard cached data, reload asset).
+		/// </summary>
+		/// <param name="data">Surface data.</param>
+		/// <param name="info">Material info structure.</param>
+		/// <returns>True if cannot save it, oherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public bool SaveSurface(byte[] data, MaterialInfo info) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_SaveSurface(unmanagedPtr, data, ref info);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern byte[] Internal_LoadSurface(IntPtr obj, bool createDefaultIfMissing);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_SaveSurface(IntPtr obj, byte[] data, ref MaterialInfo info);
 #endif
 #endregion
 	}

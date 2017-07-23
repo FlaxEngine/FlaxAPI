@@ -82,6 +82,7 @@
     <Compile Include="Gizmo\TransformGizmo.Selection.cs" />
     <Compile Include="Gizmo\TransformGizmo.Settings.cs" />
     <Compile Include="Gizmo\TransformGizmo.Types.cs" />
+    <Compile Include="GUI\Drag\DragAssets.cs" />
     <Compile Include="GUI\Drag\DragHelper.cs" />
     <Compile Include="GUI\Drag\DragItems.cs" />
     <Compile Include="GUI\MainMenu.cs" />
@@ -132,13 +133,55 @@
     <Compile Include="States\LoadingState.cs" />
     <Compile Include="States\PlayingState.cs" />
     <Compile Include="States\ReloadingScriptsState.cs" />
+    <Compile Include="Surface\Archetypes\Constants.cs" />
+    <Compile Include="Surface\Archetypes\Layers.cs" />
+    <Compile Include="Surface\Archetypes\Material.cs" />
+    <Compile Include="Surface\Archetypes\Math.cs" />
+    <Compile Include="Surface\Archetypes\Packing.cs" />
+    <Compile Include="Surface\Archetypes\Parameters.cs" />
+    <Compile Include="Surface\Archetypes\Textures.cs" />
+    <Compile Include="Surface\Archetypes\Tools.cs" />
+    <Compile Include="Surface\Constants.cs" />
+    <Compile Include="Surface\ContextMenu\VisjectCM.cs" />
+    <Compile Include="Surface\ContextMenu\VisjectCMGroup.cs" />
+    <Compile Include="Surface\ContextMenu\VisjectCMItem.cs" />
+    <Compile Include="Surface\Elements\AssetSelect.cs" />
+    <Compile Include="Surface\Elements\BoolValue.cs" />
+    <Compile Include="Surface\Elements\Box.cs" />
+    <Compile Include="Surface\ConnectionType.cs" />
+    <Compile Include="Surface\Elements\ColorValue.cs" />
+    <Compile Include="Surface\Elements\ComboBoxElement.cs" />
+    <Compile Include="Surface\Elements\FloatValue.cs" />
+    <Compile Include="Surface\Elements\InputBox.cs" />
+    <Compile Include="Surface\Elements\InteagerValue.cs" />
+    <Compile Include="Surface\Elements\OutputBox.cs" />
+    <Compile Include="Surface\Elements\TextView.cs" />
+    <Compile Include="Surface\GroupArchetype.cs" />
+    <Compile Include="Surface\IParametersDependantNode.cs" />
     <Compile Include="Surface\IVisjectSurfaceOwner.cs" />
+    <Compile Include="Surface\NodeArchetype.cs" />
+    <Compile Include="Surface\NodeElementArchetype.cs" />
     <Compile Include="Surface\NodeElementType.cs" />
+    <Compile Include="Surface\NodeFactory.cs" />
     <Compile Include="Surface\NodeFlags.cs" />
+    <Compile Include="Surface\ParameterType.cs" />
+    <Compile Include="Surface\SurfaceMeta.cs" />
     <Compile Include="Surface\SurfaceNode.cs" />
+    <Compile Include="Surface\ISurfaceNodeElement.cs" />
+    <Compile Include="Surface\SurfaceNodeElementControl.cs" />
+    <Compile Include="Surface\SurfaceParameter.cs" />
+    <Compile Include="Surface\SurfaceStyle.cs" />
     <Compile Include="Surface\SurfaceType.cs" />
+    <Compile Include="Surface\TransformCoordinateSystem.cs" />
+    <Compile Include="Surface\VisjectSurface.Connecting.cs" />
+    <Compile Include="Surface\VisjectSurface.ContextMenu.cs" />
     <Compile Include="Surface\VisjectSurface.cs" />
+    <Compile Include="Surface\VisjectSurface.DragDrop.cs" />
+    <Compile Include="Surface\VisjectSurface.Mouse.cs" />
+    <Compile Include="Surface\VisjectSurface.Paramaters.cs" />
+    <Compile Include="Surface\VisjectSurface.Serialization.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
+    <Compile Include="Utilities\QueryFilterHelper.cs" />
     <Compile Include="Viewport\EditorGizmoViewport.cs" />
     <Compile Include="Viewport\EditorViewport.cs" />
     <Compile Include="Viewport\EditorViewportArcBallCam.cs" />
@@ -152,6 +195,8 @@
     <Compile Include="Windows\Assets\AssetEditorWindow.cs" />
     <Compile Include="Windows\Assets\CubeTextureWindow.cs" />
     <Compile Include="Windows\Assets\IESProfileWindow.cs" />
+    <Compile Include="Windows\Assets\MaterialInstanceWindow.cs" />
+    <Compile Include="Windows\Assets\MaterialWindow.cs" />
     <Compile Include="Windows\Assets\ModelWindow.cs" />
     <Compile Include="Windows\ContentWindow.cs" />
     <Compile Include="Windows\ContentWindow.Navigation.cs" />
@@ -174,11 +219,7 @@
       <Name>FlaxEngine</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Surface\ContextMenu\" />
-    <Folder Include="Surface\Elements\" />
-    <Folder Include="Surface\Prototypes\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <Exec Command="call &quot;$(SolutionDir)onbuild.bat&quot;" Condition=" '$(OS)' == 'Windows_NT' " />

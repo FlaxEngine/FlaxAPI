@@ -13,6 +13,7 @@ namespace FlaxEditor.Windows.Assets
     /// <summary>
     /// Editor window to view/modify <see cref="Model"/> asset.
     /// </summary>
+    /// <seealso cref="Model" />
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public sealed class ModelWindow : AssetEditorWindowBase<Model>
     {
