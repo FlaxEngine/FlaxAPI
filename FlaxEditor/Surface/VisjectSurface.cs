@@ -20,10 +20,6 @@ namespace FlaxEditor.Surface
     /// <seealso cref="IParametersDependantNode" />
     public partial class VisjectSurface : ContainerControl, IParametersDependantNode
     {
-        // TODO: stuff to finish
-        // - surface parameters tracking and editing
-        // - undo/redo support
-        
         private class SurfaceControl : ContainerControl
         {
             /// <inheritdoc />
@@ -98,6 +94,41 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Gets or sets the view center position.
+        /// </summary>
+        /// <value>
+        /// The view center position.
+        /// </value>
+        public Vector2 ViewCenterPosition
+        {
+            get => _surface.Location + Size * 0.5f;
+            set => _surface.Location = value - Size * 0.5f;
+        }
+
+        /// <summary>
+        /// Gets or sets the view scale.
+        /// </summary>
+        /// <value>
+        /// The view scale.
+        /// </value>
+        public float ViewScale
+        {
+            get => _targeScale;
+            set
+            {
+                // Clamp
+                value = Mathf.Clamp(value, 0.1f, 1.6f);
+
+                // Check if value will change
+                if (Mathf.Abs(value - _targeScale) > 0.0001f)
+                {
+                    // Set new target scale
+                    _targeScale = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets a value indicating whether user is selecting nodes.
         /// </summary>
         /// <value>
@@ -142,26 +173,13 @@ namespace FlaxEditor.Surface
             _surface.Scale = new Vector2(0.5f);
         }
 
-        private void SetScale(float scale)
+        private void AddScale(float delta)
         {
             // Disable scalig during selecting nodes
             if (_leftMouseDown)
                 return;
 
-            // Clamp
-            scale = Mathf.Clamp(scale, 0.1f, 1.6f);
-
-            // Check if value will change
-            if (Mathf.Abs(scale - _targeScale) > 0.0001f)
-            {
-                // Set new target scale
-                _targeScale = scale;
-            }
-        }
-
-        private void AddScale(float delta)
-        {
-            SetScale(_targeScale + delta);
+            Scale += delta;
         }
 
         /// <summary>
@@ -262,6 +280,28 @@ namespace FlaxEditor.Surface
 
             if (edited)
                 MarkAsEdited();
+        }
+
+        /// <summary>
+        /// Finds the node of the given type.
+        /// </summary>
+        /// <param name="groupId">The group identifier.</param>
+        /// <param name="typeId">The type identifier.</param>
+        /// <returns>Found node or null if cannot.</returns>
+        public SurfaceNode FindNode(ushort groupId, ushort typeId)
+        {
+            SurfaceNode result = null;
+            uint type = ((uint)groupId << 16) | typeId;
+            for (int i = 0; i < _nodes.Count; i++)
+            {
+                var node = _nodes[i];
+                if (node.Type == type)
+                {
+                    result = node;
+                    break;
+                }
+            }
+            return result;
         }
 
         /// <summary>

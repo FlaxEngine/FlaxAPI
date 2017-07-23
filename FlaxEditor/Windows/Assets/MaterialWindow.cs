@@ -32,6 +32,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly MaterialPreview _preview;
         private readonly VisjectSurface _surface;
 
+        private bool _isWaitingForSurfaceLoad;
         private bool _tmpMaterialIsDirty;
 
         /// <inheritdoc />
@@ -40,6 +41,7 @@ namespace FlaxEditor.Windows.Assets
         {
             // Toolstrip
             _toolstrip.AddButton(1, Editor.UI.GetIcon("Save32"));// .LinkTooltip(GetSharedTooltip(), TEXT("Save"));// Save material
+            // TODO: option to center view to main node (use ScrollViewToMain function)
             // TODO: tooltips support!
 
             // Split Panel 1
@@ -61,7 +63,7 @@ namespace FlaxEditor.Windows.Assets
             // Surface
             _surface = new VisjectSurface(this, SurfaceType.Material);
             _surface.Parent = _splitPanel1.Panel1;
-            //_surface.Enabled = false; // TODO: disable surface here and enable on material loaded
+            _surface.Enabled = false;
         }
 
         /// <summary>
@@ -76,8 +78,10 @@ namespace FlaxEditor.Windows.Assets
                 // Error
                 return true;
             }
+            if (_isWaitingForSurfaceLoad)
+                return true;
 
-            throw new NotImplementedException("TODO: finish material surface saving");
+            //throw new NotImplementedException("TODO: finish material surface saving");
             // Check if surface has been edited
             /*if (_surface.IsEdited)
             {
@@ -121,6 +125,55 @@ namespace FlaxEditor.Windows.Assets
             info.Domain = MaterialDomain.Surface;
             info.TransparentLighting = MaterialTransparentLighting.None;
             //_proxy.OnSave(info); // TODO: finish material proxy like in c++ editor
+        }
+
+        /// <summary>
+        /// Gets or sets the main material node.
+        /// </summary>
+        /// <value>
+        /// The main node.
+        /// </value>
+        private Surface.Archetypes.Material.SurfaceNodeMaterial MainNode
+        {
+            get
+            {
+                var mainNode = _surface.FindNode(1, 1) as Surface.Archetypes.Material.SurfaceNodeMaterial;
+                if (mainNode == null)
+                {
+                    // Error
+                    Debug.LogError("Failed to find main material node.");
+                }
+                return mainNode;
+            }
+        }
+
+        /// <summary>
+        /// Refreshes the main material node.
+        /// </summary>
+        public void RefreshMainNode()
+        {
+            // Find main node
+            var mainNode = MainNode;
+            if (mainNode == null)
+                return;
+
+            // Refresh it
+            mainNode.UpdateBoxes();
+        }
+
+        /// <summary>
+        /// Scrolls the view to the main material node.
+        /// </summary>
+        public void ScrollViewToMain()
+        {
+            // Find main node
+            var mainNode = MainNode;
+            if (mainNode == null)
+                return;
+
+            // Change scale and position
+            _surface.ViewScale = 1.0f;
+            _surface.ViewCenterPosition = mainNode.Center;
         }
 
         /// <inheritdoc />
@@ -184,6 +237,7 @@ namespace FlaxEditor.Windows.Assets
         protected override void UnlinkItem()
         {
             _preview.Material = null;
+            _isWaitingForSurfaceLoad = false;
 
             base.UnlinkItem();
         }
@@ -192,6 +246,7 @@ namespace FlaxEditor.Windows.Assets
         protected override void OnAssetLinked()
         {
             _preview.Material = _asset;
+            _isWaitingForSurfaceLoad = true;
 
             base.OnAssetLinked();
         }
@@ -235,6 +290,39 @@ namespace FlaxEditor.Windows.Assets
 
                 // Update
                 RefreshTempMaterial();
+            }
+
+            // Check if need to load surface
+            if (_isWaitingForSurfaceLoad && _asset.IsLoaded)
+            {
+                // Clear flag
+                _isWaitingForSurfaceLoad = false;
+
+                // Init material properties and parameters panel
+                //_proxy.OnLoaded(_asset.Info, _asset.Parameters);
+
+                Debug.Log("========================= Start loading surface");
+
+                // Load surface data from the asset
+                byte[] data = _asset.LoadSurface(true);
+                if (data == null)
+                {
+                    // Error
+                    Debug.LogError("Failed to load material surface data.");
+                    Close();
+                    return;
+                }
+
+                Debug.Log("Loaded " + data.Length + " bytes");
+
+                // Load surface graph
+
+
+                Debug.Log("========================= Done!");
+
+                // Setup
+                _surface.Enabled = true;
+                ClearEditedFlag();
             }
         }
     }

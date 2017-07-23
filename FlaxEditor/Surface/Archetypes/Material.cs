@@ -18,7 +18,7 @@ namespace FlaxEditor.Surface.Archetypes
         /// Customized <see cref="SurfaceNode"/> for main material node.
         /// </summary>
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
-        private class SurfaceNodeMaterial : SurfaceNode
+        public class SurfaceNodeMaterial : SurfaceNode
         {
             /// <inheritdoc />
             public SurfaceNodeMaterial(VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)

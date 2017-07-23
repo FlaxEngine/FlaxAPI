@@ -60,6 +60,14 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Gets the type (packed GrouID (higher 16 bits) and TypeID (lower 16 bits)).
+        /// </summary>
+        /// <value>
+        /// The type.
+        /// </value>
+        public uint Type => ((uint)GroupArchetype.GroupID << 16) | Archetype.TypeID;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SurfaceNode"/> class.
         /// </summary>
         /// <param name="surface">The surface.</param>
