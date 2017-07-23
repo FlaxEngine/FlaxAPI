@@ -17,7 +17,8 @@ namespace FlaxEditor.Surface
     /// Visject Surface control for editing Nodes Graph.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
-    public partial class VisjectSurface : ContainerControl
+    /// <seealso cref="IParametersDependantNode" />
+    public partial class VisjectSurface : ContainerControl, IParametersDependantNode
     {
         // TODO: stuff to finish
         // - surface parameters tracking and editing
