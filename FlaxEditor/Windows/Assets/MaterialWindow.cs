@@ -300,9 +300,7 @@ namespace FlaxEditor.Windows.Assets
 
                 // Init material properties and parameters panel
                 //_proxy.OnLoaded(_asset.Info, _asset.Parameters);
-
-                Debug.Log("========================= Start loading surface");
-
+                
                 // Load surface data from the asset
                 byte[] data = _asset.LoadSurface(true);
                 if (data == null)
@@ -312,14 +310,16 @@ namespace FlaxEditor.Windows.Assets
                     Close();
                     return;
                 }
-
-                Debug.Log("Loaded " + data.Length + " bytes");
-
+                
                 // Load surface graph
-
-
-                Debug.Log("========================= Done!");
-
+                if (_surface.Load(data))
+                {
+                    // Error
+                    Debug.LogError("Failed to load material surface.");
+                    Close();
+                    return;
+                }
+                
                 // Setup
                 _surface.Enabled = true;
                 ClearEditedFlag();
