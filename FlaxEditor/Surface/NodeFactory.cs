@@ -60,7 +60,7 @@ namespace FlaxEditor.Surface
                 GroupID = 6,
                 Name = "Parameters",
                 Color = new Color(52, 73, 94),
-                Archetypes = new NodeArchetype[0] // TODO: finish this
+                Archetypes = Archetypes.Parameters.Nodes
             },
             new GroupArchetype
             {

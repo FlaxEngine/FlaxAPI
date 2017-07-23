@@ -138,6 +138,7 @@
     <Compile Include="Surface\Archetypes\Material.cs" />
     <Compile Include="Surface\Archetypes\Math.cs" />
     <Compile Include="Surface\Archetypes\Packing.cs" />
+    <Compile Include="Surface\Archetypes\Parameters.cs" />
     <Compile Include="Surface\Archetypes\Textures.cs" />
     <Compile Include="Surface\Archetypes\Tools.cs" />
     <Compile Include="Surface\Constants.cs" />
@@ -156,15 +157,18 @@
     <Compile Include="Surface\Elements\OutputBox.cs" />
     <Compile Include="Surface\Elements\TextView.cs" />
     <Compile Include="Surface\GroupArchetype.cs" />
+    <Compile Include="Surface\IParametersDependantNode.cs" />
     <Compile Include="Surface\IVisjectSurfaceOwner.cs" />
     <Compile Include="Surface\NodeArchetype.cs" />
     <Compile Include="Surface\NodeElementArchetype.cs" />
     <Compile Include="Surface\NodeElementType.cs" />
     <Compile Include="Surface\NodeFactory.cs" />
     <Compile Include="Surface\NodeFlags.cs" />
+    <Compile Include="Surface\ParameterType.cs" />
     <Compile Include="Surface\SurfaceNode.cs" />
     <Compile Include="Surface\ISurfaceNodeElement.cs" />
     <Compile Include="Surface\SurfaceNodeElementControl.cs" />
+    <Compile Include="Surface\SurfaceParameter.cs" />
     <Compile Include="Surface\SurfaceStyle.cs" />
     <Compile Include="Surface\SurfaceType.cs" />
     <Compile Include="Surface\TransformCoordinateSystem.cs" />
@@ -173,6 +177,7 @@
     <Compile Include="Surface\VisjectSurface.cs" />
     <Compile Include="Surface\VisjectSurface.DragDrop.cs" />
     <Compile Include="Surface\VisjectSurface.Mouse.cs" />
+    <Compile Include="Surface\VisjectSurface.Paramaters.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
     <Compile Include="Utilities\QueryFilterHelper.cs" />
     <Compile Include="Viewport\EditorGizmoViewport.cs" />

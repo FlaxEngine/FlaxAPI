@@ -81,6 +81,16 @@ namespace FlaxEditor.Surface
             }
         }
 
+        /// <summary>
+        /// Resizes the node area.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        protected void Resize(float width, float height)
+        {
+            Size = new Vector2(width + Constants.NodeMarginX * 2, height + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize);
+        }
+
         internal void AddElement(ISurfaceNodeElement element)
         {
             Elements.Add(element);
@@ -88,11 +98,15 @@ namespace FlaxEditor.Surface
                 AddChild(control);
         }
 
-        internal void RemoveElemenet(ISurfaceNodeElement element)
+        internal void RemoveElement(ISurfaceNodeElement element, bool dispose = true)
         {
-            if (element is Control control)
-                RemoveChild(control);
             Elements.Remove(element);
+            if (element is Control control)
+            {
+                RemoveChild(control);
+                if(dispose)
+                    control.Dispose();
+            }
         }
 
         internal bool HitsHeader(ref Vector2 location)
