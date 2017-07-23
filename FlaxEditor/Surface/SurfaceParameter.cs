@@ -56,5 +56,10 @@ namespace FlaxEditor.Surface
         /// Parameter value
         /// </summary>
         public object Value;
+        
+        /// <summary>
+        /// The metadata.
+        /// </summary>
+        public readonly SurfaceMeta Meta = new SurfaceMeta();
     }
 }
