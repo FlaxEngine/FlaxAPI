@@ -9,7 +9,8 @@ namespace FlaxEditor.Surface.Elements
     /// <summary>
     /// Combo box element.
     /// </summary>
-    /// <seealso cref="FlaxEditor.Surface.SurfaceNodeElementControl" />
+    /// <seealso cref="ComboBox" />
+    /// <seealso cref="ISurfaceNodeElement" />
     public sealed class ComboBoxElement : ComboBox, ISurfaceNodeElement
     {
         private bool _isAutoSelect;
