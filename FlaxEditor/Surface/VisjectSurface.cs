@@ -346,7 +346,7 @@ namespace FlaxEditor.Surface
                         //element = new FloatValue(node, arch); // TODO: finish it
                         break;
                     case NodeElementType.InteagerValue:
-                        //nelement = ew InteagerValue(node, arch); // TODO: finish it
+                        element = new InteagerValue(node, arch);
                         break;
                     case NodeElementType.ColorValue:
                         //element = new ColorValue(node, arch); // TODO: finish it
