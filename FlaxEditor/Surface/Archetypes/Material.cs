@@ -21,8 +21,8 @@ namespace FlaxEditor.Surface.Archetypes
         public class SurfaceNodeMaterial : SurfaceNode
         {
             /// <inheritdoc />
-            public SurfaceNodeMaterial(VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
-                : base(surface, nodeArch, groupArch)
+            public SurfaceNodeMaterial(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
+                : base(id, surface, nodeArch, groupArch)
             {
             }
 
@@ -94,7 +94,7 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 1,
-                Create = (surface, arch, groupArch) => new SurfaceNodeMaterial(surface, arch, groupArch),
+                Create = (id, surface, arch, groupArch) => new SurfaceNodeMaterial(id, surface, arch, groupArch),
                 Title = "Material",
                 Description = "Main material node",
                 Flags = NodeFlags.MaterialOnly,

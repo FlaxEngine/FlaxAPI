@@ -165,6 +165,7 @@
     <Compile Include="Surface\NodeFactory.cs" />
     <Compile Include="Surface\NodeFlags.cs" />
     <Compile Include="Surface\ParameterType.cs" />
+    <Compile Include="Surface\SurfaceMeta.cs" />
     <Compile Include="Surface\SurfaceNode.cs" />
     <Compile Include="Surface\ISurfaceNodeElement.cs" />
     <Compile Include="Surface\SurfaceNodeElementControl.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="Surface\VisjectSurface.DragDrop.cs" />
     <Compile Include="Surface\VisjectSurface.Mouse.cs" />
     <Compile Include="Surface\VisjectSurface.Paramaters.cs" />
+    <Compile Include="Surface\VisjectSurface.Serialization.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
     <Compile Include="Utilities\QueryFilterHelper.cs" />
     <Compile Include="Viewport\EditorGizmoViewport.cs" />

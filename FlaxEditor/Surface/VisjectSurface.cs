@@ -4,6 +4,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEditor.Surface.Elements;
@@ -135,6 +137,11 @@ namespace FlaxEditor.Surface
         ///   <c>true</c> if user is selecting nodes; otherwise, <c>false</c>.
         /// </value>
         public bool IsSelecting => _leftMouseDown && !_isMovingSelection && _startBox == null;
+
+        /// <summary>
+        /// The metadata.
+        /// </summary>
+        public readonly SurfaceMeta Meta = new SurfaceMeta();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VisjectSurface"/> class.
@@ -305,6 +312,26 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Finds the node with the given ID.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Found node or null if cannot.</returns>
+        public SurfaceNode FindNode(uint id)
+        {
+            SurfaceNode result = null;
+            for (int i = 0; i < _nodes.Count; i++)
+            {
+                var node = _nodes[i];
+                if (node.ID == id)
+                {
+                    result = node;
+                    break;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Spawns the node.
         /// </summary>
         /// <param name="groupID">The group archetype ID.</param>
@@ -324,6 +351,27 @@ namespace FlaxEditor.Surface
             return null;
         }
 
+        private uint GetFreeNodeID()
+        {
+            uint result = 1;
+            while (true)
+            {
+                bool valid = true;
+                for (int i = 0; i < _nodes.Count; i++)
+                {
+                    if (_nodes[i].ID == result)
+                    {
+                        result++;
+                        valid = false;
+                        break;
+                    }
+                }
+                if (valid)
+                    break;
+            }
+            return result;
+        }
+
         /// <summary>
         /// Spawns the node.
         /// </summary>
@@ -338,13 +386,16 @@ namespace FlaxEditor.Surface
                 throw new ArgumentNullException();
             Assert.IsTrue(groupArchetype.Archetypes.Contains(nodeArchetype));
 
+            var id = GetFreeNodeID();
+
             // Create node
-            var node = NodeFactory.CreateNode(this, groupArchetype, nodeArchetype);
+            var node = NodeFactory.CreateNode(id, this, groupArchetype, nodeArchetype);
             if (node == null)
             {
                 Debug.LogError("Failed to create node.");
                 return null;
             }
+            _nodes.Add(node);
 
             // Intiialize
             if (customValues != null)
@@ -413,18 +464,15 @@ namespace FlaxEditor.Surface
             }
 
             // Load metadata
-            // TODO: finsih nodes metadata storage like in c++
-            /*auto meta = node.Meta.GetEntry(11);
-            if (meta && meta->IsLoaded)
+            var meta = node.Meta.GetEntry(11);
+            if (meta.Data != null)
             {
-                VisjectSurfaceMeta11* meta11 = (VisjectSurfaceMeta11*)meta->Data.GetData();
-                node.Data->SetPosition(meta11->Position);
-                node.Data->_isSelected = meta11->Selected;
+                var meta11 = ByteArrayToStructure<VisjectSurfaceMeta11>(meta.Data);
+                node.Location = meta11.Position;
+                //node.IsSelected = meta11.Selected;
             }
-            */
 
             // Link node
-            _nodes.Add(node);
             node.OnLoaded();
             node.Parent = _surface;
 

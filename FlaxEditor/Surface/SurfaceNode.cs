@@ -60,24 +60,36 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// The identifier of the node.
+        /// </summary>
+        public readonly uint ID;
+
+        /// <summary>
         /// Gets the type (packed GrouID (higher 16 bits) and TypeID (lower 16 bits)).
         /// </summary>
         /// <value>
         /// The type.
         /// </value>
         public uint Type => ((uint)GroupArchetype.GroupID << 16) | Archetype.TypeID;
+        
+        /// <summary>
+        /// The metadata.
+        /// </summary>
+        public readonly SurfaceMeta Meta = new SurfaceMeta();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SurfaceNode"/> class.
         /// </summary>
+        /// <param name="id">The node id.</param>
         /// <param name="surface">The surface.</param>
         /// <param name="nodeArch">The node archetype.</param>
         /// <param name="groupArch">The group archetype.</param>
-        public SurfaceNode(VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
+        public SurfaceNode(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(true, 0, 0, nodeArch.Size.X + Constants.NodeMarginX * 2, nodeArch.Size.Y + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize)
         {
             ClipChildren = false;
 
+            ID = id;
             Surface = surface;
             Archetype = nodeArch;
             GroupArchetype = groupArch;

@@ -117,11 +117,12 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Creates the node.
         /// </summary>
+        /// <param name="id">The node id.</param>
         /// <param name="surface">The surface.</param>
         /// <param name="groupID">The group identifier.</param>
         /// <param name="typeID">The type identifier.</param>
         /// <returns>Created node or null if failed.</returns>
-        public static SurfaceNode CreateNode(VisjectSurface surface, ushort groupID, ushort typeID)
+        public static SurfaceNode CreateNode(uint id, VisjectSurface surface, ushort groupID, ushort typeID)
         {
             // Find archetype for that node
             foreach (var groupArchetype in Groups)
@@ -135,9 +136,9 @@ namespace FlaxEditor.Surface
                             // Create
                             SurfaceNode node;
                             if (nodeArchetype.Create != null)
-                                node = nodeArchetype.Create(surface, nodeArchetype, groupArchetype);
+                                node = nodeArchetype.Create(id, surface, nodeArchetype, groupArchetype);
                             else
-                                node = new SurfaceNode(surface, nodeArchetype, groupArchetype);
+                                node = new SurfaceNode(id, surface, nodeArchetype, groupArchetype);
                             return node;
                         }
                     }
@@ -152,20 +153,21 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Creates the node.
         /// </summary>
+        /// <param name="id">The node id.</param>
         /// <param name="surface">The surface.</param>
         /// <param name="groupArchetype">The group archetype.</param>
         /// <param name="nodeArchetype">The node archetype.</param>
         /// <returns>Created node or null if failed.</returns>
-        public static SurfaceNode CreateNode(VisjectSurface surface, GroupArchetype groupArchetype, NodeArchetype nodeArchetype)
+        public static SurfaceNode CreateNode(uint id, VisjectSurface surface, GroupArchetype groupArchetype, NodeArchetype nodeArchetype)
         {
             Assert.IsTrue(groupArchetype.Archetypes.Contains(nodeArchetype));
 
             // Create
             SurfaceNode node;
             if (nodeArchetype.Create != null)
-                node = nodeArchetype.Create(surface, nodeArchetype, groupArchetype);
+                node = nodeArchetype.Create(id, surface, nodeArchetype, groupArchetype);
             else
-                node = new SurfaceNode(surface, nodeArchetype, groupArchetype);
+                node = new SurfaceNode(id, surface, nodeArchetype, groupArchetype);
             return node;
         }
     }
