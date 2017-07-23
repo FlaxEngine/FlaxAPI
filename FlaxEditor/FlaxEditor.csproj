@@ -149,6 +149,7 @@
     <Compile Include="Surface\Elements\Box.cs" />
     <Compile Include="Surface\ConnectionType.cs" />
     <Compile Include="Surface\Elements\ComboBoxElement.cs" />
+    <Compile Include="Surface\Elements\FloatValue.cs" />
     <Compile Include="Surface\Elements\InputBox.cs" />
     <Compile Include="Surface\Elements\InteagerValue.cs" />
     <Compile Include="Surface\Elements\OutputBox.cs" />
