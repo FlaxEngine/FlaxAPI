@@ -30,7 +30,7 @@ namespace FlaxEditor.Surface.Elements
 
         /// <inheritdoc />
         public InteagerValue(SurfaceNode parentNode, NodeElementArchetype archetype)
-            : base(Get(parentNode, archetype), archetype.ActualPositionX, archetype.ActualPositionY, 50)
+            : base(Get(parentNode, archetype), archetype.Position.X, archetype.Position.Y, 50)
         {
             ParentNode = parentNode;
             Archetype = archetype;

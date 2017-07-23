@@ -153,6 +153,7 @@ namespace FlaxEngine.GUI
                 if (_text != value)
                 {
                     Deselect();
+                    ResetViewOffset();
 
                     _text = value;
 
@@ -295,6 +296,14 @@ namespace FlaxEngine.GUI
             if (_isSelecting)
                 OnSelectingEnd();
             setSelection(-1);
+        }
+
+        /// <summary>
+        /// Resets the view offset (text scroll view).
+        /// </summary>
+        public void ResetViewOffset()
+        {
+            _viewOffset = _targetViewOffset = Vector2.Zero;
         }
 
         /// <summary>
@@ -712,10 +721,11 @@ namespace FlaxEngine.GUI
                 EditEnd?.Invoke();
             }
             _onStartEditValue = string.Empty;
-
+            
             ClearSelection();
+            ResetViewOffset();
         }
-
+        
         /// <summary>
         /// Action called when text gets modified.
         /// </summary>
@@ -760,7 +770,9 @@ namespace FlaxEngine.GUI
 
             // Apply view offset and clip mask
             Render2D.PushClip(TextClipRectangle);
-            Render2D.PushTransform(Matrix3x3.Translation2D(-_viewOffset));
+            bool useViewOffset = !_viewOffset.IsZero;
+            if (useViewOffset)
+                Render2D.PushTransform(Matrix3x3.Translation2D(-_viewOffset));
 
             // Check if sth is selected to draw selection
             if (HasSelection)
@@ -812,7 +824,7 @@ namespace FlaxEngine.GUI
             }
             else if (!string.IsNullOrEmpty(WatermarkText) && !IsFocused)
             {
-                Render2D.DrawText(font, WatermarkText, _layout.Bounds, style.ForegroundDisabled, _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
+                Render2D.DrawText(font, WatermarkText, _layout.Bounds, new Color(0.7f), _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
             }
 
             // Caret
@@ -824,7 +836,8 @@ namespace FlaxEngine.GUI
             }
 
             // Restore rendering state
-            Render2D.PopTransform();
+            if (useViewOffset)
+                Render2D.PopTransform();
             Render2D.PopClip();
         }
 

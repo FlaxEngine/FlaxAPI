@@ -285,8 +285,7 @@ namespace FlaxEditor.Surface
             {
                 ConnectingEnd(null);
             }
-
-            Focus();
+            
             return true;
         }
 

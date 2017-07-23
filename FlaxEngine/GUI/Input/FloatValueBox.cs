@@ -2,6 +2,9 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+using System.Globalization;
+
 namespace FlaxEngine.GUI
 {
     /// <summary>
@@ -49,7 +52,7 @@ namespace FlaxEngine.GUI
         protected sealed override void UpdateText()
         {
             // Format
-            var text = _value.ToString();
+            var text = _value.ToString(CultureInfo.InvariantCulture);
 
             // Set text
             Text = text;
@@ -63,7 +66,7 @@ namespace FlaxEngine.GUI
             if (float.TryParse(Text, out value))
             {
                 // Set value
-                Value = value;
+                Value = (float)Math.Round(value, 5);
             }
         }
 

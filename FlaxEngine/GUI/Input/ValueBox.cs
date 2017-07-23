@@ -161,6 +161,8 @@ namespace FlaxEngine.GUI
                 TryGetValue();
                 UpdateText();
             }
+
+            ResetViewOffset();
         }
 
         /// <inheritdoc />
@@ -191,7 +193,7 @@ namespace FlaxEngine.GUI
             {
                 // Update sliding
                 Vector2 slideLocation = location + ParentWindow.TrackingMouseOffset;
-                ApplySliding((slideLocation.X - _startSlideLocation.X) * _slideSpeed);
+                ApplySliding(Mathf.RoundToInt(slideLocation.X - _startSlideLocation.X) * _slideSpeed);
             }
             else
             {
