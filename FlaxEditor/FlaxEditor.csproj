@@ -82,6 +82,9 @@
     <Compile Include="Gizmo\TransformGizmo.Selection.cs" />
     <Compile Include="Gizmo\TransformGizmo.Settings.cs" />
     <Compile Include="Gizmo\TransformGizmo.Types.cs" />
+    <Compile Include="GUI\Dialogs\ColorPickerDialog.cs" />
+    <Compile Include="GUI\Dialogs\ColorSelector.cs" />
+    <Compile Include="GUI\Dialogs\Dialog.cs" />
     <Compile Include="GUI\Drag\DragAssets.cs" />
     <Compile Include="GUI\Drag\DragHelper.cs" />
     <Compile Include="GUI\Drag\DragItems.cs" />
