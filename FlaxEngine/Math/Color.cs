@@ -3,6 +3,8 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace FlaxEngine
 {
@@ -10,6 +12,7 @@ namespace FlaxEngine
     /// Representation of RGBA colors.
     /// </summary>
     [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
     public partial struct Color
     {
         /// <summary>
@@ -197,19 +200,20 @@ namespace FlaxEngine
             if (!(other is Color))
                 return false;
             var color = (Color)other;
-            return R.Equals(color.R) && G.Equals(color.G) && B.Equals(color.B) && A.Equals(color.A);
+            return Equals(ref color);
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="Color"/> is equal to this instance.
+        /// Determines whether the specified <see cref="Color" /> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="Color"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="Color" /> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="Color"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Color" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Color other)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals(ref Color other)
         {
-            return R.Equals(other.R) && G.Equals(other.G) && B.Equals(other.B) && A.Equals(other.A);
+            return Mathf.NearEqual(other.R, R) && Mathf.NearEqual(other.G, G) && Mathf.NearEqual(other.B, B) && Mathf.NearEqual(other.A, A);
         }
 
         /// <inheritdoc />
@@ -241,6 +245,32 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets the color value as the hexadecimal string.
+        /// </summary>
+        /// <returns></returns>
+        public string ToHexString()
+        {
+            const string digits = "0123456789ABCDEF";
+
+            byte r = (byte)(R * 255);
+            byte g = (byte)(G * 255);
+            byte b = (byte)(B * 255);
+
+            var result = new char[6];
+
+            result[0] = digits[(r >> 4) & 0x0f];
+            result[1] = digits[(r) & 0x0f];
+
+            result[2] = digits[(g >> 4) & 0x0f];
+            result[3] = digits[(g) & 0x0f];
+
+            result[4] = digits[(b >> 4) & 0x0f];
+            result[5] = digits[(b) & 0x0f];
+
+            return new string(result);
+        }
+
+        /// <summary>
         /// Creates <see cref="Color"/> from the hexadecimal string.
         /// </summary>
         /// <param name="hexString">The hexadecimal string.</param>
@@ -260,8 +290,8 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="hexString">The hexadecimal string.</param>
         /// <param name="value">Output value.</param>
-        /// <returns>True if value has benn parsed, otherwise false..</returns>
-        static bool TryParseHex(string hexString, out Color value)
+        /// <returns>True if value has benn parsed, otherwise false.</returns>
+        public static bool TryParseHex(string hexString, out Color value)
         {
             value = Black;
 
@@ -398,7 +428,7 @@ namespace FlaxEngine
         /// <returns>A four-element array containing the components of the color.</returns>
         public float[] ToArray()
         {
-            return new[] {R, G, B, A};
+            return new[] { R, G, B, A };
         }
 
         /// <summary>
@@ -436,6 +466,18 @@ namespace FlaxEngine
         /// <summary>
         /// Creates an RGB colour from HSV input.
         /// </summary>
+        /// <param name="hsv">Vector with components: Huew, Saturation and Value (all components must be in [0;1] range).</param>
+        /// <returns>
+        /// An opaque colour with HSV matching the input.
+        /// </returns>
+        public static Color HSVToRGB(Vector3 hsv)
+        {
+            return HSVToRGB(hsv.X, hsv.Y, hsv.Z, true);
+        }
+
+        /// <summary>
+        /// Creates an RGB colour from HSV input.
+        /// </summary>
         /// <param name="H">Hue [0..1].</param>
         /// <param name="S">Saturation [0..1].</param>
         /// <param name="V">Value [0..1].</param>
@@ -446,13 +488,13 @@ namespace FlaxEngine
         public static Color HSVToRGB(float H, float S, float V, bool hdr)
         {
             Color v = White;
-            if (S == 0f)
+            if (Mathf.IsZero(S))
             {
                 v.R = V;
                 v.G = V;
                 v.B = V;
             }
-            else if (V != 0f)
+            else if (!Mathf.IsZero(V))
             {
                 v.R = 0f;
                 v.G = 0f;
@@ -563,61 +605,137 @@ namespace FlaxEngine
             return new Color(a.R + (b.R - a.R) * t, a.G + (b.G - a.G) * t, a.B + (b.B - a.B) * t, a.A + (b.A - a.A) * t);
         }
 
+        /// <summary>
+        /// Adds two colors.
+        /// </summary>
+        /// <param name="a">The first color.</param>
+        /// <param name="b">The second color.</param>
+        /// <returns>The result of the operator.</returns>
         public static Color operator +(Color a, Color b)
         {
             return new Color(a.R + b.R, a.G + b.G, a.B + b.B, a.A + b.A);
         }
 
+        /// <summary>
+        /// Divides color by the scale factor.
+        /// </summary>
+        /// <param name="a">The first color.</param>
+        /// <param name="b">The division factor.</param>
+        /// <returns>The result of the operator.</returns>
         public static Color operator /(Color a, float b)
         {
             return new Color(a.R / b, a.G / b, a.B / b, a.A / b);
         }
 
+        /// <summary>
+        /// Compares two colors.
+        /// </summary>
+        /// <param name="lhs">The left.</param>
+        /// <param name="rhs">The right.</param>
+        /// <returns>True if colors are equal, otherwise false.</returns>
         public static bool operator ==(Color lhs, Color rhs)
         {
-            return Equals(lhs, rhs);
+            return lhs.Equals(ref rhs);
         }
 
+        /// <summary>
+        /// Compares two colors.
+        /// </summary>
+        /// <param name="lhs">The left.</param>
+        /// <param name="rhs">The right.</param>
+        /// <returns>True if colors are not equal, otherwise false.</returns>
+        public static bool operator !=(Color lhs, Color rhs)
+        {
+            return !lhs.Equals(ref rhs);
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Color"/> to <see cref="Vector3"/>.
+        /// </summary>
+        /// <param name="c">The color.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator Vector3(Color c)
         {
             return new Vector3(c.R, c.G, c.B);
         }
 
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Color"/> to <see cref="Vector4"/>.
+        /// </summary>
+        /// <param name="c">The color.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator Vector4(Color c)
         {
             return new Vector4(c.R, c.G, c.B, c.A);
         }
 
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Vector4"/> to <see cref="Color"/>.
+        /// </summary>
+        /// <param name="v">The vector.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator Color(Vector4 v)
         {
             return new Color(v.X, v.Y, v.Z, v.W);
         }
 
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Vector3"/> to <see cref="Color"/>.
+        /// </summary>
+        /// <param name="v">The vector.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator Color(Vector3 v)
         {
             return new Color(v.X, v.Y, v.Z);
         }
 
-        public static bool operator !=(Color lhs, Color rhs)
-        {
-            return !(lhs == rhs);
-        }
-
+        /// <summary>
+        /// Multiplies color components by the other color components.
+        /// </summary>
+        /// <param name="a">The first color.</param>
+        /// <param name="b">The second color.</param>
+        /// <returns>The result of the operator.</returns>
         public static Color operator *(Color a, Color b)
         {
             return new Color(a.R * b.R, a.G * b.G, a.B * b.B, a.A * b.A);
         }
 
+        /// <summary>
+        /// Multiplies color components by the scale factor.
+        /// </summary>
+        /// <param name="a">The color.</param>
+        /// <param name="b">The scale.</param>
+        /// <returns>The result of the operator.</returns>
         public static Color operator *(Color a, float b)
         {
             return new Color(a.R * b, a.G * b, a.B * b, a.A * b);
         }
 
+        /// <summary>
+        /// Multiplies color components by the scale factor.
+        /// </summary>
+        /// <param name="b">The scale.</param>
+        /// <param name="a">The color.</param>
+        /// <returns>The result of the operator.</returns>
         public static Color operator *(float b, Color a)
         {
             return new Color(a.R * b, a.G * b, a.B * b, a.A * b);
         }
 
+        /// <summary>
+        /// Substracts one color from the another.
+        /// </summary>
+        /// <param name="a">The first color.</param>
+        /// <param name="b">The second color.</param>
+        /// <returns>The result of the operator.</returns>
         public static Color operator -(Color a, Color b)
         {
             return new Color(a.R - b.R, a.G - b.G, a.B - b.B, a.A - b.A);
@@ -633,6 +751,30 @@ namespace FlaxEngine
             return new Color(R * multiplier.R, G * multiplier.G, B * multiplier.B, A);
         }
 
+        public Vector3 ToHSV()
+        {
+            float RGBMin = Mathf.Min(R, G, B);
+            float RGBMax = Mathf.Max(R, G, B);
+            float RGBRange = RGBMax - RGBMin;
+
+            float Hue;
+            if (Mathf.NearEqual(RGBMax, RGBMin))
+                Hue = 0.0f;
+            else if (Mathf.NearEqual(RGBMax, R))
+                Hue = ((((G - B) / RGBRange) * 60.0f) + 360.0f) % 360.0f;
+            else if (Mathf.NearEqual(RGBMax, G))
+                Hue = (((B - R) / RGBRange) * 60.0f) + 120.0f;
+            else if (Mathf.NearEqual(RGBMax, B))
+                Hue = (((R - G) / RGBRange) * 60.0f) + 240.0f;
+            else
+                Hue = 0.0f;
+
+            float Saturation = Mathf.IsZero(RGBMax) ? 0.0f : RGBRange / RGBMax;
+            float Value = RGBMax;
+
+            return new Vector3(Hue, Saturation, Value);
+        }
+
         public static void RGBToHSV(Color rgbColor, out float h, out float s, out float v)
         {
             if ((rgbColor.B > rgbColor.G) && (rgbColor.B > rgbColor.R))
@@ -646,17 +788,16 @@ namespace FlaxEngine
         private static void RGBToHSVHelper(float offset, float dominantcolor, float colorone, float colortwo, out float h, out float s, out float v)
         {
             v = dominantcolor;
-            if (v == 0f)
+            if (Mathf.IsZero(v))
             {
                 s = 0f;
                 h = 0f;
             }
             else
             {
-                var single = 0f;
-                single = colorone <= colortwo ? colorone : colortwo;
+                var single = colorone <= colortwo ? colorone : colortwo;
                 float vv = v - single;
-                if (vv == 0f)
+                if (Mathf.IsZero(vv))
                 {
                     s = 0f;
                     h = offset + (colorone - colortwo);
@@ -749,7 +890,7 @@ namespace FlaxEngine
         /// </summary>
         public override string ToString()
         {
-            return string.Format("RGBA({0:F3}, {1:F3}, {2:F3}, {3:F3})", R, G, B, A);
+            return $"RGBA({R:F3}, {G:F3}, {B:F3}, {A:F3})";
         }
 
         /// <summary>
@@ -758,7 +899,7 @@ namespace FlaxEngine
         /// <param name="format"></param>
         public string ToString(string format)
         {
-            return string.Format("RGBA({0}, {1}, {2}, {3})", R.ToString(format), G.ToString(format), B.ToString(format), A.ToString(format));
+            return $"RGBA({R.ToString(format)}, {G.ToString(format)}, {B.ToString(format)}, {A.ToString(format)})";
         }
     }
 }
