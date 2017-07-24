@@ -656,11 +656,12 @@ namespace FlaxEngine.GUI
             base.Update(deltaTime);
 
             // Update all enabled child controls
-            foreach (var child in _children)
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (int i = 0; i < _children.Count; i++)
             {
-                if (child.Enabled)
+                if (_children[i].Enabled)
                 {
-                    child.Update(deltaTime);
+                    _children[i].Update(deltaTime);
                 }
             }
         }

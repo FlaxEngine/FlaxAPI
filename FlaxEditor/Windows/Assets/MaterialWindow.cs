@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -23,10 +23,8 @@ namespace FlaxEditor.Windows.Assets
     {
         // TODO: things to finish
         // - material parameters and properties proxy
-        // - loading surface
         // - saving surface
-        // - bind for asset loaded/unloaded events for temp material
-
+        
         private readonly SplitPanel _splitPanel1;
         private readonly SplitPanel _splitPanel2;
         private readonly MaterialPreview _preview;

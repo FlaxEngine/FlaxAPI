@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -181,6 +181,11 @@ namespace FlaxEditor.Surface
 
                     // Create node
                     var node = NodeFactory.CreateNode(id, this, groupId, typeId);
+                    if (node == null)
+                    {
+                        // Error
+                        return true;
+                    }
                     _nodes.Add(node);
                 }
 
@@ -199,7 +204,7 @@ namespace FlaxEditor.Surface
                         int length = stream.ReadInt32();
                         if (length > 0 && length < 2000)
                         {
-                            var str = stream.ReadBytes(length);
+                            var str = stream.ReadBytes(length * 2);
                             fixed (byte* strPtr = str)
                             {
                                 var ptr = (char*)strPtr;
@@ -213,7 +218,7 @@ namespace FlaxEditor.Surface
                     param.IsStatic = stream.ReadByte() != 0;
                     param.IsUIVisible = stream.ReadByte() != 0;
                     param.IsUIEditable = stream.ReadByte() != 0;
-
+                    
                     // References
                     int refsCount = stream.ReadInt32();
                     param.ReferencedBy.Capacity = refsCount;
@@ -224,10 +229,12 @@ namespace FlaxEditor.Surface
                         if (node == null)
                         {
                             // Error
-                            Debug.LogWarning("Invalid node reference id");
-                            return true;
+                            Debug.LogWarning($"Invalid node reference id (param: {param.Name}, node ref: {refID})");
                         }
-                        param.ReferencedBy.Add(node);
+                        else
+                        {
+                            param.ReferencedBy.Add(node);
+                        }
                     }
 
                     // Value
@@ -288,11 +295,13 @@ namespace FlaxEditor.Surface
                             {
                                 // Error
                                 Debug.LogWarning("Invalid connected node id.");
-                                return true;
                             }
-                            hint.BoxA = targetBoxID;
-                            
-                            tmpHints.Add(hint);
+                            else
+                            {
+                                hint.BoxA = targetBoxID;
+
+                                tmpHints.Add(hint);
+                            }
                         }
                     }
 
