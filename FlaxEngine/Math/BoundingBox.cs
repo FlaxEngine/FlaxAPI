@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 // -----------------------------------------------------------------------------
 // Original code from SharpDX project. https://github.com/sharpdx/SharpDX/
@@ -444,6 +444,26 @@ namespace FlaxEngine
         /// <param name="result">The result of the transformation.</param>
         public static void Transform(ref BoundingBox box, ref Matrix transform, out BoundingBox result)
         {
+            // Reference: http://dev.theomader.com/transform-bounding-boxes/
+
+            var right = transform.Right;
+            var xa = right * box.Minimum.X;
+            var xb = right * box.Maximum.X;
+
+            var up = transform.Up;
+            var ya = up * box.Minimum.Y;
+            var yb = up * box.Maximum.Y;
+
+            var backward = transform.Backward;
+            var za = backward * box.Minimum.Z;
+            var zb = backward * box.Maximum.Z;
+
+            var translation = transform.TranslationVector;
+            result = new BoundingBox(
+                Vector3.Min(xa, xb) + Vector3.Min(ya, yb) + Vector3.Min(za, zb) + translation,
+                Vector3.Max(xa, xb) + Vector3.Max(ya, yb) + Vector3.Max(za, zb) + translation);
+
+            /*
             // Get box corners
             var corners = new Vector3[8];
             box.GetCorners(corners);
@@ -456,6 +476,7 @@ namespace FlaxEngine
 
             // Construct box from the points
             FromPoints(corners, out result);
+            */
         }
 
         /// <summary>
