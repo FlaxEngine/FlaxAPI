@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System.Collections.Generic;
 using System.Threading;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -15,6 +16,8 @@ namespace FlaxEditor.GUI.Dialogs
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public abstract class Dialog : ContainerControl
     {
+        internal static List<Dialog> Dialogs = new List<Dialog>();
+
         private string _title;
         private Vector2 _size;
 
@@ -44,6 +47,8 @@ namespace FlaxEditor.GUI.Dialogs
             _title = title;
             _size = size;
             _result = DialogResult.None;
+
+            Dialogs.Add(this);
         }
 
         /// <summary>
@@ -245,6 +250,14 @@ namespace FlaxEditor.GUI.Dialogs
         protected virtual bool CanCloseWindow(ClosingReason reason)
         {
             return true;
+        }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            Dialogs.Remove(this);
+
+            base.OnDestroy();
         }
     }
 }
