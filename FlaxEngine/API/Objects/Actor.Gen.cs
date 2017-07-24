@@ -27,6 +27,19 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets the scene object which contains this actor.
+		/// </summary>
+		[UnmanagedCall]
+		public Scene Scene
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetScene(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
 		/// Gets or sets parent actor (or null if actor has no parent)
 		/// </summary>
 		[UnmanagedCall]
@@ -523,6 +536,8 @@ namespace FlaxEngine
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern Scene Internal_GetScene(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Actor Internal_GetParent(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
