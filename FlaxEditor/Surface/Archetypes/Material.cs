@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -129,7 +129,7 @@ namespace FlaxEditor.Surface.Archetypes
             },
             new NodeArchetype
             {
-                TypeID = 2,
+                TypeID = 3,
                 Title = "View",
                 Description = "View properties",
                 Flags = NodeFlags.MaterialOnly,
@@ -142,7 +142,7 @@ namespace FlaxEditor.Surface.Archetypes
             },
             new NodeArchetype
             {
-                TypeID = 2,
+                TypeID = 4,
                 Title = "Normal Vector",
                 Description = "World space normal vector",
                 Flags = NodeFlags.MaterialOnly,
@@ -154,7 +154,7 @@ namespace FlaxEditor.Surface.Archetypes
             },
             new NodeArchetype
             {
-                TypeID = 2,
+                TypeID = 5,
                 Title = "Camera Vector",
                 Description = "Calculates camera vector",
                 Flags = NodeFlags.MaterialOnly,

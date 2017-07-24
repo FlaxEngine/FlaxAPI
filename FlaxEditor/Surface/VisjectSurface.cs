@@ -475,26 +475,6 @@ namespace FlaxEditor.Surface
             // Link node
             node.OnLoaded();
             node.Parent = _surface;
-
-            // TODO: add archetypes validation
-            /*
-#if DEBUG
-
-            // Validate achetype boxes ids (search for duplicates)
-            for (int i = 0; i < node.Boxes.Count - 1; i++)
-            {
-                byte id = node.Boxes[i]->ID;
-                for (int j = i + 1; j < node.Boxes.Count(); j++)
-                {
-                    if (id == node.Boxes[j]->ID)
-                    {
-                        // Data Leak
-                        throw new InvalidDataException("Invalid node archetype.");
-                    }
-                }
-            }
-
-#endif*/
         }
 
         /// <inheritdoc />

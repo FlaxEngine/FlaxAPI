@@ -2,8 +2,10 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEditor.Surface.Elements;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 
@@ -78,6 +80,52 @@ namespace FlaxEditor.Surface
             },
         };
 
+#if DEBUG
+        static NodeFactory()
+        {
+            // Validate all archetypes (reduce mistakes)
+            for (int groupIndex = 0; groupIndex < Groups.Count; groupIndex++)
+            {
+                var group = Groups[groupIndex];
+
+                // Unique group id
+                for (int i = groupIndex + 1; i < Groups.Count; i++)
+                {
+                    if(group.GroupID == Groups[i].GroupID)
+                        throw new AccessViolationException("Invalid group ID.");
+                }
+
+                for (int nodeIndex = 0; nodeIndex < group.Archetypes.Length; nodeIndex++)
+                {
+                    var node = group.Archetypes[nodeIndex];
+
+                    // Unique node ids
+                    for (int i = nodeIndex + 1; i < group.Archetypes.Length; i++)
+                    {
+                        if (node.TypeID == group.Archetypes[i].TypeID)
+                            throw new AccessViolationException("Invalid node ID.");
+                    }
+
+                    // Unique box ids
+                    for (int i = 0; i < node.Elements.Length; i++)
+                    {
+                        if (node.Elements[i].Type == NodeElementType.Input || node.Elements[i].Type == NodeElementType.Output)
+                        {
+                            for (int j = i + 1; j < node.Elements.Length; j++)
+                            {
+                                if (node.Elements[j].Type == NodeElementType.Input || node.Elements[j].Type == NodeElementType.Output)
+                                {
+                                    if (node.Elements[i].BoxID == node.Elements[j].BoxID)
+                                        throw new AccessViolationException("Invalid box ID.");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+#endif
+
         /// <summary>
         /// Gets the archetypes for the node.
         /// </summary>
@@ -110,7 +158,7 @@ namespace FlaxEditor.Surface
             }
 
             // Error
-            Debug.LogError($"Failed to find Visject Surface node with id: {groupID}:{typeID}");
+            Debug.LogError($"Failed to create Visject Surface node with id: {groupID}:{typeID}");
             return false;
         }
 
@@ -146,7 +194,7 @@ namespace FlaxEditor.Surface
             }
 
             // Error
-            Debug.LogError($"Failed to find Visject Surface node with id: {groupID}:{typeID}");
+            Debug.LogError($"Failed to create Visject Surface node with id: {groupID}:{typeID}");
             return null;
         }
 
