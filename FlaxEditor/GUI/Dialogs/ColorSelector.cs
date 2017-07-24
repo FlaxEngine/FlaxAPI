@@ -61,11 +61,11 @@ namespace FlaxEditor.GUI.Dialogs
             _colorWheelSprite = Editor.Instance.UI.GetIcon("ColorWheel");
 
             // Setup dimensions
-            updateRect();
+            UpdateRect();
             Size = new Vector2(_slider2Rect.Right + _boxRect.X, _boxRect.Bottom + _boxRect.Y);
         }
 
-        private void updateRect()
+        private void UpdateRect()
         {
             const float slidersMargin = 8.0f;
             _boxRect = new Rectangle(0, 0, _boxSize, _boxSize);
@@ -73,14 +73,14 @@ namespace FlaxEditor.GUI.Dialogs
             _slider2Rect = new Rectangle(_slider1Rect.Right + slidersMargin, _slider1Rect.Y, _slidersThickness, _slider1Rect.Height);
         }
 
-        private void updateMouse(ref Vector2 location)
+        private void UpdateMouse(ref Vector2 location)
         {
             if (_isMouseDownSlider1)
             {
                 var hsv = _color.ToHSV();
                 hsv.Z = 1.001f - Mathf.Saturate((location.Y - _slider1Rect.Y) / _slider1Rect.Height);
 
-                Color = Color.HSVToRGB(hsv);
+                Color = Color.FromHSV(hsv);
             }
             else if (_isMouseDownSlider2)
             {
@@ -143,7 +143,7 @@ namespace FlaxEditor.GUI.Dialogs
                 hsv.X = degrees;
                 hsv.Y = Mathf.Saturate(distance / (_boxRect.Width * 0.5f));
 
-                Color = Color.HSVToRGB(hsv);
+                Color = Color.FromHSV(hsv);
             }
         }
 
@@ -157,7 +157,7 @@ namespace FlaxEditor.GUI.Dialogs
             var hsv = _color.ToHSV();
             var hs = hsv;
             hs.Z = 1.0f;
-            Color hsC = Color.HSVToRGB(hs);
+            Color hsC = Color.FromHSV(hs);
             const float slidersOffset = 3.0f;
             const float slidersThickness = 4.0f;
 
@@ -199,7 +199,7 @@ namespace FlaxEditor.GUI.Dialogs
         /// <inheritdoc />
         public override void OnMouseMove(Vector2 location)
         {
-            updateMouse(ref location);
+            UpdateMouse(ref location);
 
             base.OnMouseMove(location);
         }
@@ -213,7 +213,7 @@ namespace FlaxEditor.GUI.Dialogs
                 _isMouseDownSlider1 = _slider1Rect.Contains(location);
                 _isMouseDownSlider2 = _slider2Rect.Contains(location);
 
-                updateMouse(ref location);
+                UpdateMouse(ref location);
             }
 
             Focus();

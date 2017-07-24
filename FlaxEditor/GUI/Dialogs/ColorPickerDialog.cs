@@ -34,6 +34,12 @@ namespace FlaxEditor.GUI.Dialogs
         private Button _cCancel;
         private Button _cOK;
 
+        /// <summary>
+        /// Gets the selected color.
+        /// </summary>
+        /// <value>
+        /// The color.
+        /// </value>
         public Color SelectedColor
         {
             get => _newColor;
@@ -173,9 +179,7 @@ namespace FlaxEditor.GUI.Dialogs
             if (_disableEvents)
                 return;
 
-            var color = Color.HSVToRGB(_cHue.Value, _cSaturation.Value / 100.0f, _cValue.Value / 100.0f);
-            color.A = _cAlpha.Value / 255.0f;
-            SelectedColor = color;
+            SelectedColor = Color.FromHSV(_cHue.Value, _cSaturation.Value / 100.0f, _cValue.Value / 100.0f, _cAlpha.Value / 255.0f);
         }
 
         private void OnHexChanged()
@@ -192,38 +196,39 @@ namespace FlaxEditor.GUI.Dialogs
         public override void Draw()
         {
             var style = Style.Current;
+            var textColor = Color.White;
 
             base.Draw();
             
             // RGBA
             var rgbaR = new Rectangle(_cRed.Left -CHANNEL_TEXT_WIDTH, _cRed.Y, 10000, _cRed.Height);
-            Render2D.DrawText(style.FontMedium, "R", rgbaR, Color.Wheat, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(style.FontMedium, "R", rgbaR, textColor, TextAlignment.Near, TextAlignment.Center);
             rgbaR.Location.Y = _cGreen.Y;
-            Render2D.DrawText(style.FontMedium, "G", rgbaR, Color.Wheat, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(style.FontMedium, "G", rgbaR, textColor, TextAlignment.Near, TextAlignment.Center);
             rgbaR.Location.Y = _cBlue.Y;
-            Render2D.DrawText(style.FontMedium, "B", rgbaR, Color.Wheat, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(style.FontMedium, "B", rgbaR, textColor, TextAlignment.Near, TextAlignment.Center);
             rgbaR.Location.Y = _cAlpha.Y;
-            Render2D.DrawText(style.FontMedium, "A", rgbaR, Color.Wheat, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(style.FontMedium, "A", rgbaR, textColor, TextAlignment.Near, TextAlignment.Center);
 
             // HSV left
             var hsvHl = new Rectangle(_cHue.Left -CHANNEL_TEXT_WIDTH, _cHue.Y, 10000, _cHue.Height);
-            Render2D.DrawText(style.FontMedium, "H", hsvHl, Color.Wheat, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(style.FontMedium, "H", hsvHl, textColor, TextAlignment.Near, TextAlignment.Center);
             hsvHl.Location.Y = _cSaturation.Y;
-            Render2D.DrawText(style.FontMedium, "S", hsvHl, Color.Wheat, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(style.FontMedium, "S", hsvHl, textColor, TextAlignment.Near, TextAlignment.Center);
             hsvHl.Location.Y = _cValue.Y;
-            Render2D.DrawText(style.FontMedium, "V", hsvHl, Color.Wheat, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(style.FontMedium, "V", hsvHl, textColor, TextAlignment.Near, TextAlignment.Center);
 
             // HSV right
             var hsvHr = new Rectangle(_cHue.Right +2, _cHue.Y, 10000, _cHue.Height);
-            Render2D.DrawText(style.FontMedium, "°", hsvHr, Color.Wheat, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(style.FontMedium, "°", hsvHr, textColor, TextAlignment.Near, TextAlignment.Center);
             hsvHr.Location.Y = _cSaturation.Y;
-            Render2D.DrawText(style.FontMedium, "%", hsvHr, Color.Wheat, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(style.FontMedium, "%", hsvHr, textColor, TextAlignment.Near, TextAlignment.Center);
             hsvHr.Location.Y = _cValue.Y;
-            Render2D.DrawText(style.FontMedium, "%", hsvHr, Color.Wheat, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(style.FontMedium, "%", hsvHr, textColor, TextAlignment.Near, TextAlignment.Center);
 
             // Hex
             var hex = new Rectangle(_cHex.Left -26, _cHex.Y, 10000, _cHex.Height);
-            Render2D.DrawText(style.FontMedium, "Hex", hex, Color.Wheat, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(style.FontMedium, "Hex", hex, textColor, TextAlignment.Near, TextAlignment.Center);
 
             // Color diffrence
             var newRect = new Rectangle(_cOK.X, _cHex.Bottom +PICKER_MARGIN, _cCancel.Right - _cOK.Left, 0);
