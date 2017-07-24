@@ -95,13 +95,13 @@ namespace FlaxEditor.SceneGraph
 
             return null;
         }
-        
+
         /// <inheritdoc />
         public override string Name => _actor.Name;
 
         /// <inheritdoc />
         public override bool IsActive => _actor.IsActive;
-        
+
         /// <inheritdoc />
         public override bool IsActiveInHierarchy => _actor.IsActiveInHierarchy;
 
@@ -157,7 +157,25 @@ namespace FlaxEditor.SceneGraph
             // Update UI node connections
             _treeNode.Parent = (ParentNode as ActorNode)?.TreeNode;
 
+            // Check if it's a new node and parent has been already ready
+            // (eg. we builded new node for spawned actor and link it to the game)
+            if (_treeNode.Parent != null && !_treeNode.Parent.IsLayoutLocked)
+            {
+                _treeNode.SortChildren();
+                _treeNode.IsLayoutLocked = false;
+                _treeNode.PerformLayout();
+            }
+
             base.OnParentChanged();
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            // Cleanup UI
+            _treeNode.Dispose();
+
+            base.Dispose();
         }
     }
 }

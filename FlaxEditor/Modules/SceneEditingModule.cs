@@ -48,7 +48,7 @@ namespace FlaxEditor.Modules
         public void SelectAllScenes()
         {
             // Select all sccenes (linked to the root node)
-            Select(Editor.Windows.SceneWin.Root.ChildNodes);
+            Select(Editor.Scene.Root.ChildNodes);
         }
 
         /// <summary>

@@ -76,5 +76,15 @@ namespace FlaxEditor.SceneGraph
         /// <param name="distance">The result distance.</param>
         /// <returns>Hitted object or null if there is no interseciotn at all.</returns>
         ISceneTreeNode RayCast(ref Ray ray, ref float distance);
+
+        /// <summary>
+        /// Releases the node and the child tree. Disposed all GUI parts and used resources.
+        /// </summary>
+        void Dispose();
+
+        /// <summary>
+        /// Called when node or parent node is disposing.
+        /// </summary>
+        void OnDispose();
     }
 }

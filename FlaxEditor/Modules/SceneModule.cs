@@ -1,7 +1,7 @@
 // Flax Engine scripting API
 
 using System;
-using System.Collections.Generic;
+using FlaxEditor.SceneGraph;
 using FlaxEngine;
 
 namespace FlaxEditor.Modules
@@ -12,6 +12,16 @@ namespace FlaxEditor.Modules
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class SceneModule : EditorModule
     {
+        /// <summary>
+        /// The root tree node for the whole scene graph.
+        /// </summary>
+        public readonly RootNode Root = new RootNode();
+
+        /// <summary>
+        /// The scene graph nodes factory.
+        /// </summary>
+        public readonly SceneGraphFactory Factory = new SceneGraphFactory();
+
         internal SceneModule(Editor editor)
             : base(editor)
         {
@@ -80,7 +90,7 @@ namespace FlaxEditor.Modules
 
             SceneManager.SaveSceneAsync(scene);*/
         }
-        
+
         /// <summary>
         /// Saves all open scenes (async).
         /// </summary>
@@ -185,7 +195,152 @@ namespace FlaxEditor.Modules
 	        lastSceneStream.WriteString(SceneManager::Instance()->GetLastScenePath());
 	        EditorCache::Instance()->Set(TEXT("LastScene"), false, &lastSceneStream);*/
         }
-        
+
+        private void OnSceneLoaded(Scene scene, Guid sceneId)
+        {
+            var startTime = DateTime.UtcNow;
+
+            // Build scene tree
+            var sceneNode = Factory.BuildSceneTree(scene);
+            sceneNode.TreeNode.Expand();
+
+            // TODO: cache expanded/colapsed nodes per scene tree
+
+            // Add to the tree
+            var rootNode = Root.TreeNode;
+            bool wasLayoutLocked = rootNode.IsLayoutLocked;
+            rootNode.IsLayoutLocked = true;
+            sceneNode.ParentNode = Root;
+            rootNode.SortChildren();
+            rootNode.IsLayoutLocked = wasLayoutLocked;
+            rootNode.PerformLayout();
+
+            var endTime = DateTime.UtcNow;
+            var milliseconds = (int)(endTime - startTime).TotalMilliseconds;
+            Debug.Log($"Created UI tree for scene \'{scene.Name}\' in {milliseconds} ms");
+        }
+
+        private void OnSceneUnloading(Scene scene, Guid sceneId)
+        {
+            // Find scene tree node
+            var node = Root.FindChild(scene);
+            if (node != null)
+            {
+                Debug.Log($"Cleanup UI tree for scene \'{scene.Name}\'");
+
+                // Cleanup
+                node.TreeNode.Dispose();
+            }
+        }
+
+        private void OnActorSpawned(Actor actor)
+        {
+            var parent = actor.Parent;
+            if (parent == null)
+                return;
+
+            var parentNode = GetActorNode(parent);
+            if (parentNode == null)
+            {
+                // Error
+                Debug.LogError("Failed to find parent node for actor " + actor.Name);
+                return;
+            }
+
+            var node = Factory.BuildActorNode(actor);
+            node.ParentNode = parentNode;
+        }
+
+        private void OnActorDeleted(Actor actor)
+        {
+            var node = GetActorNode(actor);
+            if (node != null)
+            {
+                // Cleanup part of the graph
+                node.Dispose();
+            }
+        }
+
+        private void OnActorParentChanged(Actor actor, Actor prevParent)
+        {
+            ActorNode node = null;
+
+            // Try use previous parent actor to find actor node
+            var prevParentNode = GetActorNode(prevParent);
+            if (prevParentNode != null)
+            {
+                // If should be one of the children
+                node = prevParentNode.FindChild(actor);
+
+                // Search whole tree if node was not found
+                if (node == null)
+                {
+                    node = Root.Find(actor);
+                    if (node == null)
+                        return;
+                }
+            }
+            else
+            {
+                // Create new node for that actor (user may unlink it from the scene before and now link it)
+                node = Factory.BuildActorNode(actor);
+            }
+
+            // Get the new parent node (may be missing)
+            var parentNode = GetActorNode(actor.Parent);
+            if (parentNode != null)
+            {
+                // Change parent
+                node.ParentNode = parentNode;
+            }
+            else
+            {
+                // Remove node (user may unlink actor from the scene but not destroy the actor)
+                node.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Gets the actor node.
+        /// </summary>
+        /// <param name="actor">The actor.</param>
+        /// <returns>Foudn actor node or null if missing. Actor may not be linked to the scene tree so node won't be found in that case.</returns>
+        public ActorNode GetActorNode(Actor actor)
+        {
+            if (actor == null)
+                return null;
+
+            // Special case if actor is a scene
+            if (actor is Scene)
+                return Root.FindChild(actor) as SceneNode;
+
+            // Get scene node
+            var scene = actor.Scene;
+            var sceneNode = Root.FindChild(scene);
+            if (sceneNode == null)
+                return null;
+
+            // Early out for not linked actors - only scene actors may have missing parent
+            if (actor.Parent == null)
+                return null;
+
+            // TODO: if it's a bottleneck use some actor nodes caching or sth (cache dictionary per scene tree, use Actor.ID for lookup)
+
+            // Find actural actor node
+            return sceneNode.Find(actor);
+        }
+
+        /// <inheritdoc />
+        public override void OnInit()
+        {
+            // Bind events
+            SceneManager.OnSceneLoaded += OnSceneLoaded;
+            SceneManager.OnSceneUnloading += OnSceneUnloading;
+            SceneManager.OnActorSpawned += OnActorSpawned;
+            SceneManager.OnActorDeleted += OnActorDeleted;
+            SceneManager.OnActorParentChanged += OnActorParentChanged;
+        }
+
         /// <inheritdoc />
         public override void OnEndInit()
         {
@@ -213,6 +368,20 @@ namespace FlaxEditor.Modules
                     }
                 }
             }*/
+        }
+
+        /// <inheritdoc />
+        public override void OnExit()
+        {
+            // Unbind events
+            SceneManager.OnSceneLoaded -= OnSceneLoaded;
+            SceneManager.OnSceneUnloading -= OnSceneUnloading;
+            SceneManager.OnActorSpawned -= OnActorSpawned;
+            SceneManager.OnActorDeleted -= OnActorDeleted;
+            SceneManager.OnActorParentChanged -= OnActorParentChanged;
+
+            // Cleanup graph
+            Root.Dispose();
         }
     }
 }

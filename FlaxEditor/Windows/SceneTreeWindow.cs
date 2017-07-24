@@ -22,16 +22,6 @@ namespace FlaxEditor.Windows
         private bool _isUpdatingSelection;
 
         /// <summary>
-        /// The root tree node for the whole scene graph.
-        /// </summary>
-        public readonly RootNode Root;
-
-        /// <summary>
-        /// The scene graph nodes factory.
-        /// </summary>
-        public readonly  SceneGraphFactory Factory = new SceneGraphFactory();
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="SceneTreeWindow"/> class.
         /// </summary>
         /// <param name="editor">The editor.</param>
@@ -41,10 +31,10 @@ namespace FlaxEditor.Windows
             Title = "Scene";
             
             // Create scene structure tree
-            Root = new RootNode();
-            Root.TreeNode.Expand();
+            var root = editor.Scene.Root;
+            root.TreeNode.Expand();
             _tree = new Tree(true);
-            _tree.AddChild(Root.TreeNode);
+            _tree.AddChild(root.TreeNode);
             _tree.OnSelectedChanged += Tree_OnOnSelectedChanged;
             _tree.OnRightClick += Tree_OnOnRightClick;
             _tree.Parent = this;
@@ -133,59 +123,13 @@ namespace FlaxEditor.Windows
                 // Find nodes to select
                 // TODO: if it takes too long let's cache hash set: (key: Actor.ID, value: SceneNode) and use faster lookup
                 var nodes = new List<TreeNode>(selection.Count);
-                selectNodesHelper(nodes, selection, Root.TreeNode);
+                selectNodesHelper(nodes, selection, Editor.Scene.Root.TreeNode);
 
                 // Select nodes
                 _tree.Select(nodes);
             }
 
             _isUpdatingSelection = false;
-        }
-
-        /// <inheritdoc />
-        public override void OnExit()
-        {
-            // Cleanup tree
-            Root.TreeNode.DisposeChildren();
-        }
-
-        /// <inheritdoc />
-        public override void OnSceneLoaded(Scene scene, Guid sceneId)
-        {
-            var startTime = DateTime.UtcNow;
-
-            // Build scene tree
-            var sceneNode = Factory.BuildSceneTree(scene);
-            sceneNode.TreeNode.Expand();
-
-            // TODO: cache expanded/colapsed nodes per scene tree
-
-            // Add to the tree
-            var rootNode = Root.TreeNode;
-            bool wasLayoutLocked = rootNode.IsLayoutLocked;
-            rootNode.IsLayoutLocked = true;
-            sceneNode.ParentNode = Root;
-            rootNode.SortChildren();
-            rootNode.IsLayoutLocked = wasLayoutLocked;
-            rootNode.PerformLayout();
-
-            var endTime = DateTime.UtcNow;
-            var milliseconds = (int)(endTime - startTime).TotalMilliseconds;
-            Debug.Log($"Created UI tree for scene \'{scene.Name}\' in {milliseconds} ms");
-        }
-
-        /// <inheritdoc />
-        public override void OnSceneUnloading(Scene scene, Guid sceneId)
-        {
-            // Find scene tree node
-            var node = Root.FindChild(scene);
-            if (node != null)
-            {
-                Debug.Log($"Cleanup UI tree for scene \'{scene.Name}\'");
-
-                // Cleanup
-                node.TreeNode.Dispose();
-            }
         }
 
         /// <inheritdoc />
@@ -202,7 +146,7 @@ namespace FlaxEditor.Windows
             {
                 overlayText = "Loading scene...";
             }
-            else if (Root.TreeNode.ChildrenCount == 0)
+            else if (((ContainerControl)_tree.GetChild(0)).ChildrenCount == 0)
             {
                 overlayText = "No scene";
             }

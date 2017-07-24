@@ -117,6 +117,29 @@ namespace FlaxEditor.SceneGraph
             return minTarget;
         }
 
+        /// <inheritdoc />
+        public virtual void Dispose()
+        {
+            OnDispose();
+
+            // Unlink from the parent
+            if (parentNode != null)
+            {
+                parentNode.ChildNodes.Remove(this);
+                parentNode = null;
+            }
+        }
+
+        /// <inheritdoc />
+        public virtual void OnDispose()
+        {
+            // Call deeper
+            for (int i = 0; i < ChildNodes.Count; i++)
+            {
+                ChildNodes[i].OnDispose();
+            }
+        }
+
         /// <summary>
         /// Checks if given ray intersects with the node.
         /// </summary>

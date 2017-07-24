@@ -368,7 +368,7 @@ namespace FlaxEditor.Viewport
             // Get mouse ray and try to hit any object
             var ray = MouseRay;
             float closest = float.MaxValue;
-            var hit = Editor.Instance.Windows.SceneWin.Root.RayCast(ref ray, ref closest);
+            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest);
 
             // Update selection
             var sceneEditing = Editor.Instance.SceneEditing;

@@ -53,38 +53,52 @@ namespace FlaxEditor.SceneGraph
             return sceneNode;
         }
 
+        /// <summary>
+        /// Builds the actor node. Warning! Don't create duplicated nodes.
+        /// </summary>
+        /// <param name="actor">The actor.</param>
+        /// <returns>Created node or null if failed.</returns>
+        public ActorNode BuildActorNode(Actor actor)
+        {
+            ActorNode result = null;
+
+            try
+            {
+                // Try to pick custom node type for that actor object
+                Type customType;
+                if (CustomNodesTypes.TryGetValue(actor.GetType(), out customType))
+                {
+                    // Use custom type
+                    result = (ActorNode)Activator.CreateInstance(customType, new object[] { actor });
+                }
+                else
+                {
+                    // Use default type for actors
+                    result = new ActorNode(actor);
+                }
+
+                // Build children
+                BuildSceneTree(result);
+            }
+            catch (Exception ex)
+            {
+                // Error
+                Debug.LogWarning($"Failed to create scene graph node for actor {actor.Name} (type: {actor.GetType()}).");
+                Debug.LogException(ex);
+            }
+
+            return result;
+        }
+
         private void BuildSceneTree(ActorNode node)
         {
             var children = node.Actor.GetChildren();
             for (int i = 0; i < children.Length; i++)
             {
-                var actor = children[i];
-
-                try
+                var childNode = BuildActorNode(children[i]);
+                if (childNode != null)
                 {
-                    ActorNode childNode;
-
-                    // Try to pick custom node type for that actor object
-                    Type customType;
-                    if (CustomNodesTypes.TryGetValue(actor.GetType(), out customType))
-                    {
-                        // Use custom type
-                        childNode = (ActorNode) Activator.CreateInstance(customType, new object[] {actor});
-                    }
-                    else
-                    {
-                        // Use default type for actors
-                        childNode = new ActorNode(actor);
-                    }
-
                     childNode.ParentNode = node;
-                    BuildSceneTree(childNode);
-                }
-                catch (Exception ex)
-                {
-                    // Error
-                    Debug.LogWarning($"Failed to create scene graph node for actor {actor.Name} (type: {actor.GetType()}).");
-                    Debug.LogException(ex);
                 }
             }
         }
