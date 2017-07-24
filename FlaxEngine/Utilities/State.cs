@@ -52,7 +52,8 @@ namespace FlaxEngine.Utilities
         /// <summary>
         /// Called when state is ending to be active.
         /// </summary>
-        public virtual void OnExit()
+        /// <param name="nextState">The next state.</param>
+        public virtual void OnExit(State nextState)
         {
         }
     }

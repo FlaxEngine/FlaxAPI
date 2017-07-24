@@ -49,7 +49,7 @@ namespace FlaxEditor.States
         }
 
         /// <inheritdoc />
-        public override void OnExit()
+        public override void OnExit(State nextState)
         {
             // Unbind event
             //ShadowsOfMordor::Builder::Instance()->OnBuildFinished.Unbind<BuildingLightingState, &BuildingLightingState::onBuildFinished>(this);

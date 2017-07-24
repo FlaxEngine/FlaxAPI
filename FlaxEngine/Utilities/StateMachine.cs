@@ -101,7 +101,7 @@ namespace FlaxEngine.Utilities
         /// <param name="nextState">Then next state.</param>
         protected virtual void SwitchState(State nextState)
         {
-            currentState?.OnExit();
+            currentState?.OnExit(nextState);
 
             currentState = nextState;
 

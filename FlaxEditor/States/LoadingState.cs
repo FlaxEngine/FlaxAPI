@@ -1,6 +1,7 @@
 // Flax Engine scripting API
 
 using FlaxEditor.Scripting;
+using FlaxEngine.Utilities;
 
 namespace FlaxEditor.States
 {
@@ -11,6 +12,7 @@ namespace FlaxEditor.States
     public sealed class LoadingState : EditorState
     {
         private bool _loadScritpsFlag;
+        private bool _compilationFailed;
 
         /// <inheritdoc />
         public override bool CanEditContent => false;
@@ -65,8 +67,8 @@ namespace FlaxEditor.States
             }
             else
             {
-                // Compilation failed so just end init
-                Editor.EndInit();
+                // Cannot compile user scripts, let's end init but on main thread in Update
+                _compilationFailed = true;
             }
         }
 
@@ -81,10 +83,17 @@ namespace FlaxEditor.States
                 // End init
                 Editor.EndInit();
             }
+            else if (_compilationFailed)
+            {
+                _compilationFailed = false;
+
+                // Compilation failed so just end init
+                Editor.EndInit();
+            }
         }
 
         /// <inheritdoc />
-        public override void OnExit()
+        public override void OnExit(State nextState)
         {
             ScriptsBuilder.OnCompilationEnd -= onCompilationEnd;
         }

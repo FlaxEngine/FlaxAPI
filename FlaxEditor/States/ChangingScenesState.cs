@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using FlaxEngine;
 using FlaxEngine.Assertions;
+using FlaxEngine.Utilities;
 
 namespace FlaxEditor.States
 {
@@ -117,9 +118,13 @@ namespace FlaxEditor.States
         }
 
         /// <inheritdoc />
-        public override void OnExit()
+        public override void OnExit(State nextState)
         {
-            Assert.AreEqual(Guid.Empty, _lastSceneFromRequest, "Invalid state.");
+            // Validate (but skip if next state is exit)
+            if (!(nextState is ClosingState))
+            {
+                Assert.AreEqual(Guid.Empty, _lastSceneFromRequest, "Invalid state.");
+            }
 
             // Unbind events
             SceneManager.OnSceneLoaded -= onSceneEvent;

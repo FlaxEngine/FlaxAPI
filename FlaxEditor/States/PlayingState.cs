@@ -2,6 +2,7 @@
 
 using System;
 using FlaxEditor.Utilities;
+using FlaxEngine.Utilities;
 
 namespace FlaxEditor.States
 {
@@ -86,7 +87,7 @@ namespace FlaxEditor.States
         }
 
         /// <inheritdoc />
-        public override void OnExit()
+        public override void OnExit(State nextState)
         {
             // TODO: finish this
             throw new NotImplementedException();
