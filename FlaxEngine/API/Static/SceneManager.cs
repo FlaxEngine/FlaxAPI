@@ -13,6 +13,19 @@ namespace FlaxEngine
     /// <param name="sceneId">The scene ID.</param>
     public delegate void SceneDelegate(Scene scene, Guid sceneId);
 
+    /// <summary>
+    /// Actor actors delegate type.
+    /// </summary>
+    /// <param name="actor">The actor.</param>
+    public delegate void ActorDelegate(Actor actor);
+
+    /// <summary>
+    /// Actor parent changed delegate.
+    /// </summary>
+    /// <param name="actor">The actor.</param>
+    /// <param name="prevParent">The previous parent.</param>
+    public delegate void ActorParentChangedDelegate(Actor actor, Actor prevParent);
+
     public static partial class SceneManager
 	{
         /// <summary>
@@ -55,8 +68,23 @@ namespace FlaxEngine
         /// </summary>
         public static event SceneDelegate OnSceneUnloaded;
 
+        /// <summary>
+        /// Occurs when new actor gets spawned to the game.
+        /// </summary>
+        public static event ActorDelegate OnActorSpawned;
+
+        /// <summary>
+        /// Occurs when actor is removed from the game.
+        /// </summary>
+        public static event ActorDelegate OnActorDeleted;
+
+        /// <summary>
+        /// Occurs when actor parent gets changed.
+        /// </summary>
+        public static event ActorParentChangedDelegate OnActorParentChanged;
+
         // Called internally from C++
-	    internal enum SceneEventType
+        internal enum SceneEventType
 	    {
 	        OnSceneSaving = 0,
 	        OnSceneSaved = 1,
@@ -81,5 +109,20 @@ namespace FlaxEngine
                 case SceneEventType.OnSceneUnloaded: OnSceneUnloaded?.Invoke(scene, sceneId); break;
             }
         }
+	    internal enum ActorEventType
+	    {
+	        OnActorSpawned = 0,
+	        OnActorDeleted = 1,
+	        OnActorParentChanged = 2,
+        }
+        internal static void Internal_OnActorEvent(ActorEventType eventType, Actor a, Actor b)
+	    {
+	        switch (eventType)
+	        {
+	            case ActorEventType.OnActorSpawned: OnActorSpawned?.Invoke(a); break;
+	            case ActorEventType.OnActorDeleted: OnActorDeleted?.Invoke(a); break;
+	            case ActorEventType.OnActorParentChanged: OnActorParentChanged?.Invoke(a, b); break;
+	        }
+	    }
     }
 }
