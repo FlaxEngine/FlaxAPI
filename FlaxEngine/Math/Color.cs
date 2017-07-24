@@ -449,139 +449,56 @@ namespace FlaxEngine
             return new Color(Mathf.SRgbToLinear(R), Mathf.SRgbToLinear(G), Mathf.SRgbToLinear(B), A);
         }
 
+        static readonly int[][] RGBSwizzle = {
+            new []{ 0, 3, 1 },
+            new []{ 2, 0, 1 },
+            new []{ 1, 0, 3 },
+            new []{ 1, 2, 0 },
+            new []{ 3, 1, 0 },
+            new []{ 0, 1, 2 },
+        };
+
         /// <summary>
-        /// Creates an RGB colour from HSV input.
+        /// Creates RGB color from Hue[0-360], Saturation[0-1] and Value[0-1].
         /// </summary>
-        /// <param name="h">Hue [0..1].</param>
-        /// <param name="s">Saturation [0..1].</param>
-        /// <param name="v">Value [0..1].</param>
-        /// <returns>
-        /// An opaque colour with HSV matching the input.
-        /// </returns>
-        public static Color HSVToRGB(float h, float s, float v)
+        /// <param name="hue">The hue angle in degress [0-360].</param>
+        /// <param name="saturation">The saturation normalized [0-1].</param>
+        /// <param name="value">The value normalized [0-1].</param>
+        /// <param name="alpha">The alpha value. Default is 1.</param>
+        /// <returns>The RGB color.</returns>
+        public static Color FromHSV(float hue, float saturation, float value, float alpha = 1.0f)
         {
-            return HSVToRGB(h, s, v, true);
+            float hDiv60 = hue / 60.0f;
+            float hDiv60Floor = (float)Math.Floor(hDiv60);
+            float hDiv60Fraction = hDiv60 - hDiv60Floor;
+
+            float[] rgbValues =
+            {
+                value,
+                value * (1.0f - saturation),
+                value * (1.0f - (hDiv60Fraction * saturation)),
+                value * (1.0f - ((1.0f - hDiv60Fraction) * saturation)),
+            };
+
+            int swizzleIndex = ((int)hDiv60Floor) % 6;
+
+            return new Color(rgbValues[RGBSwizzle[swizzleIndex][0]],
+                rgbValues[RGBSwizzle[swizzleIndex][1]],
+                rgbValues[RGBSwizzle[swizzleIndex][2]],
+                alpha);
         }
 
         /// <summary>
-        /// Creates an RGB colour from HSV input.
+        /// Creates RGB color from Hue[0-360], Saturation[0-1] and Value[0-1] paked to XYZ vector.
         /// </summary>
-        /// <param name="hsv">Vector with components: Huew, Saturation and Value (all components must be in [0;1] range).</param>
-        /// <returns>
-        /// An opaque colour with HSV matching the input.
-        /// </returns>
-        public static Color HSVToRGB(Vector3 hsv)
+        /// <param name="hsv">The HSV color.</param>
+        /// <param name="alpha">The alpha value. Default is 1.</param>
+        /// <returns>The RGB color.</returns>
+        public static Color FromHSV(Vector3 hsv, float alpha = 1.0f)
         {
-            return HSVToRGB(hsv.X, hsv.Y, hsv.Z, true);
+            return FromHSV(hsv.X, hsv.Y, hsv.Z, alpha);
         }
-
-        /// <summary>
-        /// Creates an RGB colour from HSV input.
-        /// </summary>
-        /// <param name="H">Hue [0..1].</param>
-        /// <param name="S">Saturation [0..1].</param>
-        /// <param name="V">Value [0..1].</param>
-        /// <param name="hdr">Output HDR colours. If true, the returned colour will not be clamped to [0..1].</param>
-        /// <returns>
-        /// An opaque colour with HSV matching the input.
-        /// </returns>
-        public static Color HSVToRGB(float H, float S, float V, bool hdr)
-        {
-            Color v = White;
-            if (Mathf.IsZero(S))
-            {
-                v.R = V;
-                v.G = V;
-                v.B = V;
-            }
-            else if (!Mathf.IsZero(V))
-            {
-                v.R = 0f;
-                v.G = 0f;
-                v.B = 0f;
-                float s = S;
-                float single = V;
-                float h = H * 6f;
-                var num = (int)Mathf.Floor(h);
-                float single1 = h - num;
-                float single2 = single * (1f - s);
-                float single3 = single * (1f - s * single1);
-                float single4 = single * (1f - s * (1f - single1));
-                switch (num)
-                {
-                    case -1:
-                    {
-                        v.R = single;
-                        v.G = single2;
-                        v.B = single3;
-                        break;
-                    }
-                    case 0:
-                    {
-                        v.R = single;
-                        v.G = single4;
-                        v.B = single2;
-                        break;
-                    }
-                    case 1:
-                    {
-                        v.R = single3;
-                        v.G = single;
-                        v.B = single2;
-                        break;
-                    }
-                    case 2:
-                    {
-                        v.R = single2;
-                        v.G = single;
-                        v.B = single4;
-                        break;
-                    }
-                    case 3:
-                    {
-                        v.R = single2;
-                        v.G = single3;
-                        v.B = single;
-                        break;
-                    }
-                    case 4:
-                    {
-                        v.R = single4;
-                        v.G = single2;
-                        v.B = single;
-                        break;
-                    }
-                    case 5:
-                    {
-                        v.R = single;
-                        v.G = single2;
-                        v.B = single3;
-                        break;
-                    }
-                    case 6:
-                    {
-                        v.R = single;
-                        v.G = single4;
-                        v.B = single2;
-                        break;
-                    }
-                }
-                if (!hdr)
-                {
-                    v.R = Mathf.Clamp(v.R, 0f, 1f);
-                    v.G = Mathf.Clamp(v.G, 0f, 1f);
-                    v.B = Mathf.Clamp(v.B, 0f, 1f);
-                }
-            }
-            else
-            {
-                v.R = 0f;
-                v.G = 0f;
-                v.B = 0f;
-            }
-            return v;
-        }
-
+        
         /// <summary>
         /// Linearly interpolates between colors a and b by t.
         /// </summary>
