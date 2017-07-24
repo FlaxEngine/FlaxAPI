@@ -1,6 +1,8 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
+
+using System;
 
 namespace FlaxEngine.GUI
 {
@@ -56,5 +58,10 @@ namespace FlaxEngine.GUI
         public Sprite Translate16;
         public Sprite Rotate16;
         public Sprite Scale16;
+
+        /// <summary>
+        /// Shows picking color dialog. Arguments: start color and handler to fire color changed action.
+        /// </summary>
+        public Action<Color, Action<Color>> ShowPickColorDialog;
     }
 }

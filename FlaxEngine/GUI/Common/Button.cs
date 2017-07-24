@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -11,6 +11,11 @@ namespace FlaxEngine.GUI
     /// </summary>
     public class Button : Control
     {
+        /// <summary>
+        /// The default height fro the buttons.
+        /// </summary>
+        public const float DefaultHeight = 24.0f;
+
         protected bool _mosueDown;
 
         /// <summary>
@@ -30,7 +35,7 @@ namespace FlaxEngine.GUI
         /// <param name="y">Position Y coordinate</param>
         /// <param name="width">Width</param>
         public Button(float x, float y, float width = 120)
-            : base(true, x, y, width, 24.0f)
+            : base(true, x, y, width, DefaultHeight)
         {
         }
 

@@ -1,6 +1,7 @@
 // Flax Engine scripting API
 
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Dialogs;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
@@ -181,6 +182,13 @@ namespace FlaxEditor.Modules
             style.DragWindow = style.BackgroundSelected * 0.7f;
             style.ProgressNormal = Color.FromBgra(0xFF0ad328);
             
+            // Color picking
+            style.ShowPickColorDialog += (color, handler) =>
+            {
+                var dialog = new ColorPickerDialog(color, handler);
+                dialog.Show();
+            };
+
             // Set as default
             Style.Current = style;
         }

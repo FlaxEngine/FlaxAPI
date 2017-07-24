@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -58,11 +58,11 @@ namespace FlaxEditor.Surface.Elements
             }
             else if (value is Vector3 valueVec3)
             {
-                result = (Color)valueVec3;
+                result = valueVec3;
             }
             else if (value is Vector4 valueVec4)
             {
-                result = (Color)valueVec4;
+                result = valueVec4;
             }
             else
             {
