@@ -48,6 +48,7 @@
     <Compile Include="Content\GUI\ContentView.cs" />
     <Compile Include="Content\GUI\NavigationBar.cs" />
     <Compile Include="Content\GUI\NavigationButton.cs" />
+    <Compile Include="GUI\RenamePopup.cs" />
     <Compile Include="Content\Proxy\BinaryAssetProxy.cs" />
     <Compile Include="Content\Proxy\ContentProxy.cs" />
     <Compile Include="Content\Items\AssetItem.cs" />
