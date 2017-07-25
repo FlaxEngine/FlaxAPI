@@ -141,15 +141,11 @@ namespace FlaxEditor.Windows.Assets
                 // Check if asset has been edited and not saved (and stil has linked item)
                 if (IsEdited && _item != null)
                 {
-                    // TODO: editor popups support
-
-                    /*
-                    // Ask user for futher action
+                    // Ask user for further action
                     var result = MessageBox.Show(
                         string.Format("Asset \'{0}\' has been edited. Save before closing?", _item.Path),
-                        "Close without saving?",
-                        MessageBoxButtons.YesNoCancel,
-                        MessageBoxIcon.Question
+                        "Save before closing?",
+                        MessageBox.Buttons.YesNoCancel
                     );
                     if (result == DialogResult.OK || result == DialogResult.Yes)
                     {
@@ -160,7 +156,7 @@ namespace FlaxEditor.Windows.Assets
                     {
                         // Cancel closing
                         return true;
-                    }*/
+                    }
                 }
             }
 
@@ -260,19 +256,28 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public void OnItemDeleted(ContentItem item)
         {
-            throw new NotImplementedException();
+            if (item == _item)
+            {
+                Close();
+            }
         }
 
         /// <inheritdoc />
         public void OnItemRenamed(ContentItem item)
         {
-            throw new NotImplementedException();
+            if (item == _item)
+            {
+                UpdateTitle();
+            }
         }
 
         /// <inheritdoc />
         public void OnItemDispose(ContentItem item)
         {
-            throw new NotImplementedException();
+            if (item == _item)
+            {
+                Close();
+            }
         }
 
         #endregion
