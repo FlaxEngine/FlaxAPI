@@ -2,7 +2,8 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using FlaxEngine;
+using System;
+using FlaxEditor.CustomEditors;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Windows
@@ -14,34 +15,30 @@ namespace FlaxEditor.Windows
     public class PropertiesWindow : SceneEditorWindow
     {
         /// <summary>
+        /// The editor.
+        /// </summary>
+        public readonly CustomEditor ObjectsEditor;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PropertiesWindow"/> class.
         /// </summary>
         /// <param name="editor">The editor.</param>
         public PropertiesWindow(Editor editor)
-            : base(editor, true, ScrollBars.None)
+            : base(editor, true, ScrollBars.Vertical)
         {
             Title = "Properties";
+
+            ObjectsEditor = new CustomEditor();
+            ObjectsEditor.DockStyle = DockStyle.Top;
+            ObjectsEditor.Parent = this;
+
+            Editor.SceneEditing.OnSelectionChanged += OnSelectionChanged;
         }
 
-        public override void Draw()
+        private void OnSelectionChanged()
         {
-            // TODO: remove this temp code, finish properties window
-            string text;
-            var selection = Editor.SceneEditing.Selection;
-            if (selection.Count == 0)
-            {
-                text = "No actors selected";
-            }
-            else
-            {
-                text = "Selected:\n";
-                foreach (var e in selection)
-                {
-                    text += e.Name + "\n";
-                }
-            }
-            Render2D.DrawText(Style.Current.FontMedium, text, new Rectangle(Vector2.Zero, Size), Color.White, TextAlignment.Center, TextAlignment.Center);
-            base.Draw();
+            // Update selected objects
+            ObjectsEditor.Select(Editor.SceneEditing.Selection);
         }
     }
 }
