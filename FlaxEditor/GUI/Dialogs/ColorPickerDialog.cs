@@ -79,7 +79,7 @@ namespace FlaxEditor.GUI.Dialogs
         /// <param name="startColor">The start color.</param>
         /// <param name="onChangedOk">The on changed ok.</param>
         public ColorPickerDialog(Color startColor, Action<Color> onChangedOk)
-            : base("Pick a color!", new Vector2(1000))
+            : base("Pick a color!")
         {
             BackgroundColor = Style.Current.Background;
 
@@ -129,7 +129,7 @@ namespace FlaxEditor.GUI.Dialogs
             _cValue.Parent = this;
 
             // Set valid dialog size based on UI content
-            Resize(new Vector2(_cRed.Right + PICKER_MARGIN, 300));
+            Size = new Vector2(_cRed.Right + PICKER_MARGIN, 300);
 
             // Hex
             const float hexTextBoxWidth = 80;
@@ -162,8 +162,7 @@ namespace FlaxEditor.GUI.Dialogs
 
         private void OnCancelClicked()
         {
-            _result = DialogResult.Cancel;
-            Close();
+            Close(DialogResult.Cancel);
         }
 
         private void OnRGBAChanged()
