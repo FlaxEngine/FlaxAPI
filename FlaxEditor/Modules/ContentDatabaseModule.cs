@@ -322,7 +322,7 @@ namespace FlaxEditor.Modules
                     if (!child.Exists)
                     {
                         // Send info
-                        Debug.Log(string.Format($"Content item \'{child.Path}\' has been removed"));
+                        Editor.Log(string.Format($"Content item \'{child.Path}\' has been removed"));
                         
                         // Destroy it
                         Delete(child);
@@ -479,7 +479,7 @@ namespace FlaxEditor.Modules
             // Enable events
             _enableEvents = true;
 
-            Debug.Log("Project database created. Items count: " + _itemsCreated);
+            Editor.Log("Project database created. Items count: " + _itemsCreated);
         }
 
         internal void OnDirectoryEvent(MainContentTreeNode node, FileSystemEventArgs e)

@@ -191,10 +191,10 @@ namespace FlaxEditor.Content.Thumbnails
                 else
                 {
                     // Skip asset
-                    Debug.LogWarning(string.Format("Asset \'{0}\' is inside Editor\'s private directory for Assets Thumbnails Cache. Please move it.", asset.Path));
+                    Editor.LogWarning(string.Format("Asset \'{0}\' is inside Editor\'s private directory for Assets Thumbnails Cache. Please move it.", asset.Path));
                 }
             }
-            Debug.Log(string.Format("Previews cache count: {0} (capacity for {1} icons)", atlases, atlases * PreviewsCache.AssetIconsPerAtlas));
+            Editor.Log(string.Format("Previews cache count: {0} (capacity for {1} icons)", atlases, atlases * PreviewsCache.AssetIconsPerAtlas));
 
             // Prepare at least one atlas
             if (_cache.Count == 0)

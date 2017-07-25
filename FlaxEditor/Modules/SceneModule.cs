@@ -217,7 +217,7 @@ namespace FlaxEditor.Modules
 
             var endTime = DateTime.UtcNow;
             var milliseconds = (int)(endTime - startTime).TotalMilliseconds;
-            Debug.Log($"Created UI tree for scene \'{scene.Name}\' in {milliseconds} ms");
+            Editor.Log($"Created UI tree for scene \'{scene.Name}\' in {milliseconds} ms");
         }
 
         private void OnSceneUnloading(Scene scene, Guid sceneId)
@@ -226,7 +226,7 @@ namespace FlaxEditor.Modules
             var node = Root.FindChild(scene);
             if (node != null)
             {
-                Debug.Log($"Cleanup UI tree for scene \'{scene.Name}\'");
+                Editor.Log($"Cleanup UI tree for scene \'{scene.Name}\'");
 
                 // Cleanup
                 node.TreeNode.Dispose();
