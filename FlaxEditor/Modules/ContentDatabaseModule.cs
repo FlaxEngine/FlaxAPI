@@ -323,6 +323,25 @@ namespace FlaxEditor.Modules
         /// Moves the specified item to the diffrent location. Handles moving whole directories and single assets.
         /// </summary>
         /// <param name="item">The item.</param>
+        /// <param name="newParent">The new parent.</param>
+        public void Move(ContentItem item, ContentFolder newParent)
+        {
+            if (newParent == null || item == null)
+                throw new ArgumentNullException();
+
+            // Skip nothing to change
+            if (item.ParentFolder == newParent)
+                return;
+
+            var extension = Path.GetExtension(item.Path);
+            var newPath = StringUtils.CombinePaths(newParent.Path, item.ShortName + extension);
+            Move(item, newPath);
+        }
+
+        /// <summary>
+        /// Moves the specified item to the diffrent location. Handles moving whole directories and single assets.
+        /// </summary>
+        /// <param name="item">The item.</param>
         /// <param name="newPath">The new path.</param>
         public void Move(ContentItem item, string newPath)
         {

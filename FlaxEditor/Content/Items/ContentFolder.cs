@@ -4,6 +4,8 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.GUI.Drag;
+using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Content
@@ -37,13 +39,16 @@ namespace FlaxEditor.Content
         /// The other type of directory.
         /// </summary>
         Other
-    } 
+    }
 
     /// <summary>
     /// Represents workspace directory item.
     /// </summary>
     public class ContentFolder : ContentItem
     {
+        private DragItems _dragOverItems;
+        private bool _validDragOver;
+
         /// <summary>
         /// Gets the type of the folder.
         /// </summary>
@@ -68,7 +73,7 @@ namespace FlaxEditor.Content
         /// Returns true if that folder belongs to the project workspace.
         /// </summary>
         /// <returns>True if folder belogns to the project workspace otherwise false</returns>
-        public  bool IsProjectOnly => FolderType == ContentFolderType.Content || FolderType ==  ContentFolderType.Source;
+        public bool IsProjectOnly => FolderType == ContentFolderType.Content || FolderType == ContentFolderType.Source;
 
         /// <summary>
         /// Returns true if that folder belongs to the Engine or Editor private files.
@@ -132,7 +137,7 @@ namespace FlaxEditor.Content
         public override ContentItemType ItemType => ContentItemType.Folder;
 
         /// <inheritdoc />
-        public override bool CanRename => ParentFolder != null; // Deny rename action for root folders
+        public override bool CanRename => ParentFolder != null;// Deny rename action for root folders
 
         /// <inheritdoc />
         public override bool Exists => System.IO.Directory.Exists(Path);
@@ -219,6 +224,87 @@ namespace FlaxEditor.Content
             }
 
             return base.Compare(other);
+        }
+
+        /// <inheritdoc />
+        public override void Draw()
+        {
+            base.Draw();
+
+            // Check if drag is over
+            if (IsDragOver && _validDragOver)
+                Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), Style.Current.BackgroundSelected * 0.4f, true);
+        }
+
+        private bool ValidateDragItem(ContentItem item)
+        {
+            // Reject itself and any parent
+            return item != this && !item.Find(this);
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
+        {
+            base.OnDragEnter(ref location, data);
+
+            // Check if drop file(s)
+            if (data is DragDataFiles)
+                return DragDropEffect.Copy;
+
+            // Check if drop asset(s)
+            if (_dragOverItems == null)
+                _dragOverItems = new DragItems();
+            _dragOverItems.OnDragEnter(data, ValidateDragItem);
+            _validDragOver = _dragOverItems.HasValidDrag;
+            return _dragOverItems.Effect;
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragMove(ref Vector2 location, DragData data)
+        {
+            base.OnDragMove(ref location, data);
+
+            if (data is DragDataFiles)
+                return DragDropEffect.Copy;
+            return _dragOverItems.Effect;
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
+        {
+            var result = base.OnDragDrop(ref location, data);
+
+            // Check if drop file(s)
+            if (data is DragDataFiles files)
+            {
+                // Import files
+                Editor.Instance.ContentEditing.Import(files.Files, this);
+                result = DragDropEffect.Copy;
+            }
+            else if (_dragOverItems.HasValidDrag)
+            {
+                // Move items
+                for (int i = 0; i < _dragOverItems.Objects.Count; i++)
+                {
+                    Editor.Instance.ContentDatabase.Move(_dragOverItems.Objects[i], this);
+                }
+                result = DragDropEffect.Move;
+            }
+
+            // Clear cache
+            _dragOverItems.OnDragDrop();
+            _validDragOver = false;
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override void OnDragLeave()
+        {
+            _dragOverItems?.OnDragLeave();
+            _validDragOver = false;
+
+            base.OnDragLeave();
         }
     }
 }
