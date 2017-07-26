@@ -95,6 +95,23 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Removes asset in a safe way. Available only in editor.
+		/// </summary>
+		/// <param name="path">The asset path.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static void DeleteAsset(string path) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_DeleteAsset(path);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -105,6 +122,8 @@ namespace FlaxEngine
 		internal static extern Asset Internal_LoadAsync3(string internalPath, Type type);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_RenameAsset(string oldPath, string newPath);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_DeleteAsset(string path);
 #endif
 #endregion
 	}
