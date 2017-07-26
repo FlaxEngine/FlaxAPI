@@ -18,12 +18,12 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Default height of the text box
         /// </summary>
-        private static int DefaultHeight = 18;
+        public static int DefaultHeight = 18;
 
         /// <summary>
         /// Left and right margin for text inside the text box bounds rectangle
         /// </summary>
-        private static int DefaultMargin = 4;
+        public static int DefaultMargin = 4;
 
         // TODO: support password protected text box
 
