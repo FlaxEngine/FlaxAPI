@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -20,7 +20,7 @@ namespace FlaxEngine.GUI
             set
             {
                 value = Mathf.Clamp(value, _min, _max);
-                if (_value != value)
+                if (Math.Abs(_value - value) > Mathf.Epsilon)
                 {
                     // Set value
                     _value = value;
@@ -61,9 +61,11 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void TryGetValue()
         {
+            var text = Text.Replace(',', '.');
+
             // Try to parse float
             float value;
-            if (float.TryParse(Text, out value))
+            if (float.TryParse(text, out value))
             {
                 // Set value
                 Value = (float)Math.Round(value, 5);
