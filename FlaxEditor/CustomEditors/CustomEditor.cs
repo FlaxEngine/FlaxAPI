@@ -2,92 +2,67 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using FlaxEngine.GUI;
-
 namespace FlaxEditor.CustomEditors
 {
     /// <summary>
-    /// Main class for Custom Editors used to present selected objects properties and allow to modify them.
+    /// Base class for all custom editors used to present object(s) properties. Allows to extend game objects editing with more logic and customization.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
-    public class CustomEditor : ContainerControl
+    public abstract class CustomEditor
     {
-        /// <summary>
-        /// The selected objects list.
-        /// </summary>
-        protected readonly List<object> Selection = new List<object>();
+        private ValueContainer _values;
 
         /// <summary>
-        /// Occurs when selection gets changed.
+        /// Gets a value indicating whether single object is selected.
         /// </summary>
-        public event Action SelectionChanged;
+        /// <value>
+        ///   <c>true</c> if single object is selected; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsSingleObject => _values.Count == 0;
 
-        public CustomEditor(CustomEditor parentEditor = null)
-            : base(false, 0, 0, 64, 64)
+        /// <summary>
+        /// Gets a value indicating whether selected objects are diffrent values.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if selected objects are diffrent values; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasDiffrentValues
         {
+            get
+            {
+                for (int i = 1; i < _values.Count; i++)
+                {
+                    if (_values[0] != _values[1])
+                        return true;
+                }
+                return false;
+            }
         }
 
         /// <summary>
-        /// Selects the specified object.
+        /// Gets the values.
         /// </summary>
-        /// <param name="obj">The object.</param>
-        public void Select(object obj)
+        /// <value>
+        /// The values.
+        /// </value>
+        public ValueContainer Values => _values;
+
+        internal virtual void Initialize(LayoutElementsContainer layout, ValueContainer values)
         {
-            if(obj == null)
-                throw new ArgumentNullException();
-            if (Selection.Count == 1 && Selection[0] == obj)
-                return;
+            _values = values;
 
-            Selection.Clear();
-            Selection.Add(obj);
-
-            OnSelectionChanged();
+            Initialize(layout);
+            Refresh();
         }
 
         /// <summary>
-        /// Selects the specified objects.
+        /// Initializes this editor.
         /// </summary>
-        /// <param name="objects">The objects.</param>
-        public void Select(IEnumerable<object> objects)
-        {
-            if (objects == null)
-                throw new ArgumentNullException();
-
-            Selection.Clear();
-            Selection.AddRange(objects);
-
-            OnSelectionChanged();
-        }
+        /// <param name="layout">The layout builder.</param>
+        public abstract void Initialize(LayoutElementsContainer layout);
 
         /// <summary>
-        /// Clears the selected objects.
+        /// Refreshes this editor.
         /// </summary>
-        public void Deselect()
-        {
-            if (Selection.Count == 0)
-                return;
-
-            Selection.Clear();
-
-            OnSelectionChanged();
-        }
-
-        /// <summary>
-        /// Called when selection gets changed.
-        /// </summary>
-        protected virtual void OnSelectionChanged()
-        {
-            SelectionChanged?.Invoke();
-        }
-
-        /// <inheritdoc />
-        public override void OnDestroy()
-        {
-            Deselect();
-
-            base.OnDestroy();
-        }
+        public abstract void Refresh();
     }
 }

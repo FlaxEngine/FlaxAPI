@@ -17,7 +17,7 @@ namespace FlaxEditor.Windows
         /// <summary>
         /// The editor.
         /// </summary>
-        public readonly CustomEditor ObjectsEditor;
+        public readonly CustomEditorPresenter Presenter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertiesWindow"/> class.
@@ -28,9 +28,9 @@ namespace FlaxEditor.Windows
         {
             Title = "Properties";
 
-            ObjectsEditor = new CustomEditor();
-            ObjectsEditor.DockStyle = DockStyle.Top;
-            ObjectsEditor.Parent = this;
+            Presenter = new CustomEditorPresenter();
+            Presenter.Panel.DockStyle = DockStyle.Top;
+            Presenter.Panel.Parent = this;
 
             Editor.SceneEditing.OnSelectionChanged += OnSelectionChanged;
         }
@@ -38,7 +38,7 @@ namespace FlaxEditor.Windows
         private void OnSelectionChanged()
         {
             // Update selected objects
-            ObjectsEditor.Select(Editor.SceneEditing.Selection);
+            Presenter.Select(Editor.SceneEditing.Selection);
         }
     }
 }

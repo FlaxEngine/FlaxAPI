@@ -48,6 +48,10 @@
     <Compile Include="Content\GUI\ContentView.cs" />
     <Compile Include="Content\GUI\NavigationBar.cs" />
     <Compile Include="Content\GUI\NavigationButton.cs" />
+    <Compile Include="CustomEditors\CustomEditor.cs" />
+    <Compile Include="CustomEditors\Editors\GenericEditor.cs" />
+    <Compile Include="CustomEditors\Elements\VerticalPanelElement.cs" />
+    <Compile Include="CustomEditors\ValueContainer.cs" />
     <Compile Include="GUI\RenamePopup.cs" />
     <Compile Include="Content\Proxy\BinaryAssetProxy.cs" />
     <Compile Include="Content\Proxy\ContentProxy.cs" />
@@ -75,7 +79,7 @@
     <Compile Include="Content\Thumbnails\ThumbnailRequest.cs" />
     <Compile Include="Content\Tree\ContentTreeNode.cs" />
     <Compile Include="Content\Tree\MainContentTreeNode.cs" />
-    <Compile Include="CustomEditors\CustomEditor.cs" />
+    <Compile Include="CustomEditors\CustomEditorPresenter.cs" />
     <Compile Include="CustomEditors\Elements\ButtonElement.cs" />
     <Compile Include="CustomEditors\Elements\GroupElement.cs" />
     <Compile Include="CustomEditors\LayoutElement.cs" />
