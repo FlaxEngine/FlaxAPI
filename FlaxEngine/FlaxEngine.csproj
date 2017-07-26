@@ -180,6 +180,7 @@
     <Compile Include="GUI\Common\ComboBox.cs" />
     <Compile Include="GUI\Common\Label.cs" />
     <Compile Include="GUI\Common\ProgressBar.cs" />
+    <Compile Include="GUI\Common\Spacer.cs" />
     <Compile Include="GUI\ContainerControl.cs" />
     <Compile Include="GUI\ContextMenu\ContextMenu.cs" />
     <Compile Include="GUI\ContextMenu\ContextMenuBase.cs" />

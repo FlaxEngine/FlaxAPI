@@ -55,6 +55,20 @@ namespace FlaxEditor.CustomEditors
             return element;
         }
 
+        /// <summary>
+        /// Adds new space.
+        /// </summary>
+        /// <param name="height">The height.</param>
+        /// <returns>The created element.</returns>
+        public SpaceElement Space(float height)
+        {
+            SpaceElement element = new SpaceElement();
+            element.Init(height);
+            element.Control.Parent = ContainerControl;
+            Children.Add(element);
+            return element;
+        }
+        
         /// <inheritdoc />
         public override Control Control => ContainerControl;
     }
