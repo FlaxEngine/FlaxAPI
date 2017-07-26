@@ -95,7 +95,7 @@ namespace FlaxEditor
         {
             Instance = this;
 
-            Debug.Log("Setting up C# Editor...");
+            Editor.Log("Setting up C# Editor...");
 
             // Create common editor modules
             RegisterModule(Windows = new WindowsModule(this));
@@ -116,7 +116,7 @@ namespace FlaxEditor
 
         internal void RegisterModule(EditorModule module)
         {
-            Debug.Log("Register Editor module " + module);
+            Editor.Log("Register Editor module " + module);
 
             _modules.Add(module);
             if (_isAfterInit)
@@ -126,7 +126,7 @@ namespace FlaxEditor
         internal void Init()
         {
             EnsureState<LoadingState>();
-            Debug.Log("Editor init");
+            Editor.Log("Editor init");
 
             // Note: we don't sort modules before Init (optimized)
             _modules.Sort((a, b) => a.InitOrder - b.InitOrder);
@@ -145,7 +145,7 @@ namespace FlaxEditor
         internal void EndInit()
         {
             EnsureState<LoadingState>();
-            Debug.Log("Editor end init");
+            Editor.Log("Editor end init");
 
             // Change state
             StateMachine.GoToState<EditingSceneState>();
@@ -184,7 +184,7 @@ namespace FlaxEditor
 
         internal void Exit()
         {
-            Debug.Log("Editor exit");
+            Editor.Log("Editor exit");
 
             // Start exit
             StateMachine.GoToState<ClosingState>();
@@ -245,6 +245,36 @@ namespace FlaxEditor
         {
             var state = StateMachine.GetState<TStateType>() as EditorState;
             EnsureState(state);
+        }
+
+        /// <summary>
+        /// Logs the specified message to the log file.
+        /// </summary>
+        /// <param name="msg">The message.</param>
+        public static void Log(string msg)
+        {
+            // TODO: redirect this msg to log file not a console
+            Debug.Log(msg);
+        }
+
+        /// <summary>
+        /// Logs the specified warning message to the log file.
+        /// </summary>
+        /// <param name="msg">The message.</param>
+        public static void LogWarning(string msg)
+        {
+            // TODO: redirect this msg to log file not a console
+            Debug.LogWarning(msg);
+        }
+        
+        /// <summary>
+        /// Logs the specified error message to the log file.
+        /// </summary>
+        /// <param name="msg">The message.</param>
+        public static void LogError(string msg)
+        {
+            // TODO: redirect this msg to log file not a console
+            Debug.LogError(msg);
         }
 
         #region Internal Calls

@@ -19,8 +19,7 @@ namespace FlaxEditor.GUI.Dialogs
         internal static List<Dialog> Dialogs = new List<Dialog>();
 
         private string _title;
-        private Vector2 _size;
-
+        
         protected long _isWaitingForDialog;
         protected FlaxEngine.Window _window;
         protected DialogResult _result;
@@ -37,15 +36,13 @@ namespace FlaxEditor.GUI.Dialogs
         /// Initializes a new instance of the <see cref="Dialog"/> class.
         /// </summary>
         /// <param name="title">The title.</param>
-        /// <param name="size">The dialog size.</param>
-        protected Dialog(string title, Vector2 size)
-            : base(true, Vector2.Zero, size)
+        protected Dialog(string title)
+            : base(true, new Rectangle(0, 0, 300, 100))
         {
             DockStyle = DockStyle.Fill;
             ClipChildren = false;
 
             _title = title;
-            _size = size;
             _result = DialogResult.None;
 
             Dialogs.Add(this);
@@ -140,9 +137,10 @@ namespace FlaxEditor.GUI.Dialogs
             // Setup initial window settings
             CreateWindowSettings settings = CreateWindowSettings.Default;
             settings.Title = _title;
-            settings.Size = _size;
+            settings.Size = Size;
             settings.AllowMaximize = false;
             settings.AllowMinimize = false;
+            settings.HasSizingFrame = false;
             settings.StartPosition = WindowStartPosition.CenterParent;
             settings.Parent = parentWindow;
             SetupWindowSettings(ref settings);
@@ -216,6 +214,16 @@ namespace FlaxEditor.GUI.Dialogs
         }
 
         /// <summary>
+        /// Closes dialog with the specified result.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        protected void Close(DialogResult result)
+        {
+            _result = result;
+            Close();
+        }
+
+        /// <summary>
         /// Setups the window settings.
         /// </summary>
         /// <param name="settings">The settings.</param>
@@ -229,17 +237,7 @@ namespace FlaxEditor.GUI.Dialogs
         protected virtual void OnShow()
         {
         }
-
-        /// <summary>
-        /// Resizes the dialog.
-        /// </summary>
-        /// <param name="size">The size.</param>
-        protected void Resize(Vector2 size)
-        {
-            _size = size;
-            Size = size;
-        }
-
+        
         /// <summary>
         /// Determines whether this dialog can be closed.
         /// </summary>

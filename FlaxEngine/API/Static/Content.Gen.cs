@@ -76,6 +76,25 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Renames the asset. Handles situation when asset is being loaded or storage file locked. Available only in editor.
+		/// </summary>
+		/// <param name="oldPath">The asset path to rename.</param>
+		/// <param name="newPath">The new asset path to set.</param>
+		/// <returns>True if failed, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static bool RenameAsset(string oldPath, string newPath) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_RenameAsset(oldPath, newPath);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -84,6 +103,8 @@ namespace FlaxEngine
 		internal static extern Asset Internal_LoadAsync2(string path, Type type);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Asset Internal_LoadAsync3(string internalPath, Type type);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_RenameAsset(string oldPath, string newPath);
 #endif
 #endregion
 	}

@@ -224,7 +224,7 @@ namespace FlaxEditor.Modules
 
         private void MainWindow_OnClosing(ClosingReason reason, ref bool cancel)
         {
-            Debug.Log("Main window is closing, reason: " + reason);
+            Editor.Log("Main window is closing, reason: " + reason);
 
             SaveCurrentLayout();
             
@@ -264,7 +264,7 @@ namespace FlaxEditor.Modules
 
         private void MainWindow_OnClosed()
         {
-            Debug.Log("Main window is closed");
+            Editor.Log("Main window is closed");
             MainWindow = null;
 
             // TODO: capture project icon screenshot before exit (like in c++ editor)

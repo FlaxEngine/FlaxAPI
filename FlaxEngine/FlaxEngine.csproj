@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FlaxEngine</RootNamespace>
     <AssemblyName>FlaxEngine</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -145,6 +145,8 @@
     <Compile Include="API\Static\Input.Gen.cs">
       <DependentUpon>Input.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Static\MessageBox.cs" />
+    <Compile Include="API\Static\MessageBox.Gen.cs" />
     <Compile Include="API\Static\Render2D.cs" />
     <Compile Include="API\Static\Render2D.Gen.cs">
       <DependentUpon>Render2D.cs</DependentUpon>
