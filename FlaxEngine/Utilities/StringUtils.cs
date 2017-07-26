@@ -58,5 +58,42 @@ namespace FlaxEngine
             }
             return path;
         }
+
+        /// <summary>
+        /// Normalizes the path to the standard Flax format (all separators are '/' except for drive 'C:\').
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>The normalized path.</returns>
+        public static string NormalizePath(string path)
+        {
+            var chars = path.ToCharArray();
+            for (int i = 0; i < chars.Length; i++)
+            {
+                if (chars[i] == '\\')
+                    chars[i] = '/';
+            }
+            if (chars.Length > 2 && char.IsDigit(chars[0]) && chars[1] == ':')
+            {
+                chars[2] = '\\';
+            }
+            return new string(chars);
+        }
+
+        /// <summary>
+        /// Combines the paths.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>The cobined path</returns>
+        public static string CombinePaths(string left, string right)
+        {
+            int cnt = left.Length;
+            if (cnt > 1 && left[cnt - 2] != '/' && left[cnt - 2] != '\\'
+                && (right.Length == 0 || (right[0] != '/' && right[0] != '\\')))
+            {
+                left += '/';
+            }
+            return left + right;
+        }
     }
 }
