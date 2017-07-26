@@ -8,6 +8,7 @@ using FlaxEditor.Content;
 using FlaxEditor.Content.GUI;
 using FlaxEditor.GUI;
 using FlaxEngine;
+using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Windows
@@ -35,7 +36,6 @@ namespace FlaxEditor.Windows
         private readonly Stack<ContentTreeNode> _navigationRedo = new Stack<ContentTreeNode>(32);
 
         private NewItem _newElement;
-        //private AssetsPreviewManager _previewManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContentWindow"/> class.
@@ -78,13 +78,138 @@ namespace FlaxEditor.Windows
 
             // Content View
             _view = new ContentView();
-            // TODO: bind for content view events
             _view.OnOpen += Open;
             _view.OnNavigateBack += NavigateBackward;
-            //_view.OnRename.Bind < ContentWindow, &ContentWindow::Rename > (this);
-            //_view.OnDelete.Bind < ContentWindow, &ContentWindow::view_OnDelete > (this);
-            //_view.OnDuplicate.Bind < ContentWindow, &ContentWindow::CloneSelection > (this);
+            _view.OnRename += OnRename;
+            _view.OnDelete += OnDelete;
+            _view.OnDuplicate += OnDuplicate;
             _view.Parent = _split.Panel2;
+        }
+
+        /// <summary>
+        /// Shows popup dialog with UI to rename content item.
+        /// </summary>
+        /// <param name="item">The item to rename.</param>
+        private void OnRename(ContentItem item)
+        {
+            // Show element in view
+            Select(item);
+
+            // Show rename popup
+            var popup = RenamePopup.Show(item, item.TextRectangle, item.ShortName, true);
+            popup.Tag = item;
+            popup.Renamed += renamePopup => Rename((ContentItem)renamePopup.Tag, renamePopup.Text);
+            popup.Closed += renamePopup =>
+                            {
+                                // Check if was creating new element
+                                if (_newElement != null)
+                                {
+                                    // Destroy mock control
+                                    _newElement.ParentFolder = null;
+                                    _newElement.Dispose();
+                                    _newElement = null;
+                                }
+                            };
+
+            // For new asset we want to mock the initial value so user can press just Enter to use default name
+            if (_newElement != null)
+            {
+                popup.InitialValue = "?";
+            }
+        }
+
+        private void Rename(ContentItem item, string newShortName)
+        {
+            // Check if name is valid
+            string hint;
+            if (!Editor.ContentEditing.IsValidAssetName(item, newShortName, out hint))
+            {
+                // Invalid name
+                MessageBox.Show("Given asset name is invalid. " + hint,
+                    "Invalid name",
+                    MessageBox.Buttons.OK,
+                    MessageBox.Icon.Error);
+                return;
+            }
+
+            // Cache data
+            var extension = System.IO.Path.GetExtension(item.Path);
+            var newPath = StringUtils.CombinePaths(item.ParentFolder.Path, newShortName + extension);
+
+            // Check if was renaming mock element
+            // Note: we create `_newElement` and then rename it to create new asset
+            if (_newElement == item)
+            {
+                // Create new asset
+                var proxy = _newElement.Proxy;
+                Editor.Log(string.Format("Creating asset {0} in {1}", proxy.Name, newPath));
+                proxy.Create(newPath);
+            }
+            else
+            {
+                // Validate state
+                Assert.IsNull(_newElement);
+
+                // Rename asset
+                Editor.Log(string.Format("Renaming asset {0} to {1}", item.Path, newShortName));
+                Editor.ContentDatabase.Move(item, newPath);
+            }
+
+            RefreshView();
+        }
+
+        private void OnDelete(List<ContentItem> items)
+        {
+            // TODO: remove items that depend on diffrent items in the list: use wants to remove `folderA` and `folderA/asset.x`, we should just remove `folderA`
+            var toDelete = new List<ContentItem>(items);
+
+            // Ask user
+            if (toDelete.Count == 1)
+            {
+                // Single item
+                if (MessageBox.Show(string.Format("Are you sure to delete \'{0}\'?\nThis action cannot be undone. Files will be deleted permanently.", items[0].Path),
+                        "Delete asset(s)",
+                        MessageBox.Buttons.OKCancel,
+                        MessageBox.Icon.Question)
+                    != DialogResult.OK)
+                {
+                    // Break
+                    return;
+                }
+            }
+            else
+            {
+                // Many items
+                if (MessageBox.Show(string.Format("Are you sure to delete {0} selected items?\nThis action cannot be undone. Files will be deleted permanently.", items.Count),
+                        "Delete asset(s)",
+                        MessageBox.Buttons.OKCancel,
+                        MessageBox.Icon.Question)
+                    != DialogResult.OK)
+                {
+                    // Break
+                    return;
+                }
+            }
+
+            // Clear navigation
+            // TODO: just remove invalid locations from the history (those are removed)
+            NavigationClearHistory();
+
+            // Delete items
+            for (int i = 0; i < toDelete.Count; i++)
+                Editor.ContentDatabase.Delete(toDelete[i]);
+
+            RefreshView();
+        }
+
+        private void OnDuplicate(List<ContentItem> items)
+        {
+            // TODO: remove items that depend on diffrent items in the list: use wants to remove `folderA` and `folderA/asset.x`, we should just remove `folderA`
+            var toDuplicate = new List<ContentItem>(items);
+
+            throw new NotImplementedException();
+
+            RefreshView();
         }
 
         private void ContentDatabaseOnOnItemRemoved(ContentItem contentItem)
@@ -103,8 +228,6 @@ namespace FlaxEditor.Windows
                 // Check if folder is in navigation
                 if (_navigationRedo.Contains(node) || _navigationUndo.Contains(node))
                 {
-                    Debug.Log("clear navigation");
-
                     // Clear all to prevent leaks
                     NavigationClearHistory();
                 }
@@ -169,16 +292,22 @@ namespace FlaxEditor.Windows
             switch (id)
             {
                 // Import
-		        //case 0: import(); break; // TODO: importing
+                //case 0: import(); break; // TODO: importing
 
                 // Backward
-                case 1: NavigateBackward(); break;
+                case 1:
+                    NavigateBackward();
+                    break;
 
                 // Forward
-                case 2: NavigateForward(); break;
+                case 2:
+                    NavigateForward();
+                    break;
 
                 // Up
-                case 3: NavigateUp(); break;
+                case 3:
+                    NavigateUp();
+                    break;
             }
         }
 
@@ -294,7 +423,7 @@ namespace FlaxEditor.Windows
 
             // Clear view
             _view.ClearItems();
-            
+
             // Unlink used directories
             while (_root.HasChildren)
             {

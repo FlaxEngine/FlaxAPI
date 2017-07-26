@@ -1,4 +1,6 @@
-// Flax Engine scripting API
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
 
 using System;
 using FlaxEditor.Content;
@@ -42,7 +44,7 @@ namespace FlaxEditor.Modules
             if (proxy == null)
             {
                 // Error
-                Debug.Log("Missing content proxy object for " + item);
+                Editor.Log("Missing content proxy object for " + item);
                 return null;
             }
 
@@ -72,6 +74,74 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
+        /// Determines whether specified new short name is valid name for the given content item.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="shortName">The new short name.</param>
+        /// <param name="hint">The hint text if name is invalid.</param>
+        /// <returns>
+        ///   <c>true</c> if name is valid; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsValidAssetName(ContentItem item, string shortName, out string hint)
+        {
+            // Check if name is the same except has some chars in upper case and some in lower case
+            if (shortName.Equals(item.ShortName, StringComparison.OrdinalIgnoreCase))
+            {
+                // The same file names but some chars have diffrent case
+            }
+            else
+            {
+                // Validate length
+                if (shortName.Length == 0)
+                {
+                    hint = "Name cannot be empty.";
+                    return false;
+                }
+                if (shortName.Length > 60)
+                {
+                    hint = "Too long name.";
+                    return false;
+                }
+
+                // Find invalid characters
+                char[] illegalChars = { '?', '\\', '/', '\"', '<', '>', '|', '\u0001', '\u0002', '\u0003', '\u0004', '\u0005', '\u0006', '\a', '\b', '\t', '\n', '\v', '\f', '\r', '\u000E', '\u000F', '\u0010', '\u0011', '\u0012', '\u0013', '\u0014', '\u0015', '\u0016', '\u0017', '\u0018', '\u0019', '\u001A', '\u001B', '\u001C', '\u001D', '\u001E', '\u001F' };
+                if (shortName.IndexOfAny(illegalChars) != -1)
+                {
+                    hint = "Name contains invalid character.";
+                    return false;
+                }
+
+                // Cache data
+                string sourcePath = item.Path;
+                string sourceFolder = System.IO.Path.GetDirectoryName(sourcePath);
+                string extension = System.IO.Path.GetExtension(sourcePath);
+                string destinationPath = StringUtils.CombinePaths(sourceFolder, shortName + extension);
+
+                if (item.IsFolder)
+                {
+                    // Check if direcotry is unique
+                    if (System.IO.Directory.Exists(destinationPath))
+                    {
+                        hint = "Already exists.";
+                        return false;
+                    }
+                }
+                else
+                {
+                    // Check if file is unique
+                    if (System.IO.File.Exists(destinationPath))
+                    {
+                        hint = "Already exists.";
+                        return false;
+                    }
+                }
+            }
+
+            hint = string.Empty;
+            return true;
+        }
+
+        /// <summary>
         /// Reimports the specified asset.
         /// </summary>
         /// <param name="asset">The asset.</param>
@@ -90,7 +160,7 @@ namespace FlaxEditor.Modules
         {
             var extension = System.IO.Path.GetExtension(item.Path);
             var id = Guid.NewGuid();
-            resultPath = System.IO.Path.Combine(Globals.TemporaryFolder, id.ToString("N")) + extension;
+            resultPath = StringUtils.CombinePaths(Globals.TemporaryFolder, id.ToString("N")) + extension;
             
             if (CloneAssetFile(resultPath, item.Path, id))
                 return true;

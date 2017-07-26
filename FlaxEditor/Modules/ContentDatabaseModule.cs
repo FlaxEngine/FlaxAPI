@@ -245,6 +245,169 @@ namespace FlaxEditor.Modules
             return null;
         }
 
+        private static void RenameAsset(ContentItem el, ref string newPath)
+        {
+            string oldPath = el.Path;
+
+            // Check if use content pool
+            if (el.IsAsset)
+            {
+                // Rename asset
+                // Note: we use content backend because fiel may be in use or sth, it's safe
+                if (FlaxEngine.Content.RenameAsset(oldPath, newPath))
+                {
+                    // Error
+                    Editor.LogError(string.Format("Cannot rename asset \'{0}\' to \'{1}\'", oldPath, newPath));
+                    return;
+                }
+            }
+            else
+            {
+                // Rename file
+                try
+                {
+                    File.Move(oldPath, newPath);
+                }
+                catch (Exception ex)
+                {
+                    // Error
+                    Editor.LogWarning(ex.Message);
+                    Editor.LogError(string.Format("Cannot rename asset \'{0}\' to \'{1}\'", oldPath, newPath));
+                    return;
+                }
+            }
+
+            // Change path
+            el.UpdatePath(newPath);
+        }
+
+        private static void UpdateAssetNewNameTree(ContentItem el)
+        {
+            string extension = Path.GetExtension(el.Path);
+            string newPath = StringUtils.CombinePaths(el.ParentFolder.Path, el.ShortName + extension);
+
+            // Special case for folders
+            if (el.IsFolder)
+            {
+                // Cache data
+                string oldPath = el.Path;
+                var folder = (ContentFolder)el;
+
+                // Create new folder
+                try
+                {
+                    Directory.CreateDirectory(newPath);
+                }
+                catch (Exception ex)
+                {
+                    // Error
+                    Editor.LogWarning(ex.Message);
+                    Editor.LogError(string.Format("Cannot move folder \'{0}\' to \'{1}\'", oldPath, newPath));
+                    return;
+                }
+
+                // Change path
+                el.UpdatePath(newPath);
+
+                // Rename all child elements
+                for (int i = 0; i < folder.Children.Count; i++)
+                    UpdateAssetNewNameTree(folder.Children[i]);
+            }
+            else
+            {
+                RenameAsset(el, ref newPath);
+            }
+        }
+
+        /// <summary>
+        /// Moves the specified item to the diffrent location. Handles moving whole directories and single assets.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="newPath">The new path.</param>
+        public void Move(ContentItem item, string newPath)
+        {
+            if (item == null || string.IsNullOrEmpty(newPath))
+                throw new ArgumentNullException();
+
+            if (item.IsFolder && Directory.Exists(newPath))
+            {
+                // Error
+                MessageBox.Show("Cannot move folder. Target location already exists.");
+                return;
+            }
+            if (!item.IsFolder && File.Exists(newPath))
+            {
+                // Error
+                MessageBox.Show("Cannot move file. Target location already exists.");
+                return;
+            }
+
+            // Find target parent
+            var newDirPath = Path.GetDirectoryName(newPath);
+            var newParent = Find(newDirPath) as ContentFolder;
+            if (newParent == null)
+            {
+                // Error
+                MessageBox.Show("Cannot move item. Missing target location.");
+                return;
+            }
+
+            // Perform renaming
+            {
+                string oldPath = item.Path;
+
+                // Special case for folders
+                if (item.IsFolder)
+                {
+                    // Cache data
+                    var folder = (ContentFolder)item;
+
+                    // Create new folder
+                    try
+                    {
+                        Directory.CreateDirectory(newPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Error
+                        Editor.LogWarning(ex.Message);
+                        Editor.LogError(string.Format("Cannot move folder \'{0}\' to \'{1}\'", oldPath, newPath));
+                        return;
+                    }
+
+                    // Change path
+                    item.UpdatePath(newPath);
+
+                    // Rename all child elements
+                    for (int i = 0; i < folder.Children.Count; i++)
+                        UpdateAssetNewNameTree(folder.Children[i]);
+
+                    // Delete old folder
+                    try
+                    {
+                        Directory.Delete(oldPath, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Error
+                        Editor.LogWarning(ex.Message);
+                        Editor.LogWarning(string.Format("Cannot remove folder \'{0}\'", oldPath));
+                        return;
+                    }
+                }
+                else
+                {
+                    RenameAsset(item, ref newPath);
+                }
+
+                if (item.ParentFolder != null)
+                    item.ParentFolder.Node.SortChildren();
+            }
+
+            // Link item
+            item.ParentFolder = newParent;
+        }
+
         /// <summary>
         /// Deletes the specified item.
         /// </summary>
@@ -289,8 +452,7 @@ namespace FlaxEditor.Modules
                 if (item.IsAsset)
                 {
                     // Delete asset by using content pool
-                    throw new NotImplementedException("FlaxEngine.Content.Delete assets");
-                    //FlaxEngine.Content.Delete(path);
+                    FlaxEngine.Content.DeleteAsset(path);
                 }
                 else
                 {
@@ -344,13 +506,13 @@ namespace FlaxEditor.Modules
             }
 
             // Get child directories
-            var childFolders = System.IO.Directory.GetDirectories(path);
+            var childFolders = Directory.GetDirectories(path);
             
             // Load child folders
             bool sortChildren = false;
             for (int i = 0; i < childFolders.Length; i++)
             {
-                var childPath = childFolders[i];
+                var childPath = StringUtils.NormalizePath(childFolders[i]);
 
                 // Check if node already has that element (skip during init when we want to walk project dir very fast)
                 ContentFolder childFolderNode = _isDuringFastSetup ? null : node.Folder.FindChild(childPath) as ContentFolder;
@@ -387,7 +549,7 @@ namespace FlaxEditor.Modules
             // Add them
             for (int i = 0; i < files.Length; i++)
             {
-                var path = files[i];
+                var path = StringUtils.NormalizePath(files[i]);
 
                 // Check if node already has that element (skip during init when we want to walk project dir very fast)
                 if (_isDuringFastSetup || !parent.Folder.ContaisnChild(path))
@@ -414,7 +576,7 @@ namespace FlaxEditor.Modules
             // Add them
             for (int i = 0; i < files.Length; i++)
             {
-                var path = files[i];
+                var path = StringUtils.NormalizePath(files[i]);
 
                 // Check if node already has that element (skip during init when we want to walk project dir very fast)
                 if (_isDuringFastSetup || !parent.Folder.ContaisnChild(path))
