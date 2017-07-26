@@ -141,7 +141,7 @@ namespace FlaxEditor.Content
         public override string DefaultThumbnailName => "Folder64";
 
         /// <inheritdoc />
-        public override void UpdatePath(string value)
+        internal override void UpdatePath(string value)
         {
             base.UpdatePath(value);
 
