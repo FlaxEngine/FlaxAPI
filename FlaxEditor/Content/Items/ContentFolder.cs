@@ -215,7 +215,7 @@ namespace FlaxEditor.Content
             {
                 if (!otherItem.IsFolder)
                     return -1;
-                return string.CompareOrdinal(ShortName, otherItem.ShortName);
+                return string.Compare(ShortName, otherItem.ShortName, StringComparison.InvariantCulture);
             }
 
             return base.Compare(other);

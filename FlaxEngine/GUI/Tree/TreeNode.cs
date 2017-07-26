@@ -2,6 +2,8 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+
 namespace FlaxEngine.GUI
 {
     /// <summary>
@@ -711,6 +713,16 @@ namespace FlaxEngine.GUI
             _tree = null;
 
             base.OnParentChangedInternal();
+        }
+
+        /// <inheritdoc />
+        public override int Compare(Control other)
+        {
+            if (other is TreeNode node)
+            {
+                return string.Compare(Text, node.Text, StringComparison.InvariantCulture);
+            }
+            return base.Compare(other);
         }
 
         /// <inheritdoc />
