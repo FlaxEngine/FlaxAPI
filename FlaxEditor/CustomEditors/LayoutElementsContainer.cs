@@ -14,8 +14,6 @@ namespace FlaxEditor.CustomEditors
     /// <seealso cref="FlaxEditor.CustomEditors.LayoutElement" />
     public abstract class LayoutElementsContainer : LayoutElement
     {
-        private readonly Queue<LayoutElement> toReuse = new Queue<LayoutElement>();
-
         /// <summary>
         /// The children.
         /// </summary>
@@ -28,15 +26,6 @@ namespace FlaxEditor.CustomEditors
         /// The control.
         /// </value>
         public abstract ContainerControl ContainerControl { get; }
-        
-        private void RemoveReusable()
-        {
-            while (toReuse.Count > 0)
-            {
-                var c = toReuse.Dequeue();
-                c.Dispose();
-            }
-        }
 
         /// <summary>
         /// Adds new group element.
@@ -45,19 +34,7 @@ namespace FlaxEditor.CustomEditors
         /// <returns>The created element.</returns>
         public GroupElement Group(string title)
         {
-            // Try to resuse element or create new one
-            GroupElement element;
-            if (toReuse.Count > 0 && toReuse.Dequeue() is GroupElement e)
-            {
-                element = e;
-            }
-            else
-            {
-                RemoveReusable();
-                element = new GroupElement();
-            }
-
-            // Link it
+            GroupElement element = new GroupElement();
             element.Init(title);
             element.Control.Parent = ContainerControl;
             Children.Add(element);
@@ -71,19 +48,7 @@ namespace FlaxEditor.CustomEditors
         /// <returns>The created element.</returns>
         public ButtonElement Button(string title)
         {
-            // Try to resuse element or create new one
-            ButtonElement element;
-            if (toReuse.Count > 0 && toReuse.Dequeue() is ButtonElement e)
-            {
-                element = e;
-            }
-            else
-            {
-                RemoveReusable();
-                element = new ButtonElement();
-            }
-
-            // Link it
+            ButtonElement element = new ButtonElement();
             element.Init(title);
             element.Control.Parent = ContainerControl;
             Children.Add(element);
@@ -92,41 +57,5 @@ namespace FlaxEditor.CustomEditors
 
         /// <inheritdoc />
         public override Control Control => ContainerControl;
-
-        /// <inheritdoc />
-        public override void BuildLayout()
-        {
-            for (int i = 0; i < Children.Count; i++)
-            {
-                var child = Children[i];
-                toReuse.Enqueue(child);
-                child.Control.Parent = null;
-            }
-            Children.Clear();
-
-            // TODO: create elements here
-            base.BuildLayout();
-
-            RemoveReusable();
-        }
-
-        /// <inheritdoc />
-        public override void Update(List<object> selection)
-        {
-            base.Update(selection);
-
-            for (int i = 0; i < Children.Count; i++)
-            {
-                Children[i].Update(selection);
-            }
-        }
-
-        /// <inheritdoc />
-        public override void Dispose()
-        {
-            RemoveReusable();
-
-            base.Dispose();
-        }
     }
 }
