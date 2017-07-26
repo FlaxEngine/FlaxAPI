@@ -95,6 +95,8 @@ namespace FlaxEditor.CustomEditors
 
             // Build new one
             Editor.Initialize(this, Selection);
+            Panel.UnlockChildrenRecursive();
+            Panel.PerformLayout();
         }
 
         /// <summary>

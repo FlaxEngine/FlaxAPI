@@ -266,8 +266,6 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
-            base.PerformLayoutSelf();
-
             // Arrange docked controls
             Rectangle clientArea;
             GetDesireClientArea(out clientArea);
