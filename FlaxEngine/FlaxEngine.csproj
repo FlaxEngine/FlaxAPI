@@ -159,6 +159,7 @@
       <DependentUpon>Time.cs</DependentUpon>
     </Compile>
     <Compile Include="AssetTypes\IESProfile.cs" />
+    <Compile Include="Attributes\Editor\EditorDisplayAttribute.cs" />
     <Compile Include="Attributes\MemberCollectionAttribute.cs" />
     <Compile Include="Attributes\PersisitentDataAttribute.cs" />
     <Compile Include="Configurations\PersistentDataConfig.cs" />

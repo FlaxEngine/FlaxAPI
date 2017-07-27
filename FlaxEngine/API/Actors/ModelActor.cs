@@ -19,6 +19,7 @@ namespace FlaxEngine
 	    /// </value>
 	    [MemberCollection(CanReorderItems = false, NotNullItems = true, ReadOnly = true)]
 	    [EditorIndex(100)]
+	    [EditorDisplay("Model")]
 	    public MeshInfo[] Meshes
 	    {
 	        get
