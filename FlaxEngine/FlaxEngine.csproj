@@ -254,7 +254,7 @@
     <Compile Include="Engine\Debug.cs" />
     <Compile Include="Internals\DebugLogHandler.cs" />
     <Compile Include="Attributes\ExecuteInEditModeAttribute.cs" />
-    <Compile Include="Attributes\HideInEditorAttribute.cs" />
+    <Compile Include="Attributes\Editor\HideInEditorAttribute.cs" />
     <Compile Include="Engine\ILogger.cs" />
     <Compile Include="Engine\ILogHandler.cs" />
     <Compile Include="Engine\Logger.cs">

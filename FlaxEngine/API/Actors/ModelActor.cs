@@ -17,6 +17,8 @@ namespace FlaxEngine
 	    /// <value>
 	    /// The mesh infos array. It's null if the <see cref="Model"/> property is null or asset is not loaded yet.
 	    /// </value>
+	    [MemberCollection(CanReorderItems = false, NotNullItems = true, ReadOnly = true)]
+	    [EditorIndex(100)]
 	    public MeshInfo[] Meshes
 	    {
 	        get
@@ -25,7 +27,7 @@ namespace FlaxEngine
 	            if (_meshes != null)
 	                return _meshes;
 
-                // Cache data
+	            // Cache data
 	            var model = Model;
 	            if (model && model.IsLoaded)
 	            {
@@ -41,7 +43,7 @@ namespace FlaxEngine
 	        }
 	    }
 
-        internal void Internal_OnModelChanged()
+	    internal void Internal_OnModelChanged()
 	    {
             // Clear cached data
 	        _meshes = null;
