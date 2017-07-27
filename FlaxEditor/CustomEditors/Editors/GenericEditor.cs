@@ -28,14 +28,21 @@ namespace FlaxEditor.CustomEditors.Editors
             {
                 if (obj is PropertyItemInfo other)
                 {
+                    // By group
+
+
+                    // By index
                     if (Index != null)
                     {
                         if (other.Index != null)
                             return Index.Index - other.Index.Index;
                         return -1;
                     }
-                    return 1;
+
+                    // By name
+                    return string.Compare(Info.Name, other.Info.Name, StringComparison.InvariantCulture);
                 }
+
                 return 0;
             }
         }
