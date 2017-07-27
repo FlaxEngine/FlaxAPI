@@ -39,6 +39,28 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Gets a value indicating whether selected objects are diffrent types.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if selected objects are diffrent types; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasDiffrentTypes
+        {
+            get
+            {
+                if (_values.Count < 2)
+                    return false;
+                var theFirstType = _values[0].GetType();
+                for (int i = 1; i < _values.Count; i++)
+                {
+                    if (theFirstType != _values[1].GetType())
+                        return true;
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Gets the values.
         /// </summary>
         /// <value>

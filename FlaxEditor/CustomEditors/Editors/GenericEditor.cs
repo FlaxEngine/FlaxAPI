@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -17,6 +18,28 @@ namespace FlaxEditor.CustomEditors.Editors
     {
         private readonly List<CustomEditor> children = new List<CustomEditor>();
 
+        private struct PropertyItemInfo : IComparable
+        {
+            public PropertyInfo Info;
+            public EditorIndexAttribute Index;
+
+            /// <inheritdoc />
+            public int CompareTo(object obj)
+            {
+                if (obj is PropertyItemInfo other)
+                {
+                    if (Index != null)
+                    {
+                        if (other.Index != null)
+                            return Index.Index - other.Index.Index;
+                        return -1;
+                    }
+                    return 1;
+                }
+                return 0;
+            }
+        }
+
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
@@ -29,8 +52,8 @@ namespace FlaxEditor.CustomEditors.Editors
             // TODO: spawn custom editors for every editable thing
             // TODO; use shared properties/fields across all selected objects values
 
-            // Faster path for single object selected
-            if (IsSingleObject)
+            // Faster path for the same objects selected
+            if (HasDiffrentTypes == false)
             {
                 var type = Values[0].GetType();
 
@@ -43,7 +66,9 @@ namespace FlaxEditor.CustomEditors.Editors
 
                     // TODO: promote children to other base class like CustomEditorContainer ?
 
+                    // Process the properties
                     var properties = type.GetProperties();
+                    var propertyItems = new List<PropertyItemInfo>(properties.Length);
                     for (int i = 0; i < properties.Length; i++)
                     {
                         var p = properties[i];
@@ -54,7 +79,22 @@ namespace FlaxEditor.CustomEditors.Editors
                             continue;
                         }
 
-                        layout.Button("Property " + p.Name);
+                        PropertyItemInfo item;
+                        item.Info = p;
+                        item.Index = (EditorIndexAttribute)attributes.FirstOrDefault(x => x is EditorIndexAttribute);
+                        
+                        propertyItems.Add(item);
+                    }
+
+                    // Sort items
+                    propertyItems.Sort();
+
+                    // Add itesm
+                    for (int i = 0; i < propertyItems.Count; i++)
+                    {
+                        var item = propertyItems[i];
+                        
+                        layout.Button("Property " + item.Info.Name + " order: " + (item.Index != null ? item.Index.Index.ToString() : "?"));
 
                         //var pValues = new ValueContainer() { p.GetValue(Values[0]) };
 
