@@ -15,7 +15,7 @@ namespace FlaxEngine.Json.JsonCustomSerializers
             {
                 typeof(UnmanagedCallAttribute),
                 typeof(NonSerializedAttribute),
-                typeof(HideInInspectorAttribute)
+                typeof(HideInEditorAttribute)
             };
 
         protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)

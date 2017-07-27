@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -18,6 +18,7 @@ namespace FlaxEngine
         /// <value>
         /// The parent model actor.
         /// </value>
+        [HideInEditor]
         public ModelActor ParentActor => _modelActor;
 
         /// <summary>
@@ -81,6 +82,7 @@ namespace FlaxEngine
         /// <value>
         /// The index.
         /// </value>
+        [HideInEditor]
         public int Index => _index;
 
         internal MeshInfo(ModelActor model, int index)

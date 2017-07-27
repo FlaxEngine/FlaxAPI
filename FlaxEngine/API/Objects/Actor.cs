@@ -3,11 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
@@ -17,7 +13,6 @@ namespace FlaxEngine
 	public abstract partial class Actor : ITransformable
     {
         // TODO: Instantiate from prefab
-        // TODO: Destroy
         // TODO: TransformDirection, TranformPoint
         // TODO: InverseTransformDirection, InverseTransformPoint
         // TODO: LootAt, Translate, Rotate
@@ -26,6 +21,7 @@ namespace FlaxEngine
         /// Returns true if object is fully static on the scene
         /// </summary>
         [UnmanagedCall]
+        [HideInEditor]
         public bool IsStatic
         {
 #if UNIT_TEST_COMPILANT
@@ -34,14 +30,14 @@ namespace FlaxEngine
             get { return Internal_GetStaticFlags(unmanagedPtr) == StaticFlags.FullyStatic; }
 #endif
         }
-
-
+        
         /// <summary>
         /// The rotation as Euler angles in degrees.
         /// The x, y, and z angles represent a rotation z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).
         /// Angles order (xyz): pitch, yaw and roll.
         /// </summary>
         [UnmanagedCall]
+        [HideInEditor]
         public Vector3 EulerAngles
         {
 #if UNIT_TEST_COMPILANT
@@ -69,6 +65,7 @@ namespace FlaxEngine
         /// Angles order (xyz): pitch, yaw and roll.
         /// </summary>
         [UnmanagedCall]
+        [HideInEditor]
         public Vector3 LocaEulerAngles
         {
 #if UNIT_TEST_COMPILANT
@@ -90,10 +87,11 @@ namespace FlaxEngine
 #endif
         }
 
-	    /// <summary>
-	    /// Gets or sets the actor direction vector (aka forward direction).
-	    /// </summary>
-	    public Vector3 Direction
+        /// <summary>
+        /// Gets or sets the actor direction vector (aka forward direction).
+        /// </summary>
+        [HideInEditor]
+        public Vector3 Direction
 	    {
 	        get { return Vector3.ForwardLH * Orientation; }
 	        set
@@ -118,6 +116,7 @@ namespace FlaxEngine
         /// Returns true if actor has parent
         /// </summary>
         [UnmanagedCall]
+        [HideInEditor]
         public bool HasParent
         {
 #if UNIT_TEST_COMPILANT
@@ -131,6 +130,7 @@ namespace FlaxEngine
         /// Returns true if actor has any children
         /// </summary>
         [UnmanagedCall]
+        [HideInEditor]
         public bool HasChildren
         {
 #if UNIT_TEST_COMPILANT

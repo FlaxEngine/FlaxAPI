@@ -3,7 +3,9 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using FlaxEngine;
 
 namespace FlaxEditor.CustomEditors.Editors
 {
@@ -45,6 +47,12 @@ namespace FlaxEditor.CustomEditors.Editors
                     for (int i = 0; i < properties.Length; i++)
                     {
                         var p = properties[i];
+
+                        var attributes = p.GetCustomAttributes(true);
+                        if (attributes.Any(x => x is HideInEditorAttribute))
+                        {
+                            continue;
+                        }
 
                         layout.Button("Property " + p.Name);
 

@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System.Collections.Generic;
+using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine.GUI;
 
@@ -68,7 +69,21 @@ namespace FlaxEditor.CustomEditors
             Children.Add(element);
             return element;
         }
-        
+
+        /// <summary>
+        /// Adds object(s) editor. Selects proper <see cref="CustomEditor"/> based on overrides.
+        /// </summary>
+        /// <param name="values">The values.</param>
+        /// <returns>The created element.</returns>
+        public CustomEditor Object(ValueContainer values)
+        {
+            // TODO: select proper editor (check attribues, global overrides, type overrides, etc.)
+
+            var editor = new GenericEditor();
+            editor.Initialize(this, values);
+            return editor;
+        }
+
         /// <inheritdoc />
         public override Control Control => ContainerControl;
     }
