@@ -92,6 +92,7 @@ namespace FlaxEngine
 		/// Gets or sets the actor name.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(-100)]
 		public string Name
 		{
 #if UNIT_TEST_COMPILANT
@@ -106,6 +107,7 @@ namespace FlaxEngine
 		/// Gets or sets actor static fags
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(-80)]
 		public StaticFlags StaticFlags
 		{
 #if UNIT_TEST_COMPILANT
@@ -120,6 +122,7 @@ namespace FlaxEngine
 		/// Gets or sets active state of actor
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(-70)]
 		public bool IsActive
 		{
 #if UNIT_TEST_COMPILANT
@@ -208,6 +211,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's local transform position
 		/// </summary>
 		[UnmanagedCall]
+		[EditorDisplay("Transform", "Position"), EditorOrder(-30)]
 		public Vector3 LocalPosition
 		{
 #if UNIT_TEST_COMPILANT
@@ -222,6 +226,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's local transform orientation
 		/// </summary>
 		[UnmanagedCall]
+		[EditorDisplay("Transform", "Rotation"), EditorOrder(-20)]
 		public Quaternion LocalOrientation
 		{
 #if UNIT_TEST_COMPILANT
@@ -236,6 +241,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's local transform scale
 		/// </summary>
 		[UnmanagedCall]
+		[EditorDisplay("Transform", "Scale"), EditorOrder(-10)]
 		public Vector3 LocalScale
 		{
 #if UNIT_TEST_COMPILANT
