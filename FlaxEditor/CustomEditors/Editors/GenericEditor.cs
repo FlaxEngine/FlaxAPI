@@ -107,7 +107,8 @@ namespace FlaxEditor.CustomEditors.Editors
                         item.Info = p;
                         item.Order = (EditorOrderAttribute)attributes.FirstOrDefault(x => x is EditorOrderAttribute);
                         item.Display = (EditorDisplayAttribute)attributes.FirstOrDefault(x => x is EditorDisplayAttribute);
-                        
+                        // TODO: support custom editor type via CustomClassEditorAttribute
+
                         propertyItems.Add(item);
                     }
 
@@ -152,18 +153,6 @@ namespace FlaxEditor.CustomEditors.Editors
             {
                 layout.Button("More than object selected");
             }
-
-            /*// test code for building editor layout
-            layout.Button("My button");
-            var group = layout.Group("Super Group");
-            group.Button("Inner button 1");
-            group.Space(10);
-            group.Button("Inner button 2");
-            group.Space(10);
-            group.Button("Inner button 3");
-            group.Space(10);
-            group.Button("Inner button 4");
-            */
         }
 
         /// <inheritdoc />
