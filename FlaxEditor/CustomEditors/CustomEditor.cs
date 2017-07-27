@@ -17,7 +17,7 @@ namespace FlaxEditor.CustomEditors
         /// <value>
         ///   <c>true</c> if single object is selected; otherwise, <c>false</c>.
         /// </value>
-        public bool IsSingleObject => _values.Count == 0;
+        public bool IsSingleObject => _values.Count == 1;
 
         /// <summary>
         /// Gets a value indicating whether selected objects are diffrent values.

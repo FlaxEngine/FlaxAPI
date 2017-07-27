@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEngine;
 
 namespace FlaxEditor.CustomEditors
 {
@@ -93,6 +94,9 @@ namespace FlaxEditor.CustomEditors
             // Clear layout
             Panel.DisposeChildren();
 
+            // TODO: find better way to cleanup elements
+            Children.Clear();
+            
             // Build new one
             Editor.Initialize(this, Selection);
             Panel.UnlockChildrenRecursive();
