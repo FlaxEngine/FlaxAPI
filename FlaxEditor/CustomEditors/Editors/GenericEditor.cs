@@ -46,16 +46,6 @@ namespace FlaxEditor.CustomEditors.Editors
             {
                 if (obj is PropertyItemInfo other)
                 {
-                    // By group
-                    if (Display?.Group != null)
-                    {
-                        if (other.Display?.Group != null)
-                        {
-                            return string.Compare(Display.Group, other.Display.Group, StringComparison.InvariantCulture);
-                        }
-                        return -1;
-                    }
-
                     // By order
                     if (Order != null)
                     {
@@ -63,6 +53,8 @@ namespace FlaxEditor.CustomEditors.Editors
                             return Order.Order - other.Order.Order;
                         return -1;
                     }
+                    else if (other.Order != null)
+                        return 1;
 
                     // By name
                     return string.Compare(Info.Name, other.Info.Name, StringComparison.InvariantCulture);
@@ -131,7 +123,7 @@ namespace FlaxEditor.CustomEditors.Editors
                         // Check if use group
                         if (item.UseGroup)
                         {
-                            if (lastGroup == null)
+                            if (lastGroup == null || lastGroup.Panel.Name != item.Display.Group)
                                 lastGroup = layout.Group(item.Display.Group);
 
                             // TODO: spawn proper layout for that item
