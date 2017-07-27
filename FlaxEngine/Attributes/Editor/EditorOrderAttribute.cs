@@ -13,23 +13,23 @@ namespace FlaxEngine
     /// </summary>
     /// <seealso cref="System.Attribute" />
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Delegate | AttributeTargets.Event | AttributeTargets.Method)]
-    public sealed class EditorIndexAttribute : Attribute
+    public sealed class EditorOrderAttribute : Attribute
     {
         /// <summary>
-        /// Requested index to perform layout on. Used to order the items.
+        /// Requested order to perform layout on. Used to order the items.
         /// </summary>
-        public int Index { get; set; }
+        public int Order { get; set; }
 
         /// <summary>
-        /// Override display index in visual tree for provided model.
+        /// Override display order in visual tree for provided model.
         /// </summary>
         /// <remarks>
-        /// Current index is resolved runtime, and can change if custom editor class has changed.
+        /// Current order is resolved runtime, and can change if custom editor class has changed.
         /// </remarks>
-        /// <param name="index">The order index.</param>
-        public EditorIndexAttribute(int index)
+        /// <param name="order">The order order.</param>
+        public EditorOrderAttribute(int order)
         {
-            Index = index;
+            Order = order;
         }
     }
 }

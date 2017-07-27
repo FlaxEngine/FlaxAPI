@@ -22,7 +22,7 @@ namespace FlaxEditor.CustomEditors.Editors
         private struct PropertyItemInfo : IComparable
         {
             public PropertyInfo Info;
-            public EditorIndexAttribute Index;
+            public EditorOrderAttribute Order;
             public EditorDisplayAttribute Display;
 
             /// <summary>
@@ -56,11 +56,11 @@ namespace FlaxEditor.CustomEditors.Editors
                         return -1;
                     }
 
-                    // By index
-                    if (Index != null)
+                    // By order
+                    if (Order != null)
                     {
-                        if (other.Index != null)
-                            return Index.Index - other.Index.Index;
+                        if (other.Order != null)
+                            return Order.Order - other.Order.Order;
                         return -1;
                     }
 
@@ -113,7 +113,7 @@ namespace FlaxEditor.CustomEditors.Editors
 
                         PropertyItemInfo item;
                         item.Info = p;
-                        item.Index = (EditorIndexAttribute)attributes.FirstOrDefault(x => x is EditorIndexAttribute);
+                        item.Order = (EditorOrderAttribute)attributes.FirstOrDefault(x => x is EditorOrderAttribute);
                         item.Display = (EditorDisplayAttribute)attributes.FirstOrDefault(x => x is EditorDisplayAttribute);
                         
                         propertyItems.Add(item);
@@ -135,13 +135,13 @@ namespace FlaxEditor.CustomEditors.Editors
                                 lastGroup = layout.Group(item.Display.Group);
 
                             // TODO: spawn proper layout for that item
-                            lastGroup.Button(item.DisplayName + " order: " + (item.Index != null ? item.Index.Index.ToString() : "?"));
+                            lastGroup.Button(item.DisplayName + " order: " + (item.Order != null ? item.Order.Order.ToString() : "?"));
                         }
                         else
                         {
                             lastGroup = null;
 
-                            var button = layout.Button(item.DisplayName + " order: " + (item.Index != null ? item.Index.Index.ToString() : "?"));
+                            var button = layout.Button(item.DisplayName + " order: " + (item.Order != null ? item.Order.Order.ToString() : "?"));
                             button.Button.Height = 12;
                         }
 

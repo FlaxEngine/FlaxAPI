@@ -18,7 +18,7 @@ namespace FlaxEngine
 	    /// The mesh infos array. It's null if the <see cref="Model"/> property is null or asset is not loaded yet.
 	    /// </value>
 	    [MemberCollection(CanReorderItems = false, NotNullItems = true, ReadOnly = true)]
-	    [EditorIndex(100)]
+	    [EditorOrder(100)]
 	    [EditorDisplay("Model")]
 	    public MeshInfo[] Meshes
 	    {
