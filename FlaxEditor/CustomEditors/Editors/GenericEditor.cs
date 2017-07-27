@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine;
 
 namespace FlaxEditor.CustomEditors.Editors
@@ -22,6 +23,23 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             public PropertyInfo Info;
             public EditorIndexAttribute Index;
+            public EditorDisplayAttribute Display;
+
+            /// <summary>
+            /// Gets the display name.
+            /// </summary>
+            /// <value>
+            /// The display name.
+            /// </value>
+            public string DisplayName => Display?.Name ?? Info.Name;
+
+            /// <summary>
+            /// Gets a value indicating whether use dedicated group.
+            /// </summary>
+            /// <value>
+            ///   <c>true</c> if use group; otherwise, <c>false</c>.
+            /// </value>
+            public bool UseGroup => Display?.Group != null;
 
             /// <inheritdoc />
             public int CompareTo(object obj)
@@ -29,7 +47,14 @@ namespace FlaxEditor.CustomEditors.Editors
                 if (obj is PropertyItemInfo other)
                 {
                     // By group
-
+                    if (Display?.Group != null)
+                    {
+                        if (other.Display?.Group != null)
+                        {
+                            return string.Compare(Display.Group, other.Display.Group, StringComparison.InvariantCulture);
+                        }
+                        return -1;
+                    }
 
                     // By index
                     if (Index != null)
@@ -89,6 +114,7 @@ namespace FlaxEditor.CustomEditors.Editors
                         PropertyItemInfo item;
                         item.Info = p;
                         item.Index = (EditorIndexAttribute)attributes.FirstOrDefault(x => x is EditorIndexAttribute);
+                        item.Display = (EditorDisplayAttribute)attributes.FirstOrDefault(x => x is EditorDisplayAttribute);
                         
                         propertyItems.Add(item);
                     }
@@ -96,12 +122,28 @@ namespace FlaxEditor.CustomEditors.Editors
                     // Sort items
                     propertyItems.Sort();
 
-                    // Add itesm
+                    // Add items
+                    GroupElement lastGroup = null;
                     for (int i = 0; i < propertyItems.Count; i++)
                     {
                         var item = propertyItems[i];
                         
-                        layout.Button("Property " + item.Info.Name + " order: " + (item.Index != null ? item.Index.Index.ToString() : "?"));
+                        // Check if use group
+                        if (item.UseGroup)
+                        {
+                            if (lastGroup == null)
+                                lastGroup = layout.Group(item.Display.Group);
+
+                            // TODO: spawn proper layout for that item
+                            lastGroup.Button(item.DisplayName + " order: " + (item.Index != null ? item.Index.Index.ToString() : "?"));
+                        }
+                        else
+                        {
+                            lastGroup = null;
+
+                            var button = layout.Button(item.DisplayName + " order: " + (item.Index != null ? item.Index.Index.ToString() : "?"));
+                            button.Button.Height = 12;
+                        }
 
                         //var pValues = new ValueContainer() { p.GetValue(Values[0]) };
 
