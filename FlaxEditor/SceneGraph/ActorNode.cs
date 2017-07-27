@@ -149,6 +149,9 @@ namespace FlaxEditor.SceneGraph
         }
 
         /// <inheritdoc />
+        public override object EditableObject => _actor;
+
+        /// <inheritdoc />
         public override bool RayCastSelf(ref Ray ray, ref float distance)
         {
             return _actor.IntersectsItself(ref ray, ref distance);

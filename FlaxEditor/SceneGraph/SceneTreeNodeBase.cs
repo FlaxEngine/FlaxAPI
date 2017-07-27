@@ -69,6 +69,9 @@ namespace FlaxEditor.SceneGraph
         public List<ISceneTreeNode> ChildNodes { get; } = new List<ISceneTreeNode>();
 
         /// <inheritdoc />
+        public virtual object EditableObject => this;
+
+        /// <inheritdoc />
         public bool ContainsInHierarchy(ISceneTreeNode node)
         {
             if (ChildNodes.Contains(node))

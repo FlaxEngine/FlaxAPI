@@ -38,7 +38,8 @@ namespace FlaxEditor.Windows
         private void OnSelectionChanged()
         {
             // Update selected objects
-            Presenter.Select(Editor.SceneEditing.Selection);
+            var objects = Editor.SceneEditing.Selection.ConvertAll(x => x.EditableObject);
+            Presenter.Select(objects);
         }
     }
 }

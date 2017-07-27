@@ -54,7 +54,15 @@ namespace FlaxEditor.SceneGraph
         /// The children.
         /// </value>
         List<ISceneTreeNode> ChildNodes { get; }
-        
+
+        /// <summary>
+        /// Gets the object to edit via properties editor when this node is being selected.
+        /// </summary>
+        /// <value>
+        /// The editable object.
+        /// </value>
+        object EditableObject { get; }
+
         /// <summary>
         /// Determines whether the specified object is in a hierarchy (one of the children or lower).
         /// </summary>
