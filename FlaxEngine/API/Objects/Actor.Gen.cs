@@ -30,6 +30,7 @@ namespace FlaxEngine
 		/// Gets the scene object which contains this actor.
 		/// </summary>
 		[UnmanagedCall]
+		[HideInEditor]
 		public Scene Scene
 		{
 #if UNIT_TEST_COMPILANT
@@ -43,6 +44,7 @@ namespace FlaxEngine
 		/// Gets or sets parent actor (or null if actor has no parent)
 		/// </summary>
 		[UnmanagedCall]
+		[HideInEditor]
 		public Actor Parent
 		{
 #if UNIT_TEST_COMPILANT
@@ -75,6 +77,7 @@ namespace FlaxEngine
 		/// Gets or sets zero-based index in parent actor children list.
 		/// </summary>
 		[UnmanagedCall]
+		[HideInEditor]
 		public int OrderInParent
 		{
 #if UNIT_TEST_COMPILANT
@@ -131,6 +134,7 @@ namespace FlaxEngine
 		/// Gets actor activation state in hierarchy
 		/// </summary>
 		[UnmanagedCall]
+		[HideInEditor]
 		public bool IsActiveInHierarchy
 		{
 #if UNIT_TEST_COMPILANT
@@ -144,6 +148,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's world transform position
 		/// </summary>
 		[UnmanagedCall]
+		[HideInEditor]
 		public Vector3 Position
 		{
 #if UNIT_TEST_COMPILANT
@@ -158,6 +163,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's world transform orientation
 		/// </summary>
 		[UnmanagedCall]
+		[HideInEditor]
 		public Quaternion Orientation
 		{
 #if UNIT_TEST_COMPILANT
@@ -172,6 +178,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's world transform scale
 		/// </summary>
 		[UnmanagedCall]
+		[HideInEditor]
 		public Vector3 Scale
 		{
 #if UNIT_TEST_COMPILANT
@@ -186,6 +193,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's world a three dimensional mathematical transformation
 		/// </summary>
 		[UnmanagedCall]
+		[HideInEditor]
 		public Transform Transform
 		{
 #if UNIT_TEST_COMPILANT
@@ -242,6 +250,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's world a three dimensional mathematical transformation
 		/// </summary>
 		[UnmanagedCall]
+		[HideInEditor]
 		public Transform LocalTransform
 		{
 #if UNIT_TEST_COMPILANT
@@ -256,6 +265,7 @@ namespace FlaxEngine
 		/// Gets amount of children
 		/// </summary>
 		[UnmanagedCall]
+		[HideInEditor]
 		public int ChildCount
 		{
 #if UNIT_TEST_COMPILANT
@@ -447,6 +457,7 @@ namespace FlaxEngine
 		/// Gets bounding box that contains actor object (single actor, no children included)
 		/// </summary>
 		[UnmanagedCall]
+		[HideInEditor]
 		public BoundingBox Box
 		{
 #if UNIT_TEST_COMPILANT
@@ -460,6 +471,7 @@ namespace FlaxEngine
 		/// Gets bounding box that contains actor object and all it's children (children included in recursive way)
 		/// </summary>
 		[UnmanagedCall]
+		[HideInEditor]
 		public BoundingBox BoxWithChildren
 		{
 #if UNIT_TEST_COMPILANT
@@ -473,6 +485,7 @@ namespace FlaxEngine
 		/// Returns true if actor has loaded content
 		/// </summary>
 		[UnmanagedCall]
+		[HideInEditor]
 		public bool HasContentLoaded
 		{
 #if UNIT_TEST_COMPILANT

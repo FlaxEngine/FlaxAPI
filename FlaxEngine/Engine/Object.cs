@@ -1,4 +1,6 @@
-// Flax Engine scripting API
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
 
 using System;
 using System.Runtime.CompilerServices;
@@ -19,11 +21,8 @@ namespace FlaxEngine
         /// <summary>
         /// Gets unique object ID
         /// </summary>
-        [UnmanagedCall]
-        public Guid ID
-        {
-            get { return id; }
-        }
+        [HideInEditor]
+        public Guid ID => id;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Object"/>.
@@ -32,7 +31,7 @@ namespace FlaxEngine
         protected Object()
         {
         }
-        
+
         /// <summary>
         /// Notifies the unmanaged interop object that the managed instance was finalized.
         /// </summary>
@@ -50,11 +49,11 @@ namespace FlaxEngine
         /// </summary>
         /// <typeparam name="T">Type of the object.</typeparam>
         /// <returns>Create object.</returns>
-        public static T New <T>() where T : Object
+        public static T New<T>() where T : Object
         {
             return Internal_Create(typeof(T)) as T;
         }
-        
+
         /// <summary>
         /// Destroys the specified object and clears the reference variable.
         /// The object obj will be destroyed now or after the time specified in seconds from now.
@@ -78,7 +77,7 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="obj">The object to destroy.</param>
         /// <param name="timeLeft">The time left to destroy object (in seconds).</param>
-        public static void Destroy <T>(ref T obj, float timeLeft = 0.0f) where T : Object
+        public static void Destroy<T>(ref T obj, float timeLeft = 0.0f) where T : Object
         {
             if (obj)
             {
