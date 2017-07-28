@@ -139,6 +139,10 @@ namespace FlaxEngine.GUI
                 if(IsReadOnly)
                     throw new AccessViolationException("Text Box is readonly.");
 
+                // Prevent from null problems
+                if (value == null)
+                    value = string.Empty;
+
                 // Clamp length
                 if (value.Length > MaxLength)
                     value = value.Substring(0, MaxLength);

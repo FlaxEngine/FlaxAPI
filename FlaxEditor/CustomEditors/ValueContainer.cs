@@ -11,5 +11,20 @@ namespace FlaxEditor.CustomEditors
     /// </summary>
     public sealed class ValueContainer : List<object>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValueContainer"/> class.
+        /// </summary>
+        public ValueContainer()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValueContainer"/> class.
+        /// </summary>
+        /// <param name="capacity">The number of elements that the new list can initially store.</param>
+        public ValueContainer(int capacity)
+            : base(capacity)
+        {
+        }
     }
 }

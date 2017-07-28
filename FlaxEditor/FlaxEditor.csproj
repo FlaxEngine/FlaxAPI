@@ -50,7 +50,9 @@
     <Compile Include="Content\GUI\NavigationButton.cs" />
     <Compile Include="CustomEditors\CustomEditor.cs" />
     <Compile Include="CustomEditors\Editors\GenericEditor.cs" />
+    <Compile Include="CustomEditors\Editors\StringEditor.cs" />
     <Compile Include="CustomEditors\Elements\SpaceElement.cs" />
+    <Compile Include="CustomEditors\Elements\TextBoxElement.cs" />
     <Compile Include="CustomEditors\Elements\VerticalPanelElement.cs" />
     <Compile Include="CustomEditors\ValueContainer.cs" />
     <Compile Include="GUI\RenamePopup.cs" />
