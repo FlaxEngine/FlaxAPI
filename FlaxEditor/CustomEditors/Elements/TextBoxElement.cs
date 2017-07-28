@@ -7,26 +7,26 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.CustomEditors.Elements
 {
     /// <summary>
-    /// The button element.
+    /// The textbox element.
     /// </summary>
     /// <seealso cref="FlaxEditor.CustomEditors.LayoutElement" />
-    public class ButtonElement : LayoutElement
+    public class TextBoxElement : LayoutElement
     {
         /// <summary>
-        /// The button.
+        /// The text box.
         /// </summary>
-        public readonly Button Button = new Button(0, 0);
-        
+        public readonly TextBox TextBox;
+
         /// <summary>
-        /// Initializes the element.
+        /// Initializes a new instance of the <see cref="TextBoxElement"/> class.
         /// </summary>
-        /// <param name="text">The text.</param>
-        public void Init(string text)
+        /// <param name="isMultiline">Enable/disable multiline text input support</param>
+        public TextBoxElement(bool isMultiline = false)
         {
-            Button.Text = text;
+            TextBox = new TextBox(isMultiline, 0, 0);
         }
 
         /// <inheritdoc />
-        public override Control Control => Button;
+        public override Control Control => TextBox;
     }
 }

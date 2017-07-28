@@ -71,6 +71,19 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Adds new text box element.
+        /// </summary>
+        /// <param name="isMultiline">Enable/disable multiline text input support</param>
+        /// <returns>The created element.</returns>
+        public TextBoxElement TextBox(bool isMultiline)
+        {
+            TextBoxElement element = new TextBoxElement(isMultiline);
+            element.Control.Parent = ContainerControl;
+            Children.Add(element);
+            return element;
+        }
+
+        /// <summary>
         /// Adds object(s) editor. Selects proper <see cref="CustomEditor"/> based on overrides.
         /// </summary>
         /// <param name="values">The values.</param>
