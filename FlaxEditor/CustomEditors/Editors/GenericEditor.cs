@@ -62,6 +62,12 @@ namespace FlaxEditor.CustomEditors.Editors
 
                 return 0;
             }
+
+            /// <inheritdoc />
+            public override string ToString()
+            {
+                return Info.Name;
+            }
         }
 
         /// <inheritdoc />
@@ -83,7 +89,15 @@ namespace FlaxEditor.CustomEditors.Editors
 
                 //layout.Button("Type " + type.Name);
 
-                if (type.IsClass)
+                if (type.IsArray)
+                {
+                    layout.Button("Array: " + type.Name);
+                }
+                else if (type.IsValueType)
+                {
+                    layout.Button("ValueType: " + type.Name);
+                }
+                else if (type.IsClass)
                 {
                     layout.Button("Type " + type.Name);
                     layout.Space(10);
@@ -96,6 +110,13 @@ namespace FlaxEditor.CustomEditors.Editors
                     for (int i = 0; i < properties.Length; i++)
                     {
                         var p = properties[i];
+                        var getter = p.GetMethod;
+
+                        // Skip hidden properties and only set properties
+                        if (getter == null || !getter.IsPublic)
+                        {
+                            continue;
+                        }
 
                         var attributes = p.GetCustomAttributes(true);
                         if (attributes.Any(x => x is HideInEditorAttribute))
@@ -120,28 +141,42 @@ namespace FlaxEditor.CustomEditors.Editors
                     for (int i = 0; i < propertyItems.Count; i++)
                     {
                         var item = propertyItems[i];
-                        
+
                         // Check if use group
+                        LayoutElementsContainer itemLayout;
                         if (item.UseGroup)
                         {
                             if (lastGroup == null || lastGroup.Panel.Name != item.Display.Group)
                                 lastGroup = layout.Group(item.Display.Group);
-
-                            // TODO: spawn proper layout for that item
-                            lastGroup.Button(item.DisplayName + " order: " + (item.Order != null ? item.Order.Order.ToString() : "?"));
+                            itemLayout = lastGroup;
                         }
                         else
                         {
                             lastGroup = null;
-
-                            var button = layout.Button(item.DisplayName + " order: " + (item.Order != null ? item.Order.Order.ToString() : "?"));
-                            button.Button.Height = 12;
+                            itemLayout = layout;
                         }
 
-                        //var pValues = new ValueContainer() { p.GetValue(Values[0]) };
+                        // Peek values
+                        ValueContainer itemValues;
+                        try
+                        {
+                            itemValues = new ValueContainer(Values.Count);
+                            for (int j = 0; j < Values.Count; j++)
+                                itemValues.Add(item.Info.GetValue(Values[j]));
+                        }
+                        catch (Exception ex)
+                        {
+                            Editor.LogWarning("Failed to get object values " + ex.Message);
+                            Editor.LogWarning(type.FullName + '.' + item);
+                            Editor.LogWarning(ex.StackTrace);
+                            return;
+                        }
 
-                        //var child = layout.Object(pValues);
-                        //children.Add(child);
+                        // Spawn child editor
+                        //itemLayout.Button(item.DisplayName + " order: " + (item.Order != null ? item.Order.Order.ToString() : "?"));
+                        Debug.Log("Child item " + item);
+                        var child = itemLayout.Object(itemValues);
+                        children.Add(child);
                     }
                 }
                 else
