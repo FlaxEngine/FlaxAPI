@@ -253,7 +253,7 @@ namespace FlaxEditor.Modules
             if (el.IsAsset)
             {
                 // Rename asset
-                // Note: we use content backend because fiel may be in use or sth, it's safe
+                // Note: we use content backend because file may be in use or sth, it's safe
                 if (FlaxEngine.Content.RenameAsset(oldPath, newPath))
                 {
                     // Error
@@ -440,6 +440,88 @@ namespace FlaxEditor.Modules
 
             if(_enableEvents)
                 OnWorkspaceModified?.Invoke();
+        }
+
+        /// <summary>
+        /// Copies the specified item to the target location. Handles copying whole directories and single assets.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="targetPath">The target item path.</param>
+        public void Copy(ContentItem item, string targetPath)
+        {
+            if (item == null || !item.Exists)
+            {
+                // Error
+                MessageBox.Show("Cannot move item. It's missing.");
+                return;
+            }
+
+            // Perform copy
+            {
+                string sourcePath = item.Path;
+
+                // Special case for folders
+                if (item.IsFolder)
+                {
+                    // Cache data
+                    var folder = (ContentFolder)item;
+
+                    // Create new folder if missing
+                    if (!Directory.Exists(targetPath))
+                    {
+                        try
+                        {
+                            Directory.CreateDirectory(targetPath);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Error
+                            Editor.LogWarning(ex.Message);
+                            Editor.LogError(string.Format("Cannot copy folder \'{0}\' to \'{1}\'", sourcePath, targetPath));
+                            return;
+                        }
+                    }
+
+                    // Copy all child elements
+                    for (int i = 0; i < folder.Children.Count; i++)
+                    {
+                        var child = folder.Children[i];
+                        var childExtension = System.IO.Path.GetExtension(item.Path);
+                        var childTargetPath = StringUtils.CombinePaths(targetPath, child.ShortName + childExtension);
+                        Copy(folder.Children[i], childTargetPath);
+                    }
+                }
+                else
+                {
+                    // Check if use content pool
+                    if (item.IsAsset)
+                    {
+                        // Rename asset
+                        // Note: we use content backend because file may be in use or sth, it's safe
+                        if (Editor.ContentEditing.CloneAssetFile(targetPath, sourcePath, Guid.NewGuid()))
+                        {
+                            // Error
+                            Editor.LogError(string.Format("Cannot copy asset \'{0}\' to \'{1}\'", sourcePath, targetPath));
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        // Copy file
+                        try
+                        {
+                            File.Copy(sourcePath, targetPath, true);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Error
+                            Editor.LogWarning(ex.Message);
+                            Editor.LogError(string.Format("Cannot copy asset \'{0}\' to \'{1}\'", sourcePath, targetPath));
+                            return;
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
