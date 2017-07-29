@@ -202,6 +202,7 @@
     <Compile Include="Windows\Assets\MaterialInstanceWindow.cs" />
     <Compile Include="Windows\Assets\MaterialWindow.cs" />
     <Compile Include="Windows\Assets\ModelWindow.cs" />
+    <Compile Include="Windows\ContentWindow.ContextMenu.cs" />
     <Compile Include="Windows\ContentWindow.cs" />
     <Compile Include="Windows\ContentWindow.Navigation.cs" />
     <Compile Include="Windows\DebugLogWindow.cs" />

@@ -390,18 +390,7 @@ namespace FlaxEditor.Windows
                     break;
             }
         }
-
-        private void viewOnOpen(ContentItem item)
-        {
-            //Open(item);
-        }
-
-        private void viewOnDelete()
-        {
-            // Check if has any selected items
-            //Delete(_view.Selection);
-        }
-
+        
         private void RefreshView()
         {
             RefreshView(SelectedNode);
@@ -522,6 +511,36 @@ namespace FlaxEditor.Windows
             {
                 removeFolder2Root((MainContentTreeNode)_root.GetChild(0));
             }
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        {
+            // Check if it's a right mouse button
+            if (buttons == MouseButtons.Right)
+            {
+                // Find control that is under the mouse
+                var c = GetChildAtRecursive(location);
+
+                if (c is ContentItem item)
+                {
+                    _view.Select(item);
+                    ShowContextMenuForItem(item, ref location);
+                }
+                else if (c is ContentView)
+                {
+                    ShowContextMenuForItem(null, ref location);
+                }
+                else if (c is ContentTreeNode node)
+                {
+                    _tree.Select(node);
+                    ShowContextMenuForItem(node.Folder, ref location);
+                }
+
+                return true;
+            }
+
+            return base.OnMouseUp(location, buttons);
         }
 
         /// <inheritdoc />
