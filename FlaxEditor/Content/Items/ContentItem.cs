@@ -167,6 +167,8 @@ namespace FlaxEditor.Content
 
                 // Add to new
                 _parentFolder?.Children.Add(this);
+
+                OnParentFolderChanged();
             }
         }
 
@@ -424,6 +426,13 @@ namespace FlaxEditor.Content
             {
                 ReleaseThumbnail();
             }
+        }
+
+        /// <summary>
+        /// Called when item parent folder gets changed.
+        /// </summary>
+        protected virtual void OnParentFolderChanged()
+        {
         }
 
         /// <summary>

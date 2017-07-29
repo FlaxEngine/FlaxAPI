@@ -320,6 +320,18 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
+        /// Moves the specified items to the diffrent location. Handles moving whole directories and single assets.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        /// <param name="newParent">The new parent.</param>
+
+        public void Move(List<ContentItem> items, ContentFolder newParent)
+        {
+            for (int i = 0; i < items.Count; i++)
+                Move(items[i], newParent);
+        }
+
+        /// <summary>
         /// Moves the specified item to the diffrent location. Handles moving whole directories and single assets.
         /// </summary>
         /// <param name="item">The item.</param>
@@ -490,6 +502,9 @@ namespace FlaxEditor.Modules
 
         private void loadFolder(ContentTreeNode node, bool checkSubDirs)
         {
+            if (node == null)
+                return;
+
             // Temporary data
             var folder = node.Folder;
             var path = folder.Path;

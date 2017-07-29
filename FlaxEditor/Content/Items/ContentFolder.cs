@@ -155,6 +155,15 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
+        protected override void OnParentFolderChanged()
+        {
+            // Update tree nodes structure
+            Node.Parent = ParentFolder?.Node;
+
+            base.OnParentFolderChanged();
+        }
+
+        /// <inheritdoc />
         public override ContentItem Find(string path)
         {
             // TODO: split name into parts and check each going tree sructure level down - make it faster
@@ -284,10 +293,7 @@ namespace FlaxEditor.Content
             else if (_dragOverItems.HasValidDrag)
             {
                 // Move items
-                for (int i = 0; i < _dragOverItems.Objects.Count; i++)
-                {
-                    Editor.Instance.ContentDatabase.Move(_dragOverItems.Objects[i], this);
-                }
+                Editor.Instance.ContentDatabase.Move(_dragOverItems.Objects, this);
                 result = DragDropEffect.Move;
             }
 
