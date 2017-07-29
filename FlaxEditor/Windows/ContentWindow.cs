@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using FlaxEditor.Content;
 using FlaxEditor.Content.GUI;
 using FlaxEditor.GUI;
@@ -214,14 +215,81 @@ namespace FlaxEditor.Windows
             RefreshView();
         }
 
+        private string GetClonedAssetPath(ContentItem item)
+        {
+            string sourcePath = item.Path;
+            string sourceFolder = Path.GetDirectoryName(sourcePath);
+            string destinationPath;
+            int i = 0;
+
+            // Find new name for clone
+            if (item.IsFolder)
+            {
+                do
+                {
+                    destinationPath = StringUtils.CombinePaths(sourceFolder, string.Format("{0} Copy ({1})", item.ShortName, i++));
+                } while (Directory.Exists(destinationPath));
+            }
+            else
+            {
+                string extension = Path.GetExtension(sourcePath);
+                do
+                {
+                    // TODO: better renaming cloned assets
+                    /*// Generate new name
+                    Function<bool, const String&> f;
+                    f.Bind<ContentWindow, &ContentWindow::isElementNameValid>(this);
+                    String name = StringUtils::IncrementNameNumber(el->GetName(), &f);
+                    _tmpList = nullptr;*/
+
+                    destinationPath = StringUtils.CombinePaths(sourceFolder, string.Format("{0} Copy ({1}){2}", item.ShortName, i++, extension));
+
+                } while (File.Exists(destinationPath));
+            }
+
+            return destinationPath;
+        }
+
         private void OnDuplicate(List<ContentItem> items)
         {
-            // TODO: remove items that depend on diffrent items in the list: use wants to remove `folderA` and `folderA/asset.x`, we should just remove `folderA`
-            var toDuplicate = new List<ContentItem>(items);
+            // Skip empty or null case
+            if (items == null || items.Count == 0)
+                return;
 
-            throw new NotImplementedException();
+            // TODO: don't allow to duplicate items without ParentFolder - like root items (Content, Source, Engien and Editor dirs)
 
-            RefreshView();
+            // Check if it's just a single item
+            if (items.Count == 1)
+            {
+                var item = items[0];
+
+                // Clone item
+                var targetPath = GetClonedAssetPath(item);
+                Editor.ContentDatabase.Copy(item, targetPath);
+
+                // Refresh this folder now and try to find duplicated item
+                Editor.ContentDatabase.RefreshFolder(item.ParentFolder, true);
+                RefreshView();
+                var targetItem = item.ParentFolder.FindChild(targetPath);
+
+                // Start renaming it
+                if (targetItem != null)
+                {
+                    OnRename(targetItem);
+                }
+            }
+            else
+            {
+                // TODO: remove items that depend on diffrent items in the list: use wants to remove `folderA` and `folderA/asset.x`, we should just remove `folderA`
+                var toDuplicate = new List<ContentItem>(items);
+
+                // Duplicate every item
+                for (int i = 0; i < toDuplicate.Count; i++)
+                {
+                    var item = toDuplicate[i];
+                    Editor.ContentDatabase.Copy(item, GetClonedAssetPath(item));
+                }
+            }
         }
 
         private void ContentDatabaseOnOnItemRemoved(ContentItem contentItem)
