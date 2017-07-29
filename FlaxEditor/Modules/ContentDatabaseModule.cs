@@ -486,7 +486,7 @@ namespace FlaxEditor.Modules
                     for (int i = 0; i < folder.Children.Count; i++)
                     {
                         var child = folder.Children[i];
-                        var childExtension = System.IO.Path.GetExtension(item.Path);
+                        var childExtension = Path.GetExtension(child.Path);
                         var childTargetPath = StringUtils.CombinePaths(targetPath, child.ShortName + childExtension);
                         Copy(folder.Children[i], childTargetPath);
                     }
@@ -554,7 +554,19 @@ namespace FlaxEditor.Modules
 
                 // Remove directory
                 if (Directory.Exists(path))
-                    Directory.Delete(path);
+                {
+                    try
+                    {
+                        Directory.Delete(path, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Error
+                        Editor.LogWarning(ex.Message);
+                        Editor.LogWarning(string.Format("Cannot remove folder \'{0}\'", path));
+                        return;
+                    }
+                }
 
                 // Unlink from the parent
                 item.ParentFolder = null;
