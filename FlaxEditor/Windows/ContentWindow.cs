@@ -82,9 +82,9 @@ namespace FlaxEditor.Windows
             _view = new ContentView();
             _view.OnOpen += Open;
             _view.OnNavigateBack += NavigateBackward;
-            _view.OnRename += OnRename;
-            _view.OnDelete += OnDelete;
-            _view.OnDuplicate += OnDuplicate;
+            _view.OnRename += Rename;
+            _view.OnDelete += Delete;
+            _view.OnDuplicate += Clone;
             _view.Parent = _split.Panel2;
         }
 
@@ -92,7 +92,7 @@ namespace FlaxEditor.Windows
         /// Shows popup dialog with UI to rename content item.
         /// </summary>
         /// <param name="item">The item to rename.</param>
-        private void OnRename(ContentItem item)
+        private void Rename(ContentItem item)
         {
             // Show element in view
             Select(item);
@@ -171,7 +171,12 @@ namespace FlaxEditor.Windows
             RefreshView();
         }
 
-        private void OnDelete(List<ContentItem> items)
+        private void Delete(ContentItem item)
+        {
+            Delete(new List<ContentItem> { item });
+        }
+
+        private void Delete(List<ContentItem> items)
         {
             // TODO: remove items that depend on diffrent items in the list: use wants to remove `folderA` and `folderA/asset.x`, we should just remove `folderA`
             var toDelete = new List<ContentItem>(items);
@@ -250,7 +255,31 @@ namespace FlaxEditor.Windows
             return destinationPath;
         }
 
-        private void OnDuplicate(List<ContentItem> items)
+        private void Clone(ContentItem item)
+        {
+            // Skip null
+            if (item == null)
+                return;
+
+            // TODO: don't allow to duplicate items without ParentFolder - like root items (Content, Source, Engien and Editor dirs)
+
+            // Clone item
+            var targetPath = GetClonedAssetPath(item);
+            Editor.ContentDatabase.Copy(item, targetPath);
+
+            // Refresh this folder now and try to find duplicated item
+            Editor.ContentDatabase.RefreshFolder(item.ParentFolder, true);
+            RefreshView();
+            var targetItem = item.ParentFolder.FindChild(targetPath);
+
+            // Start renaming it
+            if (targetItem != null)
+            {
+                Rename(targetItem);
+            }
+        }
+
+        private void Clone(List<ContentItem> items)
         {
             // Skip empty or null case
             if (items == null || items.Count == 0)
@@ -261,22 +290,7 @@ namespace FlaxEditor.Windows
             // Check if it's just a single item
             if (items.Count == 1)
             {
-                var item = items[0];
-
-                // Clone item
-                var targetPath = GetClonedAssetPath(item);
-                Editor.ContentDatabase.Copy(item, targetPath);
-
-                // Refresh this folder now and try to find duplicated item
-                Editor.ContentDatabase.RefreshFolder(item.ParentFolder, true);
-                RefreshView();
-                var targetItem = item.ParentFolder.FindChild(targetPath);
-
-                // Start renaming it
-                if (targetItem != null)
-                {
-                    OnRename(targetItem);
-                }
+                Clone(items[0]);
             }
             else
             {

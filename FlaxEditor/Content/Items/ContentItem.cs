@@ -217,6 +217,14 @@ namespace FlaxEditor.Content
         public virtual string DefaultThumbnailName => null;
 
         /// <summary>
+        /// Gets a value indicating whether this item has default thumbnail.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this item has default thumbnail; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasDefaultThumbnail => DefaultThumbnailName != null;
+
+        /// <summary>
         /// Gets or sets the item thumbnail. Warning, thumbnail may not be available if item has no references (<see cref="ReferencesCount"/>).
         /// </summary>
         /// <value>

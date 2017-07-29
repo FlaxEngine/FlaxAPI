@@ -278,6 +278,14 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <summary>
+        /// Duplicates the selected items.
+        /// </summary>
+        public void DuplicateSelection()
+        {
+            OnDuplicate?.Invoke(_selection);
+        }
+
+        /// <summary>
         /// Gives focus and selects the first item in the view.
         /// </summary>
         public void SelectFirstItem()
@@ -419,7 +427,7 @@ namespace FlaxEditor.Content.GUI
                 // Duplicate
                 if (key == KeyCode.D && ParentWindow.GetKey(KeyCode.CONTROL))
                 {
-                    OnDuplicate?.Invoke(_selection);
+                    DuplicateSelection();
                     return true;
                 }
 

@@ -47,7 +47,7 @@ namespace FlaxEditor.Content
             {
                 // Get meta from loaded asset
                 importPath = binaryAsset.ImportPath;
-                return !string.IsNullOrEmpty(importPath);
+                return string.IsNullOrEmpty(importPath);
             }
 
             importPath = string.Empty;
