@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using FlaxEditor.GUI;
 using FlaxEditor.GUI.Drag;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -15,7 +16,7 @@ namespace FlaxEditor.Content
     public class ContentTreeNode : TreeNode
     {
         private DragItems _dragOverItems;
-        
+
         /// <summary>
         /// The folder.
         /// </summary>
@@ -104,7 +105,7 @@ namespace FlaxEditor.Content
             _folder = new ContentFolder(type, path, this);
             Text = _folder.ShortName;
         }
-        
+
         /// <inheritdoc />
         public override void OnDestroy()
         {
@@ -139,7 +140,7 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         protected override DragDropEffect OnDragEnterHeader(DragData data)
         {
-            if(_dragOverItems == null)
+            if (_dragOverItems == null)
                 _dragOverItems = new DragItems();
 
             _dragOverItems.OnDragEnter(data, ValidateDragItem);
@@ -163,7 +164,7 @@ namespace FlaxEditor.Content
         protected override DragDropEffect OnDragDropHeader(DragData data)
         {
             var result = DragDropEffect.None;
-            
+
             // Check if drop element or files
             if (data is DragDataFiles files)
             {
@@ -191,6 +192,21 @@ namespace FlaxEditor.Content
         protected override void DoDragDrop()
         {
             DoDragDrop(DragItems.GetDragData(_folder));
+        }
+
+        /// <inheritdoc />
+        protected override void OnLongPress()
+        {
+            Select();
+
+            // Check if can rename it
+            if (_folder.CanRename)
+            {
+                // Start renaming the folder
+                var dialog = RenamePopup.Show(this, _headerRect, _folder.ShortName, false);
+                dialog.Tag = _folder;
+                dialog.Renamed += popup => Editor.Instance.Windows.ContentWin.Rename((ContentFolder)popup.Tag, popup.Text);
+            }
         }
     }
 }

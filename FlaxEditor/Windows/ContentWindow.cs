@@ -119,8 +119,19 @@ namespace FlaxEditor.Windows
             }
         }
 
-        private void Rename(ContentItem item, string newShortName)
+        internal void Rename(ContentItem item, string newShortName)
         {
+            if(item == null)
+                throw new ArgumentNullException();
+
+            // Check if can rename this item
+            if (!item.CanRename)
+            {
+                // Cannot
+                MessageBox.Show("Cannot rename this item.", "Cannot rename", MessageBox.Buttons.OK, MessageBox.Icon.Error);
+                return;
+            }
+
             // Check if name is valid
             string hint;
             if (!Editor.ContentEditing.IsValidAssetName(item, newShortName, out hint))
