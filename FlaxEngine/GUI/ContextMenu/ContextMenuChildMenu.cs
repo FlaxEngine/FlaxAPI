@@ -26,7 +26,7 @@ namespace FlaxEngine.GUI
         /// <param name="parent">The parent cotext menu.</param>
         /// <param name="text">The text.</param>
         public ContextMenuChildMenu(ContextMenu parent, string text)
-            : base(parent, false, 8, 2)
+            : base(parent, false, 8, 22)
         {
             Text = text;
         }
