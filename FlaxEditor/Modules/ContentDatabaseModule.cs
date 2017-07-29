@@ -437,6 +437,9 @@ namespace FlaxEditor.Modules
 
             // Link item
             item.ParentFolder = newParent;
+
+            if(_enableEvents)
+                OnWorkspaceModified?.Invoke();
         }
 
         /// <summary>
@@ -498,6 +501,9 @@ namespace FlaxEditor.Modules
                 // Delete item
                 item.Dispose();
             }
+
+            if (_enableEvents)
+                OnWorkspaceModified?.Invoke();
         }
 
         private void loadFolder(ContentTreeNode node, bool checkSubDirs)
@@ -562,7 +568,10 @@ namespace FlaxEditor.Modules
 
                     // Fire event
                     if (_enableEvents)
+                    {
                         OnItemAdded?.Invoke(n.Folder);
+                        OnWorkspaceModified?.Invoke();
+                    }
                     _itemsCreated++;
                 }
                 else if (checkSubDirs)

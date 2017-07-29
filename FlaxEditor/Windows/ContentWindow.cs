@@ -21,6 +21,7 @@ namespace FlaxEditor.Windows
     public sealed partial class ContentWindow : EditorWindow
     {
         private bool _isReady;
+        private bool _isWorkspaceDirty;
         private SplitPanel _split;
         private ContentView _view;
 
@@ -47,7 +48,7 @@ namespace FlaxEditor.Windows
             Title = "Content";
 
             // Content database events
-            editor.ContentDatabase.OnWorkspaceModified += RefreshView;
+            editor.ContentDatabase.OnWorkspaceModified += () => _isWorkspaceDirty = true;
             editor.ContentDatabase.OnItemRemoved += ContentDatabaseOnOnItemRemoved;
 
             // Tool strip
@@ -411,6 +412,19 @@ namespace FlaxEditor.Windows
             _isReady = true;
 
             // TODO: load last viewed folder
+        }
+
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            // Handle workspace modification events but only once per frame
+            if (_isWorkspaceDirty)
+            {
+                _isWorkspaceDirty = false;
+                RefreshView();
+            }
+            
+            base.Update(deltaTime);
         }
 
         /// <inheritdoc />
