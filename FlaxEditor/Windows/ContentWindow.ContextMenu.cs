@@ -50,7 +50,7 @@ namespace FlaxEditor.Windows
 
                 if (item.HasDefaultThumbnail == false)
                 {
-                    cm.AddButton(1, "Refresh preview");
+                    cm.AddButton(1, "Refresh thumbnail");
                 }
 
                 if (!isFolder)
@@ -98,7 +98,7 @@ namespace FlaxEditor.Windows
 
                 b = cm.AddButton(15, "Reimport all");
 
-                b = cm.AddButton(16, "Refresh all previews");
+                b = cm.AddButton(16, "Refresh all thumbnails");
             }
 
             cm.AddSeparator();
@@ -188,7 +188,7 @@ namespace FlaxEditor.Windows
                     //ReimportViewAll(); // TODO: reimport assets in a view
                     break;
                 case 16:
-                    //RefreshPreviewViewAll(); // TODO: refresh thumbnails for assets in view
+                    RefreshViewItemsThumbnails();
                     break;
                 case 17:
                     Application.ClipboardText = item.Path;
@@ -202,6 +202,15 @@ namespace FlaxEditor.Windows
                 int proxyIndex = id - CM_SPAWN_BUTTON_ID_START;
                 var proxy = Editor.ContentDatabase.Proxy[proxyIndex];
                 //newAsset(proxy, item); // TODO: create new asset
+            }
+        }
+
+        private void RefreshViewItemsThumbnails()
+        {
+            var items = _view.Items;
+            for (int i = 0; i < items.Count; i++)
+            {
+                items[i].RefreshThumbnail();
             }
         }
     }

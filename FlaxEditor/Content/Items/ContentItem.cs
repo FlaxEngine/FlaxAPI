@@ -273,7 +273,7 @@ namespace FlaxEditor.Content
         public virtual void RefreshThumbnail()
         {
             // Skip if item has default thumbnail
-            if (DefaultThumbnailName != null)
+            if (HasDefaultThumbnail)
                 return;
 
             var thumbnails = Editor.Instance.Thumbnails;
