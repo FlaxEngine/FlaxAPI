@@ -144,6 +144,20 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets or sets the system clipboard text.
+		/// </summary>
+		[UnmanagedCall]
+		public static string ClipboardText
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetClipboardText(); }
+			set { Internal_SetClipboardText(value); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -166,6 +180,10 @@ namespace FlaxEngine
 		internal static extern void Internal_Exit();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_Fatal(string msg);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern string Internal_GetClipboardText();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetClipboardText(string val);
 #endif
 #endregion
 	}
