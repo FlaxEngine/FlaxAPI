@@ -156,11 +156,10 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void Resize()
         {
-            if (_backBuffer.Size == Size)
-                return;
-
             int width = (int)Width;
             int height = (int)Height;
+            if (_backBuffer.Width == width && _backBuffer.Height == height)
+                return;
             if (width < 1 || height < 1)
             {
                 _backBuffer.Dispose();
