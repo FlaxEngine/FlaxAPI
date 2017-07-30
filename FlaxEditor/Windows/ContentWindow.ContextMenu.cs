@@ -198,10 +198,9 @@ namespace FlaxEditor.Windows
             // New asset creation
             if (id >= CM_SPAWN_BUTTON_ID_START)
             {
-                // Cache data
                 int proxyIndex = id - CM_SPAWN_BUTTON_ID_START;
                 var proxy = Editor.ContentDatabase.Proxy[proxyIndex];
-                //newAsset(proxy, item); // TODO: create new asset
+                NewItem(proxy);
             }
         }
 

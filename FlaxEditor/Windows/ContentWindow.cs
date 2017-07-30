@@ -146,7 +146,7 @@ namespace FlaxEditor.Windows
             }
 
             // Cache data
-            var extension = System.IO.Path.GetExtension(item.Path);
+            var extension = Path.GetExtension(item.Path);
             var newPath = StringUtils.CombinePaths(item.ParentFolder.Path, newShortName + extension);
 
             // Check if was renaming mock element
@@ -342,6 +342,34 @@ namespace FlaxEditor.Windows
             {
                 Rename(targetItem);
             }
+        }
+
+        /// <summary>
+        /// Starts creating new item.
+        /// </summary>
+        /// <param name="proxy">The new item proxy.</param>
+        private void NewItem(ContentProxy proxy)
+        {
+            Assert.IsNull(_newElement);
+
+            string proxyName = proxy.Name;
+            ContentFolder parentFolder = CurrentViewFolder;
+            string parentFolderPath = parentFolder.Path;
+
+            // Create asset name
+            string path;
+            string extension = '.' + proxy.FileExtension;
+            int i = 0;
+            do
+            {
+                path = StringUtils.CombinePaths(parentFolderPath, string.Format("{0} {1}", proxyName, i++) + extension);
+            } while (parentFolder.FindChild(path) != null);
+
+            // Create new asset proxy, add to view and rename it
+            _newElement = new NewItem(path, proxy);
+            _newElement.ParentFolder = parentFolder;
+            RefreshView();
+            Rename(_newElement);
         }
 
         private void ContentDatabaseOnItemRemoved(ContentItem contentItem)
