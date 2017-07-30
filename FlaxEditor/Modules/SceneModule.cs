@@ -77,8 +77,6 @@ namespace FlaxEditor.Modules
         /// <param name="path">The path.</param>
         public void CreateSceneFile(string path)
         {
-            Editor.Log(string.Format("Creating new scene to \'{0}\'", path));
-
             // Create a sample scene
             var scene = Scene.New();
             var sky = Sky.New();

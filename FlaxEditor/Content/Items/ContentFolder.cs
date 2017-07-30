@@ -128,7 +128,7 @@ namespace FlaxEditor.Content
         /// </summary>
         /// <param name="path">Element path to find</param>
         /// <returns>True if contains that element, otherwise false</returns>
-        public bool ContaisnChild(string path)
+        public bool ContainsChild(string path)
         {
             return FindChild(path) != null;
         }

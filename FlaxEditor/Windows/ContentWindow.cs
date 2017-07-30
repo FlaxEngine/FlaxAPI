@@ -151,6 +151,7 @@ namespace FlaxEditor.Windows
 
             // Check if was renaming mock element
             // Note: we create `_newElement` and then rename it to create new asset
+            var itemFolder = item.ParentFolder;
             if (_newElement == item)
             {
                 try
@@ -176,6 +177,16 @@ namespace FlaxEditor.Windows
                 Editor.ContentDatabase.Move(item, newPath);
             }
 
+            if (_newElement != null)
+            {
+                // Destroy mock control
+                _newElement.ParentFolder = null;
+                _newElement.Dispose();
+                _newElement = null;
+            }
+            
+            // Refresh database and view now
+            Editor.ContentDatabase.RefreshFolder(itemFolder, true);
             RefreshView();
         }
 

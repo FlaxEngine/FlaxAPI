@@ -137,7 +137,7 @@ namespace FlaxEditor.Modules
             ContentFolder folder = item.IsFolder ? item as ContentFolder : item.ParentFolder;
             if (folder == null)
                 return;
-
+            
             // Update
             loadFolder(folder.Node, checkSubDirs);
         }
@@ -689,7 +689,7 @@ namespace FlaxEditor.Modules
                 var path = StringUtils.NormalizePath(files[i]);
 
                 // Check if node already has that element (skip during init when we want to walk project dir very fast)
-                if (_isDuringFastSetup || !parent.Folder.ContaisnChild(path))
+                if (_isDuringFastSetup || !parent.Folder.ContainsChild(path))
                 {
                     // Create item object
                     var item = new ScriptItem(path);
@@ -699,7 +699,10 @@ namespace FlaxEditor.Modules
 
                     // Fire event
                     if (_enableEvents)
+                    {
                         OnItemAdded?.Invoke(item);
+                        OnWorkspaceModified?.Invoke();
+                    }
                     _itemsCreated++;
                 }
             }
@@ -714,21 +717,22 @@ namespace FlaxEditor.Modules
             for (int i = 0; i < files.Length; i++)
             {
                 var path = StringUtils.NormalizePath(files[i]);
-
+                
                 // Check if node already has that element (skip during init when we want to walk project dir very fast)
-                if (_isDuringFastSetup || !parent.Folder.ContaisnChild(path))
+                if (_isDuringFastSetup || !parent.Folder.ContainsChild(path))
                 {
                     // It can be any type of asset: binary, text, cooked, package, etc.
                     // The best idea is to just ask Flax.
                     // Flax isn't John Snow. Flax knows something :)
                     // Also Flax Content Layer is using smart caching so this query gonna be fast.
-
+                    
                     int typeId;
                     Guid id;
                     if (FlaxEngine.Content.GetAssetInfo(path, out typeId, out id))
                     {
                         var proxy = GetAssetProxy(typeId, path);
                         var item = proxy?.ConstructItem(path, typeId, ref id);
+                        
                         if (item != null)
                         {
                             // Link
@@ -736,7 +740,10 @@ namespace FlaxEditor.Modules
 
                             // Fire event
                             if (_enableEvents)
+                            {
                                 OnItemAdded?.Invoke(item);
+                                OnWorkspaceModified?.Invoke();
+                            }
                             _itemsCreated++;
                         }
                     }
@@ -769,6 +776,7 @@ namespace FlaxEditor.Modules
             // Load all folders
             // TODO: we should create async task for gathering content and whole workspace contents if it takes too long
             // TODO: create progress bar in content window and after end we should enable events and update it
+            _isDuringFastSetup = true;
             loadFolder(ProjectContent, true);
             loadFolder(ProjectSource, true);
             loadFolder(EnginePrivate, true);
