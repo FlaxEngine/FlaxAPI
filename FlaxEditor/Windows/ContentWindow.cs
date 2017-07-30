@@ -145,6 +145,14 @@ namespace FlaxEditor.Windows
                 return;
             }
 
+            // Ensure has parent
+            if (item.ParentFolder == null)
+            {
+                // Error
+                Editor.LogWarning("Cannot rename root items. " + item.Path);
+                return;
+            }
+
             // Cache data
             var extension = Path.GetExtension(item.Path);
             var newPath = StringUtils.CombinePaths(item.ParentFolder.Path, newShortName + extension);

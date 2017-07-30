@@ -92,6 +92,7 @@ namespace FlaxEditor.GUI
             if (text.Length > 0 && text != _startValue)
             {
                 Renamed?.Invoke(this);
+                Renamed = null;
             }
 
             Hide();
@@ -130,6 +131,7 @@ namespace FlaxEditor.GUI
         protected override void OnHide()
         {
             Closed?.Invoke(this);
+            Closed = null;
 
             base.OnHide();
 
