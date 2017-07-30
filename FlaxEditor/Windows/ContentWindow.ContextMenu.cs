@@ -171,7 +171,7 @@ namespace FlaxEditor.Windows
                     }
                     break;
                 case 10:
-                    //newFolder(); // TODO: new folder
+                    NewFolder();
                     break;
                 case 12:
                     _view.ClearSelection();

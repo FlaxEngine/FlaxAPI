@@ -50,7 +50,7 @@ namespace FlaxEditor.Windows
 
             // Content database events
             editor.ContentDatabase.OnWorkspaceModified += () => _isWorkspaceDirty = true;
-            editor.ContentDatabase.OnItemRemoved += ContentDatabaseOnOnItemRemoved;
+            editor.ContentDatabase.OnItemRemoved += ContentDatabaseOnItemRemoved;
 
             // Tool strip
             _toolStrip = new ToolStrip();
@@ -122,7 +122,7 @@ namespace FlaxEditor.Windows
 
         internal void Rename(ContentItem item, string newShortName)
         {
-            if(item == null)
+            if (item == null)
                 throw new ArgumentNullException();
 
             // Check if can rename this item
@@ -306,7 +306,37 @@ namespace FlaxEditor.Windows
             }
         }
 
-        private void ContentDatabaseOnOnItemRemoved(ContentItem contentItem)
+        /// <summary>
+        /// Stars creating the folder.
+        /// </summary>
+        private void NewFolder()
+        {
+            // Construct path
+            var parentFolder = SelectedNode.Folder;
+            string destinationPath;
+            int i = 0;
+            do
+            {
+                destinationPath = StringUtils.CombinePaths(parentFolder.Path, string.Format("New Folder ({0})", i++));
+            } while (Directory.Exists(destinationPath));
+            
+            // Create new folder
+            Directory.CreateDirectory(destinationPath);
+            
+            // Refresh parent folder now and try to find duplicated item
+            // Note: we should spawn new items directly, content database should do it to propagate events in a proper way
+            Editor.ContentDatabase.RefreshFolder(parentFolder, true);
+            RefreshView();
+            var targetItem = parentFolder.FindChild(destinationPath);
+            
+            // Start renaming it
+            if (targetItem != null)
+            {
+                Rename(targetItem);
+            }
+        }
+
+        private void ContentDatabaseOnItemRemoved(ContentItem contentItem)
         {
             if (contentItem is ContentFolder folder)
             {
