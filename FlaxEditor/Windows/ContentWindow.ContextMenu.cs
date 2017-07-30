@@ -157,7 +157,7 @@ namespace FlaxEditor.Windows
                     Rename(item);
                     break;
                 case 7:
-                    //Clipboard::SetData(item.GetNamePath()); // TODO: copy asset url (in project)
+                    Application.ClipboardText = item.NamePath;
                     break;
                 case 8:
                     if (item is BinaryAssetItem binaryAsset)
@@ -191,7 +191,7 @@ namespace FlaxEditor.Windows
                     //RefreshPreviewViewAll(); // TODO: refresh thumbnails for assets in view
                     break;
                 case 17:
-                    //Clipboard::SetData(item.GetPath()); // TODO: copy asset path
+                    Application.ClipboardText = item.Path;
                     break;
             }
 
