@@ -78,8 +78,9 @@ namespace FlaxEditor.Windows
 
                 cm.AddSeparator();
 
-                b = cm.AddButton(4, "Export");
-                b.Enabled = proxy != null && proxy.CanExport;
+                // TODO: exportig assets
+                //b = cm.AddButton(4, "Export");
+                //b.Enabled = proxy != null && proxy.CanExport;
 
                 b = cm.AddButton(5, "Clone");
                 b.Enabled = !isFolder;
@@ -166,7 +167,7 @@ namespace FlaxEditor.Windows
                         if (!binaryAsset.GetImportPath(out importPath))
                         {
                             string importLocation = System.IO.Path.GetDirectoryName(importPath);
-                            // TODO: show folder in explorer
+                            Application.StartProcess(importLocation);
                         }
                     }
                     break;
@@ -181,8 +182,7 @@ namespace FlaxEditor.Windows
                     Editor.ContentDatabase.RefreshFolder(item ?? currentFolder, true);
                     break;
                 case 14:
-                    // TODO: show asset in folder
-                    //Application::StartProcess(*(el ? StringUtils::GetDirectoryName(item.GetPath()) : currentFolder.GetPath()));
+                    Application.StartProcess(item != null ? System.IO.Path.GetDirectoryName(item.Path) : currentFolder.Path);
                     break;
                 case 15:
                     //ReimportViewAll(); // TODO: reimport assets in a view
