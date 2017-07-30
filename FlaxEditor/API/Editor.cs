@@ -276,6 +276,12 @@ namespace FlaxEditor
             // TODO: redirect this msg to log file not a console
             Debug.LogError(msg);
         }
+        
+        public enum NewAssetType
+        {
+            Material = 0,
+            MaterialInstance = 1,
+        };
 
         #region Internal Calls
 

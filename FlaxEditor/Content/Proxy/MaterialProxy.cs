@@ -41,7 +41,19 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override ContentDomain Domain => Material.Domain;
+        
+        /// <inheritdoc />
+        public override bool CanCreate(ContentFolder targetLocation)
+        {
+            return targetLocation.CanHaveAssets;
+        }
 
+        /// <inheritdoc />
+        public override void Create(string outputPath)
+        {
+            if (Editor.CreateAsset(Editor.NewAssetType.Material, outputPath))
+                throw new Exception("Failed to create new asset.");
+        }
 
         /// <inheritdoc />
         public override void OnThumbnailDrawPrepare(ThumbnailRequest request)

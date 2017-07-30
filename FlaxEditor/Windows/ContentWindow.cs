@@ -153,10 +153,18 @@ namespace FlaxEditor.Windows
             // Note: we create `_newElement` and then rename it to create new asset
             if (_newElement == item)
             {
-                // Create new asset
-                var proxy = _newElement.Proxy;
-                Editor.Log(string.Format("Creating asset {0} in {1}", proxy.Name, newPath));
-                proxy.Create(newPath);
+                try
+                {
+                    // Create new asset
+                    var proxy = _newElement.Proxy;
+                    Editor.Log(string.Format("Creating asset {0} in {1}", proxy.Name, newPath));
+                    proxy.Create(newPath);
+                }
+                catch (Exception ex)
+                {
+                    Editor.LogWarning(ex.StackTrace);
+                    Editor.LogError("Failed to create asset. " + ex.Message);
+                }
             }
             else
             {
