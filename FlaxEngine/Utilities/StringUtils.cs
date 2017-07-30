@@ -67,15 +67,20 @@ namespace FlaxEngine
         public static string NormalizePath(string path)
         {
             var chars = path.ToCharArray();
+
+            // Convert all '\' to '/'
             for (int i = 0; i < chars.Length; i++)
             {
                 if (chars[i] == '\\')
                     chars[i] = '/';
             }
-            if (chars.Length > 2 && char.IsDigit(chars[0]) && chars[1] == ':')
+
+            // Fix case 'C:/' to 'C:\'
+            if (chars.Length > 2 && !char.IsDigit(chars[0]) && chars[1] == ':')
             {
                 chars[2] = '\\';
             }
+
             return new string(chars);
         }
 
