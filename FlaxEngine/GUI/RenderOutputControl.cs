@@ -135,7 +135,7 @@ namespace FlaxEngine.GUI
             if (_resizeTime >= ResizeCheckTime)
             {
                 _resizeTime = 0;
-                Resize();
+                SyncBackbufferSize();
             }
             
             base.Update(deltaTime);
@@ -154,7 +154,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Synchronizes size of the back buffer with the size of the control.
         /// </summary>
-        public void Resize()
+        public void SyncBackbufferSize()
         {
             int width = (int)Width;
             int height = (int)Height;

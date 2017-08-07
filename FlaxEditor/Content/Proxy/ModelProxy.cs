@@ -50,7 +50,7 @@ namespace FlaxEditor.Content
                 _preview.RenderOnlyWithWindow = false;
                 _preview.Task.Enabled = false;
                 _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
-                _preview.Resize();
+                _preview.SyncBackbufferSize();
             }
 
             // TODO: disable streaming for asset during thumbnail rendering (and restore it after)
