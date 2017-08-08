@@ -106,6 +106,7 @@
     <Compile Include="Modules\CodeEditingModule.cs" />
     <Compile Include="Modules\ContentDatabaseModule.cs" />
     <Compile Include="Modules\ContentEditingModule.cs" />
+    <Compile Include="Modules\ContentImportingModule.cs" />
     <Compile Include="Modules\EditorModule.cs" />
     <Compile Include="Modules\ProgressReportingModule.cs" />
     <Compile Include="Modules\SceneEditingModule.cs" />
