@@ -16,8 +16,9 @@ namespace FlaxEditor.Content.Import
         /// Initializes a new instance of the <see cref="TextureFileEntry"/> class.
         /// </summary>
         /// <param name="url">The source file url.</param>
-        public TextureFileEntry(string url)
-            : base(url)
+        /// <param name="resultUrl">The result file url.</param>
+        public TextureFileEntry(string url, string resultUrl)
+            : base(url, resultUrl)
         {
             // TODO: prepare import options based on file name
         }

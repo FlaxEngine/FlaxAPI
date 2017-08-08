@@ -2,7 +2,9 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace FlaxEditor.Content.Import
 {
@@ -10,8 +12,9 @@ namespace FlaxEditor.Content.Import
     /// Creates new <see cref="FileEntry"/> for the given source file.
     /// </summary>
     /// <param name="url">The source file url.</param>
+    /// <param name="resultUrl">The result file url.</param>
     /// <returns>The file entry.</returns>
-    public delegate FileEntry CreateFileEntry(string url);
+    public delegate FileEntry CreateFileEntry(string url, string resultUrl);
 
     /// <summary>
     /// File import entry.
@@ -22,6 +25,11 @@ namespace FlaxEditor.Content.Import
         /// The path to the source file.
         /// </summary>
         public readonly string Url;
+
+        /// <summary>
+        /// The result file path.
+        /// </summary>
+        public readonly string ResultUrl;
 
         /// <summary>
         /// Gets a value indicating whether this entry has settings to modify.
@@ -43,15 +51,42 @@ namespace FlaxEditor.Content.Import
         /// Initializes a new instance of the <see cref="FileEntry"/> class.
         /// </summary>
         /// <param name="url">The source file url.</param>
-        public FileEntry(string url)
+        /// <param name="resultUrl">The result file url.</param>
+        public FileEntry(string url, string resultUrl)
         {
             Url = url;
+            ResultUrl = resultUrl;
         }
 
         /// <summary>
-        /// The file types registered for importing. Key is a file extension (with dot).
+        /// The file types registered for importing. Key is a file extension (without a leading dot).
+        /// Allows to plug custom importing options gather for diffrent input file types.
         /// </summary>
         public static readonly Dictionary<string, CreateFileEntry> FileTypes = new Dictionary<string, CreateFileEntry>(32);
+
+        /// <summary>
+        /// Creates the entry.
+        /// </summary>
+        /// <param name="url">The source file url.</param>
+        /// <param name="resultUrl">The result file url.</param>
+        /// <returns>Created file entry.</returns>
+        public FileEntry CreateEntry(string url, string resultUrl)
+        {
+            // Get extension (without a dot)
+            var extension = Path.GetExtension(url);
+            if (string.IsNullOrEmpty(extension))
+                throw new ArgumentException();
+            if (extension[0] == '.')
+                extension = extension.Remove(0, 1);
+
+            // Check if use overriden type
+            CreateFileEntry createDelegate;
+            if (FileTypes.TryGetValue(extension, out createDelegate))
+                return createDelegate(url, resultUrl);
+
+            // Use default type
+            return new FileEntry(url, resultUrl);
+        }
 
         internal void RegisterDefaultTypes()
         {
@@ -92,14 +127,14 @@ namespace FlaxEditor.Content.Import
             FileTypes["lxo"] = ImportModel;
         }
 
-        private static FileEntry ImportModel(string url)
+        private static FileEntry ImportModel(string url, string resultUrl)
         {
-            return new ModelFileEntry(url);
+            return new ModelFileEntry(url, resultUrl);
         }
 
-        private static FileEntry ImportTexture(string url)
+        private static FileEntry ImportTexture(string url, string resultUrl)
         {
-            return new TextureFileEntry(url);
+            return new TextureFileEntry(url, resultUrl);
         }
     }
 }
