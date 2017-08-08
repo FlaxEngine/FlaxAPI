@@ -80,6 +80,11 @@ namespace FlaxEditor
         /// The content database module.
         /// </summary>
         public readonly ContentDatabaseModule ContentDatabase;
+        
+        /// <summary>
+        /// The content importing module.
+        /// </summary>
+        public readonly ContentImportingModule ContentImporting;
 
         /// <summary>
         /// The content editing
@@ -108,6 +113,7 @@ namespace FlaxEditor
             RegisterModule(ProgressReporting = new ProgressReportingModule(this));
             RegisterModule(ContentEditing = new ContentEditingModule(this));
             RegisterModule(ContentDatabase = new ContentDatabaseModule(this));
+            RegisterModule(ContentImporting = new ContentImportingModule(this));
             RegisterModule(CodeEditing = new CodeEditingModule(this));
 
             // Create state machine

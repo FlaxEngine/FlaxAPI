@@ -56,7 +56,7 @@ namespace FlaxEditor.Windows
                 if (!isFolder)
                 {
                     b = cm.AddButton(2, "Reimport");
-                    b.Enabled = proxy != null && proxy.CanReimport(item) && item.IsAsset;
+                    b.Enabled = item is BinaryAssetItem && proxy != null && proxy.CanReimport(item);
 
                     b = cm.AddButton(15, "Reimport all");
 
@@ -142,8 +142,7 @@ namespace FlaxEditor.Windows
                     item.RefreshThumbnail();
                     break;
                 case 2:
-                    Assert.IsTrue(item.IsAsset);
-                    //Reimport((AssetElement*)el, null); // TODO: reimport asset
+                    Editor.ContentImporting.Reimport(item as BinaryAssetItem);
                     break;
                 case 3:
                     Delete(item);
@@ -176,7 +175,7 @@ namespace FlaxEditor.Windows
                     break;
                 case 12:
                     _view.ClearSelection();
-                    //import(); // TODO: import file
+                    Editor.ContentImporting.ShowImportFileDialog();
                     break;
                 case 13:
                     Editor.ContentDatabase.RefreshFolder(item ?? currentFolder, true);
@@ -185,7 +184,7 @@ namespace FlaxEditor.Windows
                     Application.StartProcess(item != null ? System.IO.Path.GetDirectoryName(item.Path) : currentFolder.Path);
                     break;
                 case 15:
-                    //ReimportViewAll(); // TODO: reimport assets in a view
+                    ReimportViewAll();
                     break;
                 case 16:
                     RefreshViewItemsThumbnails();
@@ -204,12 +203,28 @@ namespace FlaxEditor.Windows
             }
         }
 
+        /// <summary>
+        /// Refreshes thumbnails for all the items in the view.
+        /// </summary>
         private void RefreshViewItemsThumbnails()
         {
             var items = _view.Items;
             for (int i = 0; i < items.Count; i++)
             {
                 items[i].RefreshThumbnail();
+            }
+        }
+
+        /// <summary>
+        /// Reimports all the assets in the view.
+        /// </summary>
+        private void ReimportViewAll()
+        {
+            var items = _view.Items;
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i] is BinaryAssetItem binaryAssetItem)
+                    Editor.ContentImporting.Reimport(binaryAssetItem);
             }
         }
     }

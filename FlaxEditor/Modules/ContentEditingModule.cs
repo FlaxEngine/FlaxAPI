@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
 using FlaxEditor.Content;
 using FlaxEditor.Windows;
 using FlaxEngine;
@@ -140,38 +139,6 @@ namespace FlaxEditor.Modules
 
             hint = string.Empty;
             return true;
-        }
-
-        /// <summary>
-        /// Reimports the specified asset.
-        /// </summary>
-        /// <param name="asset">The asset.</param>
-        public void Reimport(BinaryAssetItem asset)
-        {
-            throw new NotImplementedException("Reimporting binary assets");
-        }
-
-        /// <summary>
-        /// Imports the specified files.
-        /// </summary>
-        /// <param name="files">The files.</param>
-        /// <param name="targetLocation">The target location.</param>
-        public void Import(List<string> files, ContentFolder targetLocation)
-        {
-            for (int i = 0; i < files.Count; i++)
-            {
-                Import(files[i], targetLocation);
-            }
-        }
-
-        /// <summary>
-        /// Imports the specified file.
-        /// </summary>
-        /// <param name="file">The file.</param>
-        /// <param name="targetLocation">The target location.</param>
-        public void Import(string file, ContentFolder targetLocation)
-        {
-            throw new NotImplementedException("Importing assets");
         }
         
         /// <summary>
