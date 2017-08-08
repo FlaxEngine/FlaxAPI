@@ -287,7 +287,7 @@ namespace FlaxEditor.Content
             if (data is DragDataFiles files)
             {
                 // Import files
-                Editor.Instance.ContentEditing.Import(files.Files, this);
+                Editor.Instance.ContentImporting.Import(files.Files, this);
                 result = DragDropEffect.Copy;
             }
             else if (_dragOverItems.HasValidDrag)

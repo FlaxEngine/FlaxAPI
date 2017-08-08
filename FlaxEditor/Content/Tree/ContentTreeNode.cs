@@ -169,7 +169,7 @@ namespace FlaxEditor.Content
             if (data is DragDataFiles files)
             {
                 // Import files
-                Editor.Instance.ContentEditing.Import(files.Files, _folder);
+                Editor.Instance.ContentImporting.Import(files.Files, _folder);
                 result = DragDropEffect.Copy;
 
                 Expand();
