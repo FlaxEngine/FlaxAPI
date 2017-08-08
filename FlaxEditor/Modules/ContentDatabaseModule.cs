@@ -108,6 +108,29 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
+        /// Gets the proxy object for the given file extension. Warning! Diffrent asset types may share the same file extension.
+        /// </summary>
+        /// <param name="extension">The file extension.</param>
+        /// <returns>Content proxy for that item or null if cannot find.</returns>
+        public ContentProxy GetProxy(string extension)
+        {
+            if(string.IsNullOrEmpty(extension))
+                throw new ArgumentNullException();
+
+            extension = StringUtils.NormalizeExtension(extension);
+
+            for (int i = 0; i < Proxy.Count; i++)
+            {
+                if (Proxy[i].FileExtension == extension)
+                {
+                    return Proxy[i];
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets the proxy object for the given asset type id.
         /// </summary>
         /// <param name="typeId">The asset type id.</param>

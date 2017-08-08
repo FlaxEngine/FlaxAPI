@@ -85,6 +85,19 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Normalizes the file extension to common format: no leading dot and all lowercase.
+        /// For example: '.TxT' will return 'txt'.
+        /// </summary>
+        /// <param name="extension">The extension.</param>
+        /// <returns>The nomralized extension.</returns>
+        public static string NormalizeExtension(string extension)
+        {
+            if (extension[0] == '.')
+                extension = extension.Remove(0, 1);
+            return extension.ToLower();
+        }
+
+        /// <summary>
         /// Combines the paths.
         /// </summary>
         /// <param name="left">The left.</param>

@@ -88,7 +88,7 @@ namespace FlaxEditor.Content.Import
             return new FileEntry(url, resultUrl);
         }
 
-        internal void RegisterDefaultTypes()
+        internal static void RegisterDefaultTypes()
         {
             // Textures
             FileTypes["tga"] = ImportTexture;
