@@ -1,5 +1,7 @@
 // Flax Engine scripting API
 
+using System;
+using FlaxEditor.Gizmo;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Dialogs;
 using FlaxEngine;
@@ -338,8 +340,9 @@ namespace FlaxEditor.Modules
             mm_Help.ContextMenu.AddButton(7, "Official Website");
             mm_Help.ContextMenu.AddButton(4, "Facebook Fanpage");
             mm_Help.ContextMenu.AddButton(5, "Youtube Channel");
-            //mm_Help.ContextMenu.AddSeparator();
-            //mm_Help.ContextMenu.AddButton(6, "Information about Flax");
+            mm_Help.ContextMenu.AddButton(8, "Twitter");
+            mm_Help.ContextMenu.AddSeparator();
+            mm_Help.ContextMenu.AddButton(6, "Information about Flax");
         }
 
         private void InitToolstrip(FlaxEngine.GUI.Window mainWindow)
@@ -387,33 +390,33 @@ namespace FlaxEditor.Modules
             switch (id)
             {
                 // Welcome screen
-                /*case 0:
+                case 0:
                     // TODO: Welcome screen
                     break;
 
                 // Save scene(s)
-                case 1: CSceneModule->SaveScenes(); break;
+                case 1: Editor.Scene.SaveScenes(); break;
 
                 // Save all
-                case 2: CEditor->SaveAll(); break;
+                case 2: Editor.SaveAll(); break;
 
                 // Undo
-                case 3: CEditor->UndoRedo.Undo(); break;
+                case 3: Editor.Undo(); break;
 
                 // Redo
-                case 4: CEditor->UndoRedo.Redo(); break;
+                case 4: Editor.Redo(); break;
 
                 // Translate mode
-                case 5: CEditor->GetMainGizmo()->SetMode(GizmoMode::Translate); break;
+                case 5: Editor.Windows.EditWin.Viewport.TransformGizmo.ActiveMode = TransformGizmo.Mode.Translate; break;
 
                 // Rotate mode
-                case 6: CEditor->GetMainGizmo()->SetMode(GizmoMode::Rotate); break;
+                case 6: Editor.Windows.EditWin.Viewport.TransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate; break;
 
                 // Scale mode
-                case 7: CEditor->GetMainGizmo()->SetMode(GizmoMode::Scale); break;
+                case 7: Editor.Windows.EditWin.Viewport.TransformGizmo.ActiveMode = TransformGizmo.Mode.Scale; break;
 
                 // Play
-                case 8:
+                /*case 8:
                 {
                     // Check if Editor is in play mode
                     if (CEditor->StateMachine->IsPlayMode())
@@ -465,13 +468,13 @@ namespace FlaxEditor.Modules
                 case 6: Editor.Windows.MainWindow.Close(ClosingReason.User); break;
 
                 // Open Visual Studio project
-                //case 7: CodeEditingManager::Instance()->OpenSolution(); break;
+                //case 7: CodeEditingManager.Instance()->OpenSolution(); break;
 
                 // Regenerate solution file
-                //case 8: ScriptsBuilder::Instance()->GenerateProject(true, true); break;
+                //case 8: ScriptsBuilder.Instance()->GenerateProject(true, true); break;
 
                 // Recompile scripts
-                //case 9: ScriptsBuilder::Instance()->Compile(); break;
+                //case 9: ScriptsBuilder.Instance()->Compile(); break;
             }
         }
 
@@ -479,14 +482,14 @@ namespace FlaxEditor.Modules
         {
             switch (id)
             {
-                //case 1: CEditor->UndoRedo.Undo(); break;
-                //case 2: CEditor->UndoRedo.Redo(); break;
+                case 1: Editor.Undo(); break;
+                case 2: Editor.Redo(); break;
                 //case 3: CEditor->GetMainGizmo()->Cut(); break;
                 //case 4: CEditor->GetMainGizmo()->CopySelection(); break;
                 //case 5: CEditor->GetMainGizmo()->Paste(); break;
                 //case 6: CEditor->GetMainGizmo()->DeleteSelection(); break;
                 //case 7: CEditor->GetMainGizmo()->Duplicate(); break;
-                //case 8: CEditor->GetMainGizmo()->SelectAll(); break;
+                case 8: Editor.SceneEditing.SelectAllScenes(); break;
                 //case 9: CWindowsModule->SceneGraph->Search(); break;
             }
         }
@@ -502,17 +505,17 @@ namespace FlaxEditor.Modules
 
             auto undoButton = c->GetButton(1);// Undo
             undoButton->SetEnabled(undoRedo.HasUndo());
-            undoButton->Text = undoRedo.HasUndo() ? LocalizationData::FormatEditorMessage(93, undoRedo.GetFirstUndo()->Get)) : LocalizationData::GetEditorMessage(95);
+            undoButton->Text = undoRedo.HasUndo() ? LocalizationData.FormatEditorMessage(93, undoRedo.GetFirstUndo()->Get)) : LocalizationData.GetEditorMessage(95);
 
             auto redoButton = c->GetButton(2);// Redo
             redoButton->SetEnabled(undoRedo.HasRedo());
-            redoButton->Text = undoRedo.HasRedo() ? LocalizationData::FormatEditorMessage(94, undoRedo.GetFirstRedo()->Get)) : LocalizationData::GetEditorMessage(96);
+            redoButton->Text = undoRedo.HasRedo() ? LocalizationData.FormatEditorMessage(94, undoRedo.GetFirstRedo()->Get)) : LocalizationData.GetEditorMessage(96);
 
             c->GetButton(3)->SetEnabled(gizmo->HasSthSelected());// Cut
             c->GetButton(4)->SetEnabled(gizmo->HasSthSelected());// Copy
             c->GetButton(6)->SetEnabled(gizmo->HasSthSelected());// Delete
             c->GetButton(7)->SetEnabled(gizmo->HasSthSelected());// Duplicate
-            c->GetButton(8)->SetEnabled(SceneManager::Instance()->IsAnySceneLoaded());// Select All
+            c->GetButton(8)->SetEnabled(SceneManager.Instance()->IsAnySceneLoaded());// Select All
 
             c->PerformLayout();*/
         }
@@ -621,7 +624,7 @@ namespace FlaxEditor.Modules
                         }
                         return actor->IsActiveInTree();
                     });
-                    SceneQuery::TreeExecute(f);
+                    SceneQuery.TreeExecute(f);
                     
                     break;
                 }*/
@@ -636,8 +639,8 @@ namespace FlaxEditor.Modules
             /*auto c = (CContextMenu*)cm;
 
             bool canBakeLightmaps = CEditor->Device->Limits->IsComputeSupported();
-            bool canEdit = SceneManager::Instance()->IsAnySceneLoaded() && CEditor->GetCurrentStateType() == EditorStates::EditingScene;
-            bool isBakingLightmaps = ProgressManager::Instance()->BakeLightmaps.IsActive();
+            bool canEdit = SceneManager.Instance()->IsAnySceneLoaded() && CEditor->GetCurrentStateType() == EditorStates.EditingScene;
+            bool isBakingLightmaps = ProgressManager.Instance()->BakeLightmaps.IsActive();
             c->GetButton(2)->SetEnabled((canEdit && canBakeLightmaps) || isBakingLightmaps);// Bake lightmaps
             c->GetButton(2)->Text = isBakingLightmaps ? "Cancel baking lightmaps") : "Bake lightmaps");
             c->GetButton(3)->SetEnabled(canEdit);// Clear lightmaps data
@@ -665,34 +668,53 @@ namespace FlaxEditor.Modules
             }
         }
 
-        void mm_Help_Click(int id, ContextMenuBase cm)
+        private void mm_Help_Click(int id, ContextMenuBase cm)
         {
-            /*switch (id)
+            switch (id)
             {
                 // Forum
-                case 1: Application::StartProcess("http://answers.flaxengine.com/")); break;
+                case 1:
+                    Application.StartProcess("http://answers.flaxengine.com/");
+                    break;
 
                 // Documentation
-                case 2: Application::StartProcess("http://docs.flaxengine.com/")); break;
+                case 2:
+                    Application.StartProcess("http://docs.flaxengine.com/");
+                    break;
 
                 // Report a bug
                 case 3:
-                    MISSING_CODE("report a bug feature");
-                    //Application::StartProcess("http://celelej.com/documentation/report-a-bug/"));
+                    // TODO: report a bug form
+                    throw new NotImplementedException("report a bug feature");
+                    //Application.StartProcess("http://celelej.com/documentation/report-a-bug/");
                     break;
 
                 // Facebook Fanpage
-                case 4: Application::StartProcess("https://facebook.com/FlaxEngine")); break;
+                case 4:
+                    Application.StartProcess("https://facebook.com/FlaxEngine");
+                    break;
 
                 // Youtube Channel
-                case 5: Application::StartProcess("https://youtube.com/Celelej")); break;
+                case 5:
+                    Application.StartProcess("https://www.youtube.com/channel/UChdER2A3n19rJWIMOZJClhw");
+                    break;
 
-                // Informations about Flax
-                case 6: MISSING_EDITOR_FEATURE("Show info window"); break;
+                // Information about Flax
+                case 6:
+                    // TODO: info window
+                    throw new NotImplementedException("Missing info window");
+                    break;
 
                 // Official Website
-                case 7: Application::StartProcess("http://flaxengine.com")); break;
-            }*/
+                case 7:
+                    Application.StartProcess("http://flaxengine.com");
+                    break;
+
+                // Twitter
+                case 8:
+                    Application.StartProcess("http://twitter.com/FlaxEngine");
+                    break;
+            }
         }
 
         private void OnOnMainWindowClosing()
