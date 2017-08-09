@@ -44,11 +44,13 @@ namespace FlaxEditor.Windows.Assets
 
             // Split Panel 1
             _splitPanel1 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None);
+            _splitPanel1.DockStyle = DockStyle.Fill;
             _splitPanel1.SplitterValue = 0.7f;
             _splitPanel1.Parent = this;
 
             // Split Panel 2
             _splitPanel2 = new SplitPanel(Orientation.Vertical, ScrollBars.None, ScrollBars.Vertical);
+            _splitPanel2.DockStyle = DockStyle.Fill;
             _splitPanel2.SplitterValue = 0.4f;
             _splitPanel2.Parent = _splitPanel1.Panel2;
 
