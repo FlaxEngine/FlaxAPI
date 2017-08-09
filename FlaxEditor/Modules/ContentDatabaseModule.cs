@@ -808,8 +808,42 @@ namespace FlaxEditor.Modules
 
             // Enable events
             _enableEvents = true;
+            Editor.ContentImporting.ImportFileDone += ContentImporting_ImportFileDone;
 
             Editor.Log("Project database created. Items count: " + _itemsCreated);
+        }
+
+        private void ContentImporting_ImportFileDone(Content.Import.FileEntry obj)
+        {
+            // Check if already has that element
+            var item = Find(obj.ResultUrl);
+            if (item is BinaryAssetItem binaryAssetItem)
+            {
+                // Get asset info from the registry (content layer will update cache it just after import)
+                int typeId;
+                Guid id;
+                if (FlaxEngine.Content.GetAssetInfo(binaryAssetItem.Path, out typeId, out id))
+                {
+                    // If asset type id has been changed we HAVE TO close all windows that use it
+                    // For eg. change texture to sprite atlas on reimport
+                    if (binaryAssetItem.TypeID != typeId)
+                    {
+                        // Asset type has been changed!
+                        Editor.LogWarning(string.Format("Asset \'{0}\' changed type from {1} to {2}.", item.Path, binaryAssetItem.TypeID, typeId));
+                        Editor.Windows.CloseAllEditors(item);
+
+                        // Remove this item from the database and call refresh
+                        var toRefresh = binaryAssetItem.ParentFolder;
+                        binaryAssetItem.Dispose();
+                        RefreshFolder(toRefresh, false);
+                    }
+                    else
+                    {
+                        // Refresh element data that could change during importing
+                        binaryAssetItem.OnReimport(ref id);
+                    }
+                }
+            }
         }
 
         internal void OnDirectoryEvent(MainContentTreeNode node, FileSystemEventArgs e)

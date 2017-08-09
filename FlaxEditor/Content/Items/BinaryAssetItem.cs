@@ -54,6 +54,11 @@ namespace FlaxEditor.Content
             return true;
         }
 
+        internal void OnReimport(ref Guid id)
+        {
+            ID = id;
+        }
+
         /// <inheritdoc />
         public override ContentDomain ItemDomain { get; }
     }

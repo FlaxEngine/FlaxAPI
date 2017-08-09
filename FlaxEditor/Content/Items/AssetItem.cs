@@ -19,7 +19,7 @@ namespace FlaxEditor.Content
         /// <value>
         /// The identifier.
         /// </value>
-        public Guid ID { get; }
+        public Guid ID { get; protected set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssetItem"/> class.
