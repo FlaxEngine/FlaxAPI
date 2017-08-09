@@ -39,6 +39,7 @@ namespace FlaxEditor.Modules
         private readonly Queue<FileEntry> _importingQueue = new Queue<FileEntry>();
         private readonly List<Request> _requests = new List<Request>();
 
+        private long _workerEndFlag;
         private Thread _workerThread;
 
         /// <summary>
@@ -56,6 +57,26 @@ namespace FlaxEditor.Modules
         /// The importing progress.
         /// </value>
         public float ImportingProgress => _importBatchSize > 0 ? (float)_importBatchDone / _importBatchSize : 1.0f;
+
+        /// <summary>
+        /// Occurs when assets importing starts.
+        /// </summary>
+        public event Action ImportingQueueBegin;
+
+        /// <summary>
+        /// Occurs when file is being imported.
+        /// </summary>
+        public event Action<FileEntry> ImportFileBegin;
+
+        /// <summary>
+        /// Occurs when file importing is done.
+        /// </summary>
+        public event Action<FileEntry> ImportFileDone;
+
+        /// <summary>
+        /// Occurs when assets importing ends.
+        /// </summary>
+        public event Action ImportingQueueEnd;
 
         /// <inheritdoc />
         internal ContentImportingModule(Editor editor)
@@ -93,7 +114,7 @@ namespace FlaxEditor.Modules
             if (targetLocation == null)
                 throw new ArgumentNullException();
 
-            lock (_importingQueue)
+            lock (_requests)
             {
                 bool skipDialog = false;
                 for (int i = 0; i < files.Count; i++)
@@ -171,9 +192,59 @@ namespace FlaxEditor.Modules
         /// <param name="outputPath">The output path.</param>
         public void Import(string inputPath, string outputPath)
         {
-            lock (_importingQueue)
+            lock (_requests)
             {
                 _requests.Add(new Request(inputPath, outputPath));
+            }
+        }
+
+        private void WorkerMain()
+        {
+            FileEntry entry;
+            bool wasLastTickWorking = false;
+
+            while (Interlocked.Read(ref _workerEndFlag) == 0)
+            {
+                // Try to get entry to process
+                lock (_requests)
+                {
+                    if (_importingQueue.Count > 0)
+                        entry = _importingQueue.Dequeue();
+                    else
+                        entry = null;
+                }
+
+                // Check if has any no job
+                bool inThisTickWork = entry != null;
+                if (inThisTickWork)
+                {
+                    // Check if begin importing
+                    if (!wasLastTickWorking)
+                    {
+                        ImportingQueueBegin?.Invoke();
+                    }
+
+                    // Import file
+                    ImportFileBegin?.Invoke(entry);
+                    // TODO: expose importing content to c#
+                    //if (AssetsImportingManager::Instance()->Import(data.InputPath, data.OutputPath, data.Argument) == false)
+                    {
+                        ImportFileDone?.Invoke(entry);
+                    }
+                }
+                else
+                {
+                    // Check if end importing
+                    if (wasLastTickWorking)
+                    {
+                        ImportingQueueEnd?.Invoke();
+                    }
+
+                    // Wait some time
+                    Thread.Sleep(50);
+                }
+
+                wasLastTickWorking = inThisTickWork;
             }
         }
 
@@ -182,7 +253,9 @@ namespace FlaxEditor.Modules
             if (_workerThread != null)
                 return;
 
-            // ..
+            _workerEndFlag = 0;
+            _workerThread = new Thread(WorkerMain);
+            _workerThread.Start();
         }
 
         private void EndWorker()
@@ -190,13 +263,34 @@ namespace FlaxEditor.Modules
             if (_workerThread == null)
                 return;
 
-            // ..
+            Interlocked.Increment(ref _workerEndFlag);
+            Thread.Sleep(0);
+
+            _workerThread.Join(1000);
+            _workerThread.Abort();
+            _workerThread = null;
         }
 
         /// <inheritdoc />
         public override void OnInit()
         {
             FileEntry.RegisterDefaultTypes();
+        }
+
+        /// <inheritdoc />
+        public override void OnUpdate()
+        {
+            // Check if has no requests to process
+            if (_requests.Count == 0)
+                return;
+
+            // TODO: process requests to _importingQueue
+        }
+
+        /// <inheritdoc />
+        public override void OnExit()
+        {
+            EndWorker();
         }
     }
 }
