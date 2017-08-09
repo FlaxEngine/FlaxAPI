@@ -171,8 +171,8 @@ namespace FlaxEditor.Windows
                 }
                 catch (Exception ex)
                 {
-                    Editor.LogWarning(ex.StackTrace);
-                    Editor.LogError("Failed to create asset. " + ex.Message);
+                    Editor.LogWarning(ex);
+                    Editor.LogError("Failed to create asset.");
                 }
             }
             else

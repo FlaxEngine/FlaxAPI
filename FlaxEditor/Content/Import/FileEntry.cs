@@ -70,7 +70,7 @@ namespace FlaxEditor.Content.Import
         /// <param name="url">The source file url.</param>
         /// <param name="resultUrl">The result file url.</param>
         /// <returns>Created file entry.</returns>
-        public FileEntry CreateEntry(string url, string resultUrl)
+        public static FileEntry CreateEntry(string url, string resultUrl)
         {
             // Get extension (without a dot)
             var extension = Path.GetExtension(url);

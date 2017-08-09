@@ -294,7 +294,7 @@ namespace FlaxEditor.Modules
                 catch (Exception ex)
                 {
                     // Error
-                    Editor.LogWarning(ex.Message);
+                    Editor.LogWarning(ex);
                     Editor.LogError(string.Format("Cannot rename asset \'{0}\' to \'{1}\'", oldPath, newPath));
                     return;
                 }
@@ -324,7 +324,7 @@ namespace FlaxEditor.Modules
                 catch (Exception ex)
                 {
                     // Error
-                    Editor.LogWarning(ex.Message);
+                    Editor.LogWarning(ex);
                     Editor.LogError(string.Format("Cannot move folder \'{0}\' to \'{1}\'", oldPath, newPath));
                     return;
                 }
@@ -424,7 +424,7 @@ namespace FlaxEditor.Modules
                     catch (Exception ex)
                     {
                         // Error
-                        Editor.LogWarning(ex.Message);
+                        Editor.LogWarning(ex);
                         Editor.LogError(string.Format("Cannot move folder \'{0}\' to \'{1}\'", oldPath, newPath));
                         return;
                     }
@@ -444,7 +444,7 @@ namespace FlaxEditor.Modules
                     catch (Exception ex)
                     {
                         // Error
-                        Editor.LogWarning(ex.Message);
+                        Editor.LogWarning(ex);
                         Editor.LogWarning(string.Format("Cannot remove folder \'{0}\'", oldPath));
                         return;
                     }
@@ -499,7 +499,7 @@ namespace FlaxEditor.Modules
                         catch (Exception ex)
                         {
                             // Error
-                            Editor.LogWarning(ex.Message);
+                            Editor.LogWarning(ex);
                             Editor.LogError(string.Format("Cannot copy folder \'{0}\' to \'{1}\'", sourcePath, targetPath));
                             return;
                         }
@@ -538,7 +538,7 @@ namespace FlaxEditor.Modules
                         catch (Exception ex)
                         {
                             // Error
-                            Editor.LogWarning(ex.Message);
+                            Editor.LogWarning(ex);
                             Editor.LogError(string.Format("Cannot copy asset \'{0}\' to \'{1}\'", sourcePath, targetPath));
                             return;
                         }
@@ -585,7 +585,7 @@ namespace FlaxEditor.Modules
                     catch (Exception ex)
                     {
                         // Error
-                        Editor.LogWarning(ex.Message);
+                        Editor.LogWarning(ex);
                         Editor.LogWarning(string.Format("Cannot remove folder \'{0}\'", path));
                         return;
                     }
@@ -808,13 +808,16 @@ namespace FlaxEditor.Modules
 
             // Enable events
             _enableEvents = true;
-            Editor.ContentImporting.ImportFileDone += ContentImporting_ImportFileDone;
+            Editor.ContentImporting.ImportFileEnd += ContentImporting_ImportFileDone;
 
             Editor.Log("Project database created. Items count: " + _itemsCreated);
         }
 
-        private void ContentImporting_ImportFileDone(Content.Import.FileEntry obj)
+        private void ContentImporting_ImportFileDone(Content.Import.FileEntry obj, bool failed)
         {
+            if (failed)
+                return;
+
             // Check if already has that element
             var item = Find(obj.ResultUrl);
             if (item is BinaryAssetItem binaryAssetItem)

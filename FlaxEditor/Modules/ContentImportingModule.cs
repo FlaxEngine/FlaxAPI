@@ -69,9 +69,16 @@ namespace FlaxEditor.Modules
         public event Action<FileEntry> ImportFileBegin;
 
         /// <summary>
-        /// Occurs when file importing is done.
+        /// Import file end delegate.
         /// </summary>
-        public event Action<FileEntry> ImportFileDone;
+        /// <param name="entry">The imported file entry.</param>
+        /// <param name="failed">if set to <c>true</c> if importing failed, otherwise false.</param>
+        public delegate void ImportFileEndDelegate(FileEntry entry, bool failed);
+
+        /// <summary>
+        /// Occurs when file importing end.
+        /// </summary>
+        public event ImportFileEndDelegate ImportFileEnd;
 
         /// <summary>
         /// Occurs when assets importing ends.
@@ -221,6 +228,8 @@ namespace FlaxEditor.Modules
                     // Check if begin importing
                     if (!wasLastTickWorking)
                     {
+                        Debug.Log("importing start");
+                        _importBatchDone = 0;
                         ImportingQueueBegin?.Invoke();
                     }
 
@@ -228,20 +237,22 @@ namespace FlaxEditor.Modules
                     ImportFileBegin?.Invoke(entry);
                     // TODO: expose importing content to c#
                     //if (AssetsImportingManager::Instance()->Import(data.InputPath, data.OutputPath, data.Argument) == false)
-                    {
-                        ImportFileDone?.Invoke(entry);
-                    }
+                    bool failed = false;
+                    _importBatchDone++;
+                    ImportFileEnd?.Invoke(entry, failed);
                 }
                 else
                 {
                     // Check if end importing
                     if (wasLastTickWorking)
                     {
+                        Debug.Log("importing end");
+                        _importBatchDone = _importBatchSize = 0;
                         ImportingQueueEnd?.Invoke();
                     }
 
                     // Wait some time
-                    Thread.Sleep(50);
+                    Thread.Sleep(100);
                 }
 
                 wasLastTickWorking = inThisTickWork;
@@ -253,8 +264,12 @@ namespace FlaxEditor.Modules
             if (_workerThread != null)
                 return;
 
+            Debug.Log("StartWorker");
+
             _workerEndFlag = 0;
             _workerThread = new Thread(WorkerMain);
+            _workerThread.Name = "Content Importer";
+            _workerThread.Priority = ThreadPriority.Highest;
             _workerThread.Start();
         }
 
@@ -262,6 +277,8 @@ namespace FlaxEditor.Modules
         {
             if (_workerThread == null)
                 return;
+
+            Debug.Log("EndWorker");
 
             Interlocked.Increment(ref _workerEndFlag);
             Thread.Sleep(0);
@@ -284,7 +301,45 @@ namespace FlaxEditor.Modules
             if (_requests.Count == 0)
                 return;
 
-            // TODO: process requests to _importingQueue
+            try
+            {
+                Debug.Log("convert requests to entries");
+
+                // Get entries
+                List<FileEntry> entries = new List<FileEntry>(_requests.Count);
+                bool needSettingsDialog = false;
+                for (int i = 0; i < _requests.Count; i++)
+                {
+                    Debug.Log(" ----> " + _requests[i].InputPath + "  ->  " + _requests[i].OutputPath);
+                    var entry = FileEntry.CreateEntry(_requests[i].InputPath, _requests[i].OutputPath);
+                    if (entry != null)
+                    {
+                        entries.Add(entry);
+                        needSettingsDialog |= entry.HasSettings;
+                    }
+                }
+                _requests.Clear();
+
+                // Check if need to show importing dialog or can just pass requests
+                if (needSettingsDialog)
+                {
+                    Debug.Log("use import fiels dialog " + entries.Count);
+                }
+                else
+                {
+                    Debug.Log("use direct import " + entries.Count);
+
+                    _importBatchSize += entries.Count;
+                    for (int i = 0; i < entries.Count; i++)
+                        _importingQueue.Enqueue(entries[i]);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Error
+                Editor.LogWarning(ex);
+                Editor.LogError("Failed to process files import request.");
+            }
         }
 
         /// <inheritdoc />

@@ -272,7 +272,17 @@ namespace FlaxEditor
             // TODO: redirect this msg to log file not a console
             Debug.LogWarning(msg);
         }
-        
+
+        /// <summary>
+        /// Logs the specified warning exception to the log file.
+        /// </summary>
+        /// <param name="ex">The exception.</param>
+        public static void LogWarning(Exception ex)
+        {
+            LogWarning("Exception: " + ex.Message);
+            LogWarning(ex.StackTrace);
+        }
+
         /// <summary>
         /// Logs the specified error message to the log file.
         /// </summary>
