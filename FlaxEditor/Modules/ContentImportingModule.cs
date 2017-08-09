@@ -205,7 +205,6 @@ namespace FlaxEditor.Modules
         {
             lock (_requests)
             {
-                Debug.Log("!!!!!!!!!!!!!!! add request " + inputPath);
                 _requests.Add(new Request(inputPath, outputPath, isBinaryAsset));
             }
         }
@@ -233,7 +232,6 @@ namespace FlaxEditor.Modules
                     // Check if begin importing
                     if (!wasLastTickWorking)
                     {
-                        Debug.Log("importing start");
                         _importBatchDone = 0;
                         ImportingQueueBegin?.Invoke();
                     }
@@ -265,7 +263,6 @@ namespace FlaxEditor.Modules
                     // Check if end importing
                     if (wasLastTickWorking)
                     {
-                        Debug.Log("importing end");
                         _importBatchDone = _importBatchSize = 0;
                         ImportingQueueEnd?.Invoke();
                     }
@@ -295,9 +292,7 @@ namespace FlaxEditor.Modules
         {
             if (_workerThread != null)
                 return;
-
-            Debug.Log("StartWorker");
-
+            
             _workerEndFlag = 0;
             _workerThread = new Thread(WorkerMain)
             {
@@ -311,9 +306,7 @@ namespace FlaxEditor.Modules
         {
             if (_workerThread == null)
                 return;
-
-            Debug.Log("EndWorker");
-
+            
             Interlocked.Increment(ref _workerEndFlag);
             Thread.Sleep(0);
 
@@ -339,14 +332,11 @@ namespace FlaxEditor.Modules
             {
                 try
                 {
-                    Debug.Log("convert requests to entries " + _requests.Count);
-
                     // Get entries
                     List<FileEntry> entries = new List<FileEntry>(_requests.Count);
                     bool needSettingsDialog = false;
                     for (int i = 0; i < _requests.Count; i++)
                     {
-                        Debug.Log(" ----> " + _requests[i].InputPath + "  ->  " + _requests[i].OutputPath);
                         var request = _requests[i];
                         var entry = FileEntry.CreateEntry(request.InputPath, request.OutputPath, request.IsBinaryAsset);
                         if (entry != null)
@@ -360,13 +350,11 @@ namespace FlaxEditor.Modules
                     // Check if need to show importing dialog or can just pass requests
                     if (needSettingsDialog)
                     {
-                        Debug.Log("use import fiels dialog " + entries.Count);
                         var dialog = new ImportFilesDialog(entries);
                         dialog.Show(Editor.Windows.MainWindow);
                     }
                     else
                     {
-                        Debug.Log("use direct import " + entries.Count);
                         LetThemBeImportedxD(entries);
                     }
                 }
