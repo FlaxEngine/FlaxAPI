@@ -258,7 +258,10 @@ namespace FlaxEditor.Content
 
             // Check if drop file(s)
             if (data is DragDataFiles)
+            {
+                _validDragOver = true;
                 return DragDropEffect.Copy;
+            }
 
             // Check if drop asset(s)
             if (_dragOverItems == null)
