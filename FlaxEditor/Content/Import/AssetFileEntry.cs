@@ -2,10 +2,6 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-
 namespace FlaxEditor.Content.Import
 {
     /// <summary>
@@ -17,6 +13,13 @@ namespace FlaxEditor.Content.Import
         public AssetFileEntry(string url, string resultUrl)
             : base(url, resultUrl)
         {
+        }
+
+        /// <inheritdoc />
+        public override bool Import()
+        {
+            // Use engine backend
+            return Editor.Import(Url, ResultUrl);
         }
     }
 }

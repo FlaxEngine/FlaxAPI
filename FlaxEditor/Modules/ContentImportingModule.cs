@@ -150,7 +150,7 @@ namespace FlaxEditor.Modules
                 throw new ArgumentNullException();
 
             var extension = System.IO.Path.GetExtension(inputPath) ?? string.Empty;
-            
+
             // Check if given file extension is a binary asset (.flax files) and can be imported by the engine
             bool isBinaryAsset = Editor.CanImport(extension);
             string outputExtension;
@@ -190,7 +190,7 @@ namespace FlaxEditor.Modules
 
             var shortName = System.IO.Path.GetFileNameWithoutExtension(inputPath);
             var outputPath = System.IO.Path.Combine(targetLocation.Path, shortName + outputExtension);
-            
+
             Import(inputPath, outputPath, isBinaryAsset);
         }
 
@@ -278,6 +278,19 @@ namespace FlaxEditor.Modules
             }
         }
 
+        private void LetThemBeImportedxD(List<FileEntry> entries)
+        {
+            int count = entries.Count;
+            if (count > 0)
+            {
+                _importBatchSize += count;
+                for (int i = 0; i < count; i++)
+                    _importingQueue.Enqueue(entries[i]);
+
+                StartWorker();
+            }
+        }
+
         private void StartWorker()
         {
             if (_workerThread != null)
@@ -286,9 +299,11 @@ namespace FlaxEditor.Modules
             Debug.Log("StartWorker");
 
             _workerEndFlag = 0;
-            _workerThread = new Thread(WorkerMain);
-            _workerThread.Name = "Content Importer";
-            _workerThread.Priority = ThreadPriority.Highest;
+            _workerThread = new Thread(WorkerMain)
+            {
+                Name = "Content Importer",
+                Priority = ThreadPriority.Highest
+            };
             _workerThread.Start();
         }
 
@@ -350,10 +365,7 @@ namespace FlaxEditor.Modules
                     else
                     {
                         Debug.Log("use direct import " + entries.Count);
-
-                        _importBatchSize += entries.Count;
-                        for (int i = 0; i < entries.Count; i++)
-                            _importingQueue.Enqueue(entries[i]);
+                        LetThemBeImportedxD(entries);
                     }
                 }
                 catch (Exception ex)
