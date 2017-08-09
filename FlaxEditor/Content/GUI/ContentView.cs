@@ -393,33 +393,43 @@ namespace FlaxEditor.Content.GUI
         /// <inheritdoc />
         public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
         {
-            base.OnDragEnter(ref location, data);
+            var result = base.OnDragEnter(ref location, data);
+            if (result != DragDropEffect.None)
+                return result;
 
             // Check if drop file(s)
             if (data is DragDataFiles)
             {
                 _validDragOver = true;
-                return DragDropEffect.Copy;
+                result = DragDropEffect.Copy;
             }
             
-            return DragDropEffect.None;
+            return result;
         }
 
         /// <inheritdoc />
         public override DragDropEffect OnDragMove(ref Vector2 location, DragData data)
         {
-            base.OnDragMove(ref location, data);
+            _validDragOver = false;
+            var result = base.OnDragMove(ref location, data);
+            if (result != DragDropEffect.None)
+                return result;
 
             if (data is DragDataFiles)
-                return DragDropEffect.Copy;
+            {
+                _validDragOver = true;
+                result = DragDropEffect.Copy;
+            }
 
-            return DragDropEffect.None;
+            return result;
         }
 
         /// <inheritdoc />
         public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
         {
             var result = base.OnDragDrop(ref location, data);
+            if (result != DragDropEffect.None)
+                return result;
 
             // Check if drop file(s)
             if (data is DragDataFiles files)
