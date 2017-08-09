@@ -832,7 +832,7 @@ namespace FlaxEditor.Modules
                     if (binaryAssetItem.TypeID != typeId)
                     {
                         // Asset type has been changed!
-                        Editor.LogWarning(string.Format("Asset \'{0}\' changed type from {1} to {2}.", item.Path, binaryAssetItem.TypeID, typeId));
+                        Editor.LogWarning(string.Format("Asset \'{0}\' changed type from {1} to {2}", item.Path, binaryAssetItem.TypeID, typeId));
                         Editor.Windows.CloseAllEditors(item);
 
                         // Remove this item from the database and call refresh

@@ -201,6 +201,7 @@ namespace FlaxEditor.Modules
         {
             lock (_requests)
             {
+                Debug.Log("!!!!!!!!!!!!!!! add request " + inputPath);
                 _requests.Add(new Request(inputPath, outputPath));
             }
         }
@@ -301,44 +302,47 @@ namespace FlaxEditor.Modules
             if (_requests.Count == 0)
                 return;
 
-            try
+            lock (_requests)
             {
-                Debug.Log("convert requests to entries");
-
-                // Get entries
-                List<FileEntry> entries = new List<FileEntry>(_requests.Count);
-                bool needSettingsDialog = false;
-                for (int i = 0; i < _requests.Count; i++)
+                try
                 {
-                    Debug.Log(" ----> " + _requests[i].InputPath + "  ->  " + _requests[i].OutputPath);
-                    var entry = FileEntry.CreateEntry(_requests[i].InputPath, _requests[i].OutputPath);
-                    if (entry != null)
+                    Debug.Log("convert requests to entries " + _requests.Count);
+
+                    // Get entries
+                    List<FileEntry> entries = new List<FileEntry>(_requests.Count);
+                    bool needSettingsDialog = false;
+                    for (int i = 0; i < _requests.Count; i++)
                     {
-                        entries.Add(entry);
-                        needSettingsDialog |= entry.HasSettings;
+                        Debug.Log(" ----> " + _requests[i].InputPath + "  ->  " + _requests[i].OutputPath);
+                        var entry = FileEntry.CreateEntry(_requests[i].InputPath, _requests[i].OutputPath);
+                        if (entry != null)
+                        {
+                            entries.Add(entry);
+                            needSettingsDialog |= entry.HasSettings;
+                        }
+                    }
+                    _requests.Clear();
+
+                    // Check if need to show importing dialog or can just pass requests
+                    if (needSettingsDialog)
+                    {
+                        Debug.Log("use import fiels dialog " + entries.Count);
+                    }
+                    else
+                    {
+                        Debug.Log("use direct import " + entries.Count);
+
+                        _importBatchSize += entries.Count;
+                        for (int i = 0; i < entries.Count; i++)
+                            _importingQueue.Enqueue(entries[i]);
                     }
                 }
-                _requests.Clear();
-
-                // Check if need to show importing dialog or can just pass requests
-                if (needSettingsDialog)
+                catch (Exception ex)
                 {
-                    Debug.Log("use import fiels dialog " + entries.Count);
+                    // Error
+                    Editor.LogWarning(ex);
+                    Editor.LogError("Failed to process files import request.");
                 }
-                else
-                {
-                    Debug.Log("use direct import " + entries.Count);
-
-                    _importBatchSize += entries.Count;
-                    for (int i = 0; i < entries.Count; i++)
-                        _importingQueue.Enqueue(entries[i]);
-                }
-            }
-            catch (Exception ex)
-            {
-                // Error
-                Editor.LogWarning(ex);
-                Editor.LogError("Failed to process files import request.");
             }
         }
 
