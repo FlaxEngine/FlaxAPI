@@ -53,12 +53,53 @@ namespace FlaxEditor
 #endif
 		}
 
+		/// <summary>
+		/// Checks if can import asset with the given extension.
+		/// </summary>
+		/// <param name="extension">The file extension.</param>
+		/// <returns>True if can import files with given extension, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static bool CanImport(string extension) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_CanImport(extension);
+#endif
+		}
+
+		/// <summary>
+		/// Imports the asset file to the target location.
+		/// </summary>
+		/// <param name="inputPath">The source file path.</param>
+		/// <param name="outputPath">The result asset file path.</param>
+		/// <returns>True if importing failed, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static bool Import(string inputPath, string outputPath) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_Import(inputPath, outputPath);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_CloseSplashScreen();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_CreateAsset(NewAssetType type, string outputPath);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_CanImport(string extension);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_Import(string inputPath, string outputPath);
 #endif
 #endregion
 	}

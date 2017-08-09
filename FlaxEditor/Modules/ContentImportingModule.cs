@@ -21,11 +21,13 @@ namespace FlaxEditor.Modules
         {
             public string InputPath;
             public string OutputPath;
+            public bool IsBinaryAsset;
 
-            public Request(string input, string output)
+            public Request(string input, string output, bool isBinaryAsset)
             {
                 InputPath = input;
                 OutputPath = output;
+                IsBinaryAsset = isBinaryAsset;
             }
         }
 
@@ -108,7 +110,7 @@ namespace FlaxEditor.Modules
         {
             string importPath;
             if (item != null && item.GetImportPath(out importPath))
-                Import(importPath, item.Path);
+                Import(importPath, item.Path, true);
         }
 
         /// <summary>
@@ -147,32 +149,16 @@ namespace FlaxEditor.Modules
             if (targetLocation == null)
                 throw new ArgumentNullException();
 
-            var extension = System.IO.Path.GetExtension(inputPath);
-            var proxy = Editor.ContentDatabase.GetProxy(extension);
-
-            // Get output file extension, this assumes that only binary files have diffrent extension than source file
+            var extension = System.IO.Path.GetExtension(inputPath) ?? string.Empty;
+            
+            // Check if given file extension is a binary asset (.flax files) and can be imported by the engine
+            bool isBinaryAsset = Editor.CanImport(extension);
             string outputExtension;
-            if (proxy != null && !proxy.IsAsset)
+            if (isBinaryAsset)
             {
-                // Use proxy file extension
-                outputExtension = proxy.FileExtension;
+                // Flax it up!
+                outputExtension = ".flax";
 
-                // Check if can place source files here
-                if (!targetLocation.CanHaveScripts)
-                {
-                    // Error
-                    if (!skipDialog)
-                    {
-                        skipDialog = true;
-                        MessageBox.Show("Target location cannot have scripts. Use Source folder for your game source code.", "Cannot import assets", MessageBox.Buttons.OK, MessageBox.Icon.Error);
-                    }
-                    return;
-                }
-            }
-            else
-            {
-                // Assume binary asset
-                outputExtension = "flax";
                 if (!targetLocation.CanHaveAssets)
                 {
                     // Error
@@ -184,11 +170,28 @@ namespace FlaxEditor.Modules
                     return;
                 }
             }
+            else
+            {
+                // Preserve file extension (will copy file to the import location)
+                outputExtension = extension;
+
+                // Check if can place source files here
+                if (extension.Equals(ScriptProxy.Extension, StringComparison.OrdinalIgnoreCase) && !targetLocation.CanHaveScripts)
+                {
+                    // Error
+                    if (!skipDialog)
+                    {
+                        skipDialog = true;
+                        MessageBox.Show("Target location cannot have scripts. Use Source folder for your game source code.", "Cannot import assets", MessageBox.Buttons.OK, MessageBox.Icon.Error);
+                    }
+                    return;
+                }
+            }
 
             var shortName = System.IO.Path.GetFileNameWithoutExtension(inputPath);
             var outputPath = System.IO.Path.Combine(targetLocation.Path, shortName + outputExtension);
-
-            Import(inputPath, outputPath);
+            
+            Import(inputPath, outputPath, isBinaryAsset);
         }
 
         /// <summary>
@@ -197,12 +200,13 @@ namespace FlaxEditor.Modules
         /// </summary>
         /// <param name="inputPath">The input path.</param>
         /// <param name="outputPath">The output path.</param>
-        public void Import(string inputPath, string outputPath)
+        /// <param name="isBinaryAsset">True if output file is a binary asset.</param>
+        private void Import(string inputPath, string outputPath, bool isBinaryAsset)
         {
             lock (_requests)
             {
                 Debug.Log("!!!!!!!!!!!!!!! add request " + inputPath);
-                _requests.Add(new Request(inputPath, outputPath));
+                _requests.Add(new Request(inputPath, outputPath, isBinaryAsset));
             }
         }
 
@@ -235,12 +239,26 @@ namespace FlaxEditor.Modules
                     }
 
                     // Import file
-                    ImportFileBegin?.Invoke(entry);
-                    // TODO: expose importing content to c#
-                    //if (AssetsImportingManager::Instance()->Import(data.InputPath, data.OutputPath, data.Argument) == false)
-                    bool failed = false;
-                    _importBatchDone++;
-                    ImportFileEnd?.Invoke(entry, failed);
+                    bool failed = true;
+                    try
+                    {
+                        ImportFileBegin?.Invoke(entry);
+                        failed = entry.Import();
+                    }
+                    catch (Exception ex)
+                    {
+                        Editor.LogWarning(ex);
+                    }
+                    finally
+                    {
+                        if (failed)
+                        {
+                            Editor.LogError("Failed to import " + entry.Url);
+                        }
+
+                        _importBatchDone++;
+                        ImportFileEnd?.Invoke(entry, failed);
+                    }
                 }
                 else
                 {
@@ -314,7 +332,8 @@ namespace FlaxEditor.Modules
                     for (int i = 0; i < _requests.Count; i++)
                     {
                         Debug.Log(" ----> " + _requests[i].InputPath + "  ->  " + _requests[i].OutputPath);
-                        var entry = FileEntry.CreateEntry(_requests[i].InputPath, _requests[i].OutputPath);
+                        var request = _requests[i];
+                        var entry = FileEntry.CreateEntry(request.InputPath, request.OutputPath, request.IsBinaryAsset);
                         if (entry != null)
                         {
                             entries.Add(entry);
