@@ -361,6 +361,8 @@ namespace FlaxEditor.Modules
                     if (needSettingsDialog)
                     {
                         Debug.Log("use import fiels dialog " + entries.Count);
+                        var dialog = new ImportFilesDialog(entries);
+                        dialog.Show(Editor.Windows.MainWindow);
                     }
                     else
                     {

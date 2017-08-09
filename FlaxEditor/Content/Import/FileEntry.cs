@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using FlaxEngine;
 
 namespace FlaxEditor.Content.Import
 {
@@ -95,6 +96,7 @@ namespace FlaxEditor.Content.Import
                 throw new ArgumentException();
             if (extension[0] == '.')
                 extension = extension.Remove(0, 1);
+            extension = extension.ToLower();
 
             // Check if use overriden type
             CreateFileEntry createDelegate;

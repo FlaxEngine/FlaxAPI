@@ -36,6 +36,7 @@ namespace FlaxEditor.GUI.Dialogs
         protected Dialog(string title)
             : base(true, new Rectangle(0, 0, 300, 100))
         {
+            BackgroundColor = Style.Current.Background;
             DockStyle = DockStyle.Fill;
             ClipChildren = false;
 

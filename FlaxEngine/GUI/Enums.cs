@@ -73,9 +73,9 @@ namespace FlaxEngine.GUI
         Center,
 
         /// <summary>
-        /// The cenetr of the right edge.
+        /// The center of the right edge.
         /// </summary>
-        CenetrRight,
+        CenterRight,
 
         /// <summary>
         /// The bottom left corner.
