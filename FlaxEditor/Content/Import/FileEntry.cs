@@ -59,6 +59,22 @@ namespace FlaxEditor.Content.Import
         }
 
         /// <summary>
+        /// Performs file importing.
+        /// </summary>
+        /// <returns>True if failed, otherwise false.</returns>
+        public virtual bool Import()
+        {
+            // Copy file by default
+            if (!File.Exists(Url))
+                return true;
+            string folder = Path.GetDirectoryName(ResultUrl);
+            if (folder != null && !Directory.Exists(folder))
+                Directory.CreateDirectory(folder);
+            File.Copy(Url, ResultUrl, true);
+            return false;
+        }
+
+        /// <summary>
         /// The file types registered for importing. Key is a file extension (without a leading dot).
         /// Allows to plug custom importing options gather for diffrent input file types.
         /// </summary>
@@ -69,8 +85,9 @@ namespace FlaxEditor.Content.Import
         /// </summary>
         /// <param name="url">The source file url.</param>
         /// <param name="resultUrl">The result file url.</param>
+        /// <param name="isBinaryAsset">True if result file is binary asset.</param>
         /// <returns>Created file entry.</returns>
-        public static FileEntry CreateEntry(string url, string resultUrl)
+        public static FileEntry CreateEntry(string url, string resultUrl, bool isBinaryAsset)
         {
             // Get extension (without a dot)
             var extension = Path.GetExtension(url);
@@ -85,7 +102,7 @@ namespace FlaxEditor.Content.Import
                 return createDelegate(url, resultUrl);
 
             // Use default type
-            return new FileEntry(url, resultUrl);
+            return isBinaryAsset ? new AssetFileEntry(url, resultUrl) : new FileEntry(url, resultUrl);
         }
 
         internal static void RegisterDefaultTypes()

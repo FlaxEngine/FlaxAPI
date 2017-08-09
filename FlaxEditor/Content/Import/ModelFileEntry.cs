@@ -7,8 +7,8 @@ namespace FlaxEditor.Content.Import
     /// <summary>
     /// Model asset import entry.
     /// </summary>
-    /// <seealso cref="FlaxEditor.Content.Import.FileEntry" />
-    public class ModelFileEntry : FileEntry
+    /// <seealso cref="FlaxEditor.Content.Import.AssetFileEntry" />
+    public class ModelFileEntry : AssetFileEntry
     {
         // TODO: add import model settings
 

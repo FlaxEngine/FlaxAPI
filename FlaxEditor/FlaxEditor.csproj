@@ -48,6 +48,7 @@
     <Compile Include="Content\GUI\ContentView.cs" />
     <Compile Include="Content\GUI\NavigationBar.cs" />
     <Compile Include="Content\GUI\NavigationButton.cs" />
+    <Compile Include="Content\Import\AssetFileEntry.cs" />
     <Compile Include="Content\Import\FileEntry.cs" />
     <Compile Include="Content\Import\ImportFilesDialog.cs" />
     <Compile Include="Content\Import\ModelFileEntry.cs" />

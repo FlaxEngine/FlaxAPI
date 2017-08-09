@@ -7,8 +7,8 @@ namespace FlaxEditor.Content.Import
     /// <summary>
     /// Texture asset import entry.
     /// </summary>
-    /// <seealso cref="FlaxEditor.Content.Import.FileEntry" />
-    public class TextureFileEntry : FileEntry
+    /// <seealso cref="FlaxEditor.Content.Import.AssetFileEntry" />
+    public class TextureFileEntry : AssetFileEntry
     {
         // TODO: add import texture settings
 
