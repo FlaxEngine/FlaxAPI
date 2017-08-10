@@ -29,7 +29,7 @@ namespace FlaxEditor.States
         /// </value>
         public bool IsPaused
         {
-            get => SceneManager.IsGameLogicRunning;
+            get => !SceneManager.IsGameLogicRunning;
             set
             {
                 if (!IsActive)

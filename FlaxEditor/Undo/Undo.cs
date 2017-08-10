@@ -71,6 +71,22 @@ namespace FlaxEditor
         public bool CanRedo => UndoOperationsStack.ReverseCount > 0;
 
         /// <summary>
+        /// Gets the first name of the undo action.
+        /// </summary>
+        /// <value>
+        /// The first name of the undo action.
+        /// </value>
+        public string FirstUndoName => UndoOperationsStack.PeekHistory().ActionString;
+
+        /// <summary>
+        /// Gets the first name of the redo action.
+        /// </summary>
+        /// <value>
+        /// The first name of the redo action.
+        /// </value>
+        public string FirstRedoName => UndoOperationsStack.PeekReverse().ActionString;
+
+        /// <summary>
         ///     Internal class for keeping reference of undo action.
         /// </summary>
         internal class UndoInternal : IHistoryAction

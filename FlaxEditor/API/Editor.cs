@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Modules;
 using FlaxEditor.States;
+using FlaxEditor.Windows;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 
@@ -100,6 +101,14 @@ namespace FlaxEditor
         /// The undo/redo
         /// </summary>
         public readonly EditorUndo Undo;
+
+        /// <summary>
+        /// Gets the main transform gizmo used by the <see cref="SceneEditorWindow"/>.
+        /// </summary>
+        /// <value>
+        /// The main transform gizmo.
+        /// </value>
+        public Gizmo.TransformGizmo MainTransformGizmo => Windows.EditWin.Viewport.TransformGizmo;
 
         internal Editor()
         {
