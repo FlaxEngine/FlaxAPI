@@ -26,7 +26,7 @@ namespace FlaxEditor.States
         /// <value>
         ///   <c>true</c> if game logic is paused; otherwise, <c>false</c>.
         /// </value>
-        private bool IsPaused
+        public bool IsPaused
         {
             get
             {
@@ -35,7 +35,7 @@ namespace FlaxEditor.States
                 //auto root = SceneManager::Instance()->Root;
                 //return root ? !root->IsGameLogicRunning : true;
             }
-            set
+            private set
             {
                 if (!IsActive)
                     throw new InvalidOperationException();

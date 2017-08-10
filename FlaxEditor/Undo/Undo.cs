@@ -55,6 +55,22 @@ namespace FlaxEditor
         public virtual bool Enabled { get; set; } = true;
 
         /// <summary>
+        /// Gets a value indicating whether can do undo on last performed action.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if can perform undo; otherwise, <c>false</c>.
+        /// </value>
+        public bool CanUndo => UndoOperationsStack.HistoryCount > 0;
+
+        /// <summary>
+        /// Gets a value indicating whether can do redo on last undone action.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if can perform redo; otherwise, <c>false</c>.
+        /// </value>
+        public bool CanRedo => UndoOperationsStack.ReverseCount > 0;
+
+        /// <summary>
         ///     Internal class for keeping reference of undo action.
         /// </summary>
         internal class UndoInternal : IHistoryAction
