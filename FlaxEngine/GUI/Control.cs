@@ -32,15 +32,11 @@ namespace FlaxEngine.GUI
         private float _rotation;
         internal Matrix3x3 _cachedTransform;
         internal Matrix3x3 _cachedTransformInv;
-
-        // Layout
+        
         private DockStyle _dockStyle;
-
         private AnchorStyle _anchorStyle;
-
-        // Misc
+        
         private string _tooltipText;
-
         private Color _backgroundColor = Color.Transparent;
 
         /// <summary>
@@ -70,7 +66,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public ContainerControl Parent
         {
-            get { return _parent; }
+            get => _parent;
             set
             {
                 if (_parent == value)
@@ -78,11 +74,27 @@ namespace FlaxEngine.GUI
 
                 Focus(null);
 
-                _parent?.RemoveChildInternal(this);
+                Vector2 oldParentSize;
+                if (_parent != null)
+                {
+                    oldParentSize = _parent.Size;
+                    _parent.RemoveChildInternal(this);
+                }
+                else
+                {
+                    oldParentSize = Vector2.Zero;
+                }
+
                 _parent = value;
                 _parent?.AddChildInternal(this);
 
                 OnParentChangedInternal();
+
+                // Check if parent size has been changed
+                if (_parent != null && !_parent.IsLayoutLocked && !_parent.Size.Equals(ref oldParentSize))
+                {
+                    OnParentResized(ref oldParentSize);
+                }
             }
         }
 
@@ -841,7 +853,47 @@ namespace FlaxEngine.GUI
         /// <param name="oldSize">Previous size of the parent control</param>
         public virtual void OnParentResized(ref Vector2 oldSize)
         {
-            // TODO: move C++ anchor styles or design better wayt for that
+            if (_anchorStyle == AnchorStyle.UpperLeft || oldSize.LengthSquared < Mathf.Epsilon)
+                return;
+
+            var bounds = Bounds;
+
+            // TODO: finish all anchor styles logic
+
+            switch (_anchorStyle)
+            {
+                //case AnchorStyle.UpperCenter: break;
+                case AnchorStyle.UpperRight:
+                {
+                    float distance = oldSize.X - bounds.Left;
+                    bounds.X = _parent.Width - distance;
+                    break;
+                }
+                case AnchorStyle.Upper:
+                {
+                    float distance = oldSize.X - bounds.Right;
+                    bounds.Width = _parent.Width - bounds.X - distance;
+                    break;
+                }
+
+                //case AnchorStyle.CenterLeft: break;
+                //case AnchorStyle.Center: break;
+                //case AnchorStyle.CenterRight: break;
+
+                //case AnchorStyle.BottomLeft: break;
+                //case AnchorStyle.BottomCenter: break;
+                //case AnchorStyle.BottomRight: break;
+                //case AnchorStyle.Bottom: break;
+
+                //case AnchorStyle.Left: break;
+                //case AnchorStyle.Right: break;
+
+                default:
+                    throw new NotImplementedException("finish anchor styles");
+                    break;
+            }
+
+            Bounds = bounds;
         }
 
         /// <summary>

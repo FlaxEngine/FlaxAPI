@@ -1082,27 +1082,34 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void SetSizeInternal(Vector2 size)
         {
-            // Lock updates to prevent additional layout calculations
-            bool wasLocked = IsLayoutLocked;
-            IsLayoutLocked = true;
-
-            // Cache previous size
-            Vector2 prevSize = Size;
-
-            // Base
-            base.SetSizeInternal(size);
-
-            // Fire event
-            for (int i = 0; i < _children.Count; i++)
+            if (IsLayoutLocked)
             {
-                _children[i].OnParentResized(ref prevSize);
+                // Base
+                base.SetSizeInternal(size);
             }
+            else
+            {
+                // Lock updates to prevent additional layout calculations
+                IsLayoutLocked = true;
 
-            // Restore state
-            IsLayoutLocked = wasLocked;
+                // Cache previous size
+                Vector2 prevSize = Size;
 
-            // Arrange child controls
-            PerformLayout();
+                // Base
+                base.SetSizeInternal(size);
+
+                // Fire event
+                for (int i = 0; i < _children.Count; i++)
+                {
+                    _children[i].OnParentResized(ref prevSize);
+                }
+
+                // Restore state
+                IsLayoutLocked = false;
+
+                // Arrange child controls
+                PerformLayout();
+            }
         }
 
         #endregion
