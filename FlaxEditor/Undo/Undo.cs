@@ -1,12 +1,11 @@
-﻿using System;
+﻿////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
+
+using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using FlaxEditor.History;
 using FlaxEditor.Utilities;
 using FlaxEngine.Collections;
@@ -14,15 +13,38 @@ using FlaxEngine.Utilities;
 
 namespace FlaxEditor
 {
-    public partial class Undo : IDisposable
+    /// <summary>
+    /// The undo/redo actions recording object.
+    /// </summary>
+    public class Undo
     {
         /// <summary>
         ///     Stack of undo actions for future disposal.
         /// </summary>
-        private static readonly OrderedDictionary<object, UndoInternal> _snapshots =
-            new OrderedDictionary<object, UndoInternal>();
+        private readonly OrderedDictionary<object, UndoInternal> _snapshots = new OrderedDictionary<object, UndoInternal>();
 
-        public static HistoryStack UndoOperationsStack { get; } = new HistoryStack();
+        /// <summary>
+        /// Gets the undo operations stack.
+        /// </summary>
+        /// <value>
+        /// The undo operations stack.
+        /// </value>
+        public HistoryStack UndoOperationsStack { get; } = new HistoryStack();
+
+        /// <summary>
+        /// Occurs when undo operation is done.
+        /// </summary>
+        public event Action UndoDone;
+
+        /// <summary>
+        /// Occurs when redo operation is done.
+        /// </summary>
+        public event Action RedoDone;
+
+        /// <summary>
+        /// Occurs when action is done and appended to the <see cref="Undo"/>.
+        /// </summary>
+        public event Action ActionDone;
 
         /// <summary>
         ///     Internal class for keeping reference of undo action.
@@ -42,11 +64,15 @@ namespace FlaxEditor
                 CopyOfInstance = snapshotInstance.DeepClone();
             }
 
+            /// <summary>
+            /// Creates the undo action object.
+            /// </summary>
+            /// <param name="diff">The difference.</param>
+            /// <returns></returns>
             public UndoActionObject CreateUndoActionObject(List<MemberComparison> diff)
             {
                 return new UndoActionObject(diff, ActionString, Id, SnapshotInstance);
             }
-
         }
 
         /// <summary>
@@ -54,7 +80,7 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="snapshotInstance">Instance of an object to record.</param>
         /// <param name="actionString">Name of action to be displayed in undo stack.</param>
-        public static void RecordBegin(object snapshotInstance, string actionString)
+        public void RecordBegin(object snapshotInstance, string actionString)
         {
             _snapshots.Add(snapshotInstance, new UndoInternal(snapshotInstance, actionString));
         }
@@ -63,7 +89,7 @@ namespace FlaxEditor
         ///     Ends recording for undo action.
         /// </summary>
         /// <param name="snapshotInstance">Instance of an object to finish recording, if null take last provided.</param>
-        public static void RecordEnd(object snapshotInstance = null)
+        public void RecordEnd(object snapshotInstance = null)
         {
             if (snapshotInstance == null)
             {
@@ -72,6 +98,8 @@ namespace FlaxEditor
             var changes = snapshotInstance.ReflectiveCompare(_snapshots[snapshotInstance].CopyOfInstance);
             UndoOperationsStack.Push(_snapshots[snapshotInstance].CreateUndoActionObject(changes));
             _snapshots.Remove(snapshotInstance);
+
+            ActionDone?.Invoke();
         }
 
         /// <summary>
@@ -80,7 +108,7 @@ namespace FlaxEditor
         /// <param name="snapshotInstance">Instance of an object to record</param>
         /// <param name="actionString">Name of action to be displayed in undo stack.</param>
         /// <param name="actionsToSave">Action in after witch recording will be finished.</param>
-        public static void RecordAction(object snapshotInstance, string actionString, Action actionsToSave)
+        public void RecordAction(object snapshotInstance, string actionString, Action actionsToSave)
         {
             RecordBegin(snapshotInstance, actionString);
             actionsToSave?.Invoke();
@@ -93,7 +121,7 @@ namespace FlaxEditor
         /// <param name="snapshotInstance">Instance of an object to record</param>
         /// <param name="actionString">Name of action to be displayed in undo stack.</param>
         /// <param name="actionsToSave">Action in after witch recording will be finished.</param>
-        public static void RecordAction<T>(T snapshotInstance, string actionString, Action<T> actionsToSave)
+        public void RecordAction<T>(T snapshotInstance, string actionString, Action<T> actionsToSave)
             where T : new()
         {
             RecordBegin(snapshotInstance, actionString);
@@ -107,7 +135,7 @@ namespace FlaxEditor
         /// <param name="snapshotInstance">Instance of an object to record</param>
         /// <param name="actionString">Name of action to be displayed in undo stack.</param>
         /// <param name="actionsToSave">Action in after witch recording will be finished.</param>
-        public static void RecordAction(object snapshotInstance, string actionString, Action<object> actionsToSave)
+        public void RecordAction(object snapshotInstance, string actionString, Action<object> actionsToSave)
         {
             RecordBegin(snapshotInstance, actionString);
             actionsToSave?.Invoke(snapshotInstance);
@@ -117,7 +145,7 @@ namespace FlaxEditor
         /// <summary>
         ///     Undo last recorded action
         /// </summary>
-        public static UndoActionObject PerformUndo()
+        public UndoActionObject PerformUndo()
         {
             UndoActionObject operation = (UndoActionObject)UndoOperationsStack.PopHistory();
             foreach (var diff in operation.Diff)
@@ -131,13 +159,15 @@ namespace FlaxEditor
                     ((PropertyInfo)diff.Member).SetValue(operation.TargetInstance, diff.Value2);
                 }
             }
+
+            UndoDone?.Invoke();
             return operation;
         }
 
         /// <summary>
         ///     Redo last undone action
         /// </summary>
-        public static UndoActionObject PerformRedo()
+        public UndoActionObject PerformRedo()
         {
             UndoActionObject operation = (UndoActionObject)UndoOperationsStack.PopReverse();
             foreach (var diff in operation.Diff)
@@ -151,26 +181,9 @@ namespace FlaxEditor
                     ((PropertyInfo)diff.Member).SetValue(operation.TargetInstance, diff.Value1);
                 }
             }
+
+            RedoDone?.Invoke();
             return operation;
-        }
-
-        private object SnapshotUndoInternal { get; }
-
-        /// <summary>
-        ///     Creates new undo object for recording actions with using pattern.
-        /// </summary>
-        /// <param name="snapshotInstance">Instance of an object to record.</param>
-        /// <param name="actionString">Name of action to be displayed in undo stack.</param>
-        public Undo(object snapshotInstance, string actionString)
-        {
-            RecordBegin(snapshotInstance, actionString);
-            SnapshotUndoInternal = snapshotInstance;
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            RecordEnd(SnapshotUndoInternal);
         }
     }
 }
