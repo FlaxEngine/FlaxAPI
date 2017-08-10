@@ -1,9 +1,10 @@
-﻿using System;
+﻿////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlaxEngine.Collections
 {
@@ -13,7 +14,7 @@ namespace FlaxEngine.Collections
     /// </summary>
     /// <typeparam name="T">Type of items inserted into buffer</typeparam>
     [Serializable]
-    public class CircularBuffer<T> : IEnumerable<T>, IReadOnlyCollection<T>
+    public class CircularBuffer<T> : IReadOnlyCollection<T>
     {
         /// <summary>
         ///     Arguments for new item added event
@@ -30,6 +31,11 @@ namespace FlaxEngine.Collections
             /// </summary>
             public T Item { get; }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ItemAddedEventArgs"/> class.
+            /// </summary>
+            /// <param name="index">The index.</param>
+            /// <param name="item">The item.</param>
             public ItemAddedEventArgs(int index, T item)
             {
                 Index = index;
@@ -52,6 +58,11 @@ namespace FlaxEngine.Collections
             /// </summary>
             public T Item { get; }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ItemRemovedEventArgs"/> class.
+            /// </summary>
+            /// <param name="wasFrontItem">if set to <c>true</c> [was front item].</param>
+            /// <param name="item">The item.</param>
             public ItemRemovedEventArgs(bool wasFrontItem, T item)
             {
                 WasFrontItem = wasFrontItem;
@@ -74,6 +85,11 @@ namespace FlaxEngine.Collections
             /// </summary>
             public T Item { get; }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ItemOverflownEventArgs"/> class.
+            /// </summary>
+            /// <param name="wasFrontItem">if set to <c>true</c> [was front item].</param>
+            /// <param name="item">The item.</param>
             public ItemOverflownEventArgs(bool wasFrontItem, T item)
             {
                 WasFrontItem = wasFrontItem;
@@ -82,8 +98,8 @@ namespace FlaxEngine.Collections
         }
 
         private T[] _buffer;
-        private int _frontItem = 0;
-        private int _backItem = 0;
+        private int _frontItem;
+        private int _backItem;
 
         /// <summary>
         ///     Executes an action when item is removed
@@ -134,7 +150,7 @@ namespace FlaxEngine.Collections
         /// </summary>
         /// <param name="capacity">Capacity of internal structure</param>
         public CircularBuffer(int capacity)
-            : this(capacity, new T[] {})
+            : this(capacity, new T[] { })
         {
         }
 
@@ -327,10 +343,13 @@ namespace FlaxEngine.Collections
         /// </summary>
         public void Clear()
         {
-            _buffer = new T[Capacity];
-            _frontItem = 0;
-            _backItem = 0;
-            Count = 0;
+            if (Count > 0)
+            {
+                _buffer = new T[Capacity];
+                _frontItem = 0;
+                _backItem = 0;
+                Count = 0;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -338,9 +357,16 @@ namespace FlaxEngine.Collections
             return GetEnumerator();
         }
 
+        /// <summary>
+        /// Returns an enumerator that iterates through the collection.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.
+        /// </returns>
         public IEnumerator<T> GetEnumerator()
         {
-            if (IsEmpty) yield break;
+            if (IsEmpty)
+                yield break;
             var array = ToArray();
             for (int i = 0; i < array.Length; i++)
                 yield return array[i];

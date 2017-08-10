@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
+
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FlaxEngine.Collections;
 
 namespace FlaxEditor.History
@@ -14,9 +15,13 @@ namespace FlaxEditor.History
     {
         private int _historyActionsLimit;
 
-        private CircularBuffer<IHistoryAction> _historyActions { get; }
-        private CircularBuffer<IHistoryAction> _reverseActions { get; set; }
+        private readonly CircularBuffer<IHistoryAction> _historyActions;
+        private readonly CircularBuffer<IHistoryAction> _reverseActions;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HistoryStack"/> class.
+        /// </summary>
+        /// <param name="historyActionsLimit">The history actions limit.</param>
         public HistoryStack(int historyActionsLimit = 1000)
         {
             _historyActionsLimit = historyActionsLimit;
@@ -24,7 +29,28 @@ namespace FlaxEditor.History
             _reverseActions = new CircularBuffer<IHistoryAction>(_historyActionsLimit);
         }
 
+        /// <summary>
+        /// Gets the history actions limit.
+        /// </summary>
+        /// <value>
+        /// The history actions limit.
+        /// </value>
+        public int HistoryActionsLimit => _historyActionsLimit;
+
+        /// <summary>
+        /// Gets the history count.
+        /// </summary>
+        /// <value>
+        /// The history count.
+        /// </value>
         public int HistoryCount => _historyActions.Count;
+
+        /// <summary>
+        /// Gets the reverse count.
+        /// </summary>
+        /// <value>
+        /// The reverse count.
+        /// </value>
         public int ReverseCount => _reverseActions.Count;
 
         /// <summary>
@@ -34,10 +60,7 @@ namespace FlaxEditor.History
         public void Push(IHistoryAction item)
         {
             _historyActions.PushFront(item);
-            if(_reverseActions.Count > 0)
-            {
-                _reverseActions.Clear();
-            }
+            _reverseActions.Clear();
         }
 
         /// <summary>
@@ -65,7 +88,8 @@ namespace FlaxEditor.History
         public IHistoryAction PopHistory()
         {
             var item = PeekHistory();
-            if (item == null) return null;
+            if (item == null)
+                return null;
             _historyActions.PopFront();
             _reverseActions.PushFront(item);
             return item;
@@ -78,7 +102,8 @@ namespace FlaxEditor.History
         public IHistoryAction PopReverse()
         {
             var item = PeekReverse();
-            if (item == null) return null;
+            if (item == null)
+                return null;
             _reverseActions.PopFront();
             _historyActions.PushFront(item);
             return item;
@@ -96,6 +121,7 @@ namespace FlaxEditor.History
             {
                 throw new ArgumentOutOfRangeException(nameof(skipElements), "argument cannot be smaller or equal to 0");
             }
+
             if (_historyActions.Count - skipElements <= 0)
             {
                 foreach (var historyAction in _historyActions)
@@ -106,11 +132,13 @@ namespace FlaxEditor.History
                 _historyActions.Clear();
                 return result;
             }
+            
             // iterate all but one elements to skip. Last element is handled exclusivly
             for (int i = 0; i < skipElements - 1; i++)
             {
                 PopHistory();
             }
+
             return PopHistory();
         }
 
@@ -126,6 +154,7 @@ namespace FlaxEditor.History
             {
                 throw new ArgumentOutOfRangeException(nameof(skipElements), "skipElement cannot be smaller or equal to 0");
             }
+
             if (_reverseActions.Count - skipElements <= 0)
             {
                 foreach (var reverseAction in _reverseActions.Reverse())
@@ -135,11 +164,13 @@ namespace FlaxEditor.History
                 _reverseActions.Clear();
                 return PeekHistory();
             }
+            
             // iterate all but one elements to skip. Last element is handled exclusivly
             for (int i = 0; i < skipElements - 1; i++)
             {
                 PopReverse();
             }
+
             return PopReverse();
         }
     }
