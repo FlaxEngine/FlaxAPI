@@ -2,6 +2,7 @@
 
 using System;
 using FlaxEditor.Utilities;
+using FlaxEngine;
 using FlaxEngine.Utilities;
 
 namespace FlaxEditor.States
@@ -28,25 +29,13 @@ namespace FlaxEditor.States
         /// </value>
         public bool IsPaused
         {
-            get
-            {
-                // TODO: finish this
-                throw new NotImplementedException();
-                //auto root = SceneManager::Instance()->Root;
-                //return root ? !root->IsGameLogicRunning : true;
-            }
-            private set
+            get => SceneManager.IsGameLogicRunning;
+            set
             {
                 if (!IsActive)
                     throw new InvalidOperationException();
 
-                // TODO: finish this
-                throw new NotImplementedException();
-                //auto scene = SceneManager::Instance();
-                //scene->Lock();
-                //ASSERT(scene->Root != nullptr);
-                //scene->Root->IsGameLogicRunning = !pauseGame;
-                //scene->Unlock();
+                SceneManager.IsGameLogicRunning = !value;
             }
         }
 
