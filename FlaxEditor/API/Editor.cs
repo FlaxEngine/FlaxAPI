@@ -9,6 +9,7 @@ using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Modules;
 using FlaxEditor.States;
 using FlaxEditor.Windows;
+using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 
@@ -114,7 +115,7 @@ namespace FlaxEditor
         {
             Instance = this;
 
-            Editor.Log("Setting up C# Editor...");
+            Log("Setting up C# Editor...");
 
             // Create common editor modules
             RegisterModule(Windows = new WindowsModule(this));
@@ -136,7 +137,7 @@ namespace FlaxEditor
 
         internal void RegisterModule(EditorModule module)
         {
-            Editor.Log("Register Editor module " + module);
+            Log("Register Editor module " + module);
 
             _modules.Add(module);
             if (_isAfterInit)
@@ -146,7 +147,7 @@ namespace FlaxEditor
         internal void Init()
         {
             EnsureState<LoadingState>();
-            Editor.Log("Editor init");
+            Log("Editor init");
 
             // Note: we don't sort modules before Init (optimized)
             _modules.Sort((a, b) => a.InitOrder - b.InitOrder);
@@ -165,7 +166,7 @@ namespace FlaxEditor
         internal void EndInit()
         {
             EnsureState<LoadingState>();
-            Editor.Log("Editor end init");
+            Log("Editor end init");
 
             // Change state
             StateMachine.GoToState<EditingSceneState>();
@@ -204,7 +205,7 @@ namespace FlaxEditor
 
         internal void Exit()
         {
-            Editor.Log("Editor exit");
+            Log("Editor exit");
 
             // Start exit
             StateMachine.GoToState<ClosingState>();
@@ -243,11 +244,20 @@ namespace FlaxEditor
         /// </summary>
         public void SaveAll()
         {
-            throw new NotImplementedException();
+            // Layout
+            Windows.SaveCurrentLayout();
 
-            // TODO: save assets
-
+            // Scenes
             Scene.SaveScenes();
+
+            // Assets
+            for (int i = 0; i < Windows.Windows.Count; i++)
+            {
+                if (Windows.Windows[i] is AssetEditorWindow win)
+                {
+                    win.Save();
+                }
+            }
         }
 
         /// <summary>
@@ -311,9 +321,19 @@ namespace FlaxEditor
             Debug.LogError(msg);
         }
         
+        /// <summary>
+        /// New asset types allowed to create.
+        /// </summary>
         public enum NewAssetType
         {
+            /// <summary>
+            /// The material. See <see cref="FlaxEngine.Material"/>.
+            /// </summary>
             Material = 0,
+
+            /// <summary>
+            /// The material instance. See <see cref="FlaxEngine.MaterialInstance"/>.
+            /// </summary>
             MaterialInstance = 1,
         };
 

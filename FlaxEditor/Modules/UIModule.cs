@@ -4,6 +4,7 @@ using System;
 using FlaxEditor.Gizmo;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Dialogs;
+using FlaxEditor.SceneGraph;
 using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.Assertions;
@@ -47,8 +48,9 @@ namespace FlaxEditor.Modules
 
         // Cached internally to improve performance
         internal Sprite FolderClosed12;
+
         internal Sprite FolderOpened12;
-        
+
         internal UIModule(Editor editor)
             : base(editor)
         {
@@ -178,12 +180,21 @@ namespace FlaxEditor.Modules
             var mainWindow = Editor.Windows.MainWindow.GUI;
 
             VisjectSurfaceBackground = FlaxEngine.Content.LoadAsyncInternal<Texture>("Editor/VisjectSurface");
-            
+
             InitStyle(mainWindow);
             InitMainMenu(mainWindow);
             InitToolstrip(mainWindow);
             InitStatusBar(mainWindow);
             InitDockPanel(mainWindow);
+        }
+
+        /// <inheritdoc />
+        public override void OnEndInit()
+        {
+            Editor.MainTransformGizmo.OnModeChanged += UpdateToolstrip;
+            Editor.StateMachine.StateChanged += UpdateToolstrip;
+
+            UpdateToolstrip();
         }
 
         /// <inheritdoc />
@@ -200,7 +211,7 @@ namespace FlaxEditor.Modules
             var style = new Style();
 
             // Note: we pre-create editor style in constructor and load icons/fonts during editor init.
-            
+
             // Metro Style colors
             style.Background = Color.FromBgra(0xFF1C1C1C);
             style.LightBackground = Color.FromBgra(0xFF2D2D30);
@@ -216,13 +227,13 @@ namespace FlaxEditor.Modules
             style.TextBoxBackgroundSelected = Color.FromBgra(0xFF3F3F46);
             style.DragWindow = style.BackgroundSelected * 0.7f;
             style.ProgressNormal = Color.FromBgra(0xFF0ad328);
-            
+
             // Color picking
             style.ShowPickColorDialog += (color, handler) =>
-            {
-                var dialog = new ColorPickerDialog(color, handler);
-                dialog.Show();
-            };
+                                         {
+                                             var dialog = new ColorPickerDialog(color, handler);
+                                             dialog.Show();
+                                         };
 
             // Set as default
             Style.Current = style;
@@ -252,7 +263,7 @@ namespace FlaxEditor.Modules
             {
                 Debug.LogError("Cannot load primary GUI Style font " + primaryFontNameInternal);
             }
-            
+
             // Icons
             style.ArrowDown = GetIcon("ArrowDown12");
             style.ArrowRight = GetIcon("ArrowRight12");
@@ -289,15 +300,11 @@ namespace FlaxEditor.Modules
             mm_File.ContextMenu.AddButton(8, "Regenerate solution file");
             mm_File.ContextMenu.AddButton(9, "Recompile scripts");
             mm_File.ContextMenu.AddSeparator();
-#if GENERATE_API
-            // TODO: add API generating UI for C# editor
+#if GENERATE_API// TODO: add API generating UI for C# editor
 	        mm_File.ContextMenu.AddButton(98, "Regenerate Engine API");
 	        mm_File.ContextMenu.AddButton(99, "Regenerate Editor API");
 	        mm_File.ContextMenu.AddSeparator();
 #endif
-            mm_File.ContextMenu.AddButton(3, "Save Scene", "Ctrl+S");
-            mm_File.ContextMenu.AddButton(4, "Save Scene as...");
-            mm_File.ContextMenu.AddSeparator();
             mm_File.ContextMenu.AddButton(6, "Exit", "Alt+F4");
 
             // Edit
@@ -320,12 +327,13 @@ namespace FlaxEditor.Modules
             // Scene
             var mm_Scene = MainMenu.AddButton("Scene");
             mm_Scene.ContextMenu.OnButtonClicked += mm_Scene_Click;
+            mm_Scene.ContextMenu.OnVisibleChanged += mm_Scene_ShowHide;
             //mm_Scene.ContextMenu.AddButton(1, "Go to location...");
             //mm_scene.AddSeparator();
             mm_Scene.ContextMenu.AddButton(3, "Move actor to viewport");
             mm_Scene.ContextMenu.AddButton(4, "Align actor with viewport");
             mm_Scene.ContextMenu.AddButton(2, "Align viewport with actor");
-            
+
             // Game
             var mm_Game = MainMenu.AddButton("Game");
             mm_Game.ContextMenu.OnButtonClicked += mm_Game_Click;
@@ -425,6 +433,7 @@ namespace FlaxEditor.Modules
                 // Welcome screen
                 case 0:
                     // TODO: Welcome screen
+                    throw new NotImplementedException("Info box");
                     break;
 
                 // Save scene(s)
@@ -508,22 +517,34 @@ namespace FlaxEditor.Modules
             switch (id)
             {
                 // Save Scenes
-                case 2: Editor.Scene.SaveScenes(); break;
+                case 2:
+                    Editor.Scene.SaveScenes();
+                    break;
 
                 // Save All
-                case 3: Editor.SaveAll(); break;
+                case 3:
+                    Editor.SaveAll();
+                    break;
 
                 // Exit
-                case 6: Editor.Windows.MainWindow.Close(ClosingReason.User); break;
+                case 6:
+                    Editor.Windows.MainWindow.Close(ClosingReason.User);
+                    break;
 
                 // Open Visual Studio project
-                case 7: ScriptsBuilder.OpenSolution(); break;
+                case 7:
+                    ScriptsBuilder.OpenSolution();
+                    break;
 
                 // Regenerate solution file
-                case 8: ScriptsBuilder.GenerateProject(true, true); break;
+                case 8:
+                    ScriptsBuilder.GenerateProject(true, true);
+                    break;
 
                 // Recompile scripts
-                case 9: ScriptsBuilder.Compile(); break;
+                case 9:
+                    ScriptsBuilder.Compile();
+                    break;
             }
         }
 
@@ -531,16 +552,24 @@ namespace FlaxEditor.Modules
         {
             switch (id)
             {
-                case 1: Editor.PerformUndo(); break;
-                case 2: Editor.PerformRedo(); break;
-                    // TODO: finish those
+                case 1:
+                    Editor.PerformUndo();
+                    break;
+                case 2:
+                    Editor.PerformRedo();
+                    break;
+                // TODO: finish those
                 //case 3: Editor.GetMainGizmo().Cut(); break;
                 //case 4: Editor.GetMainGizmo().CopySelection(); break;
                 //case 5: Editor.GetMainGizmo().Paste(); break;
                 //case 6: Editor.GetMainGizmo().DeleteSelection(); break;
                 //case 7: Editor.GetMainGizmo().Duplicate(); break;
-                case 8: Editor.SceneEditing.SelectAllScenes(); break;
-                case 9: Editor.Windows.SceneWin.Search(); break;
+                case 8:
+                    Editor.SceneEditing.SelectAllScenes();
+                    break;
+                case 9:
+                    Editor.Windows.SceneWin.Search();
+                    break;
             }
         }
 
@@ -572,10 +601,6 @@ namespace FlaxEditor.Modules
 
         private void mm_Scene_Click(int id, ContextMenuBase cm)
         {
-            var undoRedo = Editor.Undo;
-            var hasSthSelected = Editor.SceneEditing.HasSthSelected;
-            var gizmo = Editor.MainTransformGizmo;
-
             switch (id)
             {
                 // Got to location...
@@ -584,9 +609,10 @@ namespace FlaxEditor.Modules
                 // Align viewport with actor
                 case 2:
                 {
-                    if (hasSthSelected)
+                    var selection = Editor.SceneEditing;
+                    if (selection.HasSthSelected && selection.Selection[0] is ActorNode node)
                     {
-                        var actor = Editor.SceneEditing.Selection[0];
+                        var actor = node.Actor;
                         var viewport = Editor.Windows.EditWin.Viewport;
                         viewport.MoveViewport(actor.Transform);
                     }
@@ -596,9 +622,10 @@ namespace FlaxEditor.Modules
                 // Move actor to viewport
                 case 3:
                 {
-                    if (hasSthSelected)
+                    var selection = Editor.SceneEditing;
+                    if (selection.HasSthSelected && selection.Selection[0] is ActorNode node)
                     {
-                        var actor = Editor.SceneEditing.Selection[0];
+                        var actor = node.Actor;
                         var viewport = Editor.Windows.EditWin.Viewport;
                         using (new UndoBlock(Undo, actor, "Move to viewport"))
                         {
@@ -611,9 +638,10 @@ namespace FlaxEditor.Modules
                 // Align actor with viewport
                 case 4:
                 {
-                    if (hasSthSelected)
+                    var selection = Editor.SceneEditing;
+                    if (selection.HasSthSelected && selection.Selection[0] is ActorNode node)
                     {
-                        var actor = Editor.SceneEditing.Selection[0];
+                        var actor = node.Actor;
                         var viewport = Editor.Windows.EditWin.Viewport;
                         using (new UndoBlock(Undo, actor, "Align with viewport"))
                         {
@@ -624,6 +652,20 @@ namespace FlaxEditor.Modules
                     break;
                 }
             }
+        }
+
+        private void mm_Scene_ShowHide(Control control)
+        {
+            if (control.Visible == false)
+                return;
+            var c = (ContextMenu)control;
+
+            var selection = Editor.SceneEditing;
+            bool hasActorSelected = selection.HasSthSelected && selection.Selection[0] is ActorNode;
+
+            c.GetButton(2).Enabled = hasActorSelected;
+            c.GetButton(3).Enabled = hasActorSelected;
+            c.GetButton(4).Enabled = hasActorSelected;
         }
 
         private void mm_Game_Click(int id, ContextMenuBase cm)
@@ -642,22 +684,31 @@ namespace FlaxEditor.Modules
                 // Scene statistics
                 case 1: break;
 
-                    // TODO: finish those
+                // TODO: finish those
                 // Bake lightmaps
-                /*case 2: bakeOrCancelLightmaps(); break;
+                case 2:
+                    throw new NotImplementedException("Bake lightmaps");
+                    //bakeOrCancelLightmaps();
+                    break;
 
                 // Clear lightmaps data
-                case 3: Editor.clearStaticLighting(); break;
+                case 3:
+                    throw new NotImplementedException("clear lightmaps");
+                    //Editor.clearStaticLighting();
+                    break;
 
                 // Take screenshot!
-                case 4: TakeScreenshot(); break;
+                case 4:
+                    throw new NotImplementedException("take screenshot");
+                    //TakeScreenshot();
+                    break;
 
                 // Bake all env probes
                 case 5:
                 {
-                    Function<bool, Actor*> f([](Actor* actor) . bool
-            
-                    {
+                    throw new NotImplementedException("Bake all env probes");
+                    /*
+                    f = ()=>{
                         var envProbe = dynamic_cast<EnvironmentProbe*>(actor);
                         if (envProbe)
                         {
@@ -667,9 +718,9 @@ namespace FlaxEditor.Modules
                         return actor.IsActiveInTree();
                     });
                     SceneQuery.TreeExecute(f);
-                    
+                    */
                     break;
-                }*/
+                }
             }
         }
 

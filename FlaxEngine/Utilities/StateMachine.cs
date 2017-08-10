@@ -22,6 +22,16 @@ namespace FlaxEngine.Utilities
         public State CurrentState => currentState;
 
         /// <summary>
+        /// Occurs when state is being changed.
+        /// </summary>
+        public event Action StateChanging;
+
+        /// <summary>
+        /// Occurs when state gets changed.
+        /// </summary>
+        public event Action StateChanged;
+
+        /// <summary>
         /// Gets state of given type.
         /// </summary>
         /// <typeparam name="TStateType">The type of the state.</typeparam>
@@ -101,11 +111,13 @@ namespace FlaxEngine.Utilities
         /// <param name="nextState">Then next state.</param>
         protected virtual void SwitchState(State nextState)
         {
+            StateChanging?.Invoke();
             currentState?.OnExit(nextState);
 
             currentState = nextState;
 
             currentState?.OnEnter();
+            StateChanged?.Invoke();
         }
     }
 }
