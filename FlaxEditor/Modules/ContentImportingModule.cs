@@ -275,7 +275,7 @@ namespace FlaxEditor.Modules
             }
         }
 
-        private void LetThemBeImportedxD(List<FileEntry> entries)
+        internal void LetThemBeImportedxD(List<FileEntry> entries)
         {
             int count = entries.Count;
             if (count > 0)
@@ -314,7 +314,7 @@ namespace FlaxEditor.Modules
             _workerThread.Abort();
             _workerThread = null;
         }
-
+        
         /// <inheritdoc />
         public override void OnInit()
         {

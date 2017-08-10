@@ -41,6 +41,7 @@ namespace FlaxEditor.Content.Import
             var infoLabel = new Label(false, 10, headerLabel.Bottom + 5, TotalWidth - 20, 40);
             infoLabel.Text = "Specify options for importing files. Every file can have different settings. Select entries on the left panel to modify them.\nPro Tip: hold CTRL key and select entries to edit multiple at once.";
             infoLabel.HorizontalAlignment = TextAlignment.Near;
+            infoLabel.Margins = new Vector4(7);
             infoLabel.DockStyle = DockStyle.Top;
             infoLabel.Parent = this;
             
@@ -78,6 +79,7 @@ namespace FlaxEditor.Content.Import
                 // TODO: add icons for textures/models/etc from FileEntry to tree node??
                 var node = new TreeNode(false);
                 node.Text = Path.GetFileName(entry.Url);
+                // TODO: set tooltip with full source url path
                 node.Tag = entry;
                 node.Parent = _rootNode;
             }
@@ -100,8 +102,8 @@ namespace FlaxEditor.Content.Import
                 if (fileEntry != null)
                     entries.Add(fileEntry);
             }
-            // TODO: call import 
-            
+            Editor.Instance.ContentImporting.LetThemBeImportedxD(entries);
+
             Close(DialogResult.OK);
         }
 
