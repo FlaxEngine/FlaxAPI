@@ -3,12 +3,9 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using FlaxEditor.SceneGraph.GUI;
 using FlaxEditor.Windows;
 using FlaxEngine;
-using FlaxEngine.GUI;
 
 namespace FlaxEditor.SceneGraph
 {
@@ -153,30 +150,7 @@ namespace FlaxEditor.SceneGraph
         {
             return _actor.IntersectsItself(ref ray, ref distance);
         }
-        /*
-        /// <summary>
-        /// Synchronizes the children order (child actors) with teh actual state.
-        /// </summary>
-        public void SyncChildrenOrder()
-        {
-            var children = Actor.GetChildren();
 
-            // Validate data
-            if (children.Length != _treeNode.ChildrenCount)
-                throw new InvalidOperationException("Amount of child nodes is not matching actual state.");
-
-            // Sort child tree nodes (UI only)
-            // Note: ChildNodes may have diffrent order and have diffrent size
-            // because they may contain custom subnodes per actor type
-            Dictionary<Control, int> order = new Dictionary<Control, int>(children.Length * 2);
-            for (int i = 0; i < children.Length; i++)
-            {
-                var node = FindChild(children[i]);
-                order.Add(node.TreeNode, i);
-            }
-            _treeNode.Children.Sort((a, b) => order[a] - order[b]);
-        }
-        */
         /// <inheritdoc />
         protected override void OnParentChanged()
         {
@@ -187,8 +161,7 @@ namespace FlaxEditor.SceneGraph
             // (eg. we builded new node for spawned actor and link it to the game)
             if (_treeNode.Parent != null && !_treeNode.Parent.IsLayoutLocked)
             {
-                // Sync order in parent to be the same as in c++
-                //((ActorNode)ParentNode).SyncChildrenOrder();
+                _treeNode.Parent.SortChildren();
 
                 // Update UI
                 _treeNode.IsLayoutLocked = false;

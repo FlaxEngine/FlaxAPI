@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using FlaxEditor.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -14,6 +15,7 @@ namespace FlaxEditor.SceneGraph.GUI
     public class ActorTreeNode : TreeNode
     {
         private bool _isActive;
+        private int _orderInParent;
 
         /// <summary>
         /// The actor node that owns this node.
@@ -45,7 +47,39 @@ namespace FlaxEditor.SceneGraph.GUI
         {
             actorNode = node;
             Text = actorNode.Name;
-            _isActive = true;
+            if (node.Actor != null)
+            {
+                _isActive = node.Actor.IsActive;
+                _orderInParent = node.Actor.OrderInParent;
+            }
+            else
+            {
+                _isActive = true;
+                _orderInParent = 0;
+            }
+        }
+
+        internal void OnActiveChanged()
+        {
+            _isActive = actorNode.Actor.IsActive;
+        }
+
+        internal void OnOrderInParentChanged()
+        {
+            if (Parent is ActorTreeNode parent)
+            {
+                for (int i = 0; i < parent.ChildrenCount; i++)
+                {
+                    if (parent.Children[i] is ActorTreeNode child)
+                        child._orderInParent = child.Actor.OrderInParent;
+                }
+                parent.SortChildren();
+            }
+        }
+
+        internal void OnNameChanged()
+        {
+            Text = actorNode.Name;
         }
 
         /// <inheritdoc />
@@ -57,13 +91,10 @@ namespace FlaxEditor.SceneGraph.GUI
                 var style = Style.Current;
                 if (parent._isActive)
                 {
-                    _isActive = actorNode.Actor.IsActive;
-
                     if (_isActive)
                         return style.Foreground;
                 }
 
-                _isActive = false;
                 return style.ForegroundDisabled;
             }
 
@@ -89,14 +120,28 @@ namespace FlaxEditor.SceneGraph.GUI
         {
             if (other is ActorTreeNode node)
             {
-                var a1 = Actor;
-                var a2 = node.Actor;
-                if (a1 != null && a2 != null)
-                {
-                    return a1.OrderInParent - a2.OrderInParent;
-                }
+                return _orderInParent - node._orderInParent;
             }
             return base.Compare(other);
+        }
+
+        /// <inheritdoc />
+        protected override void OnLongPress()
+        {
+            Select();
+
+            // Start renaming the actor
+            var dialog = RenamePopup.Show(this, _headerRect, Text, false);
+            dialog.Tag = this;
+            dialog.Renamed += OnRenamed;
+        }
+
+        private void OnRenamed(RenamePopup renamePopup)
+        {
+            var node = (ActorTreeNode)renamePopup.Tag;
+
+            // TODO: use Undo/Redo
+            node.Actor.Name = renamePopup.Text;
         }
     }
 }

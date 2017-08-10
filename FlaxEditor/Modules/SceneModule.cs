@@ -334,6 +334,24 @@ namespace FlaxEditor.Modules
             }
         }
 
+        private void OnActorOrderInParentChanged(Actor actor)
+        {
+            ActorNode node = GetActorNode(actor);
+            node?.TreeNode.OnOrderInParentChanged();
+        }
+
+        private void OnActorNameChanged(Actor actor)
+        {
+            ActorNode node = GetActorNode(actor);
+            node?.TreeNode.OnNameChanged();
+        }
+
+        private void OnActorActiveChanged(Actor actor)
+        {
+            ActorNode node = GetActorNode(actor);
+            node?.TreeNode.OnActiveChanged();
+        }
+
         /// <summary>
         /// Gets the actor node.
         /// </summary>
@@ -373,6 +391,9 @@ namespace FlaxEditor.Modules
             SceneManager.OnActorSpawned += OnActorSpawned;
             SceneManager.OnActorDeleted += OnActorDeleted;
             SceneManager.OnActorParentChanged += OnActorParentChanged;
+            SceneManager.OnActorOrderInParentChanged += OnActorOrderInParentChanged;
+            SceneManager.OnActorNameChanged += OnActorNameChanged;
+            SceneManager.OnActorActiveChanged += OnActorActiveChanged;
         }
 
         /// <inheritdoc />
@@ -413,7 +434,10 @@ namespace FlaxEditor.Modules
             SceneManager.OnActorSpawned -= OnActorSpawned;
             SceneManager.OnActorDeleted -= OnActorDeleted;
             SceneManager.OnActorParentChanged -= OnActorParentChanged;
-
+            SceneManager.OnActorOrderInParentChanged -= OnActorOrderInParentChanged;
+            SceneManager.OnActorNameChanged -= OnActorNameChanged;
+            SceneManager.OnActorActiveChanged -= OnActorActiveChanged;
+            
             // Cleanup graph
             Root.Dispose();
         }

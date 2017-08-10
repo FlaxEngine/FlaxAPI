@@ -25,7 +25,7 @@ namespace FlaxEngine
     /// <param name="actor">The actor.</param>
     /// <param name="prevParent">The previous parent.</param>
     public delegate void ActorParentChangedDelegate(Actor actor, Actor prevParent);
-
+    
     public static partial class SceneManager
 	{
         /// <summary>
@@ -83,6 +83,21 @@ namespace FlaxEngine
         /// </summary>
         public static event ActorParentChangedDelegate OnActorParentChanged;
 
+	    /// <summary>
+	    /// Occurs when actor order in parent gets changed.
+	    /// </summary>
+	    public static event ActorDelegate OnActorOrderInParentChanged;
+        
+        /// <summary>
+	    /// Occurs when actor name gets changed.
+	    /// </summary>
+	    public static event ActorDelegate OnActorNameChanged;
+
+        /// <summary>
+	    /// Occurs when actor IsActive state gets changed.
+	    /// </summary>
+	    public static event ActorDelegate OnActorActiveChanged;
+
         // Called internally from C++
         internal enum SceneEventType
 	    {
@@ -114,6 +129,9 @@ namespace FlaxEngine
 	        OnActorSpawned = 0,
 	        OnActorDeleted = 1,
 	        OnActorParentChanged = 2,
+	        OnActorOrderInParentChanged = 3,
+	        OnActorNameChanged = 4,
+	        OnActorActiveChanged = 5,
         }
         internal static void Internal_OnActorEvent(ActorEventType eventType, Actor a, Actor b)
 	    {
@@ -122,6 +140,9 @@ namespace FlaxEngine
 	            case ActorEventType.OnActorSpawned: OnActorSpawned?.Invoke(a); break;
 	            case ActorEventType.OnActorDeleted: OnActorDeleted?.Invoke(a); break;
 	            case ActorEventType.OnActorParentChanged: OnActorParentChanged?.Invoke(a, b); break;
+	            case ActorEventType.OnActorOrderInParentChanged: OnActorOrderInParentChanged?.Invoke(a); break;
+	            case ActorEventType.OnActorNameChanged: OnActorNameChanged?.Invoke(a); break;
+	            case ActorEventType.OnActorActiveChanged: OnActorActiveChanged?.Invoke(a); break;
 	        }
 	    }
     }
