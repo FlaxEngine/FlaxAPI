@@ -16,7 +16,7 @@ namespace FlaxEditor
     /// <summary>
     /// The undo/redo actions recording object.
     /// </summary>
-    public class Undo
+    public class Undo : IDisposable
     {
         /// <summary>
         ///     Stack of undo actions for future disposal.
@@ -45,6 +45,14 @@ namespace FlaxEditor
         /// Occurs when action is done and appended to the <see cref="Undo"/>.
         /// </summary>
         public event Action ActionDone;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="Undo"/> is enabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if enabled; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool Enabled { get; set; } = true;
 
         /// <summary>
         ///     Internal class for keeping reference of undo action.
@@ -82,6 +90,9 @@ namespace FlaxEditor
         /// <param name="actionString">Name of action to be displayed in undo stack.</param>
         public void RecordBegin(object snapshotInstance, string actionString)
         {
+            if (!Enabled)
+                return;
+
             _snapshots.Add(snapshotInstance, new UndoInternal(snapshotInstance, actionString));
         }
 
@@ -91,6 +102,9 @@ namespace FlaxEditor
         /// <param name="snapshotInstance">Instance of an object to finish recording, if null take last provided.</param>
         public void RecordEnd(object snapshotInstance = null)
         {
+            if (!Enabled)
+                return;
+
             if (snapshotInstance == null)
             {
                 snapshotInstance = _snapshots.Last().Key;
@@ -147,6 +161,9 @@ namespace FlaxEditor
         /// </summary>
         public UndoActionObject PerformUndo()
         {
+            if (!Enabled)
+                return null;
+
             UndoActionObject operation = (UndoActionObject)UndoOperationsStack.PopHistory();
             foreach (var diff in operation.Diff)
             {
@@ -169,6 +186,9 @@ namespace FlaxEditor
         /// </summary>
         public UndoActionObject PerformRedo()
         {
+            if (!Enabled)
+                return null;
+
             UndoActionObject operation = (UndoActionObject)UndoOperationsStack.PopReverse();
             foreach (var diff in operation.Diff)
             {
@@ -184,6 +204,25 @@ namespace FlaxEditor
 
             RedoDone?.Invoke();
             return operation;
+        }
+
+        /// <summary>
+        /// Clears the history.
+        /// </summary>
+        public void Clear()
+        {
+            _snapshots.Clear();
+            UndoOperationsStack.Clear();
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            UndoDone = null;
+            RedoDone = null;
+            ActionDone = null;
+            
+            Clear();
         }
     }
 }

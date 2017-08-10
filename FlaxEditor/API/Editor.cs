@@ -99,7 +99,7 @@ namespace FlaxEditor
         /// <summary>
         /// The undo/redo
         /// </summary>
-        public readonly Undo Undo;
+        public readonly EditorUndo Undo;
 
         internal Editor()
         {
@@ -122,7 +122,7 @@ namespace FlaxEditor
             RegisterModule(CodeEditing = new CodeEditingModule(this));
             
             StateMachine = new EditorStateMachine(this);
-            Undo = new Undo();
+            Undo = new EditorUndo(this);
         }
 
         internal void RegisterModule(EditorModule module)
@@ -206,6 +206,8 @@ namespace FlaxEditor
                 _modules[i].OnExit();
             }
 
+            // Cleanup
+            Undo.Dispose();
             Instance = null;
         }
 

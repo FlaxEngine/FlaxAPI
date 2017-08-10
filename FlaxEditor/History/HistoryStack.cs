@@ -173,5 +173,14 @@ namespace FlaxEditor.History
 
             return PopReverse();
         }
+
+        /// <summary>
+        /// Clears whole history (back and front).
+        /// </summary>
+        public void Clear()
+        {
+            _historyActions.Clear();
+            _reverseActions.Clear();
+        }
     }
 }
