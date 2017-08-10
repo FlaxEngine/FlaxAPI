@@ -33,11 +33,13 @@ namespace FlaxEditor.Content.Import
             // Header and help description
             var headerLabel = new Label(false, 0, 0, TotalWidth, 40);
             headerLabel.Text = "Import settings";
+            headerLabel.DockStyle = DockStyle.Top;
             headerLabel.Parent = this;
             headerLabel.Font = Style.Current.FontTitle;
             var infoLabel = new Label(false, 10, headerLabel.Bottom + 5, TotalWidth - 20, 40);
             infoLabel.Text = "Specify options for importing files. Every file can have different settings. Select entries on the left panel to modify them.\nPro Tip: hold CTRL key and select entries to edit multiple at once.";
             infoLabel.HorizontalAlignment = TextAlignment.Near;
+            infoLabel.DockStyle = DockStyle.Top;
             infoLabel.Parent = this;
 
             // TODO: ok button
@@ -48,13 +50,13 @@ namespace FlaxEditor.Content.Import
             var splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.Vertical, ScrollBars.Vertical);
             splitPanel.Y = infoLabel.Bottom;
             splitPanel.Size = new Vector2(TotalWidth, EditorHeight);
+            splitPanel.DockStyle = DockStyle.Fill;
             splitPanel.Parent = this;
             
             // TODO: add custom editor presenter for per entry settings editing
 
             // Setup tree
             var tree = new Tree(true);
-            tree.DockStyle = DockStyle.Top;
             tree.Parent = splitPanel.Panel1;
             var root = new TreeNode(false);
             for (int i = 0; i < entries.Count; i++)
