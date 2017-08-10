@@ -64,6 +64,8 @@ namespace FlaxEngine.GUI
         public Tree(bool supportMultiSelect)
             : base(false, 0, 0, 100, 100)
         {
+            _performChildrenLayoutFirst = true;
+
             _supportMultiSelect = supportMultiSelect;
             _keyUpdateTime = KeyUpdateTimeout * 10;
         }
@@ -300,20 +302,24 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Updates the tree width.
+        /// Updates the tree size.
         /// </summary>
-        public void UpdateWidth()
+        public void UpdateSize()
         {
             // Use max of parent clint area width and root node width
             float width = 1;
             if (HasParent)
                 width = Parent.GetClientArea().Width;
+            var rightBottom = Vector2.Zero;
             for (int i = 0; i < _children.Count; i++)
             {
-                if (_children[i] is TreeNode node)
+                if (_children[i] is TreeNode node && node.Visible)
+                {
                     width = Mathf.Max(width, node.MinimumWidth);
+                    rightBottom = Vector2.Max(rightBottom, node.BottomRight);
+                }
             }
-            Width = width;
+            Size = new Vector2(width, rightBottom.Y);
         }
 
         /// <inheritdoc />
@@ -478,28 +484,19 @@ namespace FlaxEngine.GUI
 
             base.OnGotFocus();
         }
-
+        
         /// <inheritdoc />
         public override void OnChildResized(Control control)
         {
-            // Find valid size for the tree
-            var rightBottom = Vector2.Zero;
-            for (int i = 0; i < _children.Count; i++)
-            {
-                if (_children[i].Visible)
-                {
-                    rightBottom = Vector2.Max(rightBottom, _children[i].BottomRight);
-                }
-            }
-            Height = rightBottom.Y;
+            UpdateSize();
 
             base.OnChildResized(control);
         }
-
+        
         /// <inheritdoc />
         public override void OnParentResized(ref Vector2 oldSize)
         {
-            UpdateWidth();
+            UpdateSize();
 
             base.OnParentResized(ref oldSize);
         }
@@ -507,7 +504,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
-            UpdateWidth();
+            UpdateSize();
         }
     }
 }

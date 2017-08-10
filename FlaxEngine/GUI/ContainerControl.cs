@@ -99,7 +99,7 @@ namespace FlaxEngine.GUI
         public bool ClipChildren { get; set; } = true;
 
         /// <summary>
-        ///     Lock all child controls and itself
+        ///     Lock all child controls layout and itself
         /// </summary>
         public virtual void LockChildrenRecursive()
         {
@@ -115,7 +115,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Unlocks all child controls and itself
+        ///     Unlocks all child controls layout and itself
         /// </summary>
         public virtual void UnlockChildrenRecursive()
         {
@@ -1082,34 +1082,27 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void SetSizeInternal(Vector2 size)
         {
-            if (IsLayoutLocked)
+            // Lock updates to prevent additional layout calculations
+            bool wasLayoutLocked = IsLayoutLocked;
+            IsLayoutLocked = true;
+
+            // Cache previous size
+            Vector2 prevSize = Size;
+
+            // Base
+            base.SetSizeInternal(size);
+
+            // Fire event
+            for (int i = 0; i < _children.Count; i++)
             {
-                // Base
-                base.SetSizeInternal(size);
+                _children[i].OnParentResized(ref prevSize);
             }
-            else
-            {
-                // Lock updates to prevent additional layout calculations
-                IsLayoutLocked = true;
 
-                // Cache previous size
-                Vector2 prevSize = Size;
+            // Restore state
+            IsLayoutLocked = wasLayoutLocked;
 
-                // Base
-                base.SetSizeInternal(size);
-
-                // Fire event
-                for (int i = 0; i < _children.Count; i++)
-                {
-                    _children[i].OnParentResized(ref prevSize);
-                }
-
-                // Restore state
-                IsLayoutLocked = false;
-
-                // Arrange child controls
-                PerformLayout();
-            }
+            // Arrange child controls
+            PerformLayout();
         }
 
         #endregion

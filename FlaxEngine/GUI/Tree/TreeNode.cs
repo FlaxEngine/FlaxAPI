@@ -130,6 +130,8 @@ namespace FlaxEngine.GUI
         {
             get
             {
+                UpdateTextWidth();
+
                 float minWidth = _xOffset + _textWidth + 6 + 16;
                 if (_iconCollaped.IsValid)
                     minWidth += 16;
@@ -148,7 +150,7 @@ namespace FlaxEngine.GUI
                 return minWidth;
             }
         }
-
+        
         /// <summary>
         /// Gets the arrow rectangle.
         /// </summary>
@@ -282,6 +284,18 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Ends open/close animation by force.
+        /// </summary>
+        public void EndAnimation()
+        {
+            if (_animationProgress < 1.0f)
+            {
+                _animationProgress = 1.0f;
+                PerformLayout();
+            }
+        }
+
+        /// <summary>
         /// Select node in the tree.
         /// </summary>
         public void Select()
@@ -367,6 +381,22 @@ namespace FlaxEngine.GUI
         protected virtual Color CacheTextColor()
         {
             return Enabled ? Style.Current.Foreground : Style.Current.ForegroundDisabled;
+        }
+
+        /// <summary>
+        /// Updates the cached width of the text.
+        /// </summary>
+        protected void UpdateTextWidth()
+        {
+            if (_textChanged)
+            {
+                var style = Style.Current;
+                if (style.FontSmall)
+                {
+                    _textWidth = style.FontSmall.MeasureText(_text).X;
+                    _textChanged = false;
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -667,7 +697,7 @@ namespace FlaxEngine.GUI
         public override void OnChildResized(Control control)
         {
             PerformLayout();
-            ParentTree.UpdateWidth();
+            ParentTree.UpdateSize();
             base.OnChildResized(control);
         }
 
@@ -792,21 +822,10 @@ namespace FlaxEngine.GUI
             // Cache data
             _headerRect = new Rectangle(0, 0, Width, DefaultHeaderHeight);
         }
-
+        
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
-            if (_textChanged)
-            {
-                // Calculate minimum width of that node
-                var style = Style.Current;
-                if (style.FontSmall)
-                {
-                    _textWidth = style.FontSmall.MeasureText(_text).X;
-                    _textChanged = false;
-                }
-            }
-
             // Arrange children
             float y = DefaultHeaderHeight;
             float height = DefaultHeaderHeight;
@@ -825,8 +844,8 @@ namespace FlaxEngine.GUI
             {
                 if (_children[i] is TreeNode node)
                 {
-                    node.Location = new Vector2(0, y);
                     node._xOffset = xOffset;
+                    node.Location = new Vector2(0, y);
                     float nodeHeight = node.Height + DefaultNodeOffsetY;
                     y += nodeHeight;
                     height += nodeHeight;
@@ -845,12 +864,14 @@ namespace FlaxEngine.GUI
             // Set height
             Height = Mathf.Max(DefaultHeaderHeight, y);
         }
-
+        
         /// <inheritdoc />
         protected override void OnParentChangedInternal()
         {
             // Clear cached tree
             _tree = null;
+            if (Parent != null)
+                Width = Parent.Width;
 
             base.OnParentChangedInternal();
         }

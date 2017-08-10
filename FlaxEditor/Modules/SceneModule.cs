@@ -236,7 +236,10 @@ namespace FlaxEditor.Modules
 
             // Build scene tree
             var sceneNode = Factory.BuildSceneTree(scene);
-            sceneNode.TreeNode.Expand();
+            var treeNode = sceneNode.TreeNode;
+            treeNode.IsLayoutLocked = true;
+            treeNode.Expand();
+            treeNode.EndAnimation();
 
             // TODO: cache expanded/colapsed nodes per scene tree
 
@@ -244,11 +247,14 @@ namespace FlaxEditor.Modules
             var rootNode = Root.TreeNode;
             bool wasLayoutLocked = rootNode.IsLayoutLocked;
             rootNode.IsLayoutLocked = true;
+            //
             sceneNode.ParentNode = Root;
             rootNode.SortChildren();
+            //
+            treeNode.UnlockChildrenRecursive();
             rootNode.IsLayoutLocked = wasLayoutLocked;
-            rootNode.PerformLayout();
-
+            rootNode.Parent.PerformLayout();
+            
             var endTime = DateTime.UtcNow;
             var milliseconds = (int)(endTime - startTime).TotalMilliseconds;
             Editor.Log($"Created UI tree for scene \'{scene.Name}\' in {milliseconds} ms");
