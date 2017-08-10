@@ -17,6 +17,8 @@ namespace FlaxEditor.Content.Import
     /// <seealso cref="FlaxEditor.GUI.Dialogs.Dialog" />
     public class ImportFilesDialog : Dialog
     {
+        private TreeNode _rootNode;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportFilesDialog"/> class.
         /// </summary>
@@ -41,10 +43,20 @@ namespace FlaxEditor.Content.Import
             infoLabel.HorizontalAlignment = TextAlignment.Near;
             infoLabel.DockStyle = DockStyle.Top;
             infoLabel.Parent = this;
-
-            // TODO: ok button
-
-            // TODO: cancel button
+            
+            // Buttons
+            const float ButtonsWidth = 60;
+            const float ButtonsMargin = 8;
+            var okButton = new Button(TotalWidth - ButtonsMargin - ButtonsWidth, infoLabel.Bottom - 30, ButtonsWidth);
+            okButton.Text = "OK";
+            okButton.AnchorStyle = AnchorStyle.UpperRight;
+            okButton.Clicked += OnOk;
+            okButton.Parent = this;
+            var cancelButton = new Button(okButton.Left - ButtonsMargin - ButtonsWidth, okButton.Y, ButtonsWidth);
+            cancelButton.Text = "Cancel";
+            cancelButton.AnchorStyle = AnchorStyle.UpperRight;
+            cancelButton.Clicked += OnCancel;
+            cancelButton.Parent = this;
 
             // Split panel for entries list and settings editor
             var splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.Vertical, ScrollBars.Vertical);
@@ -58,7 +70,7 @@ namespace FlaxEditor.Content.Import
             // Setup tree
             var tree = new Tree(true);
             tree.Parent = splitPanel.Panel1;
-            var root = new TreeNode(false);
+            _rootNode = new TreeNode(false);
             for (int i = 0; i < entries.Count; i++)
             {
                 var entry = entries[i];
@@ -67,16 +79,35 @@ namespace FlaxEditor.Content.Import
                 var node = new TreeNode(false);
                 node.Text = Path.GetFileName(entry.Url);
                 node.Tag = entry;
-                node.Parent = root;
+                node.Parent = _rootNode;
             }
-            root.Expand();
-            root.Parent = tree;
+            _rootNode.Expand();
+            _rootNode.Parent = tree;
             tree.OnSelectedChanged += OnSelectedChanged;
 
             // Select the first item
-            tree.Select(root.Children[0] as TreeNode);
+            tree.Select(_rootNode.Children[0] as TreeNode);
 
             Size = new Vector2(TotalWidth, splitPanel.Bottom);
+        }
+
+        private void OnOk()
+        {
+            var entries = new List<FileEntry>(_rootNode.ChildrenCount);
+            for (int i = 0; i < _rootNode.ChildrenCount; i++)
+            {
+                var fileEntry = _rootNode.Children[i].Tag as FileEntry;
+                if (fileEntry != null)
+                    entries.Add(fileEntry);
+            }
+            // TODO: call import 
+            
+            Close(DialogResult.OK);
+        }
+
+        private void OnCancel()
+        {
+            Close(DialogResult.Cancel);
         }
 
         private void OnSelectedChanged(List<TreeNode> before, List<TreeNode> after)
