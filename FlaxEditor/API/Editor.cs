@@ -96,6 +96,11 @@ namespace FlaxEditor
         /// </summary>
         public readonly EditorStateMachine StateMachine;
 
+        /// <summary>
+        /// The undo/redo
+        /// </summary>
+        public readonly Undo Undo;
+
         internal Editor()
         {
             Instance = this;
@@ -115,9 +120,9 @@ namespace FlaxEditor
             RegisterModule(ContentDatabase = new ContentDatabaseModule(this));
             RegisterModule(ContentImporting = new ContentImportingModule(this));
             RegisterModule(CodeEditing = new CodeEditingModule(this));
-
-            // Create state machine
+            
             StateMachine = new EditorStateMachine(this);
+            Undo = new Undo();
         }
 
         internal void RegisterModule(EditorModule module)
@@ -207,17 +212,19 @@ namespace FlaxEditor
         /// <summary>
         /// Undo last action.
         /// </summary>
-        public void Undo()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void PerformUndo()
         {
-            // TODO: undo/redo
+            Undo.PerformUndo();
         }
 
         /// <summary>
         /// Redo last action.
         /// </summary>
-        public void Redo()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void PerformRedo()
         {
-            // TODO: undo/redo
+            Undo.PerformRedo();
         }
 
         /// <summary>

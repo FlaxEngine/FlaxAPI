@@ -401,10 +401,10 @@ namespace FlaxEditor.Modules
                 case 2: Editor.SaveAll(); break;
 
                 // Undo
-                case 3: Editor.Undo(); break;
+                case 3: Editor.PerformUndo(); break;
 
                 // Redo
-                case 4: Editor.Redo(); break;
+                case 4: Editor.PerformRedo(); break;
 
                 // Translate mode
                 case 5: Editor.Windows.EditWin.Viewport.TransformGizmo.ActiveMode = TransformGizmo.Mode.Translate; break;
@@ -482,8 +482,8 @@ namespace FlaxEditor.Modules
         {
             switch (id)
             {
-                case 1: Editor.Undo(); break;
-                case 2: Editor.Redo(); break;
+                case 1: Editor.PerformUndo(); break;
+                case 2: Editor.PerformRedo(); break;
                 //case 3: CEditor->GetMainGizmo()->Cut(); break;
                 //case 4: CEditor->GetMainGizmo()->CopySelection(); break;
                 //case 5: CEditor->GetMainGizmo()->Paste(); break;
