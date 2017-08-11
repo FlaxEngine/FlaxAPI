@@ -144,6 +144,40 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets or sets the system clipboard text.
+		/// </summary>
+		[UnmanagedCall]
+		public static string ClipboardText
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetClipboardText(); }
+			set { Internal_SetClipboardText(value); }
+#endif
+		}
+
+		/// <summary>
+		/// Starts a new native process.
+		/// </summary>
+		/// <param name="path">Target file path.</param>
+		/// <param name="args">Custom command line arguments to pass to the new application.</param>
+		/// <param name="hiddenWindow">True if hide processs window, otherwise false (it's not always possible).</param>
+		/// <param name="waitForEnd">True if wait for the process end, otherwise false.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static void StartProcess(string path, string args = null, bool hiddenWindow = false, bool waitForEnd = false) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_StartProcess(path, args, hiddenWindow, waitForEnd);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -166,6 +200,12 @@ namespace FlaxEngine
 		internal static extern void Internal_Exit();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_Fatal(string msg);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern string Internal_GetClipboardText();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetClipboardText(string val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_StartProcess(string path, string args, bool hiddenWindow, bool waitForEnd);
 #endif
 #endregion
 	}

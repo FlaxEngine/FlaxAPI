@@ -108,6 +108,29 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
+        /// Gets the proxy object for the given file extension. Warning! Diffrent asset types may share the same file extension.
+        /// </summary>
+        /// <param name="extension">The file extension.</param>
+        /// <returns>Content proxy for that item or null if cannot find.</returns>
+        public ContentProxy GetProxy(string extension)
+        {
+            if(string.IsNullOrEmpty(extension))
+                throw new ArgumentNullException();
+
+            extension = StringUtils.NormalizeExtension(extension);
+
+            for (int i = 0; i < Proxy.Count; i++)
+            {
+                if (Proxy[i].FileExtension == extension)
+                {
+                    return Proxy[i];
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets the proxy object for the given asset type id.
         /// </summary>
         /// <param name="typeId">The asset type id.</param>
@@ -137,7 +160,7 @@ namespace FlaxEditor.Modules
             ContentFolder folder = item.IsFolder ? item as ContentFolder : item.ParentFolder;
             if (folder == null)
                 return;
-
+            
             // Update
             loadFolder(folder.Node, checkSubDirs);
         }
@@ -245,6 +268,285 @@ namespace FlaxEditor.Modules
             return null;
         }
 
+        private static void RenameAsset(ContentItem el, ref string newPath)
+        {
+            string oldPath = el.Path;
+
+            // Check if use content pool
+            if (el.IsAsset)
+            {
+                // Rename asset
+                // Note: we use content backend because file may be in use or sth, it's safe
+                if (FlaxEngine.Content.RenameAsset(oldPath, newPath))
+                {
+                    // Error
+                    Editor.LogError(string.Format("Cannot rename asset \'{0}\' to \'{1}\'", oldPath, newPath));
+                    return;
+                }
+            }
+            else
+            {
+                // Rename file
+                try
+                {
+                    File.Move(oldPath, newPath);
+                }
+                catch (Exception ex)
+                {
+                    // Error
+                    Editor.LogWarning(ex);
+                    Editor.LogError(string.Format("Cannot rename asset \'{0}\' to \'{1}\'", oldPath, newPath));
+                    return;
+                }
+            }
+
+            // Change path
+            el.UpdatePath(newPath);
+        }
+
+        private static void UpdateAssetNewNameTree(ContentItem el)
+        {
+            string extension = Path.GetExtension(el.Path);
+            string newPath = StringUtils.CombinePaths(el.ParentFolder.Path, el.ShortName + extension);
+
+            // Special case for folders
+            if (el.IsFolder)
+            {
+                // Cache data
+                string oldPath = el.Path;
+                var folder = (ContentFolder)el;
+
+                // Create new folder
+                try
+                {
+                    Directory.CreateDirectory(newPath);
+                }
+                catch (Exception ex)
+                {
+                    // Error
+                    Editor.LogWarning(ex);
+                    Editor.LogError(string.Format("Cannot move folder \'{0}\' to \'{1}\'", oldPath, newPath));
+                    return;
+                }
+
+                // Change path
+                el.UpdatePath(newPath);
+
+                // Rename all child elements
+                for (int i = 0; i < folder.Children.Count; i++)
+                    UpdateAssetNewNameTree(folder.Children[i]);
+            }
+            else
+            {
+                RenameAsset(el, ref newPath);
+            }
+        }
+
+        /// <summary>
+        /// Moves the specified items to the diffrent location. Handles moving whole directories and single assets.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        /// <param name="newParent">The new parent.</param>
+
+        public void Move(List<ContentItem> items, ContentFolder newParent)
+        {
+            for (int i = 0; i < items.Count; i++)
+                Move(items[i], newParent);
+        }
+
+        /// <summary>
+        /// Moves the specified item to the diffrent location. Handles moving whole directories and single assets.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="newParent">The new parent.</param>
+        public void Move(ContentItem item, ContentFolder newParent)
+        {
+            if (newParent == null || item == null)
+                throw new ArgumentNullException();
+
+            // Skip nothing to change
+            if (item.ParentFolder == newParent)
+                return;
+
+            var extension = Path.GetExtension(item.Path);
+            var newPath = StringUtils.CombinePaths(newParent.Path, item.ShortName + extension);
+            Move(item, newPath);
+        }
+
+        /// <summary>
+        /// Moves the specified item to the diffrent location. Handles moving whole directories and single assets.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="newPath">The new path.</param>
+        public void Move(ContentItem item, string newPath)
+        {
+            if (item == null || string.IsNullOrEmpty(newPath))
+                throw new ArgumentNullException();
+
+            if (item.IsFolder && Directory.Exists(newPath))
+            {
+                // Error
+                MessageBox.Show("Cannot move folder. Target location already exists.");
+                return;
+            }
+            if (!item.IsFolder && File.Exists(newPath))
+            {
+                // Error
+                MessageBox.Show("Cannot move file. Target location already exists.");
+                return;
+            }
+
+            // Find target parent
+            var newDirPath = Path.GetDirectoryName(newPath);
+            var newParent = Find(newDirPath) as ContentFolder;
+            if (newParent == null)
+            {
+                // Error
+                MessageBox.Show("Cannot move item. Missing target location.");
+                return;
+            }
+
+            // Perform renaming
+            {
+                string oldPath = item.Path;
+
+                // Special case for folders
+                if (item.IsFolder)
+                {
+                    // Cache data
+                    var folder = (ContentFolder)item;
+
+                    // Create new folder
+                    try
+                    {
+                        Directory.CreateDirectory(newPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Error
+                        Editor.LogWarning(ex);
+                        Editor.LogError(string.Format("Cannot move folder \'{0}\' to \'{1}\'", oldPath, newPath));
+                        return;
+                    }
+
+                    // Change path
+                    item.UpdatePath(newPath);
+
+                    // Rename all child elements
+                    for (int i = 0; i < folder.Children.Count; i++)
+                        UpdateAssetNewNameTree(folder.Children[i]);
+
+                    // Delete old folder
+                    try
+                    {
+                        Directory.Delete(oldPath, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Error
+                        Editor.LogWarning(ex);
+                        Editor.LogWarning(string.Format("Cannot remove folder \'{0}\'", oldPath));
+                        return;
+                    }
+                }
+                else
+                {
+                    RenameAsset(item, ref newPath);
+                }
+
+                if (item.ParentFolder != null)
+                    item.ParentFolder.Node.SortChildren();
+            }
+
+            // Link item
+            item.ParentFolder = newParent;
+
+            if(_enableEvents)
+                OnWorkspaceModified?.Invoke();
+        }
+
+        /// <summary>
+        /// Copies the specified item to the target location. Handles copying whole directories and single assets.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="targetPath">The target item path.</param>
+        public void Copy(ContentItem item, string targetPath)
+        {
+            if (item == null || !item.Exists)
+            {
+                // Error
+                MessageBox.Show("Cannot move item. It's missing.");
+                return;
+            }
+
+            // Perform copy
+            {
+                string sourcePath = item.Path;
+
+                // Special case for folders
+                if (item.IsFolder)
+                {
+                    // Cache data
+                    var folder = (ContentFolder)item;
+
+                    // Create new folder if missing
+                    if (!Directory.Exists(targetPath))
+                    {
+                        try
+                        {
+                            Directory.CreateDirectory(targetPath);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Error
+                            Editor.LogWarning(ex);
+                            Editor.LogError(string.Format("Cannot copy folder \'{0}\' to \'{1}\'", sourcePath, targetPath));
+                            return;
+                        }
+                    }
+
+                    // Copy all child elements
+                    for (int i = 0; i < folder.Children.Count; i++)
+                    {
+                        var child = folder.Children[i];
+                        var childExtension = Path.GetExtension(child.Path);
+                        var childTargetPath = StringUtils.CombinePaths(targetPath, child.ShortName + childExtension);
+                        Copy(folder.Children[i], childTargetPath);
+                    }
+                }
+                else
+                {
+                    // Check if use content pool
+                    if (item.IsAsset)
+                    {
+                        // Rename asset
+                        // Note: we use content backend because file may be in use or sth, it's safe
+                        if (Editor.ContentEditing.CloneAssetFile(targetPath, sourcePath, Guid.NewGuid()))
+                        {
+                            // Error
+                            Editor.LogError(string.Format("Cannot copy asset \'{0}\' to \'{1}\'", sourcePath, targetPath));
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        // Copy file
+                        try
+                        {
+                            File.Copy(sourcePath, targetPath, true);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Error
+                            Editor.LogWarning(ex);
+                            Editor.LogError(string.Format("Cannot copy asset \'{0}\' to \'{1}\'", sourcePath, targetPath));
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Deletes the specified item.
         /// </summary>
@@ -275,7 +577,19 @@ namespace FlaxEditor.Modules
 
                 // Remove directory
                 if (Directory.Exists(path))
-                    Directory.Delete(path);
+                {
+                    try
+                    {
+                        Directory.Delete(path, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Error
+                        Editor.LogWarning(ex);
+                        Editor.LogWarning(string.Format("Cannot remove folder \'{0}\'", path));
+                        return;
+                    }
+                }
 
                 // Unlink from the parent
                 item.ParentFolder = null;
@@ -289,8 +603,7 @@ namespace FlaxEditor.Modules
                 if (item.IsAsset)
                 {
                     // Delete asset by using content pool
-                    throw new NotImplementedException("FlaxEngine.Content.Delete assets");
-                    //FlaxEngine.Content.Delete(path);
+                    FlaxEngine.Content.DeleteAsset(path);
                 }
                 else
                 {
@@ -305,10 +618,16 @@ namespace FlaxEditor.Modules
                 // Delete item
                 item.Dispose();
             }
+
+            if (_enableEvents)
+                OnWorkspaceModified?.Invoke();
         }
 
         private void loadFolder(ContentTreeNode node, bool checkSubDirs)
         {
+            if (node == null)
+                return;
+
             // Temporary data
             var folder = node.Folder;
             var path = folder.Path;
@@ -344,13 +663,13 @@ namespace FlaxEditor.Modules
             }
 
             // Get child directories
-            var childFolders = System.IO.Directory.GetDirectories(path);
+            var childFolders = Directory.GetDirectories(path);
             
             // Load child folders
             bool sortChildren = false;
             for (int i = 0; i < childFolders.Length; i++)
             {
-                var childPath = childFolders[i];
+                var childPath = StringUtils.NormalizePath(childFolders[i]);
 
                 // Check if node already has that element (skip during init when we want to walk project dir very fast)
                 ContentFolder childFolderNode = _isDuringFastSetup ? null : node.Folder.FindChild(childPath) as ContentFolder;
@@ -366,7 +685,10 @@ namespace FlaxEditor.Modules
 
                     // Fire event
                     if (_enableEvents)
+                    {
                         OnItemAdded?.Invoke(n.Folder);
+                        OnWorkspaceModified?.Invoke();
+                    }
                     _itemsCreated++;
                 }
                 else if (checkSubDirs)
@@ -387,10 +709,10 @@ namespace FlaxEditor.Modules
             // Add them
             for (int i = 0; i < files.Length; i++)
             {
-                var path = files[i];
+                var path = StringUtils.NormalizePath(files[i]);
 
                 // Check if node already has that element (skip during init when we want to walk project dir very fast)
-                if (_isDuringFastSetup || !parent.Folder.ContaisnChild(path))
+                if (_isDuringFastSetup || !parent.Folder.ContainsChild(path))
                 {
                     // Create item object
                     var item = new ScriptItem(path);
@@ -400,7 +722,10 @@ namespace FlaxEditor.Modules
 
                     // Fire event
                     if (_enableEvents)
+                    {
                         OnItemAdded?.Invoke(item);
+                        OnWorkspaceModified?.Invoke();
+                    }
                     _itemsCreated++;
                 }
             }
@@ -414,22 +739,23 @@ namespace FlaxEditor.Modules
             // Add them
             for (int i = 0; i < files.Length; i++)
             {
-                var path = files[i];
-
+                var path = StringUtils.NormalizePath(files[i]);
+                
                 // Check if node already has that element (skip during init when we want to walk project dir very fast)
-                if (_isDuringFastSetup || !parent.Folder.ContaisnChild(path))
+                if (_isDuringFastSetup || !parent.Folder.ContainsChild(path))
                 {
                     // It can be any type of asset: binary, text, cooked, package, etc.
                     // The best idea is to just ask Flax.
                     // Flax isn't John Snow. Flax knows something :)
                     // Also Flax Content Layer is using smart caching so this query gonna be fast.
-
+                    
                     int typeId;
                     Guid id;
                     if (FlaxEngine.Content.GetAssetInfo(path, out typeId, out id))
                     {
                         var proxy = GetAssetProxy(typeId, path);
                         var item = proxy?.ConstructItem(path, typeId, ref id);
+                        
                         if (item != null)
                         {
                             // Link
@@ -437,7 +763,10 @@ namespace FlaxEditor.Modules
 
                             // Fire event
                             if (_enableEvents)
+                            {
                                 OnItemAdded?.Invoke(item);
+                                OnWorkspaceModified?.Invoke();
+                            }
                             _itemsCreated++;
                         }
                     }
@@ -470,6 +799,7 @@ namespace FlaxEditor.Modules
             // Load all folders
             // TODO: we should create async task for gathering content and whole workspace contents if it takes too long
             // TODO: create progress bar in content window and after end we should enable events and update it
+            _isDuringFastSetup = true;
             loadFolder(ProjectContent, true);
             loadFolder(ProjectSource, true);
             loadFolder(EnginePrivate, true);
@@ -478,8 +808,45 @@ namespace FlaxEditor.Modules
 
             // Enable events
             _enableEvents = true;
+            Editor.ContentImporting.ImportFileEnd += ContentImporting_ImportFileDone;
 
             Editor.Log("Project database created. Items count: " + _itemsCreated);
+        }
+
+        private void ContentImporting_ImportFileDone(Content.Import.FileEntry obj, bool failed)
+        {
+            if (failed)
+                return;
+
+            // Check if already has that element
+            var item = Find(obj.ResultUrl);
+            if (item is BinaryAssetItem binaryAssetItem)
+            {
+                // Get asset info from the registry (content layer will update cache it just after import)
+                int typeId;
+                Guid id;
+                if (FlaxEngine.Content.GetAssetInfo(binaryAssetItem.Path, out typeId, out id))
+                {
+                    // If asset type id has been changed we HAVE TO close all windows that use it
+                    // For eg. change texture to sprite atlas on reimport
+                    if (binaryAssetItem.TypeID != typeId)
+                    {
+                        // Asset type has been changed!
+                        Editor.LogWarning(string.Format("Asset \'{0}\' changed type from {1} to {2}", item.Path, binaryAssetItem.TypeID, typeId));
+                        Editor.Windows.CloseAllEditors(item);
+
+                        // Remove this item from the database and call refresh
+                        var toRefresh = binaryAssetItem.ParentFolder;
+                        binaryAssetItem.Dispose();
+                        RefreshFolder(toRefresh, false);
+                    }
+                    else
+                    {
+                        // Refresh element data that could change during importing
+                        binaryAssetItem.OnReimport(ref id);
+                    }
+                }
+            }
         }
 
         internal void OnDirectoryEvent(MainContentTreeNode node, FileSystemEventArgs e)

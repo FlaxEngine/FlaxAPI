@@ -48,6 +48,11 @@
     <Compile Include="Content\GUI\ContentView.cs" />
     <Compile Include="Content\GUI\NavigationBar.cs" />
     <Compile Include="Content\GUI\NavigationButton.cs" />
+    <Compile Include="Content\Import\AssetFileEntry.cs" />
+    <Compile Include="Content\Import\FileEntry.cs" />
+    <Compile Include="Content\Import\ImportFilesDialog.cs" />
+    <Compile Include="Content\Import\ModelFileEntry.cs" />
+    <Compile Include="Content\Import\TextureFileEntry.cs" />
     <Compile Include="CustomEditors\CustomEditor.cs" />
     <Compile Include="CustomEditors\Editors\GenericEditor.cs" />
     <Compile Include="CustomEditors\Editors\StringEditor.cs" />
@@ -114,6 +119,7 @@
     <Compile Include="Modules\CodeEditingModule.cs" />
     <Compile Include="Modules\ContentDatabaseModule.cs" />
     <Compile Include="Modules\ContentEditingModule.cs" />
+    <Compile Include="Modules\ContentImportingModule.cs" />
     <Compile Include="Modules\EditorModule.cs" />
     <Compile Include="Modules\ProgressReportingModule.cs" />
     <Compile Include="Modules\SceneEditingModule.cs" />
@@ -196,6 +202,8 @@
     <Compile Include="Surface\VisjectSurface.Mouse.cs" />
     <Compile Include="Surface\VisjectSurface.Paramaters.cs" />
     <Compile Include="Surface\VisjectSurface.Serialization.cs" />
+    <Compile Include="Undo\EditorUndo.cs" />
+    <Compile Include="Undo\UndoBlock.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
     <Compile Include="Utilities\QueryFilterHelper.cs" />
     <Compile Include="Viewport\EditorGizmoViewport.cs" />
@@ -214,6 +222,7 @@
     <Compile Include="Windows\Assets\MaterialInstanceWindow.cs" />
     <Compile Include="Windows\Assets\MaterialWindow.cs" />
     <Compile Include="Windows\Assets\ModelWindow.cs" />
+    <Compile Include="Windows\ContentWindow.ContextMenu.cs" />
     <Compile Include="Windows\ContentWindow.cs" />
     <Compile Include="Windows\ContentWindow.Navigation.cs" />
     <Compile Include="Windows\DebugLogWindow.cs" />

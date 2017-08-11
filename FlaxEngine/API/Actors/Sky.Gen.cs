@@ -17,6 +17,7 @@ namespace FlaxEngine
 	/// <summary>
 	/// Sky actor renders atmosphere around the scene with fog and sky
 	/// </summary>
+	[Serializable]
 	public sealed partial class Sky : Actor
 	{
 		/// <summary>

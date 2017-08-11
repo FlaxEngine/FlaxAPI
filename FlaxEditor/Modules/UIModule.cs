@@ -1,7 +1,11 @@
 // Flax Engine scripting API
 
+using System;
+using FlaxEditor.Gizmo;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Dialogs;
+using FlaxEditor.SceneGraph;
+using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
@@ -44,8 +48,9 @@ namespace FlaxEditor.Modules
 
         // Cached internally to improve performance
         internal Sprite FolderClosed12;
+
         internal Sprite FolderOpened12;
-        
+
         internal UIModule(Editor editor)
             : base(editor)
         {
@@ -95,15 +100,10 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
-        /// Checks if toolstrip pause button is checked/
+        /// Checks if toolstrip pause button is being checked.
         /// </summary>
         /// <returns>True if toolstrip pause button is checked, otherwise false.</returns>
-        public bool IsPauseButtonChecked()
-        {
-            if (ToolStrip != null)
-                return ToolStrip.GetButton(9).Checked;
-            return false;
-        }
+        public bool IsPauseButtonChecked => ToolStrip != null && ToolStrip.GetButton(9).Checked;
 
         /// <summary>
         /// Updates the toolstrip.
@@ -113,7 +113,44 @@ namespace FlaxEditor.Modules
             if (ToolStrip == null)
                 return;
 
-            // TODO: update all toolstrip buttons
+            var undoRedo = Editor.Undo;
+            var gizmo = Editor.MainTransformGizmo;
+            var state = Editor.StateMachine.CurrentState;
+
+            // Update buttons
+            bool canEditScene = state.CanEditScene;
+            bool canEnterPlayMode = state.CanEnterPlayMode;
+            //ToolStrip.GetButton(2).Enabled = Editor.IsEdited;// Save All
+            //
+            ToolStrip.GetButton(3).Enabled = canEditScene && undoRedo.CanUndo;// Undo
+            ToolStrip.GetButton(4).Enabled = canEditScene && undoRedo.CanRedo;// Redo
+            //
+            var gizmoMode = gizmo.ActiveMode;
+            ToolStrip.GetButton(5).Checked = gizmoMode == TransformGizmo.Mode.Translate;// Translate mode
+            ToolStrip.GetButton(6).Checked = gizmoMode == TransformGizmo.Mode.Rotate;// Rotate mode
+            ToolStrip.GetButton(7).Checked = gizmoMode == TransformGizmo.Mode.Scale;// Scale mode
+            //
+            var play = ToolStrip.GetButton(8);// Play
+            var pause = ToolStrip.GetButton(9);// Pause
+            var step = ToolStrip.GetButton(10);// Step
+            play.Enabled = canEnterPlayMode;
+            if (Editor.StateMachine.IsPlayMode)
+            {
+                play.Checked = false;
+                play.Icon = GetIcon("Stop32");
+                pause.Enabled = true;
+                pause.Checked = Editor.StateMachine.PlayingState.IsPaused;
+                pause.AutoCheck = false;
+                step.Enabled = true;
+            }
+            else
+            {
+                play.Checked = Editor.Simulation.IsPlayModeRequested;
+                play.Icon = GetIcon("Play32");
+                pause.Enabled = canEnterPlayMode;
+                pause.AutoCheck = true;
+                step.Enabled = false;
+            }
         }
 
         /// <summary>
@@ -143,7 +180,7 @@ namespace FlaxEditor.Modules
             var mainWindow = Editor.Windows.MainWindow.GUI;
 
             VisjectSurfaceBackground = FlaxEngine.Content.LoadAsyncInternal<Texture>("Editor/VisjectSurface");
-            
+
             InitStyle(mainWindow);
             InitMainMenu(mainWindow);
             InitToolstrip(mainWindow);
@@ -152,11 +189,23 @@ namespace FlaxEditor.Modules
         }
 
         /// <inheritdoc />
+        public override void OnEndInit()
+        {
+            Editor.MainTransformGizmo.OnModeChanged += UpdateToolstrip;
+            Editor.StateMachine.StateChanged += UpdateToolstrip;
+            Editor.Undo.UndoDone += UpdateToolstrip;
+            Editor.Undo.RedoDone += UpdateToolstrip;
+            Editor.Undo.ActionDone += UpdateToolstrip;
+            
+            UpdateToolstrip();
+        }
+
+        /// <inheritdoc />
         public override void OnExit()
         {
             _iconsAtlas = null;
 
-            // Cleanup dock panel hint proxy windows (Flax will destroy them by auto but it's better to clear them earlier)
+            // Cleanup dock panel hint proxy windows (Flax will destroy them by var but it's better to clear them earlier)
             DockHintWindow.Proxy.Dispsoe();
         }
 
@@ -165,7 +214,7 @@ namespace FlaxEditor.Modules
             var style = new Style();
 
             // Note: we pre-create editor style in constructor and load icons/fonts during editor init.
-            
+
             // Metro Style colors
             style.Background = Color.FromBgra(0xFF1C1C1C);
             style.LightBackground = Color.FromBgra(0xFF2D2D30);
@@ -181,13 +230,13 @@ namespace FlaxEditor.Modules
             style.TextBoxBackgroundSelected = Color.FromBgra(0xFF3F3F46);
             style.DragWindow = style.BackgroundSelected * 0.7f;
             style.ProgressNormal = Color.FromBgra(0xFF0ad328);
-            
+
             // Color picking
             style.ShowPickColorDialog += (color, handler) =>
-            {
-                var dialog = new ColorPickerDialog(color, handler);
-                dialog.Show();
-            };
+                                         {
+                                             var dialog = new ColorPickerDialog(color, handler);
+                                             dialog.Show();
+                                         };
 
             // Set as default
             Style.Current = style;
@@ -217,7 +266,7 @@ namespace FlaxEditor.Modules
             {
                 Debug.LogError("Cannot load primary GUI Style font " + primaryFontNameInternal);
             }
-            
+
             // Icons
             style.ArrowDown = GetIcon("ArrowDown12");
             style.ArrowRight = GetIcon("ArrowRight12");
@@ -254,15 +303,11 @@ namespace FlaxEditor.Modules
             mm_File.ContextMenu.AddButton(8, "Regenerate solution file");
             mm_File.ContextMenu.AddButton(9, "Recompile scripts");
             mm_File.ContextMenu.AddSeparator();
-#if GENERATE_API
-            // TODO: add API generating UI for C# editor
+#if GENERATE_API// TODO: add API generating UI for C# editor
 	        mm_File.ContextMenu.AddButton(98, "Regenerate Engine API");
 	        mm_File.ContextMenu.AddButton(99, "Regenerate Editor API");
 	        mm_File.ContextMenu.AddSeparator();
 #endif
-            mm_File.ContextMenu.AddButton(3, "Save Scene", "Ctrl+S");
-            mm_File.ContextMenu.AddButton(4, "Save Scene as...");
-            mm_File.ContextMenu.AddSeparator();
             mm_File.ContextMenu.AddButton(6, "Exit", "Alt+F4");
 
             // Edit
@@ -285,12 +330,13 @@ namespace FlaxEditor.Modules
             // Scene
             var mm_Scene = MainMenu.AddButton("Scene");
             mm_Scene.ContextMenu.OnButtonClicked += mm_Scene_Click;
+            mm_Scene.ContextMenu.OnVisibleChanged += mm_Scene_ShowHide;
             //mm_Scene.ContextMenu.AddButton(1, "Go to location...");
-            //mm_scene->AddSeparator();
+            //mm_scene.AddSeparator();
             mm_Scene.ContextMenu.AddButton(3, "Move actor to viewport");
             mm_Scene.ContextMenu.AddButton(4, "Align actor with viewport");
             mm_Scene.ContextMenu.AddButton(2, "Align viewport with actor");
-            
+
             // Game
             var mm_Game = MainMenu.AddButton("Game");
             mm_Game.ContextMenu.OnButtonClicked += mm_Game_Click;
@@ -338,8 +384,9 @@ namespace FlaxEditor.Modules
             mm_Help.ContextMenu.AddButton(7, "Official Website");
             mm_Help.ContextMenu.AddButton(4, "Facebook Fanpage");
             mm_Help.ContextMenu.AddButton(5, "Youtube Channel");
-            //mm_Help.ContextMenu.AddSeparator();
-            //mm_Help.ContextMenu.AddButton(6, "Information about Flax");
+            mm_Help.ContextMenu.AddButton(8, "Twitter");
+            mm_Help.ContextMenu.AddSeparator();
+            mm_Help.ContextMenu.AddButton(6, "Information about Flax");
         }
 
         private void InitToolstrip(FlaxEngine.GUI.Window mainWindow)
@@ -387,67 +434,84 @@ namespace FlaxEditor.Modules
             switch (id)
             {
                 // Welcome screen
-                /*case 0:
+                case 0:
                     // TODO: Welcome screen
+                    throw new NotImplementedException("Info box");
                     break;
 
                 // Save scene(s)
-                case 1: CSceneModule->SaveScenes(); break;
+                case 1:
+                    Editor.Scene.SaveScenes();
+                    break;
 
                 // Save all
-                case 2: CEditor->SaveAll(); break;
+                case 2:
+                    Editor.SaveAll();
+                    break;
 
                 // Undo
-                case 3: CEditor->UndoRedo.Undo(); break;
+                case 3:
+                    Editor.PerformUndo();
+                    break;
 
                 // Redo
-                case 4: CEditor->UndoRedo.Redo(); break;
+                case 4:
+                    Editor.PerformRedo();
+                    break;
 
                 // Translate mode
-                case 5: CEditor->GetMainGizmo()->SetMode(GizmoMode::Translate); break;
+                case 5:
+                    Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Translate;
+                    break;
 
                 // Rotate mode
-                case 6: CEditor->GetMainGizmo()->SetMode(GizmoMode::Rotate); break;
+                case 6:
+                    Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate;
+                    break;
 
                 // Scale mode
-                case 7: CEditor->GetMainGizmo()->SetMode(GizmoMode::Scale); break;
+                case 7:
+                    Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Scale;
+                    break;
 
                 // Play
                 case 8:
                 {
                     // Check if Editor is in play mode
-                    if (CEditor->StateMachine->IsPlayMode())
+                    if (Editor.StateMachine.IsPlayMode)
                     {
                         // Stop game
-                        CSimulationModule->RequestStopPlay();
+                        Editor.Simulation.RequestStopPlay();
                     }
                     else
                     {
                         // Start playing (will validate state)
-                        CSimulationModule->RequestStartPlay();
+                        Editor.Simulation.RequestStartPlay();
                     }
-                }
                     break;
+                }
 
                 // Pause
                 case 9:
                 {
                     // Check if Editor is in pause state
-                    if (CEditor->StateMachine->PlayingState.IsPaused())
+                    if (Editor.StateMachine.PlayingState.IsPaused)
                     {
                         // Resume game
-                        CSimulationModule->RequestResumePlay();
+                        Editor.Simulation.RequestResumePlay();
                     }
                     else
                     {
                         // Pause game
-                        CSimulationModule->RequestPausePlay();
+                        Editor.Simulation.RequestPausePlay();
                     }
-                }
                     break;
+                }
 
                 // Step
-                case 10: CSimulationModule->RequestPlayOneFrame(); break;*/
+                case 10:
+                    Editor.Simulation.RequestPlayOneFrame();
+                    break;
             }
         }
 
@@ -456,22 +520,34 @@ namespace FlaxEditor.Modules
             switch (id)
             {
                 // Save Scenes
-                case 2: Editor.Scene.SaveScenes(); break;
+                case 2:
+                    Editor.Scene.SaveScenes();
+                    break;
 
                 // Save All
-                case 3: Editor.SaveAll(); break;
+                case 3:
+                    Editor.SaveAll();
+                    break;
 
                 // Exit
-                case 6: Editor.Windows.MainWindow.Close(ClosingReason.User); break;
+                case 6:
+                    Editor.Windows.MainWindow.Close(ClosingReason.User);
+                    break;
 
                 // Open Visual Studio project
-                //case 7: CodeEditingManager::Instance()->OpenSolution(); break;
+                case 7:
+                    ScriptsBuilder.OpenSolution();
+                    break;
 
                 // Regenerate solution file
-                //case 8: ScriptsBuilder::Instance()->GenerateProject(true, true); break;
+                case 8:
+                    ScriptsBuilder.GenerateProject(true, true);
+                    break;
 
                 // Recompile scripts
-                //case 9: ScriptsBuilder::Instance()->Compile(); break;
+                case 9:
+                    ScriptsBuilder.Compile();
+                    break;
             }
         }
 
@@ -479,49 +555,55 @@ namespace FlaxEditor.Modules
         {
             switch (id)
             {
-                //case 1: CEditor->UndoRedo.Undo(); break;
-                //case 2: CEditor->UndoRedo.Redo(); break;
-                //case 3: CEditor->GetMainGizmo()->Cut(); break;
-                //case 4: CEditor->GetMainGizmo()->CopySelection(); break;
-                //case 5: CEditor->GetMainGizmo()->Paste(); break;
-                //case 6: CEditor->GetMainGizmo()->DeleteSelection(); break;
-                //case 7: CEditor->GetMainGizmo()->Duplicate(); break;
-                //case 8: CEditor->GetMainGizmo()->SelectAll(); break;
-                //case 9: CWindowsModule->SceneGraph->Search(); break;
+                case 1:
+                    Editor.PerformUndo();
+                    break;
+                case 2:
+                    Editor.PerformRedo();
+                    break;
+                // TODO: finish those
+                //case 3: Editor.GetMainGizmo().Cut(); break;
+                //case 4: Editor.GetMainGizmo().CopySelection(); break;
+                //case 5: Editor.GetMainGizmo().Paste(); break;
+                //case 6: Editor.GetMainGizmo().DeleteSelection(); break;
+                //case 7: Editor.GetMainGizmo().Duplicate(); break;
+                case 8:
+                    Editor.SceneEditing.SelectAllScenes();
+                    break;
+                case 9:
+                    Editor.Windows.SceneWin.Search();
+                    break;
             }
         }
 
-        private void mm_Edit_ShowHide(Control c)
+        private void mm_Edit_ShowHide(Control control)
         {
-            if (c.Visible == false)
+            if (control.Visible == false)
                 return;
+            var c = (ContextMenu)control;
 
-            /*auto & undoRedo = CEditor->UndoRedo;
-            auto gizmo = CEditor->GetMainGizmo();
-            auto c = (CContextMenu*)cm;
+            var undoRedo = Editor.Undo;
+            var hasSthSelected = Editor.SceneEditing.HasSthSelected;
 
-            auto undoButton = c->GetButton(1);// Undo
-            undoButton->SetEnabled(undoRedo.HasUndo());
-            undoButton->Text = undoRedo.HasUndo() ? LocalizationData::FormatEditorMessage(93, undoRedo.GetFirstUndo()->Get)) : LocalizationData::GetEditorMessage(95);
+            var undoButton = c.GetButton(1);// Undo
+            undoButton.Enabled = undoRedo.CanUndo;
+            undoButton.Text = undoRedo.CanUndo ? string.Format("Undo \'{0}\'", undoRedo.FirstUndoName) : "No undo";
 
-            auto redoButton = c->GetButton(2);// Redo
-            redoButton->SetEnabled(undoRedo.HasRedo());
-            redoButton->Text = undoRedo.HasRedo() ? LocalizationData::FormatEditorMessage(94, undoRedo.GetFirstRedo()->Get)) : LocalizationData::GetEditorMessage(96);
+            var redoButton = c.GetButton(2);// Redo
+            redoButton.Enabled = undoRedo.CanRedo;
+            redoButton.Text = undoRedo.CanRedo ? string.Format("Redo \'{0}\'", undoRedo.FirstRedoName) : "No redo";
 
-            c->GetButton(3)->SetEnabled(gizmo->HasSthSelected());// Cut
-            c->GetButton(4)->SetEnabled(gizmo->HasSthSelected());// Copy
-            c->GetButton(6)->SetEnabled(gizmo->HasSthSelected());// Delete
-            c->GetButton(7)->SetEnabled(gizmo->HasSthSelected());// Duplicate
-            c->GetButton(8)->SetEnabled(SceneManager::Instance()->IsAnySceneLoaded());// Select All
+            c.GetButton(3).Enabled = hasSthSelected;// Cut
+            c.GetButton(4).Enabled = hasSthSelected;// Copy
+            c.GetButton(6).Enabled = hasSthSelected;// Delete
+            c.GetButton(7).Enabled = hasSthSelected;// Duplicate
+            c.GetButton(8).Enabled = SceneManager.IsAnySceneLoaded;// Select All
 
-            c->PerformLayout();*/
+            c.PerformLayout();
         }
 
         private void mm_Scene_Click(int id, ContextMenuBase cm)
         {
-            /*auto& undoRedo = CEditor->UndoRedo;
-            auto gizmo = CEditor->GetMainGizmo();
-
             switch (id)
             {
                 // Got to location...
@@ -530,56 +612,63 @@ namespace FlaxEditor.Modules
                 // Align viewport with actor
                 case 2:
                 {
-                    if (gizmo->HasSthSelected())
+                    var selection = Editor.SceneEditing;
+                    if (selection.HasSthSelected && selection.Selection[0] is ActorNode node)
                     {
-                        auto actor = gizmo->GetSelection()->At(0);
-                        auto viewport = CWindowsModule->Frame->GetViewport();
-                        viewport->MoveViewport(actor->GetTransform());
+                        var actor = node.Actor;
+                        var viewport = Editor.Windows.EditWin.Viewport;
+                        viewport.MoveViewport(actor.Transform);
                     }
-                    
                     break;
                 }
 
                 // Move actor to viewport
                 case 3:
                 {
-                    if (gizmo->HasSthSelected())
+                    var selection = Editor.SceneEditing;
+                    if (selection.HasSthSelected && selection.Selection[0] is ActorNode node)
                     {
-                        auto actor = gizmo->GetSelection()->At(0);
-                        auto viewport = CWindowsModule->Frame->GetViewport();
-                        Array<Transform> before(1);
-                        before.Add(actor->GetTransform());
-                        actor->SetPosition(viewport->GetViewPosition());
-
-                        if (!undoRedo.IsDisabled())
-                            undoRedo.AddAction(new TransformActors(gizmo, before));
+                        var actor = node.Actor;
+                        var viewport = Editor.Windows.EditWin.Viewport;
+                        using (new UndoBlock(Undo, actor, "Move to viewport"))
+                        {
+                            actor.Position = viewport.ViewPosition;
+                        }
                     }
-                    
                     break;
-                } 
+                }
 
                 // Align actor with viewport
                 case 4:
                 {
-                    if (gizmo->HasSthSelected())
+                    var selection = Editor.SceneEditing;
+                    if (selection.HasSthSelected && selection.Selection[0] is ActorNode node)
                     {
-                        auto actor = gizmo->GetSelection()->At(0);
-                        auto viewport = CWindowsModule->Frame->GetViewport();
-                        Array<Transform> before(1);
-                        before.Add(actor->GetTransform());
-                        Transform transform;
-                        transform.Translation = viewport->GetViewPosition();
-                        transform.Orientation = viewport->GetViewOrientation();
-                        transform.Scale = actor->GetScale();
-                        actor->SetTransform(transform);
-
-                        if (!undoRedo.IsDisabled())
-                            undoRedo.AddAction(new TransformActors(gizmo, before));
+                        var actor = node.Actor;
+                        var viewport = Editor.Windows.EditWin.Viewport;
+                        using (new UndoBlock(Undo, actor, "Align with viewport"))
+                        {
+                            actor.Position = viewport.ViewPosition;
+                            actor.Orientation = viewport.ViewOrientation;
+                        }
                     }
-
                     break;
                 }
-            }*/
+            }
+        }
+
+        private void mm_Scene_ShowHide(Control control)
+        {
+            if (control.Visible == false)
+                return;
+            var c = (ContextMenu)control;
+
+            var selection = Editor.SceneEditing;
+            bool hasActorSelected = selection.HasSthSelected && selection.Selection[0] is ActorNode;
+
+            c.GetButton(2).Enabled = hasActorSelected;
+            c.GetButton(3).Enabled = hasActorSelected;
+            c.GetButton(4).Enabled = hasActorSelected;
         }
 
         private void mm_Game_Click(int id, ContextMenuBase cm)
@@ -595,55 +684,65 @@ namespace FlaxEditor.Modules
         {
             switch (id)
             {
-                /*// Scene statistics
+                // Scene statistics
                 case 1: break;
 
+                // TODO: finish those
                 // Bake lightmaps
-                case 2: bakeOrCancelLightmaps(); break;
+                case 2:
+                    throw new NotImplementedException("Bake lightmaps");
+                    //bakeOrCancelLightmaps();
+                    break;
 
                 // Clear lightmaps data
-                case 3: CEditor->clearStaticLighting(); break;
+                case 3:
+                    throw new NotImplementedException("clear lightmaps");
+                    //Editor.clearStaticLighting();
+                    break;
 
                 // Take screenshot!
-                case 4: TakeScreenshot(); break;
+                case 4:
+                    throw new NotImplementedException("take screenshot");
+                    //TakeScreenshot();
+                    break;
 
                 // Bake all env probes
                 case 5:
                 {
-                    Function<bool, Actor*> f([](Actor* actor) -> bool
-            
-                    {
-                        auto envProbe = dynamic_cast<EnvironmentProbe*>(actor);
+                    throw new NotImplementedException("Bake all env probes");
+                    /*
+                    f = ()=>{
+                        var envProbe = dynamic_cast<EnvironmentProbe*>(actor);
                         if (envProbe)
                         {
-                            envProbe->Bake();
-                            CEditor->MarkAsEdited();
+                            envProbe.Bake();
+                            Editor.MarkAsEdited();
                         }
-                        return actor->IsActiveInTree();
+                        return actor.IsActiveInTree();
                     });
-                    SceneQuery::TreeExecute(f);
-                    
+                    SceneQuery.TreeExecute(f);
+                    */
                     break;
-                }*/
+                }
             }
         }
 
-        private void mm_Tools_ShowHide(Control c)
+        private void mm_Tools_ShowHide(Control control)
         {
-            if (c.Visible == false)
+            if (control.Visible == false)
                 return;
 
-            /*auto c = (CContextMenu*)cm;
-
-            bool canBakeLightmaps = CEditor->Device->Limits->IsComputeSupported();
-            bool canEdit = SceneManager::Instance()->IsAnySceneLoaded() && CEditor->GetCurrentStateType() == EditorStates::EditingScene;
-            bool isBakingLightmaps = ProgressManager::Instance()->BakeLightmaps.IsActive();
-            c->GetButton(2)->SetEnabled((canEdit && canBakeLightmaps) || isBakingLightmaps);// Bake lightmaps
-            c->GetButton(2)->Text = isBakingLightmaps ? "Cancel baking lightmaps") : "Bake lightmaps");
-            c->GetButton(3)->SetEnabled(canEdit);// Clear lightmaps data
-            c->GetButton(5)->SetEnabled(canEdit);// Bake all env probes
-
-            c->PerformLayout();*/
+            var c = (ContextMenu)control;
+            /*// TODO: baking lightmaps via c# editor
+            bool canBakeLightmaps = Editor.Device.Limits.IsComputeSupported();
+            bool canEdit = SceneManager.IsAnySceneLoaded && Editor.StateMachine.IsEditMode;
+            bool isBakingLightmaps = Editor.ProgressReporting.BakeLightmaps.IsActive();
+            c.GetButton(2).Enabled = (canEdit && canBakeLightmaps) || isBakingLightmaps;// Bake lightmaps
+            c.GetButton(2).Text = isBakingLightmaps ? "Cancel baking lightmaps" : "Bake lightmaps";
+            c.GetButton(3).Enabled = canEdit;// Clear lightmaps data
+            c.GetButton(5).Enabled = canEdit;// Bake all env probes
+            */
+            c.PerformLayout();
         }
 
         private void mm_Window_Click(int id, ContextMenuBase cm)
@@ -665,34 +764,53 @@ namespace FlaxEditor.Modules
             }
         }
 
-        void mm_Help_Click(int id, ContextMenuBase cm)
+        private void mm_Help_Click(int id, ContextMenuBase cm)
         {
-            /*switch (id)
+            switch (id)
             {
                 // Forum
-                case 1: Application::StartProcess("http://answers.flaxengine.com/")); break;
+                case 1:
+                    Application.StartProcess("http://answers.flaxengine.com/");
+                    break;
 
                 // Documentation
-                case 2: Application::StartProcess("http://docs.flaxengine.com/")); break;
+                case 2:
+                    Application.StartProcess("http://docs.flaxengine.com/");
+                    break;
 
                 // Report a bug
                 case 3:
-                    MISSING_CODE("report a bug feature");
-                    //Application::StartProcess("http://celelej.com/documentation/report-a-bug/"));
+                    // TODO: report a bug form
+                    throw new NotImplementedException("report a bug feature");
+                    //Application.StartProcess("http://celelej.com/documentation/report-a-bug/");
                     break;
 
                 // Facebook Fanpage
-                case 4: Application::StartProcess("https://facebook.com/FlaxEngine")); break;
+                case 4:
+                    Application.StartProcess("https://facebook.com/FlaxEngine");
+                    break;
 
                 // Youtube Channel
-                case 5: Application::StartProcess("https://youtube.com/Celelej")); break;
+                case 5:
+                    Application.StartProcess("https://www.youtube.com/channel/UChdER2A3n19rJWIMOZJClhw");
+                    break;
 
-                // Informations about Flax
-                case 6: MISSING_EDITOR_FEATURE("Show info window"); break;
+                // Information about Flax
+                case 6:
+                    // TODO: info window
+                    throw new NotImplementedException("Missing info window");
+                    break;
 
                 // Official Website
-                case 7: Application::StartProcess("http://flaxengine.com")); break;
-            }*/
+                case 7:
+                    Application.StartProcess("http://flaxengine.com");
+                    break;
+
+                // Twitter
+                case 8:
+                    Application.StartProcess("http://twitter.com/FlaxEngine");
+                    break;
+            }
         }
 
         private void OnOnMainWindowClosing()

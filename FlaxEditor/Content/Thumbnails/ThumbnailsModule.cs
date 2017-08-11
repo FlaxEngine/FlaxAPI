@@ -39,7 +39,7 @@ namespace FlaxEditor.Content.Thumbnails
         internal ThumbnailsModule(Editor editor)
             : base(editor)
         {
-            _cacheFolder = Path.Combine(Globals.ProjectCacheFolder, "Thumbnails");
+            _cacheFolder = StringUtils.CombinePaths(Globals.ProjectCacheFolder, "Thumbnails");
             _lastFlushTime = DateTime.UtcNow;
         }
 
@@ -343,7 +343,7 @@ namespace FlaxEditor.Content.Thumbnails
         private PreviewsCache CreateAtlas()
         {
             // Create atlas path
-            var path = Path.Combine(_cacheFolder, string.Format("cache_{0:N}.flax", Guid.NewGuid()));
+            var path = StringUtils.CombinePaths(_cacheFolder, string.Format("cache_{0:N}.flax", Guid.NewGuid()));
 
             // Create atlas
             if (PreviewsCache.Create(path))

@@ -12,11 +12,7 @@ namespace FlaxEngine
         // TODO: expose import files methods (only in editor?)
         // TODO: expose create assets methods (only in editor?)
         // TODO: expose create temporary asset path method
-        // TODO: AssetsCount property
         // TODO: assets list get
-        // TODO: GetAsset() methods
-        // TODO: Delete, Rename, Unload APIs
-        // TODO: CreateVirtualAsset method
 
         /// <summary>
         /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.

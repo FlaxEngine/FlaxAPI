@@ -44,11 +44,11 @@ namespace FlaxEditor.Windows
             //var groupRecentlyCreated = createGroupWithList(actorGroups, "Recently Created"));
             //
             /*var groupBasicModels = createGroupWithList(actorGroups, "Basic Models");
-            groupBasicModels.AddItem(new DragTextItem("Cube", DragElement::GetDragData(Path.Combine(Globals.EditorFolder, "Primitives/Cube.flax"))));
-            groupBasicModels.AddItem(new DragTextItem("Sphere", DragElement::GetDragData(Path.Combine(Globals.EditorFolder, "Primitives/Sphere.flax"))));
-            groupBasicModels.AddItem(new DragTextItem("Plane", DragElement::GetDragData(Path.Combine(Globals.EditorFolder, "Primitives/Plane.flax"))));
-            groupBasicModels.AddItem(new DragTextItem("Cylinder", DragElement::GetDragData(Path.Combine(Globals.EditorFolder, "Primitives/Cylinder.flax"))));
-            groupBasicModels.AddItem(new DragTextItem("Cone", DragElement::GetDragData(Path.Combine(Globals.EditorFolder, "Primitives/Cone.flax"))));
+            groupBasicModels.AddItem(new DragTextItem("Cube", DragElement::GetDragData(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Cube.flax"))));
+            groupBasicModels.AddItem(new DragTextItem("Sphere", DragElement::GetDragData(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Sphere.flax"))));
+            groupBasicModels.AddItem(new DragTextItem("Plane", DragElement::GetDragData(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Plane.flax"))));
+            groupBasicModels.AddItem(new DragTextItem("Cylinder", DragElement::GetDragData(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Cylinder.flax"))));
+            groupBasicModels.AddItem(new DragTextItem("Cone", DragElement::GetDragData(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Cone.flax"))));
             //
             var groupLights = createGroupWithList(actorGroups, "Lights");
             groupLights.AddItem(new DragTextItem("Directional Light", DragActorGetData(DirectionalLight::TypeID)));

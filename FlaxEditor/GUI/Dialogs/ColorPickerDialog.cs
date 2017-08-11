@@ -81,8 +81,6 @@ namespace FlaxEditor.GUI.Dialogs
         public ColorPickerDialog(Color startColor, Action<Color> onChangedOk)
             : base("Pick a color!")
         {
-            BackgroundColor = Style.Current.Background;
-
             _oldColor = startColor;
             _newColor = Color.Transparent;
             _onChangedOk = onChangedOk;

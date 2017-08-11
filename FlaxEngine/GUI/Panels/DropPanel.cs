@@ -153,8 +153,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void EndAnimation()
         {
-            _animationProgress = 1.0f;
-            PerformLayout();
+            if (_animationProgress < 1.0f)
+            {
+                _animationProgress = 1.0f;
+                PerformLayout();
+            }
         }
 
         /// <inheritdoc />

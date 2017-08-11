@@ -17,6 +17,7 @@ namespace FlaxEngine
 	/// <summary>
 	/// Describes the camera projection and view. Provides information about how to render scene (viewport location and direction, etc.).
 	/// </summary>
+	[Serializable]
 	public sealed partial class Camera : Actor
 	{
 		/// <summary>

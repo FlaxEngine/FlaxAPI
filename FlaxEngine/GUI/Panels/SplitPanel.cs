@@ -81,7 +81,6 @@ namespace FlaxEngine.GUI
         {
             _orientation = orientation;
             _splitterValue = 0.5f;
-            DockStyle = DockStyle.Fill;
 
             Panel1 = new Panel(panel1Scroll);
             Panel2 = new Panel(panel2Scroll);

@@ -1,9 +1,10 @@
-﻿using System;
+﻿////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlaxEditor.Utilities
 {
@@ -24,15 +25,16 @@ namespace FlaxEditor.Utilities
                 throw new ArgumentException("both first and second parameters has to be of the same type");
             }
 
-            List<MemberComparison> list = new List<MemberComparison>(); //The list to be returned
+            var list = new List<MemberComparison>();//The list to be returned
 
-            var members =
-                first.GetType().GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            foreach (MemberInfo m in members)
+            var members = first.GetType().GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            for (int i = 0; i < members.Length; i++)
             {
+                var m = members[i];
+
                 if (m.MemberType == MemberTypes.Field)
                 {
-                    FieldInfo field = (FieldInfo) m;
+                    FieldInfo field = (FieldInfo)m;
                     var xValue = field.GetValue(first);
                     var yValue = field.GetValue(second);
                     if (!object.Equals(xValue, yValue))
@@ -43,7 +45,7 @@ namespace FlaxEditor.Utilities
                 }
                 else if (m.MemberType == MemberTypes.Property)
                 {
-                    var prop = (PropertyInfo) m;
+                    var prop = (PropertyInfo)m;
                     if (prop.CanRead && prop.GetGetMethod().GetParameters().Length == 0)
                     {
                         var xValue = prop.GetValue(first, null);

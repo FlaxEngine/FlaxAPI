@@ -7,10 +7,10 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Base class for all actor types on the scene
-	/// </summary>
-	public abstract partial class Actor : ITransformable
+    /// <summary>
+    /// Base class for all actor types on the scene
+    /// </summary>
+    public abstract partial class Actor : ITransformable
     {
         // TODO: Instantiate from prefab
         // TODO: TransformDirection, TranformPoint

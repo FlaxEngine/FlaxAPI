@@ -95,6 +95,74 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Removes asset in a safe way. Available only in editor.
+		/// </summary>
+		/// <param name="path">The asset path.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static void DeleteAsset(string path) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_DeleteAsset(path);
+#endif
+		}
+
+		/// <summary>
+		/// Gets the asset from the Content Pool if it has been loaded.
+		/// </summary>
+		/// <param name="id">Asset unique ID.</param>
+		/// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
+		/// <returns>Asset instance if loaded, null otherwise.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static T GetAsset<T>(Guid id) where T : Asset
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return (T)Internal_GetAsset1(ref id, typeof(T));
+#endif
+		}
+
+		/// <summary>
+		/// Gets the asset from the Content Pool if it has been loaded.
+		/// </summary>
+		/// <param name="path">Path to the asset.</param>
+		/// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
+		/// <returns>Asset instance if loaded, null otherwise.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static T GetAsset<T>(string path) where T : Asset
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return (T)Internal_GetAsset2(path, typeof(T));
+#endif
+		}
+
+		/// <summary>
+		/// Gets the amount of created asset objects.
+		/// </summary>
+		[UnmanagedCall]
+		public static int AssetsCount
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetAssetsCount(); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -105,6 +173,14 @@ namespace FlaxEngine
 		internal static extern Asset Internal_LoadAsync3(string internalPath, Type type);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_RenameAsset(string oldPath, string newPath);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_DeleteAsset(string path);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern Asset Internal_GetAsset1(ref Guid id, Type type);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern Asset Internal_GetAsset2(string path, Type type);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern int Internal_GetAssetsCount();
 #endif
 #endregion
 	}

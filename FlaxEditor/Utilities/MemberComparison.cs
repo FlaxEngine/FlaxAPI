@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using FlaxEngine;
 
 namespace FlaxEditor.Utilities
 {
@@ -22,6 +23,12 @@ namespace FlaxEditor.Utilities
         /// </summary>
         public readonly object Value2;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MemberComparison"/> struct.
+        /// </summary>
+        /// <param name="member">The member.</param>
+        /// <param name="value1">The first value.</param>
+        /// <param name="value2">The second value.</param>
         public MemberComparison(MemberInfo member, object value1, object value2)
         {
             Member = member;
@@ -29,11 +36,29 @@ namespace FlaxEditor.Utilities
             Value2 = value2;
         }
 
+        /// <summary>
+        /// Sets the member value. Handles field or property type.
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <param name="value">The value.</param>
+        public void SetMemberValue(object instance, object value)
+        {
+            if (Member.MemberType == MemberTypes.Field)
+            {
+                ((FieldInfo)Member).SetValue(instance, value);
+            }
+            else
+            {
+                var property = (PropertyInfo)Member;
+                if (property.SetMethod != null)
+                    property.SetValue(instance, value);
+            }
+        }
+
         /// <inheritdoc />
         public override string ToString()
         {
-            return Member.Name + ": " + Value1.ToString() + (Value1.Equals(Value2) ? " == " : " != ") +
-                   Value2.ToString();
+            return Member.Name + ": " + Value1 + (Value1.Equals(Value2) ? " == " : " != ") + Value2;
         }
     }
 }

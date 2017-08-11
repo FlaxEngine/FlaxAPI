@@ -357,6 +357,7 @@ namespace FlaxEngine.GUI.Docking
             // Create splitter and link controls
             var parent = _tabsProxy.Parent;
             SplitPanel splitter = new SplitPanel(o, ScrollBars.None, ScrollBars.None);
+            splitter.DockStyle = DockStyle.Fill;
             splitter.SplitterValue = splitterValue;
             splitter.Panel1.AddChild(c1);
             splitter.Panel2.AddChild(c2);

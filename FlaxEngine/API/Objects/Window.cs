@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using FlaxEngine.GUI;
 
@@ -127,6 +128,8 @@ namespace FlaxEngine
 
     public partial class Window
     {
+        internal static List<Window> Windows = new List<Window>();
+        
         /// <summary>
         /// Window closing delegate.
         /// </summary>
@@ -306,6 +309,8 @@ namespace FlaxEngine
 
         internal void Internal_OnShow()
         {
+            Windows.Add(this);
+
             GUI.UnlockChildrenRecursive();
             GUI.PerformLayout();
         }
@@ -445,6 +450,8 @@ namespace FlaxEngine
         internal void Internal_OnClosed()
         {
             OnClosed?.Invoke();
+            
+            Windows.Remove(this);
 
             // Force clear all events (we cannot use window after close)
             OnKeyDown = null;

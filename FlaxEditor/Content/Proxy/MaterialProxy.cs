@@ -41,7 +41,19 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override ContentDomain Domain => Material.Domain;
+        
+        /// <inheritdoc />
+        public override bool CanCreate(ContentFolder targetLocation)
+        {
+            return targetLocation.CanHaveAssets;
+        }
 
+        /// <inheritdoc />
+        public override void Create(string outputPath)
+        {
+            if (Editor.CreateAsset(Editor.NewAssetType.Material, outputPath))
+                throw new Exception("Failed to create new asset.");
+        }
 
         /// <inheritdoc />
         public override void OnThumbnailDrawPrepare(ThumbnailRequest request)
@@ -52,7 +64,7 @@ namespace FlaxEditor.Content
                 _preview.RenderOnlyWithWindow = false;
                 _preview.Task.Enabled = false;
                 _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
-                _preview.Resize();
+                _preview.SyncBackbufferSize();
             }
 
             // TODO: disable streaming for dependant assets during thumbnail rendering (and restore it after)

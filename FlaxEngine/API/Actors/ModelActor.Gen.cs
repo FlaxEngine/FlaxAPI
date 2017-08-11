@@ -17,6 +17,7 @@ namespace FlaxEngine
 	/// <summary>
 	/// Renders model on the screen.
 	/// </summary>
+	[Serializable]
 	public sealed partial class ModelActor : Actor
 	{
 		/// <summary>

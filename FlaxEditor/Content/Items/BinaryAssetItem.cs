@@ -47,11 +47,16 @@ namespace FlaxEditor.Content
             {
                 // Get meta from loaded asset
                 importPath = binaryAsset.ImportPath;
-                return !string.IsNullOrEmpty(importPath);
+                return string.IsNullOrEmpty(importPath);
             }
 
             importPath = string.Empty;
             return true;
+        }
+
+        internal void OnReimport(ref Guid id)
+        {
+            ID = id;
         }
 
         /// <inheritdoc />

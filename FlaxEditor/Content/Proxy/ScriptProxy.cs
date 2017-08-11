@@ -44,7 +44,7 @@ namespace FlaxEditor.Content
         public override void Create(string outputPath)
         {
             // Load template
-            var templatePath = Path.Combine(Globals.EditorFolder, "Scripting/ScriptTemplate.cs");
+            var templatePath = StringUtils.CombinePaths(Globals.EditorFolder, "Scripting/ScriptTemplate.cs");
             var scriptTemplate = File.ReadAllText(templatePath);
 
             // Format

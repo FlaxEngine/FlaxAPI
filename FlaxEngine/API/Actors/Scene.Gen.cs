@@ -17,6 +17,7 @@ namespace FlaxEngine
 	/// <summary>
 	/// Scene root actor object
 	/// </summary>
+	[Serializable]
 	public sealed partial class Scene : Actor
 	{
 		/// <summary>
@@ -24,6 +25,23 @@ namespace FlaxEngine
 		/// </summary>
 		private Scene() : base()
 		{
+		}
+
+		/// <summary>
+		/// Creates new instance of <see cref="Scene"/> object.
+		/// </summary>
+		/// <returns>Created object.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static Scene New() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_Create(typeof(Scene)) as Scene;
+#endif
 		}
 
 		/// <summary>

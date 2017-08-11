@@ -63,6 +63,11 @@ namespace FlaxEngine.GUI
         UpperRight,
 
         /// <summary>
+        /// The upper edge.
+        /// </summary>
+        Upper,
+
+        /// <summary>
         /// The center of the left edge.
         /// </summary>
         CenterLeft,
@@ -73,9 +78,9 @@ namespace FlaxEngine.GUI
         Center,
 
         /// <summary>
-        /// The cenetr of the right edge.
+        /// The center of the right edge.
         /// </summary>
-        CenetrRight,
+        CenterRight,
 
         /// <summary>
         /// The bottom left corner.
@@ -90,7 +95,22 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The bottom right corner.
         /// </summary>
-        BottomRight
+        BottomRight,
+
+        /// <summary>
+        /// The bottom edge.
+        /// </summary>
+        Bottom,
+
+        /// <summary>
+        /// The left edge.
+        /// </summary>
+        Left,
+
+        /// <summary>
+        /// The right edge.
+        /// </summary>
+        Right,
     }
     
     /// <summary>

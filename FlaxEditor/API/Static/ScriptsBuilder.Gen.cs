@@ -116,6 +116,59 @@ namespace FlaxEditor.Scripting
 #endif
 		}
 
+		/// <summary>
+		/// Generates solution and project files.
+		/// </summary>
+		/// <param name="forceGenerateSolution">True if generate solution file by force even if there is no need to.</param>
+		/// <param name="forceGenerateProject">True if generate project files by force even if there is no need to.</param>
+		/// <returns>True if cannot perform that action, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static bool GenerateProject(bool forceGenerateSolution, bool forceGenerateProject) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_GenerateProject(forceGenerateSolution, forceGenerateProject);
+#endif
+		}
+
+		/// <summary>
+		/// Opens the solution file using dedicated code editor.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static void OpenSolution() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_OpenSolution();
+#endif
+		}
+
+		/// <summary>
+		/// Opens the file using dedicated code editor.
+		/// </summary>
+		/// <param name="path">The file path to open.</param>
+		/// <param name="line">The line number to navigate to. Use 0 to not use it.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static void OpenFile(string path, int line = 0) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_OpenFile(path, line);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -132,6 +185,12 @@ namespace FlaxEditor.Scripting
 		internal static extern void Internal_MarkWorkspaceDirty();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_Compile();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_GenerateProject(bool forceGenerateSolution, bool forceGenerateProject);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_OpenSolution();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_OpenFile(string path, int line);
 #endif
 #endregion
 	}

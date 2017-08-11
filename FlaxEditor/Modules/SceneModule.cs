@@ -1,8 +1,10 @@
 // Flax Engine scripting API
 
 using System;
+using System.IO;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
+using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Modules
 {
@@ -70,12 +72,44 @@ namespace FlaxEditor.Modules
         }*/
 
         /// <summary>
-        /// Creates the scene file.
+        /// Creates the new scene file. The default scene contains set of simple actors.
         /// </summary>
         /// <param name="path">The path.</param>
         public void CreateSceneFile(string path)
         {
-            throw new NotImplementedException();
+            // Create a sample scene
+            var scene = Scene.New();
+            var sky = Sky.New();
+            var sun = DirectionalLight.New();
+            var floor = BoxBrush.New();
+            //
+            scene.AddChild(sky);
+            scene.AddChild(sun);
+            scene.AddChild(floor);
+            //
+            sky.Name = "Sky";
+            sky.LocalPosition = new Vector3(0, 40, 0);
+            sky.SunLight = sun;
+            //
+            sun.Name = "Sun";
+            sun.LocalPosition = new Vector3(0, 30, 0);
+            sun.LocaEulerAngles = new Vector3(45, 0, 0);
+            //
+            floor.Name = "Floor";
+            floor.Size = new Vector3(200, 10, 200);
+
+            // Serialize
+            var bytes = SceneManager.SaveSceneToBytes(scene);
+
+            // Cleanup
+            Object.Destroy(scene);
+
+            if (bytes == null || bytes.Length == 0)
+                throw new Exception("Failed to serialize scene.");
+
+            // Write to file
+            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read))
+                fileStream.Write(bytes, 0, bytes.Length);
         }
 
         /// <summary>
@@ -202,7 +236,10 @@ namespace FlaxEditor.Modules
 
             // Build scene tree
             var sceneNode = Factory.BuildSceneTree(scene);
-            sceneNode.TreeNode.Expand();
+            var treeNode = sceneNode.TreeNode;
+            treeNode.IsLayoutLocked = true;
+            treeNode.Expand();
+            treeNode.EndAnimation();
 
             // TODO: cache expanded/colapsed nodes per scene tree
 
@@ -210,11 +247,14 @@ namespace FlaxEditor.Modules
             var rootNode = Root.TreeNode;
             bool wasLayoutLocked = rootNode.IsLayoutLocked;
             rootNode.IsLayoutLocked = true;
+            //
             sceneNode.ParentNode = Root;
             rootNode.SortChildren();
+            //
+            treeNode.UnlockChildrenRecursive();
             rootNode.IsLayoutLocked = wasLayoutLocked;
-            rootNode.PerformLayout();
-
+            rootNode.Parent.PerformLayout();
+            
             var endTime = DateTime.UtcNow;
             var milliseconds = (int)(endTime - startTime).TotalMilliseconds;
             Editor.Log($"Created UI tree for scene \'{scene.Name}\' in {milliseconds} ms");
@@ -300,6 +340,24 @@ namespace FlaxEditor.Modules
             }
         }
 
+        private void OnActorOrderInParentChanged(Actor actor)
+        {
+            ActorNode node = GetActorNode(actor);
+            node?.TreeNode.OnOrderInParentChanged();
+        }
+
+        private void OnActorNameChanged(Actor actor)
+        {
+            ActorNode node = GetActorNode(actor);
+            node?.TreeNode.OnNameChanged();
+        }
+
+        private void OnActorActiveChanged(Actor actor)
+        {
+            ActorNode node = GetActorNode(actor);
+            node?.TreeNode.OnActiveChanged();
+        }
+
         /// <summary>
         /// Gets the actor node.
         /// </summary>
@@ -339,6 +397,9 @@ namespace FlaxEditor.Modules
             SceneManager.OnActorSpawned += OnActorSpawned;
             SceneManager.OnActorDeleted += OnActorDeleted;
             SceneManager.OnActorParentChanged += OnActorParentChanged;
+            SceneManager.OnActorOrderInParentChanged += OnActorOrderInParentChanged;
+            SceneManager.OnActorNameChanged += OnActorNameChanged;
+            SceneManager.OnActorActiveChanged += OnActorActiveChanged;
         }
 
         /// <inheritdoc />
@@ -379,7 +440,10 @@ namespace FlaxEditor.Modules
             SceneManager.OnActorSpawned -= OnActorSpawned;
             SceneManager.OnActorDeleted -= OnActorDeleted;
             SceneManager.OnActorParentChanged -= OnActorParentChanged;
-
+            SceneManager.OnActorOrderInParentChanged -= OnActorOrderInParentChanged;
+            SceneManager.OnActorNameChanged -= OnActorNameChanged;
+            SceneManager.OnActorActiveChanged -= OnActorActiveChanged;
+            
             // Cleanup graph
             Root.Dispose();
         }

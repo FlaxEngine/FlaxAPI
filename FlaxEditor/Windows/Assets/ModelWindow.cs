@@ -41,6 +41,7 @@ namespace FlaxEditor.Windows.Assets
 
             // Split Panel
             _splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical);
+            _splitPanel.DockStyle = DockStyle.Fill;
             _splitPanel.SplitterValue = 0.7f;
             _splitPanel.Parent = this;
 

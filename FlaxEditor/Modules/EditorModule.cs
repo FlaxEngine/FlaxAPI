@@ -21,6 +21,11 @@ namespace FlaxEditor.Modules
         public readonly Editor Editor;
 
         /// <summary>
+        /// Gets the editor undo.
+        /// </summary>
+        public EditorUndo Undo => Editor.Undo;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EditorModule"/> class.
         /// </summary>
         /// <param name="editor">The editor.</param>

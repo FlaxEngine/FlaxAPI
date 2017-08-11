@@ -8,6 +8,8 @@ using System.Runtime.CompilerServices;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Modules;
 using FlaxEditor.States;
+using FlaxEditor.Windows;
+using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 
@@ -80,6 +82,11 @@ namespace FlaxEditor
         /// The content database module.
         /// </summary>
         public readonly ContentDatabaseModule ContentDatabase;
+        
+        /// <summary>
+        /// The content importing module.
+        /// </summary>
+        public readonly ContentImportingModule ContentImporting;
 
         /// <summary>
         /// The content editing
@@ -91,11 +98,24 @@ namespace FlaxEditor
         /// </summary>
         public readonly EditorStateMachine StateMachine;
 
+        /// <summary>
+        /// The undo/redo
+        /// </summary>
+        public readonly EditorUndo Undo;
+
+        /// <summary>
+        /// Gets the main transform gizmo used by the <see cref="SceneEditorWindow"/>.
+        /// </summary>
+        /// <value>
+        /// The main transform gizmo.
+        /// </value>
+        public Gizmo.TransformGizmo MainTransformGizmo => Windows.EditWin.Viewport.TransformGizmo;
+
         internal Editor()
         {
             Instance = this;
 
-            Editor.Log("Setting up C# Editor...");
+            Log("Setting up C# Editor...");
 
             // Create common editor modules
             RegisterModule(Windows = new WindowsModule(this));
@@ -108,15 +128,16 @@ namespace FlaxEditor
             RegisterModule(ProgressReporting = new ProgressReportingModule(this));
             RegisterModule(ContentEditing = new ContentEditingModule(this));
             RegisterModule(ContentDatabase = new ContentDatabaseModule(this));
+            RegisterModule(ContentImporting = new ContentImportingModule(this));
             RegisterModule(CodeEditing = new CodeEditingModule(this));
-
-            // Create state machine
+            
             StateMachine = new EditorStateMachine(this);
+            Undo = new EditorUndo(this);
         }
 
         internal void RegisterModule(EditorModule module)
         {
-            Editor.Log("Register Editor module " + module);
+            Log("Register Editor module " + module);
 
             _modules.Add(module);
             if (_isAfterInit)
@@ -126,7 +147,7 @@ namespace FlaxEditor
         internal void Init()
         {
             EnsureState<LoadingState>();
-            Editor.Log("Editor init");
+            Log("Editor init");
 
             // Note: we don't sort modules before Init (optimized)
             _modules.Sort((a, b) => a.InitOrder - b.InitOrder);
@@ -145,7 +166,7 @@ namespace FlaxEditor
         internal void EndInit()
         {
             EnsureState<LoadingState>();
-            Editor.Log("Editor end init");
+            Log("Editor end init");
 
             // Change state
             StateMachine.GoToState<EditingSceneState>();
@@ -184,7 +205,7 @@ namespace FlaxEditor
 
         internal void Exit()
         {
-            Editor.Log("Editor exit");
+            Log("Editor exit");
 
             // Start exit
             StateMachine.GoToState<ClosingState>();
@@ -195,23 +216,27 @@ namespace FlaxEditor
                 _modules[i].OnExit();
             }
 
+            // Cleanup
+            Undo.Dispose();
             Instance = null;
         }
 
         /// <summary>
         /// Undo last action.
         /// </summary>
-        public void Undo()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void PerformUndo()
         {
-            // TODO: undo/redo
+            Undo.PerformUndo();
         }
 
         /// <summary>
         /// Redo last action.
         /// </summary>
-        public void Redo()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void PerformRedo()
         {
-            // TODO: undo/redo
+            Undo.PerformRedo();
         }
 
         /// <summary>
@@ -219,11 +244,20 @@ namespace FlaxEditor
         /// </summary>
         public void SaveAll()
         {
-            throw new NotImplementedException();
+            // Layout
+            Windows.SaveCurrentLayout();
 
-            // TODO: save assets
-
+            // Scenes
             Scene.SaveScenes();
+
+            // Assets
+            for (int i = 0; i < Windows.Windows.Count; i++)
+            {
+                if (Windows.Windows[i] is AssetEditorWindow win)
+                {
+                    win.Save();
+                }
+            }
         }
 
         /// <summary>
@@ -266,7 +300,17 @@ namespace FlaxEditor
             // TODO: redirect this msg to log file not a console
             Debug.LogWarning(msg);
         }
-        
+
+        /// <summary>
+        /// Logs the specified warning exception to the log file.
+        /// </summary>
+        /// <param name="ex">The exception.</param>
+        public static void LogWarning(Exception ex)
+        {
+            LogWarning("Exception: " + ex.Message);
+            LogWarning(ex.StackTrace);
+        }
+
         /// <summary>
         /// Logs the specified error message to the log file.
         /// </summary>
@@ -276,6 +320,22 @@ namespace FlaxEditor
             // TODO: redirect this msg to log file not a console
             Debug.LogError(msg);
         }
+        
+        /// <summary>
+        /// New asset types allowed to create.
+        /// </summary>
+        public enum NewAssetType
+        {
+            /// <summary>
+            /// The material. See <see cref="FlaxEngine.Material"/>.
+            /// </summary>
+            Material = 0,
+
+            /// <summary>
+            /// The material instance. See <see cref="FlaxEngine.MaterialInstance"/>.
+            /// </summary>
+            MaterialInstance = 1,
+        };
 
         #region Internal Calls
 

@@ -52,19 +52,21 @@ namespace FlaxEditor.Tests
         [Test]
         public void UndoTestBasic()
         {
+            var undo = new Undo();
+
             var instance = new UndoObject(true);
-            Undo.RecordBegin(instance, "Basic");
+            undo.RecordBegin(instance, "Basic");
             instance.FieldFloat = 0;
             instance.FieldInteger = 0;
             instance.FieldObject = null;
             instance.PropertyFloat = 0;
             instance.PropertyInteger = 0;
             instance.PropertyObject = null;
-            Undo.RecordEnd();
-            var id = BasicUndoRedo(instance, new Guid());
+            undo.RecordEnd();
+            var id = BasicUndoRedo(undo, instance, new Guid());
 
             instance = new UndoObject(true);
-            Undo.RecordAction(instance, "Basic", () =>
+            undo.RecordAction(instance, "Basic", () =>
             {
                 instance.FieldFloat = 0;
                 instance.FieldInteger = 0;
@@ -73,10 +75,10 @@ namespace FlaxEditor.Tests
                 instance.PropertyInteger = 0;
                 instance.PropertyObject = null;
             });
-            id = BasicUndoRedo(instance, id);
+            id = BasicUndoRedo(undo, instance, id);
 
             object generic = new UndoObject(true);
-            Undo.RecordAction(generic, "Basic", (i) =>
+            undo.RecordAction(generic, "Basic", (i) =>
             {
                 ((UndoObject)i).FieldFloat = 0;
                 ((UndoObject)i).FieldInteger = 0;
@@ -85,10 +87,10 @@ namespace FlaxEditor.Tests
                 ((UndoObject)i).PropertyInteger = 0;
                 ((UndoObject)i).PropertyObject = null;
             });
-            id = BasicUndoRedo((UndoObject)generic, id);
+            id = BasicUndoRedo(undo, (UndoObject)generic, id);
 
             instance = new UndoObject(true);
-            Undo.RecordAction(instance, "Basic", (i) =>
+            undo.RecordAction(instance, "Basic", (i) =>
             {
                 i.FieldFloat = 0;
                 i.FieldInteger = 0;
@@ -97,10 +99,10 @@ namespace FlaxEditor.Tests
                 i.PropertyInteger = 0;
                 i.PropertyObject = null;
             });
-            id = BasicUndoRedo(instance, id);
+            id = BasicUndoRedo(undo ,instance, id);
 
             instance = new UndoObject(true);
-            using(new Undo(instance, "Basic"))
+            using(new UndoBlock(undo, instance, "Basic"))
             {
                 instance.FieldFloat = 0;
                 instance.FieldInteger = 0;
@@ -109,19 +111,19 @@ namespace FlaxEditor.Tests
                 instance.PropertyInteger = 0;
                 instance.PropertyObject = null;
             }
-            id = BasicUndoRedo(instance, id);
+            id = BasicUndoRedo(undo, instance, id);
         }
 
-        private static Guid BasicUndoRedo(UndoObject instance, Guid lastGuid)
+        private static Guid BasicUndoRedo(Undo undo, UndoObject instance, Guid lastGuid)
         {
-            Assert.AreEqual("Basic", Undo.PerformUndo().ActionString);
+            Assert.AreEqual("Basic", undo.PerformUndo().ActionString);
             Assert.AreEqual(10, instance.FieldInteger);
             Assert.AreEqual(0.1f, instance.FieldFloat);
             Assert.AreNotEqual(null, instance.FieldObject);
             Assert.AreEqual(-10, instance.PropertyInteger);
             Assert.AreEqual(-0.1f, instance.PropertyFloat);
             Assert.AreNotEqual(null, instance.PropertyObject);
-            var redo = Undo.PerformRedo();
+            var redo = undo.PerformRedo();
             Assert.AreNotEqual(redo.Id, lastGuid);
             Assert.AreEqual("Basic", redo.ActionString);
             Assert.AreEqual(0, instance.FieldInteger);
@@ -136,8 +138,9 @@ namespace FlaxEditor.Tests
         [Test]
         public void UndoTestRecursive()
         {
+            var undo = new Undo();
             var instance = new UndoObject(true);
-            Undo.RecordAction(instance, "Basic", (i) =>
+            undo.RecordAction(instance, "Basic", (i) =>
             {
                 i.FieldObject = new UndoObject();
                 i.FieldObject.FieldObject = new UndoObject();
@@ -150,7 +153,7 @@ namespace FlaxEditor.Tests
                 i.PropertyObject.PropertyObject.FieldObject = new UndoObject();
                 i.PropertyObject.PropertyObject.FieldObject.FieldInteger = 99;
             });
-            Undo.PerformUndo();
+            undo.PerformUndo();
             Assert.AreNotEqual(null, instance.FieldObject);
             Assert.AreNotEqual(null, instance.FieldObject.FieldObject);
             Assert.AreEqual(null, instance.FieldObject.FieldObject.FieldObject);
@@ -159,7 +162,7 @@ namespace FlaxEditor.Tests
             Assert.AreNotEqual(null, instance.PropertyObject.PropertyObject);
             Assert.AreEqual(null, instance.PropertyObject.PropertyObject.PropertyObject);
             Assert.AreEqual(null, instance.PropertyObject.PropertyObject.FieldObject);
-            Undo.PerformRedo();
+            undo.PerformRedo();
             Assert.AreNotEqual(null, instance.FieldObject);
             Assert.AreNotEqual(null, instance.FieldObject.FieldObject);
             Assert.AreNotEqual(null, instance.FieldObject.FieldObject.FieldObject);

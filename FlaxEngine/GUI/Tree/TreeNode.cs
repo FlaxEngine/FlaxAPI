@@ -2,6 +2,8 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+
 namespace FlaxEngine.GUI
 {
     /// <summary>
@@ -128,6 +130,8 @@ namespace FlaxEngine.GUI
         {
             get
             {
+                UpdateTextWidth();
+
                 float minWidth = _xOffset + _textWidth + 6 + 16;
                 if (_iconCollaped.IsValid)
                     minWidth += 16;
@@ -146,6 +150,11 @@ namespace FlaxEngine.GUI
                 return minWidth;
             }
         }
+        
+        /// <summary>
+        /// Gets the arrow rectangle.
+        /// </summary>
+        protected Rectangle ArrowRect => new Rectangle(_xOffset + 2, 2, 12, 12);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeNode"/> class.
@@ -275,6 +284,18 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Ends open/close animation by force.
+        /// </summary>
+        public void EndAnimation()
+        {
+            if (_animationProgress < 1.0f)
+            {
+                _animationProgress = 1.0f;
+                PerformLayout();
+            }
+        }
+
+        /// <summary>
         /// Select node in the tree.
         /// </summary>
         public void Select()
@@ -282,11 +303,42 @@ namespace FlaxEngine.GUI
             ParentTree.Select(this);
         }
 
-        // TODO: finsih drag and drop
-        /*protected virtual DragDropEffect onDragEnter(IGuiData* data);
-        protected virtual DragDropEffect onDragOver(IGuiData* data);
-        protected virtual DragDropEffect onDragDrop(IGuiData* data);
-        protected virtual void onDragLeave();*/
+        /// <summary>
+        /// Called when drag and drop enters the node header area.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>Drag action response.</returns>
+        protected virtual DragDropEffect OnDragEnterHeader(DragData data)
+        {
+            return DragDropEffect.None;
+        }
+
+        /// <summary>
+        /// Called when drag and drop moves over the node header area.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>Drag action response.</returns>
+        protected virtual DragDropEffect OnDragMoveHeader(DragData data)
+        {
+            return DragDropEffect.None;
+        }
+
+        /// <summary>
+        /// Called when drag and drop performs over the node header area.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>Drag action response.</returns>
+        protected virtual DragDropEffect OnDragDropHeader(DragData data)
+        {
+            return DragDropEffect.None;
+        }
+
+        /// <summary>
+        /// Called when drag and drop leaves the node header area.
+        /// </summary>
+        protected virtual void OnDragLeaveHeader()
+        {
+        }
 
         /// <summary>
         /// Begins the drag drop operation.
@@ -331,7 +383,21 @@ namespace FlaxEngine.GUI
             return Enabled ? Style.Current.Foreground : Style.Current.ForegroundDisabled;
         }
 
-        // TODO: support drag and drop for tree nodes
+        /// <summary>
+        /// Updates the cached width of the text.
+        /// </summary>
+        protected void UpdateTextWidth()
+        {
+            if (_textChanged)
+            {
+                var style = Style.Current;
+                if (style.FontSmall)
+                {
+                    _textWidth = style.FontSmall.MeasureText(_text).X;
+                    _textChanged = false;
+                }
+            }
+        }
 
         /// <inheritdoc />
         public override void Update(float deltaTime)
@@ -390,7 +456,7 @@ namespace FlaxEngine.GUI
 
                 // Draw arrow
                 if (hasChildren)
-                    Render2D.DrawSprite(_opened ? style.ArrowDown : style.ArrowRight, new Rectangle(_xOffset + 2, 2, 12, 12), _mouseOverHeader ? Color.White : new Color(0.8f, 0.8f, 0.8f, 0.8f));
+                    Render2D.DrawSprite(_opened ? style.ArrowDown : style.ArrowRight, ArrowRect, _mouseOverHeader ? Color.White : new Color(0.8f, 0.8f, 0.8f, 0.8f));
 
                 // Draw icon
                 if (_iconCollaped.IsValid)
@@ -405,7 +471,7 @@ namespace FlaxEngine.GUI
                 // Draw drag and drop effect
                 if (IsDragOver)
                 {
-                    Color dragOverColor = style.BackgroundHighlighted * 0.4f;
+                    Color dragOverColor = style.BackgroundSelected * 0.4f;
                     Rectangle rect;
                     switch (_dragOverMode)
                     {
@@ -486,7 +552,7 @@ namespace FlaxEngine.GUI
                 {
                     // Focus
                     Focus();
-                    
+
                     // Check if user is pressing control key
                     var tree = ParentTree;
                     var window = tree.ParentWindow;
@@ -555,9 +621,9 @@ namespace FlaxEngine.GUI
         public override void OnMouseMove(Vector2 location)
         {
             // Cache flags
-            _mouseOverArrow = _children.Count > 0 && new Rectangle(_xOffset + 2, 2, 12, 12).Contains(location);
+            _mouseOverArrow = _children.Count > 0 && ArrowRect.Contains(location);
             _mouseOverHeader = new Rectangle(0, 0, Width, DefaultHeaderHeight - 1).Contains(location);
-            
+
             // Check if start drag and drop
             if (_isMouseDown && Vector2.Distance(_mouseDownPos, location) > 10.0f)
             {
@@ -631,7 +697,7 @@ namespace FlaxEngine.GUI
         public override void OnChildResized(Control control)
         {
             PerformLayout();
-            ParentTree.UpdateWidth();
+            ParentTree.UpdateSize();
             base.OnChildResized(control);
         }
 
@@ -643,28 +709,123 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(Vector2 size)
+        public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
         {
-            base.SetSizeInternal(size);
-            
-            // Cache data
-            _headerRect = new Rectangle(0, 0, Width, DefaultHeaderHeight);
+            var result = base.OnDragEnter(ref location, data);
+
+            // Check if no children handled that event
+            _dragOverMode = DragItemPositioning.None;
+            if (result == DragDropEffect.None)
+            {
+                updateDrawPositioning(ref location);
+
+                // Check if mosue is over header
+                _isDragOverHeader = testHeaderHit(ref location);
+                if (_isDragOverHeader)
+                {
+                    // Check if mouse is over arrow
+                    if (_children.Count > 0 && ArrowRect.Contains(location))
+                    {
+                        // Expand node
+                        Expand();
+                    }
+
+                    result = OnDragEnterHeader(data);
+                }
+
+                if (result == DragDropEffect.None)
+                    _dragOverMode = DragItemPositioning.None;
+            }
+
+            return result;
         }
 
         /// <inheritdoc />
-        protected override void PerformLayoutSelf()
+        public override DragDropEffect OnDragMove(ref Vector2 location, DragData data)
         {
-            if (_textChanged)
+            var result = base.OnDragMove(ref location, data);
+
+            // Check if no children handled that event
+            _dragOverMode = DragItemPositioning.None;
+            if (result == DragDropEffect.None)
             {
-                // Calculate minimum width of that node
-                var style = Style.Current;
-                if (style.FontSmall)
+                updateDrawPositioning(ref location);
+
+                // Check if mosue is over header
+                bool isDragOverHeader = testHeaderHit(ref location);
+                if (isDragOverHeader)
                 {
-                    _textWidth = style.FontSmall.MeasureText(_text).X;
-                    _textChanged = false;
+                    // Check if mouse is over arrow
+                    if (_children.Count > 0 && ArrowRect.Contains(location))
+                    {
+                        // Expand node
+                        Expand();
+                    }
+
+                    if (!_isDragOverHeader)
+                        result = OnDragEnterHeader(data);
+                    else
+                        result = OnDragMoveHeader(data);
+                }
+                _isDragOverHeader = isDragOverHeader;
+
+                if (result == DragDropEffect.None)
+                    _dragOverMode = DragItemPositioning.None;
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
+        {
+            var result = base.OnDragDrop(ref location, data);
+
+            // Check if no children handled that event
+            if (result == DragDropEffect.None)
+            {
+                updateDrawPositioning(ref location);
+
+                // Check if mosue is over header
+                if (testHeaderHit(ref location))
+                {
+                    result = OnDragDropHeader(data);
                 }
             }
 
+            // Clear cache
+            _isDragOverHeader = false;
+            _dragOverMode = DragItemPositioning.None;
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override void OnDragLeave()
+        {
+            // Clear cache
+            if (_isDragOverHeader)
+            {
+                _isDragOverHeader = false;
+                OnDragLeaveHeader();
+            }
+            _dragOverMode = DragItemPositioning.None;
+
+            base.OnDragLeave();
+        }
+
+        /// <inheritdoc />
+        protected override void SetSizeInternal(Vector2 size)
+        {
+            base.SetSizeInternal(size);
+
+            // Cache data
+            _headerRect = new Rectangle(0, 0, Width, DefaultHeaderHeight);
+        }
+        
+        /// <inheritdoc />
+        protected override void PerformLayoutSelf()
+        {
             // Arrange children
             float y = DefaultHeaderHeight;
             float height = DefaultHeaderHeight;
@@ -683,8 +844,8 @@ namespace FlaxEngine.GUI
             {
                 if (_children[i] is TreeNode node)
                 {
-                    node.Location = new Vector2(0, y);
                     node._xOffset = xOffset;
+                    node.Location = new Vector2(0, y);
                     float nodeHeight = node.Height + DefaultNodeOffsetY;
                     y += nodeHeight;
                     height += nodeHeight;
@@ -703,14 +864,26 @@ namespace FlaxEngine.GUI
             // Set height
             Height = Mathf.Max(DefaultHeaderHeight, y);
         }
-
+        
         /// <inheritdoc />
         protected override void OnParentChangedInternal()
         {
             // Clear cached tree
             _tree = null;
+            if (Parent != null)
+                Width = Parent.Width;
 
             base.OnParentChangedInternal();
+        }
+
+        /// <inheritdoc />
+        public override int Compare(Control other)
+        {
+            if (other is TreeNode node)
+            {
+                return string.Compare(Text, node.Text, StringComparison.InvariantCulture);
+            }
+            return base.Compare(other);
         }
 
         /// <inheritdoc />

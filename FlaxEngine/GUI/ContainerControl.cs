@@ -99,7 +99,7 @@ namespace FlaxEngine.GUI
         public bool ClipChildren { get; set; } = true;
 
         /// <summary>
-        ///     Lock all child controls and itself
+        ///     Lock all child controls layout and itself
         /// </summary>
         public virtual void LockChildrenRecursive()
         {
@@ -115,7 +115,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Unlocks all child controls and itself
+        ///     Unlocks all child controls layout and itself
         /// </summary>
         public virtual void UnlockChildrenRecursive()
         {
@@ -1083,7 +1083,7 @@ namespace FlaxEngine.GUI
         protected override void SetSizeInternal(Vector2 size)
         {
             // Lock updates to prevent additional layout calculations
-            bool wasLocked = IsLayoutLocked;
+            bool wasLayoutLocked = IsLayoutLocked;
             IsLayoutLocked = true;
 
             // Cache previous size
@@ -1099,7 +1099,7 @@ namespace FlaxEngine.GUI
             }
 
             // Restore state
-            IsLayoutLocked = wasLocked;
+            IsLayoutLocked = wasLayoutLocked;
 
             // Arrange child controls
             PerformLayout();

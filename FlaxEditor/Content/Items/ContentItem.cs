@@ -167,6 +167,8 @@ namespace FlaxEditor.Content
 
                 // Add to new
                 _parentFolder?.Children.Add(this);
+
+                OnParentFolderChanged();
             }
         }
 
@@ -215,6 +217,14 @@ namespace FlaxEditor.Content
         public virtual string DefaultThumbnailName => null;
 
         /// <summary>
+        /// Gets a value indicating whether this item has default thumbnail.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this item has default thumbnail; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasDefaultThumbnail => DefaultThumbnailName != null;
+
+        /// <summary>
         /// Gets or sets the item thumbnail. Warning, thumbnail may not be available if item has no references (<see cref="ReferencesCount"/>).
         /// </summary>
         /// <value>
@@ -242,12 +252,12 @@ namespace FlaxEditor.Content
         /// Updates the item path. Use with caution or even don't use it. It's dangerous.
         /// </summary>
         /// <param name="value">The new path.</param>
-        public virtual void UpdatePath(string value)
+        internal virtual void UpdatePath(string value)
         {
             Assert.AreNotEqual(Path, value);
-
+            
             // Set path
-            Path = value;
+            Path = StringUtils.NormalizePath(value);
             ShortName = System.IO.Path.GetFileNameWithoutExtension(value);
 
             // Fire event
@@ -263,7 +273,7 @@ namespace FlaxEditor.Content
         public virtual void RefreshThumbnail()
         {
             // Skip if item has default thumbnail
-            if (DefaultThumbnailName != null)
+            if (HasDefaultThumbnail)
                 return;
 
             var thumbnails = Editor.Instance.Thumbnails;
@@ -427,6 +437,13 @@ namespace FlaxEditor.Content
         }
 
         /// <summary>
+        /// Called when item parent folder gets changed.
+        /// </summary>
+        protected virtual void OnParentFolderChanged()
+        {
+        }
+
+        /// <summary>
         /// Requests the thumbnail.
         /// </summary>
         protected void RequestThumbnail()
@@ -580,7 +597,7 @@ namespace FlaxEditor.Content
             {
                 if (otherItem.IsFolder)
                     return 1;
-                return string.CompareOrdinal(ShortName, otherItem.ShortName);
+                return string.Compare(ShortName, otherItem.ShortName, StringComparison.InvariantCulture);
             }
 
             return base.Compare(other);

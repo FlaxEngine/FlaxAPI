@@ -44,8 +44,8 @@ namespace FlaxEditor.Windows
                     switch (key)
                     {
                         case KeyCode.S: Editor.SaveAll(); return true;
-                        case KeyCode.Z: Editor.Undo(); return true;
-                        case KeyCode.Y: Editor.Redo(); return true;
+                        case KeyCode.Z: Editor.PerformUndo(); return true;
+                        case KeyCode.Y: Editor.PerformRedo(); return true;
                     }
                 }
             }

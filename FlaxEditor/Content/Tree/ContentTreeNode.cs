@@ -2,6 +2,8 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using FlaxEditor.GUI;
+using FlaxEditor.GUI.Drag;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -13,6 +15,11 @@ namespace FlaxEditor.Content
     /// <seealso cref="FlaxEngine.GUI.TreeNode" />
     public class ContentTreeNode : TreeNode
     {
+        private DragItems _dragOverItems;
+
+        /// <summary>
+        /// The folder.
+        /// </summary>
         protected ContentFolder _folder;
 
         /// <summary>
@@ -106,6 +113,100 @@ namespace FlaxEditor.Content
             _folder.Dispose();
 
             base.OnDestroy();
+        }
+
+        private DragDropEffect GetDragEffect(DragData data)
+        {
+            if (data is DragDataFiles)
+            {
+                if (_folder.CanHaveAssets)
+                    return DragDropEffect.Copy;
+            }
+            else
+            {
+                if (_dragOverItems.HasValidDrag)
+                    return DragDropEffect.Move;
+            }
+
+            return DragDropEffect.None;
+        }
+
+        private bool ValidateDragItem(ContentItem item)
+        {
+            // Reject itself and any parent
+            return item != _folder && !item.Find(_folder);
+        }
+
+        /// <inheritdoc />
+        protected override DragDropEffect OnDragEnterHeader(DragData data)
+        {
+            if (_dragOverItems == null)
+                _dragOverItems = new DragItems();
+
+            _dragOverItems.OnDragEnter(data, ValidateDragItem);
+            return GetDragEffect(data);
+        }
+
+        /// <inheritdoc />
+        protected override DragDropEffect OnDragMoveHeader(DragData data)
+        {
+            return GetDragEffect(data);
+        }
+
+        /// <inheritdoc />
+        protected override void OnDragLeaveHeader()
+        {
+            _dragOverItems.OnDragLeave();
+            base.OnDragLeaveHeader();
+        }
+
+        /// <inheritdoc />
+        protected override DragDropEffect OnDragDropHeader(DragData data)
+        {
+            var result = DragDropEffect.None;
+
+            // Check if drop element or files
+            if (data is DragDataFiles files)
+            {
+                // Import files
+                Editor.Instance.ContentImporting.Import(files.Files, _folder);
+                result = DragDropEffect.Copy;
+
+                Expand();
+            }
+            else if (_dragOverItems.HasValidDrag)
+            {
+                // Move items
+                Editor.Instance.ContentDatabase.Move(_dragOverItems.Objects, _folder);
+                result = DragDropEffect.Move;
+
+                Expand();
+            }
+
+            _dragOverItems.OnDragDrop();
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        protected override void DoDragDrop()
+        {
+            DoDragDrop(DragItems.GetDragData(_folder));
+        }
+
+        /// <inheritdoc />
+        protected override void OnLongPress()
+        {
+            Select();
+
+            // Check if can rename it
+            if (_folder.CanRename)
+            {
+                // Start renaming the folder
+                var dialog = RenamePopup.Show(this, _headerRect, _folder.ShortName, false);
+                dialog.Tag = _folder;
+                dialog.Renamed += popup => Editor.Instance.Windows.ContentWin.Rename((ContentFolder)popup.Tag, popup.Text);
+            }
         }
     }
 }

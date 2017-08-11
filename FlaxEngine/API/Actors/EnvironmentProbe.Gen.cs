@@ -17,6 +17,7 @@ namespace FlaxEngine
 	/// <summary>
 	/// Environment Probe can capture space around the objects to provide reflections.
 	/// </summary>
+	[Serializable]
 	public sealed partial class EnvironmentProbe : Actor
 	{
 		/// <summary>
