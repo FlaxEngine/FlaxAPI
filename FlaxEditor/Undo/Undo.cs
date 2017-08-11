@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using FlaxEditor.History;
 using FlaxEditor.Utilities;
 using FlaxEngine.Collections;
@@ -199,14 +198,7 @@ namespace FlaxEditor
             UndoActionObject operation = (UndoActionObject)UndoOperationsStack.PopHistory();
             foreach (var diff in operation.Diff)
             {
-                if (diff.Member.MemberType == MemberTypes.Field)
-                {
-                    ((FieldInfo)diff.Member).SetValue(operation.TargetInstance, diff.Value2);
-                }
-                else
-                {
-                    ((PropertyInfo)diff.Member).SetValue(operation.TargetInstance, diff.Value2);
-                }
+                diff.SetMemberValue(operation.TargetInstance, diff.Value2);
             }
 
             UndoDone?.Invoke();
@@ -224,14 +216,7 @@ namespace FlaxEditor
             UndoActionObject operation = (UndoActionObject)UndoOperationsStack.PopReverse();
             foreach (var diff in operation.Diff)
             {
-                if (diff.Member.MemberType == MemberTypes.Field)
-                {
-                    ((FieldInfo)diff.Member).SetValue(operation.TargetInstance, diff.Value1);
-                }
-                else
-                {
-                    ((PropertyInfo)diff.Member).SetValue(operation.TargetInstance, diff.Value1);
-                }
+                diff.SetMemberValue(operation.TargetInstance, diff.Value1);
             }
 
             RedoDone?.Invoke();
