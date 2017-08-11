@@ -442,6 +442,11 @@ namespace FlaxEditor.Modules
             
             // Cleanup graph
             Root.Dispose();
+
+            if (SceneGraphFactory.Nodes.Count > 0)
+            {
+                Editor.LogWarning("Not all scene graph nodes has been disposed!");
+            }
         }
     }
 }

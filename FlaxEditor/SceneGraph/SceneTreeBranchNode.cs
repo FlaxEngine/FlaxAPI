@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FlaxEngine;
@@ -21,6 +22,12 @@ namespace FlaxEditor.SceneGraph
         /// The children.
         /// </value>
         public List<SceneTreeNode> ChildNodes { get; } = new List<SceneTreeNode>();
+
+        /// <inheritdoc />
+        protected SceneTreeBranchNode(Guid id)
+            : base(id)
+        {
+        }
 
         /// <inheritdoc />
         public override bool ContainsInHierarchy(SceneTreeNode node)

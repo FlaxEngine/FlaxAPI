@@ -48,6 +48,14 @@ namespace FlaxEditor.SceneGraph
         /// </summary>
         /// <param name="actor">The actor.</param>
         public ActorNode(Actor actor)
+            : base(actor.ID)
+        {
+            _actor = actor;
+            _treeNode = new ActorTreeNode(this);
+        }
+
+        internal ActorNode(Actor actor, Guid id)
+            : base(id)
         {
             _actor = actor;
             _treeNode = new ActorTreeNode(this);
@@ -98,10 +106,7 @@ namespace FlaxEditor.SceneGraph
 
         /// <inheritdoc />
         public override string Name => _actor.Name;
-
-        /// <inheritdoc />
-        public override Guid ID => _actor.ID;
-
+        
         /// <inheritdoc />
         public override bool IsActive => _actor.IsActive;
 

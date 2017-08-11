@@ -20,6 +20,23 @@ namespace FlaxEditor.SceneGraph
         public static readonly Dictionary<Type, Type> CustomNodesTypes = new Dictionary<Type, Type>();
 
         /// <summary>
+        /// The nodes collection where key is ID.
+        /// </summary>
+        public static readonly Dictionary<Guid, SceneTreeNode> Nodes = new Dictionary<Guid, SceneTreeNode>();
+
+        /// <summary>
+        /// Tries to find the node by the given ID.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Found node or null if cannot.</returns>
+        public static SceneTreeNode FindNode(Guid id)
+        {
+            SceneTreeNode result;
+            Nodes.TryGetValue(id, out result);
+            return result;
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SceneGraphFactory"/> class.
         /// </summary>
         static SceneGraphFactory()

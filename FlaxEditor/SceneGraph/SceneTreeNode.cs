@@ -21,6 +21,16 @@ namespace FlaxEditor.SceneGraph
         protected SceneTreeBranchNode parentNode;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SceneTreeNode"/> class.
+        /// </summary>
+        /// <param name="id">The unique node identifier. Cannot be changed at runtime.</param>
+        protected SceneTreeNode(Guid id)
+        {
+            ID = id;
+            SceneGraphFactory.Nodes.Add(id, this);
+        }
+
+        /// <summary>
         /// Gets the name.
         /// </summary>
         /// <value>
@@ -34,7 +44,7 @@ namespace FlaxEditor.SceneGraph
         /// <value>
         /// The identifier.
         /// </value>
-        public abstract Guid ID { get; }
+        public Guid ID { get; }
 
         /// <inheritdoc />
         public abstract Transform Transform { get; set; }
@@ -166,6 +176,7 @@ namespace FlaxEditor.SceneGraph
         /// </summary>
         public virtual void OnDispose()
         {
+            SceneGraphFactory.Nodes.Remove(ID);
         }
 
         /// <summary>

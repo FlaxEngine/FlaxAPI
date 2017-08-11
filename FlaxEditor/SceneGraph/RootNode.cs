@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using FlaxEngine;
 
 namespace FlaxEditor.SceneGraph
@@ -16,12 +17,18 @@ namespace FlaxEditor.SceneGraph
         /// Initializes a new instance of the <see cref="RootNode"/> class.
         /// </summary>
         public RootNode()
-            : base(null)
+            : base(null, new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1))
         {
         }
-        
+
         /// <inheritdoc />
         public override string Name => "Root";
+
+        /// <inheritdoc />
+        public override bool CanCopyPaste => false;
+
+        /// <inheritdoc />
+        public override bool CanDelete => false;
 
         /// <inheritdoc />
         public override bool IsActive => true;
