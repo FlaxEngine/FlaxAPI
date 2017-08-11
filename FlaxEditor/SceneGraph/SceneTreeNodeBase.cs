@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FlaxEngine;
@@ -33,6 +34,15 @@ namespace FlaxEditor.SceneGraph
 
         /// <inheritdoc />
         public abstract string Name { get; }
+
+        /// <inheritdoc />
+        public abstract Guid ID { get; }
+
+        /// <inheritdoc />
+        public virtual bool CanCopyPaste => true;
+
+        /// <inheritdoc />
+        public virtual bool CanDelete => true;
 
         /// <inheritdoc />
         public abstract bool IsActive { get; }

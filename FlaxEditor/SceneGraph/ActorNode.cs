@@ -100,6 +100,9 @@ namespace FlaxEditor.SceneGraph
         public override string Name => _actor.Name;
 
         /// <inheritdoc />
+        public override Guid ID => _actor.ID;
+
+        /// <inheritdoc />
         public override bool IsActive => _actor.IsActive;
 
         /// <inheritdoc />

@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Collections.Generic;
 using FlaxEditor.Windows;
 using FlaxEngine;
@@ -22,6 +23,30 @@ namespace FlaxEditor.SceneGraph
         /// The name.
         /// </value>
         string Name { get; }
+
+        /// <summary>
+        /// Gets the identifier. Must be unique and immutable.
+        /// </summary>
+        /// <value>
+        /// The identifier.
+        /// </value>
+        Guid ID { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance can be copied or/and pasted.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance can be used for copy and paste; otherwise, <c>false</c>.
+        /// </value>
+        bool CanCopyPaste { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this node can be deleted by the user.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance can be deleted; otherwise, <c>false</c>.
+        /// </value>
+        bool CanDelete { get; }
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="ISceneTreeNode"/> is active.
@@ -62,7 +87,7 @@ namespace FlaxEditor.SceneGraph
         /// The editable object.
         /// </value>
         object EditableObject { get; }
-
+        
         /// <summary>
         /// Determines whether the specified object is in a hierarchy (one of the children or lower).
         /// </summary>
