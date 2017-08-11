@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -44,7 +44,7 @@ namespace FlaxEditor.Utilities
             var type = obj.GetType();
             var values = new List<object>();
 
-            // Note: this loop must match with 
+            // Note: this loop must match with Compare method
 
             var members = type.GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             for (int i = 0; i < members.Length; i++)
@@ -52,7 +52,6 @@ namespace FlaxEditor.Utilities
                 var m = members[i];
 
                 var attributes = m.GetCustomAttributes(true);
-
                 if (attributes.Any(x => x is NoSerializeAttribute))
                     continue;
 
@@ -92,6 +91,8 @@ namespace FlaxEditor.Utilities
 
             var list = new List<MemberComparison>();
 
+            // Note: this loop must match with CaptureSnapshot method
+
             var members = ObjectType.GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             int index = 0;
             for (int i = 0; i < members.Length; i++)
@@ -99,11 +100,14 @@ namespace FlaxEditor.Utilities
                 var m = members[i];
 
                 var attributes = m.GetCustomAttributes(true);
-                if (attributes.Any(x => x is NonSerializedAttribute))
+                if (attributes.Any(x => x is NoSerializeAttribute))
                     continue;
-
+                
                 if (m.MemberType == MemberTypes.Field)
                 {
+                    if (attributes.Any(x => x is NonSerializedAttribute))
+                        continue;
+
                     FieldInfo field = (FieldInfo)m;
                     var xValue = Values[index++];
                     var yValue = field.GetValue(obj);
