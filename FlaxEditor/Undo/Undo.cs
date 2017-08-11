@@ -8,7 +8,6 @@ using System.Linq;
 using FlaxEditor.History;
 using FlaxEditor.Utilities;
 using FlaxEngine.Collections;
-using FlaxEngine.Utilities;
 
 namespace FlaxEditor
 {
@@ -192,12 +191,13 @@ namespace FlaxEditor
         /// </summary>
         public UndoActionObject PerformUndo()
         {
-            if (!Enabled)
+            if (!Enabled || !CanUndo)
                 return null;
 
             UndoActionObject operation = (UndoActionObject)UndoOperationsStack.PopHistory();
-            foreach (var diff in operation.Diff)
+            for (var i = 0; i < operation.Diff.Count; i++)
             {
+                var diff = operation.Diff[i];
                 diff.SetMemberValue(operation.TargetInstance, diff.Value2);
             }
 
@@ -210,12 +210,13 @@ namespace FlaxEditor
         /// </summary>
         public UndoActionObject PerformRedo()
         {
-            if (!Enabled)
+            if (!Enabled || !CanRedo)
                 return null;
 
             UndoActionObject operation = (UndoActionObject)UndoOperationsStack.PopReverse();
-            foreach (var diff in operation.Diff)
+            for (var i = 0; i < operation.Diff.Count; i++)
             {
+                var diff = operation.Diff[i];
                 diff.SetMemberValue(operation.TargetInstance, diff.Value1);
             }
 
@@ -238,7 +239,7 @@ namespace FlaxEditor
             UndoDone = null;
             RedoDone = null;
             ActionDone = null;
-            
+
             Clear();
         }
     }
