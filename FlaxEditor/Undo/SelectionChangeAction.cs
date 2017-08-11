@@ -2,7 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using FlaxEditor.History;
+using System;
 using FlaxEditor.SceneGraph;
 
 namespace FlaxEditor
@@ -13,28 +13,34 @@ namespace FlaxEditor
     /// <seealso cref="IUndoAction" />
     public class SelectionChangeAction : IUndoAction
     {
-        private readonly ISceneTreeNode[] _before;
-        private readonly ISceneTreeNode[] _after;
+        // Note: we use SceneTreeNode ids because they may be removed so we have to find them on action rollback
+        private readonly Guid[] _before;
+        private readonly Guid[] _after;
 
-        internal SelectionChangeAction(ISceneTreeNode[] before, ISceneTreeNode[] after)
+        internal SelectionChangeAction(SceneTreeNode[] before, SceneTreeNode[] after)
         {
-            _before = before;
-            _after = after;
+            _before = new Guid[before.Length];
+            for (int i = 0; i < before.Length; i++)
+                _before[i] = before[i].ID;
+
+            _after = new Guid[after.Length];
+            for (int i = 0; i < after.Length; i++)
+                _after[i] = after[i].ID;
         }
-        
+
         /// <inheritdoc />
         public string ActionString => "Selection change";
 
         /// <inheritdoc />
         public void Do()
         {
-            Editor.Instance.SceneEditing.OnSelectionUndo(_after);
+            //Editor.Instance.SceneEditing.OnSelectionUndo(_after);
         }
 
         /// <inheritdoc />
         public void Undo()
         {
-            Editor.Instance.SceneEditing.OnSelectionUndo(_before);
+            //Editor.Instance.SceneEditing.OnSelectionUndo(_before);
         }
     }
 }

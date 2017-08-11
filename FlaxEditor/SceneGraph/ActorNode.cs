@@ -14,8 +14,8 @@ namespace FlaxEditor.SceneGraph
     /// It's part of the Scene Graph.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.TreeNode" />
-    /// <seealso cref="ISceneTreeNode" />
-    public class ActorNode : SceneTreeNodeBase
+    /// <seealso cref="SceneTreeBranchNode" />
+    public class ActorNode : SceneTreeBranchNode
     {
         /// <summary>
         /// The linked actor object.
@@ -137,7 +137,7 @@ namespace FlaxEditor.SceneGraph
         }
 
         /// <inheritdoc />
-        public override ISceneTreeNode ParentNode
+        public override SceneTreeBranchNode ParentNode
         {
             set
             {

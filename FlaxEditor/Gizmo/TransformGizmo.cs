@@ -21,14 +21,14 @@ namespace FlaxEditor.Gizmo
         /// <param name="translationDelta">The translation delta.</param>
         /// <param name="rotationDelta">The rotation delta.</param>
         /// <param name="scaleDelta">The scale delta.</param>
-        public delegate void ApplyTransformationDelegate(List<ISceneTreeNode> selection, ref Vector3 translationDelta, ref Matrix rotationDelta, ref Vector3 scaleDelta);
+        public delegate void ApplyTransformationDelegate(List<SceneTreeNode> selection, ref Vector3 translationDelta, ref Matrix rotationDelta, ref Vector3 scaleDelta);
 
         private bool _isTransforming;
         private bool _isCloning;
         private bool _isActive;
         private readonly List<Transform> _startTransforms = new List<Transform>();
-        private readonly List<ISceneTreeNode> _selection = new List<ISceneTreeNode>();
-        private readonly List<ISceneTreeNode> _selectionParents = new List<ISceneTreeNode>();
+        private readonly List<SceneTreeNode> _selection = new List<SceneTreeNode>();
+        private readonly List<SceneTreeNode> _selectionParents = new List<SceneTreeNode>();
 
         private Matrix _screenScaleMatrix;
         private float _screenScale;

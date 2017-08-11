@@ -2,7 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-namespace FlaxEditor.SceneGraph
+namespace FlaxEditor.SceneGraph.Actors
 {
     /// <summary>
     /// Actor tree node for <see cref="FlaxEngine.Scene"/> objects.

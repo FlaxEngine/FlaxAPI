@@ -4,7 +4,7 @@
 
 using FlaxEngine;
 
-namespace FlaxEditor.SceneGraph.Actors
+namespace FlaxEditor.SceneGraph
 {
     /// <summary>
     /// Helper class for actors with icon drawn in editor (eg. lights, probes, etc.).

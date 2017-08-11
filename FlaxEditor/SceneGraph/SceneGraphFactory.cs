@@ -12,17 +12,17 @@ namespace FlaxEditor.SceneGraph
     /// <summary>
     /// Factory service for Scene Graph nodes creating.
     /// </summary>
-    public class SceneGraphFactory
+    public static class SceneGraphFactory
     {
         /// <summary>
         /// The custom nodes types. Key = object type, Value = custom graph node type
         /// </summary>
-        public readonly Dictionary<Type, Type> CustomNodesTypes = new Dictionary<Type, Type>();
+        public static readonly Dictionary<Type, Type> CustomNodesTypes = new Dictionary<Type, Type>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneGraphFactory"/> class.
         /// </summary>
-        public SceneGraphFactory()
+        static SceneGraphFactory()
         {
             // Init default nodes types
             CustomNodesTypes.Add(typeof(Camera), typeof(CameraNode));
@@ -39,7 +39,7 @@ namespace FlaxEditor.SceneGraph
         /// </summary>
         /// <param name="scene">The scene.</param>
         /// <returns>The root scene node.</returns>
-        public SceneNode BuildSceneTree(Scene scene)
+        public static SceneNode BuildSceneTree(Scene scene)
         {
             // TODO: make it faster by calling engine internaly only once to gather optimzied scene tree -> but do it in late stage of editor development - no early optimalization!
 
@@ -58,7 +58,7 @@ namespace FlaxEditor.SceneGraph
         /// </summary>
         /// <param name="actor">The actor.</param>
         /// <returns>Created node or null if failed.</returns>
-        public ActorNode BuildActorNode(Actor actor)
+        public static ActorNode BuildActorNode(Actor actor)
         {
             ActorNode result = null;
 
@@ -90,7 +90,7 @@ namespace FlaxEditor.SceneGraph
             return result;
         }
 
-        private void BuildSceneTree(ActorNode node)
+        private static void BuildSceneTree(ActorNode node)
         {
             var children = node.Actor.GetChildren();
             for (int i = 0; i < children.Length; i++)

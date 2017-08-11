@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using FlaxEditor.SceneGraph;
+using FlaxEditor.SceneGraph.Actors;
 using FlaxEngine;
 using Object = FlaxEngine.Object;
 
@@ -18,11 +19,6 @@ namespace FlaxEditor.Modules
         /// The root tree node for the whole scene graph.
         /// </summary>
         public readonly RootNode Root = new RootNode();
-
-        /// <summary>
-        /// The scene graph nodes factory.
-        /// </summary>
-        public readonly SceneGraphFactory Factory = new SceneGraphFactory();
 
         internal SceneModule(Editor editor)
             : base(editor)
@@ -235,7 +231,7 @@ namespace FlaxEditor.Modules
             var startTime = DateTime.UtcNow;
 
             // Build scene tree
-            var sceneNode = Factory.BuildSceneTree(scene);
+            var sceneNode = SceneGraphFactory.BuildSceneTree(scene);
             var treeNode = sceneNode.TreeNode;
             treeNode.IsLayoutLocked = true;
             treeNode.Expand();
@@ -287,7 +283,7 @@ namespace FlaxEditor.Modules
                 return;
             }
 
-            var node = Factory.BuildActorNode(actor);
+            var node = SceneGraphFactory.BuildActorNode(actor);
             node.ParentNode = parentNode;
         }
 
@@ -323,7 +319,7 @@ namespace FlaxEditor.Modules
             else
             {
                 // Create new node for that actor (user may unlink it from the scene before and now link it)
-                node = Factory.BuildActorNode(actor);
+                node = SceneGraphFactory.BuildActorNode(actor);
             }
 
             // Get the new parent node (may be missing)

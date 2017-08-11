@@ -140,11 +140,11 @@
     <Compile Include="SceneGraph\Actors\SkyNode.cs" />
     <Compile Include="SceneGraph\Actors\SpotLightNode.cs" />
     <Compile Include="SceneGraph\GUI\ActorTreeNode.cs" />
-    <Compile Include="SceneGraph\ISceneTreeNode.cs" />
     <Compile Include="SceneGraph\RootNode.cs" />
     <Compile Include="SceneGraph\SceneGraphFactory.cs" />
-    <Compile Include="SceneGraph\SceneNode.cs" />
-    <Compile Include="SceneGraph\SceneTreeNodeBase.cs" />
+    <Compile Include="SceneGraph\Actors\SceneNode.cs" />
+    <Compile Include="SceneGraph\SceneTreeBranchNode.cs" />
+    <Compile Include="SceneGraph\SceneTreeNode.cs" />
     <Compile Include="States\BuildingLightingState.cs" />
     <Compile Include="States\ChangingScenesState.cs" />
     <Compile Include="States\ClosingState.cs" />

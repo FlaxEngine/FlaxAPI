@@ -61,7 +61,7 @@ namespace FlaxEditor.Windows
             if (after.Count > 0)
             {
                 // Get actors from nodes
-                var actors = new List<ISceneTreeNode>(after.Count);
+                var actors = new List<SceneTreeNode>(after.Count);
                 for (int i = 0; i < after.Count; i++)
                 {
                     if (after[i] is ActorTreeNode node && node.Actor)
@@ -89,7 +89,7 @@ namespace FlaxEditor.Windows
             Editor.SceneEditing.OnSelectionChanged += OnOnSelectionChanged;
         }
 
-        private void selectNodesHelper(List<TreeNode> nodes, List<ISceneTreeNode> selection, TreeNode node)
+        private void selectNodesHelper(List<TreeNode> nodes, List<SceneTreeNode> selection, TreeNode node)
         {
             for (int i = 0; i < node.ChildrenCount; i++)
             {
