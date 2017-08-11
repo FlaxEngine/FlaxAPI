@@ -174,7 +174,7 @@ namespace FlaxEditor.CustomEditors.Editors
 
                         // Spawn child editor
                         //itemLayout.Button(item.DisplayName + " order: " + (item.Order != null ? item.Order.Order.ToString() : "?"));
-                        Debug.Log("Child item " + item);
+                        //Debug.Log("Child item " + item);
                         var child = itemLayout.Object(itemValues);
                         children.Add(child);
                     }
