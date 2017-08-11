@@ -103,7 +103,7 @@ namespace FlaxEditor.CustomEditors.Editors
                     layout.Space(10);
 
                     // TODO: promote children to other base class like CustomEditorContainer ?
-
+                    /*
                     // Process the properties
                     var properties = type.GetProperties();
                     var propertyItems = new List<PropertyItemInfo>(properties.Length);
@@ -177,7 +177,7 @@ namespace FlaxEditor.CustomEditors.Editors
                         //Debug.Log("Child item " + item);
                         var child = itemLayout.Object(itemValues);
                         children.Add(child);
-                    }
+                    }*/
                 }
                 else
                 {
