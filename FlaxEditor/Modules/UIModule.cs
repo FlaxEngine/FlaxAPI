@@ -193,7 +193,10 @@ namespace FlaxEditor.Modules
         {
             Editor.MainTransformGizmo.OnModeChanged += UpdateToolstrip;
             Editor.StateMachine.StateChanged += UpdateToolstrip;
-
+            Editor.Undo.UndoDone += UpdateToolstrip;
+            Editor.Undo.RedoDone += UpdateToolstrip;
+            Editor.Undo.ActionDone += UpdateToolstrip;
+            
             UpdateToolstrip();
         }
 
