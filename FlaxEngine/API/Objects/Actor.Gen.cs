@@ -14,11 +14,11 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-    /// <summary>
-    /// Base class for all actor types on the scene
-    /// </summary>
-    [Serializable]
-    public abstract partial class Actor : Object
+	/// <summary>
+	/// Base class for all actor types on the scene
+	/// </summary>
+	[Serializable]
+	public abstract partial class Actor : Object
 	{
 		/// <summary>
 		/// Creates new <see cref="Actor"/> object.
