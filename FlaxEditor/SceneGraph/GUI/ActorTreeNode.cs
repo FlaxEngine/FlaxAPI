@@ -132,16 +132,13 @@ namespace FlaxEditor.SceneGraph.GUI
 
             // Start renaming the actor
             var dialog = RenamePopup.Show(this, _headerRect, Text, false);
-            dialog.Tag = this;
             dialog.Renamed += OnRenamed;
         }
 
         private void OnRenamed(RenamePopup renamePopup)
         {
-            var node = (ActorTreeNode)renamePopup.Tag;
-
-            // TODO: use Undo/Redo
-            node.Actor.Name = renamePopup.Text;
+            using (new UndoBlock(Editor.Instance.Undo, Actor, "Rename"))
+                Actor.Name = renamePopup.Text;
         }
     }
 }
