@@ -205,6 +205,7 @@
     <Compile Include="Undo\EditorUndo.cs" />
     <Compile Include="Undo\UndoBlock.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
+    <Compile Include="Utilities\ObjectSnapshot.cs" />
     <Compile Include="Utilities\QueryFilterHelper.cs" />
     <Compile Include="Viewport\EditorGizmoViewport.cs" />
     <Compile Include="Viewport\EditorViewport.cs" />
