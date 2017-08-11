@@ -161,7 +161,9 @@
     <Compile Include="AssetTypes\IESProfile.cs" />
     <Compile Include="Attributes\Editor\EditorDisplayAttribute.cs" />
     <Compile Include="Attributes\MemberCollectionAttribute.cs" />
+    <Compile Include="Attributes\NoSerializeAttribute.cs" />
     <Compile Include="Attributes\PersisitentDataAttribute.cs" />
+    <Compile Include="Attributes\SerializeAttribute.cs" />
     <Compile Include="Configurations\PersistentDataConfig.cs" />
     <Compile Include="Engine\ITransformable.cs" />
     <Compile Include="Engine\Mesh.cs" />
@@ -288,7 +290,6 @@
     <Compile Include="Math\Quaternion.cs" />
     <Compile Include="Math\Ray.cs" />
     <Compile Include="Attributes\RequireChildActorAttribute.cs" />
-    <Compile Include="Attributes\SerializeFieldAttribute.cs" />
     <Compile Include="Enums\ShadowsCastingMode.cs" />
     <Compile Include="Enums\StaticFlags.cs" />
     <Compile Include="Engine\Exceptions\UnassignedReferenceException.cs" />
