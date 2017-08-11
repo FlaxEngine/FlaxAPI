@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -92,15 +92,15 @@ namespace FlaxEditor
         {
             public Guid Id { get; }
             public string ActionString { get; }
-            public object CopyOfInstance { get; }
             public object SnapshotInstance { get; }
+            public ObjectSnapshot Snapshot { get; }
 
             public UndoInternal(object snapshotInstance, string actionString)
             {
                 ActionString = actionString;
                 Id = Guid.NewGuid();
                 SnapshotInstance = snapshotInstance;
-                CopyOfInstance = snapshotInstance.DeepClone();
+                Snapshot = ObjectSnapshot.CaptureSnapshot(snapshotInstance);
             }
 
             /// <summary>
@@ -140,7 +140,7 @@ namespace FlaxEditor
             {
                 snapshotInstance = _snapshots.Last().Key;
             }
-            var changes = snapshotInstance.ReflectiveCompare(_snapshots[snapshotInstance].CopyOfInstance);
+            var changes = _snapshots[snapshotInstance].Snapshot.Compare(snapshotInstance);
             UndoOperationsStack.Push(_snapshots[snapshotInstance].CreateUndoActionObject(changes));
             _snapshots.Remove(snapshotInstance);
 
