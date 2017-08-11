@@ -87,17 +87,15 @@ namespace FlaxEditor
         /// <summary>
         ///     Internal class for keeping reference of undo action.
         /// </summary>
-        internal class UndoInternal : IHistoryAction
+        internal class UndoInternal
         {
-            public Guid Id { get; }
-            public string ActionString { get; }
-            public object SnapshotInstance { get; }
-            public ObjectSnapshot Snapshot { get; }
+            public string ActionString;
+            public object SnapshotInstance;
+            public ObjectSnapshot Snapshot;
 
             public UndoInternal(object snapshotInstance, string actionString)
             {
                 ActionString = actionString;
-                Id = Guid.NewGuid();
                 SnapshotInstance = snapshotInstance;
                 Snapshot = ObjectSnapshot.CaptureSnapshot(snapshotInstance);
             }
@@ -106,10 +104,10 @@ namespace FlaxEditor
             /// Creates the undo action object.
             /// </summary>
             /// <param name="diff">The difference.</param>
-            /// <returns></returns>
+            /// <returns>The undo action.</returns>
             public UndoActionObject CreateUndoActionObject(List<MemberComparison> diff)
             {
-                return new UndoActionObject(diff, ActionString, Id, SnapshotInstance);
+                return new UndoActionObject(diff, ActionString, SnapshotInstance);
             }
         }
 
@@ -187,41 +185,48 @@ namespace FlaxEditor
         }
 
         /// <summary>
+        /// Adds the action to the history.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        public void AddAction(IUndoAction action)
+        {
+            if (action == null)
+                throw new ArgumentNullException();
+
+            if (!Enabled)
+                return;
+
+            UndoOperationsStack.Push(action);
+
+            ActionDone?.Invoke();
+        }
+
+        /// <summary>
         ///     Undo last recorded action
         /// </summary>
-        public UndoActionObject PerformUndo()
+        public void PerformUndo()
         {
             if (!Enabled || !CanUndo)
-                return null;
+                return;
 
-            UndoActionObject operation = (UndoActionObject)UndoOperationsStack.PopHistory();
-            for (var i = 0; i < operation.Diff.Count; i++)
-            {
-                var diff = operation.Diff[i];
-                diff.SetMemberValue(operation.TargetInstance, diff.Value2);
-            }
+            var operation = (IUndoAction)UndoOperationsStack.PopHistory();
+            operation.Undo();
 
             UndoDone?.Invoke();
-            return operation;
         }
 
         /// <summary>
         ///     Redo last undone action
         /// </summary>
-        public UndoActionObject PerformRedo()
+        public void PerformRedo()
         {
             if (!Enabled || !CanRedo)
-                return null;
+                return;
 
-            UndoActionObject operation = (UndoActionObject)UndoOperationsStack.PopReverse();
-            for (var i = 0; i < operation.Diff.Count; i++)
-            {
-                var diff = operation.Diff[i];
-                diff.SetMemberValue(operation.TargetInstance, diff.Value1);
-            }
+            var operation = (IUndoAction)UndoOperationsStack.PopReverse();
+            operation.Do();
 
             RedoDone?.Invoke();
-            return operation;
         }
 
         /// <summary>

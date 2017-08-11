@@ -203,6 +203,8 @@
     <Compile Include="Surface\VisjectSurface.Paramaters.cs" />
     <Compile Include="Surface\VisjectSurface.Serialization.cs" />
     <Compile Include="Undo\EditorUndo.cs" />
+    <Compile Include="Undo\IUndoAction.cs" />
+    <Compile Include="Undo\SelectionChangeAction.cs" />
     <Compile Include="Undo\UndoBlock.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
     <Compile Include="Utilities\ObjectSnapshot.cs" />

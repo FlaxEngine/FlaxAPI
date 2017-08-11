@@ -63,7 +63,7 @@ namespace FlaxEditor.Tests
             instance.PropertyInteger = 0;
             instance.PropertyObject = null;
             undo.RecordEnd();
-            var id = BasicUndoRedo(undo, instance, new Guid());
+            BasicUndoRedo(undo, instance);
 
             instance = new UndoObject(true);
             undo.RecordAction(instance, "Basic", () =>
@@ -75,7 +75,7 @@ namespace FlaxEditor.Tests
                 instance.PropertyInteger = 0;
                 instance.PropertyObject = null;
             });
-            id = BasicUndoRedo(undo, instance, id);
+            BasicUndoRedo(undo, instance);
 
             object generic = new UndoObject(true);
             undo.RecordAction(generic, "Basic", (i) =>
@@ -87,7 +87,7 @@ namespace FlaxEditor.Tests
                 ((UndoObject)i).PropertyInteger = 0;
                 ((UndoObject)i).PropertyObject = null;
             });
-            id = BasicUndoRedo(undo, (UndoObject)generic, id);
+            BasicUndoRedo(undo, (UndoObject)generic);
 
             instance = new UndoObject(true);
             undo.RecordAction(instance, "Basic", (i) =>
@@ -99,7 +99,7 @@ namespace FlaxEditor.Tests
                 i.PropertyInteger = 0;
                 i.PropertyObject = null;
             });
-            id = BasicUndoRedo(undo ,instance, id);
+            BasicUndoRedo(undo ,instance);
 
             instance = new UndoObject(true);
             using(new UndoBlock(undo, instance, "Basic"))
@@ -111,28 +111,27 @@ namespace FlaxEditor.Tests
                 instance.PropertyInteger = 0;
                 instance.PropertyObject = null;
             }
-            id = BasicUndoRedo(undo, instance, id);
+            BasicUndoRedo(undo, instance);
         }
 
-        private static Guid BasicUndoRedo(Undo undo, UndoObject instance, Guid lastGuid)
+        private static void BasicUndoRedo(Undo undo, UndoObject instance)
         {
-            Assert.AreEqual("Basic", undo.PerformUndo().ActionString);
+            Assert.AreEqual("Basic", undo.FirstUndoName);
+            undo.PerformUndo();
             Assert.AreEqual(10, instance.FieldInteger);
             Assert.AreEqual(0.1f, instance.FieldFloat);
             Assert.AreNotEqual(null, instance.FieldObject);
             Assert.AreEqual(-10, instance.PropertyInteger);
             Assert.AreEqual(-0.1f, instance.PropertyFloat);
             Assert.AreNotEqual(null, instance.PropertyObject);
-            var redo = undo.PerformRedo();
-            Assert.AreNotEqual(redo.Id, lastGuid);
-            Assert.AreEqual("Basic", redo.ActionString);
+            Assert.AreEqual("Basic", undo.FirstRedoName);
+            undo.PerformRedo();
             Assert.AreEqual(0, instance.FieldInteger);
             Assert.AreEqual(0, instance.FieldFloat);
             Assert.AreEqual(null, instance.FieldObject);
             Assert.AreEqual(0, instance.PropertyInteger);
             Assert.AreEqual(0, instance.PropertyFloat);
             Assert.AreEqual(null, instance.PropertyObject);
-            return redo.Id;
         }
 
         [Test]

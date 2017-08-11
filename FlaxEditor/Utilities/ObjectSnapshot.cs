@@ -109,9 +109,9 @@ namespace FlaxEditor.Utilities
                         continue;
 
                     FieldInfo field = (FieldInfo)m;
-                    var yValue = Values[index++];
-                    var xValue = field.GetValue(obj);
-                    if (!object.Equals(xValue, yValue))
+                    var xValue = Values[index++];
+                    var yValue = field.GetValue(obj);
+                    if (!Equals(xValue, yValue))
                     {
                         //Add a new comparison to the list if the value of the member defined on 'first' isn't equal to the value of the member defined on 'second'.
                         list.Add(new MemberComparison(field, xValue, yValue));
@@ -122,9 +122,9 @@ namespace FlaxEditor.Utilities
                     var prop = (PropertyInfo)m;
                     if (prop.CanRead && prop.GetGetMethod().GetParameters().Length == 0)
                     {
-                        var yValue = Values[index++];
-                        var xValue = prop.GetValue(obj, null);
-                        if (!object.Equals(xValue, yValue))
+                        var xValue = Values[index++];
+                        var yValue = prop.GetValue(obj, null);
+                        if (!Equals(xValue, yValue))
                         {
                             list.Add(new MemberComparison(prop, xValue, yValue));
                         }

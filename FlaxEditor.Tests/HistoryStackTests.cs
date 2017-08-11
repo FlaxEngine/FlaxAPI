@@ -36,8 +36,7 @@ namespace FlaxEditor.Tests
             {
                 return Item.ToString();
             }
-
-            public Guid Id { get; set; }
+            
             public string ActionString { get; set; }
         }
 

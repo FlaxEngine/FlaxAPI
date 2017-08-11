@@ -1,10 +1,11 @@
-// Flax Engine scripting API
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.SceneGraph;
-using FlaxEngine;
 
 namespace FlaxEditor.Modules
 {
@@ -65,11 +66,12 @@ namespace FlaxEditor.Modules
             if (!additive && Selection.Count == selection.Count && Selection.SequenceEqual(selection))
                 return;
 
+            var before = Selection.ToArray();
             if (!additive)
                 Selection.Clear();
             Selection.AddRange(selection);
 
-            SelectionChanged();
+            SelectionChange(before);
         }
 
         /// <summary>
@@ -86,13 +88,14 @@ namespace FlaxEditor.Modules
             if (!additive && Selection.Count == selection.Length && Selection.SequenceEqual(selection))
                 return;
 
+            var before = Selection.ToArray();
             if (!additive)
                 Selection.Clear();
             Selection.AddRange(selection);
 
-            SelectionChanged();
+            SelectionChange(before);
         }
-        
+
         /// <summary>
         /// Selects the specified object.
         /// </summary>
@@ -107,11 +110,12 @@ namespace FlaxEditor.Modules
             if (!additive && Selection.Count == 1 && Selection[0] == selection)
                 return;
 
+            var before = Selection.ToArray();
             if (!additive)
                 Selection.Clear();
             Selection.Add(selection);
 
-            SelectionChanged();
+            SelectionChange(before);
         }
 
         /// <summary>
@@ -119,10 +123,13 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void Deselect(ISceneTreeNode node)
         {
-            if (!Selection.Remove(node))
+            if (!Selection.Contains(node))
                 return;
-            
-            SelectionChanged();
+
+            var before = Selection.ToArray();
+            Selection.Remove(node);
+
+            SelectionChange(before);
         }
 
         /// <summary>
@@ -134,13 +141,24 @@ namespace FlaxEditor.Modules
             if (Selection.Count == 0)
                 return;
 
+            var before = Selection.ToArray();
             Selection.Clear();
 
-            SelectionChanged();
+            SelectionChange(before);
         }
 
-        private void SelectionChanged()
+        private void SelectionChange(ISceneTreeNode[] before)
         {
+            Undo.AddAction(new SelectionChangeAction(before, Selection.ToArray()));
+
+            OnSelectionChanged?.Invoke();
+        }
+
+        internal void OnSelectionUndo(ISceneTreeNode[] toSelect)
+        {
+            Selection.Clear();
+            Selection.AddRange(toSelect);
+
             OnSelectionChanged?.Invoke();
         }
 
