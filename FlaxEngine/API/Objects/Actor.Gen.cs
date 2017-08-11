@@ -31,7 +31,7 @@ namespace FlaxEngine
 		/// Gets the scene object which contains this actor.
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor]
+		[HideInEditor, NoSerializeAttribute]
 		public Scene Scene
 		{
 #if UNIT_TEST_COMPILANT
@@ -138,7 +138,7 @@ namespace FlaxEngine
 		/// Gets actor activation state in hierarchy
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor]
+		[HideInEditor, NoSerializeAttribute]
 		public bool IsActiveInHierarchy
 		{
 #if UNIT_TEST_COMPILANT
@@ -152,7 +152,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's world transform position
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor]
+		[HideInEditor, NoSerializeAttribute]
 		public Vector3 Position
 		{
 #if UNIT_TEST_COMPILANT
@@ -167,7 +167,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's world transform orientation
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor]
+		[HideInEditor, NoSerializeAttribute]
 		public Quaternion Orientation
 		{
 #if UNIT_TEST_COMPILANT
@@ -182,7 +182,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's world transform scale
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor]
+		[HideInEditor, NoSerializeAttribute]
 		public Vector3 Scale
 		{
 #if UNIT_TEST_COMPILANT
@@ -197,7 +197,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's world a three dimensional mathematical transformation
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor]
+		[HideInEditor, NoSerializeAttribute]
 		public Transform Transform
 		{
 #if UNIT_TEST_COMPILANT
@@ -212,7 +212,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's local transform position
 		/// </summary>
 		[UnmanagedCall]
-		[EditorDisplay("Transform", "Position"), EditorOrder(-30)]
+		[EditorDisplay("Transform", "Position"), EditorOrder(-30), NoSerializeAttribute]
 		public Vector3 LocalPosition
 		{
 #if UNIT_TEST_COMPILANT
@@ -227,7 +227,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's local transform orientation
 		/// </summary>
 		[UnmanagedCall]
-		[EditorDisplay("Transform", "Rotation"), EditorOrder(-20)]
+		[EditorDisplay("Transform", "Rotation"), EditorOrder(-20), NoSerializeAttribute]
 		public Quaternion LocalOrientation
 		{
 #if UNIT_TEST_COMPILANT
@@ -242,7 +242,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's local transform scale
 		/// </summary>
 		[UnmanagedCall]
-		[EditorDisplay("Transform", "Scale"), EditorOrder(-10)]
+		[EditorDisplay("Transform", "Scale"), EditorOrder(-10), NoSerializeAttribute]
 		public Vector3 LocalScale
 		{
 #if UNIT_TEST_COMPILANT
@@ -272,7 +272,7 @@ namespace FlaxEngine
 		/// Gets amount of children
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor]
+		[HideInEditor, NoSerializeAttribute]
 		public int ChildCount
 		{
 #if UNIT_TEST_COMPILANT
@@ -464,7 +464,7 @@ namespace FlaxEngine
 		/// Gets bounding box that contains actor object (single actor, no children included)
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor]
+		[HideInEditor, NoSerializeAttribute]
 		public BoundingBox Box
 		{
 #if UNIT_TEST_COMPILANT
@@ -478,7 +478,7 @@ namespace FlaxEngine
 		/// Gets bounding box that contains actor object and all it's children (children included in recursive way)
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor]
+		[HideInEditor, NoSerializeAttribute]
 		public BoundingBox BoxWithChildren
 		{
 #if UNIT_TEST_COMPILANT
@@ -492,7 +492,7 @@ namespace FlaxEngine
 		/// Returns true if actor has loaded content
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor]
+		[HideInEditor, NoSerializeAttribute]
 		public bool HasContentLoaded
 		{
 #if UNIT_TEST_COMPILANT

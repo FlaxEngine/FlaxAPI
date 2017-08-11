@@ -37,7 +37,7 @@ namespace FlaxEngine
         /// Angles order (xyz): pitch, yaw and roll.
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor]
+        [HideInEditor, NoSerializeAttribute]
         public Vector3 EulerAngles
         {
 #if UNIT_TEST_COMPILANT
@@ -65,7 +65,7 @@ namespace FlaxEngine
         /// Angles order (xyz): pitch, yaw and roll.
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor]
+        [HideInEditor, NoSerializeAttribute]
         public Vector3 LocaEulerAngles
         {
 #if UNIT_TEST_COMPILANT
@@ -90,7 +90,7 @@ namespace FlaxEngine
         /// <summary>
         /// Gets or sets the actor direction vector (aka forward direction).
         /// </summary>
-        [HideInEditor]
+        [HideInEditor, NoSerializeAttribute]
         public Vector3 Direction
 	    {
 	        get { return Vector3.ForwardLH * Orientation; }
@@ -116,7 +116,7 @@ namespace FlaxEngine
         /// Returns true if actor has parent
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor]
+        [HideInEditor, NoSerializeAttribute]
         public bool HasParent
         {
 #if UNIT_TEST_COMPILANT
@@ -130,7 +130,7 @@ namespace FlaxEngine
         /// Returns true if actor has any children
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor]
+        [HideInEditor, NoSerializeAttribute]
         public bool HasChildren
         {
 #if UNIT_TEST_COMPILANT
