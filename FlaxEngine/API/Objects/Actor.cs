@@ -3,21 +3,16 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Base class for all actor types on the scene
-	/// </summary>
-	public abstract partial class Actor : ITransformable
+    /// <summary>
+    /// Base class for all actor types on the scene
+    /// </summary>
+    public abstract partial class Actor : ITransformable
     {
         // TODO: Instantiate from prefab
-        // TODO: Destroy
         // TODO: TransformDirection, TranformPoint
         // TODO: InverseTransformDirection, InverseTransformPoint
         // TODO: LootAt, Translate, Rotate

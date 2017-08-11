@@ -17,6 +17,7 @@ namespace FlaxEngine
 	/// <summary>
 	/// Spot Light can emmit light from point in space in a given direction
 	/// </summary>
+	[Serializable]
 	public sealed partial class SpotLight : Actor
 	{
 		/// <summary>

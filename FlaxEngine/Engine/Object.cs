@@ -8,6 +8,7 @@ namespace FlaxEngine
     /// <summary>
     /// Base class for all objects Flax can reference.
     /// </summary>
+    [Serializable]
     public abstract class Object
     {
         [NonSerialized]

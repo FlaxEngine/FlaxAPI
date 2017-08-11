@@ -17,6 +17,7 @@ namespace FlaxEngine
 	/// <summary>
 	/// Empty actor is usefull to create hierarchy and/or hold scripts. See <see cref="Script"/>.
 	/// </summary>
+	[Serializable]
 	public sealed partial class EmptyActor : Actor
 	{
 		/// <summary>

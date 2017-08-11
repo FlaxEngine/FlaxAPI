@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-	public sealed partial class Sky
+    public sealed partial class Sky
 	{
 	}
 }

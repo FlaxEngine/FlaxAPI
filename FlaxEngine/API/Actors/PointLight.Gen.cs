@@ -17,6 +17,7 @@ namespace FlaxEngine
 	/// <summary>
 	/// Point Light can emmit light from point in space
 	/// </summary>
+	[Serializable]
 	public sealed partial class PointLight : Actor
 	{
 		/// <summary>

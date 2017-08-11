@@ -17,6 +17,7 @@ namespace FlaxEngine
 	/// <summary>
 	/// Box Brush actor
 	/// </summary>
+	[Serializable]
 	public sealed partial class BoxBrush : Actor
 	{
 		/// <summary>

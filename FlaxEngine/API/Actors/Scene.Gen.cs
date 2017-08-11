@@ -17,6 +17,7 @@ namespace FlaxEngine
 	/// <summary>
 	/// Scene root actor object
 	/// </summary>
+	[Serializable]
 	public sealed partial class Scene : Actor
 	{
 		/// <summary>
