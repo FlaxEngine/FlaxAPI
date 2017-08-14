@@ -5,28 +5,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-    public class PersistentDataConfig
+    /// <summary>
+    /// Configuration for persistant data
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct PersistentDataConfig
     {
         /// <summary>
         /// Logs an error if tried to write to ReadOnly file
         /// </summary>
         public bool ReadOnly { get; set; }
         /// <summary>
-        /// Preloades persistetnt data asynchronysly
+        /// Preloades persistetnt data settings
         /// </summary>
-        /// <remarks>
-        /// Default loads on first use
-        /// </remarks>
-        public PreloadSettings PreloadFile { get; set; }
-        /// <summary>
-        /// Defines how automatic cache should behave between scenes changing
-        /// </summary>
-        public CacheSettings CacheOptions { get; set; }
+        //public PreloadSettingsEnum PreloadFile { get; set; }
         /// <summary>
         /// Defines encrypting and decrypting options
         /// </summary>
@@ -55,25 +53,86 @@ namespace FlaxEngine
         /// </summary>
         public bool ValidateWithChecksum { get; set; }
 
-        public class FlushSettings
+        /// <summary>
+        /// Configuration options for automatic or manual flush
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct FlushSettings
         {
+            /// <summary>
+            /// Overrides all other flush options if true. Do not perform any automatic flushing
+            /// </summary>
+            public bool IsManualFlush { get; set; }
         }
 
-        public class PreloadSettings
+        /// <summary>
+        /// Enum defining preload data mode
+        /// </summary>
+        public enum PreloadSettingsEnum
         {
+            /// <summary>
+            /// PersistentData will not be loaded automaticaly
+            /// <para>Load has to be performed manualy, or data will be set to default until overwritten</para>
+            /// </summary>
+            Never = 0,
+            /// <summary>
+            /// PersistentData will be loaded automaticaly before scene loading is performed
+            /// </summary>
+            /// <remarks>
+            /// Most usefull when scene requires some data from file. Same effect will be achieved when used <see cref="OnFirstUse"/>
+            /// </remarks>
+            BeforeSceneLoad = 10,
+            /// <summary>
+            /// PersistentData will be loaded automaticaly before scene loading is performed. 
+            /// </summary>
+            /// <remarks>Most of the scene initalization is performed, but object creation is waiting for data to be loaded</remarks>
+            /// <seealso cref="BeforeSceneLoad"/>
+            BeforeSceneLoadAsynchronus = 11,
+            /// <summary>
+            /// PersistentData will be loaded after scene is loaded and all objects on the scene are created and before Awake is executed
+            /// <para>
+            /// Most usefull when object are initialized with persistant data but we want to include settings on first loading screen.
+            /// </para>
+            /// <para>
+            /// Same effect will be achieved when used <see cref="OnFirstUse"/>
+            /// </para>
+            /// </summary>
+            BeforeObjectInitialization = 20,
+            /// <summary>
+            /// PersistentData will be loaded after scene is loaded and all objects on the scene are created and before Awake is executed
+            /// </summary>
+            /// <remarks>Most usefull when object are initialized with persistant data but we want to include settings on first loading screen.</remarks>
+            /// <seealso cref="BeforeObjectInitialization"/>
+            BeforeObjectInitializationAsynchronus = 21,
+            /// <summary>
+            /// Persistent data is loaded before first Get or Save is used
+            /// </summary>
+            OnFirstUse = 50,
         }
 
-
-        public class CacheSettings
-        {
-        }
     }
 
-    public class CompressionSettings
+    /// <summary>
+    /// Configuration for compression
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CompressionSettings
     {
+        /// <summary>
+        /// Use plain text, do not compress files
+        /// </summary>
+        public bool UsePlainText { get; set; }
     }
 
-    public class CypherSettings
+    /// <summary>
+    /// Configuration for cypher
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CypherSettings
     {
+        /// <summary>
+        /// Do not use cypher, and leave plain text
+        /// </summary>
+        public bool UsePlainText { get; set; }
     }
 }
