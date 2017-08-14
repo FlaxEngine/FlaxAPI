@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FlaxEngine</RootNamespace>
     <AssemblyName>FlaxEngine</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -59,7 +59,6 @@
     <Compile Include="API\Actors\DirectionalLight.Gen.cs">
       <DependentUpon>DirectionalLight.cs</DependentUpon>
     </Compile>
-    <Compile Include="API\Actors\EmptyActor.Gen.cs" />
     <Compile Include="API\Actors\EnvironmentProbe.cs" />
     <Compile Include="API\Actors\EnvironmentProbe.Gen.cs">
       <DependentUpon>EnvironmentProbe.cs</DependentUpon>
@@ -86,23 +85,13 @@
     <Compile Include="API\Actors\SpotLight.Gen.cs">
       <DependentUpon>SpotLight.cs</DependentUpon>
     </Compile>
-    <Compile Include="API\Assets\BinaryAsset.cs" />
-    <Compile Include="API\Assets\BinaryAsset.Gen.cs" />
-    <Compile Include="API\BinaryAssets\CubeTexture.cs" />
-    <Compile Include="API\BinaryAssets\CubeTexture.Gen.cs" />
-    <Compile Include="API\BinaryAssets\FontAsset.cs" />
-    <Compile Include="API\BinaryAssets\FontAsset.Gen.cs" />
-    <Compile Include="API\BinaryAssets\Model.cs" />
-    <Compile Include="API\BinaryAssets\Model.Gen.cs" />
-    <Compile Include="API\BinaryAssets\SpriteAtlas.cs" />
-    <Compile Include="API\BinaryAssets\SpriteAtlas.Gen.cs" />
-    <Compile Include="API\BinaryAssets\Texture.cs" />
-    <Compile Include="API\BinaryAssets\Texture.Gen.cs" />
+    <Compile Include="API\Assets\FontAsset.cs" />
+    <Compile Include="API\Assets\FontAsset.Gen.cs">
+      <DependentUpon>FontAsset.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Assets\SpriteAtlas.cs" />
+    <Compile Include="API\Assets\SpriteAtlas.Gen.cs" />
     <Compile Include="API\CreateWindowSettings.cs" />
-    <Compile Include="API\MaterialBases\Material.cs" />
-    <Compile Include="API\MaterialBases\Material.Gen.cs" />
-    <Compile Include="API\MaterialBases\MaterialInstance.cs" />
-    <Compile Include="API\MaterialBases\MaterialInstance.Gen.cs" />
     <Compile Include="API\Objects\Actor.cs" />
     <Compile Include="API\Objects\Actor.Gen.cs">
       <DependentUpon>Actor.cs</DependentUpon>
@@ -117,14 +106,6 @@
     <Compile Include="API\Objects\Font.Gen.cs">
       <DependentUpon>Font.cs</DependentUpon>
     </Compile>
-    <Compile Include="API\Objects\GPUContext.cs" />
-    <Compile Include="API\Objects\GPUContext.Gen.cs" />
-    <Compile Include="API\Objects\RenderBuffers.cs" />
-    <Compile Include="API\Objects\RenderBuffers.Gen.cs" />
-    <Compile Include="API\Objects\RenderTarget.cs" />
-    <Compile Include="API\Objects\RenderTarget.Gen.cs" />
-    <Compile Include="API\Objects\RenderTask.cs" />
-    <Compile Include="API\Objects\RenderTask.Gen.cs" />
     <Compile Include="API\Objects\Script.cs" />
     <Compile Include="API\Objects\Script.Gen.cs">
       <DependentUpon>Script.cs</DependentUpon>
@@ -137,16 +118,12 @@
     <Compile Include="API\Static\Content.Gen.cs">
       <DependentUpon>Content.cs</DependentUpon>
     </Compile>
-    <Compile Include="API\Static\DebugDraw.cs" />
-    <Compile Include="API\Static\DebugDraw.Gen.cs" />
     <Compile Include="API\Static\Globals.cs" />
     <Compile Include="API\Static\Globals.Gen.cs" />
     <Compile Include="API\Static\Input.cs" />
     <Compile Include="API\Static\Input.Gen.cs">
       <DependentUpon>Input.cs</DependentUpon>
     </Compile>
-    <Compile Include="API\Static\MessageBox.cs" />
-    <Compile Include="API\Static\MessageBox.Gen.cs" />
     <Compile Include="API\Static\Render2D.cs" />
     <Compile Include="API\Static\Render2D.Gen.cs">
       <DependentUpon>Render2D.cs</DependentUpon>
@@ -159,32 +136,20 @@
       <DependentUpon>Time.cs</DependentUpon>
     </Compile>
     <Compile Include="AssetTypes\IESProfile.cs" />
-    <Compile Include="Attributes\Editor\EditorDisplayAttribute.cs" />
     <Compile Include="Attributes\MemberCollectionAttribute.cs" />
-    <Compile Include="Attributes\NoSerializeAttribute.cs" />
     <Compile Include="Attributes\PersisitentDataAttribute.cs" />
-    <Compile Include="Attributes\SerializeAttribute.cs" />
     <Compile Include="Configurations\PersistentDataConfig.cs" />
-    <Compile Include="Engine\ITransformable.cs" />
-    <Compile Include="Engine\Mesh.cs" />
-    <Compile Include="Engine\MeshInfo.cs" />
-    <Compile Include="Engine\ModelLOD.cs" />
-    <Compile Include="Enums\Quality.cs" />
     <Compile Include="Enums\UI.cs" />
     <Compile Include="Attributes\Editor\CustomEditorAttribute.cs" />
-    <Compile Include="Attributes\Editor\EditorOrderAttribute.cs" />
+    <Compile Include="Attributes\Editor\EditorIndexAttribute.cs" />
     <Compile Include="Collections\CircularBuffer.cs" />
     <Compile Include="Collections\IOrderedDictionary.cs" />
     <Compile Include="Collections\OrderedDictionary.cs">
       <DependentUpon>IOrderedDictionary.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\Common\Button.cs" />
-    <Compile Include="GUI\Common\CheckBox.cs" />
-    <Compile Include="GUI\Common\ComboBox.cs" />
-    <Compile Include="GUI\Common\Label.cs" />
-    <Compile Include="GUI\Common\ProgressBar.cs" />
-    <Compile Include="GUI\Common\Spacer.cs" />
     <Compile Include="GUI\ContainerControl.cs" />
+    <Compile Include="GUI\ContainerControlChildrenSized.cs" />
     <Compile Include="GUI\ContextMenu\ContextMenu.cs" />
     <Compile Include="GUI\ContextMenu\ContextMenuBase.cs" />
     <Compile Include="GUI\ContextMenu\ContextMenuButton.cs" />
@@ -195,38 +160,22 @@
       <DependentUpon>Control.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\Control.cs" />
-    <Compile Include="GUI\Docking\DockHintWindow.cs" />
     <Compile Include="GUI\Docking\DockPanel.cs" />
     <Compile Include="GUI\Docking\DockPanelProxy.cs" />
     <Compile Include="GUI\Docking\DockWindow.cs" />
     <Compile Include="GUI\Docking\FloatWindowDockPanel.cs" />
     <Compile Include="GUI\Docking\MasterDockPanel.cs" />
-    <Compile Include="GUI\DragData.cs" />
-    <Compile Include="GUI\DragDataFiles.cs" />
-    <Compile Include="GUI\DragDataText.cs" />
     <Compile Include="GUI\Enums.cs" />
-    <Compile Include="GUI\Input\ColorValueBox.cs" />
-    <Compile Include="GUI\Input\FloatValueBox.cs" />
-    <Compile Include="GUI\Input\IntValueBox.cs" />
     <Compile Include="GUI\Input\TextBox.cs" />
     <Compile Include="GUI\Input\TextBox.Keys.cs">
       <DependentUpon>TextBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Input\ValueBox.cs" />
-    <Compile Include="GUI\Panels\DropPanel.cs" />
-    <Compile Include="GUI\Panels\HorizontalPanel.cs" />
     <Compile Include="GUI\Panels\HScrollBar.cs" />
-    <Compile Include="GUI\Panels\PanelWithMargins.cs" />
     <Compile Include="GUI\Panels\ScrollBar.cs" />
     <Compile Include="GUI\Panels\Panel.cs" />
     <Compile Include="GUI\Panels\SplitPanel.cs" />
-    <Compile Include="GUI\Panels\VerticalPanel.cs" />
     <Compile Include="GUI\Panels\VScrollBar.cs" />
-    <Compile Include="GUI\RenderOutputControl.cs" />
-    <Compile Include="GUI\ScrollableControl.cs" />
     <Compile Include="GUI\Style.cs" />
-    <Compile Include="GUI\Tabs\Tab.cs" />
-    <Compile Include="GUI\Tabs\Tabs.cs" />
     <Compile Include="GUI\Tree\Tree.cs" />
     <Compile Include="GUI\Tree\TreeNode.cs" />
     <Compile Include="GUI\Window.cs" />
@@ -236,9 +185,14 @@
     <Compile Include="Assertions\AssertionException.cs" />
     <Compile Include="Assertions\AssertionMessageUtil.cs" />
     <Compile Include="Assertions\FloatComparer.cs" />
+    <Compile Include="AssetTypes\CubeTexture.cs" />
     <Compile Include="AssetTypes\Document.cs" />
+    <Compile Include="AssetTypes\Material.cs" />
     <Compile Include="AssetTypes\MaterialBase.cs" />
+    <Compile Include="AssetTypes\MaterialInstance.cs" />
+    <Compile Include="AssetTypes\Model.cs" />
     <Compile Include="AssetTypes\Shader.cs" />
+    <Compile Include="AssetTypes\Texture.cs" />
     <Compile Include="Bodies\BoxBody.cs" />
     <Compile Include="Enums\BrushMode.cs" />
     <Compile Include="Enums\Input.Enums.cs" />
@@ -257,7 +211,7 @@
     <Compile Include="Engine\Debug.cs" />
     <Compile Include="Internals\DebugLogHandler.cs" />
     <Compile Include="Attributes\ExecuteInEditModeAttribute.cs" />
-    <Compile Include="Attributes\Editor\HideInEditorAttribute.cs" />
+    <Compile Include="Attributes\HideInInspectorAttribute.cs" />
     <Compile Include="Engine\ILogger.cs" />
     <Compile Include="Engine\ILogHandler.cs" />
     <Compile Include="Engine\Logger.cs">
@@ -274,7 +228,6 @@
     <Compile Include="Math\HalfUtils.cs" />
     <Compile Include="Math\Mathf.cs" />
     <Compile Include="Math\Matrix.cs" />
-    <Compile Include="Math\Matrix2x2.cs" />
     <Compile Include="Math\Matrix3x3.cs" />
     <Compile Include="Math\OrientedBoundingBox.cs" />
     <Compile Include="Math\Rectangle.cs" />
@@ -290,6 +243,7 @@
     <Compile Include="Math\Quaternion.cs" />
     <Compile Include="Math\Ray.cs" />
     <Compile Include="Attributes\RequireChildActorAttribute.cs" />
+    <Compile Include="Attributes\SerializeFieldAttribute.cs" />
     <Compile Include="Enums\ShadowsCastingMode.cs" />
     <Compile Include="Enums\StaticFlags.cs" />
     <Compile Include="Engine\Exceptions\UnassignedReferenceException.cs" />
@@ -299,21 +253,9 @@
     <Compile Include="Math\Vector2.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Math\Vector4.cs" />
-    <Compile Include="Rendering\CullMode.cs" />
-    <Compile Include="Rendering\CustomRenderTask.cs" />
-    <Compile Include="Rendering\DrawCallsCollector.cs" />
-    <Compile Include="Rendering\MaterialInfo.cs" />
-    <Compile Include="Rendering\MaterialParameter.cs" />
-    <Compile Include="Rendering\MSAALevel.cs" />
     <Compile Include="Rendering\PixelFormat.cs" />
     <Compile Include="Rendering\PixelFormatExtensions.cs" />
-    <Compile Include="Rendering\PostProcessEffect.cs" />
-    <Compile Include="Rendering\RenderPass.cs" />
-    <Compile Include="Rendering\RenderView.cs" />
-    <Compile Include="Rendering\SceneRenderTask.cs" />
-    <Compile Include="Rendering\TextureFlags.cs" />
-    <Compile Include="Rendering\ViewFlags.cs" />
-    <Compile Include="Rendering\ViewMode.cs" />
+    <Compile Include="TEST.cs" />
     <Compile Include="Utilities\Extenstions.cs" />
     <Compile Include="Utilities\State.cs" />
     <Compile Include="Utilities\StateMachine.cs" />
@@ -328,7 +270,14 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="AfterBuild">
-    <Exec Command="call &quot;$(SolutionDir)onbuild.bat&quot;" Condition=" '$(OS)' == 'Windows_NT' " />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /i /s /y "$(TargetDir)..\." "$(SolutionDir)..\Source\Bin\Editor\Assemblies" /exclude:$(SolutionDir)excludedFileList.txt</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
   </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
 </Project>
