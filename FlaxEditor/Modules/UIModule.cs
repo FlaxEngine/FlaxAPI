@@ -10,6 +10,7 @@ using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 using FlaxEngine.GUI.Docking;
+using FlaxEngine.Json;
 
 namespace FlaxEditor.Modules
 {
@@ -186,6 +187,13 @@ namespace FlaxEditor.Modules
             InitToolstrip(mainWindow);
             InitStatusBar(mainWindow);
             InitDockPanel(mainWindow);
+
+
+            var actor = ModelActor.New();
+            var str = InternalJsonSerializer.Serialize(actor);
+            Debug.Log("Serialized object: ");
+            Debug.Log(str);
+            FlaxEngine.Object.Destroy(ref actor);
         }
 
         /// <inheritdoc />

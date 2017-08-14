@@ -11,36 +11,49 @@ namespace FlaxEditor
     /// Objects selection change action.
     /// </summary>
     /// <seealso cref="IUndoAction" />
-    public class SelectionChangeAction : IUndoAction
+    public class SelectionChangeAction : UndoActionBase<SelectionChangeAction.DataStorage>
     {
-        // Note: we use SceneTreeNode ids because they may be removed so we have to find them on action rollback
-        private readonly Guid[] _before;
-        private readonly Guid[] _after;
+        /// <summary>
+        /// The undo data.
+        /// </summary>
+        [Serializable]
+        public struct DataStorage
+        {
+            /// <summary>
+            /// The 'before' selection.
+            /// </summary>
+            public SceneTreeNode[] Before;
+
+            /// <summary>
+            /// The 'after' selection.
+            /// </summary>
+            public SceneTreeNode[] After;
+        }
 
         internal SelectionChangeAction(SceneTreeNode[] before, SceneTreeNode[] after)
         {
-            _before = new Guid[before.Length];
-            for (int i = 0; i < before.Length; i++)
-                _before[i] = before[i].ID;
-
-            _after = new Guid[after.Length];
-            for (int i = 0; i < after.Length; i++)
-                _after[i] = after[i].ID;
+            Data = new DataStorage
+            {
+                Before = before,
+                After = after,
+            };
         }
 
         /// <inheritdoc />
-        public string ActionString => "Selection change";
+        public override string ActionString => "Selection change";
 
         /// <inheritdoc />
-        public void Do()
+        public override void Do()
         {
-            //Editor.Instance.SceneEditing.OnSelectionUndo(_after);
+            var data = Data;
+            Editor.Instance.SceneEditing.OnSelectionUndo(data.After);
         }
 
         /// <inheritdoc />
-        public void Undo()
+        public override void Undo()
         {
-            //Editor.Instance.SceneEditing.OnSelectionUndo(_before);
+            var data = Data;
+            Editor.Instance.SceneEditing.OnSelectionUndo(data.Before);
         }
     }
 }
