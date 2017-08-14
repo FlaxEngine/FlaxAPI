@@ -50,11 +50,38 @@ namespace FlaxEditor.Utilities
         {
             if (Member.MemberType == MemberTypes.Field)
             {
-                ((FieldInfo)Member).SetValue(instance, value);
+                var field = (FieldInfo)Member;
+
+                if (value != null)
+                {
+                    if (value is long && field.FieldType == typeof(int))
+                    {
+                        value = (int)(long)value;
+                    }
+                    else if (value is double && field.FieldType == typeof(float))
+                    {
+                        value = (float)(double)value;
+                    }
+                }
+
+                field.SetValue(instance, value);
             }
             else
             {
                 var property = (PropertyInfo)Member;
+
+                if (value != null)
+                {
+                    if (value is long && property.PropertyType == typeof(int))
+                    {
+                        value = (int)(long)value;
+                    }
+                    else if (value is double && property.PropertyType == typeof(float))
+                    {
+                        value = (float)(double)value;
+                    }
+                }
+
                 if (property.SetMethod != null)
                     property.SetValue(instance, value);
             }

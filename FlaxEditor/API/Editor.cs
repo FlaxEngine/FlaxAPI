@@ -12,6 +12,7 @@ using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.Assertions;
+using FlaxEngine.Json;
 
 namespace FlaxEditor
 {
@@ -24,6 +25,11 @@ namespace FlaxEditor
         /// The Editor instance.
         /// </value>
         public static Editor Instance { get; private set; }
+
+        static Editor()
+        {
+            InternalJsonSerializer.Settings.Converters.Add(new SceneTreeNodeConverter());
+        }
 
         private readonly List<EditorModule> _modules = new List<EditorModule>(16);
         private bool _isAfterInit;

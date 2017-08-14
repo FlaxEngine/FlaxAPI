@@ -469,7 +469,8 @@ namespace FlaxEditor.Content.Thumbnails
         /// <inheritdoc />
         public override void OnExit()
         {
-            _task.Enabled = false;
+            if (_task != null)
+                _task.Enabled = false;
 
             lock (_requests)
             {
@@ -480,7 +481,7 @@ namespace FlaxEditor.Content.Thumbnails
             }
 
             _guiRoot.Dispose();
-            _task.Dispose();
+            _task?.Dispose();
             Object.Destroy(ref _output);
         }
 

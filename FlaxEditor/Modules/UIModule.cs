@@ -187,15 +187,8 @@ namespace FlaxEditor.Modules
             InitToolstrip(mainWindow);
             InitStatusBar(mainWindow);
             InitDockPanel(mainWindow);
-
-
-            var actor = ModelActor.New();
-            var str = InternalJsonSerializer.Serialize(actor);
-            Debug.Log("Serialized object: ");
-            Debug.Log(str);
-            FlaxEngine.Object.Destroy(ref actor);
         }
-
+        
         /// <inheritdoc />
         public override void OnEndInit()
         {

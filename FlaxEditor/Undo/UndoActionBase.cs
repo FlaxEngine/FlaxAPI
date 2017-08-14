@@ -3,21 +3,54 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using FlaxEditor.SceneGraph;
+using FlaxEngine;
+using FlaxEngine.Json;
+using Newtonsoft.Json;
 
 namespace FlaxEditor
 {
+    internal class SceneTreeNodeConverter : JsonConverter
+    {
+        /// <inheritdoc />
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            Guid id = Guid.Empty;
+            if (value is SceneTreeNode obj)
+                id = obj.ID;
+            
+            writer.WriteValue(id);
+        }
+
+        /// <inheritdoc />
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            if (reader.TokenType == JsonToken.String)
+            {
+                var id = Guid.Parse((string)reader.Value);
+                return SceneGraphFactory.FindNode(id);
+            }
+
+            return null;
+        }
+
+        /// <inheritdoc />
+        public override bool CanConvert(Type objectType)
+        {
+            return typeof(SceneTreeNode).IsAssignableFrom(objectType);
+        }
+    }
+
     /// <summary>
     /// Base class for <see cref="IUndoAction"/> implementations. Stores undo data serialized and preserves references to the game objects.
     /// </summary>
     /// <typeparam name="TData">The type of the data. Must have <see cref="SerializableAttribute"/>.</typeparam>
     /// <seealso cref="FlaxEditor.IUndoAction" />
-    public abstract class UndoActionBase<TData> : IUndoAction
+    public abstract class UndoActionBase<TData> : IUndoAction where TData: struct
     {
-        //private byte[] _data;
-        private TData _data;
+        private string _data;
 
         /// <summary>
         /// Gets or sets the serialized undo data.
@@ -27,24 +60,11 @@ namespace FlaxEditor
         /// </value>
         protected TData Data
         {
-            get
-            {
-                /*using (var ms = new MemoryStream(_data))
-                {
-                    var formatter = Formatter;
-                    return (TData)formatter.Deserialize(ms);
-                }*/
-                return _data;
-            }
+            get => JsonConvert.DeserializeObject<TData>(_data, InternalJsonSerializer.Settings);
             set
             {
-                /*using (var ms = new MemoryStream())
-                {
-                    var formatter = Formatter;
-                    formatter.Serialize(ms, value);
-                    _data = ms.ToArray();
-                }*/
-                _data = value;
+                _data = JsonConvert.SerializeObject(value, Formatting.Indented, InternalJsonSerializer.Settings);
+                Debug.Log("Serialized undo: " + _data);
             }
         }
 

@@ -45,15 +45,10 @@ namespace FlaxEngine.Json.JsonCustomSerializers
         private bool IgnoreAttributes(PropertyInfo info)
         {
             var attr = info.GetCustomAttributes();
-            foreach (var type in _attributesIgnoreList)
+            foreach (var attribute in attr)
             {
-                foreach (var attribute in attr)
-                {
-                    if (attribute.GetType() == type)
-                    {
-                        return false;
-                    }
-                }
+                if (_attributesIgnoreList.Contains(attribute.GetType()))
+                    return false;
             }
             return true;
         }

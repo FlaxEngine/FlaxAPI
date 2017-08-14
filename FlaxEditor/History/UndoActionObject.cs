@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using FlaxEditor.Utilities;
 
 namespace FlaxEditor.History
@@ -22,19 +23,37 @@ namespace FlaxEditor.History
         public struct DataStorage
         {
             /// <summary>
-            /// The difference.
+            /// The values 1.
             /// </summary>
-            public MemberComparison[] Diff;
+            public object[] Values1;
 
             /// <summary>
-            /// The target object being modified.
+            /// The values 2.
             /// </summary>
+            public object[] Values2;
+
+            /// <summary>
+            /// The target object being modified (as FlaxEngine.Object).
+            /// </summary>
+            public FlaxEngine.Object Ref1;
+
+            /// <summary>
+            /// The target object being modified (as FlaxEditor.SceneGraph.SceneTreeNode).
+            /// </summary>
+            public SceneGraph.SceneTreeNode Ref2;
+        }
+
+        private struct DataPrepared
+        {
+            public MemberComparison[] Diff;
             public object TargetInstance;
         }
 
         // For objects that cannot be referenced in undo action like: FlaxEngine.Object or SceneTreeNode we store them in DataStorage,
         // otherwise here:
         private object TargetInstance;
+
+        private MemberInfo[] Members;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UndoActionObject"/> class.
@@ -48,10 +67,40 @@ namespace FlaxEditor.History
 
             ActionString = actionString;
             TargetInstance = useDataStorageForInstance ? null : targetInstance;
+
+            int count = diff.Count;
+            var values1 = new object[count];
+            var values2 = new object[count];
+            Members = new MemberInfo[count];
+            for (int i = 0; i < count; i++)
+            {
+                values1[i] = diff[i].Value1;
+                values2[i] = diff[i].Value2;
+                Members[i] = diff[i].Member;
+            }
+
             Data = new DataStorage
             {
-                Diff = diff.ToArray(),
-                TargetInstance = useDataStorageForInstance ? targetInstance : null
+                Values1 = values1,
+                Values2 = values2,
+                Ref1 = useDataStorageForInstance ? targetInstance as FlaxEngine.Object : null,
+                Ref2 = useDataStorageForInstance ? targetInstance as SceneGraph.SceneTreeNode : null,
+            };
+        }
+
+        private DataPrepared PrepareData()
+        {
+            var data = Data;
+            var count = data.Values1.Length;
+            var diff = new MemberComparison[count];
+            for (int i = 0; i < count; i++)
+            {
+                diff[i] = new MemberComparison(Members[i], data.Values1[i], data.Values2[i]);
+            }
+            return new DataPrepared
+            {
+                Diff = diff,
+                TargetInstance = data.Ref1 ?? data.Ref2 ?? TargetInstance,
             };
         }
 
@@ -61,24 +110,22 @@ namespace FlaxEditor.History
         /// <inheritdoc />
         public override void Do()
         {
-            var data = Data;
-            var targetInstance = data.TargetInstance ?? TargetInstance;
+            var data = PrepareData();
             for (var i = 0; i < data.Diff.Length; i++)
             {
                 var diff = data.Diff[i];
-                diff.SetMemberValue(targetInstance, diff.Value2);
+                diff.SetMemberValue(data.TargetInstance, diff.Value2);
             }
         }
 
         /// <inheritdoc />
         public override void Undo()
         {
-            var data = Data;
-            var targetInstance = data.TargetInstance ?? TargetInstance;
+            var data = PrepareData();
             for (var i = 0; i < data.Diff.Length; i++)
             {
                 var diff = data.Diff[i];
-                diff.SetMemberValue(targetInstance, diff.Value1);
+                diff.SetMemberValue(data.TargetInstance, diff.Value1);
             }
         }
     }
