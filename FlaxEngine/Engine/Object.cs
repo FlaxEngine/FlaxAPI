@@ -38,10 +38,12 @@ namespace FlaxEngine
         /// </summary>
         ~Object()
         {
+#if !UNIT_TEST_COMPILANT
             if (unmanagedPtr != IntPtr.Zero)
             {
                 Internal_ManagedInstanceDeleted(unmanagedPtr);
             }
+#endif
         }
 
         /// <summary>
@@ -49,10 +51,29 @@ namespace FlaxEngine
         /// All unused objects should be released using <see cref="Destroy"/>.
         /// </summary>
         /// <typeparam name="T">Type of the object.</typeparam>
-        /// <returns>Create object.</returns>
+        /// <returns>Created object.</returns>
         public static T New<T>() where T : Object
         {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
             return Internal_Create(typeof(T)) as T;
+#endif
+        }
+
+        /// <summary>
+        /// Finds the object with the given ID.
+        /// </summary>
+        /// <param name="id">Unique ID of the object.</param>
+        /// <typeparam name="T">Type of the object.</typeparam>
+        /// <returns>Found object or null if missing.</returns>
+        public static T Find<T>(ref Guid id) where T : Object
+        {
+#if UNIT_TEST_COMPILANT
+            return null;
+#else
+            return Internal_FindObject(ref id) as T;
+#endif
         }
 
         /// <summary>
@@ -66,7 +87,9 @@ namespace FlaxEngine
         /// <param name="timeLeft">The time left to destroy object (in seconds).</param>
         public static void Destroy(Object obj, float timeLeft = 0.0f)
         {
+#if !UNIT_TEST_COMPILANT
             Internal_Destroy(GetUnmanagedPtr(obj), timeLeft);
+#endif
         }
 
         /// <summary>
@@ -82,7 +105,9 @@ namespace FlaxEngine
         {
             if (obj)
             {
+#if !UNIT_TEST_COMPILANT
                 Internal_Destroy(obj.unmanagedPtr, timeLeft);
+#endif
                 obj = null;
             }
         }
@@ -107,7 +132,7 @@ namespace FlaxEngine
             return unmanagedPtr.GetHashCode();
         }
 
-        #region Internal Calls
+#region Internal Calls
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Object Internal_Create(Type type);
@@ -121,6 +146,6 @@ namespace FlaxEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Object Internal_FindObject(ref Guid id);
 
-        #endregion
+#endregion
     }
 }

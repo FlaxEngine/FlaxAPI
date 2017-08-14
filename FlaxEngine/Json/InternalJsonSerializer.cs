@@ -26,7 +26,7 @@ namespace FlaxEngine.Json
             if (reader.TokenType == JsonToken.String)
             {
                 var id = Guid.Parse((string)reader.Value);
-                return Object.Internal_FindObject(ref id);
+                return Object.Find<Object>(ref id);
             }
 
             return null;

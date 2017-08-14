@@ -3,10 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using FlaxEditor.SceneGraph;
-using FlaxEngine;
 using FlaxEngine.Json;
 using Newtonsoft.Json;
 
@@ -61,25 +58,7 @@ namespace FlaxEditor
         protected TData Data
         {
             get => JsonConvert.DeserializeObject<TData>(_data, InternalJsonSerializer.Settings);
-            set
-            {
-                _data = JsonConvert.SerializeObject(value, Formatting.Indented, InternalJsonSerializer.Settings);
-                Debug.Log("Serialized undo: " + _data);
-            }
-        }
-
-        /// <summary>
-        /// Gets the formatter used to data serialization.
-        /// </summary>
-        /// <value>
-        /// The formatter.
-        /// </value>
-        protected IFormatter Formatter
-        {
-            get
-            {
-                return new BinaryFormatter();
-            }
+            set => _data = JsonConvert.SerializeObject(value, Formatting.Indented, InternalJsonSerializer.Settings);
         }
         
         /// <inheritdoc />
