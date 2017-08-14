@@ -311,7 +311,7 @@ namespace FlaxEditor.Modules
                 // Search whole tree if node was not found
                 if (node == null)
                 {
-                    node = Root.Find(actor);
+                    node = GetActorNode(actor);
                     if (node == null)
                         return;
                 }
@@ -364,24 +364,8 @@ namespace FlaxEditor.Modules
             if (actor == null)
                 return null;
 
-            // Special case if actor is a scene
-            if (actor is Scene)
-                return Root.FindChild(actor) as SceneNode;
-
-            // Get scene node
-            var scene = actor.Scene;
-            var sceneNode = Root.FindChild(scene);
-            if (sceneNode == null)
-                return null;
-
-            // Early out for not linked actors - only scene actors may have missing parent
-            if (actor.Parent == null)
-                return null;
-
-            // TODO: if it's a bottleneck use some actor nodes caching or sth (cache dictionary per scene tree, use Actor.ID for lookup)
-
-            // Find actural actor node
-            return sceneNode.Find(actor);
+            // ActorNode has the same ID as actor does
+            return SceneGraphFactory.FindNode(actor.ID) as ActorNode;
         }
 
         /// <inheritdoc />
