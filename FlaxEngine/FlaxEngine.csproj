@@ -164,6 +164,7 @@
     <Compile Include="Attributes\NoSerializeAttribute.cs" />
     <Compile Include="Attributes\PersisitentDataAttribute.cs" />
     <Compile Include="Attributes\SerializeAttribute.cs" />
+    <Compile Include="Attributes\UnmanagedCallAttribute.cs" />
     <Compile Include="Configurations\PersistentDataConfig.cs" />
     <Compile Include="Engine\ITransformable.cs" />
     <Compile Include="Engine\Mesh.cs" />

@@ -102,6 +102,8 @@ namespace FlaxEditor.CustomEditors.Editors
                     layout.Button("Type " + type.Name);
                     layout.Space(10);
 
+                    // p.GetIndexParameters().GetLength(0) == 0 <---
+
                     // TODO: promote children to other base class like CustomEditorContainer ?
                     /*
                     // Process the properties

@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Reflection;
 
 namespace FlaxEditor.Utilities
@@ -9,6 +10,7 @@ namespace FlaxEditor.Utilities
     /// <summary>
     ///     This structure represents the comparison of one member of an object to the corresponding member of another object.
     /// </summary>
+    [Serializable]
     public struct MemberComparison
     {
         /// <summary>

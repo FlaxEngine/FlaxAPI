@@ -1,41 +1,64 @@
-﻿using System;
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using FlaxEngine.Json.JsonCustomSerializers;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-
-/// <summary>
-/// Attibute stops serialization of given property since it is calling unmanaged code
-/// </summary>
-internal class UnmanagedCallAttribute : Attribute
-{
-}
 
 namespace FlaxEngine.Json
 {
-    internal static class InternalJsonSerializer
+    /*internal class FlaxObjectConverter : JsonConverter
     {
-        internal static string Serialize(object obj)
+        /// <inheritdoc />
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            try
-            {
-                Debug.LogError(obj.ToString());
-                var seetings = new JsonSerializerSettings() {ContractResolver = new ExtendedDefaultContractResolver()};
-                return JsonConvert.SerializeObject(obj, Formatting.Indented, seetings);
-            }
-            catch (Exception e)
-            {
-                return e.Message + " " + e.StackTrace;
-            }
+            Guid id = Guid.Empty;
+            if (value is Object obj)
+                id = obj.ID;
+
+            writer.WriteValue(id);
         }
 
-        internal static object Deserialize(object input, string json)
+        /// <inheritdoc />
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            return input = JsonConvert.DeserializeObject(json);
+            Guid id = Guid.Empty;
+            if(reader.TokenType == JsonToken.String)
+        }
+
+        /// <inheritdoc />
+        public override bool CanConvert(Type objectType)
+        {
+            return typeof(Object).IsAssignableFrom(objectType);
+        }
+    }
+    */
+    internal static class InternalJsonSerializer
+    {
+        public static JsonSerializerSettings Settings = CreateDefaultSettings();
+
+        private static JsonSerializerSettings CreateDefaultSettings()
+        {
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new ExtendedDefaultContractResolver(),
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                TypeNameHandling = TypeNameHandling.Auto,
+            };
+            //settings.Converters.Add(new FlaxObjectConverter());
+            return settings;
+        }
+        
+        internal static string Serialize(object obj)
+        {
+            return JsonConvert.SerializeObject(obj, Formatting.Indented, Settings);
+        }
+
+        internal static void Deserialize(object input, string json)
+        {
+            JsonConvert.PopulateObject(json, input);
         }
     }
 }

@@ -1,9 +1,11 @@
-﻿using System;
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -11,12 +13,13 @@ namespace FlaxEngine.Json.JsonCustomSerializers
 {
     internal class ExtendedDefaultContractResolver : DefaultContractResolver
     {
-        private List<Type> _attributesIgnoreList = new List<Type>
-            {
-                typeof(UnmanagedCallAttribute),
-                typeof(NonSerializedAttribute),
-                typeof(HideInEditorAttribute)
-            };
+        private Type[] _attributesIgnoreList =
+        {
+            typeof(UnmanagedCallAttribute),
+            typeof(NonSerializedAttribute),
+            typeof(NoSerializeAttribute),
+            typeof(HideInEditorAttribute)
+        };
 
         protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
         {
@@ -30,17 +33,12 @@ namespace FlaxEngine.Json.JsonCustomSerializers
                 .Select(p => base.CreateProperty(p, memberSerialization))
                 .ToList();
 
-            foreach (var jsonProperty in properties)
-            {
-                Debug.Log(jsonProperty.PropertyName + " " + jsonProperty.PropertyType);
-            }
-
             var props = fields.Union(properties).ToList();
             props.ForEach(p =>
-            {
-                p.Writable = true;
-                p.Readable = true;
-            });
+                          {
+                              p.Writable = true;
+                              p.Readable = true;
+                          });
             return props;
         }
 
