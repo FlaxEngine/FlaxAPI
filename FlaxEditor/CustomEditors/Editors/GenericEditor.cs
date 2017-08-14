@@ -102,10 +102,8 @@ namespace FlaxEditor.CustomEditors.Editors
                     layout.Button("Type " + type.Name);
                     layout.Space(10);
 
-                    // p.GetIndexParameters().GetLength(0) == 0 <---
-
                     // TODO: promote children to other base class like CustomEditorContainer ?
-                    /*
+                    
                     // Process the properties
                     var properties = type.GetProperties();
                     var propertyItems = new List<PropertyItemInfo>(properties.Length);
@@ -115,7 +113,7 @@ namespace FlaxEditor.CustomEditors.Editors
                         var getter = p.GetMethod;
 
                         // Skip hidden properties and only set properties
-                        if (getter == null || !getter.IsPublic)
+                        if (getter == null || !getter.IsPublic || p.GetIndexParameters().GetLength(0) != 0)
                         {
                             continue;
                         }
@@ -175,11 +173,11 @@ namespace FlaxEditor.CustomEditors.Editors
                         }
 
                         // Spawn child editor
-                        //itemLayout.Button(item.DisplayName + " order: " + (item.Order != null ? item.Order.Order.ToString() : "?"));
+                        itemLayout.Button(item.DisplayName + " order: " + (item.Order != null ? item.Order.Order.ToString() : "?"));
                         //Debug.Log("Child item " + item);
-                        var child = itemLayout.Object(itemValues);
-                        children.Add(child);
-                    }*/
+                        //var child = itemLayout.Object(itemValues);
+                        //children.Add(child);
+                    }
                 }
                 else
                 {
