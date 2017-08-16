@@ -16,10 +16,20 @@ namespace FlaxEditor
     /// </summary>
     public class Undo : IDisposable
     {
+        internal interface IUndoInternal
+        {
+            /// <summary>
+            /// Creates the undo action object on recording end.
+            /// </summary>
+            /// <param name="snapshotInstance">The snapshoted object.</param>
+            /// <returns>The undo action.</returns>
+            IUndoAction End(object snapshotInstance);
+        }
+
         /// <summary>
         ///     Stack of undo actions for future disposal.
         /// </summary>
-        private readonly OrderedDictionary<object, UndoInternal> _snapshots = new OrderedDictionary<object, UndoInternal>();
+        private readonly OrderedDictionary<object, IUndoInternal> _snapshots = new OrderedDictionary<object, IUndoInternal>();
 
         /// <summary>
         /// Gets the undo operations stack.
@@ -87,7 +97,7 @@ namespace FlaxEditor
         /// <summary>
         ///     Internal class for keeping reference of undo action.
         /// </summary>
-        internal class UndoInternal
+        internal class UndoInternal : IUndoInternal
         {
             public string ActionString;
             public object SnapshotInstance;
@@ -100,13 +110,10 @@ namespace FlaxEditor
                 Snapshot = ObjectSnapshot.CaptureSnapshot(snapshotInstance);
             }
 
-            /// <summary>
-            /// Creates the undo action object.
-            /// </summary>
-            /// <param name="diff">The difference.</param>
-            /// <returns>The undo action.</returns>
-            public UndoActionObject CreateUndoActionObject(List<MemberComparison> diff)
+            /// <inheritdoc />
+            public IUndoAction End(object snapshotInstance)
             {
+                var diff = Snapshot.Compare(snapshotInstance);
                 return new UndoActionObject(diff, ActionString, SnapshotInstance);
             }
         }
@@ -137,8 +144,76 @@ namespace FlaxEditor
             {
                 snapshotInstance = _snapshots.Last().Key;
             }
-            var changes = _snapshots[snapshotInstance].Snapshot.Compare(snapshotInstance);
-            var action = _snapshots[snapshotInstance].CreateUndoActionObject(changes);
+            var action = _snapshots[snapshotInstance].End(snapshotInstance);
+            UndoOperationsStack.Push(action);
+            _snapshots.Remove(snapshotInstance);
+
+            OnAction(action);
+        }
+
+        /// <summary>
+        ///     Internal class for keeping reference of undo action that modifies collection of objects.
+        /// </summary>
+        internal class UndoMultiInternal : IUndoInternal
+        {
+            public string ActionString;
+            public object[] SnapshotInstances;
+            public ObjectSnapshot[] Snapshot;
+
+            public UndoMultiInternal(object[] snapshotInstances, string actionString)
+            {
+                ActionString = actionString;
+                SnapshotInstances = snapshotInstances;
+                Snapshot = new ObjectSnapshot[snapshotInstances.Length];
+                for (var i = 0; i < snapshotInstances.Length; i++)
+                {
+                    Snapshot[i] = ObjectSnapshot.CaptureSnapshot(snapshotInstances[i]);
+                }
+            }
+
+            /// <inheritdoc />
+            public IUndoAction End(object snapshotInstance)
+            {
+                var snapshotInstances = (object[])snapshotInstance;
+                if (snapshotInstances == null || snapshotInstances.Length != SnapshotInstances.Length)
+                    throw new ArgumentException("Invalid multi undo action objects.");
+                var actions = new List<UndoActionObject>();
+                for (int i = 0; i < snapshotInstances.Length; i++)
+                {
+                    var diff = Snapshot[i].Compare(snapshotInstances[i]);
+                    actions.Add(new UndoActionObject(diff, ActionString, SnapshotInstances[i]));
+                }
+                return new MultiUndoAction(actions);
+            }
+        }
+
+        /// <summary>
+        ///     Begins recording for undo action.
+        /// </summary>
+        /// <param name="snapshotInstances">Instances of objects to record.</param>
+        /// <param name="actionString">Name of action to be displayed in undo stack.</param>
+        public void RecordMultiBegin(object[] snapshotInstances, string actionString)
+        {
+            if (!Enabled)
+                return;
+
+            _snapshots.Add(snapshotInstances, new UndoMultiInternal(snapshotInstances, actionString));
+        }
+
+        /// <summary>
+        ///     Ends recording for undo action.
+        /// </summary>
+        /// <param name="snapshotInstance">Instance of an object to finish recording, if null take last provided.</param>
+        public void RecordMultiEnd(object[] snapshotInstance = null)
+        {
+            if (!Enabled)
+                return;
+
+            if (snapshotInstance == null)
+            {
+                snapshotInstance = (object[])_snapshots.Last().Key;
+            }
+            var action = _snapshots[snapshotInstance].End(snapshotInstance);
             UndoOperationsStack.Push(action);
             _snapshots.Remove(snapshotInstance);
 
