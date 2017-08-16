@@ -11,8 +11,8 @@ namespace FlaxEditor.Windows
     /// <summary>
     /// Window used to present collection of selected object(s) properties in a grid. Supports Undo/Redo operations.
     /// </summary>
-    /// <seealso cref="FlaxEditor.Windows.SceneEditorWindow" />
-    public class PropertiesWindow : SceneEditorWindow
+    /// <seealso cref="FlaxEditor.Windows.EditorWindow" />
+    public class PropertiesWindow : EditorWindow
     {
         /// <summary>
         /// The editor.

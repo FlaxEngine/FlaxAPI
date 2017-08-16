@@ -179,7 +179,7 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
-        /// Pastes the copied objects.
+        /// Pastes the copied objects. Supports undo/redo.
         /// </summary>
         public void Paste()
         {
@@ -187,19 +187,21 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
-        /// Cuts the selected objects.
+        /// Cuts the selected objects. Supports undo/redo.
         /// </summary>
         public void Cut()
         {
-            throw new NotImplementedException("TODO: implement Cut");
+            Copy();
+            Delete();
         }
 
         /// <summary>
-        /// Duplicates the selected objects.
+        /// Duplicates the selected objects. Supports undo/redo.
         /// </summary>
         public void Duplicate()
         {
-            throw new NotImplementedException("TODO: implement duplicate");
+            Copy();
+            Paste();
         }
     }
 }

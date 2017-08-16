@@ -563,12 +563,21 @@ namespace FlaxEditor.Modules
                 case 2:
                     Editor.PerformRedo();
                     break;
-                // TODO: finish those
-                //case 3: Editor.GetMainGizmo().Cut(); break;
-                //case 4: Editor.GetMainGizmo().CopySelection(); break;
-                //case 5: Editor.GetMainGizmo().Paste(); break;
-                //case 6: Editor.GetMainGizmo().DeleteSelection(); break;
-                //case 7: Editor.GetMainGizmo().Duplicate(); break;
+                case 3:
+                    Editor.SceneEditing.Cut();
+                    break;
+                case 4:
+                    Editor.SceneEditing.Copy();
+                    break;
+                case 5:
+                    Editor.SceneEditing.Paste();
+                    break;
+                case 6:
+                    Editor.SceneEditing.Delete();
+                    break;
+                case 7:
+                    Editor.SceneEditing.Duplicate();
+                    break;
                 case 8:
                     Editor.SceneEditing.SelectAllScenes();
                     break;
