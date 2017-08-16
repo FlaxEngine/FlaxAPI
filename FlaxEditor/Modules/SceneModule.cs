@@ -86,8 +86,7 @@ namespace FlaxEditor.Modules
         {
             foreach (var scene in Root.ChildNodes)
             {
-                var node = scene as SceneNode;
-                if (node != null && node.IsEdited)
+                if (scene is SceneNode node && node.IsEdited)
                     return true;
             }
             return false;
@@ -140,11 +139,20 @@ namespace FlaxEditor.Modules
         /// <param name="scene">Scene to save.</param>
         public void SaveScene(Scene scene)
         {
-            /*// Early out
-            if (IsEdited(scene) == false)
+            SaveScene(GetActorNode(scene) as SceneNode);
+        }
+
+        /// <summary>
+        /// Saves scene (async).
+        /// </summary>
+        /// <param name="scene">Scene to save.</param>
+        public void SaveScene(SceneNode scene)
+        {
+            if (!scene.IsEdited)
                 return;
 
-            SceneManager.SaveSceneAsync(scene);*/
+            scene.IsEdited = false;
+            SceneManager.SaveSceneAsync(scene.Scene);
         }
 
         /// <summary>
@@ -152,11 +160,15 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void SaveScenes()
         {
-            /*// Early out
-            if (IsEdited() == false)
+            if (!IsEdited())
                 return;
 
-            SceneManager.SaveAllScenesAsync();*/
+            foreach (var scene in Root.ChildNodes)
+            {
+                if (scene is SceneNode node)
+                    node.IsEdited = false;
+            }
+            SceneManager.SaveAllScenesAsync();
         }
 
         /// <summary>
@@ -170,9 +182,12 @@ namespace FlaxEditor.Modules
             if (!Editor.StateMachine.CurrentState.CanChangeScene)
                 return;
 
-            // Ensure to save all pending changes
-            if (CheckSaveBeforeClose())
-                return;
+            if (!additive)
+            {
+                // Ensure to save all pending changes
+                if (CheckSaveBeforeClose())
+                    return;
+            }
 
             // Load scene
             Editor.StateMachine.ChangingScenesState.LoadScene(sceneId, additive);
@@ -199,45 +214,93 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Show save before scene load/unload action.
         /// </summary>
+        /// <param name="scene">The scene that will be closed.</param>
         /// <returns>True if action has been canceled, otherwise false</returns>
-        public bool CheckSaveBeforeClose()
+        public bool CheckSaveBeforeClose(SceneNode scene)
         {
-            //throw new NotImplementedException();
-            // TODO: suspend auto save for a while
             // Suspend auto saves
-            //SuspendAutoSave();
-            /*
-            // TODO: restore old code
-            LOG(Warning, 0, TEXT("SceneModule::CheckSaveBeforeClose()"));
+            SuspendAutoSave();
+            
             // Check if scene was edited after last saving
-            if (CEditor->IsEdited() && SceneManager::Instance()->IsAnySceneLoaded())
+            if (scene.IsEdited)
             {
                 // Ask user for futher action
-                auto result = MessageBox::Show(
-                    LocalizationData::FormatEditorMessage(136, SceneManager::Instance()->GetLastSceneFilename()),
-                    LocalizationData::GetEditorMessage(134),
-                    MessageBoxButtons::YesNoCancel,
-                    MessageBoxIcon::Question
+                var result = MessageBox.Show(
+                    string.Format("Scene \'{0}\' has been edited. Save before closing?", scene.Name),
+                    "Close without saving?",
+                    MessageBox.Buttons.YesNoCancel,
+                    MessageBox.Icon.Question
                 );
-                if (result == DialogResult::OK || result == DialogResult::Yes)
+                if (result == DialogResult.OK || result == DialogResult.Yes)
                 {
                     // Save and close
-                    SaveScene();
+                    SaveScene(scene);
                 }
-                else if (result == DialogResult::Cancel || result == DialogResult::Abort)
+                else if (result == DialogResult.Cancel || result == DialogResult.Abort)
                 {
                     // Cancel closing
                     return true;
                 }
             }
 
-            // Clear Editor's data
-            auto gizmo = CEditor->GetMainGizmo();
-            if (gizmo)
-                gizmo->Deselect();
-            CEditor->UndoRedo.ClearHistory();
-            */
+            ClearRefsToSceneObjects();
+
             return false;
+        }
+
+        /// <summary>
+        /// Show save before scene load/unload action.
+        /// </summary>
+        /// <returns>True if action has been canceled, otherwise false</returns>
+        public bool CheckSaveBeforeClose()
+        {
+            // Suspend auto saves
+            SuspendAutoSave();
+
+            // Check if scene was edited after last saving
+            if (IsEdited())
+            {
+                // Ask user for futher action
+                var scenes = SceneManager.Scenes;
+                var result = MessageBox.Show(
+                    scenes.Length == 1 ? string.Format("Scene \'{0}\' has been edited. Save before closing?", scenes[0].Name) : string.Format("{0} scenes have been edited. Save before closing?", scenes.Length),
+                    "Close without saving?",
+                    MessageBox.Buttons.YesNoCancel,
+                    MessageBox.Icon.Question
+                );
+                if (result == DialogResult.OK || result == DialogResult.Yes)
+                {
+                    // Save and close
+                    SaveScenes();
+                }
+                else if (result == DialogResult.Cancel || result == DialogResult.Abort)
+                {
+                    // Cancel closing
+                    return true;
+                }
+            }
+
+            ClearRefsToSceneObjects();
+
+            return false;
+        }
+
+        /// <summary>
+        /// Suspends auto saving for a while.
+        /// </summary>
+        public void SuspendAutoSave()
+        {
+            // TODO: finish auto save from old c++ editor code
+        }
+
+        /// <summary>
+        /// Clears references to the scene objects by the editor. Deselects objects. Clear undo history.
+        /// </summary>
+        public void ClearRefsToSceneObjects()
+        {
+            // Clear Editor's data
+            Editor.SceneEditing.Deselect();
+            Undo.Clear();
         }
 
         /// <summary>
@@ -255,7 +318,7 @@ namespace FlaxEditor.Modules
         private void OnSceneLoaded(Scene scene, Guid sceneId)
         {
             var startTime = DateTime.UtcNow;
-
+            
             // Build scene tree
             var sceneNode = SceneGraphFactory.BuildSceneTree(scene);
             var treeNode = sceneNode.TreeNode;
@@ -279,7 +342,7 @@ namespace FlaxEditor.Modules
             
             var endTime = DateTime.UtcNow;
             var milliseconds = (int)(endTime - startTime).TotalMilliseconds;
-            Editor.Log($"Created UI tree for scene \'{scene.Name}\' in {milliseconds} ms");
+            Editor.Log($"Created graph for scene \'{scene.Name}\' in {milliseconds} ms");
         }
 
         private void OnSceneUnloading(Scene scene, Guid sceneId)
@@ -288,10 +351,10 @@ namespace FlaxEditor.Modules
             var node = Root.FindChild(scene);
             if (node != null)
             {
-                Editor.Log($"Cleanup UI tree for scene \'{scene.Name}\'");
+                Editor.Log($"Cleanup graph for scene \'{scene.Name}\'");
 
                 // Cleanup
-                node.TreeNode.Dispose();
+                node.Dispose();
             }
         }
 

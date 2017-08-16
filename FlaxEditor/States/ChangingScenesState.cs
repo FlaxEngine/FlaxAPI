@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 using System;
 using System.Collections.Generic;
@@ -41,8 +41,7 @@ namespace FlaxEditor.States
                 _scenesToUnload.AddRange(SceneManager.Scenes);
             }
 
-            // Request state change
-            StateMachine.GoToState(this);
+            TryEnter();
         }
 
         /// <summary>
@@ -61,8 +60,7 @@ namespace FlaxEditor.States
             // Setup request
             _scenesToUnload.Add(scene);
 
-            // Request state change
-            StateMachine.GoToState(this);
+            TryEnter();
         }
         
         /// <summary>
@@ -80,6 +78,30 @@ namespace FlaxEditor.States
             _scenesToLoad.AddRange(toLoad);
             _scenesToUnload.AddRange(toUnload);
 
+            TryEnter();
+        }
+
+        private void TryEnter()
+        {
+            // Remove redundant scene changes
+            for (int i = 0; i < _scenesToUnload.Count; i++)
+            {
+                var id = _scenesToUnload[i].ID;
+                for (int j = 0; j < _scenesToLoad.Count; j++)
+                {
+                    if (_scenesToLoad[j] == id)
+                    {
+                        _scenesToLoad.RemoveAt(j--);
+                        _scenesToUnload.RemoveAt(i);
+                        break;
+                    }
+                }
+            }
+
+            // Check if won't change anything
+            if (_scenesToLoad.Count + _scenesToUnload.Count == 0)
+                return;
+
             // Request state change
             StateMachine.GoToState(this);
         }
@@ -96,21 +118,20 @@ namespace FlaxEditor.States
             SceneManager.OnSceneLoaded += onSceneEvent;
             SceneManager.OnSceneLoadError += onSceneEvent;
             SceneManager.OnSceneUnloaded += onSceneEvent;
-            
+
+            // Note: we use _lastSceneFromRequest to store id of the scene used for the last request (async scene requests are performed in an calling order)
+            // Later we can detect this scene event and assume that all previous actions has been done.
+            _lastSceneFromRequest = _scenesToLoad.Count > 0 ? _scenesToLoad[_scenesToLoad.Count - 1] : _scenesToUnload[_scenesToUnload.Count - 1].ID;
+
             // Push scenes changing requests
             for (int i = 0; i < _scenesToUnload.Count; i++)
             {
                 SceneManager.UnloadSceneAsync(_scenesToUnload[i]);
-                _lastSceneFromRequest = _scenesToUnload[i].ID;
             }
             for (int i = 0; i < _scenesToLoad.Count; i++)
             {
                 SceneManager.LoadSceneAsync(_scenesToLoad[i]);
-                _lastSceneFromRequest = _scenesToLoad[i];
             }
-
-            // Note: we user _lastSceneFromRequest to store id of the scene used for the last request (async scene requests are performed in an calling order)
-            // Later we can detect this scene event and assume that all previous actions has been done.
 
             // Clear request
             _scenesToLoad.Clear();
