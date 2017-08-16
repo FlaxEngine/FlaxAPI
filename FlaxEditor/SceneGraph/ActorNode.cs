@@ -124,7 +124,7 @@ namespace FlaxEditor.SceneGraph
         public override string Name => _actor.Name;
 
         /// <inheritdoc />
-        public override SceneNode ParentScene => SceneGraphFactory.FindNode(_actor.ID) as SceneNode;
+        public override SceneNode ParentScene => SceneGraphFactory.FindNode(_actor.Scene.ID) as SceneNode;
 
         /// <inheritdoc />
         public override bool IsActive => _actor.IsActive;
@@ -138,28 +138,7 @@ namespace FlaxEditor.SceneGraph
             get => _actor.Transform;
             set => _actor.Transform = value;
         }
-
-        /// <inheritdoc />
-        public override Vector3 Position
-        {
-            get => _actor.Position;
-            set => _actor.Position = value;
-        }
-
-        /// <inheritdoc />
-        public override Quaternion Orientation
-        {
-            get => _actor.Orientation;
-            set => _actor.Orientation = value;
-        }
-
-        /// <inheritdoc />
-        public override Vector3 Scale
-        {
-            get => _actor.Scale;
-            set => _actor.Scale = value;
-        }
-
+        
         /// <inheritdoc />
         public override SceneGraphNode ParentNode
         {

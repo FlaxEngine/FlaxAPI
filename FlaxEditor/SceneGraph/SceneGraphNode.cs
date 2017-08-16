@@ -67,15 +67,6 @@ namespace FlaxEditor.SceneGraph
 
         /// <inheritdoc />
         public abstract Transform Transform { get; set; }
-
-        /// <inheritdoc />
-        public abstract Vector3 Position { get; set; }
-
-        /// <inheritdoc />
-        public abstract Quaternion Orientation { get; set; }
-
-        /// <inheritdoc />
-        public abstract Vector3 Scale { get; set; }
         
         /// <summary>
         /// Gets a value indicating whether this instance can be copied or/and pasted.

@@ -34,7 +34,7 @@ namespace FlaxEditor.Gizmo
             // Get center point
             Vector3 center = Vector3.Zero;
             for (int i = 0; i < count; i++)
-                center += _selectionParents[i].Position;
+                center += _selectionParents[i].Transform.Translation;
 
             // Return arithmetic average or whatever it means
             return center / count;

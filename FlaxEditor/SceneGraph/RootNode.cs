@@ -49,28 +49,7 @@ namespace FlaxEditor.SceneGraph
             get => Transform.Identity;
             set { }
         }
-
-        /// <inheritdoc />
-        public override Vector3 Position
-        {
-            get => Vector3.Zero;
-            set { }
-        }
-
-        /// <inheritdoc />
-        public override Quaternion Orientation
-        {
-            get => Quaternion.Identity;
-            set { }
-        }
-
-        /// <inheritdoc />
-        public override Vector3 Scale
-        {
-            get => Vector3.One;
-            set { }
-        }
-
+        
         /// <inheritdoc />
         public override bool RayCastSelf(ref Ray ray, ref float distance)
         {
