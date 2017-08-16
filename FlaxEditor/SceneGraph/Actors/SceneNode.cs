@@ -2,6 +2,9 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using FlaxEditor.SceneGraph.GUI;
+using FlaxEngine;
+
 namespace FlaxEditor.SceneGraph.Actors
 {
     /// <summary>
@@ -10,21 +13,46 @@ namespace FlaxEditor.SceneGraph.Actors
     /// <seealso cref="ActorNode" />
     public sealed class SceneNode : ActorNode
     {
+        private bool _isEdited;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this scene is edited.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this scene is edited; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsEdited
+        {
+            get => _isEdited;
+            set
+            {
+                if (_isEdited != value)
+                {
+                    _isEdited = value;
+
+                    _treeNode.UpdateText();
+                }
+            }
+        }
+
         /// <summary>
         /// Gets the scene.
         /// </summary>
         /// <value>
         /// The scene.
         /// </value>
-        public FlaxEngine.Scene Scene => _actor as FlaxEngine.Scene;
+        public Scene Scene => _actor as Scene;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneNode"/> class.
         /// </summary>
         /// <param name="scene">The scene.</param>
-        public SceneNode(FlaxEngine.Scene scene)
-            : base(scene)
+        public SceneNode(Scene scene)
+            : base(scene, new SceneTreeNode())
         {
         }
+
+        /// <inheritdoc />
+        public override SceneNode ParentScene => this;
     }
 }

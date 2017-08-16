@@ -138,10 +138,11 @@ namespace FlaxEditor
                 snapshotInstance = _snapshots.Last().Key;
             }
             var changes = _snapshots[snapshotInstance].Snapshot.Compare(snapshotInstance);
-            UndoOperationsStack.Push(_snapshots[snapshotInstance].CreateUndoActionObject(changes));
+            var action = _snapshots[snapshotInstance].CreateUndoActionObject(changes);
+            UndoOperationsStack.Push(action);
             _snapshots.Remove(snapshotInstance);
 
-            ActionDone?.Invoke();
+            OnAction(action);
         }
 
         /// <summary>
@@ -198,7 +199,7 @@ namespace FlaxEditor
 
             UndoOperationsStack.Push(action);
 
-            ActionDone?.Invoke();
+            OnAction(action);
         }
 
         /// <summary>
@@ -209,10 +210,10 @@ namespace FlaxEditor
             if (!Enabled || !CanUndo)
                 return;
 
-            var operation = (IUndoAction)UndoOperationsStack.PopHistory();
-            operation.Undo();
-
-            UndoDone?.Invoke();
+            var action = (IUndoAction)UndoOperationsStack.PopHistory();
+            action.Undo();
+            
+            OnUndo(action);
         }
 
         /// <summary>
@@ -223,9 +224,36 @@ namespace FlaxEditor
             if (!Enabled || !CanRedo)
                 return;
 
-            var operation = (IUndoAction)UndoOperationsStack.PopReverse();
-            operation.Do();
+            var action = (IUndoAction)UndoOperationsStack.PopReverse();
+            action.Do();
 
+            OnRedo(action);
+        }
+
+        /// <summary>
+        /// Called when <see cref="Undo"/> performs action.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        protected virtual void OnAction(IUndoAction action)
+        {
+            ActionDone?.Invoke();
+        }
+        
+        /// <summary>
+        /// Called when <see cref="Undo"/> performs undo action.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        protected virtual void OnUndo(IUndoAction action)
+        {
+            UndoDone?.Invoke();
+        }
+        
+        /// <summary>
+        /// Called when <see cref="Undo"/> performs redo action.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        protected virtual void OnRedo(IUndoAction action)
+        {
             RedoDone?.Invoke();
         }
 

@@ -52,7 +52,8 @@ namespace FlaxEditor.SceneGraph
             : base(actor.ID)
         {
             _actor = actor;
-            _treeNode = new ActorTreeNode(this);
+            _treeNode = new ActorTreeNode();
+            _treeNode.LinkNode(this);
         }
 
         /// <summary>
@@ -65,13 +66,15 @@ namespace FlaxEditor.SceneGraph
         {
             _actor = actor;
             _treeNode = treeNode;
+            _treeNode.LinkNode(this);
         }
 
         internal ActorNode(Actor actor, Guid id)
             : base(id)
         {
             _actor = actor;
-            _treeNode = new ActorTreeNode(this);
+            _treeNode = new ActorTreeNode();
+            _treeNode.LinkNode(this);
         }
 
         /// <summary>

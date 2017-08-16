@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Drag;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -16,11 +17,12 @@ namespace FlaxEditor.SceneGraph.GUI
     {
         private bool _isActive;
         private int _orderInParent;
+        private DragActors _dragActors;
 
         /// <summary>
         /// The actor node that owns this node.
         /// </summary>
-        protected readonly ActorNode actorNode;
+        protected ActorNode actorNode;
 
         /// <summary>
         /// Gets the actor.
@@ -41,12 +43,14 @@ namespace FlaxEditor.SceneGraph.GUI
         /// <summary>
         /// Initializes a new instance of the <see cref="ActorTreeNode"/> class.
         /// </summary>
-        /// <param name="node">The parent node.</param>
-        public ActorTreeNode(ActorNode node)
+        public ActorTreeNode()
             : base(true)
         {
+        }
+
+        internal virtual void LinkNode(ActorNode node)
+        {
             actorNode = node;
-            Text = actorNode.Name;
             if (node.Actor != null)
             {
                 _isActive = node.Actor.IsActive;
@@ -57,6 +61,7 @@ namespace FlaxEditor.SceneGraph.GUI
                 _isActive = true;
                 _orderInParent = 0;
             }
+            UpdateText();
         }
 
         internal void OnActiveChanged()
@@ -78,6 +83,14 @@ namespace FlaxEditor.SceneGraph.GUI
         }
 
         internal void OnNameChanged()
+        {
+            UpdateText();
+        }
+
+        /// <summary>
+        /// Updates the tree node text.
+        /// </summary>
+        public virtual void UpdateText()
         {
             Text = actorNode.Name;
         }
@@ -131,7 +144,7 @@ namespace FlaxEditor.SceneGraph.GUI
             Select();
 
             // Start renaming the actor
-            var dialog = RenamePopup.Show(this, _headerRect, Text, false);
+            var dialog = RenamePopup.Show(this, _headerRect, actorNode.Name, false);
             dialog.Renamed += OnRenamed;
         }
 
@@ -140,5 +153,115 @@ namespace FlaxEditor.SceneGraph.GUI
             using (new UndoBlock(Editor.Instance.Undo, Actor, "Rename"))
                 Actor.Name = renamePopup.Text;
         }
+        /*
+        /// <inheritdoc />
+        protected override DragDropEffect OnDragEnterHeader(DragData data)
+        {
+            // Check if cannot edit scene or there is no scene loaded
+            if (!Editor.Instance.StateMachine.CurrentState.CanEditScene || !SceneManager.IsAnySceneLoaded)
+                return DragDropEffect.None;
+
+            // Check if drop actors
+            if (_dragActors == null)
+                _dragActors = new DragActors();
+            if (_dragActors.OnDragEnter(data, ValidateDragActor))
+                return _dragActors.Effect;
+
+            return DragDropEffect.None;
+        }
+
+        /// <inheritdoc />
+        protected override DragDropEffect OnDragMoveHeader(DragData data)
+        {
+            if (_dragActors != null && _dragActors.HasValidDrag)
+                return _dragActors.Effect;
+
+            return DragDropEffect.None;
+        }
+
+        /// <inheritdoc />
+        protected override void OnDragLeaveHeader()
+        {
+            _dragActors?.OnDragLeave();
+        }
+
+        /// <inheritdoc />
+        protected override DragDropEffect OnDragDropHeader(DragData data)
+        {
+            var result = DragDropEffect.None;
+            
+            Actor myActor = Actor;
+            Actor newParent = myActor;
+            int newOrder = -1;
+
+            // Check if has no actor (only for Root Actor)
+            if (myActor == null)
+            {
+                // Append to the last scene
+                var scenes = SceneManager.Scenes;
+                if (scenes == null || scenes.Length == 0)
+                    throw new InvalidOperationException("No scene loaded.");
+                newParent = scenes[scenes.Length - 1];
+            }
+            else
+            {
+                // Use drag positioning to change target parent and index
+                if (_dragOverMode == DragItemPositioning.Above)
+                {
+                    if (newParent.HasParent)
+                    {
+                        newParent = newParent.Parent;
+                        newOrder = newParent->GetChildren()->IndexOf(myActor);
+                    }
+                }
+                else if (_dragOverMode == DragItemPositioning.Below)
+                {
+                    if (newParent.HasParent)
+                    {
+                        newParent = newParent.Parent;
+                        newOrder = newParent->GetChildren()->IndexOf(myActor) + 1;
+                    }
+                }
+            }
+            if(newParent == null)
+                throw new InvalidOperationException("Missing parent actor.");
+
+            // Drag actors
+            if (_dragActors.HasValidDrag)
+            {
+                using (new UndoBlock(Editor.Instance.Undo, , "Change actor(s) parent"))
+                {
+                    for (int i = 0; i < _dragActors.Objects.Count; i++)
+                    {
+                        var actor = _dragActors.Objects[i].Actor;
+                        actor.Parent = newParent;
+                        actor.OrderInParent = newOrder;
+                    }
+                }
+
+                result = DragDropEffect.Move;
+            }
+
+            // Clear cache
+            _dragActors.OnDragDrop();
+
+            // Check if scene has been modified
+            if (result != DragDropEffect.None)
+            {
+                // Expand if drag was over this node
+                if (_dragOverMode == DragItemPositioning.Above)
+                    Expand();
+
+                // Editor.Instance.Scene TODO: mark as edited
+            }
+
+            return result;
+        }
+
+        private bool ValidateDragActor(ActorNode actorNode)
+        {
+            // Reject dragging parents and itself
+            return actorNode.Actor != null && actorNode != ActorNode && actorNode.Find(Actor) == null;
+        }*/
     }
 }

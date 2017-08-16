@@ -1,6 +1,7 @@
 // Flax Engine scripting API
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
@@ -24,14 +25,34 @@ namespace FlaxEditor.Modules
             : base(editor)
         {
         }
-        /*
+        
         /// <summary>
         /// Marks the scene as modified.
         /// </summary>
         /// <param name="scene">The scene.</param>
         public void MarkSceneEdited(Scene scene)
         {
-            editedScenes.Add(scene);
+            MarkSceneEdited(GetActorNode(scene) as SceneNode);
+        }
+
+        /// <summary>
+        /// Marks the scene as modified.
+        /// </summary>
+        /// <param name="scene">The scene.</param>
+        public void MarkSceneEdited(SceneNode scene)
+        {
+            if (scene != null)
+                scene.IsEdited = true;
+        }
+
+        /// <summary>
+        /// Marks the scenes as modified.
+        /// </summary>
+        /// <param name="scenes">The scenes.</param>
+        public void MarkSceneEdited(IEnumerable<Scene> scenes)
+        {
+            foreach (var scene in scenes)
+                MarkSceneEdited(scene);
         }
 
         /// <summary>
@@ -39,9 +60,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void MarkAllScenesEdited()
         {
-            var scenes = SceneManager.Scenes;
-            for (int i = 0; i < scenes.Length; i++)
-                editedScenes.Add(scenes[i]);
+            MarkSceneEdited(SceneManager.Scenes);
         }
 
         /// <summary>
@@ -53,7 +72,8 @@ namespace FlaxEditor.Modules
         /// </returns>
         public bool IsEdited(Scene scene)
         {
-            return editedScenes.Contains(scene);
+            var node = GetActorNode(scene) as SceneNode;
+            return node?.IsEdited ?? false;
         }
 
         /// <summary>
@@ -64,8 +84,14 @@ namespace FlaxEditor.Modules
         /// </returns>
         public bool IsEdited()
         {
-            return editedScenes.Count != 0;
-        }*/
+            foreach (var scene in Root.ChildNodes)
+            {
+                var node = scene as SceneNode;
+                if (node != null && node.IsEdited)
+                    return true;
+            }
+            return false;
+        }
 
         /// <summary>
         /// Creates the new scene file. The default scene contains set of simple actors.
@@ -358,7 +384,7 @@ namespace FlaxEditor.Modules
         /// Gets the actor node.
         /// </summary>
         /// <param name="actor">The actor.</param>
-        /// <returns>Foudn actor node or null if missing. Actor may not be linked to the scene tree so node won't be found in that case.</returns>
+        /// <returns>Found actor node or null if missing. Actor may not be linked to the scene tree so node won't be found in that case.</returns>
         public ActorNode GetActorNode(Actor actor)
         {
             if (actor == null)
@@ -366,6 +392,17 @@ namespace FlaxEditor.Modules
 
             // ActorNode has the same ID as actor does
             return SceneGraphFactory.FindNode(actor.ID) as ActorNode;
+        }
+
+        /// <summary>
+        /// Gets the actor node.
+        /// </summary>
+        /// <param name="actorId">The actor id.</param>
+        /// <returns>Found actor node or null if missing. Actor may not be linked to the scene tree so node won't be found in that case.</returns>
+        public ActorNode GetActorNode(Guid actorId)
+        {
+            // ActorNode has the same ID as actor does
+            return SceneGraphFactory.FindNode(actorId) as ActorNode;
         }
 
         /// <inheritdoc />

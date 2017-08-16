@@ -550,9 +550,6 @@ namespace FlaxEngine.GUI
                 // Prevent from selecting node when user is just clicking at an arrow
                 if (!_mouseOverArrow)
                 {
-                    // Focus
-                    Focus();
-
                     // Check if user is pressing control key
                     var tree = ParentTree;
                     var window = tree.ParentWindow;
@@ -584,6 +581,7 @@ namespace FlaxEngine.GUI
                 }
 
                 // Handled
+                Focus();
                 return true;
             }
 
