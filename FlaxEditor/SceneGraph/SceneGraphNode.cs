@@ -109,6 +109,11 @@ namespace FlaxEditor.SceneGraph
         public abstract bool IsActiveInHierarchy { get; }
 
         /// <summary>
+        /// Gets or sets order of the node in the parent container.
+        /// </summary>
+        public abstract int OrderInParent { get; set; }
+        
+        /// <summary>
         /// Gets or sets the parent node.
         /// </summary>
         /// <value>
@@ -218,6 +223,29 @@ namespace FlaxEditor.SceneGraph
         {
             return false;
         }
+
+        /// <summary>
+        /// Delegate used to deserialize scene graph node from the raw bytes.
+        /// </summary>
+        /// <param name="data">The serialized data.</param>
+        /// <returns>The deserialized node.</returns>
+        public delegate SceneGraphNode DeserializeHandler(byte[] data);
+        
+        /// <summary>
+        /// Gets object deserialization handler.
+        /// </summary>
+        public abstract DeserializeHandler Deserializer { get; }
+        
+        /// <summary>
+        /// Serializes object represented by this node eg. actor.
+        /// </summary>
+        /// <returns></returns>
+        public abstract byte[] Serialize();
+
+        /// <summary>
+        /// Deletes object represented by this node eg. actor.
+        /// </summary>
+        public abstract void Delete();
 
         /// <summary>
         /// Releases the node and the child tree. Disposed all GUI parts and used resources.

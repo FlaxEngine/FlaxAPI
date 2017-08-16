@@ -23,15 +23,17 @@ namespace FlaxEditor
         /// Initializes a new instance of the <see cref="MultiUndoAction"/> class.
         /// </summary>
         /// <param name="actions">The actions to include within this multi action.</param>
-        public MultiUndoAction(IEnumerable<IUndoAction> actions)
+        /// <param name="actionString">The action string.</param>
+        public MultiUndoAction(IEnumerable<IUndoAction> actions, string actionString = null)
         {
             Actions = actions?.ToArray() ?? throw new ArgumentNullException();
             if (Actions.Length == 0)
                 throw new ArgumentException("Empty actions collection.");
+            ActionString = actionString ?? Actions[0].ActionString;
         }
 
         /// <inheritdoc />
-        public string ActionString => Actions[0].ActionString;
+        public string ActionString { get; }
 
         /// <inheritdoc />
         public void Do()

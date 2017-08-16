@@ -133,6 +133,13 @@ namespace FlaxEditor.SceneGraph
         public override bool IsActiveInHierarchy => _actor.IsActiveInHierarchy;
 
         /// <inheritdoc />
+        public override int OrderInParent
+        {
+            get => _actor.OrderInParent;
+            set => _actor.OrderInParent = value;
+        }
+
+        /// <inheritdoc />
         public override Transform Transform
         {
             get => _actor.Transform;
@@ -158,6 +165,29 @@ namespace FlaxEditor.SceneGraph
         public override bool RayCastSelf(ref Ray ray, ref float distance)
         {
             return _actor.IntersectsItself(ref ray, ref distance);
+        }
+
+        /// <inheritdoc />
+        public override DeserializeHandler Deserializer => Deserialize;
+
+        /// <inheritdoc />
+        public override byte[] Serialize()
+        {
+            return _actor.ToBytes();
+        }
+
+        private static SceneGraphNode Deserialize(byte[] data)
+        {
+            var actor = Actor.FromBytes(data);
+            if (actor == null)
+                return null;
+            return SceneGraphFactory.FindNode(actor.ID);
+        }
+
+        /// <inheritdoc />
+        public override void Delete()
+        {
+            FlaxEngine.Object.Destroy(_actor);
         }
 
         /// <inheritdoc />
