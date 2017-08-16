@@ -84,7 +84,7 @@ namespace FlaxEditor.SceneGraph
         ///   <c>true</c> if this instance can be used for copy and paste; otherwise, <c>false</c>.
         /// </value>
         public virtual bool CanCopyPaste => true;
-
+        
         /// <summary>
         /// Gets a value indicating whether this node can be deleted by the user.
         /// </summary>
@@ -92,6 +92,14 @@ namespace FlaxEditor.SceneGraph
         ///   <c>true</c> if this instance can be deleted; otherwise, <c>false</c>.
         /// </value>
         public virtual bool CanDelete => true;
+
+        /// <summary>
+        /// Gets a value indicating whether this node can be dragged by the user.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance can be dragged; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool CanDrag => true;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="SceneGraphNode"/> is active.

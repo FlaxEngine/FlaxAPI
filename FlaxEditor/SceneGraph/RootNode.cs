@@ -33,6 +33,9 @@ namespace FlaxEditor.SceneGraph
 
         /// <inheritdoc />
         public override bool CanDelete => false;
+        
+        /// <inheritdoc />
+        public override bool CanDrag => false;
 
         /// <inheritdoc />
         public override bool IsActive => true;

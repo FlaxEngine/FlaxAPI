@@ -2,6 +2,8 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+using System.Collections.Generic;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Drag;
 using FlaxEngine;
@@ -153,7 +155,7 @@ namespace FlaxEditor.SceneGraph.GUI
             using (new UndoBlock(Editor.Instance.Undo, Actor, "Rename"))
                 Actor.Name = renamePopup.Text;
         }
-        /*
+
         /// <inheritdoc />
         protected override DragDropEffect OnDragEnterHeader(DragData data)
         {
@@ -189,9 +191,9 @@ namespace FlaxEditor.SceneGraph.GUI
         protected override DragDropEffect OnDragDropHeader(DragData data)
         {
             var result = DragDropEffect.None;
-            
+
             Actor myActor = Actor;
-            Actor newParent = myActor;
+            Actor newParent;
             int newOrder = -1;
 
             // Check if has no actor (only for Root Actor)
@@ -205,37 +207,53 @@ namespace FlaxEditor.SceneGraph.GUI
             }
             else
             {
+                newParent = myActor;
+
                 // Use drag positioning to change target parent and index
                 if (_dragOverMode == DragItemPositioning.Above)
                 {
-                    if (newParent.HasParent)
+                    if (myActor.HasParent)
                     {
-                        newParent = newParent.Parent;
-                        newOrder = newParent->GetChildren()->IndexOf(myActor);
+                        newParent = myActor.Parent;
+                        newOrder = myActor.OrderInParent;
                     }
                 }
                 else if (_dragOverMode == DragItemPositioning.Below)
                 {
-                    if (newParent.HasParent)
+                    if (myActor.HasParent)
                     {
-                        newParent = newParent.Parent;
-                        newOrder = newParent->GetChildren()->IndexOf(myActor) + 1;
+                        newParent = myActor.Parent;
+                        newOrder = myActor.OrderInParent + 1;
                     }
                 }
             }
-            if(newParent == null)
+            if (newParent == null)
                 throw new InvalidOperationException("Missing parent actor.");
 
             // Drag actors
             if (_dragActors.HasValidDrag)
             {
-                using (new UndoBlock(Editor.Instance.Undo, , "Change actor(s) parent"))
+                var singleObject = _dragActors.Objects.Count == 1;
+                if (singleObject)
                 {
-                    for (int i = 0; i < _dragActors.Objects.Count; i++)
+                    var targetActor = _dragActors.Objects[0].Actor;
+                    using (new UndoBlock(Editor.Instance.Undo, targetActor, "Change actor parent"))
                     {
-                        var actor = _dragActors.Objects[i].Actor;
-                        actor.Parent = newParent;
-                        actor.OrderInParent = newOrder;
+                        targetActor.Parent = newParent;
+                        targetActor.OrderInParent = newOrder;
+                    }
+                }
+                else
+                {
+                    var targetActors = _dragActors.Objects.ConvertAll(x => x.Actor);
+                    using (new UndoMultiBlock(Editor.Instance.Undo, targetActors, "Change actors parent"))
+                    {
+                        for (int i = 0; i < targetActors.Count; i++)
+                        {
+                            var targetActor = targetActors[i];
+                            targetActor.Parent = newParent;
+                            targetActor.OrderInParent = newOrder;
+                        }
                     }
                 }
 
@@ -248,11 +266,8 @@ namespace FlaxEditor.SceneGraph.GUI
             // Check if scene has been modified
             if (result != DragDropEffect.None)
             {
-                // Expand if drag was over this node
-                if (_dragOverMode == DragItemPositioning.Above)
-                    Expand();
-
-                // Editor.Instance.Scene TODO: mark as edited
+                var node = SceneGraphFactory.FindNode(newParent.ID) as ActorNode;
+                node?.TreeNode.Expand();
             }
 
             return result;
@@ -262,6 +277,34 @@ namespace FlaxEditor.SceneGraph.GUI
         {
             // Reject dragging parents and itself
             return actorNode.Actor != null && actorNode != ActorNode && actorNode.Find(Actor) == null;
-        }*/
+        }
+
+        /// <inheritdoc />
+        protected override void DoDragDrop()
+        {
+            DragData data;
+            var tree = ParentTree;
+
+            // Check if this node is selected
+            if (tree.Selection.Contains(this))
+            {
+                // Get selected actors
+                var actors = new List<ActorNode>();
+                for (var i = 0; i < tree.Selection.Count; i++)
+                {
+                    var e = tree.Selection[i];
+                    if (e is ActorTreeNode node && node.ActorNode.CanDrag)
+                        actors.Add(node.ActorNode);
+                }
+                data = DragActors.GetDragData(actors);
+            }
+            else
+            {
+                data = DragActors.GetDragData(ActorNode);
+            }
+
+            // Start drag operation
+            DoDragDrop(data);
+        }
     }
 }
