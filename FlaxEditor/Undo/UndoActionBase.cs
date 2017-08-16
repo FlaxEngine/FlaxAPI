@@ -17,8 +17,8 @@ namespace FlaxEditor
             Guid id = Guid.Empty;
             if (value is SceneTreeNode obj)
                 id = obj.ID;
-            
-            writer.WriteValue(id);
+
+            writer.WriteValue(id.ToString("N"));
         }
 
         /// <inheritdoc />

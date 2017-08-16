@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using FlaxEditor.Utilities;
+using FlaxEngine;
 
 namespace FlaxEditor.History
 {
@@ -17,6 +18,59 @@ namespace FlaxEditor.History
     public class UndoActionObject : UndoActionBase<UndoActionObject.DataStorage>
     {
         /// <summary>
+        /// The data value storage to solve issue for flax objects and editor scene tree nodes which are serialized by ref id.
+        /// </summary>
+        public struct DataValue
+        {
+            /// <summary>
+            /// The generic value (anything).
+            /// </summary>
+            public object Generic;
+
+            /// <summary>
+            /// The flax object.
+            /// </summary>
+            public FlaxEngine.Object FlaxObject;
+
+            /// <summary>
+            /// The editor node object.
+            /// </summary>
+            public SceneGraph.SceneTreeNode EditorNode;
+
+            /// <summary>
+            /// Gets the proper value.
+            /// </summary>
+            [NoSerialize]
+            public object Value => EditorNode ?? FlaxObject ?? Generic;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="DataValue"/> struct.
+            /// </summary>
+            /// <param name="value">The value.</param>
+            public DataValue(object value)
+            {
+                if (value is SceneGraph.SceneTreeNode editorNode)
+                {
+                    Generic = null;
+                    FlaxObject = null;
+                    EditorNode = editorNode;
+                }
+                else if (value is FlaxEngine.Object flaxObject)
+                {
+                    Generic = null;
+                    FlaxObject = flaxObject;
+                    EditorNode = null;
+                }
+                else
+                {
+                    Generic = value;
+                    FlaxObject = null;
+                    EditorNode = null;
+                }
+            }
+        }
+
+        /// <summary>
         /// The data.
         /// </summary>
         [Serializable]
@@ -25,22 +79,17 @@ namespace FlaxEditor.History
             /// <summary>
             /// The values 1.
             /// </summary>
-            public object[] Values1;
+            public DataValue[] Values1;
 
             /// <summary>
             /// The values 2.
             /// </summary>
-            public object[] Values2;
+            public DataValue[] Values2;
 
             /// <summary>
-            /// The target object being modified (as FlaxEngine.Object).
+            /// The instance.
             /// </summary>
-            public FlaxEngine.Object Ref1;
-
-            /// <summary>
-            /// The target object being modified (as FlaxEditor.SceneGraph.SceneTreeNode).
-            /// </summary>
-            public SceneGraph.SceneTreeNode Ref2;
+            public DataValue Instance;
         }
 
         private struct DataPrepared
@@ -69,13 +118,13 @@ namespace FlaxEditor.History
             TargetInstance = useDataStorageForInstance ? null : targetInstance;
 
             int count = diff.Count;
-            var values1 = new object[count];
-            var values2 = new object[count];
+            var values1 = new DataValue[count];
+            var values2 = new DataValue[count];
             Members = new MemberInfo[count];
             for (int i = 0; i < count; i++)
             {
-                values1[i] = diff[i].Value1;
-                values2[i] = diff[i].Value2;
+                values1[i] = new DataValue(diff[i].Value1);
+                values2[i] = new DataValue(diff[i].Value2);
                 Members[i] = diff[i].Member;
             }
 
@@ -83,8 +132,7 @@ namespace FlaxEditor.History
             {
                 Values1 = values1,
                 Values2 = values2,
-                Ref1 = useDataStorageForInstance ? targetInstance as FlaxEngine.Object : null,
-                Ref2 = useDataStorageForInstance ? targetInstance as SceneGraph.SceneTreeNode : null,
+                Instance = new DataValue(useDataStorageForInstance ? targetInstance : null)
             };
         }
 
@@ -95,12 +143,12 @@ namespace FlaxEditor.History
             var diff = new MemberComparison[count];
             for (int i = 0; i < count; i++)
             {
-                diff[i] = new MemberComparison(Members[i], data.Values1[i], data.Values2[i]);
+                diff[i] = new MemberComparison(Members[i], data.Values1[i].Value, data.Values2[i].Value);
             }
             return new DataPrepared
             {
                 Diff = diff,
-                TargetInstance = data.Ref1 ?? data.Ref2 ?? TargetInstance,
+                TargetInstance = data.Instance.Value ?? TargetInstance,
             };
         }
 

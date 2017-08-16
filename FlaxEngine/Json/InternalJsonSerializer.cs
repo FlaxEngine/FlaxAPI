@@ -17,7 +17,7 @@ namespace FlaxEngine.Json
             if (value is Object obj)
                 id = obj.ID;
 
-            writer.WriteValue(id);
+            writer.WriteValue(id.ToString("N"));
         }
 
         /// <inheritdoc />

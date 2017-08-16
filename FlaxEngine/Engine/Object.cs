@@ -8,13 +8,13 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Base class for all objects Flax can reference.
+    /// Base class for all objects Flax can reference. Every object has unique identifier.
     /// </summary>
     [Serializable]
     public abstract class Object
     {
         [NonSerialized]
-        internal IntPtr unmanagedPtr = IntPtr.Zero;
+        internal readonly IntPtr unmanagedPtr = IntPtr.Zero;
 
         [NonSerialized]
         internal Guid id = Guid.Empty;
@@ -123,13 +123,17 @@ namespace FlaxEngine
 
         internal static IntPtr GetUnmanagedPtr(Object obj)
         {
-            return obj != null ? obj.unmanagedPtr : IntPtr.Zero;
+            return obj?.unmanagedPtr ?? IntPtr.Zero;
         }
 
         /// <inheritdoc />
         public override int GetHashCode()
         {
+#if UNIT_TEST_COMPILANT
+            return base.GetHashCode();
+#else
             return unmanagedPtr.GetHashCode();
+#endif
         }
 
 #region Internal Calls
