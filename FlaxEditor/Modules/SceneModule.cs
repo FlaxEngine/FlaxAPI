@@ -93,6 +93,22 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
+        /// Determines whether every scene is edited.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if every scene is edited; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsEverySceneEdited()
+        {
+            foreach (var scene in Root.ChildNodes)
+            {
+                if (scene is SceneNode node && !node.IsEdited)
+                    return false;
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Creates the new scene file. The default scene contains set of simple actors.
         /// </summary>
         /// <param name="path">The path.</param>

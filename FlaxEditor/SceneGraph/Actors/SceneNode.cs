@@ -53,6 +53,15 @@ namespace FlaxEditor.SceneGraph.Actors
         }
 
         /// <inheritdoc />
+        public override bool CanCopyPaste => false;
+
+        /// <inheritdoc />
+        public override bool CanDelete => false;
+
+        /// <inheritdoc />
+        public override bool CanDrag => false;
+
+        /// <inheritdoc />
         public override SceneNode ParentScene => this;
     }
 }

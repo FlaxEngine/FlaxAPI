@@ -56,11 +56,15 @@ namespace FlaxEditor
         private void CheckSceneEdited(IUndoAction action)
         {
             // Note: this is automatic tracking system to check if undo action modifies scene objects
-            
+
+            // Skip if all scenes are already modified
+            if(Editor.Instance.Scene.IsEverySceneEdited())
+                return;
+
             if (action is UndoActionObject undoActionObject)
             {
                 var data = undoActionObject.PrepareData();
-                
+
                 if (data.TargetInstance is SceneGraph.SceneGraphNode node)
                 {
                     Editor.Instance.Scene.MarkSceneEdited(node.ParentScene);
@@ -77,6 +81,14 @@ namespace FlaxEditor
                 for (int i = 0; i < data.Selection.Length; i++)
                 {
                     Editor.Instance.Scene.MarkSceneEdited(data.Selection[i].ParentScene);
+                }
+            }
+            else if (action is MultiUndoAction multiUndoAction)
+            {
+                // Process child actions
+                for (int i = 0; i < multiUndoAction.Actions.Length; i++)
+                {
+                    CheckSceneEdited(multiUndoAction.Actions[i]);
                 }
             }
         }
