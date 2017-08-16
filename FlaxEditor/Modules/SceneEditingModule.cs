@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEditor.Actions;
 using FlaxEditor.SceneGraph;
 
 namespace FlaxEditor.Modules
@@ -157,7 +158,8 @@ namespace FlaxEditor.Modules
         internal void OnSelectionUndo(SceneGraphNode[] toSelect)
         {
             Selection.Clear();
-            Selection.AddRange(toSelect);
+            if (toSelect != null && toSelect.Length > 0)
+                Selection.AddRange(toSelect);
 
             OnSelectionChanged?.Invoke();
         }
@@ -167,7 +169,21 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void Delete()
         {
-            throw new NotImplementedException("TODO: implement Delete");
+            // Peek things that can be removed
+            var objects = Selection.BuildAllNodes().Where(x => x.CanDelete).ToList();
+            if (objects.Count == 0)
+                return;
+
+            // Change selection
+            var action1 = new SelectionChangeAction(Selection.ToArray(), new SceneGraphNode[0]);
+
+            // Delete objects
+            var action2 = new DeleteNodesAction(objects);
+
+            // Merge two actions and perform them
+            var action = new MultiUndoAction(new IUndoAction[] { action1, action2 }, action2.ActionString);
+            action.Do();
+            Undo.AddAction(action);
         }
 
         /// <summary>
@@ -175,6 +191,11 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void Copy()
         {
+            // Peek things that can be copied (copy all acctors)
+            var objects = Selection.BuildAllNodes().Where(x => x.CanCopyPaste).ToList();
+            if (objects.Count == 0)
+                return;
+
             throw new NotImplementedException("TODO: implement Copy");
         }
 
@@ -200,8 +221,12 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void Duplicate()
         {
-            Copy();
-            Paste();
+            // Peek things that can be duplicated (duplicate only top objects)
+            var objects = Selection.BuildNodesParents().Where(x => x.CanCopyPaste).ToList();
+            if (objects.Count == 0)
+                return;
+
+            throw new NotImplementedException("TODO: implement Duplicate");
         }
     }
 }
