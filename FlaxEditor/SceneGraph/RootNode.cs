@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using FlaxEditor.SceneGraph.Actors;
 using FlaxEngine;
 
 namespace FlaxEditor.SceneGraph
@@ -23,6 +24,9 @@ namespace FlaxEditor.SceneGraph
 
         /// <inheritdoc />
         public override string Name => "Root";
+
+        /// <inheritdoc />
+        public override SceneNode ParentScene => null;
 
         /// <inheritdoc />
         public override bool CanCopyPaste => false;

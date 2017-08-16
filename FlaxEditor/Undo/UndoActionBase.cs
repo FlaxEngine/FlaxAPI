@@ -15,7 +15,7 @@ namespace FlaxEditor
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             Guid id = Guid.Empty;
-            if (value is SceneTreeNode obj)
+            if (value is SceneGraphNode obj)
                 id = obj.ID;
 
             writer.WriteValue(id.ToString("N"));
@@ -36,7 +36,7 @@ namespace FlaxEditor
         /// <inheritdoc />
         public override bool CanConvert(Type objectType)
         {
-            return typeof(SceneTreeNode).IsAssignableFrom(objectType);
+            return typeof(SceneGraphNode).IsAssignableFrom(objectType);
         }
     }
 

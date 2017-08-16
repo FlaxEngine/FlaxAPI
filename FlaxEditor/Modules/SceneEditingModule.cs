@@ -18,7 +18,7 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// The selected objects.
         /// </summary>
-        public readonly List<SceneTreeNode> Selection = new List<SceneTreeNode>(64);
+        public readonly List<SceneGraphNode> Selection = new List<SceneGraphNode>(64);
 
         /// <summary>
         /// Gets the amount of the selected objects.
@@ -57,7 +57,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         /// <param name="selection">The selection.</param>
         /// <param name="additive">if set to <c>true</c> will use additive mode, otherwise will clear previous selection.</param>
-        public void Select(List<SceneTreeNode> selection, bool additive = false)
+        public void Select(List<SceneGraphNode> selection, bool additive = false)
         {
             if (selection == null)
                 throw new ArgumentNullException();
@@ -79,7 +79,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         /// <param name="selection">The selection.</param>
         /// <param name="additive">if set to <c>true</c> will use additive mode, otherwise will clear previous selection.</param>
-        public void Select(SceneTreeNode[] selection, bool additive = false)
+        public void Select(SceneGraphNode[] selection, bool additive = false)
         {
             if (selection == null)
                 throw new ArgumentNullException();
@@ -101,7 +101,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         /// <param name="selection">The selection.</param>
         /// <param name="additive">if set to <c>true</c> will use additive mode, otherwise will clear previous selection.</param>
-        public void Select(SceneTreeNode selection, bool additive = false)
+        public void Select(SceneGraphNode selection, bool additive = false)
         {
             if (selection == null)
                 throw new ArgumentNullException();
@@ -121,7 +121,7 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Deselects given object.
         /// </summary>
-        public void Deselect(SceneTreeNode node)
+        public void Deselect(SceneGraphNode node)
         {
             if (!Selection.Contains(node))
                 return;
@@ -147,14 +147,14 @@ namespace FlaxEditor.Modules
             SelectionChange(before);
         }
 
-        private void SelectionChange(SceneTreeNode[] before)
+        private void SelectionChange(SceneGraphNode[] before)
         {
             Undo.AddAction(new SelectionChangeAction(before, Selection.ToArray()));
 
             OnSelectionChanged?.Invoke();
         }
 
-        internal void OnSelectionUndo(SceneTreeNode[] toSelect)
+        internal void OnSelectionUndo(SceneGraphNode[] toSelect)
         {
             Selection.Clear();
             Selection.AddRange(toSelect);

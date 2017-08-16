@@ -1,4 +1,6 @@
-// Flax Engine scripting API
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
 
 using System;
 using FlaxEditor.Gizmo;
@@ -10,7 +12,6 @@ using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 using FlaxEngine.GUI.Docking;
-using FlaxEngine.Json;
 
 namespace FlaxEditor.Modules
 {

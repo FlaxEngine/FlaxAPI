@@ -17,7 +17,7 @@ namespace FlaxEditor.Gizmo
         /// <value>
         /// The selected parents.
         /// </value>
-        public List<SceneTreeNode> SelectedParents => _selectionParents;
+        public List<SceneGraphNode> SelectedParents => _selectionParents;
 
         /// <summary>
         /// Gets the selection center point (in world space).
@@ -41,7 +41,7 @@ namespace FlaxEditor.Gizmo
         }
         
         /// <inheritdoc />
-        public override void OnSelectionChanged(List<SceneTreeNode> newSelection)
+        public override void OnSelectionChanged(List<SceneGraphNode> newSelection)
         {
             // End current action
             EndTransforming();

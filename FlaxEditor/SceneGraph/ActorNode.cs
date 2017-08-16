@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.SceneGraph.GUI;
 using FlaxEditor.Windows;
 using FlaxEngine;
@@ -14,8 +15,8 @@ namespace FlaxEditor.SceneGraph
     /// It's part of the Scene Graph.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.TreeNode" />
-    /// <seealso cref="SceneTreeBranchNode" />
-    public class ActorNode : SceneTreeBranchNode
+    /// <seealso cref="SceneGraphNode" />
+    public class ActorNode : SceneGraphNode
     {
         /// <summary>
         /// The linked actor object.
@@ -52,6 +53,18 @@ namespace FlaxEditor.SceneGraph
         {
             _actor = actor;
             _treeNode = new ActorTreeNode(this);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ActorNode"/> class.
+        /// </summary>
+        /// <param name="actor">The actor.</param>
+        /// <param name="treeNode">The custom tree node.</param>
+        protected ActorNode(Actor actor, ActorTreeNode treeNode)
+            : base(actor.ID)
+        {
+            _actor = actor;
+            _treeNode = treeNode;
         }
 
         internal ActorNode(Actor actor, Guid id)
@@ -106,7 +119,10 @@ namespace FlaxEditor.SceneGraph
 
         /// <inheritdoc />
         public override string Name => _actor.Name;
-        
+
+        /// <inheritdoc />
+        public override SceneNode ParentScene => SceneGraphFactory.FindNode(_actor.ID) as SceneNode;
+
         /// <inheritdoc />
         public override bool IsActive => _actor.IsActive;
 
@@ -142,7 +158,7 @@ namespace FlaxEditor.SceneGraph
         }
 
         /// <inheritdoc />
-        public override SceneTreeBranchNode ParentNode
+        public override SceneGraphNode ParentNode
         {
             set
             {

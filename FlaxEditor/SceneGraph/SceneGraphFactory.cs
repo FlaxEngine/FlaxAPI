@@ -22,16 +22,19 @@ namespace FlaxEditor.SceneGraph
         /// <summary>
         /// The nodes collection where key is ID.
         /// </summary>
-        public static readonly Dictionary<Guid, SceneTreeNode> Nodes = new Dictionary<Guid, SceneTreeNode>();
+        public static readonly Dictionary<Guid, SceneGraphNode> Nodes = new Dictionary<Guid, SceneGraphNode>();
 
         /// <summary>
         /// Tries to find the node by the given ID.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>Found node or null if cannot.</returns>
-        public static SceneTreeNode FindNode(Guid id)
+        public static SceneGraphNode FindNode(Guid id)
         {
-            SceneTreeNode result;
+            if (id == Guid.Empty)
+                return null;
+
+            SceneGraphNode result;
             Nodes.TryGetValue(id, out result);
             return result;
         }

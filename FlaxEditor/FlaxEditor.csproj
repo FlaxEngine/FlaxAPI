@@ -63,6 +63,7 @@
     <Compile Include="CustomEditors\Elements\TextBoxElement.cs" />
     <Compile Include="CustomEditors\Elements\VerticalPanelElement.cs" />
     <Compile Include="CustomEditors\ValueContainer.cs" />
+    <Compile Include="GUI\Drag\DragActors.cs" />
     <Compile Include="GUI\RenamePopup.cs" />
     <Compile Include="Content\Proxy\BinaryAssetProxy.cs" />
     <Compile Include="Content\Proxy\ContentProxy.cs" />
@@ -143,11 +144,11 @@
     <Compile Include="SceneGraph\Actors\SkyNode.cs" />
     <Compile Include="SceneGraph\Actors\SpotLightNode.cs" />
     <Compile Include="SceneGraph\GUI\ActorTreeNode.cs" />
+    <Compile Include="SceneGraph\GUI\SceneTreeNode.cs" />
     <Compile Include="SceneGraph\RootNode.cs" />
     <Compile Include="SceneGraph\SceneGraphFactory.cs" />
     <Compile Include="SceneGraph\Actors\SceneNode.cs" />
-    <Compile Include="SceneGraph\SceneTreeBranchNode.cs" />
-    <Compile Include="SceneGraph\SceneTreeNode.cs" />
+    <Compile Include="SceneGraph\SceneGraphNode.cs" />
     <Compile Include="States\BuildingLightingState.cs" />
     <Compile Include="States\ChangingScenesState.cs" />
     <Compile Include="States\ClosingState.cs" />

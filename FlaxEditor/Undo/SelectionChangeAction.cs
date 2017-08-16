@@ -22,15 +22,15 @@ namespace FlaxEditor
             /// <summary>
             /// The 'before' selection.
             /// </summary>
-            public SceneTreeNode[] Before;
+            public SceneGraphNode[] Before;
 
             /// <summary>
             /// The 'after' selection.
             /// </summary>
-            public SceneTreeNode[] After;
+            public SceneGraphNode[] After;
         }
 
-        internal SelectionChangeAction(SceneTreeNode[] before, SceneTreeNode[] after)
+        internal SelectionChangeAction(SceneGraphNode[] before, SceneGraphNode[] after)
         {
             Data = new DataStorage
             {

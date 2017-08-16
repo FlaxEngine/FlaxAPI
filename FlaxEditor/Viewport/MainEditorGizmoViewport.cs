@@ -299,7 +299,7 @@ namespace FlaxEditor.Viewport
             Gizmos.ForEach(x => x.OnSelectionChanged(selection));
         }
 
-        public void ApplyTransform(List<SceneTreeNode> selection, ref Vector3 translationDelta, ref Matrix rotationDelta, ref Vector3 scaleDelta)
+        public void ApplyTransform(List<SceneGraphNode> selection, ref Vector3 translationDelta, ref Matrix rotationDelta, ref Vector3 scaleDelta)
         {
             // TODO: lock properties editor here
 

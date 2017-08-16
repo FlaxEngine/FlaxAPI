@@ -3,7 +3,10 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using FlaxEditor.Modules;
+using FlaxEditor.SceneGraph.Actors;
 using FlaxEngine;
 
 namespace FlaxEditor.SceneGraph
@@ -13,18 +16,26 @@ namespace FlaxEditor.SceneGraph
     /// Scene Graph is directional graph without cyclic references. It's a tree.
     /// A <see cref="SceneModule"/> class is responsible for Scene Graph management.
     /// </summary>
-    public abstract class SceneTreeNode : ITransformable
+    public abstract class SceneGraphNode : ITransformable
     {
         /// <summary>
         /// The parent node.
         /// </summary>
-        protected SceneTreeBranchNode parentNode;
+        protected SceneGraphNode parentNode;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SceneTreeNode"/> class.
+        /// Gets the children list.
+        /// </summary>
+        /// <value>
+        /// The children.
+        /// </value>
+        public List<SceneGraphNode> ChildNodes { get; } = new List<SceneGraphNode>();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SceneGraphNode"/> class.
         /// </summary>
         /// <param name="id">The unique node identifier. Cannot be changed at runtime.</param>
-        protected SceneTreeNode(Guid id)
+        protected SceneGraphNode(Guid id)
         {
             ID = id;
             SceneGraphFactory.Nodes.Add(id, this);
@@ -45,6 +56,14 @@ namespace FlaxEditor.SceneGraph
         /// The identifier.
         /// </value>
         public Guid ID { get; }
+
+        /// <summary>
+        /// Gets the parent scene.
+        /// </summary>
+        /// <value>
+        /// The scene.
+        /// </value>
+        public abstract SceneNode ParentScene { get; }
 
         /// <inheritdoc />
         public abstract Transform Transform { get; set; }
@@ -75,7 +94,7 @@ namespace FlaxEditor.SceneGraph
         public virtual bool CanDelete => true;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="SceneTreeNode"/> is active.
+        /// Gets a value indicating whether this <see cref="SceneGraphNode"/> is active.
         /// </summary>
         /// <value>
         ///   <c>true</c> if active; otherwise, <c>false</c>.
@@ -83,7 +102,7 @@ namespace FlaxEditor.SceneGraph
         public abstract bool IsActive { get; }
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="SceneTreeNode"/> is active and all parent nodes are also active.
+        /// Gets a value indicating whether this <see cref="SceneGraphNode"/> is active and all parent nodes are also active.
         /// </summary>
         /// <value>
         ///   <c>true</c> if active in hierarchy; otherwise, <c>false</c>.
@@ -96,7 +115,7 @@ namespace FlaxEditor.SceneGraph
         /// <value>
         /// The parent node.
         /// </value>
-        public virtual SceneTreeBranchNode ParentNode
+        public virtual SceneGraphNode ParentNode
         {
             get => parentNode;
             set
@@ -133,9 +152,12 @@ namespace FlaxEditor.SceneGraph
         /// </summary>
         /// <param name="node">The node to check,</param>
         /// <returns>True if given actor is part of the hierarchy, otherwise false.</returns>
-        public virtual bool ContainsInHierarchy(SceneTreeNode node)
+        public virtual bool ContainsInHierarchy(SceneGraphNode node)
         {
-            return false;
+            if (ChildNodes.Contains(node))
+                return true;
+
+            return ChildNodes.Any(x => x.ContainsInHierarchy(node));
         }
 
         /// <summary>
@@ -143,9 +165,9 @@ namespace FlaxEditor.SceneGraph
         /// </summary>
         /// <param name="node">The node to check,</param>
         /// <returns>True if given object is a child, otherwise false.</returns>
-        public virtual bool ContainsChild(SceneTreeNode node)
+        public virtual bool ContainsChild(SceneGraphNode node)
         {
-            return false;
+            return ChildNodes.Contains(node);
         }
 
         /// <summary>
@@ -154,7 +176,49 @@ namespace FlaxEditor.SceneGraph
         /// <param name="ray">The ray.</param>
         /// <param name="distance">The result distance.</param>
         /// <returns>Hitted object or null if there is no interseciotn at all.</returns>
-        public abstract SceneTreeNode RayCast(ref Ray ray, ref float distance);
+        public SceneGraphNode RayCast(ref Ray ray, ref float distance)
+        {
+            if (!IsActive)
+                return null;
+
+            // Check itself
+            SceneGraphNode minTarget = null;
+            float minDistance = float.MaxValue;
+            if (RayCastSelf(ref ray, ref distance))
+            {
+                minTarget = this;
+                minDistance = distance;
+            }
+
+            // Check all children
+            for (int i = 0; i < ChildNodes.Count; i++)
+            {
+                var hit = ChildNodes[i].RayCast(ref ray, ref distance);
+                if (hit != null)
+                {
+                    if (minDistance > distance)
+                    {
+                        minDistance = distance;
+                        minTarget = hit;
+                    }
+                }
+            }
+
+            // Return result
+            distance = minDistance;
+            return minTarget;
+        }
+
+        /// <summary>
+        /// Checks if given ray intersects with the node.
+        /// </summary>
+        /// <param name="ray">The ray.</param>
+        /// <param name="distance">The distance.</param>
+        /// <returns>True ray hits this node, otherwise false.</returns>
+        public virtual bool RayCastSelf(ref Ray ray, ref float distance)
+        {
+            return false;
+        }
 
         /// <summary>
         /// Releases the node and the child tree. Disposed all GUI parts and used resources.
@@ -176,6 +240,12 @@ namespace FlaxEditor.SceneGraph
         /// </summary>
         public virtual void OnDispose()
         {
+            // Call deeper
+            for (int i = 0; i < ChildNodes.Count; i++)
+            {
+                ChildNodes[i].OnDispose();
+            }
+
             SceneGraphFactory.Nodes.Remove(ID);
         }
 

@@ -61,7 +61,7 @@ namespace FlaxEditor.Windows
             if (after.Count > 0)
             {
                 // Get actors from nodes
-                var actors = new List<SceneTreeNode>(after.Count);
+                var actors = new List<SceneGraphNode>(after.Count);
                 for (int i = 0; i < after.Count; i++)
                 {
                     if (after[i] is ActorTreeNode node && node.Actor)
@@ -89,20 +89,6 @@ namespace FlaxEditor.Windows
             Editor.SceneEditing.OnSelectionChanged += OnOnSelectionChanged;
         }
 
-        private void selectNodesHelper(List<TreeNode> nodes, List<SceneTreeNode> selection, TreeNode node)
-        {
-            for (int i = 0; i < node.ChildrenCount; i++)
-            {
-                if (node.GetChild(i) is ActorTreeNode actorNode)
-                {
-                    if (selection.Contains(actorNode.ActorNode))
-                        nodes.Add(actorNode);
-
-                    selectNodesHelper(nodes, selection, actorNode);
-                }
-            }
-        }
-
         private void OnOnSelectionChanged()
         {
             _isUpdatingSelection = true;
@@ -121,9 +107,14 @@ namespace FlaxEditor.Windows
             else
             {
                 // Find nodes to select
-                // TODO: if it takes too long let's cache hash set: (key: Actor.ID, value: SceneNode) and use faster lookup
                 var nodes = new List<TreeNode>(selection.Count);
-                selectNodesHelper(nodes, selection, Editor.Scene.Root.TreeNode);
+                for (int i = 0; i < selection.Count; i++)
+                {
+                    if (selection[i] is ActorNode node)
+                    {
+                        nodes.Add(node.TreeNode);
+                    }
+                }
 
                 // Select nodes
                 _tree.Select(nodes);

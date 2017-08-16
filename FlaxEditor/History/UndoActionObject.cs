@@ -35,7 +35,7 @@ namespace FlaxEditor.History
             /// <summary>
             /// The editor node object.
             /// </summary>
-            public SceneGraph.SceneTreeNode EditorNode;
+            public SceneGraph.SceneGraphNode EditorNode;
 
             /// <summary>
             /// Gets the proper value.
@@ -49,7 +49,7 @@ namespace FlaxEditor.History
             /// <param name="value">The value.</param>
             public DataValue(object value)
             {
-                if (value is SceneGraph.SceneTreeNode editorNode)
+                if (value is SceneGraph.SceneGraphNode editorNode)
                 {
                     Generic = null;
                     FlaxObject = null;
@@ -92,13 +92,13 @@ namespace FlaxEditor.History
             public DataValue Instance;
         }
 
-        private struct DataPrepared
+        public struct DataPrepared
         {
             public MemberComparison[] Diff;
             public object TargetInstance;
         }
 
-        // For objects that cannot be referenced in undo action like: FlaxEngine.Object or SceneTreeNode we store them in DataStorage,
+        // For objects that cannot be referenced in undo action like: FlaxEngine.Object or SceneGraphNode we store them in DataStorage,
         // otherwise here:
         private object TargetInstance;
 
@@ -112,7 +112,7 @@ namespace FlaxEditor.History
         /// <param name="targetInstance">The target instance.</param>
         public UndoActionObject(List<MemberComparison> diff, string actionString, object targetInstance)
         {
-            bool useDataStorageForInstance = targetInstance is FlaxEngine.Object || targetInstance is SceneGraph.SceneTreeNode;
+            bool useDataStorageForInstance = targetInstance is FlaxEngine.Object || targetInstance is SceneGraph.SceneGraphNode;
 
             ActionString = actionString;
             TargetInstance = useDataStorageForInstance ? null : targetInstance;
@@ -136,7 +136,11 @@ namespace FlaxEditor.History
             };
         }
 
-        private DataPrepared PrepareData()
+        /// <summary>
+        /// Prepares the data for the undo.
+        /// </summary>
+        /// <returns>The prepared undo action data.</returns>
+        public DataPrepared PrepareData()
         {
             var data = Data;
             var count = data.Values1.Length;
