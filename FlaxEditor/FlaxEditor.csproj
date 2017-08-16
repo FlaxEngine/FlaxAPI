@@ -210,6 +210,7 @@
     <Compile Include="Undo\IUndoAction.cs" />
     <Compile Include="Undo\MultiUndoAction.cs" />
     <Compile Include="Undo\SelectionChangeAction.cs" />
+    <Compile Include="Undo\TransformObjectsAction.cs" />
     <Compile Include="Undo\UndoActionBase.cs" />
     <Compile Include="Undo\UndoBlock.cs" />
     <Compile Include="Undo\UndoMultiBlock.cs" />

@@ -59,7 +59,6 @@ namespace FlaxEditor
             
             if (action is UndoActionObject undoActionObject)
             {
-                // TODO: introduce IUndoAction .PrepareData() .ClearData() so UndoActionObject.PrepareData will be called only once
                 var data = undoActionObject.PrepareData();
                 
                 if (data.TargetInstance is SceneGraph.SceneGraphNode node)
@@ -69,6 +68,15 @@ namespace FlaxEditor
                 else if (data.TargetInstance is Actor actor)
                 {
                     Editor.Instance.Scene.MarkSceneEdited(actor.Scene);
+                }
+            }
+            else if (action is TransformObjectsAction transformObjectsAction)
+            {
+                var data = transformObjectsAction.Data;
+
+                for (int i = 0; i < data.Selection.Length; i++)
+                {
+                    Editor.Instance.Scene.MarkSceneEdited(data.Selection[i].ParentScene);
                 }
             }
         }

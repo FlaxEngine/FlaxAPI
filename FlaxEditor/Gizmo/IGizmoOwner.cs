@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -84,6 +84,11 @@ namespace FlaxEditor.Gizmo
         /// </value>
         bool UseSnapping { get; }
 
+        /// <summary>
+        /// Gets a <see cref="FlaxEditor.Undo"/> object used by the gizmo owner.
+        /// </summary>
+        Undo Undo { get; }
+
         /*
         /// <summary>
         /// Gets viewport ro use during gizmo rendering
@@ -106,20 +111,9 @@ namespace FlaxEditor.Gizmo
         virtual Actor* FindActor(const Guid& id) const = 0;
 
         /// <summary>
-        /// Gets undo/redo context
-        /// </summary>
-        /// <returns>UR service</returns>
-        virtual URContext* GetUndoRedo() const = 0;
-
-        /// <summary>
         /// Action fired when any Gizmo tool option gets changes
         /// </summary>
         virtual void OnGizmoOptionsChanged();
-
-        /// <summary>
-        /// Action fired when selection pool gets changed
-        /// </summary>
-        virtual void OnSelectionChanged();
 
         /// <summary>
         /// Action fired when gizmo ends transforming object(s)

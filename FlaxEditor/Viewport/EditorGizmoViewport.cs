@@ -18,10 +18,12 @@ namespace FlaxEditor.Viewport
         /// Initializes a new instance of the <see cref="EditorGizmoViewport"/> class.
         /// </summary>
         /// <param name="task">The task.</param>
-        public EditorGizmoViewport(SceneRenderTask task)
+        /// <param name="undo">The undo.</param>
+        public EditorGizmoViewport(SceneRenderTask task, Undo undo)
             : base(task, true)
         {
             task.OnDraw += OnDraw;
+            Undo = undo;
         }
 
         private void OnDraw(DrawCallsCollector collector)
@@ -47,6 +49,9 @@ namespace FlaxEditor.Viewport
 
         /// <inheritdoc />
         public bool UseSnapping => ParentWindow.GetKey(KeyCode.CONTROL);
+        
+        /// <inheritdoc />
+        public Undo Undo { get; }
 
         /// <inheritdoc />
         public override void Update(float deltaTime)

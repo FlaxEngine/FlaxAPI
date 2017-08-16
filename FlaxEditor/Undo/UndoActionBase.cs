@@ -45,7 +45,7 @@ namespace FlaxEditor
     /// </summary>
     /// <typeparam name="TData">The type of the data. Must have <see cref="SerializableAttribute"/>.</typeparam>
     /// <seealso cref="FlaxEditor.IUndoAction" />
-    public abstract class UndoActionBase<TData> : IUndoAction where TData: struct
+    public abstract class UndoActionBase<TData> : IUndoAction where TData : struct
     {
         private string _data;
 
@@ -55,12 +55,12 @@ namespace FlaxEditor
         /// <value>
         /// The data.
         /// </value>
-        protected TData Data
+        public TData Data
         {
             get => JsonConvert.DeserializeObject<TData>(_data, InternalJsonSerializer.Settings);
-            set => _data = JsonConvert.SerializeObject(value, Formatting.Indented, InternalJsonSerializer.Settings);
+            protected set => _data = JsonConvert.SerializeObject(value, Formatting.None, InternalJsonSerializer.Settings);
         }
-        
+
         /// <inheritdoc />
         public abstract string ActionString { get; }
 

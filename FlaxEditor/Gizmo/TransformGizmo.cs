@@ -111,16 +111,10 @@ namespace FlaxEditor.Gizmo
             }
 
             // End action
-            /*var ur = _parent->GetUndoRedo();
-            if (!ur->IsDisabled())
-            {
-                ur->AddAction(new TransformActors(this, _startTransforms));
-            }*/
+            Owner.Undo.AddAction(new TransformObjectsAction(SelectedParents, _startTransforms));
             _startTransforms.Clear();
             _isTransforming = false;
             _isCloning = false;
-            /*_parent->OnTransfomingEnd();
-            _parent->OnTransformObject();*/
         }
 
         private void UpdateGizmoPosition()
@@ -129,7 +123,7 @@ namespace FlaxEditor.Gizmo
             {
                 case PivotType.ObjectCenter:
                     if (_selection.Count > 0)
-                        _position = _selection[0].Position;
+                        _position = _selection[0].Transform.Translation;
                     break;
                 case PivotType.SelectionCenter:
                     _position = GetSelectionCenter();
@@ -157,7 +151,7 @@ namespace FlaxEditor.Gizmo
 
             // TODO: use quaternion instead of matrix?
             Matrix rotation;
-            var orientation = _selection[0].Orientation;
+            var orientation = _selection[0].Transform.Orientation;
             Matrix.RotationQuaternion(ref orientation, out rotation);
             _localForward = rotation.Forward;
             _localUp = rotation.Up;
@@ -315,7 +309,7 @@ namespace FlaxEditor.Gizmo
                                     break;
                                 }
                             }
-
+                            
                             if ((isScalling ? ScaleSnapEnabled : TranslationSnapEnable) || Owner.UseSnapping)
                             {
                                 float snapValue = isScalling ? ScaleSnapValue : TranslationSnapValue;
