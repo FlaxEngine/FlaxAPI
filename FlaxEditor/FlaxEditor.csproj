@@ -149,6 +149,7 @@
     <Compile Include="SceneGraph\SceneGraphFactory.cs" />
     <Compile Include="SceneGraph\Actors\SceneNode.cs" />
     <Compile Include="SceneGraph\SceneGraphNode.cs" />
+    <Compile Include="SceneGraph\SceneGraphTools.cs" />
     <Compile Include="States\BuildingLightingState.cs" />
     <Compile Include="States\ChangingScenesState.cs" />
     <Compile Include="States\ClosingState.cs" />

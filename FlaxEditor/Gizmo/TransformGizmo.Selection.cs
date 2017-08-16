@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System.Collections.Generic;
-using System.Linq;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
 
@@ -39,7 +38,7 @@ namespace FlaxEditor.Gizmo
             // Return arithmetic average or whatever it means
             return center / count;
         }
-        
+
         /// <inheritdoc />
         public override void OnSelectionChanged(List<SceneGraphNode> newSelection)
         {
@@ -62,25 +61,7 @@ namespace FlaxEditor.Gizmo
             // Build selected objects parents list.
             // Note: because selection may contain objects and their children we have to split them and get only parents.
             // Later during transformation we apply translation/scale/rotation only on them (children inherit transformations)
-            for (int i = 0; i < _selection.Count; i++)
-            {
-                var target = _selection[i];
-
-                // Check if any other object in selection is parent object of this one
-                bool isChild = false;
-                for (int j = 0; j < _selection.Count; j++)
-                {
-                    var test = _selection[j];
-                    if (test != target && test.ContainsInHierarchy(target))
-                    {
-                        isChild = true;
-                        break;
-                    }
-                }
-
-                if (!isChild)
-                    _selectionParents.Add(target);
-            }
+            SceneGraphTools.BuildNodesParents(_selection, _selectionParents);
         }
 
         private void SelectAxis()

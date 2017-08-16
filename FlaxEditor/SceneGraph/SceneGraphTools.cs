@@ -1,0 +1,107 @@
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
+
+using System;
+using System.Collections.Generic;
+
+namespace FlaxEditor.SceneGraph
+{
+    /// <summary>
+    /// Set of tools for <see cref="SceneGraphNode"/> processing.
+    /// </summary>
+    public static class SceneGraphTools
+    {
+        /// <summary>
+        /// Builds the array made of input nodes that are at the top level. The result collection contains only nodes that don't have parent nodes in the given collection.
+        /// </summary>
+        /// <param name="nodes">The nodes.</param>
+        /// <returns>The result.</returns>
+        public static SceneGraphNode[] BuildNodesParents(this List<SceneGraphNode> nodes)
+        {
+            var list = new List<SceneGraphNode>();
+            BuildNodesParents(nodes, list);
+            return list.ToArray();
+        }
+
+        /// <summary>
+        /// Builds the list made of input nodes that are at the top level. The result collection contains only nodes that don't have parent nodes in the given collection.
+        /// </summary>
+        /// <param name="nodes">The nodes.</param>
+        /// <param name="result">The result.</param>
+        public static void BuildNodesParents(this List<SceneGraphNode> nodes, List<SceneGraphNode> result)
+        {
+            if (nodes == null || result == null)
+                throw new ArgumentNullException();
+
+            result.Clear();
+
+            for (var i = 0; i < nodes.Count; i++)
+            {
+                var target = nodes[i];
+
+                // Check if any other object in selection is parent object of this one
+                bool isChild = false;
+                for (var j = 0; j < nodes.Count; j++)
+                {
+                    var test = nodes[j];
+                    if (test != target && test.ContainsInHierarchy(target))
+                    {
+                        isChild = true;
+                        break;
+                    }
+                }
+
+                if (!isChild)
+                    result.Add(target);
+            }
+        }
+
+        /// <summary>
+        /// Builds the array made of all nodes in the input list and child tree. The result collection contains all nodes in the tree.
+        /// </summary>
+        /// <param name="nodes">The nodes.</param>
+        /// <returns>The result.</returns>
+        public static SceneGraphNode[] BuildAllNodes(this List<SceneGraphNode> nodes)
+        {
+            var list = new List<SceneGraphNode>();
+            BuildAllNodes(nodes, list);
+            return list.ToArray();
+        }
+
+        private static void FillTree(SceneGraphNode node, List<SceneGraphNode> result)
+        {
+            result.AddRange(node.ChildNodes);
+            for (int i = 0; i < node.ChildNodes.Count; i++)
+            {
+                FillTree(node.ChildNodes[i], result);
+            }
+        }
+
+        /// <summary>
+        /// Builds the list made of all nodes in the input list and child tree. The result collection contains all nodes in the tree.
+        /// </summary>
+        /// <param name="nodes">The nodes.</param>
+        /// <param name="result">The result.</param>
+        public static void BuildAllNodes(this List<SceneGraphNode> nodes, List<SceneGraphNode> result)
+        {
+            if (nodes == null || result == null)
+                throw new ArgumentNullException();
+
+            result.Clear();
+
+            for (var i = 0; i < nodes.Count; i++)
+            {
+                var target = nodes[i];
+
+                // Check if has been already added
+                if (result.Contains(target))
+                    continue;
+
+                // Add whole child tree to the results
+                result.Add(target);
+                FillTree(target, result);
+            }
+        }
+    }
+}
