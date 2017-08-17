@@ -210,7 +210,15 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void Paste()
         {
-            throw new NotImplementedException("TODO: implement Paste");
+            // Check if clipboard contains valid actors data
+            var data = Application.ClipboardRawData;
+            if (Actor.IsValidActorData(data) == false)
+                return;
+            
+            // Create paste action
+            var action = new PasteActorsAction(data);
+            action.Do();
+            Undo.AddAction(action);
         }
 
         /// <summary>
@@ -227,6 +235,24 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void Duplicate()
         {
+            // Peek things that can be copied (copy all acctors)
+            var objects = Selection.BuildAllNodes().Where(x => x.CanCopyPaste && x is ActorNode).ToList();
+            if (objects.Count == 0)
+                return;
+
+            // Serialize actors
+            var actors = objects.ConvertAll(x => ((ActorNode)x).Actor);
+            var data = Actor.ToBytes(actors.ToArray());
+            if (data == null)
+            {
+                Editor.LogError("Failed to copy actors data.");
+                return;
+            }
+
+            // Create paste action
+            var action = new PasteActorsAction(data, true);
+            action.Do();
+            Undo.AddAction(action);
         }
     }
 }
