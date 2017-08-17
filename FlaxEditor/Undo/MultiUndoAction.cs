@@ -47,7 +47,7 @@ namespace FlaxEditor
         /// <inheritdoc />
         public void Undo()
         {
-            for (int i = 0; i < Actions.Length; i++)
+            for (int i = Actions.Length - 1; i >= 0; i--)
             {
                 Actions[i].Undo();
             }
