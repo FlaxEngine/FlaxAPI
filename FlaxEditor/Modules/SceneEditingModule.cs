@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.Actions;
 using FlaxEditor.SceneGraph;
+using FlaxEditor.SceneGraph.GUI;
+using FlaxEngine;
 
 namespace FlaxEditor.Modules
 {
@@ -186,11 +188,21 @@ namespace FlaxEditor.Modules
         public void Copy()
         {
             // Peek things that can be copied (copy all acctors)
-            var objects = Selection.BuildAllNodes().Where(x => x.CanCopyPaste).ToList();
+            var objects = Selection.BuildAllNodes().Where(x => x.CanCopyPaste && x is ActorNode).ToList();
             if (objects.Count == 0)
                 return;
 
-            throw new NotImplementedException("TODO: implement Copy");
+            // Serialize actors
+            var actors = objects.ConvertAll(x => ((ActorNode)x).Actor);
+            var data = Actor.ToBytes(actors.ToArray());
+            if (data == null)
+            {
+                Editor.LogError("Failed to copy actors data.");
+                return;
+            }
+            
+            // Copy data
+            Application.ClipboardRawData = data;
         }
 
         /// <summary>
