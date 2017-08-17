@@ -572,6 +572,24 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Determines whether the specified bytes array is valid actor data (can be deserialized into collection of actor objects).
+		/// </summary>
+		/// <param name="data">The data.</param>
+		/// <returns>True if the specified bytes array is valid actor data; otherwise, false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static bool IsValidActorData(byte[] data) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_IsValidActorData(data);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -666,6 +684,8 @@ namespace FlaxEngine
 		internal static extern void Internal_UpdateCache(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Actor[] Internal_FromBytes(byte[] data);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_IsValidActorData(byte[] data);
 #endif
 #endregion
 	}

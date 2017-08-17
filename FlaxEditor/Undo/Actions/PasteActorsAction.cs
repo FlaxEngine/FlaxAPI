@@ -17,7 +17,7 @@ namespace FlaxEditor.Actions
         private List<ActorNode> _nodeParents;
         private byte[] _data;
 
-        internal PasteActorsAction(byte[] data, bool isDuplicate)
+        internal PasteActorsAction(byte[] data, bool isDuplicate = false)
         {
             ActionString = isDuplicate ? "Duplicate actors" : "Paste actors";
 
