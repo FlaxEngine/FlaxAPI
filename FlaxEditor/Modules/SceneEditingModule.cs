@@ -63,6 +63,9 @@ namespace FlaxEditor.Modules
             if (selection == null)
                 throw new ArgumentNullException();
 
+            // Prevent from selecting null nodes
+            selection.RemoveAll(x => x == null);
+
             // Check if won't change
             if (!additive && Selection.Count == selection.Count && Selection.SequenceEqual(selection))
                 return;
@@ -85,16 +88,7 @@ namespace FlaxEditor.Modules
             if (selection == null)
                 throw new ArgumentNullException();
 
-            // Check if won't change
-            if (!additive && Selection.Count == selection.Length && Selection.SequenceEqual(selection))
-                return;
-
-            var before = Selection.ToArray();
-            if (!additive)
-                Selection.Clear();
-            Selection.AddRange(selection);
-
-            SelectionChange(before);
+            Select(selection.ToList(), additive);
         }
 
         /// <summary>
