@@ -14,21 +14,23 @@ namespace FlaxEditor.Actions
     /// <seealso cref="FlaxEditor.IUndoAction" />
     public sealed class DeleteNodesAction : IUndoAction
     {
-        private List<ActorNode> _nodes;
+        private List<ActorNode> _nodeParents;
         private byte[] _data;
 
         internal DeleteNodesAction(List<SceneGraphNode> objects)
         {
-            _nodes = new List<ActorNode>(objects.Count);
-            List<Actor> actors = new List<Actor>(objects.Count);
+            _nodeParents = new List<ActorNode>(objects.Count);
+            var actorNodes = new List<ActorNode>(objects.Count);
+            var actors = new List<Actor>(objects.Count);
             for (int i = 0; i < objects.Count; i++)
             {
                 if (objects[i] is ActorNode node)
                 {
-                    _nodes.Add(node);
+                    actorNodes.Add(node);
                     actors.Add(node.Actor);
                 }
             }
+            actorNodes.BuildNodesParents(_nodeParents);
 
             _data = Actor.ToBytes(actors.ToArray());
         }
@@ -40,13 +42,13 @@ namespace FlaxEditor.Actions
         public void Do()
         {
             // Remove objects
-            for (int i = 0; i < _nodes.Count; i++)
+            for (int i = 0; i < _nodeParents.Count; i++)
             {
-                var node = _nodes[i];
+                var node = _nodeParents[i];
                 Editor.Instance.Scene.MarkSceneEdited(node.ParentScene);
                 node.Delete();
             }
-            _nodes.Clear();
+            _nodeParents.Clear();
         }
 
         /// <inheritdoc />
@@ -56,14 +58,19 @@ namespace FlaxEditor.Actions
             var actors = Actor.FromBytes(_data);
             if (actors == null)
                 return;
+            var actorNodes = new List<ActorNode>(actors.Length);
             for (int i = 0; i < actors.Length; i++)
             {
                 var foundNode = SceneGraphFactory.FindNode(actors[i].ID);
                 if (foundNode is ActorNode node)
                 {
-                    _nodes.Add(node);
-                    Editor.Instance.Scene.MarkSceneEdited(node.ParentScene);
+                    actorNodes.Add(node);
                 }
+            }
+            actorNodes.BuildNodesParents(_nodeParents);
+            for (int i = 0; i < _nodeParents.Count; i++)
+            {
+                Editor.Instance.Scene.MarkSceneEdited(_nodeParents[i].ParentScene);
             }
         }
     }
