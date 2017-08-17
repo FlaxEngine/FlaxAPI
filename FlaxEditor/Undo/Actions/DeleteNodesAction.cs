@@ -2,10 +2,9 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using System.Collections.Generic;
 using FlaxEditor.SceneGraph;
-using FlaxEngine.Assertions;
+using FlaxEngine;
 
 namespace FlaxEditor.Actions
 {
@@ -15,74 +14,23 @@ namespace FlaxEditor.Actions
     /// <seealso cref="FlaxEditor.IUndoAction" />
     public sealed class DeleteNodesAction : IUndoAction
     {
-        /// <summary>
-        /// Represents single entry of the node being removed
-        /// </summary>
-        private class Entry
-        {
-            private SceneGraphNode.DeserializeHandler Deserializer;
-            private SceneGraphNode Node;
-            private int OrderInParent;
-            private byte[] Data;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Entry"/> class.
-            /// </summary>
-            /// <param name="node">The target node.</param>
-            public Entry(SceneGraphNode node)
-            {
-                Deserializer = node.Deserializer;
-                Node = node;
-                OrderInParent = node.OrderInParent;
-                Data = node.Serialize();
-            }
-
-            /// <summary>
-            /// Deletes this entry node.
-            /// </summary>
-            public void Delete()
-            {
-                Assert.IsNotNull(Node);
-
-                Editor.Instance.Scene.MarkSceneEdited(Node.ParentScene);
-
-                Node.Delete();
-                Node = null;
-            }
-
-            /// <summary>
-            /// Restores this entry node.
-            /// </summary>
-            public void Restore()
-            {
-                Assert.IsNull(Node);
-
-                Node = Deserializer(Data);
-                if(Node == null)
-                    throw new Exception("Failed to deserialize scene graph node.");
-
-                Editor.Instance.Scene.MarkSceneEdited(Node.ParentScene);
-            }
-            
-            /// <summary>
-            /// Updates the entry order in parent.
-            /// </summary>
-            public void UpdateOrder()
-            {
-                Assert.IsNotNull(Node);
-                Node.OrderInParent = OrderInParent;
-            }
-        }
-
-        private Entry[] _entries;
+        private List<ActorNode> _nodes;
+        private byte[] _data;
 
         internal DeleteNodesAction(List<SceneGraphNode> objects)
         {
-            _entries = new Entry[objects.Count];
+            _nodes = new List<ActorNode>(objects.Count);
+            List<Actor> actors = new List<Actor>(objects.Count);
             for (int i = 0; i < objects.Count; i++)
             {
-                _entries[i] = new Entry(objects[i]);
+                if (objects[i] is ActorNode node)
+                {
+                    _nodes.Add(node);
+                    actors.Add(node.Actor);
+                }
             }
+
+            _data = Actor.ToBytes(actors.ToArray());
         }
 
         /// <inheritdoc />
@@ -92,25 +40,30 @@ namespace FlaxEditor.Actions
         public void Do()
         {
             // Remove objects
-            for (int i = 0; i < _entries.Length; i++)
+            for (int i = 0; i < _nodes.Count; i++)
             {
-                _entries[i].Delete();
+                var node = _nodes[i];
+                Editor.Instance.Scene.MarkSceneEdited(node.ParentScene);
+                node.Delete();
             }
+            _nodes.Clear();
         }
 
         /// <inheritdoc />
         public void Undo()
         {
             // Restore objects
-            for (int i = 0; i < _entries.Length; i++)
+            var actors = Actor.FromBytes(_data);
+            if (actors == null)
+                return;
+            for (int i = 0; i < actors.Length; i++)
             {
-                _entries[i].Restore();
-            }
-
-            // Fix order in parent
-            for (int i = 0; i < _entries.Length; i++)
-            {
-                _entries[i].UpdateOrder();
+                var foundNode = SceneGraphFactory.FindNode(actors[i].ID);
+                if (foundNode is ActorNode node)
+                {
+                    _nodes.Add(node);
+                    Editor.Instance.Scene.MarkSceneEdited(node.ParentScene);
+                }
             }
         }
     }

@@ -225,24 +225,6 @@ namespace FlaxEditor.SceneGraph
         }
 
         /// <summary>
-        /// Delegate used to deserialize scene graph node from the raw bytes.
-        /// </summary>
-        /// <param name="data">The serialized data.</param>
-        /// <returns>The deserialized node.</returns>
-        public delegate SceneGraphNode DeserializeHandler(byte[] data);
-        
-        /// <summary>
-        /// Gets object deserialization handler.
-        /// </summary>
-        public abstract DeserializeHandler Deserializer { get; }
-        
-        /// <summary>
-        /// Serializes object represented by this node eg. actor.
-        /// </summary>
-        /// <returns></returns>
-        public abstract byte[] Serialize();
-
-        /// <summary>
         /// Deletes object represented by this node eg. actor.
         /// </summary>
         public abstract void Delete();

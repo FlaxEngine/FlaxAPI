@@ -197,14 +197,33 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Serializes the actor objects to the raw bytes. Serialized are actor properties and scripts but no child actors. Serializes references to the other objects in a proper way using IDs.
+        /// </summary>
+        /// <param name="actors">The actors.</param>
+        /// <returns>The bytes array with serialized actors data. Returns null if fails.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static byte[] ToBytes(Actor[] actors)
+        {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_ToBytes(Array.ConvertAll(actors, GetUnmanagedPtr));
+#endif
+        }
+
+        /// <summary>
         /// Destroys the children. Calls Object.Destroy on every child actor.
         /// </summary>
-        public void DestroyChildren()
+        /// <param name="timeLeft">The time left to destroy object (in seconds).</param>
+        public void DestroyChildren(float timeLeft = 0.0f)
         {
             var children = GetChildren();
             for (int i = 0; i < children.Length; i++)
             {
-                Destroy(children[i]);
+                Destroy(children[i], timeLeft);
             }
         }
 
@@ -217,5 +236,8 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_IntersectsItself(IntPtr obj, ref Ray ray, ref float distance);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern byte[] Internal_ToBytes(IntPtr[] actors);
     }
 }

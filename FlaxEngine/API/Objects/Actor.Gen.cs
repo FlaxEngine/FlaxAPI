@@ -555,32 +555,15 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Serializes the actor object to the raw bytes. Serialized are actor properties and scripts but no child actors. Serializes references to the other objects in a proper way using IDs.
-		/// </summary>
-		/// <returns>The bytes array with serialized actor data.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-		[UnmanagedCall]
-		public byte[] ToBytes() 
-		{
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-			return Internal_ToBytes(unmanagedPtr);
-#endif
-		}
-
-		/// <summary>
-		/// Deserializes the actor object from the raw bytes. Deserialized are actor properties and scripts but no child actors.
+		/// Deserializes the actor objects from the raw bytes. Deserialized are actor properties and scripts but no child actors.
 		/// </summary>
 		/// <param name="data">The data.</param>
-		/// <returns>Spawned actor deserialized from the data. Returns null if fails.</returns>
+		/// <returns>Spawned actors deserialized from the data. Returns null if fails.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static Actor FromBytes(byte[] data) 
+		public static Actor[] FromBytes(byte[] data) 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -682,9 +665,7 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_UpdateCache(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern byte[] Internal_ToBytes(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Actor Internal_FromBytes(byte[] data);
+		internal static extern Actor[] Internal_FromBytes(byte[] data);
 #endif
 #endregion
 	}
