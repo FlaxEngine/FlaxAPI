@@ -124,7 +124,14 @@ namespace FlaxEditor.SceneGraph
         public override string Name => _actor.Name;
 
         /// <inheritdoc />
-        public override SceneNode ParentScene => SceneGraphFactory.FindNode(_actor.Scene.ID) as SceneNode;
+        public override SceneNode ParentScene
+        {
+            get
+            {
+                var scene = _actor.Scene;
+                return scene != null ? SceneGraphFactory.FindNode(scene.ID) as SceneNode : null;
+            }
+        }
 
         /// <inheritdoc />
         public override bool IsActive => _actor.IsActive;
