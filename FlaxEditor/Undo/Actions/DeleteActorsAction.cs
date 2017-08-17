@@ -9,15 +9,15 @@ using FlaxEngine;
 namespace FlaxEditor.Actions
 {
     /// <summary>
-    /// Implementation of <see cref="IUndoAction"/> used to delete a selection of <see cref="SceneGraphNode"/>.
+    /// Implementation of <see cref="IUndoAction"/> used to delete a selection of <see cref="ActorNode"/>.
     /// </summary>
     /// <seealso cref="FlaxEditor.IUndoAction" />
-    public sealed class DeleteNodesAction : IUndoAction
+    public sealed class DeleteActorsAction : IUndoAction
     {
         private List<ActorNode> _nodeParents;
         private byte[] _data;
 
-        internal DeleteNodesAction(List<SceneGraphNode> objects)
+        internal DeleteActorsAction(List<SceneGraphNode> objects)
         {
             _nodeParents = new List<ActorNode>(objects.Count);
             var actorNodes = new List<ActorNode>(objects.Count);
@@ -36,7 +36,7 @@ namespace FlaxEditor.Actions
         }
 
         /// <inheritdoc />
-        public string ActionString => "Delete object(s)";
+        public string ActionString => "Delete actors";
 
         /// <inheritdoc />
         public void Do()

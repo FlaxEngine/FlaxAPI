@@ -174,7 +174,7 @@ namespace FlaxEditor.Modules
             var action1 = new SelectionChangeAction(Selection.ToArray(), new SceneGraphNode[0]);
 
             // Delete objects
-            var action2 = new DeleteNodesAction(objects);
+            var action2 = new DeleteActorsAction(objects);
 
             // Merge two actions and perform them
             var action = new MultiUndoAction(new IUndoAction[] { action1, action2 }, action2.ActionString);
@@ -227,12 +227,6 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void Duplicate()
         {
-            // Peek things that can be duplicated (duplicate only top objects)
-            var objects = Selection.BuildNodesParents().Where(x => x.CanCopyPaste).ToList();
-            if (objects.Count == 0)
-                return;
-
-            throw new NotImplementedException("TODO: implement Duplicate");
         }
     }
 }
