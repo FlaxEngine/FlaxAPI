@@ -45,7 +45,7 @@ namespace FlaxEditor.SceneGraph
                 for (var j = 0; j < nodes.Count; j++)
                 {
                     var test = nodes[j];
-                    if (test != target && test.ContainsInHierarchy(target))
+                    if (i != j && test.ContainsInHierarchy(target))
                     {
                         isChild = true;
                         break;
