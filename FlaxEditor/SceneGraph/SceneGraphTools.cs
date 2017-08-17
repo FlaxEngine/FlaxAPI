@@ -15,11 +15,13 @@ namespace FlaxEditor.SceneGraph
         /// <summary>
         /// Builds the array made of input nodes that are at the top level. The result collection contains only nodes that don't have parent nodes in the given collection.
         /// </summary>
+        /// <typeparam name="T">The scene graph node type.</typeparam>
         /// <param name="nodes">The nodes.</param>
         /// <returns>The result.</returns>
-        public static SceneGraphNode[] BuildNodesParents(this List<SceneGraphNode> nodes)
+        public static T[] BuildNodesParents<T>(this List<T> nodes)
+            where T : SceneGraphNode
         {
-            var list = new List<SceneGraphNode>();
+            var list = new List<T>();
             BuildNodesParents(nodes, list);
             return list.ToArray();
         }
@@ -27,9 +29,11 @@ namespace FlaxEditor.SceneGraph
         /// <summary>
         /// Builds the list made of input nodes that are at the top level. The result collection contains only nodes that don't have parent nodes in the given collection.
         /// </summary>
+        /// <typeparam name="T">The scene graph node type.</typeparam>
         /// <param name="nodes">The nodes.</param>
         /// <param name="result">The result.</param>
-        public static void BuildNodesParents(this List<SceneGraphNode> nodes, List<SceneGraphNode> result)
+        public static void BuildNodesParents<T>(this List<T> nodes, List<T> result)
+            where T : SceneGraphNode
         {
             if (nodes == null || result == null)
                 throw new ArgumentNullException();
