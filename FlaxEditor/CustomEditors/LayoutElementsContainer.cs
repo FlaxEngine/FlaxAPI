@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors
@@ -90,10 +91,18 @@ namespace FlaxEditor.CustomEditors
         /// <returns>The created element.</returns>
         public CustomEditor Object(ValueContainer values)
         {
+            // This could be passed by the calling code but it's easier to hide it from the user
+            // Note: we need that custom editor to link generated editor into the parent
+            var customEditor = CustomEditor.CurrentCustomEditor;
+            Assert.IsNotNull(customEditor);
+
             // TODO: select proper editor (check attribues, global overrides, type overrides, etc.)
 
             var editor = new GenericEditor();
+
+            customEditor.OnChildCreated(editor);
             editor.Initialize(this, values);
+
             return editor;
         }
 

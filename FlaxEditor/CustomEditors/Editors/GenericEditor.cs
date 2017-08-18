@@ -17,8 +17,6 @@ namespace FlaxEditor.CustomEditors.Editors
     /// </summary>
     public sealed class GenericEditor : CustomEditor
     {
-        private readonly List<CustomEditor> children = new List<CustomEditor>();
-
         private struct PropertyItemInfo : IComparable
         {
             public PropertyInfo Info;
@@ -70,6 +68,42 @@ namespace FlaxEditor.CustomEditors.Editors
             }
         }
 
+        private List<PropertyItemInfo> GetPropertyItemsForType(Type type)
+        {
+            // TODO: cache this per type?
+
+            // Process the properties
+            var properties = type.GetProperties();
+            var propertyItems = new List<PropertyItemInfo>(properties.Length);
+            for (int i = 0; i < properties.Length; i++)
+            {
+                var p = properties[i];
+                var getter = p.GetMethod;
+
+                // Skip hidden properties and only set properties
+                if (getter == null || !getter.IsPublic || p.GetIndexParameters().GetLength(0) != 0)
+                {
+                    continue;
+                }
+
+                var attributes = p.GetCustomAttributes(true);
+                if (attributes.Any(x => x is HideInEditorAttribute))
+                {
+                    continue;
+                }
+
+                PropertyItemInfo item;
+                item.Info = p;
+                item.Order = (EditorOrderAttribute)attributes.FirstOrDefault(x => x is EditorOrderAttribute);
+                item.Display = (EditorDisplayAttribute)attributes.FirstOrDefault(x => x is EditorDisplayAttribute);
+                // TODO: support custom editor type via CustomClassEditorAttribute
+
+                propertyItems.Add(item);
+            }
+
+            return propertyItems;
+        }
+
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
@@ -82,119 +116,71 @@ namespace FlaxEditor.CustomEditors.Editors
             // TODO: spawn custom editors for every editable thing
             // TODO; use shared properties/fields across all selected objects values
 
-            // Faster path for the same objects selected
-            if (HasDiffrentTypes == false)
+            // Collect property items
+            List<PropertyItemInfo> propertyItems;
+            if (!HasDiffrentTypes)
             {
-                var type = Values[0].GetType();
-
-                //layout.Button("Type " + type.Name);
-
-                if (type.IsArray)
-                {
-                    layout.Button("Array: " + type.Name);
-                }
-                else if (type.IsValueType)
-                {
-                    layout.Button("ValueType: " + type.Name);
-                }
-                else if (type.IsClass)
-                {
-                    layout.Button("Type " + type.Name);
-                    layout.Space(10);
-
-                    // TODO: promote children to other base class like CustomEditorContainer ?
-                    
-                    // Process the properties
-                    var properties = type.GetProperties();
-                    var propertyItems = new List<PropertyItemInfo>(properties.Length);
-                    for (int i = 0; i < properties.Length; i++)
-                    {
-                        var p = properties[i];
-                        var getter = p.GetMethod;
-
-                        // Skip hidden properties and only set properties
-                        if (getter == null || !getter.IsPublic || p.GetIndexParameters().GetLength(0) != 0)
-                        {
-                            continue;
-                        }
-
-                        var attributes = p.GetCustomAttributes(true);
-                        if (attributes.Any(x => x is HideInEditorAttribute))
-                        {
-                            continue;
-                        }
-
-                        PropertyItemInfo item;
-                        item.Info = p;
-                        item.Order = (EditorOrderAttribute)attributes.FirstOrDefault(x => x is EditorOrderAttribute);
-                        item.Display = (EditorDisplayAttribute)attributes.FirstOrDefault(x => x is EditorDisplayAttribute);
-                        // TODO: support custom editor type via CustomClassEditorAttribute
-
-                        propertyItems.Add(item);
-                    }
-
-                    // Sort items
-                    propertyItems.Sort();
-
-                    // Add items
-                    GroupElement lastGroup = null;
-                    for (int i = 0; i < propertyItems.Count; i++)
-                    {
-                        var item = propertyItems[i];
-
-                        // Check if use group
-                        LayoutElementsContainer itemLayout;
-                        if (item.UseGroup)
-                        {
-                            if (lastGroup == null || lastGroup.Panel.Name != item.Display.Group)
-                                lastGroup = layout.Group(item.Display.Group);
-                            itemLayout = lastGroup;
-                        }
-                        else
-                        {
-                            lastGroup = null;
-                            itemLayout = layout;
-                        }
-
-                        // Peek values
-                        ValueContainer itemValues;
-                        try
-                        {
-                            itemValues = new ValueContainer(Values.Count);
-                            for (int j = 0; j < Values.Count; j++)
-                                itemValues.Add(item.Info.GetValue(Values[j]));
-                        }
-                        catch (Exception ex)
-                        {
-                            Editor.LogWarning("Failed to get object values " + ex.Message);
-                            Editor.LogWarning(type.FullName + '.' + item);
-                            Editor.LogWarning(ex.StackTrace);
-                            return;
-                        }
-
-                        // Spawn child editor
-                        itemLayout.Button(item.DisplayName + " order: " + (item.Order != null ? item.Order.Order.ToString() : "?"));
-                        //Debug.Log("Child item " + item);
-                        //var child = itemLayout.Object(itemValues);
-                        //children.Add(child);
-                    }
-                }
-                else
-                {
-                    layout.Button("No class type: " + type.Name);
-                }
+                propertyItems = GetPropertyItemsForType(Values[0].GetType());
             }
             else
             {
-                layout.Button("More than object selected");
-            }
-        }
+                var types = ValuesTypes;
+                propertyItems = GetPropertyItemsForType(types[0]);
+                for (int i = 1; i < types.Length; i++)
+                {
+                    var items = GetPropertyItemsForType(types[i]);
 
-        /// <inheritdoc />
-        public override void Refresh()
-        {
-            for (int i = 0; i < children.Count; i++)
-                children[i].Refresh();
+                    // TODO: merge items and propertyItems
+                }
+            }
+
+            // TODO: promote children to other base class like CustomEditorContainer ?
+
+            // Sort items
+            propertyItems.Sort();
+
+            // Add items
+            GroupElement lastGroup = null;
+            for (int i = 0; i < propertyItems.Count; i++)
+            {
+                var item = propertyItems[i];
+
+                // Check if use group
+                LayoutElementsContainer itemLayout;
+                if (item.UseGroup)
+                {
+                    if (lastGroup == null || lastGroup.Panel.Name != item.Display.Group)
+                        lastGroup = layout.Group(item.Display.Group);
+                    itemLayout = lastGroup;
+                }
+                else
+                {
+                    lastGroup = null;
+                    itemLayout = layout;
+                }
+
+                // Peek values
+                ValueContainer itemValues;
+                try
+                {
+                    itemValues = new ValueContainer(Values.Count);
+                    for (int j = 0; j < Values.Count; j++)
+                        itemValues.Add(item.Info.GetValue(Values[j]));
+                }
+                catch (Exception ex)
+                {
+                    Editor.LogWarning("Failed to get object values for item " + item);
+                    Editor.LogWarning(ex.Message);
+                    Editor.LogWarning(ex.StackTrace);
+                    return;
+                }
+
+                // Spawn child editor
+                itemLayout.Button(item.DisplayName + " order: " + (item.Order != null ? item.Order.Order.ToString() : "?"));
+                //Debug.Log("Child item " + item);
+                //var child = itemLayout.Object(itemValues);
+                //children.Add(child);
+            }
         }
     }
 }

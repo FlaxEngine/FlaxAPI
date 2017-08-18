@@ -2,6 +2,10 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace FlaxEditor.CustomEditors
 {
     /// <summary>
@@ -10,6 +14,7 @@ namespace FlaxEditor.CustomEditors
     public abstract class CustomEditor
     {
         private ValueContainer _values;
+        private readonly List<CustomEditor> _children = new List<CustomEditor>();
 
         /// <summary>
         /// Gets a value indicating whether single object is selected.
@@ -61,6 +66,24 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Gets the values types array (without duplicates).
+        /// </summary>
+        /// <value>
+        /// The values types.
+        /// </value>
+        public Type[] ValuesTypes
+        {
+            get
+            {
+                if (_values == null)
+                    return new Type[0];
+                if (_values.Count == 1)
+                    return new []{_values[0].GetType()};
+                return _values.ConvertAll(x => x.GetType()).Distinct().ToArray();
+            }
+        }
+
+        /// <summary>
         /// Gets the values.
         /// </summary>
         /// <value>
@@ -72,8 +95,20 @@ namespace FlaxEditor.CustomEditors
         {
             _values = values;
 
+            var prev = CurrentCustomEditor;
+            CurrentCustomEditor = this;
+
             Initialize(layout);
             Refresh();
+
+            CurrentCustomEditor = prev;
+        }
+
+        internal static CustomEditor CurrentCustomEditor;
+
+        internal void OnChildCreated(CustomEditor child)
+        {
+            _children.Add(child);
         }
 
         /// <summary>
@@ -85,6 +120,11 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// Refreshes this editor.
         /// </summary>
-        public abstract void Refresh();
+        public virtual void Refresh()
+        {
+            // Update children
+            for (int i = 0; i < _children.Count; i++)
+                _children[i].Refresh();
+        }
     }
 }
