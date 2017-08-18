@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
 
@@ -64,7 +65,21 @@ namespace FlaxEditor.Actions
             actorNodes.BuildNodesParents(_nodeParents);
             for (int i = 0; i < _nodeParents.Count; i++)
             {
-                Editor.Instance.Scene.MarkSceneEdited(_nodeParents[i].ParentScene);
+                // Fix name collisions (only for parents)
+                var node = _nodeParents[i];
+                var parent = node.Actor?.Parent;
+                if (parent != null)
+                {
+                    string name = node.Name;
+                    Actor[] children = parent.GetChildren();
+                    if (children.Count(x => x.Name == name) > 1)
+                    {
+                        // Generate new name
+                        node.Actor.Name = StringUtils.IncrementNameNumber(name, x => children.All(y => y.Name != x));
+                    }
+                }
+
+                Editor.Instance.Scene.MarkSceneEdited(node.ParentScene);
             }
         }
 
