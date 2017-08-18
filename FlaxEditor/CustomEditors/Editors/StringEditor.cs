@@ -2,14 +2,15 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEngine;
 
 namespace FlaxEditor.CustomEditors.Editors
 {
     /// <summary>
     /// Default implementation of the inspector used to edit string properties.
     /// </summary>
+    [CustomEditor(typeof(string)), DefaultEditor]
     public sealed class StringEditor : CustomEditor
     {
         private TextBoxElement textBox;
@@ -29,14 +30,23 @@ namespace FlaxEditor.CustomEditors.Editors
             // TODO: block events during values refresh
 
             // TODO: update values, send mark dirty event or sth
+
+            Debug.Log("-----> text changed to " + textBox.Text);
         }
 
         /// <inheritdoc />
         public override void Refresh()
         {
-            var hasDiffrentValue = HasDiffrentValues;
-            // TODO: handle diffrent values better
-            textBox.TextBox.Text = hasDiffrentValue ? "Diffrent Values" : Values[0] as string;
+            if (HasDiffrentValues)
+            {
+                textBox.TextBox.Text = string.Empty;
+                textBox.TextBox.WatermarkText = "Diffrent Values";
+            }
+            else
+            {
+                textBox.TextBox.Text = (string)Values[0];
+                textBox.TextBox.WatermarkText = string.Empty;
+            }
         }
     }
 }

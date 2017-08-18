@@ -18,6 +18,15 @@ namespace FlaxEditor.CustomEditors.Elements
         public readonly TextBox TextBox;
 
         /// <summary>
+        /// Gets or sets the text.
+        /// </summary>
+        public string Text
+        {
+            get => TextBox.Text;
+            set => TextBox.Text = value;
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TextBoxElement"/> class.
         /// </summary>
         /// <param name="isMultiline">Enable/disable multiline text input support</param>
