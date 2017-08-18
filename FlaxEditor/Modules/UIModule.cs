@@ -398,7 +398,7 @@ namespace FlaxEditor.Modules
             ToolStrip.Parent = mainWindow;
 
             // TODO: add tooltips support like in c++
-            ToolStrip.AddButton(0, GetIcon("Logo32"));//.LinkTooltip(SharedToolTip, "Flax Engine");// Welcome screen
+            //ToolStrip.AddButton(0, GetIcon("Logo32"));//.LinkTooltip(SharedToolTip, "Flax Engine");// Welcome screen
             ToolStrip.AddButton(2, GetIcon("Save32"));//.LinkTooltip(SharedToolTip, "Save all (Ctrl+S)");// Save all
             ToolStrip.AddSeparator();
             ToolStrip.AddButton(3, GetIcon("Undo32"));//.LinkTooltip(SharedToolTip, "Undo (Ctrl+Z)");// Undo

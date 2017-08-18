@@ -5,7 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEditor.Actions;
 using FlaxEditor.SceneGraph;
+using FlaxEngine;
 
 namespace FlaxEditor.Modules
 {
@@ -62,6 +64,9 @@ namespace FlaxEditor.Modules
             if (selection == null)
                 throw new ArgumentNullException();
 
+            // Prevent from selecting null nodes
+            selection.RemoveAll(x => x == null);
+
             // Check if won't change
             if (!additive && Selection.Count == selection.Count && Selection.SequenceEqual(selection))
                 return;
@@ -84,16 +89,7 @@ namespace FlaxEditor.Modules
             if (selection == null)
                 throw new ArgumentNullException();
 
-            // Check if won't change
-            if (!additive && Selection.Count == selection.Length && Selection.SequenceEqual(selection))
-                return;
-
-            var before = Selection.ToArray();
-            if (!additive)
-                Selection.Clear();
-            Selection.AddRange(selection);
-
-            SelectionChange(before);
+            Select(selection.ToList(), additive);
         }
 
         /// <summary>
@@ -157,7 +153,8 @@ namespace FlaxEditor.Modules
         internal void OnSelectionUndo(SceneGraphNode[] toSelect)
         {
             Selection.Clear();
-            Selection.AddRange(toSelect);
+            if (toSelect != null && toSelect.Length > 0)
+                Selection.AddRange(toSelect);
 
             OnSelectionChanged?.Invoke();
         }
@@ -167,7 +164,21 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void Delete()
         {
-            throw new NotImplementedException("TODO: implement Delete");
+            // Peek things that can be removed
+            var objects = Selection.Where(x => x.CanDelete).ToList().BuildAllNodes().Where(x => x.CanDelete).ToList();
+            if (objects.Count == 0)
+                return;
+
+            // Change selection
+            var action1 = new SelectionChangeAction(Selection.ToArray(), new SceneGraphNode[0]);
+
+            // Delete objects
+            var action2 = new DeleteActorsAction(objects);
+
+            // Merge two actions and perform them
+            var action = new MultiUndoAction(new IUndoAction[] { action1, action2 }, action2.ActionString);
+            action.Do();
+            Undo.AddAction(action);
         }
 
         /// <summary>
@@ -175,7 +186,22 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void Copy()
         {
-            throw new NotImplementedException("TODO: implement Copy");
+            // Peek things that can be copied (copy all acctors)
+            var objects = Selection.Where(x => x.CanCopyPaste).ToList().BuildAllNodes().Where(x => x.CanCopyPaste && x is ActorNode).ToList();
+            if (objects.Count == 0)
+                return;
+
+            // Serialize actors
+            var actors = objects.ConvertAll(x => ((ActorNode)x).Actor);
+            var data = Actor.ToBytes(actors.ToArray());
+            if (data == null)
+            {
+                Editor.LogError("Failed to copy actors data.");
+                return;
+            }
+            
+            // Copy data
+            Application.ClipboardRawData = data;
         }
 
         /// <summary>
@@ -183,7 +209,16 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void Paste()
         {
-            throw new NotImplementedException("TODO: implement Paste");
+            // Get clipboard data
+            var data = Application.ClipboardRawData;
+
+            // Create paste action
+            var action = PasteActorsAction.TryCreate(data);
+            if (action != null)
+            {
+                action.Do();
+                Undo.AddAction(action);
+            }
         }
 
         /// <summary>
@@ -200,8 +235,27 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void Duplicate()
         {
-            Copy();
-            Paste();
+            // Peek things that can be copied (copy all acctors)
+            var objects = Selection.Where(x => x.CanCopyPaste).ToList().BuildAllNodes().Where(x => x.CanCopyPaste && x is ActorNode).ToList();
+            if (objects.Count == 0)
+                return;
+
+            // Serialize actors
+            var actors = objects.ConvertAll(x => ((ActorNode)x).Actor);
+            var data = Actor.ToBytes(actors.ToArray());
+            if (data == null)
+            {
+                Editor.LogError("Failed to copy actors data.");
+                return;
+            }
+
+            // Create paste action
+            var action = PasteActorsAction.TryCreate(data, true);
+            if (action != null)
+            {
+                action.Do();
+                Undo.AddAction(action);
+            }
         }
     }
 }

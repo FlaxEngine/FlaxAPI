@@ -225,6 +225,21 @@ namespace FlaxEditor.Content.Thumbnails
                     return;
                 }
 
+                // Find atlas with an free slot
+                var atlas = GetValidAtlas();
+                if (atlas == null)
+                {
+                    // Error
+                    _task.Enabled = false;
+                    _requests.Clear();
+                    Debug.LogError("Failed to get atlas.");
+                    return;
+                }
+
+                // Wait for atlas being loaded
+                if (!atlas.IsReady)
+                    return;
+
                 // Setup
                 _guiRoot.RemoveChildren();
                 _guiRoot.AccentColor = request.Proxy.AccentColor;
@@ -240,17 +255,6 @@ namespace FlaxEditor.Content.Thumbnails
                 // Call proxy and cleanup UI (delete create controls, shared controls should be unlinked during OnThumbnailDrawEnd event)
                 request.Proxy.OnThumbnailDrawEnd(request, _guiRoot);
                 _guiRoot.DisposeChildren();
-
-                // Find atlas with an free slot
-                var atlas = GetValidAtlas();
-                if (atlas == null)
-                {
-                    // Error
-                    _task.Enabled = false;
-                    _requests.Clear();
-                    Debug.LogError("Failed to get atlas.");
-                    return;
-                }
 
                 // Copy backbuffer with rendered preview into atlas
                 Sprite icon = atlas.OccupySlot(_output, request.Item.ID);

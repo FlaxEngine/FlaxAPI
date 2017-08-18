@@ -554,6 +554,24 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Tries the get serialized objects ids from the raw bytes.
+		/// </summary>
+		/// <param name="data">The data.</param>
+		/// <returns>Collection of serialized objects ids or null if cannot gather information from the bytes (invalid format).</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static Guid[] TryGetSerializedObjectsIds(byte[] data) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_TryGetSerializedObjectsIds(data);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -646,6 +664,8 @@ namespace FlaxEngine
 		internal static extern bool Internal_ContainsChild(IntPtr obj, Actor actor);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_UpdateCache(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern Guid[] Internal_TryGetSerializedObjectsIds(byte[] data);
 #endif
 #endregion
 	}

@@ -397,6 +397,8 @@ namespace FlaxEditor.Modules
             var node = GetActorNode(actor);
             if (node != null)
             {
+                Editor.SceneEditing.Deselect(node);
+
                 // Cleanup part of the graph
                 node.Dispose();
             }

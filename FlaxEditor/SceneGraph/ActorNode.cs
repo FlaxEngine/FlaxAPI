@@ -124,13 +124,27 @@ namespace FlaxEditor.SceneGraph
         public override string Name => _actor.Name;
 
         /// <inheritdoc />
-        public override SceneNode ParentScene => SceneGraphFactory.FindNode(_actor.Scene.ID) as SceneNode;
+        public override SceneNode ParentScene
+        {
+            get
+            {
+                var scene = _actor.Scene;
+                return scene != null ? SceneGraphFactory.FindNode(scene.ID) as SceneNode : null;
+            }
+        }
 
         /// <inheritdoc />
         public override bool IsActive => _actor.IsActive;
 
         /// <inheritdoc />
         public override bool IsActiveInHierarchy => _actor.IsActiveInHierarchy;
+
+        /// <inheritdoc />
+        public override int OrderInParent
+        {
+            get => _actor.OrderInParent;
+            set => _actor.OrderInParent = value;
+        }
 
         /// <inheritdoc />
         public override Transform Transform
@@ -158,6 +172,12 @@ namespace FlaxEditor.SceneGraph
         public override bool RayCastSelf(ref Ray ray, ref float distance)
         {
             return _actor.IntersectsItself(ref ray, ref distance);
+        }
+        
+        /// <inheritdoc />
+        public override void Delete()
+        {
+            FlaxEngine.Object.Destroy(_actor);
         }
 
         /// <inheritdoc />

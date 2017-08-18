@@ -49,9 +49,11 @@ namespace FlaxEditor.Windows
                             return true;
                         case KeyCode.Z:
                             Editor.PerformUndo();
+                            Focus();
                             return true;
                         case KeyCode.Y:
                             Editor.PerformRedo();
+                            Focus();
                             return true;
                         case KeyCode.X:
                             Editor.SceneEditing.Cut();

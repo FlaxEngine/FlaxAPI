@@ -184,23 +184,6 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Deletes actor from the scene.
-		/// </summary>
-		/// <param name="actor">The actor to delete.</param>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-		[UnmanagedCall]
-		public static void DeleteActor(Actor actor) 
-		{
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-			Internal_DeleteActor(Object.GetUnmanagedPtr(actor));
-#endif
-		}
-
-		/// <summary>
 		/// Saves scene to the asset.
 		/// </summary>
 		/// <param name="scene">The scene to serialize.</param>
@@ -450,8 +433,6 @@ namespace FlaxEngine
 		internal static extern bool Internal_GetLastSceneLoadTime();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SpawnActor(IntPtr actor, IntPtr parent);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_DeleteActor(IntPtr actor);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_SaveScene(IntPtr scene);
 		[MethodImpl(MethodImplOptions.InternalCall)]

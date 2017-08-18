@@ -159,6 +159,20 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets or sets the system clipboard raw data bytes.
+		/// </summary>
+		[UnmanagedCall]
+		public static byte[] ClipboardRawData
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetClipboardDataRaw(); }
+			set { Internal_SetClipboardDataRaw(value); }
+#endif
+		}
+
+		/// <summary>
 		/// Starts a new native process.
 		/// </summary>
 		/// <param name="path">Target file path.</param>
@@ -204,6 +218,10 @@ namespace FlaxEngine
 		internal static extern string Internal_GetClipboardText();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetClipboardText(string val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern byte[] Internal_GetClipboardDataRaw();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetClipboardDataRaw(byte[] val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_StartProcess(string path, string args, bool hiddenWindow, bool waitForEnd);
 #endif
