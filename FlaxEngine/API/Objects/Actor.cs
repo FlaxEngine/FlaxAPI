@@ -3,6 +3,8 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -215,6 +217,27 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Deserializes the actor objects from the raw bytes. Deserialized are actor properties and scripts but no child actors.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="idsMapping">The serialized objects ids mapping table used to change object ids and keep valid reference links. Use null value to skipp ids mapping.</param>
+        /// <returns>Spawned actors deserialized from the data. Returns null if fails.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static Actor[] FromBytes(byte[] data, Dictionary<Guid, Guid> idsMapping = null)
+        {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Guid[] keys = idsMapping?.Keys.ToArray();
+            Guid[] values = idsMapping?.Values.ToArray();
+            return Internal_FromBytes(data, keys, values);
+#endif
+        }
+
+        /// <summary>
         /// Destroys the children. Calls Object.Destroy on every child actor.
         /// </summary>
         /// <param name="timeLeft">The time left to destroy object (in seconds).</param>
@@ -239,5 +262,7 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern byte[] Internal_ToBytes(IntPtr[] actors);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Actor[] Internal_FromBytes(byte[] data, Guid[] idsMappingKeys, Guid[] idsMappingValues);
     }
 }

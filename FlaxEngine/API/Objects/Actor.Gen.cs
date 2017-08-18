@@ -555,38 +555,20 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Deserializes the actor objects from the raw bytes. Deserialized are actor properties and scripts but no child actors.
+		/// Tries the get serialized objects ids from the raw bytes.
 		/// </summary>
 		/// <param name="data">The data.</param>
-		/// <returns>Spawned actors deserialized from the data. Returns null if fails.</returns>
+		/// <returns>Collection of serialized objects ids or null if cannot gather information from the bytes (invalid format).</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static Actor[] FromBytes(byte[] data) 
+		public static Guid[] TryGetSerializedObjectsIds(byte[] data) 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_FromBytes(data);
-#endif
-		}
-
-		/// <summary>
-		/// Determines whether the specified bytes array is valid actor data (can be deserialized into collection of actor objects).
-		/// </summary>
-		/// <param name="data">The data.</param>
-		/// <returns>True if the specified bytes array is valid actor data; otherwise, false.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-		[UnmanagedCall]
-		public static bool IsValidActorData(byte[] data) 
-		{
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-			return Internal_IsValidActorData(data);
+			return Internal_TryGetSerializedObjectsIds(data);
 #endif
 		}
 
@@ -683,9 +665,7 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_UpdateCache(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Actor[] Internal_FromBytes(byte[] data);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_IsValidActorData(byte[] data);
+		internal static extern Guid[] Internal_TryGetSerializedObjectsIds(byte[] data);
 #endif
 #endregion
 	}

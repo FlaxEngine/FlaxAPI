@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Collections.Generic;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
@@ -14,15 +15,31 @@ namespace FlaxEditor.Actions
     /// <seealso cref="FlaxEditor.IUndoAction" />
     public sealed class PasteActorsAction : IUndoAction
     {
+        private Dictionary<Guid, Guid> _idsMapping;
         private List<ActorNode> _nodeParents;
         private byte[] _data;
 
-        internal PasteActorsAction(byte[] data, bool isDuplicate = false)
+        private PasteActorsAction(byte[] data, Guid[] objectIds, bool isDuplicate)
         {
             ActionString = isDuplicate ? "Duplicate actors" : "Paste actors";
 
+            _idsMapping = new Dictionary<Guid, Guid>(objectIds.Length * 4);
+            for (int i = 0; i < objectIds.Length; i++)
+            {
+                _idsMapping[objectIds[i]] = Guid.NewGuid();
+            }
+
             _nodeParents = new List<ActorNode>();
             _data = data;
+        }
+
+        internal static PasteActorsAction TryCreate(byte[] data, bool isDuplicate = false)
+        {
+            var objectIds = Actor.TryGetSerializedObjectsIds(data);
+            if (objectIds == null)
+                return null;
+
+            return new PasteActorsAction(data, objectIds, isDuplicate);
         }
 
         /// <inheritdoc />
@@ -32,7 +49,7 @@ namespace FlaxEditor.Actions
         public void Do()
         {
             // Restore objects
-            var actors = Actor.FromBytes(_data);
+            var actors = Actor.FromBytes(_data, _idsMapping);
             if (actors == null)
                 return;
             var actorNodes = new List<ActorNode>(actors.Length);

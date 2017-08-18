@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.Actions;
 using FlaxEditor.SceneGraph;
-using FlaxEditor.SceneGraph.GUI;
 using FlaxEngine;
 
 namespace FlaxEditor.Modules
@@ -166,7 +165,7 @@ namespace FlaxEditor.Modules
         public void Delete()
         {
             // Peek things that can be removed
-            var objects = Selection.BuildAllNodes().Where(x => x.CanDelete).ToList();
+            var objects = Selection.Where(x => x.CanDelete).ToList().BuildAllNodes().Where(x => x.CanDelete).ToList();
             if (objects.Count == 0)
                 return;
 
@@ -188,7 +187,7 @@ namespace FlaxEditor.Modules
         public void Copy()
         {
             // Peek things that can be copied (copy all acctors)
-            var objects = Selection.BuildAllNodes().Where(x => x.CanCopyPaste && x is ActorNode).ToList();
+            var objects = Selection.Where(x => x.CanCopyPaste).ToList().BuildAllNodes().Where(x => x.CanCopyPaste && x is ActorNode).ToList();
             if (objects.Count == 0)
                 return;
 
@@ -210,15 +209,16 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void Paste()
         {
-            // Check if clipboard contains valid actors data
+            // Get clipboard data
             var data = Application.ClipboardRawData;
-            if (Actor.IsValidActorData(data) == false)
-                return;
-            
+
             // Create paste action
-            var action = new PasteActorsAction(data);
-            action.Do();
-            Undo.AddAction(action);
+            var action = PasteActorsAction.TryCreate(data);
+            if (action != null)
+            {
+                action.Do();
+                Undo.AddAction(action);
+            }
         }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace FlaxEditor.Modules
         public void Duplicate()
         {
             // Peek things that can be copied (copy all acctors)
-            var objects = Selection.BuildAllNodes().Where(x => x.CanCopyPaste && x is ActorNode).ToList();
+            var objects = Selection.Where(x => x.CanCopyPaste).ToList().BuildAllNodes().Where(x => x.CanCopyPaste && x is ActorNode).ToList();
             if (objects.Count == 0)
                 return;
 
@@ -250,9 +250,12 @@ namespace FlaxEditor.Modules
             }
 
             // Create paste action
-            var action = new PasteActorsAction(data, true);
-            action.Do();
-            Undo.AddAction(action);
+            var action = PasteActorsAction.TryCreate(data, true);
+            if (action != null)
+            {
+                action.Do();
+                Undo.AddAction(action);
+            }
         }
     }
 }
