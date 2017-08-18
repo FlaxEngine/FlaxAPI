@@ -54,9 +54,23 @@ namespace FlaxEditor.Actions
             if (actors == null)
                 return;
             var actorNodes = new List<ActorNode>(actors.Length);
+            Scene[] scenes = null;
             for (int i = 0; i < actors.Length; i++)
             {
-                var foundNode = SceneGraphFactory.FindNode(actors[i].ID);
+                var actor = actors[i];
+
+                // Check if has no parent linked (broken reference eg. old parent not existing)
+                if (actor.Parent == null)
+                {
+                    // TODO: here we could paste actors to selected scene tree node if using SceneTreeWindow during paste and single actor is selected
+
+                    // Link to the first scene root
+                    if (scenes == null)
+                        scenes = SceneManager.Scenes;
+                    actor.Parent = scenes[0];
+                }
+
+                var foundNode = SceneGraphFactory.FindNode(actor.ID);
                 if (foundNode is ActorNode node)
                 {
                     actorNodes.Add(node);
