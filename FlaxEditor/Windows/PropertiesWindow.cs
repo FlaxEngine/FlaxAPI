@@ -28,7 +28,8 @@ namespace FlaxEditor.Windows
             Title = "Properties";
 
             Presenter = new CustomEditorPresenter();
-            Presenter.Panel.DockStyle = DockStyle.Top;
+            Presenter.Panel.Width = Width;
+            Presenter.Panel.AnchorStyle = AnchorStyle.Upper;
             Presenter.Panel.Parent = this;
 
             Editor.SceneEditing.OnSelectionChanged += OnSelectionChanged;
