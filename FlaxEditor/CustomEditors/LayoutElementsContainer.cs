@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System.Collections.Generic;
+using System.Reflection;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine.Assertions;
@@ -38,8 +39,7 @@ namespace FlaxEditor.CustomEditors
         {
             GroupElement element = new GroupElement();
             element.Init(title);
-            element.Control.Parent = ContainerControl;
-            Children.Add(element);
+            OnAddElement(element);
             return element;
         }
 
@@ -52,8 +52,7 @@ namespace FlaxEditor.CustomEditors
         {
             ButtonElement element = new ButtonElement();
             element.Init(title);
-            element.Control.Parent = ContainerControl;
-            Children.Add(element);
+            OnAddElement(element);
             return element;
         }
 
@@ -66,8 +65,7 @@ namespace FlaxEditor.CustomEditors
         {
             SpaceElement element = new SpaceElement();
             element.Init(height);
-            element.Control.Parent = ContainerControl;
-            Children.Add(element);
+            OnAddElement(element);
             return element;
         }
 
@@ -79,31 +77,80 @@ namespace FlaxEditor.CustomEditors
         public TextBoxElement TextBox(bool isMultiline)
         {
             TextBoxElement element = new TextBoxElement(isMultiline);
-            element.Control.Parent = ContainerControl;
-            Children.Add(element);
+            OnAddElement(element);
             return element;
         }
 
         /// <summary>
         /// Adds object(s) editor. Selects proper <see cref="CustomEditor"/> based on overrides.
         /// </summary>
+        /// <param name="member">The member.</param>
         /// <param name="values">The values.</param>
+        /// <param name="overrideEditor">The custom editor to use. If null will detect it by auto.</param>
         /// <returns>The created element.</returns>
-        public CustomEditor Object(ValueContainer values)
+        public CustomEditor Object(MemberInfo member, ValueContainer values, CustomEditor overrideEditor = null)
+        {
+            // TODO: select proper editor (check attribues, global overrides, type overrides, etc.)
+
+            var editor = new GenericEditor();
+
+            OnAddEditor(editor);
+            editor.Initialize(this, values);
+
+            return editor;
+        }
+
+        /// <summary>
+        /// Adds object property editor. Selects proper <see cref="CustomEditor"/> based on overrides.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="member">The member.</param>
+        /// <param name="values">The values.</param>
+        /// <param name="overrideEditor">The custom editor to use. If null will detect it by auto.</param>
+        /// <returns>The created element.</returns>
+        public CustomEditor Property(string name, MemberInfo member, ValueContainer values, CustomEditor overrideEditor = null)
+        {
+            // TODO: check if use inline property item or creae sub group for it
+            bool isInline = false;
+            
+            if (!isInline)
+            {
+                var group = Group(name);
+                return group.Object(member, values, overrideEditor);
+            }
+
+            // TODO: reuse previous element
+            
+            // TODO: how pass property name? maybe as tag or sth?
+            
+            PropertiesListElement element;
+
+            element = new PropertiesListElement();
+            OnAddElement(element);
+            return element.Object(member, values, overrideEditor);
+        }
+
+        /// <summary>
+        /// Called when element is added to the layout.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        protected virtual void OnAddElement(LayoutElement element)
+        {
+            element.Control.Parent = ContainerControl;
+            Children.Add(element);
+        }
+
+        /// <summary>
+        /// Called when editor is added.
+        /// </summary>
+        /// <param name="editor">The editor.</param>
+        protected virtual void OnAddEditor(CustomEditor editor)
         {
             // This could be passed by the calling code but it's easier to hide it from the user
             // Note: we need that custom editor to link generated editor into the parent
             var customEditor = CustomEditor.CurrentCustomEditor;
             Assert.IsNotNull(customEditor);
-
-            // TODO: select proper editor (check attribues, global overrides, type overrides, etc.)
-
-            var editor = new GenericEditor();
-
             customEditor.OnChildCreated(editor);
-            editor.Initialize(this, values);
-
-            return editor;
         }
 
         /// <inheritdoc />

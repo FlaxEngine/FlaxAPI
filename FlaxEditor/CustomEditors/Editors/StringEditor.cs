@@ -10,7 +10,7 @@ namespace FlaxEditor.CustomEditors.Editors
     /// <summary>
     /// Default implementation of the inspector used to edit string properties.
     /// </summary>
-    [CustomEditor(typeof(string)), DefaultEditor]
+    [CustomEditor(typeof(string), true), DefaultEditor]
     public sealed class StringEditor : CustomEditor
     {
         private TextBoxElement textBox;
