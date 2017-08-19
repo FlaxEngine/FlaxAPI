@@ -73,9 +73,20 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         /// <param name="isMultiline">Enable/disable multiline text input support</param>
         /// <returns>The created element.</returns>
-        public TextBoxElement TextBox(bool isMultiline)
+        public TextBoxElement TextBox(bool isMultiline = false)
         {
             TextBoxElement element = new TextBoxElement(isMultiline);
+            OnAddElement(element);
+            return element;
+        }
+
+        /// <summary>
+        /// Adds new check box element.
+        /// </summary>
+        /// <returns>The created element.</returns>
+        public CheckBoxElement Checkbox()
+        {
+            CheckBoxElement element = new CheckBoxElement();
             OnAddElement(element);
             return element;
         }

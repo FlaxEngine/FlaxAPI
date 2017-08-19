@@ -8,12 +8,12 @@ using FlaxEngine;
 namespace FlaxEditor.CustomEditors.Editors
 {
     /// <summary>
-    /// Default implementation of the inspector used to edit string properties.
+    /// Default implementation of the inspector used to edit bool value type properties.
     /// </summary>
-    [CustomEditor(typeof(string)), DefaultEditor]
-    public sealed class StringEditor : CustomEditor
+    [CustomEditor(typeof(bool)), DefaultEditor]
+    public sealed class BooleanEditor : CustomEditor
     {
-        private TextBoxElement textBox;
+        private CheckBoxElement checkBox;
 
         /// <inheritdoc />
         public override bool IsInline => true;
@@ -24,17 +24,7 @@ namespace FlaxEditor.CustomEditors.Editors
             if (Values == null)
                 return;
 
-            textBox = layout.TextBox();
-            textBox.TextBox.EditEnd += OnTextChanged;
-        }
-
-        private void OnTextChanged()
-        {
-            // TODO: block events during values refresh
-
-            // TODO: update values, send mark dirty event or sth
-
-            Debug.Log("-----> text changed to " + textBox.Text);
+            checkBox = layout.Checkbox();
         }
 
         /// <inheritdoc />
@@ -42,13 +32,11 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             if (HasDiffrentValues)
             {
-                textBox.TextBox.Text = string.Empty;
-                textBox.TextBox.WatermarkText = "Different Values";
+                checkBox.CheckBox.Intermediate = true;
             }
             else
             {
-                textBox.TextBox.Text = (string)Values[0];
-                textBox.TextBox.WatermarkText = string.Empty;
+                checkBox.CheckBox.Checked = (bool)Values[0];
             }
         }
     }

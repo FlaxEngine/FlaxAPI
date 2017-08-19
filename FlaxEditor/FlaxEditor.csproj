@@ -58,8 +58,10 @@
     <Compile Include="Content\Import\TextureFileEntry.cs" />
     <Compile Include="CustomEditors\CustomEditor.cs" />
     <Compile Include="CustomEditors\CustomEditorsUtil.cs" />
+    <Compile Include="CustomEditors\Editors\BooleanEditor.cs" />
     <Compile Include="CustomEditors\Editors\GenericEditor.cs" />
     <Compile Include="CustomEditors\Editors\StringEditor.cs" />
+    <Compile Include="CustomEditors\Elements\CheckBoxElement.cs" />
     <Compile Include="CustomEditors\Elements\PropertiesListElement.cs" />
     <Compile Include="CustomEditors\Elements\SpaceElement.cs" />
     <Compile Include="CustomEditors\Elements\TextBoxElement.cs" />
