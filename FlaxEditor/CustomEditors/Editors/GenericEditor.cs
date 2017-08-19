@@ -241,7 +241,7 @@ namespace FlaxEditor.CustomEditors.Editors
 
                 // Spawn child editor
                 // TODO: remove test code
-                if (item.Info.PropertyType == typeof(string) || item.Info.PropertyType == typeof(bool))
+                if (true || item.Info.PropertyType == typeof(string) || item.Info.PropertyType == typeof(bool))
                     itemLayout.Property(item.DisplayName, item.Info, itemValues, item.OverrideEditor);
                 else
                     itemLayout.Button(item.DisplayName + " order: " + (item.Order != null ? item.Order.Order.ToString() : "?"));

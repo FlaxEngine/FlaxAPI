@@ -13,7 +13,7 @@ namespace FlaxEditor.CustomEditors.Editors
     [CustomEditor(typeof(bool)), DefaultEditor]
     public sealed class BooleanEditor : CustomEditor
     {
-        private CheckBoxElement checkBox;
+        private CheckBoxElement element;
 
         /// <inheritdoc />
         public override bool IsInline => true;
@@ -24,7 +24,7 @@ namespace FlaxEditor.CustomEditors.Editors
             if (Values == null)
                 return;
 
-            checkBox = layout.Checkbox();
+            element = layout.Checkbox();
         }
 
         /// <inheritdoc />
@@ -32,11 +32,11 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             if (HasDiffrentValues)
             {
-                checkBox.CheckBox.Intermediate = true;
+                element.CheckBox.Intermediate = true;
             }
             else
             {
-                checkBox.CheckBox.Checked = (bool)Values[0];
+                element.CheckBox.Checked = (bool)Values[0];
             }
         }
     }

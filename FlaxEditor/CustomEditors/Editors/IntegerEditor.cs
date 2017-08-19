@@ -8,12 +8,12 @@ using FlaxEngine;
 namespace FlaxEditor.CustomEditors.Editors
 {
     /// <summary>
-    /// Default implementation of the inspector used to edit string properties.
+    /// Default implementation of the inspector used to edit inteager value type properties.
     /// </summary>
-    [CustomEditor(typeof(string)), DefaultEditor]
-    public sealed class StringEditor : CustomEditor
+    [CustomEditor(typeof(int)), DefaultEditor]
+    public sealed class IntegerEditor : CustomEditor
     {
-        private TextBoxElement element;
+        private IntegerValueElement element;
 
         /// <inheritdoc />
         public override bool IsInline => true;
@@ -24,17 +24,7 @@ namespace FlaxEditor.CustomEditors.Editors
             if (Values == null)
                 return;
 
-            element = layout.TextBox();
-            element.TextBox.EditEnd += OnTextChanged;
-        }
-
-        private void OnTextChanged()
-        {
-            // TODO: block events during values refresh
-
-            // TODO: update values, send mark dirty event or sth
-
-            Debug.Log("-----> text changed to " + element.Text);
+            element = layout.IntegerValue();
         }
 
         /// <inheritdoc />
@@ -42,13 +32,11 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             if (HasDiffrentValues)
             {
-                element.TextBox.Text = string.Empty;
-                element.TextBox.WatermarkText = "Different Values";
+                // TOOD: support different values for ValueBox<T>
             }
             else
             {
-                element.TextBox.Text = (string)Values[0];
-                element.TextBox.WatermarkText = string.Empty;
+                element.IntValue.Value = (int)Values[0];
             }
         }
     }

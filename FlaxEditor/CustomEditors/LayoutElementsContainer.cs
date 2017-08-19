@@ -92,6 +92,28 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Adds new float value element.
+        /// </summary>
+        /// <returns>The created element.</returns>
+        public FloatValueElement FloatValue()
+        {
+            FloatValueElement element = new FloatValueElement();
+            OnAddElement(element);
+            return element;
+        }
+
+        /// <summary>
+        /// Adds new integer value element.
+        /// </summary>
+        /// <returns>The created element.</returns>
+        public IntegerValueElement IntegerValue()
+        {
+            IntegerValueElement element = new IntegerValueElement();
+            OnAddElement(element);
+            return element;
+        }
+
+        /// <summary>
         /// Adds object(s) editor. Selects proper <see cref="CustomEditor"/> based on overrides.
         /// </summary>
         /// <param name="member">The member.</param>
