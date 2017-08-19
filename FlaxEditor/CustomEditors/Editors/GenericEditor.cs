@@ -18,11 +18,28 @@ namespace FlaxEditor.CustomEditors.Editors
     /// </summary>
     public sealed class GenericEditor : CustomEditor
     {
+        /// <summary>
+        /// Describies object property/field information for custom editors pipeline.
+        /// </summary>
+        /// <seealso cref="System.IComparable" />
         private class ItemInfo : IComparable
         {
             public PropertyInfo Info;
+
+            /// <summary>
+            /// The order attribute.
+            /// </summary>
             public EditorOrderAttribute Order;
+
+            /// <summary>
+            /// The display attribute.
+            /// </summary>
             public EditorDisplayAttribute Display;
+
+            /// <summary>
+            /// The custom editor attribute.
+            /// </summary>
+            public CustomEditorAttribute CustomEditor;
 
             /// <summary>
             /// Gets the display name.
@@ -41,6 +58,14 @@ namespace FlaxEditor.CustomEditors.Editors
             public bool UseGroup => Display?.Group != null;
 
             /// <summary>
+            /// Gets the overrided custom editor for item editing.
+            /// </summary>
+            /// <value>
+            /// The overrided editor.
+            /// </value>
+            public CustomEditor OverrideEditor => CustomEditor != null ? (CustomEditor)Activator.CreateInstance(CustomEditor.Type) : null;
+
+            /// <summary>
             /// Initializes a new instance of the <see cref="ItemInfo"/> class.
             /// </summary>
             /// <param name="info">The information.</param>
@@ -50,7 +75,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 Info = info;
                 Order = (EditorOrderAttribute)attributes.FirstOrDefault(x => x is EditorOrderAttribute);
                 Display = (EditorDisplayAttribute)attributes.FirstOrDefault(x => x is EditorDisplayAttribute);
-                // TODO: support custom editor type via CustomClassEditorAttribute
+                CustomEditor = (CustomEditorAttribute)attributes.FirstOrDefault(x => x is CustomEditorAttribute);
 
                 if (Display?.Name != null)
                 {
@@ -168,7 +193,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 for (int i = 1; i < types.Length; i++)
                 {
                     var otherItems = GetItemsForType(types[i]);
-
+                    
                     // TODO: merge items and items
                 }
             }
@@ -217,7 +242,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 // Spawn child editor
                 // TODO: remove test code
                 if (item.Info.PropertyType == typeof(string) || item.Info.PropertyType == typeof(bool))
-                    itemLayout.Property(item.DisplayName, item.Info, itemValues);
+                    itemLayout.Property(item.DisplayName, item.Info, itemValues, item.OverrideEditor);
                 else
                     itemLayout.Button(item.DisplayName + " order: " + (item.Order != null ? item.Order.Order.ToString() : "?"));
                 //Debug.Log("Child item " + item);
