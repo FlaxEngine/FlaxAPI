@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine;
 
@@ -17,7 +18,7 @@ namespace FlaxEditor.CustomEditors.Editors
     /// </summary>
     public sealed class GenericEditor : CustomEditor
     {
-        private struct ItemInfo : IComparable
+        private class ItemInfo : IComparable
         {
             public PropertyInfo Info;
             public EditorOrderAttribute Order;
@@ -29,7 +30,7 @@ namespace FlaxEditor.CustomEditors.Editors
             /// <value>
             /// The display name.
             /// </value>
-            public string DisplayName => Display?.Name ?? Info.Name;
+            public string DisplayName { get; }
 
             /// <summary>
             /// Gets a value indicating whether use dedicated group.
@@ -38,6 +39,52 @@ namespace FlaxEditor.CustomEditors.Editors
             ///   <c>true</c> if use group; otherwise, <c>false</c>.
             /// </value>
             public bool UseGroup => Display?.Group != null;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ItemInfo"/> class.
+            /// </summary>
+            /// <param name="info">The information.</param>
+            /// <param name="attributes">The attributes.</param>
+            public ItemInfo(PropertyInfo info, object[] attributes)
+            {
+                Info = info;
+                Order = (EditorOrderAttribute)attributes.FirstOrDefault(x => x is EditorOrderAttribute);
+                Display = (EditorDisplayAttribute)attributes.FirstOrDefault(x => x is EditorDisplayAttribute);
+                // TODO: support custom editor type via CustomClassEditorAttribute
+
+                if (Display?.Name != null)
+                {
+                    // Use name provided by the attribute
+                    DisplayName = Display.Name;
+                }
+                else
+                {
+                    // Process member name to make it more user-friendly
+                    string name = info.Name;
+                    int length = name.Length;
+                    StringBuilder sb = new StringBuilder(length + 4);
+                    for (int i = 0; i < length; i++)
+                    {
+                        var c = name[i];
+
+                        if (char.IsUpper(c))
+                        {
+                            if (i + 2 < length && !char.IsUpper(name[i + 1]) && !char.IsUpper(name[i + 2]))
+                                sb.Append(' ');
+                        }
+                        else if (c == '_')
+                        {
+                            if (sb.Length > 0)
+                                sb.Append(' ');
+                            continue;
+                        }
+
+                        sb.Append(c);
+                    }
+
+                    DisplayName = name;
+                }
+            }
 
             /// <inheritdoc />
             public int CompareTo(object obj)
@@ -78,26 +125,18 @@ namespace FlaxEditor.CustomEditors.Editors
             for (int i = 0; i < properties.Length; i++)
             {
                 var p = properties[i];
-                var getter = p.GetMethod;
 
                 // Skip hidden properties and only set properties
+                var getter = p.GetMethod;
                 if (getter == null || !getter.IsPublic || p.GetIndexParameters().GetLength(0) != 0)
-                {
                     continue;
-                }
 
+                // Handle HideInEditorAttribute
                 var attributes = p.GetCustomAttributes(true);
                 if (attributes.Any(x => x is HideInEditorAttribute))
-                {
                     continue;
-                }
 
-                ItemInfo item;
-                item.Info = p;
-                item.Order = (EditorOrderAttribute)attributes.FirstOrDefault(x => x is EditorOrderAttribute);
-                item.Display = (EditorDisplayAttribute)attributes.FirstOrDefault(x => x is EditorDisplayAttribute);
-                // TODO: support custom editor type via CustomClassEditorAttribute
-
+                var item = new ItemInfo(p, attributes);
                 items.Add(item);
             }
 
