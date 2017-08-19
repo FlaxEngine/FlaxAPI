@@ -82,7 +82,7 @@ namespace FlaxEditor.CustomEditors.Editors
                         sb.Append(c);
                     }
 
-                    DisplayName = name;
+                    DisplayName = sb.ToString();
                 }
             }
 
@@ -216,7 +216,7 @@ namespace FlaxEditor.CustomEditors.Editors
 
                 // Spawn child editor
                 // TODO: remove test code
-                if (item.Info.PropertyType == typeof(string))
+                if (item.Info.PropertyType == typeof(string) || item.Info.PropertyType == typeof(bool))
                     itemLayout.Property(item.DisplayName, item.Info, itemValues);
                 else
                     itemLayout.Button(item.DisplayName + " order: " + (item.Order != null ? item.Order.Order.ToString() : "?"));

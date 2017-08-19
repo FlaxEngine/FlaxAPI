@@ -50,7 +50,7 @@ namespace FlaxEngine.GUI
         public bool Intermediate
         {
             get => _intermediate;
-            set { _intermediate = value; }
+            set => _intermediate = value;
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void Toggle()
         {
-            Checked = !_checked;
+            Checked = !_intermediate && !_checked;
         }
 
         private void CacheBox()
