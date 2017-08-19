@@ -17,7 +17,7 @@ namespace FlaxEditor.CustomEditors.Editors
     /// </summary>
     public sealed class GenericEditor : CustomEditor
     {
-        private struct PropertyItemInfo : IComparable
+        private struct ItemInfo : IComparable
         {
             public PropertyInfo Info;
             public EditorOrderAttribute Order;
@@ -42,7 +42,7 @@ namespace FlaxEditor.CustomEditors.Editors
             /// <inheritdoc />
             public int CompareTo(object obj)
             {
-                if (obj is PropertyItemInfo other)
+                if (obj is ItemInfo other)
                 {
                     // By order
                     if (Order != null)
@@ -68,13 +68,13 @@ namespace FlaxEditor.CustomEditors.Editors
             }
         }
 
-        private List<PropertyItemInfo> GetPropertyItemsForType(Type type)
+        private List<ItemInfo> GetItemsForType(Type type)
         {
             // TODO: cache this per type?
 
             // Process the properties
             var properties = type.GetProperties();
-            var propertyItems = new List<PropertyItemInfo>(properties.Length);
+            var items = new List<ItemInfo>(properties.Length);
             for (int i = 0; i < properties.Length; i++)
             {
                 var p = properties[i];
@@ -92,16 +92,16 @@ namespace FlaxEditor.CustomEditors.Editors
                     continue;
                 }
 
-                PropertyItemInfo item;
+                ItemInfo item;
                 item.Info = p;
                 item.Order = (EditorOrderAttribute)attributes.FirstOrDefault(x => x is EditorOrderAttribute);
                 item.Display = (EditorDisplayAttribute)attributes.FirstOrDefault(x => x is EditorDisplayAttribute);
                 // TODO: support custom editor type via CustomClassEditorAttribute
 
-                propertyItems.Add(item);
+                items.Add(item);
             }
 
-            return propertyItems;
+            return items;
         }
 
         /// <inheritdoc />
@@ -115,35 +115,35 @@ namespace FlaxEditor.CustomEditors.Editors
             // TODO: support attribues
             // TODO: spawn custom editors for every editable thing
             // TODO; use shared properties/fields across all selected objects values
-
-            // Collect property items
-            List<PropertyItemInfo> propertyItems;
+            
+            // Collect items to edit
+            List<ItemInfo> items;
             if (!HasDiffrentTypes)
             {
-                propertyItems = GetPropertyItemsForType(Values[0].GetType());
+                items = GetItemsForType(Values[0].GetType());
             }
             else
             {
                 var types = ValuesTypes;
-                propertyItems = GetPropertyItemsForType(types[0]);
+                items = GetItemsForType(types[0]);
                 for (int i = 1; i < types.Length; i++)
                 {
-                    var items = GetPropertyItemsForType(types[i]);
+                    var otherItems = GetItemsForType(types[i]);
 
-                    // TODO: merge items and propertyItems
+                    // TODO: merge items and items
                 }
             }
 
             // TODO: promote children to other base class like CustomEditorContainer ?
 
             // Sort items
-            propertyItems.Sort();
+            items.Sort();
 
             // Add items
             GroupElement lastGroup = null;
-            for (int i = 0; i < propertyItems.Count; i++)
+            for (int i = 0; i < items.Count; i++)
             {
-                var item = propertyItems[i];
+                var item = items[i];
 
                 // Check if use group
                 LayoutElementsContainer itemLayout;
@@ -176,10 +176,12 @@ namespace FlaxEditor.CustomEditors.Editors
                 }
 
                 // Spawn child editor
-                itemLayout.Button(item.DisplayName + " order: " + (item.Order != null ? item.Order.Order.ToString() : "?"));
+                // TODO: remove test code
+                if (item.Info.PropertyType == typeof(string))
+                    itemLayout.Property(item.DisplayName, item.Info, itemValues);
+                else
+                    itemLayout.Button(item.DisplayName + " order: " + (item.Order != null ? item.Order.Order.ToString() : "?"));
                 //Debug.Log("Child item " + item);
-                //var child = itemLayout.Object(itemValues);
-                //children.Add(child);
             }
         }
     }
