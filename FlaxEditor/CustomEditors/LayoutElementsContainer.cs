@@ -4,7 +4,6 @@
 
 using System.Collections.Generic;
 using System.Reflection;
-using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
@@ -90,9 +89,7 @@ namespace FlaxEditor.CustomEditors
         /// <returns>The created element.</returns>
         public CustomEditor Object(MemberInfo member, ValueContainer values, CustomEditor overrideEditor = null)
         {
-            // TODO: select proper editor (check attribues, global overrides, type overrides, etc.)
-
-            var editor = new GenericEditor();
+            var editor = overrideEditor ?? CustomEditorsUtil.CreateEditor(member);
 
             OnAddEditor(editor);
             editor.Initialize(this, values);
