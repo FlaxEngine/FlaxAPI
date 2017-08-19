@@ -24,7 +24,10 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <seealso cref="System.IComparable" />
         private class ItemInfo : IComparable
         {
-            public PropertyInfo Info;
+            /// <summary>
+            /// The member information from reflection.
+            /// </summary>
+            public MemberInfo Info;
 
             /// <summary>
             /// The order attribute.
@@ -68,9 +71,9 @@ namespace FlaxEditor.CustomEditors.Editors
             /// <summary>
             /// Initializes a new instance of the <see cref="ItemInfo"/> class.
             /// </summary>
-            /// <param name="info">The information.</param>
+            /// <param name="info">The reflection information.</param>
             /// <param name="attributes">The attributes.</param>
-            public ItemInfo(PropertyInfo info, object[] attributes)
+            public ItemInfo(MemberInfo info, object[] attributes)
             {
                 Info = info;
                 Order = (EditorOrderAttribute)attributes.FirstOrDefault(x => x is EditorOrderAttribute);
@@ -111,6 +114,19 @@ namespace FlaxEditor.CustomEditors.Editors
                 }
             }
 
+            public ValueContainer GetValues(ValueContainer instanceValues)
+            {
+                var values = new ValueContainer(instanceValues.Count);
+                for (int j = 0; j < instanceValues.Count; j++)
+                {
+                    if (Info is PropertyInfo propertyInfo)
+                        values.Add(propertyInfo.GetValue(instanceValues[j]));
+                    else
+                        values.Add(((FieldInfo)Info).GetValue(instanceValues[j]));
+                }
+                return values;
+            }
+
             /// <inheritdoc />
             public int CompareTo(object obj)
             {
@@ -144,24 +160,49 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             // TODO: cache this per type?
 
-            // Process the properties
-            var properties = type.GetProperties();
-            var items = new List<ItemInfo>(properties.Length);
-            for (int i = 0; i < properties.Length; i++)
-            {
-                var p = properties[i];
+            var items = new List<ItemInfo>();
 
-                // Skip hidden properties and only set properties
-                var getter = p.GetMethod;
-                if (getter == null || !getter.IsPublic || p.GetIndexParameters().GetLength(0) != 0)
+            if (type.IsClass)
+            {
+                // Process properties
+                var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                items.Capacity = Math.Max(items.Capacity, items.Count + properties.Length);
+                for (int i = 0; i < properties.Length; i++)
+                {
+                    var p = properties[i];
+
+                    // Skip hidden properties and only set properties
+                    var getter = p.GetMethod;
+                    if (getter == null || !getter.IsPublic || p.GetIndexParameters().GetLength(0) != 0)
+                        continue;
+
+                    // Handle HideInEditorAttribute
+                    var attributes = p.GetCustomAttributes(true);
+                    if (attributes.Any(x => x is HideInEditorAttribute))
+                        continue;
+
+                    var item = new ItemInfo(p, attributes);
+                    items.Add(item);
+                }
+            }
+
+            // Process fields
+            var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+            items.Capacity = Math.Max(items.Capacity, items.Count + fields.Length);
+            for (int i = 0; i < fields.Length; i++)
+            {
+                var f = fields[i];
+
+                // Skip hidden fields
+                if (!f.IsPublic)
                     continue;
 
                 // Handle HideInEditorAttribute
-                var attributes = p.GetCustomAttributes(true);
+                var attributes = f.GetCustomAttributes(true);
                 if (attributes.Any(x => x is HideInEditorAttribute))
                     continue;
 
-                var item = new ItemInfo(p, attributes);
+                var item = new ItemInfo(f, attributes);
                 items.Add(item);
             }
 
@@ -179,7 +220,7 @@ namespace FlaxEditor.CustomEditors.Editors
             // TODO: support attribues
             // TODO: spawn custom editors for every editable thing
             // TODO; use shared properties/fields across all selected objects values
-            
+
             // Collect items to edit
             List<ItemInfo> items;
             if (!HasDiffrentTypes)
@@ -193,7 +234,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 for (int i = 1; i < types.Length; i++)
                 {
                     var otherItems = GetItemsForType(types[i]);
-                    
+
                     // TODO: merge items and items
                 }
             }
@@ -227,9 +268,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 ValueContainer itemValues;
                 try
                 {
-                    itemValues = new ValueContainer(Values.Count);
-                    for (int j = 0; j < Values.Count; j++)
-                        itemValues.Add(item.Info.GetValue(Values[j]));
+                    itemValues = item.GetValues(Values);
                 }
                 catch (Exception ex)
                 {
@@ -239,13 +278,8 @@ namespace FlaxEditor.CustomEditors.Editors
                     return;
                 }
 
-                // Spawn child editor
-                // TODO: remove test code
-                if (true || item.Info.PropertyType == typeof(string) || item.Info.PropertyType == typeof(bool))
-                    itemLayout.Property(item.DisplayName, item.Info, itemValues, item.OverrideEditor);
-                else
-                    itemLayout.Button(item.DisplayName + " order: " + (item.Order != null ? item.Order.Order.ToString() : "?"));
-                //Debug.Log("Child item " + item);
+                // Spawn property editor
+                itemLayout.Property(item.DisplayName, item.Info, itemValues, item.OverrideEditor);
             }
         }
     }
