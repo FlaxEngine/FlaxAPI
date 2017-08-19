@@ -129,7 +129,7 @@ namespace FlaxEditor.CustomEditors
 
             return editor;
         }
-        
+
         /// <summary>
         /// Adds object property editor. Selects proper <see cref="CustomEditor"/> based on overrides.
         /// </summary>
@@ -141,19 +141,25 @@ namespace FlaxEditor.CustomEditors
         public CustomEditor Property(string name, MemberInfo member, ValueContainer values, CustomEditor overrideEditor = null)
         {
             var editor = overrideEditor ?? CustomEditorsUtil.CreateEditor(member);
-            
+
             if (!editor.IsInline)
             {
                 var group = Group(name);
                 return group.Object(member, values, editor);
             }
 
-            // TODO: reuse previous element
-            
+            // Try to reuse previous control
             PropertiesListElement element;
+            if (Children.Count > 0 && Children[Children.Count - 1] is PropertiesListElement propertiesListElement)
+            {
+                element = propertiesListElement;
+            }
+            else
+            {
+                element = new PropertiesListElement();
+                OnAddElement(element);
+            }
 
-            element = new PropertiesListElement();
-            OnAddElement(element);
             var obj = element.Object(member, values, editor);
             obj.PropertyName = name;
             return obj;
