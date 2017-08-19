@@ -32,6 +32,7 @@ namespace FlaxEditor.CustomEditors.Elements
 
             private const int SpliterSizeHalf = SpliterSize / 2;
 
+            private PropertiesListElement _element;
             private float _splitterValue;
             private Rectangle _splitterRect;
             private bool _splitterClicked, _mouseOverSplitter;
@@ -47,7 +48,7 @@ namespace FlaxEditor.CustomEditors.Elements
                 get => _splitterValue;
                 set
                 {
-                    value = Mathf.Clamp01(value);
+                    value = Mathf.Clamp(value, 0.05f, 0.95f);
                     if (!Mathf.NearEqual(_splitterValue, value))
                     {
                         // Set new value
@@ -62,9 +63,12 @@ namespace FlaxEditor.CustomEditors.Elements
             /// <summary>
             /// Initializes a new instance of the <see cref="PropertiesList"/> class.
             /// </summary>
-            public PropertiesList()
+            /// <param name="element">The element.</param>
+            public PropertiesList(PropertiesListElement element)
             {
+                _element = element;
                 _splitterValue = 0.4f;
+                BottomMargin = TopMargin = RightMargin = SplitterMargin;
                 UpdateSplitRect();
             }
 
@@ -108,8 +112,22 @@ namespace FlaxEditor.CustomEditors.Elements
             {
                 base.Draw();
 
-                // Draw splitter
                 var style = Style.Current;
+
+                // Draw properties names
+                float namesWidth = _splitterValue * Width - 3 * SplitterMargin;
+                Render2D.PushClip(new Rectangle(0, 0, namesWidth + SplitterMargin, Height));
+                for (int i = 0; i < _element._editors.Count; i++)
+                {
+                    var editor = _element._editors[i];
+                    
+                    // TODO: find the best way to get custom editor area (y and height) to draw name in a proper place
+                    var rect = new Rectangle(SplitterMargin, 0, namesWidth, Height);
+                    Render2D.DrawText(style.FontMedium, editor.PropertyName, rect, style.Foreground, TextAlignment.Near, TextAlignment.Center);
+                }
+                Render2D.PopClip();
+
+                // Draw splitter
                 Render2D.FillRectangle(_splitterRect, _splitterClicked ? style.BackgroundSelected : _mouseOverSplitter ? style.BackgroundHighlighted : style.Background * 0.8f);
             }
 
@@ -196,10 +214,18 @@ namespace FlaxEditor.CustomEditors.Elements
         /// <summary>
         /// The list.
         /// </summary>
-        public readonly PropertiesList Properties = new PropertiesList();
+        public readonly PropertiesList Properties;
 
         /// <inheritdoc />
         public override ContainerControl ContainerControl => Properties;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertiesListElement"/> class.
+        /// </summary>
+        public PropertiesListElement()
+        {
+            Properties = new PropertiesList(this);
+        }
 
         /// <inheritdoc />
         protected override void OnAddEditor(CustomEditor editor)
