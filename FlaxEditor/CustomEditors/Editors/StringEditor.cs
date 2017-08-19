@@ -16,8 +16,8 @@ namespace FlaxEditor.CustomEditors.Editors
         private TextBoxElement textBox;
 
         /// <inheritdoc />
-        //public override bool IsInline => true;
-        
+        public override bool IsInline => true;
+
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {

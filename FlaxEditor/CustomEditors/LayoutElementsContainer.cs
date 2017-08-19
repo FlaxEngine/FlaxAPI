@@ -96,7 +96,7 @@ namespace FlaxEditor.CustomEditors
 
             return editor;
         }
-
+        
         /// <summary>
         /// Adds object property editor. Selects proper <see cref="CustomEditor"/> based on overrides.
         /// </summary>
@@ -107,24 +107,23 @@ namespace FlaxEditor.CustomEditors
         /// <returns>The created element.</returns>
         public CustomEditor Property(string name, MemberInfo member, ValueContainer values, CustomEditor overrideEditor = null)
         {
-            // TODO: check if use inline property item or creae sub group for it
-            bool isInline = false;
+            var editor = overrideEditor ?? CustomEditorsUtil.CreateEditor(member);
             
-            if (!isInline)
+            if (!editor.IsInline)
             {
                 var group = Group(name);
-                return group.Object(member, values, overrideEditor);
+                return group.Object(member, values, editor);
             }
 
             // TODO: reuse previous element
-            
-            // TODO: how pass property name? maybe as tag or sth?
             
             PropertiesListElement element;
 
             element = new PropertiesListElement();
             OnAddElement(element);
-            return element.Object(member, values, overrideEditor);
+            var obj = element.Object(member, values, editor);
+            obj.PropertyName = name;
+            return obj;
         }
 
         /// <summary>
