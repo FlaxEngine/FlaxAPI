@@ -10,11 +10,14 @@ namespace FlaxEditor.CustomEditors.Editors
     /// <summary>
     /// Default implementation of the inspector used to edit string properties.
     /// </summary>
-    [CustomEditor(typeof(string), true), DefaultEditor]
+    [CustomEditor(typeof(string)), DefaultEditor]
     public sealed class StringEditor : CustomEditor
     {
         private TextBoxElement textBox;
 
+        /// <inheritdoc />
+        //public override bool IsInline => true;
+        
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
@@ -40,7 +43,7 @@ namespace FlaxEditor.CustomEditors.Editors
             if (HasDiffrentValues)
             {
                 textBox.TextBox.Text = string.Empty;
-                textBox.TextBox.WatermarkText = "Diffrent Values";
+                textBox.TextBox.WatermarkText = "Different Values";
             }
             else
             {

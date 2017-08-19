@@ -16,6 +16,16 @@ namespace FlaxEditor.CustomEditors
         private ValueContainer _values;
         private readonly List<CustomEditor> _children = new List<CustomEditor>();
 
+        internal string PropertyName;
+
+        /// <summary>
+        /// Gets a value indicating whether inline editor contents into the property value, otherwise will use expandable group area.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this editor is inline into properties; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool IsInline => false;
+
         /// <summary>
         /// Gets a value indicating whether single object is selected.
         /// </summary>
