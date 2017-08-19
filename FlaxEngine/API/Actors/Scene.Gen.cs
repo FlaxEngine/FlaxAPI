@@ -48,6 +48,7 @@ namespace FlaxEngine
 		/// Gets path to the scene file. It's valid only in Editor.
 		/// </summary>
 		[UnmanagedCall]
+		[HideInEditor]
 		public string Path
 		{
 #if UNIT_TEST_COMPILANT
@@ -61,6 +62,7 @@ namespace FlaxEngine
 		/// Gets filename of the scene file. It's valid only in Editor.
 		/// </summary>
 		[UnmanagedCall]
+		[HideInEditor]
 		public string Filename
 		{
 #if UNIT_TEST_COMPILANT
@@ -74,28 +76,13 @@ namespace FlaxEngine
 		/// Gets path to the scene data folder. It's valid only in Editor.
 		/// </summary>
 		[UnmanagedCall]
+		[HideInEditor]
 		public string DataFolderPath
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
 			get { return Internal_GetDataFolderPath(unmanagedPtr); }
-#endif
-		}
-
-		/// <summary>
-		/// Unloads given scene. Done in sync, in the end of the next engine tick.
-		/// </summary>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-		[UnmanagedCall]
-		public static void Unload() 
-		{
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-			Internal_Unload();
 #endif
 		}
 
@@ -107,8 +94,6 @@ namespace FlaxEngine
 		internal static extern string Internal_GetFilename(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern string Internal_GetDataFolderPath(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_Unload();
 #endif
 #endregion
 	}
