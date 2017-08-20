@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 
@@ -33,11 +34,17 @@ namespace FlaxEditor.CustomEditors
         /// Adds new group element.
         /// </summary>
         /// <param name="title">The title.</param>
+        /// <param name="useTransparentHeader">True if use drop down icon and transparent group header, otherwise use normal style.</param>
         /// <returns>The created element.</returns>
-        public GroupElement Group(string title)
+        public GroupElement Group(string title, bool useTransparentHeader = false)
         {
             GroupElement element = new GroupElement();
             element.Init(title);
+            if (useTransparentHeader)
+            {
+                element.Panel.EnableDropDownIcon = true;
+                element.Panel.HeaderColor = element.Panel.HeaderColorMouseOver = Color.Transparent;
+            }
             OnAddElement(element);
             return element;
         }
@@ -45,12 +52,12 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// Adds new button element.
         /// </summary>
-        /// <param name="title">The title.</param>
+        /// <param name="text">The text.</param>
         /// <returns>The created element.</returns>
-        public ButtonElement Button(string title)
+        public ButtonElement Button(string text)
         {
             ButtonElement element = new ButtonElement();
-            element.Init(title);
+            element.Init(text);
             OnAddElement(element);
             return element;
         }
@@ -144,7 +151,8 @@ namespace FlaxEditor.CustomEditors
 
             if (!editor.IsInline)
             {
-                var group = Group(name);
+                var group = Group(name, true);
+                group.Panel.Close(false);
                 return group.Object(member, values, editor);
             }
 
