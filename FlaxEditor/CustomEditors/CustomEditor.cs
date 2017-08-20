@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEngine;
 
 namespace FlaxEditor.CustomEditors
 {
@@ -14,6 +15,7 @@ namespace FlaxEditor.CustomEditors
     /// </summary>
     public abstract class CustomEditor
     {
+        private CustomEditor _parent;
         private readonly List<CustomEditor> _children = new List<CustomEditor>();
         private ValueContainer _values;
         private bool _isSetBlocked;
@@ -120,8 +122,10 @@ namespace FlaxEditor.CustomEditors
             var prev = CurrentCustomEditor;
             CurrentCustomEditor = this;
 
+            _isSetBlocked = true;
             Initialize(layout);
             Refresh();
+            _isSetBlocked = false;
 
             CurrentCustomEditor = prev;
         }
@@ -130,7 +134,9 @@ namespace FlaxEditor.CustomEditors
 
         internal void OnChildCreated(CustomEditor child)
         {
+            // Link
             _children.Add(child);
+            child._parent = this;
         }
 
         /// <summary>
@@ -147,9 +153,11 @@ namespace FlaxEditor.CustomEditors
             }
 
             _children.Clear();
+            _parent = null;
             _hasValueDirty = false;
             _valueToSet = null;
             _values = null;
+            _isSetBlocked = false;
         }
 
         internal void RefreshRoot()
@@ -159,10 +167,10 @@ namespace FlaxEditor.CustomEditors
 
             // Update children
             for (int i = 0; i < _children.Count; i++)
-                _children[i].Refresh(this);
+                _children[i].RefreshInternal();
         }
 
-        internal void Refresh(CustomEditor parent)
+        internal void RefreshInternal()
         {
             // Check if need to update value
             if (_hasValueDirty)
@@ -172,13 +180,20 @@ namespace FlaxEditor.CustomEditors
                 _hasValueDirty = false;
                 _valueToSet = null;
 
-                // Set values
-                _values.Set(parent.Values, val);
+                // Set values (special case for structures)
+                if (_parent.Values.Type.IsValueType)
+                {
+                    // TODO: udate not ref type
+                }
+                else
+                {
+                    _values.Set(_parent.Values, val);
+                }
             }
             else
             {
                 // Update values
-                _values.Refresh(parent.Values);
+                _values.Refresh(_parent.Values);
             }
 
             // Update itself
@@ -188,7 +203,7 @@ namespace FlaxEditor.CustomEditors
 
             // Update children
             for (int i = 0; i < _children.Count; i++)
-                _children[i].Refresh(this);
+                _children[i].RefreshInternal();
         }
 
         /// <summary>

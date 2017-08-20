@@ -19,33 +19,39 @@ namespace FlaxEditor.CustomEditors
         public readonly MemberInfo Info;
 
         /// <summary>
+        /// Gets the values type.
+        /// </summary>
+        /// <value>
+        /// The values type.
+        /// </value>
+        public Type Type { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ValueContainer"/> class.
         /// </summary>
         /// <param name="info">The member info.</param>
         public ValueContainer(MemberInfo info)
         {
             Info = info;
-        }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ValueContainer"/> class.
-        /// </summary>
-        /// <param name="info">The member info.</param>
-        /// <param name="capacity">The number of elements that the new list can initially store.</param>
-        public ValueContainer(MemberInfo info, int capacity)
-            : base(capacity)
-        {
-            Info = info;
+            if (Info is PropertyInfo propertyInfo)
+            {
+                Type = propertyInfo.PropertyType;
+            }
+            else if(Info is FieldInfo fieldInfo)
+            {
+                Type = fieldInfo.FieldType;
+            }
         }
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="ValueContainer"/> class.
         /// </summary>
         /// <param name="info">The information.</param>
         /// <param name="instanceValues">The parent values.</param>
         public ValueContainer(MemberInfo info, ValueContainer instanceValues)
+            : this(info)
         {
-            Info = info;
             Capacity = instanceValues.Count;
 
             if (Info is PropertyInfo propertyInfo)
@@ -102,7 +108,6 @@ namespace FlaxEditor.CustomEditors
                 }
             }
             else
-
             {
                 var fieldInfo = (FieldInfo)Info;
                 for (int i = 0; i < Count; i++)
