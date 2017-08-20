@@ -133,11 +133,15 @@ namespace FlaxEngine.GUI
         /// </summary>
         public string Text
         {
-            get { return _text; }
+            get => _text;
             set
             {
                 if(IsReadOnly)
                     throw new AccessViolationException("Text Box is readonly.");
+
+                // Skip set if user is editing value
+                if (_isEditing)
+                    return;
 
                 // Prevent from null problems
                 if (value == null)
