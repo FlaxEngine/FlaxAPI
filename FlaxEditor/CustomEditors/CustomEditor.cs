@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEditor.CustomEditors.Elements;
 
 namespace FlaxEditor.CustomEditors
 {
@@ -16,7 +17,15 @@ namespace FlaxEditor.CustomEditors
         private ValueContainer _values;
         private readonly List<CustomEditor> _children = new List<CustomEditor>();
 
+        /// <summary>
+        /// Helper value used by the <see cref="PropertiesListElement.PropertiesList"/> to draw property name.
+        /// </summary>
         internal string PropertyName;
+        
+        /// <summary>
+        /// Helper value used by the <see cref="PropertiesListElement.PropertiesList"/> to draw property names in a proper area.
+        /// </summary>
+        internal int PropertyFirstChildControlIndex;
 
         /// <summary>
         /// Gets a value indicating whether inline editor contents into the property value, otherwise will use expandable group area.

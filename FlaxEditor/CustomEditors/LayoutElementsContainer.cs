@@ -168,8 +168,10 @@ namespace FlaxEditor.CustomEditors
                 OnAddElement(element);
             }
 
+            var firstChildControlIndex = element.ContainerControl.ChildrenCount;
             var obj = element.Object(member, values, editor);
             obj.PropertyName = name;
+            obj.PropertyFirstChildControlIndex = firstChildControlIndex;
             return obj;
         }
 

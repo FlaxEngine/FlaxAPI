@@ -115,14 +115,21 @@ namespace FlaxEditor.CustomEditors.Elements
                 var style = Style.Current;
 
                 // Draw properties names
-                float namesWidth = _splitterValue * Width - 3 * SplitterMargin;
+                float namesWidth = _splitterValue * Width - SplitterMargin;
                 Render2D.PushClip(new Rectangle(0, 0, namesWidth + SplitterMargin, Height));
-                for (int i = 0; i < _element._editors.Count; i++)
+                int count = _element._editors.Count;
+                float[] yStarts = new float[count + 1];
+                for (int i = 0; i < count; i++)
+                {
+                    var editor = _element._editors[i];
+                    yStarts[i] = _children[editor.PropertyFirstChildControlIndex].Top;
+                }
+                yStarts[count] = Height;
+                for (int i = 0; i < count; i++)
                 {
                     var editor = _element._editors[i];
                     
-                    // TODO: find the best way to get custom editor area (y and height) to draw name in a proper place
-                    var rect = new Rectangle(SplitterMargin, 0, namesWidth, Height);
+                    var rect = new Rectangle(SplitterMargin, yStarts[i], namesWidth, yStarts[i + 1] - yStarts[i]);
                     Render2D.DrawText(style.FontMedium, editor.PropertyName, rect, style.Foreground, TextAlignment.Near, TextAlignment.Center);
                 }
                 Render2D.PopClip();
