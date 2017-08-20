@@ -38,12 +38,12 @@ namespace FlaxEditor.CustomEditors
             {
                 Type = propertyInfo.PropertyType;
             }
-            else if(Info is FieldInfo fieldInfo)
+            else if (Info is FieldInfo fieldInfo)
             {
                 Type = fieldInfo.FieldType;
             }
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ValueContainer"/> class.
         /// </summary>
@@ -114,6 +114,32 @@ namespace FlaxEditor.CustomEditors
                 {
                     fieldInfo.SetValue(instanceValues[i], value);
                     this[i] = fieldInfo.GetValue(instanceValues[i]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the specified instance values with the container values.
+        /// </summary>
+        /// <param name="instanceValues">The parent values.</param>
+        public void Set(ValueContainer instanceValues)
+        {
+            if (instanceValues == null || instanceValues.Count != Count)
+                throw new ArgumentException();
+
+            if (Info is PropertyInfo propertyInfo)
+            {
+                for (int i = 0; i < Count; i++)
+                {
+                    propertyInfo.SetValue(instanceValues[i], this[i]);
+                }
+            }
+            else
+            {
+                var fieldInfo = (FieldInfo)Info;
+                for (int i = 0; i < Count; i++)
+                {
+                    fieldInfo.SetValue(instanceValues[i], this[i]);
                 }
             }
         }

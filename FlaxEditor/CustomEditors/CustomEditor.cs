@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.CustomEditors.Elements;
-using FlaxEngine;
 
 namespace FlaxEditor.CustomEditors
 {
@@ -180,14 +179,15 @@ namespace FlaxEditor.CustomEditors
                 _hasValueDirty = false;
                 _valueToSet = null;
 
-                // Set values (special case for structures)
-                if (_parent.Values.Type.IsValueType)
+                // Assign value
+                _values.Set(_parent.Values, val);
+
+                // Propagate values up if parent is not a ref type
+                var obj = _parent;
+                while (obj._parent != null && obj.Values.Type.IsValueType)
                 {
-                    // TODO: udate not ref type
-                }
-                else
-                {
-                    _values.Set(_parent.Values, val);
+                    obj.Values.Set(obj._parent.Values);
+                    obj = obj._parent;
                 }
             }
             else
