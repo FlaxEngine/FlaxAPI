@@ -60,9 +60,33 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Gets or sets the color of the header.
+        /// </summary>
+        /// <value>
+        /// The color of the header.
+        /// </value>
+        public Color HeaderColor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color of the header when mouse is over.
+        /// </summary>
+        /// <value>
+        /// The color of the header when mouse is over.
+        /// </value>
+        public Color HeaderColorMouseOver { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether enable drop down icon drawing.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if enable drop down icon drawing; otherwise, <c>false</c>.
+        /// </value>
+        public bool EnableDropDownIcon { get; set; }
+        
+        /// <summary>
         /// Occurs when drop panel is opened or closed.
         /// </summary>
-        public event Action<DropPanel> OnClosedChanged;
+        public event Action<DropPanel> ClosedChanged;
 
         /// <summary>
         /// Gets a value indicating whether this panel is closed.
@@ -95,45 +119,57 @@ namespace FlaxEngine.GUI
             _performChildrenLayoutFirst = true;
 
             HeaderText = text;
+
+            var style = Style.Current;
+            HeaderColor = style.BackgroundNormal;
+            HeaderColorMouseOver = style.BackgroundHighlighted;
         }
 
         /// <summary>
         /// Opens the group.
         /// </summary>
-        public void Open()
+        /// <param name="animate">Enable/disable animation feature.</param>
+        public void Open(bool animate = true)
         {
             // Check if state will change
             if (_isClosed)
             {
                 // Set flag
                 _isClosed = false;
-                _animationProgress = 1 - _animationProgress;
+                if (animate)
+                    _animationProgress = 1 - _animationProgress;
+                else
+                    _animationProgress = 1.0f;
 
                 // Update
                 PerformLayout();
 
                 // Fire event
-                OnClosedChanged?.Invoke(this);
+                ClosedChanged?.Invoke(this);
             }
         }
 
         /// <summary>
         /// Closes the group.
         /// </summary>
-        public void Close()
+        /// <param name="animate">Enable/disable animation feature.</param>
+        public void Close(bool animate = true)
         {
             // Check if state will change
             if (!_isClosed)
             {
                 // Set flag
                 _isClosed = true;
-                _animationProgress = 1 - _animationProgress;
+                if (animate)
+                    _animationProgress = 1 - _animationProgress;
+                else
+                    _animationProgress = 1.0f;
 
                 // Update
                 PerformLayout();
 
                 // Fire event
-                OnClosedChanged?.Invoke(this);
+                ClosedChanged?.Invoke(this);
             }
         }
 
@@ -147,19 +183,7 @@ namespace FlaxEngine.GUI
             else
                 Close();
         }
-
-        /// <summary>
-        /// Ends open/close animation by force.
-        /// </summary>
-        public void EndAnimation()
-        {
-            if (_animationProgress < 1.0f)
-            {
-                _animationProgress = 1.0f;
-                PerformLayout();
-            }
-        }
-
+        
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
@@ -187,10 +211,21 @@ namespace FlaxEngine.GUI
             var style = Style.Current;
 
             // Header
-            Render2D.FillRectangle(new Rectangle(0, 0, Width, HeaderHeight), _mouseOverHeader ? style.BackgroundHighlighted : style.BackgroundNormal);
+            var color = _mouseOverHeader ? HeaderColorMouseOver : HeaderColor;
+            if (color.A > 0)
+                Render2D.FillRectangle(new Rectangle(0, 0, Width, HeaderHeight), color);
+            
+            // Drop down icon
+            float textLeft = 4;
+            if (EnableDropDownIcon)
+            {
+                textLeft += 12;
+                var dropDownRect = new Rectangle(2, (HeaderHeight - 12) / 2, 12, 12);
+                Render2D.DrawSprite(_isClosed ? style.ArrowRight : style.ArrowDown, dropDownRect, _mouseOverHeader ? Color.White : new Color(0.8f, 0.8f, 0.8f, 0.8f));
+            }
 
             // Text
-            Render2D.DrawText(style.FontMedium, HeaderText, new Rectangle(4, 0, Width - 6, HeaderHeight), Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(style.FontMedium, HeaderText, new Rectangle(textLeft, 0, Width - textLeft - 2, HeaderHeight), Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
 
             // Check if isn't fully closed
             if (!_isClosed || _animationProgress < 0.998f)

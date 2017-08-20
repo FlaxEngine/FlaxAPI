@@ -215,12 +215,6 @@ namespace FlaxEditor.CustomEditors.Editors
             if (Values == null)
                 return;
 
-            // TODO: for structures get all public fields
-            // TODO: for objects get all public properties
-            // TODO: support attribues
-            // TODO: spawn custom editors for every editable thing
-            // TODO; use shared properties/fields across all selected objects values
-
             // Collect items to edit
             List<ItemInfo> items;
             if (!HasDiffrentTypes)
@@ -238,8 +232,6 @@ namespace FlaxEditor.CustomEditors.Editors
                     // TODO: merge items and items
                 }
             }
-
-            // TODO: promote children to other base class like CustomEditorContainer ?
 
             // Sort items
             items.Sort();

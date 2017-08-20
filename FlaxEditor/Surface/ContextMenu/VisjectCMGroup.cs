@@ -47,8 +47,7 @@ namespace FlaxEditor.Surface.ContextMenu
                     item.UpdateFilter(null);
             }
 
-            Close();
-            EndAnimation();
+            Close(false);
             Visible = true;
         }
 
@@ -72,8 +71,7 @@ namespace FlaxEditor.Surface.ContextMenu
             // Update itself
             if (isAnyVisible)
             {
-                Open();
-                EndAnimation();
+                Open(false);
                 Visible = true;
             }
             else

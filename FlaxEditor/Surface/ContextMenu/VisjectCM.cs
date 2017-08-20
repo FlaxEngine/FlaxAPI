@@ -85,8 +85,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 if (nodes.Count > 0)
                 {
                     var group = new VisjectCMGroup(this, groupArchetype);
-                    group.Close();
-                    group.EndAnimation();
+                    group.Close(false);
                     for (int i = 0; i < nodes.Count; i++)
                     {
                         var item = new VisjectCMItem(group, nodes[i]);
