@@ -154,6 +154,21 @@ namespace FlaxEditor.CustomEditors.Editors
             {
                 return Info.Name;
             }
+
+            /// <summary>
+            /// Determines whether can merge two item infos to present them at once.
+            /// </summary>
+            /// <param name="a">The a.</param>
+            /// <param name="b">The b.</param>
+            /// <returns>
+            ///   <c>true</c> if can merge two item infos to present them at once; otherwise, <c>false</c>.
+            /// </returns>
+            public static bool CanMerge(ItemInfo a, ItemInfo b)
+            {
+                if (a.Info.DeclaringType != b.Info.DeclaringType)
+                    return false;
+                return a.Info.Name == b.Info.Name;
+            }
         }
 
         private List<ItemInfo> GetItemsForType(Type type)
@@ -224,12 +239,32 @@ namespace FlaxEditor.CustomEditors.Editors
             else
             {
                 var types = ValuesTypes;
-                items = GetItemsForType(types[0]);
-                for (int i = 1; i < types.Length; i++)
+                items = new List<ItemInfo>(GetItemsForType(types[0]));
+                for (int i = 1; i < types.Length && items.Count > 0; i++)
                 {
                     var otherItems = GetItemsForType(types[i]);
 
-                    // TODO: merge items and items
+                    // Merge items
+                    for (int j = 0; j < items.Count && items.Count > 0; j++)
+                    {
+                        bool isInvalid = true;
+                        for (int k = 0; k < otherItems.Count; k++)
+                        {
+                            var a = items[j];
+                            var b = otherItems[k];
+
+                            if(ItemInfo.CanMerge(a, b))
+                            {
+                                isInvalid = false;
+                                break;
+                            }
+                        }
+
+                        if (isInvalid)
+                        {
+                            items.RemoveAt(j--);
+                        }
+                    }
                 }
             }
 

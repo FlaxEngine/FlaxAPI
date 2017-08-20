@@ -79,7 +79,6 @@ namespace FlaxEditor.CustomEditors.Elements
             }
             
             // TODO: sync splitter for whole presenter
-            // TODO: draw editors names
             // TODO: show editor tooltips
             // TODO: if name is too long to show in leftMargin space -> use tooltip to show it
 
