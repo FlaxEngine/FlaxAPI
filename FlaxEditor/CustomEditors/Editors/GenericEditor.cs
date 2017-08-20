@@ -180,7 +180,7 @@ namespace FlaxEditor.CustomEditors.Editors
 
                     // Skip hidden properties and only set properties
                     var getter = p.GetMethod;
-                    if (getter == null || !getter.IsPublic || p.GetIndexParameters().GetLength(0) != 0)
+                    if (!p.CanRead || !p.CanWrite || getter == null || !getter.IsPublic || p.GetIndexParameters().GetLength(0) != 0)
                         continue;
 
                     // Handle HideInEditorAttribute
