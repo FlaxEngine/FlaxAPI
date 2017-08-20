@@ -5,17 +5,48 @@
 using System;
 using System.Collections.Generic;
 using FlaxEditor.CustomEditors.Editors;
-using FlaxEditor.CustomEditors.Elements;
-using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors
 {
     /// <summary>
     /// Main class for Custom Editors used to present selected objects properties and allow to modify them.
     /// </summary>
-    /// <seealso cref="VerticalPanelElement" />
-    public class CustomEditorPresenter : VerticalPanelElement
+    /// <seealso cref="FlaxEditor.CustomEditors.LayoutElementsContainer" />
+    public class CustomEditorPresenter : LayoutElementsContainer
     {
+        /// <summary>
+        /// The panel control.
+        /// </summary>
+        /// <seealso cref="FlaxEngine.GUI.VerticalPanel" />
+        public class PresenterPanel : VerticalPanel
+        {
+            private CustomEditorPresenter _presenter;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PresenterPanel"/> class.
+            /// </summary>
+            /// <param name="presenter">The presenter.</param>
+            internal PresenterPanel(CustomEditorPresenter presenter)
+            {
+                _presenter = presenter;
+            }
+
+            /// <inheritdoc />
+            public override void Update(float deltaTime)
+            {
+                // Update editors
+                _presenter.Update();
+
+                base.Update(deltaTime);
+            }
+        }
+
+        /// <summary>
+        /// The panel.
+        /// </summary>
+        public readonly PresenterPanel Panel;
+
         /// <summary>
         /// The selected objects editor.
         /// </summary>
@@ -24,7 +55,7 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// The selected objects list.
         /// </summary>
-        protected readonly ValueContainer Selection = new ValueContainer();
+        protected readonly ValueContainer Selection = new ValueContainer(null);
 
         /// <summary>
         /// Occurs when selection gets changed.
@@ -36,6 +67,7 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         public CustomEditorPresenter()
         {
+            Panel = new PresenterPanel(this);
         }
 
         /// <summary>
@@ -92,18 +124,21 @@ namespace FlaxEditor.CustomEditors
             // TODO: implement layout elements reusing to reduce memory hit
 
             // Clear layout
+            Panel.IsLayoutLocked = true;
             Panel.DisposeChildren();
 
-            // TODO: find better way to cleanup elements
+            // TODO: find better way to cleanup elements if building layout is a bottleneck
             Children.Clear();
-            
+            Editor.Cleanup();
+
             // Build new one
             if (Selection.Count > 0)
             {
                 Editor.Initialize(this, Selection);
-                Panel.UnlockChildrenRecursive();
-                Panel.PerformLayout();
             }
+            
+            Panel.UnlockChildrenRecursive();
+            Panel.PerformLayout();
         }
 
         /// <summary>
@@ -114,5 +149,13 @@ namespace FlaxEditor.CustomEditors
             BuildLayout();
             SelectionChanged?.Invoke();
         }
+
+        internal void Update()
+        {
+            Editor.RefreshRoot();
+        }
+
+        /// <inheritdoc />
+        public override ContainerControl ContainerControl => Panel;
     }
 }

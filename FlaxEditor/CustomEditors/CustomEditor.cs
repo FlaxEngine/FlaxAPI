@@ -14,8 +14,10 @@ namespace FlaxEditor.CustomEditors
     /// </summary>
     public abstract class CustomEditor
     {
-        private ValueContainer _values;
         private readonly List<CustomEditor> _children = new List<CustomEditor>();
+        private ValueContainer _values;
+        private bool _hasValueDirty;
+        private object _valueToSet;
 
         /// <summary>
         /// Helper value used by the <see cref="PropertiesListElement.PropertiesList"/> to draw property name.
@@ -136,14 +138,63 @@ namespace FlaxEditor.CustomEditors
         /// <param name="layout">The layout builder.</param>
         public abstract void Initialize(LayoutElementsContainer layout);
 
+        internal void Cleanup()
+        {
+            for (int i = 0; i < _children.Count; i++)
+            {
+                _children[i].Cleanup();
+            }
+
+            _children.Clear();
+            _hasValueDirty = false;
+            _valueToSet = null;
+            _values = null;
+        }
+
+        internal void RefreshRoot()
+        {
+            // Update itself
+            Refresh();
+
+            // Update children
+            for (int i = 0; i < _children.Count; i++)
+                _children[i].Refresh(this);
+        }
+
+        internal void Refresh(CustomEditor parent)
+        {
+            // Check if need to update value
+            if (_hasValueDirty)
+            {
+                // TODO: update value
+            }
+            
+            // Update values
+            _values.Refresh(parent.Values);
+
+            // Update itself
+            Refresh();
+
+            // Update children
+            for (int i = 0; i < _children.Count; i++)
+                _children[i].Refresh(this);
+        }
+
         /// <summary>
         /// Refreshes this editor.
         /// </summary>
         public virtual void Refresh()
         {
-            // Update children
-            for (int i = 0; i < _children.Count; i++)
-                _children[i].Refresh();
+        }
+        
+        /// <summary>
+        /// Sets the object value. Actual update is performed during editor refresh in sync.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        protected void SetValue(object value)
+        {
+            _hasValueDirty = true;
+            _valueToSet = value;
         }
     }
 }

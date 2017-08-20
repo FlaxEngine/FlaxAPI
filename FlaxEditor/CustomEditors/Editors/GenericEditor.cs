@@ -116,15 +116,7 @@ namespace FlaxEditor.CustomEditors.Editors
 
             public ValueContainer GetValues(ValueContainer instanceValues)
             {
-                var values = new ValueContainer(instanceValues.Count);
-                for (int j = 0; j < instanceValues.Count; j++)
-                {
-                    if (Info is PropertyInfo propertyInfo)
-                        values.Add(propertyInfo.GetValue(instanceValues[j]));
-                    else
-                        values.Add(((FieldInfo)Info).GetValue(instanceValues[j]));
-                }
-                return values;
+                return new ValueContainer(Info, instanceValues);
             }
 
             /// <inheritdoc />
