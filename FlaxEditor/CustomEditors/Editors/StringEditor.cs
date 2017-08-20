@@ -25,18 +25,9 @@ namespace FlaxEditor.CustomEditors.Editors
                 return;
 
             element = layout.TextBox();
-            element.TextBox.EditEnd += OnTextChanged;
+            element.TextBox.EditEnd += () => SetValue(element.Text);
         }
-
-        private void OnTextChanged()
-        {
-            // TODO: block events during values refresh
-
-            // TODO: update values, send mark dirty event or sth
-
-            Debug.Log("-----> text changed to " + element.Text);
-        }
-
+        
         /// <inheritdoc />
         public override void Refresh()
         {

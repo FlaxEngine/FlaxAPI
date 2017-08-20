@@ -25,6 +25,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 return;
 
             element = layout.IntegerValue();
+            element.IntValue.ValueChanged += () => SetValue(element.IntValue.Value);
         }
 
         /// <inheritdoc />
