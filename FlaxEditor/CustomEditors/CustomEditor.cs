@@ -55,7 +55,7 @@ namespace FlaxEditor.CustomEditors
             {
                 for (int i = 1; i < _values.Count; i++)
                 {
-                    if (_values[0] != _values[1])
+                    if (!Equals(_values[0], _values[i]))
                         return true;
                 }
                 return false;
