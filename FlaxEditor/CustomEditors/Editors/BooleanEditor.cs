@@ -25,6 +25,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 return;
 
             element = layout.Checkbox();
+            element.CheckBox.CheckChanged += () => SetValue(element.CheckBox.Checked);
         }
 
         /// <inheritdoc />

@@ -16,6 +16,7 @@ namespace FlaxEditor.CustomEditors
     {
         private readonly List<CustomEditor> _children = new List<CustomEditor>();
         private ValueContainer _values;
+        private bool _isSetBlocked;
         private bool _hasValueDirty;
         private object _valueToSet;
 
@@ -166,14 +167,24 @@ namespace FlaxEditor.CustomEditors
             // Check if need to update value
             if (_hasValueDirty)
             {
-                // TODO: update value
+                // Cleanup (won't retry update in case of exception)
+                object val = _valueToSet;
+                _hasValueDirty = false;
+                _valueToSet = null;
+
+                // Set values
+                _values.Set(parent.Values, val);
             }
-            
-            // Update values
-            _values.Refresh(parent.Values);
+            else
+            {
+                // Update values
+                _values.Refresh(parent.Values);
+            }
 
             // Update itself
+            _isSetBlocked = true;
             Refresh();
+            _isSetBlocked = false;
 
             // Update children
             for (int i = 0; i < _children.Count; i++)
@@ -193,6 +204,9 @@ namespace FlaxEditor.CustomEditors
         /// <param name="value">The value.</param>
         protected void SetValue(object value)
         {
+            if (_isSetBlocked)
+                return;
+
             _hasValueDirty = true;
             _valueToSet = value;
         }

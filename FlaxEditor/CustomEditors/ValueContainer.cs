@@ -82,5 +82,35 @@ namespace FlaxEditor.CustomEditors
                     this[i] = fieldInfo.GetValue(instanceValues[i]);
             }
         }
+
+        /// <summary>
+        /// Sets the specified instance values. Refreshes this values container.
+        /// </summary>
+        /// <param name="instanceValues">The parent values.</param>
+        /// <param name="value">The value.</param>
+        public void Set(ValueContainer instanceValues, object value)
+        {
+            if (instanceValues == null || instanceValues.Count != Count)
+                throw new ArgumentException();
+
+            if (Info is PropertyInfo propertyInfo)
+            {
+                for (int i = 0; i < Count; i++)
+                {
+                    propertyInfo.SetValue(instanceValues[i], value);
+                    this[i] = propertyInfo.GetValue(instanceValues[i]);
+                }
+            }
+            else
+
+            {
+                var fieldInfo = (FieldInfo)Info;
+                for (int i = 0; i < Count; i++)
+                {
+                    fieldInfo.SetValue(instanceValues[i], value);
+                    this[i] = fieldInfo.GetValue(instanceValues[i]);
+                }
+            }
+        }
     }
 }

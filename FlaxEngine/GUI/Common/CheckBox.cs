@@ -30,13 +30,13 @@ namespace FlaxEngine.GUI
             get => _checked;
             set
             {
-                // Disable intermidiate value
-                _intermediate = false;
-                
-                if (_checked != value)
+                if (_checked != value || _intermediate)
                 {
+                    // Disable intermidiate value
+                    _intermediate = false;
+
                     _checked = value;
-                    OnCheckChanged?.Invoke();
+                    CheckChanged?.Invoke();
                 }
             }
         }
@@ -72,7 +72,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Event fired when 'checked' state gets changed.
         /// </summary>
-        public event Action OnCheckChanged;
+        public event Action CheckChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CheckBox"/> class.
