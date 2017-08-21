@@ -7,26 +7,18 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.CustomEditors.Elements
 {
     /// <summary>
-    /// The spacer element.
+    /// The custom layout element.
     /// </summary>
     /// <seealso cref="FlaxEditor.CustomEditors.LayoutElementsContainer" />
-    public class SpaceElement : LayoutElementsContainer
+    public class CustomElement<T> : LayoutElementsContainer
+        where T : ContainerControl, new()
     {
         /// <summary>
-        /// The spacer.
+        /// The custom control.
         /// </summary>
-        public readonly Spacer Spacer = new Spacer(0, 0);
-
-        /// <summary>
-        /// Initializes the element.
-        /// </summary>
-        /// <param name="height">The height.</param>
-        public void Init(float height)
-        {
-            Spacer.Height = height;
-        }
+        public readonly T Custom = new T();
 
         /// <inheritdoc />
-        public override ContainerControl ContainerControl => Spacer;
+        public override ContainerControl ContainerControl => Custom;
     }
 }
