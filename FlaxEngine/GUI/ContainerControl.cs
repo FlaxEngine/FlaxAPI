@@ -743,7 +743,7 @@ namespace FlaxEngine.GUI
         public override void OnMouseEnter(Vector2 location)
         {
             // Check all children collisions with mouse and fire events for them
-            for (int i = _children.Count - 1; i >= 0; i--)
+            for (int i = _children.Count - 1; i >= 0 && _children.Count > 0; i--)
             {
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
@@ -766,7 +766,7 @@ namespace FlaxEngine.GUI
         public override void OnMouseMove(Vector2 location)
         {
             // Check all children collisions with mouse and fire events for them
-            for (int i = _children.Count - 1; i >= 0; i--)
+            for (int i = _children.Count - 1; i >= 0 && _children.Count > 0; i--)
             {
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
@@ -799,7 +799,7 @@ namespace FlaxEngine.GUI
         public override void OnMouseLeave()
         {
             // Check all children collisions with mouse and fire events for them
-            for (int i = 0; i < _children.Count; i++)
+            for (int i = 0; i < _children.Count && _children.Count > 0; i++)
             {
                 var child = _children[i];
                 if (child.Visible && child.Enabled && child.IsMouseOver)
@@ -817,7 +817,7 @@ namespace FlaxEngine.GUI
         public override bool OnMouseWheel(Vector2 location, int delta)
         {
             // Check all children collisions with mouse and fire events for them
-            for (int i = _children.Count - 1; i >= 0; i--)
+            for (int i = _children.Count - 1; i >= 0 && _children.Count > 0; i--)
             {
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
@@ -843,7 +843,7 @@ namespace FlaxEngine.GUI
         public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
             // Check all children collisions with mouse and fire events for them
-            for (int i = _children.Count - 1; i >= 0; i--)
+            for (int i = _children.Count - 1; i >= 0 && _children.Count > 0; i--)
             {
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
@@ -874,7 +874,7 @@ namespace FlaxEngine.GUI
         public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
         {
             // Check all children collisions with mouse and fire events for them
-            for (int i = _children.Count - 1; i >= 0; i--)
+            for (int i = _children.Count - 1; i >= 0 && _children.Count > 0; i--)
             {
                 var child = _children[i];
 
@@ -889,7 +889,7 @@ namespace FlaxEngine.GUI
                     }
                 }
             }
-            for (int i = _children.Count - 1; i >= 0; i--)
+            for (int i = _children.Count - 1; i >= 0 && _children.Count > 0; i--)
             {
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
@@ -915,7 +915,7 @@ namespace FlaxEngine.GUI
         public override bool OnMouseDoubleClick(Vector2 location, MouseButtons buttons)
         {
             // Check all children collisions with mouse and fire events for them
-            for (int i = _children.Count - 1; i >= 0; i--)
+            for (int i = _children.Count - 1; i >= 0 && _children.Count > 0; i--)
             {
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
@@ -940,7 +940,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override bool OnKeyDown(KeyCode key)
         {
-            for (int i = 0; i < _children.Count; i++)
+            for (int i = 0; i < _children.Count && _children.Count > 0; i++)
             {
                 var child = _children[i];
                 if (child.Enabled && (child.ContainsFocus || child.HasMouseCapture))
@@ -954,7 +954,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void OnKeyUp(KeyCode key)
         {
-            for (int i = 0; i < _children.Count; i++)
+            for (int i = 0; i < _children.Count && _children.Count > 0; i++)
             {
                 var child = _children[i];
                 if (child.Enabled && (child.ContainsFocus || child.HasMouseCapture))
@@ -972,7 +972,7 @@ namespace FlaxEngine.GUI
             var result = base.OnDragEnter(ref location, data);
 
             // Check all children collisions with mouse and fire events for them
-            for (int i = _children.Count - 1; i >= 0; i--)
+            for (int i = _children.Count - 1; i >= 0 && _children.Count > 0; i--)
             {
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
@@ -999,7 +999,7 @@ namespace FlaxEngine.GUI
             var result = base.OnDragMove(ref location, data);
 
             // Check all children collisions with mouse and fire events for them
-            for (int i = _children.Count - 1; i >= 0; i--)
+            for (int i = _children.Count - 1; i >= 0 && _children.Count > 0; i--)
             {
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
@@ -1041,7 +1041,7 @@ namespace FlaxEngine.GUI
             base.OnDragLeave();
 
             // Check all children collisions with mouse and fire events for them
-            for (int i = 0; i < _children.Count; i++)
+            for (int i = 0; i < _children.Count && _children.Count > 0; i++)
             {
                 var child = _children[i];
                 if (child.IsDragOver)
@@ -1059,7 +1059,7 @@ namespace FlaxEngine.GUI
             var result = base.OnDragDrop(ref location, data);
 
             // Check all children collisions with mouse and fire events for them
-            for (int i = _children.Count - 1; i >= 0; i--)
+            for (int i = _children.Count - 1; i >= 0 && _children.Count > 0; i--)
             {
                 var child = _children[i];
                 if (child.Visible && child.Enabled)
