@@ -8,6 +8,7 @@ using FlaxEditor.GUI;
 using FlaxEditor.GUI.Dialogs;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.Scripting;
+using FlaxEditor.Windows;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
@@ -808,8 +809,7 @@ namespace FlaxEditor.Modules
 
                 // Information about Flax
                 case 6:
-                    // TODO: info window
-                    throw new NotImplementedException("Missing info window");
+                    new AboutDialog().Show();
                     break;
 
                 // Official Website

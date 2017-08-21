@@ -247,6 +247,7 @@
     <Compile Include="Viewport\Previews\ModelPreview.cs" />
     <Compile Include="Viewport\Widgets\ViewportWidgetButton.cs" />
     <Compile Include="Viewport\Widgets\ViewportWidgetsContainer.cs" />
+    <Compile Include="Windows\AboutDialog.cs" />
     <Compile Include="Windows\Assets\AssetEditorWindow.cs" />
     <Compile Include="Windows\Assets\CubeTextureWindow.cs" />
     <Compile Include="Windows\Assets\IESProfileWindow.cs" />
