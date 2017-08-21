@@ -3,7 +3,9 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using FlaxEditor.Content;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEditor.GUI.Drag;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
@@ -20,7 +22,7 @@ namespace FlaxEditor.CustomEditors.Editors
         /// A custom control type used to pick reference to <see cref="Object"/>.
         /// </summary>
         /// <seealso cref="FlaxEngine.GUI.Control" />
-        private class ReferencePickerControl : Control
+        public class ReferencePickerControl : Control
         {
             private Type _type;
             private Object _value;
@@ -28,6 +30,10 @@ namespace FlaxEditor.CustomEditors.Editors
             private bool _isMosueDown;
             private Vector2 _mosueDownPos;
             private Vector2 _mousePos;
+
+            private bool _hasValidDragOver;
+            private DragActors _dragActors;
+            private DragAssets _dragAssets;
 
             /// <summary>
             /// Gets or sets the allowed objects type (given type and all sub classes). Must be <see cref="Object"/> type of any subclass.
@@ -108,6 +114,12 @@ namespace FlaxEditor.CustomEditors.Editors
                 return obj == null || _type.IsAssignableFrom(obj.GetType());
             }
 
+            private bool IsValid(Type type)
+            {
+                // ReSharper disable once UseMethodIsInstanceOfType
+                return _type.IsAssignableFrom(type);
+            }
+
             /// <inheritdoc />
             public override void Draw()
             {
@@ -139,10 +151,200 @@ namespace FlaxEditor.CustomEditors.Editors
                     // Draw info
                     Render2D.DrawText(style.FontMedium, "-", nameRect, Color.OrangeRed, TextAlignment.Near, TextAlignment.Center);
                 }
-                
+
                 // Check if drag is over
-                /*if (IsDragOver && _dragOverActor.HasValidDrag())
-                    Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), style.BackgroundSelected * 0.4f, true);*/
+                if (IsDragOver && _hasValidDragOver)
+                    Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), style.BackgroundSelected * 0.4f, true);
+            }
+
+            /// <inheritdoc />
+            public override void OnMouseEnter(Vector2 location)
+            {
+                _mousePos = location;
+                _mosueDownPos = Vector2.Minimum;
+
+                base.OnMouseEnter(location);
+            }
+
+            /// <inheritdoc />
+            public override void OnMouseLeave()
+            {
+                _mousePos = Vector2.Minimum;
+
+                // Check if start drag drop
+                if (_isMosueDown)
+                {
+                    // Do the drag
+                    DoDrag();
+
+                    // Clear flag
+                    _isMosueDown = false;
+                }
+
+                base.OnMouseLeave();
+            }
+
+            /// <inheritdoc />
+            public override void OnMouseMove(Vector2 location)
+            {
+                _mousePos = location;
+
+                // Check if start drag drop
+                if (_isMosueDown && Vector2.Distance(location, _mosueDownPos) > 10.0f)
+                {
+                    // Do the drag
+                    DoDrag();
+
+                    // Clear flag
+                    _isMosueDown = false;
+                }
+
+                base.OnMouseMove(location);
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+            {
+                // Buttons logic
+                if (_value != null)
+                {
+                    // Cache data
+                    var nameRect = new Rectangle(2, 1, Width - 20, 14);
+                    var buttonRect = new Rectangle(nameRect.Right + 3, 1, 14, 14);
+                    if (buttonRect.Contains(location))
+                    {
+                        // Deselect
+                        Value = null;
+                    }
+                    else
+                    {
+                        // TODO: Highlight actor in scene graph
+                    }
+                }
+
+                return base.OnMouseUp(location, buttons);
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
+            {
+                if (buttons == MouseButtons.Left)
+                {
+                    // Set flag
+                    _isMosueDown = true;
+                    _mosueDownPos = location;
+                }
+
+                return base.OnMouseDown(location, buttons);
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseDoubleClick(Vector2 location, MouseButtons buttons)
+            {
+                Focus();
+
+                // Check if has object selected
+                if (_value != null)
+                {
+                    // Select object
+                    if (_value is Actor actor)
+                        Editor.Instance.SceneEditing.Select(actor);
+                    else if (_value is Asset asset)
+                        Editor.Instance.Windows.ContentWin.Select(asset);
+                }
+
+                return base.OnMouseDoubleClick(location, buttons);
+            }
+
+            private void DoDrag()
+            {
+                // Do the drag drop operation if has selected element
+                if (_value != null)
+                {
+                    if (_value is Actor actor)
+                        DoDragDrop(DragActors.GetDragData(actor));
+                    else if (_value is Asset asset)
+                        DoDragDrop(DragAssets.GetDragData(asset));
+                }
+            }
+
+            private DragDropEffect DragEffect => _hasValidDragOver ? DragDropEffect.Move : DragDropEffect.None;
+
+            /// <inheritdoc />
+            public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
+            {
+                base.OnDragEnter(ref location, data);
+
+                // Ensure to have valid drag helpers (uses lazy init)
+                if (_dragActors == null)
+                    _dragActors = new DragActors();
+                if (_dragAssets == null)
+                    _dragAssets = new DragAssets();
+
+                _hasValidDragOver = false;
+                if (_dragActors.OnDragEnter(data, x => IsValid(x.Actor)))
+                {
+                    _hasValidDragOver = true;
+                }
+                else if (_dragAssets.OnDragEnter(data, ValidateDragAsset))
+                {
+                    _hasValidDragOver = true;
+                }
+
+                return DragEffect;
+            }
+
+            private bool ValidateDragAsset(AssetItem assetItem)
+            {
+                // Check if can accept assets
+                if (!IsValid(typeof(Asset)))
+                    return false;
+
+                // Load or get asset
+                var id = assetItem.ID;
+                var obj = Object.Find<Asset>(ref id);
+                if (obj == null)
+                    return false;
+
+                // Check it
+                return IsValid(obj);
+            }
+
+            /// <inheritdoc />
+            public override DragDropEffect OnDragMove(ref Vector2 location, DragData data)
+            {
+                base.OnDragMove(ref location, data);
+
+                return DragEffect;
+            }
+
+            /// <inheritdoc />
+            public override void OnDragLeave()
+            {
+                _hasValidDragOver = false;
+                _dragActors.OnDragLeave();
+                _dragAssets.OnDragLeave();
+
+                base.OnDragLeave();
+            }
+
+            /// <inheritdoc />
+            public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
+            {
+                var result = DragEffect;
+
+                base.OnDragDrop(ref location, data);
+
+                if (_dragActors.HasValidDrag)
+                {
+                    Value = _dragActors.Objects[0].Actor;
+                }
+                else if (_dragAssets.HasValidDrag)
+                {
+                    ValueID = _dragAssets.Objects[0].ID;
+                }
+
+                return result;
             }
         }
 
