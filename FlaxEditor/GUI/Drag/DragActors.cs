@@ -68,6 +68,19 @@ namespace FlaxEditor.GUI.Drag
         /// <summary>
         /// Gets the drag data.
         /// </summary>
+        /// <param name="actor">The actor.</param>
+        /// <returns>The data.</returns>
+        public static DragDataText GetDragData(Actor actor)
+        {
+            if (actor == null)
+                throw new ArgumentNullException();
+
+            return new DragDataText(DragPrefix + actor.ID.ToString("N"));
+        }
+
+        /// <summary>
+        /// Gets the drag data.
+        /// </summary>
         /// <param name="item">The item.</param>
         /// <returns>The data.</returns>
         public static DragDataText GetDragData(ActorNode item)

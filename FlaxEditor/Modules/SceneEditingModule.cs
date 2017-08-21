@@ -55,6 +55,17 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
+        /// Selects the specified actor (finds it's scene graph node).
+        /// </summary>
+        /// <param name="actor">The actor.</param>
+        public void Select(Actor actor)
+        {
+            var node = Editor.Scene.GetActorNode(actor);
+            if (node != null)
+                Select(node);
+        }
+
+        /// <summary>
         /// Selects the specified collection of objects.
         /// </summary>
         /// <param name="selection">The selection.</param>

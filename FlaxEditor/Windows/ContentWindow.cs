@@ -438,6 +438,17 @@ namespace FlaxEditor.Windows
         }
 
         /// <summary>
+        /// Selects the specified asset in the content view.
+        /// </summary>
+        /// <param name="asset">The asset to select.</param>
+        public void Select(Asset asset)
+        {
+            var item = Editor.ContentDatabase.Find(asset.ID);
+            if(item != null)
+                Select(item);
+        }
+
+        /// <summary>
         /// Selects the specified item in the content view.
         /// </summary>
         /// <param name="item">The item to select.</param>

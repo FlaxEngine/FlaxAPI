@@ -1,10 +1,11 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
 using System.Collections.Generic;
 using FlaxEditor.Content;
+using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Drag
@@ -57,6 +58,16 @@ namespace FlaxEditor.GUI.Drag
             }
 
             return new AssetItem[0];
+        }
+
+        /// <summary>
+        /// Gets the drag data (finds asset item).
+        /// </summary>
+        /// <param name="asset">The asset.</param>
+        /// <returns>The data.</returns>
+        public static DragDataText GetDragData(Asset asset)
+        {
+            return DragItems.GetDragData(Editor.Instance.ContentDatabase.Find(asset.ID));
         }
 
         /// <summary>
