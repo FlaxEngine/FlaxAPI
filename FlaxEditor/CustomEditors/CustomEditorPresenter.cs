@@ -166,7 +166,7 @@ namespace FlaxEditor.CustomEditors
         internal void Update()
         {
             // If any UI control has been modified we should try to record selected objects change
-            if (_isDirty)
+            if (_isDirty && Undo != null)
             {
                 _isDirty = false;
                 using (new UndoMultiBlock(Undo, Selection, "Edit object(s)"))

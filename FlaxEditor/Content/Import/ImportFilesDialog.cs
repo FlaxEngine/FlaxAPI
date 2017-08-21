@@ -1,10 +1,11 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
 using System.Collections.Generic;
 using System.IO;
+using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI.Dialogs;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -18,6 +19,7 @@ namespace FlaxEditor.Content.Import
     public class ImportFilesDialog : Dialog
     {
         private TreeNode _rootNode;
+        private CustomEditorPresenter _settingsEditor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportFilesDialog"/> class.
@@ -28,7 +30,7 @@ namespace FlaxEditor.Content.Import
         {
             if (entries == null || entries.Count < 1)
                 throw new ArgumentNullException();
-            
+
             const float TotalWidth = 920;
             const float EditorHeight = 450;
 
@@ -44,7 +46,7 @@ namespace FlaxEditor.Content.Import
             infoLabel.Margins = new Vector4(7);
             infoLabel.DockStyle = DockStyle.Top;
             infoLabel.Parent = this;
-            
+
             // Buttons
             const float ButtonsWidth = 60;
             const float ButtonsMargin = 8;
@@ -65,8 +67,14 @@ namespace FlaxEditor.Content.Import
             splitPanel.Size = new Vector2(TotalWidth, EditorHeight);
             splitPanel.DockStyle = DockStyle.Fill;
             splitPanel.Parent = this;
-            
+
             // TODO: add custom editor presenter for per entry settings editing
+
+            // Settings editor
+            _settingsEditor = new CustomEditorPresenter(null);
+            _settingsEditor.Panel.Width = splitPanel.Panel2.Width;
+            _settingsEditor.Panel.AnchorStyle = AnchorStyle.Upper;
+            _settingsEditor.Panel.Parent = splitPanel.Panel2;
 
             // Setup tree
             var tree = new Tree(true);
@@ -75,7 +83,7 @@ namespace FlaxEditor.Content.Import
             for (int i = 0; i < entries.Count; i++)
             {
                 var entry = entries[i];
-                
+
                 // TODO: add icons for textures/models/etc from FileEntry to tree node??
                 var node = new TreeNode(false);
                 node.Text = Path.GetFileName(entry.Url);
@@ -114,15 +122,14 @@ namespace FlaxEditor.Content.Import
 
         private void OnSelectedChanged(List<TreeNode> before, List<TreeNode> after)
         {
-            List<object> selection = new List<object>(after.Count);
+            var selection = new List<object>(after.Count);
             for (int i = 0; i < after.Count; i++)
             {
-                var fileEntry = after[i].Tag as FileEntry;
-                if (fileEntry != null)
+                if (after[i].Tag is FileEntry fileEntry)
                     selection.Add(fileEntry.Settings);
             }
-            
-            // TODO: select objects
+
+            _settingsEditor.Select(selection);
         }
 
         /// <inheritdoc />
