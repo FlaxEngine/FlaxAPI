@@ -62,6 +62,7 @@
     <Compile Include="CustomEditors\Editors\FloatEditor.cs" />
     <Compile Include="CustomEditors\Editors\GenericEditor.cs" />
     <Compile Include="CustomEditors\Editors\IntegerEditor.cs" />
+    <Compile Include="CustomEditors\Editors\QuaternionEditor.cs" />
     <Compile Include="CustomEditors\Editors\StringEditor.cs" />
     <Compile Include="CustomEditors\Editors\Vector2Editor.cs" />
     <Compile Include="CustomEditors\Editors\Vector3Editor.cs" />

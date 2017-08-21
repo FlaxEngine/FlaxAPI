@@ -1299,7 +1299,11 @@ namespace FlaxEngine
         public static Quaternion Euler(Vector3 eulerAngles)
         {
             Quaternion result;
-            Euler(ref eulerAngles, out result);
+            RotationYawPitchRoll(
+                eulerAngles.Y * Mathf.DegreesToRadians,
+                eulerAngles.X * Mathf.DegreesToRadians,
+                eulerAngles.Z * Mathf.DegreesToRadians,
+                out result);
             return result;
         }
 
@@ -1311,21 +1315,28 @@ namespace FlaxEngine
         /// <param name="result">When the method completes, contains the newly created quaternion.</param>
         public static void Euler(ref Vector3 eulerAngles, out Quaternion result)
         {
-            float halfRoll = eulerAngles.Z * (0.5f * Mathf.DegreesToRadians);
-            float halfPitch = eulerAngles.X * (0.5f * Mathf.DegreesToRadians);
-            float halfYaw = eulerAngles.Y * (0.5f * Mathf.DegreesToRadians);
+            RotationYawPitchRoll(
+                eulerAngles.Y * Mathf.DegreesToRadians,
+                eulerAngles.X * Mathf.DegreesToRadians,
+                eulerAngles.Z * Mathf.DegreesToRadians,
+                out result);
+        }
 
-            var sinRoll = (float)Math.Sin(halfRoll);
-            var cosRoll = (float)Math.Cos(halfRoll);
-            var sinPitch = (float)Math.Sin(halfPitch);
-            var cosPitch = (float)Math.Cos(halfPitch);
-            var sinYaw = (float)Math.Sin(halfYaw);
-            var cosYaw = (float)Math.Cos(halfYaw);
-
-            result.X = cosYaw * sinPitch * cosRoll + sinYaw * cosPitch * sinRoll;
-            result.Y = sinYaw * cosPitch * cosRoll - cosYaw * sinPitch * sinRoll;
-            result.Z = cosYaw * cosPitch * sinRoll - sinYaw * sinPitch * cosRoll;
-            result.W = cosYaw * cosPitch * cosRoll + sinYaw * sinPitch * sinRoll;
+        /// <summary>
+        /// Creates a quaternion given a pitch, yaw and roll values.
+        /// Angles are in degrees.
+        /// </summary>
+        /// <param name="x">The pitch of rotation (in degrees).</param>
+        /// <param name="y">The yaw of rotation (in degrees).</param>
+        /// <param name="z">The roll of rotation (in degrees).</param>
+        /// <param name="result">When the method completes, contains the newly created quaternion.</param>
+        public static void Euler(float x, float y, float z, out Quaternion result)
+        {
+            RotationYawPitchRoll(
+                y * Mathf.DegreesToRadians,
+                x * Mathf.DegreesToRadians,
+                z * Mathf.DegreesToRadians,
+                out result);
         }
 
         /// <summary>
