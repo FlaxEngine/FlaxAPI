@@ -57,6 +57,10 @@ namespace FlaxEditor.CustomEditors
                     return new GenericEditor();
                 }
             }
+            if (targetType.IsSubclassOf(typeof(FlaxEngine.Object)))
+            {
+                return new FlaxObjectRefEditor();
+            }
 
             // The most generic editor
             return new GenericEditor();

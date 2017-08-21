@@ -61,6 +61,7 @@
     <Compile Include="CustomEditors\Editors\BooleanEditor.cs" />
     <Compile Include="CustomEditors\Editors\ColorEditor.cs" />
     <Compile Include="CustomEditors\Editors\EnumEditor.cs" />
+    <Compile Include="CustomEditors\Editors\FlaxObjectRefEditor.cs" />
     <Compile Include="CustomEditors\Editors\FloatEditor.cs" />
     <Compile Include="CustomEditors\Editors\GenericEditor.cs" />
     <Compile Include="CustomEditors\Editors\IntegerEditor.cs" />
