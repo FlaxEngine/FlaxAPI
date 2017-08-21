@@ -46,6 +46,14 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Initializes a new instance of the <see cref="ColorValueBox"/> class.
         /// </summary>
+        public ColorValueBox()
+            : base(true, 0, 0, 32, 18)
+        {
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ColorValueBox"/> class.
+        /// </summary>
         /// <param name="value">The initial value.</param>
         /// <param name="x">The x location</param>
         /// <param name="y">The y location</param>
