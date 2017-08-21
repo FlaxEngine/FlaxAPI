@@ -60,6 +60,7 @@
     <Compile Include="CustomEditors\CustomEditorsUtil.cs" />
     <Compile Include="CustomEditors\Editors\BooleanEditor.cs" />
     <Compile Include="CustomEditors\Editors\ColorEditor.cs" />
+    <Compile Include="CustomEditors\Editors\EnumEditor.cs" />
     <Compile Include="CustomEditors\Editors\FloatEditor.cs" />
     <Compile Include="CustomEditors\Editors\GenericEditor.cs" />
     <Compile Include="CustomEditors\Editors\IntegerEditor.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="CustomEditors\Editors\Vector4Editor.cs" />
     <Compile Include="CustomEditors\Elements\CheckBoxElement.cs" />
     <Compile Include="CustomEditors\Elements\CustomElement.cs" />
+    <Compile Include="CustomEditors\Elements\EnumElement.cs" />
     <Compile Include="CustomEditors\Elements\FloatValueElement.cs" />
     <Compile Include="CustomEditors\Elements\IntegerValueElement.cs" />
     <Compile Include="CustomEditors\Elements\PropertiesListElement.cs" />

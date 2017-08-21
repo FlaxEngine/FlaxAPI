@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using FlaxEditor.CustomEditors.Elements;
@@ -142,6 +143,19 @@ namespace FlaxEditor.CustomEditors
         public IntegerValueElement IntegerValue()
         {
             IntegerValueElement element = new IntegerValueElement();
+            OnAddElement(element);
+            return element;
+        }
+
+        /// <summary>
+        /// Adds new enum value element.
+        /// </summary>
+        /// <param name="type">The enum type.</param>
+        /// <param name="cusstomBuildEntriesDelegate">The custom entries layout builder. Allows to hide existing or add diffrent enum values to editor.</param>
+        /// <returns>The created element.</returns>
+        public EnumElement Enum(Type type, EnumElement.BuildEntriesDelegate cusstomBuildEntriesDelegate = null)
+        {
+            EnumElement element = new EnumElement(type, cusstomBuildEntriesDelegate);
             OnAddElement(element);
             return element;
         }

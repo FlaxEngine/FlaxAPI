@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using FlaxEditor.CustomEditors.Editors;
@@ -28,19 +29,36 @@ namespace FlaxEditor.CustomEditors
                 throw new NotImplementedException();
             }
 
-            // Special case for array
-            if (targetType.IsArray)
-            {
-                // TODO: dedicated array editor
-                return new GenericEditor();
-            }
-
             // Use custom editor
             var type = Internal_GetCustomEditor(targetType);
             if (type != null)
                 return (CustomEditor)Activator.CreateInstance(type);
 
-            // Use generic one
+            // Select default editor (based on type)
+            if (targetType.IsArray)
+            {
+                // TODO: dedicated array editor
+                return new GenericEditor();
+            }
+            if (targetType.IsEnum)
+            {
+                return new EnumEditor();
+            }
+            if (targetType.IsGenericType)
+            {
+                if (targetType.GetGenericTypeDefinition() == typeof(List<>))
+                {
+                    // TODO: dedicated List<T> editor
+                    return new GenericEditor();
+                }
+                if (targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+                {
+                    // TODO: dedicated Dictionary<T> editor
+                    return new GenericEditor();
+                }
+            }
+
+            // The most generic editor
             return new GenericEditor();
         }
 
