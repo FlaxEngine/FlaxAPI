@@ -1,10 +1,15 @@
-﻿// Flax Engine scripting API
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
+
+using System;
 
 namespace FlaxEngine
 {
     /// <summary>
     /// Static flags for the actor
     /// </summary>
+    [Flags]
     public enum StaticFlags
     {
         /// <summary>
@@ -31,10 +36,5 @@ namespace FlaxEngine
         /// Objects is fully static on the scene
         /// </summary>
         FullyStatic = Transform | ReflectionProbe | Lightmap,
-
-        /// <summary>
-        /// Maximum value of the enum (force to int)
-        /// </summary>
-        Max = 1 << 31,
     };
 }
