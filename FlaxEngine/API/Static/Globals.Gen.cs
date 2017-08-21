@@ -36,10 +36,25 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets the Flax version text.
+		/// </summary>
+		[UnmanagedCall]
+		public static string Version
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetVersion(); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern string[] Internal_GetPaths();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern string Internal_GetVersion();
 #endif
 #endregion
 	}
