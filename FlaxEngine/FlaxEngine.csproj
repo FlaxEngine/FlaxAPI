@@ -182,6 +182,8 @@
     <Compile Include="GUI\Common\Button.cs" />
     <Compile Include="GUI\Common\CheckBox.cs" />
     <Compile Include="GUI\Common\ComboBox.cs" />
+    <Compile Include="GUI\Common\IImageSource.cs" />
+    <Compile Include="GUI\Common\Image.cs" />
     <Compile Include="GUI\Common\Label.cs" />
     <Compile Include="GUI\Common\ProgressBar.cs" />
     <Compile Include="GUI\Common\Spacer.cs" />
