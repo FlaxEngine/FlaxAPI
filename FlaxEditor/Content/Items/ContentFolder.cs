@@ -301,7 +301,7 @@ namespace FlaxEditor.Content
             }
 
             // Clear cache
-            _dragOverItems.OnDragDrop();
+            _dragOverItems?.OnDragDrop();
             _validDragOver = false;
 
             return result;
