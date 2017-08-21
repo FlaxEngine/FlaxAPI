@@ -169,7 +169,7 @@ namespace FlaxEditor.CustomEditors
             if (_isDirty)
             {
                 _isDirty = false;
-                using (new UndoMultiBlock(Undo, Selection, "Editor object(s)"))
+                using (new UndoMultiBlock(Undo, Selection, "Edit object(s)"))
                     Editor.RefreshRoot();
             }
             else

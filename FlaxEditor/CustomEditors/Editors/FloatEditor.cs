@@ -33,7 +33,7 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             if (HasDiffrentValues)
             {
-                // TOOD: support different values for ValueBox<T>
+                // TODO: support different values for ValueBox<T>
             }
             else
             {
