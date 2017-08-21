@@ -27,7 +27,7 @@ namespace FlaxEditor.Windows
         {
             Title = "Properties";
 
-            Presenter = new CustomEditorPresenter();
+            Presenter = new CustomEditorPresenter(editor.Undo);
             Presenter.Panel.Width = Width;
             Presenter.Panel.AnchorStyle = AnchorStyle.Upper;
             Presenter.Panel.Parent = this;

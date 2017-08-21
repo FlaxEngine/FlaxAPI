@@ -172,7 +172,7 @@ namespace FlaxEditor.CustomEditors
             var editor = overrideEditor ?? CustomEditorsUtil.CreateEditor(member);
 
             OnAddEditor(editor);
-            editor.Initialize(this, values);
+            editor.Initialize(CustomEditor.CurrentCustomEditor.Presenter, this, values);
 
             return editor;
         }

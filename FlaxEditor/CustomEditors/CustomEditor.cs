@@ -14,6 +14,7 @@ namespace FlaxEditor.CustomEditors
     /// </summary>
     public abstract class CustomEditor
     {
+        private CustomEditorPresenter _presenter;
         private CustomEditor _parent;
         private readonly List<CustomEditor> _children = new List<CustomEditor>();
         private ValueContainer _values;
@@ -114,8 +115,17 @@ namespace FlaxEditor.CustomEditors
         /// </value>
         public ValueContainer Values => _values;
 
-        internal virtual void Initialize(LayoutElementsContainer layout, ValueContainer values)
+        /// <summary>
+        /// Gets the presenter control. It's the top most part of the Custom Editors layout.
+        /// </summary>
+        /// <value>
+        /// The presenter.
+        /// </value>
+        public CustomEditorPresenter Presenter => _presenter;
+
+        internal virtual void Initialize(CustomEditorPresenter presenter, LayoutElementsContainer layout, ValueContainer values)
         {
+            _presenter = presenter;
             _values = values;
 
             var prev = CurrentCustomEditor;
@@ -152,6 +162,7 @@ namespace FlaxEditor.CustomEditors
             }
 
             _children.Clear();
+            _presenter = null;
             _parent = null;
             _hasValueDirty = false;
             _valueToSet = null;
@@ -224,6 +235,7 @@ namespace FlaxEditor.CustomEditors
 
             _hasValueDirty = true;
             _valueToSet = value;
+            _presenter.OnDirty();
         }
     }
 }

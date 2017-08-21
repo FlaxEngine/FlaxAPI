@@ -42,6 +42,8 @@ namespace FlaxEditor.CustomEditors
             }
         }
 
+        private bool _isDirty;
+
         /// <summary>
         /// The panel.
         /// </summary>
@@ -58,6 +60,11 @@ namespace FlaxEditor.CustomEditors
         protected readonly ValueContainer Selection = new ValueContainer(null);
 
         /// <summary>
+        /// The undo object used by this editor.
+        /// </summary>
+        public readonly Undo Undo;
+
+        /// <summary>
         /// Occurs when selection gets changed.
         /// </summary>
         public event Action SelectionChanged;
@@ -65,8 +72,9 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomEditorPresenter"/> class.
         /// </summary>
-        public CustomEditorPresenter()
+        public CustomEditorPresenter(Undo undo)
         {
+            Undo = undo;
             Panel = new PresenterPanel(this);
         }
 
@@ -134,9 +142,11 @@ namespace FlaxEditor.CustomEditors
             // Build new one
             if (Selection.Count > 0)
             {
-                Editor.Initialize(this, Selection);
+                Editor.Initialize(this, this, Selection);
             }
-            
+
+            _isDirty = false;
+
             Panel.UnlockChildrenRecursive();
             Panel.PerformLayout();
         }
@@ -150,9 +160,30 @@ namespace FlaxEditor.CustomEditors
             SelectionChanged?.Invoke();
         }
 
+        /// <summary>
+        /// Updates custom editors. Refreshes UI values and applies changes to the selected objects.
+        /// </summary>
         internal void Update()
         {
-            Editor.RefreshRoot();
+            // If any UI control has been modified we should try to record selected objects change
+            if (_isDirty)
+            {
+                _isDirty = false;
+                using (new UndoMultiBlock(Undo, Selection, "Editor object(s)"))
+                    Editor.RefreshRoot();
+            }
+            else
+            {
+                Editor.RefreshRoot();
+            }
+        }
+
+        /// <summary>
+        /// Called when any object UI editor value gets modified and will be updated during next refresh.
+        /// </summary>
+        internal void OnDirty()
+        {
+            _isDirty = true;
         }
 
         /// <inheritdoc />
