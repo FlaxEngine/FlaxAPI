@@ -7,8 +7,8 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// Helper control used to insert blank space into the layout.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.Control" />
-    public sealed class Spacer : Control
+    /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    public sealed class Spacer : ContainerControl
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Spacer"/> class.
