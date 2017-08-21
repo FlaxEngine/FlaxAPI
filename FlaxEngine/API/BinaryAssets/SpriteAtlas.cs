@@ -3,10 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
@@ -35,6 +32,42 @@ namespace FlaxEngine
         /// </summary>
         /// <returns>True if this sprite handle is valid, otherwise false.</returns>
         public bool IsValid => Atlas != null && Index != -1;
+
+        /// <summary>
+        /// Gets the sprite size (in pixels).
+        /// </summary>
+        /// <value>
+        /// The size.
+        /// </value>
+        public Vector2 Size
+        {
+            get
+            {
+                if (Atlas == null)
+                    throw new InvalidOperationException("Cannot use invalid sprite.");
+                Vector2 result;
+                SpriteAtlas.Internal_GetSpriteSize(Atlas.unmanagedPtr, Index, out result);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Gets the sprite area in atlas (in normalized atlas coordinaes [0;1]).
+        /// </summary>
+        /// <value>
+        /// The sprite area in atlas (normalized).
+        /// </value>
+        public Rectangle Area
+        {
+            get
+            {
+                if (Atlas == null)
+                    throw new InvalidOperationException("Cannot use invalid sprite.");
+                Rectangle result;
+                SpriteAtlas.Internal_GetSpriteArea(Atlas.unmanagedPtr, Index, out result);
+                return result;
+            }
+        }
     }
 
     public partial class SpriteAtlas
@@ -48,5 +81,16 @@ namespace FlaxEngine
         /// The asset type content domain.
         /// </summary>
         public const ContentDomain Domain = ContentDomain.Texture;
+
+        #region Internal Calls
+
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetSpriteSize(IntPtr obj, int index, out Vector2 resultAsRef);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetSpriteArea(IntPtr obj, int index, out Rectangle resultAsRef);
+#endif
+
+        #endregion
     }
 }
