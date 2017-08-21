@@ -63,7 +63,9 @@
     <Compile Include="CustomEditors\Editors\GenericEditor.cs" />
     <Compile Include="CustomEditors\Editors\IntegerEditor.cs" />
     <Compile Include="CustomEditors\Editors\StringEditor.cs" />
+    <Compile Include="CustomEditors\Editors\Vector3Editor.cs" />
     <Compile Include="CustomEditors\Elements\CheckBoxElement.cs" />
+    <Compile Include="CustomEditors\Elements\CustomElement.cs" />
     <Compile Include="CustomEditors\Elements\FloatValueElement.cs" />
     <Compile Include="CustomEditors\Elements\IntegerValueElement.cs" />
     <Compile Include="CustomEditors\Elements\PropertiesListElement.cs" />
