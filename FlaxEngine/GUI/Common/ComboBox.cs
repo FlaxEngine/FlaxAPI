@@ -110,7 +110,7 @@ namespace FlaxEngine.GUI
                 if (!SupportMultiSelect)
                     throw new InvalidOperationException();
 
-                if (_selectedIndicies.SequenceEqual(value))
+                if (!_selectedIndicies.SequenceEqual(value))
                 {
                     // Select
                     _selectedIndicies.Clear();
