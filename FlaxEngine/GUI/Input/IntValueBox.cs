@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -48,11 +48,9 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected sealed override void UpdateText()
         {
-            // Format
             var text = _value.ToString();
             
-            // Set text
-            Text = text;
+            SetText(text);
         }
 
         /// <inheritdoc />

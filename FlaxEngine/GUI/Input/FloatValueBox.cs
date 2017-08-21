@@ -51,11 +51,9 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected sealed override void UpdateText()
         {
-            // Format
             var text = _value.ToString(CultureInfo.InvariantCulture);
-
-            // Set text
-            Text = text;
+            
+            SetText(text);
         }
 
         /// <inheritdoc />

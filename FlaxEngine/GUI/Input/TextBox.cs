@@ -18,12 +18,12 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Default height of the text box
         /// </summary>
-        public static int DefaultHeight = 18;
+        public static float DefaultHeight = 18;
 
         /// <summary>
         /// Left and right margin for text inside the text box bounds rectangle
         /// </summary>
-        public static int DefaultMargin = 4;
+        public static float DefaultMargin = 4;
 
         // TODO: support password protected text box
 
@@ -142,31 +142,40 @@ namespace FlaxEngine.GUI
                 // Skip set if user is editing value
                 if (_isEditing)
                     return;
+                
+                SetText(value);
+            }
+        }
 
-                // Prevent from null problems
-                if (value == null)
-                    value = string.Empty;
+        /// <summary>
+        /// Sets the text.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        protected void SetText(string value)
+        {
+            // Prevent from null problems
+            if (value == null)
+                value = string.Empty;
 
-                // Clamp length
-                if (value.Length > MaxLength)
-                    value = value.Substring(0, MaxLength);
+            // Clamp length
+            if (value.Length > MaxLength)
+                value = value.Substring(0, MaxLength);
 
-                // Ensure to use only single line
-                if (_isMultiline == false && value.Length > 0)
-                {
-                    // Extract only the first line
-                    value = value.GetLines()[0];
-                }
+            // Ensure to use only single line
+            if (_isMultiline == false && value.Length > 0)
+            {
+                // Extract only the first line
+                value = value.GetLines()[0];
+            }
 
-                if (_text != value)
-                {
-                    Deselect();
-                    ResetViewOffset();
+            if (_text != value)
+            {
+                Deselect();
+                ResetViewOffset();
 
-                    _text = value;
+                _text = value;
 
-                    OnTextChanged();
-                }
+                OnTextChanged();
             }
         }
 
