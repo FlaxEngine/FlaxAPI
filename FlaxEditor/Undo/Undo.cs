@@ -22,7 +22,7 @@ namespace FlaxEditor
             /// Creates the undo action object on recording end.
             /// </summary>
             /// <param name="snapshotInstance">The snapshoted object.</param>
-            /// <returns>The undo action.</returns>
+            /// <returns>The undo action. May be null if no changes found.</returns>
             IUndoAction End(object snapshotInstance);
         }
 
@@ -114,6 +114,8 @@ namespace FlaxEditor
             public IUndoAction End(object snapshotInstance)
             {
                 var diff = Snapshot.Compare(snapshotInstance);
+                if (diff.Count == 0)
+                    return null;
                 return new UndoActionObject(diff, ActionString, SnapshotInstance);
             }
         }
@@ -145,10 +147,14 @@ namespace FlaxEditor
                 snapshotInstance = _snapshots.Last().Key;
             }
             var action = _snapshots[snapshotInstance].End(snapshotInstance);
-            UndoOperationsStack.Push(action);
             _snapshots.Remove(snapshotInstance);
 
-            OnAction(action);
+            // It may be null if no changes has been found during recording
+            if (action != null)
+            {
+                UndoOperationsStack.Push(action);
+                OnAction(action);
+            }
         }
 
         /// <summary>
@@ -181,8 +187,12 @@ namespace FlaxEditor
                 for (int i = 0; i < snapshotInstances.Length; i++)
                 {
                     var diff = Snapshot[i].Compare(snapshotInstances[i]);
+                    if (diff.Count == 0)
+                        continue;
                     actions.Add(new UndoActionObject(diff, ActionString, SnapshotInstances[i]));
                 }
+                if (actions.Count == 0)
+                    return null;
                 return new MultiUndoAction(actions);
             }
         }
@@ -214,10 +224,14 @@ namespace FlaxEditor
                 snapshotInstance = (object[])_snapshots.Last().Key;
             }
             var action = _snapshots[snapshotInstance].End(snapshotInstance);
-            UndoOperationsStack.Push(action);
             _snapshots.Remove(snapshotInstance);
 
-            OnAction(action);
+            // It may be null if no changes has been found during recording
+            if (action != null)
+            {
+                UndoOperationsStack.Push(action);
+                OnAction(action);
+            }
         }
 
         /// <summary>
