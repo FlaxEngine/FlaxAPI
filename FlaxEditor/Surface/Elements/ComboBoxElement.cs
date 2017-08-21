@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -35,7 +35,7 @@ namespace FlaxEditor.Surface.Elements
         {
             ParentNode = parentNode;
             Archetype = archetype;
-            
+
             // Check if combo box will use auto select feature
             // Note: used provided items we should auto update saved node value on closed
             _isAutoSelect = Archetype.Text != null;
@@ -44,23 +44,24 @@ namespace FlaxEditor.Surface.Elements
                 // Get the fucking items xD
                 var items = Archetype.Text.Split('\n');
                 AddItems(items);
-                
+
                 // Select saved value
-                _seletedIndex = (int)ParentNode.Values[Archetype.ValueIndex];
+                _selectedIndicies.Clear();
+                _selectedIndicies.Add((int)ParentNode.Values[Archetype.ValueIndex]);
             }
         }
 
         /// <inheritdoc />
-        protected override void SelectedIndexChanged()
+        protected override void OnSelectedIndexChanged()
         {
             if (_isAutoSelect)
             {
                 // Edit value
-                ParentNode.Values[Archetype.ValueIndex] = _seletedIndex;
+                ParentNode.Values[Archetype.ValueIndex] = SelectedIndex;
                 ParentNode.Surface.MarkAsEdited();
             }
 
-            base.SelectedIndexChanged();
+            base.OnSelectedIndexChanged();
         }
     }
 }

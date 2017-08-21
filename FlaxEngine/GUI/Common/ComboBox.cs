@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FlaxEngine.GUI
 {
@@ -13,12 +14,28 @@ namespace FlaxEngine.GUI
     /// <seealso cref="FlaxEngine.GUI.Control" />
     public class ComboBox : Control
     {
-        private const float DefaultHeight = 18.0f;
+        /// <summary>
+        /// The default height of the control.
+        /// </summary>
+        public const float DefaultHeight = 18.0f;
 
+        /// <summary>
+        /// The items.
+        /// </summary>
         protected readonly List<string> _items = new List<string>();
+
+        /// <summary>
+        /// The popup menu. May be null if has not been used yet.
+        /// </summary>
         protected ContextMenu _popupMenu;
-        protected bool _mouseDown, _blockPopup;
-        protected int _seletedIndex = -1;
+
+        private bool _mouseDown;
+        private bool _blockPopup;
+
+        /// <summary>
+        /// The selected indicies.
+        /// </summary>
+        protected readonly List<int> _selectedIndicies = new List<int>(4);
 
         /// <summary>
         /// True if sort items before showing the list, otherwise present them in the unchanged order.
@@ -26,9 +43,14 @@ namespace FlaxEngine.GUI
         public bool Sorted { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether support multi items selection.
+        /// </summary>
+        public bool SupportMultiSelect { get; set; }
+        
+        /// <summary>
         /// Event fired when selected index gets changed.
         /// </summary>
-        public event Action<ComboBox> OnSelectedIndexChanged;
+        public event Action<ComboBox> SelectedIndexChanged;
 
         /// <summary>
         /// Gets a value indicating whether this popup menu is opened.
@@ -39,14 +61,14 @@ namespace FlaxEngine.GUI
         public bool IsPopupOpened => _popupMenu != null && _popupMenu.IsOpened;
 
         /// <summary>
-        /// Gets or sets the selected item (returns <see cref="string.Empty"/> if no item is being selected).
+        /// Gets or sets the selected item (returns <see cref="string.Empty"/> if no item is being selected or more than one item is selected).
         /// </summary>
         /// <value>
         /// The selected item.
         /// </value>
         public string SelectedItem
         {
-            get => _seletedIndex != -1 ? _items[_seletedIndex] : string.Empty;
+            get => _selectedIndicies.Count == 1 ? _items[_selectedIndicies[0]] : string.Empty;
             set => SelectedIndex = _items.IndexOf(value);
         }
 
@@ -58,18 +80,42 @@ namespace FlaxEngine.GUI
         /// </value>
         public int SelectedIndex
         {
-            get => _seletedIndex;
+            get => _selectedIndicies.Count == 1 ? _selectedIndicies[0] : -1;
             set
             {
                 // Clamp index
                 value = Mathf.Clamp(value, value, _items.Count - 1);
 
                 // Check if index will change
-                if (value != _seletedIndex)
+                if (value != SelectedIndex)
                 {
                     // Select
-                    _seletedIndex = value;
-                    SelectedIndexChanged();
+                    _selectedIndicies.Clear();
+                    _selectedIndicies.Add(value);
+                    OnSelectedIndexChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the selection.
+        /// </summary>
+        public List<int> Selection
+        {
+            get => _selectedIndicies;
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException();
+                if (!SupportMultiSelect)
+                    throw new InvalidOperationException();
+
+                if (_selectedIndicies.SequenceEqual(value))
+                {
+                    // Select
+                    _selectedIndicies.Clear();
+                    _selectedIndicies.AddRange(value);
+                    OnSelectedIndexChanged();
                 }
             }
         }
@@ -80,7 +126,7 @@ namespace FlaxEngine.GUI
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <param name="width">The width.</param>
-        public ComboBox(float x, float y, float width = 120.0f)
+        public ComboBox(float x = 0, float y = 0, float width = 120.0f)
             : base(true, x, y, width, DefaultHeight)
         {
         }
@@ -90,6 +136,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void ClearItems()
         {
+            SelectedIndex = -1;
             _items.Clear();
         }
 
@@ -125,9 +172,29 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Called when selected item index gets changed.
         /// </summary>
-        protected virtual void SelectedIndexChanged()
+        protected virtual void OnSelectedIndexChanged()
         {
-            OnSelectedIndexChanged?.Invoke(this);
+            SelectedIndexChanged?.Invoke(this);
+        }
+
+        /// <summary>
+        /// Called when item is clicked.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        protected virtual void OnItemClicked(int index)
+        {
+            if (SupportMultiSelect)
+            {
+                if (_selectedIndicies.Contains(index))
+                    _selectedIndicies.Remove(index);
+                else
+                    _selectedIndicies.Add(index);
+                OnSelectedIndexChanged();
+            }
+            else
+            {
+                SelectedIndex = index;
+            }
         }
 
         /// <summary>
@@ -147,7 +214,7 @@ namespace FlaxEngine.GUI
             };
             popup.OnButtonClicked += (id, cm) =>
             {
-                SelectedIndex = id;
+                OnItemClicked(id);
                 cm.Hide();
             };
 
@@ -196,11 +263,12 @@ namespace FlaxEngine.GUI
             Render2D.DrawRectangle(clientRect, borderColor);
 
             // Check if has selected item
-            if (_seletedIndex != -1)
+            var selectedIndex = SelectedIndex;
+            if (selectedIndex != -1)
             {
                 // Draw text of the selected item
                 float textScale = Height / DefaultHeight;
-                Render2D.DrawText(style.FontMedium, _items[_seletedIndex], new Rectangle(margin, 0, clientRect.Width - boxSize, clientRect.Height), Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, textScale);
+                Render2D.DrawText(style.FontMedium, _items[selectedIndex], new Rectangle(margin, 0, clientRect.Width - boxSize, clientRect.Height), Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, textScale);
             }
 
             // Arrow
@@ -268,9 +336,14 @@ namespace FlaxEngine.GUI
                     _popupMenu.DisposeChildren();
                     if (Sorted)
                         _items.Sort();
+                    var style = Style.Current;
                     for (int i = 0; i < _items.Count; i++)
                     {
-                        _popupMenu.AddButton(i, _items[i]);
+                        var button = _popupMenu.AddButton(i, _items[i]);
+                        if (_selectedIndicies.Contains(i))
+                        {
+                            button.Icon = style.CheckBoxTick;
+                        }
                     }
 
                     // Show dropdown list

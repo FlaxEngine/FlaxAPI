@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -175,7 +175,7 @@ namespace FlaxEditor.Surface.Archetypes
                 if (_combobox == null)
                 {
                     _combobox = (ComboBoxElement)_children[0];
-                    _combobox.OnSelectedIndexChanged += OnSelectedChanged;
+                    _combobox.SelectedIndexChanged += OnSelectedChanged;
                 }
 
                 // Update items
