@@ -94,7 +94,7 @@ namespace FlaxEditor.Content.Import
         /// True if generate mip maps chain for the texture.
         /// </summary>
         [EditorOrder(60), Tooltip("True if generate mip maps chain for the texture")]
-        public bool GenerateMipMaps { get; set; }  = true;
+        public bool GenerateMipMaps { get; set; } = true;
 
         /// <summary>
         /// The import texture scale.
@@ -126,7 +126,57 @@ namespace FlaxEditor.Content.Import
         public TextureFileEntry(string url, string resultUrl)
             : base(url, resultUrl)
         {
-            // TODO: prepare import options based on file name
+            // TODO: ask flax assets backend to try restore previous import settings
+
+            // Get short file name
+            var shortName = System.IO.Path.GetFileNameWithoutExtension(url);
+
+            // Try to guess format type based on file name
+            TextureFormatType formatToUse = TextureFormatType.ColorRGB;
+            string snl = shortName.ToLower();
+            //if (options.Type != TextureFormatType.ColorRGB)
+            //    formatToUse = options.Type;
+            // else
+            if (snl.EndsWith("_n")
+                || snl.Contains("nrm")
+                || snl.Contains("nm")
+                || snl.Contains("normal")
+                || snl.EndsWith("normals"))
+            {
+                // Normal map
+                formatToUse = TextureFormatType.NormalMap;
+            }
+            else if (snl.EndsWith("_d")
+                     || snl.Contains("diffuse")
+                     || snl.Contains("diff")
+                     || snl.Contains("color")
+                     || snl.Contains("basecolor")
+                     || snl.Contains("albedo"))
+            {
+                // Albedo or diffuse map
+                formatToUse = TextureFormatType.ColorRGB;
+            }
+            else if (snl.EndsWith("ao")
+                     || snl.EndsWith("ambientocclusion")
+                     || snl.EndsWith("gloss")
+                     || snl.EndsWith("_r")
+                     || snl.EndsWith("_displ")
+                     || snl.EndsWith("roughness")
+                     || snl.EndsWith("metalness")
+                     || snl.EndsWith("displacement")
+                     || snl.EndsWith("spec")
+                     || snl.EndsWith("specular")
+                     || snl.EndsWith("occlusion")
+                     || snl.EndsWith("height")
+                     || snl.EndsWith("heights")
+                     || snl.EndsWith("cavity")
+                     || snl.EndsWith("metalic")
+                     || snl.EndsWith("metallic"))
+            {
+                // Glossiness, metalness, ambient occlusion, displacement, height, cavity or specular
+                formatToUse = TextureFormatType.GrayScale;
+            }
+            _settings.Type = (TextureImportSettings.CustomTextureFormatType)formatToUse;
         }
 
         /// <inheritdoc />
