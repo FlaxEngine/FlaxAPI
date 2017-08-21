@@ -68,9 +68,22 @@ namespace FlaxEditor.CustomEditors
         /// <typeparam name="T">The custom control.</typeparam>
         /// <returns>The created element.</returns>
         public CustomElement<T> Custom<T>()
-            where T : ContainerControl, new()
+            where T : Control, new()
         {
             var element = new CustomElement<T>();
+            OnAddElement(element);
+            return element;
+        }
+
+        /// <summary>
+        /// Adds new custom elements container.
+        /// </summary>
+        /// <typeparam name="T">The custom control.</typeparam>
+        /// <returns>The created element.</returns>
+        public CustomElementsContainer<T> CustomContainer<T>()
+            where T : ContainerControl, new()
+        {
+            var element = new CustomElementsContainer<T>();
             OnAddElement(element);
             return element;
         }

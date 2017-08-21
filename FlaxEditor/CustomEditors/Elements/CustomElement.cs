@@ -10,15 +10,31 @@ namespace FlaxEditor.CustomEditors.Elements
     /// The custom layout element.
     /// </summary>
     /// <seealso cref="FlaxEditor.CustomEditors.LayoutElementsContainer" />
-    public class CustomElement<T> : LayoutElementsContainer
+    public class CustomElementsContainer<T> : LayoutElementsContainer
         where T : ContainerControl, new()
     {
         /// <summary>
         /// The custom control.
         /// </summary>
-        public readonly T Custom = new T();
+        public readonly T CustomControl = new T();
 
         /// <inheritdoc />
-        public override ContainerControl ContainerControl => Custom;
+        public override ContainerControl ContainerControl => CustomControl;
+    }
+
+    /// <summary>
+    /// The custom layout element.
+    /// </summary>
+    /// <seealso cref="FlaxEditor.CustomEditors.LayoutElement" />
+    public class CustomElement<T> : LayoutElement
+        where T : Control, new()
+    {
+        /// <summary>
+        /// The custom control.
+        /// </summary>
+        public readonly T CustomControl = new T();
+
+        /// <inheritdoc />
+        public override Control Control => CustomControl;
     }
 }

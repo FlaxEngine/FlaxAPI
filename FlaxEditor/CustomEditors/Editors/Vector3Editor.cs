@@ -26,11 +26,12 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             if (Values == null)
                 return;
-            
-            var grid = layout.Custom<UniformGridPanel>();
-            grid.Custom.Height = TextBox.DefaultHeight;
-            grid.Custom.SlotsHorizontally = 3;
-            grid.Custom.SlotsVertically = 1;
+
+            var grid = layout.CustomContainer<UniformGridPanel>();
+            var gridControl = grid.CustomControl;
+            gridControl.Height = TextBox.DefaultHeight;
+            gridControl.SlotsHorizontally = 3;
+            gridControl.SlotsVertically = 1;
 
             xElement = grid.FloatValue();
             xElement.FloatValue.ValueChanged += OnValueChanged;
