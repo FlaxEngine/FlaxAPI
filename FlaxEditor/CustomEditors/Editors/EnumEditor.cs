@@ -32,7 +32,7 @@ namespace FlaxEditor.CustomEditors.Editors
             else
             {
                 element = layout.Enum(Values[0].GetType());
-                element.ValueChanged += () => SetValue(element.Value);
+                element.ValueChanged += () => SetValue(element.EnumTypeValue);
             }
         }
 
@@ -45,7 +45,7 @@ namespace FlaxEditor.CustomEditors.Editors
             }
             else
             {
-                element.Value = (int)Values[0];
+                element.EnumTypeValue = Values[0];
             }
         }
     }

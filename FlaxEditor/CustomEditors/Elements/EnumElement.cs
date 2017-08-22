@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors.Elements
@@ -15,6 +16,8 @@ namespace FlaxEditor.CustomEditors.Elements
     /// <seealso cref="FlaxEditor.CustomEditors.LayoutElement" />
     public class EnumElement : LayoutElement
     {
+        private Type _underlyingType;
+
         /// <summary>
         /// The combo box used to show enum values.
         /// </summary>
@@ -115,7 +118,7 @@ namespace FlaxEditor.CustomEditors.Elements
                     {
                         return;
                     }
-                    
+
                     // Build new selection
                     for (int i = 0; i < entries.Count; i++)
                     {
@@ -158,6 +161,18 @@ namespace FlaxEditor.CustomEditors.Elements
         public bool IsFlags { get; }
 
         /// <summary>
+        /// Gets or sets the value of the enum (may not be int).
+        /// </summary>
+        /// <value>
+        /// The enum type value.
+        /// </value>
+        public object EnumTypeValue
+        {
+            get => Convert.ChangeType(Value, _underlyingType);
+            set => Value = Convert.ToInt32(value);
+        }
+
+        /// <summary>
         /// Gets or sets the value.
         /// </summary>
         /// <value>
@@ -171,7 +186,7 @@ namespace FlaxEditor.CustomEditors.Elements
                 // Skip if won't change
                 if (_cachedValue == value && _hasValueCached)
                     return;
-                
+
                 // Single value
                 for (int i = 0; i < _entries.Count; i++)
                 {
@@ -202,7 +217,7 @@ namespace FlaxEditor.CustomEditors.Elements
                 }
             }
         }
-        
+
         /// <summary>
         /// Caches the selected UI enum value.
         /// </summary>
@@ -243,6 +258,7 @@ namespace FlaxEditor.CustomEditors.Elements
             if (type == null || !type.IsEnum)
                 throw new ArgumentException("Invalid enum type.");
             _enumType = type;
+            _underlyingType = Enum.GetUnderlyingType(_enumType);
             IsFlags = _enumType.GetCustomAttribute<FlagsAttribute>() != null;
 
             _comboBox = new EnumComboBox(this);
@@ -282,7 +298,7 @@ namespace FlaxEditor.CustomEditors.Elements
                     continue;
 
                 var name = CustomEditorsUtil.GetPropertyNameUI(field.Name);
-                entries.Add(new Entry(name, (int)field.GetRawConstantValue()));
+                entries.Add(new Entry(name, Convert.ToInt32(field.GetRawConstantValue())));
             }
         }
 
