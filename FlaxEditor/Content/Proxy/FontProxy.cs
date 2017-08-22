@@ -28,6 +28,12 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
+        public override bool CanReimport(ContentItem item)
+        {
+            return true;
+        }
+
+        /// <inheritdoc />
         public override EditorWindow Open(Editor editor, ContentItem item)
         {
             throw new NotImplementedException();// TODO: font window

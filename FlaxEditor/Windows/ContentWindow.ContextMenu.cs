@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -56,7 +56,7 @@ namespace FlaxEditor.Windows
                 if (!isFolder)
                 {
                     b = cm.AddButton(2, "Reimport");
-                    b.Enabled = item is BinaryAssetItem && proxy != null && proxy.CanReimport(item);
+                    b.Enabled = proxy != null && proxy.CanReimport(item);
 
                     b = cm.AddButton(15, "Reimport all");
 

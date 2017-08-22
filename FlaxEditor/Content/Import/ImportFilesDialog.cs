@@ -67,9 +67,7 @@ namespace FlaxEditor.Content.Import
             splitPanel.Size = new Vector2(TotalWidth, EditorHeight);
             splitPanel.DockStyle = DockStyle.Fill;
             splitPanel.Parent = this;
-
-            // TODO: add custom editor presenter for per entry settings editing
-
+            
             // Settings editor
             _settingsEditor = new CustomEditorPresenter(null);
             _settingsEditor.Panel.Width = splitPanel.Panel2.Width;
@@ -125,7 +123,7 @@ namespace FlaxEditor.Content.Import
             var selection = new List<object>(after.Count);
             for (int i = 0; i < after.Count; i++)
             {
-                if (after[i].Tag is FileEntry fileEntry)
+                if (after[i].Tag is FileEntry fileEntry && fileEntry.HasSettings)
                     selection.Add(fileEntry.Settings);
             }
 
