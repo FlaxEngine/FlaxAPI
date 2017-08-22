@@ -10,7 +10,7 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.Windows
 {
     /// <summary>
-    /// About this product dialog window.
+    ///     About this product dialog window.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Dialogs.Dialog" />
     internal sealed class AboutDialog : Dialog
@@ -21,14 +21,22 @@ namespace FlaxEditor.Windows
         {
             Size = new Vector2(400, 260);
 
-            // Icon
-            var icon = new Image(false, 4, 4, 80, 80)
+            Control header = CreateHeader();
+            Control authorsLabel = CreateAuthorsLabels(header);
+            CreateFooter(authorsLabel);
+        }
+
+        /// <summary>
+        /// Create header with Flax engine icon and version number
+        /// </summary>
+        /// <returns>Returns icon controller (most top left)</returns>
+        private Control CreateHeader()
+        {
+            Image icon = new Image(false, 4, 4, 80, 80)
             {
                 ImageSource = new SpriteImageSource(Editor.Instance.UI.GetIcon("Logo128")),
                 Parent = this
             };
-
-            // Name
             var nameLabel = new Label(false, icon.Right + 10, icon.Top, 100, 34)
             {
                 Text = "Flax Engine",
@@ -37,17 +45,38 @@ namespace FlaxEditor.Windows
                 VerticalAlignment = TextAlignment.Center,
                 Parent = this
             };
-
-            // Version
-            var versionLabel = new Label(false, nameLabel.Left, nameLabel.Bottom + 4, nameLabel.Width, 50)
+            new Label(false, nameLabel.Left, nameLabel.Bottom + 4, nameLabel.Width, 50)
             {
                 Text = string.Format("Version: {0}\nCopyright (c) 2012-2017 Wojciech Figat.\nAll rights reserved.", Globals.Version),
                 HorizontalAlignment = TextAlignment.Near,
                 VerticalAlignment = TextAlignment.Near,
                 Parent = this
             };
+            return icon;
+        }
 
-            // Authors
+        /// <summary>
+        /// Create footer label
+        /// </summary>
+        /// <param name="topParentControl">Top element that this footer should be put under</param>
+        private void CreateFooter(Control topParentControl)
+        {
+            Panel thirdPartyPanel = GenerateThirdPartyLabels(topParentControl);
+            new Label(false, 4, thirdPartyPanel.Bottom, Width - 8, Height - thirdPartyPanel.Bottom)
+            {
+                HorizontalAlignment = TextAlignment.Far,
+                Text = "Made with <3 in Poland",
+                Parent = this
+            };
+        }
+
+        /// <summary>
+        /// Authors labels generation and show
+        /// </summary>
+        /// <param name="topParentControl">Top element that this labels should be put under</param>
+        /// <returns>Authors control</returns>
+        private Control CreateAuthorsLabels(Control topParentControl)
+        {
             var authors = new List<string>(new[]
             {
                 "Wojciech Figat",
@@ -55,15 +84,23 @@ namespace FlaxEditor.Windows
                 "Damian Korczowski",
             });
             authors.Sort();
-            var authorsLabel = new Label(false, 4, icon.Bottom + 20, Width - 8, 50)
+            var authorsLabel = new Label(false, 4, topParentControl.Bottom + 20, Width - 8, 50)
             {
                 Text = "People who made it:\n" + string.Join(", ", authors),
                 HorizontalAlignment = TextAlignment.Near,
                 VerticalAlignment = TextAlignment.Near,
                 Parent = this
             };
-            
-            // 3rdParty software and other licenses
+            return authorsLabel;
+        }
+
+        /// <summary>
+        /// 3rdParty software and other licenses labels
+        /// </summary>
+        /// <param name="authorsLabel"></param>
+        /// <returns></returns>
+        private Panel GenerateThirdPartyLabels(Control authorsLabel)
+        {
             var thirdPartyPanel = new Panel(ScrollBars.Vertical)
             {
                 Bounds = new Rectangle(0, authorsLabel.Bottom + 4, Width, Height - authorsLabel.Bottom - 24),
@@ -98,13 +135,7 @@ namespace FlaxEditor.Windows
                 y += entryLabel.Height + 2;
             }
 
-            // Footer
-            var footerLabel = new Label(false, 4, thirdPartyPanel.Bottom, Width - 8, Height - thirdPartyPanel.Bottom)
-            {
-                HorizontalAlignment = TextAlignment.Far,
-                Text = "Made with <3 in Poland",
-                Parent = this
-            };
+            return thirdPartyPanel;
         }
     }
 }
