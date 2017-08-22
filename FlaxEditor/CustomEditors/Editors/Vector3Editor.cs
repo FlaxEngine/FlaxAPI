@@ -45,6 +45,9 @@ namespace FlaxEditor.CustomEditors.Editors
 
         private void OnValueChanged()
         {
+            if (IsSetBlocked)
+                return;
+
             SetValue(new Vector3(
                 xElement.FloatValue.Value,
                 yElement.FloatValue.Value,

@@ -70,6 +70,11 @@ namespace FlaxEditor.CustomEditors
         public event Action SelectionChanged;
 
         /// <summary>
+        /// Occurs when any property gets changed.
+        /// </summary>
+        public event Action OnModify;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CustomEditorPresenter"/> class.
         /// </summary>
         public CustomEditorPresenter(Undo undo)
@@ -165,10 +170,12 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         internal void Update()
         {
+            bool isDirty = _isDirty;
+            _isDirty = false;
+
             // If any UI control has been modified we should try to record selected objects change
-            if (_isDirty && Undo != null)
+            if (isDirty && Undo != null)
             {
-                _isDirty = false;
                 using (new UndoMultiBlock(Undo, Selection, "Edit object(s)"))
                     Editor.RefreshRoot();
             }
@@ -176,6 +183,9 @@ namespace FlaxEditor.CustomEditors
             {
                 Editor.RefreshRoot();
             }
+
+            if (isDirty)
+                OnModify?.Invoke();
         }
 
         /// <summary>

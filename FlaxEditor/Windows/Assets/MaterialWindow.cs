@@ -30,36 +30,36 @@ namespace FlaxEditor.Windows.Assets
             [EditorOrder(10), Tooltip("Material domain type")]
             public MaterialDomain Domain { get; set; }
 
-            [EditorOrder(20), Tooltip("")]
+            [EditorOrder(20), Tooltip("Determinates how materials' color should be blended with the background colors")]
             public MaterialBlendMode BlendMode { get; set; }
 
-            [EditorOrder(30), Tooltip("")]
+            [EditorOrder(30), Tooltip("Indicates that material should be renered without backface culling and normals should be fliped for the backfaces")]
             public bool TwoSided { get; set; }
 
-            [EditorOrder(40), Tooltip("")]
+            [EditorOrder(40), Tooltip("True if render in wireframe mode")]
             public bool Wireframe { get; set; }
 
-            [EditorOrder(100), EditorDisplay("Transparency"), Tooltip("")]
+            [EditorOrder(100), EditorDisplay("Transparency"), Tooltip("Transparent materials lighting mode")]
             public MaterialTransparentLighting Lighting { get; set; }
 
-            [EditorOrder(110), EditorDisplay("Transparency"), Tooltip("")]
+            [EditorOrder(110), EditorDisplay("Transparency"), Tooltip("True if disable depth test when rendering material")]
             public bool DisableDepthTest { get; set; }
 
-            [EditorOrder(120), EditorDisplay("Transparency"), Tooltip("")]
+            [EditorOrder(120), EditorDisplay("Transparency"), Tooltip("True if disable reflections when rendering material")]
             public bool DisableReflections { get; set; }
 
-            [EditorOrder(130), EditorDisplay("Transparency"), Tooltip("")]
+            [HideInEditor, EditorOrder(130), EditorDisplay("Transparency"), Tooltip("True if disable atmosphere fog when rendering material")]
             public bool DisableFog { get; set; }
 
-            [EditorOrder(140), EditorDisplay("Transparency"), Tooltip("")]
+            [EditorOrder(140), EditorDisplay("Transparency"), Tooltip("True if disable distortion effect when rendering material")]
             public bool DisableDistortion { get; set; }
 
-            [EditorOrder(200), EditorDisplay("Misc"), Tooltip("")]
+            [EditorOrder(200), EditorDisplay("Misc"), Tooltip("True if disable depth buffer write when rendering material")]
             public bool DisableDepthWrite { get; set; }
 
             //[EditorOrder(1000)]
             //public MaterialDomain Parameters { get; set; }
-
+            
             /// <summary>
             /// Gathers parameters from the specified material.
             /// </summary>
@@ -115,7 +115,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly VisjectSurface _surface;
         private readonly CustomEditorPresenter _propertiesEditor;
 
-        private readonly PropertiesProxy _properties = new PropertiesProxy();
+        private readonly PropertiesProxy _properties;
         private bool _isWaitingForSurfaceLoad;
         private bool _tmpMaterialIsDirty;
 
@@ -149,12 +149,20 @@ namespace FlaxEditor.Windows.Assets
             _propertiesEditor.Panel.Width = _splitPanel2.Panel2.Width;
             _propertiesEditor.Panel.AnchorStyle = AnchorStyle.Upper;
             _propertiesEditor.Panel.Parent = _splitPanel2.Panel2;
+            _properties = new PropertiesProxy();
             _propertiesEditor.Select(_properties);
-
+            _propertiesEditor.OnModify += OnMaterialPropertyEdited;
+            
             // Surface
             _surface = new VisjectSurface(this, SurfaceType.Material);
             _surface.Parent = _splitPanel1.Panel1;
             _surface.Enabled = false;
+        }
+
+        private void OnMaterialPropertyEdited()
+        {
+            _surface.MarkAsEdited();
+            RefreshMainNode();
         }
 
         /// <summary>
