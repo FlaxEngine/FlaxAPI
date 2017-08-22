@@ -196,6 +196,16 @@ namespace FlaxEditor.CustomEditors
                 return group.Object(member, values, editor);
             }
 
+            var element = AddPropertyItem(name);
+            return element.Object(member, values, editor);
+        }
+
+        /// <summary>
+        /// Adds the <see cref="PropertiesListElement"/> to the current layou or reuses the previous one. Used to inject properties.
+        /// </summary>
+        /// <returns>The element.</returns>
+        protected PropertiesListElement AddPropertyItem(string name)
+        {
             // Try to reuse previous control
             PropertiesListElement element;
             if (Children.Count > 0 && Children[Children.Count - 1] is PropertiesListElement propertiesListElement)
@@ -208,11 +218,9 @@ namespace FlaxEditor.CustomEditors
                 OnAddElement(element);
             }
 
-            var firstChildControlIndex = element.ContainerControl.ChildrenCount;
-            var obj = element.Object(member, values, editor);
-            obj.PropertyName = name;
-            obj.PropertyFirstChildControlIndex = firstChildControlIndex;
-            return obj;
+            element.OnAddProperty(name);
+
+            return element;
         }
 
         /// <summary>

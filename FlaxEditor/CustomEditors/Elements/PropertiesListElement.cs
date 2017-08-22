@@ -116,20 +116,20 @@ namespace FlaxEditor.CustomEditors.Elements
                 // Draw properties names
                 float namesWidth = _splitterValue * Width - SplitterMargin;
                 Render2D.PushClip(new Rectangle(0, 0, namesWidth + SplitterMargin, Height));
-                int count = _element._editors.Count;
+                int count = _element.Entrie.Count;
                 float[] yStarts = new float[count + 1];
                 for (int i = 0; i < count; i++)
                 {
-                    var editor = _element._editors[i];
-                    yStarts[i] = _children[editor.PropertyFirstChildControlIndex].Top;
+                    var entry = _element.Entrie[i];
+                    yStarts[i] = _children[entry.FirstChildControlIndex].Top;
                 }
                 yStarts[count] = Height;
                 for (int i = 0; i < count; i++)
                 {
-                    var editor = _element._editors[i];
-                    
+                    var entry = _element.Entrie[i];
+
                     var rect = new Rectangle(SplitterMargin, yStarts[i], namesWidth, yStarts[i + 1] - yStarts[i]);
-                    Render2D.DrawText(style.FontMedium, editor.PropertyName, rect, style.Foreground, TextAlignment.Near, TextAlignment.Center);
+                    Render2D.DrawText(style.FontMedium, entry.Name, rect, style.Foreground, TextAlignment.Near, TextAlignment.Center);
                 }
                 Render2D.PopClip();
 
@@ -213,11 +213,6 @@ namespace FlaxEditor.CustomEditors.Elements
         }
 
         /// <summary>
-        /// The child editors added to this elements container.
-        /// </summary>
-        protected readonly List<CustomEditor> _editors = new List<CustomEditor>();
-
-        /// <summary>
         /// The list.
         /// </summary>
         public readonly PropertiesList Properties;
@@ -233,12 +228,28 @@ namespace FlaxEditor.CustomEditors.Elements
             Properties = new PropertiesList(this);
         }
 
-        /// <inheritdoc />
-        protected override void OnAddEditor(CustomEditor editor)
+        internal struct PropertyEntry
         {
-            base.OnAddEditor(editor);
+            /// <summary>
+            /// Helper value used by the <see cref="PropertiesList"/> to draw property name.
+            /// </summary>
+            public string Name;
 
-            _editors.Add(editor);
+            /// <summary>
+            /// Helper value used by the <see cref="PropertiesList"/> to draw property names in a proper area.
+            /// </summary>
+            public int FirstChildControlIndex;
+        }
+
+        internal readonly List<PropertyEntry> Entrie = new List<PropertyEntry>();
+
+        internal void OnAddProperty(string name)
+        {
+            Entrie.Add(new PropertyEntry
+            {
+                Name = name,
+                FirstChildControlIndex = Children.Count
+            });
         }
     }
 }

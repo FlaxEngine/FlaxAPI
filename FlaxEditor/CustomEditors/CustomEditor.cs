@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FlaxEditor.CustomEditors.Elements;
 
 namespace FlaxEditor.CustomEditors
 {
@@ -21,16 +20,6 @@ namespace FlaxEditor.CustomEditors
         private bool _isSetBlocked;
         private bool _hasValueDirty;
         private object _valueToSet;
-
-        /// <summary>
-        /// Helper value used by the <see cref="PropertiesListElement.PropertiesList"/> to draw property name.
-        /// </summary>
-        internal string PropertyName;
-        
-        /// <summary>
-        /// Helper value used by the <see cref="PropertiesListElement.PropertiesList"/> to draw property names in a proper area.
-        /// </summary>
-        internal int PropertyFirstChildControlIndex;
 
         /// <summary>
         /// Gets a value indicating whether inline editor contents into the property value, otherwise will use expandable group area.
@@ -122,6 +111,14 @@ namespace FlaxEditor.CustomEditors
         /// The presenter.
         /// </value>
         public CustomEditorPresenter Presenter => _presenter;
+
+        /// <summary>
+        /// Gets a value indicating whether setting value is blocked (during refresh).
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if setting value is blocked; otherwise, <c>false</c>.
+        /// </value>
+        protected bool IsSetBlocked => _isSetBlocked;
 
         internal virtual void Initialize(CustomEditorPresenter presenter, LayoutElementsContainer layout, ValueContainer values)
         {
