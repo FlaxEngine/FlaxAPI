@@ -177,7 +177,7 @@ namespace FlaxEditor.Surface
                     _isMovingSelection = true;
 
                     // Check if user is pressing control
-                    if (ParentWindow.GetKey(KeyCode.CONTROL))
+                    if (ParentWindow.GetKey(KeyCode.Control))
                     {
                         // Add to selection
                         AddToSelection(nodeAtMouse);
@@ -294,7 +294,7 @@ namespace FlaxEditor.Surface
         {
             if (ContainsFocus)
             {
-                if (key == KeyCode.DELETE)
+                if (key == KeyCode.Delete)
                 {
                     DeleteSelection();
                 }

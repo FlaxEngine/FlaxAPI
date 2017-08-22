@@ -102,13 +102,13 @@ namespace FlaxEditor.GUI
         public override bool OnKeyDown(KeyCode key)
         {
             // Enter
-            if (key == KeyCode.RETURN)
+            if (key == KeyCode.Return)
             {
                 OnTextChanged();
                 return true;
             }
             // Esc
-            if (key == KeyCode.ESCAPE)
+            if (key == KeyCode.Escape)
             {
                 Hide();
                 return true;

@@ -39,9 +39,9 @@ namespace FlaxEditor.Viewport
             
             public void Gather(FlaxEngine.Window window)
             {
-                IsControlDown = window.GetKey(KeyCode.CONTROL);
-                IsShiftDown = window.GetKey(KeyCode.SHIFT);
-                IsAltDown = window.GetKey(KeyCode.ALT);
+                IsControlDown = window.GetKey(KeyCode.Control);
+                IsShiftDown = window.GetKey(KeyCode.Shift);
+                IsAltDown = window.GetKey(KeyCode.Alt);
 
                 IsMouseRightDown = window.GetMouseButton(MouseButtons.Right);
                 IsMouseMiddleDown = window.GetMouseButton(MouseButtons.Middle);

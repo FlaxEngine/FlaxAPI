@@ -553,12 +553,12 @@ namespace FlaxEngine.GUI
                     // Check if user is pressing control key
                     var tree = ParentTree;
                     var window = tree.ParentWindow;
-                    if (window.GetKey(KeyCode.SHIFT))
+                    if (window.GetKey(KeyCode.Shift))
                     {
                         // Select range
                         tree.SelectRange(this);
                     }
-                    else if (window.GetKey(KeyCode.CONTROL))
+                    else if (window.GetKey(KeyCode.Control))
                     {
                         // Add/Remove
                         tree.AddOrRemoveSelection(this);
@@ -671,14 +671,14 @@ namespace FlaxEngine.GUI
             if (IsFocused && _children.Count > 0)
             {
                 // Collapse
-                if (key == KeyCode.LEFT)
+                if (key == KeyCode.ArrowLeft)
                 {
                     Collapse();
                     return true;
                 }
 
                 // Expand
-                if (key == KeyCode.RIGHT)
+                if (key == KeyCode.ArrowRight)
                 {
                     Expand();
                     return true;

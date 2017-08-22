@@ -374,7 +374,7 @@ namespace FlaxEditor.Viewport
             var sceneEditing = Editor.Instance.SceneEditing;
             if (hit != null)
             {
-                bool addRemove = ParentWindow.GetKey(KeyCode.CONTROL);
+                bool addRemove = ParentWindow.GetKey(KeyCode.Control);
                 bool isSelected = sceneEditing.Selection.Contains(hit);
 
                 if (addRemove)
@@ -403,7 +403,7 @@ namespace FlaxEditor.Viewport
         /// <inheritdoc />
         public override bool OnKeyDown(KeyCode key)
         {
-            if (key == KeyCode.DELETE)
+            if (key == KeyCode.Delete)
             {
                 _editor.SceneEditing.Delete();
                 return true;
@@ -428,7 +428,7 @@ namespace FlaxEditor.Viewport
                 _editor.Windows.EditWin.ShowSelectedActors();
                 return true;
             }
-            if (ParentWindow.GetKey(KeyCode.CONTROL))
+            if (ParentWindow.GetKey(KeyCode.Control))
             {
                 switch (key)
                 {

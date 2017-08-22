@@ -2,6 +2,8 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System.Collections.Generic;
+
 namespace FlaxEngine.GUI
 {
     public partial class TextBox
@@ -11,10 +13,10 @@ namespace FlaxEngine.GUI
         {
             // Check if use lowercase or uppercase
             var window = ParentWindow;
-            bool shftDown = window.GetKey(KeyCode.SHIFT);
-            bool ctrDown = window.GetKey(KeyCode.CONTROL);
+            bool shftDown = window.GetKey(KeyCode.Shift);
+            bool ctrDown = window.GetKey(KeyCode.Control);
             bool uppercase = shftDown;
-            if (window.GetKey(KeyCode.CAPITAL))
+            if (window.GetKey(KeyCode.Capital))
             	uppercase = !uppercase;// TODO: capslock
 
             // Check if use combination with a control key
@@ -50,8 +52,8 @@ namespace FlaxEngine.GUI
             switch (key)
             {
                 // Delete
-                case KeyCode.BACK:
-                case KeyCode.DELETE:
+                case KeyCode.Backspace:
+                case KeyCode.Delete:
                 {
                     int left = SelectionLeft;
                     if (HasSelection)
@@ -72,7 +74,7 @@ namespace FlaxEngine.GUI
                 }
 
                 // Cancel
-                case KeyCode.ESCAPE:
+                case KeyCode.Escape:
                 {
                     // Restore text from start
                     setSelection(-1);
@@ -85,7 +87,7 @@ namespace FlaxEngine.GUI
                 }
 
                 // Enter
-                case KeyCode.RETURN:
+                case KeyCode.Return:
                 {
                     if (IsMultiline)
                     {
@@ -102,7 +104,7 @@ namespace FlaxEngine.GUI
                 }
 
                 // Scroll to begin
-                case KeyCode.HOME:
+                case KeyCode.Home:
                 {
                     // Move caret to the first character
                     setSelection(0);
@@ -110,26 +112,26 @@ namespace FlaxEngine.GUI
                 }
 
                 // Scroll to end
-                case KeyCode.END:
+                case KeyCode.End:
                 {
                     // Move caret after last character
                     setSelection(TextLength);
                     return true;
                 }
 
-                case KeyCode.RIGHT:
+                case KeyCode.ArrowRight:
                     MoveRight(shftDown, ctrDown);
                     return true;
 
-                case KeyCode.LEFT:
+                case KeyCode.ArrowLeft:
                     MoveLeft(shftDown, ctrDown);
                     return true;
 
-                case KeyCode.UP:
+                case KeyCode.ArrowUp:
                     MoveUp(shftDown, ctrDown);
                     return true;
 
-                case KeyCode.DOWN:
+                case KeyCode.ArrowDown:
                     MoveDown(shftDown, ctrDown);
                     return true;
             }
@@ -168,95 +170,95 @@ namespace FlaxEngine.GUI
                 case KeyCode.Alpha9:
                     ascii = uppercase ? '(' : '9';
                     break;
-                case KeyCode.OEM_PLUS:
+                case KeyCode.Plus:
                     ascii = uppercase ? '=' : '+';
                     break;
-                case KeyCode.OEM_COMMA:
+                case KeyCode.Comma:
                     ascii = uppercase ? '<' : ',';
                     break;
-                case KeyCode.OEM_MINUS:
+                case KeyCode.Minus:
                     ascii = uppercase ? '_' : '-';
                     break;
-                case KeyCode.OEM_PERIOD:
+                case KeyCode.Period:
                     ascii = uppercase ? '>' : '.';
                     break;
-                case KeyCode.OEM_1:
+                case KeyCode.Colon:
                     ascii = uppercase ? ':' : ';';
                     break;
-                case KeyCode.OEM_2:
+                case KeyCode.Slash:
                     ascii = uppercase ? '?' : '/';
                     break;
-                case KeyCode.OEM_3:
+                case KeyCode.BackQuote:
                     ascii = uppercase ? '~' : '`';
                     break;
-                case KeyCode.OEM_4:
+                case KeyCode.LeftBracket:
                     ascii = uppercase ? '{' : '[';
                     break;
-                case KeyCode.OEM_5:
+                case KeyCode.Backslash:
                     ascii = uppercase ? '|' : '\\';
                     break;
-                case KeyCode.OEM_6:
+                case KeyCode.RightBracket:
                     ascii = uppercase ? '}' : ']';
                     break;
-                case KeyCode.OEM_7:
+                case KeyCode.Quote:
                     ascii = uppercase ? '\"' : '\'';
                     break;
-                case KeyCode.OEM_8:
+                case KeyCode.Oem8:
                     ascii = uppercase ? '@' : '#';
                     break;
 
-                case KeyCode.TAB:
+                case KeyCode.Tab:
                     ascii = '\t';
                     break;
-                case KeyCode.SPACE:
+                case KeyCode.Spacebar:
                     ascii = ' ';
                     break;
-                case KeyCode.NUMPAD0:
+                case KeyCode.Numpad0:
                     ascii = '0';
                     break;
-                case KeyCode.NUMPAD1:
+                case KeyCode.Numpad1:
                     ascii = '1';
                     break;
-                case KeyCode.NUMPAD2:
+                case KeyCode.Numpad2:
                     ascii = '2';
                     break;
-                case KeyCode.NUMPAD3:
+                case KeyCode.Numpad3:
                     ascii = '3';
                     break;
-                case KeyCode.NUMPAD4:
+                case KeyCode.Numpad4:
                     ascii = '4';
                     break;
-                case KeyCode.NUMPAD5:
+                case KeyCode.Numpad5:
                     ascii = '5';
                     break;
-                case KeyCode.NUMPAD6:
+                case KeyCode.Numpad6:
                     ascii = '6';
                     break;
-                case KeyCode.NUMPAD7:
+                case KeyCode.Numpad7:
                     ascii = '7';
                     break;
-                case KeyCode.NUMPAD8:
+                case KeyCode.Numpad8:
                     ascii = '8';
                     break;
-                case KeyCode.NUMPAD9:
+                case KeyCode.Numpad9:
                     ascii = '9';
                     break;
-                case KeyCode.MULTIPLY:
+                case KeyCode.NumpadMultiply:
                     ascii = '*';
                     break;
-                case KeyCode.ADD:
+                case KeyCode.NumpadAdd:
                     ascii = '+';
                     break;
-                case KeyCode.SEPARATOR:
+                case KeyCode.NumpadSeparator:
                     ascii = ',';
                     break;
-                case KeyCode.SUBTRACT:
+                case KeyCode.NumpadSubtract:
                     ascii = '-';
                     break;
-                case KeyCode.DECIMAL:
+                case KeyCode.NumpadDecimal:
                     ascii = '.';
                     break;
-                case KeyCode.DIVIDE:
+                case KeyCode.NumpadDivide:
                     ascii = '/';
                     break;
 
@@ -298,6 +300,11 @@ namespace FlaxEngine.GUI
             }
 
             return true;
+        }
+
+        private void WriteText()
+        {
+            
         }
     }
 }

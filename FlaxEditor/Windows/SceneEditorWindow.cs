@@ -40,7 +40,7 @@ namespace FlaxEditor.Windows
             if (!result)
             {
                 var parentWin = ParentWindow;
-                if (parentWin.GetKey(KeyCode.CONTROL))
+                if (parentWin.GetKey(KeyCode.Control))
                 {
                     switch (key)
                     {
@@ -75,7 +75,7 @@ namespace FlaxEditor.Windows
                             break;
                     }
                 }
-                else if (parentWin.GetKey(KeyCode.DELETE))
+                else if (parentWin.GetKey(KeyCode.Delete))
                 {
                     Editor.SceneEditing.Delete();
                 }

@@ -322,7 +322,7 @@ namespace FlaxEditor.Content.GUI
             bool isSelected = _selection.Contains(item);
 
             // Switch based on input (control, alt and shift keys)
-            if (ParentWindow.GetKey(KeyCode.CONTROL))
+            if (ParentWindow.GetKey(KeyCode.Control))
             {
                 if (isSelected)
                     Deselect(item);
@@ -459,7 +459,7 @@ namespace FlaxEditor.Content.GUI
         public override bool OnMouseWheel(Vector2 location, int delta)
         {
             // Check if pressing control key
-            if (ParentWindow.GetKey(KeyCode.CONTROL))
+            if (ParentWindow.GetKey(KeyCode.Control))
             {
                 // Zoom
                 _scale = Mathf.Clamp(_scale + (delta > 0 ? 1 : -1) * 0.05f, 0.3f, 3.0f);
@@ -476,7 +476,7 @@ namespace FlaxEditor.Content.GUI
         public override bool OnKeyDown(KeyCode key)
         {
             // Navigate backward
-            if (key == KeyCode.BACK)
+            if (key == KeyCode.Backspace)
             {
                 OnNavigateBack?.Invoke();
                 return true;
@@ -486,21 +486,21 @@ namespace FlaxEditor.Content.GUI
             if (HasSelection)
             {
                 // Delete selection
-                if (key == KeyCode.DELETE)
+                if (key == KeyCode.Delete)
                 {
                     OnDelete?.Invoke(_selection);
                     return true;
                 }
 
                 // Open
-                if (key == KeyCode.RETURN && _selection.Count == 1)
+                if (key == KeyCode.Return && _selection.Count == 1)
                 {
                     OnOpen?.Invoke(_selection[0]);
                     return true;
                 }
 
                 // Duplicate
-                if (key == KeyCode.D && ParentWindow.GetKey(KeyCode.CONTROL))
+                if (key == KeyCode.D && ParentWindow.GetKey(KeyCode.Control))
                 {
                     DuplicateSelection();
                     return true;
@@ -512,19 +512,19 @@ namespace FlaxEditor.Content.GUI
                     Vector2 size = root.Size;
                     Vector2 offset = Vector2.Minimum;
                     ContentItem item = null;
-                    if (key == KeyCode.UP)
+                    if (key == KeyCode.ArrowUp)
                     {
                         offset = new Vector2(0, -size.Y);
                     }
-                    else if (key == KeyCode.DOWN)
+                    else if (key == KeyCode.ArrowDown)
                     {
                         offset = new Vector2(0, size.Y);
                     }
-                    else if (key == KeyCode.RIGHT)
+                    else if (key == KeyCode.ArrowRight)
                     {
                         offset = new Vector2(size.X, 0);
                     }
-                    else if (key == KeyCode.LEFT)
+                    else if (key == KeyCode.ArrowLeft)
                     {
                         offset = new Vector2(-size.X, 0);
                     }

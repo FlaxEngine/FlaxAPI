@@ -118,7 +118,7 @@ namespace FlaxEditor.Windows.Assets
             bool result = base.OnKeyDown(key);
             if (!result)
             {
-                if (ParentWindow.GetKey(KeyCode.CONTROL))
+                if (ParentWindow.GetKey(KeyCode.Control))
                 {
                     switch (key)
                     {
