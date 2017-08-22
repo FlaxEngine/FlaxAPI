@@ -581,8 +581,8 @@ namespace FlaxEditor.Surface
                 Render2D.DrawRectangle(new Rectangle(0, 0, rect.Width - 2, rect.Height - 2), style.BackgroundSelected);
 
             // Draw disabled overlay
-            if (!Enabled)
-                Render2D.FillRectangle(rect, new Color(0.2f, 0.2f, 0.2f, 0.5f), true);
+            //if (!Enabled)
+            //    Render2D.FillRectangle(rect, new Color(0.2f, 0.2f, 0.2f, 0.5f), true);
         }
 
         /// <inheritdoc />

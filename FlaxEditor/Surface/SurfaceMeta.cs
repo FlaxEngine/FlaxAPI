@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -19,7 +19,6 @@ namespace FlaxEditor.Surface
         public struct Entry
         {
             public int TypeID;
-            public DateTime CreationTime;
             public byte[] Data;
         }
 
@@ -48,7 +47,7 @@ namespace FlaxEditor.Surface
                     Entry e = new Entry();
 
                     e.TypeID = stream.ReadInt32();
-                    e.CreationTime = new DateTime(stream.ReadInt64());
+                    stream.ReadInt64(); // don't use CreationTime
 
                     uint dataSize = stream.ReadUInt32();
                     e.Data = new byte[dataSize];
@@ -63,12 +62,26 @@ namespace FlaxEditor.Surface
         /// Save to the stream
         /// </summary>
         /// <param name="stream">Stream</param>
-        /// <param name="saveData">True if load meta data</param>
         /// <returns>True if cannot save data</returns>
-        /*bool Save(WriteStream* stream, bool saveData)
+        public void Save(BinaryWriter stream)
         {
-            
-        }*/
+            stream.Write(Entries.Count);
+
+            for (int i = 0; i < Entries.Count; i++)
+            {
+                Entry e = Entries[i];
+
+                stream.Write(e.TypeID);
+                stream.Write((long)0);
+
+                uint dataSize = e.Data != null ? (uint)e.Data.Length : 0;
+                stream.Write(dataSize);
+                if (dataSize > 0)
+                {
+                    stream.Write(e.Data);
+                }
+            }
+        }
 
         /// <summary>
         /// Releases meta data.
@@ -104,10 +117,11 @@ namespace FlaxEditor.Surface
         /// <param name="data">Bytes to set</param>
         public void AddEntry(int typeID, byte[] data)
         {
-            Entry e = new Entry();
-            e.CreationTime = DateTime.UtcNow;
-            e.TypeID = typeID;
-            e.Data = data;
+            Entry e = new Entry
+            {
+                TypeID = typeID,
+                Data = data
+            };
             Entries.Add(e);
         }
     }
