@@ -87,30 +87,8 @@ namespace FlaxEditor.CustomEditors.Editors
                 }
                 else
                 {
-                    // Process member name to make it more user-friendly
-                    string name = info.Name;
-                    int length = name.Length;
-                    StringBuilder sb = new StringBuilder(length + 4);
-                    for (int i = 0; i < length; i++)
-                    {
-                        var c = name[i];
-
-                        if (char.IsUpper(c))
-                        {
-                            if (i + 2 < length && !char.IsUpper(name[i + 1]) && !char.IsUpper(name[i + 2]))
-                                sb.Append(' ');
-                        }
-                        else if (c == '_')
-                        {
-                            if (sb.Length > 0)
-                                sb.Append(' ');
-                            continue;
-                        }
-
-                        sb.Append(c);
-                    }
-
-                    DisplayName = sb.ToString();
+                    // Use filtered member name
+                    DisplayName = CustomEditorsUtil.GetPropertyNameUI(info.Name);
                 }
             }
 

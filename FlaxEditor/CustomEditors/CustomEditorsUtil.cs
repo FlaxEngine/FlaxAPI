@@ -6,12 +6,45 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 using FlaxEditor.CustomEditors.Editors;
 
 namespace FlaxEditor.CustomEditors
 {
     internal static class CustomEditorsUtil
     {
+        /// <summary>
+        /// Gets the property name for UI. Removes unnecessary characters and filters text. Makes it more user-friendly.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The result.</returns>
+        public static string GetPropertyNameUI(string name)
+        {
+            int length = name.Length;
+            StringBuilder sb = new StringBuilder(length + 4);
+
+            for (int i = 0; i < length; i++)
+            {
+                var c = name[i];
+
+                if (char.IsUpper(c) && i > 0)
+                {
+                    if (i + 2 < length && !char.IsUpper(name[i + 1]) && !char.IsUpper(name[i + 2]))
+                        sb.Append(' ');
+                }
+                else if (c == '_')
+                {
+                    if (sb.Length > 0)
+                        sb.Append(' ');
+                    continue;
+                }
+
+                sb.Append(c);
+            }
+
+            return sb.ToString();
+        }
+
         internal static CustomEditor CreateEditor(MemberInfo member)
         {
             // Select target value type

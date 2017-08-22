@@ -93,7 +93,7 @@ namespace FlaxEngine
 		/// Gets or sets the actor name.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(-100)]
+		[EditorDisplay("General"), EditorOrder(-100)]
 		public string Name
 		{
 #if UNIT_TEST_COMPILANT
@@ -108,7 +108,7 @@ namespace FlaxEngine
 		/// Gets or sets actor static fags
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(-80)]
+		[EditorDisplay("General"), EditorOrder(-80)]
 		public StaticFlags StaticFlags
 		{
 #if UNIT_TEST_COMPILANT
@@ -123,7 +123,7 @@ namespace FlaxEngine
 		/// Gets or sets active state of actor
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(-70)]
+		[EditorDisplay("General"), EditorOrder(-70)]
 		public bool IsActive
 		{
 #if UNIT_TEST_COMPILANT

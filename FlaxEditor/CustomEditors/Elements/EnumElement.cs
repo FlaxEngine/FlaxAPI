@@ -281,7 +281,8 @@ namespace FlaxEditor.CustomEditors.Elements
                 if (field.Name.Equals("value__"))
                     continue;
 
-                entries.Add(new Entry(field.Name, (int)field.GetRawConstantValue()));
+                var name = CustomEditorsUtil.GetPropertyNameUI(field.Name);
+                entries.Add(new Entry(name, (int)field.GetRawConstantValue()));
             }
         }
 
