@@ -27,7 +27,7 @@ namespace FlaxEditor.Windows
         }
 
         /// <summary>
-        /// Create header with Flax engine icon and version number
+        ///     Create header with Flax engine icon and version number
         /// </summary>
         /// <returns>Returns icon controller (most top left)</returns>
         private Control CreateHeader()
@@ -56,7 +56,7 @@ namespace FlaxEditor.Windows
         }
 
         /// <summary>
-        /// Create footer label
+        ///     Create footer label
         /// </summary>
         /// <param name="topParentControl">Top element that this footer should be put under</param>
         private void CreateFooter(Control topParentControl)
@@ -71,7 +71,7 @@ namespace FlaxEditor.Windows
         }
 
         /// <summary>
-        /// Authors labels generation and show
+        ///     Authors labels generation and show
         /// </summary>
         /// <param name="topParentControl">Top element that this labels should be put under</param>
         /// <returns>Authors control</returns>
@@ -95,7 +95,7 @@ namespace FlaxEditor.Windows
         }
 
         /// <summary>
-        /// 3rdParty software and other licenses labels
+        ///     3rdParty software and other licenses labels
         /// </summary>
         /// <param name="authorsLabel"></param>
         /// <returns></returns>
