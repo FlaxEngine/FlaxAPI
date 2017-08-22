@@ -5,6 +5,8 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using FlaxEditor.Content.Import;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Modules;
 using FlaxEditor.States;
@@ -88,7 +90,7 @@ namespace FlaxEditor
         /// The content database module.
         /// </summary>
         public readonly ContentDatabaseModule ContentDatabase;
-        
+
         /// <summary>
         /// The content importing module.
         /// </summary>
@@ -136,7 +138,7 @@ namespace FlaxEditor
             RegisterModule(ContentDatabase = new ContentDatabaseModule(this));
             RegisterModule(ContentImporting = new ContentImportingModule(this));
             RegisterModule(CodeEditing = new CodeEditingModule(this));
-            
+
             StateMachine = new EditorStateMachine(this);
             Undo = new EditorUndo(this);
         }
@@ -326,7 +328,7 @@ namespace FlaxEditor
             // TODO: redirect this msg to log file not a console
             Debug.LogError(msg);
         }
-        
+
         /// <summary>
         /// New asset types allowed to create.
         /// </summary>
@@ -343,11 +345,84 @@ namespace FlaxEditor
             MaterialInstance = 1,
         };
 
+        /// <summary>
+        /// Imports the asset file to the target location.
+        /// </summary>
+        /// <param name="inputPath">The source file path.</param>
+        /// <param name="outputPath">The result asset file path.</param>
+        /// <returns>True if importing failed, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool Import(string inputPath, string outputPath)
+        {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_Import(inputPath, outputPath, IntPtr.Zero);
+#endif
+        }
+
+        /// <summary>
+        /// Imports the texture asset file to the target location.
+        /// </summary>
+        /// <param name="inputPath">The source file path.</param>
+        /// <param name="outputPath">The result asset file path.</param>
+        /// <param name="settings">The settings.</param>
+        /// <returns>True if importing failed, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool Import(string inputPath, string outputPath, TextureImportSettings settings)
+        {
+            if(settings == null)
+                throw new ArgumentNullException();
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            TextureImportSettings.InternalOptions internalOptions;
+            settings.ToInternal(out internalOptions);
+            return Internal_ImportTexture(inputPath, outputPath, ref internalOptions);
+#endif
+        }
+
+        /// <summary>
+        /// Imports the model asset file to the target location.
+        /// </summary>
+        /// <param name="inputPath">The source file path.</param>
+        /// <param name="outputPath">The result asset file path.</param>
+        /// <param name="settings">The settings.</param>
+        /// <returns>True if importing failed, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool Import(string inputPath, string outputPath, ModelImportSettings settings)
+        {
+            if(settings == null)
+                throw new ArgumentNullException();
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            ModelImportSettings.InternalOptions internalOptions;
+            settings.ToInternal(out internalOptions);
+            return Internal_ImportModel(inputPath, outputPath, ref internalOptions);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_CloneAssetFile(string dstPath, string srcPath, ref Guid dstId);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_Import(string inputPath, string outputPath, IntPtr arg);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_ImportTexture(string inputPath, string outputPath, ref TextureImportSettings.InternalOptions options);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_ImportModel(string inputPath, string outputPath, ref ModelImportSettings.InternalOptions options);
 #endif
 
         #endregion

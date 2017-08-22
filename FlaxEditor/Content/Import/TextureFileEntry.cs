@@ -256,6 +256,54 @@ namespace FlaxEditor.Content.Import
         /// </summary>
         [HideInEditor]
         public List<SpriteInfo> Sprites = new List<SpriteInfo>();
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct InternalOptions
+        {
+            public TextureFormatType Type;
+            public bool IsAtlas;
+            public bool NeverStream;
+            public bool Compress;
+            public bool IndependentChannels;
+            public bool IsSRGB;
+            public bool GenerateMipMaps;
+            public float Scale;
+            public int MaxSize;
+            public Rectangle[] SpriteAreas;
+            public string[] SpriteNames;
+        }
+
+        internal void ToInternal(out InternalOptions options)
+        {
+            options = new InternalOptions
+            {
+                Type = (TextureFormatType)(int)Type,
+                IsAtlas = IsAtlas,
+                NeverStream = NeverStream,
+                Compress = Compress,
+                IndependentChannels = IndependentChannels,
+                IsSRGB = IsSRGB,
+                GenerateMipMaps = GenerateMipMaps,
+                Scale = Scale,
+                MaxSize = (int)MaxSize
+            };
+            if (Sprites != null && Sprites.Count > 0)
+            {
+                int count = Sprites.Count;
+                options.SpriteAreas = new Rectangle[count];
+                options.SpriteNames = new string[count];
+                for (int i = 0; i < count; i++)
+                {
+                    options.SpriteAreas[i] = Sprites[i].Area;
+                    options.SpriteNames[i] = Sprites[i].Name;
+                }
+            }
+            else
+            {
+                options.SpriteAreas = null;
+                options.SpriteNames = null;
+            }
+        }
     }
 
     /// <summary>
@@ -275,11 +323,11 @@ namespace FlaxEditor.Content.Import
             : base(url, resultUrl)
         {
             // Try to restore target asset texture import options (usefull for fast reimport)
-            InternalOptions options;
+            TextureImportSettings.InternalOptions options;
             if (Internal_GetTextureImportOptions(resultUrl, out options))
             {
                 // Restore settings
-                _settings.Type = (TextureImportSettings.CustomTextureFormatType)options.Type;
+                _settings.Type = (TextureImportSettings.CustomTextureFormatType)(int)options.Type;
                 _settings.IsAtlas = options.IsAtlas;
                 _settings.NeverStream = options.NeverStream;
                 _settings.Compress = options.Compress;
@@ -300,7 +348,6 @@ namespace FlaxEditor.Content.Import
             }
 
             // Try to guess format type based on file name
-            TextureFormatType formatToUse = TextureFormatType.ColorRGB;
             var shortName = System.IO.Path.GetFileNameWithoutExtension(url);
             string snl = shortName.ToLower();
             if (_settings.Type != TextureImportSettings.CustomTextureFormatType.ColorRGB)
@@ -314,7 +361,7 @@ namespace FlaxEditor.Content.Import
                      || snl.EndsWith("normals"))
             {
                 // Normal map
-                formatToUse = TextureFormatType.NormalMap;
+                _settings.Type = TextureImportSettings.CustomTextureFormatType.NormalMap;
             }
             else if (snl.EndsWith("_d")
                      || snl.Contains("diffuse")
@@ -324,7 +371,7 @@ namespace FlaxEditor.Content.Import
                      || snl.Contains("albedo"))
             {
                 // Albedo or diffuse map
-                formatToUse = TextureFormatType.ColorRGB;
+                _settings.Type = TextureImportSettings.CustomTextureFormatType.ColorRGB;
             }
             else if (snl.EndsWith("ao")
                      || snl.EndsWith("ambientocclusion")
@@ -344,9 +391,8 @@ namespace FlaxEditor.Content.Import
                      || snl.EndsWith("metallic"))
             {
                 // Glossiness, metalness, ambient occlusion, displacement, height, cavity or specular
-                formatToUse = TextureFormatType.GrayScale;
+                _settings.Type = TextureImportSettings.CustomTextureFormatType.GrayScale;
             }
-            _settings.Type = (TextureImportSettings.CustomTextureFormatType)formatToUse;
         }
 
         /// <inheritdoc />
@@ -355,27 +401,17 @@ namespace FlaxEditor.Content.Import
         /// <inheritdoc />
         public override object Settings => _settings;
 
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct InternalOptions
+        /// <inheritdoc />
+        public override bool Import()
         {
-            public TextureFormatType Type;
-            public bool IsAtlas;
-            public bool NeverStream;
-            public bool Compress;
-            public bool IndependentChannels;
-            public bool IsSRGB;
-            public bool GenerateMipMaps;
-            public float Scale;
-            public int MaxSize;
-            public Rectangle[] SpriteAreas;
-            public string[] SpriteNames;
+            return Editor.Import(Url, ResultUrl, _settings);
         }
 
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_GetTextureImportOptions(string path, out InternalOptions result);
+        internal static extern bool Internal_GetTextureImportOptions(string path, out TextureImportSettings.InternalOptions result);
 #endif
 
         #endregion

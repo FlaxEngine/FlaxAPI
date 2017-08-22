@@ -90,6 +90,32 @@ namespace FlaxEditor.Content.Import
         /// </summary>
         [EditorOrder(70), Tooltip("Model lightmap UVs source")]
         public ModelLightmapUVsSource LighmapUVsSource { get; set; } = ModelLightmapUVsSource.Disable;
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct InternalOptions
+        {
+            public float Scale;
+            public bool CalculateNormals;
+            public float SmoothigNormalsAngle;
+            public bool CalculateTangents;
+            public bool ForceTwoSided;
+            public bool OptimizeMeshes;
+            public ModelLightmapUVsSource LighmapUVsSource;
+        }
+
+        internal void ToInternal(out InternalOptions options)
+        {
+            options = new InternalOptions
+            {
+                Scale = Scale,
+                CalculateNormals = CalculateNormals,
+                SmoothigNormalsAngle = SmoothigNormalsAngle,
+                CalculateTangents = CalculateTangents,
+                ForceTwoSided = ForceTwoSided,
+                OptimizeMeshes = OptimizeMeshes,
+                LighmapUVsSource = LighmapUVsSource
+            };
+        }
     }
 
     /// <summary>
@@ -109,7 +135,7 @@ namespace FlaxEditor.Content.Import
             : base(url, resultUrl)
         {
             // Try to restore target asset model import options (usefull for fast reimport)
-            InternalOptions options;
+            ModelImportSettings.InternalOptions options;
             if (Internal_GetModelImportOptions(resultUrl, out options))
             {
                 // Restore settings
@@ -129,23 +155,17 @@ namespace FlaxEditor.Content.Import
         /// <inheritdoc />
         public override object Settings => _settings;
 
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct InternalOptions
+        /// <inheritdoc />
+        public override bool Import()
         {
-            public float Scale;
-            public bool CalculateNormals;
-            public float SmoothigNormalsAngle;
-            public bool CalculateTangents;
-            public bool ForceTwoSided;
-            public bool OptimizeMeshes;
-            public ModelLightmapUVsSource LighmapUVsSource;
+            return Editor.Import(Url, ResultUrl, _settings);
         }
 
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_GetModelImportOptions(string path, out InternalOptions result);
+        internal static extern bool Internal_GetModelImportOptions(string path, out ModelImportSettings.InternalOptions result);
 #endif
 
         #endregion

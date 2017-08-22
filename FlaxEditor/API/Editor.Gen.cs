@@ -71,25 +71,6 @@ namespace FlaxEditor
 #endif
 		}
 
-		/// <summary>
-		/// Imports the asset file to the target location.
-		/// </summary>
-		/// <param name="inputPath">The source file path.</param>
-		/// <param name="outputPath">The result asset file path.</param>
-		/// <returns>True if importing failed, otherwise false.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-		[UnmanagedCall]
-		public static bool Import(string inputPath, string outputPath) 
-		{
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-			return Internal_Import(inputPath, outputPath);
-#endif
-		}
-
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -98,8 +79,6 @@ namespace FlaxEditor
 		internal static extern bool Internal_CreateAsset(NewAssetType type, string outputPath);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_CanImport(string extension);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_Import(string inputPath, string outputPath);
 #endif
 #endregion
 	}
