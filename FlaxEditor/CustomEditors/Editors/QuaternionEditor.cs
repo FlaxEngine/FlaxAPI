@@ -45,6 +45,9 @@ namespace FlaxEditor.CustomEditors.Editors
 
         private void OnValueChanged()
         {
+            if (IsSetBlocked)
+                return;
+
             float x = xElement.FloatValue.Value;
             float y = yElement.FloatValue.Value;
             float z = zElement.FloatValue.Value;
