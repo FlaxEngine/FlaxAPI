@@ -52,43 +52,43 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Custom import scale.
         /// </summary>
-        [EditorOrder(10), Tooltip("")]
+        [EditorOrder(10), Tooltip("Custom import scale")]
         public float Scale { get; set; } = 1.0f;
 
         /// <summary>
         /// True if calculate model normals, otherwise will import them.
         /// </summary>
-        [EditorOrder(20), Tooltip("")]
+        [EditorOrder(20), Tooltip("Enable model normal vectors recalculating")]
         public bool CalculateNormals { get; set; } = true;
 
         /// <summary>
         /// Calculated normals smoothing angle.
         /// </summary>
-        [EditorOrder(30), Tooltip("")]
+        [EditorOrder(30), Tooltip("Generated normal vector smoothing angle")]
         public float SmoothigNormalsAngle { get; set; } = 60.0f;
 
         /// <summary>
         /// True if calculate model tangents, otherwise will import them.
         /// </summary>
-        [EditorOrder(40), Tooltip("")]
+        [EditorOrder(40), Tooltip("Enable model tangent vectors recalculating")]
         public bool CalculateTangents { get; set; } = true;
 
         /// <summary>
         /// Enable/disable drawing model two sided by force.
         /// </summary>
-        [EditorOrder(50), Tooltip("")]
+        [EditorOrder(50), Tooltip("Enable/disable drawing model two sided by force")]
         public bool ForceTwoSided { get; set; }
 
         /// <summary>
         /// Enable/disable meshes geometry optimization.
         /// </summary>
-        [EditorOrder(60), Tooltip("")]
+        [EditorOrder(60), Tooltip("Enable/disable meshes geometry optimization")]
         public bool OptimizeMeshes { get; set; } = true;
 
         /// <summary>
         /// The lighmap UVs source.
         /// </summary>
-        [EditorOrder(70), Tooltip("")]
+        [EditorOrder(70), Tooltip("Model lightmap UVs source")]
         public ModelLightmapUVsSource LighmapUVsSource { get; set; } = ModelLightmapUVsSource.Disable;
     }
 
