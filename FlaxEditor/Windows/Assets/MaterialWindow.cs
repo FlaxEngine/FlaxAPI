@@ -4,6 +4,7 @@
 
 using System;
 using FlaxEditor.Content;
+using FlaxEditor.CustomEditors;
 using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
@@ -21,15 +22,100 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Surface.IVisjectSurfaceOwner" />
     public sealed class MaterialWindow : ClonedAssetEditorWindowBase<Material>, IVisjectSurfaceOwner
     {
-        // TODO: things to finish
-        // - material parameters and properties proxy
-        // - saving surface
-        
+        /// <summary>
+        /// The material properties proxy object.
+        /// </summary>
+        private sealed class PropertiesProxy
+        {
+            [EditorOrder(10), Tooltip("Material domain type")]
+            public MaterialDomain Domain { get; set; }
+
+            [EditorOrder(20), Tooltip("")]
+            public MaterialBlendMode BlendMode { get; set; }
+
+            [EditorOrder(30), Tooltip("")]
+            public bool TwoSided { get; set; }
+
+            [EditorOrder(40), Tooltip("")]
+            public bool Wireframe { get; set; }
+
+            [EditorOrder(100), EditorDisplay("Transparency"), Tooltip("")]
+            public MaterialTransparentLighting Lighting { get; set; }
+
+            [EditorOrder(110), EditorDisplay("Transparency"), Tooltip("")]
+            public bool DisableDepthTest { get; set; }
+
+            [EditorOrder(120), EditorDisplay("Transparency"), Tooltip("")]
+            public bool DisableReflections { get; set; }
+
+            [EditorOrder(130), EditorDisplay("Transparency"), Tooltip("")]
+            public bool DisableFog { get; set; }
+
+            [EditorOrder(140), EditorDisplay("Transparency"), Tooltip("")]
+            public bool DisableDistortion { get; set; }
+
+            [EditorOrder(200), EditorDisplay("Misc"), Tooltip("")]
+            public bool DisableDepthWrite { get; set; }
+
+            //[EditorOrder(1000)]
+            //public MaterialDomain Parameters { get; set; }
+
+            /// <summary>
+            /// Gathers parameters from the specified material.
+            /// </summary>
+            /// <param name="material">The material.</param>
+            public void OnLoad(Material material)
+            {
+                // Update cache
+                var info = material.Info;
+                Wireframe = (info.Flags & MaterialFlags.Wireframe) != 0;
+                TwoSided = (info.Flags & MaterialFlags.TwoSided) != 0;
+                DisableDepthTest = (info.Flags & MaterialFlags.TransparentDisableDepthTest) != 0;
+                DisableReflections = (info.Flags & MaterialFlags.TransparentDisableReflections) != 0;
+                DisableFog = (info.Flags & MaterialFlags.TransparentDisableFog) != 0;
+                DisableDepthWrite = (info.Flags & MaterialFlags.DisableDepthWrite) != 0;
+                DisableDistortion = (info.Flags & MaterialFlags.TransparentDisableDistortion) != 0;
+                BlendMode = info.BlendMode;
+                Lighting = info.TransparentLighting;
+                Domain = info.Domain;
+
+                // TODO: parameters
+            }
+
+            /// <summary>
+            /// Saves the material properties to the material info structure.
+            /// </summary>
+            /// <param name="info">The material info.</param>
+            public void OnSave(ref MaterialInfo info)
+            {
+                // Update flags
+                if (Wireframe)
+                    info.Flags |= MaterialFlags.Wireframe;
+                if (TwoSided)
+                    info.Flags |= MaterialFlags.TwoSided;
+                if (DisableDepthTest)
+                    info.Flags |= MaterialFlags.TransparentDisableDepthTest;
+                if (DisableReflections)
+                    info.Flags |= MaterialFlags.TransparentDisableReflections;
+                if (DisableFog)
+                    info.Flags |= MaterialFlags.TransparentDisableFog;
+                if (DisableDepthWrite)
+                    info.Flags |= MaterialFlags.DisableDepthWrite;
+                if (DisableDistortion)
+                    info.Flags |= MaterialFlags.TransparentDisableDistortion;
+                info.BlendMode = BlendMode;
+                info.TransparentLighting = Lighting;
+                info.Domain = Domain;
+            }
+        }
+
         private readonly SplitPanel _splitPanel1;
         private readonly SplitPanel _splitPanel2;
         private readonly MaterialPreview _preview;
         private readonly VisjectSurface _surface;
+        private readonly CustomEditorPresenter _propertiesEditor;
 
+        private readonly PropertiesProxy _properties = new PropertiesProxy();
         private bool _isWaitingForSurfaceLoad;
         private bool _tmpMaterialIsDirty;
 
@@ -58,7 +144,12 @@ namespace FlaxEditor.Windows.Assets
             _preview = new MaterialPreview(true);
             _preview.Parent = _splitPanel2.Panel1;
 
-            // TODO: Properies Editor for material properties and parameters editing
+            // Material properties editor
+            _propertiesEditor = new CustomEditorPresenter(null);
+            _propertiesEditor.Panel.Width = _splitPanel2.Panel2.Width;
+            _propertiesEditor.Panel.AnchorStyle = AnchorStyle.Upper;
+            _propertiesEditor.Panel.Parent = _splitPanel2.Panel2;
+            _propertiesEditor.Select(_properties);
 
             // Surface
             _surface = new VisjectSurface(this, SurfaceType.Material);
@@ -81,34 +172,31 @@ namespace FlaxEditor.Windows.Assets
             if (_isWaitingForSurfaceLoad)
                 return true;
 
-            //throw new NotImplementedException("TODO: finish material surface saving");
             // Check if surface has been edited
-            /*if (_surface.IsEdited)
+            if (_surface.IsEdited)
             {
                 // Save surface
-                MemoryWriteStream surfaceStream(2 * 1024);
-                if (_surface.Save(&surfaceStream))
+                var data = _surface.Save();
+                if (data == null)
                 {
                     // Error
-                    LOG_EDITOR(Error, 62, _element.ToString());
+                    Editor.LogError("Failed to save material surface");
                     return true;
                 }
 
                 // Create material info
                 MaterialInfo info;
-                FillMaterialInfo(&info);
+                FillMaterialInfo(out info);
 
                 // Save data to the temporary material
-                _preview.Disable();
-                _isWaitingForLoad = true;
-                if (_tmpMaterial.SaveSurface(&surfaceStream, &info))
+                if (_asset.SaveSurface(data, info))
                 {
                     // Error
                     _surface.MarkAsEdited();
-                    LOG_EDITOR(Error, 63, _element.ToString());
+                    Editor.LogError("Failed to save material surface data");
                     return true;
                 }
-            }*/
+            }
 
             return false;
         }
@@ -119,12 +207,14 @@ namespace FlaxEditor.Windows.Assets
         /// <param name="info">Output info.</param>
         public void FillMaterialInfo(out MaterialInfo info)
         {
-            info = new MaterialInfo();
-            info.Flags = MaterialFlags.None;
-            info.BlendMode = MaterialBlendMode.Opaque;
-            info.Domain = MaterialDomain.Surface;
-            info.TransparentLighting = MaterialTransparentLighting.None;
-            //_proxy.OnSave(info); // TODO: finish material proxy like in c++ editor
+            info = new MaterialInfo
+            {
+                Flags = MaterialFlags.None,
+                BlendMode = MaterialBlendMode.Opaque,
+                Domain = MaterialDomain.Surface,
+                TransparentLighting = MaterialTransparentLighting.None
+            };
+            _properties.OnSave(ref info);
         }
 
         /// <summary>
@@ -191,12 +281,17 @@ namespace FlaxEditor.Windows.Assets
             }
 
             // Update original material so user can see changes in the scene
-            SaveToOriginal();
+            if (SaveToOriginal())
+            {
+                // Error
+                return;
+            }
 
             // Copy shader cache from the temporary material (will skip compilation on Reload - faster)
-            throw new NotImplementedException("copy temp material cache to the original one");
-            //ShaderCacheManager.Instance().CopyCache(materialId, _tmpMaterial.GetID());
-
+            Guid dstId = _item.ID;
+            Guid srcId = _asset.ID;
+            Editor.Internal_CopyCache(ref dstId, ref srcId);
+            
             // Clear flag
             ClearEditedFlag();
 
@@ -298,9 +393,9 @@ namespace FlaxEditor.Windows.Assets
                 // Clear flag
                 _isWaitingForSurfaceLoad = false;
 
-                // Init material properties and parameters panel
-                //_proxy.OnLoaded(_asset.Info, _asset.Parameters);
-                
+                // Init material properties and parameters proxy
+                _properties.OnLoad(_asset);
+
                 // Load surface data from the asset
                 byte[] data = _asset.LoadSurface(true);
                 if (data == null)
@@ -319,7 +414,7 @@ namespace FlaxEditor.Windows.Assets
                     Close();
                     return;
                 }
-                
+
                 // Setup
                 _surface.Enabled = true;
                 ClearEditedFlag();

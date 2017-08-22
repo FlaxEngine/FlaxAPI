@@ -396,51 +396,53 @@ namespace FlaxEditor.Windows.Assets
         /// <summary>
         /// Saves the copy of the asset to the original location. This action cannot be undone!
         /// </summary>
-        protected void SaveToOriginal()
+        /// <returns>True if failed, otherwise false.</returns>
+        protected bool SaveToOriginal()
         {
             // Wait until temporary asset fille be fully loaded
             if (_asset.WaitForLoaded())
             {
                 // Error
-                // TODO: log error?
-                return;
+                Editor.LogError(string.Format("Cannot save asset {0}. Wait for temporary asset loaded failed.", _item.Path));
+                return true;
             }
-
-            throw new NotImplementedException();
-
-            /*
-
+            
             // Cache data
             var id = _item.ID;
-            String sourcePath = _asset.Path;
-            String destinationPath = _item.Path;
+            var sourcePath = _asset.Path;
+            var destinationPath = _item.Path;
 
             // Check if orginal asset is loaded
-            var originalAsset = FlaxEngine.Content.GetAsset(id);
+            var originalAsset = FlaxEngine.Content.GetAsset<T>(id);
             if (originalAsset)
             {
                 // Wait for loaded to prevent any issues
                 if (originalAsset.WaitForLoaded())
                 {
                     // Error
-                    // TODO: log error?
-                    return;
+                    Editor.LogError(string.Format("Cannot save asset {0}. Wait for original asset loaded failed.", _item.Path));
+                    return true;
                 }
             }
-
+            
             // Copy temporary material to the final destination (and restore ID)
-            if (CWindowsModule.ContentWin.CloneAssetFile(destinationPath, sourcePath, id))
+            if (Editor.ContentEditing.CloneAssetFile(destinationPath, sourcePath, id))
             {
                 // Error
-                LOG_EDITOR(Error, 44, sourcePath, destinationPath);
-                return;
+                Editor.LogError(string.Format("Cannot copy asset \'{0}\' to \'{1}\'", sourcePath, destinationPath));
+                return true;
             }
 
             // Reload original asset
             if (originalAsset)
             {
                 originalAsset.Reload();
-            }*/
+            }
+
+            // Refresh thumbnail
+            _item.RefreshThumbnail();
+
+            return false;
         }
 
         /// <inheritdoc />
