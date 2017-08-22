@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FlaxEngine;
+// ReSharper disable InconsistentNaming
 
 namespace FlaxEditor.Content.Import
 {
@@ -143,6 +144,11 @@ namespace FlaxEditor.Content.Import
             _8192 = 8192
         }
 
+        /// <summary>
+        /// Converts the maximum size to enum.
+        /// </summary>
+        /// <param name="f">The max size.</param>
+        /// <returns>The converted enum.</returns>
         public static CustomMaxSizeType ConvertMaxSize(int f)
         {
             if (!Mathf.IsPowerOfTwo(f))
