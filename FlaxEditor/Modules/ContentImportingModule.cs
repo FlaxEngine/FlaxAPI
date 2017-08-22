@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -109,8 +109,26 @@ namespace FlaxEditor.Modules
         public void Reimport(BinaryAssetItem item)
         {
             string importPath;
-            if (item != null && item.GetImportPath(out importPath))
+            if (item != null && !item.GetImportPath(out importPath))
+            {
+                // Check if input file is missing
+                if (!System.IO.File.Exists(importPath))
+                {
+                    Editor.LogWarning(string.Format("Cannot reimport asset \'{0}\'. File \'{1}\' does not exist.", item.Path, importPath));
+
+                    // Ask user to select new file location
+                    var title = string.Format("Please find missing \'{0}\' file for asset \'{1}\'", importPath, item.ShortName);
+                    var files = MessageBox.OpenFileDialog(Editor.Windows.MainWindow, null, "All files (*.*)\0*.*\0", false, title);
+                    if (files != null && files.Length > 0)
+                        importPath = files[0];
+
+                    // Validate file path again
+                    if (!System.IO.File.Exists(importPath))
+                        return;
+                }
+
                 Import(importPath, item.Path, true);
+            }
         }
 
         /// <summary>
