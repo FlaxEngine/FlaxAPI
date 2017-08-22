@@ -2,6 +2,10 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System.Collections.Generic;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using FlaxEngine;
 
 namespace FlaxEditor.Content.Import
@@ -11,12 +15,39 @@ namespace FlaxEditor.Content.Import
     /// </summary>
     public enum TextureFormatType : byte
     {
+        /// <summary>
+        /// The unknown.
+        /// </summary>
         Unknown = 0,
+
+        /// <summary>
+        /// The color with RGB channels.
+        /// </summary>
         ColorRGB = 1,
+
+        /// <summary>
+        /// The color with RGBA channels.
+        /// </summary>
         ColorRGBA = 2,
+
+        /// <summary>
+        /// The normal map (packed and compressed).
+        /// </summary>
         NormalMap = 3,
+
+        /// <summary>
+        /// The gray scale (R channel).
+        /// </summary>
         GrayScale = 4,
+
+        /// <summary>
+        /// The HDR color (RGBA channels).
+        /// </summary>
         HdrRGBA = 5,
+
+        /// <summary>
+        /// The HDR color (RGB channels).
+        /// </summary>
         HdrRGB = 6
     }
 
@@ -30,11 +61,34 @@ namespace FlaxEditor.Content.Import
         /// </summary>
         public enum CustomTextureFormatType
         {
+            /// <summary>
+            /// The color with RGB channels.
+            /// </summary>
             ColorRGB = 1,
+
+            /// <summary>
+            /// The color with RGBA channels.
+            /// </summary>
             ColorRGBA = 2,
+
+            /// <summary>
+            /// The normal map (packed and compressed).
+            /// </summary>
             NormalMap = 3,
+
+            /// <summary>
+            /// The gray scale (R channel).
+            /// </summary>
             GrayScale = 4,
+
+            /// <summary>
+            /// The HDR color (RGBA channels).
+            /// </summary>
             HdrRGBA = 5,
+
+            /// <summary>
+            /// The HDR color (RGB channels).
+            /// </summary>
             HdrRGB = 6
         }
 
@@ -43,15 +97,97 @@ namespace FlaxEditor.Content.Import
         /// </summary>
         public enum CustomMaxSizeType
         {
+            /// <summary>
+            /// The 32.
+            /// </summary>
             _32 = 32,
+
+            /// <summary>
+            /// The 64.
+            /// </summary>
             _64 = 64,
+
+            /// <summary>
+            /// The 128.
+            /// </summary>
             _128 = 128,
+
+            /// <summary>
+            /// The 256.
+            /// </summary>
             _256 = 256,
+
+            /// <summary>
+            /// The 512.
+            /// </summary>
             _512 = 512,
+
+            /// <summary>
+            /// The 1024.
+            /// </summary>
             _1024 = 1024,
+
+            /// <summary>
+            /// The 2048.
+            /// </summary>
             _2048 = 2048,
+
+            /// <summary>
+            /// The 4096.
+            /// </summary>
             _4096 = 4096,
+
+            /// <summary>
+            /// The 8192.
+            /// </summary>
             _8192 = 8192
+        }
+
+        public static CustomMaxSizeType ConvertMaxSize(int f)
+        {
+            if (!Mathf.IsPowerOfTwo(f))
+                f = Mathf.NextPowerOfTwo(f);
+
+            FieldInfo[] fields = typeof(CustomMaxSizeType).GetFields();
+            for (int i = 0; i < fields.Length; i++)
+            {
+                var field = fields[i];
+                if (field.Name.Equals("value__"))
+                    continue;
+
+                if (f == (int)field.GetRawConstantValue())
+                    return (CustomMaxSizeType)f;
+            }
+
+            return CustomMaxSizeType._8192;
+        }
+
+        /// <summary>
+        /// The sprite info.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SpriteInfo
+        {
+            /// <summary>
+            /// The sprite area.
+            /// </summary>
+            public Rectangle Area;
+
+            /// <summary>
+            /// The sprite name.
+            /// </summary>
+            public string Name;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="SpriteInfo"/> struct.
+            /// </summary>
+            /// <param name="area">The area.</param>
+            /// <param name="name">The name.</param>
+            public SpriteInfo(Rectangle area, string name)
+            {
+                Area = area;
+                Name = name;
+            }
         }
 
         /// <summary>
@@ -108,6 +244,12 @@ namespace FlaxEditor.Content.Import
         /// </summary>
         [EditorOrder(80), Tooltip("Maximum texture size (will be resized if need to)")]
         public CustomMaxSizeType MaxSize { get; set; } = CustomMaxSizeType._8192;
+
+        /// <summary>
+        /// The sprites. Used to keep created sprites on sprite atlas reimport.
+        /// </summary>
+        [HideInEditor]
+        public List<SpriteInfo> Sprites = new List<SpriteInfo>();
     }
 
     /// <summary>
@@ -126,22 +268,44 @@ namespace FlaxEditor.Content.Import
         public TextureFileEntry(string url, string resultUrl)
             : base(url, resultUrl)
         {
-            // TODO: ask flax assets backend to try restore previous import settings
-
-            // Get short file name
-            var shortName = System.IO.Path.GetFileNameWithoutExtension(url);
+            // Try to restore target asset texture import options (usefull for fast reimport)
+            InternalOptions options;
+            if (Internal_GetTextureImportOptions(resultUrl, out options))
+            {
+                // Restore settings
+                _settings.Type = (TextureImportSettings.CustomTextureFormatType)options.Type;
+                _settings.IsAtlas = options.IsAtlas;
+                _settings.NeverStream = options.NeverStream;
+                _settings.Compress = options.Compress;
+                _settings.IndependentChannels = options.IndependentChannels;
+                _settings.IsSRGB = options.IsSRGB;
+                _settings.GenerateMipMaps = options.GenerateMipMaps;
+                _settings.Scale = options.Scale;
+                _settings.MaxSize = TextureImportSettings.ConvertMaxSize(options.MaxSize);
+                if (options.SpriteAreas != null)
+                {
+                    int spritesCount = options.SpriteAreas.Length;
+                    _settings.Sprites.Capacity = spritesCount;
+                    for (int i = 0; i < spritesCount; i++)
+                    {
+                        _settings.Sprites.Add(new TextureImportSettings.SpriteInfo(options.SpriteAreas[i], options.SpriteNames[i]));
+                    }
+                }
+            }
 
             // Try to guess format type based on file name
             TextureFormatType formatToUse = TextureFormatType.ColorRGB;
+            var shortName = System.IO.Path.GetFileNameWithoutExtension(url);
             string snl = shortName.ToLower();
-            //if (options.Type != TextureFormatType.ColorRGB)
-            //    formatToUse = options.Type;
-            // else
-            if (snl.EndsWith("_n")
-                || snl.Contains("nrm")
-                || snl.Contains("nm")
-                || snl.Contains("normal")
-                || snl.EndsWith("normals"))
+            if (_settings.Type != TextureImportSettings.CustomTextureFormatType.ColorRGB)
+            {
+                // Skip checking
+            }
+            else if (snl.EndsWith("_n")
+                     || snl.Contains("nrm")
+                     || snl.Contains("nm")
+                     || snl.Contains("normal")
+                     || snl.EndsWith("normals"))
             {
                 // Normal map
                 formatToUse = TextureFormatType.NormalMap;
@@ -184,5 +348,30 @@ namespace FlaxEditor.Content.Import
 
         /// <inheritdoc />
         public override object Settings => _settings;
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct InternalOptions
+        {
+            public TextureFormatType Type;
+            public bool IsAtlas;
+            public bool NeverStream;
+            public bool Compress;
+            public bool IndependentChannels;
+            public bool IsSRGB;
+            public bool GenerateMipMaps;
+            public float Scale;
+            public int MaxSize;
+            public Rectangle[] SpriteAreas;
+            public string[] SpriteNames;
+        }
+
+        #region Internal Calls
+
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetTextureImportOptions(string path, out InternalOptions result);
+#endif
+
+        #endregion
     }
 }
