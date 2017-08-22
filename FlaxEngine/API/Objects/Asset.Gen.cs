@@ -83,6 +83,22 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Reloads the asset.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public bool Reload() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_Reload(unmanagedPtr);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -93,6 +109,8 @@ namespace FlaxEngine
 		internal static extern int Internal_GetRefCount(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_WaitForLoaded(IntPtr obj, double timeoutInMiliseconds);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_Reload(IntPtr obj);
 #endif
 #endregion
 	}

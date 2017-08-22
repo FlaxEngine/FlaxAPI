@@ -423,6 +423,8 @@ namespace FlaxEditor
         internal static extern bool Internal_ImportTexture(string inputPath, string outputPath, ref TextureImportSettings.InternalOptions options);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_ImportModel(string inputPath, string outputPath, ref ModelImportSettings.InternalOptions options);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_CopyCache(ref Guid dstId, ref Guid srcId);
 #endif
 
         #endregion
