@@ -33,41 +33,52 @@ namespace FlaxEditor.Content.Import
 
             const float TotalWidth = 920;
             const float EditorHeight = 450;
+            Width = TotalWidth;
 
             // Header and help description
-            var headerLabel = new Label(false, 0, 0, TotalWidth, 40);
-            headerLabel.Text = "Import settings";
-            headerLabel.DockStyle = DockStyle.Top;
-            headerLabel.Parent = this;
-            headerLabel.Font = Style.Current.FontTitle;
-            var infoLabel = new Label(false, 10, headerLabel.Bottom + 5, TotalWidth - 20, 40);
-            infoLabel.Text = "Specify options for importing files. Every file can have different settings. Select entries on the left panel to modify them.\nPro Tip: hold CTRL key and select entries to edit multiple at once.";
-            infoLabel.HorizontalAlignment = TextAlignment.Near;
-            infoLabel.Margins = new Vector4(7);
-            infoLabel.DockStyle = DockStyle.Top;
-            infoLabel.Parent = this;
+            var headerLabel = new Label(false, 0, 0, TotalWidth, 40)
+            {
+                Text = "Import settings",
+                DockStyle = DockStyle.Top,
+                Parent = this,
+                Font = Style.Current.FontTitle
+            };
+            var infoLabel = new Label(false, 10, headerLabel.Bottom + 5, TotalWidth - 20, 40)
+            {
+                Text = "Specify options for importing files. Every file can have different settings. Select entries on the left panel to modify them.\nPro Tip: hold CTRL key and select entries to edit multiple at once.",
+                HorizontalAlignment = TextAlignment.Near,
+                Margins = new Vector4(7),
+                DockStyle = DockStyle.Top,
+                Parent = this
+            };
 
             // Buttons
             const float ButtonsWidth = 60;
             const float ButtonsMargin = 8;
-            var okButton = new Button(TotalWidth - ButtonsMargin - ButtonsWidth, infoLabel.Bottom - 30, ButtonsWidth);
-            okButton.Text = "OK";
-            okButton.AnchorStyle = AnchorStyle.UpperRight;
-            okButton.Clicked += OnOk;
-            okButton.Parent = this;
-            var cancelButton = new Button(okButton.Left - ButtonsMargin - ButtonsWidth, okButton.Y, ButtonsWidth);
-            cancelButton.Text = "Cancel";
-            cancelButton.AnchorStyle = AnchorStyle.UpperRight;
+            var importButton = new Button(TotalWidth - ButtonsMargin - ButtonsWidth, infoLabel.Bottom - 30, ButtonsWidth)
+            {
+                Text = "Import",
+                AnchorStyle = AnchorStyle.UpperRight,
+                Parent = this
+            };
+            importButton.Clicked += OnImport;
+            var cancelButton = new Button(importButton.Left - ButtonsMargin - ButtonsWidth, importButton.Y, ButtonsWidth)
+            {
+                Text = "Cancel",
+                AnchorStyle = AnchorStyle.UpperRight,
+                Parent = this
+            };
             cancelButton.Clicked += OnCancel;
-            cancelButton.Parent = this;
-
-            // Split panel for entries list and settings editor
-            var splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.Vertical, ScrollBars.Vertical);
-            splitPanel.Y = infoLabel.Bottom;
-            splitPanel.Size = new Vector2(TotalWidth, EditorHeight);
-            splitPanel.DockStyle = DockStyle.Fill;
-            splitPanel.Parent = this;
             
+            // Split panel for entries list and settings editor
+            var splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.Vertical, ScrollBars.Vertical)
+            {
+                Y = infoLabel.Bottom,
+                Size = new Vector2(TotalWidth, EditorHeight),
+                DockStyle = DockStyle.Fill,
+                Parent = this
+            };
+
             // Settings editor
             _settingsEditor = new CustomEditorPresenter(null);
             _settingsEditor.Panel.Width = splitPanel.Panel2.Width;
@@ -83,11 +94,13 @@ namespace FlaxEditor.Content.Import
                 var entry = entries[i];
 
                 // TODO: add icons for textures/models/etc from FileEntry to tree node??
-                var node = new TreeNode(false);
-                node.Text = Path.GetFileName(entry.Url);
+                var node = new TreeNode(false)
+                {
+                    Text = Path.GetFileName(entry.Url),
+                    Tag = entry,
+                    Parent = _rootNode
+                };
                 // TODO: set tooltip with full source url path
-                node.Tag = entry;
-                node.Parent = _rootNode;
             }
             _rootNode.Expand();
             _rootNode.Parent = tree;
@@ -99,7 +112,7 @@ namespace FlaxEditor.Content.Import
             Size = new Vector2(TotalWidth, splitPanel.Bottom);
         }
 
-        private void OnOk()
+        private void OnImport()
         {
             var entries = new List<FileEntry>(_rootNode.ChildrenCount);
             for (int i = 0; i < _rootNode.ChildrenCount; i++)
