@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace FlaxEditor.CustomEditors
 {
@@ -36,7 +35,7 @@ namespace FlaxEditor.CustomEditors
         /// <value>
         ///   <c>true</c> if single object is selected; otherwise, <c>false</c>.
         /// </value>
-        public bool IsSingleObject => _values.Count == 1;
+        public bool IsSingleObject => _values.IsSingleObject;
 
         /// <summary>
         /// Gets a value indicating whether selected objects are diffrent values.
@@ -44,18 +43,7 @@ namespace FlaxEditor.CustomEditors
         /// <value>
         ///   <c>true</c> if selected objects are diffrent values; otherwise, <c>false</c>.
         /// </value>
-        public bool HasDiffrentValues
-        {
-            get
-            {
-                for (int i = 1; i < _values.Count; i++)
-                {
-                    if (!Equals(_values[0], _values[i]))
-                        return true;
-                }
-                return false;
-            }
-        }
+        public bool HasDiffrentValues => _values.HasDiffrentValues;
 
         /// <summary>
         /// Gets a value indicating whether selected objects are diffrent types.
@@ -63,21 +51,7 @@ namespace FlaxEditor.CustomEditors
         /// <value>
         ///   <c>true</c> if selected objects are diffrent types; otherwise, <c>false</c>.
         /// </value>
-        public bool HasDiffrentTypes
-        {
-            get
-            {
-                if (_values.Count < 2)
-                    return false;
-                var theFirstType = _values[0].GetType();
-                for (int i = 1; i < _values.Count; i++)
-                {
-                    if (theFirstType != _values[1].GetType())
-                        return true;
-                }
-                return false;
-            }
-        }
+        public bool HasDiffrentTypes => _values.HasDiffrentTypes;
 
         /// <summary>
         /// Gets the values types array (without duplicates).
@@ -85,17 +59,7 @@ namespace FlaxEditor.CustomEditors
         /// <value>
         /// The values types.
         /// </value>
-        public Type[] ValuesTypes
-        {
-            get
-            {
-                if (_values == null)
-                    return new Type[0];
-                if (_values.Count == 1)
-                    return new []{_values[0].GetType()};
-                return _values.ConvertAll(x => x.GetType()).Distinct().ToArray();
-            }
-        }
+        public Type[] ValuesTypes => _values.ValuesTypes;
 
         /// <summary>
         /// Gets the values.

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 
 namespace FlaxEditor.CustomEditors
 {
@@ -25,6 +26,71 @@ namespace FlaxEditor.CustomEditors
         /// The values type.
         /// </value>
         public Type Type { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether single object is selected.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if single object is selected; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsSingleObject => Count == 1;
+
+        /// <summary>
+        /// Gets a value indicating whether selected objects are diffrent values.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if selected objects are diffrent values; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasDiffrentValues
+        {
+            get
+            {
+                for (int i = 1; i < Count; i++)
+                {
+                    if (!Equals(this[0], this[i]))
+                        return true;
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether selected objects are diffrent types.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if selected objects are diffrent types; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasDiffrentTypes
+        {
+            get
+            {
+                if (Count < 2)
+                    return false;
+                var theFirstType = this[0].GetType();
+                for (int i = 1; i < Count; i++)
+                {
+                    if (theFirstType != this[1].GetType())
+                        return true;
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the values types array (without duplicates).
+        /// </summary>
+        /// <value>
+        /// The values types.
+        /// </value>
+        public Type[] ValuesTypes
+        {
+            get
+            {
+                if (Count == 1)
+                    return new[] { this[0].GetType() };
+                return ConvertAll(x => x.GetType()).Distinct().ToArray();
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValueContainer"/> class.
