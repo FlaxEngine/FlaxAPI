@@ -13,6 +13,7 @@ namespace FlaxEditor.CustomEditors
     /// </summary>
     public abstract class CustomEditor
     {
+        private LayoutElementsContainer _layout;
         private CustomEditorPresenter _presenter;
         private CustomEditor _parent;
         private readonly List<CustomEditor> _children = new List<CustomEditor>();
@@ -122,6 +123,7 @@ namespace FlaxEditor.CustomEditors
 
         internal virtual void Initialize(CustomEditorPresenter presenter, LayoutElementsContainer layout, ValueContainer values)
         {
+            _layout = layout;
             _presenter = presenter;
             _values = values;
 
@@ -144,7 +146,31 @@ namespace FlaxEditor.CustomEditors
             _children.Add(child);
             child._parent = this;
         }
+        
+        /// <summary>
+        /// Rebuilds the editor layout. Cleans the whole UI with child elements/editors and then builds new hierarchy. Call it only when necessary.
+        /// </summary>
+        public void RebuildLayout()
+        {
+            var values = _values;
+            var presenter = _presenter;
+            var layout = _layout;
+            var control = layout.ContainerControl;
+            var parent = _parent;
 
+            control.IsLayoutLocked = true;
+            control.DisposeChildren();
+
+            layout.Children.Clear();
+            Cleanup();
+
+            _parent = parent;
+            Initialize(presenter, layout, values);
+
+            control.UnlockChildrenRecursive();
+            control.PerformLayout();
+        }
+        
         /// <summary>
         /// Initializes this editor.
         /// </summary>
