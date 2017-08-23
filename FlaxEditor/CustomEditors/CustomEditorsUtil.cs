@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using FlaxEditor.CustomEditors.Editors;
@@ -45,21 +44,11 @@ namespace FlaxEditor.CustomEditors
             return sb.ToString();
         }
 
-        internal static CustomEditor CreateEditor(MemberInfo member)
+        internal static CustomEditor CreateEditor(Type targetType)
         {
-            // Select target value type
-            Type targetType;
-            if (member is PropertyInfo propertyInfo)
+            if (targetType.IsArray)
             {
-                targetType = propertyInfo.PropertyType;
-            }
-            else if (member is FieldInfo fieldInfo)
-            {
-                targetType = fieldInfo.FieldType;
-            }
-            else
-            {
-                throw new NotImplementedException();
+                return new ArrayEditor();
             }
 
             // Use custom editor
@@ -68,11 +57,6 @@ namespace FlaxEditor.CustomEditors
                 return (CustomEditor)Activator.CreateInstance(type);
 
             // Select default editor (based on type)
-            if (targetType.IsArray)
-            {
-                // TODO: dedicated array editor
-                return new GenericEditor();
-            }
             if (targetType.IsEnum)
             {
                 return new EnumEditor();
@@ -81,8 +65,7 @@ namespace FlaxEditor.CustomEditors
             {
                 if (targetType.GetGenericTypeDefinition() == typeof(List<>))
                 {
-                    // TODO: dedicated List<T> editor
-                    return new GenericEditor();
+                    return new ListEditor();
                 }
                 if (targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
                 {
