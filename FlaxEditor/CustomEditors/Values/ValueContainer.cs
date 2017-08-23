@@ -11,7 +11,7 @@ namespace FlaxEditor.CustomEditors
     /// <summary>
     /// Editable object values.
     /// </summary>
-    public sealed class ValueContainer : List<object>
+    public class ValueContainer : List<object>
     {
         /// <summary>
         /// The values source information from reflection. Used to update values.
@@ -47,7 +47,7 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// Initializes a new instance of the <see cref="ValueContainer"/> class.
         /// </summary>
-        /// <param name="info">The information.</param>
+        /// <param name="info">The member info.</param>
         /// <param name="instanceValues">The parent values.</param>
         public ValueContainer(MemberInfo info, ValueContainer instanceValues)
             : this(info)
@@ -68,10 +68,21 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ValueContainer"/> class.
+        /// </summary>
+        /// <param name="info">The member info.</param>
+        /// <param name="type">The type.</param>
+        protected ValueContainer(MemberInfo info, Type type)
+        {
+            Info = info;
+            Type = type;
+        }
+
+        /// <summary>
         /// Refreshes the specified instance values.
         /// </summary>
         /// <param name="instanceValues">The parent values.</param>
-        public void Refresh(ValueContainer instanceValues)
+        public virtual void Refresh(ValueContainer instanceValues)
         {
             if (instanceValues == null || instanceValues.Count != Count)
                 throw new ArgumentException();
@@ -94,7 +105,7 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         /// <param name="instanceValues">The parent values.</param>
         /// <param name="value">The value.</param>
-        public void Set(ValueContainer instanceValues, object value)
+        public virtual void Set(ValueContainer instanceValues, object value)
         {
             if (instanceValues == null || instanceValues.Count != Count)
                 throw new ArgumentException();
@@ -122,7 +133,7 @@ namespace FlaxEditor.CustomEditors
         /// Sets the specified instance values with the container values.
         /// </summary>
         /// <param name="instanceValues">The parent values.</param>
-        public void Set(ValueContainer instanceValues)
+        public virtual void Set(ValueContainer instanceValues)
         {
             if (instanceValues == null || instanceValues.Count != Count)
                 throw new ArgumentException();
