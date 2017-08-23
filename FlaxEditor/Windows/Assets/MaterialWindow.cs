@@ -108,7 +108,7 @@ namespace FlaxEditor.Windows.Assets
                     }
                     _parametersHash = material._parametersHash;
                     var parameters = material.Parameters;
-
+                    
                     for (int i = 0; i < parameters.Length; i++)
                     {
                         var p = parameters[i];
@@ -156,6 +156,7 @@ namespace FlaxEditor.Windows.Assets
 
                                 win.Asset.Parameters[pIndex].Value = value;
                                 win.Surface.Parameters[pIndex].Value = surfaceParam;
+                                win._paramValueChange = true;
                             }
                         );
 
@@ -265,7 +266,17 @@ namespace FlaxEditor.Windows.Assets
                     var material = materialWin?.Asset;
                     int parametersHash = -1;
                     if (material != null)
-                        parametersHash = material.IsLoaded ? material._parametersHash : -2;
+                    {
+                        if (material.IsLoaded)
+                        {
+                            var parameters = material.Parameters;// need to ask for params here to sync valid hash   
+                            parametersHash = material._parametersHash;
+                        }
+                        else
+                        {
+                            parametersHash = -2;
+                        }
+                    }
 
                     if (parametersHash != _parametersHash)
                     {
@@ -341,6 +352,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly PropertiesProxy _properties;
         private bool _isWaitingForSurfaceLoad;
         private bool _tmpMaterialIsDirty;
+        internal bool _paramValueChange;
 
         /// <summary>
         /// Gets the material surface.
@@ -397,7 +409,8 @@ namespace FlaxEditor.Windows.Assets
 
         private void OnMaterialPropertyEdited()
         {
-            _surface.MarkAsEdited();
+            _surface.MarkAsEdited(!_paramValueChange);
+            _paramValueChange = false;
             RefreshMainNode();
         }
 
@@ -637,7 +650,7 @@ namespace FlaxEditor.Windows.Assets
             {
                 // Clear flag
                 _isWaitingForSurfaceLoad = false;
-
+                
                 // Init material properties and parameters proxy
                 _properties.OnLoad(this);
                 

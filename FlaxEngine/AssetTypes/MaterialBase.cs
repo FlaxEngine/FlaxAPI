@@ -18,6 +18,7 @@ namespace FlaxEngine
         /// Helper value used to keep material paramaters collection in sync with actual backend data.
         /// </summary>
         internal int _parametersHash;
+
         private MaterialParameter[] _parameters;
 
         /// <summary>
@@ -29,7 +30,12 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-            get { MaterialInfo resultAsRef; Internal_GetInfo(unmanagedPtr, out resultAsRef); return resultAsRef; }
+            get
+            {
+                MaterialInfo resultAsRef;
+                Internal_GetInfo(unmanagedPtr, out resultAsRef);
+                return resultAsRef;
+            }
 #endif
         }
 
@@ -43,8 +49,8 @@ namespace FlaxEngine
         {
             get
             {
-                // Check if has cached value
-                if (_parameters != null)
+                // Check if has cached value or is not loaded
+                if (_parameters != null || !IsLoaded)
                     return _parameters;
 
                 // Get next hash #hashtag
@@ -85,18 +91,24 @@ namespace FlaxEngine
         }
 
         #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetInfo(IntPtr obj, out MaterialInfo resultAsRef);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ulong[] Internal_CacheParameters(IntPtr obj);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string Internal_GetParamName(IntPtr obj, int index);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string Internal_SetParamValue(IntPtr obj, int index, IntPtr ptr);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string Internal_GetParamValue(IntPtr obj, int index, IntPtr ptr);
 #endif
+
         #endregion
     }
 }
