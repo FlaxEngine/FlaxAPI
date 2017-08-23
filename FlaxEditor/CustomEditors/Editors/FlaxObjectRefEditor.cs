@@ -350,13 +350,10 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
-            if (Values == null)
-                return;
-
             if (!HasDiffrentTypes)
             {
                 element = layout.Custom<ReferencePickerControl>();
-                element.CustomControl.Type = Values.Type != typeof(object) ? Values.Type : Values[0].GetType();
+                element.CustomControl.Type = Values.Type != typeof(object) || Values[0] == null ? Values.Type : Values[0].GetType();
                 element.CustomControl.ValueChanged += () => SetValue(element.CustomControl.Value);
             }
         }

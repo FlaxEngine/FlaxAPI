@@ -17,7 +17,7 @@ namespace FlaxEditor.GUI
     /// <seealso cref="IContentItemOwner" />
     public class AssetPicker : Control, IContentItemOwner
     {
-        private const float IconSize = 64;
+        private const float DefaultIconSize = 64;
         private const float ButtonsOffset = 2;
         private const float ButtonsSize = 12;
 
@@ -43,13 +43,14 @@ namespace FlaxEditor.GUI
                 // Check if value won't change
                 if (value == _selected)
                     return;
+                if (value != null && value.ItemDomain != _domain)
+                    throw new ArgumentException("Invalid asset domain.");
 
                 // Change value
                 _selected?.RemoveReference(this);
                 _selected = value;
-
                 _selected?.AddReference(this);
-
+                
                 OnSelectedItemChanged();
             }
         }
@@ -63,7 +64,13 @@ namespace FlaxEditor.GUI
         public Guid SelectedID
         {
             get => _selected?.ID ?? Guid.Empty;
-            set => SelectedItem = Editor.Instance.ContentDatabase.Find(value) as AssetItem;
+            set
+            {
+                if (value != SelectedID)
+                {
+                    SelectedItem = Editor.Instance.ContentDatabase.Find(value) as AssetItem;
+                }
+            }
         }
 
         /// <summary>
@@ -75,13 +82,52 @@ namespace FlaxEditor.GUI
         public Asset SelectedAsset
         {
             get => _selected != null ? FlaxEngine.Content.Load(_selected.ID) : null;
-            set => SelectedItem = value ? Editor.Instance.ContentDatabase.Find(value.ID) as AssetItem : null;
+            set
+            {
+                if (value == null)
+                {
+                    SelectedItem = null;
+                }
+                else if (value.ID != SelectedID)
+                {
+                    SelectedItem = Editor.Instance.ContentDatabase.Find(value.ID) as AssetItem;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the assets domain that this picker acepts.
+        /// </summary>
+        /// <value>
+        /// The domain.
+        /// </value>
+        public ContentDomain Domain
+        {
+            get => _domain;
+            set
+            {
+                if (_domain != value)
+                {
+                    _domain = value;
+
+                    if (_selected != null && _selected.ItemDomain != _domain)
+                        SelectedItem = null;
+                }
+            }
         }
 
         /// <summary>
         /// Occurs when selected item gets changed.
         /// </summary>
         public event Action SelectedItemChanged;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssetPicker"/> class.
+        /// </summary>
+        public AssetPicker()
+            : this(ContentDomain.Invalid, Vector2.Zero)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssetPicker"/> class.
@@ -98,12 +144,12 @@ namespace FlaxEditor.GUI
         /// <param name="contentDomain">The assets content domain.</param>
         /// <param name="location">The control location.</param>
         public AssetPicker(ContentDomain contentDomain, Vector2 location)
-            : base(true, location, new Vector2(IconSize + ButtonsOffset + ButtonsSize, IconSize))
+            : base(true, location, new Vector2(DefaultIconSize + ButtonsOffset + ButtonsSize, DefaultIconSize))
         {
             _domain = contentDomain;
             _mousePos = Vector2.Minimum;
         }
-
+        
         /// <summary>
         /// Called when selected item gets changed.
         /// </summary>
@@ -140,38 +186,56 @@ namespace FlaxEditor.GUI
             SelectedItem = null;
         }
 
+        private Rectangle IconRect => new Rectangle(0, 0, Height, Height);
+
+        private Rectangle Button1Rect => new Rectangle(Height + ButtonsOffset, 0, ButtonsSize, ButtonsSize);
+
+        private Rectangle Button2Rect => new Rectangle(Height + ButtonsOffset, ButtonsSize, ButtonsSize, ButtonsSize);
+
         /// <inheritdoc />
         public override void Draw()
         {
             // Cache data
             var style = Style.Current;
-            float buttonSize = ButtonsSize;
-            var itemRect = new Rectangle(0, 0, Height, Height);
-            var button1Rect = new Rectangle(Width + ButtonsOffset - buttonSize, 0, buttonSize, buttonSize);
-            var button2Rect = new Rectangle(button1Rect.X, button1Rect.Bottom, buttonSize, buttonSize);
+            var iconRect = IconRect;
+            var button1Rect = Button1Rect;
+            var button2Rect = Button2Rect;
 
             // Check if has item selected
             if (_selected != null)
             {
                 // Draw item preview
-                _selected.DrawThumbnail(ref itemRect);
+                _selected.DrawThumbnail(ref iconRect);
 
                 // Draw find button
                 Render2D.DrawSprite(style.Search, button1Rect, new Color(button1Rect.Contains(_mousePos) ? 1.0f : 0.7f));
 
                 // Draw remove button
                 Render2D.DrawSprite(style.Cross, button2Rect, new Color(button2Rect.Contains(_mousePos) ? 1.0f : 0.7f));
+
+                // Draw name
+                float sizeForTextLeft = Width - button1Rect.Right;
+                if (sizeForTextLeft > 30)
+                {
+                    Render2D.DrawText(
+                        style.FontSmall,
+                        _selected.ShortName,
+                        new Rectangle(button1Rect.Right + 2, 0, sizeForTextLeft, ButtonsSize),
+                        Color.White,
+                        TextAlignment.Near,
+                        TextAlignment.Center);
+                }
             }
             else
             {
                 // No element selected
-                Render2D.FillRectangle(itemRect, new Color(0.2f));
-                Render2D.DrawText(style.FontMedium, "No\nasset\nselected", itemRect, Color.Wheat, TextAlignment.Center, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, Height / IconSize);
+                Render2D.FillRectangle(iconRect, new Color(0.2f));
+                Render2D.DrawText(style.FontMedium, "No asset\nselected", iconRect, Color.Wheat, TextAlignment.Center, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, Height / DefaultIconSize);
             }
 
             // Check if drag is over
             if (IsDragOver && _dragOverElement.HasValidDrag)
-                Render2D.FillRectangle(itemRect, style.BackgroundSelected * 0.4f, true);
+                Render2D.FillRectangle(iconRect, style.BackgroundSelected * 0.4f, true);
         }
 
         /// <inheritdoc />
@@ -237,17 +301,14 @@ namespace FlaxEditor.GUI
             }
 
             // Buttons logic
-            float buttonSize = ButtonsSize;
-            var button1Rect = new Rectangle(Width + ButtonsOffset - buttonSize, 0, buttonSize, buttonSize);
-            var button2Rect = new Rectangle(button1Rect.X, button1Rect.Bottom, buttonSize, buttonSize);
             if (_selected != null)
             {
-                if (button1Rect.Contains(location))
+                if (Button1Rect.Contains(location))
                 {
                     // Select asset
                     Editor.Instance.Windows.ContentWin.Select(_selected);
                 }
-                else if (button2Rect.Contains(location))
+                else if (Button2Rect.Contains(location))
                 {
                     // Deselect asset
                     SelectedItem = null;
@@ -262,8 +323,7 @@ namespace FlaxEditor.GUI
         public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
             // Set flag for dragging asset
-            var itemRect = new Rectangle(0, 0, Height, Height);
-            if (buttons == MouseButtons.Left && itemRect.Contains(location))
+            if (buttons == MouseButtons.Left && IconRect.Contains(location))
             {
                 _isMosueDown = true;
                 _mosueDownPos = location;
@@ -280,7 +340,7 @@ namespace FlaxEditor.GUI
             Focus();
 
             // Check if has element selected
-            if (_selected != null)
+            if (_selected != null && IconRect.Contains(location))
             {
                 // Open it
                 Editor.Instance.ContentEditing.Open(_selected);
