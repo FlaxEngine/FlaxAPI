@@ -21,9 +21,6 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
-            if (Values == null)
-                return;
-
             element = layout.FloatValue();
             element.FloatValue.ValueChanged += () => SetValue(element.FloatValue.Value);
         }

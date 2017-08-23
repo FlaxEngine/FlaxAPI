@@ -197,9 +197,6 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
-            if (Values == null)
-                return;
-
             // Collect items to edit
             List<ItemInfo> items;
             if (!HasDiffrentTypes)

@@ -21,9 +21,6 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
-            if (Values == null)
-                return;
-
             element = layout.TextBox();
             element.TextBox.EditEnd += () => SetValue(element.Text);
         }
