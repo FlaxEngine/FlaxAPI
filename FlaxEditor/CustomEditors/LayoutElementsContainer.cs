@@ -169,6 +169,7 @@ namespace FlaxEditor.CustomEditors
         public LabelElement Label(string text)
         {
             LabelElement element = new LabelElement();
+            element.Label.Text = text;
             OnAddElement(element);
             return element;
         }

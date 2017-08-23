@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors.Elements
@@ -23,6 +24,7 @@ namespace FlaxEditor.CustomEditors.Elements
         public LabelElement()
         {
             Label = new Label(false, 0, 0, 100, 18);
+            Label.HorizontalAlignment = TextAlignment.Near;
             // TODO: auto height for label
         }
 
