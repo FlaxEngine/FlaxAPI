@@ -10,6 +10,7 @@ using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
+// ReSharper disable MemberCanBePrivate.Local
 
 namespace FlaxEditor.Windows.Assets
 {
@@ -57,16 +58,119 @@ namespace FlaxEditor.Windows.Assets
             [EditorOrder(200), EditorDisplay("Misc"), Tooltip("True if disable depth buffer write when rendering material")]
             public bool DisableDepthWrite { get; set; }
 
-            //[EditorOrder(1000)]
-            //public MaterialDomain Parameters { get; set; }
-            
+            [EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor))]
+            public MaterialWindow MaterialWinRef { get; set; }
+
+            /// <summary>
+            /// Custom editor for editing material parameters collection.
+            /// </summary>
+            /// <seealso cref="FlaxEditor.CustomEditors.CustomEditor" />
+            public class ParametersEditor : CustomEditor
+            {
+                private int _parametersHash;
+
+                /// <inheritdoc />
+                public override DisplayStyle Style => DisplayStyle.InlineIntoParent;
+
+                /// <inheritdoc />
+                public override void Initialize(LayoutElementsContainer layout)
+                {
+                    var materialWin = Values[0] as MaterialWindow;
+                    var material = materialWin?.Asset;
+                    if (material == null)
+                    {
+                        _parametersHash = -1;
+                        layout.Label("No parameters");
+                        return;
+                    }
+                    if (!material.IsLoaded)
+                    {
+                        _parametersHash = -2;
+                        layout.Label("Loading...");
+                        return;
+                    }
+                    _parametersHash = material._parametersHash;
+                    var parameters = material.Parameters;
+
+                    for (int i = 0; i < parameters.Length; i++)
+                    {
+                        var p = parameters[i];
+                        if (!p.IsPublic)
+                            continue;
+
+                        var pIndex = i;
+                        var pValue = p.Value;
+                        var pGuidType = false;
+                        Type pType;
+                        switch (p.Type)
+                        {
+                            case MaterialParameterType.CubeTexture:
+                                pType = typeof(CubeTexture);
+                                pGuidType = true;
+                                break;
+                            case MaterialParameterType.Texture:
+                            case MaterialParameterType.NormalMap:
+                                pType = typeof(Texture);
+                                pGuidType = true;
+                                break;
+                            default:
+                                pType = p.Value.GetType();
+                                break;
+                        }
+
+                        var propertyValue = new CustomValueContainer(
+                            pType,
+                            pValue,
+                            (instance, index) =>
+                            {
+                                // Get material parameter
+                                var win = (MaterialWindow)instance;
+                                return win.Asset.Parameters[pIndex].Value;
+                            },
+                            (instance, index, value) =>
+                            {
+                                // Set material parameter and surface parameter
+                                var win = (MaterialWindow)instance;
+
+                                // Visject surface paramaters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
+                                var surfaceParam = value;
+                                if (pGuidType)
+                                    surfaceParam = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
+
+                                win.Asset.Parameters[pIndex].Value = value;
+                                win.Surface.Parameters[pIndex].Value = surfaceParam;
+                            }
+                        );
+
+                        layout.Property(p.Name, propertyValue);
+                    }
+                }
+
+                /// <inheritdoc />
+                public override void Refresh()
+                {
+                    var materialWin = Values[0] as MaterialWindow;
+                    var material = materialWin?.Asset;
+                    int parametersHash = -1;
+                    if (material != null)
+                        parametersHash = material.IsLoaded ? material._parametersHash : -2;
+
+                    if (parametersHash != _parametersHash)
+                    {
+                        // Parameters has been modifed (loaded/unloaded/edited)
+                        RebuildLayout();
+                    }
+                }
+            }
+
             /// <summary>
             /// Gathers parameters from the specified material.
             /// </summary>
-            /// <param name="material">The material.</param>
-            public void OnLoad(Material material)
+            /// <param name="materialWin">The material window.</param>
+            public void OnLoad(MaterialWindow materialWin)
             {
                 // Update cache
+                var material = materialWin.Asset;
                 var info = material.Info;
                 Wireframe = (info.Flags & MaterialFlags.Wireframe) != 0;
                 TwoSided = (info.Flags & MaterialFlags.TwoSided) != 0;
@@ -79,7 +183,8 @@ namespace FlaxEditor.Windows.Assets
                 Lighting = info.TransparentLighting;
                 Domain = info.Domain;
 
-                // TODO: parameters
+                // Link
+                MaterialWinRef = materialWin;
             }
 
             /// <summary>
@@ -107,17 +212,28 @@ namespace FlaxEditor.Windows.Assets
                 info.TransparentLighting = Lighting;
                 info.Domain = Domain;
             }
+
+            /// <summary>
+            /// Clears temporary data.
+            /// </summary>
+            public void OnClean()
+            {
+                // Unlink
+                MaterialWinRef = null;
+            }
         }
 
-        private readonly SplitPanel _splitPanel1;
-        private readonly SplitPanel _splitPanel2;
         private readonly MaterialPreview _preview;
         private readonly VisjectSurface _surface;
-        private readonly CustomEditorPresenter _propertiesEditor;
 
         private readonly PropertiesProxy _properties;
         private bool _isWaitingForSurfaceLoad;
         private bool _tmpMaterialIsDirty;
+
+        /// <summary>
+        /// Gets the material surface.
+        /// </summary>
+        public VisjectSurface Surface => _surface;
 
         /// <inheritdoc />
         public MaterialWindow(Editor editor, AssetItem item)
@@ -129,34 +245,42 @@ namespace FlaxEditor.Windows.Assets
             // TODO: tooltips support!
 
             // Split Panel 1
-            _splitPanel1 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None);
-            _splitPanel1.DockStyle = DockStyle.Fill;
-            _splitPanel1.SplitterValue = 0.7f;
-            _splitPanel1.Parent = this;
+            var splitPanel1 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
+            {
+                DockStyle = DockStyle.Fill,
+                SplitterValue = 0.7f,
+                Parent = this
+            };
 
             // Split Panel 2
-            _splitPanel2 = new SplitPanel(Orientation.Vertical, ScrollBars.None, ScrollBars.Vertical);
-            _splitPanel2.DockStyle = DockStyle.Fill;
-            _splitPanel2.SplitterValue = 0.4f;
-            _splitPanel2.Parent = _splitPanel1.Panel2;
+            var splitPanel2 = new SplitPanel(Orientation.Vertical, ScrollBars.None, ScrollBars.Vertical)
+            {
+                DockStyle = DockStyle.Fill,
+                SplitterValue = 0.4f,
+                Parent = splitPanel1.Panel2
+            };
 
             // Material preview
-            _preview = new MaterialPreview(true);
-            _preview.Parent = _splitPanel2.Panel1;
+            _preview = new MaterialPreview(true)
+            {
+                Parent = splitPanel2.Panel1
+            };
 
             // Material properties editor
-            _propertiesEditor = new CustomEditorPresenter(null);
-            _propertiesEditor.Panel.Width = _splitPanel2.Panel2.Width;
-            _propertiesEditor.Panel.AnchorStyle = AnchorStyle.Upper;
-            _propertiesEditor.Panel.Parent = _splitPanel2.Panel2;
+            var propertiesEditor = new CustomEditorPresenter(null);
+            propertiesEditor.Panel.Width = splitPanel2.Panel2.Width;
+            propertiesEditor.Panel.AnchorStyle = AnchorStyle.Upper;
+            propertiesEditor.Panel.Parent = splitPanel2.Panel2;
             _properties = new PropertiesProxy();
-            _propertiesEditor.Select(_properties);
-            _propertiesEditor.OnModify += OnMaterialPropertyEdited;
-            
+            propertiesEditor.Select(_properties);
+            propertiesEditor.OnModify += OnMaterialPropertyEdited;
+
             // Surface
-            _surface = new VisjectSurface(this, SurfaceType.Material);
-            _surface.Parent = _splitPanel1.Panel1;
-            _surface.Enabled = false;
+            _surface = new VisjectSurface(this, SurfaceType.Material)
+            {
+                Parent = splitPanel1.Panel1,
+                Enabled = false
+            };
         }
 
         private void OnMaterialPropertyEdited()
@@ -339,6 +463,7 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         protected override void UnlinkItem()
         {
+            _properties.OnClean();
             _preview.Material = null;
             _isWaitingForSurfaceLoad = false;
 
@@ -402,8 +527,8 @@ namespace FlaxEditor.Windows.Assets
                 _isWaitingForSurfaceLoad = false;
 
                 // Init material properties and parameters proxy
-                _properties.OnLoad(_asset);
-
+                _properties.OnLoad(this);
+                
                 // Load surface data from the asset
                 byte[] data = _asset.LoadSurface(true);
                 if (data == null)
