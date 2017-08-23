@@ -116,17 +116,23 @@ namespace FlaxEditor.CustomEditors.Elements
                 // Draw properties names
                 float namesWidth = _splitterValue * Width - SplitterMargin;
                 Render2D.PushClip(new Rectangle(0, 0, namesWidth + SplitterMargin, Height));
-                int count = _element.Entrie.Count;
+                int count = _element.Entries.Count;
                 float[] yStarts = new float[count + 1];
                 for (int i = 0; i < count; i++)
                 {
-                    var entry = _element.Entrie[i];
-                    yStarts[i] = _children[entry.FirstChildControlIndex].Top;
+                    var entry = _element.Entries[i];
+
+                    if (entry.FirstChildControlIndex < 0)
+                        yStarts[i] = 0;
+                    else if (_children.Count <= entry.FirstChildControlIndex)
+                        yStarts[i] = Height;
+                    else
+                        yStarts[i] = _children[entry.FirstChildControlIndex].Top;
                 }
                 yStarts[count] = Height;
                 for (int i = 0; i < count; i++)
                 {
-                    var entry = _element.Entrie[i];
+                    var entry = _element.Entries[i];
 
                     var rect = new Rectangle(SplitterMargin, yStarts[i], namesWidth, yStarts[i + 1] - yStarts[i]);
                     Render2D.DrawText(style.FontMedium, entry.Name, rect, style.Foreground, TextAlignment.Near, TextAlignment.Center);
@@ -241,11 +247,11 @@ namespace FlaxEditor.CustomEditors.Elements
             public int FirstChildControlIndex;
         }
 
-        internal readonly List<PropertyEntry> Entrie = new List<PropertyEntry>();
+        internal readonly List<PropertyEntry> Entries = new List<PropertyEntry>();
 
         internal void OnAddProperty(string name)
         {
-            Entrie.Add(new PropertyEntry
+            Entries.Add(new PropertyEntry
             {
                 Name = name,
                 FirstChildControlIndex = Children.Count
