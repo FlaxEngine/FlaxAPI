@@ -5,6 +5,8 @@
 using System;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
+using FlaxEditor.CustomEditors.GUI;
+using FlaxEditor.GUI;
 using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
@@ -157,7 +159,10 @@ namespace FlaxEditor.Windows.Assets
                             }
                         );
 
-                        layout.Property(p.Name, propertyValue);
+                        var propertyLabel = new ClickablePropertyNameLabel(p.Name);
+                        propertyLabel.MouseRightClick += (label, location) => ShowParameterMenu(pIndex, label, ref location);
+                        var property = layout.AddPropertyItem(propertyLabel);
+                        property.Object(propertyValue);
                     }
 
                     if (parameters.Length > 0)
@@ -170,6 +175,31 @@ namespace FlaxEditor.Windows.Assets
                     newParam.Button.Clicked += () => AddParameter((ParameterType)paramType.Value);
                 }
 
+                /// <summary>
+                /// Shows the parameter context menu.
+                /// </summary>
+                /// <param name="index">The index.</param>
+                /// <param name="label">The label control.</param>
+                /// <param name="targetLocation">The target location.</param>
+                private void ShowParameterMenu(int index, Control label, ref Vector2 targetLocation)
+                {
+                    var contextMenu = new ContextMenu();
+                    contextMenu.OnButtonClicked += (id, menu) =>
+                                                   {
+                                                       if (id == 1)
+                                                           StartParameterRenaming(index, label);
+                                                       else if (id == 2)
+                                                           DeleteParameter(index);
+                                                   };
+                    contextMenu.AddButton(1, "Rename");
+                    contextMenu.AddButton(2, "Delete");
+                    contextMenu.Show(label, targetLocation);
+                }
+
+                /// <summary>
+                /// Adds the parameter.
+                /// </summary>
+                /// <param name="type">The type.</param>
                 private void AddParameter(ParameterType type)
                 {
                     var win = Values[0] as MaterialWindow;
@@ -180,7 +210,44 @@ namespace FlaxEditor.Windows.Assets
                     var param = SurfaceParameter.Create(type);
                     win.Surface.Parameters.Add(param);
                     win.Surface.OnParamCreated(param);
-                    win.Surface.MarkAsEdited();
+                }
+
+                /// <summary>
+                /// Starts renaming parameter.
+                /// </summary>
+                /// <param name="index">The index.</param>
+                /// <param name="label">The label control.</param>
+                private void StartParameterRenaming(int index, Control label)
+                {
+                    var win = (MaterialWindow)Values[0];
+                    var material = win.Asset;
+                    var parameter = material.Parameters[index];
+                    var dialog = RenamePopup.Show(label, new Rectangle(0, 0, label.Width - 2, label.Height), parameter.Name, false);
+                    dialog.Tag = index;
+                    dialog.Renamed += OnParameterRenamed;
+                }
+
+                private void OnParameterRenamed(RenamePopup renamePopup)
+                {
+                    var index = (int)renamePopup.Tag;
+                    var newName = renamePopup.Text;
+
+                    var win = (MaterialWindow)Values[0];
+                    var param = win.Surface.Parameters[index];
+                    param.Name = newName;
+                    win.Surface.OnParamRenamed(param);
+                }
+
+                /// <summary>
+                /// Removes the parameter.
+                /// </summary>
+                /// <param name="index">The index.</param>
+                private void DeleteParameter(int index)
+                {
+                    var win = (MaterialWindow)Values[0];
+                    var param = win.Surface.Parameters[index];
+                    win.Surface.Parameters.RemoveAt(index);
+                    win.Surface.OnParamDeleted(param);
                 }
 
                 /// <inheritdoc />
