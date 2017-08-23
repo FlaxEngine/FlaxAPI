@@ -162,6 +162,30 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Adds new label element.
+        /// </summary>
+        /// <param name="text">The label text.</param>
+        /// <returns>The created element.</returns>
+        public LabelElement Label(string text)
+        {
+            LabelElement element = new LabelElement();
+            OnAddElement(element);
+            return element;
+        }
+
+        /// <summary>
+        /// Adds new label element with name label.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="text">The label text.</param>
+        /// <returns>The created element.</returns>
+        public LabelElement Label(string name, string text)
+        {
+            var property = AddPropertyItem(name);
+            return property.Label(text);
+        }
+
+        /// <summary>
         /// Adds new float value element.
         /// </summary>
         /// <returns>The created element.</returns>
@@ -242,7 +266,7 @@ namespace FlaxEditor.CustomEditors
             if(values == null)
                 throw new ArgumentNullException();
 
-            var editor = overrideEditor ?? CustomEditorsUtil.CreateEditor(values.Type);
+            var editor = CustomEditorsUtil.CreateEditor(values, overrideEditor);
 
             OnAddEditor(editor);
             editor.Initialize(CustomEditor.CurrentCustomEditor.Presenter, this, values);
@@ -272,7 +296,7 @@ namespace FlaxEditor.CustomEditors
         /// <returns>The created element.</returns>
         public CustomEditor Property(string name, ValueContainer values, CustomEditor overrideEditor = null)
         {
-            var editor = overrideEditor ?? CustomEditorsUtil.CreateEditor(values.Type);
+            var editor = CustomEditorsUtil.CreateEditor(values, overrideEditor);
 
             if (!editor.IsInline)
             {

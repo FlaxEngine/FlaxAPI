@@ -44,6 +44,20 @@ namespace FlaxEditor.CustomEditors
             return sb.ToString();
         }
 
+        internal static CustomEditor CreateEditor(ValueContainer values, CustomEditor overrideEditor)
+        {
+            // Check if use provided editor
+            if (overrideEditor != null)
+                return overrideEditor;
+
+            // Special case if property is a pure object type and all values are the same type
+            if (values.Type == typeof(object) && values.Count > 0 && values[0] != null && !values.HasDiffrentTypes)
+                return CreateEditor(values[0].GetType());
+
+            // Use editor for the property type
+            return CreateEditor(values.Type);
+        }
+
         internal static CustomEditor CreateEditor(Type targetType)
         {
             if (targetType.IsArray)

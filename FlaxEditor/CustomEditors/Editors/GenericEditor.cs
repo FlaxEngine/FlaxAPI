@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine;
 
@@ -201,7 +200,14 @@ namespace FlaxEditor.CustomEditors.Editors
             List<ItemInfo> items;
             if (!HasDiffrentTypes)
             {
-                items = GetItemsForType(Values[0].GetType());
+                var value = Values[0];
+                if (value == null)
+                {
+                    layout.Label("<null>");
+                    return;
+                }
+
+                items = GetItemsForType(value.GetType());
             }
             else
             {
