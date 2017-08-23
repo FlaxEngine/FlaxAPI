@@ -81,7 +81,7 @@ namespace FlaxEditor.Surface
             int length = str.Length;
             stream.Write(length);
             var bytes = System.Text.Encoding.Unicode.GetBytes(str);
-            if (bytes == null || bytes.Length * 2 != length)
+            if (bytes.Length != length * 2)
                 throw new ArgumentException();
             fixed (byte* bytesPtr = bytes)
             {
