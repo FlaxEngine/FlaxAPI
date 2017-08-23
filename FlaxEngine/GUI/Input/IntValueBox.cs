@@ -2,6 +2,8 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+
 namespace FlaxEngine.GUI
 {
     /// <summary>
@@ -25,6 +27,40 @@ namespace FlaxEngine.GUI
                     // Update
                     UpdateText();
                     OnValueChanged();
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public override int MinValue
+        {
+            get => _min;
+            set
+            {
+                if (_min != value)
+                {
+                    if(value > _max)
+                        throw new ArgumentException();
+
+                    _min = value;
+                    Value = Value;
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public override int MaxValue
+        {
+            get => _max;
+            set
+            {
+                if (_max != value)
+                {
+                    if (value < _min)
+                        throw new ArgumentException();
+
+                    _max = value;
+                    Value = Value;
                 }
             }
         }

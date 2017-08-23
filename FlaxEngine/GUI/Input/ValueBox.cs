@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -11,7 +11,7 @@ namespace FlaxEngine.GUI
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <seealso cref="FlaxEngine.GUI.TextBox" />
-    public abstract class ValueBox<T> : TextBox where T : IComparable<T>
+    public abstract class ValueBox<T> : TextBox where T : struct, IComparable<T>
     {
         /// <summary>
         /// The sliding box size.
@@ -38,6 +38,22 @@ namespace FlaxEngine.GUI
         /// The value.
         /// </value>
         public abstract T Value { get; set; }
+
+        /// <summary>
+        /// Gets or sets the minimum value.
+        /// </summary>
+        /// <value>
+        /// The minimum value.
+        /// </value>
+        public abstract T MinValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maximum value.
+        /// </summary>
+        /// <value>
+        /// The maximum value.
+        /// </value>
+        public abstract T MaxValue { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValueBox{T}"/> class.

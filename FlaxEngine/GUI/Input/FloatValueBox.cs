@@ -32,6 +32,40 @@ namespace FlaxEngine.GUI
             }
         }
 
+        /// <inheritdoc />
+        public override float MinValue
+        {
+            get => _min;
+            set
+            {
+                if (!Mathf.NearEqual(_min, value))
+                {
+                    if (value > _max)
+                        throw new ArgumentException();
+
+                    _min = value;
+                    Value = Value;
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public override float MaxValue
+        {
+            get => _max;
+            set
+            {
+                if (!Mathf.NearEqual(_max, value))
+                {
+                    if (value < _min)
+                        throw new ArgumentException();
+
+                    _max = value;
+                    Value = Value;
+                }
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FloatValueBox"/> class.
         /// </summary>
