@@ -253,10 +253,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets text font
         /// </summary>
-        private Font Font
-        {
-            get { return Style.Current.FontMedium; }
-        }
+        public Font Font { get; set; }
 
         /// <summary>
         /// Gets rectangle with area for text
@@ -291,6 +288,8 @@ namespace FlaxEngine.GUI
             _layout = TextLayoutOptions.Default;
             _layout.VerticalAlignment = IsMultiline ? TextAlignment.Near : TextAlignment.Center;
             _layout.TextWrapping = TextWrapping.NoWrap;
+
+            Font = Style.Current.FontMedium;
 
             UpdateTextRect();
 
