@@ -91,6 +91,7 @@ namespace FlaxEditor.Surface.ContextMenu
                         var item = new VisjectCMItem(group, nodes[i]);
                         item.Parent = group;
                     }
+                    group.SortChildren();
                     group.Parent = panel2;
                     _groups.Add(group);
                 }

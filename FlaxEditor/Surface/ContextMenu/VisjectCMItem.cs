@@ -142,5 +142,13 @@ namespace FlaxEditor.Surface.ContextMenu
 
             base.OnMouseLeave();
         }
+
+        /// <inheritdoc />
+        public override int Compare(Control other)
+        {
+            if (other is VisjectCMItem otherItem)
+                return String.Compare(NodeArchetype.Title, otherItem.NodeArchetype.Title, StringComparison.Ordinal);
+            return base.Compare(other);
+        }
     }
 }
