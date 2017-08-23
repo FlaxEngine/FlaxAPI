@@ -70,6 +70,20 @@ namespace FlaxEditor.Windows.Assets
             {
                 private int _parametersHash;
 
+                private enum NewParameterType
+                {
+                    Bool = (int)ParameterType.Bool,
+                    Inteager = (int)ParameterType.Inteager,
+                    Float = (int)ParameterType.Float,
+                    Vector2 = (int)ParameterType.Vector2,
+                    Vector3 = (int)ParameterType.Vector3,
+                    Vector4 = (int)ParameterType.Vector4,
+                    Color = (int)ParameterType.Color,
+                    Texture = (int)ParameterType.Texture,
+                    CubeTexture = (int)ParameterType.CubeTexture,
+                    NormalMap = (int)ParameterType.NormalMap,
+                }
+
                 /// <inheritdoc />
                 public override DisplayStyle Style => DisplayStyle.InlineIntoParent;
 
@@ -145,6 +159,28 @@ namespace FlaxEditor.Windows.Assets
 
                         layout.Property(p.Name, propertyValue);
                     }
+
+                    if (parameters.Length > 0)
+                        layout.Space(10);
+
+                    // Parameters creating
+                    var paramType = layout.Enum(typeof(NewParameterType));
+                    paramType.Value = (int)NewParameterType.Float;
+                    var newParam = layout.Button("Add parameter");
+                    newParam.Button.Clicked += () => AddParameter((ParameterType)paramType.Value);
+                }
+
+                private void AddParameter(ParameterType type)
+                {
+                    var win = Values[0] as MaterialWindow;
+                    var material = win?.Asset;
+                    if (material == null || !material.IsLoaded)
+                        return;
+
+                    var param = SurfaceParameter.Create(type);
+                    win.Surface.Parameters.Add(param);
+                    win.Surface.OnParamCreated(param);
+                    win.Surface.MarkAsEdited();
                 }
 
                 /// <inheritdoc />
