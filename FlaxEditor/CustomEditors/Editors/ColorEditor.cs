@@ -17,7 +17,7 @@ namespace FlaxEditor.CustomEditors.Editors
         private CustomElement<ColorValueBox> element;
 
         /// <inheritdoc />
-        public override bool IsInline => true;
+        public override DisplayStyle Style => DisplayStyle.Inline;
 
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)

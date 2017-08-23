@@ -120,7 +120,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 base.Draw();
 
                 // Cache data
-                var style = Style.Current;
+                var style = FlaxEngine.GUI.Style.Current;
                 bool isSelected = _value != null;
                 var frameRect = new Rectangle(0, 0, Width - (isSelected ? 16 : 0), 16);
                 var nameRect = new Rectangle(2, 1, Width - (isSelected ? 20 : 4), 14);
@@ -345,7 +345,7 @@ namespace FlaxEditor.CustomEditors.Editors
         private CustomElement<ReferencePickerControl> element;
 
         /// <inheritdoc />
-        public override bool IsInline => true;
+        public override DisplayStyle Style => DisplayStyle.Inline;
 
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)

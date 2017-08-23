@@ -20,7 +20,7 @@ namespace FlaxEditor.CustomEditors.Editors
         private FloatValueElement wElement;
 
         /// <inheritdoc />
-        public override bool IsInline => true;
+        public override DisplayStyle Style => DisplayStyle.Inline;
 
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)

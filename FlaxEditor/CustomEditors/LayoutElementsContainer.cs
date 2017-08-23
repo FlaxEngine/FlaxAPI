@@ -298,8 +298,14 @@ namespace FlaxEditor.CustomEditors
         public CustomEditor Property(string name, ValueContainer values, CustomEditor overrideEditor = null)
         {
             var editor = CustomEditorsUtil.CreateEditor(values, overrideEditor);
+            var style = editor.Style;
 
-            if (!editor.IsInline)
+            if(style == DisplayStyle.InlineIntoParent)
+            {
+                return Object(values, editor);
+            }
+            
+            if (style == DisplayStyle.Group)
             {
                 var group = Group(name, true);
                 group.Panel.Close(false);

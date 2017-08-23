@@ -8,6 +8,27 @@ using System.Collections.Generic;
 namespace FlaxEditor.CustomEditors
 {
     /// <summary>
+    /// Custom editor layout style modes.
+    /// </summary>
+    public enum DisplayStyle
+    {
+        /// <summary>
+        /// Creates a separate group for the editor (drop down element). This is a default value.
+        /// </summary>
+        Group,
+
+        /// <summary>
+        /// Inlines editor contents into the property area without creating a drop-down group.
+        /// </summary>
+        Inline,
+
+        /// <summary>
+        /// Inlines editor contents into the parent editor layout. Won;t use property with label name.
+        /// </summary>
+        InlineIntoParent,
+    }
+
+    /// <summary>
     /// Base class for all custom editors used to present object(s) properties. Allows to extend game objects editing with more logic and customization.
     /// </summary>
     public abstract class CustomEditor
@@ -22,13 +43,13 @@ namespace FlaxEditor.CustomEditors
         private object _valueToSet;
 
         /// <summary>
-        /// Gets a value indicating whether inline editor contents into the property value, otherwise will use expandable group area.
+        /// Gets the custom editor style.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this editor is inline into properties; otherwise, <c>false</c>.
+        /// The style.
         /// </value>
-        public virtual bool IsInline => false;
-
+        public virtual DisplayStyle Style => DisplayStyle.Group;
+        
         /// <summary>
         /// Gets a value indicating whether single object is selected.
         /// </summary>
