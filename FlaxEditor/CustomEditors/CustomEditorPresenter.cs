@@ -75,6 +75,11 @@ namespace FlaxEditor.CustomEditors
         public event Action OnModify;
 
         /// <summary>
+        /// Gets the amount of objects being selected.
+        /// </summary>
+        public int SelectionCount => Selection.Count;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CustomEditorPresenter"/> class.
         /// </summary>
         public CustomEditorPresenter(Undo undo)

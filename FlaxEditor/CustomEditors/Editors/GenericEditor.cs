@@ -276,7 +276,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 }
 
                 // Spawn property editor
-                itemLayout.Property(item.DisplayName, item.Info, itemValues, item.OverrideEditor);
+                itemLayout.Property(item.DisplayName, itemValues, item.OverrideEditor);
             }
         }
     }

@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine;
 using FlaxEngine.Assertions;
@@ -77,6 +76,19 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Adds new custom element with name label.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <typeparam name="T">The custom control.</typeparam>
+        /// <returns>The created element.</returns>
+        public CustomElement<T> Custom<T>(string name)
+            where T : Control, new()
+        {
+            var property = AddPropertyItem(name);
+            return property.Custom<T>();
+        }
+
+        /// <summary>
         /// Adds new custom elements container.
         /// </summary>
         /// <typeparam name="T">The custom control.</typeparam>
@@ -87,6 +99,19 @@ namespace FlaxEditor.CustomEditors
             var element = new CustomElementsContainer<T>();
             OnAddElement(element);
             return element;
+        }
+
+        /// <summary>
+        /// Adds new custom elements container with name label.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <typeparam name="T">The custom control.</typeparam>
+        /// <returns>The created element.</returns>
+        public CustomElementsContainer<T> CustomContainer<T>(string name)
+            where T : ContainerControl, new()
+        {
+            var property = AddPropertyItem(name);
+            return property.CustomContainer<T>();
         }
 
         /// <summary>
@@ -126,6 +151,17 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Adds new check box element with name label.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <returns>The created element.</returns>
+        public CheckBoxElement Checkbox(string name)
+        {
+            var property = AddPropertyItem(name);
+            return property.Checkbox();
+        }
+
+        /// <summary>
         /// Adds new float value element.
         /// </summary>
         /// <returns>The created element.</returns>
@@ -137,6 +173,17 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Adds new float value element with name label.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <returns>The created element.</returns>
+        public FloatValueElement FloatValue(string name)
+        {
+            var property = AddPropertyItem(name);
+            return property.FloatValue();
+        }
+
+        /// <summary>
         /// Adds new integer value element.
         /// </summary>
         /// <returns>The created element.</returns>
@@ -145,6 +192,17 @@ namespace FlaxEditor.CustomEditors
             IntegerValueElement element = new IntegerValueElement();
             OnAddElement(element);
             return element;
+        }
+
+        /// <summary>
+        /// Adds new integer value element with name label.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <returns>The created element.</returns>
+        public IntegerValueElement IntegerValue(string name)
+        {
+            var property = AddPropertyItem(name);
+            return property.IntegerValue();
         }
 
         /// <summary>
@@ -161,15 +219,30 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Adds new enum value element with name label.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="type">The enum type.</param>
+        /// <param name="cusstomBuildEntriesDelegate">The custom entries layout builder. Allows to hide existing or add diffrent enum values to editor.</param>
+        /// <returns>The created element.</returns>
+        public EnumElement Enum(string name, Type type, EnumElement.BuildEntriesDelegate cusstomBuildEntriesDelegate = null)
+        {
+            var property = AddPropertyItem(name);
+            return property.Enum(type, cusstomBuildEntriesDelegate);
+        }
+
+        /// <summary>
         /// Adds object(s) editor. Selects proper <see cref="CustomEditor"/> based on overrides.
         /// </summary>
-        /// <param name="member">The member.</param>
         /// <param name="values">The values.</param>
         /// <param name="overrideEditor">The custom editor to use. If null will detect it by auto.</param>
         /// <returns>The created element.</returns>
-        public CustomEditor Object(MemberInfo member, ValueContainer values, CustomEditor overrideEditor = null)
+        public CustomEditor Object(ValueContainer values, CustomEditor overrideEditor = null)
         {
-            var editor = overrideEditor ?? CustomEditorsUtil.CreateEditor(member);
+            if(values == null)
+                throw new ArgumentNullException();
+
+            var editor = overrideEditor ?? CustomEditorsUtil.CreateEditor(values.Type);
 
             OnAddEditor(editor);
             editor.Initialize(CustomEditor.CurrentCustomEditor.Presenter, this, values);
@@ -178,26 +251,38 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
-        /// Adds object property editor. Selects proper <see cref="CustomEditor"/> based on overrides.
+        /// Adds object(s) editor with name label. Selects proper <see cref="CustomEditor"/> based on overrides.
         /// </summary>
         /// <param name="name">The property name.</param>
-        /// <param name="member">The member.</param>
         /// <param name="values">The values.</param>
         /// <param name="overrideEditor">The custom editor to use. If null will detect it by auto.</param>
         /// <returns>The created element.</returns>
-        public CustomEditor Property(string name, MemberInfo member, ValueContainer values, CustomEditor overrideEditor = null)
+        public CustomEditor Object(string name, ValueContainer values, CustomEditor overrideEditor = null)
         {
-            var editor = overrideEditor ?? CustomEditorsUtil.CreateEditor(member);
+            var property = AddPropertyItem(name);
+            return property.Object(values, overrideEditor);
+        }
+
+        /// <summary>
+        /// Adds object property editor. Selects proper <see cref="CustomEditor"/> based on overrides.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="values">The values.</param>
+        /// <param name="overrideEditor">The custom editor to use. If null will detect it by auto.</param>
+        /// <returns>The created element.</returns>
+        public CustomEditor Property(string name, ValueContainer values, CustomEditor overrideEditor = null)
+        {
+            var editor = overrideEditor ?? CustomEditorsUtil.CreateEditor(values.Type);
 
             if (!editor.IsInline)
             {
                 var group = Group(name, true);
                 group.Panel.Close(false);
-                return group.Object(member, values, editor);
+                return group.Object(values, editor);
             }
 
-            var element = AddPropertyItem(name);
-            return element.Object(member, values, editor);
+            var property = AddPropertyItem(name);
+            return property.Object(values, editor);
         }
 
         /// <summary>
