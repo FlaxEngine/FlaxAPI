@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -86,7 +86,76 @@ namespace FlaxEngine.Rendering
         /// </value>
         public unsafe object Value
         {
-            // TODO: implement getter
+            get
+            {
+                // Validate the hash
+                if (_material._parametersHash != _hash)
+                    throw new InvalidOperationException("Cannot use invalid material parameter.");
+                if (!_isPublic)
+                    throw new InvalidOperationException("Cannot set private material parameters.");
+
+                IntPtr ptr;
+                bool vBool = false;
+                int vInt = 0;
+                float vFloat = 0;
+                Vector2 vVector2 = new Vector2();
+                Vector3 vVector3 = new Vector3();
+                Vector4 vVector4 = new Vector4();
+                Color vColor = new Color();
+                Guid vGuid = new Guid();
+
+                switch (_type)
+                {
+                    case MaterialParameterType.Bool:
+                        ptr = new IntPtr(&vBool);
+                        break;
+                    case MaterialParameterType.Inteager:
+                        ptr = new IntPtr(&vInt);
+                        break;
+                    case MaterialParameterType.Float:
+                        ptr = new IntPtr(&vFloat);
+                        break;
+                    case MaterialParameterType.Vector2:
+                        ptr = new IntPtr(&vVector2);
+                        break;
+                    case MaterialParameterType.Vector3:
+                        ptr = new IntPtr(&vVector3);
+                        break;
+                    case MaterialParameterType.Vector4:
+                        ptr = new IntPtr(&vVector4);
+                        break;
+                    case MaterialParameterType.Color:
+                        ptr = new IntPtr(&vColor);
+                        break;
+
+                    case MaterialParameterType.CubeTexture:
+                    case MaterialParameterType.Texture:
+                    case MaterialParameterType.NormalMap:
+                        ptr = new IntPtr(&vGuid);
+                        break;
+
+                    default: throw new ArgumentOutOfRangeException();
+                }
+
+                MaterialBase.Internal_GetParamValue(_material.unmanagedPtr, _index, ptr);
+
+                switch (_type)
+                {
+                    case MaterialParameterType.Bool: return vBool;
+                    case MaterialParameterType.Inteager: return vInt;
+                    case MaterialParameterType.Float: return vFloat;
+                    case MaterialParameterType.Vector2: return vVector2;
+                    case MaterialParameterType.Vector3: return vVector3;
+                    case MaterialParameterType.Vector4: return vVector4;
+                    case MaterialParameterType.Color: return vColor;
+
+                    case MaterialParameterType.CubeTexture:
+                    case MaterialParameterType.Texture:
+                    case MaterialParameterType.NormalMap: return Object.Find<Object>(ref vGuid);
+
+                    default: throw new ArgumentOutOfRangeException();
+                }
+            }
             set
             {
                 // Validate the hash
