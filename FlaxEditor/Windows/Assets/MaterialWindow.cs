@@ -208,6 +208,14 @@ namespace FlaxEditor.Windows.Assets
                         return;
 
                     var param = SurfaceParameter.Create(type);
+                    if (type == ParameterType.NormalMap)
+                    {
+                        // Use default normal map texture (don't load asset here, just lookup registry for id at path)
+                        int typeId;
+                        Guid id;
+                        FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out typeId, out id);
+                        param.Value = id;
+                    }
                     win.Surface.Parameters.Add(param);
                     win.Surface.OnParamCreated(param);
                 }
