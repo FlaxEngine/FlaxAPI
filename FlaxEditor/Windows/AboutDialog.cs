@@ -37,7 +37,7 @@ namespace FlaxEditor.Windows
                 ImageSource = new SpriteImageSource(Editor.Instance.UI.GetIcon("Logo128")),
                 Parent = this
             };
-            var nameLabel = new Label(false, icon.Right + 10, icon.Top, 100, 34)
+            var nameLabel = new Label(false, icon.Right + 10, icon.Top, 200, 34)
             {
                 Text = "Flax Engine",
                 Font = Style.Current.FontTitle,

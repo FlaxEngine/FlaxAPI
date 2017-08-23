@@ -47,7 +47,7 @@ namespace FlaxEditor.Content.Import
             {
                 Text = "Specify options for importing files. Every file can have different settings. Select entries on the left panel to modify them.\nPro Tip: hold CTRL key and select entries to edit multiple at once.",
                 HorizontalAlignment = TextAlignment.Near,
-                Margins = new Vector4(7),
+                Margin = new Margin(7),
                 DockStyle = DockStyle.Top,
                 Parent = this
             };
