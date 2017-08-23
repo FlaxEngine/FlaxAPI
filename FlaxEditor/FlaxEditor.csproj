@@ -59,6 +59,7 @@
     <Compile Include="CustomEditors\CustomEditor.cs" />
     <Compile Include="CustomEditors\CustomEditorsUtil.cs" />
     <Compile Include="CustomEditors\Editors\ArrayEditor.cs" />
+    <Compile Include="CustomEditors\Editors\AssetRefEditor.cs" />
     <Compile Include="CustomEditors\Editors\BooleanEditor.cs" />
     <Compile Include="CustomEditors\Editors\CollectionEditor.cs" />
     <Compile Include="CustomEditors\Editors\ColorEditor.cs" />

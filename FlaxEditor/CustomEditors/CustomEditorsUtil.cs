@@ -87,6 +87,10 @@ namespace FlaxEditor.CustomEditors
                     return new GenericEditor();
                 }
             }
+            if (targetType.IsSubclassOf(typeof(FlaxEngine.Asset)))
+            {
+                return new AssetRefEditor();
+            }
             if (targetType.IsSubclassOf(typeof(FlaxEngine.Object)))
             {
                 return new FlaxObjectRefEditor();
