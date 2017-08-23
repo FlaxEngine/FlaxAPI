@@ -114,12 +114,6 @@ namespace FlaxEditor.CustomEditors.Editors
                 return obj == null || _type.IsAssignableFrom(obj.GetType());
             }
 
-            private bool IsValid(Type type)
-            {
-                // ReSharper disable once UseMethodIsInstanceOfType
-                return _type.IsAssignableFrom(type);
-            }
-
             /// <inheritdoc />
             public override void Draw()
             {
@@ -297,7 +291,7 @@ namespace FlaxEditor.CustomEditors.Editors
             private bool ValidateDragAsset(AssetItem assetItem)
             {
                 // Check if can accept assets
-                if (!IsValid(typeof(Asset)))
+                if (!typeof(Asset).IsAssignableFrom(_type))
                     return false;
 
                 // Load or get asset
@@ -356,10 +350,13 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
+            if (Values == null)
+                return;
+
             if (!HasDiffrentTypes)
             {
                 element = layout.Custom<ReferencePickerControl>();
-                element.CustomControl.Type = Values.Type;
+                element.CustomControl.Type = Values.Type != typeof(object) ? Values.Type : Values[0].GetType();
                 element.CustomControl.ValueChanged += () => SetValue(element.CustomControl.Value);
             }
         }
