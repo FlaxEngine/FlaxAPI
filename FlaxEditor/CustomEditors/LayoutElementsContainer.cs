@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEditor.CustomEditors.GUI;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
@@ -316,11 +317,7 @@ namespace FlaxEditor.CustomEditors
             return property.Object(values, editor);
         }
 
-        /// <summary>
-        /// Adds the <see cref="PropertiesListElement"/> to the current layou or reuses the previous one. Used to inject properties.
-        /// </summary>
-        /// <returns>The element.</returns>
-        protected PropertiesListElement AddPropertyItem(string name)
+        private PropertiesListElement AddPropertyItem()
         {
             // Try to reuse previous control
             PropertiesListElement element;
@@ -333,9 +330,33 @@ namespace FlaxEditor.CustomEditors
                 element = new PropertiesListElement();
                 OnAddElement(element);
             }
+            return element;
+        }
 
+        /// <summary>
+        /// Adds the <see cref="PropertiesListElement"/> to the current layou or reuses the previous one. Used to inject properties.
+        /// </summary>
+        /// <param name="name">The property label name.</param>
+        /// <returns>The element.</returns>
+        public PropertiesListElement AddPropertyItem(string name)
+        {
+            PropertiesListElement element = AddPropertyItem();
             element.OnAddProperty(name);
+            return element;
+        }
 
+        /// <summary>
+        /// Adds the <see cref="PropertiesListElement"/> to the current layou or reuses the previous one. Used to inject properties.
+        /// </summary>
+        /// <param name="label">The property label.</param>
+        /// <returns>The element.</returns>
+        public PropertiesListElement AddPropertyItem(PropertyNameLabel label)
+        {
+            if(label == null)
+                throw new ArgumentNullException();
+
+            PropertiesListElement element = AddPropertyItem();
+            element.OnAddProperty(label);
             return element;
         }
 
@@ -360,6 +381,14 @@ namespace FlaxEditor.CustomEditors
             var customEditor = CustomEditor.CurrentCustomEditor;
             Assert.IsNotNull(customEditor);
             customEditor.OnChildCreated(editor);
+        }
+
+        /// <summary>
+        /// Clears the layout.
+        /// </summary>
+        public virtual void ClearLayout()
+        {
+            Children.Clear();
         }
 
         /// <inheritdoc />

@@ -148,7 +148,7 @@ namespace FlaxEditor.CustomEditors
             control.IsLayoutLocked = true;
             control.DisposeChildren();
 
-            layout.Children.Clear();
+            layout.ClearLayout();
             Cleanup();
 
             _parent = parent;

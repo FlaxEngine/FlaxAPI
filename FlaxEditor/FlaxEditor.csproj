@@ -81,6 +81,8 @@
     <Compile Include="CustomEditors\Elements\IntegerValueElement.cs" />
     <Compile Include="CustomEditors\Elements\LabelElement.cs" />
     <Compile Include="CustomEditors\Elements\PropertiesListElement.cs" />
+    <Compile Include="CustomEditors\GUI\PropertiesList.cs" />
+    <Compile Include="CustomEditors\GUI\PropertyNameLabel.cs" />
     <Compile Include="CustomEditors\Elements\SpaceElement.cs" />
     <Compile Include="CustomEditors\Elements\TextBoxElement.cs" />
     <Compile Include="CustomEditors\Elements\VerticalPanelElement.cs" />

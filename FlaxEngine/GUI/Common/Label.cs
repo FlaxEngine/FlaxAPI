@@ -100,8 +100,8 @@ namespace FlaxEngine.GUI
             var style = Style.Current;
             var font = Font ?? style.FontMedium;
             var rect = new Rectangle(new Vector2(Margin.Left, Margin.Top), Size - Margin.Size);
-            
-            if(ClipText)
+
+            if (ClipText)
                 Render2D.PushClip(ref rect);
 
             Render2D.DrawText(
