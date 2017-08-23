@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors
 {
@@ -142,6 +143,7 @@ namespace FlaxEditor.CustomEditors
             var layout = _layout;
             var control = layout.ContainerControl;
             var parent = _parent;
+            var parentScrollV = (_presenter.Panel.Parent as Panel)?.VScrollBar?.Value ?? -1;
 
             control.IsLayoutLocked = true;
             control.DisposeChildren();
@@ -151,9 +153,13 @@ namespace FlaxEditor.CustomEditors
 
             _parent = parent;
             Initialize(presenter, layout, values);
-
+            
             control.UnlockChildrenRecursive();
             control.PerformLayout();
+
+            // Restore scroll value
+            if (parentScrollV != -1)
+                ((Panel)_presenter.Panel.Parent).VScrollBar.Value = parentScrollV;
         }
         
         /// <summary>

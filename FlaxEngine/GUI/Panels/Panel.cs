@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 using System;
 
@@ -124,6 +124,7 @@ namespace FlaxEngine.GUI
                 _viewOffset.Y = -value;
             else
                 _viewOffset.X = -value;
+            PerformLayout();
         }
 
         /// <inheritdoc />
