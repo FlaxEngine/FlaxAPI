@@ -28,16 +28,16 @@ namespace FlaxEditor.Windows.Assets
         /// </summary>
         private sealed class PropertiesProxy
         {
-            [EditorOrder(10), Tooltip("Material domain type")]
+            [EditorOrder(10), EditorDisplay("General"), Tooltip("Material domain type")]
             public MaterialDomain Domain { get; set; }
 
-            [EditorOrder(20), Tooltip("Determinates how materials' color should be blended with the background colors")]
+            [EditorOrder(20), EditorDisplay("General"), Tooltip("Determinates how materials' color should be blended with the background colors")]
             public MaterialBlendMode BlendMode { get; set; }
 
-            [EditorOrder(30), Tooltip("Indicates that material should be renered without backface culling and normals should be fliped for the backfaces")]
+            [EditorOrder(30), EditorDisplay("General"), Tooltip("Indicates that material should be renered without backface culling and normals should be fliped for the backfaces")]
             public bool TwoSided { get; set; }
 
-            [EditorOrder(40), Tooltip("True if render in wireframe mode")]
+            [EditorOrder(40), EditorDisplay("General"), Tooltip("True if render in wireframe mode")]
             public bool Wireframe { get; set; }
 
             [EditorOrder(100), EditorDisplay("Transparency"), Tooltip("Transparent materials lighting mode")]
@@ -59,6 +59,7 @@ namespace FlaxEditor.Windows.Assets
             public bool DisableDepthWrite { get; set; }
 
             [EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor))]
+            // ReSharper disable once UnusedAutoPropertyAccessor.Local
             public MaterialWindow MaterialWinRef { get; set; }
 
             /// <summary>

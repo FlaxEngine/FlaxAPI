@@ -120,6 +120,8 @@ namespace FlaxEditor.Surface
 
         internal void RemoveElement(ISurfaceNodeElement element, bool dispose = true)
         {
+            if(element is Box box)
+                box.RemoveConnections();
             Elements.Remove(element);
             if (element is Control control)
             {
@@ -350,6 +352,14 @@ namespace FlaxEditor.Surface
         protected override void SetScaleInternal(ref Vector2 scale)
         {
             base.SetScaleInternal(ref scale);
+
+            UpdateRectangles();
+        }
+
+        /// <inheritdoc />
+        protected override void SetSizeInternal(Vector2 size)
+        {
+            base.SetSizeInternal(size);
 
             UpdateRectangles();
         }
