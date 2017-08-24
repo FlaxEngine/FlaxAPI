@@ -19,6 +19,7 @@ namespace FlaxEditor.Viewport.Previews
         private DirectionalLight _previewLight;
         private EnvironmentProbe _envProbe;
         private Sky _sky;
+        private MaterialBase _material;
 
         /// <summary>
         /// Gets or sets the material asset to preview. It can be <see cref="FlaxEngine.Material"/> or <see cref="FlaxEngine.MaterialInstance"/>.
@@ -28,18 +29,14 @@ namespace FlaxEditor.Viewport.Previews
         /// </value>
         public MaterialBase Material
         {
-            get
-            {
-                var meshes = _previewModel.Meshes;
-                if (meshes.Length == 1)
-                    return meshes[0].Material;
-                return null;
-            }
+            get => _material;
             set
             {
-                var meshes = _previewModel.Meshes;
-                if (meshes.Length == 1)
-                    meshes[0].Material = value;
+                if (_material != value)
+                {
+                    _material = value;
+                    UpdateMaterial();
+                }
             }
         }
 
@@ -91,8 +88,37 @@ namespace FlaxEditor.Viewport.Previews
         public override bool HasLoadedAssets => base.HasLoadedAssets && _sky.HasContentLoaded && _previewModel.Model.IsLoaded && _envProbe.Probe.IsLoaded;
 
         /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            base.Update(deltaTime);
+
+            UpdateMaterial();
+        }
+
+        private void UpdateMaterial()
+        {
+            // If material is a surface link it to the preview model.
+            // Otherwise use postFx volume to render custom postFx material.
+            MaterialBase surfaceMaterial = null;
+            MaterialBase postFxMaterial = null;
+            if (_material != null)
+            {
+                if (_material.IsPostFx)
+                    postFxMaterial = _material;
+                else
+                    surfaceMaterial = _material;
+            }
+            var meshes = _previewModel.Meshes;
+            if (meshes.Length == 1)
+                meshes[0].Material = surfaceMaterial;
+            // TODO postFx volume
+        }
+
+        /// <inheritdoc />
         public override void OnDestroy()
         {
+            _material = null;
+
             // Ensure to cleanup created actor objects
             Object.Destroy(ref _previewModel);
             Object.Destroy(ref _previewLight);

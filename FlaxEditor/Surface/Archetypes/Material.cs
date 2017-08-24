@@ -40,6 +40,7 @@ namespace FlaxEditor.Surface.Archetypes
                 // Get material info
                 MaterialInfo info;
                 materialWindow.FillMaterialInfo(out info);
+                bool isPostFx = info.Domain == MaterialDomain.PostProcess;
                 bool isntLayered = !GetBox(0).HasAnyConnection;
                 bool isSurface = info.Domain == MaterialDomain.Surface && isntLayered;
                 bool isLitSurface = isSurface && info.BlendMode != MaterialBlendMode.Unlit;
@@ -47,14 +48,14 @@ namespace FlaxEditor.Surface.Archetypes
 
                 // Update boxes
                 GetBox(1).Enabled = isLitSurface;// Color
-                GetBox(2).Enabled = isntLayered;// Mask
-                GetBox(3).Enabled = isSurface;// Emissive
+                GetBox(2).Enabled = isSurface;// Mask
+                GetBox(3).Enabled = isSurface || isPostFx;// Emissive
                 GetBox(4).Enabled = isLitSurface;// Metalness
                 GetBox(5).Enabled = isLitSurface;// Specular
                 GetBox(6).Enabled = isLitSurface;// Roughness
                 GetBox(7).Enabled = isLitSurface;// Ambient Occlusion
                 GetBox(8).Enabled = isLitSurface;// Normal
-                GetBox(9).Enabled = isTransparent;// Opacity
+                GetBox(9).Enabled = isTransparent || isPostFx;// Opacity
                 GetBox(10).Enabled = isTransparent;// Refraction
                 GetBox(11).Enabled = false;// Position Offset
                 // TODO: support world position offset

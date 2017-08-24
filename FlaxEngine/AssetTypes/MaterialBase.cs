@@ -40,6 +40,14 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets a value indicating whether this material is post fx (cannot be used with a normal meshes).
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this material is post fx; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsPostFx => Info.Domain == MaterialDomain.PostProcess;
+
+        /// <summary>
         /// Gets or sets the material parameters collection.
         /// </summary>
         /// <value>
