@@ -71,6 +71,8 @@
     <Compile Include="API\Actors\PointLight.Gen.cs">
       <DependentUpon>PointLight.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Actors\PostFxVolume.cs" />
+    <Compile Include="API\Actors\PostFxVolume.Gen.cs" />
     <Compile Include="API\Actors\Scene.cs" />
     <Compile Include="API\Actors\Scene.Gen.cs" />
     <Compile Include="API\Actors\Sky.cs" />
