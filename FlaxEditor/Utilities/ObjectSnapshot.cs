@@ -56,7 +56,7 @@ namespace FlaxEditor.Utilities
                 else if (m.MemberType == MemberTypes.Property)
                 {
                     var prop = (PropertyInfo)m;
-                    if (prop.CanRead && prop.GetGetMethod().GetParameters().Length == 0)
+                    if (prop.CanRead && prop.CanWrite && prop.GetGetMethod().GetParameters().Length == 0)
                     {
                         result.Add(m);
                     }
