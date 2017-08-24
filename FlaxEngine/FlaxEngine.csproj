@@ -314,6 +314,7 @@
     <Compile Include="Rendering\PixelFormat.cs" />
     <Compile Include="Rendering\PixelFormatExtensions.cs" />
     <Compile Include="Rendering\PostProcessEffect.cs" />
+    <Compile Include="Rendering\PostProcessSettings.cs" />
     <Compile Include="Rendering\RenderPass.cs" />
     <Compile Include="Rendering\RenderView.cs" />
     <Compile Include="Rendering\SceneRenderTask.cs" />
