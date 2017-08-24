@@ -31,22 +31,13 @@ namespace FlaxEditor.Utilities
             Values = values;
         }
 
-        /// <summary>
-        /// Captures the snapshot of the object.
-        /// </summary>
-        /// <param name="obj">The object to capture.</param>
-        /// <returns>The object snapshot.</returns>
-        public static ObjectSnapshot CaptureSnapshot(object obj)
+        private static List<MemberInfo> GetMembers(Type type)
         {
-            if (obj == null)
-                throw new ArgumentNullException();
-
-            var type = obj.GetType();
-            var values = new List<object>();
-
-            // Note: this loop must match with Compare method
+            // TODO: cache it per type
 
             var members = type.GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            var result = new List<MemberInfo>(members.Length);
+
             for (int i = 0; i < members.Length; i++)
             {
                 var m = members[i];
@@ -60,16 +51,48 @@ namespace FlaxEditor.Utilities
                     if (attributes.Any(x => x is NonSerializedAttribute))
                         continue;
 
-                    FieldInfo field = (FieldInfo)m;
-                    values.Add(field.GetValue(obj));
+                    result.Add(m);
                 }
                 else if (m.MemberType == MemberTypes.Property)
                 {
                     var prop = (PropertyInfo)m;
                     if (prop.CanRead && prop.GetGetMethod().GetParameters().Length == 0)
                     {
-                        values.Add(prop.GetValue(obj, null));
+                        result.Add(m);
                     }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Captures the snapshot of the object.
+        /// </summary>
+        /// <param name="obj">The object to capture.</param>
+        /// <returns>The object snapshot.</returns>
+        public static ObjectSnapshot CaptureSnapshot(object obj)
+        {
+            if (obj == null)
+                throw new ArgumentNullException();
+
+            var type = obj.GetType();
+            var values = new List<object>();
+
+            var members = GetMembers(type);
+            for (int i = 0; i < members.Count; i++)
+            {
+                var m = members[i];
+
+                if (m.MemberType == MemberTypes.Field)
+                {
+                    FieldInfo field = (FieldInfo)m;
+                    values.Add(field.GetValue(obj));
+                }
+                else if (m.MemberType == MemberTypes.Property)
+                {
+                    var prop = (PropertyInfo)m;
+                    values.Add(prop.GetValue(obj, null));
                 }
             }
 
@@ -91,43 +114,30 @@ namespace FlaxEditor.Utilities
 
             var list = new List<MemberComparison>();
 
-            // Note: this loop must match with CaptureSnapshot method
-
-            var members = ObjectType.GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            var members = GetMembers(ObjectType);
             int index = 0;
-            for (int i = 0; i < members.Length; i++)
+            for (int i = 0; i < members.Count; i++)
             {
                 var m = members[i];
 
-                var attributes = m.GetCustomAttributes(true);
-                if (attributes.Any(x => x is NoSerializeAttribute))
-                    continue;
-                
                 if (m.MemberType == MemberTypes.Field)
                 {
-                    if (attributes.Any(x => x is NonSerializedAttribute))
-                        continue;
-
                     FieldInfo field = (FieldInfo)m;
                     var xValue = Values[index++];
                     var yValue = field.GetValue(obj);
                     if (!Equals(xValue, yValue))
                     {
-                        //Add a new comparison to the list if the value of the member defined on 'first' isn't equal to the value of the member defined on 'second'.
                         list.Add(new MemberComparison(field, xValue, yValue));
                     }
                 }
                 else if (m.MemberType == MemberTypes.Property)
                 {
                     var prop = (PropertyInfo)m;
-                    if (prop.CanRead && prop.GetGetMethod().GetParameters().Length == 0)
+                    var xValue = Values[index++];
+                    var yValue = prop.GetValue(obj, null);
+                    if (!Equals(xValue, yValue))
                     {
-                        var xValue = Values[index++];
-                        var yValue = prop.GetValue(obj, null);
-                        if (!Equals(xValue, yValue))
-                        {
-                            list.Add(new MemberComparison(prop, xValue, yValue));
-                        }
+                        list.Add(new MemberComparison(prop, xValue, yValue));
                     }
                 }
             }
