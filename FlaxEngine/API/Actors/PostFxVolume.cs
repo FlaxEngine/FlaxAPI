@@ -16,18 +16,28 @@ namespace FlaxEngine
         [EditorDisplay(null, "PostFx Settings"), EditorOrder(100)]
         public readonly PostProcessSettings Settings = new PostProcessSettings();
 
+        /// <summary>
+        /// Updates cached Settings.data from unmanaged data
+        /// </summary>
+        /// <param name="ptr">The unmanaged data pointer.</param>
         internal void Internal_SetData(IntPtr ptr)
         {
-            // Updates cached Settings.data from unmanaged data
             Settings.data = (PostProcessSettings.Data)Marshal.PtrToStructure(ptr, typeof(PostProcessSettings.Data));
         }
 
-        internal void Internal_GetData(IntPtr ptr)
+        /// <summary>
+        /// Sends cached Settings.data to unmanaged data
+        /// </summary>
+        /// <param name="ptr">The unmanaged data pointer.</param>
+        /// <returns>True if data has been modified, otherwise false.</returns>
+        internal bool Internal_GetData(IntPtr ptr)
         {
-            // TODO: add state tracking on managed side and flush settings data only after change
+            if (!Settings.isDataDirty)
+                return false;
 
-            // Sends cached Settings.data to unmanaged data
+            Settings.isDataDirty = false;
             Marshal.StructureToPtr(Settings.data, ptr, false);
+            return true;
         }
     }
 }

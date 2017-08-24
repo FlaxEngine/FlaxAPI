@@ -3,8 +3,8 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
+// ReSharper disable InconsistentNaming
 
 namespace FlaxEngine.Rendering
 {
@@ -114,6 +114,7 @@ namespace FlaxEngine.Rendering
         {
             // DepthOfFieldSettings
             public bool DOF_Enabled;
+
             public float DOF_FocalDistance;
             public float DOF_FocalRegion;
             public float DOF_NearTransitionRange;
@@ -130,6 +131,7 @@ namespace FlaxEngine.Rendering
         }
 
         internal Data data;
+        internal bool isDataDirty;
 
         internal PostProcessSettings()
         {
@@ -142,42 +144,66 @@ namespace FlaxEngine.Rendering
         public bool DOF_Enabled
         {
             get => data.DOF_Enabled;
-            set => data.DOF_Enabled = value;
+            set
+            {
+                data.DOF_Enabled = value;
+                isDataDirty = true;
+            }
         }
 
         [EditorOrder(701), EditorDisplay("Depth of Field", "Focal Distance"), Tooltip("The distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs"), Limit(0, 100000.0f)]
         public float DOF_FocalDistance
         {
             get => data.DOF_FocalDistance;
-            set => data.DOF_FocalDistance = value;
+            set
+            {
+                data.DOF_FocalDistance = value;
+                isDataDirty = true;
+            }
         }
 
         [EditorOrder(702), EditorDisplay("Depth of Field", "Focal Region"), Tooltip("The distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs"), Limit(0, 100000.0f, 1)]
         public float DOF_FocalRegion
         {
             get => data.DOF_FocalRegion;
-            set => data.DOF_FocalRegion = value;
+            set
+            {
+                data.DOF_FocalRegion = value;
+                isDataDirty = true;
+            }
         }
 
         [EditorOrder(703), EditorDisplay("Depth of Field", "Near Transition Range"), Tooltip("The distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred"), Limit(0, 500.0f)]
         public float DOF_NearTransitionRange
         {
             get => data.DOF_NearTransitionRange;
-            set => data.DOF_NearTransitionRange = value;
+            set
+            {
+                data.DOF_NearTransitionRange = value;
+                isDataDirty = true;
+            }
         }
 
         [EditorOrder(704), EditorDisplay("Depth of Field", "Far Transition Range"), Tooltip("The distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred"), Limit(0, 1000.0f)]
         public float DOF_FarTransitionRange
         {
             get => data.DOF_FarTransitionRange;
-            set => data.DOF_FarTransitionRange = value;
+            set
+            {
+                data.DOF_FarTransitionRange = value;
+                isDataDirty = true;
+            }
         }
 
         [EditorOrder(705), EditorDisplay("Depth of Field", "Depth Limit"), Tooltip("The distance in World Units which describes border after that there is no blur (usefull to disable DoF on sky)"), Limit(50, 1000000.0f, 2)]
         public float DOF_DepthLimit
         {
             get => data.DOF_DepthLimit;
-            set => data.DOF_DepthLimit = value;
+            set
+            {
+                data.DOF_DepthLimit = value;
+                isDataDirty = true;
+            }
         }
 
         /// <summary>
@@ -187,56 +213,88 @@ namespace FlaxEngine.Rendering
         public bool DOF_BokehEnabled
         {
             get => data.DOF_BokehEnabled;
-            set => data.DOF_BokehEnabled = value;
+            set
+            {
+                data.DOF_BokehEnabled = value;
+                isDataDirty = true;
+            }
         }
 
         [EditorOrder(707), EditorDisplay("Depth of Field", "Bokeh Size"), Tooltip("Controls Bokeh shapes maximum size"), Limit(0, 100.0f, 0.1f)]
         public float DOF_BokehSize
         {
             get => data.DOF_BokehSize;
-            set => data.DOF_BokehSize = value;
+            set
+            {
+                data.DOF_BokehSize = value;
+                isDataDirty = true;
+            }
         }
 
         [EditorOrder(708), EditorDisplay("Depth of Field", "Bokeh Shape"), Tooltip("Bokeh shapes style")]
         public BokehShapeType DOF_BokehShape
         {
             get => data.DOF_BokehShape;
-            set => data.DOF_BokehShape = value;
+            set
+            {
+                data.DOF_BokehShape = value;
+                isDataDirty = true;
+            }
         }
 
         [EditorOrder(709), EditorDisplay("Depth of Field", "Bokeh Shape Custom Texture"), Tooltip("Custom texture for bokeh shapes")]
         public Texture DOF_BokehShapeCustom
         {
             get => Object.Find<Texture>(ref data.DOF_BokehShapeCustom);
-            set => data.DOF_BokehShapeCustom = value?.ID ?? Guid.Empty;
+            set
+            {
+                data.DOF_BokehShapeCustom = value?.ID ?? Guid.Empty;
+                isDataDirty = true;
+            }
         }
 
         [EditorOrder(710), EditorDisplay("Depth of Field", "Bokeh Brightness Threshold"), Tooltip("Controls Bokeh shapes generating minimum pixel brightness to appear"), Limit(0, 10.0f, 0.01f)]
         public float DOF_BokehBrightnessThreshold
         {
             get => data.DOF_BokehBrightnessThreshold;
-            set => data.DOF_BokehBrightnessThreshold = value;
+            set
+            {
+                data.DOF_BokehBrightnessThreshold = value;
+                isDataDirty = true;
+            }
         }
 
         [EditorOrder(711), EditorDisplay("Depth of Field", "Bokeh Blur Threshold"), Tooltip("Controls Bokeh shapes blur threashold"), Limit(0, 1.0f, 0.001f)]
         public float DOF_BokehBlurThreshold
         {
             get => data.DOF_BokehBlurThreshold;
-            set => data.DOF_BokehBlurThreshold = value;
+            set
+            {
+                data.DOF_BokehBlurThreshold = value;
+                isDataDirty = true;
+            }
         }
 
         [EditorOrder(712), EditorDisplay("Depth of Field", "Bokeh Falloff"), Tooltip("Controls Bokeh shapes brightness fallouff parameter"), Limit(0, 2.0f, 0.001f)]
         public float DOF_BokehFalloff
         {
             get => data.DOF_BokehFalloff;
-            set => data.DOF_BokehFalloff = value;
+            set
+            {
+                data.DOF_BokehFalloff = value;
+                isDataDirty = true;
+            }
         }
 
         [EditorOrder(713), EditorDisplay("Depth of Field", "Bokeh Depth Cutoff"), Tooltip("Controls Bokeh shapes depth cutoff parameter"), Limit(0, 5.0f, 0.001f)]
         public float DOF_BokehDepthCutoff
         {
             get => data.DOF_BokehDepthCutoff;
-            set => data.DOF_BokehDepthCutoff = value;
+            set
+            {
+                data.DOF_BokehDepthCutoff = value;
+                isDataDirty = true;
+            }
         }
     }
 }
