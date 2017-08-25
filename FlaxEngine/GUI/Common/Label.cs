@@ -19,6 +19,14 @@ namespace FlaxEngine.GUI
         public string Text { get; set; }
 
         /// <summary>
+        /// Gets or sets the color of the text.
+        /// </summary>
+        /// <value>
+        /// The color of the text.
+        /// </value>
+        public Color TextColor { get; set; } = Color.White;
+
+        /// <summary>
         /// Gets or sets the horizontal text alignment.
         /// </summary>
         /// <value>
@@ -108,7 +116,7 @@ namespace FlaxEngine.GUI
                 font,
                 Text,
                 rect,
-                style.Foreground,
+                TextColor,
                 HorizontalAlignment,
                 VerticalAlignment,
                 Wrapping
