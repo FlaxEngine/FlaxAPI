@@ -13,9 +13,9 @@ namespace FlaxEngine
         /// <summary>
         /// Gets the post processing settings.
         /// </summary>
-        [EditorDisplay(null, "PostFx Settings"), EditorOrder(100)]
-        public readonly PostProcessSettings Settings = new PostProcessSettings();
-
+        [EditorDisplay("PostFx Settings"), EditorOrder(100)]
+        public PostProcessSettings Settings;
+        
         /// <summary>
         /// Updates cached Settings.data from unmanaged data
         /// </summary>

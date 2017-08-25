@@ -15,13 +15,13 @@ namespace FlaxEditor.CustomEditors.Editors
     /// Default implementation of the inspector used when no specified inspector is provided for the type. Inspector 
     /// displays GUI for all the inspectable fields in the object.
     /// </summary>
-    public sealed class GenericEditor : CustomEditor
+    public class GenericEditor : CustomEditor
     {
         /// <summary>
         /// Describies object property/field information for custom editors pipeline.
         /// </summary>
         /// <seealso cref="System.IComparable" />
-        private class ItemInfo : IComparable
+        protected class ItemInfo : IComparable
         {
             /// <summary>
             /// The member information from reflection.
@@ -91,6 +91,11 @@ namespace FlaxEditor.CustomEditors.Editors
                 }
             }
 
+            /// <summary>
+            /// Gets the values.
+            /// </summary>
+            /// <param name="instanceValues">The instance values.</param>
+            /// <returns>The values container.</returns>
             public ValueContainer GetValues(ValueContainer instanceValues)
             {
                 return new ValueContainer(Info, instanceValues);
@@ -140,13 +145,30 @@ namespace FlaxEditor.CustomEditors.Editors
             }
         }
 
-        private List<ItemInfo> GetItemsForType(Type type)
+        /// <summary>
+        /// Gets the items for the type
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>The items.</returns>
+        protected virtual List<ItemInfo> GetItemsForType(Type type)
+        {
+            return GetItemsForType(type, type.IsClass, true);
+        }
+
+        /// <summary>
+        /// Gets the items for the type
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="useProperties">True if use type properties.</param>
+        /// <param name="useFields">True if use type fields.</param>
+        /// <returns>The items.</returns>
+        protected virtual List<ItemInfo> GetItemsForType(Type type, bool useProperties, bool useFields)
         {
             // TODO: cache this per type?
 
             var items = new List<ItemInfo>();
 
-            if (type.IsClass)
+            if (useProperties)
             {
                 // Process properties
                 var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -170,24 +192,27 @@ namespace FlaxEditor.CustomEditors.Editors
                 }
             }
 
-            // Process fields
-            var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
-            items.Capacity = Math.Max(items.Capacity, items.Count + fields.Length);
-            for (int i = 0; i < fields.Length; i++)
+            if (useFields)
             {
-                var f = fields[i];
+                // Process fields
+                var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+                items.Capacity = Math.Max(items.Capacity, items.Count + fields.Length);
+                for (int i = 0; i < fields.Length; i++)
+                {
+                    var f = fields[i];
 
-                // Skip hidden fields
-                if (!f.IsPublic)
-                    continue;
+                    // Skip hidden fields
+                    if (!f.IsPublic)
+                        continue;
 
-                // Handle HideInEditorAttribute
-                var attributes = f.GetCustomAttributes(true);
-                if (attributes.Any(x => x is HideInEditorAttribute))
-                    continue;
+                    // Handle HideInEditorAttribute
+                    var attributes = f.GetCustomAttributes(true);
+                    if (attributes.Any(x => x is HideInEditorAttribute))
+                        continue;
 
-                var item = new ItemInfo(f, attributes);
-                items.Add(item);
+                    var item = new ItemInfo(f, attributes);
+                    items.Add(item);
+                }
             }
 
             return items;

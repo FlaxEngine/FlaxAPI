@@ -104,7 +104,7 @@ namespace FlaxEngine.Rendering
     /// <summary>
     /// Contains settings for rendering advanced visual effects and post effects.
     /// </summary>
-    public sealed class PostProcessSettings
+    public struct PostProcessSettings
     {
         /// <summary>
         /// Packed setings storage container used with C++ interop.
@@ -132,11 +132,7 @@ namespace FlaxEngine.Rendering
 
         internal Data data;
         internal bool isDataDirty;
-
-        internal PostProcessSettings()
-        {
-        }
-
+        
         /// <summary>
         /// Gets or sets a value indicating whether Depth of Field is enabled.
         /// </summary>
