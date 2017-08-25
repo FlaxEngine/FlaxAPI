@@ -328,6 +328,34 @@ namespace FlaxEditor.CustomEditors
             return property.Object(values, editor);
         }
 
+        /// <summary>
+        /// Adds object property editor. Selects proper <see cref="CustomEditor"/> based on overrides.
+        /// </summary>
+        /// <param name="label">The property label.</param>
+        /// <param name="values">The values.</param>
+        /// <param name="overrideEditor">The custom editor to use. If null will detect it by auto.</param>
+        /// <returns>The created element.</returns>
+        public CustomEditor Property(PropertyNameLabel label, ValueContainer values, CustomEditor overrideEditor = null)
+        {
+            var editor = CustomEditorsUtil.CreateEditor(values, overrideEditor);
+            var style = editor.Style;
+
+            if(style == DisplayStyle.InlineIntoParent)
+            {
+                return Object(values, editor);
+            }
+            
+            if (style == DisplayStyle.Group)
+            {
+                var group = Group(label.Name, true);
+                group.Panel.Close(false);
+                return group.Object(values, editor);
+            }
+
+            var property = AddPropertyItem(label);
+            return property.Object(values, editor);
+        }
+
         private PropertiesListElement AddPropertyItem()
         {
             // Try to reuse previous control

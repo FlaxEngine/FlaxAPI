@@ -218,6 +218,17 @@ namespace FlaxEditor.CustomEditors.Editors
             return items;
         }
 
+        /// <summary>
+        /// Spawns the property for the given item.
+        /// </summary>
+        /// <param name="itemLayout">The item layout.</param>
+        /// <param name="itemValues">The item values.</param>
+        /// <param name="item">The item.</param>
+        protected virtual void SpawnProperty(LayoutElementsContainer itemLayout, ValueContainer itemValues, ItemInfo item)
+        {
+            itemLayout.Property(item.DisplayName, itemValues, item.OverrideEditor);
+        }
+
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
@@ -304,7 +315,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 }
 
                 // Spawn property editor
-                itemLayout.Property(item.DisplayName, itemValues, item.OverrideEditor);
+                SpawnProperty(itemLayout, itemValues, item);
             }
         }
     }

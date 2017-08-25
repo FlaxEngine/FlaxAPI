@@ -7,8 +7,8 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// The basic GUI label control.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.Control" />
-    public class Label : Control
+    /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    public class Label : ContainerControl
     {
         /// <summary>
         /// Gets or sets the text.
