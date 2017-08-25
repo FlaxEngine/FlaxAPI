@@ -104,12 +104,13 @@ namespace FlaxEngine.Rendering
     /// <summary>
     /// Contains settings for rendering advanced visual effects and post effects.
     /// </summary>
+    [Serializable]
     public struct PostProcessSettings
     {
         /// <summary>
         /// Packed setings storage container used with C++ interop.
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
+        [Serializable, StructLayout(LayoutKind.Sequential)]
         internal struct Data
         {
             // Flags
@@ -183,13 +184,16 @@ namespace FlaxEngine.Rendering
             }
         }
 
+        [Serialize]
         internal Data data;
+
+        [NoSerialize]
         internal bool isDataDirty;
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether Depth of Field is enabled.
         /// </summary>
-        [EditorOrder(700), EditorDisplay("Depth of Field", "Enabled"), Tooltip("Enable depth of field effect")]
+        [NoSerialize, EditorOrder(700), EditorDisplay("Depth of Field", "Enabled"), Tooltip("Enable depth of field effect")]
         public bool DOF_Enabled
         {
             get => data.DOF_Enabled;
@@ -203,7 +207,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs.
         /// </summary>
-        [EditorOrder(701), EditorDisplay("Depth of Field", "Focal Distance"), Tooltip("The distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs"), Limit(0, 100000.0f)]
+        [NoSerialize, EditorOrder(701), EditorDisplay("Depth of Field", "Focal Distance"), Tooltip("The distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs"), Limit(0, 100000.0f)]
         public float DOF_FocalDistance
         {
             get => data.DOF_FocalDistance;
@@ -217,7 +221,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs.
         /// </summary>
-        [EditorOrder(702), EditorDisplay("Depth of Field", "Focal Region"), Tooltip("The distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs"), Limit(0, 100000.0f, 1)]
+        [NoSerialize, EditorOrder(702), EditorDisplay("Depth of Field", "Focal Region"), Tooltip("The distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs"), Limit(0, 100000.0f, 1)]
         public float DOF_FocalRegion
         {
             get => data.DOF_FocalRegion;
@@ -231,7 +235,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred.
         /// </summary>
-        [EditorOrder(703), EditorDisplay("Depth of Field", "Near Transition Range"), Tooltip("The distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred"), Limit(0, 500.0f)]
+        [NoSerialize, EditorOrder(703), EditorDisplay("Depth of Field", "Near Transition Range"), Tooltip("The distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred"), Limit(0, 500.0f)]
         public float DOF_NearTransitionRange
         {
             get => data.DOF_NearTransitionRange;
@@ -245,7 +249,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred.
         /// </summary>
-        [EditorOrder(704), EditorDisplay("Depth of Field", "Far Transition Range"), Tooltip("The distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred"), Limit(0, 1000.0f)]
+        [NoSerialize, EditorOrder(704), EditorDisplay("Depth of Field", "Far Transition Range"), Tooltip("The distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred"), Limit(0, 1000.0f)]
         public float DOF_FarTransitionRange
         {
             get => data.DOF_FarTransitionRange;
@@ -256,7 +260,10 @@ namespace FlaxEngine.Rendering
             }
         }
 
-        [EditorOrder(705), EditorDisplay("Depth of Field", "Depth Limit"), Tooltip("The distance in World Units which describes border after that there is no blur (usefull to disable DoF on sky)"), Limit(50, 1000000.0f, 2)]
+        /// <summary>
+        /// Gets or sets the distance in World Units which describes border after that there is no blur (usefull to disable DoF on sky).
+        /// </summary>
+        [NoSerialize, EditorOrder(705), EditorDisplay("Depth of Field", "Depth Limit"), Tooltip("The distance in World Units which describes border after that there is no blur (usefull to disable DoF on sky)"), Limit(50, 1000000.0f, 2)]
         public float DOF_DepthLimit
         {
             get => data.DOF_DepthLimit;
@@ -268,9 +275,9 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether Depth of Field bokeh shapes rendering is enabled.
+        /// Enables/disables generating Bokeh shapes.
         /// </summary>
-        [EditorOrder(706), EditorDisplay("Depth of Field", "Bokeh Enable"), Tooltip("Enables/disables generating Bokeh shapes")]
+        [NoSerialize, EditorOrder(706), EditorDisplay("Depth of Field", "Bokeh Enable"), Tooltip("Enables/disables generating Bokeh shapes")]
         public bool DOF_BokehEnabled
         {
             get => data.DOF_BokehEnabled;
@@ -281,7 +288,10 @@ namespace FlaxEngine.Rendering
             }
         }
 
-        [EditorOrder(707), EditorDisplay("Depth of Field", "Bokeh Size"), Tooltip("Controls Bokeh shapes maximum size"), Limit(0, 100.0f, 0.1f)]
+        /// <summary>
+        /// Controls Bokeh shapes maximum size.
+        /// </summary>
+        [NoSerialize, EditorOrder(707), EditorDisplay("Depth of Field", "Bokeh Size"), Tooltip("Controls Bokeh shapes maximum size"), Limit(0, 100.0f, 0.1f)]
         public float DOF_BokehSize
         {
             get => data.DOF_BokehSize;
@@ -292,7 +302,10 @@ namespace FlaxEngine.Rendering
             }
         }
 
-        [EditorOrder(708), EditorDisplay("Depth of Field", "Bokeh Shape"), Tooltip("Bokeh shapes style")]
+        /// <summary>
+        /// Gets or sets the Bokeh shapes style.
+        /// </summary>
+        [NoSerialize, EditorOrder(708), EditorDisplay("Depth of Field", "Bokeh Shape"), Tooltip("Bokeh shapes style")]
         public BokehShapeType DOF_BokehShape
         {
             get => data.DOF_BokehShape;
@@ -302,8 +315,11 @@ namespace FlaxEngine.Rendering
                 isDataDirty = true;
             }
         }
-
-        [EditorOrder(709), EditorDisplay("Depth of Field", "Bokeh Shape Custom Texture"), Tooltip("Custom texture for bokeh shapes")]
+        /*
+        /// <summary>
+        /// Gets or sets the custom texture for bokeh shapes.
+        /// </summary>
+        [NoSerialize, EditorOrder(709), EditorDisplay("Depth of Field", "Bokeh Shape Custom Texture"), Tooltip("Custom texture for bokeh shapes")]
         public Texture DOF_BokehShapeCustom
         {
             get => Object.Find<Texture>(ref data.DOF_BokehShapeCustom);
@@ -313,8 +329,11 @@ namespace FlaxEngine.Rendering
                 isDataDirty = true;
             }
         }
-
-        [EditorOrder(710), EditorDisplay("Depth of Field", "Bokeh Brightness Threshold"), Tooltip("Controls Bokeh shapes generating minimum pixel brightness to appear"), Limit(0, 10.0f, 0.01f)]
+        */
+        /// <summary>
+        /// Controls Bokeh shapes generating minimum pixel brightness to appear.
+        /// </summary>
+        [NoSerialize, EditorOrder(710), EditorDisplay("Depth of Field", "Bokeh Brightness Threshold"), Tooltip("Controls Bokeh shapes generating minimum pixel brightness to appear"), Limit(0, 10.0f, 0.01f)]
         public float DOF_BokehBrightnessThreshold
         {
             get => data.DOF_BokehBrightnessThreshold;
@@ -325,7 +344,10 @@ namespace FlaxEngine.Rendering
             }
         }
 
-        [EditorOrder(711), EditorDisplay("Depth of Field", "Bokeh Blur Threshold"), Tooltip("Controls Bokeh shapes blur threashold"), Limit(0, 1.0f, 0.001f)]
+        /// <summary>
+        /// Controls Bokeh shapes blur threashold.
+        /// </summary>
+        [NoSerialize, EditorOrder(711), EditorDisplay("Depth of Field", "Bokeh Blur Threshold"), Tooltip("Controls Bokeh shapes blur threashold"), Limit(0, 1.0f, 0.001f)]
         public float DOF_BokehBlurThreshold
         {
             get => data.DOF_BokehBlurThreshold;
@@ -336,7 +358,10 @@ namespace FlaxEngine.Rendering
             }
         }
 
-        [EditorOrder(712), EditorDisplay("Depth of Field", "Bokeh Falloff"), Tooltip("Controls Bokeh shapes brightness fallouff parameter"), Limit(0, 2.0f, 0.001f)]
+        /// <summary>
+        /// Controls Bokeh shapes brightness fallouff parameter.
+        /// </summary>
+        [NoSerialize, EditorOrder(712), EditorDisplay("Depth of Field", "Bokeh Falloff"), Tooltip("Controls Bokeh shapes brightness fallouff parameter"), Limit(0, 2.0f, 0.001f)]
         public float DOF_BokehFalloff
         {
             get => data.DOF_BokehFalloff;
@@ -347,7 +372,10 @@ namespace FlaxEngine.Rendering
             }
         }
 
-        [EditorOrder(713), EditorDisplay("Depth of Field", "Bokeh Depth Cutoff"), Tooltip("Controls Bokeh shapes depth cutoff parameter"), Limit(0, 5.0f, 0.001f)]
+        /// <summary>
+        /// Controls Bokeh shapes depth cutoff parameter.
+        /// </summary>
+        [NoSerialize, EditorOrder(713), EditorDisplay("Depth of Field", "Bokeh Depth Cutoff"), Tooltip("Controls Bokeh shapes depth cutoff parameter"), Limit(0, 5.0f, 0.001f)]
         public float DOF_BokehDepthCutoff
         {
             get => data.DOF_BokehDepthCutoff;
@@ -356,6 +384,27 @@ namespace FlaxEngine.Rendering
                 data.DOF_BokehDepthCutoff = value;
                 isDataDirty = true;
             }
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            if (obj is PostProcessSettings other)
+                return data.Equals(other.data);
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool Equals(PostProcessSettings other)
+        {
+            return data.Equals(other.data);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            // ReSharper disable once NonReadonlyMemberInGetHashCode
+            return data.GetHashCode();
         }
     }
 }
