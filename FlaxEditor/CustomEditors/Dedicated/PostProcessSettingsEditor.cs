@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using FlaxEditor.CustomEditors.Editors;
+using FlaxEditor.CustomEditors.GUI;
 using FlaxEngine;
 using FlaxEngine.Rendering;
 
@@ -16,13 +17,61 @@ namespace FlaxEditor.CustomEditors.Dedicated
     [CustomEditor(typeof(PostProcessSettings))]
     public sealed class PostProcessSettingsEditor : GenericEditor
     {
+        private readonly List<CheckablePropertyNameLabel> _labels = new List<CheckablePropertyNameLabel>(64);
+
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.InlineIntoParent;
 
         /// <inheritdoc />
         protected override List<ItemInfo> GetItemsForType(Type type)
         {
-            return base.GetItemsForType(type, true, false);
+            // Show structure properties
+            return GetItemsForType(type, true, false);
+        }
+
+        /// <inheritdoc />
+        protected override void SpawnProperty(LayoutElementsContainer itemLayout, ValueContainer itemValues, ItemInfo item)
+        {
+            // Add labels with a check box
+            var label = new CheckablePropertyNameLabel(item.DisplayName);
+            label.CheckBox.Tag = item.Order.Order;
+            label.CheckChanged += CheckBoxOnCheckChanged;
+            _labels.Add(label);
+            itemLayout.Property(label, itemValues, item.OverrideEditor);
+        }
+
+        private void CheckBoxOnCheckChanged(CheckablePropertyNameLabel label)
+        {
+            if (IsSetBlocked)
+                return;
+
+            var order = (int)label.CheckBox.Tag;
+            var value = (PostProcessSettings)Values[0];
+            value.data.SetFlag(order, label.CheckBox.Checked);
+            value.isDataDirty = true;
+            SetValue(value);
+        }
+
+        /// <inheritdoc />
+        public override void Refresh()
+        {
+            base.Refresh();
+
+            // Update all labels
+            var value = (PostProcessSettings)Values[0];
+            for (int i = 0; i < _labels.Count; i++)
+            {
+                var order = (int)_labels[i].CheckBox.Tag;
+                _labels[i].CheckBox.Checked = value.data.GetFlag(order);
+            }
+        }
+
+        /// <inheritdoc />
+        public override void Initialize(LayoutElementsContainer layout)
+        {
+            _labels.Clear();
+
+            base.Initialize(layout);
         }
     }
 }

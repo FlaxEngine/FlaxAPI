@@ -112,9 +112,25 @@ namespace FlaxEngine.Rendering
         [StructLayout(LayoutKind.Sequential)]
         internal struct Data
         {
-            // DepthOfFieldSettings
-            public bool DOF_Enabled;
+            // Flags
 
+            // Every property has order eg. 601, 812. We use dozens number as group index and rest as a property index.
+            // Bit fields contain flags if override every parameter.
+
+            public int Flags0;//
+            public int Flags1;// AO
+            public int Flags2;// Bloom
+            public int Flags3;// ToneMap
+            public int Flags4;// Eye
+            public int Flags5;// Cam
+            public int Flags6;// Flare
+            public int Flags7;// DOF
+            public int Flags8;// SSR
+            public int Flags9;// 
+
+            // DepthOfFieldSettings
+
+            public bool DOF_Enabled;
             public float DOF_FocalDistance;
             public float DOF_FocalRegion;
             public float DOF_NearTransitionRange;
@@ -128,6 +144,43 @@ namespace FlaxEngine.Rendering
             public float DOF_BokehBlurThreshold;
             public float DOF_BokehFalloff;
             public float DOF_BokehDepthCutoff;
+
+            public bool GetFlag(int order)
+            {
+                int groupIndex = order / 100;
+                int propertyIndex = order - groupIndex * 100;
+                return GetFlag(groupIndex, propertyIndex);
+            }
+
+            public unsafe bool GetFlag(int groupIndex, int propertyIndex)
+            {
+                fixed (int* ptr = &Flags0)
+                {
+                    int* groupFlag = (int*)((long)ptr + groupIndex * sizeof(int));
+                    int propertyFlag = 1 << propertyIndex;
+                    return (*groupFlag & propertyFlag) != 0;
+                }
+            }
+
+            public void SetFlag(int order, bool value)
+            {
+                int groupIndex = order / 100;
+                int propertyIndex = order - groupIndex * 100;
+                SetFlag(groupIndex, propertyIndex, value);
+            }
+
+            public unsafe void SetFlag(int groupIndex, int propertyIndex, bool value)
+            {
+                fixed (int* ptr = &Flags0)
+                {
+                    int* groupFlag = (int*)((long)ptr + groupIndex * sizeof(int));
+                    int propertyFlag = 1 << propertyIndex;
+                    if (value)
+                        *groupFlag |= propertyFlag;
+                    else
+                        *groupFlag &= ~propertyFlag;
+                }
+            }
         }
 
         internal Data data;
@@ -147,6 +200,9 @@ namespace FlaxEngine.Rendering
             }
         }
 
+        /// <summary>
+        /// Gets or sets the distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs.
+        /// </summary>
         [EditorOrder(701), EditorDisplay("Depth of Field", "Focal Distance"), Tooltip("The distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs"), Limit(0, 100000.0f)]
         public float DOF_FocalDistance
         {
@@ -158,6 +214,9 @@ namespace FlaxEngine.Rendering
             }
         }
 
+        /// <summary>
+        /// Gets or sets the distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs.
+        /// </summary>
         [EditorOrder(702), EditorDisplay("Depth of Field", "Focal Region"), Tooltip("The distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs"), Limit(0, 100000.0f, 1)]
         public float DOF_FocalRegion
         {
@@ -169,6 +228,9 @@ namespace FlaxEngine.Rendering
             }
         }
 
+        /// <summary>
+        /// Gets or sets the distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred.
+        /// </summary>
         [EditorOrder(703), EditorDisplay("Depth of Field", "Near Transition Range"), Tooltip("The distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred"), Limit(0, 500.0f)]
         public float DOF_NearTransitionRange
         {
@@ -180,6 +242,9 @@ namespace FlaxEngine.Rendering
             }
         }
 
+        /// <summary>
+        /// Gets or sets the distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred.
+        /// </summary>
         [EditorOrder(704), EditorDisplay("Depth of Field", "Far Transition Range"), Tooltip("The distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred"), Limit(0, 1000.0f)]
         public float DOF_FarTransitionRange
         {
