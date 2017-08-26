@@ -129,6 +129,66 @@ namespace FlaxEngine.Rendering
             public int Flags8;// SSR
             public int Flags9;// 
 
+            // Ambient Occlusion
+
+            public bool AO_Enabled;
+            public float AO_Intensity;
+            public float AO_Power;
+            public float AO_Radius;
+            public float AO_FadeOutDistance;
+
+            // Screen Space Reflections
+
+            public bool SSR_Enabled;
+            public float SSR_MaxRoughness;
+
+            // Bloom
+
+            public bool Bloom_Enabled;
+            public float Bloom_Intensity;
+            public float Bloom_Threshold;
+            public float Bloom_BlurSigma;
+            public float Bloom_Scale;
+
+            // ToneMappingSettings
+
+            public ToneMappingTechniqe ToneMap_Technique;
+            public float ToneMap_WhiteLevel;
+            public float ToneMap_LuminanceSaturation;
+            public float ToneMap_Bias;
+
+            // Eye Adaptation
+
+            public EyeAdaptationTechnique Eye_Technique;
+            public float Eye_Speed;
+            public float Eye_Exposure;
+            public float Eye_KeyValue;
+            public float Eye_MinLuminance;
+            public float Eye_MaxLuminance;
+
+            // CameraArtifactsSettings
+
+            public float Cam_VignetteIntensity;
+            public Vector3 Cam_VignetteColor;
+            public float Cam_VignetteShapeFactor;
+            public float Cam_GrainAmount;
+            public float Cam_GrainParticleSize;
+            public Vector3 Cam_ChromaticDistortion;
+
+            // LensFlaresSettings
+
+            public float Flare_Intensity;
+            public int Flare_Ghosts;
+            public float Flare_HaloWidth;
+            public float Flare_HaloIntensity;
+            public float Flare_GhostDispersal;
+            public float Flare_Distortion;
+            public float Flare_ThresholdBias;
+            public float Flare_ThresholdScale;
+            public Guid Flare_LensColor;
+            public Guid Flare_LensStar;
+            public Guid Flare_LensDirt;
+
             // DepthOfFieldSettings
 
             public bool DOF_Enabled;
