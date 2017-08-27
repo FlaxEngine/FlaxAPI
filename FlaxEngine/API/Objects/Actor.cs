@@ -189,12 +189,12 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public bool IntersectsItself(ref Ray ray, ref float distance)
+        public bool IntersectsItself(ref Ray ray, out float distance)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_IntersectsItself(unmanagedPtr, ref ray, ref distance);
+            return Internal_IntersectsItself(unmanagedPtr, ref ray, out distance);
 #endif
         }
 
@@ -258,7 +258,7 @@ namespace FlaxEngine
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_IntersectsItself(IntPtr obj, ref Ray ray, ref float distance);
+        internal static extern bool Internal_IntersectsItself(IntPtr obj, ref Ray ray, out float distance);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern byte[] Internal_ToBytes(IntPtr[] actors);

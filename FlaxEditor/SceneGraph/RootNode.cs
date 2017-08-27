@@ -51,8 +51,9 @@ namespace FlaxEditor.SceneGraph
         }
         
         /// <inheritdoc />
-        public override bool RayCastSelf(ref Ray ray, ref float distance)
+        public override bool RayCastSelf(ref Ray ray, out float distance)
         {
+            distance = 0;
             return false;
         }
     }

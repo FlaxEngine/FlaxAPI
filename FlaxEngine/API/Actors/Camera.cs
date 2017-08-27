@@ -25,6 +25,6 @@ namespace FlaxEngine
 
         // Hacky internal call to get proper camera preview model intersection (works only in editor)
 	    [MethodImpl(MethodImplOptions.InternalCall)]
-	    internal static extern bool Internal_IntersectsItselfEditor(IntPtr obj, ref Ray ray, ref float distance);
+	    internal static extern bool Internal_IntersectsItselfEditor(IntPtr obj, ref Ray ray, out float distance);
     }
 }

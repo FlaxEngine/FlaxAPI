@@ -185,10 +185,12 @@ namespace FlaxEditor.SceneGraph
             if (!IsActive)
                 return null;
 
+            // TODO: early out with boxWithChildren test
+            
             // Check itself
             SceneGraphNode minTarget = null;
             float minDistance = float.MaxValue;
-            if (RayCastSelf(ref ray, ref distance))
+            if (RayCastSelf(ref ray, out distance))
             {
                 minTarget = this;
                 minDistance = distance;
@@ -219,8 +221,9 @@ namespace FlaxEditor.SceneGraph
         /// <param name="ray">The ray.</param>
         /// <param name="distance">The distance.</param>
         /// <returns>True ray hits this node, otherwise false.</returns>
-        public virtual bool RayCastSelf(ref Ray ray, ref float distance)
+        public virtual bool RayCastSelf(ref Ray ray, out float distance)
         {
+            distance = 0;
             return false;
         }
 

@@ -19,9 +19,9 @@ namespace FlaxEditor.SceneGraph.Actors
         }
 
         /// <inheritdoc />
-        public override bool RayCastSelf(ref Ray ray, ref float distance)
+        public override bool RayCastSelf(ref Ray ray, out float distance)
         {
-            return Camera.Internal_IntersectsItselfEditor(Object.GetUnmanagedPtr(_actor), ref ray, ref distance);
+            return Camera.Internal_IntersectsItselfEditor(Object.GetUnmanagedPtr(_actor), ref ray, out distance);
         }
     }
 }
