@@ -52,6 +52,7 @@ namespace FlaxEditor.SceneGraph
             CustomNodesTypes.Add(typeof(SpotLight), typeof(SpotLightNode));
             CustomNodesTypes.Add(typeof(Skybox), typeof(SkyboxNode));
             CustomNodesTypes.Add(typeof(Sky), typeof(SkyNode));
+            CustomNodesTypes.Add(typeof(PostFxVolume), typeof(PostFxVolumeNode));
         }
 
         /// <summary>

@@ -40,6 +40,12 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
+        protected override void DoDragDrop()
+        {
+            // No drag for root nodes
+        }
+
+        /// <inheritdoc />
         public override void OnDestroy()
         {
             _watcher.EnableRaisingEvents = false;

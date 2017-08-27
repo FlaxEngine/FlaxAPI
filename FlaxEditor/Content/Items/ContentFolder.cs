@@ -140,6 +140,9 @@ namespace FlaxEditor.Content
         public override bool CanRename => ParentFolder != null;// Deny rename action for root folders
 
         /// <inheritdoc />
+        public override bool CanDrag => ParentFolder != null;// Deny rename action for root folders
+
+        /// <inheritdoc />
         public override bool Exists => System.IO.Directory.Exists(Path);
 
         /// <inheritdoc />
