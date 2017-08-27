@@ -250,6 +250,550 @@ namespace FlaxEngine.Rendering
         [NoSerialize]
         internal bool isDataDirty;
 
+        #region Ambient Occlusion
+
+        /// <summary>
+        /// Enable/disable ambient occlusion effect.
+        /// </summary>
+        [NoSerialize, EditorOrder(100), EditorDisplay("Ambient Occlusion", "Enabled")]
+        public bool AO_Enabled
+        {
+            get => data.AO_Enabled;
+            set
+            {
+                data.AO_Enabled = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the ambient occlusion intensity.
+        /// </summary>
+        [NoSerialize, EditorOrder(101), EditorDisplay("Ambient Occlusion", "Intensity"), Limit(0, 2.0f, 0.01f)]
+        public float AO_Intensity
+        {
+            get => data.AO_Intensity;
+            set
+            {
+                data.AO_Intensity = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the ambient occluion power.
+        /// </summary>
+        [NoSerialize, EditorOrder(102), EditorDisplay("Ambient Occlusion", "Power"), Limit(0, 4.0f, 0.01f)]
+        public float AO_Power
+        {
+            get => data.AO_Power;
+            set
+            {
+                data.AO_Power = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the ambient occlusion check range radius.
+        /// </summary>
+        [NoSerialize, EditorOrder(103), EditorDisplay("Ambient Occlusion", "Radius"), Limit(0, 16.0f, 0.01f)]
+        public float AO_Radius
+        {
+            get => data.AO_Radius;
+            set
+            {
+                data.AO_Radius = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the ambient occlusion fade out distance.
+        /// </summary>
+        [NoSerialize, EditorOrder(104), EditorDisplay("Ambient Occlusion", "Fade Out Distance"), Limit(0, 1000000.0f)]
+        public float AO_FadeOutDistance
+        {
+            get => data.AO_FadeOutDistance;
+            set
+            {
+                data.AO_FadeOutDistance = value;
+                isDataDirty = true;
+            }
+        }
+
+        #endregion
+
+        #region Bloom
+
+        /// <summary>
+        /// Enables/disables bloom effect.
+        /// </summary>
+        [NoSerialize, EditorOrder(200), EditorDisplay("Bloom", "Enabled")]
+        public bool Bloom_Enabled
+        {
+            get => data.Bloom_Enabled;
+            set
+            {
+                data.Bloom_Enabled = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the bloom intensity.
+        /// </summary>
+        [NoSerialize, EditorOrder(201), EditorDisplay("Bloom", "Intensity"), Limit(0, 10.0f, 0.1f)]
+        public float Bloom_Intensity
+        {
+            get => data.Bloom_Intensity;
+            set
+            {
+                data.Bloom_Intensity = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the bloom threshold. Pixels with higher luminance are glowing.
+        /// </summary>
+        [NoSerialize, EditorOrder(202), EditorDisplay("Bloom", "Threshold"), Limit(0, 15.0f, 0.01f)]
+        public float Bloom_Threshold
+        {
+            get => data.Bloom_Threshold;
+            set
+            {
+                data.Bloom_Threshold = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the bloom blur sigma parameter.
+        /// </summary>
+        [NoSerialize, EditorOrder(203), EditorDisplay("Bloom", "BlurSigma")]
+        public float Bloom_BlurSigma
+        {
+            get => data.Bloom_BlurSigma;
+            set
+            {
+                data.Bloom_BlurSigma = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the bloom blur scale.
+        /// </summary>
+        [NoSerialize, EditorOrder(204), EditorDisplay("Bloom", "Scale")]
+        public float Bloom_Scale
+        {
+            get => data.Bloom_Scale;
+            set
+            {
+                data.Bloom_Scale = value;
+                isDataDirty = true;
+            }
+        }
+
+        #endregion
+
+        #region Tone Mapping
+
+        /// <summary>
+        /// Gets or sets the tone mapping mode.
+        /// </summary>
+        [NoSerialize, EditorOrder(300), EditorDisplay("Tone Mapping", "Technique")]
+        public ToneMappingTechniqe ToneMap_Technique
+        {
+            get => data.ToneMap_Technique;
+            set
+            {
+                data.ToneMap_Technique = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the tone mapping white level.
+        /// </summary>
+        [NoSerialize, EditorOrder(301), EditorDisplay("Tone Mapping", "White Level")]
+        public float ToneMap_WhiteLevel
+        {
+            get => data.ToneMap_WhiteLevel;
+            set
+            {
+                data.ToneMap_WhiteLevel = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the tone mapping pixels luminance saturation.
+        /// </summary>
+        [NoSerialize, EditorOrder(302), EditorDisplay("Tone Mapping", "Luminance Saturation")]
+        public float ToneMap_LuminanceSaturation
+        {
+            get => data.ToneMap_LuminanceSaturation;
+            set
+            {
+                data.ToneMap_LuminanceSaturation = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the tone mapping bias.
+        /// </summary>
+        [NoSerialize, EditorOrder(303), EditorDisplay("Tone Mapping", "Bias")]
+        public float ToneMap_Bias
+        {
+            get => data.ToneMap_Bias;
+            set
+            {
+                data.ToneMap_Bias = value;
+                isDataDirty = true;
+            }
+        }
+
+        #endregion
+
+        #region Eye Adaptation
+
+        /// <summary>
+        /// Gets or sets the eye adaptation mode.
+        /// </summary>
+        [NoSerialize, EditorOrder(400), EditorDisplay("Eye Adaptation", "Technique")]
+        public EyeAdaptationTechnique Eye_Technique
+        {
+            get => data.Eye_Technique;
+            set
+            {
+                data.Eye_Technique = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the speed of the eye adaptation effect.
+        /// </summary>
+        [NoSerialize, EditorOrder(401), EditorDisplay("Eye Adaptation", "Speed"), Limit(0, 100.0f, 0.1f)]
+        public float Eye_Speed
+        {
+            get => data.Eye_Speed;
+            set
+            {
+                data.Eye_Speed = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the camera exposure.
+        /// </summary>
+        [NoSerialize, EditorOrder(402), EditorDisplay("Eye Adaptation", "Exposure")]
+        public float Eye_Exposure
+        {
+            get => data.Eye_Exposure;
+            set
+            {
+                data.Eye_Exposure = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the pixels light value to achieve.
+        /// </summary>
+        [NoSerialize, EditorOrder(403), EditorDisplay("Eye Adaptation", "Key Value")]
+        public float Eye_KeyValue
+        {
+            get => data.Eye_KeyValue;
+            set
+            {
+                data.Eye_KeyValue = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the minimum luminance value used for tone mapping.
+        /// </summary>
+        [NoSerialize, EditorOrder(404), EditorDisplay("Eye Adaptation", "Minimum luminance"), Limit(0, 10.0f, 0.001f)]
+        public float Eye_MinLuminance
+        {
+            get => data.Eye_MinLuminance;
+            set
+            {
+                data.Eye_MinLuminance = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum luminance value used for tone mapping.
+        /// </summary>
+        [NoSerialize, EditorOrder(405), EditorDisplay("Eye Adaptation", "Maximum luminance"), Limit(0, 100.0f, 0.001f)]
+        public float Eye_MaxLuminance
+        {
+            get => data.Eye_MaxLuminance;
+            set
+            {
+                data.Eye_MaxLuminance = value;
+                isDataDirty = true;
+            }
+        }
+
+        #endregion
+
+        #region Camera Artifacts
+
+        /// <summary>
+        /// Gets or sets the vignette intensity.
+        /// </summary>
+        [NoSerialize, EditorOrder(500), EditorDisplay("Camera Artifacts", "Vignette Intensity"), Limit(0, 2, 0.001f)]
+        public float Cam_VignetteIntensity
+        {
+            get => data.Cam_VignetteIntensity;
+            set
+            {
+                data.Cam_VignetteIntensity = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the vignette color.
+        /// </summary>
+        [NoSerialize, EditorOrder(501), EditorDisplay("Camera Artifacts", "Vignette Color")]
+        public Color Cam_VignetteColor
+        {
+            get => data.Cam_VignetteColor;
+            set
+            {
+                data.Cam_VignetteColor = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the vignette shape factor.
+        /// </summary>
+        [NoSerialize, EditorOrder(502), EditorDisplay("Camera Artifacts", "Vignette Shape Factor"), Limit(0.0001f, 2.0f, 0.001f)]
+        public float Cam_VignetteShapeFactor
+        {
+            get => data.Cam_VignetteShapeFactor;
+            set
+            {
+                data.Cam_VignetteShapeFactor = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the grain noise amount.
+        /// </summary>
+        [NoSerialize, EditorOrder(503), EditorDisplay("Camera Artifacts", "Grain Amount"), Limit(0.0f, 2.0f, 0.005f)]
+        public float Cam_GrainAmount
+        {
+            get => data.Cam_GrainAmount;
+            set
+            {
+                data.Cam_GrainAmount = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the grain noise particles size.
+        /// </summary>
+        [NoSerialize, EditorOrder(504), EditorDisplay("Camera Artifacts", "Grain Particle Size"), Limit(1.0f, 3.0f, 0.01f)]
+        public float Cam_GrainParticleSize
+        {
+            get => data.Cam_GrainParticleSize;
+            set
+            {
+                data.Cam_GrainParticleSize = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the chromatic aberration distortion (per channel).
+        /// </summary>
+        [NoSerialize, EditorOrder(505), EditorDisplay("Camera Artifacts", "Chromatic Distortion"), Limit(-30.0f, 30.0f, 0.1f)]
+        public Vector3 Cam_ChromaticDistortion
+        {
+            get => data.Cam_ChromaticDistortion;
+            set
+            {
+                data.Cam_ChromaticDistortion = value;
+                isDataDirty = true;
+            }
+        }
+
+        #endregion
+
+        #region Lens Flares
+
+        /// <summary>
+        /// Gets or sets the lens flares intensity.
+        /// </summary>
+        [NoSerialize, EditorOrder(600), EditorDisplay("Lens Flares", "Intensity"), Limit(0, 2.0f, 0.01f)]
+        public float Flare_Intensity
+        {
+            get => data.Flare_Intensity;
+            set
+            {
+                data.Flare_Intensity = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the amount of lens flares ghosts.
+        /// </summary>
+        [NoSerialize, EditorOrder(601), EditorDisplay("Lens Flares", "Ghosts"), Limit(0, 16)]
+        public int Flare_Ghosts
+        {
+            get => data.Flare_Ghosts;
+            set
+            {
+                data.Flare_Ghosts = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the lens flares halo size.
+        /// </summary>
+        [NoSerialize, EditorOrder(602), EditorDisplay("Lens Flares", "Halo Width")]
+        public float Flare_HaloWidth
+        {
+            get => data.Flare_HaloWidth;
+            set
+            {
+                data.Flare_HaloWidth = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the lens flares halo intensity.
+        /// </summary>
+        [NoSerialize, EditorOrder(603), EditorDisplay("Lens Flares", "Halo Intensity"), Limit(0, 2.0f, 0.01f)]
+        public float Flare_HaloIntensity
+        {
+            get => data.Flare_HaloIntensity;
+            set
+            {
+                data.Flare_HaloIntensity = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the lens flares ghosts dispersal.
+        /// </summary>
+        [NoSerialize, EditorOrder(604), EditorDisplay("Lens Flares", "Ghost Dispersal")]
+        public float Flare_GhostDispersal
+        {
+            get => data.Flare_GhostDispersal;
+            set
+            {
+                data.Flare_GhostDispersal = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the lens flares distortion.
+        /// </summary>
+        [NoSerialize, EditorOrder(605), EditorDisplay("Lens Flares", "Distortion")]
+        public float Flare_Distortion
+        {
+            get => data.Flare_Distortion;
+            set
+            {
+                data.Flare_Distortion = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the lens flares threshold bias.
+        /// </summary>
+        [NoSerialize, EditorOrder(606), EditorDisplay("Lens Flares", "Threshold Bias")]
+        public float Flare_ThresholdBias
+        {
+            get => data.Flare_ThresholdBias;
+            set
+            {
+                data.Flare_ThresholdBias = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the lens flares threshold scale.
+        /// </summary>
+        [NoSerialize, EditorOrder(607), EditorDisplay("Lens Flares", "Threshold Scale")]
+        public float Flare_ThresholdScale
+        {
+            get => data.Flare_ThresholdScale;
+            set
+            {
+                data.Flare_ThresholdScale = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the camera lens dirt texture.
+        /// </summary>
+        [NoSerialize, EditorOrder(608), EditorDisplay("Lens Flares", "Lens Dirt"), Tooltip("Custom texture for camera dirt")]
+        public Texture Flare_LensDirt
+        {
+            get => Object.Find<Texture>(ref data.Flare_LensDirt);
+            set
+            {
+                data.Flare_LensDirt = value?.ID ?? Guid.Empty;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the camera lens color lookup texture.
+        /// </summary>
+        [NoSerialize, EditorOrder(609), EditorDisplay("Lens Flares", "Lens Color"), Tooltip("Custom texture for lens flares color")]
+        public Texture Flare_LensColor
+        {
+            get => Object.Find<Texture>(ref data.Flare_LensColor);
+            set
+            {
+                data.Flare_LensColor = value?.ID ?? Guid.Empty;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the lens star lookup texture.
+        /// </summary>
+        [NoSerialize, EditorOrder(610), EditorDisplay("Lens Flares", "Lens Star"), Tooltip("Custom texture for lens flares star")]
+        public Texture Flare_LensStar
+        {
+            get => Object.Find<Texture>(ref data.Flare_LensStar);
+            set
+            {
+                data.Flare_LensStar = value?.ID ?? Guid.Empty;
+                isDataDirty = true;
+            }
+        }
+
+        #endregion
+
+        #region Depth of Field
+
         /// <summary>
         /// Gets or sets a value indicating whether Depth of Field is enabled.
         /// </summary>
@@ -281,7 +825,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs.
         /// </summary>
-        [NoSerialize, EditorOrder(702), EditorDisplay("Depth of Field", "Focal Region"), Tooltip("The distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs"), Limit(0, 100000.0f, 1)]
+        [NoSerialize, EditorOrder(702), EditorDisplay("Depth of Field", "Focal Region"), Tooltip("The distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs"), Limit(0, 100000.0f)]
         public float DOF_FocalRegion
         {
             get => data.DOF_FocalRegion;
@@ -375,7 +919,7 @@ namespace FlaxEngine.Rendering
                 isDataDirty = true;
             }
         }
-        /*
+
         /// <summary>
         /// Gets or sets the custom texture for bokeh shapes.
         /// </summary>
@@ -389,7 +933,7 @@ namespace FlaxEngine.Rendering
                 isDataDirty = true;
             }
         }
-        */
+
         /// <summary>
         /// Controls Bokeh shapes generating minimum pixel brightness to appear.
         /// </summary>
@@ -445,6 +989,40 @@ namespace FlaxEngine.Rendering
                 isDataDirty = true;
             }
         }
+
+        #endregion
+
+        #region Screen Space Reflections
+
+        /// <summary>
+        /// Enables or disables rendering of Screen Space Reflections.
+        /// </summary>
+        [NoSerialize, EditorOrder(800), EditorDisplay("Screen Space Reflections", "Enabled"), Tooltip("Enables or disables rendering Screen Space Reflections effect on camera")]
+        public bool SSR_Enabled
+        {
+            get => data.SSR_Enabled;
+            set
+            {
+                data.SSR_Enabled = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum surface roughness to calculate screen space reflections for it.
+        /// </summary>
+        [NoSerialize, EditorOrder(801), EditorDisplay("Screen Space Reflections", "Max Roughness"), Tooltip("Maximum surface roughness values that can accept Screen Space Reflections"), Limit(0, 1.0f, 0.0001f)]
+        public float SSR_MaxRoughness
+        {
+            get => data.SSR_MaxRoughness;
+            set
+            {
+                data.SSR_MaxRoughness = value;
+                isDataDirty = true;
+            }
+        }
+
+        #endregion
 
         /// <inheritdoc />
         public override bool Equals(object obj)
