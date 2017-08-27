@@ -456,9 +456,9 @@ namespace FlaxEditor.Viewport
 
             // Update input
             {
-                // Get input buttons and keys
+                // Get input buttons and keys (skip if viewort has no focus or mouse is over a child control)
                 _prevInput = _input;
-                if(ContainsFocus)
+                if(ContainsFocus && GetChildAt(_viewMousePos) == null)
                     _input.Gather(win.NativeWindow);
                 else
                     _input.Clear();
