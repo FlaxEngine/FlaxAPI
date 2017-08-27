@@ -45,7 +45,22 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets size of the volume.
+		/// Gets or sets center of the volume in the local space.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorDisplay("PostFx Volume"), EditorOrder(40)]
+		public Vector3 Center
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { Vector3 resultAsRef; Internal_GetCenter(unmanagedPtr, out resultAsRef); return resultAsRef; }
+			set { Internal_SetCenter(unmanagedPtr, ref value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets size of the volume in the local space.
 		/// </summary>
 		[UnmanagedCall]
 		[EditorDisplay("PostFx Volume"), EditorOrder(50)]
@@ -134,6 +149,10 @@ namespace FlaxEngine
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetCenter(IntPtr obj, out Vector3 resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetCenter(IntPtr obj, ref Vector3 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetSize(IntPtr obj, out Vector3 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
