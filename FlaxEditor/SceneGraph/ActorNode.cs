@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.SceneGraph.GUI;
 using FlaxEditor.Windows;
@@ -173,7 +174,13 @@ namespace FlaxEditor.SceneGraph
         {
             return _actor.IntersectsItself(ref ray, out distance);
         }
-        
+
+        /// <inheritdoc />
+        public override void OnDebugDraw(List<IntPtr> actorsPtr)
+        {
+            actorsPtr.Add(_actor.unmanagedPtr);
+        }
+
         /// <inheritdoc />
         public override void Delete()
         {

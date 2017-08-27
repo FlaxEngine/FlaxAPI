@@ -50,8 +50,8 @@ namespace FlaxEditor.Viewport
                     var actors = new List<IntPtr>(selectedParents.Count);
                     for (int i = 0; i < selectedParents.Count; i++)
                     {
-                        if (selectedParents[i] is ActorNode actor)
-                            actors.Add(FlaxEngine.Object.GetUnmanagedPtr(actor.Actor));
+                        if (selectedParents[i].IsActiveInHierarchy)
+                            selectedParents[i].OnDebugDraw(actors);
                     }
                     if (actors.Count > 0)
                         selectedActors = actors.ToArray();

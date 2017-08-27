@@ -98,12 +98,6 @@ namespace FlaxEditor.Windows
             {
                 _tree.Deselect();
             }
-            else if (selection.Count == 1)
-            {
-                var node = selection[0] as ActorNode;
-
-                _tree.Select(node?.TreeNode);
-            }
             else
             {
                 // Find nodes to select

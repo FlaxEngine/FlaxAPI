@@ -116,6 +116,8 @@ namespace FlaxEditor.Modules
             // Check if won't change
             if (!additive && Selection.Count == 1 && Selection[0] == selection)
                 return;
+            if (additive && Selection.Contains(selection))
+                return;
 
             var before = Selection.ToArray();
             if (!additive)

@@ -127,7 +127,7 @@ namespace FlaxEditor.Viewport
         /// <summary>
         /// Camera's pitch angle clamp range (in degrees).
         /// </summary>
-        public Vector2 CamPitchAngles = new Vector2(-86, 86);
+        public Vector2 CamPitchAngles = new Vector2(-88, 88);
 
         /// <summary>
         /// Gets the view transform.

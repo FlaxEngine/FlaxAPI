@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEngine;
 
@@ -55,6 +56,16 @@ namespace FlaxEditor.SceneGraph
         {
             distance = 0;
             return false;
+        }
+
+        /// <inheritdoc />
+        public override void OnDebugDraw(List<IntPtr> actorsPtr)
+        {
+        }
+
+        /// <inheritdoc />
+        public override void Delete()
+        {
         }
     }
 }

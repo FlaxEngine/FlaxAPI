@@ -228,9 +228,19 @@ namespace FlaxEditor.SceneGraph
         }
 
         /// <summary>
+        /// Called when selected nodes should draw debug shapes using <see cref="DebugDraw"/> interface.
+        /// </summary>
+        /// <param name="actorsPtr">The actors pointers collection to call them fron unmanaged side.</param>
+        public virtual void OnDebugDraw(List<IntPtr> actorsPtr)
+        {
+        }
+
+        /// <summary>
         /// Deletes object represented by this node eg. actor.
         /// </summary>
-        public abstract void Delete();
+        public virtual void Delete()
+        {
+        }
 
         /// <summary>
         /// Releases the node and the child tree. Disposed all GUI parts and used resources.
