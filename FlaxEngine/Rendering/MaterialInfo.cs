@@ -120,6 +120,32 @@ namespace FlaxEngine.Rendering
     }
 
     /// <summary>
+    /// Post Fx material rendering locations.
+    /// </summary>
+    public enum MaterialPostFxLocation : byte
+    {
+        /// <summary>
+        /// The after post processing pass using LDR input frame.
+        /// </summary>
+        AfterPostProcessingPass = 0,
+
+        /// <summary>
+        /// The before post processing pass using HDR input frame.
+        /// </summary>
+        BeforePostProcessingPass = 1,
+
+        /// <summary>
+        /// The before forward pass but after GBuffer with HDR input frame.
+        /// </summary>
+        BeforeForwardPass = 2,
+
+        /// <summary>
+        /// The after custom post effects.
+        /// </summary>
+        AfterCustomPostEffects = 3,
+    }
+
+    /// <summary>
     /// Structure with basic information about the material surface.
     /// It describes how material is reacting on light and which graphical features of it requires to render.
     /// </summary>
@@ -146,11 +172,32 @@ namespace FlaxEngine.Rendering
         /// </summary>
         public MaterialTransparentLighting TransparentLighting;
 
+        /// <summary>
+        /// The post fx material rendering location.
+        /// </summary>
+        public MaterialPostFxLocation PostFxLocation;
+
+        /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="a">The a.</param>
+        /// <param name="b">The b.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static bool operator ==(MaterialInfo a, MaterialInfo b)
         {
             return a.Equals(b);
         }
 
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="a">The a.</param>
+        /// <param name="b">The b.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static bool operator !=(MaterialInfo a, MaterialInfo b)
         {
             return !a.Equals(b);
@@ -159,13 +206,18 @@ namespace FlaxEngine.Rendering
         /// <inheritdoc />
         public bool Equals(MaterialInfo other)
         {
-            return Domain == other.Domain && BlendMode == other.BlendMode && Flags == other.Flags && TransparentLighting == other.TransparentLighting;
+            return Domain == other.Domain
+                   && BlendMode == other.BlendMode
+                   && Flags == other.Flags
+                   && TransparentLighting == other.TransparentLighting
+                   && PostFxLocation == other.PostFxLocation;
         }
 
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(null, obj))
+                return false;
             return obj is MaterialInfo && Equals((MaterialInfo)obj);
         }
 
@@ -178,6 +230,7 @@ namespace FlaxEngine.Rendering
                 hashCode = (hashCode * 397) ^ (int)BlendMode;
                 hashCode = (hashCode * 397) ^ (int)Flags;
                 hashCode = (hashCode * 397) ^ (int)TransparentLighting;
+                hashCode = (hashCode * 397) ^ (int)PostFxLocation;
                 return hashCode;
             }
         }

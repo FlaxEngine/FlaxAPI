@@ -60,6 +60,9 @@ namespace FlaxEditor.Windows.Assets
             [EditorOrder(200), EditorDisplay("Misc"), Tooltip("True if disable depth buffer write when rendering material")]
             public bool DisableDepthWrite { get; set; }
 
+            [EditorOrder(201), EditorDisplay("Misc"), Tooltip("The post fx material rendering location")]
+            public MaterialPostFxLocation PostFxLocation { get; set; }
+
             [EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor))]
             // ReSharper disable once UnusedAutoPropertyAccessor.Local
             public MaterialWindow MaterialWinRef { get; set; }
@@ -302,6 +305,7 @@ namespace FlaxEditor.Windows.Assets
                 DisableFog = (info.Flags & MaterialFlags.TransparentDisableFog) != 0;
                 DisableDepthWrite = (info.Flags & MaterialFlags.DisableDepthWrite) != 0;
                 DisableDistortion = (info.Flags & MaterialFlags.TransparentDisableDistortion) != 0;
+                PostFxLocation = info.PostFxLocation;
                 BlendMode = info.BlendMode;
                 Lighting = info.TransparentLighting;
                 Domain = info.Domain;
@@ -331,6 +335,7 @@ namespace FlaxEditor.Windows.Assets
                     info.Flags |= MaterialFlags.DisableDepthWrite;
                 if (DisableDistortion)
                     info.Flags |= MaterialFlags.TransparentDisableDistortion;
+                info.PostFxLocation = PostFxLocation;
                 info.BlendMode = BlendMode;
                 info.TransparentLighting = Lighting;
                 info.Domain = Domain;
@@ -469,7 +474,8 @@ namespace FlaxEditor.Windows.Assets
                 Flags = MaterialFlags.None,
                 BlendMode = MaterialBlendMode.Opaque,
                 Domain = MaterialDomain.Surface,
-                TransparentLighting = MaterialTransparentLighting.None
+                TransparentLighting = MaterialTransparentLighting.None,
+                PostFxLocation = MaterialPostFxLocation.AfterPostProcessingPass,
             };
             _properties.OnSave(ref info);
         }
