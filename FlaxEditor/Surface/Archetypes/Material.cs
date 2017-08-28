@@ -166,6 +166,32 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "Vector", ConnectionType.Vector3, 0),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 6,
+                Title = "Screen Position",
+                Description = "Gathers screen position or texcoord",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(140, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "Position", ConnectionType.Vector2, 0),
+                    NodeElementArchetype.Factory.Output(1, "Texcoord", ConnectionType.Vector2, 1),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 7,
+                Title = "Screen Size",
+                Description = "Gathers screen size",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(120, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "Size", ConnectionType.Vector2, 0),
+                    NodeElementArchetype.Factory.Output(1, "Inv Size", ConnectionType.Vector2, 1),
+                }
+            },
         };
     }
 }
