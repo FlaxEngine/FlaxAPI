@@ -182,7 +182,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Object, 6),
-                    NodeElementArchetype.Factory.Output(1, "Depth", ConnectionType.Vector4, 1),
+                    NodeElementArchetype.Factory.Output(1, "Depth", ConnectionType.Float, 1),
                 }
             },
         };
