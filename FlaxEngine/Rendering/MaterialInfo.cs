@@ -196,9 +196,14 @@ namespace FlaxEngine.Rendering
         Specular = 8,
 
         /// <summary>
+        /// The material color.
+        /// </summary>
+        BaseColor = 9,
+
+        /// <summary>
         /// The material shading model.
         /// </summary>
-        ShadingModel = 9,
+        ShadingModel = 10,
     }
 
     /// <summary>
