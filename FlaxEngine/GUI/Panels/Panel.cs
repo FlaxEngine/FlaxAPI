@@ -33,8 +33,8 @@ namespace FlaxEngine.GUI
         /// </value>
         public Vector2 ScrollRightCorner
         {
-            get { return _scrollRightCorner; }
-            internal set { _scrollRightCorner = value; }
+            get => _scrollRightCorner;
+            internal set => _scrollRightCorner = value;
         }
         
         /// <summary>
@@ -53,18 +53,23 @@ namespace FlaxEngine.GUI
         public Panel(ScrollBars scrollBars, bool canFocus = false)
             : base(canFocus)
         {
-            // Create scroll bars
             if ((scrollBars & ScrollBars.Vertical) == ScrollBars.Vertical)
             {
                 // Create vertical sroll bar
-                VScrollBar = new VScrollBar(Width - ScrollBar.DefaultSize, Height);
-                VScrollBar.Parent = this;
+                VScrollBar = new VScrollBar(Width - ScrollBar.DefaultSize, Height)
+                {
+                    DockStyle = DockStyle.Right,
+                    Parent = this
+                };
             }
             if ((scrollBars & ScrollBars.Horizontal) == ScrollBars.Horizontal)
             {
                 // Create vertical sroll bar
-                HScrollBar = new HScrollBar(Height - ScrollBar.DefaultSize, Width);
-                HScrollBar.Parent = this;
+                HScrollBar = new HScrollBar(Height - ScrollBar.DefaultSize, Width)
+                {
+                    DockStyle = DockStyle.Bottom,
+                    Parent = this
+                };
             }
         }
 

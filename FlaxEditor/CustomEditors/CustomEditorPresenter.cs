@@ -23,13 +23,13 @@ namespace FlaxEditor.CustomEditors
         {
             private CustomEditorPresenter _presenter;
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PresenterPanel"/> class.
-            /// </summary>
-            /// <param name="presenter">The presenter.</param>
-            internal PresenterPanel(CustomEditorPresenter presenter)
+            /// <inheritdoc />
+            public override bool IsScrollable { get; }
+
+            internal PresenterPanel(CustomEditorPresenter presenter, bool isPanelScrollable)
             {
                 _presenter = presenter;
+                IsScrollable = isPanelScrollable;
             }
 
             /// <inheritdoc />
@@ -82,10 +82,12 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomEditorPresenter"/> class.
         /// </summary>
-        public CustomEditorPresenter(Undo undo)
+        /// <param name="undo">The undo. It's optional.</param>
+        /// <param name="isPanelScrollable">Enable/disable scrollable feature.</param>
+        public CustomEditorPresenter(Undo undo, bool isPanelScrollable = true)
         {
             Undo = undo;
-            Panel = new PresenterPanel(this);
+            Panel = new PresenterPanel(this, isPanelScrollable);
         }
 
         /// <summary>
