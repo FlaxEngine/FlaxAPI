@@ -134,11 +134,12 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "View",
                 Description = "View properties",
                 Flags = NodeFlags.MaterialOnly,
-                Size = new Vector2(150, 40),
+                Size = new Vector2(150, 60),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, "Position", ConnectionType.Vector3, 0),
                     NodeElementArchetype.Factory.Output(1, "Direction", ConnectionType.Vector3, 1),
+                    NodeElementArchetype.Factory.Output(2, "Far Plane", ConnectionType.Float, 2),
                 }
             },
             new NodeArchetype
