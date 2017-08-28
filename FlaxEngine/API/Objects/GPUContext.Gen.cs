@@ -63,6 +63,46 @@ namespace FlaxEngine.Rendering
 		}
 
 		/// <summary>
+		/// Draws postFx material to the render target.
+		/// </summary>
+		/// <param name="material">The material to render. It must be a post fx material.</param>
+		/// <param name="output">The output texture. Must be valid and created.</param>
+		/// <param name="input">The input texture. It's optional.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void DrawPostFxMaterial(MaterialBase material, RenderTarget output, RenderTarget input = null) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_DrawPostFxMaterial1(unmanagedPtr, Object.GetUnmanagedPtr(material), Object.GetUnmanagedPtr(output), Object.GetUnmanagedPtr(input));
+#endif
+		}
+
+		/// <summary>
+		/// Draws postFx material to the render target.
+		/// </summary>
+		/// <param name="material">The material to render. It must be a post fx material.</param>
+		/// <param name="output">The output texture. Must be valid and created.</param>
+		/// <param name="input">The input texture. It's optional.</param>
+		/// <param name="view">Rendering view description structure.</param>
+		/// <param name="buffers">Frame rendering buffers. Can be used by the material to gather per pixel surface properties.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void DrawPostFxMaterial(MaterialBase material, RenderTarget output, RenderTarget input, RenderView view, RenderBuffers buffers = null) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_DrawPostFxMaterial2(unmanagedPtr, Object.GetUnmanagedPtr(material), Object.GetUnmanagedPtr(output), Object.GetUnmanagedPtr(input), ref view, Object.GetUnmanagedPtr(buffers));
+#endif
+		}
+
+		/// <summary>
 		/// Draws scene.
 		/// </summary>
 		/// <param name="task">Calling render task.</param>
@@ -91,6 +131,10 @@ namespace FlaxEngine.Rendering
 		internal static extern void Internal_Clear(IntPtr obj, IntPtr rt, ref Color color);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_ClearDepth(IntPtr obj, IntPtr depthBuffer, float depthValue);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_DrawPostFxMaterial1(IntPtr obj, IntPtr material, IntPtr output, IntPtr input);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_DrawPostFxMaterial2(IntPtr obj, IntPtr material, IntPtr output, IntPtr input, ref RenderView view, IntPtr buffers);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_DrawScene(IntPtr obj, IntPtr task, IntPtr output, IntPtr buffers, ref RenderView view, ViewFlags flags, ViewMode mode, IntPtr[] customActors);
 #endif
