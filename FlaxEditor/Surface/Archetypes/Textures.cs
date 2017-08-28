@@ -136,7 +136,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Scene Texture",
                 Description = "Graphics pipeline textures lookup node",
                 Flags = NodeFlags.MaterialOnly,
-                Size = new Vector2(140, 120),
+                Size = new Vector2(170, 120),
                 DefaultValues = new object[]
                 {
                     (int)MaterialSceneTextures.SceneColor
@@ -150,8 +150,7 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(3, "G", ConnectionType.Float, 3),
                     NodeElementArchetype.Factory.Output(4, "B", ConnectionType.Float, 4),
                     NodeElementArchetype.Factory.Output(5, "A", ConnectionType.Float, 5),
-                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY, "Texture"),
-                    NodeElementArchetype.Factory.CmoboBox(50, Surface.Constants.LayoutOffsetY, 50, 0, typeof(MaterialSceneTextures))
+                    NodeElementArchetype.Factory.CmoboBox(0, Surface.Constants.LayoutOffsetY, 120, 0, typeof(MaterialSceneTextures))
                 }
             },
             new NodeArchetype
@@ -178,7 +177,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Scene Depth",
                 Description = "Scene depth buffer texture lookup node",
                 Flags = NodeFlags.MaterialOnly,
-                Size = new Vector2(140, 80),
+                Size = new Vector2(140, 60),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),

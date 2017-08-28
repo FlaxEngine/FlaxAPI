@@ -121,22 +121,27 @@ namespace FlaxEngine.GUI
         /// </summary>
         public Color BackgroundColor
         {
-            get { return _backgroundColor; }
-            set { _backgroundColor = value; }
+            get => _backgroundColor;
+            set => _backgroundColor = value;
         }
 
         /// <summary>
-        ///     Gets the docking style of the control
+        ///     Gets or sets the docking style of the control.
+        /// If vlue set is other than <see cref="FlaxEngine.GUI.DockStyle.None"/> then <see cref="IsScrollable"/> will be disabled by auto.
         /// </summary>
         /// <returns>Dock style of the control</returns>
         public DockStyle DockStyle
         {
-            get { return _dockStyle; }
+            get => _dockStyle;
             set
             {
                 if (_dockStyle != value)
                 {
                     _dockStyle = value;
+
+                    // Disable scrolling for docked controls (by default but can be manually restored)
+                    if (_dockStyle != DockStyle.None)
+                        IsScrollable = false;
 
                     // Update parent's container
                     _parent?.PerformLayout();
@@ -161,18 +166,16 @@ namespace FlaxEngine.GUI
                 }
             }
         }
-
-        /// <summary>
-        ///     Returns true if control can use scrolling feature
-        /// </summary>
-        public virtual bool IsScrollable => _dockStyle == DockStyle.None;
+        
+        /// <inheritdoc />
+        public bool IsScrollable { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether the control can respond to user interaction
         /// </summary>
         public bool Enabled
         {
-            get { return _isEnabled; }
+            get => _isEnabled;
             set
             {
                 if (_isEnabled != value)
@@ -199,7 +202,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public bool Visible
         {
-            get { return _isVisible; }
+            get => _isVisible;
             set
             {
                 if (_isVisible != value)

@@ -40,21 +40,28 @@ namespace FlaxEditor.Surface.ContextMenu
             Size = new Vector2(320, 220);
 
             // Search box
-            _searchBox = new TextBox(false, 1, 1);
-            _searchBox.Width = Width - 3;
-            _searchBox.WatermarkText = "Search...";
+            _searchBox = new TextBox(false, 1, 1)
+            {
+                Width = Width - 3,
+                WatermarkText = "Search...",
+                Parent = this
+            };
             _searchBox.TextChanged += OnSearchFilterChanged;
-            _searchBox.Parent = this;
 
             // Create first panel (for scrollbar)
-            var panel1 = new Panel(ScrollBars.Vertical);
-            panel1.Bounds = new Rectangle(0, _searchBox.Bottom + 1, Width, Height - _searchBox.Bottom - 2);
-            panel1.Parent = this;
+            var panel1 = new Panel(ScrollBars.Vertical)
+            {
+                Bounds = new Rectangle(0, _searchBox.Bottom + 1, Width, Height - _searchBox.Bottom - 2),
+                Parent = this
+            };
 
             // Create second panel (for groups arrangement)
-            var panel2 = new VerticalPanel();
-            panel2.Width = panel1.Width;
-            panel2.Parent = panel1;
+            var panel2 = new VerticalPanel
+            {
+                DockStyle = DockStyle.Top,
+                IsScrollable = true,
+                Parent = panel1
+            };
             
             // Init groups
             var groups = NodeFactory.Groups;

@@ -81,7 +81,6 @@ namespace FlaxEditor.Content.Import
 
             // Settings editor
             _settingsEditor = new CustomEditorPresenter(null);
-            _settingsEditor.Panel.DockStyle = DockStyle.Top;
             _settingsEditor.Panel.Parent = splitPanel.Panel2;
 
             // Setup tree

@@ -407,7 +407,6 @@ namespace FlaxEditor.Windows.Assets
 
             // Material properties editor
             var propertiesEditor = new CustomEditorPresenter(null);
-            propertiesEditor.Panel.DockStyle = DockStyle.Top;
             propertiesEditor.Panel.Parent = splitPanel2.Panel2;
             _properties = new PropertiesProxy();
             propertiesEditor.Select(_properties);
