@@ -19,6 +19,7 @@ namespace FlaxEditor.Viewport.Previews
         private DirectionalLight _previewLight;
         private EnvironmentProbe _envProbe;
         private Sky _sky;
+        private PostFxVolume _postFxVolume;
         private MaterialBase _material;
 
         /// <summary>
@@ -68,12 +69,18 @@ namespace FlaxEditor.Viewport.Previews
             //
             _sky = Sky.New();
             _sky.SunLight = _previewLight;
-
+            //
+            _postFxVolume = PostFxVolume.New();
+            _postFxVolume.IsBounded = true;
+            _postFxVolume.Settings.Eye_MinLuminance = 0.1f;
+            _postFxVolume.Settings.PostFxMaterials = new MaterialBase[1];
+            
             // Link actors for rendering
             Task.CustomActors.Add(_previewModel);
             Task.CustomActors.Add(_previewLight);
             Task.CustomActors.Add(_envProbe);
             Task.CustomActors.Add(_sky);
+            Task.CustomActors.Add(_postFxVolume);
 
             // Update actors
             for (int i = 0; i < Task.CustomActors.Count; i++)
@@ -111,7 +118,7 @@ namespace FlaxEditor.Viewport.Previews
             var meshes = _previewModel.Meshes;
             if (meshes.Length == 1)
                 meshes[0].Material = surfaceMaterial;
-            // TODO postFx volume
+            _postFxVolume.Settings.PostFxMaterials[0] = postFxMaterial;
         }
 
         /// <inheritdoc />
@@ -124,6 +131,7 @@ namespace FlaxEditor.Viewport.Previews
             Object.Destroy(ref _previewLight);
             Object.Destroy(ref _envProbe);
             Object.Destroy(ref _sky);
+            Object.Destroy(ref _postFxVolume);
 
             base.OnDestroy();
         }
