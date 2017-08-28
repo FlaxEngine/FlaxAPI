@@ -11,17 +11,65 @@ namespace FlaxEngine.Rendering
     /// </summary>
     public enum MaterialParameterType : byte
     {
+        /// <summary>
+        /// The invalid type.
+        /// </summary>
         Invalid = 0,
+
+        /// <summary>
+        /// The bool.
+        /// </summary>
         Bool,
+
+        /// <summary>
+        /// The inteager.
+        /// </summary>
         Inteager,
+
+        /// <summary>
+        /// The float.
+        /// </summary>
         Float,
+
+        /// <summary>
+        /// The vector2
+        /// </summary>
         Vector2,
+
+        /// <summary>
+        /// The vector3.
+        /// </summary>
         Vector3,
+
+        /// <summary>
+        /// The vector4.
+        /// </summary>
         Vector4,
+
+        /// <summary>
+        /// The color.
+        /// </summary>
         Color,
+
+        /// <summary>
+        /// The texture.
+        /// </summary>
         Texture,
+
+        /// <summary>
+        /// The cube texture.
+        /// </summary>
         CubeTexture,
-        NormalMap
+
+        /// <summary>
+        /// The normal map texture.
+        /// </summary>
+        NormalMap,
+
+        /// <summary>
+        /// The scene texture.
+        /// </summary>
+        SceneTexture,
     }
 
     /// <summary>

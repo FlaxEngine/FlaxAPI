@@ -2,6 +2,10 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using FlaxEditor.CustomEditors;
 using FlaxEngine;
 
 namespace FlaxEditor.Surface
@@ -293,6 +297,35 @@ namespace FlaxEditor.Surface
                     BoxID = width, // Use Box ID to store combo box width
                     ConnectionsType = ConnectionType.Invalid
                 };
+            }
+
+            /// <summary>
+            /// Creates new Combo Box element description for enum editing.
+            /// </summary>
+            /// <param name="x">The x location (in node area space).</param>
+            /// <param name="y">The y location (in node area space).</param>
+            /// <param name="width">The width of the element.</param>
+            /// <param name="valueIndex">The index of the node variable linked as the input. Usefull to make a physical connection between input box and default value for it.</param>
+            /// <param name="enumType">The enum type to present all it's values. Important: first value should be 0 and so on.</param>
+            /// <returns>The archetype.</returns>
+            public static NodeElementArchetype CmoboBox(float x, float y, int width, int valueIndex, Type enumType)
+            {
+                if (enumType == null || !enumType.IsEnum)
+                    throw new ArgumentException();
+
+                FieldInfo[] fields = enumType.GetFields();
+                List<string> values = new List<string>(fields.Length);
+                for (int i = 0; i < fields.Length; i++)
+                {
+                    var field = fields[i];
+                    if (field.Name.Equals("value__"))
+                        continue;
+                    
+                    var name = CustomEditorsUtil.GetPropertyNameUI(field.Name);
+                    values.Add(name);
+                }
+                
+                return CmoboBox(x, y, width, valueIndex, values.ToArray());
             }
 
             /// <summary>

@@ -1,9 +1,10 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
 using FlaxEngine;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Surface.Archetypes
 {
@@ -127,6 +128,62 @@ namespace FlaxEditor.Surface.Archetypes
                         "B",
                         "A",
                     })
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 6,
+                Title = "Scene Texture",
+                Description = "Graphics pipeline textures lookup node",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(140, 120),
+                DefaultValues = new object[]
+                {
+                    (int)MaterialSceneTextures.SceneColor
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Object, 6),
+                    NodeElementArchetype.Factory.Output(1, "Color", ConnectionType.Vector4, 1),
+                    NodeElementArchetype.Factory.Output(2, "R", ConnectionType.Float, 2),
+                    NodeElementArchetype.Factory.Output(3, "G", ConnectionType.Float, 3),
+                    NodeElementArchetype.Factory.Output(4, "B", ConnectionType.Float, 4),
+                    NodeElementArchetype.Factory.Output(5, "A", ConnectionType.Float, 5),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY, "Texture"),
+                    NodeElementArchetype.Factory.CmoboBox(50, Surface.Constants.LayoutOffsetY, 50, 0, typeof(MaterialSceneTextures))
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 7,
+                Title = "Scene Color",
+                Description = "Scene color texture lookup node",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(140, 120),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Object, 6),
+                    NodeElementArchetype.Factory.Output(1, "Color", ConnectionType.Vector4, 1),
+                    NodeElementArchetype.Factory.Output(2, "R", ConnectionType.Float, 2),
+                    NodeElementArchetype.Factory.Output(3, "G", ConnectionType.Float, 3),
+                    NodeElementArchetype.Factory.Output(4, "B", ConnectionType.Float, 4),
+                    NodeElementArchetype.Factory.Output(5, "A", ConnectionType.Float, 5)
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 8,
+                Title = "Scene Depth",
+                Description = "Scene depth buffer texture lookup node",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(140, 80),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Object, 6),
+                    NodeElementArchetype.Factory.Output(1, "Depth", ConnectionType.Vector4, 1),
                 }
             },
         };

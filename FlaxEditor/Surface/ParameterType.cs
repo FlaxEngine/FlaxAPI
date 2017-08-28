@@ -92,6 +92,11 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// The cube texture id.
         /// </summary>
-        CubeTexture = 16
+        CubeTexture = 16,
+
+        /// <summary>
+        /// The scene texture type.
+        /// </summary>
+        SceneTexture = 17,
     }
 }

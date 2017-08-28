@@ -57,10 +57,16 @@ namespace FlaxEditor.Windows.Assets
             [EditorOrder(140), EditorDisplay("Transparency"), Tooltip("True if disable distortion effect when rendering material")]
             public bool DisableDistortion { get; set; }
 
+            [EditorOrder(150), EditorDisplay("Transparency"), Tooltip("Controls opacity values clipping point"), Limit(0.0f, 1.0f, 0.01f)]
+            public float OpacityThreshold { get; set; }
+
             [EditorOrder(200), EditorDisplay("Misc"), Tooltip("True if disable depth buffer write when rendering material")]
             public bool DisableDepthWrite { get; set; }
 
-            [EditorOrder(201), EditorDisplay("Misc"), Tooltip("The post fx material rendering location")]
+            [EditorOrder(210), EditorDisplay("Misc"), Tooltip("Controls mask values clipping point"), Limit(0.0f, 1.0f, 0.01f)]
+            public float MaskThreshold { get; set; }
+
+            [EditorOrder(220), EditorDisplay("Misc"), Tooltip("The post fx material rendering location")]
             public MaterialPostFxLocation PostFxLocation { get; set; }
 
             [EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor))]
@@ -305,6 +311,8 @@ namespace FlaxEditor.Windows.Assets
                 DisableFog = (info.Flags & MaterialFlags.TransparentDisableFog) != 0;
                 DisableDepthWrite = (info.Flags & MaterialFlags.DisableDepthWrite) != 0;
                 DisableDistortion = (info.Flags & MaterialFlags.TransparentDisableDistortion) != 0;
+                OpacityThreshold = info.OpacityThreshold;
+                MaskThreshold = info.MaskThreshold;
                 PostFxLocation = info.PostFxLocation;
                 BlendMode = info.BlendMode;
                 Lighting = info.TransparentLighting;
@@ -335,6 +343,8 @@ namespace FlaxEditor.Windows.Assets
                     info.Flags |= MaterialFlags.DisableDepthWrite;
                 if (DisableDistortion)
                     info.Flags |= MaterialFlags.TransparentDisableDistortion;
+                info.OpacityThreshold = OpacityThreshold;
+                info.MaskThreshold = MaskThreshold;
                 info.PostFxLocation = PostFxLocation;
                 info.BlendMode = BlendMode;
                 info.TransparentLighting = Lighting;
@@ -468,14 +478,7 @@ namespace FlaxEditor.Windows.Assets
         /// <param name="info">Output info.</param>
         public void FillMaterialInfo(out MaterialInfo info)
         {
-            info = new MaterialInfo
-            {
-                Flags = MaterialFlags.None,
-                BlendMode = MaterialBlendMode.Opaque,
-                Domain = MaterialDomain.Surface,
-                TransparentLighting = MaterialTransparentLighting.None,
-                PostFxLocation = MaterialPostFxLocation.AfterPostProcessingPass,
-            };
+            info = MaterialInfo.CreateDefault();
             _properties.OnSave(ref info);
         }
 

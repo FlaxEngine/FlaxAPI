@@ -146,6 +146,62 @@ namespace FlaxEngine.Rendering
     }
 
     /// <summary>
+    /// Material input scene textures. Special inputs from the graphics pipeline.
+    /// </summary>
+    public enum MaterialSceneTextures
+    {
+        /// <summary>
+        /// The scene color.
+        /// </summary>
+        SceneColor = 0,
+
+        /// <summary>
+        /// The scene depth.
+        /// </summary>
+        SceneDepth = 1,
+
+        /// <summary>
+        /// The material diffuse color.
+        /// </summary>
+        DiffuseColor = 2,
+
+        /// <summary>
+        /// The material specular color.
+        /// </summary>
+        SpecularColor = 3,
+
+        /// <summary>
+        /// The material world space normal.
+        /// </summary>
+        WorldNormal = 4,
+
+        /// <summary>
+        /// The ambient occlusion.
+        /// </summary>
+        AmbientOcclusion = 5,
+
+        /// <summary>
+        /// The material metalness value.
+        /// </summary>
+        Metalness = 6,
+
+        /// <summary>
+        /// The material roughness value.
+        /// </summary>
+        Roughness = 7,
+
+        /// <summary>
+        /// The material specular value.
+        /// </summary>
+        Specular = 8,
+
+        /// <summary>
+        /// The material shading model.
+        /// </summary>
+        ShadingModel = 9,
+    }
+
+    /// <summary>
     /// Structure with basic information about the material surface.
     /// It describes how material is reacting on light and which graphical features of it requires to render.
     /// </summary>
@@ -176,6 +232,34 @@ namespace FlaxEngine.Rendering
         /// The post fx material rendering location.
         /// </summary>
         public MaterialPostFxLocation PostFxLocation;
+
+        /// <summary>
+        /// The mask threshold.
+        /// </summary>
+        public float MaskThreshold;
+
+        /// <summary>
+        /// The opacity threshold.
+        /// </summary>
+        public float OpacityThreshold;
+
+        /// <summary>
+        /// Creates the default <see cref="MaterialInfo"/>.
+        /// </summary>
+        /// <returns>The result.</returns>
+        public static MaterialInfo CreateDefault()
+        {
+            return new MaterialInfo
+            {
+                Flags = MaterialFlags.None,
+                BlendMode = MaterialBlendMode.Opaque,
+                Domain = MaterialDomain.Surface,
+                TransparentLighting = MaterialTransparentLighting.None,
+                PostFxLocation = MaterialPostFxLocation.AfterPostProcessingPass,
+                MaskThreshold = 0.3f,
+                OpacityThreshold = 1.0f / 255.0f,
+            };
+        }
 
         /// <summary>
         /// Implements the operator ==.
@@ -231,6 +315,8 @@ namespace FlaxEngine.Rendering
                 hashCode = (hashCode * 397) ^ (int)Flags;
                 hashCode = (hashCode * 397) ^ (int)TransparentLighting;
                 hashCode = (hashCode * 397) ^ (int)PostFxLocation;
+                hashCode = (hashCode * 397) ^ (int)MaskThreshold;
+                hashCode = (hashCode * 397) ^ (int)OpacityThreshold;
                 return hashCode;
             }
         }
