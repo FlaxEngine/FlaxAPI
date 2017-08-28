@@ -92,7 +92,7 @@ namespace FlaxEditor.Viewport.Previews
         }
 
         /// <inheritdoc />
-        public override bool HasLoadedAssets => base.HasLoadedAssets && _sky.HasContentLoaded && _previewModel.Model.IsLoaded && _envProbe.Probe.IsLoaded;
+        public override bool HasLoadedAssets => base.HasLoadedAssets && _sky.HasContentLoaded && _previewModel.Model.IsLoaded && _envProbe.Probe.IsLoaded && _postFxVolume.HasContentLoaded;
 
         /// <inheritdoc />
         public override void Update(float deltaTime)

@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -30,7 +30,7 @@ namespace FlaxEditor.Surface.Elements
 
         /// <inheritdoc />
         public FloatValue(SurfaceNode parentNode, NodeElementArchetype archetype)
-            : base(Get(parentNode, archetype), archetype.Position.X, archetype.Position.Y, 50, -100000, 100000, 0.1f)
+            : base(Get(parentNode, archetype), archetype.Position.X, archetype.Position.Y, 50, -100000, 100000, 0.05f)
         {
             ParentNode = parentNode;
             Archetype = archetype;
@@ -99,13 +99,13 @@ namespace FlaxEditor.Surface.Elements
 
             var value = parentNode.Values[arch.ValueIndex];
 
-            if (value is int valueInt)
+            if (value is int)
             {
-                value = (float)valueInt;
+                value = (int)toSet;
             }
-            else if (value is float valueFloat)
+            else if (value is float)
             {
-                value = valueFloat;
+                value = toSet;
             }
             else if (value is Vector2 valueVec2)
             {
