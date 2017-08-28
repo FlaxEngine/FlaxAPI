@@ -206,6 +206,18 @@ namespace FlaxEngine.Rendering
             public float DOF_BokehFalloff;
             public float DOF_BokehDepthCutoff;
 
+            // PostFxMaterials
+
+            public int PostFxMaterialsCount;
+            public Guid PostFxMaterial0;
+            public Guid PostFxMaterial1;
+            public Guid PostFxMaterial2;
+            public Guid PostFxMaterial3;
+            public Guid PostFxMaterial4;
+            public Guid PostFxMaterial5;
+            public Guid PostFxMaterial6;
+            public Guid PostFxMaterial7;
+
             public bool GetFlag(int order)
             {
                 int groupIndex = order / 100;
@@ -244,11 +256,14 @@ namespace FlaxEngine.Rendering
             }
         }
 
+        [NoSerialize]
+        internal bool isDataDirty;
+
         [Serialize]
         internal Data data;
 
-        [NoSerialize]
-        internal bool isDataDirty;
+        [Serialize]
+        internal MaterialBase[] postFxMaterials;
 
         #region Ambient Occlusion
 
@@ -754,7 +769,7 @@ namespace FlaxEngine.Rendering
         [NoSerialize, EditorOrder(608), EditorDisplay("Lens Flares", "Lens Dirt"), Tooltip("Custom texture for camera dirt")]
         public Texture Flare_LensDirt
         {
-            get => Object.Find<Texture>(ref data.Flare_LensDirt);
+            get => Content.LoadAsync<Texture>(data.Flare_LensDirt);
             set
             {
                 data.Flare_LensDirt = value?.ID ?? Guid.Empty;
@@ -768,7 +783,7 @@ namespace FlaxEngine.Rendering
         [NoSerialize, EditorOrder(609), EditorDisplay("Lens Flares", "Lens Color"), Tooltip("Custom texture for lens flares color")]
         public Texture Flare_LensColor
         {
-            get => Object.Find<Texture>(ref data.Flare_LensColor);
+            get => Content.LoadAsync<Texture>(data.Flare_LensColor);
             set
             {
                 data.Flare_LensColor = value?.ID ?? Guid.Empty;
@@ -782,7 +797,7 @@ namespace FlaxEngine.Rendering
         [NoSerialize, EditorOrder(610), EditorDisplay("Lens Flares", "Lens Star"), Tooltip("Custom texture for lens flares star")]
         public Texture Flare_LensStar
         {
-            get => Object.Find<Texture>(ref data.Flare_LensStar);
+            get => Content.LoadAsync<Texture>(data.Flare_LensStar);
             set
             {
                 data.Flare_LensStar = value?.ID ?? Guid.Empty;
@@ -926,7 +941,7 @@ namespace FlaxEngine.Rendering
         [NoSerialize, EditorOrder(709), EditorDisplay("Depth of Field", "Bokeh Shape Custom Texture"), Tooltip("Custom texture for bokeh shapes")]
         public Texture DOF_BokehShapeCustom
         {
-            get => Object.Find<Texture>(ref data.DOF_BokehShapeCustom);
+            get => Content.LoadAsync<Texture>(data.DOF_BokehShapeCustom);
             set
             {
                 data.DOF_BokehShapeCustom = value?.ID ?? Guid.Empty;
@@ -1020,6 +1035,20 @@ namespace FlaxEngine.Rendering
                 data.SSR_MaxRoughness = value;
                 isDataDirty = true;
             }
+        }
+
+        #endregion
+
+        #region PostFx Materials
+
+        /// <summary>
+        /// Gets the post effect materials collection.
+        /// </summary>
+        [NoSerialize, EditorOrder(900), EditorDisplay("PostFx Materials", "Materials"), Tooltip("Post effect materials to render")]
+        public MaterialBase[] PostFxMaterials
+        {
+            get => postFxMaterials;
+            set => postFxMaterials = value;
         }
 
         #endregion
