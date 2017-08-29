@@ -312,7 +312,7 @@ namespace FlaxEditor.CustomEditors
             var editor = CustomEditorsUtil.CreateEditor(values, overrideEditor);
             var style = editor.Style;
 
-            if(style == DisplayStyle.InlineIntoParent)
+            if(style == DisplayStyle.InlineIntoParent || name == "__inline__")
             {
                 return Object(values, editor);
             }

@@ -1044,7 +1044,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets the post effect materials collection.
         /// </summary>
-        [NoSerialize, EditorOrder(900), EditorDisplay("PostFx Materials", "Materials"), Tooltip("Post effect materials to render")]
+        [NoSerialize, EditorOrder(900), EditorDisplay("PostFx Materials", "__inline__"), Tooltip("Post effect materials to render")]
         public MaterialBase[] PostFxMaterials
         {
             get => postFxMaterials;

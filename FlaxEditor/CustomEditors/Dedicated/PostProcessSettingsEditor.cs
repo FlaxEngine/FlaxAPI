@@ -32,9 +32,18 @@ namespace FlaxEditor.CustomEditors.Dedicated
         /// <inheritdoc />
         protected override void SpawnProperty(LayoutElementsContainer itemLayout, ValueContainer itemValues, ItemInfo item)
         {
+            var order = item.Order.Order;
+
+            // Skip for PosFx Materials
+            if (order == 900)
+            {
+                base.SpawnProperty(itemLayout, itemValues, item);
+                return;
+            }
+
             // Add labels with a check box
             var label = new CheckablePropertyNameLabel(item.DisplayName);
-            label.CheckBox.Tag = item.Order.Order;
+            label.CheckBox.Tag = order;
             label.CheckChanged += CheckBoxOnCheckChanged;
             _labels.Add(label);
             itemLayout.Property(label, itemValues, item.OverrideEditor);
