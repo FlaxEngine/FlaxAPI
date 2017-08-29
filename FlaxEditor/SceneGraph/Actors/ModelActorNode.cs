@@ -38,20 +38,24 @@ namespace FlaxEditor.SceneGraph.Actors
             /// <inheritdoc />
             public override Transform Transform
             {
-                get => ((ModelActor)_actor.Actor).Meshes[Index].Transform;
-                set => ((ModelActor)_actor.Actor).Meshes[Index].Transform = value;
+                get => _actor.Actor.Transform.LocalToWorld(Mesh.Transform);
+                set => Mesh.Transform = _actor.Actor.Transform.WorldToLocal(value);
             }
 
             /// <inheritdoc />
-            public override object EditableObject => ((ModelActor)_actor.Actor).Meshes[Index];
+            public override object EditableObject => Mesh;
+
+            /// <inheritdoc />
+            public override bool RayCastSelf(ref Ray ray, out float distance)
+            {
+                return Mesh.Intersects(ray, out distance);
+            }
         }
 
         /// <inheritdoc />
         public ModelActorNode(Actor actor)
             : base(actor)
         {
-            Debug.Log("modelNode for " + actor.Name);
-
             var modelActor = (ModelActor)actor;
             modelActor.MeshesChanged += BuildNodes;
             BuildNodes(modelActor);
@@ -59,8 +63,6 @@ namespace FlaxEditor.SceneGraph.Actors
 
         private void BuildNodes(ModelActor actor)
         {
-            Debug.Log("rebuild actor nodes for " + actor.Name);
-
             // Clear previous
             DisposeChildNodes();
 
@@ -78,6 +80,14 @@ namespace FlaxEditor.SceneGraph.Actors
                     AddChildNode(new MeshNode(this, new Guid(idBytes), i));
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public override bool RayCastSelf(ref Ray ray, out float distance)
+        {
+            // Disable this node hit - MeshNodes handles ray casting
+            distance = 0;
+            return false;
         }
     }
 }

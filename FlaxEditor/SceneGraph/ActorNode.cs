@@ -180,7 +180,7 @@ namespace FlaxEditor.SceneGraph
             get => _actor.Transform;
             set => _actor.Transform = value;
         }
-        
+
         /// <inheritdoc />
         public override SceneGraphNode ParentNode
         {
@@ -239,7 +239,7 @@ namespace FlaxEditor.SceneGraph
         {
             // Cleanup UI
             _treeNode.Dispose();
-            
+
             base.Dispose();
         }
     }

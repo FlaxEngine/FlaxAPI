@@ -18,7 +18,7 @@ namespace FlaxEditor.SceneGraph
         /// The node index.
         /// </summary>
         public readonly int Index;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ActorChildNode"/> class.
         /// </summary>
@@ -68,13 +68,13 @@ namespace FlaxEditor.SceneGraph
     /// <typeparam name="T">The parent actor type.</typeparam>
     /// <seealso cref="FlaxEditor.SceneGraph.SceneGraphNode" />
     /// <seealso cref="FlaxEditor.SceneGraph.ActorNode" />
-    public abstract class ActorChildNode<T> : ActorChildNode where T: ActorNode
+    public abstract class ActorChildNode<T> : ActorChildNode where T : ActorNode
     {
         /// <summary>
         /// The actor.
         /// </summary>
         protected readonly T _actor;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ActorChildNode{T}"/> class.
         /// </summary>

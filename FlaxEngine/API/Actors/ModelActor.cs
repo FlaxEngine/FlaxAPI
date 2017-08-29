@@ -81,6 +81,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetMeshVisible(IntPtr obj, int index, bool value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_IntersectsMesh(IntPtr obj, int index, ref Ray ray, out float distance);
 #endif
     }
 }
