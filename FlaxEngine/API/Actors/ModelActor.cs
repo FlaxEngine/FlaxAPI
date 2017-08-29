@@ -9,14 +9,15 @@ namespace FlaxEngine
 {
     public sealed partial class ModelActor
     {
+        [Serialize]
         private MeshInfo[] _meshes;
 
         /// <summary>
         /// Gets the model mesh infos collection. Each <see cref="MeshInfo"/> contains data how to render each mesh (transformation, material, shadows casting, etc.).
         /// </summary>
-        /// <value>
-        /// The mesh infos array. It's null if the <see cref="Model"/> property is null or asset is not loaded yet.
-        /// </value>
+        /// <remarks>
+        /// It's null if the <see cref="Model"/> property is null or asset is not loaded yet.
+        /// </remarks>
         [EditorOrder(100), EditorDisplay("Model")]
         [MemberCollection(CanReorderItems = false, NotNullItems = true, ReadOnly = true)]
         public MeshInfo[] Meshes
