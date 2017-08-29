@@ -428,30 +428,6 @@ namespace FlaxEditor.Viewport
                 _editor.Windows.EditWin.ShowSelectedActors();
                 return true;
             }
-            if (ParentWindow.GetKey(KeyCode.Control))
-            {
-                switch (key)
-                {
-                    case KeyCode.X:
-                        _editor.SceneEditing.Cut();
-                        return true;
-                    case KeyCode.C:
-                        _editor.SceneEditing.Copy();
-                        return true;
-                    case KeyCode.V:
-                        _editor.SceneEditing.Paste();
-                        return true;
-                    case KeyCode.D:
-                        _editor.SceneEditing.Duplicate();
-                        return true;
-                    case KeyCode.F:
-                        _editor.Windows.SceneWin.Search();
-                        return true;
-                    case KeyCode.A:
-                        _editor.SceneEditing.SelectAllScenes();
-                        return true;
-                }
-            }
 
             return base.OnKeyDown(key);
         }
