@@ -199,7 +199,7 @@ namespace FlaxEditor.Modules
             Editor.Undo.UndoDone += UpdateToolstrip;
             Editor.Undo.RedoDone += UpdateToolstrip;
             Editor.Undo.ActionDone += UpdateToolstrip;
-            
+
             UpdateToolstrip();
         }
 
@@ -235,11 +235,7 @@ namespace FlaxEditor.Modules
             style.ProgressNormal = Color.FromBgra(0xFF0ad328);
 
             // Color picking
-            style.ShowPickColorDialog += (color, handler) =>
-                                         {
-                                             var dialog = new ColorPickerDialog(color, handler);
-                                             dialog.Show();
-                                         };
+            style.ShowPickColorDialog += (color, handler) => new ColorPickerDialog(color, handler).Show();
 
             // Set as default
             Style.Current = style;
@@ -438,8 +434,7 @@ namespace FlaxEditor.Modules
             {
                 // Welcome screen
                 case 0:
-                    // TODO: Welcome screen
-                    throw new NotImplementedException("Info box");
+                    new AboutDialog().Show();
                     break;
 
                 // Save scene(s)

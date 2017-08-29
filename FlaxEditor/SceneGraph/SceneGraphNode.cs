@@ -175,6 +175,15 @@ namespace FlaxEditor.SceneGraph
         }
 
         /// <summary>
+        /// Adds the child node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        public void AddChild(SceneGraphNode node)
+        {
+            node.ParentNode = this;
+        }
+
+        /// <summary>
         /// Performs raycasting over nodes hierarchy trying to get the closest object hited by the given ray.
         /// </summary>
         /// <param name="ray">The ray.</param>
@@ -202,7 +211,7 @@ namespace FlaxEditor.SceneGraph
                 var hit = ChildNodes[i].RayCast(ref ray, ref distance);
                 if (hit != null)
                 {
-                    if (minDistance > distance)
+                    if (distance < minDistance)
                     {
                         minDistance = distance;
                         minTarget = hit;

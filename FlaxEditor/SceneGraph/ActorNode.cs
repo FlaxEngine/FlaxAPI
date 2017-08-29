@@ -15,8 +15,8 @@ namespace FlaxEditor.SceneGraph
     /// A tree node used to visalize scene actors structure in <see cref="SceneTreeWindow"/>. It's a ViewModel object for <see cref="Actor"/>.
     /// It's part of the Scene Graph.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.TreeNode" />
     /// <seealso cref="SceneGraphNode" />
+    /// <seealso cref="Actor" />
     public class ActorNode : SceneGraphNode
     {
         /// <summary>
@@ -44,6 +44,11 @@ namespace FlaxEditor.SceneGraph
         /// The tree node.
         /// </value>
         public ActorTreeNode TreeNode => _treeNode;
+
+        /// <summary>
+        /// The actor child nodes used to represent special parts of the actor (meshes, links, surfaces).
+        /// </summary>
+        public readonly List<ActorChildNode> ActorChildNodes = new List<ActorChildNode>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActorNode"/> class.
@@ -104,11 +109,33 @@ namespace FlaxEditor.SceneGraph
         }
 
         /// <summary>
+        /// Adds the child node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>The node</returns>
+        public ActorChildNode AddChildNode(ActorChildNode node)
+        {
+            ActorChildNodes.Add(node);
+            node.ParentNode = this;
+            return node;
+        }
+
+        /// <summary>
+        /// Disposes the child nodes.
+        /// </summary>
+        public void DisposeChildNodes()
+        {
+            for (int i = 0; i < ActorChildNodes.Count; i++)
+                ActorChildNodes[i].Dispose();
+            ActorChildNodes.Clear();
+        }
+
+        /// <summary>
         /// Tries to find the tree node for the specified actor in child nodes collection.
         /// </summary>
         /// <param name="actor">The actor.</param>
         /// <returns>Tree node or null if cannot find it.</returns>
-        public ActorNode FindChild(Actor actor)
+        public ActorNode FindChildActor(Actor actor)
         {
             for (int i = 0; i < ChildNodes.Count; i++)
             {
@@ -212,7 +239,7 @@ namespace FlaxEditor.SceneGraph
         {
             // Cleanup UI
             _treeNode.Dispose();
-
+            
             base.Dispose();
         }
     }

@@ -364,7 +364,7 @@ namespace FlaxEditor.Modules
         private void OnSceneUnloading(Scene scene, Guid sceneId)
         {
             // Find scene tree node
-            var node = Root.FindChild(scene);
+            var node = Root.FindChildActor(scene);
             if (node != null)
             {
                 Editor.Log($"Cleanup graph for scene \'{scene.Name}\'");
@@ -413,7 +413,7 @@ namespace FlaxEditor.Modules
             if (prevParentNode != null)
             {
                 // If should be one of the children
-                node = prevParentNode.FindChild(actor);
+                node = prevParentNode.FindChildActor(actor);
 
                 // Search whole tree if node was not found
                 if (node == null)
