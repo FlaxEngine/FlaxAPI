@@ -84,15 +84,13 @@ namespace FlaxEditor.Utilities
             {
                 var m = members[i];
 
-                if (m.MemberType == MemberTypes.Field)
+                if (m is FieldInfo fieldInfo)
                 {
-                    FieldInfo field = (FieldInfo)m;
-                    values.Add(field.GetValue(obj));
+                    values.Add(fieldInfo.GetValue(obj));
                 }
-                else if (m.MemberType == MemberTypes.Property)
+                else
                 {
-                    var prop = (PropertyInfo)m;
-                    values.Add(prop.GetValue(obj, null));
+                    values.Add(((PropertyInfo)m).GetValue(obj, null));
                 }
             }
 
@@ -119,26 +117,22 @@ namespace FlaxEditor.Utilities
             for (int i = 0; i < members.Count; i++)
             {
                 var m = members[i];
+                object xValue = Values[index++];
+                object yValue;
 
-                if (m.MemberType == MemberTypes.Field)
+                if (m is FieldInfo fieldInfo)
                 {
-                    FieldInfo field = (FieldInfo)m;
-                    var xValue = Values[index++];
-                    var yValue = field.GetValue(obj);
-                    if (!Equals(xValue, yValue))
-                    {
-                        list.Add(new MemberComparison(field, xValue, yValue));
-                    }
+                    yValue = fieldInfo.GetValue(obj);
                 }
-                else if (m.MemberType == MemberTypes.Property)
+                else
                 {
-                    var prop = (PropertyInfo)m;
-                    var xValue = Values[index++];
-                    var yValue = prop.GetValue(obj, null);
-                    if (!Equals(xValue, yValue))
-                    {
-                        list.Add(new MemberComparison(prop, xValue, yValue));
-                    }
+                    var propertyInfo = (PropertyInfo)m;
+                    yValue = propertyInfo.GetValue(obj, null);
+                }
+                
+                if (!Equals(xValue, yValue))
+                {
+                    list.Add(new MemberComparison(m, xValue, yValue));
                 }
             }
 

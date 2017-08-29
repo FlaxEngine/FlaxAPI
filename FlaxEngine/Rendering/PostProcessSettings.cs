@@ -5,6 +5,7 @@
 using System;
 using System.Runtime.InteropServices;
 // ReSharper disable InconsistentNaming
+// ReSharper disable NonReadonlyMemberInGetHashCode
 
 namespace FlaxEngine.Rendering
 {
@@ -105,7 +106,7 @@ namespace FlaxEngine.Rendering
     /// Contains settings for rendering advanced visual effects and post effects.
     /// </summary>
     [Serializable]
-    public struct PostProcessSettings
+    public struct PostProcessSettings : IEquatable<PostProcessSettings>
     {
         /// <summary>
         /// Packed setings storage container used with C++ interop.
@@ -117,6 +118,7 @@ namespace FlaxEngine.Rendering
 
             // Every property has order eg. 601, 812. We use dozens number as group index and rest as a property index.
             // Bit fields contain flags if override every parameter.
+            // Helper functions GetFlag/SetFlags are used to modify override flag per single setting.
 
             public int Flags0;//
             public int Flags1;// AO
@@ -262,8 +264,10 @@ namespace FlaxEngine.Rendering
         [Serialize]
         internal Data data;
 
-        [Serialize]
-        internal MaterialBase[] postFxMaterials;
+        /// <summary>
+        /// The maximum allowed amount custom post fx materials assigned to <see cref="PostProcessSettings"/>.
+        /// </summary>
+        public const int MaxPostFxMaterials = 8;
 
         #region Ambient Occlusion
 
@@ -1045,10 +1049,51 @@ namespace FlaxEngine.Rendering
         /// Gets the post effect materials collection.
         /// </summary>
         [NoSerialize, EditorOrder(900), EditorDisplay("PostFx Materials", "__inline__"), Tooltip("Post effect materials to render")]
-        public MaterialBase[] PostFxMaterials
+        public unsafe MaterialBase[] PostFxMaterials
         {
-            get => postFxMaterials;
-            set => postFxMaterials = value;
+            get
+            {
+                var result = new MaterialBase[data.PostFxMaterialsCount];
+                fixed (Guid* postFxMaterials = &data.PostFxMaterial0)
+                {
+                    for (int i = 0; i < data.PostFxMaterialsCount; i++)
+                    {
+                        result[i] = Content.LoadAsync<MaterialBase>(postFxMaterials[i]);
+                    }
+                }
+                return result;
+            }
+            set
+            {
+                fixed (Guid* postFxMaterials = &data.PostFxMaterial0)
+                {
+                    var postFxLength = Mathf.Min(value?.Length ?? 0, MaxPostFxMaterials);
+                    bool posFxMaterialsChanged = data.PostFxMaterialsCount != postFxLength;
+
+                    for (int i = 0; i < postFxLength; i++)
+                    {
+                        Guid id = value[i]?.ID ?? Guid.Empty;
+                        if (postFxMaterials[i] != id)
+                        {
+                            posFxMaterialsChanged = true;
+                        }
+                        postFxMaterials[i] = id;
+                    }
+
+                    for (int i = postFxLength; i < MaxPostFxMaterials; i++)
+                    {
+                        if (postFxMaterials[i] != Guid.Empty)
+                        {
+                            posFxMaterialsChanged = true;
+                        }
+                        postFxMaterials[i] = Guid.Empty;
+                    }
+
+                    data.PostFxMaterialsCount = postFxLength;
+                    if (posFxMaterialsChanged)
+                        isDataDirty = true;
+                }
+            }
         }
 
         #endregion
@@ -1060,7 +1105,7 @@ namespace FlaxEngine.Rendering
                 return data.Equals(other.data);
             return false;
         }
-
+        
         /// <inheritdoc />
         public bool Equals(PostProcessSettings other)
         {
@@ -1070,7 +1115,6 @@ namespace FlaxEngine.Rendering
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            // ReSharper disable once NonReadonlyMemberInGetHashCode
             return data.GetHashCode();
         }
     }

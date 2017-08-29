@@ -20,53 +20,20 @@ namespace FlaxEngine
         /// Updates cached Settings.data from unmanaged data
         /// </summary>
         /// <param name="ptr">The unmanaged data pointer.</param>
-        internal unsafe void Internal_SetData(IntPtr ptr)
+        internal void Internal_SetData(IntPtr ptr)
         {
             Settings.data = (PostProcessSettings.Data)Marshal.PtrToStructure(ptr, typeof(PostProcessSettings.Data));
-
-            var postFxCount = Settings.data.PostFxMaterialsCount;
-            Settings.postFxMaterials = new MaterialBase[postFxCount];
-            fixed (Guid* postFxMaterials = &Settings.data.PostFxMaterial0)
-            {
-                for (int i = 0; i < postFxCount; i++)
-                {
-                    Settings.postFxMaterials[i] = Content.LoadAsync<MaterialBase>(postFxMaterials[i]);
-                }
-            }
         }
 
         /// <summary>
         /// Sends cached Settings.data to unmanaged data
         /// </summary>
         /// <param name="ptr">The unmanaged data pointer.</param>
+        /// <param name="forceGet">True if get data by force, even if no change has been registered.</param>
         /// <returns>True if data has been modified, otherwise false.</returns>
-        internal unsafe bool Internal_GetData(IntPtr ptr)
+        internal bool Internal_GetData(IntPtr ptr, bool forceGet)
         {
-            var postFx = Settings.postFxMaterials;
-            var postFxLength = postFx?.Length ?? 0;
-
-            
-            Guid[] postFxMaterialsIds = new Guid[postFxLength];
-            for (int i = 0; i < postFxLength; i++)
-            {
-                postFxMaterialsIds[i] = postFx[i]?.ID ?? Guid.Empty;
-            }
-
-            bool posFxMaterialsChanged = false;
-            fixed (Guid* postFxMaterials = &Settings.data.PostFxMaterial0)
-            {
-                for (int i = 0; i < Settings.data.PostFxMaterialsCount; i++)
-                {
-                    if (postFxMaterials[i] != postFxMaterialsIds[i])
-                    {
-                        posFxMaterialsChanged = true;
-                    }
-                    postFxMaterials[i] = postFxMaterialsIds[i];
-                }
-                Settings.data.PostFxMaterialsCount = postFxLength;
-            }
-
-            if (!Settings.isDataDirty && !posFxMaterialsChanged)
+            if (!Settings.isDataDirty && !forceGet)
                 return false;
 
             Settings.isDataDirty = false;
