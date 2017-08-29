@@ -42,63 +42,96 @@ namespace FlaxEditor.Utilities
             }
         }
 
+        private static Type[] _attributesIgnoreList =
+        {
+            typeof(NonSerializedAttribute),
+            typeof(NoSerializeAttribute)
+        };
+        
+        private static void GetEntries(MemberInfo member, Stack<MemberInfo> membersPath, Type type, List<TypeEntry> result, List<object> values, Stack<object> refStack, Type memberType, object memberValue)
+        {
+            membersPath.Push(member);
+            var path = new MemberInfoPath(membersPath);
+            var beforeCount = result.Count;
+
+            // Check if record object sub members (skip flax objects)
+            // It's used for ref types bu not null types and with checking cyclic references
+            if (memberType.IsClass
+                && !typeof(FlaxEngine.Object).IsAssignableFrom(memberType)
+                && memberValue != null
+                && !refStack.Contains(memberValue))
+            {
+                refStack.Push(memberValue);
+                GetEntries(memberValue, membersPath, memberType, result, values, refStack);
+                refStack.Pop();
+            }
+
+            var afterCount = result.Count;
+            result.Add(new TypeEntry(path, afterCount - beforeCount));
+            values.Add(memberValue);
+            membersPath.Pop();
+        }
+
         private static void GetEntries(object instance, Stack<MemberInfo> membersPath, Type type, List<TypeEntry> result, List<object> values, Stack<object> refStack)
         {
-            var members = type.GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            // Note: this should match Flax serialization rules and atttributes (see ExtendedDefaultContractResolver)
 
-            for (int i = 0; i < members.Length; i++)
+            var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            for (int i = 0; i < fields.Length; i++)
             {
-                var member = members[i];
+                var f = fields[i];
+                var attributes = f.GetCustomAttributes();
 
-                var attributes = member.GetCustomAttributes(true);
-                if (attributes.Any(x => x is NoSerializeAttribute))
+                // Serialize non-public fields only with a proper attribute
+                if (!f.IsPublic && !attributes.Any(x => x is SerializeAttribute))
                     continue;
 
-                Type memberType;
-                object memberValue;
-                if (member is FieldInfo fieldInfo)
+                // Check if has attribute to skip serialization
+                bool noSerialize = false;
+                foreach (var attribute in attributes)
                 {
-                    if (attributes.Any(x => x is NonSerializedAttribute))
-                        continue;
-
-                    memberType = fieldInfo.FieldType;
-                    memberValue = fieldInfo.GetValue(instance);
+                    if (_attributesIgnoreList.Contains(attribute.GetType()))
+                    {
+                        noSerialize = true;
+                        break;
+                    }
                 }
-                else if (member is PropertyInfo propertyInfo)
-                {
+                if (noSerialize)
                     continue;
 
-                    if (!propertyInfo.CanRead || !propertyInfo.CanWrite || propertyInfo.GetGetMethod().GetParameters().Length != 0)
-                        continue;
+                var memberType = f.FieldType;
+                var memberValue = f.GetValue(instance);
+                GetEntries(f, membersPath, type, result, values, refStack, memberType, memberValue);
+            }
 
-                    memberType = propertyInfo.PropertyType;
-                    memberValue = propertyInfo.GetValue(instance, null);
-                }
-                else
-                {
+            for (int i = 0; i < properties.Length; i++)
+            {
+                var p = properties[i];
+
+                // Serialize only properties with read/write
+                if (!(p.CanRead && p.CanWrite && p.GetIndexParameters().GetLength(0) == 0))
                     continue;
-                }
 
-                membersPath.Push(member);
-                var path = new MemberInfoPath(membersPath);
-                var beforeCount = result.Count;
+                var attributes = p.GetCustomAttributes();
 
-                // Check if record object sub members (skip flax objects)
-                // It's used for ref types bu not null types and with checking cyclic references
-                if (memberType.IsClass
-                    && !typeof(FlaxEngine.Object).IsAssignableFrom(memberType)
-                    && memberValue != null
-                    && !refStack.Contains(memberValue))
+                // Check if has attribute to skip serialization
+                bool noSerialize = false;
+                foreach (var attribute in attributes)
                 {
-                    refStack.Push(memberValue);
-                    GetEntries(memberValue, membersPath, memberType, result, values, refStack);
-                    refStack.Pop();
+                    if (_attributesIgnoreList.Contains(attribute.GetType()))
+                    {
+                        noSerialize = true;
+                        break;
+                    }
                 }
+                if (noSerialize)
+                    continue;
 
-                var afterCount = result.Count;
-                result.Add(new TypeEntry(path, afterCount - beforeCount));
-                values.Add(memberValue);
-                membersPath.Pop();
+                var memberType = p.PropertyType;
+                var memberValue = p.GetValue(instance, null);
+                GetEntries(p, membersPath, type, result, values, refStack, memberType, memberValue);
             }
         }
 
