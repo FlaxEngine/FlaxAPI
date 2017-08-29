@@ -164,11 +164,13 @@
     <Compile Include="Modules\UIModule.cs" />
     <Compile Include="Modules\WindowsModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SceneGraph\ActorChildNode.cs" />
     <Compile Include="SceneGraph\ActorNode.cs" />
     <Compile Include="SceneGraph\ActorNodeWithIcon.cs" />
     <Compile Include="SceneGraph\Actors\CameraNode.cs" />
     <Compile Include="SceneGraph\Actors\DirectionalLightNode.cs" />
     <Compile Include="SceneGraph\Actors\EnvironmentProbeNode.cs" />
+    <Compile Include="SceneGraph\Actors\ModelActorNode.cs" />
     <Compile Include="SceneGraph\Actors\PointLightNode.cs" />
     <Compile Include="SceneGraph\Actors\PostFxVolumeNode.cs" />
     <Compile Include="SceneGraph\Actors\SkyboxNode.cs" />

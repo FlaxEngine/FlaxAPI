@@ -27,6 +27,7 @@ namespace FlaxEngine
         /// <value>
         /// The lcoal transform.
         /// </value>
+        [EditorOrder(40), EditorDisplay("Mesh")]
         public Transform Transform
         {
             get
@@ -37,7 +38,7 @@ namespace FlaxEngine
             }
             set => ModelActor.Internal_SetMeshTransform(_modelActor.unmanagedPtr, _index, ref value);
         }
-
+        
         /// <summary>
         /// Gets or sets the material used to render the mesh.
         /// If value if null then model asset mesh default material will be used as a fallback.
@@ -45,6 +46,7 @@ namespace FlaxEngine
         /// <value>
         /// The material.
         /// </value>
+        [EditorOrder(10), EditorDisplay("Mesh")]
         public MaterialBase Material
         {
             get => ModelActor.Internal_GetMeshMaterial(_modelActor.unmanagedPtr, _index);
@@ -58,6 +60,7 @@ namespace FlaxEngine
         /// <value>
         /// The scale in lightmap.
         /// </value>
+        [EditorOrder(20), EditorDisplay("Mesh"), Limit(0, 10000, 0.1f)]
         public float ScaleInLightmap
         {
             get => ModelActor.Internal_GetMeshScaleInLightmap(_modelActor.unmanagedPtr, _index);
@@ -70,6 +73,7 @@ namespace FlaxEngine
         /// <value>
         ///   <c>true</c> if visible; otherwise, <c>false</c>.
         /// </value>
+        [EditorOrder(30), EditorDisplay("Mesh")]
         public bool Visible
         {
             get => ModelActor.Internal_GetMeshVisible(_modelActor.unmanagedPtr, _index);
