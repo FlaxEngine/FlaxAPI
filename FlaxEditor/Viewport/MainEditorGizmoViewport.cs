@@ -4,11 +4,15 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.Content;
 using FlaxEditor.Gizmo;
+using FlaxEditor.GUI.Drag;
 using FlaxEditor.SceneGraph;
+using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.Viewport.Widgets;
 using FlaxEditor.Windows;
 using FlaxEngine;
+using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
 
@@ -26,6 +30,8 @@ namespace FlaxEditor.Viewport
         private readonly ViewportWidgetButton _gizmoModeRotate;
         private readonly ViewportWidgetButton _gizmoModeScale;
 
+        private readonly DragItems _dragItems = new DragItems();
+
         /// <summary>
         /// The transform gizmo.
         /// </summary>
@@ -41,23 +47,7 @@ namespace FlaxEditor.Viewport
             _editor = editor;
 
             Task.Flags = ViewFlags.DefaultEditor;
-            Task.OnEnd += task =>
-            {
-                IntPtr[] selectedActors = null;
-                var selectedParents = TransformGizmo.SelectedParents;
-                if (selectedParents.Count > 0)
-                {
-                    var actors = new List<IntPtr>(selectedParents.Count);
-                    for (int i = 0; i < selectedParents.Count; i++)
-                    {
-                        if (selectedParents[i].IsActiveInHierarchy)
-                            selectedParents[i].OnDebugDraw(actors);
-                    }
-                    if (actors.Count > 0)
-                        selectedActors = actors.ToArray();
-                }
-                DebugDraw.Draw(task, selectedActors);
-            };
+            Task.OnEnd += RenderTaskOnEnd;
 
             TransformGizmo = new TransformGizmo(this);
             TransformGizmo.OnApplyTransformation += ApplyTransform;
@@ -161,9 +151,28 @@ namespace FlaxEditor.Viewport
             gizmoMode.Parent = this;
         }
 
+        private void RenderTaskOnEnd(SceneRenderTask task)
+        {
+            // Draw selected objects debug shapes
+            IntPtr[] selectedActors = null;
+            var selectedParents = TransformGizmo.SelectedParents;
+            if (selectedParents.Count > 0)
+            {
+                var actors = new List<IntPtr>(selectedParents.Count);
+                for (int i = 0; i < selectedParents.Count; i++)
+                {
+                    if (selectedParents[i].IsActiveInHierarchy)
+                        selectedParents[i].OnDebugDraw(actors);
+                }
+                if (actors.Count > 0)
+                    selectedActors = actors.ToArray();
+            }
+            DebugDraw.Draw(task, selectedActors);
+        }
+
         private void onGizmoModeToggle(ViewportWidgetButton button)
         {
-            TransformGizmo.ActiveMode = (TransformGizmo.Mode) (int) button.Tag;
+            TransformGizmo.ActiveMode = (TransformGizmo.Mode)(int)button.Tag;
         }
 
         private void onTranslateSnappingToggle(ViewportWidgetButton button)
@@ -209,7 +218,7 @@ namespace FlaxEditor.Viewport
 
         private void widgetScaleSnapClick(int id, ContextMenu contextMenu)
         {
-            var button = (ViewportWidgetButton) contextMenu.GetButton(id).Tag;
+            var button = (ViewportWidgetButton)contextMenu.GetButton(id).Tag;
             TransformGizmo.ScaleSnapValue = EditorViewportScaleSnapValues[id];
             button.Text = EditorViewportScaleSnapValues[id].ToString();
         }
@@ -219,7 +228,7 @@ namespace FlaxEditor.Viewport
             if (control.Visible == false)
                 return;
 
-            var ccm = (ContextMenu) control;
+            var ccm = (ContextMenu)control;
             for (int i = 0; i < EditorViewportScaleSnapValues.Length; i++)
             {
                 ccm.GetButton(i).Icon = Mathf.Abs(TransformGizmo.ScaleSnapValue - EditorViewportScaleSnapValues[i]) < 0.001f
@@ -242,7 +251,7 @@ namespace FlaxEditor.Viewport
 
         private void widgetRotateSnapClick(int id, ContextMenu contextMenu)
         {
-            var button = (ViewportWidgetButton) contextMenu.GetButton(id).Tag;
+            var button = (ViewportWidgetButton)contextMenu.GetButton(id).Tag;
             TransformGizmo.RotationSnapValue = EditorViewportRotateSnapValues[id];
             button.Text = EditorViewportRotateSnapValues[id].ToString();
         }
@@ -252,7 +261,7 @@ namespace FlaxEditor.Viewport
             if (control.Visible == false)
                 return;
 
-            var ccm = (ContextMenu) control;
+            var ccm = (ContextMenu)control;
             for (int i = 0; i < EditorViewportRotateSnapValues.Length; i++)
             {
                 ccm.GetButton(i).Icon = Mathf.Abs(TransformGizmo.RotationSnapValue - EditorViewportRotateSnapValues[i]) < 0.001f
@@ -274,7 +283,7 @@ namespace FlaxEditor.Viewport
 
         private void widgetTranslateSnapClick(int id, ContextMenu contextMenu)
         {
-            var button = (ViewportWidgetButton) contextMenu.GetButton(id).Tag;
+            var button = (ViewportWidgetButton)contextMenu.GetButton(id).Tag;
             TransformGizmo.TranslationSnapValue = EditorViewportTranslateSnapValues[id];
             button.Text = EditorViewportTranslateSnapValues[id].ToString();
         }
@@ -284,7 +293,7 @@ namespace FlaxEditor.Viewport
             if (control.Visible == false)
                 return;
 
-            var ccm = (ContextMenu) control;
+            var ccm = (ContextMenu)control;
             for (int i = 0; i < EditorViewportTranslateSnapValues.Length; i++)
             {
                 ccm.GetButton(i).Icon = Mathf.Abs(TransformGizmo.TranslationSnapValue - EditorViewportTranslateSnapValues[i]) < 0.001f
@@ -374,6 +383,30 @@ namespace FlaxEditor.Viewport
             var sceneEditing = Editor.Instance.SceneEditing;
             if (hit != null)
             {
+                // For child actor nodes (mesh, link or sth) we need to select it's owning actor node first or any other child node (but not a child actor)
+                if (hit is ActorChildNode actorChildNode)
+                {
+                    var parentNode = actorChildNode.ParentNode;
+                    bool canChildBeSelected = sceneEditing.Selection.Contains(parentNode);
+                    if (!canChildBeSelected)
+                    {
+                        for (int i = 0; i < parentNode.ChildNodes.Count; i++)
+                        {
+                            if (sceneEditing.Selection.Contains(parentNode.ChildNodes[i]))
+                            {
+                                canChildBeSelected = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!canChildBeSelected)
+                    {
+                        // Select parent
+                        hit = parentNode;
+                    }
+                }
+
                 bool addRemove = ParentWindow.GetKey(KeyCode.Control);
                 bool isSelected = sceneEditing.Selection.Contains(hit);
 
@@ -430,6 +463,109 @@ namespace FlaxEditor.Viewport
             }
 
             return base.OnKeyDown(key);
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
+        {
+            var result = base.OnDragEnter(ref location, data);
+            if (result != DragDropEffect.None)
+                return result;
+
+            if (_dragItems.OnDragEnter(data, ValidateDragItem))
+                result = _dragItems.Effect;
+
+            return result;
+        }
+
+        private bool ValidateDragItem(ContentItem contentItem)
+        {
+            switch (contentItem.ItemDomain)
+            {
+                case ContentDomain.Material:
+                case ContentDomain.Model:
+                case ContentDomain.Prefab:
+                case ContentDomain.Scene: return true;
+                default: return false;
+            }
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragMove(ref Vector2 location, DragData data)
+        {
+            var result = base.OnDragMove(ref location, data);
+            if (result != DragDropEffect.None)
+                return result;
+            
+            return _dragItems.Effect;
+        }
+
+        /// <inheritdoc />
+        public override void OnDragLeave()
+        {
+            _dragItems.OnDragLeave();
+
+            base.OnDragLeave();
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
+        {
+            var result = base.OnDragDrop(ref location, data);
+            if (result != DragDropEffect.None)
+                return result;
+
+            if (_dragItems.HasValidDrag)
+            {
+                result = _dragItems.Effect;
+
+                // Get mouse ray and try to hit any object
+                var ray = ConvertMouseToRay(ref location);
+                float closest = float.MaxValue;
+                var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest);
+                Vector3 hitLocation;
+                if (hit != null)
+                {
+                    // Use hit location
+                    hitLocation = ray.Position + ray.Direction * closest;
+                }
+                else
+                {
+                    // Use area in front of the viewport
+                    hitLocation = ViewPosition + ViewDirection * 10;
+                }
+
+                // Process items
+                for (int i = 0; i < _dragItems.Objects.Count; i++)
+                {
+                    var item = _dragItems.Objects[i];
+                    var assetItem = item as AssetItem;
+                    
+                    switch (item.ItemDomain)
+                    {
+                        case ContentDomain.Material:
+                        {
+                            if (assetItem == null)
+                                throw new ArgumentNullException();
+
+                            if (hit is ModelActorNode.MeshNode meshNode)
+                            {
+                                var material = FlaxEngine.Content.LoadAsync<MaterialBase>(assetItem.ID);
+                                using (new UndoBlock(Undo, meshNode.ModelActor, "Change material"))
+                                    meshNode.Mesh.Material = material;
+                            }
+
+                            break;
+                        }
+                        case ContentDomain.Model:
+                        case ContentDomain.Prefab:
+                        case ContentDomain.Scene: break;
+                        default: throw new ArgumentOutOfRangeException();
+                    }
+                }
+            }
+
+            return result;
         }
     }
 }
