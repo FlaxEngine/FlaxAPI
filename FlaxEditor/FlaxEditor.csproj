@@ -251,6 +251,7 @@
     <Compile Include="Undo\UndoBlock.cs" />
     <Compile Include="Undo\UndoMultiBlock.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
+    <Compile Include="Utilities\MemberInfoPath.cs" />
     <Compile Include="Utilities\ObjectSnapshot.cs" />
     <Compile Include="Utilities\QueryFilterHelper.cs" />
     <Compile Include="Viewport\EditorGizmoViewport.cs" />

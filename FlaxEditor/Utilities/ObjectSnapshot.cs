@@ -15,54 +15,102 @@ namespace FlaxEditor.Utilities
     /// </summary>
     public sealed class ObjectSnapshot
     {
+        private readonly List<TypeEntry> _members;
+        private readonly List<object> _values;
+        
         /// <summary>
         /// The object type.
         /// </summary>
         public readonly Type ObjectType;
-
-        /// <summary>
-        /// The stored values.
-        /// </summary>
-        public readonly List<object> Values;
-
-        private ObjectSnapshot(Type type, List<object> values)
+        
+        private ObjectSnapshot(Type type, List<object> values, List<TypeEntry> members)
         {
             ObjectType = type;
-            Values = values;
+            _values = values;
+            _members = members;
         }
 
-        private static List<MemberInfo> GetMembers(Type type)
+        private struct TypeEntry
         {
-            // TODO: cache it per type
+            public MemberInfoPath Path;
+            public int SubEntriesCount;
 
+            public TypeEntry(MemberInfoPath membersPath, int subEntriesCount)
+            {
+                Path = membersPath;
+                SubEntriesCount = subEntriesCount;
+            }
+        }
+
+        private static void GetEntries(object instance, Stack<MemberInfo> membersPath, Type type, List<TypeEntry> result, List<object> values, Stack<object> refStack)
+        {
             var members = type.GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            var result = new List<MemberInfo>(members.Length);
 
             for (int i = 0; i < members.Length; i++)
             {
-                var m = members[i];
+                var member = members[i];
 
-                var attributes = m.GetCustomAttributes(true);
+                var attributes = member.GetCustomAttributes(true);
                 if (attributes.Any(x => x is NoSerializeAttribute))
                     continue;
 
-                if (m.MemberType == MemberTypes.Field)
+                Type memberType;
+                object memberValue;
+                if (member is FieldInfo fieldInfo)
                 {
                     if (attributes.Any(x => x is NonSerializedAttribute))
                         continue;
 
-                    result.Add(m);
+                    memberType = fieldInfo.FieldType;
+                    memberValue = fieldInfo.GetValue(instance);
                 }
-                else if (m.MemberType == MemberTypes.Property)
+                else if (member is PropertyInfo propertyInfo)
                 {
-                    var prop = (PropertyInfo)m;
-                    if (prop.CanRead && prop.CanWrite && prop.GetGetMethod().GetParameters().Length == 0)
-                    {
-                        result.Add(m);
-                    }
-                }
-            }
+                    continue;
 
+                    if (!propertyInfo.CanRead || !propertyInfo.CanWrite || propertyInfo.GetGetMethod().GetParameters().Length != 0)
+                        continue;
+
+                    memberType = propertyInfo.PropertyType;
+                    memberValue = propertyInfo.GetValue(instance, null);
+                }
+                else
+                {
+                    continue;
+                }
+
+                membersPath.Push(member);
+                var path = new MemberInfoPath(membersPath);
+                var beforeCount = result.Count;
+
+                // Check if record object sub members (skip flax objects)
+                // It's used for ref types bu not null types and with checking cyclic references
+                if (memberType.IsClass
+                    && !typeof(FlaxEngine.Object).IsAssignableFrom(memberType)
+                    && memberValue != null
+                    && !refStack.Contains(memberValue))
+                {
+                    refStack.Push(memberValue);
+                    GetEntries(memberValue, membersPath, memberType, result, values, refStack);
+                    refStack.Pop();
+                }
+
+                var afterCount = result.Count;
+                result.Add(new TypeEntry(path, afterCount - beforeCount));
+                values.Add(memberValue);
+                membersPath.Pop();
+            }
+        }
+
+        private static List<TypeEntry> GetMembers(object instance, Type type, out List<object> values)
+        {
+            values = new List<object>();
+            var result = new List<TypeEntry>();
+            var membersPath = new Stack<MemberInfo>(8);
+            var refsStack = new Stack<object>(8);
+
+            refsStack.Push(instance);
+            GetEntries(instance, membersPath, type, result, values, refsStack);
             return result;
         }
 
@@ -77,24 +125,11 @@ namespace FlaxEditor.Utilities
                 throw new ArgumentNullException();
 
             var type = obj.GetType();
-            var values = new List<object>();
 
-            var members = GetMembers(type);
-            for (int i = 0; i < members.Count; i++)
-            {
-                var m = members[i];
-
-                if (m is FieldInfo fieldInfo)
-                {
-                    values.Add(fieldInfo.GetValue(obj));
-                }
-                else
-                {
-                    values.Add(((PropertyInfo)m).GetValue(obj, null));
-                }
-            }
-
-            return new ObjectSnapshot(type, values);
+            List<object> values;
+            var members = GetMembers(obj, type, out values);
+            
+            return new ObjectSnapshot(type, values, members);
         }
 
         /// <summary>
@@ -112,30 +147,21 @@ namespace FlaxEditor.Utilities
 
             var list = new List<MemberComparison>();
 
-            var members = GetMembers(ObjectType);
-            int index = 0;
-            for (int i = 0; i < members.Count; i++)
+            for (int i = _members.Count - 1; i >= 0; i--)
             {
-                var m = members[i];
-                object xValue = Values[index++];
-                object yValue;
+                var m = _members[i];
+                object xValue = _values[i];
+                object yValue = m.Path.GetLastValue(obj);
 
-                if (m is FieldInfo fieldInfo)
-                {
-                    yValue = fieldInfo.GetValue(obj);
-                }
-                else
-                {
-                    var propertyInfo = (PropertyInfo)m;
-                    yValue = propertyInfo.GetValue(obj, null);
-                }
-                
                 if (!Equals(xValue, yValue))
                 {
-                    list.Add(new MemberComparison(m, xValue, yValue));
+                    list.Add(new MemberComparison(m.Path, xValue, yValue));
+
+                    // Value changed, skip sub entries compare
+                    i -= m.SubEntriesCount;
                 }
             }
-
+            
             return list;
         }
     }

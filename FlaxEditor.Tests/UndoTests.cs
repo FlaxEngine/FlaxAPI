@@ -173,5 +173,50 @@ namespace FlaxEditor.Tests
             Assert.AreEqual(99, instance.FieldObject.FieldObject.PropertyObject.FieldInteger);
             Assert.AreEqual(99, instance.PropertyObject.PropertyObject.FieldObject.FieldInteger);
         }
+
+        [Test]
+        public void UndoTestRecursive2()
+        {
+            var undo = new Undo();
+            var instance = new UndoObject(true)
+            {
+                FieldObject =
+                {
+                    FieldObject = new UndoObject(false),
+                    PropertyObject = new UndoObject(false)
+                },
+                PropertyObject =
+                {
+                    FieldObject = new UndoObject(false),
+                    PropertyObject = new UndoObject(false)
+                }
+            };
+            using (new UndoBlock(undo, instance, "Edit"))
+            {
+                instance.FieldInteger = 1;
+                instance.FieldObject.FieldInteger = 10;
+                instance.PropertyObject.FieldInteger = 11;
+                instance.FieldObject.FieldObject.FieldInteger = 22;
+                instance.FieldObject.PropertyObject.FieldInteger = 23;
+                instance.PropertyObject.FieldObject.FieldInteger = 24;
+                instance.PropertyObject.PropertyObject.FieldInteger = 25;
+            }
+            undo.PerformUndo();
+            Assert.AreEqual(10, instance.FieldInteger);
+            Assert.AreEqual(1, instance.FieldObject.FieldInteger);
+            Assert.AreEqual(-1, instance.PropertyObject.FieldInteger);
+            Assert.AreEqual(10, instance.FieldObject.FieldObject.FieldInteger);
+            Assert.AreEqual(10, instance.FieldObject.PropertyObject.FieldInteger);
+            Assert.AreEqual(10, instance.PropertyObject.FieldObject.FieldInteger);
+            Assert.AreEqual(10, instance.PropertyObject.PropertyObject.FieldInteger);
+            undo.PerformRedo();
+            Assert.AreEqual(1, instance.FieldInteger);
+            Assert.AreEqual(10, instance.FieldObject.FieldInteger);
+            Assert.AreEqual(11, instance.PropertyObject.FieldInteger);
+            Assert.AreEqual(22, instance.FieldObject.FieldObject.FieldInteger);
+            Assert.AreEqual(23, instance.FieldObject.PropertyObject.FieldInteger);
+            Assert.AreEqual(24, instance.PropertyObject.FieldObject.FieldInteger);
+            Assert.AreEqual(25, instance.PropertyObject.PropertyObject.FieldInteger);
+        }
     }
 }

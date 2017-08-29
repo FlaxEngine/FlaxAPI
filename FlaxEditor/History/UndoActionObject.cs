@@ -102,7 +102,7 @@ namespace FlaxEditor.History
         // otherwise here:
         private object TargetInstance;
 
-        private MemberInfo[] Members;
+        private MemberInfoPath[] Members;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UndoActionObject"/> class.
@@ -120,12 +120,12 @@ namespace FlaxEditor.History
             int count = diff.Count;
             var values1 = new DataValue[count];
             var values2 = new DataValue[count];
-            Members = new MemberInfo[count];
+            Members = new MemberInfoPath[count];
             for (int i = 0; i < count; i++)
             {
                 values1[i] = new DataValue(diff[i].Value1);
                 values2[i] = new DataValue(diff[i].Value2);
-                Members[i] = diff[i].Member;
+                Members[i] = diff[i].MemberPath;
             }
 
             Data = new DataStorage
