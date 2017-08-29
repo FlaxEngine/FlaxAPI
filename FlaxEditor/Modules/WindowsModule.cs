@@ -87,6 +87,21 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
+        /// Updates the main window title.
+        /// </summary>
+        public void UpdateWindowTitle()
+        {
+            var mainWindow = MainWindow;
+            if (mainWindow)
+            {
+                var projectPath = Globals.ProjectFolder.Replace('/', '\\');
+                var platformBit = Application.Is64bitApp ? "64" : "32";
+                var title = string.Format("Flax Editor - \'{0}\' ({1}-bit)", projectPath, platformBit);
+                mainWindow.Title = title;
+            }
+        }
+
+        /// <summary>
         /// Flash main editor window to catch user attention
         /// </summary>
         public void FlashMainWindow()
@@ -195,6 +210,7 @@ namespace FlaxEditor.Modules
                 Debug.LogError("Failed to create editor main window!");
                 return;
             }
+            UpdateWindowTitle();
 
             // Link for main window events
             MainWindow.OnClosing += MainWindow_OnClosing;
@@ -275,6 +291,8 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnEndInit()
         {
+            UpdateWindowTitle();
+
             // Initialize windows
             for (int i = 0; i < Windows.Count; i++)
                 Windows[i].OnInit();
