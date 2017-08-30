@@ -9,7 +9,6 @@ namespace FlaxEngine
 {
     public sealed partial class ModelActor
     {
-        [Serialize]
         private MeshInfo[] _meshes;
 
         /// <summary>
@@ -18,6 +17,7 @@ namespace FlaxEngine
         /// <remarks>
         /// It's null if the <see cref="Model"/> property is null or asset is not loaded yet.
         /// </remarks>
+        [Serialize]
         [EditorOrder(100), EditorDisplay("Model")]
         [MemberCollection(CanReorderItems = false, NotNullItems = true, ReadOnly = true)]
         public MeshInfo[] Meshes
@@ -41,6 +41,14 @@ namespace FlaxEngine
                 }
 
                 return _meshes;
+            }
+            internal set
+            {
+                // Used by the serialization system
+                
+                _meshes = value;
+
+                MeshesChanged?.Invoke(this);
             }
         }
 

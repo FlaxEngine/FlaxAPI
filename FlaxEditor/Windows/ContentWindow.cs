@@ -63,15 +63,19 @@ namespace FlaxEditor.Windows
             _toolStrip.Parent = this;
 
             // Navigation bar
-            _navigationBar = new NavigationBar();
-            _navigationBar.Height = 32;
-            _navigationBar.Parent = this;
+            _navigationBar = new NavigationBar
+            {
+                Height = 32,
+                Parent = this
+            };
 
             // Split panel
-            _split = new SplitPanel(Orientation.Horizontal, ScrollBars.Both, ScrollBars.Vertical);
-            _split.DockStyle = DockStyle.Fill;
-            _split.SplitterValue = 0.2f;
-            _split.Parent = this;
+            _split = new SplitPanel(Orientation.Horizontal, ScrollBars.Both, ScrollBars.Vertical)
+            {
+                DockStyle = DockStyle.Fill,
+                SplitterValue = 0.2f,
+                Parent = this
+            };
 
             // Content structure tree
             _tree = new Tree(false);

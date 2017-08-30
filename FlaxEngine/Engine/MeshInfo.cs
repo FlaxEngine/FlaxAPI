@@ -9,7 +9,9 @@ namespace FlaxEngine
     /// </summary>
     public sealed class MeshInfo
     {
+        [Serialize]
         internal ModelActor _modelActor;
+        [Serialize]
         internal readonly int _index;
 
         /// <summary>
@@ -88,6 +90,11 @@ namespace FlaxEngine
         /// </value>
         [HideInEditor]
         public int Index => _index;
+
+        internal MeshInfo()
+        {
+            // Used by the serialization system
+        }
 
         internal MeshInfo(ModelActor model, int index)
         {

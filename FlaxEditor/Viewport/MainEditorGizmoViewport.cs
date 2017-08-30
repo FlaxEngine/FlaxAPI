@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using FlaxEditor.Actions;
 using FlaxEditor.Content;
 using FlaxEditor.Gizmo;
 using FlaxEditor.GUI.Drag;
@@ -308,10 +307,15 @@ namespace FlaxEditor.Viewport
             Gizmos.ForEach(x => x.OnSelectionChanged(selection));
         }
 
+        /// <summary>
+        /// Applies the transform to the collection of scene graph nodes.
+        /// </summary>
+        /// <param name="selection">The selection.</param>
+        /// <param name="translationDelta">The translation delta.</param>
+        /// <param name="rotationDelta">The rotation delta.</param>
+        /// <param name="scaleDelta">The scale delta.</param>
         public void ApplyTransform(List<SceneGraphNode> selection, ref Vector3 translationDelta, ref Matrix rotationDelta, ref Vector3 scaleDelta)
         {
-            // TODO: lock properties editor here
-
             bool useObjCenter = TransformGizmo.ActivePivot == TransformGizmo.PivotType.ObjectCenter;
             bool uniformScale = TransformGizmo.ActiveAxis == TransformGizmo.Axis.Center;
             Vector3 gizmoPosition = TransformGizmo.Position;
@@ -350,16 +354,13 @@ namespace FlaxEditor.Viewport
 
                 obj.Transform = trans;
             }
-
-            // Fire event
-            // TODO: mark scene as edited (all parent scenes of the selected objects)
         }
 
         /// <inheritdoc />
         protected override void OnLeftMouseButtonUp()
         {
-            // Skip if was controlling mouse
-            if (_prevInput.IsControllingMouse)
+            // Skip if was controlling mouse or mouse is not over the area
+            if (_prevInput.IsControllingMouse || !Bounds.Contains(ref _viewMousePos))
                 return;
 
             if (TransformGizmo.IsActive)
@@ -558,6 +559,7 @@ namespace FlaxEditor.Viewport
                             // Create actor
                             var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
                             var actor = ModelActor.New();
+                            actor.StaticFlags = StaticFlags.FullyStatic;
                             actor.Name = item.ShortName;
                             actor.Model = model;
 
