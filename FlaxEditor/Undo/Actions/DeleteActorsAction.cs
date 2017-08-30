@@ -16,9 +16,16 @@ namespace FlaxEditor.Actions
     {
         private List<ActorNode> _nodeParents;
         private byte[] _data;
+        private bool _isInverted;
 
-        internal DeleteActorsAction(List<SceneGraphNode> objects)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DeleteActorsAction"/> class.
+        /// </summary>
+        /// <param name="objects">The objects.</param>
+        /// <param name="isInverted">If set to <c>true</c> action will be inverted - instead of delete it will be create actors.</param>
+        internal DeleteActorsAction(List<SceneGraphNode> objects, bool isInverted = false)
         {
+            _isInverted = isInverted;
             _nodeParents = new List<ActorNode>(objects.Count);
             var actorNodes = new List<ActorNode>(objects.Count);
             var actors = new List<Actor>(objects.Count);
@@ -36,10 +43,27 @@ namespace FlaxEditor.Actions
         }
 
         /// <inheritdoc />
-        public string ActionString => "Delete actors";
+        public string ActionString => _isInverted ? "Create actors" : "Delete actors";
 
         /// <inheritdoc />
         public void Do()
+        {
+            if(_isInverted)
+                Create();
+            else
+                Delete();
+        }
+
+        /// <inheritdoc />
+        public void Undo()
+        {
+            if (_isInverted)
+                Delete();
+            else
+                Create();
+        }
+
+        private void Delete()
         {
             // Remove objects
             for (int i = 0; i < _nodeParents.Count; i++)
@@ -51,8 +75,7 @@ namespace FlaxEditor.Actions
             _nodeParents.Clear();
         }
 
-        /// <inheritdoc />
-        public void Undo()
+        private void Create()
         {
             // Restore objects
             var actors = Actor.FromBytes(_data);

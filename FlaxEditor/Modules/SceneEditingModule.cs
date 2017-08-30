@@ -173,6 +173,22 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
+        /// Spawns the specified actor to the game (with undo).
+        /// </summary>
+        /// <param name="actor">The actor.</param>
+        /// <param name="parent">The parent actor. Set null as default.</param>
+        public void Spawn(Actor actor, Actor parent = null)
+        {
+            // Add it
+            SceneManager.SpawnActor(actor, parent);
+
+            // Create undo action
+            var actorNode = Editor.Instance.Scene.GetActorNode(actor);
+            var action = new DeleteActorsAction(new List<SceneGraphNode>(1) { actorNode }, true);
+            Undo.AddAction(action);
+        }
+
+        /// <summary>
         /// Deletes the selected objects. Supports undo/redo.
         /// </summary>
         public void Delete()

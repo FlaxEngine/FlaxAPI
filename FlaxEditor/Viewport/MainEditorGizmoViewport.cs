@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.Actions;
 using FlaxEditor.Content;
 using FlaxEditor.Gizmo;
 using FlaxEditor.GUI.Drag;
@@ -554,6 +555,19 @@ namespace FlaxEditor.Viewport
                         }
                         case ContentDomain.Model:
                         {
+                            // Create actor
+                            var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
+                            var actor = ModelActor.New();
+                            actor.Name = item.ShortName;
+                            actor.Model = model;
+
+                            // Place it
+                            var box = actor.Box;
+                            actor.Position = hitLocation - (box.Size.Length * 0.5f) * ViewDirection;
+
+                            // Spawn
+                            Editor.Instance.SceneEditing.Spawn(actor);
+                            
                             break;
                         }
                         case ContentDomain.Prefab:
