@@ -39,6 +39,11 @@ namespace FlaxEditor.CustomEditors.Editors
             public EditorDisplayAttribute Display;
 
             /// <summary>
+            /// The tooltip attribute.
+            /// </summary>
+            public TooltipAttribute Tooltip;
+
+            /// <summary>
             /// The custom editor attribute.
             /// </summary>
             public CustomEditorAttribute CustomEditor;
@@ -68,6 +73,11 @@ namespace FlaxEditor.CustomEditors.Editors
             public CustomEditor OverrideEditor => CustomEditor != null ? (CustomEditor)Activator.CreateInstance(CustomEditor.Type) : null;
 
             /// <summary>
+            /// Gets the tooltip text (may be null if not provided).
+            /// </summary>
+            public string TooltipText => Tooltip?.Text;
+
+            /// <summary>
             /// Initializes a new instance of the <see cref="ItemInfo"/> class.
             /// </summary>
             /// <param name="info">The reflection information.</param>
@@ -77,8 +87,9 @@ namespace FlaxEditor.CustomEditors.Editors
                 Info = info;
                 Order = (EditorOrderAttribute)attributes.FirstOrDefault(x => x is EditorOrderAttribute);
                 Display = (EditorDisplayAttribute)attributes.FirstOrDefault(x => x is EditorDisplayAttribute);
+                Tooltip = (TooltipAttribute)attributes.FirstOrDefault(x => x is TooltipAttribute);
                 CustomEditor = (CustomEditorAttribute)attributes.FirstOrDefault(x => x is CustomEditorAttribute);
-
+                
                 if (Display?.Name != null)
                 {
                     // Use name provided by the attribute
@@ -226,7 +237,7 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <param name="item">The item.</param>
         protected virtual void SpawnProperty(LayoutElementsContainer itemLayout, ValueContainer itemValues, ItemInfo item)
         {
-            itemLayout.Property(item.DisplayName, itemValues, item.OverrideEditor);
+            itemLayout.Property(item.DisplayName, itemValues, item.OverrideEditor, item.TooltipText);
         }
 
         /// <inheritdoc />

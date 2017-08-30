@@ -33,19 +33,23 @@ namespace FlaxEditor.CustomEditors.Elements
 
         internal readonly List<PropertyNameLabel> Labels = new List<PropertyNameLabel>();
 
-        internal void OnAddProperty(string name)
+        internal void OnAddProperty(string name, string tooltip)
         {
-            var label = new PropertyNameLabel(name);
-            label.Parent = Properties;
-            label.FirstChildControlIndex = Properties.Children.Count;
+            var label = new PropertyNameLabel(name)
+            {
+                Parent = Properties,
+                TooltipText = tooltip,
+                FirstChildControlIndex = Properties.Children.Count
+            };
             Labels.Add(label);
         }
 
-        internal void OnAddProperty(PropertyNameLabel label)
+        internal void OnAddProperty(PropertyNameLabel label, string tooltip)
         {
             if (label == null)
                 throw new ArgumentNullException();
             label.Parent = Properties;
+            label.TooltipText = tooltip;
             label.FirstChildControlIndex = Properties.Children.Count;
             Labels.Add(label);
         }

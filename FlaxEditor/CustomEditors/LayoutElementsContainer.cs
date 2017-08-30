@@ -92,11 +92,12 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         /// <param name="name">The property name.</param>
         /// <typeparam name="T">The custom control.</typeparam>
+        /// <param name="tooltip">The property label tooltip text.</param>
         /// <returns>The created element.</returns>
-        public CustomElement<T> Custom<T>(string name)
+        public CustomElement<T> Custom<T>(string name, string tooltip = null)
             where T : Control, new()
         {
-            var property = AddPropertyItem(name);
+            var property = AddPropertyItem(name, tooltip);
             return property.Custom<T>();
         }
 
@@ -118,8 +119,9 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         /// <param name="name">The property name.</param>
         /// <typeparam name="T">The custom control.</typeparam>
+        /// <param name="tooltip">The property label tooltip text.</param>
         /// <returns>The created element.</returns>
-        public CustomElementsContainer<T> CustomContainer<T>(string name)
+        public CustomElementsContainer<T> CustomContainer<T>(string name, string tooltip = null)
             where T : ContainerControl, new()
         {
             var property = AddPropertyItem(name);
@@ -166,10 +168,11 @@ namespace FlaxEditor.CustomEditors
         /// Adds new check box element with name label.
         /// </summary>
         /// <param name="name">The property name.</param>
+        /// <param name="tooltip">The property label tooltip text.</param>
         /// <returns>The created element.</returns>
-        public CheckBoxElement Checkbox(string name)
+        public CheckBoxElement Checkbox(string name, string tooltip = null)
         {
-            var property = AddPropertyItem(name);
+            var property = AddPropertyItem(name, tooltip);
             return property.Checkbox();
         }
 
@@ -191,10 +194,11 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         /// <param name="name">The property name.</param>
         /// <param name="text">The label text.</param>
+        /// <param name="tooltip">The property label tooltip text.</param>
         /// <returns>The created element.</returns>
-        public LabelElement Label(string name, string text)
+        public LabelElement Label(string name, string text, string tooltip = null)
         {
-            var property = AddPropertyItem(name);
+            var property = AddPropertyItem(name, tooltip);
             return property.Label(text);
         }
 
@@ -213,10 +217,11 @@ namespace FlaxEditor.CustomEditors
         /// Adds new float value element with name label.
         /// </summary>
         /// <param name="name">The property name.</param>
+        /// <param name="tooltip">The property label tooltip text.</param>
         /// <returns>The created element.</returns>
-        public FloatValueElement FloatValue(string name)
+        public FloatValueElement FloatValue(string name, string tooltip = null)
         {
-            var property = AddPropertyItem(name);
+            var property = AddPropertyItem(name, tooltip);
             return property.FloatValue();
         }
 
@@ -235,10 +240,11 @@ namespace FlaxEditor.CustomEditors
         /// Adds new integer value element with name label.
         /// </summary>
         /// <param name="name">The property name.</param>
+        /// <param name="tooltip">The property label tooltip text.</param>
         /// <returns>The created element.</returns>
-        public IntegerValueElement IntegerValue(string name)
+        public IntegerValueElement IntegerValue(string name, string tooltip = null)
         {
-            var property = AddPropertyItem(name);
+            var property = AddPropertyItem(name, tooltip);
             return property.IntegerValue();
         }
 
@@ -261,10 +267,11 @@ namespace FlaxEditor.CustomEditors
         /// <param name="name">The property name.</param>
         /// <param name="type">The enum type.</param>
         /// <param name="cusstomBuildEntriesDelegate">The custom entries layout builder. Allows to hide existing or add diffrent enum values to editor.</param>
+        /// <param name="tooltip">The property label tooltip text.</param>
         /// <returns>The created element.</returns>
-        public EnumElement Enum(string name, Type type, EnumElement.BuildEntriesDelegate cusstomBuildEntriesDelegate = null)
+        public EnumElement Enum(string name, Type type, EnumElement.BuildEntriesDelegate cusstomBuildEntriesDelegate = null, string tooltip = null)
         {
-            var property = AddPropertyItem(name);
+            var property = AddPropertyItem(name, tooltip);
             return property.Enum(type, cusstomBuildEntriesDelegate);
         }
 
@@ -293,10 +300,11 @@ namespace FlaxEditor.CustomEditors
         /// <param name="name">The property name.</param>
         /// <param name="values">The values.</param>
         /// <param name="overrideEditor">The custom editor to use. If null will detect it by auto.</param>
+        /// <param name="tooltip">The property label tooltip text.</param>
         /// <returns>The created element.</returns>
-        public CustomEditor Object(string name, ValueContainer values, CustomEditor overrideEditor = null)
+        public CustomEditor Object(string name, ValueContainer values, CustomEditor overrideEditor = null, string tooltip = null)
         {
-            var property = AddPropertyItem(name);
+            var property = AddPropertyItem(name, tooltip);
             return property.Object(values, overrideEditor);
         }
 
@@ -306,8 +314,9 @@ namespace FlaxEditor.CustomEditors
         /// <param name="name">The property name.</param>
         /// <param name="values">The values.</param>
         /// <param name="overrideEditor">The custom editor to use. If null will detect it by auto.</param>
+        /// <param name="tooltip">The property label tooltip text.</param>
         /// <returns>The created element.</returns>
-        public CustomEditor Property(string name, ValueContainer values, CustomEditor overrideEditor = null)
+        public CustomEditor Property(string name, ValueContainer values, CustomEditor overrideEditor = null, string tooltip = null)
         {
             var editor = CustomEditorsUtil.CreateEditor(values, overrideEditor);
             var style = editor.Style;
@@ -324,7 +333,7 @@ namespace FlaxEditor.CustomEditors
                 return group.Object(values, editor);
             }
 
-            var property = AddPropertyItem(name);
+            var property = AddPropertyItem(name, tooltip);
             return property.Object(values, editor);
         }
 
@@ -334,8 +343,9 @@ namespace FlaxEditor.CustomEditors
         /// <param name="label">The property label.</param>
         /// <param name="values">The values.</param>
         /// <param name="overrideEditor">The custom editor to use. If null will detect it by auto.</param>
+        /// <param name="tooltip">The property label tooltip text.</param>
         /// <returns>The created element.</returns>
-        public CustomEditor Property(PropertyNameLabel label, ValueContainer values, CustomEditor overrideEditor = null)
+        public CustomEditor Property(PropertyNameLabel label, ValueContainer values, CustomEditor overrideEditor = null, string tooltip = null)
         {
             var editor = CustomEditorsUtil.CreateEditor(values, overrideEditor);
             var style = editor.Style;
@@ -352,7 +362,7 @@ namespace FlaxEditor.CustomEditors
                 return group.Object(values, editor);
             }
 
-            var property = AddPropertyItem(label);
+            var property = AddPropertyItem(label, tooltip);
             return property.Object(values, editor);
         }
 
@@ -376,11 +386,12 @@ namespace FlaxEditor.CustomEditors
         /// Adds the <see cref="PropertiesListElement"/> to the current layou or reuses the previous one. Used to inject properties.
         /// </summary>
         /// <param name="name">The property label name.</param>
+        /// <param name="tooltip">The property label tooltip text.</param>
         /// <returns>The element.</returns>
-        public PropertiesListElement AddPropertyItem(string name)
+        public PropertiesListElement AddPropertyItem(string name, string tooltip = null)
         {
             PropertiesListElement element = AddPropertyItem();
-            element.OnAddProperty(name);
+            element.OnAddProperty(name, tooltip);
             return element;
         }
 
@@ -388,14 +399,15 @@ namespace FlaxEditor.CustomEditors
         /// Adds the <see cref="PropertiesListElement"/> to the current layou or reuses the previous one. Used to inject properties.
         /// </summary>
         /// <param name="label">The property label.</param>
+        /// <param name="tooltip">The property label tooltip text.</param>
         /// <returns>The element.</returns>
-        public PropertiesListElement AddPropertyItem(PropertyNameLabel label)
+        public PropertiesListElement AddPropertyItem(PropertyNameLabel label, string tooltip = null)
         {
             if(label == null)
                 throw new ArgumentNullException();
 
             PropertiesListElement element = AddPropertyItem();
-            element.OnAddProperty(label);
+            element.OnAddProperty(label, tooltip);
             return element;
         }
 
