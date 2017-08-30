@@ -54,11 +54,11 @@ namespace FlaxEditor.Windows
 
             // Tool strip
             _toolStrip = new ToolStrip();
-            _toolStrip.AddButton(0, Editor.UI.GetIcon("Import32"));//.LinkTooltip(GetSharedTooltip(), "Import content");// Import
+            _toolStrip.AddButton(0, Editor.UI.GetIcon("Import32")).LinkTooltip("Import content");// Import
             _toolStrip.AddSeparator();
-            _toolStrip.AddButton(1, Editor.UI.GetIcon("ArrowLeft32"));//.LinkTooltip(GetSharedTooltip(), "Navigate backward");// Backward
-            _toolStrip.AddButton(2, Editor.UI.GetIcon("ArrowRight32"));//.LinkTooltip(GetSharedTooltip(), "Navigate forward");// Forward
-            _toolStrip.AddButton(3, Editor.UI.GetIcon("ArrowUp32"));//.LinkTooltip(GetSharedTooltip(), "Navigate up");// Up
+            _toolStrip.AddButton(1, Editor.UI.GetIcon("ArrowLeft32")).LinkTooltip("Navigate backward");// Backward
+            _toolStrip.AddButton(2, Editor.UI.GetIcon("ArrowRight32")).LinkTooltip("Navigate forward");// Forward
+            _toolStrip.AddButton(3, Editor.UI.GetIcon("ArrowUp32")).LinkTooltip("Navigate up");// Up
             _toolStrip.OnButtonClicked += toolstripButtonClicked;
             _toolStrip.Parent = this;
 

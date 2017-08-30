@@ -98,7 +98,7 @@ namespace FlaxEditor.Content.Import
                     Tag = entry,
                     Parent = _rootNode
                 };
-                // TODO: set tooltip with full source url path
+                node.LinkTooltip(entry.Url);
             }
             _rootNode.Expand();
             _rootNode.Parent = tree;

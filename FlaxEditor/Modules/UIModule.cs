@@ -279,6 +279,8 @@ namespace FlaxEditor.Modules
             style.Rotate16 = GetIcon("Rotate16");
             style.Scale16 = GetIcon("Scale16");
 
+            style.SharedTooltip = new Tooltip();
+
             // Cache icons
             FolderClosed12 = GetIcon("FolderClosed12");
             FolderOpened12 = GetIcon("FolderOpened12");
@@ -393,21 +395,20 @@ namespace FlaxEditor.Modules
             ToolStrip = new ToolStrip();
             ToolStrip.OnButtonClicked += onTootlstripButtonClicked;
             ToolStrip.Parent = mainWindow;
-
-            // TODO: add tooltips support like in c++
-            //ToolStrip.AddButton(0, GetIcon("Logo32"));//.LinkTooltip(SharedToolTip, "Flax Engine");// Welcome screen
-            ToolStrip.AddButton(2, GetIcon("Save32"));//.LinkTooltip(SharedToolTip, "Save all (Ctrl+S)");// Save all
+            
+            //ToolStrip.AddButton(0, GetIcon("Logo32")).LinkTooltip("Flax Engine");// Welcome screen
+            ToolStrip.AddButton(2, GetIcon("Save32")).LinkTooltip("Save all (Ctrl+S)");// Save all
             ToolStrip.AddSeparator();
-            ToolStrip.AddButton(3, GetIcon("Undo32"));//.LinkTooltip(SharedToolTip, "Undo (Ctrl+Z)");// Undo
-            ToolStrip.AddButton(4, GetIcon("Redo32"));//.LinkTooltip(SharedToolTip, "Redo (Ctrl+Y)");// Redo
+            ToolStrip.AddButton(3, GetIcon("Undo32")).LinkTooltip("Undo (Ctrl+Z)");// Undo
+            ToolStrip.AddButton(4, GetIcon("Redo32")).LinkTooltip("Redo (Ctrl+Y)");// Redo
             ToolStrip.AddSeparator();
-            ToolStrip.AddButton(5, GetIcon("Translate32"));//.LinkTooltip(SharedToolTip, "Change Gizmo tool mode to Translate (1)");// Translate mode
-            ToolStrip.AddButton(6, GetIcon("Rotate32"));//.LinkTooltip(SharedToolTip, "Change Gizmo tool mode to Rotate (2)");// Rotate mode
-            ToolStrip.AddButton(7, GetIcon("Scale32"));//.LinkTooltip(SharedToolTip, "Change Gizmo tool mode to Scale (3)");// Scale mode
+            ToolStrip.AddButton(5, GetIcon("Translate32")).LinkTooltip("Change Gizmo tool mode to Translate (1)");// Translate mode
+            ToolStrip.AddButton(6, GetIcon("Rotate32")).LinkTooltip("Change Gizmo tool mode to Rotate (2)");// Rotate mode
+            ToolStrip.AddButton(7, GetIcon("Scale32")).LinkTooltip("Change Gizmo tool mode to Scale (3)");// Scale mode
             ToolStrip.AddSeparator();
-            ToolStrip.AddButton(8, GetIcon("Play32"));//.LinkTooltip(SharedToolTip, "Start/Stop simulation (F5)");// Play
-            ToolStrip.AddButton(9, GetIcon("Pause32"));//.LinkTooltip(SharedToolTip, "Pause simulation");// Pause
-            ToolStrip.AddButton(10, GetIcon("Step32"));//.LinkTooltip(SharedToolTip, "Step one frame in simulation");// Step
+            ToolStrip.AddButton(8, GetIcon("Play32")).LinkTooltip("Start/Stop simulation (F5)");// Play
+            ToolStrip.AddButton(9, GetIcon("Pause32")).LinkTooltip("Pause simulation");// Pause
+            ToolStrip.AddButton(10, GetIcon("Step32")).LinkTooltip("Step one frame in simulation");// Step
 
             UpdateToolstrip();
         }

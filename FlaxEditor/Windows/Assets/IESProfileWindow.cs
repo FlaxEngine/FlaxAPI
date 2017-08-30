@@ -21,9 +21,9 @@ namespace FlaxEditor.Windows.Assets
             : base(editor, item)
         {
             // Toolstrip
-            _toolstrip.AddButton(1, editor.UI.GetIcon("Import32")); //->LinkTooltip(GetSharedTooltip(), TEXT("Reimport"));// Reimport // TODO: tooltips
+            _toolstrip.AddButton(1, editor.UI.GetIcon("Import32")).LinkTooltip("Reimport");// Reimport
             _toolstrip.AddSeparator();
-            _toolstrip.AddButton(2, editor.UI.GetIcon("PageScale32")); //->LinkTooltip(GetSharedTooltip(), TEXT("Center view"));// Center view // TODO: tooltips
+            _toolstrip.AddButton(2, editor.UI.GetIcon("PageScale32")).LinkTooltip("Center view");// Center view
 
             // Texture viewer
             _view = new IESProfileView();
