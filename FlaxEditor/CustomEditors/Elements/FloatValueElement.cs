@@ -2,6 +2,9 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System.Linq;
+using System.Reflection;
+using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors.Elements
@@ -23,6 +26,36 @@ namespace FlaxEditor.CustomEditors.Elements
         public FloatValueElement()
         {
             FloatValue = new FloatValueBox(0);
+        }
+
+        /// <summary>
+        /// Sets the editor limits from member <see cref="LimitAttribute"/>.
+        /// </summary>
+        /// <param name="member">The member.</param>
+        public void SetLimits(MemberInfo member)
+        {
+            // Try get limit attribute for value min/max range setting and slider speed
+            if (member != null)
+            {
+                var attributes = member.GetCustomAttributes(true);
+                var limit = attributes.FirstOrDefault(x => x is LimitAttribute);
+                if (limit != null)
+                {
+                    FloatValue.SetLimits((LimitAttribute)limit);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the editor limits from member <see cref="LimitAttribute"/>.
+        /// </summary>
+        /// <param name="limit">The limit.</param>
+        public void SetLimits(LimitAttribute limit)
+        {
+            if (limit != null)
+            {
+                FloatValue.SetLimits(limit);
+            }
         }
 
         /// <inheritdoc />

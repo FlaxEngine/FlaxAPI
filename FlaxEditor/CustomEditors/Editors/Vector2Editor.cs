@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System.Linq;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -29,10 +30,19 @@ namespace FlaxEditor.CustomEditors.Editors
             gridControl.SlotsHorizontally = 2;
             gridControl.SlotsVertically = 1;
 
+            LimitAttribute limit = null;
+            if (Values.Info != null)
+            {
+                var attributes = Values.Info.GetCustomAttributes(true);
+                limit = (LimitAttribute)attributes.FirstOrDefault(x => x is LimitAttribute);
+            }
+
             xElement = grid.FloatValue();
+            xElement.SetLimits(limit);
             xElement.FloatValue.ValueChanged += OnValueChanged;
 
             yElement = grid.FloatValue();
+            yElement.SetLimits(limit);
             yElement.FloatValue.ValueChanged += OnValueChanged;
         }
 
