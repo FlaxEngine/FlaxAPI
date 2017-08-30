@@ -2,7 +2,9 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System.Linq;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEngine;
 
 namespace FlaxEditor.CustomEditors.Editors
 {
@@ -13,6 +15,9 @@ namespace FlaxEditor.CustomEditors.Editors
     {
         private IntegerValueElement _size;
         private int _elementsCount;
+        private bool _readOnly;
+        private bool _canReorderItems;
+        private bool _notNullItems;
 
         /// <summary>
         /// Gets the length of the collection.
@@ -22,6 +27,10 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
+            _readOnly = false;
+            _canReorderItems = true;
+            _notNullItems = false;
+
             // No support for different colelctions for now
             if (HasDiffrentValues || HasDiffrentTypes)
                 return;
@@ -29,12 +38,35 @@ namespace FlaxEditor.CustomEditors.Editors
             var type = Values.Type;
             var size = Count;
 
+            // Try get MemberCollectionAttribute for collection editor meta
+            if (Values.Info != null)
+            {
+                var attributes = Values.Info.GetCustomAttributes(true);
+                var memberCollection = (MemberCollectionAttribute)attributes.FirstOrDefault(x => x is MemberCollectionAttribute);
+                if (memberCollection != null)
+                {
+                    // TODO: handle ReadOnly and NotNullItems by filtering child editors SetValue
+                    // TODO: handle CanReorderItems
+
+                    _readOnly = memberCollection.ReadOnly;
+                    _canReorderItems = memberCollection.CanReorderItems;
+                    _notNullItems = memberCollection.NotNullItems;
+                }
+            }
+
             // Size
-            _size = layout.IntegerValue("Size");
-            _size.IntValue.MinValue = 0;
-            _size.IntValue.MaxValue = ushort.MaxValue;
-            _size.IntValue.Value = size;
-            _size.IntValue.ValueChanged += OnSizeChanged;
+            if (_readOnly)
+            {
+                layout.Label("Size", size.ToString());
+            }
+            else
+            {
+                _size = layout.IntegerValue("Size");
+                _size.IntValue.MinValue = 0;
+                _size.IntValue.MaxValue = ushort.MaxValue;
+                _size.IntValue.Value = size;
+                _size.IntValue.ValueChanged += OnSizeChanged;
+            }
 
             // Elements
             if (size > 0)

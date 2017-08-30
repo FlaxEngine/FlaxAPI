@@ -22,7 +22,7 @@ namespace FlaxEngine
         /// Gets or sets whether the items of this collection can be reordered. If <c>true</c>, applications using
         /// this collection should provide users a way to reorder items.
         /// </summary>
-        public bool CanReorderItems { get; set; }
+        public bool CanReorderItems { get; set; } = true;
 
         /// <summary>
         /// Gets or sets whether the items of this collection can be null. If <c>true</c>, applications using
