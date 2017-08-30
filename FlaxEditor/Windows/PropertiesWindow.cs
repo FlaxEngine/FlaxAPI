@@ -2,6 +2,8 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.CustomEditors;
 using FlaxEngine.GUI;
@@ -14,6 +16,8 @@ namespace FlaxEditor.Windows
     /// <seealso cref="FlaxEditor.Windows.EditorWindow" />
     public class PropertiesWindow : EditorWindow
     {
+        private IEnumerable<object> undoRecordObjects;
+
         /// <summary>
         /// The editor.
         /// </summary>
@@ -30,13 +34,20 @@ namespace FlaxEditor.Windows
 
             Presenter = new CustomEditorPresenter(editor.Undo);
             Presenter.Panel.Parent = this;
-            
+            Presenter.GetUndoObjects += GetUndoObjects;
+
             Editor.SceneEditing.OnSelectionChanged += OnSelectionChanged;
+        }
+
+        private IEnumerable<object> GetUndoObjects(CustomEditorPresenter customEditorPresenter)
+        {
+            return undoRecordObjects;
         }
 
         private void OnSelectionChanged()
         {
             // Update selected objects
+            undoRecordObjects = Editor.SceneEditing.Selection.ConvertAll(x => x.UndoRecordObject).Distinct();
             var objects = Editor.SceneEditing.Selection.ConvertAll(x => x.EditableObject).Distinct();
             Presenter.Select(objects);
         }

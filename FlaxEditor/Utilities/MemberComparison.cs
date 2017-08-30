@@ -82,7 +82,7 @@ namespace FlaxEditor.Utilities
         /// <inheritdoc />
         public override string ToString()
         {
-            return MemberPath.Path + ": " + Value1 + (Value1.Equals(Value2) ? " == " : " != ") + Value2;
+            return MemberPath.Path + ": " + (Value1 ?? "<null>") + (Equals(Value1, Value2) ? " == " : " != ") + (Value2 ?? "<null>");
         }
     }
 }

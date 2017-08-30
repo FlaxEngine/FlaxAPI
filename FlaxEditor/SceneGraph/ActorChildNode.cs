@@ -60,6 +60,9 @@ namespace FlaxEditor.SceneGraph
 
         /// <inheritdoc />
         public override object EditableObject => ParentNode.EditableObject;
+
+        /// <inheritdoc />
+        public override object UndoRecordObject => ParentNode.UndoRecordObject;
     }
 
     /// <summary>

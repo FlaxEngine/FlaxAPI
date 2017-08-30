@@ -152,6 +152,14 @@ namespace FlaxEditor.SceneGraph
         public virtual object EditableObject => this;
 
         /// <summary>
+        /// Gets the object used to record undo changes.
+        /// </summary>
+        /// <value>
+        /// The undo record object.
+        /// </value>
+        public virtual object UndoRecordObject => EditableObject;
+
+        /// <summary>
         /// Determines whether the specified object is in a hierarchy (one of the children or lower).
         /// </summary>
         /// <param name="node">The node to check,</param>

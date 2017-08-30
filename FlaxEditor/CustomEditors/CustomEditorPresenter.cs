@@ -70,7 +70,12 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// Occurs when any property gets changed.
         /// </summary>
-        public event Action OnModify;
+        public event Action Modified;
+
+        /// <summary>
+        /// Occurs when presenter wants to gather undo objects to record changes. Can be overriden to provide custom objects collection.
+        /// </summary>
+        public Func<CustomEditorPresenter, IEnumerable<object>> GetUndoObjects = presenter => presenter.Selection;
 
         /// <summary>
         /// Gets the amount of objects being selected.
@@ -183,7 +188,7 @@ namespace FlaxEditor.CustomEditors
             // If any UI control has been modified we should try to record selected objects change
             if (isDirty && Undo != null)
             {
-                using (new UndoMultiBlock(Undo, Selection, "Edit object(s)"))
+                using (new UndoMultiBlock(Undo, GetUndoObjects(this), "Edit object(s)"))
                     Editor.RefreshRoot();
             }
             else
@@ -192,7 +197,7 @@ namespace FlaxEditor.CustomEditors
             }
 
             if (isDirty)
-                OnModify?.Invoke();
+                Modified?.Invoke();
         }
 
         /// <summary>

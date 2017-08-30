@@ -410,7 +410,7 @@ namespace FlaxEditor.Windows.Assets
             propertiesEditor.Panel.Parent = splitPanel2.Panel2;
             _properties = new PropertiesProxy();
             propertiesEditor.Select(_properties);
-            propertiesEditor.OnModify += OnMaterialPropertyEdited;
+            propertiesEditor.Modified += OnMaterialPropertyEdited;
 
             // Surface
             _surface = new VisjectSurface(this, SurfaceType.Material)
