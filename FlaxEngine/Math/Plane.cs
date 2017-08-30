@@ -353,7 +353,6 @@ namespace FlaxEngine
         /// <summary>
         /// Builds a matrix that can be used to reflect vectors about a plane.
         /// </summary>
-        /// <param name="plane">The plane for which the reflection occurs. This parameter is assumed to be normalized.</param>
         /// <param name="result">When the method completes, contains the reflection matrix.</param>
         public void Reflection(out Matrix result)
         {

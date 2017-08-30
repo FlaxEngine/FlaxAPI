@@ -48,6 +48,7 @@ namespace FlaxEngine
 		/// Gets or sets value indicating if camera should use perspective rendering mode, otherwise it will use orthographic projection.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(20), EditorDisplay("Camera"), Tooltip("Enables perspective projection mode, otherwise uses ortho")]
 		public bool UsePerspective
 		{
 #if UNIT_TEST_COMPILANT
@@ -62,6 +63,7 @@ namespace FlaxEngine
 		/// Gets or sets camera's field of view (in degrees)
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(10), EditorDisplay("Camera"), Limit(0, 179), Tooltip("Field of view angle in degrees")]
 		public float FieldOfView
 		{
 #if UNIT_TEST_COMPILANT
@@ -76,6 +78,7 @@ namespace FlaxEngine
 		/// Gets or sets the custom aspect ratio. 0 if not use custom value.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(50), EditorDisplay("Camera"), Limit(0, 10), Tooltip("Custom aspect ratio to use. Set to 0 to disable.")]
 		public float CustomAspectRatio
 		{
 #if UNIT_TEST_COMPILANT
@@ -90,6 +93,7 @@ namespace FlaxEngine
 		/// Gets or sets camera's near plane distance
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(30), EditorDisplay("Camera"), Limit(0, 1000, 0.05f), Tooltip("Near clipping plane distance")]
 		public float NearPlane
 		{
 #if UNIT_TEST_COMPILANT
@@ -104,6 +108,7 @@ namespace FlaxEngine
 		/// Gets or sets camera's far plane distance
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(40), EditorDisplay("Camera"), Limit(0, 1000000, 5), Tooltip("Far clipping plane distance")]
 		public float FarPlane
 		{
 #if UNIT_TEST_COMPILANT

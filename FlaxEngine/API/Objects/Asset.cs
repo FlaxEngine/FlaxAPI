@@ -2,30 +2,71 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace FlaxEngine
 {
     /// <summary>
-    /// Basic types of the content assets base types
+    /// Basic types of the content assets base types.
     /// </summary>
     public enum ContentDomain
     {
+        /// <summary>
+        /// The invalid.
+        /// </summary>
         Invalid,
+
+        /// <summary>
+        /// The texture.
+        /// </summary>
         Texture,
+
+        /// <summary>
+        /// The cube texture.
+        /// </summary>
         CubeTexture,
+
+        /// <summary>
+        /// The material.
+        /// </summary>
         Material,
+
+        /// <summary>
+        /// The model.
+        /// </summary>
         Model,
+
+        /// <summary>
+        /// The prefab.
+        /// </summary>
         Prefab,
+
+        /// <summary>
+        /// The document.
+        /// </summary>
         Document,
+
+        /// <summary>
+        /// The other.
+        /// </summary>
         Other,
+
+        /// <summary>
+        /// The shader.
+        /// </summary>
         Shader,
+
+        /// <summary>
+        /// The font.
+        /// </summary>
         Font,
+
+        /// <summary>
+        /// The ies profile.
+        /// </summary>
         IESProfile,
+
+        /// <summary>
+        /// The scene.
+        /// </summary>
         Scene
     }
 
@@ -33,7 +74,7 @@ namespace FlaxEngine
     /// Assets objects base class.
     /// </summary>
     public partial class Asset
-	{
+    {
         /// <inheritdoc />
         public override string ToString()
         {

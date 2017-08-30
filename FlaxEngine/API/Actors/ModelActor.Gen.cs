@@ -48,6 +48,7 @@ namespace FlaxEngine
 		/// Gets or sets model scale in lightmap parameter
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(10), EditorDisplay("Model")]
 		public float ScaleInLightmap
 		{
 #if UNIT_TEST_COMPILANT
@@ -62,6 +63,7 @@ namespace FlaxEngine
 		/// Gets or sets model asset
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(20), EditorDisplay("Model")]
 		public Model Model
 		{
 #if UNIT_TEST_COMPILANT

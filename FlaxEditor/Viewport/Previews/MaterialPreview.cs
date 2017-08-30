@@ -65,7 +65,7 @@ namespace FlaxEditor.Viewport.Previews
             //
             _envProbe = EnvironmentProbe.New();
             _envProbe.AutoUpdate = false;
-            _envProbe.SetCustomProbe(FlaxEngine.Content.LoadAsyncInternal<CubeTexture>("Editor/SimplySky"));
+            _envProbe.CustomProbe = FlaxEngine.Content.LoadAsyncInternal<CubeTexture>("Editor/SimplySky");
             //
             _sky = Sky.New();
             _sky.SunLight = _previewLight;

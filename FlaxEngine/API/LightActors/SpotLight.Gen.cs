@@ -15,74 +15,73 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
 	/// <summary>
-	/// Skybox actor can render sky using custom cube texture or material
+	/// Spot light emmits light from the point in a given direction
 	/// </summary>
 	[Serializable]
-	public sealed partial class Skybox : Actor
+	public sealed partial class SpotLight : LightActor
 	{
 		/// <summary>
-		/// Creates new <see cref="Skybox"/> object.
+		/// Creates new <see cref="SpotLight"/> object.
 		/// </summary>
-		private Skybox() : base()
+		private SpotLight() : base()
 		{
 		}
 
 		/// <summary>
-		/// Creates new instance of <see cref="Skybox"/> object.
+		/// Creates new instance of <see cref="SpotLight"/> object.
 		/// </summary>
 		/// <returns>Created object.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static Skybox New() 
+		public static SpotLight New() 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Create(typeof(Skybox)) as Skybox;
+			return Internal_Create(typeof(SpotLight)) as SpotLight;
 #endif
 		}
 
 		/// <summary>
-		/// Gets or sets value indicating if visual element affects the world
+		/// Gets or sets light radius parameter.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(-50), EditorDisplay("General"), Tooltip("True if visual element affects the world")]
-		public bool AffectsWorld
+		public float Radius
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetAffectsWorld(unmanagedPtr); }
-			set { Internal_SetAffectsWorld(unmanagedPtr, value); }
+			get { return Internal_GetRadius(unmanagedPtr); }
+			set { Internal_SetRadius(unmanagedPtr, value); }
 #endif
 		}
 
 		/// <summary>
-		/// Gets or sets skybox color
+		/// Gets or sets light source bulb radius parameter.
 		/// </summary>
 		[UnmanagedCall]
-		public Color Color
+		public float SourceRadius
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { Color resultAsRef; Internal_GetColor(unmanagedPtr, out resultAsRef); return resultAsRef; }
-			set { Internal_SetColor(unmanagedPtr, ref value); }
+			get { return Internal_GetSourceRadius(unmanagedPtr); }
+			set { Internal_SetSourceRadius(unmanagedPtr, value); }
 #endif
 		}
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetAffectsWorld(IntPtr obj);
+		internal static extern float Internal_GetRadius(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetAffectsWorld(IntPtr obj, bool val);
+		internal static extern void Internal_SetRadius(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetColor(IntPtr obj, out Color resultAsRef);
+		internal static extern float Internal_GetSourceRadius(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetColor(IntPtr obj, ref Color val);
+		internal static extern void Internal_SetSourceRadius(IntPtr obj, float val);
 #endif
 #endregion
 	}

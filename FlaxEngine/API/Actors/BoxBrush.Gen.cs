@@ -15,7 +15,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
 	/// <summary>
-	/// Box Brush actor
+	/// Performs CSG box brush operation thats adds or removes geometry.
 	/// </summary>
 	[Serializable]
 	public sealed partial class BoxBrush : Actor
@@ -48,6 +48,7 @@ namespace FlaxEngine
 		/// Gets or sets brush surfaces scale in lightmap parameter.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(30), EditorDisplay("CSG")]
 		public float ScaleInLightmap
 		{
 #if UNIT_TEST_COMPILANT
@@ -62,6 +63,7 @@ namespace FlaxEngine
 		/// Gets or sets brush size.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(20), EditorDisplay("CSG")]
 		public Vector3 Size
 		{
 #if UNIT_TEST_COMPILANT
@@ -76,6 +78,7 @@ namespace FlaxEngine
 		/// Gets or sets CSG brush mode.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(10), EditorDisplay("CSG")]
 		public BrushMode Mode
 		{
 #if UNIT_TEST_COMPILANT

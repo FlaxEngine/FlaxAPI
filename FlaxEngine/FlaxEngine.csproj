@@ -54,22 +54,16 @@
     <Compile Include="API\Actors\Camera.Gen.cs">
       <DependentUpon>Camera.cs</DependentUpon>
     </Compile>
-    <Compile Include="API\Actors\DirectionalLight.cs" />
-    <Compile Include="API\Actors\DirectionalLight.Gen.cs">
-      <DependentUpon>DirectionalLight.cs</DependentUpon>
-    </Compile>
     <Compile Include="API\Actors\EmptyActor.Gen.cs" />
     <Compile Include="API\Actors\EnvironmentProbe.cs" />
     <Compile Include="API\Actors\EnvironmentProbe.Gen.cs">
       <DependentUpon>EnvironmentProbe.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Actors\LightActor.cs" />
+    <Compile Include="API\Actors\LightActor.Gen.cs" />
     <Compile Include="API\Actors\ModelActor.cs" />
     <Compile Include="API\Actors\ModelActor.Gen.cs">
       <DependentUpon>ModelActor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="API\Actors\PointLight.cs" />
-    <Compile Include="API\Actors\PointLight.Gen.cs">
-      <DependentUpon>PointLight.cs</DependentUpon>
     </Compile>
     <Compile Include="API\Actors\PostFxVolume.cs" />
     <Compile Include="API\Actors\PostFxVolume.Gen.cs" />
@@ -82,10 +76,6 @@
     <Compile Include="API\Actors\Skybox.cs" />
     <Compile Include="API\Actors\Skybox.Gen.cs">
       <DependentUpon>Skybox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="API\Actors\SpotLight.cs" />
-    <Compile Include="API\Actors\SpotLight.Gen.cs">
-      <DependentUpon>SpotLight.cs</DependentUpon>
     </Compile>
     <Compile Include="API\Assets\BinaryAsset.cs" />
     <Compile Include="API\Assets\BinaryAsset.Gen.cs" />
@@ -100,6 +90,12 @@
     <Compile Include="API\BinaryAssets\Texture.cs" />
     <Compile Include="API\BinaryAssets\Texture.Gen.cs" />
     <Compile Include="API\CreateWindowSettings.cs" />
+    <Compile Include="API\LightActors\DirectionalLight.cs" />
+    <Compile Include="API\LightActors\DirectionalLight.Gen.cs" />
+    <Compile Include="API\LightActors\PointLight.cs" />
+    <Compile Include="API\LightActors\PointLight.Gen.cs" />
+    <Compile Include="API\LightActors\SpotLight.cs" />
+    <Compile Include="API\LightActors\SpotLight.Gen.cs" />
     <Compile Include="API\MaterialBases\Material.cs" />
     <Compile Include="API\MaterialBases\Material.Gen.cs" />
     <Compile Include="API\MaterialBases\MaterialInstance.cs" />

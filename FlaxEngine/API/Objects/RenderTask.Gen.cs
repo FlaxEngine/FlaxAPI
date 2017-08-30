@@ -68,7 +68,7 @@ namespace FlaxEngine.Rendering
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return (T)Internal_Create(typeof(T));
+			return (T)Internal_CreateTask(typeof(T));
 #endif
 		}
 
@@ -83,7 +83,7 @@ namespace FlaxEngine.Rendering
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetOrder(IntPtr obj, int val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern RenderTask Internal_Create(Type type);
+		internal static extern RenderTask Internal_CreateTask(Type type);
 #endif
 #endregion
 	}
