@@ -67,42 +67,42 @@ namespace FlaxEditor.Tests
 
             instance = new UndoObject(true);
             undo.RecordAction(instance, "Basic", () =>
-            {
-                instance.FieldFloat = 0;
-                instance.FieldInteger = 0;
-                instance.FieldObject = null;
-                instance.PropertyFloat = 0;
-                instance.PropertyInteger = 0;
-                instance.PropertyObject = null;
-            });
+                                                 {
+                                                     instance.FieldFloat = 0;
+                                                     instance.FieldInteger = 0;
+                                                     instance.FieldObject = null;
+                                                     instance.PropertyFloat = 0;
+                                                     instance.PropertyInteger = 0;
+                                                     instance.PropertyObject = null;
+                                                 });
             BasicUndoRedo(undo, instance);
 
             object generic = new UndoObject(true);
             undo.RecordAction(generic, "Basic", (i) =>
-            {
-                ((UndoObject)i).FieldFloat = 0;
-                ((UndoObject)i).FieldInteger = 0;
-                ((UndoObject)i).FieldObject = null;
-                ((UndoObject)i).PropertyFloat = 0;
-                ((UndoObject)i).PropertyInteger = 0;
-                ((UndoObject)i).PropertyObject = null;
-            });
+                                                {
+                                                    ((UndoObject)i).FieldFloat = 0;
+                                                    ((UndoObject)i).FieldInteger = 0;
+                                                    ((UndoObject)i).FieldObject = null;
+                                                    ((UndoObject)i).PropertyFloat = 0;
+                                                    ((UndoObject)i).PropertyInteger = 0;
+                                                    ((UndoObject)i).PropertyObject = null;
+                                                });
             BasicUndoRedo(undo, (UndoObject)generic);
 
             instance = new UndoObject(true);
             undo.RecordAction(instance, "Basic", (i) =>
-            {
-                i.FieldFloat = 0;
-                i.FieldInteger = 0;
-                i.FieldObject = null;
-                i.PropertyFloat = 0;
-                i.PropertyInteger = 0;
-                i.PropertyObject = null;
-            });
-            BasicUndoRedo(undo ,instance);
+                                                 {
+                                                     i.FieldFloat = 0;
+                                                     i.FieldInteger = 0;
+                                                     i.FieldObject = null;
+                                                     i.PropertyFloat = 0;
+                                                     i.PropertyInteger = 0;
+                                                     i.PropertyObject = null;
+                                                 });
+            BasicUndoRedo(undo, instance);
 
             instance = new UndoObject(true);
-            using(new UndoBlock(undo, instance, "Basic"))
+            using (new UndoBlock(undo, instance, "Basic"))
             {
                 instance.FieldFloat = 0;
                 instance.FieldInteger = 0;
@@ -140,18 +140,18 @@ namespace FlaxEditor.Tests
             var undo = new Undo();
             var instance = new UndoObject(true);
             undo.RecordAction(instance, "Basic", (i) =>
-            {
-                i.FieldObject = new UndoObject();
-                i.FieldObject.FieldObject = new UndoObject();
-                i.FieldObject.FieldObject.FieldObject = new UndoObject();
-                i.FieldObject.FieldObject.PropertyObject = new UndoObject();
-                i.FieldObject.FieldObject.PropertyObject.FieldInteger = 99;
-                i.PropertyObject = new UndoObject();
-                i.PropertyObject.PropertyObject = new UndoObject();
-                i.PropertyObject.PropertyObject.PropertyObject = new UndoObject();
-                i.PropertyObject.PropertyObject.FieldObject = new UndoObject();
-                i.PropertyObject.PropertyObject.FieldObject.FieldInteger = 99;
-            });
+                                                 {
+                                                     i.FieldObject = new UndoObject();
+                                                     i.FieldObject.FieldObject = new UndoObject();
+                                                     i.FieldObject.FieldObject.FieldObject = new UndoObject();
+                                                     i.FieldObject.FieldObject.PropertyObject = new UndoObject();
+                                                     i.FieldObject.FieldObject.PropertyObject.FieldInteger = 99;
+                                                     i.PropertyObject = new UndoObject();
+                                                     i.PropertyObject.PropertyObject = new UndoObject();
+                                                     i.PropertyObject.PropertyObject.PropertyObject = new UndoObject();
+                                                     i.PropertyObject.PropertyObject.FieldObject = new UndoObject();
+                                                     i.PropertyObject.PropertyObject.FieldObject.FieldInteger = 99;
+                                                 });
             undo.PerformUndo();
             Assert.AreNotEqual(null, instance.FieldObject);
             Assert.AreNotEqual(null, instance.FieldObject.FieldObject);
@@ -217,6 +217,174 @@ namespace FlaxEditor.Tests
             Assert.AreEqual(23, instance.FieldObject.PropertyObject.FieldInteger);
             Assert.AreEqual(24, instance.PropertyObject.FieldObject.FieldInteger);
             Assert.AreEqual(25, instance.PropertyObject.PropertyObject.FieldInteger);
+        }
+
+        [Serializable]
+        public class UndoObjectWithArray : UndoObject
+        {
+            public UndoObjectWithArray[] FieldArray;
+            public UndoObjectWithArray[] PropertyArray { get; set; }
+        }
+
+        [Test]
+        public void UndoTestRecursiveArray()
+        {
+            var undo = new Undo();
+            var instance = new UndoObjectWithArray
+            {
+                FieldArray = new[]
+                {
+                    new UndoObjectWithArray
+                    {
+                        FieldInteger = 33,
+                        PropertyFloat = 3.3f,
+                        FieldArray = new UndoObjectWithArray[1]
+                        {
+                            new UndoObjectWithArray
+                            {
+                                FieldFloat = 1000.0f
+                            },
+                        },
+                        PropertyArray = new UndoObjectWithArray[1]
+                        {
+                            new UndoObjectWithArray
+                            {
+                                FieldFloat = 1000.0f
+                            },
+                        }
+                    },
+                    new UndoObjectWithArray
+                    {
+                        FieldInteger = 34,
+                        PropertyFloat = 3.4f,
+                        FieldArray = new UndoObjectWithArray[0]
+                    },
+                },
+                PropertyArray = new[]
+                {
+                    new UndoObjectWithArray
+                    {
+                        FieldInteger = 33,
+                        PropertyFloat = 3.3f,
+                        FieldArray = new UndoObjectWithArray[1]
+                        {
+                            new UndoObjectWithArray
+                            {
+                                FieldFloat = 1000.0f
+                            },
+                        },
+                        PropertyArray = new UndoObjectWithArray[1]
+                        {
+                            new UndoObjectWithArray
+                            {
+                                FieldFloat = 1000.0f
+                            },
+                        }
+                    },
+                    new UndoObjectWithArray
+                    {
+                        FieldInteger = 34,
+                        PropertyFloat = 3.4f,
+                        FieldArray = new UndoObjectWithArray[0]
+                    },
+                },
+            };
+            using (new UndoBlock(undo, instance, "Edit"))
+            {
+                instance.FieldArray[0].FieldInteger = 11;
+                instance.FieldArray[0].PropertyFloat = 1.1f;
+                instance.FieldArray[1].FieldInteger = 12;
+                instance.FieldArray[1].PropertyFloat = 1.2f;
+                instance.FieldArray[0].FieldArray = null;
+                instance.FieldArray[0].PropertyArray[0].FieldFloat = -1;
+                instance.PropertyArray[0].FieldInteger = -11;
+                instance.PropertyArray[0].PropertyFloat = -1.1f;
+                instance.PropertyArray[1].FieldInteger = -12;
+                instance.PropertyArray[1].PropertyFloat = -1.2f;
+                instance.PropertyArray[0].FieldArray = null;
+                instance.PropertyArray[0].PropertyArray[0].FieldFloat = 1;
+            }
+            undo.PerformUndo();
+            Assert.AreEqual(2, instance.FieldArray.Length);
+            Assert.AreEqual(33, instance.FieldArray[0].FieldInteger);
+            Assert.AreEqual(3.3f, instance.FieldArray[0].PropertyFloat);
+            Assert.AreEqual(34, instance.FieldArray[1].FieldInteger);
+            Assert.AreEqual(3.4f, instance.FieldArray[1].PropertyFloat);
+            Assert.AreNotEqual(null, instance.FieldArray[0].FieldArray);
+            Assert.AreEqual(1000.0f, instance.FieldArray[0].PropertyArray[0].FieldFloat);
+            Assert.AreEqual(2, instance.PropertyArray.Length);
+            Assert.AreEqual(33, instance.PropertyArray[0].FieldInteger);
+            Assert.AreEqual(3.3f, instance.PropertyArray[0].PropertyFloat);
+            Assert.AreEqual(34, instance.PropertyArray[1].FieldInteger);
+            Assert.AreEqual(3.4f, instance.PropertyArray[1].PropertyFloat);
+            Assert.AreNotEqual(null, instance.PropertyArray[0].FieldArray);
+            Assert.AreEqual(1000.0f, instance.PropertyArray[0].PropertyArray[0].FieldFloat);
+            undo.PerformRedo();
+            Assert.AreEqual(11, instance.FieldArray[0].FieldInteger);
+            Assert.AreEqual(1.1f, instance.FieldArray[0].PropertyFloat);
+            Assert.AreEqual(12, instance.FieldArray[1].FieldInteger);
+            Assert.AreEqual(1.2f, instance.FieldArray[1].PropertyFloat);
+            Assert.AreEqual(null, instance.FieldArray[0].FieldArray);
+            Assert.AreEqual(-1, instance.FieldArray[0].PropertyArray[0].FieldFloat);
+            Assert.AreEqual(-11, instance.PropertyArray[0].FieldInteger);
+            Assert.AreEqual(-1.1f, instance.PropertyArray[0].PropertyFloat);
+            Assert.AreEqual(-12, instance.PropertyArray[1].FieldInteger);
+            Assert.AreEqual(-1.2f, instance.PropertyArray[1].PropertyFloat);
+            Assert.AreEqual(null, instance.PropertyArray[0].FieldArray);
+            Assert.AreEqual(1, instance.PropertyArray[0].PropertyArray[0].FieldFloat);
+        }
+
+        [Serializable]
+        class UndoObjectArray
+        {
+            public int[] MyInts;
+            public int[] MyIntsProp { get; set; }
+        }
+
+        [Test]
+        public void UndoTestArray()
+        {
+            var undo = new Undo();
+            var instance = new UndoObjectArray
+            {
+                MyInts = new[] { 1, 2, 3, 4, 5 },
+                MyIntsProp = new[] { 1, 2, 3, 4, 5 },
+            };
+            using (new UndoBlock(undo, instance, "Edit"))
+            {
+                instance.MyInts[0] = 11;
+                instance.MyInts[1] = 12;
+                instance.MyInts[2] = 13;
+                instance.MyInts[3] = 14;
+                instance.MyInts[4] = 15;
+                instance.MyIntsProp[1] = 500;
+            }
+            undo.PerformUndo();
+            Assert.AreEqual(5, instance.MyInts.Length);
+            Assert.AreEqual(1, instance.MyInts[0]);
+            Assert.AreEqual(2, instance.MyInts[1]);
+            Assert.AreEqual(3, instance.MyInts[2]);
+            Assert.AreEqual(4, instance.MyInts[3]);
+            Assert.AreEqual(5, instance.MyInts[4]);
+            Assert.AreEqual(5, instance.MyIntsProp.Length);
+            Assert.AreEqual(1, instance.MyIntsProp[0]);
+            Assert.AreEqual(2, instance.MyIntsProp[1]);
+            Assert.AreEqual(3, instance.MyIntsProp[2]);
+            Assert.AreEqual(4, instance.MyIntsProp[3]);
+            Assert.AreEqual(5, instance.MyIntsProp[4]);
+            undo.PerformRedo();
+            Assert.AreEqual(5, instance.MyInts.Length);
+            Assert.AreEqual(11, instance.MyInts[0]);
+            Assert.AreEqual(12, instance.MyInts[1]);
+            Assert.AreEqual(13, instance.MyInts[2]);
+            Assert.AreEqual(14, instance.MyInts[3]);
+            Assert.AreEqual(15, instance.MyInts[4]);
+            Assert.AreEqual(5, instance.MyIntsProp.Length);
+            Assert.AreEqual(1, instance.MyIntsProp[0]);
+            Assert.AreEqual(500, instance.MyIntsProp[1]);
+            Assert.AreEqual(3, instance.MyIntsProp[2]);
+            Assert.AreEqual(4, instance.MyIntsProp[3]);
+            Assert.AreEqual(5, instance.MyIntsProp[4]);
         }
     }
 }

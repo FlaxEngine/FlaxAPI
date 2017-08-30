@@ -17,12 +17,12 @@ namespace FlaxEditor.Utilities
     {
         private readonly List<TypeEntry> _members;
         private readonly List<object> _values;
-        
+
         /// <summary>
         /// The object type.
         /// </summary>
         public readonly Type ObjectType;
-        
+
         private ObjectSnapshot(Type type, List<object> values, List<TypeEntry> members)
         {
             ObjectType = type;
@@ -47,8 +47,8 @@ namespace FlaxEditor.Utilities
             typeof(NonSerializedAttribute),
             typeof(NoSerializeAttribute)
         };
-        
-        private static void GetEntries(MemberInfo member, Stack<MemberInfo> membersPath, Type type, List<TypeEntry> result, List<object> values, Stack<object> refStack, Type memberType, object memberValue)
+
+        private static void GetEntries(MemberInfoPath.Entry member, Stack<MemberInfoPath.Entry> membersPath, Type type, List<TypeEntry> result, List<object> values, Stack<object> refStack, Type memberType, object memberValue)
         {
             membersPath.Push(member);
             var path = new MemberInfoPath(membersPath);
@@ -56,14 +56,30 @@ namespace FlaxEditor.Utilities
 
             // Check if record object sub members (skip flax objects)
             // It's used for ref types bu not null types and with checking cyclic references
-            if (memberType.IsClass
-                && !typeof(FlaxEngine.Object).IsAssignableFrom(memberType)
+            if ((memberType.IsClass || memberType.IsArray)
                 && memberValue != null
                 && !refStack.Contains(memberValue))
             {
-                refStack.Push(memberValue);
-                GetEntries(memberValue, membersPath, memberType, result, values, refStack);
-                refStack.Pop();
+                if (memberType.IsArray && !typeof(FlaxEngine.Object).IsAssignableFrom(memberType.GetElementType()))
+                {
+                    var array = (Array)memberValue;
+                    var elementType = memberType.GetElementType();
+                    var length = array.Length;
+
+                    refStack.Push(memberValue);
+                    for (int i = 0; i < length; i++)
+                    {
+                        var elementValue = array.GetValue(i);
+                        GetEntries(new MemberInfoPath.Entry(member.Member, i), membersPath, type, result, values, refStack, elementType, elementValue);
+                    }
+                    refStack.Pop();
+                }
+                else if (memberType.IsClass && !typeof(FlaxEngine.Object).IsAssignableFrom(memberType))
+                {
+                    refStack.Push(memberValue);
+                    GetEntries(memberValue, membersPath, memberType, result, values, refStack);
+                    refStack.Pop();
+                }
             }
 
             var afterCount = result.Count;
@@ -72,7 +88,7 @@ namespace FlaxEditor.Utilities
             membersPath.Pop();
         }
 
-        private static void GetEntries(object instance, Stack<MemberInfo> membersPath, Type type, List<TypeEntry> result, List<object> values, Stack<object> refStack)
+        private static void GetEntries(object instance, Stack<MemberInfoPath.Entry> membersPath, Type type, List<TypeEntry> result, List<object> values, Stack<object> refStack)
         {
             // Note: this should match Flax serialization rules and atttributes (see ExtendedDefaultContractResolver)
 
@@ -103,7 +119,7 @@ namespace FlaxEditor.Utilities
 
                 var memberType = f.FieldType;
                 var memberValue = f.GetValue(instance);
-                GetEntries(f, membersPath, type, result, values, refStack, memberType, memberValue);
+                GetEntries(new MemberInfoPath.Entry(f), membersPath, type, result, values, refStack, memberType, memberValue);
             }
 
             for (int i = 0; i < properties.Length; i++)
@@ -131,7 +147,7 @@ namespace FlaxEditor.Utilities
 
                 var memberType = p.PropertyType;
                 var memberValue = p.GetValue(instance, null);
-                GetEntries(p, membersPath, type, result, values, refStack, memberType, memberValue);
+                GetEntries(new MemberInfoPath.Entry(p), membersPath, type, result, values, refStack, memberType, memberValue);
             }
         }
 
@@ -139,7 +155,7 @@ namespace FlaxEditor.Utilities
         {
             values = new List<object>();
             var result = new List<TypeEntry>();
-            var membersPath = new Stack<MemberInfo>(8);
+            var membersPath = new Stack<MemberInfoPath.Entry>(8);
             var refsStack = new Stack<object>(8);
 
             refsStack.Push(instance);
@@ -161,7 +177,11 @@ namespace FlaxEditor.Utilities
 
             List<object> values;
             var members = GetMembers(obj, type, out values);
-            
+
+            //Debug.Log("-------------- CaptureSnapshot:  " + obj.GetType() + "  --------------");
+            //for (int i = 0; i < values.Count; i++)
+            //    Debug.Log(members[i].Path.Path + " =  " + (values[i] ?? "<null>"));
+
             return new ObjectSnapshot(type, values, members);
         }
 
@@ -188,13 +208,15 @@ namespace FlaxEditor.Utilities
 
                 if (!Equals(xValue, yValue))
                 {
+                    //Debug.Log("Diff on: " + (new MemberComparison(m.Path, xValue, yValue)));
+
                     list.Add(new MemberComparison(m.Path, xValue, yValue));
 
                     // Value changed, skip sub entries compare
                     i -= m.SubEntriesCount;
                 }
             }
-            
+
             return list;
         }
     }

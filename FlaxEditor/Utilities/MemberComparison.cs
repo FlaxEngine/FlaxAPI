@@ -63,41 +63,20 @@ namespace FlaxEditor.Utilities
         {
             var finalMember = MemberPath.GetLastMember(ref instance);
 
-            if (finalMember is FieldInfo field)
+            var type = finalMember.Type;
+            if (value != null)
             {
-                if (value != null)
+                if (value is long && type == typeof(int))
                 {
-                    if (value is long && field.FieldType == typeof(int))
-                    {
-                        value = (int)(long)value;
-                    }
-                    else if (value is double && field.FieldType == typeof(float))
-                    {
-                        value = (float)(double)value;
-                    }
+                    value = (int)(long)value;
                 }
-
-                field.SetValue(instance, value);
-            }
-            else
-            {
-                var property = (PropertyInfo)finalMember;
-
-                if (value != null)
+                else if (value is double && type == typeof(float))
                 {
-                    if (value is long && property.PropertyType == typeof(int))
-                    {
-                        value = (int)(long)value;
-                    }
-                    else if (value is double && property.PropertyType == typeof(float))
-                    {
-                        value = (float)(double)value;
-                    }
+                    value = (float)(double)value;
                 }
-
-                if (property.SetMethod != null)
-                    property.SetValue(instance, value);
             }
+
+            finalMember.SetValue(instance, value);
         }
 
         /// <inheritdoc />
