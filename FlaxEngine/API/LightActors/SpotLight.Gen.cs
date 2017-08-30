@@ -48,6 +48,7 @@ namespace FlaxEngine
 		/// Gets or sets light radius parameter.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(1), EditorDisplay("Light"), Tooltip("Light radius"), Limit(0, 10000, 0.1f)]
 		public float Radius
 		{
 #if UNIT_TEST_COMPILANT
@@ -62,6 +63,7 @@ namespace FlaxEngine
 		/// Gets or sets light source bulb radius parameter.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(2), EditorDisplay("Light"), Tooltip("Light bulb source radius"), Limit(0, 1000, 0.01f)]
 		public float SourceRadius
 		{
 #if UNIT_TEST_COMPILANT

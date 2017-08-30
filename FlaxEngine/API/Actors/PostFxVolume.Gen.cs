@@ -48,7 +48,7 @@ namespace FlaxEngine
 		/// Gets or sets center of the volume in the local space.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorDisplay("PostFx Volume"), EditorOrder(40)]
+		[EditorDisplay("PostFx Volume"), EditorOrder(40), Tooltip("Volume center (local space of the actor)")]
 		public Vector3 Center
 		{
 #if UNIT_TEST_COMPILANT
@@ -63,7 +63,7 @@ namespace FlaxEngine
 		/// Gets or sets size of the volume in the local space.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorDisplay("PostFx Volume"), EditorOrder(50)]
+		[EditorDisplay("PostFx Volume"), EditorOrder(50), Tooltip("Volume size")]
 		public Vector3 Size
 		{
 #if UNIT_TEST_COMPILANT
@@ -78,7 +78,7 @@ namespace FlaxEngine
 		/// Gets or sets the order in which multiple volumes are blended together. The volume with the highest priority takes precedence over all other overlapping volumes.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorDisplay("PostFx Volume"), EditorOrder(60)]
+		[EditorDisplay("PostFx Volume"), EditorOrder(60), Tooltip("Volume blending priority. Highest priority takes precedence over all other overlapping volumes.")]
 		public int Priority
 		{
 #if UNIT_TEST_COMPILANT
@@ -93,7 +93,7 @@ namespace FlaxEngine
 		/// Gets or sets the distance inside the volume at which blending with the volume's settings occurs.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorDisplay("PostFx Volume"), EditorOrder(70)]
+		[EditorDisplay("PostFx Volume"), EditorOrder(70), Tooltip("Settings blending fade out radius (inner distance)")]
 		public float BlendRadius
 		{
 #if UNIT_TEST_COMPILANT
@@ -108,7 +108,7 @@ namespace FlaxEngine
 		/// Gets or sets the amount of influence the volume's properties have. 0 is no effect; 1 is full effect.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorDisplay("PostFx Volume"), EditorOrder(80)]
+		[EditorDisplay("PostFx Volume"), EditorOrder(80), Tooltip("Settings blending weight")]
 		public float BlendWeight
 		{
 #if UNIT_TEST_COMPILANT
@@ -123,7 +123,7 @@ namespace FlaxEngine
 		/// Gets or sets the value indicating whether the bounds of the volume are taken into account. If true, the volume affects the entire world, regardless of its bounds. If false, the volume only has an effect within its bounds.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorDisplay("PostFx Volume"), EditorOrder(90)]
+		[EditorDisplay("PostFx Volume"), EditorOrder(90), Tooltip("Determinates whether the bounds of the volume are used when blending")]
 		public bool IsBounded
 		{
 #if UNIT_TEST_COMPILANT

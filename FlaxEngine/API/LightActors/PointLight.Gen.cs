@@ -48,6 +48,7 @@ namespace FlaxEngine
 		/// Gets or sets light radius parameter.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(1), EditorDisplay("Light"), Tooltip("Light radius"), Limit(0, 100000, 0.1f)]
 		public float Radius
 		{
 #if UNIT_TEST_COMPILANT
@@ -62,6 +63,7 @@ namespace FlaxEngine
 		/// Gets or sets light source bulb radius parameter.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(2), EditorDisplay("Light"), Tooltip("Light bulb source radius"), Limit(0, 1000, 0.01f)]
 		public float SourceRadius
 		{
 #if UNIT_TEST_COMPILANT
@@ -73,15 +75,17 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets the light scaled radius parameter (radius * max scale vector component).
+		/// Gets or sets light source bulb length parameter.
 		/// </summary>
 		[UnmanagedCall]
-		public float ScaledRadius
+		[EditorOrder(3), EditorDisplay("Light"), Tooltip("Light build source length"), Limit(0, 1000, 0.01f)]
+		public float SourceLength
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetScaledRadius(unmanagedPtr); }
+			get { return Internal_GetSourceLength(unmanagedPtr); }
+			set { Internal_SetSourceLength(unmanagedPtr, value); }
 #endif
 		}
 
@@ -96,7 +100,9 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetSourceRadius(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetScaledRadius(IntPtr obj);
+		internal static extern float Internal_GetSourceLength(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetSourceLength(IntPtr obj, float val);
 #endif
 #endregion
 	}

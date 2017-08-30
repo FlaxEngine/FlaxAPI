@@ -9,10 +9,6 @@ namespace FlaxEngine
 	    /// <summary>
 	    /// Gets the light scaled radius parameter.
 	    /// </summary>
-	    [UnmanagedCall]
-	    public float ScaledRadius
-	    {
-	        get { return Scale.MaxValue * Radius; }
-	    }
-    }
+	    public float ScaledRadius => Scale.MaxValue * Radius;
+	}
 }

@@ -18,5 +18,10 @@ namespace FlaxEngine
 	    /// Returns true if probe is using custom cube texture (not baked one).
 	    /// </summary>
 	    public bool IsUsingCustomProbe => CustomProbe != null;
-	}
+
+	    /// <summary>
+	    /// Gets the probe scaled radius parameter.
+	    /// </summary>
+	    public float ScaledRadius => Scale.MaxValue * Radius;
+    }
 }

@@ -15,7 +15,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
 	/// <summary>
-	/// Skybox actor can render sky using custom cube texture or material
+	/// Skybox actor renders sky using custom cube texture or material
 	/// </summary>
 	[Serializable]
 	public sealed partial class Skybox : Actor
@@ -45,7 +45,7 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets value indicating if visual element affects the world
+		/// Gets or sets value indicating if visual element affects the world.
 		/// </summary>
 		[UnmanagedCall]
 		[EditorOrder(-50), EditorDisplay("General"), Tooltip("True if visual element affects the world")]
@@ -60,9 +60,40 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets skybox color
+		/// Gets or sets skybox cube texture.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(10), EditorDisplay("Skybox"), Tooltip("Skybox cube texture")]
+		public CubeTexture CubeTexture
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetCubeTexture(unmanagedPtr); }
+			set { Internal_SetCubeTexture(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets skybox custom material used to override default.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(20), EditorDisplay("Skybox"), Tooltip("Skybox custom material used to override default")]
+		public MaterialBase CustomMatrial
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetCustomMatrial(unmanagedPtr); }
+			set { Internal_SetCustomMatrial(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets skybox color.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(30), EditorDisplay("Skybox"), Tooltip("Skybox color")]
 		public Color Color
 		{
 #if UNIT_TEST_COMPILANT
@@ -79,6 +110,14 @@ namespace FlaxEngine
 		internal static extern bool Internal_GetAffectsWorld(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetAffectsWorld(IntPtr obj, bool val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern CubeTexture Internal_GetCubeTexture(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetCubeTexture(IntPtr obj, IntPtr val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern MaterialBase Internal_GetCustomMatrial(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetCustomMatrial(IntPtr obj, IntPtr val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetColor(IntPtr obj, out Color resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]

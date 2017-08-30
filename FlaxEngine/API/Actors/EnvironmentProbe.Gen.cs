@@ -90,19 +90,6 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets the probe scaled radius parameter (radius * max scale vector component).
-		/// </summary>
-		[UnmanagedCall]
-		public float ScaledRadius
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { return Internal_GetScaledRadius(unmanagedPtr); }
-#endif
-		}
-
-		/// <summary>
 		/// Gets or sets value indicating if probe should be updated automaticlly on change.
 		/// </summary>
 		[UnmanagedCall]
@@ -175,8 +162,6 @@ namespace FlaxEngine
 		internal static extern float Internal_GetRadius(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetRadius(IntPtr obj, float val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetScaledRadius(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetAutoUpdate(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]

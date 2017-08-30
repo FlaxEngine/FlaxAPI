@@ -75,11 +75,11 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets the sun disc size.
+		/// Gets or sets the sun disc scale.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(20), EditorDisplay("Sun"), Tooltip("Sun disc size"), Limit(0, 100, 0.01f)]
-		public float DiscScale
+		[EditorOrder(20), EditorDisplay("Sun"), Tooltip("Sun disc scale"), Limit(0, 100, 0.01f)]
+		public float SunDiscScale
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
