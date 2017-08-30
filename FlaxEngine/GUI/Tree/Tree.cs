@@ -65,6 +65,7 @@ namespace FlaxEngine.GUI
             : base(false, 0, 0, 100, 100)
         {
             _performChildrenLayoutFirst = true;
+            IsScrollable = true;
 
             _supportMultiSelect = supportMultiSelect;
             _keyUpdateTime = KeyUpdateTimeout * 10;
