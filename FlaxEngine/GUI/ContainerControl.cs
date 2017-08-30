@@ -36,7 +36,7 @@ namespace FlaxEngine.GUI
         public event Action<Control> OnChildControlResized;
 
         ///<inheritdoc />
-        protected ContainerControl(bool canFocus)
+        protected ContainerControl(bool canFocus = true)
             : base(canFocus, 0, 0, 64, 64)
         {
             IsLayoutLocked = true;

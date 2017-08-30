@@ -15,29 +15,35 @@ namespace FlaxEngine.GUI
         private bool _isDisposing, _isFocused;
 
         // State
-        private bool _isMouseOver, _isDragOver;
 
+        private bool _isMouseOver, _isDragOver;
         private bool _isVisible = true;
         private bool _isEnabled = true;
         private bool _canFocus;
 
         // Dimensions
+
         private Rectangle _bounds;
 
         // Transform
-        private Vector2 _scale = new Vector2(1.0f);
 
+        private Vector2 _scale = new Vector2(1.0f);
         private Vector2 _pivot = new Vector2(0.5f);
         private Vector2 _shear;
         private float _rotation;
         internal Matrix3x3 _cachedTransform;
         internal Matrix3x3 _cachedTransformInv;
         
+        // Style
+
         private DockStyle _dockStyle;
         private AnchorStyle _anchorStyle;
-        
-        private string _tooltipText;
         private Color _backgroundColor = Color.Transparent;
+        
+        // Tooltip
+
+        private string _tooltipText;
+        private Tooltip _tooltip;
 
         /// <summary>
         ///     Action is invoked, when location is changed
@@ -166,8 +172,13 @@ namespace FlaxEngine.GUI
                 }
             }
         }
-        
-        /// <inheritdoc />
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this control is scrollable (scroll bars affect it).
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this control is scrollable; otherwise, <c>false</c>.
+        /// </value>
         public bool IsScrollable { get; set; }
 
         /// <summary>
@@ -339,8 +350,10 @@ namespace FlaxEngine.GUI
         public virtual void Update(float deltaTime)
         {
             // Update tooltip
-            //if (_tooltip && _mouseOver)
-            //     _tooltip->OnControlMouseOver(this, dt);
+            if (_tooltipText != null && IsMouseOver)
+            {
+                Tooltip.OnMouseOverControl(this, deltaTime);
+            }
         }
 
         /// <summary>
@@ -500,8 +513,8 @@ namespace FlaxEngine.GUI
             _isMouseOver = true;
 
             // Update tooltip
-            //if (_tooltip)
-            //    _tooltip->OnControlMouseEnter(this);
+            if (_tooltipText != null)
+                Tooltip.OnMouseEnterControl(this);
         }
 
         /// <summary>
@@ -519,6 +532,10 @@ namespace FlaxEngine.GUI
         {
             // Clear flag
             _isMouseOver = false;
+
+            // Update tooltip
+            if (_tooltipText != null)
+                Tooltip.OnMouseLeaveControl(this);
         }
 
         /// <summary>
@@ -658,7 +675,64 @@ namespace FlaxEngine.GUI
 
         #region Tooltip
 
-        // TODO: move tooltips support from C++
+        /// <summary>
+        /// Gets or sets the tooltip text.
+        /// </summary>
+        public string TooltipText
+        {
+            get => _tooltipText;
+            set => _tooltipText = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the custom tooltip control linked. Use null to show default shared tooltip from the current <see cref="Style"/>.
+        /// </summary>
+        [HideInEditor]
+        public Tooltip CustomTooltip
+        {
+            get => _tooltip;
+            set => _tooltip = value;
+        }
+
+        /// <summary>
+        /// Gets the tooltip used by this control (custom or shared one).
+        /// </summary>
+        public Tooltip Tooltip => _tooltip ?? Style.Current.SharedTooltip;
+
+        /// <summary>
+        /// Links the tooltip.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="customTooltip">The custom tooltip.</param>
+        public void LinkTooltip(string text, Tooltip customTooltip = null)
+        {
+            _tooltipText = text;
+            _tooltip = customTooltip;
+        }
+
+        /// <summary>
+        /// Unlinks the tooltip.
+        /// </summary>
+        public void UnlinkTooltip()
+        {
+            _tooltipText = null;
+            _tooltip = null;
+        }
+
+        /// <summary>
+        /// Called when tooltip wants to be shown. Allows modifying its appearance.
+        /// </summary>
+        /// <param name="text">The tooltip text to show.</param>
+        /// <param name="location">The popup start location (in this control local space).</param>
+        /// <param name="area">The allowed area of mouse movement to show tooltip (in this control local space).</param>
+        /// <returns>True if can show tooltip, otherwise false to skip.</returns>
+        public virtual bool OnShowTooltip(out string text, out Vector2 location, out Rectangle area)
+        {
+            text = _tooltipText;
+            location = Size * new Vector2(0.5f, 1.0f);
+            area = new Rectangle(Vector2.Zero, Size);
+            return true;
+        }
 
         #endregion
 
@@ -914,6 +988,7 @@ namespace FlaxEngine.GUI
         {
             Defocus();
 
+            UnlinkTooltip();
             Tag = null;
         }
 
