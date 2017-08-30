@@ -75,6 +75,21 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets or sets brush center location (in local space).
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(21), EditorDisplay("CSG"), Tooltip("CSG brush center location (in local space)")]
+		public Vector3 Center
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { Vector3 resultAsRef; Internal_GetCenter(unmanagedPtr, out resultAsRef); return resultAsRef; }
+			set { Internal_SetCenter(unmanagedPtr, ref value); }
+#endif
+		}
+
+		/// <summary>
 		/// Gets or sets CSG brush mode.
 		/// </summary>
 		[UnmanagedCall]
@@ -99,6 +114,10 @@ namespace FlaxEngine
 		internal static extern void Internal_GetSize(IntPtr obj, out Vector3 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetSize(IntPtr obj, ref Vector3 val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetCenter(IntPtr obj, out Vector3 resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetCenter(IntPtr obj, ref Vector3 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern BrushMode Internal_GetMode(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
