@@ -12,7 +12,6 @@ using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.Viewport.Widgets;
 using FlaxEditor.Windows;
 using FlaxEngine;
-using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
 
@@ -30,7 +29,7 @@ namespace FlaxEditor.Viewport
         private readonly ViewportWidgetButton _gizmoModeRotate;
         private readonly ViewportWidgetButton _gizmoModeScale;
 
-        private readonly DragItems _dragItems = new DragItems();
+        private readonly DragAssets _dragAssets = new DragAssets();
 
         /// <summary>
         /// The transform gizmo.
@@ -472,8 +471,8 @@ namespace FlaxEditor.Viewport
             if (result != DragDropEffect.None)
                 return result;
 
-            if (_dragItems.OnDragEnter(data, ValidateDragItem))
-                result = _dragItems.Effect;
+            if (_dragAssets.OnDragEnter(data, ValidateDragItem))
+                result = _dragAssets.Effect;
 
             return result;
         }
@@ -497,13 +496,13 @@ namespace FlaxEditor.Viewport
             if (result != DragDropEffect.None)
                 return result;
             
-            return _dragItems.Effect;
+            return _dragAssets.Effect;
         }
 
         /// <inheritdoc />
         public override void OnDragLeave()
         {
-            _dragItems.OnDragLeave();
+            _dragAssets.OnDragLeave();
 
             base.OnDragLeave();
         }
@@ -515,9 +514,9 @@ namespace FlaxEditor.Viewport
             if (result != DragDropEffect.None)
                 return result;
 
-            if (_dragItems.HasValidDrag)
+            if (_dragAssets.HasValidDrag)
             {
-                result = _dragItems.Effect;
+                result = _dragAssets.Effect;
 
                 // Get mouse ray and try to hit any object
                 var ray = ConvertMouseToRay(ref location);
@@ -536,21 +535,17 @@ namespace FlaxEditor.Viewport
                 }
 
                 // Process items
-                for (int i = 0; i < _dragItems.Objects.Count; i++)
+                for (int i = 0; i < _dragAssets.Objects.Count; i++)
                 {
-                    var item = _dragItems.Objects[i];
-                    var assetItem = item as AssetItem;
-                    
+                    var item = _dragAssets.Objects[i];
+
                     switch (item.ItemDomain)
                     {
                         case ContentDomain.Material:
                         {
-                            if (assetItem == null)
-                                throw new ArgumentNullException();
-
                             if (hit is ModelActorNode.MeshNode meshNode)
                             {
-                                var material = FlaxEngine.Content.LoadAsync<MaterialBase>(assetItem.ID);
+                                var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
                                 using (new UndoBlock(Undo, meshNode.ModelActor, "Change material"))
                                     meshNode.Mesh.Material = material;
                             }
@@ -558,8 +553,18 @@ namespace FlaxEditor.Viewport
                             break;
                         }
                         case ContentDomain.Model:
+                        {
+                            break;
+                        }
                         case ContentDomain.Prefab:
-                        case ContentDomain.Scene: break;
+                        {
+                            throw new NotImplementedException("Spawning prefabs");
+                        }
+                        case ContentDomain.Scene:
+                        {
+                            Editor.Instance.Scene.OpenScene(item.ID, true);
+                            break;
+                        }
                         default: throw new ArgumentOutOfRangeException();
                     }
                 }
