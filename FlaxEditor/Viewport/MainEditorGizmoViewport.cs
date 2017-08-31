@@ -46,7 +46,7 @@ namespace FlaxEditor.Viewport
             _editor = editor;
 
             Task.Flags = ViewFlags.DefaultEditor;
-            Task.OnEnd += RenderTaskOnEnd;
+            Task.End += RenderTaskOnEnd;
 
             TransformGizmo = new TransformGizmo(this);
             TransformGizmo.OnApplyTransformation += ApplyTransform;

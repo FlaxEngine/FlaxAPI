@@ -13,6 +13,7 @@ using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 using FlaxEngine.GUI.Docking;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Modules
 {
@@ -710,8 +711,7 @@ namespace FlaxEditor.Modules
 
                 // Take screenshot!
                 case 4:
-                    throw new NotImplementedException("take screenshot");
-                    //TakeScreenshot();
+                    Editor.Windows.TakeScreenshot();
                     break;
 
                 // Bake all env probes

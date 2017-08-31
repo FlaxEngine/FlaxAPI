@@ -7,6 +7,8 @@ using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.Assertions;
+using FlaxEngine.Rendering;
+using FlaxEngine.Utilities;
 using Window = FlaxEngine.Window;
 
 namespace FlaxEditor.Modules
@@ -84,6 +86,28 @@ namespace FlaxEditor.Modules
         {
             // Init windows module first
             InitOrder = -100;
+        }
+
+        /// <summary>
+        /// Takes the screenshot of the current viewport.
+        /// </summary>
+        public void TakeScreenshot()
+        {
+            // Select task
+            SceneRenderTask target = null;
+            if (Editor.Windows.EditWin.IsSelected)
+            {
+                // Use editor window
+                target = EditWin.Viewport.Task;
+            }
+            else
+            {
+                // Use game window
+                GameWin.FocusOrShow();
+            }
+
+            // Fire screenshot taking
+            Screenshot.Capture(target);
         }
 
         /// <summary>

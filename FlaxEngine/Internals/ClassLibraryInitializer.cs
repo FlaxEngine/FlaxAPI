@@ -2,19 +2,22 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.IO;
-using System.Runtime.CompilerServices;
+using FlaxEngine.Rendering;
 
 namespace FlaxEngine
 {
     internal static class ClassLibraryInitializer
     {
-        private static void Init()
+        /// <summary>
+        /// Initializes Flax API. Called before everything else from native code.
+        /// </summary>
+        internal static void Init()
         {
             UnhandledExceptionHandler.RegisterUECatcher();
             FlaxLogWriter.Init();
             Globals.Init();
+
+            MainRenderTask.Instance = RenderTask.Create<MainRenderTask>();
         }
     }
 }

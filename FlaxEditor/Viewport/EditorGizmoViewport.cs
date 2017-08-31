@@ -22,7 +22,7 @@ namespace FlaxEditor.Viewport
         public EditorGizmoViewport(SceneRenderTask task, Undo undo)
             : base(task, true)
         {
-            task.OnDraw += OnDraw;
+            task.Draw += OnDraw;
             Undo = undo;
         }
 

@@ -125,6 +125,12 @@ namespace FlaxEditor.Viewport
             }
         }
 
+        /// <summary>
+        /// Updates the view (position and orientation).
+        /// </summary>
+        /// <param name="dt">The delta time (in seconds).</param>
+        /// <param name="moveDelta">The move delta (scaled).</param>
+        /// <param name="mouseDelta">The mouse delta (scaled).</param>
         protected override void UpdateView(float dt, ref Vector3 moveDelta, ref Vector2 mouseDelta)
         {
             if (IsAnimatingMove)

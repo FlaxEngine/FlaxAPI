@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -42,7 +42,7 @@ namespace FlaxEditor.Viewport.Previews
             DockStyle = DockStyle.Fill;
             
             Task.Flags = ViewFlags.DefaultModelPreview;
-            Task.OnBegin += OnBegin;
+            Task.Begin += OnBegin;
 
             SetView(new Quaternion(0.424461186f, -0.0940724313f, 0.0443938486f, 0.899451137f));
 

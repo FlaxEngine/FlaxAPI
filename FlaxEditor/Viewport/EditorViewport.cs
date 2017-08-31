@@ -7,6 +7,7 @@ using FlaxEditor.Viewport.Widgets;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
+using FlaxEngine.Utilities;
 
 namespace FlaxEditor.Viewport
 {
@@ -280,7 +281,7 @@ namespace FlaxEditor.Viewport
             }
 
             // Link for task event
-            task.OnBegin += x => CopyViewData(ref x.View);
+            task.Begin += x => CopyViewData(ref x.View);
         }
 
         /// <summary>
@@ -289,10 +290,9 @@ namespace FlaxEditor.Viewport
         /// <param name="path">The output file path. Set null to use default value.</param>
         public void TakeScreenshot(string path = null)
         {
-            //CaptureScreenshot.Capture(Task, path);
-            throw new NotImplementedException();// TODO: taking screenshots
+            Screenshot.Capture(Task, path);
         }
-        
+
         /// <summary>
         /// Copies the render view data to <see cref="RenderView"/> structure.
         /// </summary>
