@@ -179,7 +179,7 @@ namespace FlaxEngine.GUI
         /// <value>
         ///   <c>true</c> if this control is scrollable; otherwise, <c>false</c>.
         /// </value>
-        public bool IsScrollable { get; set; }
+        public bool IsScrollable { get; set; } = true;
 
         /// <summary>
         ///     Gets or sets a value indicating whether the control can respond to user interaction
