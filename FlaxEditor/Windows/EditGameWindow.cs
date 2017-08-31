@@ -75,7 +75,16 @@ namespace FlaxEditor.Windows
 
             private void UpdatePinButton()
             {
-                _pinButton.Text = _isPinned ? "-" : "+";
+                if (_isPinned)
+                {
+                    _pinButton.Text = "-";
+                    _pinButton.TooltipText = "Unpin preview";
+                }
+                else
+                {
+                    _pinButton.Text = "+";
+                    _pinButton.TooltipText = "Pin preview";
+                }
             }
 
             /// <inheritdoc />
@@ -202,7 +211,7 @@ namespace FlaxEditor.Windows
                     continue;
                 var camera = _previews[i].Camera;
                 var cameraNode = Editor.Scene.GetActorNode(camera);
-                if (cameraNode == null || !cameraNode.IsActiveInHierarchy || !selection.Contains(cameraNode))
+                if (cameraNode == null || !selection.Contains(cameraNode))
                 {
                     // Hide it
                     HideCameraPreview(_previews[i--]);
@@ -212,8 +221,12 @@ namespace FlaxEditor.Windows
             // Find any selected cameras and create pewviews for them
             for (int i = 0; i < selection.Count; i++)
             {
-                if (selection[i] is CameraNode cameraNode && cameraNode.IsActiveInHierarchy)
+                if (selection[i] is CameraNode cameraNode)
                 {
+                    // Check limit for cameras
+                    if (_previews.Count >= 8)
+                        break;
+
                     var camera = (Camera)cameraNode.Actor;
                     var preview = _previews.FirstOrDefault(x => x.Camera == camera);
                     if (preview == null)
@@ -304,6 +317,16 @@ namespace FlaxEditor.Windows
 
 
                 // TODO: load cached viewport for that scene
+            }
+        }
+
+        /// <inheritdoc />
+        public override void OnSceneUnloading(Scene scene, Guid sceneId)
+        {
+            for (int i = 0; i < _previews.Count; i++)
+            {
+                if (_previews[i].Camera.Scene == scene)
+                    HideCameraPreview(_previews[i--]);
             }
         }
 
