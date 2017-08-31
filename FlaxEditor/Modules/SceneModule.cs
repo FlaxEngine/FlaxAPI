@@ -21,6 +21,11 @@ namespace FlaxEditor.Modules
         /// </summary>
         public readonly RootNode Root = new RootNode();
 
+        /// <summary>
+        /// Occurs when actor gets removed. Editor and all submodules should remove references to that actor.
+        /// </summary>
+        public event Action<ActorNode> ActorRemoved;
+
         internal SceneModule(Editor editor)
             : base(editor)
         {
@@ -397,7 +402,7 @@ namespace FlaxEditor.Modules
             var node = GetActorNode(actor);
             if (node != null)
             {
-                Editor.SceneEditing.Deselect(node);
+                ActorRemoved?.Invoke(node);
 
                 // Cleanup part of the graph
                 node.Dispose();

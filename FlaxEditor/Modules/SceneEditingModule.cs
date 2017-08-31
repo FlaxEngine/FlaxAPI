@@ -286,5 +286,12 @@ namespace FlaxEditor.Modules
                 Undo.AddAction(action);
             }
         }
+
+        /// <inheritdoc />
+        public override void OnInit()
+        {
+            // Deselect actors on remove
+            Editor.Scene.ActorRemoved += Deselect;
+        }
     }
 }
