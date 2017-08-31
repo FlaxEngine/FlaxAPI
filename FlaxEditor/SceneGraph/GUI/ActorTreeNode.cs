@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.Content;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Drag;
 using FlaxEngine;
@@ -20,11 +21,12 @@ namespace FlaxEditor.SceneGraph.GUI
         private bool _isActive;
         private int _orderInParent;
         private DragActors _dragActors;
+        private DragAssets _dragAssets;
 
         /// <summary>
         /// The actor node that owns this node.
         /// </summary>
-        protected ActorNode actorNode;
+        protected ActorNode _actorNode;
 
         /// <summary>
         /// Gets the actor.
@@ -32,7 +34,7 @@ namespace FlaxEditor.SceneGraph.GUI
         /// <value>
         /// The actor.
         /// </value>
-        public Actor Actor => actorNode.Actor;
+        public Actor Actor => _actorNode.Actor;
 
         /// <summary>
         /// Gets the actor node.
@@ -40,7 +42,7 @@ namespace FlaxEditor.SceneGraph.GUI
         /// <value>
         /// The actor node.
         /// </value>
-        public ActorNode ActorNode => actorNode;
+        public ActorNode ActorNode => _actorNode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActorTreeNode"/> class.
@@ -52,7 +54,7 @@ namespace FlaxEditor.SceneGraph.GUI
 
         internal virtual void LinkNode(ActorNode node)
         {
-            actorNode = node;
+            _actorNode = node;
             if (node.Actor != null)
             {
                 _isActive = node.Actor.IsActive;
@@ -68,7 +70,7 @@ namespace FlaxEditor.SceneGraph.GUI
 
         internal void OnActiveChanged()
         {
-            _isActive = actorNode.Actor.IsActive;
+            _isActive = _actorNode.Actor.IsActive;
         }
 
         internal void OnOrderInParentChanged()
@@ -94,7 +96,7 @@ namespace FlaxEditor.SceneGraph.GUI
         /// </summary>
         public virtual void UpdateText()
         {
-            Text = actorNode.Name;
+            Text = _actorNode.Name;
         }
 
         /// <inheritdoc />
@@ -146,7 +148,7 @@ namespace FlaxEditor.SceneGraph.GUI
             Select();
 
             // Start renaming the actor
-            var dialog = RenamePopup.Show(this, _headerRect, actorNode.Name, false);
+            var dialog = RenamePopup.Show(this, _headerRect, _actorNode.Name, false);
             dialog.Renamed += OnRenamed;
         }
 
@@ -169,6 +171,12 @@ namespace FlaxEditor.SceneGraph.GUI
             if (_dragActors.OnDragEnter(data, ValidateDragActor))
                 return _dragActors.Effect;
 
+            // Check if drag assets
+            if(_dragAssets == null)
+                _dragAssets = new DragAssets();
+            if (_dragAssets.OnDragEnter(data, ValidateDragAsset))
+                return _dragAssets.Effect;
+
             return DragDropEffect.None;
         }
 
@@ -177,6 +185,8 @@ namespace FlaxEditor.SceneGraph.GUI
         {
             if (_dragActors != null && _dragActors.HasValidDrag)
                 return _dragActors.Effect;
+            if (_dragAssets != null && _dragAssets.HasValidDrag)
+                return _dragAssets.Effect;
 
             return DragDropEffect.None;
         }
@@ -185,6 +195,7 @@ namespace FlaxEditor.SceneGraph.GUI
         protected override void OnDragLeaveHeader()
         {
             _dragActors?.OnDragLeave();
+            _dragAssets?.OnDragLeave();
         }
 
         /// <inheritdoc />
@@ -231,7 +242,7 @@ namespace FlaxEditor.SceneGraph.GUI
                 throw new InvalidOperationException("Missing parent actor.");
 
             // Drag actors
-            if (_dragActors.HasValidDrag)
+            if (_dragActors != null && _dragActors.HasValidDrag)
             {
                 var singleObject = _dragActors.Objects.Count == 1;
                 if (singleObject)
@@ -259,9 +270,43 @@ namespace FlaxEditor.SceneGraph.GUI
 
                 result = DragDropEffect.Move;
             }
+            // Drag assets
+            else if (_dragAssets != null && _dragAssets.HasValidDrag)
+            {
+                for (int i = 0; i < _dragAssets.Objects.Count; i++)
+                {
+                    var item = _dragAssets.Objects[i];
+
+                    switch (item.ItemDomain)
+                    {
+                        case ContentDomain.Model:
+                        {
+                            // Create actor
+                            var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
+                            var actor = ModelActor.New();
+                            actor.StaticFlags = Actor.StaticFlags;
+                            actor.Name = item.ShortName;
+                            actor.Model = model;
+                            
+                            // Spawn
+                            Editor.Instance.SceneEditing.Spawn(actor, Actor);
+                            
+                            break;
+                        }
+
+                        case ContentDomain.Prefab:
+                        {
+                            throw new NotImplementedException("Spawning prefabs");
+                        }
+                    }
+                }
+
+                result = DragDropEffect.Move;
+            }
 
             // Clear cache
-            _dragActors.OnDragDrop();
+            _dragActors?.OnDragDrop();
+            _dragAssets?.OnDragDrop();
 
             // Check if scene has been modified
             if (result != DragDropEffect.None)
@@ -277,6 +322,16 @@ namespace FlaxEditor.SceneGraph.GUI
         {
             // Reject dragging parents and itself
             return actorNode.Actor != null && actorNode != ActorNode && actorNode.Find(Actor) == null;
+        }
+
+        private bool ValidateDragAsset(AssetItem item)
+        {
+            switch (item.ItemDomain)
+            {
+                case ContentDomain.Model:
+                case ContentDomain.Prefab: return true;
+                default: return false;
+            }
         }
 
         /// <inheritdoc />
