@@ -2,7 +2,6 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using FlaxEditor.CustomEditors.Editors;
 using FlaxEngine;
 
 namespace FlaxEditor.CustomEditors.Dedicated
@@ -10,9 +9,9 @@ namespace FlaxEditor.CustomEditors.Dedicated
     /// <summary>
     /// Custom editor for <see cref="EnvironmentProbe"/>.
     /// </summary>
-    /// <seealso cref="FlaxEditor.CustomEditors.Editors.GenericEditor" />
+    /// <seealso cref="ActorEditor" />
     [CustomEditor(typeof(EnvironmentProbe))]
-    public sealed class EnvironmentProbeEditor : GenericEditor
+    public sealed class EnvironmentProbeEditor : ActorEditor
     {
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)

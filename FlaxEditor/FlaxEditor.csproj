@@ -58,6 +58,7 @@
     <Compile Include="Content\Import\TextureFileEntry.cs" />
     <Compile Include="CustomEditors\CustomEditor.cs" />
     <Compile Include="CustomEditors\CustomEditorsUtil.cs" />
+    <Compile Include="CustomEditors\Dedicated\ActorEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\EnvironmentProbeEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\PostProcessSettingsEditor.cs" />
     <Compile Include="CustomEditors\Editors\ArrayEditor.cs" />
