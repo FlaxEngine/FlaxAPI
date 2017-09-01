@@ -70,7 +70,7 @@ namespace FlaxEditor.Progress
         /// </summary>
         protected virtual void OnStart()
         {
-            if(_isActive)
+            if (_isActive)
                 throw new InvalidOperationException("Already started.");
 
             _isActive = true;
@@ -88,20 +88,20 @@ namespace FlaxEditor.Progress
         protected virtual void OnUpdate(float progress, string infoText)
         {
             progress = Mathf.Saturate(progress);
-            if (!Mathf.NearEqual(progress, _progress) && infoText != _infoText)
+            if (!Mathf.NearEqual(progress, _progress) || infoText != _infoText)
             {
                 _progress = progress;
                 _infoText = infoText;
                 ProgressChanged?.Invoke(this);
             }
         }
-        
+
         /// <summary>
         /// Called when progress action ends.
         /// </summary>
         protected virtual void OnEnd()
         {
-            if(!_isActive)
+            if (!_isActive)
                 throw new InvalidOperationException("Already ended.");
 
             _isActive = false;
