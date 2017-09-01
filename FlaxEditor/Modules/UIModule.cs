@@ -7,6 +7,7 @@ using FlaxEditor.Gizmo;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Dialogs;
 using FlaxEditor.SceneGraph;
+using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.Scripting;
 using FlaxEditor.Windows;
 using FlaxEngine;
@@ -765,19 +766,15 @@ namespace FlaxEditor.Modules
                 // Bake all env probes
                 case 5:
                 {
-                    throw new NotImplementedException("Bake all env probes");
-                    /*
-                    f = ()=>{
-                        var envProbe = dynamic_cast<EnvironmentProbe*>(actor);
-                        if (envProbe)
-                        {
-                            envProbe.Bake();
-                            Editor.MarkAsEdited();
-                        }
-                        return actor.IsActiveInTree();
-                    });
-                    SceneQuery.TreeExecute(f);
-                    */
+                    Editor.Scene.ExecuteOnGraph(node =>
+                                                {
+                                                    if (node is EnvironmentProbeNode envProbeNode)
+                                                    {
+                                                        ((EnvironmentProbe)envProbeNode.Actor).Bake();
+                                                        node.ParentScene.IsEdited = true;
+                                                    }
+                                                    return node.IsActive;
+                                                });
                     break;
                 }
             }

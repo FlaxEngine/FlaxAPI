@@ -491,6 +491,15 @@ namespace FlaxEditor.Modules
             return SceneGraphFactory.FindNode(actorId) as ActorNode;
         }
 
+        /// <summary>
+        /// Executes the custom action on the graph nodes.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        public void ExecuteOnGraph(SceneGraphTools.GraphExecuteCallbackDelegate callback)
+        {
+            Root.ExecuteOnGraph(callback);
+        }
+        
         /// <inheritdoc />
         public override void OnInit()
         {
