@@ -102,7 +102,7 @@ namespace FlaxEditor.Content.Import
             }
             _rootNode.Expand();
             _rootNode.Parent = tree;
-            tree.OnSelectedChanged += OnSelectedChanged;
+            tree.SelectedChanged += OnSelectedChanged;
 
             // Select the first item
             tree.Select(_rootNode.Children[0] as TreeNode);

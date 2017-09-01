@@ -20,6 +20,13 @@ namespace FlaxEditor.Windows
     {
         private Tree _tree;
         private bool _isUpdatingSelection;
+        private ContextMenu _contextMenu;
+
+        private struct ActorsGroup
+        {
+            public string Name;
+            public KeyValuePair<string, Type>[] Types;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneTreeWindow"/> class.
@@ -29,19 +36,157 @@ namespace FlaxEditor.Windows
             : base(editor, true, ScrollBars.Both)
         {
             Title = "Scene";
-            
+
             // Create scene structure tree
             var root = editor.Scene.Root;
             root.TreeNode.Expand();
             _tree = new Tree(true);
             _tree.AddChild(root.TreeNode);
-            _tree.OnSelectedChanged += Tree_OnOnSelectedChanged;
-            _tree.OnRightClick += Tree_OnOnRightClick;
+            _tree.SelectedChanged += Tree_OnSelectedChanged;
+            _tree.RightClick += Tree_OnRightClick;
             _tree.Parent = this;
 
-            // TODO: create context menu
+            // Spawnable actors (groups with single entry are inlined without a child menu)
+            var groups = new[]
+            {
+                new ActorsGroup
+                {
+                    Types = new[] { new KeyValuePair<string, Type>("Actor", typeof(EmptyActor)) }
+                },
+                new ActorsGroup
+                {
+                    Types = new[] { new KeyValuePair<string, Type>("Model", typeof(ModelActor)) }
+                },
+                new ActorsGroup
+                {
+                    Types = new[] { new KeyValuePair<string, Type>("Camera", typeof(Camera)) }
+                },
+                new ActorsGroup
+                {
+                    Name = "Lights",
+                    Types = new[]
+                    {
+                        new KeyValuePair<string, Type>("Point Light", typeof(PointLight)),
+                        new KeyValuePair<string, Type>("Spot Light", typeof(SpotLight)),
+                        new KeyValuePair<string, Type>("Directional Light", typeof(DirectionalLight)),
+                    }
+                },
+                new ActorsGroup
+                {
+                    Name = "Visuals",
+                    Types = new[]
+                    {
+                        new KeyValuePair<string, Type>("Environment Probe", typeof(EnvironmentProbe)),
+                        new KeyValuePair<string, Type>("Sky", typeof(Sky)),
+                        new KeyValuePair<string, Type>("Skybox", typeof(Skybox)),
+                    }
+                },
+                // TODO: physics group with rigid and kinematic bodies and stuff
+                new ActorsGroup
+                {
+                    Name = "CSG",
+                    Types = new[]
+                    {
+                        new KeyValuePair<string, Type>("Box Brush", typeof(BoxBrush)),
+                    }
+                },
+                new ActorsGroup
+                {
+                    Name = "Volumes",
+                    Types = new[]
+                    {
+                        new KeyValuePair<string, Type>("PostFx Volume", typeof(PostFxVolume)),
+                    }
+                },
+            };
 
-            // TODO: disable node action if scene editing is not allowed
+            // Create context menu
+            _contextMenu = new ContextMenu();
+            _contextMenu.MinimumWidth = 120;
+            _contextMenu.AddButton(1, "Duplicate");
+            _contextMenu.AddButton(2, "Delete");
+            _contextMenu.AddSeparator();
+            _contextMenu.AddButton(3, "Copy");
+            _contextMenu.AddButton(4, "Paste");
+            _contextMenu.AddButton(5, "Cut");
+            _contextMenu.AddSeparator();
+            var newActorCm = _contextMenu.AddChildMenu("New").ContextMenu;
+            for (int i = 0; i < groups.Length; i++)
+            {
+                var group = groups[i];
+
+                if (group.Types.Length == 1)
+                {
+                    var button = newActorCm.AddButton(6 + i, group.Types[0].Key);
+                    button.Tag = group.Types[0].Value;
+                }
+                else
+                {
+                    var groupCm = newActorCm.AddChildMenu(group.Name).ContextMenu;
+                    for (int j = 0; j < group.Types.Length; j++)
+                    {
+                        var button = groupCm.AddButton(j, group.Types[j].Key);
+                        button.Tag = group.Types[j].Value;
+                    }
+                    groupCm.OnButtonClicked += GroupCmOnButtonClicked;
+                }
+            }
+            newActorCm.OnButtonClicked += ContextMenuOnButtonClicked;
+            _contextMenu.OnButtonClicked += ContextMenuOnButtonClicked;
+        }
+
+        private void GroupCmOnButtonClicked(int id, ContextMenu contextMenu)
+        {
+            Spawn((Type)contextMenu.GetButton(id).Tag);
+        }
+
+        private void ContextMenuOnButtonClicked(int id, ContextMenu contextMenu)
+        {
+            switch (id)
+            {
+                case 1:
+                    Editor.SceneEditing.Duplicate();
+                    break;
+                case 2:
+                    Editor.SceneEditing.Delete();
+                    break;
+                case 3:
+                    Editor.SceneEditing.Copy();
+                    break;
+                case 4:
+                    Editor.SceneEditing.Paste();
+                    break;
+                case 5:
+                    Editor.SceneEditing.Cut();
+                    break;
+                default:
+                    Spawn((Type)contextMenu.GetButton(id).Tag);
+                    break;
+            }
+        }
+
+        private void Spawn(Type type)
+        {
+            // Create actor
+            Actor actor = (Actor)FlaxEngine.Object.New(type);
+            Actor parentActor = null;
+            if (Editor.SceneEditing.HasSthSelected && Editor.SceneEditing.Selection[0] is ActorNode actorNode)
+            {
+                parentActor = actorNode.Actor;
+
+                // Use parent flags and the same location
+                actor.StaticFlags = parentActor.StaticFlags;
+                actor.Transform = parentActor.Transform;
+
+                // Rename actor to identify it easly
+                actor.Name = StringUtils.IncrementNameNumber(type.Name, x => parentActor.GetChild(x) == null);
+
+                // Expand parent tree node
+                actorNode.TreeNode.Expand();
+            }
+
+            // Spawn it
+            Editor.SceneEditing.Spawn(actor, parentActor);
         }
 
         /// <summary>
@@ -52,7 +197,7 @@ namespace FlaxEditor.Windows
             throw new NotImplementedException("TODO: scene tree window searching");
         }
 
-        private void Tree_OnOnSelectedChanged(List<TreeNode> before, List<TreeNode> after)
+        private void Tree_OnSelectedChanged(List<TreeNode> before, List<TreeNode> after)
         {
             // Check if lock events
             if (_isUpdatingSelection)
@@ -78,9 +223,13 @@ namespace FlaxEditor.Windows
             }
         }
 
-        private void Tree_OnOnRightClick(TreeNode node, Vector2 location)
+        private void Tree_OnRightClick(TreeNode node, Vector2 location)
         {
-            // TODO: show context menu
+            if (!Editor.StateMachine.CurrentState.CanEditScene)
+                return;
+            
+            // Show context menu
+            _contextMenu.Show(node, location);
         }
 
         /// <inheritdoc />
@@ -141,6 +290,14 @@ namespace FlaxEditor.Windows
             }
 
             base.Draw();
+        }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            _contextMenu.Dispose();
+
+            base.OnDestroy();
         }
     }
 }

@@ -79,7 +79,7 @@ namespace FlaxEditor.Windows
 
             // Content structure tree
             _tree = new Tree(false);
-            _tree.OnSelectedChanged += treeOnSelectedChanged;
+            _tree.SelectedChanged += treeOnSelectedChanged;
             _tree.Parent = _split.Panel1;
 
             // Content View

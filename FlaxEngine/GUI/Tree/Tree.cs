@@ -40,12 +40,12 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Action fired when tree nodes selection gets changed.
         /// </summary>
-        public event SelectionChangedDelegate OnSelectedChanged;
+        public event SelectionChangedDelegate SelectedChanged;
 
         /// <summary>
         /// Action fired when ouse goes right click up on node.
         /// </summary>
-        public event NodeClickDelegate OnRightClick;
+        public event NodeClickDelegate RightClick;
 
         /// <summary>
         /// List with all selected nodes
@@ -73,7 +73,7 @@ namespace FlaxEngine.GUI
 
         internal void OnRightClickInternal(TreeNode node, ref Vector2 location)
         {
-            OnRightClick?.Invoke(node, location);
+            RightClick?.Invoke(node, location);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace FlaxEngine.GUI
             Focus();
 
             // Fire event
-            OnSelectedChanged?.Invoke(prev, Selection);
+            SelectedChanged?.Invoke(prev, Selection);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace FlaxEngine.GUI
             Focus();
 
             // Fire event
-            OnSelectedChanged?.Invoke(prev, Selection);
+            SelectedChanged?.Invoke(prev, Selection);
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace FlaxEngine.GUI
             Focus();
 
             // Fire event
-            OnSelectedChanged?.Invoke(prev, Selection);
+            SelectedChanged?.Invoke(prev, Selection);
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace FlaxEngine.GUI
             Focus();
 
             // Fire event
-            OnSelectedChanged?.Invoke(prev, Selection);
+            SelectedChanged?.Invoke(prev, Selection);
         }
 
         private void walkSelectRangeExpandedTree(List<TreeNode> selection, TreeNode node, ref Rectangle range)
@@ -255,7 +255,7 @@ namespace FlaxEngine.GUI
                 if (Selection.Count != prev.Count || !Selection.SequenceEqual(prev))
                 {
                     // Fire event
-                    OnSelectedChanged?.Invoke(prev, Selection);
+                    SelectedChanged?.Invoke(prev, Selection);
                 }
             }
             else
@@ -297,7 +297,7 @@ namespace FlaxEngine.GUI
                 if (Selection.Count != prev.Count || !Selection.SequenceEqual(prev))
                 {
                     // Fire event
-                    OnSelectedChanged?.Invoke(prev, Selection);
+                    SelectedChanged?.Invoke(prev, Selection);
                 }
             }
         }
