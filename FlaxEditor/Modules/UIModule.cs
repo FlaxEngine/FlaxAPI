@@ -13,7 +13,6 @@ using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 using FlaxEngine.GUI.Docking;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Modules
 {
@@ -24,6 +23,8 @@ namespace FlaxEditor.Modules
     public sealed class UIModule : EditorModule
     {
         private SpriteAtlas _iconsAtlas;
+        private Label _progressLabel;
+        private ProgressBar _progressBar;
 
         /// <summary>
         /// The main menu control.
@@ -44,15 +45,15 @@ namespace FlaxEditor.Modules
         /// The status strip control.
         /// </summary>
         public StatusBar StatusBar;
-
+        
         /// <summary>
         /// The visject surface background texture. Cached to be used globally.
         /// </summary>
         public Texture VisjectSurfaceBackground;
-
+        
         // Cached internally to improve performance
-        internal Sprite FolderClosed12;
 
+        internal Sprite FolderClosed12;
         internal Sprite FolderOpened12;
 
         internal UIModule(Editor editor)
@@ -175,6 +176,24 @@ namespace FlaxEditor.Modules
                 color = Style.Current.BackgroundSelected;
             }
             StatusBar.StatusColor = color;
+        }
+
+        internal bool ProgressVisible
+        {
+            get => _progressLabel?.Parent.Visible ?? false;
+            set
+            {
+                if (_progressLabel != null)
+                    _progressLabel.Parent.Visible = value;
+            }
+        }
+
+        internal void UpdateProgress(string text, float progress)
+        {
+            if (_progressLabel != null)
+                _progressLabel.Text = text;
+            if (_progressBar != null)
+                _progressBar.Value = progress;
         }
 
         /// <inheritdoc />
@@ -417,10 +436,39 @@ namespace FlaxEditor.Modules
         private void InitStatusBar(FlaxEngine.GUI.Window mainWindow)
         {
             // Status Bar
-            StatusBar = new StatusBar();
-            StatusBar.Parent = mainWindow;
+            StatusBar = new StatusBar
+            {
+                Text = "Ready",
+                Parent = mainWindow
+            };
 
-            StatusBar.Text = "Ready";
+            // Progress bar with label
+            const float progressBarWidth = 120.0f;
+            const float progressBarHeight = 18;
+            const float progressBarRightMargin = 4;
+            const float progressBarLeftMargin = 4;
+            var progressPanel = new Panel(ScrollBars.None)
+            {
+                Visible = false,
+                DockStyle = DockStyle.Fill,
+                Parent = StatusBar
+            };
+            _progressBar = new ProgressBar(
+                progressPanel.Width - progressBarWidth - progressBarRightMargin,
+                (StatusBar.Height - progressBarHeight) * 0.5f,
+                progressBarWidth,
+                progressBarHeight)
+            {
+                AnchorStyle = AnchorStyle.CenterRight,
+                Parent = progressPanel
+            };
+            _progressLabel = new Label(0, 0, _progressBar.Left - progressBarLeftMargin, progressPanel.Height)
+            {
+                HorizontalAlignment = TextAlignment.Far,
+                AnchorStyle = AnchorStyle.CenterRight,
+                Parent = progressPanel
+            };
+            
             UpdateStatusBar();
         }
 
@@ -429,7 +477,7 @@ namespace FlaxEditor.Modules
             // Dock Panel
             MasterPanel.Parent = mainWindow;
         }
-
+        
         private void onTootlstripButtonClicked(int id)
         {
             switch (id)
@@ -827,6 +875,8 @@ namespace FlaxEditor.Modules
             ToolStrip = null;
             MasterPanel = null;
             StatusBar = null;
+            _progressLabel = null;
+            _progressBar = null;
         }
     }
 }
