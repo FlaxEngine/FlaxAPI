@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -75,7 +75,7 @@ namespace FlaxEditor.Content
         /// <param name="context">GPU context.</param>
         public virtual void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
         {
-            guiRoot.AddChild(new Label(false, Vector2.Zero, guiRoot.Size)
+            guiRoot.AddChild(new Label(Vector2.Zero, guiRoot.Size)
             {
                 Text = Name,
                 Wrapping = TextWrapping.WrapWords

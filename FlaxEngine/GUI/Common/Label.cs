@@ -83,20 +83,20 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public Label(bool canFocus, float x, float y, float width, float height)
-            : base(canFocus, x, y, width, height)
+        public Label(float x, float y, float width, float height)
+            : base(false, x, y, width, height)
         {
         }
 
         /// <inheritdoc />
-        public Label(bool canFocus, Vector2 location, Vector2 size)
-            : base(canFocus, location, size)
+        public Label(Vector2 location, Vector2 size)
+            : base(false, location, size)
         {
         }
 
         /// <inheritdoc />
-        public Label(bool canFocus, Rectangle bounds)
-            : base(canFocus, bounds)
+        public Label(Rectangle bounds)
+            : base(false, bounds)
         {
         }
 

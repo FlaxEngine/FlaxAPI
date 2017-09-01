@@ -942,12 +942,16 @@ namespace FlaxEngine.GUI
                 return;
 
             var bounds = Bounds;
-
+            
             // TODO: finish all anchor styles logic
 
             switch (_anchorStyle)
             {
-                //case AnchorStyle.UpperCenter: break;
+                case AnchorStyle.UpperCenter:
+                {
+                    bounds.X = (_parent.Width - bounds.Width) * 0.5f;
+                    break;
+                }
                 case AnchorStyle.UpperRight:
                 {
                     float distance = oldSize.X - bounds.Left;
@@ -961,9 +965,23 @@ namespace FlaxEngine.GUI
                     break;
                 }
 
-                //case AnchorStyle.CenterLeft: break;
-                //case AnchorStyle.Center: break;
-                //case AnchorStyle.CenterRight: break;
+                case AnchorStyle.CenterLeft:
+                {
+                    bounds.Y = (_parent.Height - bounds.Height) * 0.5f;
+                    break;
+                }
+                case AnchorStyle.Center:
+                {
+                    bounds.Location = (_parent.Size - bounds.Size) * 0.5f;
+                    break;
+                }
+                case AnchorStyle.CenterRight:
+                {
+                    float distance = oldSize.X - bounds.Left;
+                    bounds.X = _parent.Width - distance;
+                    bounds.Y = (_parent.Height - bounds.Height) * 0.5f;
+                    break;
+                }
 
                 //case AnchorStyle.BottomLeft: break;
                 //case AnchorStyle.BottomCenter: break;

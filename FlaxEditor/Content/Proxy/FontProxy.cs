@@ -49,7 +49,7 @@ namespace FlaxEditor.Content
         public override void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
         {
             var asset = FlaxEngine.Content.Load<FontAsset>(request.Item.Path);
-            guiRoot.AddChild(new Label(false, Vector2.Zero, guiRoot.Size)
+            guiRoot.AddChild(new Label(Vector2.Zero, guiRoot.Size)
             {
                 Text = asset.FamilyName,
                 Wrapping = TextWrapping.WrapWords

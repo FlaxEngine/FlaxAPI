@@ -36,14 +36,14 @@ namespace FlaxEditor.Content.Import
             Width = TotalWidth;
 
             // Header and help description
-            var headerLabel = new Label(false, 0, 0, TotalWidth, 40)
+            var headerLabel = new Label(0, 0, TotalWidth, 40)
             {
                 Text = "Import settings",
                 DockStyle = DockStyle.Top,
                 Parent = this,
                 Font = Style.Current.FontTitle
             };
-            var infoLabel = new Label(false, 10, headerLabel.Bottom + 5, TotalWidth - 20, 40)
+            var infoLabel = new Label(10, headerLabel.Bottom + 5, TotalWidth - 20, 40)
             {
                 Text = "Specify options for importing files. Every file can have different settings. Select entries on the left panel to modify them.\nPro Tip: hold CTRL key and select entries to edit multiple at once.",
                 HorizontalAlignment = TextAlignment.Near,
