@@ -63,7 +63,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Action is invoked, when visibility is changed
         /// </summary>
-        public event Action<Control> OnVisibleChanged;
+        public event Action<Control> VisibleChanged;
 
         #region Public Properties
 
@@ -232,7 +232,7 @@ namespace FlaxEngine.GUI
                             OnDragLeave();
                     }
 
-                    OnVisibleChanged?.Invoke(this);
+                    VisibleChanged?.Invoke(this);
                     if (HasParent)
                     {
                         _parent.PerformLayout();

@@ -60,6 +60,7 @@ namespace FlaxEditor.Viewport
             var transformSpaceToggle = new ViewportWidgetButton(string.Empty, editor.UI.GetIcon("World16"), null, true)
             {
                 Checked = TransformGizmo.ActiveTransformSpace == TransformGizmo.TransformSpace.World,
+                TooltipText = "Gizmo transform space (world or local)",
                 Parent = transformSpaceWidget
             };
             transformSpaceToggle.OnToggle += onTransformSpaceToggle;
@@ -70,19 +71,20 @@ namespace FlaxEditor.Viewport
             var enableScaleSnapping = new ViewportWidgetButton(string.Empty, editor.UI.GetIcon("ScaleStep16"), null, true)
             {
                 Checked = TransformGizmo.ScaleSnapEnabled,
+                TooltipText = "Enable scale snapping",
                 Parent = scaleSnappingWidget
             };
             enableScaleSnapping.OnToggle += onScaleSnappingToggle;
             var scaleSnappingCM = new ContextMenu();
-            var scaleSnappng = new ViewportWidgetButton(TransformGizmo.ScaleSnapValue.ToString(), Sprite.Invalid,
-                scaleSnappingCM);
+            var scaleSnappng = new ViewportWidgetButton(TransformGizmo.ScaleSnapValue.ToString(), Sprite.Invalid, scaleSnappingCM);
+            scaleSnappng.TooltipText = "Scale snapping values";
             for (int i = 0; i < EditorViewportScaleSnapValues.Length; i++)
             {
                 var button = scaleSnappingCM.AddButton(i, EditorViewportScaleSnapValues[i].ToString());
                 button.Tag = scaleSnappng;
             }
             scaleSnappingCM.OnButtonClicked += widgetScaleSnapClick;
-            scaleSnappingCM.OnVisibleChanged += widgetScaleSnapShowHide;
+            scaleSnappingCM.VisibleChanged += widgetScaleSnapShowHide;
             scaleSnappng.Parent = scaleSnappingWidget;
             scaleSnappingWidget.Parent = this;
 
@@ -91,18 +93,20 @@ namespace FlaxEditor.Viewport
             var enableRotateSnapping = new ViewportWidgetButton(string.Empty, editor.UI.GetIcon("RotateStep16"), null, true)
             {
                 Checked = TransformGizmo.RotationSnapEnabled,
+                TooltipText = "Enable rotation snapping",
                 Parent = rotateSnappingWidget
             };
             enableRotateSnapping.OnToggle += onRotateSnappingToggle;
             var rotateSnappingCM = new ContextMenu();
             var rotateSnappng = new ViewportWidgetButton(TransformGizmo.RotationSnapValue.ToString(), Sprite.Invalid, rotateSnappingCM);
+            rotateSnappng.TooltipText = "Rotation snapping values";
             for (int i = 0; i < EditorViewportRotateSnapValues.Length; i++)
             {
                 var button = rotateSnappingCM.AddButton(i, EditorViewportRotateSnapValues[i].ToString());
                 button.Tag = rotateSnappng;
             }
             rotateSnappingCM.OnButtonClicked += widgetRotateSnapClick;
-            rotateSnappingCM.OnVisibleChanged += widgetRotateSnapShowHide;
+            rotateSnappingCM.VisibleChanged += widgetRotateSnapShowHide;
             rotateSnappng.Parent = rotateSnappingWidget;
             rotateSnappingWidget.Parent = this;
 
@@ -111,18 +115,20 @@ namespace FlaxEditor.Viewport
             var enableTranslateSnapping = new ViewportWidgetButton(string.Empty, editor.UI.GetIcon("Grid16"), null, true)
             {
                 Checked = TransformGizmo.TranslationSnapEnable,
+                TooltipText = "Enable position snapping",
                 Parent = translateSnappingWidget
             };
             enableTranslateSnapping.OnToggle += onTranslateSnappingToggle;
             var translateSnappingCM = new ContextMenu();
             var translateSnappng = new ViewportWidgetButton(TransformGizmo.TranslationSnapValue.ToString(), Sprite.Invalid, translateSnappingCM);
+            translateSnappng.TooltipText = "Position snapping values";
             for (int i = 0; i < EditorViewportTranslateSnapValues.Length; i++)
             {
                 var button = translateSnappingCM.AddButton(i, EditorViewportTranslateSnapValues[i].ToString());
                 button.Tag = translateSnappng;
             }
             translateSnappingCM.OnButtonClicked += widgetTranslateSnapClick;
-            translateSnappingCM.OnVisibleChanged += widgetTranslateSnapShowHide;
+            translateSnappingCM.VisibleChanged += widgetTranslateSnapShowHide;
             translateSnappng.Parent = translateSnappingWidget;
             translateSnappingWidget.Parent = this;
 
@@ -131,6 +137,7 @@ namespace FlaxEditor.Viewport
             _gizmoModeTranslate = new ViewportWidgetButton(string.Empty, editor.UI.GetIcon("Translate16"), null, true)
             {
                 Tag = TransformGizmo.Mode.Translate,
+                TooltipText = "Translate gizmo mode",
                 Checked = true,
                 Parent = gizmoMode
             };
@@ -138,12 +145,14 @@ namespace FlaxEditor.Viewport
             _gizmoModeRotate = new ViewportWidgetButton(string.Empty, editor.UI.GetIcon("Rotate16"), null, true)
             {
                 Tag = TransformGizmo.Mode.Rotate,
+                TooltipText = "Rotate gizmo mode",
                 Parent = gizmoMode
             };
             _gizmoModeRotate.OnToggle += onGizmoModeToggle;
             _gizmoModeScale = new ViewportWidgetButton(string.Empty, editor.UI.GetIcon("Scale16"), null, true)
             {
                 Tag = TransformGizmo.Mode.Scale,
+                TooltipText = "Scale gizmo mode",
                 Parent = gizmoMode
             };
             _gizmoModeScale.OnToggle += onGizmoModeToggle;

@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,9 +25,12 @@ namespace FlaxEditor.Viewport.Widgets
         /// </summary>
         public Action<ViewportWidgetButton> OnToggle;
 
+        /// <summary>
+        /// Gets or sets the text.
+        /// </summary>
         public string Text
         {
-            get { return _text; }
+            get => _text;
             set
             {
                 _text = value;
@@ -35,12 +38,25 @@ namespace FlaxEditor.Viewport.Widgets
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="ViewportWidgetButton"/> is checked.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if checked; otherwise, <c>false</c>.
+        /// </value>
         public bool Checked
         {
-            get { return _checked; }
-            set { _checked = value; }
+            get => _checked;
+            set => _checked = value;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewportWidgetButton"/> class.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="icon">The icon.</param>
+        /// <param name="contextMenu">The context menu.</param>
+        /// <param name="autoCheck">if set to <c>true</c> will be automatic checked on mouse click.</param>
         public ViewportWidgetButton(string text, Sprite icon, ContextMenu contextMenu = null, bool autoCheck = false)
             : base(true, 0, 0, calculateButtonWidth(0, icon.IsValid), ViewportWidgetsContainer.WidgetsHeight)
         {
@@ -50,10 +66,10 @@ namespace FlaxEditor.Viewport.Widgets
             _autoCheck = autoCheck;
 
             if (_cm != null)
-                _cm.OnVisibleChanged += CmOnOnVisibleChanged;
+                _cm.VisibleChanged += CmOnVisibleChanged;
         }
 
-        private void CmOnOnVisibleChanged(Control control)
+        private void CmOnVisibleChanged(Control control)
         {
             if (_cm != null && !_cm.IsOpened)
             {

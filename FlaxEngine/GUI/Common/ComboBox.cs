@@ -205,7 +205,7 @@ namespace FlaxEngine.GUI
             var popup = new ContextMenu();
 
             // Bind events
-            popup.OnVisibleChanged += cm =>
+            popup.VisibleChanged += cm =>
             {
                 var win = ParentWindow;
                 _blockPopup = win != null && new Rectangle(Vector2.Zero, Size).Contains(PointFromWindow(win.MousePosition));

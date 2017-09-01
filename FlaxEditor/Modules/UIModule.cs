@@ -315,7 +315,7 @@ namespace FlaxEditor.Modules
             // Edit
             var mm_Edit = MainMenu.AddButton("Edit");
             mm_Edit.ContextMenu.OnButtonClicked += mm_Edit_Click;
-            mm_Edit.ContextMenu.OnVisibleChanged += mm_Edit_ShowHide;
+            mm_Edit.ContextMenu.VisibleChanged += mm_Edit_ShowHide;
             mm_Edit.ContextMenu.AddButton(1, string.Empty, "Ctrl+Z");// Undo text is updated in mm_Edit_ShowHide
             mm_Edit.ContextMenu.AddButton(2, string.Empty, "Ctrl+Y");// Redo text is updated in mm_Edit_ShowHide
             mm_Edit.ContextMenu.AddSeparator();
@@ -332,7 +332,7 @@ namespace FlaxEditor.Modules
             // Scene
             var mm_Scene = MainMenu.AddButton("Scene");
             mm_Scene.ContextMenu.OnButtonClicked += mm_Scene_Click;
-            mm_Scene.ContextMenu.OnVisibleChanged += mm_Scene_ShowHide;
+            mm_Scene.ContextMenu.VisibleChanged += mm_Scene_ShowHide;
             //mm_Scene.ContextMenu.AddButton(1, "Go to location...");
             //mm_scene.AddSeparator();
             mm_Scene.ContextMenu.AddButton(3, "Move actor to viewport");
@@ -351,7 +351,7 @@ namespace FlaxEditor.Modules
             // Tools
             var mm_Tools = MainMenu.AddButton("Tools");
             mm_Tools.ContextMenu.OnButtonClicked += mm_Tools_Click;
-            mm_Tools.ContextMenu.OnVisibleChanged += mm_Tools_ShowHide;
+            mm_Tools.ContextMenu.VisibleChanged += mm_Tools_ShowHide;
             //mm_Tools.ContextMenu.AddButton(1, "Scene statistics");
             mm_Tools.ContextMenu.AddButton(2, "Bake lightmaps", "Ctrl+F10");
             mm_Tools.ContextMenu.AddButton(3, "Clear lightmaps data");

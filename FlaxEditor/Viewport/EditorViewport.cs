@@ -251,6 +251,7 @@ namespace FlaxEditor.Viewport
                 var camSpeed = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperRight);
                 var camSpeedCM = new ContextMenu();
                 var camSpeedButton = new ViewportWidgetButton("1", Editor.Instance.UI.GetIcon("ArrowRightBorder16"), camSpeedCM);
+                camSpeedButton.TooltipText = "Camera speed scale";
                 _speedWidget = camSpeedButton;
                 for (int i = 0; i < EditorViewportCameraSpeedValues.Length; i++)
                 {
@@ -259,7 +260,7 @@ namespace FlaxEditor.Viewport
                 }
                 camSpeedCM.Tag = this;
                 camSpeedCM.OnButtonClicked += widgetCamSpeedClick;
-                camSpeedCM.OnVisibleChanged += widgetCamSpeedShowHide;
+                camSpeedCM.VisibleChanged += widgetCamSpeedShowHide;
                 camSpeedButton.Parent = camSpeed;
                 camSpeed.Parent = this;
 
@@ -272,8 +273,9 @@ namespace FlaxEditor.Viewport
                 }
                 viewModeCM.Tag = this;
                 viewModeCM.OnButtonClicked += widgetViewModeClick;
-                viewModeCM.OnVisibleChanged += widgetViewModeShowHide;
+                viewModeCM.VisibleChanged += widgetViewModeShowHide;
                 var viewModeButton = new ViewportWidgetButton("View", Sprite.Invalid, viewModeCM);
+                viewModeButton.TooltipText = "View properties";
                 viewModeButton.Parent = viewMode;
                 viewMode.Parent = this;
 
