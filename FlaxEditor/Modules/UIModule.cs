@@ -14,6 +14,7 @@ using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 using FlaxEngine.GUI.Docking;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Modules
 {
@@ -216,12 +217,18 @@ namespace FlaxEditor.Modules
         public override void OnEndInit()
         {
             Editor.MainTransformGizmo.OnModeChanged += UpdateToolstrip;
-            Editor.StateMachine.StateChanged += UpdateToolstrip;
+            Editor.StateMachine.StateChanged += StateMachineOnStateChanged;
             Editor.Undo.UndoDone += UpdateToolstrip;
             Editor.Undo.RedoDone += UpdateToolstrip;
             Editor.Undo.ActionDone += UpdateToolstrip;
 
             UpdateToolstrip();
+        }
+
+        private void StateMachineOnStateChanged()
+        {
+            UpdateToolstrip();
+            UpdateStatusBar();
         }
 
         /// <inheritdoc />
@@ -786,15 +793,14 @@ namespace FlaxEditor.Modules
                 return;
 
             var c = (ContextMenu)control;
-            /*// TODO: baking lightmaps via c# editor
-            bool canBakeLightmaps = Editor.Device.Limits.IsComputeSupported();
+            bool canBakeLightmaps = GraphicsDevice.Limits.IsComputeSupported;
             bool canEdit = SceneManager.IsAnySceneLoaded && Editor.StateMachine.IsEditMode;
-            bool isBakingLightmaps = Editor.ProgressReporting.BakeLightmaps.IsActive();
+            bool isBakingLightmaps = Editor.ProgressReporting.BakeLightmaps.IsActive;
             c.GetButton(2).Enabled = (canEdit && canBakeLightmaps) || isBakingLightmaps;// Bake lightmaps
             c.GetButton(2).Text = isBakingLightmaps ? "Cancel baking lightmaps" : "Bake lightmaps";
             c.GetButton(3).Enabled = canEdit;// Clear lightmaps data
             c.GetButton(5).Enabled = canEdit;// Bake all env probes
-            */
+            
             c.PerformLayout();
         }
 
