@@ -1,3 +1,4 @@
+using FlaxEditor.Scripting;
 using FlaxEditor.States;
 using NUnit.Framework;
 
@@ -35,7 +36,7 @@ namespace FlaxEditor.Tests
             
             // Mock scripts compilation finish
             editor.Update();
-            Scripting.ScriptsBuilder.Internal_OnCompilationEnd(true);
+            Scripting.ScriptsBuilder.Internal_OnEvent(ScriptsBuilder.EventType.CompileEndGood);
             editor.Update();
 
             editor.EnsureState<EditingSceneState>();

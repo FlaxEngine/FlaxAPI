@@ -158,7 +158,6 @@
     <Compile Include="Modules\ProgressReportingModule.cs" />
     <Compile Include="Modules\SceneEditingModule.cs" />
     <Compile Include="Modules\SceneModule.cs" />
-    <Compile Include="Modules\ScriptingModule.cs" />
     <Compile Include="Modules\SimulationModule.cs" />
     <Compile Include="Content\Thumbnails\ThumbnailsModule.cs" />
     <Compile Include="Modules\UIModule.cs" />

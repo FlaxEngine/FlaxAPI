@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System.Text;
+using FlaxEditor.Scripting;
 
 namespace FlaxEditor.Content
 {
@@ -79,6 +80,14 @@ namespace FlaxEditor.Content
         public override ScriptItem FindScriptWitScriptName(string scriptName)
         {
             return scriptName == ScriptName ? this : null;
+        }
+
+        /// <inheritdoc />
+        public override void OnDelete()
+        {
+            ScriptsBuilder.MarkWorkspaceDirty();
+
+            base.OnDelete();
         }
     }
 }
