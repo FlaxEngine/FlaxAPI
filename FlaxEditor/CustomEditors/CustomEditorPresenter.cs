@@ -50,7 +50,7 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// The selected objects editor.
         /// </summary>
-        protected readonly GenericEditor Editor = new GenericEditor();
+        protected CustomEditor Editor;
 
         /// <summary>
         /// The selected objects list.
@@ -150,11 +150,19 @@ namespace FlaxEditor.CustomEditors
             Panel.DisposeChildren();
             
             ClearLayout();
-            Editor.Cleanup();
+            if (Editor != null)
+            {
+                Editor.Cleanup();
+                Editor = null;
+            }
 
             // Build new one
             if (Selection.Count > 0)
             {
+                Type type = typeof(object);
+                if (Selection.HasDiffrentTypes == false)
+                    type = Selection[0].GetType();
+                Editor = CustomEditorsUtil.CreateEditor(type, false);
                 Editor.Initialize(this, this, Selection);
             }
 
@@ -182,6 +190,9 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         internal void Update()
         {
+            if (Editor == null)
+                return;
+
             bool isDirty = _isDirty;
             _isDirty = false;
 
