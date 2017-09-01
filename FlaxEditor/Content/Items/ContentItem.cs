@@ -297,7 +297,7 @@ namespace FlaxEditor.Content
         }
 
         /// <summary>
-        /// Trues to find the item at the specified path.
+        /// Tries to find the item at the specified path.
         /// </summary>
         /// <param name="path">The path.</param>
         /// <returns>Found item or null if missing.</returns>
@@ -317,7 +317,7 @@ namespace FlaxEditor.Content
         }
 
         /// <summary>
-        /// Trues to find the item with the specified id.
+        /// Tries to find the item with the specified id.
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>Found item or null if missing.</returns>

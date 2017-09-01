@@ -133,11 +133,11 @@ namespace FlaxEditor
             RegisterModule(Scripting = new ScriptingModule(this));
             RegisterModule(Scene = new SceneModule(this));
             RegisterModule(SceneEditing = new SceneEditingModule(this));
-            RegisterModule(ProgressReporting = new ProgressReportingModule(this));
             RegisterModule(ContentEditing = new ContentEditingModule(this));
             RegisterModule(ContentDatabase = new ContentDatabaseModule(this));
             RegisterModule(ContentImporting = new ContentImportingModule(this));
             RegisterModule(CodeEditing = new CodeEditingModule(this));
+            RegisterModule(ProgressReporting = new ProgressReportingModule(this));
 
             StateMachine = new EditorStateMachine(this);
             Undo = new EditorUndo(this);
