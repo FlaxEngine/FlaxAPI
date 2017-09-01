@@ -421,6 +421,28 @@ namespace FlaxEditor
 #endif
         }
 
+        #region Env Probes Baking
+
+        /// <summary>
+        /// Occurs when environment probe baking starts.
+        /// </summary>
+        public static event Action<EnvironmentProbe> EnvProbeBakeStart;
+
+        /// <summary>
+        /// Occurs when environment probe baking ends.
+        /// </summary>
+        public static event Action<EnvironmentProbe> EnvProbeBakeEnd;
+
+        internal static void Internal_EnvProbeBake(bool started, EnvironmentProbe probe)
+        {
+            if(started)
+                EnvProbeBakeStart?.Invoke(probe);
+            else
+                EnvProbeBakeEnd?.Invoke(probe);
+        }
+
+        #endregion
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
