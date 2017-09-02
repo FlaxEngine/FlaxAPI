@@ -23,13 +23,11 @@ namespace FlaxEditor.CustomEditors
         {
             private CustomEditorPresenter _presenter;
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PresenterPanel"/> class.
-            /// </summary>
-            /// <param name="presenter">The presenter.</param>
             internal PresenterPanel(CustomEditorPresenter presenter)
             {
                 _presenter = presenter;
+                DockStyle = DockStyle.Top;
+                IsScrollable = true;
             }
 
             /// <inheritdoc />
@@ -52,7 +50,7 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// The selected objects editor.
         /// </summary>
-        protected readonly GenericEditor Editor = new GenericEditor();
+        protected CustomEditor Editor;
 
         /// <summary>
         /// The selected objects list.
@@ -72,7 +70,12 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// Occurs when any property gets changed.
         /// </summary>
-        public event Action OnModify;
+        public event Action Modified;
+
+        /// <summary>
+        /// Occurs when presenter wants to gather undo objects to record changes. Can be overriden to provide custom objects collection.
+        /// </summary>
+        public Func<CustomEditorPresenter, IEnumerable<object>> GetUndoObjects = presenter => presenter.Selection;
 
         /// <summary>
         /// Gets the amount of objects being selected.
@@ -82,6 +85,7 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomEditorPresenter"/> class.
         /// </summary>
+        /// <param name="undo">The undo. It's optional.</param>
         public CustomEditorPresenter(Undo undo)
         {
             Undo = undo;
@@ -144,13 +148,21 @@ namespace FlaxEditor.CustomEditors
             var parentScrollV = (Panel.Parent as Panel)?.VScrollBar?.Value ?? -1;
             Panel.IsLayoutLocked = true;
             Panel.DisposeChildren();
-
-            Children.Clear();
-            Editor.Cleanup();
+            
+            ClearLayout();
+            if (Editor != null)
+            {
+                Editor.Cleanup();
+                Editor = null;
+            }
 
             // Build new one
             if (Selection.Count > 0)
             {
+                Type type = typeof(object);
+                if (Selection.HasDiffrentTypes == false)
+                    type = Selection[0].GetType();
+                Editor = CustomEditorsUtil.CreateEditor(type, false);
                 Editor.Initialize(this, this, Selection);
             }
 
@@ -178,13 +190,16 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         internal void Update()
         {
+            if (Editor == null)
+                return;
+
             bool isDirty = _isDirty;
             _isDirty = false;
 
             // If any UI control has been modified we should try to record selected objects change
             if (isDirty && Undo != null)
             {
-                using (new UndoMultiBlock(Undo, Selection, "Edit object(s)"))
+                using (new UndoMultiBlock(Undo, GetUndoObjects(this), "Edit object(s)"))
                     Editor.RefreshRoot();
             }
             else
@@ -193,7 +208,7 @@ namespace FlaxEditor.CustomEditors
             }
 
             if (isDirty)
-                OnModify?.Invoke();
+                Modified?.Invoke();
         }
 
         /// <summary>

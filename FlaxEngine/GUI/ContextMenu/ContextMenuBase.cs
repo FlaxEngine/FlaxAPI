@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -232,6 +232,10 @@ namespace FlaxEngine.GUI
 
         private void onWindowLostFocus()
         {
+            // Skip for parent menus (child should hanndle lost of focus)
+            if (_childCM != null)
+                return;
+
             // Check if user stopped using that popup menu
             var root = TopmostCM;
             if (_parentCM != null)

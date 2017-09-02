@@ -4,6 +4,7 @@
 
 using System;
 using FlaxEditor.SceneGraph;
+using FlaxEngine;
 using FlaxEngine.Json;
 using Newtonsoft.Json;
 
@@ -59,6 +60,11 @@ namespace FlaxEditor
         {
             get => JsonConvert.DeserializeObject<TData>(_data, InternalJsonSerializer.Settings);
             protected set => _data = JsonConvert.SerializeObject(value, Formatting.None, InternalJsonSerializer.Settings);
+            /*protected set
+            {
+                _data = JsonConvert.SerializeObject(value, Formatting.Indented, InternalJsonSerializer.Settings);
+                Debug.Log(_data);
+            }*/
         }
 
         /// <inheritdoc />

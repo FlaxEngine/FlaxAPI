@@ -5,6 +5,8 @@
 using System;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
+using FlaxEditor.CustomEditors.GUI;
+using FlaxEditor.GUI;
 using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
@@ -55,8 +57,17 @@ namespace FlaxEditor.Windows.Assets
             [EditorOrder(140), EditorDisplay("Transparency"), Tooltip("True if disable distortion effect when rendering material")]
             public bool DisableDistortion { get; set; }
 
+            [EditorOrder(150), EditorDisplay("Transparency"), Tooltip("Controls opacity values clipping point"), Limit(0.0f, 1.0f, 0.01f)]
+            public float OpacityThreshold { get; set; }
+
             [EditorOrder(200), EditorDisplay("Misc"), Tooltip("True if disable depth buffer write when rendering material")]
             public bool DisableDepthWrite { get; set; }
+
+            [EditorOrder(210), EditorDisplay("Misc"), Tooltip("Controls mask values clipping point"), Limit(0.0f, 1.0f, 0.01f)]
+            public float MaskThreshold { get; set; }
+
+            [EditorOrder(220), EditorDisplay("Misc"), Tooltip("The post fx material rendering location")]
+            public MaterialPostFxLocation PostFxLocation { get; set; }
 
             [EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor))]
             // ReSharper disable once UnusedAutoPropertyAccessor.Local
@@ -106,7 +117,7 @@ namespace FlaxEditor.Windows.Assets
                     }
                     _parametersHash = material._parametersHash;
                     var parameters = material.Parameters;
-
+                    
                     for (int i = 0; i < parameters.Length; i++)
                     {
                         var p = parameters[i];
@@ -154,10 +165,14 @@ namespace FlaxEditor.Windows.Assets
 
                                 win.Asset.Parameters[pIndex].Value = value;
                                 win.Surface.Parameters[pIndex].Value = surfaceParam;
+                                win._paramValueChange = true;
                             }
                         );
 
-                        layout.Property(p.Name, propertyValue);
+                        var propertyLabel = new ClickablePropertyNameLabel(p.Name);
+                        propertyLabel.MouseRightClick += (label, location) => ShowParameterMenu(pIndex, label, ref location);
+                        var property = layout.AddPropertyItem(propertyLabel);
+                        property.Object(propertyValue);
                     }
 
                     if (parameters.Length > 0)
@@ -170,6 +185,31 @@ namespace FlaxEditor.Windows.Assets
                     newParam.Button.Clicked += () => AddParameter((ParameterType)paramType.Value);
                 }
 
+                /// <summary>
+                /// Shows the parameter context menu.
+                /// </summary>
+                /// <param name="index">The index.</param>
+                /// <param name="label">The label control.</param>
+                /// <param name="targetLocation">The target location.</param>
+                private void ShowParameterMenu(int index, Control label, ref Vector2 targetLocation)
+                {
+                    var contextMenu = new ContextMenu();
+                    contextMenu.OnButtonClicked += (id, menu) =>
+                                                   {
+                                                       if (id == 1)
+                                                           StartParameterRenaming(index, label);
+                                                       else if (id == 2)
+                                                           DeleteParameter(index);
+                                                   };
+                    contextMenu.AddButton(1, "Rename");
+                    contextMenu.AddButton(2, "Delete");
+                    contextMenu.Show(label, targetLocation);
+                }
+
+                /// <summary>
+                /// Adds the parameter.
+                /// </summary>
+                /// <param name="type">The type.</param>
                 private void AddParameter(ParameterType type)
                 {
                     var win = Values[0] as MaterialWindow;
@@ -178,9 +218,54 @@ namespace FlaxEditor.Windows.Assets
                         return;
 
                     var param = SurfaceParameter.Create(type);
+                    if (type == ParameterType.NormalMap)
+                    {
+                        // Use default normal map texture (don't load asset here, just lookup registry for id at path)
+                        int typeId;
+                        Guid id;
+                        FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out typeId, out id);
+                        param.Value = id;
+                    }
                     win.Surface.Parameters.Add(param);
                     win.Surface.OnParamCreated(param);
-                    win.Surface.MarkAsEdited();
+                }
+
+                /// <summary>
+                /// Starts renaming parameter.
+                /// </summary>
+                /// <param name="index">The index.</param>
+                /// <param name="label">The label control.</param>
+                private void StartParameterRenaming(int index, Control label)
+                {
+                    var win = (MaterialWindow)Values[0];
+                    var material = win.Asset;
+                    var parameter = material.Parameters[index];
+                    var dialog = RenamePopup.Show(label, new Rectangle(0, 0, label.Width - 2, label.Height), parameter.Name, false);
+                    dialog.Tag = index;
+                    dialog.Renamed += OnParameterRenamed;
+                }
+
+                private void OnParameterRenamed(RenamePopup renamePopup)
+                {
+                    var index = (int)renamePopup.Tag;
+                    var newName = renamePopup.Text;
+
+                    var win = (MaterialWindow)Values[0];
+                    var param = win.Surface.Parameters[index];
+                    param.Name = newName;
+                    win.Surface.OnParamRenamed(param);
+                }
+
+                /// <summary>
+                /// Removes the parameter.
+                /// </summary>
+                /// <param name="index">The index.</param>
+                private void DeleteParameter(int index)
+                {
+                    var win = (MaterialWindow)Values[0];
+                    var param = win.Surface.Parameters[index];
+                    win.Surface.Parameters.RemoveAt(index);
+                    win.Surface.OnParamDeleted(param);
                 }
 
                 /// <inheritdoc />
@@ -190,7 +275,17 @@ namespace FlaxEditor.Windows.Assets
                     var material = materialWin?.Asset;
                     int parametersHash = -1;
                     if (material != null)
-                        parametersHash = material.IsLoaded ? material._parametersHash : -2;
+                    {
+                        if (material.IsLoaded)
+                        {
+                            var parameters = material.Parameters;// need to ask for params here to sync valid hash   
+                            parametersHash = material._parametersHash;
+                        }
+                        else
+                        {
+                            parametersHash = -2;
+                        }
+                    }
 
                     if (parametersHash != _parametersHash)
                     {
@@ -216,6 +311,9 @@ namespace FlaxEditor.Windows.Assets
                 DisableFog = (info.Flags & MaterialFlags.TransparentDisableFog) != 0;
                 DisableDepthWrite = (info.Flags & MaterialFlags.DisableDepthWrite) != 0;
                 DisableDistortion = (info.Flags & MaterialFlags.TransparentDisableDistortion) != 0;
+                OpacityThreshold = info.OpacityThreshold;
+                MaskThreshold = info.MaskThreshold;
+                PostFxLocation = info.PostFxLocation;
                 BlendMode = info.BlendMode;
                 Lighting = info.TransparentLighting;
                 Domain = info.Domain;
@@ -245,6 +343,9 @@ namespace FlaxEditor.Windows.Assets
                     info.Flags |= MaterialFlags.DisableDepthWrite;
                 if (DisableDistortion)
                     info.Flags |= MaterialFlags.TransparentDisableDistortion;
+                info.OpacityThreshold = OpacityThreshold;
+                info.MaskThreshold = MaskThreshold;
+                info.PostFxLocation = PostFxLocation;
                 info.BlendMode = BlendMode;
                 info.TransparentLighting = Lighting;
                 info.Domain = Domain;
@@ -266,6 +367,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly PropertiesProxy _properties;
         private bool _isWaitingForSurfaceLoad;
         private bool _tmpMaterialIsDirty;
+        internal bool _paramValueChange;
 
         /// <summary>
         /// Gets the material surface.
@@ -277,9 +379,8 @@ namespace FlaxEditor.Windows.Assets
             : base(editor, item)
         {
             // Toolstrip
-            _toolstrip.AddButton(1, Editor.UI.GetIcon("Save32"));// .LinkTooltip(GetSharedTooltip(), TEXT("Save"));// Save material
+            _toolstrip.AddButton(1, Editor.UI.GetIcon("Save32")).LinkTooltip("Save");// Save material
             // TODO: option to center view to main node (use ScrollViewToMain function)
-            // TODO: tooltips support!
 
             // Split Panel 1
             var splitPanel1 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
@@ -305,12 +406,10 @@ namespace FlaxEditor.Windows.Assets
 
             // Material properties editor
             var propertiesEditor = new CustomEditorPresenter(null);
-            propertiesEditor.Panel.Width = splitPanel2.Panel2.Width;
-            propertiesEditor.Panel.AnchorStyle = AnchorStyle.Upper;
             propertiesEditor.Panel.Parent = splitPanel2.Panel2;
             _properties = new PropertiesProxy();
             propertiesEditor.Select(_properties);
-            propertiesEditor.OnModify += OnMaterialPropertyEdited;
+            propertiesEditor.Modified += OnMaterialPropertyEdited;
 
             // Surface
             _surface = new VisjectSurface(this, SurfaceType.Material)
@@ -322,7 +421,8 @@ namespace FlaxEditor.Windows.Assets
 
         private void OnMaterialPropertyEdited()
         {
-            _surface.MarkAsEdited();
+            _surface.MarkAsEdited(!_paramValueChange);
+            _paramValueChange = false;
             RefreshMainNode();
         }
 
@@ -376,13 +476,7 @@ namespace FlaxEditor.Windows.Assets
         /// <param name="info">Output info.</param>
         public void FillMaterialInfo(out MaterialInfo info)
         {
-            info = new MaterialInfo
-            {
-                Flags = MaterialFlags.None,
-                BlendMode = MaterialBlendMode.Opaque,
-                Domain = MaterialDomain.Surface,
-                TransparentLighting = MaterialTransparentLighting.None
-            };
+            info = MaterialInfo.CreateDefault();
             _properties.OnSave(ref info);
         }
 
@@ -562,7 +656,7 @@ namespace FlaxEditor.Windows.Assets
             {
                 // Clear flag
                 _isWaitingForSurfaceLoad = false;
-
+                
                 // Init material properties and parameters proxy
                 _properties.OnLoad(this);
                 

@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -35,9 +35,9 @@ namespace FlaxEditor.Windows.Assets
             : base(editor, item)
         {
             // Toolstrip
-            _toolstrip.AddButton(1, editor.UI.GetIcon("Save32"));//->LinkTooltip(GetSharedTooltip(), TEXT("Save")); // TODO: tooltips
+            _toolstrip.AddButton(1, editor.UI.GetIcon("Save32")).LinkTooltip("Save");
             _toolstrip.AddSeparator();
-            _toolstrip.AddButton(2, editor.UI.GetIcon("UV32"));//->LinkTooltip(GetSharedTooltip(), TEXT("Show model UVs")); // TODO: tooltips
+            _toolstrip.AddButton(2, editor.UI.GetIcon("UV32")).LinkTooltip("Show model UVs");
 
             // Split Panel
             _splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical);

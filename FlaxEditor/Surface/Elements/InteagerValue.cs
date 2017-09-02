@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -100,13 +100,13 @@ namespace FlaxEditor.Surface.Elements
             var value = parentNode.Values[arch.ValueIndex];
             float toSetF = (float)toSet;
 
-            if (value is int valueInt)
+            if (value is int)
             {
-                value = valueInt;
+                value = toSet;
             }
-            else if (value is float valueFloat)
+            else if (value is float)
             {
-                value = (int)valueFloat;
+                value = (float)toSet;
             }
             else if (value is Vector2 valueVec2)
             {

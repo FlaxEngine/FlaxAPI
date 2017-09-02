@@ -15,39 +15,16 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
 	/// <summary>
-	/// Directional Light can emmit light from direction in space
+	/// Light source actor. Base class for spot, point and directional lights.
 	/// </summary>
 	[Serializable]
-	public sealed partial class DirectionalLight : Actor
+	public abstract partial class LightActor : Actor
 	{
 		/// <summary>
-		/// Creates new <see cref="DirectionalLight"/> object.
-		/// </summary>
-		private DirectionalLight() : base()
-		{
-		}
-
-		/// <summary>
-		/// Creates new instance of <see cref="DirectionalLight"/> object.
-		/// </summary>
-		/// <returns>Created object.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-		[UnmanagedCall]
-		public static DirectionalLight New() 
-		{
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-			return Internal_Create(typeof(DirectionalLight)) as DirectionalLight;
-#endif
-		}
-
-		/// <summary>
-		/// Gets or sets value indicating if visual element affects the world
+		/// Gets or sets value indicating if visual element affects the world.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(-50), EditorDisplay("General"), Tooltip("True if visual element affects the world")]
 		public bool AffectsWorld
 		{
 #if UNIT_TEST_COMPILANT
@@ -59,9 +36,10 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// 
+		/// Gets or sets the light emission color.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(20), EditorDisplay("Light"), Tooltip("Light emission color")]
 		public Color Color
 		{
 #if UNIT_TEST_COMPILANT
@@ -73,9 +51,10 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets light brightness parameter
+		/// Gets or sets light brightness parameter.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(30), EditorDisplay("Light"), Tooltip("Light brighness value"), Limit(0.0f, 1000.0f, 0.01f)]
 		public float Brightness
 		{
 #if UNIT_TEST_COMPILANT
@@ -87,9 +66,10 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets light shadows casting distance from view
+		/// Gets or sets light shadows casting distance from view.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(80), EditorDisplay("Light"), Tooltip("Light shadows rendering distance"), Limit(0, 100000)]
 		public float ShadowsDistance
 		{
 #if UNIT_TEST_COMPILANT
@@ -101,9 +81,10 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets light shadows fade off distance
+		/// Gets light shadows fade off distance.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(90), EditorDisplay("Light"), Tooltip("Shadows fade off distance"), Limit(0.0f, 200.0f, 0.1f)]
 		public float ShadowsFadeDistance
 		{
 #if UNIT_TEST_COMPILANT
@@ -118,6 +99,7 @@ namespace FlaxEngine
 		/// Gets or sets the minimum roughness value used to clamp material surface roughness during shading pixel.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(40), EditorDisplay("Light"), Tooltip("Minimum roughness value used to clamp material surface roughness during shading"), Limit(0.0f, 1.0f, 0.01f)]
 		public float MinimumRoughness
 		{
 #if UNIT_TEST_COMPILANT
@@ -129,9 +111,10 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets value indicating if how visual element casts shadows
+		/// Gets or sets value indicating if how visual element casts shadows.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(60), EditorDisplay("Light"), Tooltip("Describes how visual element casts shadows")]
 		public ShadowsCastingMode ShadowsMode
 		{
 #if UNIT_TEST_COMPILANT
@@ -139,6 +122,21 @@ namespace FlaxEngine
 #else
 			get { return Internal_GetShadowsMode(unmanagedPtr); }
 			set { Internal_SetShadowsMode(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets shadows sharpness value.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(70), EditorDisplay("Light"), Tooltip("Controls shadows sharpness value"), Limit(1.0f, 10.0f, 0.001f)]
+		public float ShadowsSharpness
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetShadowsSharpness(unmanagedPtr); }
+			set { Internal_SetShadowsSharpness(unmanagedPtr, value); }
 #endif
 		}
 
@@ -172,6 +170,10 @@ namespace FlaxEngine
 		internal static extern ShadowsCastingMode Internal_GetShadowsMode(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetShadowsMode(IntPtr obj, ShadowsCastingMode val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetShadowsSharpness(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetShadowsSharpness(IntPtr obj, float val);
 #endif
 #endregion
 	}

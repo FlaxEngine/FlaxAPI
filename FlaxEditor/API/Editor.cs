@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using FlaxEditor.Content.Import;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Modules;
+using FlaxEditor.Scripting;
 using FlaxEditor.States;
 using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
@@ -60,12 +61,7 @@ namespace FlaxEditor
         /// The simulation module.
         /// </summary>
         public readonly SimulationModule Simulation;
-
-        /// <summary>
-        /// The scripting module.
-        /// </summary>
-        public readonly ScriptingModule Scripting;
-
+        
         /// <summary>
         /// The scene module.
         /// </summary>
@@ -130,17 +126,30 @@ namespace FlaxEditor
             RegisterModule(UI = new UIModule(this));
             RegisterModule(Thumbnails = new ThumbnailsModule(this));
             RegisterModule(Simulation = new SimulationModule(this));
-            RegisterModule(Scripting = new ScriptingModule(this));
             RegisterModule(Scene = new SceneModule(this));
             RegisterModule(SceneEditing = new SceneEditingModule(this));
-            RegisterModule(ProgressReporting = new ProgressReportingModule(this));
             RegisterModule(ContentEditing = new ContentEditingModule(this));
             RegisterModule(ContentDatabase = new ContentDatabaseModule(this));
             RegisterModule(ContentImporting = new ContentImportingModule(this));
             RegisterModule(CodeEditing = new CodeEditingModule(this));
+            RegisterModule(ProgressReporting = new ProgressReportingModule(this));
 
             StateMachine = new EditorStateMachine(this);
             Undo = new EditorUndo(this);
+
+            ScriptsBuilder.ScriptsReloadBegin += ScriptsBuilder_ScriptsReloadBegin;
+            ScriptsBuilder.ScriptsReloadEnd += ScriptsBuilder_ScriptsReloadEnd;
+        }
+
+        private void ScriptsBuilder_ScriptsReloadBegin()
+        {
+            EnsureState<EditingSceneState>();
+            StateMachine.GoToState<ReloadingScriptsState>();
+        }
+
+        private void ScriptsBuilder_ScriptsReloadEnd()
+        {
+            StateMachine.GoToState<EditingSceneState>();
         }
 
         internal void RegisterModule(EditorModule module)
@@ -411,6 +420,28 @@ namespace FlaxEditor
             return Internal_ImportModel(inputPath, outputPath, ref internalOptions);
 #endif
         }
+
+        #region Env Probes Baking
+
+        /// <summary>
+        /// Occurs when environment probe baking starts.
+        /// </summary>
+        public static event Action<EnvironmentProbe> EnvProbeBakeStart;
+
+        /// <summary>
+        /// Occurs when environment probe baking ends.
+        /// </summary>
+        public static event Action<EnvironmentProbe> EnvProbeBakeEnd;
+
+        internal static void Internal_EnvProbeBake(bool started, EnvironmentProbe probe)
+        {
+            if(started)
+                EnvProbeBakeStart?.Invoke(probe);
+            else
+                EnvProbeBakeEnd?.Invoke(probe);
+        }
+
+        #endregion
 
         #region Internal Calls
 

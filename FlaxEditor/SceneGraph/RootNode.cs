@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEngine;
 
@@ -51,9 +52,20 @@ namespace FlaxEditor.SceneGraph
         }
         
         /// <inheritdoc />
-        public override bool RayCastSelf(ref Ray ray, ref float distance)
+        public override bool RayCastSelf(ref Ray ray, out float distance)
         {
+            distance = 0;
             return false;
+        }
+
+        /// <inheritdoc />
+        public override void OnDebugDraw(List<IntPtr> actorsPtr)
+        {
+        }
+
+        /// <inheritdoc />
+        public override void Delete()
+        {
         }
     }
 }

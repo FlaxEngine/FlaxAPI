@@ -5,6 +5,7 @@
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
+using FlaxEngine.Utilities;
 
 namespace FlaxEditor.Windows
 {
@@ -25,8 +26,8 @@ namespace FlaxEditor.Windows
         {
             Title = "Game";
 
-            var task = RenderTask.Create<SceneRenderTask>();
-            task.OnBegin += OnBegin;
+            var task = MainRenderTask.Instance;
+            task.Begin += OnBegin;
 
             // Setup viewport
             _viewport = new RenderOutputControl(task);
@@ -36,14 +37,12 @@ namespace FlaxEditor.Windows
 
         private void OnBegin(SceneRenderTask sceneRenderTask)
         {
-            // Use the main camera for the game preview
-            var camera = Camera.MainCamera;
+            var camera = sceneRenderTask.Camera;
             if (camera)
             {
                 // Fix aspect ratio to fit the current output dimensions
                 camera.CustomAspectRatio = Width / Height;
             }
-            sceneRenderTask.Camera = camera;
         }
 
         /// <inheritdoc />
@@ -51,7 +50,7 @@ namespace FlaxEditor.Windows
         {
             if (ParentWindow.GetKeyDown(KeyCode.F12))
             {
-                // TODO: capture screenshot
+                Screenshot.Capture();
             }
 
             base.Update(deltaTime);

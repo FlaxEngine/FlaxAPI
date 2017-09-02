@@ -7,12 +7,14 @@ using FlaxEditor.Gizmo;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Dialogs;
 using FlaxEditor.SceneGraph;
+using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.Scripting;
 using FlaxEditor.Windows;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 using FlaxEngine.GUI.Docking;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Modules
 {
@@ -23,6 +25,8 @@ namespace FlaxEditor.Modules
     public sealed class UIModule : EditorModule
     {
         private SpriteAtlas _iconsAtlas;
+        private Label _progressLabel;
+        private ProgressBar _progressBar;
 
         /// <summary>
         /// The main menu control.
@@ -43,15 +47,15 @@ namespace FlaxEditor.Modules
         /// The status strip control.
         /// </summary>
         public StatusBar StatusBar;
-
+        
         /// <summary>
         /// The visject surface background texture. Cached to be used globally.
         /// </summary>
         public Texture VisjectSurfaceBackground;
-
+        
         // Cached internally to improve performance
-        internal Sprite FolderClosed12;
 
+        internal Sprite FolderClosed12;
         internal Sprite FolderOpened12;
 
         internal UIModule(Editor editor)
@@ -176,6 +180,24 @@ namespace FlaxEditor.Modules
             StatusBar.StatusColor = color;
         }
 
+        internal bool ProgressVisible
+        {
+            get => _progressLabel?.Parent.Visible ?? false;
+            set
+            {
+                if (_progressLabel != null)
+                    _progressLabel.Parent.Visible = value;
+            }
+        }
+
+        internal void UpdateProgress(string text, float progress)
+        {
+            if (_progressLabel != null)
+                _progressLabel.Text = text;
+            if (_progressBar != null)
+                _progressBar.Value = progress;
+        }
+
         /// <inheritdoc />
         public override void OnInit()
         {
@@ -195,12 +217,18 @@ namespace FlaxEditor.Modules
         public override void OnEndInit()
         {
             Editor.MainTransformGizmo.OnModeChanged += UpdateToolstrip;
-            Editor.StateMachine.StateChanged += UpdateToolstrip;
+            Editor.StateMachine.StateChanged += StateMachineOnStateChanged;
             Editor.Undo.UndoDone += UpdateToolstrip;
             Editor.Undo.RedoDone += UpdateToolstrip;
             Editor.Undo.ActionDone += UpdateToolstrip;
-            
+
             UpdateToolstrip();
+        }
+
+        private void StateMachineOnStateChanged()
+        {
+            UpdateToolstrip();
+            UpdateStatusBar();
         }
 
         /// <inheritdoc />
@@ -235,11 +263,7 @@ namespace FlaxEditor.Modules
             style.ProgressNormal = Color.FromBgra(0xFF0ad328);
 
             // Color picking
-            style.ShowPickColorDialog += (color, handler) =>
-                                         {
-                                             var dialog = new ColorPickerDialog(color, handler);
-                                             dialog.Show();
-                                         };
+            style.ShowPickColorDialog += (color, handler) => new ColorPickerDialog(color, handler).Show();
 
             // Set as default
             Style.Current = style;
@@ -283,6 +307,8 @@ namespace FlaxEditor.Modules
             style.Rotate16 = GetIcon("Rotate16");
             style.Scale16 = GetIcon("Scale16");
 
+            style.SharedTooltip = new Tooltip();
+
             // Cache icons
             FolderClosed12 = GetIcon("FolderClosed12");
             FolderOpened12 = GetIcon("FolderOpened12");
@@ -316,7 +342,7 @@ namespace FlaxEditor.Modules
             // Edit
             var mm_Edit = MainMenu.AddButton("Edit");
             mm_Edit.ContextMenu.OnButtonClicked += mm_Edit_Click;
-            mm_Edit.ContextMenu.OnVisibleChanged += mm_Edit_ShowHide;
+            mm_Edit.ContextMenu.VisibleChanged += mm_Edit_ShowHide;
             mm_Edit.ContextMenu.AddButton(1, string.Empty, "Ctrl+Z");// Undo text is updated in mm_Edit_ShowHide
             mm_Edit.ContextMenu.AddButton(2, string.Empty, "Ctrl+Y");// Redo text is updated in mm_Edit_ShowHide
             mm_Edit.ContextMenu.AddSeparator();
@@ -333,7 +359,7 @@ namespace FlaxEditor.Modules
             // Scene
             var mm_Scene = MainMenu.AddButton("Scene");
             mm_Scene.ContextMenu.OnButtonClicked += mm_Scene_Click;
-            mm_Scene.ContextMenu.OnVisibleChanged += mm_Scene_ShowHide;
+            mm_Scene.ContextMenu.VisibleChanged += mm_Scene_ShowHide;
             //mm_Scene.ContextMenu.AddButton(1, "Go to location...");
             //mm_scene.AddSeparator();
             mm_Scene.ContextMenu.AddButton(3, "Move actor to viewport");
@@ -352,7 +378,7 @@ namespace FlaxEditor.Modules
             // Tools
             var mm_Tools = MainMenu.AddButton("Tools");
             mm_Tools.ContextMenu.OnButtonClicked += mm_Tools_Click;
-            mm_Tools.ContextMenu.OnVisibleChanged += mm_Tools_ShowHide;
+            mm_Tools.ContextMenu.VisibleChanged += mm_Tools_ShowHide;
             //mm_Tools.ContextMenu.AddButton(1, "Scene statistics");
             mm_Tools.ContextMenu.AddButton(2, "Bake lightmaps", "Ctrl+F10");
             mm_Tools.ContextMenu.AddButton(3, "Clear lightmaps data");
@@ -397,21 +423,20 @@ namespace FlaxEditor.Modules
             ToolStrip = new ToolStrip();
             ToolStrip.OnButtonClicked += onTootlstripButtonClicked;
             ToolStrip.Parent = mainWindow;
-
-            // TODO: add tooltips support like in c++
-            //ToolStrip.AddButton(0, GetIcon("Logo32"));//.LinkTooltip(SharedToolTip, "Flax Engine");// Welcome screen
-            ToolStrip.AddButton(2, GetIcon("Save32"));//.LinkTooltip(SharedToolTip, "Save all (Ctrl+S)");// Save all
+            
+            //ToolStrip.AddButton(0, GetIcon("Logo32")).LinkTooltip("Flax Engine");// Welcome screen
+            ToolStrip.AddButton(2, GetIcon("Save32")).LinkTooltip("Save all (Ctrl+S)");// Save all
             ToolStrip.AddSeparator();
-            ToolStrip.AddButton(3, GetIcon("Undo32"));//.LinkTooltip(SharedToolTip, "Undo (Ctrl+Z)");// Undo
-            ToolStrip.AddButton(4, GetIcon("Redo32"));//.LinkTooltip(SharedToolTip, "Redo (Ctrl+Y)");// Redo
+            ToolStrip.AddButton(3, GetIcon("Undo32")).LinkTooltip("Undo (Ctrl+Z)");// Undo
+            ToolStrip.AddButton(4, GetIcon("Redo32")).LinkTooltip("Redo (Ctrl+Y)");// Redo
             ToolStrip.AddSeparator();
-            ToolStrip.AddButton(5, GetIcon("Translate32"));//.LinkTooltip(SharedToolTip, "Change Gizmo tool mode to Translate (1)");// Translate mode
-            ToolStrip.AddButton(6, GetIcon("Rotate32"));//.LinkTooltip(SharedToolTip, "Change Gizmo tool mode to Rotate (2)");// Rotate mode
-            ToolStrip.AddButton(7, GetIcon("Scale32"));//.LinkTooltip(SharedToolTip, "Change Gizmo tool mode to Scale (3)");// Scale mode
+            ToolStrip.AddButton(5, GetIcon("Translate32")).LinkTooltip("Change Gizmo tool mode to Translate (1)");// Translate mode
+            ToolStrip.AddButton(6, GetIcon("Rotate32")).LinkTooltip("Change Gizmo tool mode to Rotate (2)");// Rotate mode
+            ToolStrip.AddButton(7, GetIcon("Scale32")).LinkTooltip("Change Gizmo tool mode to Scale (3)");// Scale mode
             ToolStrip.AddSeparator();
-            ToolStrip.AddButton(8, GetIcon("Play32"));//.LinkTooltip(SharedToolTip, "Start/Stop simulation (F5)");// Play
-            ToolStrip.AddButton(9, GetIcon("Pause32"));//.LinkTooltip(SharedToolTip, "Pause simulation");// Pause
-            ToolStrip.AddButton(10, GetIcon("Step32"));//.LinkTooltip(SharedToolTip, "Step one frame in simulation");// Step
+            ToolStrip.AddButton(8, GetIcon("Play32")).LinkTooltip("Start/Stop simulation (F5)");// Play
+            ToolStrip.AddButton(9, GetIcon("Pause32")).LinkTooltip("Pause simulation");// Pause
+            ToolStrip.AddButton(10, GetIcon("Step32")).LinkTooltip("Step one frame in simulation");// Step
 
             UpdateToolstrip();
         }
@@ -419,10 +444,39 @@ namespace FlaxEditor.Modules
         private void InitStatusBar(FlaxEngine.GUI.Window mainWindow)
         {
             // Status Bar
-            StatusBar = new StatusBar();
-            StatusBar.Parent = mainWindow;
+            StatusBar = new StatusBar
+            {
+                Text = "Ready",
+                Parent = mainWindow
+            };
 
-            StatusBar.Text = "Ready";
+            // Progress bar with label
+            const float progressBarWidth = 120.0f;
+            const float progressBarHeight = 18;
+            const float progressBarRightMargin = 4;
+            const float progressBarLeftMargin = 4;
+            var progressPanel = new Panel(ScrollBars.None)
+            {
+                Visible = false,
+                DockStyle = DockStyle.Fill,
+                Parent = StatusBar
+            };
+            _progressBar = new ProgressBar(
+                progressPanel.Width - progressBarWidth - progressBarRightMargin,
+                (StatusBar.Height - progressBarHeight) * 0.5f,
+                progressBarWidth,
+                progressBarHeight)
+            {
+                AnchorStyle = AnchorStyle.CenterRight,
+                Parent = progressPanel
+            };
+            _progressLabel = new Label(0, 0, _progressBar.Left - progressBarLeftMargin, progressPanel.Height)
+            {
+                HorizontalAlignment = TextAlignment.Far,
+                AnchorStyle = AnchorStyle.CenterRight,
+                Parent = progressPanel
+            };
+            
             UpdateStatusBar();
         }
 
@@ -431,15 +485,14 @@ namespace FlaxEditor.Modules
             // Dock Panel
             MasterPanel.Parent = mainWindow;
         }
-
+        
         private void onTootlstripButtonClicked(int id)
         {
             switch (id)
             {
                 // Welcome screen
                 case 0:
-                    // TODO: Welcome screen
-                    throw new NotImplementedException("Info box");
+                    new AboutDialog().Show();
                     break;
 
                 // Save scene(s)
@@ -714,26 +767,21 @@ namespace FlaxEditor.Modules
 
                 // Take screenshot!
                 case 4:
-                    throw new NotImplementedException("take screenshot");
-                    //TakeScreenshot();
+                    Editor.Windows.TakeScreenshot();
                     break;
 
                 // Bake all env probes
                 case 5:
                 {
-                    throw new NotImplementedException("Bake all env probes");
-                    /*
-                    f = ()=>{
-                        var envProbe = dynamic_cast<EnvironmentProbe*>(actor);
-                        if (envProbe)
-                        {
-                            envProbe.Bake();
-                            Editor.MarkAsEdited();
-                        }
-                        return actor.IsActiveInTree();
-                    });
-                    SceneQuery.TreeExecute(f);
-                    */
+                    Editor.Scene.ExecuteOnGraph(node =>
+                                                {
+                                                    if (node is EnvironmentProbeNode envProbeNode)
+                                                    {
+                                                        ((EnvironmentProbe)envProbeNode.Actor).Bake();
+                                                        node.ParentScene.IsEdited = true;
+                                                    }
+                                                    return node.IsActive;
+                                                });
                     break;
                 }
             }
@@ -745,15 +793,14 @@ namespace FlaxEditor.Modules
                 return;
 
             var c = (ContextMenu)control;
-            /*// TODO: baking lightmaps via c# editor
-            bool canBakeLightmaps = Editor.Device.Limits.IsComputeSupported();
+            bool canBakeLightmaps = GraphicsDevice.Limits.IsComputeSupported;
             bool canEdit = SceneManager.IsAnySceneLoaded && Editor.StateMachine.IsEditMode;
-            bool isBakingLightmaps = Editor.ProgressReporting.BakeLightmaps.IsActive();
+            bool isBakingLightmaps = Editor.ProgressReporting.BakeLightmaps.IsActive;
             c.GetButton(2).Enabled = (canEdit && canBakeLightmaps) || isBakingLightmaps;// Bake lightmaps
             c.GetButton(2).Text = isBakingLightmaps ? "Cancel baking lightmaps" : "Bake lightmaps";
             c.GetButton(3).Enabled = canEdit;// Clear lightmaps data
             c.GetButton(5).Enabled = canEdit;// Bake all env probes
-            */
+            
             c.PerformLayout();
         }
 
@@ -831,6 +878,8 @@ namespace FlaxEditor.Modules
             ToolStrip = null;
             MasterPanel = null;
             StatusBar = null;
+            _progressLabel = null;
+            _progressBar = null;
         }
     }
 }

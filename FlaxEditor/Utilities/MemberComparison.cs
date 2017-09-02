@@ -14,9 +14,9 @@ namespace FlaxEditor.Utilities
     public struct MemberComparison
     {
         /// <summary>
-        ///     Member this Comparison compares
+        ///     Members path this Comparison compares.
         /// </summary>
-        public readonly MemberInfo Member;
+        public MemberInfoPath MemberPath;
 
         /// <summary>
         ///     The value of first object respective member
@@ -36,7 +36,20 @@ namespace FlaxEditor.Utilities
         /// <param name="value2">The second value.</param>
         public MemberComparison(MemberInfo member, object value1, object value2)
         {
-            Member = member;
+            MemberPath = new MemberInfoPath(member);
+            Value1 = value1;
+            Value2 = value2;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MemberComparison"/> struct.
+        /// </summary>
+        /// <param name="memberPath">The member path.</param>
+        /// <param name="value1">The first value.</param>
+        /// <param name="value2">The second value.</param>
+        public MemberComparison(MemberInfoPath memberPath, object value1, object value2)
+        {
+            MemberPath = memberPath;
             Value1 = value1;
             Value2 = value2;
         }
@@ -48,49 +61,28 @@ namespace FlaxEditor.Utilities
         /// <param name="value">The value.</param>
         public void SetMemberValue(object instance, object value)
         {
-            if (Member.MemberType == MemberTypes.Field)
+            var finalMember = MemberPath.GetLastMember(ref instance);
+
+            var type = finalMember.Type;
+            if (value != null)
             {
-                var field = (FieldInfo)Member;
-
-                if (value != null)
+                if (value is long && type == typeof(int))
                 {
-                    if (value is long && field.FieldType == typeof(int))
-                    {
-                        value = (int)(long)value;
-                    }
-                    else if (value is double && field.FieldType == typeof(float))
-                    {
-                        value = (float)(double)value;
-                    }
+                    value = (int)(long)value;
                 }
-
-                field.SetValue(instance, value);
-            }
-            else
-            {
-                var property = (PropertyInfo)Member;
-
-                if (value != null)
+                else if (value is double && type == typeof(float))
                 {
-                    if (value is long && property.PropertyType == typeof(int))
-                    {
-                        value = (int)(long)value;
-                    }
-                    else if (value is double && property.PropertyType == typeof(float))
-                    {
-                        value = (float)(double)value;
-                    }
+                    value = (float)(double)value;
                 }
-
-                if (property.SetMethod != null)
-                    property.SetValue(instance, value);
             }
+
+            finalMember.SetValue(instance, value);
         }
 
         /// <inheritdoc />
         public override string ToString()
         {
-            return Member.Name + ": " + Value1 + (Value1.Equals(Value2) ? " == " : " != ") + Value2;
+            return MemberPath.Path + ": " + (Value1 ?? "<null>") + (Equals(Value1, Value2) ? " == " : " != ") + (Value2 ?? "<null>");
         }
     }
 }

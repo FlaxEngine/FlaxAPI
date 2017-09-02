@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 // -----------------------------------------------------------------------------
 // Original code from SharpDX project. https://github.com/sharpdx/SharpDX/
@@ -57,9 +57,9 @@ namespace FlaxEngine
         /// </remarks>
         public OrientedBoundingBox(BoundingBox bb)
         {
-            Vector3 Center = bb.Minimum + (bb.Maximum - bb.Minimum) / 2f;
-            Extents = bb.Maximum - Center;
-            Transformation = Matrix.Translation(Center);
+            Vector3 center = bb.Minimum + (bb.Maximum - bb.Minimum) / 2f;
+            Extents = bb.Maximum - center;
+            Transformation = Matrix.Translation(center);
         }
 
         /// <summary>
@@ -72,9 +72,9 @@ namespace FlaxEngine
         /// </remarks>
         public OrientedBoundingBox(Vector3 minimum, Vector3 maximum)
         {
-            Vector3 Center = minimum + (maximum - minimum) / 2f;
-            Extents = maximum - Center;
-            Transformation = Matrix.Translation(Center);
+            Vector3 center = minimum + (maximum - minimum) / 2f;
+            Extents = maximum - center;
+            Transformation = Matrix.Translation(center);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace FlaxEngine
         public OrientedBoundingBox(Vector3[] points)
         {
             if ((points == null) || (points.Length == 0))
-                throw new ArgumentNullException("points");
+                throw new ArgumentNullException(nameof(points));
 
             var minimum = new Vector3(float.MaxValue);
             var maximum = new Vector3(float.MinValue);
@@ -99,9 +99,9 @@ namespace FlaxEngine
                 Vector3.Max(ref maximum, ref points[i], out maximum);
             }
 
-            Vector3 Center = minimum + (maximum - minimum) / 2f;
-            Extents = maximum - Center;
-            Transformation = Matrix.Translation(Center);
+            Vector3 center = minimum + (maximum - minimum) / 2f;
+            Extents = maximum - center;
+            Transformation = Matrix.Translation(center);
         }
 
         /// <summary>
@@ -431,11 +431,11 @@ namespace FlaxEngine
 
             // Calculate B to A rotation matrix
             for (i = 0; i < 3; i++)
-                for (k = 0; k < 3; k++)
-                {
-                    R[i, k] = Vector3.Dot(RotA[i], RotB[k]);
-                    AR[i, k] = Math.Abs(R[i, k]);
-                }
+            for (k = 0; k < 3; k++)
+            {
+                R[i, k] = Vector3.Dot(RotA[i], RotB[k]);
+                AR[i, k] = Math.Abs(R[i, k]);
+            }
 
             // Vector separating the centers of Box B and of Box A	
             Vector3 vSepWS = obb.Center - Center;
@@ -466,16 +466,16 @@ namespace FlaxEngine
 
             // Now test Cross Products of each basis vector combination ( A[i], B[k] )
             for (i = 0; i < 3; i++)
-                for (k = 0; k < 3; k++)
-                {
-                    int i1 = (i + 1) % 3, i2 = (i + 2) % 3;
-                    int k1 = (k + 1) % 3, k2 = (k + 2) % 3;
-                    ExtentA = SizeA[i1] * AR[i2, k] + SizeA[i2] * AR[i1, k];
-                    ExtentB = SizeB[k1] * AR[i, k2] + SizeB[k2] * AR[i, k1];
-                    Separation = Math.Abs(vSepA[i2] * R[i1, k] - vSepA[i1] * R[i2, k]);
-                    if (Separation > ExtentA + ExtentB)
-                        return ContainmentType.Disjoint;
-                }
+            for (k = 0; k < 3; k++)
+            {
+                int i1 = (i + 1) % 3, i2 = (i + 2) % 3;
+                int k1 = (k + 1) % 3, k2 = (k + 2) % 3;
+                ExtentA = SizeA[i1] * AR[i2, k] + SizeA[i2] * AR[i1, k];
+                ExtentB = SizeB[k1] * AR[i, k2] + SizeB[k2] * AR[i, k1];
+                Separation = Math.Abs(vSepA[i2] * R[i1, k] - vSepA[i1] * R[i2, k]);
+                if (Separation > ExtentA + ExtentB)
+                    return ContainmentType.Disjoint;
+            }
 
             // No separating axis found, the boxes overlap	
             return ContainmentType.Intersects;
@@ -494,7 +494,7 @@ namespace FlaxEngine
         /// </remarks>
         public ContainmentType ContainsLine(ref Vector3 L1, ref Vector3 L2)
         {
-            ContainmentType cornersCheck = Contains(new[] {L1, L2});
+            ContainmentType cornersCheck = Contains(new[] { L1, L2 });
             if (cornersCheck != ContainmentType.Disjoint)
                 return cornersCheck;
 
@@ -563,8 +563,8 @@ namespace FlaxEngine
             var AR = new Matrix();// absolute values of R matrix, to use with box extents
 
             for (i = 0; i < 3; i++)
-                for (k = 0; k < 3; k++)
-                    AR[i, k] = Math.Abs(R[i, k]);
+            for (k = 0; k < 3; k++)
+                AR[i, k] = Math.Abs(R[i, k]);
 
             // Vector separating the centers of Box B and of Box A	
             Vector3 vSepWS = boxCenter - Center;
@@ -595,16 +595,16 @@ namespace FlaxEngine
 
             // Now test Cross Products of each basis vector combination ( A[i], B[k] )
             for (i = 0; i < 3; i++)
-                for (k = 0; k < 3; k++)
-                {
-                    int i1 = (i + 1) % 3, i2 = (i + 2) % 3;
-                    int k1 = (k + 1) % 3, k2 = (k + 2) % 3;
-                    ExtentA = SizeA[i1] * AR[i2, k] + SizeA[i2] * AR[i1, k];
-                    ExtentB = SizeB[k1] * AR[i, k2] + SizeB[k2] * AR[i, k1];
-                    Separation = Math.Abs(vSepA[i2] * R[i1, k] - vSepA[i1] * R[i2, k]);
-                    if (Separation > ExtentA + ExtentB)
-                        return ContainmentType.Disjoint;
-                }
+            for (k = 0; k < 3; k++)
+            {
+                int i1 = (i + 1) % 3, i2 = (i + 2) % 3;
+                int k1 = (k + 1) % 3, k2 = (k + 2) % 3;
+                ExtentA = SizeA[i1] * AR[i2, k] + SizeA[i2] * AR[i1, k];
+                ExtentB = SizeB[k1] * AR[i, k2] + SizeB[k2] * AR[i, k1];
+                Separation = Math.Abs(vSepA[i2] * R[i1, k] - vSepA[i1] * R[i2, k]);
+                if (Separation > ExtentA + ExtentB)
+                    return ContainmentType.Disjoint;
+            }
 
             // No separating axis found, the boxes overlap	
             return ContainmentType.Intersects;
@@ -638,6 +638,27 @@ namespace FlaxEngine
                 Vector3.TransformCoordinate(ref point, ref Transformation, out point);
 
             return intersects;
+        }
+
+        /// <summary>
+        /// Determines whether there is an intersection between a <see cref="Ray" /> and a <see cref="OrientedBoundingBox" />.
+        /// </summary>
+        /// <param name="ray">The ray to test.</param>
+        /// <param name="distance">
+        /// When the method completes, contains the distance of intersection from the ray start,
+        /// or 0 if there was no intersection.
+        /// </param>
+        /// <returns>Whether the two objects intersected.</returns>
+        public bool Intersects(ref Ray ray, out float distance)
+        {
+            Vector3 point;
+            if (Intersects(ref ray, out point))
+            {
+                Vector3.Distance(ref ray.Position, ref point, out distance);
+                return true;
+            }
+            distance = 0;
+            return false;
         }
 
         /// <summary>
@@ -702,8 +723,8 @@ namespace FlaxEngine
                 AtoB_Matrix = new Matrix();
                 int i, k;
                 for (i = 0; i < 3; i++)
-                    for (k = 0; k < 3; k++)
-                        AtoB_Matrix[i, k] = Vector3.Dot(RotB[i], RotA[k]);
+                for (k = 0; k < 3; k++)
+                    AtoB_Matrix[i, k] = Vector3.Dot(RotB[i], RotA[k]);
                 Vector3 v = B.Center - A.Center;
                 AtoB_Matrix.M41 = Vector3.Dot(v, RotA[0]);
                 AtoB_Matrix.M42 = Vector3.Dot(v, RotA[1]);

@@ -58,7 +58,7 @@ namespace FlaxEditor.CustomEditors
             return CreateEditor(values.Type);
         }
 
-        internal static CustomEditor CreateEditor(Type targetType)
+        internal static CustomEditor CreateEditor(Type targetType, bool canUseRefPicker = true)
         {
             if (targetType.IsArray)
             {
@@ -87,13 +87,16 @@ namespace FlaxEditor.CustomEditors
                     return new GenericEditor();
                 }
             }
-            if (targetType.IsSubclassOf(typeof(FlaxEngine.Asset)))
+            if (canUseRefPicker)
             {
-                return new AssetRefEditor();
-            }
-            if (targetType.IsSubclassOf(typeof(FlaxEngine.Object)))
-            {
-                return new FlaxObjectRefEditor();
+                if (targetType.IsSubclassOf(typeof(FlaxEngine.Asset)))
+                {
+                    return new AssetRefEditor();
+                }
+                if (targetType.IsSubclassOf(typeof(FlaxEngine.Object)))
+                {
+                    return new FlaxObjectRefEditor();
+                }
             }
 
             // The most generic editor

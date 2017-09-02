@@ -50,32 +50,36 @@ namespace FlaxEditor.Windows
 
             // Content database events
             editor.ContentDatabase.OnWorkspaceModified += () => _isWorkspaceDirty = true;
-            editor.ContentDatabase.OnItemRemoved += ContentDatabaseOnItemRemoved;
+            editor.ContentDatabase.ItemRemoved += ContentDatabaseOnItemRemoved;
 
             // Tool strip
             _toolStrip = new ToolStrip();
-            _toolStrip.AddButton(0, Editor.UI.GetIcon("Import32"));//.LinkTooltip(GetSharedTooltip(), "Import content");// Import
+            _toolStrip.AddButton(0, Editor.UI.GetIcon("Import32")).LinkTooltip("Import content");// Import
             _toolStrip.AddSeparator();
-            _toolStrip.AddButton(1, Editor.UI.GetIcon("ArrowLeft32"));//.LinkTooltip(GetSharedTooltip(), "Navigate backward");// Backward
-            _toolStrip.AddButton(2, Editor.UI.GetIcon("ArrowRight32"));//.LinkTooltip(GetSharedTooltip(), "Navigate forward");// Forward
-            _toolStrip.AddButton(3, Editor.UI.GetIcon("ArrowUp32"));//.LinkTooltip(GetSharedTooltip(), "Navigate up");// Up
+            _toolStrip.AddButton(1, Editor.UI.GetIcon("ArrowLeft32")).LinkTooltip("Navigate backward");// Backward
+            _toolStrip.AddButton(2, Editor.UI.GetIcon("ArrowRight32")).LinkTooltip("Navigate forward");// Forward
+            _toolStrip.AddButton(3, Editor.UI.GetIcon("ArrowUp32")).LinkTooltip("Navigate up");// Up
             _toolStrip.OnButtonClicked += toolstripButtonClicked;
             _toolStrip.Parent = this;
 
             // Navigation bar
-            _navigationBar = new NavigationBar();
-            _navigationBar.Height = 32;
-            _navigationBar.Parent = this;
+            _navigationBar = new NavigationBar
+            {
+                Height = 32,
+                Parent = this
+            };
 
             // Split panel
-            _split = new SplitPanel(Orientation.Horizontal, ScrollBars.Both, ScrollBars.Vertical);
-            _split.DockStyle = DockStyle.Fill;
-            _split.SplitterValue = 0.2f;
-            _split.Parent = this;
+            _split = new SplitPanel(Orientation.Horizontal, ScrollBars.Both, ScrollBars.Vertical)
+            {
+                DockStyle = DockStyle.Fill,
+                SplitterValue = 0.2f,
+                Parent = this
+            };
 
             // Content structure tree
             _tree = new Tree(false);
-            _tree.OnSelectedChanged += treeOnSelectedChanged;
+            _tree.SelectedChanged += treeOnSelectedChanged;
             _tree.Parent = _split.Panel1;
 
             // Content View

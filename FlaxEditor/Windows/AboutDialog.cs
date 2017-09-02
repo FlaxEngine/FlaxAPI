@@ -37,7 +37,7 @@ namespace FlaxEditor.Windows
                 ImageSource = new SpriteImageSource(Editor.Instance.UI.GetIcon("Logo128")),
                 Parent = this
             };
-            var nameLabel = new Label(false, icon.Right + 10, icon.Top, 100, 34)
+            var nameLabel = new Label(icon.Right + 10, icon.Top, 200, 34)
             {
                 Text = "Flax Engine",
                 Font = Style.Current.FontTitle,
@@ -45,7 +45,7 @@ namespace FlaxEditor.Windows
                 VerticalAlignment = TextAlignment.Center,
                 Parent = this
             };
-            new Label(false, nameLabel.Left, nameLabel.Bottom + 4, nameLabel.Width, 50)
+            new Label(nameLabel.Left, nameLabel.Bottom + 4, nameLabel.Width, 50)
             {
                 Text = string.Format("Version: {0}\nCopyright (c) 2012-2017 Wojciech Figat.\nAll rights reserved.", Globals.Version),
                 HorizontalAlignment = TextAlignment.Near,
@@ -62,7 +62,7 @@ namespace FlaxEditor.Windows
         private void CreateFooter(Control topParentControl)
         {
             Panel thirdPartyPanel = GenerateThirdPartyLabels(topParentControl);
-            new Label(false, 4, thirdPartyPanel.Bottom, Width - 8, Height - thirdPartyPanel.Bottom)
+            new Label(4, thirdPartyPanel.Bottom, Width - 8, Height - thirdPartyPanel.Bottom)
             {
                 HorizontalAlignment = TextAlignment.Far,
                 Text = "Made with <3 in Poland",
@@ -84,7 +84,7 @@ namespace FlaxEditor.Windows
                 "Damian Korczowski",
             });
             authors.Sort();
-            var authorsLabel = new Label(false, 4, topParentControl.Bottom + 20, Width - 8, 50)
+            var authorsLabel = new Label(4, topParentControl.Bottom + 20, Width - 8, 50)
             {
                 Text = "People who made it:\n" + string.Join(", ", authors),
                 HorizontalAlignment = TextAlignment.Near,
@@ -125,7 +125,7 @@ namespace FlaxEditor.Windows
             for (var i = 0; i < thirdPartyEntries.Length; i++)
             {
                 var entry = thirdPartyEntries[i];
-                var entryLabel = new Label(false, 0, y, Width, 14)
+                var entryLabel = new Label(0, y, Width, 14)
                 {
                     Text = entry,
                     HorizontalAlignment = TextAlignment.Near,

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using FlaxEditor.Content;
+using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 
@@ -51,12 +52,12 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Occurs when new items is added to the workspace content database.
         /// </summary>
-        public event Action<ContentItem> OnItemAdded;
+        public event Action<ContentItem> ItemAdded;
 
         /// <summary>
         /// Occurs when new items is removed from the workspace content database.
         /// </summary>
-        public event Action<ContentItem> OnItemRemoved;
+        public event Action<ContentItem> ItemRemoved;
 
         /// <summary>
         /// Occurs when workspace has been modified.
@@ -558,7 +559,7 @@ namespace FlaxEditor.Modules
 
             // Fire events
             if (_enableEvents)
-                OnItemRemoved?.Invoke(item);
+                ItemRemoved?.Invoke(item);
             item.OnDelete();
             _itemsDeleted++;
 
@@ -686,7 +687,7 @@ namespace FlaxEditor.Modules
                     // Fire event
                     if (_enableEvents)
                     {
-                        OnItemAdded?.Invoke(n.Folder);
+                        ItemAdded?.Invoke(n.Folder);
                         OnWorkspaceModified?.Invoke();
                     }
                     _itemsCreated++;
@@ -707,6 +708,7 @@ namespace FlaxEditor.Modules
             var files = Directory.GetFiles(directory, ScriptProxy.ExtensionFiler, SearchOption.TopDirectoryOnly);
 
             // Add them
+            bool anyAdded = false;
             for (int i = 0; i < files.Length; i++)
             {
                 var path = StringUtils.NormalizePath(files[i]);
@@ -723,12 +725,16 @@ namespace FlaxEditor.Modules
                     // Fire event
                     if (_enableEvents)
                     {
-                        OnItemAdded?.Invoke(item);
+                        ItemAdded?.Invoke(item);
                         OnWorkspaceModified?.Invoke();
                     }
                     _itemsCreated++;
+                    anyAdded = true;
                 }
             }
+
+            if (anyAdded && _enableEvents)
+                ScriptsBuilder.MarkWorkspaceDirty();
         }
 
         private void LoadAssets(ContentTreeNode parent, string directory)
@@ -764,7 +770,7 @@ namespace FlaxEditor.Modules
                             // Fire event
                             if (_enableEvents)
                             {
-                                OnItemAdded?.Invoke(item);
+                                ItemAdded?.Invoke(item);
                                 OnWorkspaceModified?.Invoke();
                             }
                             _itemsCreated++;

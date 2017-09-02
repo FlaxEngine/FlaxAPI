@@ -45,7 +45,8 @@ namespace FlaxEngine.Rendering
 
         /// <summary>
         /// The frame rendering buffers.
-        /// Task is creating and resizing them during rendering.
+        /// Task is creating and resizing them during rendering if need to.
+        /// Size of the buffers always equals size of the output.
         /// </summary>
         public RenderBuffers Buffers;
 
@@ -78,17 +79,18 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// The action called on rendering begin.
         /// </summary>
-        public event BeginDelegate OnBegin;
+        public event BeginDelegate Begin;
 
         /// <summary>
         /// The action called on rendering end.
         /// </summary>
-        public event EndDelegate OnEnd;
+        public event EndDelegate End;
 
         /// <summary>
-        /// The action called on view rendering to collect draw calls. It allows to extend rendering pipeline and draw custom geometry non-existing in the scene or custom actors set.
+        /// The action called on view rendering to collect draw calls.
+        /// It allows to extend rendering pipeline and draw custom geometry non-existing in the scene or custom actors set.
         /// </summary>
-        public event DrawDelegate OnDraw;
+        public event DrawDelegate Draw;
 
         internal SceneRenderTask()
         {
@@ -126,11 +128,11 @@ namespace FlaxEngine.Rendering
             // Create buffers if missing
             if (Buffers == null)
                 Buffers = RenderBuffers.New();
-            
+
             // Prepare view
+            OnBegin();
             if (Camera != null)
                 View.CopyFrom(Camera);
-            OnBegin?.Invoke(this);
 
             // Resize buffers
             Buffers.Size = Output.Size;
@@ -140,17 +142,32 @@ namespace FlaxEngine.Rendering
             context.DrawScene(this, Output, Buffers, View, Flags, Mode, customActors);
 
             // Finish
-            OnEnd?.Invoke(this);
+            OnEnd();
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Called when on rendering begin.
+        /// </summary>
+        protected virtual void OnBegin()
+        {
+            Begin?.Invoke(this);
+        }
+        
+        /// <summary>
+        /// Called when on rendering end.
+        /// </summary>
+        protected virtual void OnEnd()
+        {
+            End?.Invoke(this);
+        }
+        
         internal override DrawCall[] Internal_Draw()
         {
-            if (OnDraw != null)
+            if (Draw != null)
             {
                 // Collect draw calls and send them packed back to be rendered
                 var collector = new DrawCallsCollector();
-                OnDraw(collector);
+                Draw(collector);
                 return collector.DrawCalls;
             }
 

@@ -48,6 +48,7 @@ namespace FlaxEngine
 		/// Gets or sets model scale in lightmap parameter
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(10), EditorDisplay("Model"), Tooltip("Model meshes master scale in lightmap"), Limit(0, 1000.0f, 0.1f)]
 		public float ScaleInLightmap
 		{
 #if UNIT_TEST_COMPILANT
@@ -62,6 +63,7 @@ namespace FlaxEngine
 		/// Gets or sets model asset
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(20), EditorDisplay("Model"), Tooltip("Model asset to draw")]
 		public Model Model
 		{
 #if UNIT_TEST_COMPILANT

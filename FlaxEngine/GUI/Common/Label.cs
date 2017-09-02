@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -7,8 +7,8 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// The basic GUI label control.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.Control" />
-    public class Label : Control
+    /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    public class Label : ContainerControl
     {
         /// <summary>
         /// Gets or sets the text.
@@ -17,6 +17,14 @@ namespace FlaxEngine.GUI
         /// The text.
         /// </value>
         public string Text { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color of the text.
+        /// </summary>
+        /// <value>
+        /// The color of the text.
+        /// </value>
+        public Color TextColor { get; set; } = Color.White;
 
         /// <summary>
         /// Gets or sets the horizontal text alignment.
@@ -51,96 +59,44 @@ namespace FlaxEngine.GUI
         public Font Font { get; set; }
 
         /// <summary>
-        /// Gets or sets the margins for the text. Each vector component represents other control side in order: left, right, top and bottom.
+        /// Gets or sets the margin for the text.
         /// </summary>
         /// <value>
-        /// The margins.
+        /// The margin.
         /// </value>
-        public Vector4 Margins { get; set; }
+        public Margin Margin { get; set; }
 
         /// <summary>
-        /// Gets or sets the left margin.
+        /// Gets or sets a value indicating whether clip text during rendering.
         /// </summary>
         /// <value>
-        /// The left margin.
+        ///   <c>true</c> if clip text; otherwise, <c>false</c>.
         /// </value>
-        public float LeftMargin
-        {
-            get => Margins.X;
-            set
-            {
-                var v = Margins;
-                v.X = value;
-                Margins = v;
-            }
-        }
+        public bool ClipText { get; set; } = false;
 
         /// <summary>
-        /// Gets or sets the right margin.
+        /// Initializes a new instance of the <see cref="Label"/> class.
         /// </summary>
-        /// <value>
-        /// The right margin.
-        /// </value>
-        public float RightMargin
-        {
-            get => Margins.Y;
-            set
-            {
-                var v = Margins;
-                v.Y = value;
-                Margins = v;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the top margin.
-        /// </summary>
-        /// <value>
-        /// The top margin.
-        /// </value>
-        public float TopMargin
-        {
-            get => Margins.Z;
-            set
-            {
-                var v = Margins;
-                v.Z = value;
-                Margins = v;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the bottom margin.
-        /// </summary>
-        /// <value>
-        /// The bottom margin.
-        /// </value>
-        public float BottomMargin
-        {
-            get => Margins.W;
-            set
-            {
-                var v = Margins;
-                v.W = value;
-                Margins = v;
-            }
-        }
-
-        /// <inheritdoc />
-        public Label(bool canFocus, float x, float y, float width, float height)
-            : base(canFocus, x, y, width, height)
+        public Label()
+            : base(false, 0, 0, 100, 20)
         {
         }
 
         /// <inheritdoc />
-        public Label(bool canFocus, Vector2 location, Vector2 size)
-            : base(canFocus, location, size)
+        public Label(float x, float y, float width, float height)
+            : base(false, x, y, width, height)
         {
         }
 
         /// <inheritdoc />
-        public Label(bool canFocus, Rectangle bounds)
-            : base(canFocus, bounds)
+        public Label(Vector2 location, Vector2 size)
+            : base(false, location, size)
+        {
+        }
+
+        /// <inheritdoc />
+        public Label(Rectangle bounds)
+            : base(false, bounds)
         {
         }
 
@@ -151,17 +107,23 @@ namespace FlaxEngine.GUI
 
             var style = Style.Current;
             var font = Font ?? style.FontMedium;
-            var rect = new Rectangle(Margins.X, Margins.Z, Width - Margins.X - Margins.Y, Height - Margins.Z - Margins.W);
+            var rect = new Rectangle(new Vector2(Margin.Left, Margin.Top), Size - Margin.Size);
+
+            if (ClipText)
+                Render2D.PushClip(ref rect);
 
             Render2D.DrawText(
                 font,
                 Text,
                 rect,
-                style.Foreground,
+                TextColor,
                 HorizontalAlignment,
                 VerticalAlignment,
                 Wrapping
             );
+
+            if (ClipText)
+                Render2D.PopClip();
         }
     }
 }

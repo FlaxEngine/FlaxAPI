@@ -120,6 +120,93 @@ namespace FlaxEngine.Rendering
     }
 
     /// <summary>
+    /// Post Fx material rendering locations.
+    /// </summary>
+    public enum MaterialPostFxLocation : byte
+    {
+        /// <summary>
+        /// The after post processing pass using LDR input frame.
+        /// </summary>
+        AfterPostProcessingPass = 0,
+
+        /// <summary>
+        /// The before post processing pass using HDR input frame.
+        /// </summary>
+        BeforePostProcessingPass = 1,
+
+        /// <summary>
+        /// The before forward pass but after GBuffer with HDR input frame.
+        /// </summary>
+        BeforeForwardPass = 2,
+
+        /// <summary>
+        /// The after custom post effects.
+        /// </summary>
+        AfterCustomPostEffects = 3,
+    }
+
+    /// <summary>
+    /// Material input scene textures. Special inputs from the graphics pipeline.
+    /// </summary>
+    public enum MaterialSceneTextures
+    {
+        /// <summary>
+        /// The scene color.
+        /// </summary>
+        SceneColor = 0,
+
+        /// <summary>
+        /// The scene depth.
+        /// </summary>
+        SceneDepth = 1,
+
+        /// <summary>
+        /// The material diffuse color.
+        /// </summary>
+        DiffuseColor = 2,
+
+        /// <summary>
+        /// The material specular color.
+        /// </summary>
+        SpecularColor = 3,
+
+        /// <summary>
+        /// The material world space normal.
+        /// </summary>
+        WorldNormal = 4,
+
+        /// <summary>
+        /// The ambient occlusion.
+        /// </summary>
+        AmbientOcclusion = 5,
+
+        /// <summary>
+        /// The material metalness value.
+        /// </summary>
+        Metalness = 6,
+
+        /// <summary>
+        /// The material roughness value.
+        /// </summary>
+        Roughness = 7,
+
+        /// <summary>
+        /// The material specular value.
+        /// </summary>
+        Specular = 8,
+
+        /// <summary>
+        /// The material color.
+        /// </summary>
+        BaseColor = 9,
+
+        /// <summary>
+        /// The material shading model.
+        /// </summary>
+        ShadingModel = 10,
+    }
+
+    /// <summary>
     /// Structure with basic information about the material surface.
     /// It describes how material is reacting on light and which graphical features of it requires to render.
     /// </summary>
@@ -146,11 +233,60 @@ namespace FlaxEngine.Rendering
         /// </summary>
         public MaterialTransparentLighting TransparentLighting;
 
+        /// <summary>
+        /// The post fx material rendering location.
+        /// </summary>
+        public MaterialPostFxLocation PostFxLocation;
+
+        /// <summary>
+        /// The mask threshold.
+        /// </summary>
+        public float MaskThreshold;
+
+        /// <summary>
+        /// The opacity threshold.
+        /// </summary>
+        public float OpacityThreshold;
+
+        /// <summary>
+        /// Creates the default <see cref="MaterialInfo"/>.
+        /// </summary>
+        /// <returns>The result.</returns>
+        public static MaterialInfo CreateDefault()
+        {
+            return new MaterialInfo
+            {
+                Flags = MaterialFlags.None,
+                BlendMode = MaterialBlendMode.Opaque,
+                Domain = MaterialDomain.Surface,
+                TransparentLighting = MaterialTransparentLighting.None,
+                PostFxLocation = MaterialPostFxLocation.AfterPostProcessingPass,
+                MaskThreshold = 0.3f,
+                OpacityThreshold = 1.0f / 255.0f,
+            };
+        }
+
+        /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="a">The a.</param>
+        /// <param name="b">The b.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static bool operator ==(MaterialInfo a, MaterialInfo b)
         {
             return a.Equals(b);
         }
 
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="a">The a.</param>
+        /// <param name="b">The b.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static bool operator !=(MaterialInfo a, MaterialInfo b)
         {
             return !a.Equals(b);
@@ -159,13 +295,18 @@ namespace FlaxEngine.Rendering
         /// <inheritdoc />
         public bool Equals(MaterialInfo other)
         {
-            return Domain == other.Domain && BlendMode == other.BlendMode && Flags == other.Flags && TransparentLighting == other.TransparentLighting;
+            return Domain == other.Domain
+                   && BlendMode == other.BlendMode
+                   && Flags == other.Flags
+                   && TransparentLighting == other.TransparentLighting
+                   && PostFxLocation == other.PostFxLocation;
         }
 
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(null, obj))
+                return false;
             return obj is MaterialInfo && Equals((MaterialInfo)obj);
         }
 
@@ -178,6 +319,9 @@ namespace FlaxEngine.Rendering
                 hashCode = (hashCode * 397) ^ (int)BlendMode;
                 hashCode = (hashCode * 397) ^ (int)Flags;
                 hashCode = (hashCode * 397) ^ (int)TransparentLighting;
+                hashCode = (hashCode * 397) ^ (int)PostFxLocation;
+                hashCode = (hashCode * 397) ^ (int)MaskThreshold;
+                hashCode = (hashCode * 397) ^ (int)OpacityThreshold;
                 return hashCode;
             }
         }

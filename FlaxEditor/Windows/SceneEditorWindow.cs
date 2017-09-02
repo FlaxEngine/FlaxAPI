@@ -62,7 +62,7 @@ namespace FlaxEditor.Windows
                             Editor.SceneEditing.Copy();
                             break;
                         case KeyCode.V:
-                            Editor.SceneEditing.Copy();
+                            Editor.SceneEditing.Paste();
                             break;
                         case KeyCode.D:
                             Editor.SceneEditing.Duplicate();

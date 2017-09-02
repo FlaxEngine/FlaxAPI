@@ -81,6 +81,18 @@ namespace FlaxEngine.GUI
             UpdateText();
         }
 
+        /// <summary>
+        /// Sets the limits from the attribute.
+        /// </summary>
+        /// <param name="limits">The limits.</param>
+        public void SetLimits(LimitAttribute limits)
+        {
+            _min = (int)limits.Min;
+            _max = (int)Mathf.Max(_min, limits.Max);
+            _slideSpeed = limits.SliderSpeed;
+            Value = Value;
+        }
+        
         /// <inheritdoc />
         protected sealed override void UpdateText()
         {

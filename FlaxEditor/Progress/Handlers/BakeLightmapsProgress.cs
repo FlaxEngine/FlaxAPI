@@ -8,19 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlaxEngine
+namespace FlaxEditor.Progress.Handlers
 {
-	public sealed partial class SpotLight
-	{
-        // TODO: expose ShadowsSharpness
-
-        /// <summary>
-        /// Gets light scaled radius parameter
-        /// </summary>
-        [UnmanagedCall]
-        public float ScaledRadius
-        {
-            get { return Scale.MaxValue * Radius; }
-        }
+    /// <summary>
+    /// Statis lightmaps baking progress reporting handler.
+    /// </summary>
+    /// <seealso cref="FlaxEditor.Progress.ProgressHandler" />
+    public sealed class BakeLightmapsProgress : ProgressHandler
+    {
     }
 }

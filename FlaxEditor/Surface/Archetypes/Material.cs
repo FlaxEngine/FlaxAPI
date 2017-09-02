@@ -40,6 +40,7 @@ namespace FlaxEditor.Surface.Archetypes
                 // Get material info
                 MaterialInfo info;
                 materialWindow.FillMaterialInfo(out info);
+                bool isPostFx = info.Domain == MaterialDomain.PostProcess;
                 bool isntLayered = !GetBox(0).HasAnyConnection;
                 bool isSurface = info.Domain == MaterialDomain.Surface && isntLayered;
                 bool isLitSurface = isSurface && info.BlendMode != MaterialBlendMode.Unlit;
@@ -47,14 +48,14 @@ namespace FlaxEditor.Surface.Archetypes
 
                 // Update boxes
                 GetBox(1).Enabled = isLitSurface;// Color
-                GetBox(2).Enabled = isntLayered;// Mask
-                GetBox(3).Enabled = isSurface;// Emissive
+                GetBox(2).Enabled = isSurface;// Mask
+                GetBox(3).Enabled = isSurface || isPostFx;// Emissive
                 GetBox(4).Enabled = isLitSurface;// Metalness
                 GetBox(5).Enabled = isLitSurface;// Specular
                 GetBox(6).Enabled = isLitSurface;// Roughness
                 GetBox(7).Enabled = isLitSurface;// Ambient Occlusion
                 GetBox(8).Enabled = isLitSurface;// Normal
-                GetBox(9).Enabled = isTransparent;// Opacity
+                GetBox(9).Enabled = isTransparent || isPostFx;// Opacity
                 GetBox(10).Enabled = isTransparent;// Refraction
                 GetBox(11).Enabled = false;// Position Offset
                 // TODO: support world position offset
@@ -133,11 +134,12 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "View",
                 Description = "View properties",
                 Flags = NodeFlags.MaterialOnly,
-                Size = new Vector2(150, 40),
+                Size = new Vector2(150, 60),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, "Position", ConnectionType.Vector3, 0),
                     NodeElementArchetype.Factory.Output(1, "Direction", ConnectionType.Vector3, 1),
+                    NodeElementArchetype.Factory.Output(2, "Far Plane", ConnectionType.Float, 2),
                 }
             },
             new NodeArchetype
@@ -162,6 +164,32 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, "Vector", ConnectionType.Vector3, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 6,
+                Title = "Screen Position",
+                Description = "Gathers screen position or texcoord",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(140, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "Position", ConnectionType.Vector2, 0),
+                    NodeElementArchetype.Factory.Output(1, "Texcoord", ConnectionType.Vector2, 1),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 7,
+                Title = "Screen Size",
+                Description = "Gathers screen size",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(120, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "Size", ConnectionType.Vector2, 0),
+                    NodeElementArchetype.Factory.Output(1, "Inv Size", ConnectionType.Vector2, 1),
                 }
             },
         };

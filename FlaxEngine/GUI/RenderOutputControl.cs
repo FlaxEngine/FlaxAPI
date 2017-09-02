@@ -62,7 +62,7 @@ namespace FlaxEngine.GUI
             _task = task;
             _task.Output = _backBuffer;
             _task.CanSkipRendering += CanSkipRendering;
-            _task.OnEnd += OnEnd;
+            _task.End += OnEnd;
         }
 
         /// <summary>

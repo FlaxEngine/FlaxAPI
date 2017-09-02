@@ -61,6 +61,16 @@ namespace FlaxEditor.Modules
         public float ImportingProgress => _importBatchSize > 0 ? (float)_importBatchDone / _importBatchSize : 1.0f;
 
         /// <summary>
+        /// Gets the amount of files done in the current import batch.
+        /// </summary>
+        public float ImportBatchDone => _importBatchDone;
+
+        /// <summary>
+        /// Gets the size of the current import batch (imported files + files to import left).
+        /// </summary>
+        public int ImportBatchSize => _importBatchSize;
+
+        /// <summary>
         /// Occurs when assets importing starts.
         /// </summary>
         public event Action ImportingQueueBegin;

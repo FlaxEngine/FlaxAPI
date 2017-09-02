@@ -425,9 +425,17 @@ namespace FlaxEngine.GUI
                 OnLongPress();
             }
 
-            // Base
+            // Don't update collapsed children
             if (_opened)
+            {
                 base.Update(deltaTime);
+            }
+            else
+            {
+                // Manually update tooltip
+                if (TooltipText != null && IsMouseOver)
+                    Tooltip.OnMouseOverControl(this, deltaTime);
+            }
         }
 
         /// <inheritdoc />

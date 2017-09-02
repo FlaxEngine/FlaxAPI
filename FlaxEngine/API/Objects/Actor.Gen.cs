@@ -93,7 +93,7 @@ namespace FlaxEngine
 		/// Gets or sets the actor name.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorDisplay("General"), EditorOrder(-100)]
+		[EditorDisplay("General"), EditorOrder(-100), Tooltip("Custom name of the actor")]
 		public string Name
 		{
 #if UNIT_TEST_COMPILANT
@@ -108,7 +108,7 @@ namespace FlaxEngine
 		/// Gets or sets actor static fags
 		/// </summary>
 		[UnmanagedCall]
-		[EditorDisplay("General"), EditorOrder(-80)]
+		[EditorDisplay("General"), EditorOrder(-80), Tooltip("Static flags describe type of the object")]
 		public StaticFlags StaticFlags
 		{
 #if UNIT_TEST_COMPILANT
@@ -123,7 +123,7 @@ namespace FlaxEngine
 		/// Gets or sets active state of actor
 		/// </summary>
 		[UnmanagedCall]
-		[EditorDisplay("General"), EditorOrder(-70)]
+		[EditorDisplay("General"), EditorOrder(-70), Tooltip("Enable/disable object")]
 		public bool IsActive
 		{
 #if UNIT_TEST_COMPILANT
@@ -212,7 +212,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's local transform position
 		/// </summary>
 		[UnmanagedCall]
-		[EditorDisplay("Transform", "Position"), EditorOrder(-30), NoSerializeAttribute]
+		[EditorDisplay("Transform", "Position"), EditorOrder(-30), NoSerialize, Tooltip("Local position of the object (in the parent object space)")]
 		public Vector3 LocalPosition
 		{
 #if UNIT_TEST_COMPILANT
@@ -227,7 +227,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's local transform orientation
 		/// </summary>
 		[UnmanagedCall]
-		[EditorDisplay("Transform", "Rotation"), EditorOrder(-20), NoSerializeAttribute]
+		[EditorDisplay("Transform", "Rotation"), EditorOrder(-20), NoSerialize, Tooltip("Local orientation of the object (in the parent object space)")]
 		public Quaternion LocalOrientation
 		{
 #if UNIT_TEST_COMPILANT
@@ -242,7 +242,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's local transform scale
 		/// </summary>
 		[UnmanagedCall]
-		[EditorDisplay("Transform", "Scale"), EditorOrder(-10), NoSerializeAttribute]
+		[EditorDisplay("Transform", "Scale"), EditorOrder(-10), NoSerialize, Tooltip("Local scale of the object (in the parent object space)")]
 		public Vector3 LocalScale
 		{
 #if UNIT_TEST_COMPILANT

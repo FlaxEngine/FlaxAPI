@@ -19,11 +19,13 @@ namespace FlaxEditor.Actions
         private Dictionary<Guid, Guid> _idsMapping;
         private List<ActorNode> _nodeParents;
         private byte[] _data;
+        private Guid _pasteParent;
 
-        private PasteActorsAction(byte[] data, Guid[] objectIds, bool isDuplicate)
+        private PasteActorsAction(byte[] data, Guid[] objectIds, ref Guid pasteParent, bool isDuplicate)
         {
             ActionString = isDuplicate ? "Duplicate actors" : "Paste actors";
 
+            _pasteParent = pasteParent;
             _idsMapping = new Dictionary<Guid, Guid>(objectIds.Length * 4);
             for (int i = 0; i < objectIds.Length; i++)
             {
@@ -34,13 +36,13 @@ namespace FlaxEditor.Actions
             _data = data;
         }
 
-        internal static PasteActorsAction TryCreate(byte[] data, bool isDuplicate = false)
+        internal static PasteActorsAction TryCreate(byte[] data, Guid pasteParent, bool isDuplicate = false)
         {
             var objectIds = Actor.TryGetSerializedObjectsIds(data);
             if (objectIds == null)
                 return null;
 
-            return new PasteActorsAction(data, objectIds, isDuplicate);
+            return new PasteActorsAction(data, objectIds, ref pasteParent, isDuplicate);
         }
 
         /// <inheritdoc />
@@ -62,12 +64,10 @@ namespace FlaxEditor.Actions
                 // Check if has no parent linked (broken reference eg. old parent not existing)
                 if (actor.Parent == null)
                 {
-                    // TODO: here we could paste actors to selected scene tree node if using SceneTreeWindow during paste and single actor is selected
-
                     // Link to the first scene root
                     if (scenes == null)
                         scenes = SceneManager.Scenes;
-                    actor.Parent = scenes[0];
+                    actor.SetParent(scenes[0], false);
                 }
 
                 var foundNode = SceneGraphFactory.FindNode(actor.ID);
@@ -76,7 +76,19 @@ namespace FlaxEditor.Actions
                     actorNodes.Add(node);
                 }
             }
+
             actorNodes.BuildNodesParents(_nodeParents);
+
+            var pasteParentNode = Editor.Instance.Scene.GetActorNode(_pasteParent);
+            if (pasteParentNode != null)
+            {
+                // Move pasted actors to the parent target (if specified and valid)
+                for (int i = 0; i < _nodeParents.Count; i++)
+                {
+                    _nodeParents[i].Actor.SetParent(pasteParentNode.Actor, false);
+                }
+            }
+
             for (int i = 0; i < _nodeParents.Count; i++)
             {
                 // Fix name collisions (only for parents)

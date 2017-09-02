@@ -48,6 +48,7 @@ namespace FlaxEngine
 		/// Gets or sets value indicating if visual element affects the world.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(-50), EditorDisplay("General"), Tooltip("True if visual element affects the world")]
 		public bool AffectsWorld
 		{
 #if UNIT_TEST_COMPILANT
@@ -62,6 +63,7 @@ namespace FlaxEngine
 		/// Gets or sets probe brightness parameter.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(10), EditorDisplay("Probe"), Tooltip("Reflections brightness")]
 		public float Brightness
 		{
 #if UNIT_TEST_COMPILANT
@@ -76,6 +78,7 @@ namespace FlaxEngine
 		/// Gets or sets probe radius.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(20), EditorDisplay("Probe"), Tooltip("Probe radius")]
 		public float Radius
 		{
 #if UNIT_TEST_COMPILANT
@@ -87,22 +90,10 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets the probe scaled radius parameter (radius * max scale vector component).
-		/// </summary>
-		[UnmanagedCall]
-		public float ScaledRadius
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { return Internal_GetScaledRadius(unmanagedPtr); }
-#endif
-		}
-
-		/// <summary>
 		/// Gets or sets value indicating if probe should be updated automaticlly on change.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(30), EditorDisplay("Probe"), Tooltip("Enable auto probe update on transform changed")]
 		public bool AutoUpdate
 		{
 #if UNIT_TEST_COMPILANT
@@ -110,6 +101,21 @@ namespace FlaxEngine
 #else
 			get { return Internal_GetAutoUpdate(unmanagedPtr); }
 			set { Internal_SetAutoUpdate(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the custom probe texture to be used during reflections pass rendering. Use null if disable custom probe feature.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(40), EditorDisplay("Probe"), Tooltip("Custom probe to override baked probe")]
+		public CubeTexture CustomProbe
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetCustomProbe(unmanagedPtr); }
+			set { Internal_SetCustomProbe(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
 #endif
 		}
 
@@ -123,36 +129,6 @@ namespace FlaxEngine
 			get; set;
 #else
 			get { return Internal_GetProbe(unmanagedPtr); }
-#endif
-		}
-
-		/// <summary>
-		/// Returns true if probe is using custom cube texture (not baked).
-		/// </summary>
-		[UnmanagedCall]
-		public bool IsUsingCustomProbe
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { return Internal_IsUsingCustomProbe(unmanagedPtr); }
-#endif
-		}
-
-		/// <summary>
-		/// Sets the custom probe texture to use during rendering.
-		/// </summary>
-		/// <param name="probe">Sets the custom probe texture to be using during reflections pass rendering. Use null if disable custom probe feature.</param>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-		[UnmanagedCall]
-		public void SetCustomProbe(CubeTexture probe) 
-		{
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-			Internal_SetCustomProbe(unmanagedPtr, Object.GetUnmanagedPtr(probe));
 #endif
 		}
 
@@ -187,17 +163,15 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetRadius(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetScaledRadius(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetAutoUpdate(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetAutoUpdate(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern CubeTexture Internal_GetCustomProbe(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetCustomProbe(IntPtr obj, IntPtr val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern CubeTexture Internal_GetProbe(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_IsUsingCustomProbe(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetCustomProbe(IntPtr obj, IntPtr probe);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_Bake(IntPtr obj);
 #endif

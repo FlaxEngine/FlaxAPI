@@ -36,7 +36,7 @@ namespace FlaxEngine.GUI
         public event Action<Control> OnChildControlResized;
 
         ///<inheritdoc />
-        protected ContainerControl(bool canFocus)
+        protected ContainerControl(bool canFocus = true)
             : base(canFocus, 0, 0, 64, 64)
         {
             IsLayoutLocked = true;
@@ -656,7 +656,6 @@ namespace FlaxEngine.GUI
             base.Update(deltaTime);
 
             // Update all enabled child controls
-            // ReSharper disable once ForCanBeConvertedToForeach
             for (int i = 0; i < _children.Count; i++)
             {
                 if (_children[i].Enabled)

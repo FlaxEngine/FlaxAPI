@@ -21,6 +21,11 @@ namespace FlaxEditor.Modules
         /// </summary>
         public readonly RootNode Root = new RootNode();
 
+        /// <summary>
+        /// Occurs when actor gets removed. Editor and all submodules should remove references to that actor.
+        /// </summary>
+        public event Action<ActorNode> ActorRemoved;
+
         internal SceneModule(Editor editor)
             : base(editor)
         {
@@ -364,7 +369,7 @@ namespace FlaxEditor.Modules
         private void OnSceneUnloading(Scene scene, Guid sceneId)
         {
             // Find scene tree node
-            var node = Root.FindChild(scene);
+            var node = Root.FindChildActor(scene);
             if (node != null)
             {
                 Editor.Log($"Cleanup graph for scene \'{scene.Name}\'");
@@ -397,7 +402,7 @@ namespace FlaxEditor.Modules
             var node = GetActorNode(actor);
             if (node != null)
             {
-                Editor.SceneEditing.Deselect(node);
+                ActorRemoved?.Invoke(node);
 
                 // Cleanup part of the graph
                 node.Dispose();
@@ -413,7 +418,7 @@ namespace FlaxEditor.Modules
             if (prevParentNode != null)
             {
                 // If should be one of the children
-                node = prevParentNode.FindChild(actor);
+                node = prevParentNode.FindChildActor(actor);
 
                 // Search whole tree if node was not found
                 if (node == null)
@@ -486,6 +491,15 @@ namespace FlaxEditor.Modules
             return SceneGraphFactory.FindNode(actorId) as ActorNode;
         }
 
+        /// <summary>
+        /// Executes the custom action on the graph nodes.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        public void ExecuteOnGraph(SceneGraphTools.GraphExecuteCallbackDelegate callback)
+        {
+            Root.ExecuteOnGraph(callback);
+        }
+        
         /// <inheritdoc />
         public override void OnInit()
         {

@@ -15,29 +15,35 @@ namespace FlaxEngine.GUI
         private bool _isDisposing, _isFocused;
 
         // State
-        private bool _isMouseOver, _isDragOver;
 
+        private bool _isMouseOver, _isDragOver;
         private bool _isVisible = true;
         private bool _isEnabled = true;
         private bool _canFocus;
 
         // Dimensions
+
         private Rectangle _bounds;
 
         // Transform
-        private Vector2 _scale = new Vector2(1.0f);
 
+        private Vector2 _scale = new Vector2(1.0f);
         private Vector2 _pivot = new Vector2(0.5f);
         private Vector2 _shear;
         private float _rotation;
         internal Matrix3x3 _cachedTransform;
         internal Matrix3x3 _cachedTransformInv;
         
+        // Style
+
         private DockStyle _dockStyle;
         private AnchorStyle _anchorStyle;
-        
-        private string _tooltipText;
         private Color _backgroundColor = Color.Transparent;
+        
+        // Tooltip
+
+        private string _tooltipText;
+        private Tooltip _tooltip;
 
         /// <summary>
         ///     Action is invoked, when location is changed
@@ -57,7 +63,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Action is invoked, when visibility is changed
         /// </summary>
-        public event Action<Control> OnVisibleChanged;
+        public event Action<Control> VisibleChanged;
 
         #region Public Properties
 
@@ -121,22 +127,27 @@ namespace FlaxEngine.GUI
         /// </summary>
         public Color BackgroundColor
         {
-            get { return _backgroundColor; }
-            set { _backgroundColor = value; }
+            get => _backgroundColor;
+            set => _backgroundColor = value;
         }
 
         /// <summary>
-        ///     Gets the docking style of the control
+        ///     Gets or sets the docking style of the control.
+        /// If vlue set is other than <see cref="FlaxEngine.GUI.DockStyle.None"/> then <see cref="IsScrollable"/> will be disabled by auto.
         /// </summary>
         /// <returns>Dock style of the control</returns>
         public DockStyle DockStyle
         {
-            get { return _dockStyle; }
+            get => _dockStyle;
             set
             {
                 if (_dockStyle != value)
                 {
                     _dockStyle = value;
+
+                    // Disable scrolling for docked controls (by default but can be manually restored)
+                    if (_dockStyle != DockStyle.None)
+                        IsScrollable = false;
 
                     // Update parent's container
                     _parent?.PerformLayout();
@@ -163,16 +174,19 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Returns true if control can use scrolling feature
+        /// Gets or sets a value indicating whether this control is scrollable (scroll bars affect it).
         /// </summary>
-        public virtual bool IsScrollable => _dockStyle == DockStyle.None;
+        /// <value>
+        ///   <c>true</c> if this control is scrollable; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsScrollable { get; set; } = true;
 
         /// <summary>
         ///     Gets or sets a value indicating whether the control can respond to user interaction
         /// </summary>
         public bool Enabled
         {
-            get { return _isEnabled; }
+            get => _isEnabled;
             set
             {
                 if (_isEnabled != value)
@@ -199,7 +213,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public bool Visible
         {
-            get { return _isVisible; }
+            get => _isVisible;
             set
             {
                 if (_isVisible != value)
@@ -218,7 +232,7 @@ namespace FlaxEngine.GUI
                             OnDragLeave();
                     }
 
-                    OnVisibleChanged?.Invoke(this);
+                    VisibleChanged?.Invoke(this);
                     if (HasParent)
                     {
                         _parent.PerformLayout();
@@ -336,8 +350,10 @@ namespace FlaxEngine.GUI
         public virtual void Update(float deltaTime)
         {
             // Update tooltip
-            //if (_tooltip && _mouseOver)
-            //     _tooltip->OnControlMouseOver(this, dt);
+            if (_tooltipText != null && IsMouseOver)
+            {
+                Tooltip.OnMouseOverControl(this, deltaTime);
+            }
         }
 
         /// <summary>
@@ -497,8 +513,8 @@ namespace FlaxEngine.GUI
             _isMouseOver = true;
 
             // Update tooltip
-            //if (_tooltip)
-            //    _tooltip->OnControlMouseEnter(this);
+            if (_tooltipText != null)
+                Tooltip.OnMouseEnterControl(this);
         }
 
         /// <summary>
@@ -516,6 +532,10 @@ namespace FlaxEngine.GUI
         {
             // Clear flag
             _isMouseOver = false;
+
+            // Update tooltip
+            if (_tooltipText != null)
+                Tooltip.OnMouseLeaveControl(this);
         }
 
         /// <summary>
@@ -655,7 +675,64 @@ namespace FlaxEngine.GUI
 
         #region Tooltip
 
-        // TODO: move tooltips support from C++
+        /// <summary>
+        /// Gets or sets the tooltip text.
+        /// </summary>
+        public string TooltipText
+        {
+            get => _tooltipText;
+            set => _tooltipText = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the custom tooltip control linked. Use null to show default shared tooltip from the current <see cref="Style"/>.
+        /// </summary>
+        [HideInEditor]
+        public Tooltip CustomTooltip
+        {
+            get => _tooltip;
+            set => _tooltip = value;
+        }
+
+        /// <summary>
+        /// Gets the tooltip used by this control (custom or shared one).
+        /// </summary>
+        public Tooltip Tooltip => _tooltip ?? Style.Current.SharedTooltip;
+
+        /// <summary>
+        /// Links the tooltip.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="customTooltip">The custom tooltip.</param>
+        public void LinkTooltip(string text, Tooltip customTooltip = null)
+        {
+            _tooltipText = text;
+            _tooltip = customTooltip;
+        }
+
+        /// <summary>
+        /// Unlinks the tooltip.
+        /// </summary>
+        public void UnlinkTooltip()
+        {
+            _tooltipText = null;
+            _tooltip = null;
+        }
+
+        /// <summary>
+        /// Called when tooltip wants to be shown. Allows modifying its appearance.
+        /// </summary>
+        /// <param name="text">The tooltip text to show.</param>
+        /// <param name="location">The popup start location (in this control local space).</param>
+        /// <param name="area">The allowed area of mouse movement to show tooltip (in this control local space).</param>
+        /// <returns>True if can show tooltip, otherwise false to skip.</returns>
+        public virtual bool OnShowTooltip(out string text, out Vector2 location, out Rectangle area)
+        {
+            text = _tooltipText;
+            location = Size * new Vector2(0.5f, 1.0f);
+            area = new Rectangle(Vector2.Zero, Size);
+            return true;
+        }
 
         #endregion
 
@@ -865,12 +942,16 @@ namespace FlaxEngine.GUI
                 return;
 
             var bounds = Bounds;
-
+            
             // TODO: finish all anchor styles logic
 
             switch (_anchorStyle)
             {
-                //case AnchorStyle.UpperCenter: break;
+                case AnchorStyle.UpperCenter:
+                {
+                    bounds.X = (_parent.Width - bounds.Width) * 0.5f;
+                    break;
+                }
                 case AnchorStyle.UpperRight:
                 {
                     float distance = oldSize.X - bounds.Left;
@@ -884,9 +965,23 @@ namespace FlaxEngine.GUI
                     break;
                 }
 
-                //case AnchorStyle.CenterLeft: break;
-                //case AnchorStyle.Center: break;
-                //case AnchorStyle.CenterRight: break;
+                case AnchorStyle.CenterLeft:
+                {
+                    bounds.Y = (_parent.Height - bounds.Height) * 0.5f;
+                    break;
+                }
+                case AnchorStyle.Center:
+                {
+                    bounds.Location = (_parent.Size - bounds.Size) * 0.5f;
+                    break;
+                }
+                case AnchorStyle.CenterRight:
+                {
+                    float distance = oldSize.X - bounds.Left;
+                    bounds.X = _parent.Width - distance;
+                    bounds.Y = (_parent.Height - bounds.Height) * 0.5f;
+                    break;
+                }
 
                 //case AnchorStyle.BottomLeft: break;
                 //case AnchorStyle.BottomCenter: break;
@@ -911,6 +1006,7 @@ namespace FlaxEngine.GUI
         {
             Defocus();
 
+            UnlinkTooltip();
             Tag = null;
         }
 

@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 using System;
 using System.Globalization;
@@ -29,16 +29,19 @@ namespace FlaxEngine
         /// <summary>
         /// Translation vector of the transform
         /// </summary>
+        [EditorOrder(10), EditorDisplay(null, "Position")]
         public Vector3 Translation;
 
         /// <summary>
         /// Rotation of the transform
         /// </summary>
+        [EditorOrder(20), EditorDisplay(null, "Rotation")]
         public Quaternion Orientation;
 
         /// <summary>
         /// Scale vector of the transform
         /// </summary>
+        [EditorOrder(30), EditorDisplay(null, "Scale"), Limit(float.MinValue, float.MaxValue, 0.1f)]
         public Vector3 Scale;
 
         /// <summary>

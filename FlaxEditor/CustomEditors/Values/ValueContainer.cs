@@ -66,10 +66,10 @@ namespace FlaxEditor.CustomEditors
             {
                 if (Count < 2)
                     return false;
-                var theFirstType = this[0].GetType();
+                var theFirstType = this[0]?.GetType();
                 for (int i = 1; i < Count; i++)
                 {
-                    if (theFirstType != this[1].GetType())
+                    if (theFirstType != this[1]?.GetType())
                         return true;
                 }
                 return false;

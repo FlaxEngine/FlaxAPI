@@ -40,7 +40,7 @@ namespace FlaxEditor.Windows.Assets
 
             _toolstrip = new ToolStrip();
             _toolstrip.OnButtonClicked += OnToolstripButtonClicked;
-            _toolstrip.AddButton(1000, editor.UI.GetIcon("Find32"));//->LinkTooltip(GetSharedTooltip(), "Show and select in Content Window"); // TODO: tooltips support!
+            _toolstrip.AddButton(1000, editor.UI.GetIcon("Find32")).LinkTooltip("Show and select in Content Window");
             _toolstrip.Parent = this;
 
             UpdateTitle();

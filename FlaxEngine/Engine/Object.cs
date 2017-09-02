@@ -62,6 +62,21 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Creates the new instance of the Object.
+        /// All unused objects should be released using <see cref="Destroy"/>.
+        /// </summary>
+        /// <param name="type">Type of the object.</param>
+        /// <returns>Created object.</returns>
+        public static Object New(Type type)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_Create(type);
+#endif
+        }
+
+        /// <summary>
         /// Finds the object with the given ID.
         /// </summary>
         /// <param name="id">Unique ID of the object.</param>

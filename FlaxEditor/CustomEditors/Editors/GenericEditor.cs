@@ -15,13 +15,13 @@ namespace FlaxEditor.CustomEditors.Editors
     /// Default implementation of the inspector used when no specified inspector is provided for the type. Inspector 
     /// displays GUI for all the inspectable fields in the object.
     /// </summary>
-    public sealed class GenericEditor : CustomEditor
+    public class GenericEditor : CustomEditor
     {
         /// <summary>
         /// Describies object property/field information for custom editors pipeline.
         /// </summary>
         /// <seealso cref="System.IComparable" />
-        private class ItemInfo : IComparable
+        protected class ItemInfo : IComparable
         {
             /// <summary>
             /// The member information from reflection.
@@ -37,6 +37,11 @@ namespace FlaxEditor.CustomEditors.Editors
             /// The display attribute.
             /// </summary>
             public EditorDisplayAttribute Display;
+
+            /// <summary>
+            /// The tooltip attribute.
+            /// </summary>
+            public TooltipAttribute Tooltip;
 
             /// <summary>
             /// The custom editor attribute.
@@ -68,6 +73,11 @@ namespace FlaxEditor.CustomEditors.Editors
             public CustomEditor OverrideEditor => CustomEditor != null ? (CustomEditor)Activator.CreateInstance(CustomEditor.Type) : null;
 
             /// <summary>
+            /// Gets the tooltip text (may be null if not provided).
+            /// </summary>
+            public string TooltipText => Tooltip?.Text;
+
+            /// <summary>
             /// Initializes a new instance of the <see cref="ItemInfo"/> class.
             /// </summary>
             /// <param name="info">The reflection information.</param>
@@ -77,8 +87,9 @@ namespace FlaxEditor.CustomEditors.Editors
                 Info = info;
                 Order = (EditorOrderAttribute)attributes.FirstOrDefault(x => x is EditorOrderAttribute);
                 Display = (EditorDisplayAttribute)attributes.FirstOrDefault(x => x is EditorDisplayAttribute);
+                Tooltip = (TooltipAttribute)attributes.FirstOrDefault(x => x is TooltipAttribute);
                 CustomEditor = (CustomEditorAttribute)attributes.FirstOrDefault(x => x is CustomEditorAttribute);
-
+                
                 if (Display?.Name != null)
                 {
                     // Use name provided by the attribute
@@ -91,6 +102,11 @@ namespace FlaxEditor.CustomEditors.Editors
                 }
             }
 
+            /// <summary>
+            /// Gets the values.
+            /// </summary>
+            /// <param name="instanceValues">The instance values.</param>
+            /// <returns>The values container.</returns>
             public ValueContainer GetValues(ValueContainer instanceValues)
             {
                 return new ValueContainer(Info, instanceValues);
@@ -140,13 +156,30 @@ namespace FlaxEditor.CustomEditors.Editors
             }
         }
 
-        private List<ItemInfo> GetItemsForType(Type type)
+        /// <summary>
+        /// Gets the items for the type
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>The items.</returns>
+        protected virtual List<ItemInfo> GetItemsForType(Type type)
+        {
+            return GetItemsForType(type, type.IsClass, true);
+        }
+
+        /// <summary>
+        /// Gets the items for the type
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="useProperties">True if use type properties.</param>
+        /// <param name="useFields">True if use type fields.</param>
+        /// <returns>The items.</returns>
+        protected virtual List<ItemInfo> GetItemsForType(Type type, bool useProperties, bool useFields)
         {
             // TODO: cache this per type?
 
             var items = new List<ItemInfo>();
 
-            if (type.IsClass)
+            if (useProperties)
             {
                 // Process properties
                 var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -170,27 +203,41 @@ namespace FlaxEditor.CustomEditors.Editors
                 }
             }
 
-            // Process fields
-            var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
-            items.Capacity = Math.Max(items.Capacity, items.Count + fields.Length);
-            for (int i = 0; i < fields.Length; i++)
+            if (useFields)
             {
-                var f = fields[i];
+                // Process fields
+                var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+                items.Capacity = Math.Max(items.Capacity, items.Count + fields.Length);
+                for (int i = 0; i < fields.Length; i++)
+                {
+                    var f = fields[i];
 
-                // Skip hidden fields
-                if (!f.IsPublic)
-                    continue;
+                    // Skip hidden fields
+                    if (!f.IsPublic)
+                        continue;
 
-                // Handle HideInEditorAttribute
-                var attributes = f.GetCustomAttributes(true);
-                if (attributes.Any(x => x is HideInEditorAttribute))
-                    continue;
+                    // Handle HideInEditorAttribute
+                    var attributes = f.GetCustomAttributes(true);
+                    if (attributes.Any(x => x is HideInEditorAttribute))
+                        continue;
 
-                var item = new ItemInfo(f, attributes);
-                items.Add(item);
+                    var item = new ItemInfo(f, attributes);
+                    items.Add(item);
+                }
             }
 
             return items;
+        }
+
+        /// <summary>
+        /// Spawns the property for the given item.
+        /// </summary>
+        /// <param name="itemLayout">The item layout.</param>
+        /// <param name="itemValues">The item values.</param>
+        /// <param name="item">The item.</param>
+        protected virtual void SpawnProperty(LayoutElementsContainer itemLayout, ValueContainer itemValues, ItemInfo item)
+        {
+            itemLayout.Property(item.DisplayName, itemValues, item.OverrideEditor, item.TooltipText);
         }
 
         /// <inheritdoc />
@@ -279,7 +326,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 }
 
                 // Spawn property editor
-                itemLayout.Property(item.DisplayName, itemValues, item.OverrideEditor);
+                SpawnProperty(itemLayout, itemValues, item);
             }
         }
     }

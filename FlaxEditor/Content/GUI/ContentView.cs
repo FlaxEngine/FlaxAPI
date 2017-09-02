@@ -100,6 +100,7 @@ namespace FlaxEditor.Content.GUI
             : base(true)
         {
             DockStyle = DockStyle.Top;
+            IsScrollable = true;
         }
 
         /// <summary>
@@ -377,9 +378,6 @@ namespace FlaxEditor.Content.GUI
         }
 
         #endregion
-
-        /// <inheritdoc />
-        public override bool IsScrollable => true;
 
         /// <inheritdoc />
         public override void Draw()

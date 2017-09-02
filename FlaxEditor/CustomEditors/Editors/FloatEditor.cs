@@ -22,6 +22,7 @@ namespace FlaxEditor.CustomEditors.Editors
         public override void Initialize(LayoutElementsContainer layout)
         {
             element = layout.FloatValue();
+            element.SetLimits(Values.Info);
             element.FloatValue.ValueChanged += () => SetValue(element.FloatValue.Value);
         }
 

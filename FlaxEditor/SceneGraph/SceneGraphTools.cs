@@ -13,6 +13,29 @@ namespace FlaxEditor.SceneGraph
     public static class SceneGraphTools
     {
         /// <summary>
+        /// Delegate for scene graph action exeuction callback.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>True if call deeper, otherwise skip calling node children.</returns>
+        public delegate bool GraphExecuteCallbackDelegate(SceneGraphNode node);
+
+        /// <summary>
+        /// Executes the custom action on the graph nodes.
+        /// </summary>
+        /// <param name="node">The node</param>
+        /// <param name="callback">The callback.</param>
+        public static void ExecuteOnGraph(this SceneGraphNode node, GraphExecuteCallbackDelegate callback)
+        {
+            for (int i = 0; i < node.ChildNodes.Count; i++)
+            {
+                if (callback(node.ChildNodes[i]))
+                {
+                    ExecuteOnGraph(node.ChildNodes[i], callback);
+                }
+            }
+        }
+
+        /// <summary>
         /// Builds the array made of input nodes that are at the top level. The result collection contains only nodes that don't have parent nodes in the given collection.
         /// </summary>
         /// <typeparam name="T">The scene graph node type.</typeparam>

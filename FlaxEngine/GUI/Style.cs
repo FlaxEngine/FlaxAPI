@@ -60,6 +60,11 @@ namespace FlaxEngine.GUI
         public Sprite Scale16;
 
         /// <summary>
+        /// The shared tooltip control used by the controls if no custom tooltip is provided.
+        /// </summary>
+        public Tooltip SharedTooltip;
+
+        /// <summary>
         /// Shows picking color dialog. Arguments: start color and handler to fire color changed action.
         /// </summary>
         public Action<Color, Action<Color>> ShowPickColorDialog;

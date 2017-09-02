@@ -15,7 +15,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
 	/// <summary>
-	/// Box Brush actor
+	/// Performs CSG box brush operation thats adds or removes geometry.
 	/// </summary>
 	[Serializable]
 	public sealed partial class BoxBrush : Actor
@@ -48,6 +48,7 @@ namespace FlaxEngine
 		/// Gets or sets brush surfaces scale in lightmap parameter.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(30), EditorDisplay("CSG"), Tooltip("Brush surfaces master scale in lightmap"), Limit(0, 1000.0f, 0.1f)]
 		public float ScaleInLightmap
 		{
 #if UNIT_TEST_COMPILANT
@@ -62,6 +63,7 @@ namespace FlaxEngine
 		/// Gets or sets brush size.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(20), EditorDisplay("CSG"), Tooltip("CSG brush size")]
 		public Vector3 Size
 		{
 #if UNIT_TEST_COMPILANT
@@ -73,9 +75,25 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets or sets brush center location (in local space).
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(21), EditorDisplay("CSG"), Tooltip("CSG brush center location (in local space)")]
+		public Vector3 Center
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { Vector3 resultAsRef; Internal_GetCenter(unmanagedPtr, out resultAsRef); return resultAsRef; }
+			set { Internal_SetCenter(unmanagedPtr, ref value); }
+#endif
+		}
+
+		/// <summary>
 		/// Gets or sets CSG brush mode.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorOrder(10), EditorDisplay("CSG"), Tooltip("CSG brush mode")]
 		public BrushMode Mode
 		{
 #if UNIT_TEST_COMPILANT
@@ -96,6 +114,10 @@ namespace FlaxEngine
 		internal static extern void Internal_GetSize(IntPtr obj, out Vector3 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetSize(IntPtr obj, ref Vector3 val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetCenter(IntPtr obj, out Vector3 resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetCenter(IntPtr obj, ref Vector3 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern BrushMode Internal_GetMode(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]

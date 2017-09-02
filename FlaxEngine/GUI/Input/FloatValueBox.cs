@@ -65,7 +65,7 @@ namespace FlaxEngine.GUI
                 }
             }
         }
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="FloatValueBox"/> class.
         /// </summary>
@@ -80,6 +80,18 @@ namespace FlaxEngine.GUI
             : base(Mathf.Clamp(value, min, max), x, y, width, min, max, slideSpeed)
         {
             UpdateText();
+        }
+
+        /// <summary>
+        /// Sets the limits from the attribute.
+        /// </summary>
+        /// <param name="limits">The limits.</param>
+        public void SetLimits(LimitAttribute limits)
+        {
+            _min = limits.Min;
+            _max = Mathf.Max(_min, limits.Max);
+            _slideSpeed = limits.SliderSpeed;
+            Value = Value;
         }
 
         /// <inheritdoc />

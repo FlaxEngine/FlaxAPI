@@ -138,6 +138,14 @@ namespace FlaxEditor.Content
         public virtual bool CanRename => true;
 
         /// <summary>
+        /// Gets a value indicating whether this item can be dragged and droped.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance can use drag; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool CanDrag => true;
+
+        /// <summary>
         /// Gets a value indicating whether this <see cref="ContentItem"/> exists on drive.
         /// </summary>
         /// <value>
@@ -289,7 +297,7 @@ namespace FlaxEditor.Content
         }
 
         /// <summary>
-        /// Trues to find the item at the specified path.
+        /// Tries to find the item at the specified path.
         /// </summary>
         /// <param name="path">The path.</param>
         /// <returns>Found item or null if missing.</returns>
@@ -309,7 +317,7 @@ namespace FlaxEditor.Content
         }
 
         /// <summary>
-        /// Trues to find the item with the specified id.
+        /// Tries to find the item with the specified id.
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>Found item or null if missing.</returns>
@@ -465,6 +473,9 @@ namespace FlaxEditor.Content
         /// </summary>
         protected virtual void DoDrag()
         {
+            if (!CanDrag)
+                return;
+
             DragData data;
 
             // Check if is selected

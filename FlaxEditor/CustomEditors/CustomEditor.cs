@@ -148,7 +148,7 @@ namespace FlaxEditor.CustomEditors
             control.IsLayoutLocked = true;
             control.DisposeChildren();
 
-            layout.Children.Clear();
+            layout.ClearLayout();
             Cleanup();
 
             _parent = parent;
@@ -207,9 +207,9 @@ namespace FlaxEditor.CustomEditors
                 // Assign value
                 _values.Set(_parent.Values, val);
 
-                // Propagate values up if parent is not a ref type
+                // Propagate values up
                 var obj = _parent;
-                while (obj._parent != null && obj.Values.Type.IsValueType)
+                while (obj._parent != null)
                 {
                     obj.Values.Set(obj._parent.Values);
                     obj = obj._parent;

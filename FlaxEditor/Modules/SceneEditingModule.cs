@@ -116,6 +116,8 @@ namespace FlaxEditor.Modules
             // Check if won't change
             if (!additive && Selection.Count == 1 && Selection[0] == selection)
                 return;
+            if (additive && Selection.Contains(selection))
+                return;
 
             var before = Selection.ToArray();
             if (!additive)
@@ -171,6 +173,22 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
+        /// Spawns the specified actor to the game (with undo).
+        /// </summary>
+        /// <param name="actor">The actor.</param>
+        /// <param name="parent">The parent actor. Set null as default.</param>
+        public void Spawn(Actor actor, Actor parent = null)
+        {
+            // Add it
+            SceneManager.SpawnActor(actor, parent);
+
+            // Create undo action
+            var actorNode = Editor.Instance.Scene.GetActorNode(actor);
+            var action = new DeleteActorsAction(new List<SceneGraphNode>(1) { actorNode }, true);
+            Undo.AddAction(action);
+        }
+
+        /// <summary>
         /// Deletes the selected objects. Supports undo/redo.
         /// </summary>
         public void Delete()
@@ -218,13 +236,20 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Pastes the copied objects. Supports undo/redo.
         /// </summary>
-        public void Paste()
+        /// <param name="pasteTargetActor">The target actor to paste copied data.</param>
+        public void Paste(Actor pasteTargetActor = null)
         {
             // Get clipboard data
             var data = Application.ClipboardRawData;
+            
+            // Ser aste target if only one actor is selected and no target provided
+            if (pasteTargetActor == null && SelectionCount == 1 && Selection[0] is ActorNode actorNode)
+            {
+                pasteTargetActor = actorNode.Actor;
+            }
 
             // Create paste action
-            var action = PasteActorsAction.TryCreate(data);
+            var action = PasteActorsAction.TryCreate(data, pasteTargetActor?.ID ?? Guid.Empty);
             if (action != null)
             {
                 action.Do();
@@ -261,12 +286,19 @@ namespace FlaxEditor.Modules
             }
 
             // Create paste action
-            var action = PasteActorsAction.TryCreate(data, true);
+            var action = PasteActorsAction.TryCreate(data, Guid.Empty, true);
             if (action != null)
             {
                 action.Do();
                 Undo.AddAction(action);
             }
+        }
+
+        /// <inheritdoc />
+        public override void OnInit()
+        {
+            // Deselect actors on remove
+            Editor.Scene.ActorRemoved += Deselect;
         }
     }
 }

@@ -152,6 +152,14 @@ namespace FlaxEditor.SceneGraph
         public virtual object EditableObject => this;
 
         /// <summary>
+        /// Gets the object used to record undo changes.
+        /// </summary>
+        /// <value>
+        /// The undo record object.
+        /// </value>
+        public virtual object UndoRecordObject => EditableObject;
+
+        /// <summary>
         /// Determines whether the specified object is in a hierarchy (one of the children or lower).
         /// </summary>
         /// <param name="node">The node to check,</param>
@@ -175,6 +183,15 @@ namespace FlaxEditor.SceneGraph
         }
 
         /// <summary>
+        /// Adds the child node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        public void AddChild(SceneGraphNode node)
+        {
+            node.ParentNode = this;
+        }
+
+        /// <summary>
         /// Performs raycasting over nodes hierarchy trying to get the closest object hited by the given ray.
         /// </summary>
         /// <param name="ray">The ray.</param>
@@ -185,10 +202,12 @@ namespace FlaxEditor.SceneGraph
             if (!IsActive)
                 return null;
 
+            // TODO: early out with boxWithChildren test
+            
             // Check itself
             SceneGraphNode minTarget = null;
             float minDistance = float.MaxValue;
-            if (RayCastSelf(ref ray, ref distance))
+            if (RayCastSelf(ref ray, out distance))
             {
                 minTarget = this;
                 minDistance = distance;
@@ -200,7 +219,7 @@ namespace FlaxEditor.SceneGraph
                 var hit = ChildNodes[i].RayCast(ref ray, ref distance);
                 if (hit != null)
                 {
-                    if (minDistance > distance)
+                    if (distance < minDistance)
                     {
                         minDistance = distance;
                         minTarget = hit;
@@ -219,15 +238,26 @@ namespace FlaxEditor.SceneGraph
         /// <param name="ray">The ray.</param>
         /// <param name="distance">The distance.</param>
         /// <returns>True ray hits this node, otherwise false.</returns>
-        public virtual bool RayCastSelf(ref Ray ray, ref float distance)
+        public virtual bool RayCastSelf(ref Ray ray, out float distance)
         {
+            distance = 0;
             return false;
+        }
+
+        /// <summary>
+        /// Called when selected nodes should draw debug shapes using <see cref="DebugDraw"/> interface.
+        /// </summary>
+        /// <param name="actorsPtr">The actors pointers collection to call them fron unmanaged side.</param>
+        public virtual void OnDebugDraw(List<IntPtr> actorsPtr)
+        {
         }
 
         /// <summary>
         /// Deletes object represented by this node eg. actor.
         /// </summary>
-        public abstract void Delete();
+        public virtual void Delete()
+        {
+        }
 
         /// <summary>
         /// Releases the node and the child tree. Disposed all GUI parts and used resources.

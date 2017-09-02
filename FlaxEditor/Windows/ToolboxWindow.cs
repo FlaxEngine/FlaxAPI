@@ -34,7 +34,7 @@ namespace FlaxEditor.Windows
 
             // Spawn tab
             var spawnTab = tabs.AddTab(new Tab("Spawn", Editor.UI.GetIcon("Add48")));
-            //spawnTab.LinkTooltip(GetSharedTooltip(), "Spawning objects"));
+            //spawnTab.LinkTooltip("Spawning objects");
             var actorGroups = new Tabs();
             actorGroups.Orientation = Orientation.Vertical;
             actorGroups.DockStyle = DockStyle.Fill;
@@ -68,15 +68,15 @@ namespace FlaxEditor.Windows
 
             // Paint tab
             var paintTab = tabs.AddTab(new Tab("Paint", Editor.UI.GetIcon("Paint48")));
-            //paintTab.LinkTooltip(GetSharedTooltip(), "Vertex painint tool"));
+            //paintTab.LinkTooltip("Vertex painint tool"));
 
             // Foliage tab
             var foliageTab = tabs.AddTab(new Tab("Foliage", Editor.UI.GetIcon("Foliage48")));
-            //foliageTab.LinkTooltip(GetSharedTooltip(), "Foliage spawning tool"));
+            //foliageTab.LinkTooltip("Foliage spawning tool"));
 
             // Carve tab
             var carveTab = tabs.AddTab(new Tab("Carve", Editor.UI.GetIcon("Mountain48")));
-            //carveTab.LinkTooltip(GetSharedTooltip(), "Terrain carving tool"));
+            //carveTab.LinkTooltip("Terrain carving tool"));
             
             // Prepare
             actorGroups.SelectTab(0);

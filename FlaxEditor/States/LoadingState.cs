@@ -33,7 +33,7 @@ namespace FlaxEditor.States
         /// </summary>
         internal void StartInitEnding()
         {
-            ScriptsBuilder.OnCompilationEnd += onCompilationEnd;
+            ScriptsBuilder.CompilationEnd += onCompilationEnd;
 
             // Check source code has been cmpilled on start
             if (ScriptsBuilder.CompilationsCount > 0)
@@ -95,7 +95,7 @@ namespace FlaxEditor.States
         /// <inheritdoc />
         public override void OnExit(State nextState)
         {
-            ScriptsBuilder.OnCompilationEnd -= onCompilationEnd;
+            ScriptsBuilder.CompilationEnd -= onCompilationEnd;
         }
     }
 }

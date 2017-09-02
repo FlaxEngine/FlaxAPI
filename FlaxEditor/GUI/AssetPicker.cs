@@ -51,6 +51,9 @@ namespace FlaxEditor.GUI
                 _selected = value;
                 _selected?.AddReference(this);
                 
+                // Update tooltip
+                TooltipText = _selected?.NamePath;
+                
                 OnSelectedItemChanged();
             }
         }
