@@ -14,68 +14,68 @@ namespace FlaxEngine
 {
     public static partial class Input
     {
+        private static byte[] _previousPressedKeys;
+
         /// <summary>
-        /// Event that is fired when at least one key is pressed.
+        ///     Event that is fired when at least one key is hold down.
+        /// </summary>
+        public static event Action<byte[]> OnKeyHold;
+
+        /// <summary>
+        ///     Event that is fired when a new key is pressed. Contains all currently holding keys with addition to the new one.
         /// </summary>
         public static event Action<byte[]> OnKeyPressed;
 
         /// <summary>
-        /// All currently acitve keys, can be null
+        ///     Event that is fired when a key is released. Contains all currently holding keys without last one released.
         /// </summary>
-        public static byte[] ActiveKeys { get; private set; }
+        public static event Action<byte[]> OnKeyReleased;
+
 
         /// <summary>
-        /// Converts virtual key code to unicode character
+        ///     All currently acitve keys, can be null
         /// </summary>
-        /// <param name="virtualKeyCode"></param>
-        /// <param name="scanCode"></param>
-        /// <param name="keyboardState"></param>
-        /// <param name="receivingBuffer"></param>
-        /// <param name="bufferSize"></param>
-        /// <param name="flags"></param>
-        /// <returns></returns>
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        internal static extern int ToUnicode(
-            uint virtualKeyCode,
-            uint scanCode,
-            byte[] keyboardState,
-            StringBuilder receivingBuffer,
-            int bufferSize,
-            uint flags
-        );
+        public static byte[] PressedKeys { get; private set; }
 
         /// <summary>
-        /// TODO
-        /// </summary>
-        /// <param name="keyCode"></param>
-        /// <param name="shift"></param>
-        /// <returns></returns>
-        public static string GetCharsFromKeys(KeyCode keyCode, bool shift)
-        {
-            var stringBuilder = new StringBuilder(256);
-            var keyboardState = new byte[256];
-            if (shift)
-            {
-                keyboardState[(int)KeyCode.Shift] = 0xff;
-            }
-            ToUnicode((uint)keyCode, 0, keyboardState, stringBuilder, 256, 0);
-            return stringBuilder.ToString();
-        }
-
-        /// <summary>
-        /// Internal method used to get all currently active keys
+        ///     Internal method used to get all currently active keys
         /// </summary>
         /// <param name="keyPressedArray"></param>
         internal static void Internal_KeyInputEvent(byte[] keyPressedArray)
         {
-            //var a = "";
-            //foreach (var b in keyPressedArray)
-            //{
-            //    a += (KeyCode)b + " ";
-            //}
-            //Debug.Log(a);
-            ActiveKeys = keyPressedArray;
-            OnKeyPressed?.Invoke(keyPressedArray);
+            _previousPressedKeys = PressedKeys;
+            PressedKeys = keyPressedArray;
+            if (keyPressedArray.Length > 0)
+            {
+                OnKeyHold?.Invoke(keyPressedArray);
+            }
+            if (!_previousPressedKeys.Equals(PressedKeys))
+            {
+                if (_previousPressedKeys.Length > PressedKeys.Length)
+                {
+                    OnKeyReleased?.Invoke(keyPressedArray);
+                }
+                else if (_previousPressedKeys.Length < PressedKeys.Length)
+                {
+                    OnKeyPressed?.Invoke(keyPressedArray);
+                }
+                else
+                {
+                    OnKeyPressed?.Invoke(keyPressedArray);
+                    OnKeyReleased?.Invoke(keyPressedArray);
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Internal method used to get currently typed unicode characters
+        /// </summary>
+        /// <remarks>
+        ///     Do not use for game input
+        /// </remarks>
+        /// <param name="unicode"></param>
+        internal static void Internal_UnicodeInputEvent(int[] unicode)
+        {
         }
     }
 }
