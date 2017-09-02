@@ -1,14 +1,31 @@
-// Flax Engine scripting API
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
 
 using System;
 
 namespace FlaxEngine
 {
     /// <summary>
+    /// Log message delegate.
+    /// </summary>
+    /// <param name="level">The log level.</param>
+    /// <param name="msg">The message.</param>
+    /// <param name="obj">The object.</param>
+    /// <param name="stackTrace">The stack trace.</param>
+    public delegate void LogDelegate(LogType level, string msg, Object obj, string stackTrace);
+
+    /// <summary>
+    /// Log exception delegate.
+    /// </summary>
+    /// <param name="exception">The exception.</param>
+    /// <param name="obj">The object.</param>
+    public delegate void LogExceptionDegetae(Exception exception, Object obj);
+
+    /// <summary>
     /// Logger interface.
     /// </summary>
-    /// <seealso cref="FlaxEngine.ILogHandler" />
-    public interface ILogger : ILogHandler
+    public interface ILogger
     {
         /// <summary>
         /// <para>To selective enable debug log message.</para>
@@ -130,5 +147,20 @@ namespace FlaxEngine
         /// <param name="message"></param>
         /// <param name="context"></param>
         void LogWarning(string tag, object message, Object context);
+        
+        /// <summary>
+        /// <para>A variant of ILogHandler.LogFormat that logs an exception message.</para>
+        /// </summary>
+        /// <param name="exception">Runtime Exception.</param>
+        /// <param name="context">Object to which the message applies.</param>
+        void LogException(Exception exception, Object context);
+
+        /// <summary>
+        /// <para>Logs a formatted message.</para>
+        /// </summary>
+        /// <param name="logType">The type of the log message.</param>
+        /// <param name="context">Object to which the message applies.</param>
+        /// <param name="message">Message to log.</param>
+        void Log(LogType logType, Object context, string message);
     }
 }

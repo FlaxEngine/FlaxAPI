@@ -1,6 +1,9 @@
-// Flax Engine scripting API
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
@@ -11,24 +14,21 @@ namespace FlaxEngine
     {
         private const string TagFormat = "{0}: {1}";
 
-        private Logger()
-        {
-        }
-
         /// <summary>
         /// Create a custom Logger.
         /// </summary>
         /// <param name="logHandler">Pass in default log handler or custom log handler.</param>
         public Logger(ILogHandler logHandler)
         {
-            this.LogHandler = logHandler;
+            LogHandler = logHandler;
             LogEnabled = true;
             FilterLogType = LogType.Log;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static string GetString(object message)
         {
-            return message == null ? "null" : message.ToString();
+            return message?.ToString() ?? "null";
         }
 
         /// <summary>
@@ -53,6 +53,7 @@ namespace FlaxEngine
         /// <returns>
         /// Retrun true in case logs of LogType will be logged otherwise returns false.
         /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsLogTypeAllowed(LogType logType)
         {
             return LogEnabled && (logType <= FilterLogType || logType == LogType.Exception);
@@ -73,10 +74,6 @@ namespace FlaxEngine
         /// Logs message to the Flax Console using default logger.
         /// </summary>
         /// <param name="logType">The type of the log message.</param>
-        /// <param name="tag">
-        /// Used to identify the source of a log message. It usually identifies the class where the log call
-        /// occurs.
-        /// </param>
         /// <param name="message">String or object to be converted to string representation for display.</param>
         /// <param name="context">Object to which the message applies.</param>
         public void Log(LogType logType, object message, Object context)
@@ -129,7 +126,6 @@ namespace FlaxEngine
         /// <summary>
         /// Logs message to the Flax Console using default logger.
         /// </summary>
-        /// <param name="logType">The type of the log message.</param>
         /// <param name="tag">
         /// Used to identify the source of a log message. It usually identifies the class where the log call
         /// occurs.
@@ -144,7 +140,6 @@ namespace FlaxEngine
         /// <summary>
         /// Logs message to the Flax Console using default logger.
         /// </summary>
-        /// <param name="logType">The type of the log message.</param>
         /// <param name="tag">
         /// Used to identify the source of a log message. It usually identifies the class where the log call
         /// occurs.
@@ -190,7 +185,6 @@ namespace FlaxEngine
         /// A variant of Logger.Log that logs an exception message.
         /// </summary>
         /// <param name="exception">Runtime Exception.</param>
-        /// <param name="context">Object to which the message applies.</param>
         public void LogException(Exception exception)
         {
             if (LogEnabled)
@@ -208,12 +202,14 @@ namespace FlaxEngine
                 LogHandler.LogException(exception, context);
         }
 
+        /// <inheritdoc />
         public void Log(LogType logType, Object context, string message)
         {
             if (IsLogTypeAllowed(logType))
                 LogHandler.Log(logType, context, message);
         }
 
+        /// <inheritdoc />
         public void LogFormat(LogType logType, string format, params object[] args)
         {
             if (IsLogTypeAllowed(logType))

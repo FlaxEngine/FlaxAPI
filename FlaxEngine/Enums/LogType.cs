@@ -5,7 +5,7 @@
 namespace FlaxEngine
 {
     /// <summary>
-    /// The type of the log message in Debug.logger.Log or delegate registered with Application.RegisterLogCallback.
+    /// The type of the log message in Debug.Logger.Log or delegate registered with Application.RegisterLogCallback.
     /// </summary>
     public enum LogType
     {
