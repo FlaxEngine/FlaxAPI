@@ -231,8 +231,8 @@ namespace FlaxEngine.GUI
                         if (_isDragOver)
                             OnDragLeave();
                     }
-
-                    VisibleChanged?.Invoke(this);
+                    
+                    OnVisibleChanged();
                     if (HasParent)
                     {
                         _parent.PerformLayout();
@@ -923,7 +923,15 @@ namespace FlaxEngine.GUI
             UpdateTransform();
             _parent?.OnChildResized(this);
         }
-        
+
+        /// <summary>
+        /// Called when visible state gets changed.
+        /// </summary>
+        protected virtual void OnVisibleChanged()
+        {
+            VisibleChanged?.Invoke(this);
+        }
+
         /// <summary>
         ///     Action fred when parent control gets changed.
         /// </summary>

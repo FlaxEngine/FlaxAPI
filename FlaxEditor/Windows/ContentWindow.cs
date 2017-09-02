@@ -59,7 +59,7 @@ namespace FlaxEditor.Windows
             _toolStrip.AddButton(1, Editor.UI.GetIcon("ArrowLeft32")).LinkTooltip("Navigate backward");// Backward
             _toolStrip.AddButton(2, Editor.UI.GetIcon("ArrowRight32")).LinkTooltip("Navigate forward");// Forward
             _toolStrip.AddButton(3, Editor.UI.GetIcon("ArrowUp32")).LinkTooltip("Navigate up");// Up
-            _toolStrip.OnButtonClicked += toolstripButtonClicked;
+            _toolStrip.ButtonClicked += toolstripButtonClicked;
             _toolStrip.Parent = this;
 
             // Navigation bar

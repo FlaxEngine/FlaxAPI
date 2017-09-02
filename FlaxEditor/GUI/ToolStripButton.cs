@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -106,6 +106,28 @@ namespace FlaxEditor.GUI
             _id = id;
             _icon = icon;
             _text = text;
+        }
+
+        /// <summary>
+        /// Sets the automatic check mode.
+        /// </summary>
+        /// <param name="value">True if use ato check, otherwise false.</param>
+        /// <returns>This button.</returns>
+        public ToolStripButton SetAutoCheck(bool value)
+        {
+            AutoCheck = value;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the checked state.
+        /// </summary>
+        /// <param name="value">True if check it, otherwise false.</param>
+        /// <returns>This button.</returns>
+        public ToolStripButton SetChecked(bool value)
+        {
+            Checked = value;
+            return this;
         }
 
         /// <inheritdoc />

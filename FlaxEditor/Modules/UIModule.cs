@@ -421,7 +421,7 @@ namespace FlaxEditor.Modules
         private void InitToolstrip(FlaxEngine.GUI.Window mainWindow)
         {
             ToolStrip = new ToolStrip();
-            ToolStrip.OnButtonClicked += onTootlstripButtonClicked;
+            ToolStrip.ButtonClicked += onTootlstripButtonClicked;
             ToolStrip.Parent = mainWindow;
             
             //ToolStrip.AddButton(0, GetIcon("Logo32")).LinkTooltip("Flax Engine");// Welcome screen
