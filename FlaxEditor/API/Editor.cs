@@ -532,6 +532,32 @@ namespace FlaxEditor
                 LightmapsBakeEnd?.Invoke(true);
         }
 
+        /// <summary>
+        /// Starts lightmaps baking for the open scenes or cancel it if already running.
+        /// </summary>
+        public void BakeLightmapsOrCancel()
+        {
+            bool isBakingLightmaps = ProgressReporting.BakeLightmaps.IsActive;
+
+            if (isBakingLightmaps)
+                Internal_BakeLightmaps(true);
+            else
+                StateMachine.GoToState<BuildingLightingState>();
+        }
+
+        /// <summary>
+        /// Clears the lightmaps linkage for all open scenes.
+        /// </summary>
+        public void ClearLightmaps()
+        {
+            var scenes = SceneManager.Scenes;
+            for (int i = 0; i < scenes.Length; i++)
+            {
+                scenes[i].ClearLightmaps();
+            }
+            Scene.MarkSceneEdited(scenes);
+        }
+
         #endregion
 
         #region Internal Calls
@@ -547,6 +573,8 @@ namespace FlaxEditor
         internal static extern bool Internal_ImportModel(string inputPath, string outputPath, ref ModelImportSettings.InternalOptions options);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_CopyCache(ref Guid dstId, ref Guid srcId);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_BakeLightmaps(bool cancel);
 #endif
 
         #endregion

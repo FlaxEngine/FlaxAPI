@@ -751,18 +751,15 @@ namespace FlaxEditor.Modules
             {
                 // Scene statistics
                 case 1: break;
-
-                // TODO: finish those
+                    
                 // Bake lightmaps
                 case 2:
-                    throw new NotImplementedException("Bake lightmaps");
-                    //bakeOrCancelLightmaps();
+                    Editor.BakeLightmapsOrCancel();
                     break;
 
                 // Clear lightmaps data
                 case 3:
-                    throw new NotImplementedException("clear lightmaps");
-                    //Editor.clearStaticLighting();
+                    Editor.ClearLightmaps();
                     break;
 
                 // Take screenshot!
