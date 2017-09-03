@@ -262,7 +262,7 @@ namespace FlaxEngine.Rendering
                 TransparentLighting = MaterialTransparentLighting.None,
                 PostFxLocation = MaterialPostFxLocation.AfterPostProcessingPass,
                 MaskThreshold = 0.3f,
-                OpacityThreshold = 1.0f / 255.0f,
+                OpacityThreshold = 0.004f,
             };
         }
 
