@@ -200,7 +200,7 @@ namespace FlaxEditor.Windows
         private LogEntry _selected;
         private int[] _logCountPerGroup = new int[(int)LogGroup.Max];
         private readonly Regex _logRegex = new Regex("at(.*) in (.*):(\\d*)");
-        
+
         private readonly object _locker = new object();
         private bool _hasCompilationStarted;
         private readonly List<LogEntry> _pendingEntries = new List<LogEntry>(32);
@@ -250,6 +250,9 @@ namespace FlaxEditor.Windows
             // Bind events
             Debug.Logger.LogHandler.SendLog += LogHandlerOnSendLog;
             Debug.Logger.LogHandler.SendExceptionLog += LogHandlerOnSendExceptionLog;
+            ScriptsBuilder.CompilationBegin += OnCompilationBegin;
+            ScriptsBuilder.CompilationError += OnCompilationError;
+            ScriptsBuilder.CompilationWarning += OnCompilationWarning;
             Editor.StateMachine.StateChanged += StateMachineOnStateChanged;
         }
 
@@ -264,7 +267,7 @@ namespace FlaxEditor.Windows
             // Remove normal entries, keep compilation results
             RemoveEntries(false);
         }
-        
+
         /// <summary>
         /// Adds the specified log entry.
         /// </summary>
@@ -365,7 +368,7 @@ namespace FlaxEditor.Windows
                 ContextObject = o?.ID ?? Guid.Empty,
                 IsCompileResult = false
             };
-            
+
             // TODO: finish and test code locations detection
             /*if (!string.IsNullOrEmpty(stackTrace))
             {
@@ -424,7 +427,45 @@ namespace FlaxEditor.Windows
                 desc.LocationFile = match.Groups[2].Value;
                 int.TryParse(match.Groups[3].Value, out desc.LocationLine);
             }*/
-            
+
+            Add(ref desc);
+        }
+
+        private void OnCompilationBegin()
+        {
+            lock (_locker)
+            {
+                _hasCompilationStarted = true;
+            }
+        }
+
+        private void OnCompilationError(string message, string file, int line)
+        {
+            LogEntryDescription desc = new LogEntryDescription
+            {
+                Level = LogType.Error,
+                Title = message,
+                Description = file + " at line " + line,
+                IsCompileResult = true,
+                LocationFile = file.Length > 0 ? StringUtils.CombinePaths(Globals.ProjectFolder, file) : string.Empty,
+                LocationLine = line
+            };
+
+            Add(ref desc);
+        }
+
+        private void OnCompilationWarning(string message, string file, int line)
+        {
+            LogEntryDescription desc = new LogEntryDescription
+            {
+                Level = LogType.Warning,
+                Title = message,
+                Description = file + " at line " + line,
+                IsCompileResult = true,
+                LocationFile = file.Length > 0 ? StringUtils.CombinePaths(Globals.ProjectFolder, file) : string.Empty,
+                LocationLine = line
+            };
+
             Add(ref desc);
         }
 
@@ -512,8 +553,11 @@ namespace FlaxEditor.Windows
             // Unbind events
             Debug.Logger.LogHandler.SendLog -= LogHandlerOnSendLog;
             Debug.Logger.LogHandler.SendExceptionLog -= LogHandlerOnSendExceptionLog;
+            ScriptsBuilder.CompilationBegin -= OnCompilationBegin;
+            ScriptsBuilder.CompilationError -= OnCompilationError;
+            ScriptsBuilder.CompilationWarning -= OnCompilationWarning;
             Editor.StateMachine.StateChanged -= StateMachineOnStateChanged;
-            
+
             base.OnDestroy();
         }
     }
