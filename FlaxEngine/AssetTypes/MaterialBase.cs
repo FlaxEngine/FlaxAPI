@@ -94,7 +94,7 @@ namespace FlaxEngine
 
         internal void Internal_ClearParams()
         {
-            _parametersHash = 0;
+            _parametersHash++;
             _parameters = null;
         }
 

@@ -110,7 +110,11 @@ namespace FlaxEditor.Viewport.Previews
             MaterialBase postFxMaterial = null;
             if (_material != null)
             {
-                if (_material.IsPostFx)
+                if (
+                    // Material instance without a base material should not be used
+                    (!(_material is MaterialInstance) || ((MaterialInstance)_material).BaseMaterial != null)
+                    &&
+                    _material.IsPostFx)
                     postFxMaterial = _material;
                 else
                     surfaceMaterial = _material;

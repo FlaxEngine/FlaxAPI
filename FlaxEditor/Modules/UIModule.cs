@@ -81,6 +81,7 @@ namespace FlaxEditor.Modules
                 if (_iconsAtlas == null)
                 {
                     // Error
+                    Editor.LogError("Cannot load editor icons atlas.");
                     return Sprite.Invalid;
                 }
                 Assert.IsTrue(_iconsAtlas.IsLoaded);
@@ -91,7 +92,7 @@ namespace FlaxEditor.Modules
             if (!result.IsValid)
             {
                 // Warning
-                Debug.LogWarning($"Failed to load sprite icon \'{name}\'.");
+                Editor.LogWarning($"Failed to load sprite icon \'{name}\'.");
             }
 
             return result;
