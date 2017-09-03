@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using FlaxEditor.Content.Import;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Modules;
@@ -304,8 +303,7 @@ namespace FlaxEditor
         /// <param name="msg">The message.</param>
         public static void Log(string msg)
         {
-            // TODO: redirect this msg to log file not a console
-            Debug.Log(msg);
+            Internal_LogWrite(LogType.Log, msg);
         }
 
         /// <summary>
@@ -314,8 +312,7 @@ namespace FlaxEditor
         /// <param name="msg">The message.</param>
         public static void LogWarning(string msg)
         {
-            // TODO: redirect this msg to log file not a console
-            Debug.LogWarning(msg);
+            Internal_LogWrite(LogType.Warning, msg);
         }
 
         /// <summary>
@@ -334,8 +331,7 @@ namespace FlaxEditor
         /// <param name="msg">The message.</param>
         public static void LogError(string msg)
         {
-            // TODO: redirect this msg to log file not a console
-            Debug.LogError(msg);
+            Internal_LogWrite(LogType.Error, msg);
         }
 
         /// <summary>
@@ -575,6 +571,8 @@ namespace FlaxEditor
         internal static extern void Internal_CopyCache(ref Guid dstId, ref Guid srcId);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_BakeLightmaps(bool cancel);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_LogWrite(LogType type, string msg);
 #endif
 
         #endregion
