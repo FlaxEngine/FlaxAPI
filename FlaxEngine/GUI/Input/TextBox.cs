@@ -327,18 +327,12 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void Copy()
         {
-            throw new NotImplementedException("Copy textbox text");
-            // TODO: we need to support Clipboard via Flax API
-
-            /*// Check if sth is selected
-            if (SelectionLength > 0)
+            var selectedText = SelectedText;
+            if (selectedText.Length > 0)
             {
-                // Get selection
-                String selectedText = GetSelection();
-
-                // Copy
-                Application::ClipboardSetData(selectedText);
-            }*/
+                // Copy selected text
+                Application.ClipboardText = selectedText;
+            }
         }
 
         /// <summary>
@@ -346,29 +340,18 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void Cut()
         {
-            throw new NotImplementedException("Cut textbox text");
-            // TODO: we need to support Clipboard via Flax API
-
-            // Check if sth is selected
-            /*if (SelectionLength > 0)
+            var selectedText = SelectedText;
+            if (selectedText.Length > 0)
             {
-                // Get selection
-                String selectedText = GetSelection();
+                // Copy selected text
+                Application.ClipboardText = selectedText;
 
-                // Copy
-                Application::ClipboardSetData(selectedText);
-
-                // Delete selected text
-                _text.Remove(Math::Max(0, _selectionLeft), SelectionLength);
-                _selectionRight = _selectionLeft;
-                _isCaretOnLeft = false;
-
-                // Fire event
-                //OnValueChanged.TryCall(this);
-
-                // Update
-                calSelectionRect();
-            }*/
+                // Remove selection
+                int left = SelectionLeft;
+                _text = _text.Remove(left, SelectionLength);
+                setSelection(left);
+                OnTextChanged();
+            }
         }
 
         /// <summary>
@@ -376,29 +359,14 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void Paste()
         {
-            throw new NotImplementedException("Paste textbox text");
-            // TODO: we need to support Clipboard via Flax API
-
             // Get clipboard data
-            /*String clipboardText = Application::ClipboardGetData();
+            var clipboardText = Application.ClipboardText;
+            if (string.IsNullOrEmpty(clipboardText))
+                return;
 
-            // Check clipboad text length
-            if (clipboardText.HasChars())
-            {
-                // Check if sth is selected
-                int32 left = Math::Max(0, _selectionLeft);
-                int32 selectedChars = _selectionRight - left;
-                if (selectedChars > 0)
-                {
-                    // Delete selected text
-                    _text.Remove(left, selectedChars);
-                    _selectionRight = _selectionLeft;
-                    _isCaretOnLeft = false;
-                }
-
-                // Insert text
-                insertText(clipboardText);
-            }*/
+            var right = SelectionRight;
+            Insert(clipboardText);
+            setSelection(right + clipboardText.Length);
         }
 
         /// <summary>
@@ -406,24 +374,14 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void Duplicate()
         {
-            throw new NotImplementedException("Duplicate textbox text");
-            // TODO: we need to support Clipboard via Flax API
-
-            // Check if sth is selected
-            /*if (GetSelectionLength() > 0)
+            var selectedText = SelectedText;
+            if (selectedText.Length > 0)
             {
-                // Get selection text
-                String selection = GetSelection();
-
-                // Duplicate selected text
-                int32 right = _selectionRight;
-                _text.Insert(_selectionRight, selection);
-
-                // Selected inserted text
-                _selectionLeft = right;
-                _selectionRight = right + selection.Length();
-                calSelectionRect();
-            }*/
+                var right = SelectionRight;
+                setSelection(right);
+                Insert(selectedText);
+                setSelection(right, right + selectedText.Length);
+            }
         }
 
         /// <summary>
