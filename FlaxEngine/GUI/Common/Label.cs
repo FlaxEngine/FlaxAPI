@@ -167,7 +167,7 @@ namespace FlaxEngine.GUI
                     Vector2 textSize = font.MeasureText(_text);
 
                     // Update size
-                    Height = textSize.Y;
+                    Height = textSize.Y + Margin.Size.Y;
                 }
             }
 

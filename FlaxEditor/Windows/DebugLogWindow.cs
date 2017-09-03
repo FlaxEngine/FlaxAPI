@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 using FlaxEditor.GUI;
 using FlaxEditor.Scripting;
@@ -369,42 +370,33 @@ namespace FlaxEditor.Windows
                 IsCompileResult = false
             };
 
-            // TODO: finish and test code locations detection
-            /*if (!string.IsNullOrEmpty(stackTrace))
+            if (!string.IsNullOrEmpty(stackTrace))
             {
                 // Detect code location and remove leading internal stack trace part
-                std::wstring subject = std::wstring(stackTrace);
-                std::wregex regex(TEXT());
-                var match = _logRegex.Match()
+                var matches = _logRegex.Matches(stackTrace);
                 bool foundStart = false, noLocation = true;
-                std::wsregex_iterator next(subject.begin(), subject.end(), regex);
-                std::wsregex_iterator end;
-                StringBuilder fineStackTrace((int32) subject.size());
-                while (next != end)
+                var fineStackTrace = new StringBuilder(stackTrace.Length);
+                for (int i = 0; i < matches.Count; i++)
                 {
-                    match = *next;
-
+                    var match = matches[i];
                     if (foundStart)
                     {
                         if (noLocation)
                         {
-                            desc.Location.File = String(match[2].str());
-                            StringUtils::Parse(match[3].str().c_str(), &desc.Location.Line);
+                            desc.LocationFile = match.Groups[2].Value;
+                            int.TryParse(match.Groups[3].Value, out desc.LocationLine);
                             noLocation = false;
                         }
-                        auto str = match[0].str();
-                        fineStackTrace.AppendLine(str);
+                        fineStackTrace.AppendLine(match.Groups[0].Value);
                     }
-                    else if (String(match[1].str()).TrimTrailing().StartsWith("FlaxEngine.Debug.Log", String::CaseSensitive))
+                    else if (match.Groups[1].Value.Trim().StartsWith("FlaxEngine.Debug.Log", StringComparison.Ordinal))
                     {
                         foundStart = true;
                     }
-
-                    ++next;
                 }
-                fineStackTrace.ToString(desc.Description);
-            }*/
-
+                desc.Description = fineStackTrace.ToString();
+            }
+            
             Add(ref desc);
         }
 
@@ -419,14 +411,16 @@ namespace FlaxEditor.Windows
                 IsCompileResult = false
             };
 
-            // TODO: finish and test code locations detection
             // Detect code location
-            /*var match = _logRegex.Match(exception.StackTrace);
-            if (match.Success)
+            if (!string.IsNullOrEmpty(exception.StackTrace))
             {
-                desc.LocationFile = match.Groups[2].Value;
-                int.TryParse(match.Groups[3].Value, out desc.LocationLine);
-            }*/
+                var match = _logRegex.Match(exception.StackTrace);
+                if (match.Success)
+                {
+                    desc.LocationFile = match.Groups[2].Value;
+                    int.TryParse(match.Groups[3].Value, out desc.LocationLine);
+                }
+            }
 
             Add(ref desc);
         }
