@@ -46,10 +46,55 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets the total size of the texture. Actual resident size may be different due to dynamic content streaming.
+		/// </summary>
+		[UnmanagedCall]
+		public Vector2 Size
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { Vector2 resultAsRef; Internal_GetSize(unmanagedPtr, out resultAsRef); return resultAsRef; }
+#endif
+		}
+
+		/// <summary>
+		/// Gets the total mip levels count of the texture. Actual resident mipmaps count may be different due to dynamic content streaming.
+		/// </summary>
+		[UnmanagedCall]
+		public int MipLevels
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetMipLevels(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets the current mip levels count of the texture that are on GPU ready to use.
+		/// </summary>
+		[UnmanagedCall]
+		public int ResidentMipLevels
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetResidentMipLevels(unmanagedPtr); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetSprite(IntPtr obj, string name, out Sprite resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetSize(IntPtr obj, out Vector2 resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern int Internal_GetMipLevels(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern int Internal_GetResidentMipLevels(IntPtr obj);
 #endif
 #endregion
 	}

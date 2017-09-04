@@ -207,7 +207,27 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_DrawTexture(Object.GetUnmanagedPtr(t), ref rect, ref color, withAlpha);
+			Internal_DrawTexture1(Object.GetUnmanagedPtr(t), ref rect, ref color, withAlpha);
+#endif
+		}
+
+		/// <summary>
+		/// Draw texture
+		/// </summary>
+		/// <param name="t">Texture to draw</param>
+		/// <param name="rect">Rectangle to draw</param>
+		/// <param name="color">Color to use</param>
+		/// <param name="withAlpha">True if use alpha blending, otherwise it will be disabled.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static void DrawTexture(SpriteAtlas t, Rectangle rect, Color color, bool withAlpha = false) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_DrawTexture2(Object.GetUnmanagedPtr(t), ref rect, ref color, withAlpha);
 #endif
 		}
 
@@ -294,7 +314,9 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_DrawRenderTarget(IntPtr rt, ref Rectangle rect, ref Color color, bool withAlpha);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_DrawTexture(IntPtr t, ref Rectangle rect, ref Color color, bool withAlpha);
+		internal static extern void Internal_DrawTexture1(IntPtr t, ref Rectangle rect, ref Color color, bool withAlpha);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_DrawTexture2(IntPtr t, ref Rectangle rect, ref Color color, bool withAlpha);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_DrawLine(ref Vector2 p1, ref Vector2 p2, ref Color color, float thickness, bool withAlpha);
 		[MethodImpl(MethodImplOptions.InternalCall)]

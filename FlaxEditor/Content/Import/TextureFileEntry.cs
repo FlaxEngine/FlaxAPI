@@ -304,6 +304,28 @@ namespace FlaxEditor.Content.Import
                 options.SpriteNames = null;
             }
         }
+
+        internal void FromInternal(ref InternalOptions options)
+        {
+            Type = (CustomTextureFormatType)(int)options.Type;
+            IsAtlas = options.IsAtlas;
+            NeverStream = options.NeverStream;
+            Compress = options.Compress;
+            IndependentChannels = options.IndependentChannels;
+            IsSRGB = options.IsSRGB;
+            GenerateMipMaps = options.GenerateMipMaps;
+            Scale = options.Scale;
+            MaxSize = ConvertMaxSize(options.MaxSize);
+            if (options.SpriteAreas != null)
+            {
+                int spritesCount = options.SpriteAreas.Length;
+                Sprites.Capacity = spritesCount;
+                for (int i = 0; i < spritesCount; i++)
+                {
+                    Sprites.Add(new SpriteInfo(options.SpriteAreas[i], options.SpriteNames[i]));
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -327,24 +349,7 @@ namespace FlaxEditor.Content.Import
             if (Internal_GetTextureImportOptions(resultUrl, out options))
             {
                 // Restore settings
-                _settings.Type = (TextureImportSettings.CustomTextureFormatType)(int)options.Type;
-                _settings.IsAtlas = options.IsAtlas;
-                _settings.NeverStream = options.NeverStream;
-                _settings.Compress = options.Compress;
-                _settings.IndependentChannels = options.IndependentChannels;
-                _settings.IsSRGB = options.IsSRGB;
-                _settings.GenerateMipMaps = options.GenerateMipMaps;
-                _settings.Scale = options.Scale;
-                _settings.MaxSize = TextureImportSettings.ConvertMaxSize(options.MaxSize);
-                if (options.SpriteAreas != null)
-                {
-                    int spritesCount = options.SpriteAreas.Length;
-                    _settings.Sprites.Capacity = spritesCount;
-                    for (int i = 0; i < spritesCount; i++)
-                    {
-                        _settings.Sprites.Add(new TextureImportSettings.SpriteInfo(options.SpriteAreas[i], options.SpriteNames[i]));
-                    }
-                }
+                _settings.FromInternal(ref options);
             }
 
             // Try to guess format type based on file name

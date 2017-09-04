@@ -70,14 +70,14 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
         {
-            _preview.Texture = (Texture)request.Asset;
+            _preview.Asset = (Texture)request.Asset;
             _preview.Parent = guiRoot;
         }
 
         /// <inheritdoc />
         public override void OnThumbnailDrawEnd(ThumbnailRequest request, ContainerControl guiRoot)
         {
-            _preview.Texture = null;
+            _preview.Asset = null;
             _preview.Parent = null;
         }
 

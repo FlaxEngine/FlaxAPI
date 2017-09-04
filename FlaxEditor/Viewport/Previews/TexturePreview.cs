@@ -164,23 +164,28 @@ namespace FlaxEditor.Viewport.Previews
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
+            if (base.OnMouseDown(location, buttons))
+                return true;
+
             // Set flag
             _isMouseDown = true;
             _lastMosuePos = location;
             Cursor = CursorType.SizeAll;
 
-            base.OnMouseDown(location, buttons);
             return true;
         }
 
         /// <inheritdoc />
         public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
         {
+            if (base.OnMouseUp(location, buttons))
+                return true;
+
             // Clear flag
             _isMouseDown = false;
             Cursor = CursorType.Default;
 
-            return base.OnMouseUp(location, buttons);
+            return true;
         }
 
         /// <inheritdoc />
@@ -360,9 +365,58 @@ namespace FlaxEditor.Viewport.Previews
         private Texture _asset;
 
         /// <summary>
-        /// Gets or sets the texture being previews.
+        /// Gets or sets the asset to preview.
         /// </summary>
-        public Texture Texture
+        public Texture Asset
+        {
+            get => _asset;
+            set
+            {
+                if (_asset != value)
+                {
+                    _asset = value;
+                    UpdateTextureRect();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the color used to multiply texture colors.
+        /// </summary>
+        public Color Color { get; set; } = Color.White;
+
+        /// <inheritdoc />
+        protected override void CalculateTextureRect(out Rectangle rect)
+        {
+            CalculateTextureRect(_asset?.Size ?? new Vector2(100), Size, out rect);
+        }
+
+        /// <inheritdoc />
+        protected override void DrawTexture(ref Rectangle rect)
+        {
+            // Background
+            Render2D.FillRectangle(rect, Color.Gray);
+
+            // Check if has loaded asset
+            if (_asset && _asset.IsLoaded)
+            {
+                Render2D.DrawTexture(_asset, rect, Color);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Sprite atlas preview GUI control. Draws <see cref="SpriteAtlas"/> in the UI and supports view moving/zomming.
+    /// </summary>
+    /// <seealso cref="TexturePreviewBase" />
+    public class SimpleSpriteAtlasPreview : TexturePreviewBase
+    {
+        private SpriteAtlas _asset;
+
+        /// <summary>
+        /// Gets or sets the asset to preview.
+        /// </summary>
+        public SpriteAtlas Asset
         {
             get => _asset;
             set
