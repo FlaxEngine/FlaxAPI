@@ -98,6 +98,59 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Saves the sprites to the asset.
+		/// </summary>
+		/// <returns>True if failed, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public bool Save() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_Save(unmanagedPtr);
+#endif
+		}
+
+		/// <summary>
+		/// Adds a new sprite to the atlas.
+		/// </summary>
+		/// <returns>The created sprite.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public Sprite AddSprite() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Sprite resultAsRef;
+			Internal_AddSprite(unmanagedPtr, out resultAsRef);
+			return resultAsRef;
+#endif
+		}
+
+		/// <summary>
+		/// Removes new sprite from the atlas.
+		/// </summary>
+		/// <param name="index">The index of the sprite to remove.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void RemoveSprite(int index) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_RemoveSprite(unmanagedPtr, index);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -110,6 +163,12 @@ namespace FlaxEngine
 		internal static extern int Internal_GetMipLevels(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern int Internal_GetResidentMipLevels(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_Save(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_AddSprite(IntPtr obj, out Sprite resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_RemoveSprite(IntPtr obj, int index);
 #endif
 #endregion
 	}

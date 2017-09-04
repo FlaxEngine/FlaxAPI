@@ -21,6 +21,7 @@ namespace FlaxEditor.Windows.Assets
     public sealed class SpriteAtlasWindow : AssetEditorWindowBase<SpriteAtlas>
     {
         // TODO: allow to select and move sprites
+        // TODO: restore changes on win close without a changes
 
         /// <summary>
         /// Atlas view control. Shows sprites.
@@ -139,6 +140,19 @@ namespace FlaxEditor.Windows.Assets
             }
 
             /// <summary>
+            /// Updates the sprites colelction.
+            /// </summary>
+            public void UpdateSprites()
+            {
+                var atlas = _window.Asset;
+                Sprites = new SpriteEntry[atlas.SpritesCount];
+                for (int i = 0; i < Sprites.Length; i++)
+                {
+                    Sprites[i] = new SpriteEntry(atlas, i);
+                }
+            }
+
+            /// <summary>
             /// Gathers parameters from the specified texture.
             /// </summary>
             /// <param name="win">The texture window.</param>
@@ -146,13 +160,7 @@ namespace FlaxEditor.Windows.Assets
             {
                 // Link
                 _window = win;
-
-                var atlas = win.Asset;
-                Sprites = new SpriteEntry[atlas.SpritesCount];
-                for (int i = 0; i < Sprites.Length; i++)
-                {
-                    Sprites[i] = new SpriteEntry(atlas, i);
-                }
+                UpdateSprites();
 
                 // Try to restore target asset texture import options (usefull for fast reimport)
                 TextureImportSettings.InternalOptions options;
@@ -216,7 +224,7 @@ namespace FlaxEditor.Windows.Assets
             _toolstrip.AddButton(3, Editor.UI.GetIcon("AddDoc32")).LinkTooltip("Add a new sprite");
             _toolstrip.AddSeparator();
             _toolstrip.AddButton(5, Editor.UI.GetIcon("PageScale32")).LinkTooltip("Center view");
-            
+
             // Split Panel
             var splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
             {
@@ -236,10 +244,31 @@ namespace FlaxEditor.Windows.Assets
             _propertiesEditor.Panel.Parent = splitPanel.Panel2;
             _properties = new PropertiesProxy();
             _propertiesEditor.Select(_properties);
+            _propertiesEditor.Modified += MarkAsEdited;
         }
 
         /// <inheritdoc />
         protected override string WindowTitleName => "Sprite Atlas";
+
+        /// <inheritdoc />
+        public override void Save()
+        {
+            // Check if don't need to push any new changes to the orginal asset
+            if (!IsEdited)
+                return;
+
+            // Save asset
+            if (Asset.Save())
+            {
+                // Error
+                Editor.Log("Cannot save sprite atlas.");
+                return;
+            }
+
+            // Update
+            ClearEditedFlag();
+            _item.RefreshThumbnail();
+        }
 
         /// <inheritdoc />
         protected override void OnToolstripButtonClicked(int id)
@@ -254,26 +283,12 @@ namespace FlaxEditor.Windows.Assets
                     break;
                 case 3:
                 {
-                    throw new NotImplementedException("Add sprite");
-                    /*// Add sprite
-                    Sprite sprite;
-                    sprite.Area = Rect(Vector2::Zero, Vector2::One);
-                    sprite.Name = TEXT("New Sprite");
-                    auto spriteHandle = _asset->AddSprite(sprite);
-
-                    // Add UI editor
-                    auto panel = createEditor(spriteHandle.Index);
-                    panel->UnlockChildrenRecursive();
-                    _split->Panel1->PerformLayout();
-
-                    // Select it
-                    SelectSprite(spriteHandle.Index);
-
-                    MarkAsEdited();*/
-
+                    var sprite = Asset.AddSprite();
+                    MarkAsEdited();
+                    _properties.UpdateSprites();
+                    _propertiesEditor.BuildLayout();
                     break;
                 }
-
                 case 5:
                     _preview.CenterView();
                     break;
