@@ -312,7 +312,7 @@ namespace FlaxEditor.Viewport.Previews
                 //
                 channelsWidget.Parent = this;
             }
-            
+
             // Wait for base (don't want to async material parameters set due to async loading)
             baseMaterial.WaitForLoaded();
         }
@@ -324,6 +324,7 @@ namespace FlaxEditor.Viewport.Previews
         protected void SetTexture(object value)
         {
             _previewMaterial.GetParam("Texture").Value = value;
+            UpdateTextureRect();
         }
 
         private void UpdateMask()
@@ -458,15 +459,15 @@ namespace FlaxEditor.Viewport.Previews
     /// Texture preview GUI control. Draws <see cref="FlaxEngine.Texture"/> in the UI and supports view moving/zomming.
     /// Supports texture channels masking and color transformations.
     /// </summary>
-    /// <seealso cref="TexturePreviewBase" />
+    /// <seealso cref="TexturePreviewCustomBase" />
     public class TexturePreview : TexturePreviewCustomBase
     {
         private Texture _asset;
 
         /// <summary>
-        /// Gets or sets the texture being previews.
+        /// Gets or sets the texture to preview.
         /// </summary>
-        public Texture Texture
+        public Texture Asset
         {
             get => _asset;
             set
@@ -474,8 +475,7 @@ namespace FlaxEditor.Viewport.Previews
                 if (_asset != value)
                 {
                     _asset = value;
-                    _previewMaterial.GetParam("Texture").Value = _asset;
-                    UpdateTextureRect();
+                    SetTexture(_asset);
                 }
             }
         }
@@ -486,6 +486,61 @@ namespace FlaxEditor.Viewport.Previews
         /// <param name="useWidgets">True if show viewport widgets.</param>
         /// <inheritdoc />
         public TexturePreview(bool useWidgets)
+            : base(useWidgets)
+        {
+        }
+
+        /// <inheritdoc />
+        protected override void CalculateTextureRect(out Rectangle rect)
+        {
+            CalculateTextureRect(_asset?.Size ?? new Vector2(100), Size, out rect);
+        }
+
+        /// <inheritdoc />
+        protected override void DrawTexture(ref Rectangle rect)
+        {
+            // Background
+            Render2D.FillRectangle(rect, Color.Gray);
+
+            // Check if has loaded asset
+            if (_asset && _asset.IsLoaded)
+            {
+                Render2D.DrawMaterial(_previewMaterial, rect);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Sprite atlas preview GUI control. Draws <see cref="FlaxEngine.SpriteAtlas"/> in the UI and supports view moving/zomming.
+    /// Supports texture channels masking and color transformations.
+    /// </summary>
+    /// <seealso cref="TexturePreviewCustomBase" />
+    public class SpriteAtlasPreview : TexturePreviewCustomBase
+    {
+        private SpriteAtlas _asset;
+
+        /// <summary>
+        /// Gets or sets the sprite atlas to preview.
+        /// </summary>
+        public SpriteAtlas Asset
+        {
+            get => _asset;
+            set
+            {
+                if (_asset != value)
+                {
+                    _asset = value;
+                    SetTexture(_asset);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SpriteAtlasPreview"/> class.
+        /// </summary>
+        /// <param name="useWidgets">True if show viewport widgets.</param>
+        /// <inheritdoc />
+        public SpriteAtlasPreview(bool useWidgets)
             : base(useWidgets)
         {
         }

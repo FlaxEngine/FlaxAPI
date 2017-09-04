@@ -13,11 +13,11 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.Windows.Assets
 {
     /// <summary>
-    /// Texture window allows to view and edit <see cref="Texture"/> asset.
+    /// Sprite Atlas window allows to view and edit <see cref="SpriteAtlas"/> asset.
     /// </summary>
-    /// <seealso cref="Texture" />
+    /// <seealso cref="SpriteAtlas" />
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
-    public sealed class TextureWindow : AssetEditorWindowBase<Texture>
+    public sealed class SpriteAtlasWindow : AssetEditorWindowBase<SpriteAtlas>
     {
         /// <summary>
         /// The texture properties proxy object.
@@ -25,7 +25,7 @@ namespace FlaxEditor.Windows.Assets
         [CustomEditor(typeof(ProxyEditor))]
         private sealed class PropertiesProxy
         {
-            private TextureWindow _window;
+            private SpriteAtlasWindow _window;
 
             [EditorOrder(1000), EditorDisplay("Import Settings", "__inline__")]
             public TextureImportSettings ImportSettings { get; set; } = new TextureImportSettings();
@@ -35,7 +35,7 @@ namespace FlaxEditor.Windows.Assets
                 public override void Initialize(LayoutElementsContainer layout)
                 {
                     var window = ((PropertiesProxy)Values[0])._window;
-                    
+
                     base.Initialize(layout);
 
                     layout.Space(10);
@@ -43,12 +43,12 @@ namespace FlaxEditor.Windows.Assets
                     reimportButton.Button.Clicked += () => ((PropertiesProxy)Values[0]).Reimport();
                 }
             }
-            
+
             /// <summary>
             /// Gathers parameters from the specified texture.
             /// </summary>
             /// <param name="win">The texture window.</param>
-            public void OnLoad(TextureWindow win)
+            public void OnLoad(SpriteAtlasWindow win)
             {
                 // Link
                 _window = win;
@@ -97,14 +97,14 @@ namespace FlaxEditor.Windows.Assets
             }
         }
 
-        private readonly TexturePreview _preview;
+        private readonly SpriteAtlasPreview _preview;
         private readonly CustomEditorPresenter _propertiesEditor;
 
         private readonly PropertiesProxy _properties;
         private bool _isWaitingForLoad;
 
         /// <inheritdoc />
-        public TextureWindow(Editor editor, AssetItem item)
+        public SpriteAtlasWindow(Editor editor, AssetItem item)
             : base(editor, item)
         {
             // Toolstrip
@@ -121,13 +121,13 @@ namespace FlaxEditor.Windows.Assets
                 Parent = this
             };
 
-            // Texture preview
-            _preview = new TexturePreview(true)
+            // Sprite atlas preview
+            _preview = new SpriteAtlasPreview(true)
             {
                 Parent = splitPanel.Panel1
             };
 
-            // Texture properties editor
+            // Sprite atlas properties editor
             _propertiesEditor = new CustomEditorPresenter(null);
             _propertiesEditor.Panel.Parent = splitPanel.Panel2;
             _properties = new PropertiesProxy();
@@ -135,7 +135,7 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        protected override string WindowTitleName => "Texture";
+        protected override string WindowTitleName => "Sprite Atlas";
 
         /// <inheritdoc />
         protected override void OnToolstripButtonClicked(int id)
