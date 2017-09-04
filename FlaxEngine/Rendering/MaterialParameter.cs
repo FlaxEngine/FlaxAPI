@@ -119,9 +119,9 @@ namespace FlaxEngine.Rendering
             get
             {
                 // Validate the hash
-                if(_hash != _material._parametersHash)
+                if (_hash != _material._parametersHash)
                     throw new InvalidOperationException("Cannot use invalid material parameter.");
-                
+
                 return MaterialBase.Internal_GetParamName(_material.unmanagedPtr, _index);
             }
         }
@@ -253,17 +253,12 @@ namespace FlaxEngine.Rendering
                         break;
 
                     case MaterialParameterType.CubeTexture:
-                        ptr = Object.GetUnmanagedPtr(value as CubeTexture);
-                        break;
-
                     case MaterialParameterType.Texture:
                     case MaterialParameterType.NormalMap:
-                        // TODO: add support for using render target as material input
-                        ptr = Object.GetUnmanagedPtr(value as Texture);
+                        ptr = Object.GetUnmanagedPtr(value as Object);
                         break;
 
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    default: throw new ArgumentOutOfRangeException();
                 }
 
                 MaterialBase.Internal_SetParamValue(_material.unmanagedPtr, _index, ptr);
