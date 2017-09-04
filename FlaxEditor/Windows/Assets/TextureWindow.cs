@@ -90,7 +90,7 @@ namespace FlaxEditor.Windows.Assets
             };
 
             // Texture preview
-            _preview = new TexturePreview
+            _preview = new TexturePreview(true)
             {
                 Parent = splitPanel.Panel1
             };

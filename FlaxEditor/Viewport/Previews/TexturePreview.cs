@@ -2,8 +2,11 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+using FlaxEditor.Viewport.Widgets;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Viewport.Previews
 {
@@ -18,11 +21,6 @@ namespace FlaxEditor.Viewport.Previews
         private Vector2 _viewPos;
         private float _viewScale = 1.0f;
         private bool _isMouseDown;
-
-        /// <summary>
-        /// Gets a value indicating whether this viewport has loaded dependant assets.
-        /// </summary>
-        public virtual bool HasLoadedAssets => true;
 
         /// <inheritdoc />
         protected TexturePreviewBase()
@@ -203,22 +201,145 @@ namespace FlaxEditor.Viewport.Previews
     public abstract class TexturePreviewCustomBase : TexturePreviewBase
     {
         /// <summary>
+        /// Texture channel flags.
+        /// </summary>
+        [Flags]
+        public enum ChannelFlags
+        {
+            /// <summary>
+            /// The none.
+            /// </summary>
+            None = 0,
+
+            /// <summary>
+            /// The red channel.
+            /// </summary>
+            Red = 1,
+
+            /// <summary>
+            /// The green channel.
+            /// </summary>
+            Green = 2,
+
+            /// <summary>
+            /// The blue channel.
+            /// </summary>
+            Blue = 4,
+
+            /// <summary>
+            /// The alpha channel.
+            /// </summary>
+            Alpha = 8,
+
+            /// <summary>
+            /// All texture channels.
+            /// </summary>
+            All = Red | Green | Blue | Alpha
+        }
+
+        private ChannelFlags _channelFlags = ChannelFlags.All;
+
+        /// <summary>
         /// The preview material instance used to draw texture.
         /// </summary>
         protected MaterialInstance _previewMaterial;
 
         /// <summary>
-        /// Gets a value indicating whether this viewport has loaded dependant assets.
+        /// Gets or sets the view channels to show.
         /// </summary>
-        public override bool HasLoadedAssets => _previewMaterial.IsLoaded && _previewMaterial.BaseMaterial.IsLoaded;
+        public ChannelFlags ViewChannels
+        {
+            get => _channelFlags;
+            set
+            {
+                if (_channelFlags != value)
+                {
+                    _channelFlags = value;
+                    UpdateMask();
+                }
+            }
+        }
 
         /// <inheritdoc />
-        protected TexturePreviewCustomBase()
+        /// <param name="useWidgets">True if show viewport widgets.</param>
+        protected TexturePreviewCustomBase(bool useWidgets)
         {
+            // Create preview material (virtual)
             var baseMaterial = FlaxEngine.Content.LoadAsync<Material>("Editor/TexturePreviewMaterial");
             if (baseMaterial == null)
                 throw new FlaxException("Cannot load texture preview material.");
             _previewMaterial = baseMaterial.CreateVirtualInstance();
+
+            // Add widgets
+            if (useWidgets)
+            {
+                // Channels widget
+                var channelsWidget = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperLeft);
+                //
+                var channelR = new ViewportWidgetButton("R", Sprite.Invalid, null, true)
+                {
+                    Checked = true,
+                    TooltipText = "Show/hide texture red channel",
+                    Parent = channelsWidget
+                };
+                channelR.OnToggle += button => ViewChannels = button.Checked ? ViewChannels | ChannelFlags.Red : (ViewChannels & ~ChannelFlags.Red);
+                var channelG = new ViewportWidgetButton("G", Sprite.Invalid, null, true)
+                {
+                    Checked = true,
+                    TooltipText = "Show/hide texture green channel",
+                    Parent = channelsWidget
+                };
+                channelG.OnToggle += button => ViewChannels = button.Checked ? ViewChannels | ChannelFlags.Green : (ViewChannels & ~ChannelFlags.Green);
+                var channelB = new ViewportWidgetButton("B", Sprite.Invalid, null, true)
+                {
+                    Checked = true,
+                    TooltipText = "Show/hide texture blue channel",
+                    Parent = channelsWidget
+                };
+                channelB.OnToggle += button => ViewChannels = button.Checked ? ViewChannels | ChannelFlags.Blue : (ViewChannels & ~ChannelFlags.Blue);
+                var channelA = new ViewportWidgetButton("A", Sprite.Invalid, null, true)
+                {
+                    Checked = true,
+                    TooltipText = "Show/hide texture alpha channel",
+                    Parent = channelsWidget
+                };
+                channelA.OnToggle += button => ViewChannels = button.Checked ? ViewChannels | ChannelFlags.Alpha : (ViewChannels & ~ChannelFlags.Alpha);
+                //
+                channelsWidget.Parent = this;
+            }
+            
+            // Wait for base (don't want to async material parameters set due to async loading)
+            baseMaterial.WaitForLoaded();
+        }
+
+        /// <summary>
+        /// Sets the texture to draw (material parameter).
+        /// </summary>
+        /// <param name="value">The value.</param>
+        protected void SetTexture(object value)
+        {
+            _previewMaterial.GetParam("Texture").Value = value;
+        }
+
+        private void UpdateMask()
+        {
+            Vector4 mask = Vector4.One;
+            if ((_channelFlags & ChannelFlags.Red) == 0)
+                mask.X = 0;
+            if ((_channelFlags & ChannelFlags.Green) == 0)
+                mask.Y = 0;
+            if ((_channelFlags & ChannelFlags.Blue) == 0)
+                mask.Z = 0;
+            if ((_channelFlags & ChannelFlags.Alpha) == 0)
+                mask.W = 0;
+            _previewMaterial.GetParam("Mask").Value = mask;
+        }
+
+        /// <inheritdoc />
+        protected override void PerformLayoutSelf()
+        {
+            base.PerformLayoutSelf();
+            ViewportWidgetsContainer.ArrangeWidgets(this);
         }
 
         /// <inheritdoc />
@@ -281,7 +402,7 @@ namespace FlaxEditor.Viewport.Previews
 
     /// <summary>
     /// Texture preview GUI control. Draws <see cref="FlaxEngine.Texture"/> in the UI and supports view moving/zomming.
-    /// Supports texture chanels masking and color transformations.
+    /// Supports texture channels masking and color transformations.
     /// </summary>
     /// <seealso cref="TexturePreviewBase" />
     public class TexturePreview : TexturePreviewCustomBase
@@ -299,9 +420,20 @@ namespace FlaxEditor.Viewport.Previews
                 if (_asset != value)
                 {
                     _asset = value;
+                    _previewMaterial.GetParam("Texture").Value = _asset;
                     UpdateTextureRect();
                 }
             }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TexturePreview"/> class.
+        /// </summary>
+        /// <param name="useWidgets">True if show viewport widgets.</param>
+        /// <inheritdoc />
+        public TexturePreview(bool useWidgets)
+            : base(useWidgets)
+        {
         }
 
         /// <inheritdoc />
@@ -320,19 +452,6 @@ namespace FlaxEditor.Viewport.Previews
             if (_asset && _asset.IsLoaded)
             {
                 Render2D.DrawMaterial(_previewMaterial, rect);
-                
-                // Check if texture is fully loaded
-                // TODO: we should request full res texture during preview
-                /*if (asset->IsLoaded())
-                {
-                    // Draw texture
-                    render->DrawCustom(texture, rect, _psDefault, Color::White);
-                }
-                else
-                {
-                    // Texture is not fully loaded
-                    render->DrawTexture(texture, rect, Color::White, true);
-                }*/
             }
         }
     }

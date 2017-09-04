@@ -92,6 +92,26 @@ namespace FlaxEngine
             }
         }
 
+        /// <summary>
+        /// Gets the parameter by index.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns>The material parameter.</returns>
+        public MaterialParameter GetParam(int index)
+        {
+            return Parameters[index];
+        }
+
+        /// <summary>
+        /// Gets the parameter by name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The material parameter.</returns>
+        public MaterialParameter GetParam(string name)
+        {
+            return Parameters[Internal_GetParamIndexByName(unmanagedPtr, name)];
+        }
+
         internal void Internal_ClearParams()
         {
             _parametersHash++;
@@ -115,6 +135,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string Internal_GetParamValue(IntPtr obj, int index, IntPtr ptr);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetParamIndexByName(IntPtr obj, string name);
 #endif
 
         #endregion

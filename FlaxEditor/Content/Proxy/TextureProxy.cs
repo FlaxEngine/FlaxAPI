@@ -62,9 +62,6 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override bool CanDrawThumbnail(ThumbnailRequest request)
         {
-            if (!_preview.HasLoadedAssets)
-                return false;
-
             // Check if asset is streamed enough
             var asset = (Texture)request.Asset;
             return asset.ResidentMipLevels >= (int)(asset.MipLevels * ThumbnailsModule.MinimumRequriedResourcesQuality);
