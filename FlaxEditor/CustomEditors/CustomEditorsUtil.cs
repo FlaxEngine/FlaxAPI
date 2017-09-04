@@ -4,9 +4,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using FlaxEditor.CustomEditors.Editors;
+using FlaxEngine;
 
 namespace FlaxEditor.CustomEditors
 {
@@ -69,6 +71,12 @@ namespace FlaxEditor.CustomEditors
             var type = Internal_GetCustomEditor(targetType);
             if (type != null)
                 return (CustomEditor)Activator.CreateInstance(type);
+            
+            // Use attribute editor
+            var attributes = targetType.GetCustomAttributes(false);
+            var customEditorAttribute = (CustomEditorAttribute)attributes.FirstOrDefault(x => x is CustomEditorAttribute);
+            if (customEditorAttribute != null)
+                return (CustomEditor)Activator.CreateInstance(customEditorAttribute.Type);
 
             // Select default editor (based on type)
             if (targetType.IsEnum)
