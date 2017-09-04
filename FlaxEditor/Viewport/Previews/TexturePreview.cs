@@ -18,7 +18,7 @@ namespace FlaxEditor.Viewport.Previews
         private Vector2 _viewPos;
         private float _viewScale = 1.0f;
         private bool _isMouseDown;
-        
+
         /// <summary>
         /// Gets a value indicating whether this viewport has loaded dependant assets.
         /// </summary>
@@ -76,7 +76,7 @@ namespace FlaxEditor.Viewport.Previews
                 result = new Rectangle(diff, 0, w, viewSize.Y);
             }
         }
-        
+
         /// <summary>
         /// Draws the texture.
         /// </summary>
@@ -197,10 +197,44 @@ namespace FlaxEditor.Viewport.Previews
     }
 
     /// <summary>
+    /// Base class for texture previews with custom drawing features. Uses in-build postFx material to render a texture.
+    /// </summary>
+    /// <seealso cref="TexturePreviewBase" />
+    public abstract class TexturePreviewCustomBase : TexturePreviewBase
+    {
+        /// <summary>
+        /// The preview material instance used to draw texture.
+        /// </summary>
+        protected MaterialInstance _previewMaterial;
+
+        /// <summary>
+        /// Gets a value indicating whether this viewport has loaded dependant assets.
+        /// </summary>
+        public override bool HasLoadedAssets => _previewMaterial.IsLoaded && _previewMaterial.BaseMaterial.IsLoaded;
+
+        /// <inheritdoc />
+        protected TexturePreviewCustomBase()
+        {
+            var baseMaterial = FlaxEngine.Content.LoadAsync<Material>("Editor/TexturePreviewMaterial");
+            if (baseMaterial == null)
+                throw new FlaxException("Cannot load texture preview material.");
+            _previewMaterial = baseMaterial.CreateVirtualInstance();
+        }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            Object.Destroy(ref _previewMaterial);
+
+            base.OnDestroy();
+        }
+    }
+
+    /// <summary>
     /// Texture preview GUI control. Draws <see cref="FlaxEngine.Texture"/> in the UI and supports view moving/zomming.
     /// </summary>
     /// <seealso cref="TexturePreviewBase" />
-    public class TexturePreview : TexturePreviewBase
+    public class SimpleTexturePreview : TexturePreviewBase
     {
         private Texture _asset;
 
@@ -219,7 +253,12 @@ namespace FlaxEditor.Viewport.Previews
                 }
             }
         }
-        
+
+        /// <summary>
+        /// Gets or sets the color used to multiply texture colors.
+        /// </summary>
+        public Color Color { get; set; } = Color.White;
+
         /// <inheritdoc />
         protected override void CalculateTextureRect(out Rectangle rect)
         {
@@ -235,10 +274,53 @@ namespace FlaxEditor.Viewport.Previews
             // Check if has loaded asset
             if (_asset && _asset.IsLoaded)
             {
-                var texture = _asset;
+                Render2D.DrawTexture(_asset, rect, Color);
+            }
+        }
+    }
 
-                Render2D.DrawTexture(texture, rect, Color.White);
+    /// <summary>
+    /// Texture preview GUI control. Draws <see cref="FlaxEngine.Texture"/> in the UI and supports view moving/zomming.
+    /// Supports texture chanels masking and color transformations.
+    /// </summary>
+    /// <seealso cref="TexturePreviewBase" />
+    public class TexturePreview : TexturePreviewCustomBase
+    {
+        private Texture _asset;
 
+        /// <summary>
+        /// Gets or sets the texture being previews.
+        /// </summary>
+        public Texture Texture
+        {
+            get => _asset;
+            set
+            {
+                if (_asset != value)
+                {
+                    _asset = value;
+                    UpdateTextureRect();
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void CalculateTextureRect(out Rectangle rect)
+        {
+            CalculateTextureRect(_asset?.Size ?? new Vector2(100), Size, out rect);
+        }
+
+        /// <inheritdoc />
+        protected override void DrawTexture(ref Rectangle rect)
+        {
+            // Background
+            Render2D.FillRectangle(rect, Color.Gray);
+
+            // Check if has loaded asset
+            if (_asset && _asset.IsLoaded)
+            {
+                Render2D.DrawMaterial(_previewMaterial, rect);
+                
                 // Check if texture is fully loaded
                 // TODO: we should request full res texture during preview
                 /*if (asset->IsLoaded())

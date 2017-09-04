@@ -73,8 +73,7 @@ namespace FlaxEditor.Viewport.Previews
             _postFxVolume = PostFxVolume.New();
             _postFxVolume.IsBounded = true;
             _postFxVolume.Settings.Eye_MinLuminance = 0.1f;
-            _postFxVolume.Settings.PostFxMaterials = new MaterialBase[1];
-            
+
             // Link actors for rendering
             Task.CustomActors.Add(_previewModel);
             Task.CustomActors.Add(_previewLight);
@@ -110,19 +109,22 @@ namespace FlaxEditor.Viewport.Previews
             MaterialBase postFxMaterial = null;
             if (_material != null)
             {
-                if (
+                if (_material is MaterialInstance materialInstance && materialInstance.BaseMaterial == null)
+                {
                     // Material instance without a base material should not be used
-                    (!(_material is MaterialInstance) || ((MaterialInstance)_material).BaseMaterial != null)
-                    &&
-                    _material.IsPostFx)
-                    postFxMaterial = _material;
+                }
                 else
-                    surfaceMaterial = _material;
+                {
+                    if (_material.IsPostFx)
+                        postFxMaterial = _material;
+                    else
+                        surfaceMaterial = _material;
+                }
             }
             var meshes = _previewModel.Meshes;
             if (meshes.Length == 1)
                 meshes[0].Material = surfaceMaterial;
-            _postFxVolume.Settings.PostFxMaterials[0] = postFxMaterial;
+            _postFxVolume.Settings.PostFxMaterials = new [] { postFxMaterial };
         }
 
         /// <inheritdoc />

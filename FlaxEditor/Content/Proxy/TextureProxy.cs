@@ -18,7 +18,7 @@ namespace FlaxEditor.Content
     /// <seealso cref="FlaxEditor.Content.BinaryAssetProxy" />
     public sealed class TextureProxy : BinaryAssetProxy
     {
-        private TexturePreview _preview;
+        private SimpleTexturePreview _preview;
 
         /// <inheritdoc />
         public override string Name => "Texture";
@@ -52,7 +52,7 @@ namespace FlaxEditor.Content
         {
             if (_preview == null)
             {
-                _preview = new TexturePreview();
+                _preview = new SimpleTexturePreview();
                 _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
             }
 
