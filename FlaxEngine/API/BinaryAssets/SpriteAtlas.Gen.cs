@@ -60,6 +60,19 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets the total amount of sprites in the atlas.
+		/// </summary>
+		[UnmanagedCall]
+		public int SpritesCount
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetSpritesCount(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
 		/// Gets the total mip levels count of the texture. Actual resident mipmaps count may be different due to dynamic content streaming.
 		/// </summary>
 		[UnmanagedCall]
@@ -91,6 +104,8 @@ namespace FlaxEngine
 		internal static extern void Internal_GetSprite(IntPtr obj, string name, out Sprite resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetSize(IntPtr obj, out Vector2 resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern int Internal_GetSpritesCount(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern int Internal_GetMipLevels(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
