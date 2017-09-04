@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -70,7 +70,20 @@ namespace FlaxEditor.Surface.Archetypes
             Op1(8, "Ceil", "Returns the smallest integer value greater than or equal to A"),
             Op1(9, "Cosine", "Returns cosine of A"),
             Op1(10, "Floor", "Returns the largest integer value less than or equal to A"),
-            Op1(11, "Length", "Returns the length of A vector", ConnectionType.Vector),
+            new NodeArchetype
+            {
+                TypeID = 11,
+                Title = "Length",
+                Description = "Returns the length of A vector",
+                Size = new Vector2(110, 20),
+                DefaultType = ConnectionType.Vector,
+                IndependentBoxes = new[] { 0 },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "A", true, ConnectionType.Vector, 0),
+                    NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Float, 1)
+                }
+            },
             Op1(12, "Normalize", "Returns normalized A vector", ConnectionType.Vector),
             Op1(13, "Round", "Rounds A to the nearest integer"),
             Op1(14, "Saturate", "Clamps A to the range [0, 1]"),
@@ -171,6 +184,38 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.CmoboBox(100, 22, 70, 1, _vectorTransformSpaces),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 31,
+                Title = "Mad",
+                Description = "Performs value multiplication and addition at once",
+                Size = new Vector2(110, 60),
+                DefaultType = ConnectionType.Variable,
+                IndependentBoxes = new[] { 0, 1, 2 },
+                DependentBoxes = new[] { 3 },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Value", true, ConnectionType.Variable, 0),
+                    NodeElementArchetype.Factory.Input(1, "Mul", true, ConnectionType.Variable, 1),
+                    NodeElementArchetype.Factory.Input(2, "Add", true, ConnectionType.Variable, 2),
+                    NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Variable, 3)
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 32,
+                Title = "Extract Largest Component",
+                Description = "Gets the largest component mask from the input vector",
+                Size = new Vector2(180, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Value", true, ConnectionType.Vector3, 0),
+                    NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Vector3, 1)
+                }
+            },
+            Op1(33, "asin", "Returns arcus sine of A"),
+            Op1(34, "acos", "Returns arcus cosinus of A"),
+            Op1(35, "atan", "Returns arcus tangent of A"),
         };
     }
 }
