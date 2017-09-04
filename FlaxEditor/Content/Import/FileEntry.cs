@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -41,12 +41,22 @@ namespace FlaxEditor.Content.Import
         public virtual bool HasSettings => false;
 
         /// <summary>
-        /// Gets the settings object to modify.
+        /// Gets or sets the settings object to modify.
         /// </summary>
         /// <value>
         /// The settings object.
         /// </value>
         public virtual object Settings => null;
+
+        /// <summary>
+        /// Tries the override import settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns>True if settings override was successful and there is no need to edit them in dedicated dialog, otherwise false.</returns>
+        public virtual bool TryOverrideSettings(object settings)
+        {
+            return false;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileEntry"/> class.

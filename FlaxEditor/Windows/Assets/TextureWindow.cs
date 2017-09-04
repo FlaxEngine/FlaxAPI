@@ -2,9 +2,10 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using FlaxEditor.Content;
+using FlaxEditor.Content.Import;
 using FlaxEditor.CustomEditors;
+using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -21,11 +22,28 @@ namespace FlaxEditor.Windows.Assets
         /// <summary>
         /// The texture properties proxy object.
         /// </summary>
+        [CustomEditor(typeof(ProxyEditor))]
         private sealed class PropertiesProxy
         {
-            [EditorOrder(10), EditorDisplay("General"), Tooltip("")]
-            public int Value { get; set; }
+            private TextureWindow _window;
 
+            [EditorOrder(1000), EditorDisplay("Import Settings", "__inline__")]
+            public TextureImportSettings ImportSettings { get; set; } = new TextureImportSettings();
+
+            public sealed class ProxyEditor : GenericEditor
+            {
+                public override void Initialize(LayoutElementsContainer layout)
+                {
+                    var window = ((PropertiesProxy)Values[0])._window;
+                    
+                    base.Initialize(layout);
+
+                    layout.Space(10);
+                    var reimportButton = layout.Button("Reimport");
+                    reimportButton.Button.Clicked += () => ((PropertiesProxy)Values[0]).Reimport();
+                }
+            }
+            
             /// <summary>
             /// Gathers parameters from the specified texture.
             /// </summary>
@@ -33,7 +51,15 @@ namespace FlaxEditor.Windows.Assets
             public void OnLoad(TextureWindow win)
             {
                 // Link
-                // TODO: finish
+                _window = win;
+
+                // Try to restore target asset texture import options (usefull for fast reimport)
+                TextureImportSettings.InternalOptions options;
+                if (TextureFileEntry.Internal_GetTextureImportOptions(win.Item.Path, out options))
+                {
+                    // Restore settings
+                    ImportSettings.FromInternal(ref options);
+                }
 
                 // Prepare restore data
                 PeekState();
@@ -44,7 +70,14 @@ namespace FlaxEditor.Windows.Assets
             /// </summary>
             public void PeekState()
             {
-                // TODO: finish
+            }
+
+            /// <summary>
+            /// Reimports asset.
+            /// </summary>
+            public void Reimport()
+            {
+                Editor.Instance.ContentImporting.Reimport((BinaryAssetItem)_window.Item, ImportSettings);
             }
 
             /// <summary>
@@ -52,7 +85,6 @@ namespace FlaxEditor.Windows.Assets
             /// </summary>
             public void DiscardChanges()
             {
-                // TODO: finish
             }
 
             /// <summary>
@@ -61,15 +93,15 @@ namespace FlaxEditor.Windows.Assets
             public void OnClean()
             {
                 // Unlink
-                // TODO: finish
+                _window = null;
             }
         }
 
         private readonly TexturePreview _preview;
+        private readonly CustomEditorPresenter _propertiesEditor;
 
         private readonly PropertiesProxy _properties;
         private bool _isWaitingForLoad;
-        internal bool _paramValueChange;
 
         /// <inheritdoc />
         public TextureWindow(Editor editor, AssetItem item)
@@ -96,32 +128,10 @@ namespace FlaxEditor.Windows.Assets
             };
 
             // Texture properties editor
-            var propertiesEditor = new CustomEditorPresenter(null);
-            propertiesEditor.Panel.Parent = splitPanel.Panel2;
+            _propertiesEditor = new CustomEditorPresenter(null);
+            _propertiesEditor.Panel.Parent = splitPanel.Panel2;
             _properties = new PropertiesProxy();
-            propertiesEditor.Select(_properties);
-            propertiesEditor.Modified += OnPropertyEdited;
-        }
-
-        private void OnPropertyEdited()
-        {
-            _paramValueChange = false;
-            MarkAsEdited();
-        }
-
-        /// <inheritdoc />
-        public override void Save()
-        {
-            // Check if don't need to push any new changes to the orginal asset
-            if (!IsEdited)
-                return;
-
-            throw new NotImplementedException("save texture");
-
-            // Update
-            _properties.PeekState();
-            ClearEditedFlag();
-            _item.RefreshThumbnail();
+            _propertiesEditor.Select(_properties);
         }
 
         /// <inheritdoc />
@@ -199,6 +209,7 @@ namespace FlaxEditor.Windows.Assets
 
                 // Init properties and parameters proxy
                 _properties.OnLoad(this);
+                _propertiesEditor.BuildLayout();
 
                 // Setup
                 ClearEditedFlag();

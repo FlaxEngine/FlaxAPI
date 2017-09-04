@@ -407,6 +407,17 @@ namespace FlaxEditor.Content.Import
         public override object Settings => _settings;
 
         /// <inheritdoc />
+        public override bool TryOverrideSettings(object settings)
+        {
+            if (settings is TextureImportSettings o)
+            {
+                _settings = o;
+                return true;
+            }
+            return false;
+        }
+
+        /// <inheritdoc />
         public override bool Import()
         {
             return Editor.Import(Url, ResultUrl, _settings);

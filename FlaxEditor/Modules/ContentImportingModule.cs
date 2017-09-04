@@ -22,12 +22,14 @@ namespace FlaxEditor.Modules
             public string InputPath;
             public string OutputPath;
             public bool IsBinaryAsset;
+            public object Settings;
 
-            public Request(string input, string output, bool isBinaryAsset)
+            public Request(string input, string output, bool isBinaryAsset, object settings)
             {
                 InputPath = input;
                 OutputPath = output;
                 IsBinaryAsset = isBinaryAsset;
+                Settings = settings;
             }
         }
 
@@ -116,7 +118,8 @@ namespace FlaxEditor.Modules
         /// Reimports the specified <see cref="BinaryAssetItem"/> item.
         /// </summary>
         /// <param name="item">The item.</param>
-        public void Reimport(BinaryAssetItem item)
+        /// <param name="settings">The import settings to override.</param>
+        public void Reimport(BinaryAssetItem item, object settings = null)
         {
             string importPath;
             if (item != null && !item.GetImportPath(out importPath))
@@ -137,7 +140,7 @@ namespace FlaxEditor.Modules
                         return;
                 }
 
-                Import(importPath, item.Path, true);
+                Import(importPath, item.Path, true, settings);
             }
         }
 
@@ -229,11 +232,12 @@ namespace FlaxEditor.Modules
         /// <param name="inputPath">The input path.</param>
         /// <param name="outputPath">The output path.</param>
         /// <param name="isBinaryAsset">True if output file is a binary asset.</param>
-        private void Import(string inputPath, string outputPath, bool isBinaryAsset)
+        /// <param name="settings">Import settings to override.</param>
+        private void Import(string inputPath, string outputPath, bool isBinaryAsset, object settings = null)
         {
             lock (_requests)
             {
-                _requests.Add(new Request(inputPath, outputPath, isBinaryAsset));
+                _requests.Add(new Request(inputPath, outputPath, isBinaryAsset, settings));
             }
         }
 
@@ -369,8 +373,16 @@ namespace FlaxEditor.Modules
                         var entry = FileEntry.CreateEntry(request.InputPath, request.OutputPath, request.IsBinaryAsset);
                         if (entry != null)
                         {
+                            if (request.Settings != null && entry.TryOverrideSettings(request.Settings))
+                            {
+                                // Use overriden settings
+                            }
+                            else
+                            {
+                                needSettingsDialog |= entry.HasSettings;
+                            }
+                            
                             entries.Add(entry);
-                            needSettingsDialog |= entry.HasSettings;
                         }
                     }
                     _requests.Clear();
