@@ -272,6 +272,11 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
+        public virtual void OnItemReimported(ContentItem item)
+        {
+        }
+
+        /// <inheritdoc />
         public void OnItemDispose(ContentItem item)
         {
             if (item == _item)

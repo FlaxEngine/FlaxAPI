@@ -188,6 +188,13 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
+        public override void OnItemReimported(ContentItem item)
+        {
+            // Invalidate data
+            _isWaitingForLoad = true;
+        }
+
+        /// <inheritdoc />
         protected override void OnClose()
         {
             // Discard unsaved changes
