@@ -33,25 +33,28 @@ namespace FlaxEditor.Windows.Assets
             {
             }
 
-            /*protected override void DrawTexture(ref Rectangle rect)
+            protected override void DrawTexture(ref Rectangle rect)
             {
                 base.DrawTexture(ref rect);
 
                 if (Asset && Asset.IsLoaded)
                 {
+                    Rectangle area;
+                    var count = Asset.SpritesCount;
+                    var style = Style.Current;
+
                     // Draw all splites
-                    var sprites = Asset.GetSprite()
-                    for (int i = 0; i < atlas->Sprites.Count(); i++)
+                    for (int i = 0; i < count; i++)
                     {
-                        Sprite sprite = atlas->Sprites[i];
+                        Asset.GetSpriteArea(i, out area);
 
-                        Vector2 position = sprite.Area.Location * textureRect.Size + textureRect.Location;
-                        Vector2 size = sprite.Area.Size * textureRect.Size;
+                        Vector2 position = area.Location * rect.Size + rect.Location;
+                        Vector2 size = area.Size * rect.Size;
 
-                        Render2D.DrawRectangle(new Rectangle(position, size), style->BackgroundSelected, false);
+                        Render2D.DrawRectangle(new Rectangle(position, size), style.BackgroundSelected);
                     }
                 }
-            }*/
+            }
         }
 
         /// <summary>

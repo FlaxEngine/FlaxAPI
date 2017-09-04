@@ -136,6 +136,16 @@ namespace FlaxEngine
             return new Sprite(this, index);
         }
 
+        /// <summary>
+        /// Gets the sprite area (normalized).
+        /// </summary>
+        /// <param name="index">The sprite index.</param>
+        /// <param name="spriteArea">The result sprite area.</param>
+        public void GetSpriteArea(int index, out Rectangle spriteArea)
+        {
+            Internal_GetSpriteArea(unmanagedPtr, index, out spriteArea);
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
