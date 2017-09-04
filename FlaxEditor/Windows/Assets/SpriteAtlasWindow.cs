@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using FlaxEditor.Content;
 using FlaxEditor.Content.Import;
 using FlaxEditor.CustomEditors;
@@ -19,6 +20,40 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public sealed class SpriteAtlasWindow : AssetEditorWindowBase<SpriteAtlas>
     {
+        // TODO: allow to select and move sprites
+
+        /// <summary>
+        /// Atlas view control. Shows sprites.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.Viewport.Previews.SpriteAtlasPreview" />
+        private sealed class AtlasView : SpriteAtlasPreview
+        {
+            public AtlasView(bool useWidgets)
+                : base(useWidgets)
+            {
+            }
+
+            /*protected override void DrawTexture(ref Rectangle rect)
+            {
+                base.DrawTexture(ref rect);
+
+                if (Asset && Asset.IsLoaded)
+                {
+                    // Draw all splites
+                    var sprites = Asset.GetSprite()
+                    for (int i = 0; i < atlas->Sprites.Count(); i++)
+                    {
+                        Sprite sprite = atlas->Sprites[i];
+
+                        Vector2 position = sprite.Area.Location * textureRect.Size + textureRect.Location;
+                        Vector2 size = sprite.Area.Size * textureRect.Size;
+
+                        Render2D.DrawRectangle(new Rectangle(position, size), style->BackgroundSelected, false);
+                    }
+                }
+            }*/
+        }
+
         /// <summary>
         /// The texture properties proxy object.
         /// </summary>
@@ -27,6 +62,42 @@ namespace FlaxEditor.Windows.Assets
         {
             private SpriteAtlasWindow _window;
 
+            public class SpriteEntry
+            {
+                [HideInEditor]
+                public Sprite Sprite;
+
+                public SpriteEntry(SpriteAtlas atlas, int index)
+                {
+                    Sprite = atlas.GetSprite(index);
+                }
+
+                [EditorOrder(0)]
+                public string Name
+                {
+                    get => Sprite.Name;
+                    set => Sprite.Name = value;
+                }
+
+                [EditorOrder(1), Limit(-4096, 4096)]
+                public Vector2 Location
+                {
+                    get => Sprite.Location;
+                    set => Sprite.Location = value;
+                }
+                
+                [EditorOrder(3), Limit(0, 4096)]
+                public Vector2 Size
+                {
+                    get => Sprite.Size;
+                    set => Sprite.Size = value;
+                }
+            }
+
+            [EditorOrder(0), EditorDisplay("Sprites")]
+            [CustomEditor(typeof(SpritesColelctionEditor))]
+            public SpriteEntry[] Sprites;
+            
             [EditorOrder(1000), EditorDisplay("Import Settings", "__inline__")]
             public TextureImportSettings ImportSettings { get; set; } = new TextureImportSettings();
 
@@ -44,6 +115,26 @@ namespace FlaxEditor.Windows.Assets
                 }
             }
 
+            public sealed class SpritesColelctionEditor : CustomEditor
+            {
+                public override DisplayStyle Style => DisplayStyle.InlineIntoParent;
+
+                public override void Initialize(LayoutElementsContainer layout)
+                {
+                    var sprites = (SpriteEntry[])Values[0];
+
+                    if (sprites != null)
+                    {
+                        var elementType = typeof(SpriteEntry);
+                        for (int i = 0; i < sprites.Length; i++)
+                        {
+                            var group = layout.Group(sprites[i].Name);
+                            group.Object(new ListValueContainer(elementType, i, Values));
+                        }
+                    }
+                }
+            }
+
             /// <summary>
             /// Gathers parameters from the specified texture.
             /// </summary>
@@ -52,6 +143,13 @@ namespace FlaxEditor.Windows.Assets
             {
                 // Link
                 _window = win;
+
+                var atlas = win.Asset;
+                Sprites = new SpriteEntry[atlas.SpritesCount];
+                for (int i = 0; i < Sprites.Length; i++)
+                {
+                    Sprites[i] = new SpriteEntry(atlas, i);
+                }
 
                 // Try to restore target asset texture import options (usefull for fast reimport)
                 TextureImportSettings.InternalOptions options;
@@ -94,10 +192,11 @@ namespace FlaxEditor.Windows.Assets
             {
                 // Unlink
                 _window = null;
+                Sprites = null;
             }
         }
 
-        private readonly SpriteAtlasPreview _preview;
+        private readonly AtlasView _preview;
         private readonly CustomEditorPresenter _propertiesEditor;
 
         private readonly PropertiesProxy _properties;
@@ -111,10 +210,12 @@ namespace FlaxEditor.Windows.Assets
             _toolstrip.AddButton(1, Editor.UI.GetIcon("Save32")).LinkTooltip("Save");
             _toolstrip.AddButton(2, Editor.UI.GetIcon("Import32")).LinkTooltip("Reimport");
             _toolstrip.AddSeparator();
+            _toolstrip.AddButton(3, Editor.UI.GetIcon("AddDoc32")).LinkTooltip("Add a new sprite");
+            _toolstrip.AddSeparator();
             _toolstrip.AddButton(5, Editor.UI.GetIcon("PageScale32")).LinkTooltip("Center view");
-
+            
             // Split Panel
-            var splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
+            var splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
             {
                 DockStyle = DockStyle.Fill,
                 SplitterValue = 0.7f,
@@ -122,7 +223,7 @@ namespace FlaxEditor.Windows.Assets
             };
 
             // Sprite atlas preview
-            _preview = new SpriteAtlasPreview(true)
+            _preview = new AtlasView(true)
             {
                 Parent = splitPanel.Panel1
             };
@@ -148,6 +249,28 @@ namespace FlaxEditor.Windows.Assets
                 case 2:
                     Editor.ContentImporting.Reimport((BinaryAssetItem)Item);
                     break;
+                case 3:
+                {
+                    throw new NotImplementedException("Add sprite");
+                    /*// Add sprite
+                    Sprite sprite;
+                    sprite.Area = Rect(Vector2::Zero, Vector2::One);
+                    sprite.Name = TEXT("New Sprite");
+                    auto spriteHandle = _asset->AddSprite(sprite);
+
+                    // Add UI editor
+                    auto panel = createEditor(spriteHandle.Index);
+                    panel->UnlockChildrenRecursive();
+                    _split->Panel1->PerformLayout();
+
+                    // Select it
+                    SelectSprite(spriteHandle.Index);
+
+                    MarkAsEdited();*/
+
+                    break;
+                }
+
                 case 5:
                     _preview.CenterView();
                     break;

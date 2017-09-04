@@ -114,7 +114,7 @@ namespace FlaxEditor.Windows.Assets
             _toolstrip.AddButton(5, Editor.UI.GetIcon("PageScale32")).LinkTooltip("Center view");
 
             // Split Panel
-            var splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
+            var splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
             {
                 DockStyle = DockStyle.Fill,
                 SplitterValue = 0.7f,
