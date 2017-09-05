@@ -127,6 +127,21 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets a list of all scripts attached to this object. It's read-only array. Use AddScript/RemoveScript to modify collection.
+        /// </summary>
+        [UnmanagedCall]
+        [HideInEditor, EditorDisplay("Scripts", "__inline__"), EditorOrder(-5), MemberCollection(ReadOnly = true, NotNullItems = true, CanReorderItems = false)]
+        public Script[] Scripts
+        {
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+            get { return Internal_GetScripts(unmanagedPtr); }
+            internal set { }
+#endif
+        }
+
+        /// <summary>
         /// Returns true if actor has parent
         /// </summary>
         [UnmanagedCall]
@@ -268,6 +283,9 @@ namespace FlaxEngine
         {
             return $"{Name} ({GetType().Name})";
         }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Script[] Internal_GetScripts(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_IntersectsItself(IntPtr obj, ref Ray ray, out float distance);

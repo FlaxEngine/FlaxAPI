@@ -444,20 +444,6 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets a list of all scripts attached to this object. It's read-only array. Use AddScript/RemoveScript to modify collection.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorDisplay("Scripts", "__inline__"), EditorOrder(-5), MemberCollection(ReadOnly = true, NotNullItems = true, CanReorderItems = false)]
-		public Script[] Scripts
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { return Internal_GetScripts(unmanagedPtr); }
-#endif
-		}
-
-		/// <summary>
 		/// Adds a script to the actor.
 		/// </summary>
 		/// <param name="script">The script to add</param>
@@ -681,8 +667,6 @@ namespace FlaxEngine
 		internal static extern Script Internal_GetScript(IntPtr obj, Type type);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Script[] Internal_GetScriptsPerType(IntPtr obj, Type type);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Script[] Internal_GetScripts(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_AddScript(IntPtr obj, IntPtr script);
 		[MethodImpl(MethodImplOptions.InternalCall)]
