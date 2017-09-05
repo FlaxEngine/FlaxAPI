@@ -46,65 +46,46 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// Gets the custom editor style.
         /// </summary>
-        /// <value>
-        /// The style.
-        /// </value>
         public virtual DisplayStyle Style => DisplayStyle.Group;
         
         /// <summary>
         /// Gets a value indicating whether single object is selected.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if single object is selected; otherwise, <c>false</c>.
-        /// </value>
         public bool IsSingleObject => _values.IsSingleObject;
 
         /// <summary>
         /// Gets a value indicating whether selected objects are diffrent values.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if selected objects are diffrent values; otherwise, <c>false</c>.
-        /// </value>
         public bool HasDiffrentValues => _values.HasDiffrentValues;
 
         /// <summary>
         /// Gets a value indicating whether selected objects are diffrent types.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if selected objects are diffrent types; otherwise, <c>false</c>.
-        /// </value>
         public bool HasDiffrentTypes => _values.HasDiffrentTypes;
 
         /// <summary>
         /// Gets the values types array (without duplicates).
         /// </summary>
-        /// <value>
-        /// The values types.
-        /// </value>
         public Type[] ValuesTypes => _values.ValuesTypes;
 
         /// <summary>
         /// Gets the values.
         /// </summary>
-        /// <value>
-        /// The values.
-        /// </value>
         public ValueContainer Values => _values;
+
+        /// <summary>
+        /// Gets the parent editor.
+        /// </summary>
+        public CustomEditor ParentEditor => _parent;
 
         /// <summary>
         /// Gets the presenter control. It's the top most part of the Custom Editors layout.
         /// </summary>
-        /// <value>
-        /// The presenter.
-        /// </value>
         public CustomEditorPresenter Presenter => _presenter;
 
         /// <summary>
         /// Gets a value indicating whether setting value is blocked (during refresh).
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if setting value is blocked; otherwise, <c>false</c>.
-        /// </value>
         protected bool IsSetBlocked => _isSetBlocked;
 
         internal virtual void Initialize(CustomEditorPresenter presenter, LayoutElementsContainer layout, ValueContainer values)

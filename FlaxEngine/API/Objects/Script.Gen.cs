@@ -23,6 +23,7 @@ namespace FlaxEngine
 		/// Enable/disable script updates.
 		/// </summary>
 		[UnmanagedCall]
+		[HideInEditor]
 		public bool Enabled
 		{
 #if UNIT_TEST_COMPILANT

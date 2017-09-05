@@ -51,25 +51,16 @@ namespace FlaxEditor.CustomEditors.Editors
             /// <summary>
             /// Gets the display name.
             /// </summary>
-            /// <value>
-            /// The display name.
-            /// </value>
             public string DisplayName { get; }
 
             /// <summary>
             /// Gets a value indicating whether use dedicated group.
             /// </summary>
-            /// <value>
-            ///   <c>true</c> if use group; otherwise, <c>false</c>.
-            /// </value>
             public bool UseGroup => Display?.Group != null;
 
             /// <summary>
             /// Gets the overrided custom editor for item editing.
             /// </summary>
-            /// <value>
-            /// The overrided editor.
-            /// </value>
             public CustomEditor OverrideEditor => CustomEditor != null ? (CustomEditor)Activator.CreateInstance(CustomEditor.Type) : null;
 
             /// <summary>

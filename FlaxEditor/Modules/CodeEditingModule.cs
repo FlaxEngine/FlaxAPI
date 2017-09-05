@@ -1,8 +1,8 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
+using FlaxEditor.Scripting;
 
 namespace FlaxEditor.Modules
 {
@@ -23,7 +23,7 @@ namespace FlaxEditor.Modules
         /// <param name="path">The source file path.</param>
         public void OpenFile(string path)
         {
-            throw new NotImplementedException();
+            ScriptsBuilder.OpenFile(path);
         }
     }
 }
