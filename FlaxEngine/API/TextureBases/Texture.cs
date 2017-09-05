@@ -4,16 +4,16 @@
 
 namespace FlaxEngine
 {
-	public partial class IESProfile
-	{
+    public partial class Texture
+    {
         /// <summary>
-        /// The IES Profile asset type unique ID.
+        /// The texture asset type unique ID.
         /// </summary>
-        public const int TypeID = 12;
+        public const int TypeID = 1;
 
         /// <summary>
         /// The asset type content domain.
         /// </summary>
-        public const ContentDomain Domain = ContentDomain.IESProfile;
+        public const ContentDomain Domain = ContentDomain.Texture;
     }
 }

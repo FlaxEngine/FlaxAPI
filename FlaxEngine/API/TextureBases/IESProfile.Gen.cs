@@ -17,7 +17,7 @@ namespace FlaxEngine
 	/// <summary>
 	/// Contains IES profile texture used by the lights to simulate real life bulb light emission.
 	/// </summary>
-	public partial class IESProfile : BinaryAsset
+	public partial class IESProfile : TextureBase
 	{
 		/// <summary>
 		/// Creates new <see cref="IESProfile"/> object.
@@ -27,37 +27,22 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets the total mip levels count of the texture. Actual resident mipmaps count may be different due to dynamic content streaming.
+		/// Gets the light brightness in Lumens, imported from the IES profile source file.
 		/// </summary>
 		[UnmanagedCall]
-		public int MipLevels
+		public float Brightness
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetMipLevels(unmanagedPtr); }
-#endif
-		}
-
-		/// <summary>
-		/// Gets the current mip levels count of the texture that are on GPU ready to use.
-		/// </summary>
-		[UnmanagedCall]
-		public int ResidentMipLevels
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { return Internal_GetResidentMipLevels(unmanagedPtr); }
+			get { return Internal_GetBrightness(unmanagedPtr); }
 #endif
 		}
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern int Internal_GetMipLevels(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern int Internal_GetResidentMipLevels(IntPtr obj);
+		internal static extern float Internal_GetBrightness(IntPtr obj);
 #endif
 #endregion
 	}

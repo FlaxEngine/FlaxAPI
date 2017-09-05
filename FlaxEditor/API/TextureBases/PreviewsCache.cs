@@ -24,8 +24,14 @@ namespace FlaxEditor
         /// </summary>
         public const int AssetIconsAtlasMargin = 4;
 
-        // Util constants
+        /// <summary>
+        /// The amount of asset icons per atlas row.
+        /// </summary>
         public const int AssetIconsPerRow = (int)((float)AssetIconsAtlasSize / (AssetIconSize + AssetIconsAtlasMargin));
+
+        /// <summary>
+        /// The amount of asset icons per atlas.
+        /// </summary>
         public const int AssetIconsPerAtlas = AssetIconsPerRow * AssetIconsPerRow;
 
         /// <summary>
