@@ -31,7 +31,7 @@ namespace FlaxEngine
 		/// Gets the scene object which contains this actor.
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public Scene Scene
 		{
 #if UNIT_TEST_COMPILANT
@@ -138,7 +138,7 @@ namespace FlaxEngine
 		/// Gets actor activation state in hierarchy
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public bool IsActiveInHierarchy
 		{
 #if UNIT_TEST_COMPILANT
@@ -152,7 +152,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's world transform position
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public Vector3 Position
 		{
 #if UNIT_TEST_COMPILANT
@@ -167,7 +167,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's world transform orientation
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public Quaternion Orientation
 		{
 #if UNIT_TEST_COMPILANT
@@ -182,7 +182,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's world transform scale
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public Vector3 Scale
 		{
 #if UNIT_TEST_COMPILANT
@@ -197,7 +197,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's world a three dimensional mathematical transformation
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public Transform Transform
 		{
 #if UNIT_TEST_COMPILANT
@@ -272,7 +272,7 @@ namespace FlaxEngine
 		/// Gets amount of children
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public int ChildCount
 		{
 #if UNIT_TEST_COMPILANT
@@ -447,6 +447,7 @@ namespace FlaxEngine
 		/// Gets a list of all scripts attached to this object. It's read-only array. Use AddScript/RemoveScript to modify collection.
 		/// </summary>
 		[UnmanagedCall]
+		[EditorDisplay("Scripts", "__inline__"), EditorOrder(-5), MemberCollection(ReadOnly = true, NotNullItems = true, CanReorderItems = false)]
 		public Script[] Scripts
 		{
 #if UNIT_TEST_COMPILANT
@@ -494,7 +495,7 @@ namespace FlaxEngine
 		/// Gets bounding box that contains actor object (single actor, no children included)
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public BoundingBox Box
 		{
 #if UNIT_TEST_COMPILANT
@@ -508,7 +509,7 @@ namespace FlaxEngine
 		/// Gets bounding box that contains actor object and all it's children (children included in recursive way)
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public BoundingBox BoxWithChildren
 		{
 #if UNIT_TEST_COMPILANT
@@ -522,7 +523,7 @@ namespace FlaxEngine
 		/// Returns true if actor has loaded content
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public bool HasContentLoaded
 		{
 #if UNIT_TEST_COMPILANT
