@@ -31,7 +31,7 @@ namespace FlaxEditor.CustomEditors.Editors
             _canReorderItems = true;
             _notNullItems = false;
 
-            // No support for different colelctions for now
+            // No support for different collections for now
             if (HasDiffrentValues || HasDiffrentTypes)
                 return;
 

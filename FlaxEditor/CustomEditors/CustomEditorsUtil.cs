@@ -46,7 +46,7 @@ namespace FlaxEditor.CustomEditors
             return sb.ToString();
         }
 
-        internal static CustomEditor CreateEditor(ValueContainer values, CustomEditor overrideEditor)
+        internal static CustomEditor CreateEditor(ValueContainer values, CustomEditor overrideEditor, bool canUseRefPicker = true)
         {
             // Check if use provided editor
             if (overrideEditor != null)
@@ -54,10 +54,10 @@ namespace FlaxEditor.CustomEditors
 
             // Special case if property is a pure object type and all values are the same type
             if (values.Type == typeof(object) && values.Count > 0 && values[0] != null && !values.HasDiffrentTypes)
-                return CreateEditor(values[0].GetType());
+                return CreateEditor(values[0].GetType(), canUseRefPicker);
 
             // Use editor for the property type
-            return CreateEditor(values.Type);
+            return CreateEditor(values.Type, canUseRefPicker);
         }
 
         internal static CustomEditor CreateEditor(Type targetType, bool canUseRefPicker = true)
@@ -74,8 +74,15 @@ namespace FlaxEditor.CustomEditors
                 {
                     var type = Internal_GetCustomEditor(checkType);
                     if (type != null)
+                    {
                         return (CustomEditor)Activator.CreateInstance(type);
+                    }
                     checkType = checkType.BaseType;
+
+                    // Skip if cannot use ref editors
+                    if (!canUseRefPicker && checkType == typeof(FlaxEngine.Object))
+                        break;
+
                 } while (checkType != null);
             }
 
