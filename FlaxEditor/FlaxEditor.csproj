@@ -266,6 +266,7 @@
     <Compile Include="Viewport\EditorViewportFPSCam.cs" />
     <Compile Include="Viewport\MainEditorGizmoViewport.cs" />
     <Compile Include="Viewport\Previews\CubeTexturePreview.cs" />
+    <Compile Include="Viewport\Previews\IESProfilePreview.cs" />
     <Compile Include="Viewport\Previews\MaterialPreview.cs" />
     <Compile Include="Viewport\Previews\ModelPreview.cs" />
     <Compile Include="Viewport\Previews\TexturePreview.cs" />

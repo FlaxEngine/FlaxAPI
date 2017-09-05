@@ -2,18 +2,24 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
+using FlaxEditor.Content.Thumbnails;
+using FlaxEditor.Viewport.Previews;
 using FlaxEditor.Windows;
+using FlaxEditor.Windows.Assets;
 using FlaxEngine;
+using FlaxEngine.GUI;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Content
 {
     /// <summary>
-    /// A <see cref="Texture"/> asset proxy object.
+    /// A <see cref="IESProfile"/> asset proxy object.
     /// </summary>
     /// <seealso cref="FlaxEditor.Content.BinaryAssetProxy" />
     public class IESProfileProxy : BinaryAssetProxy
     {
+        private IESProfilePreview _preview;
+
         /// <inheritdoc />
         public override string Name => "IES Profile";
 
@@ -32,7 +38,7 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override EditorWindow Open(Editor editor, ContentItem item)
         {
-            throw new NotImplementedException();// TODO: ies profile window
+            return new IESProfileWindow(editor, (AssetItem)item);
         }
 
         /// <inheritdoc />
@@ -40,5 +46,51 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override ContentDomain Domain => IESProfile.Domain;
+
+        /// <inheritdoc />
+        public override void OnThumbnailDrawPrepare(ThumbnailRequest request)
+        {
+            if (_preview == null)
+            {
+                _preview = new IESProfilePreview();
+                _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
+            }
+
+            // TODO: disable streaming for asset during thumbnail rendering (and restore it after)
+        }
+
+        /// <inheritdoc />
+        public override bool CanDrawThumbnail(ThumbnailRequest request)
+        {
+            // Check if asset is streamed enough
+            var asset = (IESProfile)request.Asset;
+            return asset.ResidentMipLevels >= (int)(asset.MipLevels * ThumbnailsModule.MinimumRequriedResourcesQuality);
+        }
+
+        /// <inheritdoc />
+        public override void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
+        {
+            _preview.Asset = (IESProfile)request.Asset;
+            _preview.Parent = guiRoot;
+        }
+
+        /// <inheritdoc />
+        public override void OnThumbnailDrawEnd(ThumbnailRequest request, ContainerControl guiRoot)
+        {
+            _preview.Asset = null;
+            _preview.Parent = null;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            if (_preview != null)
+            {
+                _preview.Dispose();
+                _preview = null;
+            }
+
+            base.Dispose();
+        }
     }
 }

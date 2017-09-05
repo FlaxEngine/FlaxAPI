@@ -83,6 +83,8 @@
     <Compile Include="API\BinaryAssets\CubeTexture.Gen.cs" />
     <Compile Include="API\BinaryAssets\FontAsset.cs" />
     <Compile Include="API\BinaryAssets\FontAsset.Gen.cs" />
+    <Compile Include="API\BinaryAssets\IESProfile.cs" />
+    <Compile Include="API\BinaryAssets\IESProfile.Gen.cs" />
     <Compile Include="API\BinaryAssets\Model.cs" />
     <Compile Include="API\BinaryAssets\Model.Gen.cs" />
     <Compile Include="API\BinaryAssets\SpriteAtlas.cs" />
@@ -157,7 +159,6 @@
     <Compile Include="API\Static\Time.Gen.cs">
       <DependentUpon>Time.cs</DependentUpon>
     </Compile>
-    <Compile Include="AssetTypes\IESProfile.cs" />
     <Compile Include="Attributes\Editor\DefaultEditorAttribute.cs" />
     <Compile Include="Attributes\Editor\EditorDisplayAttribute.cs" />
     <Compile Include="Attributes\Editor\LimitAttribute.cs" />

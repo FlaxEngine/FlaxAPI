@@ -204,13 +204,13 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 32,
-                Title = "Extract Largest Component",
+                Title = "Largest Component Mask",
                 Description = "Gets the largest component mask from the input vector",
-                Size = new Vector2(180, 30),
+                Size = new Vector2(220, 30),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "Value", true, ConnectionType.Vector3, 0),
-                    NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Vector3, 1)
+                    NodeElementArchetype.Factory.Output(0, "Mask", ConnectionType.Vector3, 1)
                 }
             },
             Op1(33, "asin", "Returns arcus sine of A"),

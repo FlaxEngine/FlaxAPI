@@ -1,15 +1,11 @@
-// Flax Engine scripting API
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
 
 namespace FlaxEngine
 {
-    public sealed class IESProfile : BinaryAsset
-    {
+	public partial class IESProfile
+	{
         /// <summary>
         /// The IES Profile asset type unique ID.
         /// </summary>

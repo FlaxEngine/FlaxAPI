@@ -3,32 +3,35 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using FlaxEditor.Content;
+using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.Windows.Assets
 {
-    /*
     /// <summary>
     /// Editor window to view/modify <see cref="IESProfile"/> asset.
     /// </summary>
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public sealed class IESProfileWindow : AssetEditorWindowBase<IESProfile>
     {
-        private readonly IESProfileView _view;
+        private readonly IESProfilePreview _preview;
 
         /// <inheritdoc />
         public IESProfileWindow(Editor editor, AssetItem item)
             : base(editor, item)
         {
             // Toolstrip
-            _toolstrip.AddButton(1, editor.UI.GetIcon("Import32")).LinkTooltip("Reimport");// Reimport
+            _toolstrip.AddButton(1, editor.UI.GetIcon("Import32")).LinkTooltip("Reimport");
             _toolstrip.AddSeparator();
-            _toolstrip.AddButton(2, editor.UI.GetIcon("PageScale32")).LinkTooltip("Center view");// Center view
+            _toolstrip.AddButton(2, editor.UI.GetIcon("PageScale32")).LinkTooltip("Center view");
 
-            // Texture viewer
-            _view = new IESProfileView();
-            _view.DockStyle = DockStyle.Fill;
-            _view.Parent = this;
+            // IES Profile preview
+            _preview = new IESProfilePreview
+            {
+                DockStyle = DockStyle.Fill,
+                Parent = this
+            };
         }
 
         /// <inheritdoc />
@@ -39,16 +42,12 @@ namespace FlaxEditor.Windows.Assets
         {
             switch (id)
             {
-                // Reimport
                 case 1:
-                    Editor.ContentEditing.Reimport(_item as BinaryAssetItem);
+                    Editor.ContentImporting.Reimport((BinaryAssetItem)Item);
                     break;
-
-                // Center view
                 case 2:
-                    _view.CenterView();
+                    _preview.CenterView();
                     break;
-
                 default:
                     base.OnToolstripButtonClicked(id);
                     break;
@@ -58,7 +57,7 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         protected override void UnlinkItem()
         {
-            _view.Texture = null;
+            _preview.Asset = null;
 
             base.UnlinkItem();
         }
@@ -66,9 +65,9 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         protected override void OnAssetLoaded()
         {
-            _view.Texture = _asset;
-            
+            _preview.Asset = _asset;
+
             base.OnAssetLoaded();
         }
-    }*/
+    }
 }
