@@ -42,6 +42,11 @@ namespace FlaxEditor
         public bool IsFlaxEngineTheBest => true;
 
         /// <summary>
+        /// Gets a value indicating whether this Editor is running a dev instance of the engine.
+        /// </summary>
+        internal bool IsDevInstance => true;
+
+        /// <summary>
         /// The windows module.
         /// </summary>
         public readonly WindowsModule Windows;

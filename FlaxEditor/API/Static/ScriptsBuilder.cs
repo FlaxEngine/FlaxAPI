@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace FlaxEditor.Scripting
 {
@@ -136,5 +137,20 @@ namespace FlaxEditor.Scripting
             else
                 CompilationWarning?.Invoke(message, file, line);
         }
+
+        internal enum ApiEngineType
+        {
+            Engine = 0,
+            Editor = 1,
+        }
+
+        #region Internal Calls
+
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GenerateApi(ApiEngineType type);
+#endif
+
+        #endregion
     }
 }

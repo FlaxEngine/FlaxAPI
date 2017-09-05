@@ -47,12 +47,12 @@ namespace FlaxEditor.Modules
         /// The status strip control.
         /// </summary>
         public StatusBar StatusBar;
-        
+
         /// <summary>
         /// The visject surface background texture. Cached to be used globally.
         /// </summary>
         public Texture VisjectSurfaceBackground;
-        
+
         // Cached internally to improve performance
 
         internal Sprite FolderClosed12;
@@ -213,7 +213,7 @@ namespace FlaxEditor.Modules
             InitStatusBar(mainWindow);
             InitDockPanel(mainWindow);
         }
-        
+
         /// <inheritdoc />
         public override void OnEndInit()
         {
@@ -333,11 +333,12 @@ namespace FlaxEditor.Modules
             mm_File.ContextMenu.AddButton(8, "Regenerate solution file");
             mm_File.ContextMenu.AddButton(9, "Recompile scripts");
             mm_File.ContextMenu.AddSeparator();
-#if GENERATE_API// TODO: add API generating UI for C# editor
-	        mm_File.ContextMenu.AddButton(98, "Regenerate Engine API");
-	        mm_File.ContextMenu.AddButton(99, "Regenerate Editor API");
-	        mm_File.ContextMenu.AddSeparator();
-#endif
+            if (Editor.IsDevInstance)
+            {
+                mm_File.ContextMenu.AddButton(98, "Regenerate Engine API");
+                mm_File.ContextMenu.AddButton(99, "Regenerate Editor API");
+                mm_File.ContextMenu.AddSeparator();
+            }
             mm_File.ContextMenu.AddButton(6, "Exit", "Alt+F4");
 
             // Edit
@@ -424,7 +425,7 @@ namespace FlaxEditor.Modules
             ToolStrip = new ToolStrip();
             ToolStrip.ButtonClicked += onTootlstripButtonClicked;
             ToolStrip.Parent = mainWindow;
-            
+
             //ToolStrip.AddButton(0, GetIcon("Logo32")).LinkTooltip("Flax Engine");// Welcome screen
             ToolStrip.AddButton(2, GetIcon("Save32")).LinkTooltip("Save all (Ctrl+S)");// Save all
             ToolStrip.AddSeparator();
@@ -477,7 +478,7 @@ namespace FlaxEditor.Modules
                 AnchorStyle = AnchorStyle.CenterRight,
                 Parent = progressPanel
             };
-            
+
             UpdateStatusBar();
         }
 
@@ -486,7 +487,7 @@ namespace FlaxEditor.Modules
             // Dock Panel
             MasterPanel.Parent = mainWindow;
         }
-        
+
         private void onTootlstripButtonClicked(int id)
         {
             switch (id)
@@ -604,6 +605,14 @@ namespace FlaxEditor.Modules
                 // Recompile scripts
                 case 9:
                     ScriptsBuilder.Compile();
+                    break;
+
+                // Regererate api
+                case 98:
+                    ScriptsBuilder.Internal_GenerateApi(ScriptsBuilder.ApiEngineType.Engine);
+                    break;
+                case 99:
+                    ScriptsBuilder.Internal_GenerateApi(ScriptsBuilder.ApiEngineType.Editor);
                     break;
             }
         }
@@ -752,7 +761,7 @@ namespace FlaxEditor.Modules
             {
                 // Scene statistics
                 case 1: break;
-                    
+
                 // Bake lightmaps
                 case 2:
                     Editor.BakeLightmapsOrCancel();
@@ -798,7 +807,7 @@ namespace FlaxEditor.Modules
             c.GetButton(2).Text = isBakingLightmaps ? "Cancel baking lightmaps" : "Bake lightmaps";
             c.GetButton(3).Enabled = canEdit;// Clear lightmaps data
             c.GetButton(5).Enabled = canEdit;// Bake all env probes
-            
+
             c.PerformLayout();
         }
 
@@ -807,17 +816,33 @@ namespace FlaxEditor.Modules
             switch (id)
             {
                 // Restore default layout
-                case 1: Editor.Windows.LoadDefaultLayout(); break;
-                
+                case 1:
+                    Editor.Windows.LoadDefaultLayout();
+                    break;
+
                 // Windows
-                case 10: Editor.Windows.ContentWin.FocusOrShow(); break;
-                case 11: Editor.Windows.SceneWin.FocusOrShow(); break;
-                case 12: Editor.Windows.ToolboxWin.FocusOrShow(); break;
-                case 13: Editor.Windows.PropertiesWin.FocusOrShow(); break;
+                case 10:
+                    Editor.Windows.ContentWin.FocusOrShow();
+                    break;
+                case 11:
+                    Editor.Windows.SceneWin.FocusOrShow();
+                    break;
+                case 12:
+                    Editor.Windows.ToolboxWin.FocusOrShow();
+                    break;
+                case 13:
+                    Editor.Windows.PropertiesWin.FocusOrShow();
+                    break;
                 //case 14: Editor.Windows.QualityWin.FocusOrShow(); break;
-                case 15: Editor.Windows.GameWin.FocusOrShow(); break;
-                case 16: Editor.Windows.EditWin.FocusOrShow(); break;
-                case 17: Editor.Windows.DebugWin.FocusOrShow(); break;
+                case 15:
+                    Editor.Windows.GameWin.FocusOrShow();
+                    break;
+                case 16:
+                    Editor.Windows.EditWin.FocusOrShow();
+                    break;
+                case 17:
+                    Editor.Windows.DebugWin.FocusOrShow();
+                    break;
             }
         }
 
