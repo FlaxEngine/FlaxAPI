@@ -81,6 +81,15 @@ namespace FlaxEditor.CustomEditors.Editors
             /// Initializes a new instance of the <see cref="ItemInfo"/> class.
             /// </summary>
             /// <param name="info">The reflection information.</param>
+            public ItemInfo(MemberInfo info)
+                : this(info, info.GetCustomAttributes(true))
+            {
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ItemInfo"/> class.
+            /// </summary>
+            /// <param name="info">The reflection information.</param>
             /// <param name="attributes">The attributes.</param>
             public ItemInfo(MemberInfo info, object[] attributes)
             {
@@ -173,14 +182,14 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <param name="useProperties">True if use type properties.</param>
         /// <param name="useFields">True if use type fields.</param>
         /// <returns>The items.</returns>
-        protected virtual List<ItemInfo> GetItemsForType(Type type, bool useProperties, bool useFields)
+        protected List<ItemInfo> GetItemsForType(Type type, bool useProperties, bool useFields)
         {
-            // TODO: cache this per type?
-
             var items = new List<ItemInfo>();
 
             if (useProperties)
             {
+                // TODO: cache properties items array per type?
+
                 // Process properties
                 var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 items.Capacity = Math.Max(items.Capacity, items.Count + properties.Length);
@@ -205,6 +214,8 @@ namespace FlaxEditor.CustomEditors.Editors
 
             if (useFields)
             {
+                // TODO: cache fields items array per type?
+
                 // Process fields
                 var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
                 items.Capacity = Math.Max(items.Capacity, items.Count + fields.Length);

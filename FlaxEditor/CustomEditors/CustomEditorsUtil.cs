@@ -68,10 +68,17 @@ namespace FlaxEditor.CustomEditors
             }
 
             // Use custom editor
-            var type = Internal_GetCustomEditor(targetType);
-            if (type != null)
-                return (CustomEditor)Activator.CreateInstance(type);
-            
+            {
+                var checkType = targetType;
+                do
+                {
+                    var type = Internal_GetCustomEditor(checkType);
+                    if (type != null)
+                        return (CustomEditor)Activator.CreateInstance(type);
+                    checkType = checkType.BaseType;
+                } while (checkType != null);
+            }
+
             // Use attribute editor
             var attributes = targetType.GetCustomAttributes(false);
             var customEditorAttribute = (CustomEditorAttribute)attributes.FirstOrDefault(x => x is CustomEditorAttribute);
