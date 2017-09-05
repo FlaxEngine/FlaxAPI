@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI.Drag;
+using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -34,9 +35,9 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 private DragScripts _dragScripts;
 
                 /// <summary>
-                /// The linked actor.
+                /// The parent scripts editor.
                 /// </summary>
-                public Actor Actor;
+                public ScriptsEditor ScriptsEditor;
 
                 /// <summary>
                 /// Initializes a new instance of the <see cref="DragAreaControl"/> class.
@@ -56,19 +57,21 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
                     // Info
                     Render2D.DrawText(style.FontSmall, "Drag scripts here", new Rectangle(2, 2, size.X - 4, size.Y - 4), style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center, TextWrapping.WrapWords);
-                    
+
                     // Check if drag is over
                     if (IsDragOver && _dragScripts != null && _dragScripts.HasValidDrag)
                     {
                         var area = new Rectangle(Vector2.Zero, size);
                         Render2D.FillRectangle(area, Color.Orange * 0.5f, true);
-                        Render2D.DrawRectangle(area.MakeExpanded(-1), Color.Black);
+                        Render2D.DrawRectangle(area, Color.Black);
                     }
                 }
 
                 private bool ValidateScript(ScriptItem scriptItem)
                 {
-                    throw new NotImplementedException("validate script drag " + scriptItem.ScriptName);
+                    var scriptName = scriptItem.ScriptName;
+                    var scriptType = ScriptsBuilder.FindScript(scriptName);
+                    return scriptType != null;
                 }
 
                 /// <inheritdoc />
@@ -115,10 +118,23 @@ namespace FlaxEditor.CustomEditors.Dedicated
                         for (int i = 0; i < _dragScripts.Objects.Count; i++)
                         {
                             var item = _dragScripts.Objects[i];
+                            var scriptName = item.ScriptName;
+                            var scriptType = ScriptsBuilder.FindScript(scriptName);
 
-                            throw new NotImplementedException("add script " + item.ScriptName);
+                            var actors = ScriptsEditor.ParentEditor.Values;
+                            for (int j = 0; j < actors.Count; j++)
+                            {
+                                var actor = (Actor)actors[j];
+
+                                var script = (Script)FlaxEngine.Object.New(scriptType);
+                                actor.AddScript(script);
+                            }
                         }
+
+                        ScriptsEditor.RebuildLayout();
                     }
+
+                    _dragScripts.OnDragDrop();
 
                     return result;
                 }
@@ -129,7 +145,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             {
                 // Area for drag&drop scripts
                 var dragArea = layout.Custom<DragAreaControl>();
-                //dragArea.CustomControl.Actor =  TODO: get actor!!!
+                dragArea.CustomControl.ScriptsEditor = this;
 
                 base.Initialize(layout);
             }
