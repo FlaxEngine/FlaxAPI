@@ -10,8 +10,8 @@ namespace FlaxEditor.CustomEditors.Dedicated
     /// Custom editor for <see cref="EnvironmentProbe"/>.
     /// </summary>
     /// <seealso cref="ActorEditor" />
-    [CustomEditor(typeof(EnvironmentProbe))]
-    public sealed class EnvironmentProbeEditor : ActorEditor
+    [CustomEditor(typeof(EnvironmentProbe)), DefaultEditor]
+    public class EnvironmentProbeEditor : ActorEditor
     {
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)

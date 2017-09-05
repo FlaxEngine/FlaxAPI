@@ -2,6 +2,7 @@ using System;
 using FlaxEditor.History;
 using NUnit.Framework;
 using Assert = FlaxEngine.Assertions.Assert;
+using System.Collections.Generic;
 
 namespace FlaxEditor.Tests
 {
@@ -36,7 +37,14 @@ namespace FlaxEditor.Tests
             {
                 return Item.ToString();
             }
-            
+
+            public override int GetHashCode()
+            {
+                var hashCode = -606588576;
+                hashCode = hashCode * -1521134295 + Item.GetHashCode();
+                return hashCode;
+            }
+
             public string ActionString { get; set; }
         }
 

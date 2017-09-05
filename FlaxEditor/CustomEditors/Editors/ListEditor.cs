@@ -13,7 +13,7 @@ namespace FlaxEditor.CustomEditors.Editors
     /// Default implementation of the inspector used to edit lists.
     /// </summary>
     [CustomEditor(typeof(List<>)), DefaultEditor]
-    public sealed class ListEditor : CollectionEditor
+    public class ListEditor : CollectionEditor
     {
         /// <inheritdoc />
         public override int Count => (Values[0] as IList)?.Count ?? 0;
