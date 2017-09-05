@@ -96,6 +96,7 @@
     <Compile Include="CustomEditors\Values\ValueContainer.cs" />
     <Compile Include="GUI\AssetPicker.cs" />
     <Compile Include="GUI\Drag\DragActors.cs" />
+    <Compile Include="GUI\Drag\DragScripts.cs" />
     <Compile Include="GUI\RenamePopup.cs" />
     <Compile Include="Content\Proxy\BinaryAssetProxy.cs" />
     <Compile Include="Content\Proxy\ContentProxy.cs" />
