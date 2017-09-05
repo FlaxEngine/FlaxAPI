@@ -355,13 +355,10 @@ namespace FlaxEditor.Windows.Assets
 
                 // Fire events
                 OnAssetLinked();
+                _asset.WaitForLoaded();// TODO: expose loaded/reloaded/unload events to c# API and wait here
                 if (_asset.IsLoaded)
                 {
                     OnAssetLoaded();
-                }
-                else
-                {
-                    // TODO: expose loaded/reloaded/unload events to c# API
                 }
             }
 

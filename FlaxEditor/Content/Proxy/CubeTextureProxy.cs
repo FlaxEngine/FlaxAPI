@@ -70,7 +70,7 @@ namespace FlaxEditor.Content
 
             // Check if all mip maps are streamed
             var asset = (CubeTexture)request.Asset;
-            return asset.ResidentMipLevels >= (int)(asset.MipLevels * ThumbnailsModule.MinimumRequriedResourcesQuality);
+            return asset.ResidentMipLevels >= Mathf.Max(1, (int)(asset.MipLevels * ThumbnailsModule.MinimumRequriedResourcesQuality));
         }
 
         /// <inheritdoc />

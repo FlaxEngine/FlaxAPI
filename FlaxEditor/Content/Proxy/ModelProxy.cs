@@ -70,7 +70,7 @@ namespace FlaxEditor.Content
 
             // Check if asset is streamed enough
             var asset = (Model)request.Asset;
-            return asset.LoadedLODs >= (int)(asset.LODs.Length * ThumbnailsModule.MinimumRequriedResourcesQuality);
+            return asset.LoadedLODs >= Mathf.Max(1, (int)(asset.LODs.Length * ThumbnailsModule.MinimumRequriedResourcesQuality));
         }
 
         /// <inheritdoc />

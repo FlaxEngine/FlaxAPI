@@ -64,7 +64,7 @@ namespace FlaxEditor.Content
         {
             // Check if asset is streamed enough
             var asset = (IESProfile)request.Asset;
-            return asset.ResidentMipLevels >= (int)(asset.MipLevels * ThumbnailsModule.MinimumRequriedResourcesQuality);
+            return asset.ResidentMipLevels >= Mathf.Max(1, (int)(asset.MipLevels * ThumbnailsModule.MinimumRequriedResourcesQuality));
         }
 
         /// <inheritdoc />
