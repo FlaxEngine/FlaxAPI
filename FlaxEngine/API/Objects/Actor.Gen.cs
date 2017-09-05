@@ -391,7 +391,7 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Returns a list of all actors attached to this object.
+		/// Returns a list of all actors attached to this object. It's read-only array.
 		/// </summary>
 		/// <returns>All actors attached to this object.</returns>
 #if UNIT_TEST_COMPILANT
@@ -444,19 +444,49 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Returns a list of all scripts attached to this object.
+		/// Gets a list of all scripts attached to this object. It's read-only array. Use AddScript/RemoveScript to modify collection.
 		/// </summary>
-		/// <returns>All scripts attached to this object.</returns>
+		[UnmanagedCall]
+		public Script[] Scripts
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetScripts(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
+		/// Adds a script to the actor.
+		/// </summary>
+		/// <param name="script">The script to add</param>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public Script[] GetScripts() 
+		public void AddScript(Script script) 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_GetScripts(unmanagedPtr);
+			Internal_AddScript(unmanagedPtr, Object.GetUnmanagedPtr(script));
+#endif
+		}
+
+		/// <summary>
+		/// Removes a script from the actor. Use Object.Destroy to delete unlinked script and prevent from leaks.
+		/// </summary>
+		/// <param name="script">The script to remove</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void RemoveScript(Script script) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_RemoveScript(unmanagedPtr, Object.GetUnmanagedPtr(script));
 #endif
 		}
 
@@ -652,6 +682,10 @@ namespace FlaxEngine
 		internal static extern Script[] Internal_GetScriptsPerType(IntPtr obj, Type type);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Script[] Internal_GetScripts(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_AddScript(IntPtr obj, IntPtr script);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_RemoveScript(IntPtr obj, IntPtr script);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetBox(IntPtr obj, out BoundingBox resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]

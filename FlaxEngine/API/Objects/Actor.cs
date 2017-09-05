@@ -32,7 +32,7 @@ namespace FlaxEngine
             get { return Internal_GetStaticFlags(unmanagedPtr) == StaticFlags.FullyStatic; }
 #endif
         }
-        
+
         /// <summary>
         /// The rotation as Euler angles in degrees.
         /// The x, y, and z angles represent a rotation z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).
@@ -94,18 +94,18 @@ namespace FlaxEngine
         /// </summary>
         [HideInEditor, NoSerializeAttribute]
         public Vector3 Direction
-	    {
-	        get { return Vector3.ForwardLH * Orientation; }
-	        set
-	        {
-	            Vector3 right = Vector3.Cross(value, Vector3.Up);
-	            Vector3 up = Vector3.Cross(right, value);
-	            //up = Vector3.Up;
-	            Orientation = Quaternion.LookRotation(value, up);
-	        }
-	    }
+        {
+            get { return Vector3.ForwardLH * Orientation; }
+            set
+            {
+                Vector3 right = Vector3.Cross(value, Vector3.Up);
+                Vector3 up = Vector3.Cross(right, value);
+                //up = Vector3.Up;
+                Orientation = Quaternion.LookRotation(value, up);
+            }
+        }
 
-	    /// <summary>
+        /// <summary>
         /// Resets actor local transform
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -115,10 +115,22 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Creates new instance of the script and adds it to the actor.
+        /// </summary>
+        /// <typeparam name="T">The script type.</typeparam>
+        /// <returns>Created script object.</returns>
+        public T AddScript<T>() where T : Script
+        {
+            var script = Object.New<T>();
+            AddScript(script);
+            return script;
+        }
+
+        /// <summary>
         /// Returns true if actor has parent
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor, NoSerializeAttribute]
+        [HideInEditor, NoSerialize]
         public bool HasParent
         {
 #if UNIT_TEST_COMPILANT
@@ -132,7 +144,7 @@ namespace FlaxEngine
         /// Returns true if actor has any children
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor, NoSerializeAttribute]
+        [HideInEditor, NoSerialize]
         public bool HasChildren
         {
 #if UNIT_TEST_COMPILANT
@@ -262,6 +274,7 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern byte[] Internal_ToBytes(IntPtr[] actors);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Actor[] Internal_FromBytes(byte[] data, Guid[] idsMappingKeys, Guid[] idsMappingValues);
     }
