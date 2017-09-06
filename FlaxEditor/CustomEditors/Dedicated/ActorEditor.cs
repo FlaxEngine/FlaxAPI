@@ -10,6 +10,7 @@ using FlaxEditor.GUI.Drag;
 using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.CustomEditors.Dedicated
 {
@@ -150,18 +151,96 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 // No support to show scripts for more than one actor selected
                 if (Values.Count > 1)
                     return;
-                
+
                 // Scripts
                 var scripts = (Script[])Values[0];
                 var elementType = typeof(Script);
                 for (int i = 0; i < scripts.Length; i++)
                 {
+                    var script = scripts[i];
                     var values = new ListValueContainer(elementType, i, Values);
-                    var type = scripts[i].GetType();
+                    var type = script.GetType();
                     var editor = CustomEditorsUtil.CreateEditor(type, false);
                     var title = CustomEditorsUtil.GetPropertyNameUI(type.Name);
                     var group = layout.Group(title);
+
+                    const float settingsButtonMargin = 1;
+                    const float settingsButtonSize = 12;
+                    var settingsButton = new Image(true, group.Panel.Width - settingsButtonSize - settingsButtonMargin, settingsButtonMargin, settingsButtonSize, settingsButtonSize)
+                    {
+                        AnchorStyle = AnchorStyle.UpperRight,
+                        IsScrollable = false,
+                        Color = new Color(0.7f),
+                        ImageSource = new SpriteImageSource(FlaxEngine.GUI.Style.Current.Settings),
+                        Tag = script,
+                        Parent = group.Panel
+                    };
+                    settingsButton.Clicked += SettingsButtonOnClicked;
+
                     group.Object(values, editor);
+                }
+            }
+
+            private void SettingsButtonOnClicked(Image image, MouseButtons mouseButtons)
+            {
+                if (mouseButtons != MouseButtons.Left)
+                    return;
+
+                var script = (Script)image.Tag;
+
+                var cm = new ContextMenu();
+                cm.Tag = script;
+                cm.OnButtonClicked += SettingsMenuOnButtonClicked;
+                cm.AddButton(0, "Reset").Enabled = false; // TODO: finish this
+                cm.AddSeparator();
+                cm.AddButton(1, "Remove");
+                cm.AddButton(2, "Move up").Enabled = script.OrderInParent > 0;
+                cm.AddButton(3, "Move down").Enabled = script.OrderInParent < script.Actor.Scripts.Length - 1;
+                // TODO: copy script
+                // TODO: paste script values
+                // TODO: paste script as new
+                // TODO: copt script reference
+                cm.AddSeparator();
+                cm.AddButton(4, "Edit script");
+                cm.Show(image, image.Size);
+            }
+
+            private void SettingsMenuOnButtonClicked(int id, ContextMenu contextMenu)
+            {
+                var script = (Script)contextMenu.Tag;
+                switch (id)
+                {
+                    // Reset
+                    case 0:
+                    {
+                        throw new NotImplementedException("Reset script");
+                        break;
+                    }
+
+                    // Remove
+                    case 1:
+                        Object.Destroy(script);
+                        ParentEditor.RebuildLayout();
+                        break;
+
+                    // Move up
+                    case 2:
+                        script.OrderInParent -= 1;
+                        ParentEditor.RebuildLayout();
+                        break;
+
+                    // Move down
+                    case 3:
+                        script.OrderInParent += 1;
+                        ParentEditor.RebuildLayout();
+                        break;
+
+                    // Edit script
+                    case 4:
+                        var item = Editor.Instance.ContentDatabase.FindScriptWitScriptName(script);
+                        if (item != null)
+                            Editor.Instance.ContentEditing.Open(item);
+                        break;
                 }
             }
         }
