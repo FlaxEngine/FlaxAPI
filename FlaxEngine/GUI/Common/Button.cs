@@ -16,17 +16,30 @@ namespace FlaxEngine.GUI
         /// </summary>
         public const float DefaultHeight = 24.0f;
 
+        /// <summary>
+        /// The mosue down flag.
+        /// </summary>
         protected bool _mosueDown;
 
         /// <summary>
-        /// Button text property
+        /// Button text property.
         /// </summary>
         public string Text { get; set; }
 
         /// <summary>
+        /// Gets or sets the font used to draw button text.
+        /// </summary>
+        public Font Font { get; set; }
+
+        /// <summary>
         /// Event fired when user clicks on the button
         /// </summary>
-        public Action Clicked;
+        public event Action Clicked;
+        
+        /// <summary>
+        /// Gets or sets the color of the border.
+        /// </summary>
+        public Color BorderColor { get; set; }
 
         /// <summary>
         /// Init
@@ -34,9 +47,13 @@ namespace FlaxEngine.GUI
         /// <param name="x">Position X coordinate</param>
         /// <param name="y">Position Y coordinate</param>
         /// <param name="width">Width</param>
-        public Button(float x, float y, float width = 120)
+        public Button(float x = 0, float y = 0, float width = 120)
             : base(true, x, y, width, DefaultHeight)
         {
+            var style = Style.Current;
+            Font = style.FontMedium;
+            BackgroundColor = style.BackgroundNormal;
+            BorderColor = style.BorderNormal;
         }
 
         /// <summary>
@@ -52,15 +69,13 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void Draw()
         {
-            base.Draw();
-
             // Cache data
             var style = Style.Current;
-            Rectangle clientRect = new Rectangle(0, 0, Size);
-
+            Rectangle clientRect = new Rectangle(Vector2.Zero, Size);
+            
             // Background
-            Color backgroundColor = style.BackgroundNormal;
-            Color borderColor = style.BorderNormal;
+            Color backgroundColor = BackgroundColor;
+            Color borderColor = BorderColor;
             if (!Enabled)
             {
                 backgroundColor *= 0.5f;
@@ -80,7 +95,7 @@ namespace FlaxEngine.GUI
             Render2D.DrawRectangle(clientRect, borderColor);
 
             // Text
-            Render2D.DrawText(style.FontMedium, Text, clientRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
+            Render2D.DrawText(Font, Text, clientRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
         }
 
         /// <inheritdoc />
