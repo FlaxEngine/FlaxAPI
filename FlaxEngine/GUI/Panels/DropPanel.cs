@@ -227,13 +227,34 @@ namespace FlaxEngine.GUI
             // Text
             Render2D.DrawText(style.FontMedium, HeaderText, new Rectangle(textLeft, 0, Width - textLeft - 2, HeaderHeight), Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
 
+            // Draw child controls that are not arranged (pined to the header, etc.)
+            for (int i = 0; i < _children.Count; i++)
+            {
+                var child = _children[i];
+                if (!child.IsScrollable && child.Visible)
+                {
+                    Render2D.PushTransform(ref child._cachedTransform);
+                    child.Draw();
+                    Render2D.PopTransform();
+                }
+            }
+
             // Check if isn't fully closed
             if (!_isClosed || _animationProgress < 0.998f)
             {
                 // Draw children with clipping mask (so none of the controls will override the header)
                 Rectangle clipMask = new Rectangle(0, HeaderHeight, Width, Height - HeaderHeight);
                 Render2D.PushClip(ref clipMask);
-                DrawChildren();
+                for (int i = 0; i < _children.Count; i++)
+                {
+                    var child = _children[i];
+                    if (child.IsScrollable && child.Visible)
+                    {
+                        Render2D.PushTransform(ref child._cachedTransform);
+                        child.Draw();
+                        Render2D.PopTransform();
+                    }
+                }
                 Render2D.PopClip();
             }
         }
@@ -241,14 +262,18 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
+            if (base.OnMouseDown(location, buttons))
+                return true;
+
             _mouseOverHeader = HeaderRectangle.Contains(location);
 
             if (buttons == MouseButtons.Left && _mouseOverHeader)
             {
                 _mouseDown = true;
+                return true;
             }
 
-            return base.OnMouseDown(location, buttons);
+            return false;
         }
 
         /// <inheritdoc />
@@ -262,6 +287,9 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
         {
+            if (base.OnMouseUp(location, buttons))
+                return true;
+            
             _mouseOverHeader = HeaderRectangle.Contains(location);
 
             if (buttons == MouseButtons.Left && _mouseDown)
@@ -272,9 +300,11 @@ namespace FlaxEngine.GUI
                 {
                     Toggle();
                 }
+
+                return true;
             }
 
-            return base.OnMouseUp(location, buttons);
+            return false;
         }
 
         /// <inheritdoc />
@@ -322,7 +352,7 @@ namespace FlaxEngine.GUI
             for (int i = 0; i < _children.Count; i++)
             {
                 Control c = _children[i];
-                if (c.DockStyle == DockStyle.None && c.Visible)
+                if (c.IsScrollable && c.Visible)
                 {
                     var h = c.Height;
                     c.Bounds = new Rectangle(leftMargin, y, itemsWidth, h);
