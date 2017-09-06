@@ -99,23 +99,14 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyPressed(KeyCodeMap key)
         {
-            // Enter
-            if (key == KeyCode.Return)
-            {
-                OnTextChanged();
-                return true;
-            }
-            // Esc
-            if (key == KeyCode.Escape)
-            {
-                Hide();
-                return true;
-            }
+            if (key.InvokeFirstCommand(
+                (KeyCode.Return, OnTextChanged),
+                (KeyCode.Escape, Hide))) return true;
 
             // Base
-            return base.OnKeyDown(key);
+            return base.OnKeyPressed(key);
         }
 
         /// <inheritdoc />

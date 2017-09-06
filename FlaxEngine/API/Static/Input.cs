@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -14,28 +13,33 @@ namespace FlaxEngine
 {
     public static partial class Input
     {
-        private static byte[] _previousPressedKeys;
+        private static KeyCodeMap _previousPressedKeys;
 
         /// <summary>
         ///     Event that is fired when at least one key is hold down.
         /// </summary>
-        public static event Action<byte[]> OnKeyHold;
+        public static event Action<KeyCodeMap> OnKeyHold;
 
         /// <summary>
         ///     Event that is fired when a new key is pressed. Contains all currently holding keys with addition to the new one.
         /// </summary>
-        public static event Action<byte[]> OnKeyPressed;
+        public static event Action<KeyCodeMap> OnKeyPressed;
 
         /// <summary>
         ///     Event that is fired when a key is released. Contains all currently holding keys without last one released.
         /// </summary>
-        public static event Action<byte[]> OnKeyReleased;
+        public static event Action<KeyCodeMap> OnKeyReleased;
+
+        /// <summary>
+        ///     Event taht is fired when a key with modifier or special character or IME input returns a character.
+        /// </summary>
+        public static event Action<string> OnTextEntered;
 
 
         /// <summary>
         ///     All currently acitve keys, can be null
         /// </summary>
-        public static byte[] PressedKeys { get; private set; }
+        public static KeyCodeMap PressedKeys { get; private set; }
 
         /// <summary>
         ///     Internal method used to get all currently active keys
@@ -43,27 +47,33 @@ namespace FlaxEngine
         /// <param name="keyPressedArray"></param>
         internal static void Internal_KeyInputEvent(byte[] keyPressedArray)
         {
-            _previousPressedKeys = PressedKeys;
-            PressedKeys = keyPressedArray;
             if (keyPressedArray.Length > 0)
             {
-                OnKeyHold?.Invoke(keyPressedArray);
+                var keysMapped = new KeyCodeMap(keyPressedArray);
+                _previousPressedKeys = PressedKeys;
+                PressedKeys = keysMapped;
+                OnKeyHold?.Invoke(keysMapped);
+                if (!_previousPressedKeys.Equals(PressedKeys))
+                {
+                    if (_previousPressedKeys.Count > PressedKeys.Count)
+                    {
+                        OnKeyReleased?.Invoke(keysMapped);
+                    }
+                    else if (_previousPressedKeys.Count < PressedKeys.Count)
+                    {
+                        OnKeyPressed?.Invoke(keysMapped);
+                    }
+                    else
+                    {
+                        OnKeyPressed?.Invoke(keysMapped);
+                        OnKeyReleased?.Invoke(keysMapped);
+                    }
+                }
             }
-            if (!_previousPressedKeys.Equals(PressedKeys))
+            else
             {
-                if (_previousPressedKeys.Length > PressedKeys.Length)
-                {
-                    OnKeyReleased?.Invoke(keyPressedArray);
-                }
-                else if (_previousPressedKeys.Length < PressedKeys.Length)
-                {
-                    OnKeyPressed?.Invoke(keyPressedArray);
-                }
-                else
-                {
-                    OnKeyPressed?.Invoke(keyPressedArray);
-                    OnKeyReleased?.Invoke(keyPressedArray);
-                }
+                _previousPressedKeys = PressedKeys;
+                PressedKeys = new KeyCodeMap(null);
             }
         }
 
@@ -76,6 +86,12 @@ namespace FlaxEngine
         /// <param name="unicode"></param>
         internal static void Internal_UnicodeInputEvent(int[] unicode)
         {
+            StringBuilder builder = new StringBuilder(unicode.Length);
+            foreach (var i in unicode)
+            {
+                builder.Append((char)i);
+            }
+            OnTextEntered?.Invoke(builder.ToString());
         }
     }
 }

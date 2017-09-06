@@ -290,17 +290,17 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override void OnKeyUp(KeyCode key)
+        public override void OnKeyReleased(KeyCodeMap key)
         {
             if (ContainsFocus)
             {
-                if (key == KeyCode.Delete)
+                if (key[KeyCode.Delete])
                 {
                     DeleteSelection();
                 }
             }
 
-            base.OnKeyUp(key);
+            base.OnKeyReleased(key);
         }
     }
 }

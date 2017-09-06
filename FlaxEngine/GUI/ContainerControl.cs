@@ -937,29 +937,29 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyPressed(KeyCodeMap key)
         {
             for (int i = 0; i < _children.Count && _children.Count > 0; i++)
             {
                 var child = _children[i];
                 if (child.Enabled && (child.ContainsFocus || child.HasMouseCapture))
                 {
-                    return child.OnKeyDown(key);
+                    child.OnKeyPressed(key);
+                    return true;
                 }
             }
             return false;
         }
 
         /// <inheritdoc />
-        public override void OnKeyUp(KeyCode key)
+        public override void OnKeyReleased(KeyCodeMap key)
         {
             for (int i = 0; i < _children.Count && _children.Count > 0; i++)
             {
                 var child = _children[i];
                 if (child.Enabled && (child.ContainsFocus || child.HasMouseCapture))
                 {
-                    child.OnKeyUp(key);
-                    break;
+                    child.OnKeyReleased(key);
                 }
             }
         }

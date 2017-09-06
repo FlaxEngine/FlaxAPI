@@ -332,14 +332,16 @@ namespace FlaxEngine
 
         internal void Internal_OnKeyDown(KeyCode key)
         {
-            OnKeyDown?.Invoke(key);
-            GUI.OnKeyDown(key);
+            //TODO remove, replaced with Input.OnKeyPressed event
+            //OnKeyDown?.Invoke(key);
+            //GUI.OnKeyDown(key);
         }
 
         internal void Internal_OnKeyUp(KeyCode key)
         {
-            OnKeyUp?.Invoke(key);
-            GUI.OnKeyUp(key);
+            //TODO remove, replaced with Input.OnKeyPressed event
+            //OnKeyUp?.Invoke(key);
+            //GUI.OnKeyUp(key);
         }
 
         internal void Internal_OnMouseDown(ref Vector2 mousePos, MouseButtons buttons)

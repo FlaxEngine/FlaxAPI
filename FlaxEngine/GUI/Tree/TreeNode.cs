@@ -673,30 +673,20 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyPressed(KeyCodeMap key)
         {
             // Check if is focused and has any children
             if (IsFocused && _children.Count > 0)
             {
-                // Collapse
-                if (key == KeyCode.ArrowLeft)
-                {
-                    Collapse();
-                    return true;
-                }
-
-                // Expand
-                if (key == KeyCode.ArrowRight)
-                {
-                    Expand();
-                    return true;
-                }
+                if (key.InvokeFirstCommand(
+                    (KeyCode.ArrowLeft, Collapse),
+                    (KeyCode.ArrowRight, Expand))) return true;
             }
 
             // Base
             if (_opened)
-                return base.OnKeyDown(key);
-            return false;
+                return base.OnKeyPressed(key);
+            return true;
         }
 
         /// <inheritdoc />

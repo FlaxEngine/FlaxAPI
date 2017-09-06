@@ -112,24 +112,11 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyPressed(KeyCodeMap key)
         {
             // Base
-            bool result = base.OnKeyDown(key);
-            if (!result)
-            {
-                if (ParentWindow.GetKey(KeyCode.Control))
-                {
-                    switch (key)
-                    {
-                        case KeyCode.S:
-                            Save();
-                            return true;
-                    }
-                }
-            }
-
-            return result;
+            if(base.OnKeyPressed(key)) return true;
+            return key.InvokeFirstCommand(KeyCode.Control, (KeyCode.S, Save));
         }
 
         /// <inheritdoc />

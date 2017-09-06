@@ -324,6 +324,15 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Wrapper to unregister event on dispose
+        /// </summary>
+        /// <param name="map"></param>
+        private void OnInputOnOnKeyPressed(KeyCodeMap map)
+        {
+            OnKeyPressed(map);
+        }
+
+        /// <summary>
         ///     Delete control (will unlink from the parent and start to dispose)
         /// </summary>
         public virtual void Dispose()
@@ -332,7 +341,7 @@ namespace FlaxEngine.GUI
             {
                 return;
             }
-
+            Defocus();
             // Set disposing flag
             _isDisposing = true;
 
@@ -433,6 +442,8 @@ namespace FlaxEngine.GUI
         {
             if (IsFocused)
             {
+                Input.OnKeyPressed -= OnInputOnOnKeyPressed;
+                Input.OnKeyReleased -= OnKeyReleased;
                 Focus(null);
             }
         }
@@ -476,6 +487,8 @@ namespace FlaxEngine.GUI
         /// <returns>True if control got a focus</returns>
         protected virtual bool Focus(Control c)
         {
+            Input.OnKeyPressed += OnInputOnOnKeyPressed;
+            Input.OnKeyReleased += OnKeyReleased;
             return _parent != null && _parent.Focus(c);
         }
 
@@ -594,7 +607,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="key">Key value</param>
         /// <returns>True if event has been handled, otherwise false</returns>
-        public virtual bool OnKeyDown(KeyCode key)
+        public virtual bool OnKeyPressed(KeyCodeMap key)
         {
             return false;
         }
@@ -603,7 +616,7 @@ namespace FlaxEngine.GUI
         ///     When key goes up
         /// </summary>
         /// <param name="key">Key value</param>
-        public virtual void OnKeyUp(KeyCode key)
+        public virtual void OnKeyReleased(KeyCodeMap key)
         {
         }
 

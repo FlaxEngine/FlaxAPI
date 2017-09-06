@@ -471,10 +471,10 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyPressed(KeyCodeMap key)
         {
             // Navigate backward
-            if (key == KeyCode.Backspace)
+            if (key[KeyCode.Backspace])
             {
                 OnNavigateBack?.Invoke();
                 return true;
@@ -484,21 +484,21 @@ namespace FlaxEditor.Content.GUI
             if (HasSelection)
             {
                 // Delete selection
-                if (key == KeyCode.Delete)
+                if (key[KeyCode.Delete])
                 {
                     OnDelete?.Invoke(_selection);
                     return true;
                 }
 
                 // Open
-                if (key == KeyCode.Return && _selection.Count == 1)
+                if (key[KeyCode.Return] && _selection.Count == 1)
                 {
                     OnOpen?.Invoke(_selection[0]);
                     return true;
                 }
 
                 // Duplicate
-                if (key == KeyCode.D && ParentWindow.GetKey(KeyCode.Control))
+                if (key[KeyCode.D] && ParentWindow.GetKey(KeyCode.Control))
                 {
                     DuplicateSelection();
                     return true;
@@ -510,19 +510,19 @@ namespace FlaxEditor.Content.GUI
                     Vector2 size = root.Size;
                     Vector2 offset = Vector2.Minimum;
                     ContentItem item = null;
-                    if (key == KeyCode.ArrowUp)
+                    if (key[KeyCode.ArrowUp])
                     {
                         offset = new Vector2(0, -size.Y);
                     }
-                    else if (key == KeyCode.ArrowDown)
+                    else if (key[KeyCode.ArrowDown])
                     {
                         offset = new Vector2(0, size.Y);
                     }
-                    else if (key == KeyCode.ArrowRight)
+                    else if (key[KeyCode.ArrowRight])
                     {
                         offset = new Vector2(size.X, 0);
                     }
-                    else if (key == KeyCode.ArrowLeft)
+                    else if (key[KeyCode.ArrowLeft])
                     {
                         offset = new Vector2(-size.X, 0);
                     }
@@ -538,7 +538,7 @@ namespace FlaxEditor.Content.GUI
                 }
             }
             
-            return base.OnKeyDown(key);
+            return base.OnKeyPressed(key);
         }
 
         /// <inheritdoc />

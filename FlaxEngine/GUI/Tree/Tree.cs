@@ -459,22 +459,20 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyPressed(KeyCodeMap key)
         {
             // Check if can use multi selection
             if (_supportMultiSelect)
-            {
-                bool isCtrlDown = ParentWindow.GetKey(KeyCode.Control);
-                
+            {                
                 // Select all expanded nodes
-                if (key == KeyCode.A && isCtrlDown)
+                if (key[KeyCode.A] && key.IsControl())
                 {
                     SelectAllExpaned();
                     return true;
                 }
             }
 
-            return base.OnKeyDown(key);
+            return base.OnKeyPressed(key);
         }
 
         /// <inheritdoc />

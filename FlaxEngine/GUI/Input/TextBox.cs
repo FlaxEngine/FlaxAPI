@@ -294,6 +294,7 @@ namespace FlaxEngine.GUI
             UpdateTextRect();
 
             OnSizeChanged += ActionOnSizeChanged;
+            Input.OnTextEntered += OnTextEntered;
         }
 
         /// <summary>
@@ -558,6 +559,76 @@ namespace FlaxEngine.GUI
                 {
                     setSelection(position);
                 }
+            }
+        }
+
+        /// <summary>
+        ///     Moves to the next line if multiline is selected or ends edition
+        /// </summary>
+        private void NextLineOrDeselect()
+        {
+            if (IsMultiline)
+            {
+                // Insert new line
+                Insert('\n');
+            }
+            else
+            {
+                // End editing
+                Defocus();
+            }
+        }
+
+        /// <summary>
+        ///     Removes all text from <see cref="TextBox"/>
+        /// </summary>
+        private void ResetText()
+        {
+            setSelection(-1);
+            _text = _onStartEditValue;
+
+            Defocus();
+            OnTextChanged();
+        }
+
+        /// <summary>
+        /// Removes selected text
+        /// </summary>
+        /// <returns>True if succeeed</returns>
+        public bool RemoveSelection()
+        {
+            if (HasSelection)
+            {
+                _text = _text.Remove(SelectionLeft, SelectionLength);
+                setSelection(SelectionLeft);
+                OnTextChanged();
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        ///     Remove one character in the back (look default behavior for <see cref="KeyCode.Backspace"/>
+        /// </summary>
+        private void RemoveBackward()
+        {
+            if (RemoveSelection() && CaretPosition > 0)
+            {
+                setSelection(SelectionLeft);
+                _text = _text.Remove(SelectionLeft, 1);
+                OnTextChanged();
+            }
+        }
+
+        /// <summary>
+        ///     Remove one character in the front (look default behavior for <see cref="KeyCode.Delete"/>
+        /// </summary>
+        private void RemoveForward()
+        {
+            if (RemoveSelection() && CaretPosition < TextLength)
+            {
+                _text = _text.Remove(SelectionLeft, 1);
+                OnTextChanged();
             }
         }
 

@@ -33,55 +33,23 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyPressed(KeyCodeMap key)
         {
             // Base
-            bool result = base.OnKeyDown(key);
-            if (!result)
-            {
-                var parentWin = ParentWindow;
-                if (parentWin.GetKey(KeyCode.Control))
-                {
-                    switch (key)
-                    {
-                        case KeyCode.S:
-                            Editor.SaveAll();
-                            return true;
-                        case KeyCode.Z:
-                            Editor.PerformUndo();
-                            Focus();
-                            return true;
-                        case KeyCode.Y:
-                            Editor.PerformRedo();
-                            Focus();
-                            return true;
-                        case KeyCode.X:
-                            Editor.SceneEditing.Cut();
-                            break;
-                        case KeyCode.C:
-                            Editor.SceneEditing.Copy();
-                            break;
-                        case KeyCode.V:
-                            Editor.SceneEditing.Paste();
-                            break;
-                        case KeyCode.D:
-                            Editor.SceneEditing.Duplicate();
-                            break;
-                        case KeyCode.A:
-                            Editor.SceneEditing.SelectAllScenes();
-                            break;
-                        case KeyCode.F:
-                            Editor.Windows.SceneWin.Search();
-                            break;
-                    }
-                }
-                else if (parentWin.GetKey(KeyCode.Delete))
-                {
-                    Editor.SceneEditing.Delete();
-                }
-            }
+            if (base.OnKeyPressed(key)) return true;
 
-            return result;
+            if(key.InvokeFirstCommand(KeyCode.Control,
+                (KeyCode.S, Editor.SaveAll),
+                (KeyCode.Z, Editor.PerformUndo),
+                (KeyCode.Y, () => { Editor.PerformRedo(); Focus(); }),
+                (KeyCode.X, Editor.SceneEditing.Cut),
+                (KeyCode.C, Editor.SceneEditing.Copy),
+                (KeyCode.V, () => { Editor.SceneEditing.Paste(); }),
+                (KeyCode.D, Editor.SceneEditing.Duplicate),
+                (KeyCode.A, Editor.SceneEditing.SelectAllScenes),
+                (KeyCode.F, Editor.Windows.SceneWin.Search)
+            )){ return true; }
+            return key.InvokeFirstCommand((KeyCode.Delete, Editor.SceneEditing.Delete));
         }
     }
 }
