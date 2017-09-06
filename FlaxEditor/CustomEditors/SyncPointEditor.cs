@@ -40,7 +40,7 @@ namespace FlaxEditor.CustomEditors
             _isDirty = false;
 
             // If any UI control has been modified we should try to record selected objects change
-            if (isDirty && Undo != null)
+            if (isDirty && Undo != null && Undo.Enabled)
             {
                 using (new UndoMultiBlock(Undo, UndoObjects, "Edit object(s)"))
                     Refresh();

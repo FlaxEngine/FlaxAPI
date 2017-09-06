@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 using System;
 using FlaxEditor.Scripting;
@@ -25,13 +25,11 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Checks if play mode should start only with single frame update and then enter step mode.
         /// </summary>
-        /// <returns>True if start with only 1 frame update and the nenter step mode, otherwise false</returns>
         public bool ShouldPlayModeStartWithStep => Editor.UI.IsPauseButtonChecked;
 
         /// <summary>
         /// Returns true if play mode has been requested.
         /// </summary>
-        /// <returns>True if play mode has been requested, otherwise false</returns>
         public bool IsPlayModeRequested => _isPlayModeRequested;
 
         /// <summary>
@@ -126,8 +124,9 @@ namespace FlaxEditor.Modules
                 Editor.UI.UpdateToolstrip();
             }
         }
-
-        internal void OnPlayModeEnter()
+        
+        /// <inheritdoc />
+        public override void OnPlayBegin()
         {
             Editor.Windows.FlashMainWindow();
 
@@ -145,7 +144,8 @@ namespace FlaxEditor.Modules
             Editor.Log("[PlayMode] Enter");
         }
 
-        internal void OnPlayModeExit()
+        /// <inheritdoc />
+        public override void OnPlayEnd()
         {
             var gameWin = Editor.Windows.GameWin;
             if (gameWin != null && _wasEditorWinFocusedOnPlay)

@@ -127,7 +127,7 @@ namespace FlaxEditor.Modules
 
             // Update buttons
             bool canEditScene = state.CanEditScene;
-            bool canEnterPlayMode = state.CanEnterPlayMode;
+            bool canEnterPlayMode = state.CanEnterPlayMode && SceneManager.IsAnySceneLoaded;
             //ToolStrip.GetButton(2).Enabled = Editor.IsEdited;// Save All
             //
             ToolStrip.GetButton(3).Enabled = canEditScene && undoRedo.CanUndo;// Undo

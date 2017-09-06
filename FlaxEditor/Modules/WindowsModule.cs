@@ -411,6 +411,20 @@ namespace FlaxEditor.Modules
                 Windows[i].OnSceneUnloading(scene, sceneId);
         }
 
+        /// <inheritdoc />
+        public override void OnPlayBegin()
+        {
+            for (int i = 0; i < Windows.Count; i++)
+                Windows[i].OnPlayBegin();
+        }
+
+        /// <inheritdoc />
+        public override void OnPlayEnd()
+        {
+            for (int i = 0; i < Windows.Count; i++)
+                Windows[i].OnPlayEnd();
+        }
+
         #endregion
     }
 }

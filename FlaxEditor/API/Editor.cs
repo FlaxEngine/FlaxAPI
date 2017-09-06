@@ -153,6 +153,7 @@ namespace FlaxEditor
 
         private void ScriptsBuilder_ScriptsReloadEnd()
         {
+            EnsureState<ReloadingScriptsState>();
             StateMachine.GoToState<EditingSceneState>();
         }
 
@@ -222,6 +223,18 @@ namespace FlaxEditor
             {
                 Debug.LogException(ex);
             }
+        }
+
+        internal void OnPlayBegin()
+        {
+            for (int i = 0; i < _modules.Count; i++)
+                _modules[i].OnPlayBegin();
+        }
+
+        internal void OnPlayEnd()
+        {
+            for (int i = 0; i < _modules.Count; i++)
+                _modules[i].OnPlayEnd();
         }
 
         internal void Exit()
