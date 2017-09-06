@@ -66,6 +66,17 @@ namespace FlaxEditor.CustomEditors
             {
                 return new ArrayEditor();
             }
+            if (canUseRefPicker)
+            {
+                if (targetType.IsSubclassOf(typeof(Asset)))
+                {
+                    return new AssetRefEditor();
+                }
+                if (targetType.IsSubclassOf(typeof(FlaxEngine.Object)))
+                {
+                    return new FlaxObjectRefEditor();
+                }
+            }
 
             // Use custom editor
             {
@@ -78,7 +89,7 @@ namespace FlaxEditor.CustomEditors
                         return (CustomEditor)Activator.CreateInstance(type);
                     }
                     checkType = checkType.BaseType;
-
+                    
                     // Skip if cannot use ref editors
                     if (!canUseRefPicker && checkType == typeof(FlaxEngine.Object))
                         break;
@@ -109,18 +120,7 @@ namespace FlaxEditor.CustomEditors
                     return new GenericEditor();
                 }
             }
-            if (canUseRefPicker)
-            {
-                if (targetType.IsSubclassOf(typeof(FlaxEngine.Asset)))
-                {
-                    return new AssetRefEditor();
-                }
-                if (targetType.IsSubclassOf(typeof(FlaxEngine.Object)))
-                {
-                    return new FlaxObjectRefEditor();
-                }
-            }
-
+            
             // The most generic editor
             return new GenericEditor();
         }
