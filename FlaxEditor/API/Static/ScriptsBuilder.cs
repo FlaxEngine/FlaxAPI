@@ -15,10 +15,18 @@ namespace FlaxEditor.Scripting
         // TODO: expose api to inject custom defines to compilation and more customizations
 
         /// <summary>
-        /// On compilation end
+        /// Compilation end event delegate.
         /// </summary>
         /// <param name="success">False if compilation has failed, otherwise true.</param>
         public delegate void CompilationEndDelegate(bool success);
+
+        /// <summary>
+        /// Compilation message events delegate.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="file">The target file.</param>
+        /// <param name="line">The target line.</param>
+        public delegate void CompilationMessageDelegate(string message, string file, int line);
 
         /// <summary>
         /// Occurs when compilation ends.
@@ -60,6 +68,16 @@ namespace FlaxEditor.Scripting
         /// Occurs when user scripts reload ends.
         /// </summary>
         public static event Action ScriptsReloadEnd;
+
+        /// <summary>
+        /// Occurs on compilation error.
+        /// </summary>
+        public static event CompilationMessageDelegate CompilationError;
+
+        /// <summary>
+        /// Occurs on compilation warning.
+        /// </summary>
+        public static event CompilationMessageDelegate CompilationWarning;
 
         /// <summary>
         /// Checks if need to compile source code. If so calls compilation.
@@ -109,6 +127,14 @@ namespace FlaxEditor.Scripting
                     ScriptsReloadEnd?.Invoke();
                     break;
             }
+        }
+
+        internal static void Internal_OnCompileEvent(string message, string file, int line, bool isError)
+        {
+            if (isError)
+                CompilationError?.Invoke(message, file, line);
+            else
+                CompilationWarning?.Invoke(message, file, line);
         }
     }
 }

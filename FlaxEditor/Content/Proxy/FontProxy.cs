@@ -2,10 +2,9 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using FlaxEditor.Content.Thumbnails;
-using FlaxEditor.Modules;
 using FlaxEditor.Windows;
+using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
@@ -13,7 +12,7 @@ using FlaxEngine.Rendering;
 namespace FlaxEditor.Content
 {
     /// <summary>
-    /// A <see cref="Texture"/> asset proxy object.
+    /// A <see cref="FontAsset"/> asset proxy object.
     /// </summary>
     /// <seealso cref="FlaxEditor.Content.BinaryAssetProxy" />
     public class FontProxy : BinaryAssetProxy
@@ -36,7 +35,7 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override EditorWindow Open(Editor editor, ContentItem item)
         {
-            throw new NotImplementedException();// TODO: font window
+            return new FontAssetWindow(editor, (AssetItem)item);
         }
 
         /// <inheritdoc />
@@ -44,7 +43,7 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override ContentDomain Domain => FontAsset.Domain;
-        
+
         /// <inheritdoc />
         public override void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
         {

@@ -5,33 +5,33 @@
 namespace FlaxEngine
 {
     /// <summary>
-    /// The type of the log message in Debug.logger.Log or delegate registered with Application.RegisterLogCallback.
+    /// The type of the log message in <see cref="Debug"/>.
     /// </summary>
     public enum LogType
     {
         /// <summary>
         /// LogType used for Errors.
         /// </summary>
-        Error,
+        Error = 0,
 
         /// <summary>
         /// LogType used for Asserts. (These could also indicate an error inside Flax itself.)
         /// </summary>
-        Assert,
+        Assert = 1,
 
         /// <summary>
         /// LogType used for Warnings.
         /// </summary>
-        Warning,
+        Warning = 2,
 
         /// <summary>
         /// LogType used for regular log messages.
         /// </summary>
-        Log,
+        Log = 3,
 
         /// <summary>
         /// LogType used for Exceptions.
         /// </summary>
-        Exception
+        Exception = 4
     }
 }

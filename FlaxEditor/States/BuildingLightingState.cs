@@ -1,12 +1,14 @@
-﻿// Flax Engine scripting API
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
 
-using System;
+using FlaxEngine.Assertions;
 using FlaxEngine.Utilities;
 
 namespace FlaxEditor.States
 {
     /// <summary>
-    /// In this state engine is building static lighting for the scene. Editing scene is blocked.
+    /// In this state engine is building static lighting for the scene. Editing scene and content is blocked.
     /// </summary>
     /// <seealso cref="FlaxEditor.States.EditorState" />
     public sealed class BuildingLightingState : EditorState
@@ -36,33 +38,29 @@ namespace FlaxEditor.States
         /// <inheritdoc />
         public override void OnEnter()
         {
-            throw new NotImplementedException();
             // Clear flag
             _wasBuildFinished = false;
 
             // Bind event
-            //ShadowsOfMordor::Builder::Instance()->OnBuildFinished.Bind<BuildingLightingState, &BuildingLightingState::onBuildFinished>(this);
+            Editor.LightmapsBakeEnd += OnLightmapsBakeEnd;
 
             // Start building
-            //CEditor->MarkAsEdited();
-            //ShadowsOfMordor::Builder::Instance()->Build();
+            Editor.Scene.MarkAllScenesEdited();
+            Editor.Internal_BakeLightmaps(false);
         }
 
         /// <inheritdoc />
         public override void OnExit(State nextState)
         {
             // Unbind event
-            //ShadowsOfMordor::Builder::Instance()->OnBuildFinished.Unbind<BuildingLightingState, &BuildingLightingState::onBuildFinished>(this);
-
-            // Notify user
-            //CWindowsModule->FlashMainWindow();
+            Editor.LightmapsBakeEnd -= OnLightmapsBakeEnd;
         }
 
-        private void onBuildFinished(bool failed)
+        private void OnLightmapsBakeEnd(bool failed)
         {
-            //ASSERT(IsActive() && !_wasBuildFinished);
-            //_wasBuildFinished = true;
-            //GetParent()->GoTo(EditorStates::EditingScene);
+            Assert.IsTrue(IsActive && !_wasBuildFinished);
+            _wasBuildFinished = true;
+            Editor.StateMachine.GoToState<EditingSceneState>();
         }
     }
 }

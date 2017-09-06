@@ -421,7 +421,7 @@ namespace FlaxEditor.Modules
         private void InitToolstrip(FlaxEngine.GUI.Window mainWindow)
         {
             ToolStrip = new ToolStrip();
-            ToolStrip.OnButtonClicked += onTootlstripButtonClicked;
+            ToolStrip.ButtonClicked += onTootlstripButtonClicked;
             ToolStrip.Parent = mainWindow;
             
             //ToolStrip.AddButton(0, GetIcon("Logo32")).LinkTooltip("Flax Engine");// Welcome screen
@@ -751,18 +751,15 @@ namespace FlaxEditor.Modules
             {
                 // Scene statistics
                 case 1: break;
-
-                // TODO: finish those
+                    
                 // Bake lightmaps
                 case 2:
-                    throw new NotImplementedException("Bake lightmaps");
-                    //bakeOrCancelLightmaps();
+                    Editor.BakeLightmapsOrCancel();
                     break;
 
                 // Clear lightmaps data
                 case 3:
-                    throw new NotImplementedException("clear lightmaps");
-                    //Editor.clearStaticLighting();
+                    Editor.ClearLightmaps();
                     break;
 
                 // Take screenshot!

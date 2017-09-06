@@ -1,4 +1,6 @@
-// Flax Engine scripting API
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
 
 using System;
 using System.Runtime.CompilerServices;
@@ -7,19 +9,33 @@ namespace FlaxEngine
 {
     internal sealed class DebugLogHandler : ILogHandler
     {
+        /// <summary>
+        /// Occurs on sending a log message.
+        /// </summary>
+        public event LogDelegate SendLog;
+
+        /// <summary>
+        /// Occurs on sending a log message.
+        /// </summary>
+        public event LogExceptionDegetae SendExceptionLog;
+
         public void LogException(Exception exception, Object context)
         {
             Internal_LogException(exception, context?.unmanagedPtr ?? IntPtr.Zero);
+            
+            SendExceptionLog?.Invoke(exception, context);
         }
 
         public void Log(LogType logType, Object context, string message)
         {
 #if DEBUG
-            string stackTrace = string.Empty;// Environment.StackTrace;
+            string stackTrace = Environment.StackTrace;
 #else
             string stackTrace = string.Empty;
 #endif
             Internal_Log(logType, message, context?.unmanagedPtr ?? IntPtr.Zero, stackTrace);
+
+            SendLog?.Invoke(logType, message, context, stackTrace);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]

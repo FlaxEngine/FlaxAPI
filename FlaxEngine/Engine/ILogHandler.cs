@@ -1,11 +1,26 @@
-// Flax Engine scripting API
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+////////////////////////////////////////////////////////////////////////////////////
 
 using System;
 
 namespace FlaxEngine
 {
+    /// <summary>
+    /// Logs handler.
+    /// </summary>
     public interface ILogHandler
     {
+        /// <summary>
+        /// Occurs on sending a log message.
+        /// </summary>
+        event LogDelegate SendLog;
+
+        /// <summary>
+        /// Occurs on sending a exception log message.
+        /// </summary>
+        event LogExceptionDegetae SendExceptionLog;
+
         /// <summary>
         /// <para>A variant of ILogHandler.LogFormat that logs an exception message.</para>
         /// </summary>

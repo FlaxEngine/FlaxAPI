@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using FlaxEditor.Content.Import;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Modules;
@@ -304,8 +303,7 @@ namespace FlaxEditor
         /// <param name="msg">The message.</param>
         public static void Log(string msg)
         {
-            // TODO: redirect this msg to log file not a console
-            Debug.Log(msg);
+            Internal_LogWrite(LogType.Log, msg);
         }
 
         /// <summary>
@@ -314,8 +312,7 @@ namespace FlaxEditor
         /// <param name="msg">The message.</param>
         public static void LogWarning(string msg)
         {
-            // TODO: redirect this msg to log file not a console
-            Debug.LogWarning(msg);
+            Internal_LogWrite(LogType.Warning, msg);
         }
 
         /// <summary>
@@ -334,8 +331,7 @@ namespace FlaxEditor
         /// <param name="msg">The message.</param>
         public static void LogError(string msg)
         {
-            // TODO: redirect this msg to log file not a console
-            Debug.LogError(msg);
+            Internal_LogWrite(LogType.Error, msg);
         }
 
         /// <summary>
@@ -443,6 +439,123 @@ namespace FlaxEditor
 
         #endregion
 
+        #region Lightmaps Baking
+
+        /// <summary>
+        /// Lightmaps baking steps.
+        /// </summary>
+        public enum LightmapsBakeSteps
+        {
+            /// <summary>
+            /// The cache entries stage.
+            /// </summary>
+            CacheEntries,
+
+            /// <summary>
+            /// The generate lightmap charts stage.
+            /// </summary>
+            GenerateLightmapCharts,
+
+            /// <summary>
+            /// The pack lightmap charts stage.
+            /// </summary>
+            PackLightmapCharts,
+
+            /// <summary>
+            /// The update lightmaps collection stage.
+            /// </summary>
+            UpdateLightmapsCollection,
+
+            /// <summary>
+            /// The update entries stage.
+            /// </summary>
+            UpdateEntries,
+
+            /// <summary>
+            /// The generate hemispheres cache stage.
+            /// </summary>
+            GenerateHemispheresCache,
+
+            /// <summary>
+            /// The render hemispheres stage.
+            /// </summary>
+            RenderHemispheres,
+
+            /// <summary>
+            /// The cleanup stage.
+            /// </summary>
+            Cleanup
+        }
+
+        /// <summary>
+        /// Lightmaps baking progress event delegate.
+        /// </summary>
+        /// <param name="step">The current step.</param>
+        /// <param name="stepProgress">The current step progress (normalized to [0;1]).</param>
+        /// <param name="totalProgress">The total baking progress (normalized to [0;1]).</param>
+        public delegate void LightmapsBakeProgressDelegate(LightmapsBakeSteps step, float stepProgress, float totalProgress);
+
+        /// <summary>
+        /// Lighmaps baking nd event delegate.
+        /// </summary>
+        /// <param name="failed">True if baking failed or has been canceled, otherwise false.</param>
+        public delegate void LightmapsBakeEndDelegate(bool failed);
+
+        /// <summary>
+        /// Occurs when lightmaps baking starts.
+        /// </summary>
+        public static event Action LightmapsBakeStart;
+
+        /// <summary>
+        /// Occurs when lightmaps baking ends.
+        /// </summary>
+        public static event LightmapsBakeEndDelegate LightmapsBakeEnd;
+
+        /// <summary>
+        /// Occurs when lightmaps baking progress changes.
+        /// </summary>
+        public static event LightmapsBakeProgressDelegate LightmapsBakeProgress;
+        
+        internal static void Internal_LightmapsBake(LightmapsBakeSteps step, float stepProgress, float totalProgress, bool isProgressEvent)
+        {
+            if (isProgressEvent)
+                LightmapsBakeProgress?.Invoke(step, stepProgress, totalProgress);
+            else if (step == LightmapsBakeSteps.CacheEntries)
+                LightmapsBakeStart?.Invoke();
+            else if (step == LightmapsBakeSteps.GenerateLightmapCharts)
+                LightmapsBakeEnd?.Invoke(false);
+            else
+                LightmapsBakeEnd?.Invoke(true);
+        }
+
+        /// <summary>
+        /// Starts lightmaps baking for the open scenes or cancel it if already running.
+        /// </summary>
+        public void BakeLightmapsOrCancel()
+        {
+            bool isBakingLightmaps = ProgressReporting.BakeLightmaps.IsActive;
+
+            if (isBakingLightmaps)
+                Internal_BakeLightmaps(true);
+            else
+                StateMachine.GoToState<BuildingLightingState>();
+        }
+
+        /// <summary>
+        /// Clears the lightmaps linkage for all open scenes.
+        /// </summary>
+        public void ClearLightmaps()
+        {
+            var scenes = SceneManager.Scenes;
+            for (int i = 0; i < scenes.Length; i++)
+            {
+                scenes[i].ClearLightmaps();
+            }
+            Scene.MarkSceneEdited(scenes);
+        }
+
+        #endregion
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -456,6 +569,10 @@ namespace FlaxEditor
         internal static extern bool Internal_ImportModel(string inputPath, string outputPath, ref ModelImportSettings.InternalOptions options);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_CopyCache(ref Guid dstId, ref Guid srcId);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_BakeLightmaps(bool cancel);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_LogWrite(LogType type, string msg);
 #endif
 
         #endregion

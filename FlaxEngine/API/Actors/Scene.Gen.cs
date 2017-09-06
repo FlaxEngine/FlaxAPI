@@ -86,6 +86,22 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Removes all baked lightmap textures from the scene.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void ClearLightmaps() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_ClearLightmaps(unmanagedPtr);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -94,6 +110,8 @@ namespace FlaxEngine
 		internal static extern string Internal_GetFilename(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern string Internal_GetDataFolderPath(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_ClearLightmaps(IntPtr obj);
 #endif
 #endregion
 	}

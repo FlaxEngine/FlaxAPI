@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Collections.Generic;
 
 namespace FlaxEngine
@@ -11,6 +12,36 @@ namespace FlaxEngine
     /// </summary>
     public static class Utils
     {
+        /// <summary>
+        /// Rounds the floating point value up to 1 decimal place.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The rounded result.</returns>
+        public static float RoundTo1DecimalPlace(float value)
+        {
+            return (float)Math.Round(value * 10) / 10;
+        }
+        
+        /// <summary>
+        /// Rounds the floating point value up to 2 decimal places.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The rounded result.</returns>
+        public static float RoundTo2DecimalPlaces(float value)
+        {
+            return (float)Math.Round(value * 100) / 100;
+        }
+        
+        /// <summary>
+        /// Rounds the floating point value up to 3 decimal places.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The rounded result.</returns>
+        public static float RoundTo3DecimalPlaces(float value)
+        {
+            return (float)Math.Round(value * 1000) / 1000;
+        }
+
         /// <summary>
         /// Determines whether two arrays are equal by comparing the elements by using the default equality comparer for their type.
         /// </summary>

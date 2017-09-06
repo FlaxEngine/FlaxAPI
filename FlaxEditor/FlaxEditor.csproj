@@ -273,6 +273,7 @@
     <Compile Include="Windows\AboutDialog.cs" />
     <Compile Include="Windows\Assets\AssetEditorWindow.cs" />
     <Compile Include="Windows\Assets\CubeTextureWindow.cs" />
+    <Compile Include="Windows\Assets\FontWindow.cs" />
     <Compile Include="Windows\Assets\IESProfileWindow.cs" />
     <Compile Include="Windows\Assets\MaterialInstanceWindow.cs" />
     <Compile Include="Windows\Assets\MaterialWindow.cs" />

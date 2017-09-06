@@ -15,7 +15,7 @@ namespace FlaxEngine
         /// <summary>
         /// Get default debug logger.
         /// </summary>
-        public static ILogger logger
+        public static ILogger Logger
         {
             get { return _logger; }
         }
@@ -34,7 +34,7 @@ namespace FlaxEngine
         public static void Assert(bool condition)
         {
             if (!condition)
-                logger.Log(LogType.Assert, "Assertion failed");
+                Logger.Log(LogType.Assert, "Assertion failed");
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace FlaxEngine
         public static void Assert(bool condition, Object context)
         {
             if (!condition)
-                logger.Log(LogType.Assert, (object)"Assertion failed", context);
+                Logger.Log(LogType.Assert, (object)"Assertion failed", context);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace FlaxEngine
         public static void Assert(bool condition, object message)
         {
             if (!condition)
-                logger.Log(LogType.Assert, message);
+                Logger.Log(LogType.Assert, message);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace FlaxEngine
         public static void Assert(bool condition, string message)
         {
             if (!condition)
-                logger.Log(LogType.Assert, message);
+                Logger.Log(LogType.Assert, message);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace FlaxEngine
         public static void Assert(bool condition, object message, Object context)
         {
             if (!condition)
-                logger.Log(LogType.Assert, message, context);
+                Logger.Log(LogType.Assert, message, context);
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace FlaxEngine
         public static void Assert(bool condition, string message, Object context)
         {
             if (!condition)
-                logger.Log(LogType.Assert, (object)message, context);
+                Logger.Log(LogType.Assert, (object)message, context);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace FlaxEngine
         public static void AssertFormat(bool condition, string format, params object[] args)
         {
             if (!condition)
-                logger.LogFormat(LogType.Assert, format, args);
+                Logger.LogFormat(LogType.Assert, format, args);
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace FlaxEngine
         public static void AssertFormat(bool condition, Object context, string format, params object[] args)
         {
             if (!condition)
-                logger.Log(LogType.Assert, context, string.Format(format, args));
+                Logger.Log(LogType.Assert, context, string.Format(format, args));
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace FlaxEngine
         /// <param name="message">String or object to be converted to string representation for display.</param>
         public static void Log(object message)
         {
-            logger.Log(LogType.Log, message);
+            Logger.Log(LogType.Log, message);
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace FlaxEngine
         /// <param name="context">Object to which the message applies.</param>
         public static void Log(object message, Object context)
         {
-            logger.Log(LogType.Log, message, context);
+            Logger.Log(LogType.Log, message, context);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace FlaxEngine
         [Conditional("FLAX_ASSERTIONS")]
         public static void LogAssertion(object message)
         {
-            logger.Log(LogType.Assert, message);
+            Logger.Log(LogType.Assert, message);
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace FlaxEngine
         [Conditional("FLAX_ASSERTIONS")]
         public static void LogAssertion(object message, Object context)
         {
-            logger.Log(LogType.Assert, message, context);
+            Logger.Log(LogType.Assert, message, context);
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace FlaxEngine
         [Conditional("FLAX_ASSERTIONS")]
         public static void LogAssertionFormat(string format, params object[] args)
         {
-            logger.LogFormat(LogType.Assert, format, args);
+            Logger.LogFormat(LogType.Assert, format, args);
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace FlaxEngine
         [Conditional("FLAX_ASSERTIONS")]
         public static void LogAssertionFormat(Object context, string format, params object[] args)
         {
-            logger.Log(LogType.Assert, context, string.Format(format, args));
+            Logger.Log(LogType.Assert, context, string.Format(format, args));
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace FlaxEngine
         /// <param name="message">String or object to be converted to string representation for display.</param>
         public static void LogError(object message)
         {
-            logger.Log(LogType.Error, message);
+            Logger.Log(LogType.Error, message);
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace FlaxEngine
         /// <param name="context">Object to which the message applies.</param>
         public static void LogError(object message, Object context)
         {
-            logger.Log(LogType.Error, message, context);
+            Logger.Log(LogType.Error, message, context);
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace FlaxEngine
         /// <param name="args">Format arguments.</param>
         public static void LogErrorFormat(string format, params object[] args)
         {
-            logger.LogFormat(LogType.Error, format, args);
+            Logger.LogFormat(LogType.Error, format, args);
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace FlaxEngine
         /// <param name="context">Object to which the message applies.</param>
         public static void LogErrorFormat(Object context, string format, params object[] args)
         {
-            logger.Log(LogType.Error, context, string.Format(format, args));
+            Logger.Log(LogType.Error, context, string.Format(format, args));
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace FlaxEngine
         /// <param name="exception">Runtime Exception.</param>
         public static void LogException(Exception exception)
         {
-            logger.LogException(exception, null);
+            Logger.LogException(exception, null);
         }
 
         /// <summary>
@@ -245,7 +245,7 @@ namespace FlaxEngine
         /// <param name="exception">Runtime Exception.</param>
         public static void LogException(Exception exception, Object context)
         {
-            logger.LogException(exception, context);
+            Logger.LogException(exception, context);
         }
 
         /// <summary>
@@ -255,7 +255,7 @@ namespace FlaxEngine
         /// <param name="args">Format arguments.</param>
         public static void LogFormat(string format, params object[] args)
         {
-            logger.LogFormat(LogType.Log, format, args);
+            Logger.LogFormat(LogType.Log, format, args);
         }
 
         /// <summary>
@@ -266,7 +266,7 @@ namespace FlaxEngine
         /// <param name="context">Object to which the message applies.</param>
         public static void LogFormat(Object context, string format, params object[] args)
         {
-            logger.Log(LogType.Log, context, string.Format(format, args));
+            Logger.Log(LogType.Log, context, string.Format(format, args));
         }
 
         /// <summary>
@@ -275,7 +275,7 @@ namespace FlaxEngine
         /// <param name="message">String or object to be converted to string representation for display.</param>
         public static void LogWarning(object message)
         {
-            logger.Log(LogType.Warning, message);
+            Logger.Log(LogType.Warning, message);
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace FlaxEngine
         /// <param name="context">Object to which the message applies.</param>
         public static void LogWarning(object message, Object context)
         {
-            logger.Log(LogType.Warning, message, context);
+            Logger.Log(LogType.Warning, message, context);
         }
 
         /// <summary>
@@ -295,7 +295,7 @@ namespace FlaxEngine
         /// <param name="args">Format arguments.</param>
         public static void LogWarningFormat(string format, params object[] args)
         {
-            logger.Log(LogType.Warning, format, args);
+            Logger.Log(LogType.Warning, format, args);
         }
 
         /// <summary>
@@ -306,7 +306,7 @@ namespace FlaxEngine
         /// <param name="context">Object to which the message applies.</param>
         public static void LogWarningFormat(Object context, string format, params object[] args)
         {
-            logger.Log(LogType.Warning, context, string.Format(format, args));
+            Logger.Log(LogType.Warning, context, string.Format(format, args));
         }
     }
 }

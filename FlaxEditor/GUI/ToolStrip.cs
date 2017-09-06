@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,7 +21,7 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// Event fired when button gets clicked.
         /// </summary>
-        public Action<int> OnButtonClicked;
+        public Action<int> ButtonClicked;
 
         /// <summary>
         /// Tries to get the last button.
@@ -137,7 +137,7 @@ namespace FlaxEditor.GUI
 
         internal void OnButtonClickedInternal(int id)
         {
-            OnButtonClicked?.Invoke(id);
+            ButtonClicked?.Invoke(id);
         }
 
         /// <inheritdoc />

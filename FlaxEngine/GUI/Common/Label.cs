@@ -10,13 +10,24 @@ namespace FlaxEngine.GUI
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class Label : ContainerControl
     {
+        private string _text;
+        private bool _autoHeight;
+
         /// <summary>
         /// Gets or sets the text.
         /// </summary>
         /// <value>
         /// The text.
         /// </value>
-        public string Text { get; set; }
+        public string Text
+        {
+            get => _text;
+            set
+            {
+                _text = value;
+                PerformLayout();
+            }
+        }
 
         /// <summary>
         /// Gets or sets the color of the text.
@@ -75,6 +86,22 @@ namespace FlaxEngine.GUI
         public bool ClipText { get; set; } = false;
 
         /// <summary>
+        /// Gets or sets a value indicating whether set automatic height based on text contents.
+        /// </summary>
+        public bool AutoHeight
+        {
+            get => _autoHeight;
+            set
+            {
+                if (_autoHeight != value)
+                {
+                    _autoHeight = value;
+                    PerformLayout();
+                }
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Label"/> class.
         /// </summary>
         public Label()
@@ -118,12 +145,33 @@ namespace FlaxEngine.GUI
                 rect,
                 TextColor,
                 HorizontalAlignment,
-                VerticalAlignment,
+                _autoHeight ? TextAlignment.Near : VerticalAlignment,
                 Wrapping
             );
 
             if (ClipText)
                 Render2D.PopClip();
+        }
+
+        /// <inheritdoc />
+        protected override void PerformLayoutSelf()
+        {
+            // Check if size is controlled via text
+            if (AutoHeight)
+            {
+                var style = Style.Current;
+                var font = Font ?? style.FontMedium;
+                if (font)
+                {
+                    // Calculate text size
+                    Vector2 textSize = font.MeasureText(_text);
+
+                    // Update size
+                    Height = textSize.Y + Margin.Size.Y;
+                }
+            }
+
+            base.PerformLayoutSelf();
         }
     }
 }
