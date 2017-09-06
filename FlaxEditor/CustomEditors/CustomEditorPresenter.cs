@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using FlaxEditor.CustomEditors.Editors;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors
@@ -39,18 +38,69 @@ namespace FlaxEditor.CustomEditors
                 base.Update(deltaTime);
             }
         }
+        
+        /// <summary>
+        /// The root editor. Mocks some custom editors events. Created a child editor for the selected objects.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.CustomEditors.SyncPointEditor" />
+        protected class RootEditor : SyncPointEditor
+        {
+            /// <summary>
+            /// The selected objects editor.
+            /// </summary>
+            public CustomEditor Editor;
+            
+            /// <summary>
+            /// Setups editor for selected objects.
+            /// </summary>
+            /// <param name="presenter">The presenter.</param>
+            public void Setup(CustomEditorPresenter presenter)
+            {
+                Cleanup();
+                Initialize(presenter, presenter, null);
+            }
 
-        private bool _isDirty;
+            /// <inheritdoc />
+            public override void Initialize(LayoutElementsContainer layout)
+            {
+                var selection = Presenter.Selection;
+                if (selection.Count > 0)
+                {
+                    Type type = typeof(object);
+                    if (selection.HasDiffrentTypes == false)
+                        type = selection[0].GetType();
+                    Editor = CustomEditorsUtil.CreateEditor(type, false);
+                    Editor.Initialize(Presenter, Presenter, selection);
+                    OnChildCreated(Editor);
+                }
+                
+                base.Initialize(layout);
+            }
 
+            /// <inheritdoc />
+            protected override void OnModified()
+            {
+                Presenter.Modified?.Invoke();
+
+                base.OnModified();
+            }
+
+            /// <inheritdoc />
+            protected override void SyncChildValues(ValueContainer values)
+            {
+                // Skip
+            }
+        }
+        
         /// <summary>
         /// The panel.
         /// </summary>
         public readonly PresenterPanel Panel;
 
         /// <summary>
-        /// The selected objects editor.
+        /// The selected objects editor (root, it generatec actual editor for selection).
         /// </summary>
-        protected CustomEditor Editor;
+        protected readonly RootEditor Editor;
 
         /// <summary>
         /// The selected objects list.
@@ -90,6 +140,8 @@ namespace FlaxEditor.CustomEditors
         {
             Undo = undo;
             Panel = new PresenterPanel(this);
+            Editor = new RootEditor();
+            Editor.Initialize(this, this, null);
         }
 
         /// <summary>
@@ -150,23 +202,7 @@ namespace FlaxEditor.CustomEditors
             Panel.DisposeChildren();
             
             ClearLayout();
-            if (Editor != null)
-            {
-                Editor.Cleanup();
-                Editor = null;
-            }
-
-            // Build new one
-            if (Selection.Count > 0)
-            {
-                Type type = typeof(object);
-                if (Selection.HasDiffrentTypes == false)
-                    type = Selection[0].GetType();
-                Editor = CustomEditorsUtil.CreateEditor(type, false);
-                Editor.Initialize(this, this, Selection);
-            }
-
-            _isDirty = false;
+            Editor.Setup(this);
 
             Panel.UnlockChildrenRecursive();
             Panel.PerformLayout();
@@ -190,33 +226,7 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         internal void Update()
         {
-            if (Editor == null)
-                return;
-
-            bool isDirty = _isDirty;
-            _isDirty = false;
-
-            // If any UI control has been modified we should try to record selected objects change
-            if (isDirty && Undo != null)
-            {
-                using (new UndoMultiBlock(Undo, GetUndoObjects(this), "Edit object(s)"))
-                    Editor.RefreshRoot();
-            }
-            else
-            {
-                Editor.RefreshRoot();
-            }
-
-            if (isDirty)
-                Modified?.Invoke();
-        }
-
-        /// <summary>
-        /// Called when any object UI editor value gets modified and will be updated during next refresh.
-        /// </summary>
-        internal void OnDirty()
-        {
-            _isDirty = true;
+            Editor?.RefreshInternal();
         }
 
         /// <inheritdoc />

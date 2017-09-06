@@ -58,7 +58,7 @@ namespace FlaxEditor
             // Note: this is automatic tracking system to check if undo action modifies scene objects
 
             // Skip if all scenes are already modified
-            if(Editor.Instance.Scene.IsEverySceneEdited())
+            if (Editor.Instance.Scene.IsEverySceneEdited())
                 return;
 
             if (action is UndoActionObject undoActionObject)
@@ -72,6 +72,10 @@ namespace FlaxEditor
                 else if (data.TargetInstance is Actor actor)
                 {
                     Editor.Instance.Scene.MarkSceneEdited(actor.Scene);
+                }
+                else if (data.TargetInstance is Script script)
+                {
+                    Editor.Instance.Scene.MarkSceneEdited(script.Actor.Scene);
                 }
             }
             else if (action is TransformObjectsAction transformObjectsAction)

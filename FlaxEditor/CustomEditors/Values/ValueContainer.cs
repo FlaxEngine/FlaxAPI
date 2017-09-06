@@ -150,7 +150,9 @@ namespace FlaxEditor.CustomEditors
         /// <param name="instanceValues">The parent values.</param>
         public virtual void Refresh(ValueContainer instanceValues)
         {
-            if (instanceValues == null || instanceValues.Count != Count)
+            if(instanceValues == null)
+                throw new ArgumentNullException();
+            if (instanceValues.Count != Count)
                 throw new ArgumentException();
 
             if (Info is PropertyInfo propertyInfo)
@@ -173,7 +175,9 @@ namespace FlaxEditor.CustomEditors
         /// <param name="value">The value.</param>
         public virtual void Set(ValueContainer instanceValues, object value)
         {
-            if (instanceValues == null || instanceValues.Count != Count)
+            if (instanceValues == null)
+                throw new ArgumentNullException();
+            if (instanceValues.Count != Count)
                 throw new ArgumentException();
 
             if (Info is PropertyInfo propertyInfo)
@@ -201,7 +205,9 @@ namespace FlaxEditor.CustomEditors
         /// <param name="instanceValues">The parent values.</param>
         public virtual void Set(ValueContainer instanceValues)
         {
-            if (instanceValues == null || instanceValues.Count != Count)
+            if (instanceValues == null)
+                throw new ArgumentNullException();
+            if (instanceValues.Count != Count)
                 throw new ArgumentException();
 
             if (Info is PropertyInfo propertyInfo)

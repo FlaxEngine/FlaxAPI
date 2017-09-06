@@ -126,7 +126,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                         }
                     }
 
-                    ScriptsEditor.ParentEditor.RebuildLayout();
+                    ScriptsEditor.OnScriptsEdited();
                 }
 
                 _dragScripts.OnDragDrop();
@@ -139,11 +139,21 @@ namespace FlaxEditor.CustomEditors.Dedicated
         /// Custom editor for actor scripts collection.
         /// </summary>
         /// <seealso cref="CustomEditor" />
-        public sealed class ScriptsEditor : CustomEditor
+        public sealed class ScriptsEditor : SyncPointEditor
         {
+            /// <summary>
+            /// The scripts collection. Undo operations are recorder for scripts.
+            /// </summary>
+            private readonly List<Script> _scripts = new List<Script>();
+
+            /// <inheritdoc />
+            public override IEnumerable<object> UndoObjects => _scripts;
+
             /// <inheritdoc />
             public override void Initialize(LayoutElementsContainer layout)
             {
+                _scripts.Clear();
+
                 // Area for drag&drop scripts
                 var dragArea = layout.Custom<DragAreaControl>();
                 dragArea.CustomControl.ScriptsEditor = this;
@@ -154,6 +164,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
                 // Scripts
                 var scripts = (Script[])Values[0];
+                _scripts.AddRange(scripts);
                 var elementType = typeof(Script);
                 for (int i = 0; i < scripts.Length; i++)
                 {
@@ -161,16 +172,19 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     var values = new ListValueContainer(elementType, i, Values);
                     var type = script.GetType();
                     var editor = CustomEditorsUtil.CreateEditor(type, false);
+
+                    // Create group
                     var title = CustomEditorsUtil.GetPropertyNameUI(type.Name);
                     var group = layout.Group(title);
 
-                    const float settingsButtonMargin = 1;
-                    const float settingsButtonSize = 12;
-                    var settingsButton = new Image(true, group.Panel.Width - settingsButtonSize - settingsButtonMargin, settingsButtonMargin, settingsButtonSize, settingsButtonSize)
+                    // Add settings button to the group
+                    const float settingsButtonSize = 14;
+                    var settingsButton = new Image(true, group.Panel.Width - settingsButtonSize, 0, settingsButtonSize, settingsButtonSize)
                     {
                         AnchorStyle = AnchorStyle.UpperRight,
                         IsScrollable = false,
                         Color = new Color(0.7f),
+                        Margin = new Margin(1),
                         ImageSource = new SpriteImageSource(FlaxEngine.GUI.Style.Current.Settings),
                         Tag = script,
                         Parent = group.Panel
@@ -179,6 +193,8 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
                     group.Object(values, editor);
                 }
+
+                base.Initialize(layout);
             }
 
             private void SettingsButtonOnClicked(Image image, MouseButtons mouseButtons)
@@ -191,7 +207,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 var cm = new ContextMenu();
                 cm.Tag = script;
                 cm.OnButtonClicked += SettingsMenuOnButtonClicked;
-                cm.AddButton(0, "Reset").Enabled = false; // TODO: finish this
+                cm.AddButton(0, "Reset").Enabled = false;// TODO: finish this
                 cm.AddSeparator();
                 cm.AddButton(1, "Remove");
                 cm.AddButton(2, "Move up").Enabled = script.OrderInParent > 0;
@@ -220,19 +236,19 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     // Remove
                     case 1:
                         Object.Destroy(script);
-                        ParentEditor.RebuildLayout();
+                        OnScriptsEdited();
                         break;
 
                     // Move up
                     case 2:
                         script.OrderInParent -= 1;
-                        ParentEditor.RebuildLayout();
+                        OnScriptsEdited();
                         break;
 
                     // Move down
                     case 3:
                         script.OrderInParent += 1;
-                        ParentEditor.RebuildLayout();
+                        OnScriptsEdited();
                         break;
 
                     // Edit script
@@ -242,6 +258,20 @@ namespace FlaxEditor.CustomEditors.Dedicated
                             Editor.Instance.ContentEditing.Open(item);
                         break;
                 }
+            }
+
+            /// <summary>
+            /// Called when scripts collection gets edited (change size or scripts order).
+            /// </summary>
+            public void OnScriptsEdited()
+            {
+                // TODO: use undo actions for script operations and don't mark scenes edited here!
+                for (int i = 0; i < ParentEditor.Values.Count; i++)
+                {
+                    if (ParentEditor.Values[i] is Actor actor)
+                        Editor.Instance.Scene.MarkSceneEdited(actor.Scene);
+                }
+                ParentEditor.RebuildLayout();
             }
         }
 

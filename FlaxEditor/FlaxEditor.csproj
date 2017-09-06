@@ -92,6 +92,7 @@
     <Compile Include="CustomEditors\Elements\SpaceElement.cs" />
     <Compile Include="CustomEditors\Elements\TextBoxElement.cs" />
     <Compile Include="CustomEditors\Elements\VerticalPanelElement.cs" />
+    <Compile Include="CustomEditors\SyncPointEditor.cs" />
     <Compile Include="CustomEditors\Values\CustomValueContainer.cs" />
     <Compile Include="CustomEditors\Values\ListValueContainer.cs" />
     <Compile Include="CustomEditors\Values\ValueContainer.cs" />
