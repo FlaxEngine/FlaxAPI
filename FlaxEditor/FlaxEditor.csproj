@@ -169,6 +169,7 @@
     <Compile Include="Modules\WindowsModule.cs" />
     <Compile Include="Progress\Handlers\BakeEnvProbesProgress.cs" />
     <Compile Include="Progress\Handlers\BakeLightmapsProgress.cs" />
+    <Compile Include="Progress\Handlers\CodeEditorOpenProgress.cs" />
     <Compile Include="Progress\Handlers\CompileScriptsProgress.cs" />
     <Compile Include="Progress\Handlers\ImportAssetsProgress.cs" />
     <Compile Include="Progress\ProgressHandler.cs" />
