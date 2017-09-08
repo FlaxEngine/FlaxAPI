@@ -118,24 +118,32 @@ namespace FlaxEditor.States
             SceneManager.OnSceneLoaded += onSceneEvent;
             SceneManager.OnSceneLoadError += onSceneEvent;
             SceneManager.OnSceneUnloaded += onSceneEvent;
-
-            // Note: we use _lastSceneFromRequest to store id of the scene used for the last request (async scene requests are performed in an calling order)
-            // Later we can detect this scene event and assume that all previous actions has been done.
-            _lastSceneFromRequest = _scenesToLoad.Count > 0 ? _scenesToLoad[_scenesToLoad.Count - 1] : _scenesToUnload[_scenesToUnload.Count - 1].ID;
-
+            
             // Push scenes changing requests
             for (int i = 0; i < _scenesToUnload.Count; i++)
             {
+                _lastSceneFromRequest = _scenesToUnload[i].ID;
                 SceneManager.UnloadSceneAsync(_scenesToUnload[i]);
             }
             for (int i = 0; i < _scenesToLoad.Count; i++)
             {
-                SceneManager.LoadSceneAsync(_scenesToLoad[i]);
+                var id = _scenesToLoad[i];
+                bool failed = SceneManager.LoadSceneAsync(id);
+                if (!failed)
+                    _lastSceneFromRequest = id;
             }
-
+            
             // Clear request
             _scenesToLoad.Clear();
             _scenesToUnload.Clear();
+
+            // Spacial case when all scenes are unloaded and no scene loaded we won't be able too handle onSceneEvent so just leave state now
+            // It may be caused when scripts are not laoded due to ocmpilation errors or cannot find scene asset or other internal engine.
+            if (_lastSceneFromRequest == Guid.Empty)
+            {
+                Editor.LogWarning("Cannot perform scene change");
+                StateMachine.GoToState<EditingSceneState>();
+            }
         }
 
         /// <inheritdoc />
@@ -145,6 +153,10 @@ namespace FlaxEditor.States
             if (!(nextState is ClosingState))
             {
                 Assert.AreEqual(Guid.Empty, _lastSceneFromRequest, "Invalid state.");
+            }
+            else
+            {
+                _lastSceneFromRequest = Guid.Empty;
             }
 
             // Unbind events
@@ -159,7 +171,6 @@ namespace FlaxEditor.States
             if (sceneId == _lastSceneFromRequest)
             {
                 _lastSceneFromRequest = Guid.Empty;
-
                 StateMachine.GoToState<EditingSceneState>();
             }
         }

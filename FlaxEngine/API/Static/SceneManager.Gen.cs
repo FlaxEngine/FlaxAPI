@@ -309,16 +309,17 @@ namespace FlaxEngine
 		/// Loads scene from the asset. Done in the background.
 		/// </summary>
 		/// <param name="sceneId">The scene ID to load.</param>
+		/// <returns>True if failed (no scripts loaded or missing scene asset), otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static void LoadSceneAsync(Guid sceneId) 
+		public static bool LoadSceneAsync(Guid sceneId) 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_LoadSceneAsync(ref sceneId);
+			return Internal_LoadSceneAsync(ref sceneId);
 #endif
 		}
 
@@ -447,7 +448,7 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Scene Internal_LoadSceneFromBytes(byte[] sceneData);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_LoadSceneAsync(ref Guid sceneId);
+		internal static extern bool Internal_LoadSceneAsync(ref Guid sceneId);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_UnloadScene(IntPtr scene);
 		[MethodImpl(MethodImplOptions.InternalCall)]

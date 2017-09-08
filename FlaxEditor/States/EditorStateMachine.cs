@@ -115,25 +115,9 @@ namespace FlaxEditor.States
         /// <inheritdoc />
         protected override void SwitchState(State nextState)
         {
-            var prev = (EditorState)currentState;
-            var next = (EditorState)nextState;
+            Editor.Log($"Changing editor state from {currentState} to {nextState}");
 
-            // Send info
-            //LOG_EDITOR(Info, 117, ToString(next->GetType()));
-
-            // Base
             base.SwitchState(nextState);
-
-            // Fire events
-            /*OnStateChanged(prev ? prev->GetType() : EditorStates::Loading, next ? next->GetType() : EditorStates::Loading);
-            if (_currentState && CurrentState()->IsEditorReady())
-            {
-                // TODO: let CEditor bind to OnStateCangedEvent instead of that nesting!
-
-                // Update UI
-                CUIModule->UpdateToolstrip();
-                CUIModule->UpdateStatusStripColor();
-            }*/
         }
     }
 }
