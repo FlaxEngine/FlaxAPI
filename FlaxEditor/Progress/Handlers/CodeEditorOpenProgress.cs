@@ -27,7 +27,7 @@ namespace FlaxEditor.Progress.Handlers
         {
             base.OnStart();
 
-            OnUpdate(10, "Starting editor...");
+            OnUpdate(0.1f, "Starting editor...");
         }
     }
 }
