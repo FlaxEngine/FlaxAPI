@@ -446,6 +446,9 @@ namespace FlaxEditor.Windows
             };
 
             Add(ref desc);
+
+            // Focus window on errors (easier for user to get why scrips cannot compile)
+            FocusOrShow();
         }
 
         private void OnCompilationWarning(string message, string file, int line)

@@ -218,6 +218,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 // TODO: copt script reference
                 cm.AddSeparator();
                 cm.AddButton(4, "Edit script");
+                cm.AddButton(5, "Show in content window");
                 cm.Show(image, image.Size);
             }
 
@@ -253,10 +254,21 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
                     // Edit script
                     case 4:
+                    {
                         var item = Editor.Instance.ContentDatabase.FindScriptWitScriptName(script);
                         if (item != null)
                             Editor.Instance.ContentEditing.Open(item);
                         break;
+                    }
+
+                    // Show in content window
+                    case 5:
+                    {
+                        var item = Editor.Instance.ContentDatabase.FindScriptWitScriptName(script);
+                        if (item != null)
+                            Editor.Instance.Windows.ContentWin.Select(item);
+                        break;
+                    }
                 }
             }
 
