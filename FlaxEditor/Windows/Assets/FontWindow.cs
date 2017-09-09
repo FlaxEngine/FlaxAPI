@@ -68,6 +68,7 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         protected override void OnAssetLinked()
         {
+            Asset.WaitForLoaded();
             _textPreview.Font = Asset.CreateFont(30);
             _inputText.Text = string.Format("This is a sample text using font {0}.", Asset.FamilyName);
 
