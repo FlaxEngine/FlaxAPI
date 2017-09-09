@@ -244,6 +244,8 @@ namespace FlaxEditor
             // Start exit
             StateMachine.GoToState<ClosingState>();
 
+            Scene.ClearRefsToSceneObjects();
+
             // Release modules (from back to front)
             for (int i = _modules.Count - 1; i >= 0; i--)
             {

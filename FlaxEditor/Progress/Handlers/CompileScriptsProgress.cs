@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using FlaxEditor.Scripting;
 
 namespace FlaxEditor.Progress.Handlers
@@ -23,6 +24,13 @@ namespace FlaxEditor.Progress.Handlers
             ScriptsBuilder.CompilationFailed += OnEnd;
             ScriptsBuilder.CompilationStarted += () => OnUpdate(0.2f, "Compiling scripts...");
             ScriptsBuilder.ScriptsReloadCalled += () => OnUpdate(0.8f, "Reloading scripts...");
+            ScriptsBuilder.ScriptsReloadBegin += OnScriptsReloadBegin;
+        }
+
+        private void OnScriptsReloadBegin()
+        {
+            // Clear references to the user scripts (we gonna reload an assembly)
+            Editor.Instance.Scene.ClearRefsToSceneObjects();
         }
 
         /// <inheritdoc />
