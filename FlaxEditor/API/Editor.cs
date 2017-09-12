@@ -578,6 +578,16 @@ namespace FlaxEditor
 
         #region Internal Calls
 
+        internal IntPtr GetMainWindowPtr()
+        {
+            return Windows.MainWindow.unmanagedPtr;
+        }
+
+        internal bool CanReloadScripts()
+        {
+            return StateMachine.CurrentState.CanReloadScripts;
+        }
+
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_CloneAssetFile(string dstPath, string srcPath, ref Guid dstId);
