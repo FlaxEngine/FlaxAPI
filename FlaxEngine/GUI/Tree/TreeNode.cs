@@ -679,8 +679,8 @@ namespace FlaxEngine.GUI
             if (IsFocused && _children.Count > 0)
             {
                 if (key.InvokeFirstCommand(
-                    (KeyCode.ArrowLeft, Collapse),
-                    (KeyCode.ArrowRight, Expand))) return true;
+                    new KeyCodeMap.KeyCommand(KeyCode.ArrowLeft, Collapse),
+                    new KeyCodeMap.KeyCommand(KeyCode.ArrowRight, Expand))) return true;
             }
 
             // Base

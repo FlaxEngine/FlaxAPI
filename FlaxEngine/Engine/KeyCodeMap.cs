@@ -10,6 +10,20 @@ namespace FlaxEngine
     /// </summary>
     public class KeyCodeMap : IEnumerable<KeyCode>
     {
+        /// <summary>
+        /// TODO comment
+        /// </summary>
+        public class KeyCommand
+        {
+            public KeyCode Code { get; set; }
+            public Action ActionToInvoke { get; set; }
+            public KeyCommand(KeyCode code, Action actionToInvoke)
+            {
+                Code = code;
+                ActionToInvoke = actionToInvoke;
+            }
+        }
+
         private readonly HashSet<KeyCode> _keyCodes;
 
         /// <summary>
@@ -73,7 +87,7 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="actionsToInvoke">All actions that should be invoked if key is pressed</param>
         /// <returns></returns>
-        public bool InvokeFirstCommand(params (KeyCode Code, Action ActionToInvoke)[] actionsToInvoke)
+        public bool InvokeFirstCommand(params KeyCommand[] actionsToInvoke)
         {
             foreach (var tuple in actionsToInvoke)
             {
@@ -88,9 +102,8 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="actionsToInvoke">All actions that should be invoked if key is pressed</param>
         /// <returns></returns>
-        public bool InvokeFirstCommand(KeyCode modifier, params (KeyCode Code, Action ActionToInvoke)[] actionsToInvoke)
+        public bool InvokeFirstCommand(KeyCode modifier, params KeyCommand[] actionsToInvoke)
         {
-            Debug.Log(KeyCodes.Contains(modifier));
             if (!KeyCodes.Contains(modifier))
                 return false;
             foreach (var tuple in actionsToInvoke)
@@ -106,7 +119,7 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="actionsToInvoke">All actions that should be invoked if key is pressed</param>
         /// <returns></returns>
-        public bool InvokeFirstCommand(KeyCode[] modifiers, params (KeyCode Code, Action ActionToInvoke)[] actionsToInvoke)
+        public bool InvokeFirstCommand(KeyCode[] modifiers, params KeyCommand[] actionsToInvoke)
         {
             foreach (var modifier in modifiers)
             {
@@ -204,6 +217,35 @@ namespace FlaxEngine
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            var keyCodeMap = (KeyCodeMap)obj;
+            if(keyCodeMap?.Count != Count)
+            {
+                return false;
+            }
+            foreach (var code in KeyCodes)
+            {
+                if (!keyCodeMap.KeyCodes.Contains(code))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            var stringBuilder = new StringBuilder();
+            foreach (var keyCode in _keyCodes)
+            {
+                stringBuilder.Append(keyCode + " ");
+            }
+            return stringBuilder.ToString();
         }
     }
 }

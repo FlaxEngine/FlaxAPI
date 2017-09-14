@@ -329,7 +329,14 @@ namespace FlaxEngine.GUI
         /// <param name="map"></param>
         private void OnInputOnOnKeyPressed(KeyCodeMap map)
         {
-            OnKeyPressed(map);
+            try
+            {
+                OnKeyPressed(map);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
         }
 
         /// <summary>

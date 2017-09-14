@@ -610,11 +610,11 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Remove one character in the back (look default behavior for <see cref="KeyCode.Backspace"/>
         /// </summary>
-        private void RemoveBackward()
+        public void RemoveBackward()
         {
-            if (RemoveSelection() && CaretPosition > 0)
+            if (!RemoveSelection() && CaretPosition > 0)
             {
-                setSelection(SelectionLeft);
+                setSelection(SelectionLeft - 1);
                 _text = _text.Remove(SelectionLeft, 1);
                 OnTextChanged();
             }
@@ -623,20 +623,28 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Remove one character in the front (look default behavior for <see cref="KeyCode.Delete"/>
         /// </summary>
-        private void RemoveForward()
+        public void RemoveForward()
         {
-            if (RemoveSelection() && CaretPosition < TextLength)
+            if (!RemoveSelection() && CaretPosition < TextLength)
             {
                 _text = _text.Remove(SelectionLeft, 1);
                 OnTextChanged();
             }
         }
 
+        /// <summary>
+        /// TODO chagne to property
+        /// </summary>
+        /// <param name="caret"></param>
         private void setSelection(int caret)
         {
             setSelection(caret, caret);
         }
 
+        /// <summary>
+        /// TODO chagne to property
+        /// </summary>
+        /// <param name="caret"></param>
         private void setSelection(int start, int end)
         {
             // Update parameters

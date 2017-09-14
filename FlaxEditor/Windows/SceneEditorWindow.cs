@@ -39,17 +39,17 @@ namespace FlaxEditor.Windows
             if (base.OnKeyPressed(key)) return true;
 
             if(key.InvokeFirstCommand(KeyCode.Control,
-                (KeyCode.S, Editor.SaveAll),
-                (KeyCode.Z, Editor.PerformUndo),
-                (KeyCode.Y, () => { Editor.PerformRedo(); Focus(); }),
-                (KeyCode.X, Editor.SceneEditing.Cut),
-                (KeyCode.C, Editor.SceneEditing.Copy),
-                (KeyCode.V, () => { Editor.SceneEditing.Paste(); }),
-                (KeyCode.D, Editor.SceneEditing.Duplicate),
-                (KeyCode.A, Editor.SceneEditing.SelectAllScenes),
-                (KeyCode.F, Editor.Windows.SceneWin.Search)
+                new KeyCodeMap.KeyCommand(KeyCode.S, Editor.SaveAll),
+                new KeyCodeMap.KeyCommand(KeyCode.Z, Editor.PerformUndo),
+                new KeyCodeMap.KeyCommand(KeyCode.Y, () => { Editor.PerformRedo(); Focus(); }),
+                new KeyCodeMap.KeyCommand(KeyCode.X, Editor.SceneEditing.Cut),
+                new KeyCodeMap.KeyCommand(KeyCode.C, Editor.SceneEditing.Copy),
+                new KeyCodeMap.KeyCommand(KeyCode.V, () => { Editor.SceneEditing.Paste(); }),
+                new KeyCodeMap.KeyCommand(KeyCode.D, Editor.SceneEditing.Duplicate),
+                new KeyCodeMap.KeyCommand(KeyCode.A, Editor.SceneEditing.SelectAllScenes),
+                new KeyCodeMap.KeyCommand(KeyCode.F, Editor.Windows.SceneWin.Search)
             )){ return true; }
-            return key.InvokeFirstCommand((KeyCode.Delete, Editor.SceneEditing.Delete));
+            return key.InvokeFirstCommand(new KeyCodeMap.KeyCommand(KeyCode.Delete, Editor.SceneEditing.Delete));
         }
     }
 }

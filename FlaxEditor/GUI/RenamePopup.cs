@@ -102,8 +102,8 @@ namespace FlaxEditor.GUI
         public override bool OnKeyPressed(KeyCodeMap key)
         {
             if (key.InvokeFirstCommand(
-                (KeyCode.Return, OnTextChanged),
-                (KeyCode.Escape, Hide))) return true;
+                new KeyCodeMap.KeyCommand(KeyCode.Return, OnTextChanged),
+                new KeyCodeMap.KeyCommand(KeyCode.Escape, Hide))) return true;
 
             // Base
             return base.OnKeyPressed(key);

@@ -944,7 +944,15 @@ namespace FlaxEngine.GUI
                 var child = _children[i];
                 if (child.Enabled && (child.ContainsFocus || child.HasMouseCapture))
                 {
-                    child.OnKeyPressed(key);
+                    try
+                    {
+                        child.OnKeyPressed(key);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError(child.GetType().FullName);
+                        Debug.LogError(e);
+                    }
                     return true;
                 }
             }

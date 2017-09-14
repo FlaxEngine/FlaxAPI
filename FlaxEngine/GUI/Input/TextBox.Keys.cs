@@ -22,26 +22,26 @@ namespace FlaxEngine.GUI
             bool ctrDown = ParentWindow.GetKey(KeyCode.Control);
 
             if (key.InvokeFirstCommand(KeyCode.Control,
-                (KeyCode.C, Copy),
-                (KeyCode.V, Paste),
-                (KeyCode.D, Duplicate),
-                (KeyCode.X, Cut),
-                (KeyCode.A, SelectAll)))
+                new KeyCodeMap.KeyCommand(KeyCode.C, Copy),
+                new KeyCodeMap.KeyCommand(KeyCode.V, Paste),
+                new KeyCodeMap.KeyCommand(KeyCode.D, Duplicate),
+                new KeyCodeMap.KeyCommand(KeyCode.X, Cut),
+                new KeyCodeMap.KeyCommand(KeyCode.A, SelectAll)))
             {
                 return true;
             }
 
             key.InvokeFirstCommand(
-                    (KeyCode.Escape, ResetText),
-                    (KeyCode.Return, NextLineOrDeselect),
-                    (KeyCode.Backspace, RemoveBackward),
-                    (KeyCode.Delete, RemoveForward),
-                    (KeyCode.Home, () => { setSelection(0); }),
-                    (KeyCode.End, () => { setSelection(TextLength); }),
-                    (KeyCode.ArrowRight, () => { MoveRight(shftDown, ctrDown); }),
-                    (KeyCode.ArrowLeft, () => { MoveLeft(shftDown, ctrDown); }),
-                    (KeyCode.ArrowUp, () => { MoveUp(shftDown, ctrDown); }),
-                    (KeyCode.ArrowDown, () => { MoveDown(shftDown, ctrDown); })
+                new KeyCodeMap.KeyCommand(KeyCode.Escape, ResetText),
+                    new KeyCodeMap.KeyCommand(KeyCode.Return, NextLineOrDeselect),
+                    new KeyCodeMap.KeyCommand(KeyCode.Backspace, RemoveBackward),
+                    new KeyCodeMap.KeyCommand(KeyCode.Delete, RemoveForward),
+                    new KeyCodeMap.KeyCommand(KeyCode.Home, () => { setSelection(0); }),
+                    new KeyCodeMap.KeyCommand(KeyCode.End, () => { setSelection(TextLength); }),
+                    new KeyCodeMap.KeyCommand(KeyCode.ArrowRight, () => { MoveRight(shftDown, ctrDown); }),
+                    new KeyCodeMap.KeyCommand(KeyCode.ArrowLeft, () => { MoveLeft(shftDown, ctrDown); }),
+                    new KeyCodeMap.KeyCommand(KeyCode.ArrowUp, () => { MoveUp(shftDown, ctrDown); }),
+                    new KeyCodeMap.KeyCommand(KeyCode.ArrowDown, () => { MoveDown(shftDown, ctrDown); })
                 );
             return false;
         }

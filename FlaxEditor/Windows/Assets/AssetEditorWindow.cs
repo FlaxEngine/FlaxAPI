@@ -116,7 +116,7 @@ namespace FlaxEditor.Windows.Assets
         {
             // Base
             if(base.OnKeyPressed(key)) return true;
-            return key.InvokeFirstCommand(KeyCode.Control, (KeyCode.S, Save));
+            return key.InvokeFirstCommand(KeyCode.Control, new KeyCodeMap.KeyCommand(KeyCode.S, Save));
         }
 
         /// <inheritdoc />
