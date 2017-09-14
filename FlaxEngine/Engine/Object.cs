@@ -165,6 +165,9 @@ namespace FlaxEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Object Internal_FindObject(ref Guid id);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_ChangeID(IntPtr obj, ref Guid id);
+
 #endregion
     }
 }

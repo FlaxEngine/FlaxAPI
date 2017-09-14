@@ -250,9 +250,11 @@
     <Compile Include="Surface\VisjectSurface.Mouse.cs" />
     <Compile Include="Surface\VisjectSurface.Paramaters.cs" />
     <Compile Include="Surface\VisjectSurface.Serialization.cs" />
+    <Compile Include="Undo\Actions\AddRemoveScript.cs" />
     <Compile Include="Undo\Actions\DeleteActorsAction.cs" />
     <Compile Include="Undo\Actions\PasteActorsAction.cs" />
     <Compile Include="Undo\EditorUndo.cs" />
+    <Compile Include="Undo\ISceneEditAction.cs" />
     <Compile Include="Undo\IUndoAction.cs" />
     <Compile Include="Undo\MultiUndoAction.cs" />
     <Compile Include="Undo\SelectionChangeAction.cs" />

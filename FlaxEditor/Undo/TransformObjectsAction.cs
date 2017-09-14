@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.Modules;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
 
@@ -15,7 +16,7 @@ namespace FlaxEditor
     /// Since we use this kind of action very ofter (for <see cref="FlaxEditor.Gizmo.TransformGizmo"/> operations) it's better to provide faster implementation.
     /// </summary>
     /// <seealso cref="FlaxEditor.IUndoAction" />
-    public sealed class TransformObjectsAction : UndoActionBase<TransformObjectsAction.DataStorage>
+    public sealed class TransformObjectsAction : UndoActionBase<TransformObjectsAction.DataStorage>, ISceneEditAction
     {
         /// <summary>
         /// The undo data.
@@ -69,6 +70,15 @@ namespace FlaxEditor
             for (int i = 0; i < data.Selection.Length; i++)
             {
                 data.Selection[i].Transform = data.Before[i];
+            }
+        }
+
+        void ISceneEditAction.MarkSceneEdited(SceneModule sceneModule)
+        {
+            var data = Data;
+            for (int i = 0; i < data.Selection.Length; i++)
+            {
+                sceneModule.MarkSceneEdited(data.Selection[i].ParentScene);
             }
         }
     }

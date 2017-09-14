@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.Actions;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI.Drag;
@@ -110,6 +111,8 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 {
                     result = _dragScripts.Effect;
 
+                    var actions = new List<IUndoAction>(4);
+                    
                     for (int i = 0; i < _dragScripts.Objects.Count; i++)
                     {
                         var item = _dragScripts.Objects[i];
@@ -120,12 +123,13 @@ namespace FlaxEditor.CustomEditors.Dedicated
                         for (int j = 0; j < actors.Count; j++)
                         {
                             var actor = (Actor)actors[j];
-
-                            var script = (Script)FlaxEngine.Object.New(scriptType);
-                            actor.AddScript(script);
+                            actions.Add(AddRemoveScript.Add(actor, scriptType));
                         }
                     }
 
+                    var multiAction = new MultiUndoAction(actions);
+                    multiAction.Do();
+                    Editor.Instance.Undo.AddAction(multiAction);
                     ScriptsEditor.OnScriptsEdited();
                 }
 
@@ -236,7 +240,9 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
                     // Remove
                     case 1:
-                        Object.Destroy(script);
+                        var action = AddRemoveScript.Remove(script);
+                        action.Do();
+                        Editor.Instance.Undo.AddAction(action);
                         OnScriptsEdited();
                         break;
 
@@ -277,13 +283,23 @@ namespace FlaxEditor.CustomEditors.Dedicated
             /// </summary>
             public void OnScriptsEdited()
             {
-                // TODO: use undo actions for script operations and don't mark scenes edited here!
-                for (int i = 0; i < ParentEditor.Values.Count; i++)
-                {
-                    if (ParentEditor.Values[i] is Actor actor)
-                        Editor.Instance.Scene.MarkSceneEdited(actor.Scene);
-                }
                 ParentEditor.RebuildLayout();
+            }
+
+            /// <inheritdoc />
+            public override void Refresh()
+            {
+                if (Values.Count <= 1)
+                {
+                    var scripts = (Script[])Values[0];
+                    if (!Utils.ArraysEqual(scripts, _scripts))
+                    {
+                        // Sync
+                        OnScriptsEdited();
+                    }
+                }
+
+                base.Refresh();
             }
         }
 

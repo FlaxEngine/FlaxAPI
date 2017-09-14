@@ -61,7 +61,12 @@ namespace FlaxEditor
             if (Editor.Instance.Scene.IsEverySceneEdited())
                 return;
 
-            if (action is UndoActionObject undoActionObject)
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            if (action is ISceneEditAction sceneEditAction)
+            {
+                sceneEditAction.MarkSceneEdited(Editor.Instance.Scene);
+            }
+            else if (action is UndoActionObject undoActionObject)
             {
                 var data = undoActionObject.PrepareData();
 
@@ -76,15 +81,6 @@ namespace FlaxEditor
                 else if (data.TargetInstance is Script script)
                 {
                     Editor.Instance.Scene.MarkSceneEdited(script.Actor.Scene);
-                }
-            }
-            else if (action is TransformObjectsAction transformObjectsAction)
-            {
-                var data = transformObjectsAction.Data;
-
-                for (int i = 0; i < data.Selection.Length; i++)
-                {
-                    Editor.Instance.Scene.MarkSceneEdited(data.Selection[i].ParentScene);
                 }
             }
             else if (action is MultiUndoAction multiUndoAction)
