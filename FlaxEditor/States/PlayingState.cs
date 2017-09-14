@@ -24,9 +24,6 @@ namespace FlaxEditor.States
         /// <summary>
         /// Gets or sets a value indicating whether game logic is paused.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if game logic is paused; otherwise, <c>false</c>.
-        /// </value>
         public bool IsPaused
         {
             get => !SceneManager.IsGameLogicRunning;
@@ -61,6 +58,8 @@ namespace FlaxEditor.States
         /// <inheritdoc />
         public override void OnExit(State nextState)
         {
+            IsPaused = true;
+
             // Remove references to the scene objects
             Editor.Scene.ClearRefsToSceneObjects();
 
@@ -69,6 +68,7 @@ namespace FlaxEditor.States
 
             // Fire events
             Editor.OnPlayEnd();
+            IsPaused = true;
         }
     }
 }
