@@ -18,6 +18,11 @@ namespace FlaxEditor.Windows
         private readonly RenderOutputControl _viewport;
 
         /// <summary>
+        /// Gets the viewport.
+        /// </summary>
+        public RenderOutputControl Viewport => _viewport;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="GameWindow"/> class.
         /// </summary>
         /// <param name="editor">The editor.</param>

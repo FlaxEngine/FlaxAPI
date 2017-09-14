@@ -583,9 +583,42 @@ namespace FlaxEditor
             return Windows.MainWindow.unmanagedPtr;
         }
 
-        internal bool CanReloadScripts()
+        internal bool Internal_CanReloadScripts()
         {
             return StateMachine.CurrentState.CanReloadScripts;
+        }
+
+        internal void Internal_GetMousePosition(out Vector2 resultAsRef)
+        {
+            resultAsRef = Vector2.Minimum;
+            if (Windows.GameWin != null && Windows.GameWin.ContainsFocus)
+            {
+                var win = Windows.GameWin.ParentWindow;
+                if (win != null)
+                    resultAsRef = Windows.GameWin.Viewport.PointFromWindow(win.MousePosition);
+            }
+        }
+
+        internal void Internal_SetMousePosition(ref Vector2 val)
+        {
+            if (Windows.GameWin != null && Windows.GameWin.ContainsFocus)
+            {
+                var win = Windows.GameWin.ParentWindow;
+                if (win != null)
+                    win.MousePosition = Windows.GameWin.Viewport.PointToWindow(val);
+            }
+        }
+
+        internal IntPtr Internal_GetGameWinPtr()
+        {
+            IntPtr result = IntPtr.Zero;
+            if (Windows.GameWin != null && Windows.GameWin.ContainsFocus)
+            {
+                var win = Windows.GameWin.ParentWindow;
+                if (win != null)
+                    result = win.NativeWindow.unmanagedPtr;
+            }
+            return result;
         }
 
 #if !UNIT_TEST_COMPILANT
