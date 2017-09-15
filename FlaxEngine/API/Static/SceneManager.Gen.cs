@@ -291,18 +291,17 @@ namespace FlaxEngine
 		/// Loads scene from the bytes array.
 		/// </summary>
 		/// <param name="sceneData">The scene data to load.</param>
-		/// <param name="autoInitialize">Enable/disable auto scene initialization, otherwise user should do it (in that situation scene is registered but not in a gameplay, call OnBeginPlay to start logic for it; it will deserialize scripts and references to the other objects).</param>
 		/// <returns>Loaded scene object, otherwise null if cannot load data (then see log for more information).</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static Scene LoadSceneFromBytes(byte[] sceneData, bool autoInitialize = true) 
+		public static Scene LoadSceneFromBytes(byte[] sceneData) 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_LoadSceneFromBytes(sceneData, autoInitialize);
+			return Internal_LoadSceneFromBytes(sceneData);
 #endif
 		}
 
@@ -310,16 +309,17 @@ namespace FlaxEngine
 		/// Loads scene from the asset. Done in the background.
 		/// </summary>
 		/// <param name="sceneId">The scene ID to load.</param>
+		/// <returns>True if failed (no scripts loaded or missing scene asset), otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static void LoadSceneAsync(Guid sceneId) 
+		public static bool LoadSceneAsync(Guid sceneId) 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_LoadSceneAsync(ref sceneId);
+			return Internal_LoadSceneAsync(ref sceneId);
 #endif
 		}
 
@@ -446,9 +446,9 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_LoadScene(ref Guid sceneId);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Scene Internal_LoadSceneFromBytes(byte[] sceneData, bool autoInitialize);
+		internal static extern Scene Internal_LoadSceneFromBytes(byte[] sceneData);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_LoadSceneAsync(ref Guid sceneId);
+		internal static extern bool Internal_LoadSceneAsync(ref Guid sceneId);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_UnloadScene(IntPtr scene);
 		[MethodImpl(MethodImplOptions.InternalCall)]

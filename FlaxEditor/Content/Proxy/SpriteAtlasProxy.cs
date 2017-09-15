@@ -3,8 +3,13 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using FlaxEditor.Content.Thumbnails;
+using FlaxEditor.Viewport.Previews;
 using FlaxEditor.Windows;
+using FlaxEditor.Windows.Assets;
 using FlaxEngine;
+using FlaxEngine.GUI;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Content
 {
@@ -14,6 +19,8 @@ namespace FlaxEditor.Content
     /// <seealso cref="FlaxEditor.Content.BinaryAssetProxy" />
     public sealed class SpriteAtlasProxy : BinaryAssetProxy
     {
+        private SimpleSpriteAtlasPreview _preview;
+
         /// <inheritdoc />
         public override string Name => "Sprite Atlas";
 
@@ -32,7 +39,7 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override EditorWindow Open(Editor editor, ContentItem item)
         {
-            throw new NotImplementedException();// TODO: sprite atlas window
+            return new SpriteAtlasWindow(editor, (AssetItem)item);
         }
 
         /// <inheritdoc />
@@ -40,5 +47,51 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override ContentDomain Domain => SpriteAtlas.Domain;
+
+        /// <inheritdoc />
+        public override void OnThumbnailDrawPrepare(ThumbnailRequest request)
+        {
+            if (_preview == null)
+            {
+                _preview = new SimpleSpriteAtlasPreview();
+                _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
+            }
+
+            // TODO: disable streaming for asset during thumbnail rendering (and restore it after)
+        }
+
+        /// <inheritdoc />
+        public override bool CanDrawThumbnail(ThumbnailRequest request)
+        {
+            // Check if asset is streamed enough
+            var asset = (SpriteAtlas)request.Asset;
+            return asset.ResidentMipLevels >= Mathf.Max(1, (int)(asset.MipLevels * ThumbnailsModule.MinimumRequriedResourcesQuality));
+        }
+
+        /// <inheritdoc />
+        public override void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
+        {
+            _preview.Asset = (SpriteAtlas)request.Asset;
+            _preview.Parent = guiRoot;
+        }
+
+        /// <inheritdoc />
+        public override void OnThumbnailDrawEnd(ThumbnailRequest request, ContainerControl guiRoot)
+        {
+            _preview.Asset = null;
+            _preview.Parent = null;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            if (_preview != null)
+            {
+                _preview.Dispose();
+                _preview = null;
+            }
+
+            base.Dispose();
+        }
     }
 }

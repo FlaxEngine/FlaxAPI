@@ -259,6 +259,11 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
+        public virtual void OnItemReimported(ContentItem item)
+        {
+        }
+
+        /// <inheritdoc />
         public void OnItemDispose(ContentItem item)
         {
             if (item == _item)
@@ -337,13 +342,10 @@ namespace FlaxEditor.Windows.Assets
 
                 // Fire events
                 OnAssetLinked();
+                _asset.WaitForLoaded();// TODO: expose loaded/reloaded/unload events to c# API and wait here
                 if (_asset.IsLoaded)
                 {
                     OnAssetLoaded();
-                }
-                else
-                {
-                    // TODO: expose loaded/reloaded/unload events to c# API
                 }
             }
 

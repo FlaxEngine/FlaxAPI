@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors.Elements
@@ -15,7 +16,7 @@ namespace FlaxEditor.CustomEditors.Elements
         /// <summary>
         /// The button.
         /// </summary>
-        public readonly Button Button = new Button(0, 0);
+        public readonly Button Button = new Button();
         
         /// <summary>
         /// Initializes the element.
@@ -24,6 +25,18 @@ namespace FlaxEditor.CustomEditors.Elements
         public void Init(string text)
         {
             Button.Text = text;
+        }
+
+        /// <summary>
+        /// Initializes the element.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="color">The color.</param>
+        public void Init(string text, Color color)
+        {
+            Button.Text = text;
+            Button.BackgroundColor = color;
+            Button.BorderColor = color.RGBMultiplied(0.5f);
         }
 
         /// <inheritdoc />

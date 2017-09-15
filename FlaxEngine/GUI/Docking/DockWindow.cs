@@ -220,11 +220,9 @@ namespace FlaxEngine.GUI.Docking
         /// <param name="state">The state.</param>
         public void FocusOrShow(DockState state = DockState.Float)
         {
-            var window = ParentWindow;
-            if (Visible && window != null)
+            if (Visible)
             {
-                window.BringToFront();
-                window.Focus();
+                SelectTab();
                 Focus();
             }
             else

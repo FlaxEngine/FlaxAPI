@@ -36,18 +36,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Tools\Bin\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\BinaryAssets\PreviewsCache.cs" />
-    <Compile Include="API\BinaryAssets\PreviewsCache.Gen.cs" />
     <Compile Include="API\Editor.cs" />
     <Compile Include="API\Editor.Gen.cs" />
     <Compile Include="API\Static\ScriptsBuilder.cs" />
     <Compile Include="API\Static\ScriptsBuilder.Gen.cs" />
+    <Compile Include="API\TextureBases\PreviewsCache.cs" />
+    <Compile Include="API\TextureBases\PreviewsCache.Gen.cs" />
     <Compile Include="Content\GUI\ContentView.cs" />
     <Compile Include="Content\GUI\NavigationBar.cs" />
     <Compile Include="Content\GUI\NavigationButton.cs" />
@@ -91,11 +92,13 @@
     <Compile Include="CustomEditors\Elements\SpaceElement.cs" />
     <Compile Include="CustomEditors\Elements\TextBoxElement.cs" />
     <Compile Include="CustomEditors\Elements\VerticalPanelElement.cs" />
+    <Compile Include="CustomEditors\SyncPointEditor.cs" />
     <Compile Include="CustomEditors\Values\CustomValueContainer.cs" />
     <Compile Include="CustomEditors\Values\ListValueContainer.cs" />
     <Compile Include="CustomEditors\Values\ValueContainer.cs" />
     <Compile Include="GUI\AssetPicker.cs" />
     <Compile Include="GUI\Drag\DragActors.cs" />
+    <Compile Include="GUI\Drag\DragScripts.cs" />
     <Compile Include="GUI\RenamePopup.cs" />
     <Compile Include="Content\Proxy\BinaryAssetProxy.cs" />
     <Compile Include="Content\Proxy\ContentProxy.cs" />
@@ -166,6 +169,7 @@
     <Compile Include="Modules\WindowsModule.cs" />
     <Compile Include="Progress\Handlers\BakeEnvProbesProgress.cs" />
     <Compile Include="Progress\Handlers\BakeLightmapsProgress.cs" />
+    <Compile Include="Progress\Handlers\CodeEditorOpenProgress.cs" />
     <Compile Include="Progress\Handlers\CompileScriptsProgress.cs" />
     <Compile Include="Progress\Handlers\ImportAssetsProgress.cs" />
     <Compile Include="Progress\ProgressHandler.cs" />
@@ -246,9 +250,11 @@
     <Compile Include="Surface\VisjectSurface.Mouse.cs" />
     <Compile Include="Surface\VisjectSurface.Paramaters.cs" />
     <Compile Include="Surface\VisjectSurface.Serialization.cs" />
+    <Compile Include="Undo\Actions\AddRemoveScript.cs" />
     <Compile Include="Undo\Actions\DeleteActorsAction.cs" />
     <Compile Include="Undo\Actions\PasteActorsAction.cs" />
     <Compile Include="Undo\EditorUndo.cs" />
+    <Compile Include="Undo\ISceneEditAction.cs" />
     <Compile Include="Undo\IUndoAction.cs" />
     <Compile Include="Undo\MultiUndoAction.cs" />
     <Compile Include="Undo\SelectionChangeAction.cs" />
@@ -266,8 +272,10 @@
     <Compile Include="Viewport\EditorViewportFPSCam.cs" />
     <Compile Include="Viewport\MainEditorGizmoViewport.cs" />
     <Compile Include="Viewport\Previews\CubeTexturePreview.cs" />
+    <Compile Include="Viewport\Previews\IESProfilePreview.cs" />
     <Compile Include="Viewport\Previews\MaterialPreview.cs" />
     <Compile Include="Viewport\Previews\ModelPreview.cs" />
+    <Compile Include="Viewport\Previews\TexturePreview.cs" />
     <Compile Include="Viewport\Widgets\ViewportWidgetButton.cs" />
     <Compile Include="Viewport\Widgets\ViewportWidgetsContainer.cs" />
     <Compile Include="Windows\AboutDialog.cs" />
@@ -278,6 +286,8 @@
     <Compile Include="Windows\Assets\MaterialInstanceWindow.cs" />
     <Compile Include="Windows\Assets\MaterialWindow.cs" />
     <Compile Include="Windows\Assets\ModelWindow.cs" />
+    <Compile Include="Windows\Assets\SpriteAtlasWindow.cs" />
+    <Compile Include="Windows\Assets\TextureWindow.cs" />
     <Compile Include="Windows\ContentWindow.ContextMenu.cs" />
     <Compile Include="Windows\ContentWindow.cs" />
     <Compile Include="Windows\ContentWindow.Navigation.cs" />
@@ -299,9 +309,6 @@
       <Project>{7a23adf2-cab0-4ed9-9edc-d9a2b9e51b21}</Project>
       <Name>FlaxEngine</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">

@@ -75,6 +75,20 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Adds new button element with custom color.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="color">The color.</param>
+        /// <returns>The created element.</returns>
+        public ButtonElement Button(string text, Color color)
+        {
+            ButtonElement element = new ButtonElement();
+            element.Init(text, color);
+            OnAddElement(element);
+            return element;
+        }
+
+        /// <summary>
         /// Adds new custom element.
         /// </summary>
         /// <typeparam name="T">The custom control.</typeparam>

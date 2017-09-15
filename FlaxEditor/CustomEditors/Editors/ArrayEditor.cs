@@ -11,7 +11,7 @@ namespace FlaxEditor.CustomEditors.Editors
     /// Default implementation of the inspector used to edit arrays.
     /// </summary>
     [CustomEditor(typeof(Array)), DefaultEditor]
-    public sealed class ArrayEditor : CollectionEditor
+    public class ArrayEditor : CollectionEditor
     {
         /// <inheritdoc />
         public override int Count => (Values[0] as Array)?.Length ?? 0;

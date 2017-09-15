@@ -885,7 +885,7 @@ namespace FlaxEngine
         /// Creates a quaternion given a rotation and an axis.
         /// </summary>
         /// <param name="axis">The axis of rotation.</param>
-        /// <param name="angle">The angle of rotation.</param>
+        /// <param name="angle">The angle of rotation (in radians).</param>
         /// <param name="result">When the method completes, contains the newly created quaternion.</param>
         public static void RotationAxis(ref Vector3 axis, float angle, out Quaternion result)
         {
@@ -906,7 +906,7 @@ namespace FlaxEngine
         /// Creates a quaternion given a rotation and an axis.
         /// </summary>
         /// <param name="axis">The axis of rotation.</param>
-        /// <param name="angle">The angle of rotation.</param>
+        /// <param name="angle">The angle of rotation (in radians).</param>
         /// <returns>The newly created quaternion.</returns>
         public static Quaternion RotationAxis(Vector3 axis, float angle)
         {

@@ -42,6 +42,11 @@ namespace FlaxEditor
         public bool IsFlaxEngineTheBest => true;
 
         /// <summary>
+        /// Gets a value indicating whether this Editor is running a dev instance of the engine.
+        /// </summary>
+        internal bool IsDevInstance => true;
+
+        /// <summary>
         /// The windows module.
         /// </summary>
         public readonly WindowsModule Windows;
@@ -148,6 +153,7 @@ namespace FlaxEditor
 
         private void ScriptsBuilder_ScriptsReloadEnd()
         {
+            EnsureState<ReloadingScriptsState>();
             StateMachine.GoToState<EditingSceneState>();
         }
 
@@ -219,12 +225,26 @@ namespace FlaxEditor
             }
         }
 
+        internal void OnPlayBegin()
+        {
+            for (int i = 0; i < _modules.Count; i++)
+                _modules[i].OnPlayBegin();
+        }
+
+        internal void OnPlayEnd()
+        {
+            for (int i = 0; i < _modules.Count; i++)
+                _modules[i].OnPlayEnd();
+        }
+
         internal void Exit()
         {
             Log("Editor exit");
 
             // Start exit
             StateMachine.GoToState<ClosingState>();
+
+            Scene.ClearRefsToSceneObjects();
 
             // Release modules (from back to front)
             for (int i = _modules.Count - 1; i >= 0; i--)
@@ -557,6 +577,49 @@ namespace FlaxEditor
         #endregion
 
         #region Internal Calls
+
+        internal IntPtr GetMainWindowPtr()
+        {
+            return Windows.MainWindow.unmanagedPtr;
+        }
+
+        internal bool Internal_CanReloadScripts()
+        {
+            return StateMachine.CurrentState.CanReloadScripts;
+        }
+
+        internal void Internal_GetMousePosition(out Vector2 resultAsRef)
+        {
+            resultAsRef = Vector2.Minimum;
+            if (Windows.GameWin != null && Windows.GameWin.ContainsFocus)
+            {
+                var win = Windows.GameWin.ParentWindow;
+                if (win != null)
+                    resultAsRef = Windows.GameWin.Viewport.PointFromWindow(win.MousePosition);
+            }
+        }
+
+        internal void Internal_SetMousePosition(ref Vector2 val)
+        {
+            if (Windows.GameWin != null && Windows.GameWin.ContainsFocus)
+            {
+                var win = Windows.GameWin.ParentWindow;
+                if (win != null)
+                    win.MousePosition = Windows.GameWin.Viewport.PointToWindow(val);
+            }
+        }
+
+        internal IntPtr Internal_GetGameWinPtr()
+        {
+            IntPtr result = IntPtr.Zero;
+            if (Windows.GameWin != null && Windows.GameWin.ContainsFocus)
+            {
+                var win = Windows.GameWin.ParentWindow;
+                if (win != null)
+                    result = win.NativeWindow.unmanagedPtr;
+            }
+            return result;
+        }
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]

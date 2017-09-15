@@ -20,7 +20,7 @@ namespace FlaxEditor
 	/// <summary>
 	/// Asset which contains set of asset items thumbnails (cached previews).
 	/// </summary>
-	public sealed partial class PreviewsCache : BinaryAsset
+	public sealed partial class PreviewsCache : TextureBase
 	{
 		/// <summary>
 		/// Creates new <see cref="PreviewsCache"/> object.

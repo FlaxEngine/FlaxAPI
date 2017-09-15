@@ -21,5 +21,16 @@ namespace FlaxEngine
 	    /// The asset type content domain.
 	    /// </summary>
 	    public const ContentDomain Domain = ContentDomain.Material;
+
+        /// <summary>
+        /// Creates the virtual material instance of this material which allows to override any material parameters.
+        /// </summary>
+        /// <returns>The created virtual material instance asset.</returns>
+        public MaterialInstance CreateVirtualInstance()
+        {
+            var instance = Content.CreateVirtualAsset<MaterialInstance>();
+            instance.BaseMaterial = this;
+            return instance;
+        }
     }
 }

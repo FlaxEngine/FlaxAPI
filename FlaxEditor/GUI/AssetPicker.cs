@@ -183,6 +183,11 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
+        public void OnItemReimported(ContentItem item)
+        {
+        }
+
+        /// <inheritdoc />
         public void OnItemDispose(ContentItem item)
         {
             // Deselect item

@@ -123,6 +123,20 @@ namespace FlaxEditor.Windows
         }
 
         /// <summary>
+        /// Called when Editor is entering play mode.
+        /// </summary>
+        public virtual void OnPlayBegin()
+        {
+        }
+
+        /// <summary>
+        /// Called when Editor leaves the play mode.
+        /// </summary>
+        public virtual void OnPlayEnd()
+        {
+        }
+
+        /// <summary>
         /// Called when window should be initializated.
         /// At this point, main window, content database, default editor windows are ready.
         /// </summary>

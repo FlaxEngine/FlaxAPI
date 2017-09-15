@@ -149,6 +149,11 @@ namespace FlaxEditor.Content.Thumbnails
         }
 
         /// <inheritdoc />
+        void IContentItemOwner.OnItemReimported(ContentItem item)
+        {
+        }
+
+        /// <inheritdoc />
         void IContentItemOwner.OnItemDispose(ContentItem item)
         {
             if (item is AssetItem assetItem)

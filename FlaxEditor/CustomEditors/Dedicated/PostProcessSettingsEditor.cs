@@ -14,8 +14,8 @@ namespace FlaxEditor.CustomEditors.Dedicated
     /// <summary>
     /// <see cref="PostProcessSettings"/> editor.
     /// </summary>
-    [CustomEditor(typeof(PostProcessSettings))]
-    public sealed class PostProcessSettingsEditor : GenericEditor
+    [CustomEditor(typeof(PostProcessSettings)), DefaultEditor]
+    public class PostProcessSettingsEditor : GenericEditor
     {
         private readonly List<CheckablePropertyNameLabel> _labels = new List<CheckablePropertyNameLabel>(64);
 

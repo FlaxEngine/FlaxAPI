@@ -46,65 +46,46 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// Gets the custom editor style.
         /// </summary>
-        /// <value>
-        /// The style.
-        /// </value>
         public virtual DisplayStyle Style => DisplayStyle.Group;
         
         /// <summary>
         /// Gets a value indicating whether single object is selected.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if single object is selected; otherwise, <c>false</c>.
-        /// </value>
         public bool IsSingleObject => _values.IsSingleObject;
 
         /// <summary>
         /// Gets a value indicating whether selected objects are diffrent values.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if selected objects are diffrent values; otherwise, <c>false</c>.
-        /// </value>
         public bool HasDiffrentValues => _values.HasDiffrentValues;
 
         /// <summary>
         /// Gets a value indicating whether selected objects are diffrent types.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if selected objects are diffrent types; otherwise, <c>false</c>.
-        /// </value>
         public bool HasDiffrentTypes => _values.HasDiffrentTypes;
 
         /// <summary>
         /// Gets the values types array (without duplicates).
         /// </summary>
-        /// <value>
-        /// The values types.
-        /// </value>
         public Type[] ValuesTypes => _values.ValuesTypes;
 
         /// <summary>
         /// Gets the values.
         /// </summary>
-        /// <value>
-        /// The values.
-        /// </value>
         public ValueContainer Values => _values;
+
+        /// <summary>
+        /// Gets the parent editor.
+        /// </summary>
+        public CustomEditor ParentEditor => _parent;
 
         /// <summary>
         /// Gets the presenter control. It's the top most part of the Custom Editors layout.
         /// </summary>
-        /// <value>
-        /// The presenter.
-        /// </value>
         public CustomEditorPresenter Presenter => _presenter;
 
         /// <summary>
         /// Gets a value indicating whether setting value is blocked (during refresh).
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if setting value is blocked; otherwise, <c>false</c>.
-        /// </value>
         protected bool IsSetBlocked => _isSetBlocked;
 
         internal virtual void Initialize(CustomEditorPresenter presenter, LayoutElementsContainer layout, ValueContainer values)
@@ -168,6 +149,9 @@ namespace FlaxEditor.CustomEditors
         /// <param name="layout">The layout builder.</param>
         public abstract void Initialize(LayoutElementsContainer layout);
 
+        /// <summary>
+        /// Cleanups this editor resources and child editors.
+        /// </summary>
         internal void Cleanup()
         {
             for (int i = 0; i < _children.Count; i++)
@@ -186,15 +170,19 @@ namespace FlaxEditor.CustomEditors
 
         internal void RefreshRoot()
         {
-            // Update itself
+            for (int i = 0; i < _children.Count; i++)
+                _children[i].RefreshRootChild();
+        }
+
+        internal void RefreshRootChild()
+        {
             Refresh();
 
-            // Update children
             for (int i = 0; i < _children.Count; i++)
                 _children[i].RefreshInternal();
         }
 
-        internal void RefreshInternal()
+        internal virtual void RefreshInternal()
         {
             // Check if need to update value
             if (_hasValueDirty)
@@ -211,7 +199,7 @@ namespace FlaxEditor.CustomEditors
                 var obj = _parent;
                 while (obj._parent != null)
                 {
-                    obj.Values.Set(obj._parent.Values);
+                    obj._parent.SyncChildValues(obj.Values);
                     obj = obj._parent;
                 }
             }
@@ -230,14 +218,14 @@ namespace FlaxEditor.CustomEditors
             for (int i = 0; i < _children.Count; i++)
                 _children[i].RefreshInternal();
         }
-
+        
         /// <summary>
         /// Refreshes this editor.
         /// </summary>
         public virtual void Refresh()
         {
         }
-        
+
         /// <summary>
         /// Sets the object value. Actual update is performed during editor refresh in sync.
         /// </summary>
@@ -247,9 +235,33 @@ namespace FlaxEditor.CustomEditors
             if (_isSetBlocked)
                 return;
 
-            _hasValueDirty = true;
-            _valueToSet = value;
-            _presenter.OnDirty();
+            if (OnDirty(this, value))
+            {
+                _hasValueDirty = true;
+                _valueToSet = value;
+            }
+        }
+
+        /// <summary>
+        /// Synchronizes the child values container with this editor values.
+        /// </summary>
+        /// <param name="values">The values to synchronize.</param>
+        protected virtual void SyncChildValues(ValueContainer values)
+        {
+            values.Set(Values);
+        }
+
+        /// <summary>
+        /// Called when custom editor gets dirty (UI value has been modified).
+        /// Allows to filter the event, block it or handle in a custom way.
+        /// </summary>
+        /// <param name="editor">The editor.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>True if allow to handle this event, otherwise false.</returns>
+        protected virtual bool OnDirty(CustomEditor editor, object value)
+        {
+            ParentEditor.OnDirty(editor, value);
+            return true;
         }
     }
 }

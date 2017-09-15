@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 using System;
 using System.Globalization;
@@ -343,6 +343,11 @@ namespace FlaxEngine
         public static Rectangle operator-(Rectangle rectangle, Vector2 offset)
         {
             return new Rectangle(rectangle.Location - offset, rectangle.Size);
+        }
+
+        public static Rectangle operator *(Rectangle rectangle, float scale)
+        {
+            return rectangle.MakeScaled(scale);
         }
 
         #endregion

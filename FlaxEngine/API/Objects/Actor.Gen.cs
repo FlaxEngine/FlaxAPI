@@ -31,7 +31,7 @@ namespace FlaxEngine
 		/// Gets the scene object which contains this actor.
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public Scene Scene
 		{
 #if UNIT_TEST_COMPILANT
@@ -138,7 +138,7 @@ namespace FlaxEngine
 		/// Gets actor activation state in hierarchy
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public bool IsActiveInHierarchy
 		{
 #if UNIT_TEST_COMPILANT
@@ -152,7 +152,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's world transform position
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public Vector3 Position
 		{
 #if UNIT_TEST_COMPILANT
@@ -167,7 +167,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's world transform orientation
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public Quaternion Orientation
 		{
 #if UNIT_TEST_COMPILANT
@@ -182,7 +182,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's world transform scale
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public Vector3 Scale
 		{
 #if UNIT_TEST_COMPILANT
@@ -197,7 +197,7 @@ namespace FlaxEngine
 		/// Gets or sets actor's world a three dimensional mathematical transformation
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public Transform Transform
 		{
 #if UNIT_TEST_COMPILANT
@@ -272,7 +272,7 @@ namespace FlaxEngine
 		/// Gets amount of children
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public int ChildCount
 		{
 #if UNIT_TEST_COMPILANT
@@ -391,7 +391,7 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Returns a list of all actors attached to this object.
+		/// Returns a list of all actors attached to this object. It's read-only array.
 		/// </summary>
 		/// <returns>All actors attached to this object.</returns>
 #if UNIT_TEST_COMPILANT
@@ -444,19 +444,36 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Returns a list of all scripts attached to this object.
+		/// Adds a script to the actor.
 		/// </summary>
-		/// <returns>All scripts attached to this object.</returns>
+		/// <param name="script">The script to add</param>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public Script[] GetScripts() 
+		public void AddScript(Script script) 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_GetScripts(unmanagedPtr);
+			Internal_AddScript(unmanagedPtr, Object.GetUnmanagedPtr(script));
+#endif
+		}
+
+		/// <summary>
+		/// Removes a script from the actor. Use Object.Destroy to delete unlinked script and prevent from leaks.
+		/// </summary>
+		/// <param name="script">The script to remove</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void RemoveScript(Script script) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_RemoveScript(unmanagedPtr, Object.GetUnmanagedPtr(script));
 #endif
 		}
 
@@ -464,7 +481,7 @@ namespace FlaxEngine
 		/// Gets bounding box that contains actor object (single actor, no children included)
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public BoundingBox Box
 		{
 #if UNIT_TEST_COMPILANT
@@ -478,7 +495,7 @@ namespace FlaxEngine
 		/// Gets bounding box that contains actor object and all it's children (children included in recursive way)
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public BoundingBox BoxWithChildren
 		{
 #if UNIT_TEST_COMPILANT
@@ -492,7 +509,7 @@ namespace FlaxEngine
 		/// Returns true if actor has loaded content
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor, NoSerializeAttribute]
+		[HideInEditor, NoSerialize]
 		public bool HasContentLoaded
 		{
 #if UNIT_TEST_COMPILANT
@@ -651,7 +668,9 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Script[] Internal_GetScriptsPerType(IntPtr obj, Type type);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Script[] Internal_GetScripts(IntPtr obj);
+		internal static extern void Internal_AddScript(IntPtr obj, IntPtr script);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_RemoveScript(IntPtr obj, IntPtr script);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetBox(IntPtr obj, out BoundingBox resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]

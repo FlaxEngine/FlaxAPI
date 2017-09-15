@@ -15,41 +15,34 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
 	/// <summary>
-	/// Sprite atlas texture made of collection of sprites.
+	/// Contains IES profile texture used by the lights to simulate real life bulb light emission.
 	/// </summary>
-	public partial class SpriteAtlas : BinaryAsset
+	public partial class IESProfile : TextureBase
 	{
 		/// <summary>
-		/// Creates new <see cref="SpriteAtlas"/> object.
+		/// Creates new <see cref="IESProfile"/> object.
 		/// </summary>
-		private SpriteAtlas() : base()
+		private IESProfile() : base()
 		{
 		}
 
 		/// <summary>
-		/// Gets the sprite by name.
+		/// Gets the light brightness in Lumens, imported from the IES profile source file.
 		/// </summary>
-		/// <param name="name">The sprite name.</param>
-		/// <returns>Sprite handle (may be invalid if cannot find it).</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
 		[UnmanagedCall]
-		public Sprite GetSprite(string name) 
+		public float Brightness
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			get; set;
 #else
-			Sprite resultAsRef;
-			Internal_GetSprite(unmanagedPtr, name, out resultAsRef);
-			return resultAsRef;
+			get { return Internal_GetBrightness(unmanagedPtr); }
 #endif
 		}
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetSprite(IntPtr obj, string name, out Sprite resultAsRef);
+		internal static extern float Internal_GetBrightness(IntPtr obj);
 #endif
 #endregion
 	}

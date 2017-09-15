@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 namespace FlaxEditor.Modules
 {
@@ -59,6 +59,20 @@ namespace FlaxEditor.Modules
         /// Called when Editor is closing. Performs module cleanup.
         /// </summary>
         public virtual void OnExit()
+        {
+        }
+
+        /// <summary>
+        /// Called when Editor is entering play mode.
+        /// </summary>
+        public virtual void OnPlayBegin()
+        {
+        }
+
+        /// <summary>
+        /// Called when Editor leaves the play mode.
+        /// </summary>
+        public virtual void OnPlayEnd()
         {
         }
     }

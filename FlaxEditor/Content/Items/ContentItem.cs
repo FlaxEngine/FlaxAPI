@@ -62,6 +62,12 @@ namespace FlaxEditor.Content
         void OnItemRenamed(ContentItem item);
 
         /// <summary>
+        /// Called when item gets reimported or reloaded.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        void OnItemReimported(ContentItem item);
+
+        /// <summary>
         /// Called when referenced item gets disposed (editor closing, database inetrnal changes, etc.).
         /// Item should not be used after that.
         /// </summary>
@@ -466,6 +472,16 @@ namespace FlaxEditor.Content
         {
             // Simply unlink sprite
             _thumbnail = Sprite.Invalid;
+        }
+
+        /// <summary>
+        /// Called when item gets reimported or reloaded.
+        /// </summary>
+        protected virtual void OnReimport()
+        {
+            for (int i = 0; i < _references.Count; i++)
+                _references[i].OnItemReimported(this);
+            RefreshThumbnail();
         }
 
         /// <summary>

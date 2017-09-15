@@ -21,7 +21,6 @@ namespace FlaxEditor.Windows
     /// <seealso cref="FlaxEditor.Windows.EditorWindow" />
     public sealed partial class ContentWindow : EditorWindow
     {
-        private bool _isReady;
         private bool _isWorkspaceDirty;
         private SplitPanel _split;
         private ContentView _view;
@@ -54,11 +53,11 @@ namespace FlaxEditor.Windows
 
             // Tool strip
             _toolStrip = new ToolStrip();
-            _toolStrip.AddButton(0, Editor.UI.GetIcon("Import32")).LinkTooltip("Import content");// Import
+            _toolStrip.AddButton(0, Editor.UI.GetIcon("Import32")).LinkTooltip("Import content");
             _toolStrip.AddSeparator();
-            _toolStrip.AddButton(1, Editor.UI.GetIcon("ArrowLeft32")).LinkTooltip("Navigate backward");// Backward
-            _toolStrip.AddButton(2, Editor.UI.GetIcon("ArrowRight32")).LinkTooltip("Navigate forward");// Forward
-            _toolStrip.AddButton(3, Editor.UI.GetIcon("ArrowUp32")).LinkTooltip("Navigate up");// Up
+            _toolStrip.AddButton(1, Editor.UI.GetIcon("ArrowLeft32")).LinkTooltip("Navigate backward");
+            _toolStrip.AddButton(2, Editor.UI.GetIcon("ArrowRight32")).LinkTooltip("Navigate forward");
+            _toolStrip.AddButton(3, Editor.UI.GetIcon("ArrowUp32")).LinkTooltip("Navigate up");
             _toolStrip.ButtonClicked += toolstripButtonClicked;
             _toolStrip.Parent = this;
 
@@ -196,7 +195,7 @@ namespace FlaxEditor.Windows
                 _newElement.Dispose();
                 _newElement = null;
             }
-            
+
             // Refresh database and view now
             Editor.ContentDatabase.RefreshFolder(itemFolder, true);
             RefreshView();
@@ -350,16 +349,16 @@ namespace FlaxEditor.Windows
             {
                 destinationPath = StringUtils.CombinePaths(parentFolder.Path, string.Format("New Folder ({0})", i++));
             } while (Directory.Exists(destinationPath));
-            
+
             // Create new folder
             Directory.CreateDirectory(destinationPath);
-            
+
             // Refresh parent folder now and try to find duplicated item
             // Note: we should spawn new items directly, content database should do it to propagate events in a proper way
             Editor.ContentDatabase.RefreshFolder(parentFolder, true);
             RefreshView();
             var targetItem = parentFolder.FindChild(destinationPath);
-            
+
             // Start renaming it
             if (targetItem != null)
             {
@@ -448,7 +447,7 @@ namespace FlaxEditor.Windows
         public void Select(Asset asset)
         {
             var item = Editor.ContentDatabase.Find(asset.ID);
-            if(item != null)
+            if (item != null)
                 Select(item);
         }
 
@@ -485,26 +484,21 @@ namespace FlaxEditor.Windows
         {
             switch (id)
             {
-                // Import
-                //case 0: import(); break; // TODO: importing
-
-                // Backward
+                case 0:
+                    Editor.ContentImporting.ShowImportFileDialog();
+                    break;
                 case 1:
                     NavigateBackward();
                     break;
-
-                // Forward
                 case 2:
                     NavigateForward();
                     break;
-
-                // Up
                 case 3:
                     NavigateUp();
                     break;
             }
         }
-        
+
         private void RefreshView()
         {
             RefreshView(SelectedNode);
@@ -566,15 +560,14 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void OnInit()
         {
-            const bool ShowFlaxFolders = true;
-
             // Setup content root node
             _root = new ContentTreeNode(null, string.Empty);
             _root.Expand();
             addFolder2Root(Editor.ContentDatabase.ProjectContent);
             addFolder2Root(Editor.ContentDatabase.ProjectSource);
-            if (ShowFlaxFolders)
+            if (Editor.IsDevInstance)
             {
+                // Flax internal assets locations
                 addFolder2Root(Editor.ContentDatabase.EnginePrivate);
                 addFolder2Root(Editor.ContentDatabase.EditorPrivate);
             }
@@ -589,10 +582,7 @@ namespace FlaxEditor.Windows
             // Update UI layout
             UnlockChildrenRecursive();
             PerformLayout();
-
-            // Mark as ready
-            _isReady = true;
-
+            
             // TODO: load last viewed folder
         }
 
@@ -605,16 +595,13 @@ namespace FlaxEditor.Windows
                 _isWorkspaceDirty = false;
                 RefreshView();
             }
-            
+
             base.Update(deltaTime);
         }
 
         /// <inheritdoc />
         public override void OnExit()
         {
-            // Enter uneady mode
-            _isReady = false;
-
             // TODO: save last viewed folder
 
             // Clear view

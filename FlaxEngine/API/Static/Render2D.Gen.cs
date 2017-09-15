@@ -207,7 +207,27 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_DrawTexture(Object.GetUnmanagedPtr(t), ref rect, ref color, withAlpha);
+			Internal_DrawTexture1(Object.GetUnmanagedPtr(t), ref rect, ref color, withAlpha);
+#endif
+		}
+
+		/// <summary>
+		/// Draw texture
+		/// </summary>
+		/// <param name="t">Texture to draw</param>
+		/// <param name="rect">Rectangle to draw</param>
+		/// <param name="color">Color to use</param>
+		/// <param name="withAlpha">True if use alpha blending, otherwise it will be disabled.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static void DrawTexture(SpriteAtlas t, Rectangle rect, Color color, bool withAlpha = false) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_DrawTexture2(Object.GetUnmanagedPtr(t), ref rect, ref color, withAlpha);
 #endif
 		}
 
@@ -255,6 +275,24 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Draws the postFx material in the 2D.
+		/// </summary>
+		/// <param name="material">Material to render. Must be a PostFx material type.</param>
+		/// <param name="rect">The target rectangle to draw.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static void DrawMaterial(MaterialBase material, Rectangle rect) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_DrawMaterial(Object.GetUnmanagedPtr(material), ref rect);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -276,11 +314,15 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_DrawRenderTarget(IntPtr rt, ref Rectangle rect, ref Color color, bool withAlpha);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_DrawTexture(IntPtr t, ref Rectangle rect, ref Color color, bool withAlpha);
+		internal static extern void Internal_DrawTexture1(IntPtr t, ref Rectangle rect, ref Color color, bool withAlpha);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_DrawTexture2(IntPtr t, ref Rectangle rect, ref Color color, bool withAlpha);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_DrawLine(ref Vector2 p1, ref Vector2 p2, ref Color color, float thickness, bool withAlpha);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_DrawBezier(ref Vector2 p1, ref Vector2 p2, ref Vector2 p3, ref Vector2 p4, ref Color color, float thickness, bool withAlpha);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_DrawMaterial(IntPtr material, ref Rectangle rect);
 #endif
 #endregion
 	}

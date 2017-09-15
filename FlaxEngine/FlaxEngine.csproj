@@ -37,13 +37,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Tools\Bin\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Actors\BoxBrush.cs" />
@@ -79,16 +79,10 @@
     </Compile>
     <Compile Include="API\Assets\BinaryAsset.cs" />
     <Compile Include="API\Assets\BinaryAsset.Gen.cs" />
-    <Compile Include="API\BinaryAssets\CubeTexture.cs" />
-    <Compile Include="API\BinaryAssets\CubeTexture.Gen.cs" />
     <Compile Include="API\BinaryAssets\FontAsset.cs" />
     <Compile Include="API\BinaryAssets\FontAsset.Gen.cs" />
     <Compile Include="API\BinaryAssets\Model.cs" />
     <Compile Include="API\BinaryAssets\Model.Gen.cs" />
-    <Compile Include="API\BinaryAssets\SpriteAtlas.cs" />
-    <Compile Include="API\BinaryAssets\SpriteAtlas.Gen.cs" />
-    <Compile Include="API\BinaryAssets\Texture.cs" />
-    <Compile Include="API\BinaryAssets\Texture.Gen.cs" />
     <Compile Include="API\CreateWindowSettings.cs" />
     <Compile Include="API\LightActors\DirectionalLight.cs" />
     <Compile Include="API\LightActors\DirectionalLight.Gen.cs" />
@@ -158,7 +152,15 @@
     <Compile Include="API\Static\Time.Gen.cs">
       <DependentUpon>Time.cs</DependentUpon>
     </Compile>
-    <Compile Include="AssetTypes\IESProfile.cs" />
+    <Compile Include="API\TextureBases\CubeTexture.cs" />
+    <Compile Include="API\TextureBases\CubeTexture.Gen.cs" />
+    <Compile Include="API\TextureBases\IESProfile.cs" />
+    <Compile Include="API\TextureBases\IESProfile.Gen.cs" />
+    <Compile Include="API\TextureBases\SpriteAtlas.cs" />
+    <Compile Include="API\TextureBases\SpriteAtlas.Gen.cs" />
+    <Compile Include="API\TextureBases\Texture.cs" />
+    <Compile Include="API\TextureBases\Texture.Gen.cs" />
+    <Compile Include="AssetTypes\TextureBase.cs" />
     <Compile Include="Attributes\Editor\DefaultEditorAttribute.cs" />
     <Compile Include="Attributes\Editor\EditorDisplayAttribute.cs" />
     <Compile Include="Attributes\Editor\LimitAttribute.cs" />

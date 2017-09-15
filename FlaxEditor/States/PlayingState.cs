@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 using System;
 using FlaxEditor.Utilities;
@@ -13,7 +13,7 @@ namespace FlaxEditor.States
     /// <seealso cref="FlaxEditor.States.EditorState" />
     public sealed class PlayingState : EditorState
     {
-        private DuplicateScenes _duplicateSceness;
+        private readonly DuplicateScenes _duplicateScenes = new DuplicateScenes();
 
         /// <inheritdoc />
         public override bool CanEditScene => true;
@@ -24,9 +24,6 @@ namespace FlaxEditor.States
         /// <summary>
         /// Gets or sets a value indicating whether game logic is paused.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if game logic is paused; otherwise, <c>false</c>.
-        /// </value>
         public bool IsPaused
         {
             get => !SceneManager.IsGameLogicRunning;
@@ -47,52 +44,31 @@ namespace FlaxEditor.States
         /// <inheritdoc />
         public override void OnEnter()
         {
-            // TODO: finish this
-            throw new NotImplementedException();
-
-            /*// Clear selection
-            // TODO: cache selection as Undo/Redo action but without Add to the UR context
-            CEditor->GetMainGizmo()->Deselect();
+            // Remove references to the scene objects
+            Editor.Scene.ClearRefsToSceneObjects();
 
             // Duplicate editor scene for simulation
             _duplicateScenes.GatherSceneData();
 
-            // TODO: deserialize that scene data? and unlink edited scene??
-
-
-            // TODO: after finishing csg data serialization remove that build call
-            CSG::Builder::Instance()->Build();
-
-
-
-
             // Fire events
-            for (int32 i = 0; i < CWindowsModule->Windows.Count(); i++)
-            {
-                CWindowsModule->Windows[i]->OnPlayBegin();
-            }
+            Editor.OnPlayBegin();
             IsPaused = false;
-            CSimulationModule->onPlayModeEnter();*/
         }
 
         /// <inheritdoc />
         public override void OnExit(State nextState)
         {
-            // TODO: finish this
-            throw new NotImplementedException();
+            IsPaused = true;
 
-            /*// Clear selection
-            CEditor->GetMainGizmo()->Deselect();
+            // Remove references to the scene objects
+            Editor.Scene.ClearRefsToSceneObjects();
 
             // Restore editor scene
             _duplicateScenes.RestoreSceneData();
 
             // Fire events
-            for (int32 i = 0; i < CWindowsModule->Windows.Count(); i++)
-            {
-                CWindowsModule->Windows[i]->OnPlayEnd();
-            }
-            CSimulationModule->onPlayModeExit();*/
+            Editor.OnPlayEnd();
+            IsPaused = true;
         }
     }
 }

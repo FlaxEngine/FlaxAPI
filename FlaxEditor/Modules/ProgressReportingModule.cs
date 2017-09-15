@@ -39,6 +39,11 @@ namespace FlaxEditor.Modules
         public readonly BakeEnvProbesProgress BakeEnvProbes = new BakeEnvProbesProgress();
 
         /// <summary>
+        /// The code editor async open progress handler.
+        /// </summary>
+        public readonly CodeEditorOpenProgress CodeEditorOpen = new CodeEditorOpenProgress();
+
+        /// <summary>
         /// Gets the first active handler.
         /// </summary>
         public ProgressHandler FirstActiveHandler => _handlers.FirstOrDefault(x => x.IsActive);
@@ -58,6 +63,7 @@ namespace FlaxEditor.Modules
             RegisterHandler(CompileScripts);
             RegisterHandler(BakeLightmaps);
             RegisterHandler(BakeEnvProbes);
+            RegisterHandler(CodeEditorOpen);
         }
 
         /// <summary>

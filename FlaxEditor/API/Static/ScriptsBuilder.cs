@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace FlaxEditor.Scripting
 {
@@ -80,6 +81,16 @@ namespace FlaxEditor.Scripting
         public static event CompilationMessageDelegate CompilationWarning;
 
         /// <summary>
+        /// Occurs when code editor starts asynchronous open a file or a solution.
+        /// </summary>
+        public static event Action CodeEditorAsyncOpenBegin;
+
+        /// <summary>
+        /// Occurs when code editor ends asynchronous open a file or a solution.
+        /// </summary>
+        public static event Action CodeEditorAsyncOpenEnd;
+
+        /// <summary>
         /// Checks if need to compile source code. If so calls compilation.
         /// </summary>
         public static void CheckForCompile()
@@ -136,5 +147,28 @@ namespace FlaxEditor.Scripting
             else
                 CompilationWarning?.Invoke(message, file, line);
         }
+
+        internal static void Internal_OnCodeEditorEvent(bool isEnd)
+        {
+            if (isEnd)
+                CodeEditorAsyncOpenEnd?.Invoke();
+            else
+                CodeEditorAsyncOpenBegin?.Invoke();
+        }
+
+        internal enum ApiEngineType
+        {
+            Engine = 0,
+            Editor = 1,
+        }
+
+        #region Internal Calls
+
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GenerateApi(ApiEngineType type);
+#endif
+
+        #endregion
     }
 }

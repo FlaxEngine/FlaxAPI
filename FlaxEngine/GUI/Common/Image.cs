@@ -2,6 +2,8 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+
 namespace FlaxEngine.GUI
 {
     /// <summary>
@@ -13,42 +15,43 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the image source.
         /// </summary>
-        /// <value>
-        /// The image source.
-        /// </value>
         public IImageSource ImageSource { get; set; }
 
         /// <summary>
         /// Gets or sets the margin for the image.
         /// </summary>
-        /// <value>
-        /// The margin.
-        /// </value>
         public Margin Margin { get; set; }
 
         /// <summary>
         /// Gets or sets the color used to multiply the image pixels.
         /// </summary>
-        /// <value>
-        /// The color.
-        /// </value>
         public Color Color { get; set; } = Color.White;
+
+        /// <summary>
+        /// Gets or sets the color used to multiply the image pixels when mouse is over the image.
+        /// </summary>
+        public Color MouseOverColor { get; set; } = Color.White;
 
         /// <summary>
         /// Gets or sets a value indicating whether render image with alpha blending.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if use alpha blending; otherwise, <c>false</c>.
-        /// </value>
         public bool WithAlpha { get; set; } = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether keep aspect ratio whend rawing the image.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if keep source aspect ratio; otherwise, <c>false</c>.
-        /// </value>
         public bool KeepAspectRatio { get; set; } = true;
+
+        /// <summary>
+        /// Occurs when mouse clicks on the image.
+        /// </summary>
+        public event Action<Image, MouseButtons> Clicked;
+
+        /// <inheritdoc />
+        public Image()
+            : base(false, 0, 0, 64, 64)
+        {
+        }
 
         /// <inheritdoc />
         public Image(bool canFocus, float x, float y, float width, float height)
@@ -103,7 +106,22 @@ namespace FlaxEngine.GUI
 
             Margin.ShrinkRectangle(ref rect);
 
-            ImageSource.Draw(rect, Color, WithAlpha);
+            ImageSource.Draw(rect, IsMouseOver ? MouseOverColor : Color, WithAlpha);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        {
+            if (base.OnMouseUp(location, buttons))
+                return true;
+
+            if (Clicked != null)
+            {
+                Clicked.Invoke(this, buttons);
+                return true;
+            }
+
+            return false;
         }
     }
 }

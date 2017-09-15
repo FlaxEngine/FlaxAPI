@@ -58,10 +58,15 @@ namespace FlaxEditor
             // Note: this is automatic tracking system to check if undo action modifies scene objects
 
             // Skip if all scenes are already modified
-            if(Editor.Instance.Scene.IsEverySceneEdited())
+            if (Editor.Instance.Scene.IsEverySceneEdited())
                 return;
 
-            if (action is UndoActionObject undoActionObject)
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            if (action is ISceneEditAction sceneEditAction)
+            {
+                sceneEditAction.MarkSceneEdited(Editor.Instance.Scene);
+            }
+            else if (action is UndoActionObject undoActionObject)
             {
                 var data = undoActionObject.PrepareData();
 
@@ -73,14 +78,9 @@ namespace FlaxEditor
                 {
                     Editor.Instance.Scene.MarkSceneEdited(actor.Scene);
                 }
-            }
-            else if (action is TransformObjectsAction transformObjectsAction)
-            {
-                var data = transformObjectsAction.Data;
-
-                for (int i = 0; i < data.Selection.Length; i++)
+                else if (data.TargetInstance is Script script)
                 {
-                    Editor.Instance.Scene.MarkSceneEdited(data.Selection[i].ParentScene);
+                    Editor.Instance.Scene.MarkSceneEdited(script.Actor.Scene);
                 }
             }
             else if (action is MultiUndoAction multiUndoAction)

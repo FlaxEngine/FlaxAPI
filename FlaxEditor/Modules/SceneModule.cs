@@ -321,7 +321,14 @@ namespace FlaxEditor.Modules
         {
             // Clear Editor's data
             Editor.SceneEditing.Deselect();
-            Undo.Clear();
+            Undo.Clear(); // note: undo actions serialize ids to the objects (not direct refs) but cache reflection meta so we need to clean it
+
+            // Collect dead objects
+            var memBefore = GC.GetTotalMemory(false);
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            var memAfter = GC.GetTotalMemory(false);
+            Editor.Log(string.Format("Clear references to the scene objects, memory change: {0} MB", (memAfter - memBefore) / (1024 * 1024)));
         }
 
         /// <summary>

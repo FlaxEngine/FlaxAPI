@@ -225,9 +225,6 @@ namespace FlaxEditor.Viewport
         /// <summary>
         /// Gets a value indicating whether this viewport has loaded dependant assets.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this viewport has loaded assets; otherwise, <c>false</c>.
-        /// </value>
         public virtual bool HasLoadedAssets => true;
 
         /// <summary>
@@ -640,33 +637,7 @@ namespace FlaxEditor.Viewport
         protected override void PerformLayoutSelf()
         {
             base.PerformLayoutSelf();
-
-            // Arrange viewport widgets
-            const float margin = ViewportWidgetsContainer.WidgetsMargin;
-            float left = margin;
-            float right = Width - margin;
-            for (int i = 0; i < _children.Count; i++)
-            {
-                if (_children[i] is ViewportWidgetsContainer widget && widget.Visible)
-                {
-                    float x;
-                    switch (widget.WidgetLocation)
-                    {
-                        case ViewportWidgetLocation.UpperLeft:
-                            x = left;
-                            left += widget.Width + margin;
-                            break;
-                        case ViewportWidgetLocation.UpperRight:
-                            x = right - widget.Width;
-                            right = x - margin;
-                            break;
-                        default:
-                            x = 0;
-                            break;
-                    }
-                    widget.Location = new Vector2(x, margin);
-                }
-            }
+            ViewportWidgetsContainer.ArrangeWidgets(this);
         }
 
         private float[] EditorViewportCameraSpeedValues =

@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -23,8 +23,15 @@ namespace FlaxEditor.Viewport.Widgets
         public const float WidgetsHeight = 18;
         public const float WidgetsIconSize = 16;
 
+        /// <summary>
+        /// Gets the widget location.
+        /// </summary>
         public ViewportWidgetLocation WidgetLocation { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewportWidgetsContainer"/> class.
+        /// </summary>
+        /// <param name="location">The location.</param>
         public ViewportWidgetsContainer(ViewportWidgetLocation location)
             : base(false, 0, WidgetsMargin, 64, WidgetsHeight + 2)
         {
@@ -70,6 +77,40 @@ namespace FlaxEditor.Viewport.Widgets
             }
 
             Width = x + 1;
+        }
+
+        /// <summary>
+        /// Arranges the widgets of the control.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        public static void ArrangeWidgets(ContainerControl control)
+        {
+            // Arrange viewport widgets
+            const float margin = ViewportWidgetsContainer.WidgetsMargin;
+            float left = margin;
+            float right = control.Width - margin;
+            for (int i = 0; i < control.ChildrenCount; i++)
+            {
+                if (control.Children[i] is ViewportWidgetsContainer widget && widget.Visible)
+                {
+                    float x;
+                    switch (widget.WidgetLocation)
+                    {
+                        case ViewportWidgetLocation.UpperLeft:
+                            x = left;
+                            left += widget.Width + margin;
+                            break;
+                        case ViewportWidgetLocation.UpperRight:
+                            x = right - widget.Width;
+                            right = x - margin;
+                            break;
+                        default:
+                            x = 0;
+                            break;
+                    }
+                    widget.Location = new Vector2(x, margin);
+                }
+            }
         }
     }
 }

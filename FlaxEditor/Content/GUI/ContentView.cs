@@ -371,6 +371,11 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <inheritdoc />
+        void IContentItemOwner.OnItemReimported(ContentItem item)
+        {
+        }
+
+        /// <inheritdoc />
         void IContentItemOwner.OnItemDispose(ContentItem item)
         {
             _selection.Remove(item);

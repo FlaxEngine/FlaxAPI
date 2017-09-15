@@ -4,9 +4,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using FlaxEditor.CustomEditors.Editors;
+using FlaxEngine;
 
 namespace FlaxEditor.CustomEditors
 {
@@ -44,7 +46,7 @@ namespace FlaxEditor.CustomEditors
             return sb.ToString();
         }
 
-        internal static CustomEditor CreateEditor(ValueContainer values, CustomEditor overrideEditor)
+        internal static CustomEditor CreateEditor(ValueContainer values, CustomEditor overrideEditor, bool canUseRefPicker = true)
         {
             // Check if use provided editor
             if (overrideEditor != null)
@@ -52,10 +54,10 @@ namespace FlaxEditor.CustomEditors
 
             // Special case if property is a pure object type and all values are the same type
             if (values.Type == typeof(object) && values.Count > 0 && values[0] != null && !values.HasDiffrentTypes)
-                return CreateEditor(values[0].GetType());
+                return CreateEditor(values[0].GetType(), canUseRefPicker);
 
             // Use editor for the property type
-            return CreateEditor(values.Type);
+            return CreateEditor(values.Type, canUseRefPicker);
         }
 
         internal static CustomEditor CreateEditor(Type targetType, bool canUseRefPicker = true)
@@ -64,11 +66,42 @@ namespace FlaxEditor.CustomEditors
             {
                 return new ArrayEditor();
             }
+            if (canUseRefPicker)
+            {
+                if (targetType.IsSubclassOf(typeof(Asset)))
+                {
+                    return new AssetRefEditor();
+                }
+                if (targetType.IsSubclassOf(typeof(FlaxEngine.Object)))
+                {
+                    return new FlaxObjectRefEditor();
+                }
+            }
 
             // Use custom editor
-            var type = Internal_GetCustomEditor(targetType);
-            if (type != null)
-                return (CustomEditor)Activator.CreateInstance(type);
+            {
+                var checkType = targetType;
+                do
+                {
+                    var type = Internal_GetCustomEditor(checkType);
+                    if (type != null)
+                    {
+                        return (CustomEditor)Activator.CreateInstance(type);
+                    }
+                    checkType = checkType.BaseType;
+                    
+                    // Skip if cannot use ref editors
+                    if (!canUseRefPicker && checkType == typeof(FlaxEngine.Object))
+                        break;
+
+                } while (checkType != null);
+            }
+
+            // Use attribute editor
+            var attributes = targetType.GetCustomAttributes(false);
+            var customEditorAttribute = (CustomEditorAttribute)attributes.FirstOrDefault(x => x is CustomEditorAttribute);
+            if (customEditorAttribute != null)
+                return (CustomEditor)Activator.CreateInstance(customEditorAttribute.Type);
 
             // Select default editor (based on type)
             if (targetType.IsEnum)
@@ -87,18 +120,7 @@ namespace FlaxEditor.CustomEditors
                     return new GenericEditor();
                 }
             }
-            if (canUseRefPicker)
-            {
-                if (targetType.IsSubclassOf(typeof(FlaxEngine.Asset)))
-                {
-                    return new AssetRefEditor();
-                }
-                if (targetType.IsSubclassOf(typeof(FlaxEngine.Object)))
-                {
-                    return new FlaxObjectRefEditor();
-                }
-            }
-
+            
             // The most generic editor
             return new GenericEditor();
         }

@@ -57,6 +57,7 @@ namespace FlaxEditor.Content
         internal void OnReimport(ref Guid id)
         {
             ID = id;
+            OnReimport();
         }
 
         /// <inheritdoc />

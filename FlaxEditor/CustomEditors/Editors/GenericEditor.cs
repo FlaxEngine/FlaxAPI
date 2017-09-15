@@ -51,31 +51,31 @@ namespace FlaxEditor.CustomEditors.Editors
             /// <summary>
             /// Gets the display name.
             /// </summary>
-            /// <value>
-            /// The display name.
-            /// </value>
             public string DisplayName { get; }
 
             /// <summary>
             /// Gets a value indicating whether use dedicated group.
             /// </summary>
-            /// <value>
-            ///   <c>true</c> if use group; otherwise, <c>false</c>.
-            /// </value>
             public bool UseGroup => Display?.Group != null;
 
             /// <summary>
             /// Gets the overrided custom editor for item editing.
             /// </summary>
-            /// <value>
-            /// The overrided editor.
-            /// </value>
             public CustomEditor OverrideEditor => CustomEditor != null ? (CustomEditor)Activator.CreateInstance(CustomEditor.Type) : null;
 
             /// <summary>
             /// Gets the tooltip text (may be null if not provided).
             /// </summary>
             public string TooltipText => Tooltip?.Text;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ItemInfo"/> class.
+            /// </summary>
+            /// <param name="info">The reflection information.</param>
+            public ItemInfo(MemberInfo info)
+                : this(info, info.GetCustomAttributes(true))
+            {
+            }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="ItemInfo"/> class.
@@ -173,14 +173,14 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <param name="useProperties">True if use type properties.</param>
         /// <param name="useFields">True if use type fields.</param>
         /// <returns>The items.</returns>
-        protected virtual List<ItemInfo> GetItemsForType(Type type, bool useProperties, bool useFields)
+        protected List<ItemInfo> GetItemsForType(Type type, bool useProperties, bool useFields)
         {
-            // TODO: cache this per type?
-
             var items = new List<ItemInfo>();
 
             if (useProperties)
             {
+                // TODO: cache properties items array per type?
+
                 // Process properties
                 var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 items.Capacity = Math.Max(items.Capacity, items.Count + properties.Length);
@@ -205,6 +205,8 @@ namespace FlaxEditor.CustomEditors.Editors
 
             if (useFields)
             {
+                // TODO: cache fields items array per type?
+
                 // Process fields
                 var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
                 items.Capacity = Math.Max(items.Capacity, items.Count + fields.Length);
