@@ -212,6 +212,9 @@ namespace FlaxEditor.Modules
             InitToolstrip(mainWindow);
             InitStatusBar(mainWindow);
             InitDockPanel(mainWindow);
+
+            // Precache hint windows
+            DockHintWindow.Proxy.InitHitProxy();
         }
 
         /// <inheritdoc />

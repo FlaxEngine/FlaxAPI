@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -247,13 +247,13 @@ namespace FlaxEngine.GUI.Docking
                 Vector2 offset = _rectDock.Location;
                 float BorderMargin = 4.0f;
                 float ProxyHintWindowsSize2 = Proxy.HintWindowsSize * 0.5f;
-                float CenterX = size.X * 0.5f;
-                float CenterY = size.Y * 0.5f;
-                _rUpper = new Rectangle(CenterX - ProxyHintWindowsSize2, BorderMargin, Proxy.HintWindowsSize, Proxy.HintWindowsSize) + offset;
-                _rBottom = new Rectangle(CenterX - ProxyHintWindowsSize2, size.Y - Proxy.HintWindowsSize - BorderMargin, Proxy.HintWindowsSize, Proxy.HintWindowsSize) + offset;
-                _rLeft = new Rectangle(BorderMargin, CenterY - ProxyHintWindowsSize2, Proxy.HintWindowsSize, Proxy.HintWindowsSize) + offset;
-                _rRight = new Rectangle(size.X - Proxy.HintWindowsSize - BorderMargin, CenterY - ProxyHintWindowsSize2, Proxy.HintWindowsSize, Proxy.HintWindowsSize) + offset;
-                _rCenter = new Rectangle(CenterX - ProxyHintWindowsSize2, CenterY - ProxyHintWindowsSize2, Proxy.HintWindowsSize, Proxy.HintWindowsSize) + offset;
+                float centerX = size.X * 0.5f;
+                float centerY = size.Y * 0.5f;
+                _rUpper = new Rectangle(centerX - ProxyHintWindowsSize2, BorderMargin, Proxy.HintWindowsSize, Proxy.HintWindowsSize) + offset;
+                _rBottom = new Rectangle(centerX - ProxyHintWindowsSize2, size.Y - Proxy.HintWindowsSize - BorderMargin, Proxy.HintWindowsSize, Proxy.HintWindowsSize) + offset;
+                _rLeft = new Rectangle(BorderMargin, centerY - ProxyHintWindowsSize2, Proxy.HintWindowsSize, Proxy.HintWindowsSize) + offset;
+                _rRight = new Rectangle(size.X - Proxy.HintWindowsSize - BorderMargin, centerY - ProxyHintWindowsSize2, Proxy.HintWindowsSize, Proxy.HintWindowsSize) + offset;
+                _rCenter = new Rectangle(centerX - ProxyHintWindowsSize2, centerY - ProxyHintWindowsSize2, Proxy.HintWindowsSize, Proxy.HintWindowsSize) + offset;
 
                 // Hit test
                 DockState toSet = DockState.Float;
@@ -328,12 +328,7 @@ namespace FlaxEngine.GUI.Docking
 
             updateRects();
         }
-
-        private WindowHitCodes onHitTest(Vector2 mouse)
-        {
-            return WindowHitCodes.Transparent;
-        }
-
+        
         private void onLostFocus()
         {
             Dispose();
@@ -344,14 +339,52 @@ namespace FlaxEngine.GUI.Docking
         /// </summary>
         public static class Proxy
         {
+            /// <summary>
+            /// The drag proxy window.
+            /// </summary>
             public static FlaxEngine.Window Window;
+
+            /// <summary>
+            /// The left hint proxy window.
+            /// </summary>
             public static FlaxEngine.Window Left;
+
+            /// <summary>
+            /// The right hint proxy window.
+            /// </summary>
             public static FlaxEngine.Window Right;
+
+            /// <summary>
+            /// The up hint proxy window.
+            /// </summary>
             public static FlaxEngine.Window Up;
+
+            /// <summary>
+            /// The down hint proxy window.
+            /// </summary>
             public static FlaxEngine.Window Down;
+
+            /// <summary>
+            /// The center hint proxy window.
+            /// </summary>
             public static FlaxEngine.Window Center;
 
+            /// <summary>
+            /// The hint windows size.
+            /// </summary>
             public const float HintWindowsSize = 32.0f;
+
+            /// <summary>
+            /// Initializes the hit proxy windows. Those windows are used to incidate drag target areas (left, right, top, bottom, etc.).
+            /// </summary>
+            public static void InitHitProxy()
+            {
+                CreateProxy(ref Left, "DockHint.Left");
+                CreateProxy(ref Right, "DockHint.Right");
+                CreateProxy(ref Up, "DockHint.Up");
+                CreateProxy(ref Down, "DockHint.Down");
+                CreateProxy(ref Center, "DockHint.Center");
+            }
 
             /// <summary>
             /// Inits docking proxy windows.
@@ -388,11 +421,7 @@ namespace FlaxEngine.GUI.Docking
                     Window.ClientSize = initSize;
                 }
 
-                CreateProxy(ref Left, "DockHint.Left");
-                CreateProxy(ref Right, "DockHint.Right");
-                CreateProxy(ref Up, "DockHint.Up");
-                CreateProxy(ref Down, "DockHint.Down");
-                CreateProxy(ref Center, "DockHint.Center");
+                InitHitProxy();
             }
 
             private static void CreateProxy(ref FlaxEngine.Window win, string name)
