@@ -112,11 +112,11 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        public override bool OnKeyPressed(KeyCodeMap key)
+        public override bool OnKeyPressed(InputChord key)
         {
             // Base
             if(base.OnKeyPressed(key)) return true;
-            return key.InvokeFirstCommand(KeyCode.Control, new KeyCodeMap.KeyCommand(KeyCode.S, Save));
+            return key.InvokeFirstCommand(KeyCode.Control, new InputChord.KeyCommand(KeyCode.S, Save));
         }
 
         /// <inheritdoc />

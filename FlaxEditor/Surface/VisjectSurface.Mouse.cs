@@ -290,7 +290,7 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override void OnKeyReleased(KeyCodeMap key)
+        public override void OnKeyReleased(InputChord key)
         {
             if (ContainsFocus)
             {

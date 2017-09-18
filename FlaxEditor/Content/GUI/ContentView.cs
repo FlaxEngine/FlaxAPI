@@ -476,7 +476,7 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyPressed(KeyCodeMap key)
+        public override bool OnKeyPressed(InputChord key)
         {
             // Navigate backward
             if (key[KeyCode.Backspace])
@@ -503,7 +503,7 @@ namespace FlaxEditor.Content.GUI
                 }
 
                 // Duplicate
-                if (key[KeyCode.D] && ParentWindow.GetKey(KeyCode.Control))
+                if (key[KeyCode.D] && ParentWindow != null && ParentWindow.GetKey(KeyCode.Control))
                 {
                     DuplicateSelection();
                     return true;

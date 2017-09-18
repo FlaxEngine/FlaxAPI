@@ -9,19 +9,19 @@ using FlaxEngine.Utilities;
 namespace FlaxEngine.GUI
 {
     /// <summary>
-    /// Text Box control which can gather text input from the user
+    ///     Text Box control which can gather text input from the user
     /// </summary>
     public partial class TextBox : Control
     {
         private static readonly char[] Separators = { ' ', '.', ',', '\t', '\r', '\n' };
 
         /// <summary>
-        /// Default height of the text box
+        ///     Default height of the text box
         /// </summary>
         public static float DefaultHeight = 18;
 
         /// <summary>
-        /// Left and right margin for text inside the text box bounds rectangle
+        ///     Left and right margin for text inside the text box bounds rectangle
         /// </summary>
         public static float DefaultMargin = 4;
 
@@ -31,37 +31,41 @@ namespace FlaxEngine.GUI
 
         // State
         private string _onStartEditValue;
+
         private bool _isEditing;
         private Vector2 _viewOffset, _targetViewOffset;
 
         // Options
         private bool _isMultiline, _isReadOnly;
+
         private int _maxLength;
         private TextLayoutOptions _layout;
 
         // Selecting
         private bool _isSelecting;
+
         private int _selectionStart, _selectionEnd;
         private float _animateTime;
+
 
         #region Events
 
         /// <summary>
-        /// Event fired when text gets changed
+        ///     Event fired when text gets changed
         /// </summary>
         public event Action TextChanged;
 
         /// <summary>
-        /// Event fired when text gets changed after editing (user accepted entered value).
+        ///     Event fired when text gets changed after editing (user accepted entered value).
         /// </summary>
         public event Action EditEnd;
 
         #endregion
 
         #region Public Properties
-        
+
         /// <summary>
-        /// Gets or sets a value indicating whether this is a multiline text box control.
+        ///     Gets or sets a value indicating whether this is a multiline text box control.
         /// </summary>
         public bool IsMultiline
         {
@@ -79,7 +83,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets the maximum number of characters the user can type into the text box control.
+        ///     Gets or sets the maximum number of characters the user can type into the text box control.
         /// </summary>
         public int MaxLength
         {
@@ -87,7 +91,9 @@ namespace FlaxEngine.GUI
             set
             {
                 if (_maxLength <= 0 || _maxLength > 1000000)
+                {
                     throw new ArgumentOutOfRangeException(nameof(MaxLength));
+                }
 
                 if (_maxLength != value)
                 {
@@ -113,7 +119,7 @@ namespace FlaxEngine.GUI
         */
 
         /// <summary>
-        /// Gets or sets a value indicating whether text in the text box is read-only. 
+        ///     Gets or sets a value indicating whether text in the text box is read-only.
         /// </summary>
         public bool IsReadOnly
         {
@@ -129,37 +135,45 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets text property
+        ///     Gets or sets text property
         /// </summary>
         public string Text
         {
             get => _text;
             set
             {
-                if(IsReadOnly)
+                if (IsReadOnly)
+                {
                     throw new AccessViolationException("Text Box is readonly.");
+                }
 
                 // Skip set if user is editing value
                 if (_isEditing)
+                {
                     return;
-                
+                }
+
                 SetText(value);
             }
         }
 
         /// <summary>
-        /// Sets the text.
+        ///     Sets the text.
         /// </summary>
         /// <param name="value">The value.</param>
         protected void SetText(string value)
         {
             // Prevent from null problems
             if (value == null)
+            {
                 value = string.Empty;
+            }
 
             // Clamp length
             if (value.Length > MaxLength)
+            {
                 value = value.Substring(0, MaxLength);
+            }
 
             // Ensure to use only single line
             if (_isMultiline == false && value.Length > 0)
@@ -180,12 +194,12 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets length of the text
+        ///     Gets length of the text
         /// </summary>
         public int TextLength => _text.Length;
 
         /// <summary>
-        /// Gets the currently selected text in the control.
+        ///     Gets the currently selected text in the control.
         /// </summary>
         public string SelectedText
         {
@@ -197,42 +211,42 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets the number of characters selected in the text box.
+        ///     Gets or sets the number of characters selected in the text box.
         /// </summary>
         public int SelectionLength => Mathf.Abs(_selectionEnd - _selectionStart);
 
         /// <summary>
-        /// Returns true if any text is selected, otherwise false
+        ///     Returns true if any text is selected, otherwise false
         /// </summary>
         public bool HasSelection => SelectionLength > 0;
 
         /// <summary>
-        /// Gets or sets the watermark text to show grayed when textbox is empty.
+        ///     Gets or sets the watermark text to show grayed when textbox is empty.
         /// </summary>
         /// <value>
-        /// The watermark text.
+        ///     The watermark text.
         /// </value>
         public string WatermarkText { get; set; }
 
         #endregion
 
         /// <summary>
-        /// Index of the character on left edge of the selection
+        ///     Index of the character on left edge of the selection
         /// </summary>
         private int SelectionLeft => Mathf.Min(_selectionStart, _selectionEnd);
 
         /// <summary>
-        /// Index of the character on right edge of the selection
+        ///     Index of the character on right edge of the selection
         /// </summary>
         private int SelectionRight => Mathf.Max(_selectionStart, _selectionEnd);
 
         /// <summary>
-        /// Gets current caret position (index of the character)
+        ///     Gets current caret position (index of the character)
         /// </summary>
         private int CaretPosition => _selectionEnd;
 
         /// <summary>
-        /// Calculates caret rectangle
+        ///     Calculates caret rectangle
         /// </summary>
         private Rectangle CaretBounds
         {
@@ -243,7 +257,7 @@ namespace FlaxEngine.GUI
                 Vector2 caretPos = Font.GetCharPosition(_text, CaretPosition, _layout);
 
                 return new Rectangle(
-                    caretPos.X - (caretWidth * 0.5f),
+                    caretPos.X - caretWidth * 0.5f,
                     caretPos.Y,
                     caretWidth,
                     Font.Height);
@@ -251,12 +265,12 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets text font
+        ///     Gets text font
         /// </summary>
         public Font Font { get; set; }
 
         /// <summary>
-        /// Gets rectangle with area for text
+        ///     Gets rectangle with area for text
         /// </summary>
         protected virtual Rectangle TextRectangle
         {
@@ -264,15 +278,15 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets rectangle used to clip text
+        ///     Gets rectangle used to clip text
         /// </summary>
         protected virtual Rectangle TextClipRectangle
         {
             get { return new Rectangle(1, 1, Width - 2, Height - 2); }
         }
-        
+
         /// <summary>
-        /// Init
+        ///     Init
         /// </summary>
         /// <param name="isMultiline">Enable/disable multiline text input support</param>
         /// <param name="x">Position X coordinate</param>
@@ -298,7 +312,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Clears all text from the text box control. 
+        ///     Clears all text from the text box control.
         /// </summary>
         public void Clear()
         {
@@ -306,17 +320,19 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Clear selection range
+        ///     Clear selection range
         /// </summary>
         public void ClearSelection()
         {
             if (_isSelecting)
+            {
                 OnSelectingEnd();
+            }
             setSelection(-1);
         }
 
         /// <summary>
-        /// Resets the view offset (text scroll view).
+        ///     Resets the view offset (text scroll view).
         /// </summary>
         public void ResetViewOffset()
         {
@@ -324,7 +340,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Copies the current selection in the text box to the Clipboard. 
+        ///     Copies the current selection in the text box to the Clipboard.
         /// </summary>
         public void Copy()
         {
@@ -337,7 +353,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Moves the current selection in the text box to the Clipboard. 
+        ///     Moves the current selection in the text box to the Clipboard.
         /// </summary>
         public void Cut()
         {
@@ -356,14 +372,16 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Replaces the current selection in the text box with the contents of the Clipboard.
+        ///     Replaces the current selection in the text box with the contents of the Clipboard.
         /// </summary>
         public void Paste()
         {
             // Get clipboard data
             var clipboardText = Application.ClipboardText;
             if (string.IsNullOrEmpty(clipboardText))
+            {
                 return;
+            }
 
             var right = SelectionRight;
             Insert(clipboardText);
@@ -371,7 +389,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Duplicates the current selection in the text box.
+        ///     Duplicates the current selection in the text box.
         /// </summary>
         public void Duplicate()
         {
@@ -386,7 +404,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Ensures that the caret is visible in the TextBox window, by scrolling the TextBox control surface if necessary.
+        ///     Ensures that the caret is visible in the TextBox window, by scrolling the TextBox control surface if necessary.
         /// </summary>
         public void ScrollToCaret()
         {
@@ -400,7 +418,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Selects all text in the text box.
+        ///     Selects all text in the text box.
         /// </summary>
         public void SelectAll()
         {
@@ -411,7 +429,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Sets selection to empty value
+        ///     Sets selection to empty value
         /// </summary>
         public void Deselect()
         {
@@ -441,15 +459,21 @@ namespace FlaxEngine.GUI
         private void Insert(string str)
         {
             if (IsReadOnly)
+            {
                 throw new AccessViolationException("Text Box is readonly.");
+            }
 
             int selectionLength = SelectionLength;
             int charactersLeft = MaxLength - _text.Length + selectionLength;
             Assert.IsTrue(charactersLeft >= 0);
             if (charactersLeft == 0)
+            {
                 return;
+            }
             if (charactersLeft < str.Length)
+            {
                 str = str.Substring(0, charactersLeft);
+            }
 
             if (TextLength == 0)
             {
@@ -460,10 +484,12 @@ namespace FlaxEngine.GUI
             {
                 var left = SelectionLeft >= 0 ? SelectionLeft : 0;
                 if (HasSelection)
+                {
                     _text = _text.Remove(left, selectionLength);
+                }
 
                 _text = _text.Insert(left, str);
-                
+
                 setSelection(left + 1);
             }
 
@@ -476,13 +502,17 @@ namespace FlaxEngine.GUI
             {
                 setSelection(SelectionRight);
             }
-            else if(SelectionRight < TextLength)
+            else if (SelectionRight < TextLength)
             {
                 int position;
                 if (ctrl)
+                {
                     position = FindtNextWordBegin();
+                }
                 else
+                {
                     position = _selectionEnd + 1;
+                }
 
                 if (shift)
                 {
@@ -501,13 +531,17 @@ namespace FlaxEngine.GUI
             {
                 setSelection(SelectionLeft);
             }
-            else if(SelectionLeft > 0)
+            else if (SelectionLeft > 0)
             {
                 int position;
                 if (ctrl)
+                {
                     position = FindtPrevWordBegin();
+                }
                 else
+                {
                     position = _selectionEnd - 1;
+                }
 
                 if (shift)
                 {
@@ -580,7 +614,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Removes all text from <see cref="TextBox"/>
+        ///     Removes all text from <see cref="TextBox" />
         /// </summary>
         private void ResetText()
         {
@@ -592,7 +626,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Removes selected text
+        ///     Removes selected text
         /// </summary>
         /// <returns>True if succeeed</returns>
         public bool RemoveSelection()
@@ -608,7 +642,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Remove one character in the back (look default behavior for <see cref="KeyCode.Backspace"/>
+        ///     Remove one character in the back (look default behavior for <see cref="KeyCode.Backspace" />
         /// </summary>
         public void RemoveBackward()
         {
@@ -621,7 +655,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Remove one character in the front (look default behavior for <see cref="KeyCode.Delete"/>
+        ///     Remove one character in the front (look default behavior for <see cref="KeyCode.Delete" />
         /// </summary>
         public void RemoveForward()
         {
@@ -633,7 +667,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// TODO chagne to property
+        ///     TODO chagne to property
         /// </summary>
         /// <param name="caret"></param>
         private void setSelection(int caret)
@@ -642,7 +676,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// TODO chagne to property
+        ///     TODO chagne to property
         /// </summary>
         /// <param name="caret"></param>
         private void setSelection(int start, int end)
@@ -665,14 +699,20 @@ namespace FlaxEngine.GUI
             int caretPos = CaretPosition;
 
             if (caretPos + 1 >= textLength)
+            {
                 return textLength;
+            }
 
             int spaceLoc = Text.IndexOfAny(Separators, caretPos + 1);
 
             if (spaceLoc == -1)
+            {
                 spaceLoc = textLength;
+            }
             else
+            {
                 spaceLoc++;
+            }
 
             return spaceLoc;
         }
@@ -682,14 +722,20 @@ namespace FlaxEngine.GUI
             int caretPos = CaretPosition;
 
             if (caretPos - 2 < 0)
+            {
                 return 0;
+            }
 
             int spaceLoc = _text.LastIndexOfAny(Separators, caretPos - 2);
 
             if (spaceLoc == -1)
+            {
                 spaceLoc = 0;
+            }
             else
+            {
                 spaceLoc++;
+            }
 
             return spaceLoc;
         }
@@ -697,7 +743,9 @@ namespace FlaxEngine.GUI
         private int FindLineDownChar(int index)
         {
             if (!IsMultiline)
+            {
                 return 0;
+            }
 
             Vector2 location = Font.GetCharPosition(_text, index, _layout);
             location.Y += Font.Height;
@@ -708,7 +756,9 @@ namespace FlaxEngine.GUI
         private int FindLineUpChar(int index)
         {
             if (!IsMultiline)
+            {
                 return _text.Length;
+            }
 
             Vector2 location = Font.GetCharPosition(_text, index, _layout);
             location.Y -= Font.Height;
@@ -717,7 +767,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Action called when user starts text selecting
+        ///     Action called when user starts text selecting
         /// </summary>
         protected virtual void OnSelectingBegin()
         {
@@ -729,7 +779,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Action called when user ends text selecting
+        ///     Action called when user ends text selecting
         /// </summary>
         protected virtual void OnSelectingEnd()
         {
@@ -745,12 +795,14 @@ namespace FlaxEngine.GUI
         #region Internal Events
 
         /// <summary>
-        /// Action called when user starts text editing
+        ///     Action called when user starts text editing
         /// </summary>
         protected virtual void OnEditBegin()
         {
             if (_isEditing)
+            {
                 return;
+            }
 
             _isEditing = true;
             _onStartEditValue = _text;
@@ -760,12 +812,14 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Action called when user ends text editing.
+        ///     Action called when user ends text editing.
         /// </summary>
         protected virtual void OnEditEnd()
         {
             if (!_isEditing)
+            {
                 return;
+            }
 
             _isEditing = false;
             if (_onStartEditValue != _text)
@@ -774,13 +828,13 @@ namespace FlaxEngine.GUI
                 EditEnd?.Invoke();
             }
             _onStartEditValue = string.Empty;
-            
+
             ClearSelection();
             ResetViewOffset();
         }
-        
+
         /// <summary>
-        /// Action called when text gets modified.
+        ///     Action called when text gets modified.
         /// </summary>
         protected virtual void OnTextChanged()
         {
@@ -814,18 +868,26 @@ namespace FlaxEngine.GUI
             // Background
             Color backColor = style.TextBoxBackground;
             if (IsMouseOver)
+            {
                 backColor = style.TextBoxBackgroundSelected;
+            }
             if (BackgroundColor.A > 0)
+            {
                 backColor = BackgroundColor;
+            }
             Render2D.FillRectangle(rect, backColor);
             if (IsFocused)
+            {
                 Render2D.DrawRectangle(rect, style.BackgroundSelected);
+            }
 
             // Apply view offset and clip mask
             Render2D.PushClip(TextClipRectangle);
             bool useViewOffset = !_viewOffset.IsZero;
             if (useViewOffset)
+            {
                 Render2D.PushTransform(Matrix3x3.Translation2D(-_viewOffset));
+            }
 
             // Check if sth is selected to draw selection
             if (HasSelection)
@@ -840,7 +902,9 @@ namespace FlaxEngine.GUI
                 float alpha = Mathf.Min(1.0f, Mathf.Cos(_animateTime * 6.0f) * 0.5f + 1.3f);
                 alpha = alpha * alpha;
                 if (!IsFocused)
+                {
                     alpha = 0.1f;
+                }
                 Color selectionColor = style.BackgroundSelected * alpha;
                 //
                 int selectedLinesCount = 1 + Mathf.FloorToInt((rightEdge.Y - leftEdge.Y) / fontHeight);
@@ -890,7 +954,9 @@ namespace FlaxEngine.GUI
 
             // Restore rendering state
             if (useViewOffset)
+            {
                 Render2D.PopTransform();
+            }
             Render2D.PopClip();
         }
 
@@ -924,7 +990,7 @@ namespace FlaxEngine.GUI
             SelectAll();
             return base.OnMouseDoubleClick(location, buttons);
         }
-        
+
         /// <inheritdoc />
         public override void OnMouseMove(Vector2 location)
         {
@@ -954,12 +1020,14 @@ namespace FlaxEngine.GUI
             base.OnMouseDown(location, buttons);
             return true;
         }
-        
+
         /// <inheritdoc />
         public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
         {
             if (_isSelecting)
+            {
                 OnSelectingEnd();
+            }
             return base.OnMouseUp(location, buttons);
         }
 

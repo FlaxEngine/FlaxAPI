@@ -459,7 +459,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyPressed(KeyCodeMap key)
+        public override bool OnKeyPressed(InputChord key)
         {
             // Check if can use multi selection
             if (_supportMultiSelect)

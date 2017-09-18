@@ -33,23 +33,23 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
-        public override bool OnKeyPressed(KeyCodeMap key)
+        public override bool OnKeyPressed(InputChord key)
         {
             // Base
             if (base.OnKeyPressed(key)) return true;
 
             if(key.InvokeFirstCommand(KeyCode.Control,
-                new KeyCodeMap.KeyCommand(KeyCode.S, Editor.SaveAll),
-                new KeyCodeMap.KeyCommand(KeyCode.Z, Editor.PerformUndo),
-                new KeyCodeMap.KeyCommand(KeyCode.Y, () => { Editor.PerformRedo(); Focus(); }),
-                new KeyCodeMap.KeyCommand(KeyCode.X, Editor.SceneEditing.Cut),
-                new KeyCodeMap.KeyCommand(KeyCode.C, Editor.SceneEditing.Copy),
-                new KeyCodeMap.KeyCommand(KeyCode.V, () => { Editor.SceneEditing.Paste(); }),
-                new KeyCodeMap.KeyCommand(KeyCode.D, Editor.SceneEditing.Duplicate),
-                new KeyCodeMap.KeyCommand(KeyCode.A, Editor.SceneEditing.SelectAllScenes),
-                new KeyCodeMap.KeyCommand(KeyCode.F, Editor.Windows.SceneWin.Search)
+                new InputChord.KeyCommand(KeyCode.S, Editor.SaveAll),
+                new InputChord.KeyCommand(KeyCode.Z, Editor.PerformUndo),
+                new InputChord.KeyCommand(KeyCode.Y, () => { Editor.PerformRedo(); Focus(); }),
+                new InputChord.KeyCommand(KeyCode.X, Editor.SceneEditing.Cut),
+                new InputChord.KeyCommand(KeyCode.C, Editor.SceneEditing.Copy),
+                new InputChord.KeyCommand(KeyCode.V, () => { Editor.SceneEditing.Paste(); }),
+                new InputChord.KeyCommand(KeyCode.D, Editor.SceneEditing.Duplicate),
+                new InputChord.KeyCommand(KeyCode.A, Editor.SceneEditing.SelectAllScenes),
+                new InputChord.KeyCommand(KeyCode.F, Editor.Windows.SceneWin.Search)
             )){ return true; }
-            return key.InvokeFirstCommand(new KeyCodeMap.KeyCommand(KeyCode.Delete, Editor.SceneEditing.Delete));
+            return key.InvokeFirstCommand(new InputChord.KeyCommand(KeyCode.Delete, Editor.SceneEditing.Delete));
         }
     }
 }

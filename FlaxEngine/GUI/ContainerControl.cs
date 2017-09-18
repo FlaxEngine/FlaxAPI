@@ -937,7 +937,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyPressed(KeyCodeMap key)
+        public override bool OnKeyPressed(InputChord key)
         {
             for (int i = 0; i < _children.Count && _children.Count > 0; i++)
             {
@@ -960,7 +960,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override void OnKeyReleased(KeyCodeMap key)
+        public override void OnKeyReleased(InputChord key)
         {
             for (int i = 0; i < _children.Count && _children.Count > 0; i++)
             {

@@ -327,7 +327,7 @@ namespace FlaxEngine.GUI
         /// Wrapper to unregister event on dispose
         /// </summary>
         /// <param name="map"></param>
-        private void OnInputOnOnKeyPressed(KeyCodeMap map)
+        private void OnInputOnOnKeyPressed(InputChord map)
         {
             try
             {
@@ -614,7 +614,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="key">Key value</param>
         /// <returns>True if event has been handled, otherwise false</returns>
-        public virtual bool OnKeyPressed(KeyCodeMap key)
+        public virtual bool OnKeyPressed(InputChord key)
         {
             return false;
         }
@@ -623,7 +623,7 @@ namespace FlaxEngine.GUI
         ///     When key goes up
         /// </summary>
         /// <param name="key">Key value</param>
-        public virtual void OnKeyReleased(KeyCodeMap key)
+        public virtual void OnKeyReleased(InputChord key)
         {
         }
 

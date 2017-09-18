@@ -673,14 +673,14 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyPressed(KeyCodeMap key)
+        public override bool OnKeyPressed(InputChord key)
         {
             // Check if is focused and has any children
             if (IsFocused && _children.Count > 0)
             {
                 if (key.InvokeFirstCommand(
-                    new KeyCodeMap.KeyCommand(KeyCode.ArrowLeft, Collapse),
-                    new KeyCodeMap.KeyCommand(KeyCode.ArrowRight, Expand))) return true;
+                    new InputChord.KeyCommand(KeyCode.ArrowLeft, Collapse),
+                    new InputChord.KeyCommand(KeyCode.ArrowRight, Expand))) return true;
             }
 
             // Base

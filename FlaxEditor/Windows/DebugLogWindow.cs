@@ -149,7 +149,7 @@ namespace FlaxEditor.Windows
             }
 
             /// <inheritdoc />
-            public override bool OnKeyPressed(KeyCodeMap key)
+            public override bool OnKeyPressed(InputChord key)
             {
                 // Up
                 if (key[KeyCode.ArrowUp])

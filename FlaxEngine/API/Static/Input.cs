@@ -14,22 +14,22 @@ namespace FlaxEngine
 {
     public static partial class Input
     {
-        private static KeyCodeMap _previousPressedKeys;
+        private static InputChord _previousPressedKeys;
 
         /// <summary>
         ///     Event that is fired when at least one key is hold down.
         /// </summary>
-        public static event Action<KeyCodeMap> OnKeyHold;
+        public static event Action<InputChord> OnKeyHold;
 
         /// <summary>
         ///     Event that is fired when a new key is pressed. Contains all currently holding keys with addition to the new one.
         /// </summary>
-        public static event Action<KeyCodeMap> OnKeyPressed;
+        public static event Action<InputChord> OnKeyPressed;
 
         /// <summary>
         ///     Event that is fired when a key is released. Contains all currently holding keys without last one released.
         /// </summary>
-        public static event Action<KeyCodeMap> OnKeyReleased;
+        public static event Action<InputChord> OnKeyReleased;
 
         /// <summary>
         ///     Event taht is fired when a key with modifier or special character or IME input returns a character.
@@ -40,7 +40,10 @@ namespace FlaxEngine
         /// <summary>
         ///     All currently acitve keys, can be null
         /// </summary>
-        public static KeyCodeMap PressedKeys { get; private set; }
+        public static InputChord PressedKeys { get; private set; }
+
+        static Stopwatch stopwatch;
+        static Stopwatch stopwatch2;
 
         /// <summary>
         ///     Internal method used to get all currently active keys
@@ -50,7 +53,7 @@ namespace FlaxEngine
         {
             if (keyPressedArray.Length > 0)
             {
-                var keysMapped = new KeyCodeMap(keyPressedArray);
+                var keysMapped = new InputChord(keyPressedArray);
                 _previousPressedKeys = PressedKeys;
                 PressedKeys = keysMapped;
                 OnKeyHold?.Invoke(keysMapped);
@@ -74,7 +77,7 @@ namespace FlaxEngine
             else
             {
                 _previousPressedKeys = PressedKeys;
-                PressedKeys = new KeyCodeMap(null);
+                PressedKeys = new InputChord();
             }
         }
 
@@ -87,6 +90,30 @@ namespace FlaxEngine
         /// <param name="unicode"></param>
         internal static void Internal_UnicodeInputEvent(int[] unicode)
         {
+            try
+            {
+                if(stopwatch == null)
+                {
+                    stopwatch = Stopwatch.StartNew();
+                }
+                if (stopwatch.IsRunning)
+                {
+                    stopwatch?.Stop();
+                    Debug.Log(stopwatch?.ElapsedTicks);
+                    stopwatch2 = Stopwatch.StartNew();
+                }
+                else
+                {
+                    stopwatch2?.Stop();
+                    Debug.Log(stopwatch2?.ElapsedTicks);
+                    stopwatch = Stopwatch.StartNew();
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+                throw;
+            }
             StringBuilder builder = new StringBuilder(unicode.Length);
             foreach (var i in unicode)
             {

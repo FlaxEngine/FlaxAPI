@@ -4,6 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{BE633490-FBA4-41EB-80D4-EFA312592B8E};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ProjectGuid>{7A23ADF2-CAB0-4ED9-9EDC-D9A2B9E51B21}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -138,7 +139,8 @@
     <Compile Include="API\Static\Input.Gen.cs">
       <DependentUpon>Input.cs</DependentUpon>
     </Compile>
-    <Compile Include="Engine\KeyCodeMap.cs" />
+    <Compile Include="Engine\InputCommandsController.cs" />
+    <Compile Include="Engine\InputChord.cs" />
     <Compile Include="API\Static\MessageBox.cs" />
     <Compile Include="API\Static\MessageBox.Gen.cs" />
     <Compile Include="API\Static\Render2D.cs" />
@@ -341,6 +343,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Engine\Input\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">

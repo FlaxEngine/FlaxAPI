@@ -444,14 +444,14 @@ namespace FlaxEditor.Viewport
         }
 
         /// <inheritdoc />
-        public override bool OnKeyPressed(KeyCodeMap key)
+        public override bool OnKeyPressed(InputChord key)
         {
             if (key.InvokeFirstCommand(
-                new KeyCodeMap.KeyCommand(KeyCode.Delete, _editor.SceneEditing.Delete),
-                new KeyCodeMap.KeyCommand(KeyCode.Alpha1, () => { TransformGizmo.ActiveMode = TransformGizmo.Mode.Translate; }),
-                new KeyCodeMap.KeyCommand(KeyCode.Alpha2, () => { TransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate; }),
-                new KeyCodeMap.KeyCommand(KeyCode.Alpha3, () => { TransformGizmo.ActiveMode = TransformGizmo.Mode.Scale; }),
-                new KeyCodeMap.KeyCommand(KeyCode.F, _editor.Windows.EditWin.ShowSelectedActors)
+                new InputChord.KeyCommand(KeyCode.Delete, _editor.SceneEditing.Delete),
+                new InputChord.KeyCommand(KeyCode.Alpha1, () => { TransformGizmo.ActiveMode = TransformGizmo.Mode.Translate; }),
+                new InputChord.KeyCommand(KeyCode.Alpha2, () => { TransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate; }),
+                new InputChord.KeyCommand(KeyCode.Alpha3, () => { TransformGizmo.ActiveMode = TransformGizmo.Mode.Scale; }),
+                new InputChord.KeyCommand(KeyCode.F, _editor.Windows.EditWin.ShowSelectedActors)
                 )) return true;
            return base.OnKeyPressed(key);
         }
