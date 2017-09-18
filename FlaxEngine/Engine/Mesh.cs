@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -30,6 +30,16 @@ namespace FlaxEngine
         /// </value>
         public ModelLOD ParentLOD => _model.LODs[_lodIndex];
 
+        /// <summary>
+        /// Gets the index of the mesh (in the parnet level of detail).
+        /// </summary>
+        public int MeshIndex => _meshIndex;
+
+        /// <summary>
+        /// Gets the index of the material slot to use during this mesh rendering.
+        /// </summary>
+        public int MaterialSlotIndex => Model.Internal_GetMeshMaterialSlotIndex(_model.unmanagedPtr, _lodIndex, _meshIndex);
+        
         internal Mesh(Model model, int lodIndex, int meshIndex)
         {
             _model = model;

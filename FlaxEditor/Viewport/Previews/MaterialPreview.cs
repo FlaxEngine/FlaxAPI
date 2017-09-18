@@ -121,9 +121,9 @@ namespace FlaxEditor.Viewport.Previews
                         surfaceMaterial = _material;
                 }
             }
-            var meshes = _previewModel.Meshes;
-            if (meshes.Length == 1)
-                meshes[0].Material = surfaceMaterial;
+            var entries = _previewModel.Entries;
+            if (entries.Length == 1)
+                entries[0].Material = surfaceMaterial;
             _postFxVolume.Settings.PostFxMaterials = new [] { postFxMaterial };
         }
 

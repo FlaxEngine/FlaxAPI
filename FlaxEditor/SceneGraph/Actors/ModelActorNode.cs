@@ -25,9 +25,9 @@ namespace FlaxEditor.SceneGraph.Actors
             public ModelActor ModelActor => (ModelActor)_actor.Actor;
 
             /// <summary>
-            /// Gets the mesh.
+            /// Gets the mesh entry.
             /// </summary>
-            public MeshInfo Mesh => ((ModelActor)_actor.Actor).Meshes[Index];
+            public ModelEntryInfo Entry => ((ModelActor)_actor.Actor).Entries[Index];
 
             /// <inheritdoc />
             public MeshNode(ModelActorNode actor, Guid id, int index)
@@ -38,17 +38,17 @@ namespace FlaxEditor.SceneGraph.Actors
             /// <inheritdoc />
             public override Transform Transform
             {
-                get => _actor.Actor.Transform.LocalToWorld(Mesh.Transform);
-                set => Mesh.Transform = _actor.Actor.Transform.WorldToLocal(value);
+                get => _actor.Actor.Transform.LocalToWorld(Entry.Transform);
+                set => Entry.Transform = _actor.Actor.Transform.WorldToLocal(value);
             }
 
             /// <inheritdoc />
-            public override object EditableObject => Mesh;
+            public override object EditableObject => Entry;
 
             /// <inheritdoc />
             public override bool RayCastSelf(ref Ray ray, out float distance)
             {
-                return Mesh.Intersects(ray, out distance);
+                return Entry.Intersects(ray, out distance);
             }
         }
 
@@ -57,7 +57,7 @@ namespace FlaxEditor.SceneGraph.Actors
             : base(actor)
         {
             var modelActor = (ModelActor)actor;
-            modelActor.MeshesChanged += BuildNodes;
+            modelActor.EntriesChanged += BuildNodes;
             BuildNodes(modelActor);
         }
 
@@ -67,14 +67,14 @@ namespace FlaxEditor.SceneGraph.Actors
             DisposeChildNodes();
 
             // Build new collection
-            var meshes = actor.Meshes;
-            if (meshes != null)
+            var entries = actor.Entries;
+            if (entries != null)
             {
-                ChildNodes.Capacity = meshes.Length;
+                ChildNodes.Capacity = entries.Length;
 
                 var id = ID;
                 var idBytes = id.ToByteArray();
-                for (int i = 0; i < meshes.Length; i++)
+                for (int i = 0; i < entries.Length; i++)
                 {
                     idBytes[0] += 1;
                     AddChildNode(new MeshNode(this, new Guid(idBytes), i));

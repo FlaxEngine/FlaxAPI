@@ -5,30 +5,25 @@
 namespace FlaxEngine
 {
     /// <summary>
-    /// Represents a part of the model actor mesh infos collection. Contains information about how to render <see cref="Mesh"/>.
+    /// Represents a part of the model actor entries collection. Contains information about how to render <see cref="Mesh"/>.
     /// </summary>
-    public sealed class MeshInfo
+    public sealed class ModelEntryInfo
     {
         [Serialize]
         internal ModelActor _modelActor;
+
         [Serialize]
         internal readonly int _index;
 
         /// <summary>
         /// Gets the parent model actor.
         /// </summary>
-        /// <value>
-        /// The parent model actor.
-        /// </value>
         [HideInEditor]
         public ModelActor ParentActor => _modelActor;
 
         /// <summary>
         /// Gets or sets the mesh local transform.
         /// </summary>
-        /// <value>
-        /// The lcoal transform.
-        /// </value>
         [EditorOrder(40), EditorDisplay("Mesh")]
         public Transform Transform
         {
@@ -40,14 +35,11 @@ namespace FlaxEngine
             }
             set => ModelActor.Internal_SetMeshTransform(_modelActor.unmanagedPtr, _index, ref value);
         }
-        
+
         /// <summary>
         /// Gets or sets the material used to render the mesh.
         /// If value if null then model asset mesh default material will be used as a fallback.
         /// </summary>
-        /// <value>
-        /// The material.
-        /// </value>
         [EditorOrder(10), EditorDisplay("Mesh")]
         public MaterialBase Material
         {
@@ -59,9 +51,6 @@ namespace FlaxEngine
         /// Gets or sets the scale in lightmap (per mesh).
         /// Final mesh scale in lightmap is alsow multiplied by <see cref="ModelActor.ScaleInLightmap"/> and global scene scale parameter.
         /// </summary>
-        /// <value>
-        /// The scale in lightmap.
-        /// </value>
         [EditorOrder(20), EditorDisplay("Mesh"), Limit(0, 10000, 0.1f)]
         public float ScaleInLightmap
         {
@@ -70,16 +59,23 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="MeshInfo"/> is visible.
+        /// Gets or sets a value indicating whether this <see cref="ModelEntryInfo"/> is visible.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if visible; otherwise, <c>false</c>.
-        /// </value>
         [EditorOrder(30), EditorDisplay("Mesh")]
         public bool Visible
         {
             get => ModelActor.Internal_GetMeshVisible(_modelActor.unmanagedPtr, _index);
             set => ModelActor.Internal_SetMeshVisible(_modelActor.unmanagedPtr, _index, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the shadows casting mode.
+        /// </summary>
+        [EditorOrder(31), EditorDisplay("Mesh")]
+        public ShadowsCastingMode ShadowsMode
+        {
+            get => ModelActor.Internal_GetMeshShadowsMode(_modelActor.unmanagedPtr, _index);
+            set => ModelActor.Internal_SetMeshShadowsMode(_modelActor.unmanagedPtr, _index, value);
         }
 
         /// <summary>
@@ -91,17 +87,17 @@ namespace FlaxEngine
         [HideInEditor]
         public int Index => _index;
 
-        internal MeshInfo()
+        internal ModelEntryInfo()
         {
             // Used by the serialization system
         }
 
-        internal MeshInfo(ModelActor model, int index)
+        internal ModelEntryInfo(ModelActor model, int index)
         {
             _modelActor = model;
             _index = index;
         }
-        
+
         /// <summary>
         /// Determines if there is an intersection between the model actor mesh and a ray.
         /// If mesh data is available on the CPU performs exact intersection check with the geometry.

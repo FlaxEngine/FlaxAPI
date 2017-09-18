@@ -558,7 +558,7 @@ namespace FlaxEditor.Viewport
                             {
                                 var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
                                 using (new UndoBlock(Undo, meshNode.ModelActor, "Change material"))
-                                    meshNode.Mesh.Material = material;
+                                    meshNode.Entry.Material = material;
                             }
 
                             break;

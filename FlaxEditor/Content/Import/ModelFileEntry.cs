@@ -72,13 +72,7 @@ namespace FlaxEditor.Content.Import
         /// </summary>
         [EditorOrder(40), Tooltip("Enable model tangent vectors recalculating")]
         public bool CalculateTangents { get; set; } = true;
-
-        /// <summary>
-        /// Enable/disable drawing model two sided by force.
-        /// </summary>
-        [EditorOrder(50), Tooltip("Enable/disable drawing model two sided by force")]
-        public bool ForceTwoSided { get; set; }
-
+        
         /// <summary>
         /// Enable/disable meshes geometry optimization.
         /// </summary>
@@ -98,7 +92,6 @@ namespace FlaxEditor.Content.Import
             public bool CalculateNormals;
             public float SmoothigNormalsAngle;
             public bool CalculateTangents;
-            public bool ForceTwoSided;
             public bool OptimizeMeshes;
             public ModelLightmapUVsSource LighmapUVsSource;
         }
@@ -111,7 +104,6 @@ namespace FlaxEditor.Content.Import
                 CalculateNormals = CalculateNormals,
                 SmoothigNormalsAngle = SmoothigNormalsAngle,
                 CalculateTangents = CalculateTangents,
-                ForceTwoSided = ForceTwoSided,
                 OptimizeMeshes = OptimizeMeshes,
                 LighmapUVsSource = LighmapUVsSource
             };
@@ -143,7 +135,6 @@ namespace FlaxEditor.Content.Import
                 _settings.CalculateNormals = options.CalculateNormals;
                 _settings.SmoothigNormalsAngle = options.SmoothigNormalsAngle;
                 _settings.CalculateTangents = options.CalculateTangents;
-                _settings.ForceTwoSided = options.ForceTwoSided;
                 _settings.OptimizeMeshes = options.OptimizeMeshes;
                 _settings.LighmapUVsSource = options.LighmapUVsSource;
             }
