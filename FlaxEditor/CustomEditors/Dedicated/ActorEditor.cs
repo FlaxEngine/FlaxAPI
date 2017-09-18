@@ -178,6 +178,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     // Create group
                     var title = CustomEditorsUtil.GetPropertyNameUI(type.Name);
                     var group = layout.Group(title);
+                    group.Panel.Open(false);
 
                     // Add settings button to the group
                     const float settingsButtonSize = 14;
