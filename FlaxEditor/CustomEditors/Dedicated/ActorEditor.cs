@@ -11,7 +11,6 @@ using FlaxEditor.GUI.Drag;
 using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.CustomEditors.Dedicated
 {
@@ -239,20 +238,30 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
                     // Remove
                     case 1:
+                    {
                         var action = AddRemoveScript.Remove(script);
                         action.Do();
                         Editor.Instance.Undo.AddAction(action);
                         break;
+                    }
 
                     // Move up
                     case 2:
-                        script.OrderInParent -= 1;
+                    {
+                        var action = ChangeScriptAction.ChangeOrder(script, script.OrderInParent - 1);
+                        action.Do();
+                        Editor.Instance.Undo.AddAction(action);
                         break;
+                    }
 
                     // Move down
                     case 3:
-                        script.OrderInParent += 1;
+                    {
+                        var action = ChangeScriptAction.ChangeOrder(script, script.OrderInParent + 1);
+                        action.Do();
+                        Editor.Instance.Undo.AddAction(action);
                         break;
+                    }
 
                     // Edit script
                     case 4:
