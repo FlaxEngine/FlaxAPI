@@ -58,10 +58,10 @@ namespace FlaxEditor.Windows.Assets
             private ModelImportSettings ImportSettings = new ModelImportSettings();
 
             [HideInEditor]
-            public int IsolateSlotIndex = -1;
+            public int IsolateIndex = -1;
 
             [HideInEditor]
-            public int HighlightMeshIndex = -1;
+            public int HighlightIndex = -1;
 
             private bool _skipEffectsGuiEvents;
             private readonly List<CheckBox> _isolateCheckBoxes = new List<CheckBox>();
@@ -72,8 +72,8 @@ namespace FlaxEditor.Windows.Assets
                 // Link
                 Window = window;
                 Asset = window.Asset;
-                IsolateSlotIndex = -1;
-                HighlightMeshIndex = -1;
+                IsolateIndex = -1;
+                HighlightIndex = -1;
                 Window.UpdateEffectsOnAsset();
 
                 // Try to restore target asset import options (usefull for fast reimport)
@@ -85,8 +85,8 @@ namespace FlaxEditor.Windows.Assets
                 // Unlink
                 Window = null;
                 Asset = null;
-                IsolateSlotIndex = -1;
-                HighlightMeshIndex = -1;
+                IsolateIndex = -1;
+                HighlightIndex = -1;
             }
             
             public void Reimport()
@@ -104,13 +104,13 @@ namespace FlaxEditor.Windows.Assets
                 for (int i = 0; i < _isolateCheckBoxes.Count; i++)
                 {
                     var checkBox = _isolateCheckBoxes[i];
-                    checkBox.Checked = IsolateSlotIndex == ((Mesh)checkBox.Tag).MaterialSlotIndex;
+                    checkBox.Checked = IsolateIndex == ((Mesh)checkBox.Tag).MaterialSlotIndex;
                 }
 
                 for (int i = 0; i < _highlightCheckBoxes.Count; i++)
                 {
                     var checkBox = _highlightCheckBoxes[i];
-                    checkBox.Checked = HighlightMeshIndex == ((Mesh)checkBox.Tag).MeshIndex;
+                    checkBox.Checked = HighlightIndex == ((Mesh)checkBox.Tag).MaterialSlotIndex;
                 }
 
                 _skipEffectsGuiEvents = false;
@@ -125,13 +125,13 @@ namespace FlaxEditor.Windows.Assets
                 if (_skipEffectsGuiEvents)
                     return;
                 
-                IsolateSlotIndex = mesh?.MaterialSlotIndex ?? -1;
+                IsolateIndex = mesh?.MaterialSlotIndex ?? -1;
                 Window.UpdateEffectsOnAsset();
                 UpdateEffectsOnUI();
             }
 
             /// <summary>
-            /// Sets the mesh index to highlight.
+            /// Sets the material slot index to highlight.
             /// </summary>
             /// <param name="mesh">The mesh.</param>
             public void SetHighlight(Mesh mesh)
@@ -139,7 +139,7 @@ namespace FlaxEditor.Windows.Assets
                 if (_skipEffectsGuiEvents)
                     return;
 
-                HighlightMeshIndex = mesh?.MeshIndex ?? -1;
+                HighlightIndex = mesh?.MaterialSlotIndex ?? -1;
                 Window.UpdateEffectsOnAsset();
                 UpdateEffectsOnUI();
             }
@@ -178,15 +178,16 @@ namespace FlaxEditor.Windows.Assets
                             group.Label("Mesh " + meshIndex);
 
                             // Material Slot
+                            
 
                             // Isolate
-                            var isolate = group.Checkbox("Isolate", "Show only meshes that are using material slot linked by mesh");
+                            var isolate = group.Checkbox("Isolate", "Shows only this mesh (and meshes using the same material slot)");
                             isolate.CheckBox.Tag = mesh;
                             isolate.CheckBox.CheckChanged += () => proxy.SetIsolate(isolate.CheckBox.Checked ? (Mesh)isolate.CheckBox.Tag : null);
                             proxy._isolateCheckBoxes.Add(isolate.CheckBox);
                             
                             // Highlight
-                            var highlight = group.Checkbox("Highlight", "Highlights this mesh with a tint color");
+                            var highlight = group.Checkbox("Highlight", "Highlights this mesh with a tint color (and meshes using the same material slot)");
                             highlight.CheckBox.Tag = mesh;
                             highlight.CheckBox.CheckChanged += () => proxy.SetHighlight(highlight.CheckBox.Checked ? (Mesh)highlight.CheckBox.Tag : null);
                             proxy._highlightCheckBoxes.Add(highlight.CheckBox);
@@ -217,6 +218,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly ModelPreview _preview;
         private readonly CustomEditorPresenter _propertiesPresenter;
         private readonly PropertiesProxy _properties;
+        private ModelActor _highlightActor;
 
         private int _uvDebugIndex = -1;
 
@@ -242,13 +244,18 @@ namespace FlaxEditor.Windows.Assets
             {
                 Parent = splitPanel.Panel1
             };
-            
+
             // Model properties
             _propertiesPresenter = new CustomEditorPresenter(null);
             _propertiesPresenter.Panel.Parent = splitPanel.Panel2;
             _properties = new PropertiesProxy();
             _propertiesPresenter.Select(_properties);
             _propertiesPresenter.Modified += MarkAsEdited;
+
+            // Highlight actor (used to highlight selected material slot, see UpdateEffectsOnAsset)
+            _highlightActor = ModelActor.New();
+            _highlightActor.IsActive = false;
+            _preview.Task.CustomActors.Add(_highlightActor);
         }
 
         private void CacheMeshData()
@@ -266,11 +273,41 @@ namespace FlaxEditor.Windows.Assets
             {
                 for (int i = 0; i < entries.Length; i++)
                 {
-                    entries[i].Visible = _properties.IsolateSlotIndex == -1 || _properties.IsolateSlotIndex == i;
+                    entries[i].Visible = _properties.IsolateIndex == -1 || _properties.IsolateIndex == i;
                 }
             }
 
-            // TODO: highlight mesh
+            if (_properties.HighlightIndex != -1)
+            {
+                _highlightActor.IsActive = true;
+
+                var highlightMaterial = FlaxEngine.Content.LoadAsync<MaterialBase>("Editor/Highlight Material");
+                entries = _highlightActor.Entries;
+                if (entries != null)
+                {
+                    for (int i = 0; i < entries.Length; i++)
+                    {
+                        entries[i].Material = highlightMaterial;
+                        entries[i].Visible = _properties.HighlightIndex == i;
+                    }
+                }
+            }
+            else
+            {
+                _highlightActor.IsActive = false;
+            }
+        }
+
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            // Sync highlight actor size with actual preview model (preview scales model for better usage experiance)
+            if (_highlightActor && _highlightActor.IsActive)
+            {
+                _highlightActor.Transform = _preview.PreviewModelActor.Transform;
+            }
+
+            base.Update(deltaTime);
         }
 
         /// <inheritdoc />
@@ -340,6 +377,7 @@ namespace FlaxEditor.Windows.Assets
         {
             _properties.OnClean();
             _preview.Model = null;
+            _highlightActor.Model = null;
 
             base.UnlinkItem();
         }
@@ -348,6 +386,7 @@ namespace FlaxEditor.Windows.Assets
         protected override void OnAssetLinked()
         {
             _preview.Model = _asset;
+            _highlightActor.Model = _asset;
 
             base.OnAssetLinked();
         }
@@ -371,6 +410,14 @@ namespace FlaxEditor.Windows.Assets
             ClearEditedFlag();
             
             base.OnItemReimported(item);
+        }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            FlaxEngine.Object.Destroy(ref _highlightActor);
         }
     }
 }
