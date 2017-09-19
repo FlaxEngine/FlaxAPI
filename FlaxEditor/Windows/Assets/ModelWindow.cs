@@ -24,11 +24,10 @@ namespace FlaxEditor.Windows.Assets
         // TODO: missing features to port from c++ editor:
         // - debug model uv channels
         // - drawing model bounds - sphere/box
-        // - editing per mesh settings (material, shadows casting, etc.)
-        // - easy reimport via 1 click
         // - refesh properties on asset loaded/reimported
         // - link for content pipeline and handle asset reimport event (refresh data, etc.)
         // TODO: adding/removing material slots
+        // TODO: refresh material slots comboboxes on material slot rename
 
         /// <summary>
         /// The model properties proxy object.
@@ -64,6 +63,7 @@ namespace FlaxEditor.Windows.Assets
             public int HighlightIndex = -1;
 
             private bool _skipEffectsGuiEvents;
+            private readonly List<ComboBox> _materialSlotComboBoxes = new List<ComboBox>();
             private readonly List<CheckBox> _isolateCheckBoxes = new List<CheckBox>();
             private readonly List<CheckBox> _highlightCheckBoxes = new List<CheckBox>();
 
@@ -88,7 +88,7 @@ namespace FlaxEditor.Windows.Assets
                 IsolateIndex = -1;
                 HighlightIndex = -1;
             }
-            
+
             public void Reimport()
             {
                 Editor.Instance.ContentImporting.Reimport((BinaryAssetItem)Window.Item, ImportSettings);
@@ -117,6 +117,47 @@ namespace FlaxEditor.Windows.Assets
             }
 
             /// <summary>
+            /// Updates the material slots UI parts. Should be called after material slot rename.
+            /// </summary>
+            public void UpdateMaterialSlotsUI()
+            {
+                _skipEffectsGuiEvents = true;
+
+                // Generate material slots labels (with index prefix)
+                var slots = Asset.MaterialSlots;
+                var slotsLabels = new string[slots.Length];
+                for (int i = 0; i < slots.Length; i++)
+                {
+                    slotsLabels[i] = string.Format("[{0}] {1}", i, slots[i].Name);
+                }
+                
+                // Update comboboxes
+                for (int i = 0; i < _materialSlotComboBoxes.Count; i++)
+                {
+                    var comboBox = _materialSlotComboBoxes[i];
+                    comboBox.SetItems(slotsLabels);
+                    comboBox.SelectedIndex = ((Mesh)comboBox.Tag).MaterialSlotIndex;
+                }
+
+                _skipEffectsGuiEvents = false;
+            }
+
+            /// <summary>
+            /// Sets the material slot index to the mesh.
+            /// </summary>
+            /// <param name="mesh">The mesh.</param>
+            /// <param name="newSlotIndex">New index of the material slot to use.</param>
+            public void SetMaterialSlot(Mesh mesh, int newSlotIndex)
+            {
+                if (_skipEffectsGuiEvents)
+                    return;
+
+                mesh.MaterialSlotIndex = newSlotIndex == -1 ? 0 : newSlotIndex;
+                Window.UpdateEffectsOnAsset();
+                UpdateEffectsOnUI();
+            }
+
+            /// <summary>
             /// Sets the material slot to isolate.
             /// </summary>
             /// <param name="mesh">The mesh.</param>
@@ -124,7 +165,7 @@ namespace FlaxEditor.Windows.Assets
             {
                 if (_skipEffectsGuiEvents)
                     return;
-                
+
                 IsolateIndex = mesh?.MaterialSlotIndex ?? -1;
                 Window.UpdateEffectsOnAsset();
                 UpdateEffectsOnUI();
@@ -151,8 +192,10 @@ namespace FlaxEditor.Windows.Assets
                 public override void Initialize(LayoutElementsContainer layout)
                 {
                     var proxy = (PropertiesProxy)Values[0];
+                    proxy._materialSlotComboBoxes.Clear();
                     proxy._isolateCheckBoxes.Clear();
                     proxy._highlightCheckBoxes.Clear();
+
                     if (proxy.Asset == null)
                         return;
                     var lods = proxy.Asset.LODs;
@@ -178,14 +221,17 @@ namespace FlaxEditor.Windows.Assets
                             group.Label("Mesh " + meshIndex);
 
                             // Material Slot
-                            
+                            var materialSlot = group.ComboBox("Material Slot", "Material slot used by this mesh during rendering");
+                            materialSlot.ComboBox.Tag = mesh;
+                            materialSlot.ComboBox.SelectedIndexChanged += comboBox => proxy.SetMaterialSlot((Mesh)comboBox.Tag, comboBox.SelectedIndex);
+                            proxy._materialSlotComboBoxes.Add(materialSlot.ComboBox);
 
                             // Isolate
                             var isolate = group.Checkbox("Isolate", "Shows only this mesh (and meshes using the same material slot)");
                             isolate.CheckBox.Tag = mesh;
                             isolate.CheckBox.CheckChanged += () => proxy.SetIsolate(isolate.CheckBox.Checked ? (Mesh)isolate.CheckBox.Tag : null);
                             proxy._isolateCheckBoxes.Add(isolate.CheckBox);
-                            
+
                             // Highlight
                             var highlight = group.Checkbox("Highlight", "Highlights this mesh with a tint color (and meshes using the same material slot)");
                             highlight.CheckBox.Tag = mesh;
@@ -202,15 +248,18 @@ namespace FlaxEditor.Windows.Assets
                     // Import Settings
                     {
                         var group = layout.Group("Import Settings");
-                        
+
                         var importSettingsField = typeof(PropertiesProxy).GetField("ImportSettings", BindingFlags.NonPublic | BindingFlags.Instance);
                         var importSettingsValues = new ValueContainer(importSettingsField) { proxy.ImportSettings };
                         group.Object(importSettingsValues);
-                        
+
                         layout.Space(5);
                         var reimportButton = group.Button("Reimport");
                         reimportButton.Button.Clicked += () => ((PropertiesProxy)Values[0]).Reimport();
                     }
+
+                    // Refresh UI
+                    proxy.UpdateMaterialSlotsUI();
                 }
             }
         }

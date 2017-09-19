@@ -261,6 +261,29 @@ namespace FlaxEditor.CustomEditors
             var property = AddPropertyItem(name, tooltip);
             return property.IntegerValue();
         }
+        
+        /// <summary>
+        /// Adds new combobox element.
+        /// </summary>
+        /// <returns>The created element.</returns>
+        public ComboBoxElement ComboBox()
+        {
+            ComboBoxElement element = new ComboBoxElement();
+            OnAddElement(element);
+            return element;
+        }
+
+        /// <summary>
+        /// Adds new combobox element with name label.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="tooltip">The property label tooltip text.</param>
+        /// <returns>The created element.</returns>
+        public ComboBoxElement ComboBox(string name, string tooltip = null)
+        {
+            var property = AddPropertyItem(name, tooltip);
+            return property.ComboBox();
+        }
 
         /// <summary>
         /// Adds new enum value element.

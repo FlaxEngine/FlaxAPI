@@ -36,8 +36,12 @@ namespace FlaxEngine
         /// <summary>
         /// Gets the index of the material slot to use during this mesh rendering.
         /// </summary>
-        public int MaterialSlotIndex => Internal_GetMaterialSlotIndex(_model.unmanagedPtr, _lodIndex, _meshIndex);
-
+        public int MaterialSlotIndex
+        {
+            get => Internal_GetMaterialSlotIndex(_model.unmanagedPtr, _lodIndex, _meshIndex);
+            set => Internal_SetMaterialSlotIndex(_model.unmanagedPtr, _lodIndex, _meshIndex, value);
+        }
+        
         /// <summary>
         /// Gets the material slot used by this mesh during rendering.
         /// </summary>
@@ -63,6 +67,9 @@ namespace FlaxEngine
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetMaterialSlotIndex(IntPtr obj, int lodIndex, int meshIndex);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetMaterialSlotIndex(IntPtr obj, int lodIndex, int meshIndex, int value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetTriangleCount(IntPtr obj, int lodIndex, int meshIndex);
