@@ -66,6 +66,7 @@ namespace FlaxEditor.Viewport.Previews
             _sky.SunLight = _previewLight;
 
             // Link actors for rendering
+            Task.ActorsSource = ActorsSources.CustomActors;
             Task.CustomActors.Add(_previewModel);
             Task.CustomActors.Add(_previewLight);
             Task.CustomActors.Add(_envProbe);

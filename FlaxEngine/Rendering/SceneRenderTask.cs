@@ -32,6 +32,11 @@ namespace FlaxEngine.Rendering
         public delegate void DrawDelegate(DrawCallsCollector collector);
 
         /// <summary>
+        /// The actors source to use during rendering.
+        /// </summary>
+        public ActorsSources ActorsSource = ActorsSources.Scenes;
+
+        /// <summary>
         /// The custom set of actors to render.
         /// If collection is empty whole scene actors will be used.
         /// </summary>
@@ -139,7 +144,7 @@ namespace FlaxEngine.Rendering
 
             // Call scene rendering
             var customActors = CustomActors.Count > 0 ? CustomActors.ToArray() : null;
-            context.DrawScene(this, Output, Buffers, View, Flags, Mode, customActors);
+            context.DrawScene(this, Output, Buffers, View, Flags, Mode, customActors, ActorsSource);
 
             // Finish
             OnEnd();

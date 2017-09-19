@@ -279,6 +279,7 @@
     <Compile Include="Viewport\Previews\MaterialPreview.cs" />
     <Compile Include="Viewport\Previews\ModelPreview.cs" />
     <Compile Include="Viewport\Previews\TexturePreview.cs" />
+    <Compile Include="ViewportDebugDrawData.cs" />
     <Compile Include="Viewport\Widgets\ViewportWidgetButton.cs" />
     <Compile Include="Viewport\Widgets\ViewportWidgetsContainer.cs" />
     <Compile Include="Windows\AboutDialog.cs" />

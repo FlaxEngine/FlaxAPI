@@ -30,6 +30,7 @@ namespace FlaxEditor.Viewport
         private readonly ViewportWidgetButton _gizmoModeScale;
 
         private readonly DragAssets _dragAssets = new DragAssets();
+        private readonly ViewportDebugDrawData _debugDrawData = new ViewportDebugDrawData(32);
 
         /// <summary>
         /// The transform gizmo.
@@ -45,7 +46,9 @@ namespace FlaxEditor.Viewport
         {
             _editor = editor;
 
+            Task.ActorsSource = ActorsSources.ScenesAndCustomActors;
             Task.Flags = ViewFlags.DefaultEditor;
+            Task.Begin += RenderTaskOnBegin;
             Task.End += RenderTaskOnEnd;
 
             TransformGizmo = new TransformGizmo(this);
@@ -159,23 +162,26 @@ namespace FlaxEditor.Viewport
             gizmoMode.Parent = this;
         }
 
-        private void RenderTaskOnEnd(SceneRenderTask task)
+        private void RenderTaskOnBegin(SceneRenderTask task)
         {
-            // Draw selected objects debug shapes
-            IntPtr[] selectedActors = null;
+            _debugDrawData.Clear();
+
+            // Collect selected objects debug shapes and visuals
             var selectedParents = TransformGizmo.SelectedParents;
             if (selectedParents.Count > 0)
             {
-                var actors = new List<IntPtr>(selectedParents.Count);
                 for (int i = 0; i < selectedParents.Count; i++)
                 {
                     if (selectedParents[i].IsActiveInHierarchy)
-                        selectedParents[i].OnDebugDraw(actors);
+                        selectedParents[i].OnDebugDraw(_debugDrawData);
                 }
-                if (actors.Count > 0)
-                    selectedActors = actors.ToArray();
             }
-            DebugDraw.Draw(task, selectedActors);
+        }
+
+        private void RenderTaskOnEnd(SceneRenderTask task)
+        {
+            // Draw selected objects debug shapes and visuals
+            DebugDraw.Draw(task, _debugDrawData.ActorsPtrs);
         }
 
         private void onGizmoModeToggle(ViewportWidgetButton button)
@@ -554,7 +560,7 @@ namespace FlaxEditor.Viewport
                     {
                         case ContentDomain.Material:
                         {
-                            if (hit is ModelActorNode.MeshNode meshNode)
+                            if (hit is ModelActorNode.EntryNode meshNode)
                             {
                                 var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
                                 using (new UndoBlock(Undo, meshNode.ModelActor, "Change material"))

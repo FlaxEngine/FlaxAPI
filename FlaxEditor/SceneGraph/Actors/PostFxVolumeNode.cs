@@ -85,9 +85,9 @@ namespace FlaxEditor.SceneGraph.Actors
             }
 
             /// <inheritdoc />
-            public override void OnDebugDraw(List<IntPtr> actorsPtr)
+            public override void OnDebugDraw(ViewportDebugDrawData data)
             {
-                ParentNode.OnDebugDraw(actorsPtr);
+                ParentNode.OnDebugDraw(data);
             }
         }
 

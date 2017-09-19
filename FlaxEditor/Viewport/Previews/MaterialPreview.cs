@@ -75,6 +75,7 @@ namespace FlaxEditor.Viewport.Previews
             _postFxVolume.Settings.Eye_MinLuminance = 0.1f;
 
             // Link actors for rendering
+            Task.ActorsSource = ActorsSources.CustomActors;
             Task.CustomActors.Add(_previewModel);
             Task.CustomActors.Add(_previewLight);
             Task.CustomActors.Add(_envProbe);

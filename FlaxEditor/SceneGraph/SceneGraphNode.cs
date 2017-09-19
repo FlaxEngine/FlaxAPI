@@ -247,8 +247,8 @@ namespace FlaxEditor.SceneGraph
         /// <summary>
         /// Called when selected nodes should draw debug shapes using <see cref="DebugDraw"/> interface.
         /// </summary>
-        /// <param name="actorsPtr">The actors pointers collection to call them fron unmanaged side.</param>
-        public virtual void OnDebugDraw(List<IntPtr> actorsPtr)
+        /// <param name="data">The debug draw data.</param>
+        public virtual void OnDebugDraw(ViewportDebugDrawData data)
         {
         }
 

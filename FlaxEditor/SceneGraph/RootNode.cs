@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEngine;
 
@@ -59,7 +58,7 @@ namespace FlaxEditor.SceneGraph
         }
 
         /// <inheritdoc />
-        public override void OnDebugDraw(List<IntPtr> actorsPtr)
+        public override void OnDebugDraw(ViewportDebugDrawData data)
         {
         }
 
