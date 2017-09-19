@@ -3,7 +3,10 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using FlaxEditor.Content;
+using FlaxEditor.Content.Import;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
@@ -44,24 +47,101 @@ namespace FlaxEditor.Windows.Assets
             }
 
             [EditorOrder(20), CustomEditor(typeof(LodsEditor))]
-            public Model LevelOfDetails
+            public PropertiesProxy LevelOfDetails
             {
-                get => Asset;
+                get => this;
                 set { }
             }
 
+            private ModelWindow Window;
             private Model Asset;
+            private ModelImportSettings ImportSettings = new ModelImportSettings();
+
+            [HideInEditor]
+            public int IsolateSlotIndex = -1;
+
+            [HideInEditor]
+            public int HighlightMeshIndex = -1;
+
+            private bool _skipEffectsGuiEvents;
+            private readonly List<CheckBox> _isolateCheckBoxes = new List<CheckBox>();
+            private readonly List<CheckBox> _highlightCheckBoxes = new List<CheckBox>();
 
             public void OnLoad(ModelWindow window)
             {
                 // Link
+                Window = window;
                 Asset = window.Asset;
+                IsolateSlotIndex = -1;
+                HighlightMeshIndex = -1;
+                Window.UpdateEffectsOnAsset();
+
+                // Try to restore target asset import options (usefull for fast reimport)
+                ModelImportSettings.TryRestore(ref ImportSettings, window.Item.Path);
             }
 
             public void OnClean()
             {
                 // Unlink
+                Window = null;
                 Asset = null;
+                IsolateSlotIndex = -1;
+                HighlightMeshIndex = -1;
+            }
+            
+            public void Reimport()
+            {
+                Editor.Instance.ContentImporting.Reimport((BinaryAssetItem)Window.Item, ImportSettings);
+            }
+
+            /// <summary>
+            /// Updates the highlight/isolate effects on UI.
+            /// </summary>
+            public void UpdateEffectsOnUI()
+            {
+                _skipEffectsGuiEvents = true;
+
+                for (int i = 0; i < _isolateCheckBoxes.Count; i++)
+                {
+                    var checkBox = _isolateCheckBoxes[i];
+                    checkBox.Checked = IsolateSlotIndex == ((Mesh)checkBox.Tag).MaterialSlotIndex;
+                }
+
+                for (int i = 0; i < _highlightCheckBoxes.Count; i++)
+                {
+                    var checkBox = _highlightCheckBoxes[i];
+                    checkBox.Checked = HighlightMeshIndex == ((Mesh)checkBox.Tag).MeshIndex;
+                }
+
+                _skipEffectsGuiEvents = false;
+            }
+
+            /// <summary>
+            /// Sets the material slot to isolate.
+            /// </summary>
+            /// <param name="mesh">The mesh.</param>
+            public void SetIsolate(Mesh mesh)
+            {
+                if (_skipEffectsGuiEvents)
+                    return;
+                
+                IsolateSlotIndex = mesh?.MaterialSlotIndex ?? -1;
+                Window.UpdateEffectsOnAsset();
+                UpdateEffectsOnUI();
+            }
+
+            /// <summary>
+            /// Sets the mesh index to highlight.
+            /// </summary>
+            /// <param name="mesh">The mesh.</param>
+            public void SetHighlight(Mesh mesh)
+            {
+                if (_skipEffectsGuiEvents)
+                    return;
+
+                HighlightMeshIndex = mesh?.MeshIndex ?? -1;
+                Window.UpdateEffectsOnAsset();
+                UpdateEffectsOnUI();
             }
 
             private class LodsEditor : CustomEditor
@@ -70,9 +150,12 @@ namespace FlaxEditor.Windows.Assets
 
                 public override void Initialize(LayoutElementsContainer layout)
                 {
-                    if (Values[0] == null)
+                    var proxy = (PropertiesProxy)Values[0];
+                    proxy._isolateCheckBoxes.Clear();
+                    proxy._highlightCheckBoxes.Clear();
+                    if (proxy.Asset == null)
                         return;
-                    var lods = ((Model)Values[0]).LODs;
+                    var lods = proxy.Asset.LODs;
 
                     for (int lodIndex = 0; lodIndex < lods.Length; lodIndex++)
                     {
@@ -87,25 +170,46 @@ namespace FlaxEditor.Windows.Assets
                         }
 
                         var group = layout.Group("LOD " + lodIndex);
-                        group.Label(string.Format("Triangles: {0:N0}, Vertices: {1:N0}", triangleCount, vertexCount));
+                        group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", triangleCount, vertexCount));
 
                         for (int meshIndex = 0; meshIndex < lod.Meshes.Length; meshIndex++)
                         {
                             var mesh = lod.Meshes[meshIndex];
+                            group.Label("Mesh " + meshIndex);
 
                             // Material Slot
 
                             // Isolate
-
+                            var isolate = group.Checkbox("Isolate", "Show only meshes that are using material slot linked by mesh");
+                            isolate.CheckBox.Tag = mesh;
+                            isolate.CheckBox.CheckChanged += () => proxy.SetIsolate(isolate.CheckBox.Checked ? (Mesh)isolate.CheckBox.Tag : null);
+                            proxy._isolateCheckBoxes.Add(isolate.CheckBox);
+                            
                             // Highlight
+                            var highlight = group.Checkbox("Highlight", "Highlights this mesh with a tint color");
+                            highlight.CheckBox.Tag = mesh;
+                            highlight.CheckBox.CheckChanged += () => proxy.SetHighlight(highlight.CheckBox.Checked ? (Mesh)highlight.CheckBox.Tag : null);
+                            proxy._highlightCheckBoxes.Add(highlight.CheckBox);
                         }
                     }
 
                     // LOD Settings
+                    {
+                        // TODO: show LODs settings
+                    }
 
                     // Import Settings
-
-                    // Reimport button
+                    {
+                        var group = layout.Group("Import Settings");
+                        
+                        var importSettingsField = typeof(PropertiesProxy).GetField("ImportSettings", BindingFlags.NonPublic | BindingFlags.Instance);
+                        var importSettingsValues = new ValueContainer(importSettingsField) { proxy.ImportSettings };
+                        group.Object(importSettingsValues);
+                        
+                        layout.Space(5);
+                        var reimportButton = group.Button("Reimport");
+                        reimportButton.Button.Clicked += () => ((PropertiesProxy)Values[0]).Reimport();
+                    }
                 }
             }
         }
@@ -150,6 +254,23 @@ namespace FlaxEditor.Windows.Assets
         private void CacheMeshData()
         {
             // TODO: finish mesh data gather from c# API
+        }
+
+        /// <summary>
+        /// Updates the highlight/isolate effects on a model asset.
+        /// </summary>
+        private void UpdateEffectsOnAsset()
+        {
+            var entries = _preview.PreviewModelActor.Entries;
+            if (entries != null)
+            {
+                for (int i = 0; i < entries.Length; i++)
+                {
+                    entries[i].Visible = _properties.IsolateSlotIndex == -1 || _properties.IsolateSlotIndex == i;
+                }
+            }
+
+            // TODO: highlight mesh
         }
 
         /// <inheritdoc />

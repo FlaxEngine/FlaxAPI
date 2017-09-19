@@ -33,6 +33,11 @@ namespace FlaxEditor.Viewport.Previews
         }
 
         /// <summary>
+        /// Gets the model actor used to preview selected asset.
+        /// </summary>
+        public ModelActor PreviewModelActor => _previewModel;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ModelPreview"/> class.
         /// </summary>
         /// <param name="useWidgets">if set to <c>true</c> use widgets.</param>

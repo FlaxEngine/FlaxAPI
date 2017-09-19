@@ -35,11 +35,11 @@ namespace FlaxEngine
             get => Internal_GetMaterial(_model.unmanagedPtr, _index);
             set => Internal_SetMaterial(_model.unmanagedPtr, _index, Object.GetUnmanagedPtr(value));
         }
-
+        
         /// <summary>
         /// Gets or sets the shadows casting mode by the meshes using this slot.
         /// </summary>
-        [EditorOrder(20), Tooltip("Shadows casting mode by the meshes using this slot")]
+        [EditorOrder(20), Tooltip("Shadows casting mode by the meshes using this slot"), EditorDisplay(Name = "Shadows")]
         public ShadowsCastingMode ShadowsMode
         {
             get => Internal_GetShadowsMode(_model.unmanagedPtr, _index);
