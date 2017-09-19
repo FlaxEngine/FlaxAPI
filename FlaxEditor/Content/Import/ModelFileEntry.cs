@@ -108,6 +108,33 @@ namespace FlaxEditor.Content.Import
                 LighmapUVsSource = LighmapUVsSource
             };
         }
+        
+        internal void FromInternal(ref InternalOptions options)
+        {
+            Scale = options.Scale;
+            CalculateNormals = options.CalculateNormals;
+            SmoothigNormalsAngle = options.SmoothigNormalsAngle;
+            CalculateTangents = options.CalculateTangents;
+            OptimizeMeshes = options.OptimizeMeshes;
+            LighmapUVsSource = options.LighmapUVsSource;
+        }
+        
+        /// <summary>
+        /// Tries the restore the asset import options from the target resource file.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <param name="assetPath">The asset path.</param>
+        /// <returns>True settings has been restored, otherwise false.</returns>
+        public static bool TryRestore(ref ModelImportSettings options, string assetPath)
+        {
+            if (ModelFileEntry.Internal_GetModelImportOptions(assetPath, out var internalOptions))
+            {
+                // Restore settings
+                options.FromInternal(ref internalOptions);
+                return true;
+            }
+            return false;
+        }
     }
 
     /// <summary>
@@ -127,17 +154,7 @@ namespace FlaxEditor.Content.Import
             : base(url, resultUrl)
         {
             // Try to restore target asset model import options (usefull for fast reimport)
-            ModelImportSettings.InternalOptions options;
-            if (Internal_GetModelImportOptions(resultUrl, out options))
-            {
-                // Restore settings
-                _settings.Scale = options.Scale;
-                _settings.CalculateNormals = options.CalculateNormals;
-                _settings.SmoothigNormalsAngle = options.SmoothigNormalsAngle;
-                _settings.CalculateTangents = options.CalculateTangents;
-                _settings.OptimizeMeshes = options.OptimizeMeshes;
-                _settings.LighmapUVsSource = options.LighmapUVsSource;
-            }
+            ModelImportSettings.TryRestore(ref _settings, resultUrl);
         }
 
         /// <inheritdoc />

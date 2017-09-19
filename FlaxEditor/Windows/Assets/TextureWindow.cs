@@ -28,7 +28,7 @@ namespace FlaxEditor.Windows.Assets
             private TextureWindow _window;
 
             [EditorOrder(1000), EditorDisplay("Import Settings", "__inline__")]
-            public TextureImportSettings ImportSettings { get; set; } = new TextureImportSettings();
+            public TextureImportSettings ImportSettings = new TextureImportSettings();
 
             public sealed class ProxyEditor : GenericEditor
             {
@@ -43,23 +43,18 @@ namespace FlaxEditor.Windows.Assets
                     reimportButton.Button.Clicked += () => ((PropertiesProxy)Values[0]).Reimport();
                 }
             }
-            
+
             /// <summary>
             /// Gathers parameters from the specified texture.
             /// </summary>
-            /// <param name="win">The texture window.</param>
-            public void OnLoad(TextureWindow win)
+            /// <param name="window">The asset window.</param>
+            public void OnLoad(TextureWindow window)
             {
                 // Link
-                _window = win;
+                _window = window;
 
                 // Try to restore target asset texture import options (usefull for fast reimport)
-                TextureImportSettings.InternalOptions options;
-                if (TextureFileEntry.Internal_GetTextureImportOptions(win.Item.Path, out options))
-                {
-                    // Restore settings
-                    ImportSettings.FromInternal(ref options);
-                }
+                TextureImportSettings.TryRestore(ref ImportSettings, window.Item.Path);
 
                 // Prepare restore data
                 PeekState();
