@@ -139,9 +139,7 @@ namespace FlaxEngine.Rendering
                 // Validate the hash
                 if (_material._parametersHash != _hash)
                     throw new InvalidOperationException("Cannot use invalid material parameter.");
-                if (!_isPublic)
-                    throw new InvalidOperationException("Cannot set private material parameters.");
-
+                
                 IntPtr ptr;
                 bool vBool = false;
                 int vInt = 0;

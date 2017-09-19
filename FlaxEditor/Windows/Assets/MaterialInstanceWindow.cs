@@ -182,7 +182,11 @@ namespace FlaxEditor.Windows.Assets
                 material.BaseMaterial = _restoreBase;
                 var parameters = material.Parameters;
                 for (int i = 0; i < parameters.Length; i++)
-                    parameters[i].Value = _restoreParamsValues[i];
+                {
+                    var p = parameters[i];
+                    if (p.IsPublic)
+                        p.Value = _restoreParamsValues[i];
+                }
             }
 
             /// <summary>
@@ -277,10 +281,7 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         protected override void UpdateToolstrip()
         {
-            if (_toolstrip != null)
-            {
-                _toolstrip.GetButton(1).Enabled = IsEdited;
-            }
+            _toolstrip.GetButton(1).Enabled = IsEdited;
 
             base.UpdateToolstrip();
         }
