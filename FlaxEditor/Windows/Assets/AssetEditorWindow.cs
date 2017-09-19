@@ -401,6 +401,15 @@ namespace FlaxEditor.Windows.Assets
 
             base.UnlinkItem();
         }
+
+        /// <inheritdoc />
+        public override void OnItemReimported(ContentItem item)
+        {
+            // Wait for loaded after reimport
+            _isWaitingForLoaded = true;
+            
+            base.OnItemReimported(item);
+        }
     }
 
     /// <summary>
