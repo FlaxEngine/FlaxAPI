@@ -110,8 +110,6 @@ namespace FlaxEngine
         internal static extern int Internal_GetSlots(IntPtr obj);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int[] Internal_GetLODs(IntPtr obj);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern int Internal_GetMeshMaterialSlotIndex(IntPtr obj, int lodIndex, int meshIndex);
 #endif
     }
 }

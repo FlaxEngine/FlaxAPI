@@ -29,7 +29,7 @@ namespace FlaxEngine
         /// <summary>
         /// Gets or sets the material.
         /// </summary>
-        [EditorOrder(10), Tooltip("Material asset used to by this slot")]
+        [EditorOrder(30), Tooltip("Material asset used to by this slot"), EditorDisplay(Name = "__inline__")]
         public MaterialBase Material
         {
             get => Internal_GetMaterial(_model.unmanagedPtr, _index);
@@ -49,7 +49,7 @@ namespace FlaxEngine
         /// <summary>
         /// Gets or sets the slot name. It doesn't have to be unique.
         /// </summary>
-        [EditorOrder(30), Tooltip("Material slot name")]
+        [EditorOrder(10), Tooltip("Material slot name")]
         public string Name
         {
             get => Internal_GetName(_model.unmanagedPtr, _index);
