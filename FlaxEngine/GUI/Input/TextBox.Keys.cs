@@ -8,7 +8,7 @@ namespace FlaxEngine.GUI
 {
     public partial class TextBox
     {
-        private void AddCommandsToController(InputCommandsController controller)
+        protected virtual void AddCommandsToController(InputCommandsController controller)
         {
             controller.Add(new InputCommand(Copy, new InputChord(KeyCode.Control, KeyCode.C)));
             controller.Add(new InputCommand(Paste, new InputChord(KeyCode.Control, KeyCode.V)));
@@ -16,17 +16,26 @@ namespace FlaxEngine.GUI
             controller.Add(new InputCommand(Cut, new InputChord(KeyCode.Control, KeyCode.X)));
             controller.Add(new InputCommand(SelectAll, new InputChord(KeyCode.Control, KeyCode.A)));
 
-            controller.Add(new InputCommand(ResetText, new InputChord(KeyCode.C)));
-            controller.Add(new InputCommand(NextLineOrDeselect, new InputChord(KeyCode.C)));
-            controller.Add(new InputCommand(RemoveBackward, new InputChord(KeyCode.C)));
-            controller.Add(new InputCommand(RemoveForward, new InputChord(KeyCode.C)));
-            controller.Add(new InputCommand(() => { setSelection(0); }, new InputChord(KeyCode.C)));
-            controller.Add(new InputCommand(() => { setSelection(TextLength); }, new InputChord(KeyCode.C)));
-            controller.Add(new InputCommand(() => { MoveRight(shftDown, ctrDown); }, new InputChord(KeyCode.C)));
-            controller.Add(new InputCommand(() => { MoveLeft(shftDown, ctrDown); }, new InputChord(KeyCode.C)));
-            controller.Add(new InputCommand(() => { MoveUp(shftDown, ctrDown); }, new InputChord(KeyCode.C)));
-            controller.Add(new InputCommand(() => { MoveDown(shftDown, ctrDown); }, new InputChord(KeyCode.C)));
+            controller.Add(new InputCommand(ResetText, new InputChord(KeyCode.Escape)));
+            controller.Add(new InputCommand(NextLineOrDeselect, new InputChord(KeyCode.Return)));
+            controller.Add(new InputCommand(RemoveBackward, new InputChord(KeyCode.Backspace)));
+            controller.Add(new InputCommand(RemoveForward, new InputChord(KeyCode.Delete)));
 
+            controller.Add(new InputCommand(MoveSelectorToLineStart, new InputChord(KeyCode.Home)));
+            controller.Add(new InputCommand(MoveSelectorToLineEnd, new InputChord(KeyCode.End)));
+
+            controller.Add(new InputCommand(MoveSelectorRight, new InputChord(KeyCode.ArrowRight)));
+            controller.Add(new InputCommand(MoveSelectorLeft, new InputChord(KeyCode.ArrowLeft)));
+            controller.Add(new InputCommand(MoveSelectorUp, new InputChord(KeyCode.ArrowUp)));
+            controller.Add(new InputCommand(MoveSelectorDown, new InputChord(KeyCode.ArrowDown)));
+
+            controller.Add(new InputCommand(ExtendSelectionRight, new InputChord(KeyCode.Shift, KeyCode.ArrowRight)));
+            controller.Add(new InputCommand(ExtendSelectionLeft, new InputChord(KeyCode.Shift, KeyCode.ArrowLeft)));
+            controller.Add(new InputCommand(ExtendSelectionUp, new InputChord(KeyCode.Shift, KeyCode.ArrowUp)));
+            controller.Add(new InputCommand(ExtendSelectionDown, new InputChord(KeyCode.Shift, KeyCode.ArrowDown)));
+
+            controller.Add(new InputCommand(JumpToNextWord, new InputChord(KeyCode.Control, KeyCode.ArrowRight)));
+            controller.Add(new InputCommand(JumpToPreviousWord, new InputChord(KeyCode.Control, KeyCode.ArrowLeft)));
         }
 
         public InputCommandsController CommandsController { get; private set; } = new InputCommandsController();
@@ -41,33 +50,7 @@ namespace FlaxEngine.GUI
                 return true;
             }
 
-            // Check if use lowercase or uppercase
-            bool shftDown = ParentWindow.GetKey(KeyCode.Shift);
-            bool ctrDown = ParentWindow.GetKey(KeyCode.Control);
-
-            if (key.InvokeFirstCommand(KeyCode.Control,
-                new InputChord.KeyCommand(KeyCode.C, Copy),
-                new InputChord.KeyCommand(KeyCode.V, Paste),
-                new InputChord.KeyCommand(KeyCode.D, Duplicate),
-                new InputChord.KeyCommand(KeyCode.X, Cut),
-                new InputChord.KeyCommand(KeyCode.A, SelectAll)))
-            {
-                return true;
-            }
-
-            key.InvokeFirstCommand(
-                new InputChord.KeyCommand(KeyCode.Escape, ResetText),
-                    new InputChord.KeyCommand(KeyCode.Return, NextLineOrDeselect),
-                    new InputChord.KeyCommand(KeyCode.Backspace, RemoveBackward),
-                    new InputChord.KeyCommand(KeyCode.Delete, RemoveForward),
-                    new InputChord.KeyCommand(KeyCode.Home, () => { setSelection(0); }),
-                    new InputChord.KeyCommand(KeyCode.End, () => { setSelection(TextLength); }),
-                    new InputChord.KeyCommand(KeyCode.ArrowRight, () => { MoveRight(shftDown, ctrDown); }),
-                    new InputChord.KeyCommand(KeyCode.ArrowLeft, () => { MoveLeft(shftDown, ctrDown); }),
-                    new InputChord.KeyCommand(KeyCode.ArrowUp, () => { MoveUp(shftDown, ctrDown); }),
-                    new InputChord.KeyCommand(KeyCode.ArrowDown, () => { MoveDown(shftDown, ctrDown); })
-                );
-            return false;
+            return CommandsController.Execute(key);
         }
 
         private void OnTextEntered(string input)

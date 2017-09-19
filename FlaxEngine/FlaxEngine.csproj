@@ -139,6 +139,7 @@
     <Compile Include="API\Static\Input.Gen.cs">
       <DependentUpon>Input.cs</DependentUpon>
     </Compile>
+    <Compile Include="Engine\InputCommand.cs" />
     <Compile Include="Engine\InputCommandsController.cs" />
     <Compile Include="Engine\InputChord.cs" />
     <Compile Include="API\Static\MessageBox.cs" />

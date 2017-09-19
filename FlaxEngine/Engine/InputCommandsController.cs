@@ -26,7 +26,7 @@ namespace FlaxEngine
         private DateTime _totalSingleChordInput;
         private int _totalSingleChordInputs;
 
-        public void Execute(InputChord currentInput)
+        public bool Execute(InputChord currentInput, bool successIfNotFound = false)
         {
             if(_lastInputChord != currentInput)
             {
@@ -40,7 +40,7 @@ namespace FlaxEngine
                 if (inputDiff > SECOND_CHAR_INPUT_DELAY_TICKS)
                 {
                     InternalExecute(currentInput);
-                    return;
+                    return true;
                 }
                 var nthCalculation = (inputDiff - SECOND_CHAR_INPUT_DELAY_TICKS) - (_totalSingleChordInputs * N_TH_CHAR_INPUT_DELAY_TICKS);
                 if(nthCalculation >= 0 && nthCalculation <= N_TH_CHAR_INPUT_DELAY_TICKS)
@@ -56,6 +56,7 @@ namespace FlaxEngine
 
                 }
             }
+            return successIfNotFound;
         }
 
         private void InternalExecute(InputChord currentInput)
@@ -70,7 +71,7 @@ namespace FlaxEngine
         {
             if (IsFirstChord)
             {
-                if (currentInput.IsControl() || currentInput.IsControlShift() || currentInput.IsControlAltShift() || !currentInput.IsAlphaNumeric())
+                if (currentInput.IsControl() || !currentInput.IsAlphaNumeric())
                 {
                     return true;
                 }

@@ -328,7 +328,7 @@ namespace FlaxEngine.GUI
             {
                 OnSelectingEnd();
             }
-            setSelection(-1);
+            SetSelection(-1);
         }
 
         /// <summary>
@@ -366,7 +366,7 @@ namespace FlaxEngine.GUI
                 // Remove selection
                 int left = SelectionLeft;
                 _text = _text.Remove(left, SelectionLength);
-                setSelection(left);
+                SetSelection(left);
                 OnTextChanged();
             }
         }
@@ -385,7 +385,7 @@ namespace FlaxEngine.GUI
 
             var right = SelectionRight;
             Insert(clipboardText);
-            setSelection(right + clipboardText.Length);
+            SetSelection(right + clipboardText.Length);
         }
 
         /// <summary>
@@ -397,9 +397,9 @@ namespace FlaxEngine.GUI
             if (selectedText.Length > 0)
             {
                 var right = SelectionRight;
-                setSelection(right);
+                SetSelection(right);
                 Insert(selectedText);
-                setSelection(right, right + selectedText.Length);
+                SetSelection(right, right + selectedText.Length);
             }
         }
 
@@ -424,7 +424,7 @@ namespace FlaxEngine.GUI
         {
             if (TextLength > 0)
             {
-                setSelection(0, TextLength);
+                SetSelection(0, TextLength);
             }
         }
 
@@ -433,7 +433,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void Deselect()
         {
-            setSelection(-1);
+            SetSelection(-1);
         }
 
         #region Logic
@@ -451,12 +451,12 @@ namespace FlaxEngine.GUI
             return Font.HitTestText(_text, location + _viewOffset, _layout);
         }
 
-        private void Insert(char c)
+        protected void Insert(char c)
         {
             Insert(c.ToString());
         }
 
-        private void Insert(string str)
+        protected void Insert(string str)
         {
             if (IsReadOnly)
             {
@@ -478,7 +478,7 @@ namespace FlaxEngine.GUI
             if (TextLength == 0)
             {
                 _text = str;
-                setSelection(TextLength);
+                SetSelection(TextLength);
             }
             else
             {
@@ -490,110 +490,97 @@ namespace FlaxEngine.GUI
 
                 _text = _text.Insert(left, str);
 
-                setSelection(left + 1);
+                SetSelection(left + 1);
             }
 
             OnTextChanged();
         }
 
-        private void MoveRight(bool shift, bool ctrl)
+        protected void MoveSelectorRight()
         {
-            if (HasSelection && !shift)
+            if (HasSelection)
             {
-                setSelection(SelectionRight);
-            }
-            else if (SelectionRight < TextLength)
-            {
-                int position;
-                if (ctrl)
-                {
-                    position = FindtNextWordBegin();
-                }
-                else
-                {
-                    position = _selectionEnd + 1;
-                }
-
-                if (shift)
-                {
-                    setSelection(_selectionStart, position);
-                }
-                else
-                {
-                    setSelection(position);
-                }
-            }
-        }
-
-        private void MoveLeft(bool shift, bool ctrl)
-        {
-            if (HasSelection && !shift)
-            {
-                setSelection(SelectionLeft);
-            }
-            else if (SelectionLeft > 0)
-            {
-                int position;
-                if (ctrl)
-                {
-                    position = FindtPrevWordBegin();
-                }
-                else
-                {
-                    position = _selectionEnd - 1;
-                }
-
-                if (shift)
-                {
-                    setSelection(_selectionStart, position);
-                }
-                else
-                {
-                    setSelection(position);
-                }
-            }
-        }
-
-        private void MoveDown(bool shift, bool ctrl)
-        {
-            if (HasSelection && !shift)
-            {
-                setSelection(SelectionRight);
+                SetSelection(SelectionRight);
             }
             else
             {
-                int position = FindLineDownChar(CaretPosition);
-
-                if (shift)
-                {
-                    setSelection(_selectionStart, position);
-                }
-                else
-                {
-                    setSelection(position);
-                }
+                SetSelection(_selectionEnd + 1);
             }
         }
 
-        private void MoveUp(bool shift, bool ctrl)
+        protected void MoveSelectorLeft()
         {
-            if (HasSelection && !shift)
+            if (HasSelection)
             {
-                setSelection(SelectionLeft);
+                SetSelection(SelectionLeft);
             }
             else
             {
-                int position = FindLineUpChar(CaretPosition);
-
-                if (shift)
-                {
-                    setSelection(_selectionStart, position);
-                }
-                else
-                {
-                    setSelection(position);
-                }
+                SetSelection(_selectionEnd - 1);
             }
+        }
+
+        protected void MoveSelectorUp()
+        {
+            int position = FindLineUpChar(CaretPosition);
+            SetSelection(position);
+        }
+
+        protected void MoveSelectorDown()
+        {
+            int position = FindLineDownChar(CaretPosition);
+            SetSelection(position);
+        }
+
+        protected void ExtendSelectionRight()
+        {
+            if (SelectionRight < TextLength)
+            {
+                SetSelection(_selectionStart, _selectionEnd + 1);
+            }
+        }
+
+        protected void ExtendSelectionLeft()
+        {
+            if (SelectionRight > 0)
+            {
+                SetSelection(_selectionStart, _selectionEnd - 1);
+            }
+        }
+
+        protected void ExtendSelectionUp()
+        {
+            int position = FindLineUpChar(CaretPosition);
+            SetSelection(_selectionStart, position);
+        }
+
+        protected void ExtendSelectionDown()
+        {
+            int position = FindLineDownChar(CaretPosition);
+            SetSelection(_selectionStart, position);
+        }
+
+        protected void JumpToNextWord()
+        {
+            SetSelection(FindNextWordBegin());
+        }
+
+        protected void JumpToPreviousWord()
+        {
+            SetSelection(FindPrevWordBegin());
+
+        }
+
+        protected void MoveSelectorToLineStart()
+        {
+            //TODO 
+            SetSelection(0);
+        }
+
+        protected void MoveSelectorToLineEnd()
+        {
+            //TODO 
+            SetSelection(TextLength);
         }
 
         /// <summary>
@@ -618,7 +605,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         private void ResetText()
         {
-            setSelection(-1);
+            SetSelection(-1);
             _text = _onStartEditValue;
 
             Defocus();
@@ -634,7 +621,7 @@ namespace FlaxEngine.GUI
             if (HasSelection)
             {
                 _text = _text.Remove(SelectionLeft, SelectionLength);
-                setSelection(SelectionLeft);
+                SetSelection(SelectionLeft);
                 OnTextChanged();
                 return true;
             }
@@ -648,7 +635,7 @@ namespace FlaxEngine.GUI
         {
             if (!RemoveSelection() && CaretPosition > 0)
             {
-                setSelection(SelectionLeft - 1);
+                SetSelection(SelectionLeft - 1);
                 _text = _text.Remove(SelectionLeft, 1);
                 OnTextChanged();
             }
@@ -670,16 +657,16 @@ namespace FlaxEngine.GUI
         ///     TODO chagne to property
         /// </summary>
         /// <param name="caret"></param>
-        private void setSelection(int caret)
+        private void SetSelection(int caret)
         {
-            setSelection(caret, caret);
+            SetSelection(caret, caret);
         }
 
         /// <summary>
         ///     TODO chagne to property
         /// </summary>
         /// <param name="caret"></param>
-        private void setSelection(int start, int end)
+        private void SetSelection(int start, int end)
         {
             // Update parameters
             int textLength = _text.Length;
@@ -693,7 +680,7 @@ namespace FlaxEngine.GUI
             _animateTime = 0.0f;
         }
 
-        private int FindtNextWordBegin()
+        private int FindNextWordBegin()
         {
             int textLength = TextLength;
             int caretPos = CaretPosition;
@@ -717,7 +704,7 @@ namespace FlaxEngine.GUI
             return spaceLoc;
         }
 
-        private int FindtPrevWordBegin()
+        private int FindPrevWordBegin()
         {
             int caretPos = CaretPosition;
 
@@ -1001,7 +988,7 @@ namespace FlaxEngine.GUI
                 int currentIndex = CharIndexAtPoint(ref location);
 
                 // Modify selection end
-                setSelection(_selectionStart, currentIndex);
+                SetSelection(_selectionStart, currentIndex);
             }
         }
 
@@ -1013,7 +1000,7 @@ namespace FlaxEngine.GUI
                 OnSelectingBegin();
 
                 // Calculate char index under the mouse location
-                setSelection(CharIndexAtPoint(ref location));
+                SetSelection(CharIndexAtPoint(ref location));
             }
 
             // Base
