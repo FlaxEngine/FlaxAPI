@@ -295,6 +295,11 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public abstract class AssetEditorWindowBase<T> : AssetEditorWindow where T : Asset
     {
+        private bool _isWaitingForLoaded;
+
+        /// <summary>
+        /// The asset.
+        /// </summary>
         protected T _asset;
 
         /// <summary>
@@ -334,6 +339,25 @@ namespace FlaxEditor.Windows.Assets
         protected virtual void OnAssetLoaded()
         {
         }
+        
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            if (_isWaitingForLoaded)
+            {
+                if (_asset == null)
+                {
+                    _isWaitingForLoaded = false;
+                }
+                else if (_asset.IsLoaded)
+                {
+                    _isWaitingForLoaded = false;
+                    OnAssetLoaded();
+                }
+            }
+
+            base.Update(deltaTime);
+        }
 
         /// <inheritdoc />
         protected override void OnShow()
@@ -352,14 +376,13 @@ namespace FlaxEditor.Windows.Assets
                     Close();
                     return;
                 }
-
+                
                 // Fire events
                 OnAssetLinked();
-                _asset.WaitForLoaded();// TODO: expose loaded/reloaded/unload events to c# API and wait here
                 if (_asset.IsLoaded)
-                {
                     OnAssetLoaded();
-                }
+                else
+                    _isWaitingForLoaded = true;
             }
 
             // Base
