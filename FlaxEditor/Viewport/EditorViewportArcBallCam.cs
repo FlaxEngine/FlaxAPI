@@ -74,6 +74,12 @@ namespace FlaxEditor.Viewport
             // Rotate
             YawPitch += mouseDelta;
 
+            // Zoom
+            if (_input.IsZooming)
+            {
+                _orbitRadius = Mathf.Clamp(_orbitRadius - (MouseWheelZoomSpeedFactor * _input.MouseWheelDelta * 0.1f), 0.001f, 10000.0f);
+            }
+
             // Update view position
             UpdatePosition();
         }
