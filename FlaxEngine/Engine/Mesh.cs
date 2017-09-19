@@ -16,18 +16,12 @@ namespace FlaxEngine
 
         /// <summary>
         /// Gets the parent model asset.
-        /// </summary>
-        /// <value>
-        /// The parent model.
-        /// </value>
+        /// </summary
         public Model ParentModel => _model;
 
         /// <summary>
         /// Gets the parent level of detail object.
         /// </summary>
-        /// <value>
-        /// The parent LOD object.
-        /// </value>
         public ModelLOD ParentLOD => _model.LODs[_lodIndex];
 
         /// <summary>
@@ -39,7 +33,12 @@ namespace FlaxEngine
         /// Gets the index of the material slot to use during this mesh rendering.
         /// </summary>
         public int MaterialSlotIndex => Model.Internal_GetMeshMaterialSlotIndex(_model.unmanagedPtr, _lodIndex, _meshIndex);
-        
+
+        /// <summary>
+        /// Gets the material slot used by this mesh during rendering.
+        /// </summary>
+        public MaterialSlot MaterialSlot => _model.MaterialSlots[MaterialSlotIndex];
+
         internal Mesh(Model model, int lodIndex, int meshIndex)
         {
             _model = model;

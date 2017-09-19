@@ -173,6 +173,7 @@
     <Compile Include="Attributes\UnmanagedCallAttribute.cs" />
     <Compile Include="Configurations\PersistentDataConfig.cs" />
     <Compile Include="Engine\ITransformable.cs" />
+    <Compile Include="Engine\MaterialSlot.cs" />
     <Compile Include="Engine\Mesh.cs" />
     <Compile Include="Engine\MeshInfo.cs" />
     <Compile Include="Engine\ModelLOD.cs" />
