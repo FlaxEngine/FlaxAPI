@@ -18,7 +18,7 @@ namespace FlaxEngine
         /// It's null if the <see cref="Model"/> property is null or asset is not loaded yet.
         /// </remarks>
         [Serialize]
-        [EditorOrder(100), EditorDisplay("Entries")]
+        [EditorOrder(100), EditorDisplay("Entries", "__inline__")]
         [MemberCollection(CanReorderItems = false, NotNullItems = true, ReadOnly = true)]
         public ModelEntryInfo[] Entries
         {

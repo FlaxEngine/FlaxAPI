@@ -21,13 +21,12 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public sealed class ModelWindow : AssetEditorWindowBase<Model>
     {
-        // TODO: missing features to port from c++ editor:
         // - debug model uv channels
-        // - drawing model bounds - sphere/box
         // - refesh properties on asset loaded/reimported
         // - link for content pipeline and handle asset reimport event (refresh data, etc.)
         // TODO: adding/removing material slots
         // TODO: refresh material slots comboboxes on material slot rename
+        // TODO: add button to draw model bounds
 
         /// <summary>
         /// The model properties proxy object.
@@ -155,6 +154,7 @@ namespace FlaxEditor.Windows.Assets
                 mesh.MaterialSlotIndex = newSlotIndex == -1 ? 0 : newSlotIndex;
                 Window.UpdateEffectsOnAsset();
                 UpdateEffectsOnUI();
+                Window.MarkAsEdited();
             }
 
             /// <summary>
@@ -271,6 +271,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly CustomEditorPresenter _propertiesPresenter;
         private readonly PropertiesProxy _properties;
         private ModelActor _highlightActor;
+        private bool _refreshOnLodsLoaded;
 
         private int _uvDebugIndex = -1;
 
@@ -357,6 +358,13 @@ namespace FlaxEditor.Windows.Assets
             if (_highlightActor && _highlightActor.IsActive)
             {
                 _highlightActor.Transform = _preview.PreviewModelActor.Transform;
+            }
+            
+            // Model is loaded but LODs data may be during streaming so refresh proeprties on fully loaded
+            if (_refreshOnLodsLoaded && _asset && _asset.LoadedLODs == _asset.LODs.Length)
+            {
+                _refreshOnLodsLoaded = false;
+                _propertiesPresenter.BuildLayout();
             }
 
             base.Update(deltaTime);
@@ -449,6 +457,9 @@ namespace FlaxEditor.Windows.Assets
             _properties.OnLoad(this);
             _propertiesPresenter.BuildLayout();
             ClearEditedFlag();
+            _refreshOnLodsLoaded = true;
+
+            // TODO: disable streamign for this model
 
             base.OnAssetLoaded();
         }
