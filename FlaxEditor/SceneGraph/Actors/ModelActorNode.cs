@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 using FlaxEngine;
 
 namespace FlaxEditor.SceneGraph.Actors
@@ -14,10 +15,10 @@ namespace FlaxEditor.SceneGraph.Actors
     public sealed class ModelActorNode : ActorNode
     {
         /// <summary>
-        /// Single model mesh entry node.
+        /// Single model material slot entry node.
         /// </summary>
         /// <seealso cref="FlaxEditor.SceneGraph.ActorChildNode{T}" />
-        public sealed class MeshNode : ActorChildNode<ModelActorNode>
+        public sealed class EntryNode : ActorChildNode<ModelActorNode>
         {
             /// <summary>
             /// Gets the model actor.
@@ -25,12 +26,12 @@ namespace FlaxEditor.SceneGraph.Actors
             public ModelActor ModelActor => (ModelActor)_actor.Actor;
 
             /// <summary>
-            /// Gets the mesh entry.
+            /// Gets the entry.
             /// </summary>
             public ModelEntryInfo Entry => ((ModelActor)_actor.Actor).Entries[Index];
 
             /// <inheritdoc />
-            public MeshNode(ModelActorNode actor, Guid id, int index)
+            public EntryNode(ModelActorNode actor, Guid id, int index)
                 : base(actor, id, index)
             {
             }
@@ -49,6 +50,12 @@ namespace FlaxEditor.SceneGraph.Actors
             public override bool RayCastSelf(ref Ray ray, out float distance)
             {
                 return Entry.Intersects(ray, out distance);
+            }
+
+            /// <inheritdoc />
+            public override void OnDebugDraw(ViewportDebugDrawData data)
+            {
+                data.HighlightModel((ModelActor)_actor.Actor, Index);
             }
         }
 
@@ -77,7 +84,7 @@ namespace FlaxEditor.SceneGraph.Actors
                 for (int i = 0; i < entries.Length; i++)
                 {
                     idBytes[0] += 1;
-                    AddChildNode(new MeshNode(this, new Guid(idBytes), i));
+                    AddChildNode(new EntryNode(this, new Guid(idBytes), i));
                 }
             }
         }

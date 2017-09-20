@@ -185,7 +185,9 @@ namespace FlaxEditor.Windows.Assets
 
         private bool _isEdited;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Occurs when object gets edited.
+        /// </summary>
         public event Action OnEdited;
 
         /// <inheritdoc />
@@ -376,18 +378,15 @@ namespace FlaxEditor.Windows.Assets
                     Close();
                     return;
                 }
-                
-                // Fire events
+
+                // Fire event
                 OnAssetLinked();
-                if (_asset.IsLoaded)
-                    OnAssetLoaded();
-                else
-                    _isWaitingForLoaded = true;
+                _isWaitingForLoaded = true;
             }
 
             // Base
             base.OnShow();
-
+            
             // Update
             UpdateTitle();
             UpdateToolstrip();

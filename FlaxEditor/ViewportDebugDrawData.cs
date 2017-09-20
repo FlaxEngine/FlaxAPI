@@ -69,9 +69,6 @@ namespace FlaxEditor
         /// <param name="entryIndex">Index of the entry to highlight.</param>
         public void HighlightModel(ModelActor model, int entryIndex)
         {
-            if (model.Model == null)
-                return;
-
             _highlights.Add(new ModelsToHighlight
             {
                 Model = model,
@@ -89,12 +86,16 @@ namespace FlaxEditor
             for (int i = 0; i < _highlights.Count; i++)
             {
                 var hightlight = _highlights[i];
-                hightlight.Model.Transform.GetWorld(out m1);
-                hightlight.Model.Entries[hightlight.EntryIndex].Transform.GetWorld(out m2);
-                Matrix.Multiply(ref m2, ref m1, out world);
-                BoundingSphere bounds = BoundingSphere.FromBox(hightlight.Model.Box);
+                var model = hightlight.Model;
+                if (model.Model == null)
+                    continue;
 
-                collector.AddDrawCall(hightlight.Model.Model, hightlight.EntryIndex, _highlightMaterial, ref bounds, ref world);
+                model.Transform.GetWorld(out m1);
+                model.Entries[hightlight.EntryIndex].Transform.GetWorld(out m2);
+                Matrix.Multiply(ref m2, ref m1, out world);
+                BoundingSphere bounds = BoundingSphere.FromBox(model.Box);
+
+                collector.AddDrawCall(model.Model, hightlight.EntryIndex, _highlightMaterial, ref bounds, ref world);
             }
         }
 
