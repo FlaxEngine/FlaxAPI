@@ -98,6 +98,7 @@
     <Compile Include="CustomEditors\Values\CustomValueContainer.cs" />
     <Compile Include="CustomEditors\Values\ListValueContainer.cs" />
     <Compile Include="CustomEditors\Values\ValueContainer.cs" />
+    <Compile Include="EditorAssets.cs" />
     <Compile Include="GUI\AssetPicker.cs" />
     <Compile Include="GUI\Drag\DragActors.cs" />
     <Compile Include="GUI\Drag\DragScripts.cs" />

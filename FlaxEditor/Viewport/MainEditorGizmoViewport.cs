@@ -50,6 +50,7 @@ namespace FlaxEditor.Viewport
             Task.Flags = ViewFlags.DefaultEditor;
             Task.Begin += RenderTaskOnBegin;
             Task.End += RenderTaskOnEnd;
+            Task.Draw += RenderTaskOnDraw;
 
             TransformGizmo = new TransformGizmo(this);
             TransformGizmo.OnApplyTransformation += ApplyTransform;
@@ -182,6 +183,11 @@ namespace FlaxEditor.Viewport
         {
             // Draw selected objects debug shapes and visuals
             DebugDraw.Draw(task, _debugDrawData.ActorsPtrs);
+        }
+
+        private void RenderTaskOnDraw(DrawCallsCollector collector)
+        {
+            _debugDrawData.OnDraw(collector);
         }
 
         private void onGizmoModeToggle(ViewportWidgetButton button)
@@ -602,6 +608,14 @@ namespace FlaxEditor.Viewport
             }
 
             return result;
+        }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            _debugDrawData.Dispose();
+
+            base.OnDestroy();
         }
     }
 }

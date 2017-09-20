@@ -200,6 +200,7 @@ namespace FlaxEditor.Windows.Assets
                         return;
                     var lods = proxy.Asset.LODs;
 
+                    // Group per LOD
                     for (int lodIndex = 0; lodIndex < lods.Length; lodIndex++)
                     {
                         var lod = lods[lodIndex];
@@ -214,7 +215,8 @@ namespace FlaxEditor.Windows.Assets
 
                         var group = layout.Group("LOD " + lodIndex);
                         group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", triangleCount, vertexCount));
-
+                        
+                        // Every mesh properties
                         for (int meshIndex = 0; meshIndex < lod.Meshes.Length; meshIndex++)
                         {
                             var mesh = lod.Meshes[meshIndex];
@@ -263,6 +265,7 @@ namespace FlaxEditor.Windows.Assets
                 }
             }
         }
+
 
         private readonly ModelPreview _preview;
         private readonly CustomEditorPresenter _propertiesPresenter;
@@ -330,7 +333,7 @@ namespace FlaxEditor.Windows.Assets
             {
                 _highlightActor.IsActive = true;
 
-                var highlightMaterial = FlaxEngine.Content.LoadAsync<MaterialBase>("Editor/Highlight Material");
+                var highlightMaterial = FlaxEngine.Content.LoadAsync<MaterialBase>(EditorAssets.HighlightMaterial);
                 entries = _highlightActor.Entries;
                 if (entries != null)
                 {

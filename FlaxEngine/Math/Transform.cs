@@ -180,12 +180,8 @@ namespace FlaxEngine
         /// <returns>World matrix</returns>
         public Matrix GetWorld()
         {
-            Matrix m1, m2, result;
-            Matrix.Scaling(ref Scale, out result);
-            Matrix.RotationQuaternion(ref Orientation, out m2);
-            Matrix.Multiply(ref result, ref m2, out m1);
-            Matrix.Translation(ref Translation, out m2);
-            Matrix.Multiply(ref m1, ref m2, out result);
+            Matrix result;
+            GetWorld(out result);
             return result;
         }
 
@@ -202,8 +198,7 @@ namespace FlaxEngine
             Matrix.Translation(ref Translation, out m2);
             Matrix.Multiply(ref m1, ref m2, out result);
         }
-
-
+        
         /// <summary>
         /// Perform tranformation of the given transform in local space
         /// </summary>

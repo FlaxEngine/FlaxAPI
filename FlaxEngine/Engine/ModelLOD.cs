@@ -1,6 +1,9 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
+
+using System;
+using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
@@ -10,7 +13,6 @@ namespace FlaxEngine
     /// </summary>
     public sealed class ModelLOD
     {
-        // TODO: use hash to check if data is valid (like MaterialParameter)
         internal readonly Model _model;
         internal readonly int _lodIndex;
 
@@ -27,6 +29,15 @@ namespace FlaxEngine
         /// </summary>
         public readonly Mesh[] Meshes;
 
+        /// <summary>
+        /// The screen size to switch LODs. Bottom limit of the model screen size to render this LOD.
+        /// </summary>
+        public float ScreenSize
+        {
+            get => Internal_GetScreenSize(_model.unmanagedPtr, _lodIndex);
+            set => Internal_SetScreenSize(_model.unmanagedPtr, _lodIndex, value);
+        }
+
         internal ModelLOD(Model model, int lodIndex, int meshesCount)
         {
             _model = model;
@@ -37,5 +48,13 @@ namespace FlaxEngine
                 Meshes[i] = new Mesh(model, lodIndex, i);
             }
         }
+
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetScreenSize(IntPtr obj, int lodIndex);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetScreenSize(IntPtr obj, int lodIndex, float value);
+#endif
     }
 }
