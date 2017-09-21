@@ -80,6 +80,18 @@ namespace FlaxEditor.Content.Import
         public bool OptimizeMeshes { get; set; } = true;
 
         /// <summary>
+        /// Enable/disable geometry merge for meshes with the same materials.
+        /// </summary>
+        [EditorOrder(60), Tooltip("Enable/disable geometry merge for meshes with the same materials")]
+        public bool MergeMeshes { get; set; } = true;
+        
+        /// <summary>
+        /// Enable/disable importing meshes Level of Details.
+        /// </summary>
+        [EditorOrder(70), Tooltip("Enable/disable importing meshes Level of Details")]
+        public bool ImportLODs { get; set; } = true;
+
+        /// <summary>
         /// The lighmap UVs source.
         /// </summary>
         [EditorOrder(70), Tooltip("Model lightmap UVs source")]
@@ -93,6 +105,8 @@ namespace FlaxEditor.Content.Import
             public float SmoothigNormalsAngle;
             public bool CalculateTangents;
             public bool OptimizeMeshes;
+            public bool MergeMeshes;
+            public bool ImportLODs;
             public ModelLightmapUVsSource LighmapUVsSource;
         }
 
@@ -105,6 +119,8 @@ namespace FlaxEditor.Content.Import
                 SmoothigNormalsAngle = SmoothigNormalsAngle,
                 CalculateTangents = CalculateTangents,
                 OptimizeMeshes = OptimizeMeshes,
+                MergeMeshes = MergeMeshes,
+                ImportLODs = ImportLODs,
                 LighmapUVsSource = LighmapUVsSource
             };
         }
@@ -116,6 +132,8 @@ namespace FlaxEditor.Content.Import
             SmoothigNormalsAngle = options.SmoothigNormalsAngle;
             CalculateTangents = options.CalculateTangents;
             OptimizeMeshes = options.OptimizeMeshes;
+            MergeMeshes = options.MergeMeshes;
+            ImportLODs = options.ImportLODs;
             LighmapUVsSource = options.LighmapUVsSource;
         }
         
