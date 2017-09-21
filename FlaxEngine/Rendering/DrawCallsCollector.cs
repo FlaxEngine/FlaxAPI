@@ -33,7 +33,7 @@ namespace FlaxEngine.Rendering
             // Pick a proper LOD
             int lodIndex = RenderTask.Internal_ComputeModelLOD(model.unmanagedPtr, ref bounds, IntPtr.Zero);
             var lods = model.LODs;
-            if (lods == null || lods.Length < lodIndex)
+            if (lods == null || lods.Length < lodIndex || lodIndex < 0)
                 return;
             var lod = lods[lodIndex];
 

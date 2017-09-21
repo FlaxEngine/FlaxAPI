@@ -30,7 +30,7 @@ namespace FlaxEngine
         public readonly Mesh[] Meshes;
 
         /// <summary>
-        /// The screen size to switch LODs. Bottom limit of the model screen size to render this LOD.
+        /// Gets or sets the minimum model screen size to switch LODs. Bottom limit of the model screen size to render this LOD.
         /// </summary>
         public float ScreenSize
         {

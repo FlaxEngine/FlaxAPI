@@ -27,6 +27,7 @@ namespace FlaxEditor.Windows.Assets
         // TODO: adding/removing material slots
         // TODO: refresh material slots comboboxes on material slot rename
         // TODO: add button to draw model bounds
+        // TODO: add small panel in `General` group with lods switches visualization
 
         /// <summary>
         /// The model properties proxy object.
@@ -200,6 +201,21 @@ namespace FlaxEditor.Windows.Assets
                         return;
                     var lods = proxy.Asset.LODs;
 
+                    // General properties
+                    {
+                        var group = layout.Group("General");
+
+                        var minScreenSize = group.FloatValue("Min Screen Size", "The minimum screen size to draw model (the bottom limit). Used to cull small models. Set to 0 to disable this feature.");
+                        minScreenSize.FloatValue.MinValue = 0.0f;
+                        minScreenSize.FloatValue.MaxValue = 1.0f;
+                        minScreenSize.FloatValue.Value = proxy.Asset.MinScreenSize;
+                        minScreenSize.FloatValue.ValueChanged += () =>
+                                                                 {
+                                                                     proxy.Asset.MinScreenSize = minScreenSize.FloatValue.Value;
+                                                                     proxy.Window.MarkAsEdited();
+                                                                 };
+                    }
+
                     // Group per LOD
                     for (int lodIndex = 0; lodIndex < lods.Length; lodIndex++)
                     {
@@ -212,7 +228,7 @@ namespace FlaxEditor.Windows.Assets
                             triangleCount += mesh.Triangles;
                             vertexCount += mesh.Vertices;
                         }
-                        
+
                         var group = layout.Group("LOD " + lodIndex);
                         group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", triangleCount, vertexCount));
                         var screenSize = group.FloatValue("Screen Size", "The screen size to switch LODs. Bottom limit of the model screen size to render this LOD.");
@@ -222,9 +238,9 @@ namespace FlaxEditor.Windows.Assets
                         screenSize.FloatValue.ValueChanged += () =>
                                                               {
                                                                   lod.ScreenSize = screenSize.FloatValue.Value;
-                                                                  ((PropertiesProxy)Values[0]).Window.MarkAsEdited();
+                                                                  proxy.Window.MarkAsEdited();
                                                               };
-                        
+
                         // Every mesh properties
                         for (int meshIndex = 0; meshIndex < lod.Meshes.Length; meshIndex++)
                         {

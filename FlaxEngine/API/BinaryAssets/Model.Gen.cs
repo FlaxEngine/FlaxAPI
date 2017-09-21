@@ -52,12 +52,30 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets or sets the minimum screen size to draw model (the bottom limit). Used to cull small models. Set to 0 to disable this feature.
+		/// </summary>
+		[UnmanagedCall]
+		public float MinScreenSize
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetMinScreenSize(unmanagedPtr); }
+			set { Internal_SetMinScreenSize(unmanagedPtr, value); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern int Internal_GetLoadedLODs(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetBox(IntPtr obj, out BoundingBox resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetMinScreenSize(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetMinScreenSize(IntPtr obj, float val);
 #endif
 #endregion
 	}
