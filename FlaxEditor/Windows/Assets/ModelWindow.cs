@@ -212,9 +212,18 @@ namespace FlaxEditor.Windows.Assets
                             triangleCount += mesh.Triangles;
                             vertexCount += mesh.Vertices;
                         }
-
+                        
                         var group = layout.Group("LOD " + lodIndex);
                         group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", triangleCount, vertexCount));
+                        var screenSize = group.FloatValue("Screen Size", "The screen size to switch LODs. Bottom limit of the model screen size to render this LOD.");
+                        screenSize.FloatValue.MinValue = 0.0f;
+                        screenSize.FloatValue.MaxValue = 1.0f;
+                        screenSize.FloatValue.Value = lod.ScreenSize;
+                        screenSize.FloatValue.ValueChanged += () =>
+                                                              {
+                                                                  lod.ScreenSize = screenSize.FloatValue.Value;
+                                                                  ((PropertiesProxy)Values[0]).Window.MarkAsEdited();
+                                                              };
                         
                         // Every mesh properties
                         for (int meshIndex = 0; meshIndex < lod.Meshes.Length; meshIndex++)
