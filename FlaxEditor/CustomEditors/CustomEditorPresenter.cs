@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors
@@ -72,6 +73,11 @@ namespace FlaxEditor.CustomEditors
                     Editor = CustomEditorsUtil.CreateEditor(type, false);
                     Editor.Initialize(Presenter, Presenter, selection);
                     OnChildCreated(Editor);
+                }
+                else
+                {
+                    var label = layout.Label("No selection", TextAlignment.Center);
+                    label.Label.Height = 20.0f;
                 }
                 
                 base.Initialize(layout);
