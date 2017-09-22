@@ -10,55 +10,127 @@ using FlaxEngine.Assertions;
 
 namespace FlaxEngine
 {
+    /// <summary>
+    /// #IMPORTANT SEE CONSTRUCTOR NOTES
+    /// <para>Input controller for handling complex input chords and simple character input</para>
+    /// </summary>
     public class InputCommandsController : ICollection<InputCommand>
     {
+        /// <summary>
+        /// System windows defitnion for key hold handling of second currentInput enter
+        /// </summary>
         public const long SECOND_CHAR_INPUT_DELAY_TICKS = 5000000;
+        /// <summary>
+        /// System windows defitnion for key hold handling of nth after second currentInput enter
+        /// </summary>
         public const long N_TH_CHAR_INPUT_DELAY_TICKS = 300000;
 
+        /// <summary>
+        /// Currently waiting list of previously entered <see cref="InputChord"/> 
+        /// </summary>
         public List<InputChord> CurrentChordStack { get; } = new List<InputChord>(3);
 
+        /// <summary>
+        /// Current list of all commands ready to be validated
+        /// </summary>
         private HashSet<InputCommand> _commands = new HashSet<InputCommand>();
 
+        /// <summary>
+        /// Last entered <see cref="InputChord"/>
+        /// </summary>
         private InputChord _lastInputChord;
-        private DateTime _totalSingleChordInput;
+        /// <summary>
+        /// <see cref="DateTime"/> of first input currentInput enter. Used for continous input
+        /// </summary>
+        private DateTime _firstChordInputTime;
+        /// <summary>
+        /// Counter for until this point repeated execution of given currentInput
+        /// </summary>
         private int _totalSingleChordInputs;
-        private bool _isSecondExecuted;
+        /// <summary>
+        /// Is first <see cref="InputChord"/> validated and pressed
+        /// </summary>
+        /// <seealso cref="_isSecondExecuted"/>
         private bool _isFirstExecuted;
+        /// <summary>
+        /// Is second <see cref="InputChord"/> validated and pressed, used for in row break
+        /// </summary>
+        /// <seealso cref="_isFirstExecuted"/>
+        private bool _isSecondExecuted;
 
+        /// <summary>
+        /// In order for this class to work correctly invoke <see cref="KeyPressed"/> while event <see cref="Input.OnKeyPressed"/> fires with your custom input prevention logic
+        /// also invoke <see cref="KeyHold"/> while event <see cref="Input.OnKeyHold"/> fires with your custom input prevention logic matching above prevention logic.
+        /// <para>Default constuctor.</para> 
+        /// </summary>
         public InputCommandsController()
         {
             Input.OnKeyReleased += KeyReleased;
         }
 
+        /// <summary>
+        /// Is <see cref="InputCommandsController"/> waiting for more chords to be enter in order to validate
+        /// </summary>
         public bool IsWaitingForNextChord { get; private set; }
-        public bool IsFirstChord => CurrentChordStack.Count == 0;
-        public bool AcceptsAlphaNumeric { get; set; } = true;
-        public bool SuccessIfNotFound { get; set; }
 
-        public bool KeyPressed(InputChord chord)
+        /// <summary>
+        /// Invoke manualy when your control will have key pressed using <see cref="Input.OnKeyPressed"/>
+        /// </summary>
+        /// <param name="currentInput"></param>
+        /// <returns>True if command was found and executed</returns>
+        public bool KeyPressed(InputChord currentInput)
         {
-            if (_lastInputChord == null || chord == null || !_lastInputChord.Equals(chord))
+            if (_lastInputChord == null || currentInput == null || !_lastInputChord.Equals(currentInput))
             {
                 _isFirstExecuted = true;
-                _lastInputChord = chord;
-                _totalSingleChordInput = DateTime.UtcNow;
-                InternalExecute(chord);
-                Debug.Log("First " + IsFirstChord);
+                _lastInputChord = currentInput;
+                _firstChordInputTime = DateTime.UtcNow;
+                InternalExecute(currentInput);
                 return true;
             }
             return false;
         }
 
-        public bool KeyHold(InputChord chord)
+        /// <summary>
+        /// Invoke manualy when your control will have key hold using <see cref="Input.OnKeyHold"/>
+        /// </summary>
+        /// <param name="currentInput"></param>
+        /// <returns>True if command was found and executed</returns>
+        public bool KeyHold(InputChord currentInput)
         {
-            return Execute(chord);
+            if (_lastInputChord != null && currentInput != null && _lastInputChord.Equals(currentInput) && !currentInput.All(code => code == KeyCode.Control || code == KeyCode.Shift || code == KeyCode.Alt))
+            {
+                //Do not remove now variable. There seems to be error in mono while comparing to DateTime
+                var now = DateTime.UtcNow.Ticks;
+                var inputDiff = now - _firstChordInputTime.Ticks;
+                if (!_isSecondExecuted && inputDiff > SECOND_CHAR_INPUT_DELAY_TICKS)
+                {
+                    _isSecondExecuted = true;
+                    InternalExecute(currentInput);
+                    return true;
+                }
+                if (_isSecondExecuted)
+                {
+                    var nthCalculation = inputDiff - SECOND_CHAR_INPUT_DELAY_TICKS - _totalSingleChordInputs * N_TH_CHAR_INPUT_DELAY_TICKS;
+                    if (nthCalculation >= 0)
+                    {
+                        InternalExecute(currentInput);
+                        _totalSingleChordInputs++;
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
-        private void KeyReleased(InputChord chord)
+        /// <summary>
+        /// Invokes automaticly when <see cref="Input.OnKeyReleased"/> is pressed
+        /// </summary>
+        /// <param name="currentInput"></param>
+        private void KeyReleased(InputChord currentInput)
         {
             if (_isFirstExecuted)
             {
-                Debug.Log("Clear");
                 _isFirstExecuted = false;
                 _isSecondExecuted = false;
                 CurrentChordStack.Clear();
@@ -68,41 +140,21 @@ namespace FlaxEngine
             }
         }
 
-        private bool Execute(InputChord currentInput)
-        {
-            if (_lastInputChord != null && currentInput != null && _lastInputChord.Equals(currentInput) && !currentInput.All(code => code == KeyCode.Control || code == KeyCode.Shift || code == KeyCode.Alt))
-            {
-                //Do not remove now variable. There seems to be error in mono while comparing to DateTime
-                var now = DateTime.UtcNow.Ticks;
-                var inputDiff = now - _totalSingleChordInput.Ticks;
-                if (!_isSecondExecuted && inputDiff > SECOND_CHAR_INPUT_DELAY_TICKS)
-                {
-                    _isSecondExecuted = true;
-                    InternalExecute(currentInput);
-                    Debug.Log("Second " + IsFirstChord);
-                    return true;
-                }
-                if (_isSecondExecuted)
-                {
-                    var nthCalculation = inputDiff - SECOND_CHAR_INPUT_DELAY_TICKS - _totalSingleChordInputs * N_TH_CHAR_INPUT_DELAY_TICKS;
-                    if (nthCalculation >= 0)
-                    {
-                        Debug.Log("nthCalculation " + nthCalculation + " " + IsFirstChord);
-                        InternalExecute(currentInput);
-                        _totalSingleChordInputs++;
-                    }
-                }
-            }
-            return SuccessIfNotFound;
-        }
-
+        /// <summary>
+        /// Invokes found method.
+        /// </summary>
+        /// <param name="currentInput"></param>
         private void InternalExecute(InputChord currentInput)
         {
-            AddCurrentInputToStack(currentInput)?.Execute();
+            FindAndInvoke(currentInput)?.Execute();
         }
 
-
-        private InputCommand AddCurrentInputToStack(InputChord currentInput)
+        /// <summary>
+        /// Validates if given input exists on stack and execute it
+        /// </summary>
+        /// <param name="currentInput"></param>
+        /// <returns>Delegate to invoke or null if not found</returns>
+        private InputCommand FindAndInvoke(InputChord currentInput)
         {
             var match = _commands.Where(command => command.Validate(CurrentChordStack.Count, currentInput)).ToList();
             if (match.Count > 1)

@@ -11,8 +11,6 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected void AddCommandsToController()
         {
-            CommandsController.AcceptsAlphaNumeric = false;
-
             CommandsController.Add(new InputCommand(Copy, new InputChord(KeyCode.Control, KeyCode.C)));
             CommandsController.Add(new InputCommand(Paste, new InputChord(KeyCode.Control, KeyCode.V)));
             CommandsController.Add(new InputCommand(Duplicate, new InputChord(KeyCode.Control, KeyCode.D)));
