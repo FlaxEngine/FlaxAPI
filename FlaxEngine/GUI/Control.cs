@@ -267,6 +267,8 @@ namespace FlaxEngine.GUI
             }
         }
 
+        public InputCommandsController CommandsController { get; private set; } = new InputCommandsController();
+
         #endregion
 
         /// <summary>
@@ -321,22 +323,6 @@ namespace FlaxEngine.GUI
             _bounds = bounds;
 
             UpdateTransform();
-        }
-
-        /// <summary>
-        /// Wrapper to unregister event on dispose
-        /// </summary>
-        /// <param name="map"></param>
-        private void OnInputOnOnKeyPressed(InputChord map)
-        {
-            try
-            {
-                OnKeyPressed(map);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-            }
         }
 
         /// <summary>
@@ -443,16 +429,64 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Wrapper to unregister event on dispose
+        /// </summary>
+        /// <param name="map"></param>
+        private void OnInputOnOnKeyPressed(InputChord map)
+        {
+            if (IsFocused)
+            {
+                OnKeyPressed(map);
+            }
+        }
+
+        /// <summary>
+        /// Wrapper to unregister event on dispose
+        /// </summary>
+        /// <param name="map"></param>
+        private void OnInputOnOnKeyHold(InputChord map)
+        {
+            if (IsFocused)
+            {
+                OnKeyHold(map);
+            }
+        }
+
+        /// <summary>
+        /// Wrapper to unregister event on dispose
+        /// </summary>
+        /// <param name="map"></param>
+        private void OnInputOnOnKeyReleased(InputChord map)
+        {
+            OnKeyReleased(map);
+        }
+
+
+        /// <summary>
         ///     Removes input focus from the control
         /// </summary>
         public virtual void Defocus()
         {
             if (IsFocused)
             {
+                Input.OnKeyHold -= OnInputOnOnKeyHold;
                 Input.OnKeyPressed -= OnInputOnOnKeyPressed;
-                Input.OnKeyReleased -= OnKeyReleased;
+                Input.OnKeyReleased -= OnInputOnOnKeyReleased;
                 Focus(null);
             }
+        }
+
+        /// <summary>
+        ///     Focus that control
+        /// </summary>
+        /// <param name="c">Control to focus</param>
+        /// <returns>True if control got a focus</returns>
+        protected virtual bool Focus(Control c)
+        {
+            Input.OnKeyHold += OnInputOnOnKeyHold;
+            Input.OnKeyPressed += OnInputOnOnKeyPressed;
+            Input.OnKeyReleased += OnInputOnOnKeyReleased;
+            return _parent != null && _parent.Focus(c);
         }
 
         /// <summary>
@@ -487,17 +521,7 @@ namespace FlaxEngine.GUI
         {
         }
 
-        /// <summary>
-        ///     Focus that control
-        /// </summary>
-        /// <param name="c">Control to focus</param>
-        /// <returns>True if control got a focus</returns>
-        protected virtual bool Focus(Control c)
-        {
-            Input.OnKeyPressed += OnInputOnOnKeyPressed;
-            Input.OnKeyReleased += OnKeyReleased;
-            return _parent != null && _parent.Focus(c);
-        }
+
 
         /// <summary>
         ///     Returns true if user is using that control so OnMouseMove and other events will be send to that control even if
@@ -616,15 +640,39 @@ namespace FlaxEngine.GUI
         /// <returns>True if event has been handled, otherwise false</returns>
         public virtual bool OnKeyPressed(InputChord key)
         {
-            return false;
+            // Do not process input if control is not focused
+            if (!IsFocused)
+            {
+                return true;
+            }
+
+            return CommandsController.KeyPressed(key);
+        }
+
+        /// <summary>
+        ///     When key is held
+        /// </summary>
+        /// <param name="key">Key value</param>
+        /// <returns>True if event has been handled, otherwise false</returns>
+        public virtual bool OnKeyHold(InputChord key)
+        {
+            // Do not process input if control is not focused
+            if (!IsFocused)
+            {
+                return true;
+            }
+
+            return CommandsController.KeyHold(key);
         }
 
         /// <summary>
         ///     When key goes up
         /// </summary>
         /// <param name="key">Key value</param>
-        public virtual void OnKeyReleased(InputChord key)
+        /// <returns>True if event has been handled, otherwise false</returns>
+        public virtual bool OnKeyReleased(InputChord key)
         {
+            return false;
         }
 
         #endregion

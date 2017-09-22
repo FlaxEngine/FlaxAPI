@@ -11,7 +11,7 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.Windows.Assets
 {
     /// <summary>
-    /// Base class for assets editing/viewing windows.
+    ///     Base class for assets editing/viewing windows.
     /// </summary>
     /// <seealso cref="FlaxEditor.Windows.EditorWindow" />
     public abstract class AssetEditorWindow : EditorWindow, IEditable, IContentItemOwner
@@ -20,15 +20,15 @@ namespace FlaxEditor.Windows.Assets
         protected readonly ToolStrip _toolstrip;
 
         /// <summary>
-        /// Gets the item.
+        ///     Gets the item.
         /// </summary>
         /// <value>
-        /// The item.
+        ///     The item.
         /// </value>
         public AssetItem Item => _item;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AssetEditorWindow"/> class.
+        ///     Initializes a new instance of the <see cref="AssetEditorWindow" /> class.
         /// </summary>
         /// <param name="editor">The editor.</param>
         /// <param name="item">The item.</param>
@@ -44,10 +44,11 @@ namespace FlaxEditor.Windows.Assets
             _toolstrip.Parent = this;
 
             UpdateTitle();
+            AddCommandsToController();
         }
 
         /// <summary>
-        /// Unlinks the item. Removes reference to it and unbinds all events.
+        ///     Unlinks the item. Removes reference to it and unbinds all events.
         /// </summary>
         protected virtual void UnlinkItem()
         {
@@ -59,14 +60,14 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <summary>
-        /// Updates the toolstrip buttons and other controls. Called after some window events.
+        ///     Updates the toolstrip buttons and other controls. Called after some window events.
         /// </summary>
         protected virtual void UpdateToolstrip()
         {
         }
 
         /// <summary>
-        /// Called on toolstrip button clicked.
+        ///     Called on toolstrip button clicked.
         /// </summary>
         /// <param name="id">Button id.</param>
         protected virtual void OnToolstripButtonClicked(int id)
@@ -80,26 +81,28 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <summary>
-        /// Gets the name of the window title.
+        ///     Gets the name of the window title.
         /// </summary>
         /// <value>
-        /// The name of the window title.
+        ///     The name of the window title.
         /// </value>
         protected virtual string WindowTitleName => "Asset";
 
         /// <summary>
-        /// Updates the window title text.
+        ///     Updates the window title text.
         /// </summary>
         protected void UpdateTitle()
         {
             string title = string.Format("{0} - {1}", WindowTitleName, _item?.ShortName ?? string.Empty);
             if (IsEdited)
+            {
                 title += '*';
+            }
             Title = title;
         }
 
         /// <summary>
-        /// Tries to save asset changes if it has been edited.
+        ///     Tries to save asset changes if it has been edited.
         /// </summary>
         public virtual void Save()
         {
@@ -112,11 +115,31 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
+        protected void AddCommandsToController()
+        {
+            CommandsController.Add(new InputCommand(Save, new InputChord(KeyCode.Control, KeyCode.S)));
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyHold(InputChord key)
+        {
+            // Base
+            if (base.OnKeyHold(key) || !IsFocused)
+            {
+                return true;
+            }
+            return CommandsController.KeyHold(key);
+        }
+
+        /// <inheritdoc />
         public override bool OnKeyPressed(InputChord key)
         {
             // Base
-            if(base.OnKeyPressed(key)) return true;
-            return key.InvokeFirstCommand(KeyCode.Control, new InputChord.KeyCommand(KeyCode.S, Save));
+            if (base.OnKeyPressed(key) || !IsFocused)
+            {
+                return true;
+            }
+            return CommandsController.KeyPressed(key);
         }
 
         /// <inheritdoc />
@@ -182,9 +205,13 @@ namespace FlaxEditor.Windows.Assets
             protected set
             {
                 if (value)
+                {
                     MarkAsEdited();
+                }
                 else
+                {
                     ClearEditedFlag();
+                }
             }
         }
 
@@ -205,7 +232,7 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <summary>
-        /// Clears the edited flag.
+        ///     Clears the edited flag.
         /// </summary>
         protected void ClearEditedFlag()
         {
@@ -221,14 +248,14 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <summary>
-        /// Action fired when object gets edited.
+        ///     Action fired when object gets edited.
         /// </summary>
         protected virtual void OnEditedState()
         {
         }
 
         /// <summary>
-        /// Action firecd when object edited state gets changed.
+        ///     Action firecd when object edited state gets changed.
         /// </summary>
         protected virtual void OnEditedStateChanged()
         {
@@ -276,7 +303,7 @@ namespace FlaxEditor.Windows.Assets
     }
 
     /// <summary>
-    /// Generic base class for asset editors.
+    ///     Generic base class for asset editors.
     /// </summary>
     /// <typeparam name="T">Asset type.</typeparam>
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
@@ -285,10 +312,10 @@ namespace FlaxEditor.Windows.Assets
         protected T _asset;
 
         /// <summary>
-        /// Gets the asset.
+        ///     Gets the asset.
         /// </summary>
         /// <value>
-        /// The asset.
+        ///     The asset.
         /// </value>
         public T Asset => _asset;
 
@@ -299,7 +326,7 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <summary>
-        /// Loads the asset.
+        ///     Loads the asset.
         /// </summary>
         /// <returns>Loaded asset or null if cannot do it.</returns>
         protected virtual T LoadAsset()
@@ -309,14 +336,14 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <summary>
-        /// Called when asset gets linked and may setup window UI for it.
+        ///     Called when asset gets linked and may setup window UI for it.
         /// </summary>
         protected virtual void OnAssetLinked()
         {
         }
 
         /// <summary>
-        /// Called when asset gets loaded and may setup window UI for it.
+        ///     Called when asset gets loaded and may setup window UI for it.
         /// </summary>
         protected virtual void OnAssetLoaded()
         {
@@ -342,7 +369,7 @@ namespace FlaxEditor.Windows.Assets
 
                 // Fire events
                 OnAssetLinked();
-                _asset.WaitForLoaded();// TODO: expose loaded/reloaded/unload events to c# API and wait here
+                _asset.WaitForLoaded(); // TODO: expose loaded/reloaded/unload events to c# API and wait here
                 if (_asset.IsLoaded)
                 {
                     OnAssetLoaded();
@@ -368,7 +395,7 @@ namespace FlaxEditor.Windows.Assets
     }
 
     /// <summary>
-    /// Generic base class for asset editors that modify cloned asset and update original asset on save.
+    ///     Generic base class for asset editors that modify cloned asset and update original asset on save.
     /// </summary>
     /// <typeparam name="T">Asset type.</typeparam>
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
@@ -383,7 +410,7 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <summary>
-        /// Saves the copy of the asset to the original location. This action cannot be undone!
+        ///     Saves the copy of the asset to the original location. This action cannot be undone!
         /// </summary>
         /// <returns>True if failed, otherwise false.</returns>
         protected bool SaveToOriginal()
@@ -395,7 +422,7 @@ namespace FlaxEditor.Windows.Assets
                 Editor.LogError(string.Format("Cannot save asset {0}. Wait for temporary asset loaded failed.", _item.Path));
                 return true;
             }
-            
+
             // Cache data
             var id = _item.ID;
             var sourcePath = _asset.Path;
@@ -413,7 +440,7 @@ namespace FlaxEditor.Windows.Assets
                     return true;
                 }
             }
-            
+
             // Copy temporary material to the final destination (and restore ID)
             if (Editor.ContentEditing.CloneAssetFile(destinationPath, sourcePath, id))
             {
@@ -440,17 +467,23 @@ namespace FlaxEditor.Windows.Assets
             // Clone asset
             string clonePath;
             if (Editor.ContentEditing.FastTempAssetClone(_item, out clonePath))
+            {
                 return null;
-            
+            }
+
             // Load cloned asset
             var asset = FlaxEngine.Content.LoadAsync<T>(clonePath);
             if (asset == null)
+            {
                 return null;
+            }
 
             // Validate data
             if (asset.ID == _item.ID)
+            {
                 throw new InvalidOperationException("Cloned asset has the same IDs.");
-            
+            }
+
             return asset;
         }
     }

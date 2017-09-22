@@ -290,7 +290,7 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override void OnKeyReleased(InputChord key)
+        public override bool OnKeyReleased(InputChord key)
         {
             if (ContainsFocus)
             {
@@ -300,7 +300,7 @@ namespace FlaxEditor.Surface
                 }
             }
 
-            base.OnKeyReleased(key);
+            return base.OnKeyReleased(key);
         }
     }
 }

@@ -42,9 +42,6 @@ namespace FlaxEngine
         /// </summary>
         public static InputChord PressedKeys { get; private set; }
 
-        static Stopwatch stopwatch;
-        static Stopwatch stopwatch2;
-
         /// <summary>
         ///     Internal method used to get all currently active keys
         /// </summary>
@@ -76,10 +73,18 @@ namespace FlaxEngine
             }
             else
             {
+                var keysMapped = new InputChord();
                 _previousPressedKeys = PressedKeys;
-                PressedKeys = new InputChord();
+                if(_previousPressedKeys != null && _previousPressedKeys.Count > 0)
+                {
+                    OnKeyReleased?.Invoke(keysMapped);
+                }
+                PressedKeys = keysMapped;
             }
         }
+
+        static Stopwatch stopwatch;
+        static Stopwatch stopwatch2;
 
         /// <summary>
         ///     Internal method used to get currently typed unicode characters
@@ -90,30 +95,30 @@ namespace FlaxEngine
         /// <param name="unicode"></param>
         internal static void Internal_UnicodeInputEvent(int[] unicode)
         {
-            try
-            {
-                if(stopwatch == null)
-                {
-                    stopwatch = Stopwatch.StartNew();
-                }
-                if (stopwatch.IsRunning)
-                {
-                    stopwatch?.Stop();
-                    Debug.Log(stopwatch?.ElapsedTicks);
-                    stopwatch2 = Stopwatch.StartNew();
-                }
-                else
-                {
-                    stopwatch2?.Stop();
-                    Debug.Log(stopwatch2?.ElapsedTicks);
-                    stopwatch = Stopwatch.StartNew();
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e);
-                throw;
-            }
+            //try
+            //{
+            //    if(stopwatch == null)
+            //    {
+            //        stopwatch = Stopwatch.StartNew();
+            //    }
+            //    if (stopwatch.IsRunning)
+            //    {
+            //        stopwatch?.Stop();
+            //        Debug.Log(stopwatch?.ElapsedTicks);
+            //        stopwatch2 = Stopwatch.StartNew();
+            //    }
+            //    else
+            //    {
+            //        stopwatch2?.Stop();
+            //        Debug.Log(stopwatch2?.ElapsedTicks);
+            //        stopwatch = Stopwatch.StartNew();
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+            //    Debug.Log(e);
+            //    throw;
+            //}
             StringBuilder builder = new StringBuilder(unicode.Length);
             foreach (var i in unicode)
             {

@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// </summary>
     public class InputChord : IEnumerable<KeyCode>
     {
-        private readonly HashSet<KeyCode> _keyCodes;
+        private readonly HashSet<KeyCode> _keyCodes = new HashSet<KeyCode>();
 
         /// <summary>
         ///     Amount of keys currently pressed
@@ -24,7 +24,6 @@ namespace FlaxEngine
         /// <param name="keyPressed">Currently pressed keys prepared to be mapped</param>
         public InputChord(byte[] keyPressed)
         {
-            _keyCodes = new HashSet<KeyCode>();
             if (keyPressed == null || keyPressed.Length == 0)
             {
                 return;

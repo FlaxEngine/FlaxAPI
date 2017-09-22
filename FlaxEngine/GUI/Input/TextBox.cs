@@ -309,6 +309,8 @@ namespace FlaxEngine.GUI
 
             OnSizeChanged += ActionOnSizeChanged;
             Input.OnTextEntered += OnTextEntered;
+
+            AddCommandsToController();
         }
 
         /// <summary>
@@ -451,12 +453,20 @@ namespace FlaxEngine.GUI
             return Font.HitTestText(_text, location + _viewOffset, _layout);
         }
 
-        protected void Insert(char c)
+        /// <summary>
+        ///     Inserts new single character at currently selected location
+        /// </summary>
+        /// <param name="chr">Character to input</param>
+        public void Insert(char chr)
         {
-            Insert(c.ToString());
+            Insert(chr.ToString());
         }
 
-        protected void Insert(string str)
+        /// <summary>
+        ///     Inserts new string at currently selected location
+        /// </summary>
+        /// <param name="chr">Character to input</param>
+        public void Insert(string str)
         {
             if (IsReadOnly)
             {
@@ -496,7 +506,11 @@ namespace FlaxEngine.GUI
             OnTextChanged();
         }
 
-        protected void MoveSelectorRight()
+        /// <summary>
+        ///     Move current selector one character right if text has not ended yet.
+        ///     <para>Removes selection and moves at the end of it</para>
+        /// </summary>
+        public void MoveSelectorRight()
         {
             if (HasSelection)
             {
@@ -508,7 +522,11 @@ namespace FlaxEngine.GUI
             }
         }
 
-        protected void MoveSelectorLeft()
+        /// <summary>
+        ///     Move current selector one character left if text has not reached the begining.
+        ///     <para>Removes selection and moves at the begining of it</para>
+        /// </summary>
+        public void MoveSelectorLeft()
         {
             if (HasSelection)
             {
@@ -520,19 +538,30 @@ namespace FlaxEngine.GUI
             }
         }
 
-        protected void MoveSelectorUp()
+        /// <summary>
+        ///     Move current selector one line up if text has more lines above.
+        ///     <para>Removes selection</para>
+        /// </summary>
+        public void MoveSelectorUp()
         {
             int position = FindLineUpChar(CaretPosition);
             SetSelection(position);
         }
 
-        protected void MoveSelectorDown()
+        /// <summary>
+        ///     Move current selector one line down if text has more lines below.
+        ///     <para>Removes selection</para>
+        /// </summary>
+        public void MoveSelectorDown()
         {
             int position = FindLineDownChar(CaretPosition);
             SetSelection(position);
         }
 
-        protected void ExtendSelectionRight()
+        /// <summary>
+        ///     Create new selection or extends current one to the right
+        /// </summary>
+        public void ExtendSelectionRight()
         {
             if (SelectionRight < TextLength)
             {
@@ -540,7 +569,10 @@ namespace FlaxEngine.GUI
             }
         }
 
-        protected void ExtendSelectionLeft()
+        /// <summary>
+        ///     Create new selection or extends current one to the left
+        /// </summary>
+        public void ExtendSelectionLeft()
         {
             if (SelectionRight > 0)
             {
@@ -548,36 +580,53 @@ namespace FlaxEngine.GUI
             }
         }
 
-        protected void ExtendSelectionUp()
+        /// <summary>
+        ///     Create new selection or extends current upwards
+        /// </summary>
+        public void ExtendSelectionUp()
         {
             int position = FindLineUpChar(CaretPosition);
             SetSelection(_selectionStart, position);
         }
 
-        protected void ExtendSelectionDown()
+        /// <summary>
+        ///     Create new selection or extends current downwards
+        /// </summary>
+        public void ExtendSelectionDown()
         {
             int position = FindLineDownChar(CaretPosition);
             SetSelection(_selectionStart, position);
         }
 
-        protected void JumpToNextWord()
+        /// <summary>
+        ///     Moves current seelctor to the end of the current word <see cref="FindNextWordBegin"/>
+        /// </summary>
+        public void JumpToNextWord()
         {
             SetSelection(FindNextWordBegin());
         }
 
-        protected void JumpToPreviousWord()
+        /// <summary>
+        ///     Moves current seelctor to the begining of the previous word <see cref="FindPrevWordBegin"/>
+        /// </summary>
+        public void JumpToPreviousWord()
         {
             SetSelection(FindPrevWordBegin());
-
         }
 
-        protected void MoveSelectorToLineStart()
+        /// <summary>
+        /// TODO
+        /// </summary>
+        public void MoveSelectorToLineStart()
         {
             //TODO 
             SetSelection(0);
         }
 
-        protected void MoveSelectorToLineEnd()
+        /// <summary>
+        /// TODO
+        /// </summary>
+        public void MoveSelectorToLineEnd()
         {
             //TODO 
             SetSelection(TextLength);

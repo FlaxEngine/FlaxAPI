@@ -157,6 +157,8 @@ namespace FlaxEditor.Viewport
             };
             _gizmoModeScale.OnToggle += onGizmoModeToggle;
             gizmoMode.Parent = this;
+
+            AddCommandsToController();
         }
 
         private void RenderTaskOnEnd(SceneRenderTask task)
@@ -444,16 +446,14 @@ namespace FlaxEditor.Viewport
         }
 
         /// <inheritdoc />
-        public override bool OnKeyPressed(InputChord key)
+        protected void AddCommandsToController()
         {
-            if (key.InvokeFirstCommand(
-                new InputChord.KeyCommand(KeyCode.Delete, _editor.SceneEditing.Delete),
-                new InputChord.KeyCommand(KeyCode.Alpha1, () => { TransformGizmo.ActiveMode = TransformGizmo.Mode.Translate; }),
-                new InputChord.KeyCommand(KeyCode.Alpha2, () => { TransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate; }),
-                new InputChord.KeyCommand(KeyCode.Alpha3, () => { TransformGizmo.ActiveMode = TransformGizmo.Mode.Scale; }),
-                new InputChord.KeyCommand(KeyCode.F, _editor.Windows.EditWin.ShowSelectedActors)
-                )) return true;
-           return base.OnKeyPressed(key);
+            CommandsController.Add(new InputCommand(_editor.SceneEditing.Delete, new InputChord(KeyCode.Delete)));
+            CommandsController.Add(new InputCommand(() => { TransformGizmo.ActiveMode = TransformGizmo.Mode.Translate; }, new InputChord(KeyCode.Alpha1)));
+            CommandsController.Add(new InputCommand(() => { TransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate; }, new InputChord(KeyCode.Alpha2)));
+            CommandsController.Add(new InputCommand(() => { TransformGizmo.ActiveMode = TransformGizmo.Mode.Scale; }, new InputChord(KeyCode.Alpha3)));
+            CommandsController.Add(new InputCommand(() => { _editor.Windows.EditWin.ShowSelectedActors(); }, new InputChord(KeyCode.F)));
+
         }
 
         /// <inheritdoc />

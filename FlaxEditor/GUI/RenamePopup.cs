@@ -69,6 +69,8 @@ namespace FlaxEditor.GUI
             _inputField.DockStyle = DockStyle.Fill;
             _inputField.Text = _startValue;
             _inputField.Parent = this;
+
+            AddCommandsToController();
         }
 
         /// <summary>
@@ -99,15 +101,12 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyPressed(InputChord key)
+        protected void AddCommandsToController()
         {
-            if (key.InvokeFirstCommand(
-                new InputChord.KeyCommand(KeyCode.Return, OnTextChanged),
-                new InputChord.KeyCommand(KeyCode.Escape, Hide))) return true;
-
-            // Base
-            return base.OnKeyPressed(key);
+            CommandsController.Add(new InputCommand(OnTextChanged, new InputChord(KeyCode.Return)));
+            CommandsController.Add(new InputCommand(Hide, new InputChord(KeyCode.Escape)));
         }
+
 
         /// <inheritdoc />
         protected override void OnShow()

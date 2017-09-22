@@ -37,6 +37,8 @@ namespace FlaxEngine.GUI
         protected DragItemPositioning _dragOverMode;
         protected bool _isDragOverHeader;
 
+        public InputCommandsController CommandsController { get; private set; } = new InputCommandsController();
+
         /// <summary>
         /// Gets or sets the text.
         /// </summary>
@@ -182,6 +184,8 @@ namespace FlaxEngine.GUI
             _mouseDownTime = -1;
 
             _performChildrenLayoutFirst = true;
+
+            AddCommandsToController();
         }
 
         /// <summary>
@@ -673,14 +677,34 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
+        protected void AddCommandsToController()
+        {
+            CommandsController.Add(new InputCommand(Expand, new InputChord(KeyCode.ArrowRight)));
+            CommandsController.Add(new InputCommand(Collapse, new InputChord(KeyCode.ArrowLeft)));
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyHold(InputChord key)
+        {
+            // Check if is focused and has any children
+            if (IsFocused && _children.Count > 0)
+            {
+                CommandsController.KeyHold(key);
+            }
+
+            // Base
+            if (_opened)
+                return base.OnKeyHold(key);
+            return true;
+        }
+
+        /// <inheritdoc />
         public override bool OnKeyPressed(InputChord key)
         {
             // Check if is focused and has any children
             if (IsFocused && _children.Count > 0)
             {
-                if (key.InvokeFirstCommand(
-                    new InputChord.KeyCommand(KeyCode.ArrowLeft, Collapse),
-                    new InputChord.KeyCommand(KeyCode.ArrowRight, Expand))) return true;
+                CommandsController.KeyPressed(key);
             }
 
             // Base

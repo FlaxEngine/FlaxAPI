@@ -435,6 +435,16 @@ namespace FlaxEditor.Windows
 
         private void OnCompilationError(string message, string file, int line)
         {
+            if(file == null)
+            {
+                file = string.Empty;
+            }
+            if(message == null)
+            {
+                Debug.LogError("Message for on Compilation error was null");
+                return;
+            }
+
             LogEntryDescription desc = new LogEntryDescription
             {
                 Level = LogType.Error,

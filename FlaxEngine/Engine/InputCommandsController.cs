@@ -17,71 +17,90 @@ namespace FlaxEngine
 
         public List<InputChord> CurrentChordStack { get; } = new List<InputChord>(3);
 
-        public bool IsWaitingForNextChord { get; private set; }
-        public bool IsFirstChord => CurrentChordStack.Count == 0;
-
         private HashSet<InputCommand> _commands = new HashSet<InputCommand>();
 
         private InputChord _lastInputChord;
         private DateTime _totalSingleChordInput;
         private int _totalSingleChordInputs;
+        private bool _isSecondExecuted;
+        private bool _isFirstExecuted;
 
-        public bool Execute(InputChord currentInput, bool successIfNotFound = false)
+        public InputCommandsController()
         {
-            if(_lastInputChord != currentInput)
+            Input.OnKeyReleased += KeyReleased;
+        }
+
+        public bool IsWaitingForNextChord { get; private set; }
+        public bool IsFirstChord => CurrentChordStack.Count == 0;
+        public bool AcceptsAlphaNumeric { get; set; } = true;
+        public bool SuccessIfNotFound { get; set; }
+
+        public bool KeyPressed(InputChord chord)
+        {
+            if (_lastInputChord == null || chord == null || !_lastInputChord.Equals(chord))
             {
-                _lastInputChord = currentInput;
+                _isFirstExecuted = true;
+                _lastInputChord = chord;
                 _totalSingleChordInput = DateTime.UtcNow;
-                InternalExecute(currentInput);
-            }
-            else
-            {
-                var inputDiff = (_totalSingleChordInput - DateTime.UtcNow).Ticks;
-                if (inputDiff > SECOND_CHAR_INPUT_DELAY_TICKS)
-                {
-                    InternalExecute(currentInput);
-                    return true;
-                }
-                var nthCalculation = (inputDiff - SECOND_CHAR_INPUT_DELAY_TICKS) - (_totalSingleChordInputs * N_TH_CHAR_INPUT_DELAY_TICKS);
-                if(nthCalculation >= 0 && nthCalculation <= N_TH_CHAR_INPUT_DELAY_TICKS)
-                {
-                    InternalExecute(currentInput);
-                    _totalSingleChordInputs++;
-                }
-                else if(nthCalculation > N_TH_CHAR_INPUT_DELAY_TICKS)
-                {
-                    CurrentChordStack.Clear();
-                    IsWaitingForNextChord = true;
-                    CurrentChordStack.Add(currentInput);
-
-                }
-            }
-            return successIfNotFound;
-        }
-
-        private void InternalExecute(InputChord currentInput)
-        {
-            if (IsCommandChord(currentInput))
-            {
-                AddCurrentInputToStack(currentInput)?.Execute();
-            }
-        }
-
-        private bool IsCommandChord(InputChord currentInput)
-        {
-            if (IsFirstChord)
-            {
-                if (currentInput.IsControl() || !currentInput.IsAlphaNumeric())
-                {
-                    return true;
-                }
-            }
-            else
-            {
+                InternalExecute(chord);
+                Debug.Log("First " + IsFirstChord);
                 return true;
             }
             return false;
         }
+
+        public bool KeyHold(InputChord chord)
+        {
+            return Execute(chord);
+        }
+
+        private void KeyReleased(InputChord chord)
+        {
+            if (_isFirstExecuted)
+            {
+                Debug.Log("Clear");
+                _isFirstExecuted = false;
+                _isSecondExecuted = false;
+                CurrentChordStack.Clear();
+                IsWaitingForNextChord = true;
+                _lastInputChord = null;
+                _totalSingleChordInputs = 0;
+            }
+        }
+
+        private bool Execute(InputChord currentInput)
+        {
+            if (_lastInputChord != null && currentInput != null && _lastInputChord.Equals(currentInput) && !currentInput.All(code => code == KeyCode.Control || code == KeyCode.Shift || code == KeyCode.Alt))
+            {
+                //Do not remove now variable. There seems to be error in mono while comparing to DateTime
+                var now = DateTime.UtcNow.Ticks;
+                var inputDiff = now - _totalSingleChordInput.Ticks;
+                if (!_isSecondExecuted && inputDiff > SECOND_CHAR_INPUT_DELAY_TICKS)
+                {
+                    _isSecondExecuted = true;
+                    InternalExecute(currentInput);
+                    Debug.Log("Second " + IsFirstChord);
+                    return true;
+                }
+                if (_isSecondExecuted)
+                {
+                    var nthCalculation = inputDiff - SECOND_CHAR_INPUT_DELAY_TICKS - _totalSingleChordInputs * N_TH_CHAR_INPUT_DELAY_TICKS;
+                    if (nthCalculation >= 0)
+                    {
+                        Debug.Log("nthCalculation " + nthCalculation + " " + IsFirstChord);
+                        InternalExecute(currentInput);
+                        _totalSingleChordInputs++;
+                    }
+                }
+            }
+            return SuccessIfNotFound;
+        }
+
+        private void InternalExecute(InputChord currentInput)
+        {
+            AddCurrentInputToStack(currentInput)?.Execute();
+        }
+
 
         private InputCommand AddCurrentInputToStack(InputChord currentInput)
         {

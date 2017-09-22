@@ -15,6 +15,10 @@ namespace FlaxEngine
 
         public virtual bool Validate(int combinationIndex, InputChord map)
         {
+            if (combinationIndex != KeyCombinations.Length - 1)
+            {
+                return false;
+            }
             return KeyCombinations[combinationIndex].Equals(map);
         }
 
