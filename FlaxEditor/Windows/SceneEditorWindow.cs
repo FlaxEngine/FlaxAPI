@@ -33,8 +33,10 @@ namespace FlaxEditor.Windows
             Editor.SaveAll();
         }
 
-        /// <inheritdoc />
-        protected void AddCommandsToController()
+        /// <summary>
+        /// Adds prepared list <see cref="InputCommand"/> to <see cref="InputCommandsController"/>
+        /// </summary>
+        protected virtual void AddCommandsToController()
         {
             CommandsController.Add(new InputCommand(Editor.SaveAll, new InputChord(KeyCode.Control, KeyCode.S)));
             CommandsController.Add(new InputCommand(Editor.PerformUndo, new InputChord(KeyCode.Control, KeyCode.Z)));

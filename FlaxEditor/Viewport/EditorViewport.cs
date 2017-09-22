@@ -44,9 +44,9 @@ namespace FlaxEditor.Viewport
                 IsShiftDown = FlaxEngine.Input.GetKey(KeyCode.Shift);
                 IsAltDown = FlaxEngine.Input.GetKey(KeyCode.Alt);
 
-                IsMouseRightDown = window.GetMouseButton(MouseButtons.Right);
-                IsMouseMiddleDown = window.GetMouseButton(MouseButtons.Middle);
-                IsMouseLeftDown = window.GetMouseButton(MouseButtons.Left);
+                IsMouseRightDown = FlaxEngine.Input.GetMouseButton(MouseButtons.Right);
+                IsMouseMiddleDown = FlaxEngine.Input.GetMouseButton(MouseButtons.Middle);
+                IsMouseLeftDown = FlaxEngine.Input.GetMouseButton(MouseButtons.Left);
             }
 
             public void Clear()
@@ -67,6 +67,8 @@ namespace FlaxEditor.Viewport
         // Movement
         protected ViewportWidgetButton _speedWidget;
         protected float _movementSpeed;
+        protected float _movementBoostSpeed = 4f;
+        protected float _movementSlowSpeed = 0.3f;
         protected float _mouseAccelerationScale;
         protected bool _useMouseFiltering;
         protected bool _useMouseAcceleration;

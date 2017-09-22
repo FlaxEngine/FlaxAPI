@@ -11,57 +11,64 @@ using FlaxEngine.Assertions;
 namespace FlaxEngine
 {
     /// <summary>
-    /// #IMPORTANT SEE CONSTRUCTOR NOTES
-    /// <para>Input controller for handling complex input chords and simple character input</para>
+    ///     #IMPORTANT SEE CONSTRUCTOR NOTES
+    ///     <para>Input controller for handling complex input chords and simple character input</para>
     /// </summary>
     public class InputCommandsController : ICollection<InputCommand>
     {
         /// <summary>
-        /// System windows defitnion for key hold handling of second currentInput enter
+        ///     System windows defitnion for key hold handling of second currentInput enter
         /// </summary>
         public const long SECOND_CHAR_INPUT_DELAY_TICKS = 5000000;
+
         /// <summary>
-        /// System windows defitnion for key hold handling of nth after second currentInput enter
+        ///     System windows defitnion for key hold handling of nth after second currentInput enter
         /// </summary>
         public const long N_TH_CHAR_INPUT_DELAY_TICKS = 300000;
 
         /// <summary>
-        /// Currently waiting list of previously entered <see cref="InputChord"/> 
+        ///     Currently waiting list of previously entered <see cref="InputChord" />
         /// </summary>
         public List<InputChord> CurrentChordStack { get; } = new List<InputChord>(3);
 
         /// <summary>
-        /// Current list of all commands ready to be validated
+        ///     Current list of all commands ready to be validated
         /// </summary>
         private HashSet<InputCommand> _commands = new HashSet<InputCommand>();
 
         /// <summary>
-        /// Last entered <see cref="InputChord"/>
+        ///     Last entered <see cref="InputChord" />
         /// </summary>
         private InputChord _lastInputChord;
+
         /// <summary>
-        /// <see cref="DateTime"/> of first input currentInput enter. Used for continous input
+        ///     <see cref="DateTime" /> of first input currentInput enter. Used for continous input
         /// </summary>
         private DateTime _firstChordInputTime;
+
         /// <summary>
-        /// Counter for until this point repeated execution of given currentInput
+        ///     Counter for until this point repeated execution of given currentInput
         /// </summary>
         private int _totalSingleChordInputs;
+
         /// <summary>
-        /// Is first <see cref="InputChord"/> validated and pressed
+        ///     Is first <see cref="InputChord" /> validated and pressed
         /// </summary>
-        /// <seealso cref="_isSecondExecuted"/>
+        /// <seealso cref="_isSecondExecuted" />
         private bool _isFirstExecuted;
+
         /// <summary>
-        /// Is second <see cref="InputChord"/> validated and pressed, used for in row break
+        ///     Is second <see cref="InputChord" /> validated and pressed, used for in row break
         /// </summary>
-        /// <seealso cref="_isFirstExecuted"/>
+        /// <seealso cref="_isFirstExecuted" />
         private bool _isSecondExecuted;
 
         /// <summary>
-        /// In order for this class to work correctly invoke <see cref="KeyPressed"/> while event <see cref="Input.OnKeyPressed"/> fires with your custom input prevention logic
-        /// also invoke <see cref="KeyHold"/> while event <see cref="Input.OnKeyHold"/> fires with your custom input prevention logic matching above prevention logic.
-        /// <para>Default constuctor.</para> 
+        ///     In order for this class to work correctly invoke <see cref="KeyPressed" /> while event
+        ///     <see cref="Input.OnKeyPressed" /> fires with your custom input prevention logic
+        ///     also invoke <see cref="KeyHold" /> while event <see cref="Input.OnKeyHold" /> fires with your custom input
+        ///     prevention logic matching above prevention logic.
+        ///     <para>Default constuctor.</para>
         /// </summary>
         public InputCommandsController()
         {
@@ -69,12 +76,12 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Is <see cref="InputCommandsController"/> waiting for more chords to be enter in order to validate
+        ///     Is <see cref="InputCommandsController" /> waiting for more chords to be enter in order to validate
         /// </summary>
         public bool IsWaitingForNextChord { get; private set; }
 
         /// <summary>
-        /// InvokeUnconditionally manualy when your control will have key pressed using <see cref="Input.OnKeyPressed"/>
+        ///     InvokeUnconditionally manualy when your control will have key pressed using <see cref="Input.OnKeyPressed" />
         /// </summary>
         /// <param name="currentInput"></param>
         /// <returns>True if command was found and executed</returns>
@@ -92,7 +99,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// InvokeUnconditionally manualy when your control will have key hold using <see cref="Input.OnKeyHold"/>
+        ///     InvokeUnconditionally manualy when your control will have key hold using <see cref="Input.OnKeyHold" />
         /// </summary>
         /// <param name="currentInput"></param>
         /// <returns>True if command was found and executed</returns>
@@ -124,7 +131,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Invokes automaticly when <see cref="Input.OnKeyReleased"/> is pressed
+        ///     Invokes automaticly when <see cref="Input.OnKeyReleased" /> is pressed
         /// </summary>
         /// <param name="currentInput"></param>
         private void KeyReleased(InputChord currentInput)
@@ -141,7 +148,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Invokes found method.
+        ///     Invokes found method.
         /// </summary>
         /// <param name="currentInput"></param>
         private void InternalExecute(InputChord currentInput)
@@ -150,7 +157,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Validates if given input exists on stack and execute it
+        ///     Validates if given input exists on stack and execute it
         /// </summary>
         /// <param name="currentInput"></param>
         /// <returns>Delegate to invoke or null if not found</returns>

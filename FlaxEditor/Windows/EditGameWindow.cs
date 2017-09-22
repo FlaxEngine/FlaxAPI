@@ -339,8 +339,12 @@ namespace FlaxEditor.Windows
             base.Update(deltaTime);
         }
 
-        protected void AddCommandsToController()
+        /// <summary>
+        /// Adds prepared list <see cref="InputCommand"/> to <see cref="InputCommandsController"/>
+        /// </summary>
+        protected override void AddCommandsToController()
         {
+            base.AddCommandsToController();
             CommandsController.Add(new InputCommand(() => { Viewport.TakeScreenshot(); }, new InputChord(KeyCode.F12)));
         }
 

@@ -52,6 +52,9 @@ namespace FlaxEditor.Windows
             }
         }
 
+        /// <summary>
+        /// Adds prepared list <see cref="InputCommand"/> to <see cref="InputCommandsController"/>
+        /// </summary>
         protected void AddCommandsToController()
         {
             CommandsController.Add(new InputCommand(() => { Screenshot.Capture(); }, new InputChord(KeyCode.F12)));

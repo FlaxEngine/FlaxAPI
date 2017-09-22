@@ -8,7 +8,9 @@ namespace FlaxEngine.GUI
 {
     public partial class TextBox
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// Adds prepared list <see cref="InputCommand"/> to <see cref="InputCommandsController"/>
+        /// </summary>
         protected void AddCommandsToController()
         {
             CommandsController.Add(new InputCommand(Copy, new InputChord(KeyCode.Control, KeyCode.C)));

@@ -114,7 +114,9 @@ namespace FlaxEditor.Windows.Assets
             return item == _item;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Adds prepared list <see cref="InputCommand"/> to <see cref="InputCommandsController"/>
+        /// </summary>
         protected void AddCommandsToController()
         {
             CommandsController.Add(new InputCommand(Save, new InputChord(KeyCode.Control, KeyCode.S)));
