@@ -73,6 +73,18 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
+        /// Requests the playing start or stop in editor.
+        /// </summary>
+        public void RequestPlayOrStopPlay()
+        {
+            // Check if is in play mode
+            if (Editor.StateMachine.IsPlayMode)
+                RequestStopPlay();
+            else
+                RequestStartPlay();
+        }
+
+        /// <summary>
         /// Requests pause in playing.
         /// </summary>
         public void RequestPausePlay()
@@ -163,26 +175,6 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnUpdate()
         {
-            // Input
-            if (Input.GetKeyDown(KeyCode.F5))
-            {
-                if (Editor.StateMachine.IsPlayMode)
-                {
-                    // Stop
-                    RequestStopPlay();
-                }
-                else
-                {
-                    // Play
-                    RequestStartPlay();
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.F11))
-            {
-                // Step
-                RequestPlayOneFrame();
-            }
-
             // Check if can enter playing in editor mode
             if (Editor.StateMachine.CurrentState.CanEnterPlayMode)
             {

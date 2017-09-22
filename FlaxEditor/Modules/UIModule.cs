@@ -374,12 +374,10 @@ namespace FlaxEditor.Modules
             // Game
             var mm_Game = MainMenu.AddButton("Game");
             mm_Game.ContextMenu.OnButtonClicked += mm_Game_Click;
-            //mm_Game.ContextMenu.AddButton(1, "Play", "F5 ???"); // TODO: finish Game menu
-            //mm_Game.ContextMenu.AddButton(2, "Play in Editor");
-            //mm_Game.ContextMenu.AddButton(3, "Pause");
-            //mm_Game.ContextMenu.AddSeparator();
-            //mm_Game.ContextMenu.AddButton(4, "Game Cooker");
-
+            mm_Game.ContextMenu.VisibleChanged += mm_Game_ShowHide;
+            mm_Game.ContextMenu.AddButton(1, "Play", "F5");
+            mm_Game.ContextMenu.AddButton(2, "Pause");
+            
             // Tools
             var mm_Tools = MainMenu.AddButton("Tools");
             mm_Tools.ContextMenu.OnButtonClicked += mm_Tools_Click;
@@ -413,7 +411,7 @@ namespace FlaxEditor.Modules
             mm_Help.ContextMenu.OnButtonClicked += mm_Help_Click;
             mm_Help.ContextMenu.AddButton(1, "Forum");
             mm_Help.ContextMenu.AddButton(2, "Documentation");
-            mm_Help.ContextMenu.AddButton(3, "Report a bug");
+            mm_Help.ContextMenu.AddButton(3, "Report an issue");
             mm_Help.ContextMenu.AddSeparator();
             mm_Help.ContextMenu.AddButton(7, "Official Website");
             mm_Help.ContextMenu.AddButton(4, "Facebook Fanpage");
@@ -537,20 +535,8 @@ namespace FlaxEditor.Modules
 
                 // Play
                 case 8:
-                {
-                    // Check if Editor is in play mode
-                    if (Editor.StateMachine.IsPlayMode)
-                    {
-                        // Stop game
-                        Editor.Simulation.RequestStopPlay();
-                    }
-                    else
-                    {
-                        // Start playing (will validate state)
-                        Editor.Simulation.RequestStartPlay();
-                    }
+                    Editor.Simulation.RequestPlayOrStopPlay();
                     break;
-                }
 
                 // Pause
                 case 9:
@@ -753,9 +739,25 @@ namespace FlaxEditor.Modules
         {
             switch (id)
             {
-                // 
-                case 1: break;
+                // Play
+                case 1: Editor.Simulation.RequestStartPlay(); break;
+                    
+                // Pause
+                case 2: Editor.Simulation.RequestPausePlay(); break;
             }
+        }
+
+        private void mm_Game_ShowHide(Control control)
+        {
+            if (control.Visible == false)
+                return;
+
+            var c = (ContextMenu)control;
+            bool isInPlayMode = Editor.StateMachine.IsPlayMode;
+            c.GetButton(1).Enabled = !isInPlayMode; // Play
+            c.GetButton(2).Enabled = isInPlayMode; // Pause
+
+            c.PerformLayout();
         }
 
         private void mm_Tools_Click(int id, ContextMenuBase cm)
@@ -863,11 +865,9 @@ namespace FlaxEditor.Modules
                     Application.StartProcess("http://docs.flaxengine.com/");
                     break;
 
-                // Report a bug
+                // Report an issue
                 case 3:
-                    // TODO: report a bug form
-                    throw new NotImplementedException("report a bug feature");
-                    //Application.StartProcess("http://celelej.com/documentation/report-a-bug/");
+                    Application.StartProcess("https://github.com/FlaxEngine/FlaxAPI/issues");
                     break;
 
                 // Facebook Fanpage

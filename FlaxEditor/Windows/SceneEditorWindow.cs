@@ -75,9 +75,21 @@ namespace FlaxEditor.Windows
                             break;
                     }
                 }
-                else if (parentWin.GetKey(KeyCode.Delete))
+                else
                 {
-                    Editor.SceneEditing.Delete();
+                    switch (key)
+                    {
+                        case KeyCode.Delete:
+                            Editor.SceneEditing.Delete();
+                            break;
+
+                        case KeyCode.F5:
+                            Editor.Simulation.RequestStartPlay();
+                            break;
+                        case KeyCode.F11:
+                            Editor.Simulation.RequestPlayOneFrame();
+                            break;
+                    }
                 }
             }
 
