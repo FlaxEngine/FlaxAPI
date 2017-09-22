@@ -67,8 +67,9 @@ namespace FlaxEditor.GUI
         /// </summary>
         /// <param name="height">The height.</param>
         public ToolStrip(float height = DefaultHeight)
-            : base(false, 0, 0, 100, height)
+            : base(0, 0, 100, height)
         {
+            CanFocus = false;
             DockStyle = DockStyle.Top;
         }
 

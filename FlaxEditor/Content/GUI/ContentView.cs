@@ -97,7 +97,6 @@ namespace FlaxEditor.Content.GUI
         /// Initializes a new instance of the <see cref="ContentView"/> class.
         /// </summary>
         public ContentView()
-            : base(true)
         {
             DockStyle = DockStyle.Top;
             IsScrollable = true;

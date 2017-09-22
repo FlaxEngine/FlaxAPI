@@ -65,8 +65,9 @@ namespace FlaxEngine.GUI.Tabs
         /// Initializes a new instance of the <see cref="Tabs"/> class.
         /// </summary>
         public Tabs()
-            : base(false)
         {
+            CanFocus = false;
+
             _selectedIndex = -1;
             _tabsSize = new Vector2(70, 16);
             _orientation = Orientation.Horizontal;

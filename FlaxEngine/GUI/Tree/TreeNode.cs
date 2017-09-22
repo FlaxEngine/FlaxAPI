@@ -172,7 +172,7 @@ namespace FlaxEngine.GUI
         /// <param name="iconCollapsed">The icon for node collapsed.</param>
         /// <param name="iconOpened">The icon for node opened.</param>
         public TreeNode(bool canChangeOrder, Sprite iconCollapsed, Sprite iconOpened)
-            : base(true, 0, 0, 64, 16)
+            : base(0, 0, 64, 16)
         {
             _canChangeOrder = canChangeOrder;
             _animationProgress = 1.0f;

@@ -147,7 +147,7 @@ namespace FlaxEditor.GUI
         /// <param name="contentDomain">The assets content domain.</param>
         /// <param name="location">The control location.</param>
         public AssetPicker(ContentDomain contentDomain, Vector2 location)
-            : base(true, location, new Vector2(DefaultIconSize + ButtonsOffset + ButtonsSize, DefaultIconSize))
+            : base(location, new Vector2(DefaultIconSize + ButtonsOffset + ButtonsSize, DefaultIconSize))
         {
             _domain = contentDomain;
             _mousePos = Vector2.Minimum;

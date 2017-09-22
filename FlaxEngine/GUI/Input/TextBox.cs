@@ -279,7 +279,7 @@ namespace FlaxEngine.GUI
         /// <param name="y">Position Y coordinate</param>
         /// <param name="width">Width</param>
         public TextBox(bool isMultiline, float x, float y, float width = 120)
-            : base(true, x, y, width, DefaultHeight)
+            : base(x, y, width, DefaultHeight)
         {
             _isMultiline = isMultiline;
             _maxLength = 32000;

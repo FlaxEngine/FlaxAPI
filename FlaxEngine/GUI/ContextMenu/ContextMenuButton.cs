@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -50,7 +50,7 @@ namespace FlaxEngine.GUI
         /// <param name="text">The text.</param>
         /// <param name="shortKeys">The short keys tip.</param>
         public ContextMenuButton(ContextMenu parent, int id, string text, string shortKeys = "")
-            : base(parent, false, 8, 22)
+            : base(parent, 8, 22)
         {
             ID = id;
             Text = text;

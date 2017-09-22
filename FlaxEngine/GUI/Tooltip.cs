@@ -27,9 +27,10 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="Tooltip"/> class.
         /// </summary>
         public Tooltip()
-            : base(false, 0, 0, 300, 24)
+            : base(0, 0, 300, 24)
         {
             Visible = false;
+            CanFocus = false;
         }
 
         /// <summary>

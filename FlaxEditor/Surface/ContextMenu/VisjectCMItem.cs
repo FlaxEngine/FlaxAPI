@@ -43,7 +43,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <param name="group">The group.</param>
         /// <param name="archetype">The archetype.</param>
         public VisjectCMItem(VisjectCMGroup group, NodeArchetype archetype)
-            : base(true, 0, 0, 120, 12)
+            : base(0, 0, 120, 12)
         {
             _group = group;
             _archetype = archetype;

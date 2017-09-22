@@ -62,10 +62,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="supportMultiSelect">True if support multi selection for tree nodes, otherwise false.</param>
         public Tree(bool supportMultiSelect)
-            : base(false, 0, 0, 100, 100)
+            : base(0, 0, 100, 100)
         {
             _performChildrenLayoutFirst = true;
             IsScrollable = true;
+            CanFocus = false;
 
             _supportMultiSelect = supportMultiSelect;
             _keyUpdateTime = KeyUpdateTimeout * 10;
@@ -99,7 +100,7 @@ namespace FlaxEngine.GUI
             // Ensure that node can be visible (all it's parents are expanded)
             node.ExpandAllParents();
 
-            Focus();
+            node.Focus();
 
             // Fire event
             SelectedChanged?.Invoke(prev, Selection);
@@ -291,14 +292,14 @@ namespace FlaxEngine.GUI
                 Selection.Clear();
                 walkSelectExpandedTree(Selection, _children[0] as TreeNode);
 
-                Focus();
-
                 // Check if changed
                 if (Selection.Count != prev.Count || !Selection.SequenceEqual(prev))
                 {
                     // Fire event
                     SelectedChanged?.Invoke(prev, Selection);
                 }
+
+                Focus();
             }
         }
 
@@ -371,11 +372,9 @@ namespace FlaxEngine.GUI
                             }
                             if (toSelect != null)
                             {
-                                // Focus
-                                toSelect.Focus();
-
                                 // Select
                                 Select(toSelect);
+                                toSelect.Focus();
                             }
                         }
                         // Down
@@ -406,11 +405,9 @@ namespace FlaxEngine.GUI
                             }
                             if (toSelect != null)
                             {
-                                // Focus
-                                toSelect.Focus();
-
                                 // Select
                                 Select(toSelect);
+                                toSelect.Focus();
                             }
                         }
 
@@ -431,7 +428,10 @@ namespace FlaxEngine.GUI
                     {
                         // Select first child if has
                         if (node.HasChildren)
+                        {
                             Select(node.GetChild(0) as TreeNode);
+                            node.Focus();
+                        }
                     }
                     else
                     {
@@ -445,7 +445,10 @@ namespace FlaxEngine.GUI
                     {
                         // Select parent if has and is not a root
                         if (node.HasParent && node.Parent is TreeNode nodeParentNode && !nodeParentNode.IsRoot)
+                        {
                             Select(nodeParentNode);
+                            nodeParentNode.Focus();
+                        }
                     }
                     else
                     {

@@ -66,7 +66,7 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="ContextMenuBase"/> class.
         /// </summary>
         public ContextMenuBase()
-            : base(true, 0, 0, 120, 32)
+            : base(0, 0, 120, 32)
         {
             _direction = ContextMenuDirection.RightDown;
             Visible = false;

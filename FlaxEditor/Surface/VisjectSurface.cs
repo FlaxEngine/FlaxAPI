@@ -26,8 +26,8 @@ namespace FlaxEditor.Surface
         {
             /// <inheritdoc />
             public SurfaceControl()
-                : base(false)
             {
+                CanFocus = false;
                 ClipChildren = false;
             }
 
@@ -149,7 +149,6 @@ namespace FlaxEditor.Surface
         /// <param name="owner">The owner.</param>
         /// <param name="type">The type.</param>
         public VisjectSurface(IVisjectSurfaceOwner owner, SurfaceType type)
-            : base(true, 0, 0, 100, 100)
         {
             DockStyle = DockStyle.Fill;
 

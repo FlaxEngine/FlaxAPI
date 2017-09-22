@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -18,8 +18,9 @@ namespace FlaxEditor.GUI
         /// </summary>
         /// <param name="height">The height.</param>
         public ToolStripSeparator(float height)
-            : base(false, 0, 0, 4, height)
+            : base(0, 0, 4, height)
         {
+            CanFocus = false;
         }
 
         /// <inheritdoc />

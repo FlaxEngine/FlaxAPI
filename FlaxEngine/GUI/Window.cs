@@ -25,11 +25,16 @@ namespace FlaxEngine.GUI
         private FlaxEngine.Window _window;
 
         /// <summary>
-        /// Gets current focused control
+        /// Gets or sets the current focused control
         /// </summary>
         public Control FocusedControl
         {
-            get { return _focusedControl; }
+            get => _focusedControl;
+            set
+            {
+                Assert.IsTrue(_focusedControl == null || _focusedControl.ParentWindow == this, "Invalid control to focus");
+                Focus(value);
+            }
         }
 
         /// <summary>
@@ -123,12 +128,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="window">Native window object.</param>
         internal Window(FlaxEngine.Window window)
-            : base(false, 0, 0, 100, 60)
+            : base(0, 0, 100, 60)
         {
-            if (window == null)
-                throw new ArgumentNullException(nameof(window));
-            _window = window;
-
+            _window = window ?? throw new ArgumentNullException(nameof(window));
+            
+            CanFocus = false;
             if (Style.Current != null)
                 BackgroundColor = Style.Current.Background;
         }

@@ -34,7 +34,7 @@ namespace FlaxEditor.GUI.Dialogs
         /// </summary>
         /// <param name="title">The title.</param>
         protected Dialog(string title)
-            : base(true, new Rectangle(0, 0, 300, 100))
+            : base(new Rectangle(0, 0, 300, 100))
         {
             BackgroundColor = Style.Current.Background;
             DockStyle = DockStyle.Fill;

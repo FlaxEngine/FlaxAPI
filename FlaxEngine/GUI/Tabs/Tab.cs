@@ -50,7 +50,6 @@ namespace FlaxEngine.GUI.Tabs
         /// <param name="text">The text.</param>
         /// <param name="icon">The icon.</param>
         public Tab(string text, Sprite icon)
-            : base(true)
         {
             Text = text;
             Icon = icon;

@@ -507,8 +507,9 @@ namespace FlaxEditor.Content.Thumbnails
 
             /// <inheritdoc />
             public PreviewRoot()
-                : base(false, 0, 0, PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize)
+                : base(0, 0, PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize)
             {
+                CanFocus = false;
                 AccentColor = Color.Pink;
                 IsLayoutLocked = false;
             }

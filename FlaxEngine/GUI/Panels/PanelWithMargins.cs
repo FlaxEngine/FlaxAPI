@@ -97,10 +97,10 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Initializes a new instance of the <see cref="PanelWithMargins"/> class.
         /// </summary>
-        /// <param name="canFocus">True if panel can got focused, otherwise false. Default is false.</param>
-        protected PanelWithMargins(bool canFocus = false)
-            : base(canFocus, 0, 0, 64, 64)
+        protected PanelWithMargins()
+            : base(0, 0, 64, 64)
         {
+            CanFocus = false;
             _performChildrenLayoutFirst = true;
         }
 

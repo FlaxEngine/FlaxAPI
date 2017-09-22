@@ -32,7 +32,7 @@ namespace FlaxEditor.Windows
         /// <returns>Returns icon controller (most top left)</returns>
         private Control CreateHeader()
         {
-            Image icon = new Image(false, 4, 4, 80, 80)
+            Image icon = new Image(4, 4, 80, 80)
             {
                 ImageSource = new SpriteImageSource(Editor.Instance.UI.GetIcon("Logo128")),
                 Parent = this

@@ -19,7 +19,7 @@ namespace FlaxEngine.GUI
         private bool _isMouseOver, _isDragOver;
         private bool _isVisible = true;
         private bool _isEnabled = true;
-        private bool _canFocus;
+        private bool _canFocus = true;
 
         // Dimensions
 
@@ -289,35 +289,31 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Init
         /// </summary>
-        /// <param name="canFocus">True if control can accept user focus</param>
         /// <param name="x">X coordinate</param>
         /// <param name="y">Y coordinate</param>
         /// <param name="width">Width</param>
         /// <param name="height">Height</param>
-        protected Control(bool canFocus, float x, float y, float width, float height)
-            : this(canFocus, new Vector2(x, y), new Vector2(width, height))
+        protected Control(float x, float y, float width, float height)
+            : this(new Rectangle(x, y, width, height))
         {
         }
 
         /// <summary>
         ///     Init
         /// </summary>
-        /// <param name="canFocus">True if control can accept user focus</param>
         /// <param name="location">Upper left corner location.</param>
         /// <param name="size">Bounds size.</param>
-        protected Control(bool canFocus, Vector2 location, Vector2 size)
-            : this(canFocus, new Rectangle(location, size))
+        protected Control(Vector2 location, Vector2 size)
+            : this(new Rectangle(location, size))
         {
         }
 
         /// <summary>
         ///     Init
         /// </summary>
-        /// <param name="canFocus">True if control can accept user focus</param>
         /// <param name="bounds">Window bounds</param>
-        protected Control(bool canFocus, Rectangle bounds)
+        protected Control(Rectangle bounds)
         {
-            _canFocus = canFocus;
             _bounds = bounds;
 
             UpdateTransform();
@@ -401,7 +397,11 @@ namespace FlaxEngine.GUI
         ///     Gets a value indicating whether the control can receive focus
         /// </summary>
         /// <returns>True if the control can receive focus, otherwise false</returns>
-        public bool CanFocus => _canFocus;
+        public bool CanFocus
+        {
+            get => _canFocus;
+            set => _canFocus = value;
+        }
 
         /// <summary>
         ///     Gets a value indicating whether the control, currently has the input focus

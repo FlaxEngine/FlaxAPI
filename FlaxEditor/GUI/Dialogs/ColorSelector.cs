@@ -54,7 +54,7 @@ namespace FlaxEditor.GUI.Dialogs
         /// <param name="boxSize">Size of the box.</param>
         /// <param name="slidersThickness">The sliders thickness.</param>
         public ColorSelector(float boxSize, float slidersThickness)
-            : base(true, 0, 0, 64, 64)
+            : base(0, 0, 64, 64)
         {
             _boxSize = boxSize;
             _slidersThickness = slidersThickness;

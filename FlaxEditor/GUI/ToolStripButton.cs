@@ -86,7 +86,7 @@ namespace FlaxEditor.GUI
         /// <param name="id">The identifier.</param>
         /// <param name="icon">The icon.</param>
         public ToolStripButton(float height, int id, ref Sprite icon)
-            : base(true, 0, 0, height, height)
+            : base(0, 0, height, height)
         {
             _id = id;
             _icon = icon;
@@ -101,7 +101,7 @@ namespace FlaxEditor.GUI
         /// <param name="icon">The icon.</param>
         /// <param name="text">The text.</param>
         public ToolStripButton(float height, int id, ref Sprite icon, ref string text)
-            : base(true, 0, 0, height, height)
+            : base(0, 0, height, height)
         {
             _id = id;
             _icon = icon;

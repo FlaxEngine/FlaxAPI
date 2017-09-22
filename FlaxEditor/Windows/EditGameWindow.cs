@@ -60,6 +60,9 @@ namespace FlaxEditor.Windows
             public CameraPreview()
                 : base(RenderTask.Create<SceneRenderTask>())
             {
+                // Don't steal focus
+                CanFocus = false;
+
                 const float PinSize = 12.0f;
                 const float PinMargin = 2.0f;
 

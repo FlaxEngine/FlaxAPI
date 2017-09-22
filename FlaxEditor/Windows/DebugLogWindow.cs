@@ -82,7 +82,7 @@ namespace FlaxEditor.Windows
             public LogEntryDescription Desc;
 
             public LogEntry(DebugLogWindow window, ref LogEntryDescription desc)
-                : base(true, 0, 0, 120, DefaultHeight)
+                : base(0, 0, 120, DefaultHeight)
             {
                 DockStyle = DockStyle.Top;
                 IsScrollable = true;
