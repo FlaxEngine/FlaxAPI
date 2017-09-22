@@ -54,6 +54,7 @@ namespace FlaxEditor.SceneGraph
             CustomNodesTypes.Add(typeof(Sky), typeof(SkyNode));
             CustomNodesTypes.Add(typeof(PostFxVolume), typeof(PostFxVolumeNode));
             CustomNodesTypes.Add(typeof(ModelActor), typeof(ModelActorNode));
+            CustomNodesTypes.Add(typeof(BoxBrush), typeof(BoxBrushNode));
         }
 
         /// <summary>

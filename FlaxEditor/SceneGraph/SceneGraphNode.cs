@@ -219,7 +219,7 @@ namespace FlaxEditor.SceneGraph
                 var hit = ChildNodes[i].RayCast(ref ray, ref distance);
                 if (hit != null)
                 {
-                    if (distance < minDistance)
+                    if (distance <= minDistance)
                     {
                         minDistance = distance;
                         minTarget = hit;
