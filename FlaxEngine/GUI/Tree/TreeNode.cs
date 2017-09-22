@@ -565,12 +565,12 @@ namespace FlaxEngine.GUI
                     // Check if user is pressing control key
                     var tree = ParentTree;
                     var window = tree.ParentWindow;
-                    if (window.GetKey(KeyCode.Shift))
+                    if (Input.GetKey(KeyCode.Shift))
                     {
                         // Select range
                         tree.SelectRange(this);
                     }
-                    else if (window.GetKey(KeyCode.Control))
+                    else if (Input.GetKey(KeyCode.Control))
                     {
                         // Add/Remove
                         tree.AddOrRemoveSelection(this);

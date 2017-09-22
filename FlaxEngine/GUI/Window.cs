@@ -225,39 +225,6 @@ namespace FlaxEngine.GUI
         {
             _window.EndTrackingMouse();
         }
-        
-        /// <summary>
-        /// Gets keyboard key state.
-        /// </summary>
-        /// <param name="key">Key to check.</param>
-        /// <returns>True while the user holds down the key identified by id.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool GetKey(KeyCode key)
-        {
-            return _window.GetKey(key);
-        }
-
-        /// <summary>
-        /// Gets keyboard key down state.
-        /// </summary>
-        /// <param name="key">Key to check.</param>
-        /// <returns>True during the frame the user releases the key.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool GetKeyDown(KeyCode key)
-        {
-            return _window.GetKeyDown(key);
-        }
-
-        /// <summary>
-        /// Gets keyboard key up state.
-        /// </summary>
-        /// <param name="key">Key to check.</param>
-        /// <returns>True during the frame the user starts pressing down the key.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool GetKeyUp(KeyCode key)
-        {
-            return _window.GetKeyUp(key);
-        }
 
         /// <summary>
         /// Gets mouse button state.

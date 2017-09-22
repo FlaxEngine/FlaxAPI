@@ -480,60 +480,6 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets keyboard key state.
-		/// </summary>
-		/// <param name="key">Key ID to check.</param>
-		/// <returns>True if user holds down the key identified by id, otherwise false.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-		[UnmanagedCall]
-		public bool GetKey(KeyCode key) 
-		{
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-			return Internal_GetKey(unmanagedPtr, key);
-#endif
-		}
-
-		/// <summary>
-		/// Gets keyboard key down state.
-		/// </summary>
-		/// <param name="key">Key ID to check.</param>
-		/// <returns>True if user starts pressing down the key, otherwise false.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-		[UnmanagedCall]
-		public bool GetKeyDown(KeyCode key) 
-		{
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-			return Internal_GetKeyDown(unmanagedPtr, key);
-#endif
-		}
-
-		/// <summary>
-		/// Gets keyboard key up state.
-		/// </summary>
-		/// <param name="key">Key ID to check.</param>
-		/// <returns>True if user releases the key, otherwise false.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-		[UnmanagedCall]
-		public bool GetKeyUp(KeyCode key) 
-		{
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-			return Internal_GetKeyUp(unmanagedPtr, key);
-#endif
-		}
-
-		/// <summary>
 		/// Gets mouse button state.
 		/// </summary>
 		/// <param name="button">Mouse button to check.</param>

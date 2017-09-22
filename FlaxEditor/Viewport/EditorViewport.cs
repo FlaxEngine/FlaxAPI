@@ -40,9 +40,9 @@ namespace FlaxEditor.Viewport
             
             public void Gather(FlaxEngine.Window window)
             {
-                IsControlDown = window.GetKey(KeyCode.Control);
-                IsShiftDown = window.GetKey(KeyCode.Shift);
-                IsAltDown = window.GetKey(KeyCode.Alt);
+                IsControlDown = FlaxEngine.Input.GetKey(KeyCode.Control);
+                IsShiftDown = FlaxEngine.Input.GetKey(KeyCode.Shift);
+                IsAltDown = FlaxEngine.Input.GetKey(KeyCode.Alt);
 
                 IsMouseRightDown = window.GetMouseButton(MouseButtons.Right);
                 IsMouseMiddleDown = window.GetMouseButton(MouseButtons.Middle);
@@ -507,27 +507,27 @@ namespace FlaxEditor.Viewport
 
                 // Get input movement
                 Vector3 moveDelta = Vector3.Zero;
-                if (win.GetKey(KeyCode.W))
+                if (FlaxEngine.Input.GetKey(KeyCode.W))
                 {
                     moveDelta += Vector3.ForwardLH;
                 }
-                if (win.GetKey(KeyCode.S))
+                if (FlaxEngine.Input.GetKey(KeyCode.S))
                 {
                     moveDelta += Vector3.BackwardLH;
                 }
-                if (win.GetKey(KeyCode.D))
+                if (FlaxEngine.Input.GetKey(KeyCode.D))
                 {
                     moveDelta += Vector3.Right;
                 }
-                if (win.GetKey(KeyCode.A))
+                if (FlaxEngine.Input.GetKey(KeyCode.A))
                 {
                     moveDelta += Vector3.Left;
                 }
-                if (win.GetKey(KeyCode.E))
+                if (FlaxEngine.Input.GetKey(KeyCode.E))
                 {
                     moveDelta += Vector3.Up;
                 }
-                if (win.GetKey(KeyCode.Q))
+                if (FlaxEngine.Input.GetKey(KeyCode.Q))
                 {
                     moveDelta += Vector3.Down;
                 }

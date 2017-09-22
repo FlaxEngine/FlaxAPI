@@ -38,6 +38,8 @@ namespace FlaxEditor.Windows
             _viewport = new RenderOutputControl(task);
             _viewport.DockStyle = DockStyle.Fill;
             _viewport.Parent = this;
+
+            AddCommandsToController();
         }
 
         private void OnBegin(SceneRenderTask sceneRenderTask)
@@ -50,15 +52,9 @@ namespace FlaxEditor.Windows
             }
         }
 
-        /// <inheritdoc />
-        public override void Update(float deltaTime)
+        protected void AddCommandsToController()
         {
-            if (ParentWindow.GetKeyDown(KeyCode.F12))
-            {
-                Screenshot.Capture();
-            }
-
-            base.Update(deltaTime);
+            CommandsController.Add(new InputCommand(() => { Screenshot.Capture(); }, new InputChord(KeyCode.F12)));
         }
     }
 }

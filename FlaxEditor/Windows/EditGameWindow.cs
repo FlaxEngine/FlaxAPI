@@ -128,6 +128,7 @@ namespace FlaxEditor.Windows
             Viewport.Task.Flags = ViewFlags.DefaultEditor;
 
             Editor.Scene.ActorRemoved += SceneOnActorRemoved;
+            AddCommandsToController();
         }
 
         private void SceneOnActorRemoved(ActorNode actorNode)
@@ -335,12 +336,12 @@ namespace FlaxEditor.Windows
         {
             UpdateCameraPreview();
 
-            if (ParentWindow.GetKeyDown(KeyCode.F12))
-            {
-                Viewport.TakeScreenshot();
-            }
-
             base.Update(deltaTime);
+        }
+
+        protected void AddCommandsToController()
+        {
+            CommandsController.Add(new InputCommand(() => { Viewport.TakeScreenshot(); }, new InputChord(KeyCode.F12)));
         }
 
         /// <inheritdoc />

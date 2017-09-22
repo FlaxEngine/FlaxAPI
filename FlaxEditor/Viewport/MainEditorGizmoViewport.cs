@@ -419,7 +419,7 @@ namespace FlaxEditor.Viewport
                     }
                 }
 
-                bool addRemove = ParentWindow.GetKey(KeyCode.Control);
+                bool addRemove = FlaxEngine.Input.GetKey(KeyCode.Control);
                 bool isSelected = sceneEditing.Selection.Contains(hit);
 
                 if (addRemove)

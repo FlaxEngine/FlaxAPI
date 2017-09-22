@@ -323,7 +323,7 @@ namespace FlaxEditor.Content.GUI
             bool isSelected = _selection.Contains(item);
 
             // Switch based on input (control, alt and shift keys)
-            if (ParentWindow.GetKey(KeyCode.Control))
+            if (Input.GetKey(KeyCode.Control))
             {
                 if (isSelected)
                     Deselect(item);
@@ -462,7 +462,7 @@ namespace FlaxEditor.Content.GUI
         public override bool OnMouseWheel(Vector2 location, int delta)
         {
             // Check if pressing control key
-            if (ParentWindow.GetKey(KeyCode.Control))
+            if (Input.GetKey(KeyCode.Control))
             {
                 // Zoom
                 _scale = Mathf.Clamp(_scale + (delta > 0 ? 1 : -1) * 0.05f, 0.3f, 3.0f);
@@ -503,7 +503,7 @@ namespace FlaxEditor.Content.GUI
                 }
 
                 // Duplicate
-                if (key[KeyCode.D] && ParentWindow != null && ParentWindow.GetKey(KeyCode.Control))
+                if (key[KeyCode.D] && ParentWindow != null && Input.GetKey(KeyCode.Control))
                 {
                     DuplicateSelection();
                     return true;

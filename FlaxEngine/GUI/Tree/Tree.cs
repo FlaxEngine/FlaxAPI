@@ -324,6 +324,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
+        /// TODO Refactor
         public override void Update(float deltaTime)
         {
             var node = SelectedNode;
@@ -336,8 +337,8 @@ namespace FlaxEngine.GUI
                 // Check if can perform update
                 if (_keyUpdateTime >= KeyUpdateTimeout)
                 {
-                    bool keyUpArrow = window.GetKeyUp(KeyCode.ArrowUp);
-                    bool keyDownArrow = window.GetKeyUp(KeyCode.ArrowDown);
+                    bool keyUpArrow = Input.GetKeyUp(KeyCode.ArrowUp);
+                    bool keyDownArrow = Input.GetKeyUp(KeyCode.ArrowDown);
 
                     // Check if arrow flags are dffrent
                     if (keyDownArrow != keyUpArrow)
@@ -424,7 +425,7 @@ namespace FlaxEngine.GUI
                     _keyUpdateTime += deltaTime;
                 }
 
-                if (window.GetKeyDown(KeyCode.ArrowRight))
+                if (Input.GetKeyDown(KeyCode.ArrowRight))
                 {
                     // Check if is expanded
                     if (node.IsExpanded)
@@ -439,7 +440,7 @@ namespace FlaxEngine.GUI
                         node.Expand();
                     }
                 }
-                else if (window.GetKeyDown(KeyCode.ArrowLeft))
+                else if (Input.GetKeyDown(KeyCode.ArrowLeft))
                 {
                     if (node.IsCollapsed)
                     {

@@ -146,6 +146,7 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
+        /// TODO
         public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
             // Check if user is connecting boxes
@@ -177,7 +178,7 @@ namespace FlaxEditor.Surface
                     _isMovingSelection = true;
 
                     // Check if user is pressing control
-                    if (ParentWindow.GetKey(KeyCode.Control))
+                    if (Input.GetKey(KeyCode.Control))
                     {
                         // Add to selection
                         AddToSelection(nodeAtMouse);
