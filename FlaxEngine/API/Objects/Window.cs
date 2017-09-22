@@ -330,20 +330,6 @@ namespace FlaxEngine
             GUI.SetSize(width, height);
         }
 
-        internal void Internal_OnKeyDown(KeyCode key)
-        {
-            //TODO remove, replaced with Input.OnKeyPressed event
-            //OnKeyDown?.Invoke(key);
-            //GUI.OnKeyDown(key);
-        }
-
-        internal void Internal_OnKeyUp(KeyCode key)
-        {
-            //TODO remove, replaced with Input.OnKeyPressed event
-            //OnKeyUp?.Invoke(key);
-            //GUI.OnKeyUp(key);
-        }
-
         internal void Internal_OnMouseDown(ref Vector2 mousePos, MouseButtons buttons)
         {
             OnMouseDown?.Invoke(mousePos, buttons);

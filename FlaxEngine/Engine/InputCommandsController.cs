@@ -74,7 +74,7 @@ namespace FlaxEngine
         public bool IsWaitingForNextChord { get; private set; }
 
         /// <summary>
-        /// Invoke manualy when your control will have key pressed using <see cref="Input.OnKeyPressed"/>
+        /// InvokeUnconditionally manualy when your control will have key pressed using <see cref="Input.OnKeyPressed"/>
         /// </summary>
         /// <param name="currentInput"></param>
         /// <returns>True if command was found and executed</returns>
@@ -92,7 +92,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Invoke manualy when your control will have key hold using <see cref="Input.OnKeyHold"/>
+        /// InvokeUnconditionally manualy when your control will have key hold using <see cref="Input.OnKeyHold"/>
         /// </summary>
         /// <param name="currentInput"></param>
         /// <returns>True if command was found and executed</returns>
@@ -146,7 +146,7 @@ namespace FlaxEngine
         /// <param name="currentInput"></param>
         private void InternalExecute(InputChord currentInput)
         {
-            FindAndInvoke(currentInput)?.Execute();
+            FindAndInvoke(currentInput)?.Invoke();
         }
 
         /// <summary>
