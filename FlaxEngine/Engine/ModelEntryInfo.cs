@@ -79,11 +79,8 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets the mesh index.
+        /// Gets the mesh entry index.
         /// </summary>
-        /// <value>
-        /// The index.
-        /// </value>
         [HideInEditor]
         public int Index => _index;
 
@@ -99,7 +96,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Determines if there is an intersection between the model actor mesh and a ray.
+        /// Determines if there is an intersection between the model actor mesh entry and a ray.
         /// If mesh data is available on the CPU performs exact intersection check with the geometry.
         /// Otherwise performs simple <see cref="BoundingBox"/> vs <see cref="Ray"/> test.
         /// For more efficient collisions detection and ray casting use physics.
@@ -109,7 +106,7 @@ namespace FlaxEngine
         /// <returns>True if the actor is intersected by the ray, otherwise false.</returns>
         public bool Intersects(Ray ray, out float distance)
         {
-            return ModelActor.Internal_IntersectsMesh(_modelActor.unmanagedPtr, _index, ref ray, out distance);
+            return ModelActor.Internal_IntersectsEntry(_modelActor.unmanagedPtr, _index, ref ray, out distance);
         }
     }
 }
