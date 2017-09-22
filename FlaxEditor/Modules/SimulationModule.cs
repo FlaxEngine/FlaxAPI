@@ -3,6 +3,7 @@
 using System;
 using FlaxEditor.Scripting;
 using FlaxEditor.States;
+using FlaxEditor.Windows;
 using FlaxEngine;
 
 namespace FlaxEditor.Modules
@@ -15,7 +16,7 @@ namespace FlaxEditor.Modules
     {
         private bool _isPlayModeRequested;
         private bool _isPlayModeStopRequested;
-        private bool _wasEditorWinFocusedOnPlay;
+        private EditorWindow _enterPlayFocusedWindow;
 
         internal SimulationModule(Editor editor)
             : base(editor)
@@ -129,17 +130,17 @@ namespace FlaxEditor.Modules
         public override void OnPlayBegin()
         {
             Editor.Windows.FlashMainWindow();
-
+            
+            // Pick focused window to restore it
             var gameWin = Editor.Windows.GameWin;
-            if (gameWin != null)
-            {
-                _wasEditorWinFocusedOnPlay = gameWin.ContainsFocus;
-                gameWin.FocusOrShow();
-            }
-            else
-            {
-                _wasEditorWinFocusedOnPlay = false;
-            }
+            var editWin = Editor.Windows.EditWin;
+            if (editWin != null && editWin.IsSelected)
+                _enterPlayFocusedWindow = editWin;
+            else if (gameWin != null && gameWin.IsSelected)
+                _enterPlayFocusedWindow = gameWin;
+            
+            // Focus `Game` window
+            gameWin?.FocusOrShow();
 
             Editor.Log("[PlayMode] Enter");
         }
@@ -147,10 +148,11 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnPlayEnd()
         {
-            var gameWin = Editor.Windows.GameWin;
-            if (gameWin != null && _wasEditorWinFocusedOnPlay)
+            // Restore focused window before play mode
+            if (_enterPlayFocusedWindow != null)
             {
-                gameWin.FocusOrShow();
+                _enterPlayFocusedWindow.FocusOrShow();
+                _enterPlayFocusedWindow = null;
             }
 
             Editor.UI.UncheckPauseButton();
