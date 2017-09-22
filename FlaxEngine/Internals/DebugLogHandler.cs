@@ -43,6 +43,11 @@ namespace FlaxEngine
             Debug.Logger.Log(type, message);
         }
 
+        internal static void Internal_SendLogException(Exception exception)
+        {
+            Debug.Logger.LogException(exception);
+        }
+        
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Log(LogType level, string msg, IntPtr obj, string stackTrace);
 

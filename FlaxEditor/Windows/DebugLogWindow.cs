@@ -194,7 +194,6 @@ namespace FlaxEditor.Windows
             }
         }
 
-        private SplitPanel _splitPanel;
         private Label _logInfo;
         private Panel _entriesPanel;
         private ToolStrip _toolstrip;
@@ -229,7 +228,7 @@ namespace FlaxEditor.Windows
             updateCount();
 
             // Split panel
-            _splitPanel = new SplitPanel(Orientation.Vertical, ScrollBars.Vertical, ScrollBars.Vertical)
+            var splitPanel = new SplitPanel(Orientation.Vertical, ScrollBars.Vertical, ScrollBars.Vertical)
             {
                 DockStyle = DockStyle.Fill,
                 SplitterValue = 0.8f,
@@ -239,14 +238,14 @@ namespace FlaxEditor.Windows
             // Log detail info
             _logInfo = new Label(0, 0, 120, 1)
             {
-                Parent = _splitPanel.Panel2,
+                Parent = splitPanel.Panel2,
                 AutoHeight = true,
                 Margin = new Margin(4),
                 HorizontalAlignment = TextAlignment.Near
             };
 
             // Entries panel
-            _entriesPanel = _splitPanel.Panel1;
+            _entriesPanel = splitPanel.Panel1;
 
             // Bind events
             Debug.Logger.LogHandler.SendLog += LogHandlerOnSendLog;
@@ -254,7 +253,6 @@ namespace FlaxEditor.Windows
             ScriptsBuilder.CompilationBegin += OnCompilationBegin;
             ScriptsBuilder.CompilationError += OnCompilationError;
             ScriptsBuilder.CompilationWarning += OnCompilationWarning;
-            Editor.StateMachine.StateChanged += StateMachineOnStateChanged;
         }
 
         /// <summary>
@@ -466,15 +464,6 @@ namespace FlaxEditor.Windows
             Add(ref desc);
         }
 
-        private void StateMachineOnStateChanged()
-        {
-            // Clear on Play
-            if (Editor.StateMachine.IsPlayMode && _toolstrip.GetButton(1).Checked)
-            {
-                Clear();
-            }
-        }
-
         private void RemoveEntries(bool isCompileResult)
         {
             _entriesPanel.IsLayoutLocked = true;
@@ -482,7 +471,8 @@ namespace FlaxEditor.Windows
             Selected = null;
             for (int i = 0; i < _entriesPanel.ChildrenCount; i++)
             {
-                if (_entriesPanel.GetChild(i) is LogEntry entry && entry.Desc.IsCompileResult == isCompileResult)
+                // Clear all entries and non-error compile results
+                if (_entriesPanel.GetChild(i) is LogEntry entry && (entry.Desc.IsCompileResult == isCompileResult || entry.Group != LogGroup.Error))
                 {
                     _logCountPerGroup[(int)entry.Group]--;
                     entry.Dispose();
@@ -545,6 +535,16 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
+        public override void OnPlayBegin()
+        {
+            // Clear on Play
+            if (_toolstrip.GetButton(1).Checked)
+            {
+                Clear();
+            }
+        }
+
+        /// <inheritdoc />
         public override void OnDestroy()
         {
             // Unbind events
@@ -553,7 +553,6 @@ namespace FlaxEditor.Windows
             ScriptsBuilder.CompilationBegin -= OnCompilationBegin;
             ScriptsBuilder.CompilationError -= OnCompilationError;
             ScriptsBuilder.CompilationWarning -= OnCompilationWarning;
-            Editor.StateMachine.StateChanged -= StateMachineOnStateChanged;
 
             base.OnDestroy();
         }
