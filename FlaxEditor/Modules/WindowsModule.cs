@@ -230,7 +230,6 @@ namespace FlaxEditor.Modules
             if (MainWindow == null)
             {
                 // Error
-                // TODO: make it fatal error
                 Debug.LogError("Failed to create editor main window!");
                 return;
             }
@@ -258,8 +257,6 @@ namespace FlaxEditor.Modules
             SceneManager.OnSceneSaving += OnSceneSaving;
             SceneManager.OnSceneUnloaded += OnSceneUnloaded;
             SceneManager.OnSceneUnloading += OnSceneUnloading;
-
-            // TODO: link for OnScriptsReloadStart/OnScriptsReloadEnd events and don't fire scene events on scripts reload?
         }
 
         private void MainWindow_OnClosing(ClosingReason reason, ref bool cancel)

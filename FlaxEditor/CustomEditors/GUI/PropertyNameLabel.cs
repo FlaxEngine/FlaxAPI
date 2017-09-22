@@ -13,7 +13,6 @@ namespace FlaxEditor.CustomEditors.GUI
     /// <seealso cref="FlaxEngine.GUI.Label" />
     public class PropertyNameLabel : Label
     {
-        // TODO: show editor tooltips
         // TODO: if name is too long to show -> use tooltip to show it
 
         /// <summary>

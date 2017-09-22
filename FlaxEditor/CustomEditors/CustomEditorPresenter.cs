@@ -200,8 +200,6 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         public virtual void BuildLayout()
         {
-            // TODO: implement layout elements reusing to reduce memory hit
-
             // Clear layout
             var parentScrollV = (Panel.Parent as Panel)?.VScrollBar?.Value ?? -1;
             Panel.IsLayoutLocked = true;
