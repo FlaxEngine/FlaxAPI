@@ -38,6 +38,11 @@ namespace FlaxEngine
             SendLog?.Invoke(logType, message, context, stackTrace);
         }
 
+        internal static void Internal_SendLog(LogType type, string message)
+        {
+            Debug.Logger.Log(type, message);
+        }
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Log(LogType level, string msg, IntPtr obj, string stackTrace);
 

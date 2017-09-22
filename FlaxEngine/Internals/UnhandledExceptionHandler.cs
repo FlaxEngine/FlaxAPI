@@ -9,23 +9,19 @@ namespace FlaxEngine
     {
         private static void HandleUnhandledException(object sender, UnhandledExceptionEventArgs args)
         {
-            var exceptionObject = args.ExceptionObject as Exception;
-            if (exceptionObject != null)
-                PrintException("Unhandled Exception: ", exceptionObject);
-            NativeUnhandledExceptionHandler();
+            if (args.ExceptionObject is Exception exception)
+            {
+                Debug.LogError("Unhandled Exception: " + exception.Message);
+                Debug.LogException(exception);
+            }
+
+            Handler();
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void NativeUnhandledExceptionHandler();
+        private static extern void Handler();
 
-        private static void PrintException(string title, Exception e)
-        {
-            Debug.LogError(string.Concat(title, e.ToString()));
-            if (e.InnerException != null)
-                PrintException("Inner Exception: ", e.InnerException);
-        }
-
-        internal static void RegisterUECatcher()
+        internal static void RegisterCatcher()
         {
             AppDomain.CurrentDomain.UnhandledException += HandleUnhandledException;
         }
