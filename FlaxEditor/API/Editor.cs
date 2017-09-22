@@ -588,6 +588,11 @@ namespace FlaxEditor
             return StateMachine.CurrentState.CanReloadScripts;
         }
 
+        internal bool Internal_CanAutoBuildCSG()
+        {
+            return StateMachine.CurrentState.CanEditScene;
+        }
+
         internal void Internal_GetMousePosition(out Vector2 resultAsRef)
         {
             resultAsRef = Vector2.Minimum;

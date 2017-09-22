@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Linq;
 using FlaxEditor.Gizmo;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Dialogs;
@@ -386,10 +387,10 @@ namespace FlaxEditor.Modules
             mm_Tools.ContextMenu.AddButton(2, "Bake lightmaps", "Ctrl+F10");
             mm_Tools.ContextMenu.AddButton(3, "Clear lightmaps data");
             mm_Tools.ContextMenu.AddButton(5, "Bake all env probes");
+            mm_Tools.ContextMenu.AddButton(6, "Build CSG mesh");
             mm_Tools.ContextMenu.AddSeparator();
             mm_Tools.ContextMenu.AddButton(4, "Take screenshot!", "F12");
             //mm_Tools.ContextMenu.AddSeparator();
-            //mm_Tools.ContextMenu.AddButton(3, "Configuration");
             //mm_Tools.ContextMenu.AddButton(4, "Options");
 
             // Window
@@ -796,6 +797,13 @@ namespace FlaxEditor.Modules
                                                 });
                     break;
                 }
+
+                // Build CSG mesh
+                case 6:
+                {
+                    SceneManager.Scenes.ToList().ForEach(x => x.BuildCSG());
+                    break;
+                }
             }
         }
 
@@ -812,7 +820,8 @@ namespace FlaxEditor.Modules
             c.GetButton(2).Text = isBakingLightmaps ? "Cancel baking lightmaps" : "Bake lightmaps";
             c.GetButton(3).Enabled = canEdit;// Clear lightmaps data
             c.GetButton(5).Enabled = canEdit;// Bake all env probes
-
+            c.GetButton(6).Enabled = canEdit;// Build CSG mesh
+            
             c.PerformLayout();
         }
 
