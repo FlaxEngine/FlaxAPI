@@ -121,7 +121,7 @@ namespace FlaxEngine
 		public static void Exit() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Exit();
 #endif
@@ -138,7 +138,7 @@ namespace FlaxEngine
 		public static void Fatal(string msg) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Fatal(msg);
 #endif
@@ -186,7 +186,7 @@ namespace FlaxEngine
 		public static void StartProcess(string path, string args = null, bool hiddenWindow = false, bool waitForEnd = false) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_StartProcess(path, args, hiddenWindow, waitForEnd);
 #endif

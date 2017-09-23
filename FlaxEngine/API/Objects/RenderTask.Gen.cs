@@ -66,7 +66,7 @@ namespace FlaxEngine.Rendering
 		public static T Create<T>() where T : RenderTask
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return (T)Internal_CreateTask(typeof(T));
 #endif

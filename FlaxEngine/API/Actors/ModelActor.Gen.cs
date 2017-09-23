@@ -38,7 +38,7 @@ namespace FlaxEngine
 		public static ModelActor New() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_Create(typeof(ModelActor)) as ModelActor;
 #endif
@@ -87,7 +87,7 @@ namespace FlaxEngine
 		public MaterialBase GetMaterial(int meshIndex, int lodIndex = 0) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_GetMaterial(unmanagedPtr, meshIndex, lodIndex);
 #endif
@@ -103,7 +103,7 @@ namespace FlaxEngine
 		public void ResetMeshTransformations() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_ResetMeshTransformations(unmanagedPtr);
 #endif

@@ -65,7 +65,7 @@ namespace FlaxEditor
 		public void Flush() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Flush(unmanagedPtr);
 #endif
@@ -83,7 +83,7 @@ namespace FlaxEditor
 		public Sprite FindSlot(Guid assetId) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Sprite resultAsRef;
 			Internal_FindSlot(unmanagedPtr, ref assetId, out resultAsRef);
@@ -104,7 +104,7 @@ namespace FlaxEditor
 		public Sprite OccupySlot(RenderTarget renderTarget, Guid assetId) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Sprite resultAsRef;
 			Internal_OccupySlot(unmanagedPtr, Object.GetUnmanagedPtr(renderTarget), ref assetId, out resultAsRef);
@@ -124,7 +124,7 @@ namespace FlaxEditor
 		public bool ReleaseSlot(Guid assetId) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_ReleaseSlot(unmanagedPtr, ref assetId);
 #endif
@@ -142,7 +142,7 @@ namespace FlaxEditor
 		public static bool Create(string path) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_Create(path);
 #endif

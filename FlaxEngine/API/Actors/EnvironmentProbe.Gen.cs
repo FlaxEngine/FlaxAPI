@@ -38,7 +38,7 @@ namespace FlaxEngine
 		public static EnvironmentProbe New() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_Create(typeof(EnvironmentProbe)) as EnvironmentProbe;
 #endif
@@ -142,7 +142,7 @@ namespace FlaxEngine
 		public void Bake() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Bake(unmanagedPtr);
 #endif

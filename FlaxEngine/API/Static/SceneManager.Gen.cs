@@ -44,7 +44,7 @@ namespace FlaxEngine
 		public static Actor FindActor(Guid id) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_FindActorById(ref id);
 #endif
@@ -62,7 +62,7 @@ namespace FlaxEngine
 		public static Actor FindActor(string name) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_FindActorByName(name);
 #endif
@@ -80,7 +80,7 @@ namespace FlaxEngine
 		public static Scene FindScene(Guid id) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_FindScene(ref id);
 #endif
@@ -177,7 +177,7 @@ namespace FlaxEngine
 		public static void SpawnActor(Actor actor, Actor parent = null) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_SpawnActor(Object.GetUnmanagedPtr(actor), Object.GetUnmanagedPtr(parent));
 #endif
@@ -195,7 +195,7 @@ namespace FlaxEngine
 		public static bool SaveScene(Scene scene) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_SaveScene(Object.GetUnmanagedPtr(scene));
 #endif
@@ -213,7 +213,7 @@ namespace FlaxEngine
 		public static byte[] SaveSceneToBytes(Scene scene) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_SaveSceneToBytes(Object.GetUnmanagedPtr(scene));
 #endif
@@ -230,7 +230,7 @@ namespace FlaxEngine
 		public static void SaveSceneAsync(Scene scene) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_SaveSceneAsync(Object.GetUnmanagedPtr(scene));
 #endif
@@ -247,7 +247,7 @@ namespace FlaxEngine
 		public static bool SaveAllScenes() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_SaveAllScenes();
 #endif
@@ -263,7 +263,7 @@ namespace FlaxEngine
 		public static void SaveAllScenesAsync() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_SaveAllScenesAsync();
 #endif
@@ -281,7 +281,7 @@ namespace FlaxEngine
 		public static bool LoadScene(Guid sceneId) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_LoadScene(ref sceneId);
 #endif
@@ -299,7 +299,7 @@ namespace FlaxEngine
 		public static Scene LoadSceneFromBytes(byte[] sceneData) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_LoadSceneFromBytes(sceneData);
 #endif
@@ -317,7 +317,7 @@ namespace FlaxEngine
 		public static bool LoadSceneAsync(Guid sceneId) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_LoadSceneAsync(ref sceneId);
 #endif
@@ -335,7 +335,7 @@ namespace FlaxEngine
 		public static bool UnloadScene(Scene scene) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_UnloadScene(Object.GetUnmanagedPtr(scene));
 #endif
@@ -352,7 +352,7 @@ namespace FlaxEngine
 		public static void UnloadSceneAsync(Scene scene) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_UnloadSceneAsync(Object.GetUnmanagedPtr(scene));
 #endif
@@ -369,7 +369,7 @@ namespace FlaxEngine
 		public static bool UnloadAllScenes() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_UnloadAllScenes();
 #endif
@@ -385,7 +385,7 @@ namespace FlaxEngine
 		public static void UnloadAllScenesAsync() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_UnloadAllScenesAsync();
 #endif
@@ -401,7 +401,7 @@ namespace FlaxEngine
 		public static void ReloadScriptsAsync() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_ReloadScriptsAsync();
 #endif

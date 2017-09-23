@@ -37,7 +37,7 @@ namespace FlaxEngine.Rendering
 		public static RenderTarget New() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_Create(typeof(RenderTarget)) as RenderTarget;
 #endif
@@ -125,7 +125,7 @@ namespace FlaxEngine.Rendering
 		public void Init(PixelFormat format, int width, int height, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Init(unmanagedPtr, format, width, height, flags);
 #endif
@@ -141,7 +141,7 @@ namespace FlaxEngine.Rendering
 		public void Dispose() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Dispose(unmanagedPtr);
 #endif

@@ -38,7 +38,7 @@ namespace FlaxEngine.Rendering
 		public void Clear(RenderTarget rt, Color color) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Clear(unmanagedPtr, Object.GetUnmanagedPtr(rt), ref color);
 #endif
@@ -56,7 +56,7 @@ namespace FlaxEngine.Rendering
 		public void ClearDepth(RenderTarget depthBuffer, float depthValue = 1.0f) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_ClearDepth(unmanagedPtr, Object.GetUnmanagedPtr(depthBuffer), depthValue);
 #endif
@@ -75,7 +75,7 @@ namespace FlaxEngine.Rendering
 		public void DrawPostFxMaterial(MaterialBase material, RenderTarget output, RenderTarget input = null) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DrawPostFxMaterial1(unmanagedPtr, Object.GetUnmanagedPtr(material), Object.GetUnmanagedPtr(output), Object.GetUnmanagedPtr(input));
 #endif
@@ -96,7 +96,7 @@ namespace FlaxEngine.Rendering
 		public void DrawPostFxMaterial(MaterialBase material, RenderTarget output, RenderTarget input, RenderView view, RenderBuffers buffers = null) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DrawPostFxMaterial2(unmanagedPtr, Object.GetUnmanagedPtr(material), Object.GetUnmanagedPtr(output), Object.GetUnmanagedPtr(input), ref view, Object.GetUnmanagedPtr(buffers));
 #endif
@@ -119,7 +119,7 @@ namespace FlaxEngine.Rendering
 		public void DrawScene(RenderTask task, RenderTarget output, RenderBuffers buffers, RenderView view, ViewFlags flags, ViewMode mode, IntPtr[] customActors = null) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DrawScene(unmanagedPtr, Object.GetUnmanagedPtr(task), Object.GetUnmanagedPtr(output), Object.GetUnmanagedPtr(buffers), ref view, flags, mode, customActors);
 #endif

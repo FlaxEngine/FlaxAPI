@@ -39,7 +39,7 @@ namespace FlaxEngine
 		public byte[] LoadSurface(bool createDefaultIfMissing) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_LoadSurface(unmanagedPtr, createDefaultIfMissing);
 #endif
@@ -58,7 +58,7 @@ namespace FlaxEngine
 		public bool SaveSurface(byte[] data, MaterialInfo info) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_SaveSurface(unmanagedPtr, data, ref info);
 #endif

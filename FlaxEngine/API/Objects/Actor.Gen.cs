@@ -68,7 +68,7 @@ namespace FlaxEngine
 		public void SetParent(Actor newParent, bool worldPositionLock = true) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_SetParent(unmanagedPtr, Object.GetUnmanagedPtr(newParent), worldPositionLock);
 #endif
@@ -294,7 +294,7 @@ namespace FlaxEngine
 		public Actor GetChild(int index) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_GetChildAtIndex(unmanagedPtr, index);
 #endif
@@ -312,7 +312,7 @@ namespace FlaxEngine
 		public Actor GetChild(string name) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_GetChildWithName(unmanagedPtr, name);
 #endif
@@ -330,7 +330,7 @@ namespace FlaxEngine
 		public Actor FindActor(string name) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_FindActorWithName(unmanagedPtr, name);
 #endif
@@ -348,7 +348,7 @@ namespace FlaxEngine
 		public static Actor Find(string name) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_FindActor(name);
 #endif
@@ -366,7 +366,7 @@ namespace FlaxEngine
 		public T GetChild<T>() where T : Actor
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return (T)Internal_GetChild(unmanagedPtr, typeof(T));
 #endif
@@ -384,7 +384,7 @@ namespace FlaxEngine
 		public T[] GetChildren<T>() where T : Actor
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Array.ConvertAll(Internal_GetChildrenPerType(unmanagedPtr, typeof(T)), x => (T)x);
 #endif
@@ -401,7 +401,7 @@ namespace FlaxEngine
 		public Actor[] GetChildren() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_GetChildren(unmanagedPtr);
 #endif
@@ -419,7 +419,7 @@ namespace FlaxEngine
 		public T GetScript<T>() where T : Script
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return (T)Internal_GetScript(unmanagedPtr, typeof(T));
 #endif
@@ -437,7 +437,7 @@ namespace FlaxEngine
 		public T[] GetScripts<T>() where T : Script
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Array.ConvertAll(Internal_GetScriptsPerType(unmanagedPtr, typeof(T)), x => (T)x);
 #endif
@@ -454,7 +454,7 @@ namespace FlaxEngine
 		public void AddScript(Script script) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_AddScript(unmanagedPtr, Object.GetUnmanagedPtr(script));
 #endif
@@ -471,7 +471,7 @@ namespace FlaxEngine
 		public void RemoveScript(Script script) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_RemoveScript(unmanagedPtr, Object.GetUnmanagedPtr(script));
 #endif
@@ -531,7 +531,7 @@ namespace FlaxEngine
 		public bool ContainsInHierarchy(Actor actor) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_ContainsInHierarchy(unmanagedPtr, actor);
 #endif
@@ -549,7 +549,7 @@ namespace FlaxEngine
 		public bool ContainsChild(Actor actor) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_ContainsChild(unmanagedPtr, actor);
 #endif
@@ -565,7 +565,7 @@ namespace FlaxEngine
 		public void UpdateCache() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_UpdateCache(unmanagedPtr);
 #endif
@@ -583,7 +583,7 @@ namespace FlaxEngine
 		public static Guid[] TryGetSerializedObjectsIds(byte[] data) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_TryGetSerializedObjectsIds(data);
 #endif

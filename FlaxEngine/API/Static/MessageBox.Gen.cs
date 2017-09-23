@@ -35,7 +35,7 @@ namespace FlaxEngine
 		public static DialogResult Show(Window parent, string text, string caption, Buttons buttons, Icon icon) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_Show(Object.GetUnmanagedPtr(parent), text, caption, buttons, icon);
 #endif
@@ -57,7 +57,7 @@ namespace FlaxEngine
 		public static string[] OpenFileDialog(Window parent, string initialDirectory, string filter, bool multiselect, string title) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_OpenFileDialog(Object.GetUnmanagedPtr(parent), initialDirectory, filter, multiselect, title);
 #endif

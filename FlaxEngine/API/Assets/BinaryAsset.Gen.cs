@@ -36,7 +36,7 @@ namespace FlaxEngine
 		public void Reimport() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Reimport(unmanagedPtr);
 #endif

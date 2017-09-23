@@ -104,7 +104,7 @@ namespace FlaxEngine
 		public int GetKerning(char first, char second) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_GetKerning(unmanagedPtr, first, second);
 #endif
@@ -121,7 +121,7 @@ namespace FlaxEngine
 		public void CacheText(int size) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_CacheText(unmanagedPtr, size);
 #endif
@@ -139,7 +139,7 @@ namespace FlaxEngine
 		public Vector2 MeasureText(string text) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Vector2 resultAsRef;
 			Internal_MeasureText(unmanagedPtr, text, out resultAsRef);
@@ -161,7 +161,7 @@ namespace FlaxEngine
 		public Vector2 GetCharPosition(string text, int index, TextLayoutOptions layout) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Vector2 resultAsRef;
 			Internal_GetCharPosition1(unmanagedPtr, text, index, ref layout, out resultAsRef);
@@ -182,7 +182,7 @@ namespace FlaxEngine
 		public Vector2 GetCharPosition(string text, int index) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Vector2 resultAsRef;
 			Internal_GetCharPosition2(unmanagedPtr, text, index, out resultAsRef);
@@ -204,7 +204,7 @@ namespace FlaxEngine
 		public int HitTestText(string text, Vector2 location, TextLayoutOptions layout) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_HitTestText1(unmanagedPtr, text, ref location, ref layout);
 #endif
@@ -223,7 +223,7 @@ namespace FlaxEngine
 		public int HitTestText(string text, Vector2 location) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_HitTestText2(unmanagedPtr, text, ref location);
 #endif

@@ -45,7 +45,7 @@ namespace FlaxEngine
 		public static bool GetKey(KeyCode key) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_GetKey(key);
 #endif
@@ -63,7 +63,7 @@ namespace FlaxEngine
 		public static bool GetKeyDown(KeyCode key) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_GetKeyDown(key);
 #endif
@@ -81,7 +81,7 @@ namespace FlaxEngine
 		public static bool GetKeyUp(KeyCode key) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_GetKeyUp(key);
 #endif
@@ -99,7 +99,7 @@ namespace FlaxEngine
 		public static bool GetMouseButton(MouseButtons button) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_GetMouseButton(button);
 #endif
@@ -117,7 +117,7 @@ namespace FlaxEngine
 		public static bool GetMouseButtonDown(MouseButtons button) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_GetMouseButtonDown(button);
 #endif
@@ -135,7 +135,7 @@ namespace FlaxEngine
 		public static bool GetMouseButtonUp(MouseButtons button) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_GetMouseButtonUp(button);
 #endif

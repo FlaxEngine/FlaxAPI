@@ -30,7 +30,7 @@ namespace FlaxEngine
 		public static void PushTransform(Matrix3x3 transform) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_PushTransform(ref transform);
 #endif
@@ -46,7 +46,7 @@ namespace FlaxEngine
 		public static void PopTransform() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_PopTransform();
 #endif
@@ -63,7 +63,7 @@ namespace FlaxEngine
 		public static void PushClip(Rectangle clipRect) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_PushClip(ref clipRect);
 #endif
@@ -79,7 +79,7 @@ namespace FlaxEngine
 		public static void PopClip() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_PopClip();
 #endif
@@ -104,7 +104,7 @@ namespace FlaxEngine
 		public static void DrawText(Font font, string text, Rectangle layoutRect, Color color, TextAlignment horizontalAlignment = TextAlignment.Near, TextAlignment verticalAlignment = TextAlignment.Near, TextWrapping textWrapping = TextWrapping.NoWrap, float baseLinesGapScale = 1.0f, float scale = 1.0f) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DrawText(Object.GetUnmanagedPtr(font), text, ref layoutRect, ref color, horizontalAlignment, verticalAlignment, textWrapping, baseLinesGapScale, scale);
 #endif
@@ -123,7 +123,7 @@ namespace FlaxEngine
 		public static void FillRectangle(Rectangle rect, Color color, bool withAlpha = false) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_FillRectangle1(ref rect, ref color, withAlpha);
 #endif
@@ -145,7 +145,7 @@ namespace FlaxEngine
 		public static void FillRectangle(Rectangle rect, Color color0, Color color1, Color color2, Color color3, bool withAlpha = false) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_FillRectangle2(ref rect, ref color0, ref color1, ref color2, ref color3, withAlpha);
 #endif
@@ -165,7 +165,7 @@ namespace FlaxEngine
 		public static void DrawRectangle(Rectangle rect, Color color, bool withAlpha = false, float thickness = 1.0f) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DrawRectangle(ref rect, ref color, withAlpha, thickness);
 #endif
@@ -185,7 +185,7 @@ namespace FlaxEngine
 		public static void DrawRenderTarget(Rendering.RenderTarget rt, Rectangle rect, Color color, bool withAlpha = false) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DrawRenderTarget(Object.GetUnmanagedPtr(rt), ref rect, ref color, withAlpha);
 #endif
@@ -205,7 +205,7 @@ namespace FlaxEngine
 		public static void DrawTexture(Texture t, Rectangle rect, Color color, bool withAlpha = false) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DrawTexture1(Object.GetUnmanagedPtr(t), ref rect, ref color, withAlpha);
 #endif
@@ -225,7 +225,7 @@ namespace FlaxEngine
 		public static void DrawTexture(SpriteAtlas t, Rectangle rect, Color color, bool withAlpha = false) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DrawTexture2(Object.GetUnmanagedPtr(t), ref rect, ref color, withAlpha);
 #endif
@@ -246,7 +246,7 @@ namespace FlaxEngine
 		public static void DrawLine(Vector2 p1, Vector2 p2, Color color, float thickness = 1.0f, bool withAlpha = false) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DrawLine(ref p1, ref p2, ref color, thickness, withAlpha);
 #endif
@@ -269,7 +269,7 @@ namespace FlaxEngine
 		public static void DrawBezier(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, Color color, float thickness = 1.0f, bool withAlpha = false) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DrawBezier(ref p1, ref p2, ref p3, ref p4, ref color, thickness, withAlpha);
 #endif
@@ -287,7 +287,7 @@ namespace FlaxEngine
 		public static void DrawMaterial(MaterialBase material, Rectangle rect) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DrawMaterial(Object.GetUnmanagedPtr(material), ref rect);
 #endif

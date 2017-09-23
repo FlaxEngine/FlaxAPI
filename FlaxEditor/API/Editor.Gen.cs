@@ -29,7 +29,7 @@ namespace FlaxEditor
 		public static void CloseSplashScreen() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_CloseSplashScreen();
 #endif
@@ -47,7 +47,7 @@ namespace FlaxEditor
 		public static bool CreateAsset(NewAssetType type, string outputPath) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_CreateAsset(type, outputPath);
 #endif
@@ -65,7 +65,7 @@ namespace FlaxEditor
 		public static bool CanImport(string extension) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_CanImport(extension);
 #endif

@@ -29,7 +29,7 @@ namespace FlaxEngine
 		public virtual void Clear() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Clear(unmanagedPtr);
 #endif
@@ -45,7 +45,7 @@ namespace FlaxEngine
 		public virtual void Flush() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Flush(unmanagedPtr);
 #endif
@@ -63,7 +63,7 @@ namespace FlaxEngine
 		public virtual object Get(string key) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_Get(unmanagedPtr, key);
 #endif
@@ -82,7 +82,7 @@ namespace FlaxEngine
 		public virtual T Get<T>(string key) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return (T)Internal_GetWithType(unmanagedPtr, key, typeof(T));
 #endif
@@ -100,7 +100,7 @@ namespace FlaxEngine
 		public virtual object GetOrCreate(string key) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_Get(unmanagedPtr, key);
 #endif
@@ -119,7 +119,7 @@ namespace FlaxEngine
 		public virtual T GetOrCreate<T>(string key) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return (T)Internal_GetWithType(unmanagedPtr, key, typeof(T));
 #endif
@@ -138,7 +138,7 @@ namespace FlaxEngine
 		public static BasePersistentData File(string fileName, bool createNew = false) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_File(fileName, createNew);
 #endif
@@ -157,7 +157,7 @@ namespace FlaxEngine
 		public static BasePersistentData FileByName(string fileName, bool createNew = false) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_FileByName(fileName, createNew);
 #endif
@@ -175,7 +175,7 @@ namespace FlaxEngine
 		public static BasePersistentData FileCreate(string fileName) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_FileCreate(fileName);
 #endif
@@ -193,7 +193,7 @@ namespace FlaxEngine
 		public static BasePersistentData FileCreateByName(string fileName) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_FileCreateByName(fileName);
 #endif
@@ -212,7 +212,7 @@ namespace FlaxEngine
 		public static BasePersistentData FileCreateByName(string fileName, string fileConfigName) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_FileCreateByName_Param(fileName, fileConfigName);
 #endif

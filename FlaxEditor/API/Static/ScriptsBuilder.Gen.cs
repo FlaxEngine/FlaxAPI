@@ -94,7 +94,7 @@ namespace FlaxEditor.Scripting
 		public static void MarkWorkspaceDirty() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_MarkWorkspaceDirty();
 #endif
@@ -110,7 +110,7 @@ namespace FlaxEditor.Scripting
 		public static void Compile() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Compile();
 #endif
@@ -129,7 +129,7 @@ namespace FlaxEditor.Scripting
 		public static bool GenerateProject(bool forceGenerateSolution, bool forceGenerateProject) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_GenerateProject(forceGenerateSolution, forceGenerateProject);
 #endif
@@ -145,7 +145,7 @@ namespace FlaxEditor.Scripting
 		public static void OpenSolution() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_OpenSolution();
 #endif
@@ -163,7 +163,7 @@ namespace FlaxEditor.Scripting
 		public static void OpenFile(string path, int line = 0) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_OpenFile(path, line);
 #endif
@@ -181,7 +181,7 @@ namespace FlaxEditor.Scripting
 		public static Type FindScript(string name) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_FindScript(name);
 #endif

@@ -37,7 +37,7 @@ namespace FlaxEngine.Rendering
 		public static RenderBuffers New() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_Create(typeof(RenderBuffers)) as RenderBuffers;
 #endif
@@ -108,7 +108,7 @@ namespace FlaxEngine.Rendering
 		public void Init(int width, int height) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Init(unmanagedPtr, width, height);
 #endif
@@ -124,7 +124,7 @@ namespace FlaxEngine.Rendering
 		public void Dispose() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Dispose(unmanagedPtr);
 #endif

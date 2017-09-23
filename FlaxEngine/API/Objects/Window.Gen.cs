@@ -31,7 +31,7 @@ namespace FlaxEngine
 		public static Window Create(CreateWindowSettings settings) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_Create(ref settings);
 #endif
@@ -128,7 +128,7 @@ namespace FlaxEngine
 		public void Show() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Show(unmanagedPtr);
 #endif
@@ -144,7 +144,7 @@ namespace FlaxEngine
 		public void Hide() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Hide(unmanagedPtr);
 #endif
@@ -160,7 +160,7 @@ namespace FlaxEngine
 		public void Minimize() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Minimize(unmanagedPtr);
 #endif
@@ -176,7 +176,7 @@ namespace FlaxEngine
 		public void Maximize() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Maximize(unmanagedPtr);
 #endif
@@ -192,7 +192,7 @@ namespace FlaxEngine
 		public void Restore() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Restore(unmanagedPtr);
 #endif
@@ -209,7 +209,7 @@ namespace FlaxEngine
 		public void Close(ClosingReason reason = ClosingReason.CloseEvent) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Close(unmanagedPtr, reason);
 #endif
@@ -296,7 +296,7 @@ namespace FlaxEngine
 		public Vector2 ScreenToClient(Vector2 screenPos) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Vector2 resultAsRef;
 			Internal_ScreenToClient(unmanagedPtr, ref screenPos, out resultAsRef);
@@ -316,7 +316,7 @@ namespace FlaxEngine
 		public Vector2 ClientToScreen(Vector2 clientPos) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Vector2 resultAsRef;
 			Internal_ClientToScreen(unmanagedPtr, ref clientPos, out resultAsRef);
@@ -375,7 +375,7 @@ namespace FlaxEngine
 		public void Focus() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Focus(unmanagedPtr);
 #endif
@@ -392,7 +392,7 @@ namespace FlaxEngine
 		public void BringToFront(bool force = false) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_BringToFront(unmanagedPtr, force);
 #endif
@@ -408,7 +408,7 @@ namespace FlaxEngine
 		public void FlashWindow() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_FlashWindow(unmanagedPtr);
 #endif
@@ -426,7 +426,7 @@ namespace FlaxEngine
 		public DragDropEffect DoDragDrop(string data) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_DoDragDrop(unmanagedPtr, data);
 #endif
@@ -443,7 +443,7 @@ namespace FlaxEngine
 		public void StartTrackingMouse(bool useMouseScreenOffset) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_StartTrackingMouse(unmanagedPtr, useMouseScreenOffset);
 #endif
@@ -459,7 +459,7 @@ namespace FlaxEngine
 		public void EndTrackingMouse() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_EndTrackingMouse(unmanagedPtr);
 #endif
@@ -491,7 +491,7 @@ namespace FlaxEngine
 		public bool GetMouseButton(MouseButtons button) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_GetMouseButton(unmanagedPtr, button);
 #endif
@@ -509,7 +509,7 @@ namespace FlaxEngine
 		public bool GetMouseButtonDown(MouseButtons button) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_GetMouseButtonDown(unmanagedPtr, button);
 #endif
@@ -527,7 +527,7 @@ namespace FlaxEngine
 		public bool GetMouseButtonUp(MouseButtons button) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_GetMouseButtonUp(unmanagedPtr, button);
 #endif
@@ -629,12 +629,6 @@ namespace FlaxEngine
 		internal static extern CursorType Internal_GetCursor(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetCursor(IntPtr obj, CursorType val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetKey(IntPtr obj, KeyCode key);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetKeyDown(IntPtr obj, KeyCode key);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetKeyUp(IntPtr obj, KeyCode key);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetMouseButton(IntPtr obj, MouseButtons button);
 		[MethodImpl(MethodImplOptions.InternalCall)]

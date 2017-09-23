@@ -34,7 +34,7 @@ namespace FlaxEngine
 		public static void DrawLine(Vector3 start, Vector3 end, Color color, float duration = 0.0f, bool depthTest = true) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DrawLine(ref start, ref end, ref color, duration, depthTest);
 #endif
@@ -54,7 +54,7 @@ namespace FlaxEngine
 		public static void DrawBox(BoundingBox box, Color color, float duration = 0.0f, bool depthTest = true) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DrawBoundingBox(ref box, ref color, duration, depthTest);
 #endif
@@ -74,7 +74,7 @@ namespace FlaxEngine
 		public static void DrawFrustum(BoundingFrustum frustum, Color color, float duration = 0.0f, bool depthTest = true) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DrawFrustum(ref frustum, ref color, duration, depthTest);
 #endif
@@ -94,7 +94,7 @@ namespace FlaxEngine
 		public static void DrawBox(OrientedBoundingBox box, Color color, float duration = 0.0f, bool depthTest = true) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DrawOrientedBoundingBox(ref box, ref color, duration, depthTest);
 #endif
@@ -115,7 +115,7 @@ namespace FlaxEngine
 		public static void DrawSphere(Vector3 position, float radius, Color color, float duration = 0.0f, bool depthTest = true) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DrawSphere(ref position, radius, ref color, duration, depthTest);
 #endif
@@ -137,7 +137,7 @@ namespace FlaxEngine
 		public static void DrawCircle(Vector3 position, Vector3 normal, float radius, Color color, float duration = 0.0f, bool depthTest = true) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DrawCircle(ref position, ref normal, radius, ref color, duration, depthTest);
 #endif
@@ -160,7 +160,7 @@ namespace FlaxEngine
 		public static void DrawTube(Vector3 position, Quaternion orientation, float radius, float length, Color color, float duration = 0.0f, bool depthTest = true) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DrawTube(ref position, ref orientation, radius, length, ref color, duration, depthTest);
 #endif
@@ -178,7 +178,7 @@ namespace FlaxEngine
 		public static void Draw(FlaxEngine.Rendering.RenderTask task, IntPtr[] selectedActors) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_Draw(Object.GetUnmanagedPtr(task), selectedActors);
 #endif

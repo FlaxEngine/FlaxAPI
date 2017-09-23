@@ -77,7 +77,7 @@ namespace FlaxEngine
 		public bool WaitForLoaded(double timeoutInMiliseconds = 10000.0) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_WaitForLoaded(unmanagedPtr, timeoutInMiliseconds);
 #endif
@@ -93,7 +93,7 @@ namespace FlaxEngine
 		public bool Reload() 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_Reload(unmanagedPtr);
 #endif

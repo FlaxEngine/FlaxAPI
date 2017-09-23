@@ -32,7 +32,7 @@ namespace FlaxEngine
 		public static T LoadAsync<T>(Guid id) where T : Asset
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return (T)Internal_LoadAsync1(ref id, typeof(T));
 #endif
@@ -51,7 +51,7 @@ namespace FlaxEngine
 		public static T LoadAsync<T>(string path) where T : Asset
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return (T)Internal_LoadAsync2(path, typeof(T));
 #endif
@@ -70,7 +70,7 @@ namespace FlaxEngine
 		public static T LoadAsyncInternal<T>(string internalPath) where T : Asset
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return (T)Internal_LoadAsync3(internalPath, typeof(T));
 #endif
@@ -89,7 +89,7 @@ namespace FlaxEngine
 		public static bool RenameAsset(string oldPath, string newPath) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return Internal_RenameAsset(oldPath, newPath);
 #endif
@@ -106,7 +106,7 @@ namespace FlaxEngine
 		public static void DeleteAsset(string path) 
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			Internal_DeleteAsset(path);
 #endif
@@ -125,7 +125,7 @@ namespace FlaxEngine
 		public static T GetAsset<T>(Guid id) where T : Asset
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return (T)Internal_GetAsset1(ref id, typeof(T));
 #endif
@@ -144,7 +144,7 @@ namespace FlaxEngine
 		public static T GetAsset<T>(string path) where T : Asset
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			throw new FlaxTestCompilantNotImplementedException();
 #else
 			return (T)Internal_GetAsset2(path, typeof(T));
 #endif
