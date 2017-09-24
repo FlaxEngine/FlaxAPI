@@ -18,14 +18,10 @@ namespace FlaxEditor
         private readonly List<HighlightData> _highlights;
         private MaterialBase _highlightMaterial;
 
-        private struct HighlightData
-        {
-            public object Target;
-            public int EntryIndex;
-        }
+        internal IntPtr[] ActorsPtrs => _actors.Count > 0 ? _actors.ToArray() : null;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewportDebugDrawData"/> class.
+        /// Initializes a new instance of the <see cref="ViewportDebugDrawData" /> class.
         /// </summary>
         /// <param name="actorsCapacity">The actors capacity.</param>
         public ViewportDebugDrawData(int actorsCapacity = 0)
@@ -34,8 +30,6 @@ namespace FlaxEditor
             _highlights = new List<HighlightData>(actorsCapacity);
             _highlightMaterial = FlaxEngine.Content.LoadAsync<MaterialBase>(EditorAssets.HighlightMaterial);
         }
-
-        internal IntPtr[] ActorsPtrs => _actors.Count > 0 ? _actors.ToArray() : null;
 
         /// <summary>
         /// Adds the specified actor to draw it's debug visuals.
@@ -55,11 +49,9 @@ namespace FlaxEditor
             if (model.Model == null)
                 return;
 
-            var entries = model.Entries;
-            for (int i = 0; i < entries.Length; i++)
-            {
+            ModelEntryInfo[] entries = model.Entries;
+            for (var i = 0; i < entries.Length; i++)
                 HighlightModel(model, i);
-            }
         }
 
         /// <summary>
@@ -89,15 +81,15 @@ namespace FlaxEditor
         }
 
         /// <summary>
-        /// Called when task calls <see cref="SceneRenderTask.Draw"/> event.
+        /// Called when task calls <see cref="SceneRenderTask.Draw" /> event.
         /// </summary>
         /// <param name="collector">The draw calls collector.</param>
         public virtual void OnDraw(DrawCallsCollector collector)
         {
             Matrix m1, m2, world;
-            for (int i = 0; i < _highlights.Count; i++)
+            for (var i = 0; i < _highlights.Count; i++)
             {
-                var highlight = _highlights[i];
+                HighlightData highlight = _highlights[i];
                 if (highlight.Target is ModelActor modelActor)
                 {
                     if (modelActor.Model == null)
@@ -132,6 +124,12 @@ namespace FlaxEditor
         public virtual void Dispose()
         {
             _highlightMaterial = null;
+        }
+
+        private struct HighlightData
+        {
+            public object Target;
+            public int EntryIndex;
         }
     }
 }

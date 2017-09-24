@@ -190,6 +190,8 @@ namespace FlaxEngine
             int typeId;
             if (typeof(T) == typeof(MaterialInstance))
                 typeId = MaterialInstance.TypeID;
+            else if (typeof(T) == typeof(Model))
+                typeId = Model.TypeID;
             else
                 throw new InvalidOperationException("Asset type " + typeof(T).FullName + " does not support virtual assets.");
 

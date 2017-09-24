@@ -75,6 +75,35 @@ namespace FlaxEngine
             }
         }
 
+        /// <summary>
+        /// Updates the model mesh vertex and index buffer data.
+        /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
+        /// Mesh data will be cached and uloaded to the GPU with a delay.
+        /// </summary>
+        /// <param name="vertices">The mesh verticies positions. Cannot be null.</param>
+        /// <param name="triangles">The mesh index buffer (triangles). Cannot be null.</param>
+        /// <param name="normals">The normal vectors (per vertex).</param>
+        /// <param name="uv">The texture cordinates (per vertex).</param>
+        public void UpdateMesh(Vector3[] vertices, int[] triangles, Vector3[] normals = null, Vector2[] uv = null)
+        {
+            // Validate state and input
+            if (!IsVirtual)
+                throw new InvalidOperationException("Only virtual models can be updated at runtime.");
+            if (vertices == null)
+                throw new ArgumentNullException(nameof(vertices));
+            if (triangles == null)
+                throw new ArgumentNullException(nameof(triangles));
+            if(triangles.Length == 0 || triangles.Length % 3 != 0)
+                throw new ArgumentOutOfRangeException(nameof(triangles));
+            if (normals != null && normals.Length != vertices.Length)
+                throw new ArgumentOutOfRangeException(nameof(normals));
+            if (uv != null && uv.Length != vertices.Length)
+                throw new ArgumentOutOfRangeException(nameof(uv));
+
+            if (Internal_UpdateMesh(unmanagedPtr, vertices, triangles, normals, uv))
+                throw new FlaxException("Failed to update mesh data.");
+        }
+
         private void CacheData()
         {
             // Ask unmanaged world for amount of material slots
@@ -108,8 +137,12 @@ namespace FlaxEngine
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetSlots(IntPtr obj);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int[] Internal_GetLODs(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_UpdateMesh(IntPtr obj, Vector3[] vertices, int[] triangles, Vector3[] normals, Vector2[] uv);
 #endif
     }
 }
