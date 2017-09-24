@@ -260,6 +260,8 @@ namespace FlaxEditor.Content
             // Set path
             Path = path;
             ShortName = System.IO.Path.GetFileNameWithoutExtension(path);
+
+            IsInputPassThrough = true;
         }
 
         /// <summary>

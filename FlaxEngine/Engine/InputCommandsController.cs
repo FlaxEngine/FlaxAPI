@@ -6,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using FlaxEngine.Assertions;
 
 namespace FlaxEngine
 {
@@ -92,8 +91,7 @@ namespace FlaxEngine
                 _isFirstExecuted = true;
                 _lastInputChord = currentInput;
                 _firstChordInputTime = DateTime.UtcNow;
-                InternalExecute(currentInput);
-                return true;
+                return InternalExecute(currentInput);
             }
             return false;
         }
@@ -113,17 +111,15 @@ namespace FlaxEngine
                 if (!_isSecondExecuted && inputDiff > SECOND_CHAR_INPUT_DELAY_TICKS)
                 {
                     _isSecondExecuted = true;
-                    InternalExecute(currentInput);
-                    return true;
+                    return InternalExecute(currentInput);
                 }
                 if (_isSecondExecuted)
                 {
                     var nthCalculation = inputDiff - SECOND_CHAR_INPUT_DELAY_TICKS - _totalSingleChordInputs * N_TH_CHAR_INPUT_DELAY_TICKS;
                     if (nthCalculation >= 0)
                     {
-                        InternalExecute(currentInput);
                         _totalSingleChordInputs++;
-                        return true;
+                        return InternalExecute(currentInput);
                     }
                 }
             }
@@ -151,9 +147,15 @@ namespace FlaxEngine
         ///     Invokes found method.
         /// </summary>
         /// <param name="currentInput"></param>
-        private void InternalExecute(InputChord currentInput)
+        private bool InternalExecute(InputChord currentInput)
         {
-            FindAndInvoke(currentInput)?.Invoke();
+            var toInvoke = FindAndInvoke(currentInput);
+            if(toInvoke != null)
+            {
+                toInvoke.Invoke();
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

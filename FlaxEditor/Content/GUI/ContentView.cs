@@ -419,10 +419,10 @@ namespace FlaxEditor.Content.GUI
         /// <param name="position">Position in local coordinates</param>
         public void MoveSelector(Vector2 position)
         {
-            ClearSelection();
             var item = GetChildAt(position) as ContentItem;
             if (item != null)
             {
+                ClearSelection();
                 Select(item);
             }
         }
@@ -437,7 +437,7 @@ namespace FlaxEditor.Content.GUI
                 MoveSelectorToEnd();
             }
             var current = _selection[0];
-            MoveSelector(current.Location + current.Size / 2 + current.Size.X);
+            MoveSelector(current.Location + current.Size / 2 + new Vector2(current.Size.X, 0));
         }
 
         /// <summary>
@@ -450,7 +450,7 @@ namespace FlaxEditor.Content.GUI
                 MoveSelectorToStart();
             }
             var current = _selection[0];
-            MoveSelector(current.Location + current.Size / 2 + -current.Size.X);
+            MoveSelector(current.Location + current.Size / 2 + new Vector2(-current.Size.X, 0));
         }
 
         /// <summary>
@@ -463,7 +463,7 @@ namespace FlaxEditor.Content.GUI
                 MoveSelectorToStart();
             }
             var current = _selection[0];
-            MoveSelector(current.Location + current.Size / 2 + -current.Size.Y);
+            MoveSelector(current.Location + current.Size / 2 + new Vector2(0, -current.Size.Y));
         }
 
         /// <summary>
@@ -476,7 +476,7 @@ namespace FlaxEditor.Content.GUI
                 MoveSelectorToEnd();
             }
             var current = _selection[0];
-            MoveSelector(current.Location + current.Size / 2 + current.Size.X);
+            MoveSelector(current.Location + current.Size / 2 + new Vector2(0, current.Size.Y));
         }
 
         /// <summary>
