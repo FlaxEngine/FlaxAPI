@@ -94,7 +94,7 @@ namespace FlaxEditor.SceneGraph.Actors
             public override void OnDebugDraw(ViewportDebugDrawData data)
             {
                 ParentNode.OnDebugDraw(data);
-                DebugDraw.DrawBox(Brush.Box, Color.Orange);
+                data.HighlightBrushSurface(Brush.Surfaces[Index]);
             }
         }
 
@@ -114,10 +114,13 @@ namespace FlaxEditor.SceneGraph.Actors
         /// <inheritdoc />
         public override bool RayCastSelf(ref Ray ray, out float distance)
         {
-            for (int i = 0; i < ChildNodes.Count; i++)
+            if (((BoxBrush)_actor).OrientedBox.Intersects(ref ray))
             {
-                if (ChildNodes[i] is SideLinkNode node && node.RayCastSelf(ref ray, out distance))
-                    return true;
+                for (int i = 0; i < ChildNodes.Count; i++)
+                {
+                    if (ChildNodes[i] is SideLinkNode node && node.RayCastSelf(ref ray, out distance))
+                        return true;
+                }
             }
 
             distance = 0;

@@ -148,6 +148,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_Intersects(IntPtr obj, int index, ref Ray ray, out float distance);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Draw(IntPtr obj, int index, IntPtr materialObj);
 #endif
     }
 }

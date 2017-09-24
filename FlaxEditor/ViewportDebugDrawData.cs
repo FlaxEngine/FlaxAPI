@@ -15,12 +15,12 @@ namespace FlaxEditor
     public class ViewportDebugDrawData
     {
         private readonly List<IntPtr> _actors;
-        private readonly List<ModelsToHighlight> _highlights;
+        private readonly List<HighlightData> _highlights;
         private MaterialBase _highlightMaterial;
 
-        private struct ModelsToHighlight
+        private struct HighlightData
         {
-            public ModelActor Model;
+            public object Target;
             public int EntryIndex;
         }
 
@@ -31,7 +31,7 @@ namespace FlaxEditor
         public ViewportDebugDrawData(int actorsCapacity = 0)
         {
             _actors = new List<IntPtr>(actorsCapacity);
-            _highlights = new List<ModelsToHighlight>(actorsCapacity);
+            _highlights = new List<HighlightData>(actorsCapacity);
             _highlightMaterial = FlaxEngine.Content.LoadAsync<MaterialBase>(EditorAssets.HighlightMaterial);
         }
 
@@ -69,10 +69,22 @@ namespace FlaxEditor
         /// <param name="entryIndex">Index of the entry to highlight.</param>
         public void HighlightModel(ModelActor model, int entryIndex)
         {
-            _highlights.Add(new ModelsToHighlight
+            _highlights.Add(new HighlightData
             {
-                Model = model,
+                Target = model,
                 EntryIndex = entryIndex
+            });
+        }
+
+        /// <summary>
+        /// Highlights the brush surface.
+        /// </summary>
+        /// <param name="surface">The surface.</param>
+        public void HighlightBrushSurface(BrushSurface surface)
+        {
+            _highlights.Add(new HighlightData
+            {
+                Target = surface
             });
         }
 
@@ -85,17 +97,23 @@ namespace FlaxEditor
             Matrix m1, m2, world;
             for (int i = 0; i < _highlights.Count; i++)
             {
-                var hightlight = _highlights[i];
-                var model = hightlight.Model;
-                if (model.Model == null)
-                    continue;
+                var highlight = _highlights[i];
+                if (highlight.Target is ModelActor modelActor)
+                {
+                    if (modelActor.Model == null)
+                        continue;
 
-                model.Transform.GetWorld(out m1);
-                model.Entries[hightlight.EntryIndex].Transform.GetWorld(out m2);
-                Matrix.Multiply(ref m2, ref m1, out world);
-                BoundingSphere bounds = BoundingSphere.FromBox(model.Box);
+                    modelActor.Transform.GetWorld(out m1);
+                    modelActor.Entries[highlight.EntryIndex].Transform.GetWorld(out m2);
+                    Matrix.Multiply(ref m2, ref m1, out world);
+                    BoundingSphere bounds = BoundingSphere.FromBox(modelActor.Box);
 
-                collector.AddDrawCall(model.Model, hightlight.EntryIndex, _highlightMaterial, ref bounds, ref world);
+                    collector.AddDrawCall(modelActor.Model, highlight.EntryIndex, _highlightMaterial, ref bounds, ref world);
+                }
+                else if (highlight.Target is BrushSurface brushSurface)
+                {
+                    collector.AddDrawCall(brushSurface, _highlightMaterial);
+                }
             }
         }
 
