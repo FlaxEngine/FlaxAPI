@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -60,7 +60,7 @@ namespace FlaxEditor.Gizmo
         private BoundingSphere ScaleXSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[1], _gizmoWorld), ScaleSpheresRadius* _screenScale);
         private BoundingSphere ScaleYSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[7], _gizmoWorld), ScaleSpheresRadius* _screenScale);
         private BoundingSphere ScaleZSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[13], _gizmoWorld), ScaleSpheresRadius* _screenScale);
-        private BoundingBox CenterBox => CenterBoxRaw * _gizmoWorld;
+        private OrientedBoundingBox CenterBox => new OrientedBoundingBox(CenterBoxRaw) * _gizmoWorld;
 
         private bool _precisionModeEnabled = false;
         private Mode _activeMode = Mode.Translate;
@@ -76,7 +76,7 @@ namespace FlaxEditor.Gizmo
         /// <summary>
         /// Gizmo scale factor
         /// </summary>
-        public float ScaleFactor = 0.05f;
+        public float ScaleFactor = 0.01f;
 
         /// <summary>
         /// True if enable grid snapping when moving objects

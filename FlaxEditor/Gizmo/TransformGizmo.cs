@@ -322,9 +322,9 @@ namespace FlaxEditor.Gizmo
                                 _translationScaleSnapDelta += delta;
 
                                 delta = new Vector3(
-                                    (float)(int)(_translationScaleSnapDelta.X / snapValue) * snapValue,
-                                    (float)(int)(_translationScaleSnapDelta.Y / snapValue) * snapValue,
-                                    (float)(int)(_translationScaleSnapDelta.Z / snapValue) * snapValue);
+                                    (int)(_translationScaleSnapDelta.X / snapValue) * snapValue,
+                                    (int)(_translationScaleSnapDelta.Y / snapValue) * snapValue,
+                                    (int)(_translationScaleSnapDelta.Z / snapValue) * snapValue);
 
                                 _translationScaleSnapDelta -= delta;
                             }
@@ -457,10 +457,13 @@ namespace FlaxEditor.Gizmo
                         anyValid = true;
                         scaleDelta = _scaleDelta;
                         _scaleDelta = Vector3.Zero;
+
+                        if (ActiveAxis == Axis.Center)
+                            scaleDelta = new Vector3(scaleDelta.AvgValue);
                     }
                     else
                     {
-                        scaleDelta = ActiveAxis == Axis.Center ? Vector3.One : Vector3.Zero;
+                        scaleDelta = Vector3.Zero;
                     }
 
                     // Apply transformation (but to the parents, not whole selection pool)
@@ -503,21 +506,13 @@ namespace FlaxEditor.Gizmo
             // TODO: draw gizmo planes using models
             if (_activeMode == Mode.Translate)
             {
-                //DebugDraw.DrawBox(XAxisBox * _gizmoWorld, _activeAxis == X ? Color.Yellow : Color.Magenta, 0, false);
-                //DebugDraw.DrawBox(YAxisBox * _gizmoWorld, _activeAxis == Y ? Color.Yellow : Color.Magenta, 0, false);
-                //DebugDraw.DrawBox(ZAxisBox * _gizmoWorld, _activeAxis == Z ? Color.Yellow : Color.Magenta, 0, false);
-                
                 DebugDraw.DrawBox(new OrientedBoundingBox(XYBox) * _gizmoWorld, _activeAxis == Axis.XY ? Color.Yellow : Color.Gray, 0, false);
                 DebugDraw.DrawBox(new OrientedBoundingBox(XZBox) * _gizmoWorld, _activeAxis == Axis.ZX ? Color.Yellow : Color.Gray, 0, false);
                 DebugDraw.DrawBox(new OrientedBoundingBox(YZBox) * _gizmoWorld, _activeAxis == Axis.YZ ? Color.Yellow : Color.Gray, 0, false);
             }
             else if (_activeMode == Mode.Scale)
             {
-                DebugDraw.DrawBox(new OrientedBoundingBox(CenterBox) * _gizmoWorld, _activeAxis == Axis.Center ? Color.Yellow : Color.Gray, 0, false);
-
-                //DebugDraw.DrawSphere(getScaleXSphere(), _activeAxis == X ? Color.Yellow : Color.Magenta, 0, false);
-                //DebugDraw.DrawSphere(getScaleYSphere(), _activeAxis == Y ? Color.Yellow : Color.Magenta, 0, false);
-                //DebugDraw.DrawSphere(getScaleZSphere(), _activeAxis == Z ? Color.Yellow : Color.Magenta, 0, false);
+                DebugDraw.DrawBox(CenterBox, _activeAxis == Axis.Center ? Color.Yellow : Color.Gray, 0, false);
             }
             else
             {

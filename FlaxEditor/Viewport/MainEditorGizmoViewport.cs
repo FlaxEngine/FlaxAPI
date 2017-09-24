@@ -338,7 +338,6 @@ namespace FlaxEditor.Viewport
         public void ApplyTransform(List<SceneGraphNode> selection, ref Vector3 translationDelta, ref Matrix rotationDelta, ref Vector3 scaleDelta)
         {
             bool useObjCenter = TransformGizmo.ActivePivot == TransformGizmo.PivotType.ObjectCenter;
-            bool uniformScale = TransformGizmo.ActiveAxis == TransformGizmo.Axis.Center;
             Vector3 gizmoPosition = TransformGizmo.Position;
 
             // Transform selected objects
@@ -356,12 +355,8 @@ namespace FlaxEditor.Viewport
                 trans.Translation += translationDelta;
 
                 // Apply scale
-                if (uniformScale)
-                    trans.Scale *= scaleDelta;
-                else
-                    trans.Scale += scaleDelta;
                 const float scaleLimit = 99_999_999.0f;
-                trans.Scale = Vector3.Clamp(trans.Scale, new Vector3(-scaleLimit), new Vector3(scaleLimit));
+                trans.Scale = Vector3.Clamp(trans.Scale + scaleDelta, new Vector3(-scaleLimit), new Vector3(scaleLimit));
 
                 // Apply rotation
                 if (!rotationDelta.IsIdentity)

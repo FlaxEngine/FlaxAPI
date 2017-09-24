@@ -43,20 +43,15 @@ namespace FlaxEditor.Gizmo
         /// <inheritdoc />
         public override void Draw(DrawCallsCollector collector)
         {
-            // Check if has no model or is inactive
-            if (!_isActive
-                /*
-                || view.Pass != RenderPass.GBufferFill*/
-            )
+            if (!_isActive)
                 return;
 
-            // Temporary data
             Matrix m1, m2, m3;
 
             bool isXAxis = _activeAxis == Axis.X || _activeAxis == Axis.XY || _activeAxis == Axis.ZX;
             bool isYAxis = _activeAxis == Axis.Y || _activeAxis == Axis.XY || _activeAxis == Axis.YZ;
             bool isZAxis = _activeAxis == Axis.Z || _activeAxis == Axis.YZ || _activeAxis == Axis.ZX;
-
+            
             // Switch mode
             const float gizmoModelsScale2RealGizmoSize = 0.075f;
             switch (_activeMode)
@@ -121,13 +116,6 @@ namespace FlaxEditor.Gizmo
                     break;
                 }
             }
-
-            // Draw selected sub-object
-            /*var subObject = GetSelectedSubObject();
-            if (subObject)
-            {
-                subObject->DrawSelected(context, view);
-            }*/
         }
     }
 }
