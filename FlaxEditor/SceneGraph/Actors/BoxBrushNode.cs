@@ -22,6 +22,11 @@ namespace FlaxEditor.SceneGraph.Actors
             private Vector3 _offset;
 
             /// <summary>
+            /// Gets the brush actor.
+            /// </summary>
+            public BoxBrush Brush => (BoxBrush)((BoxBrushNode)ParentNode).Actor;
+
+            /// <summary>
             /// Initializes a new instance of the <see cref="SideLinkNode"/> class.
             /// </summary>
             /// <param name="actor">The parent node.</param>
@@ -58,14 +63,14 @@ namespace FlaxEditor.SceneGraph.Actors
             {
                 get
                 {
-                    var actor = (BoxBrush)((BoxBrushNode)ParentNode).Actor;
+                    var actor = Brush;
                     var localOffset = _offset * actor.Size + actor.Center;
                     Transform localTrans = new Transform(localOffset);
                     return actor.Transform.LocalToWorld(localTrans);
                 }
                 set
                 {
-                    var actor = (BoxBrush)((BoxBrushNode)ParentNode).Actor;
+                    var actor = Brush;
                     Transform localTrans = actor.Transform.WorldToLocal(value);
                     var prevLocalOffset = _offset * actor.Size + actor.Center;
                     var localOffset = Vector3.Abs(_offset) * 2.0f * localTrans.Translation;
@@ -77,16 +82,19 @@ namespace FlaxEditor.SceneGraph.Actors
             }
 
             /// <inheritdoc />
+            public override object EditableObject => Brush.Surfaces[Index];
+
+            /// <inheritdoc />
             public override bool RayCastSelf(ref Ray ray, out float distance)
             {
-                return ((BoxBrush)((BoxBrushNode)ParentNode).Actor).IntersectsSurface(Index, ref ray, out distance);
+                return Brush.Surfaces[Index].Intersects(ref ray, out distance);
             }
 
             /// <inheritdoc />
             public override void OnDebugDraw(ViewportDebugDrawData data)
             {
                 ParentNode.OnDebugDraw(data);
-                DebugDraw.DrawBox((((BoxBrushNode)ParentNode).Actor).Box, Color.Orange);
+                DebugDraw.DrawBox(Brush.Box, Color.Orange);
             }
         }
 
