@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using FlaxEditor.Windows;
 using FlaxEngine;
 using FlaxEngine.Assertions;
@@ -12,7 +13,7 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.Content.GUI
 {
     /// <summary>
-    /// Main control for <see cref="ContentWindow"/> used to present collection of <see cref="ContentItem"/>.
+    ///     Main control for <see cref="ContentWindow" /> used to present collection of <see cref="ContentItem" />.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     /// <seealso cref="FlaxEditor.Content.IContentItemOwner" />
@@ -27,84 +28,86 @@ namespace FlaxEditor.Content.GUI
         #region External Events
 
         /// <summary>
-        /// Called when user wants to open the item.
+        ///     Called when user wants to open the item.
         /// </summary>
         public event Action<ContentItem> OnOpen;
-        
+
         /// <summary>
-        /// Called when user wants to rename the item.
+        ///     Called when user wants to rename the item.
         /// </summary>
         public event Action<ContentItem> OnRename;
-        
+
         /// <summary>
-        /// Called when user wants to delete the item.
+        ///     Called when user wants to delete the item.
         /// </summary>
         public event Action<List<ContentItem>> OnDelete;
-        
+
         /// <summary>
-        /// Called when user wants to duplicate the item.
+        ///     Called when user wants to duplicate the item.
         /// </summary>
         public event Action<List<ContentItem>> OnDuplicate;
-        
+
         /// <summary>
-        /// Called when user wants to navigate backward.
+        ///     Called when user wants to navigate backward.
         /// </summary>
         public event Action OnNavigateBack;
 
         #endregion
 
         /// <summary>
-        /// Gets the items.
+        ///     Gets the items.
         /// </summary>
         /// <value>
-        /// The items.
+        ///     The items.
         /// </value>
         public List<ContentItem> Items => _items;
 
         /// <summary>
-        /// Gets the items count.
+        ///     Gets the items count.
         /// </summary>
         /// <value>
-        /// The items count.
+        ///     The items count.
         /// </value>
         public int ItemsCount => _items.Count;
 
         /// <summary>
-        /// Gets the selected items.
+        ///     Gets the selected items.
         /// </summary>
         /// <value>
-        /// The selection.
+        ///     The selection.
         /// </value>
         public List<ContentItem> Selection => _selection;
 
         /// <summary>
-        /// Gets the selected count.
+        ///     Gets the selected count.
         /// </summary>
         /// <value>
-        /// The selected count.
+        ///     The selected count.
         /// </value>
         public int SelectedCount => _selection.Count;
 
         /// <summary>
-        /// Gets a value indicating whether any item is selected.
+        ///     Gets a value indicating whether any item is selected.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if any item is selected; otherwise, <c>false</c>.
+        ///     <c>true</c> if any item is selected; otherwise, <c>false</c>.
         /// </value>
         public bool HasSelection => _selection.Count > 0;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ContentView"/> class.
+        ///     Initializes a new instance of the <see cref="ContentView" /> class.
         /// </summary>
         public ContentView()
             : base(true)
         {
             DockStyle = DockStyle.Top;
             IsScrollable = true;
+
+            AddCommandsToController();
         }
 
         /// <summary>
-        /// Clears the items in the view.
+        ///     Clears the items in the view.
         /// </summary>
         public void ClearItems()
         {
@@ -129,21 +132,28 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <summary>
-        /// Shows the items collection in the view.
+        ///     Shows the items collection in the view.
         /// </summary>
         /// <param name="items">The items to show.</param>
-        /// <param name="additive">If set to <c>true</c> items will be added to the current selection. Otherwise selection will be cleared before.</param>
+        /// <param name="additive">
+        ///     If set to <c>true</c> items will be added to the current selection. Otherwise selection will be
+        ///     cleared before.
+        /// </param>
         public void ShowItems(List<ContentItem> items, bool additive = false)
         {
-            if(items == null)
+            if (items == null)
+            {
                 throw new ArgumentNullException();
+            }
 
             // Check if show nothing or not change view
             if (items.Count == 0)
             {
                 // Deselect items if need to
                 if (!additive)
+                {
                     ClearItems();
+                }
                 return;
             }
 
@@ -153,7 +163,9 @@ namespace FlaxEditor.Content.GUI
 
             // Deselect items if need to
             if (!additive)
+            {
                 ClearItems();
+            }
 
             // Add references and link items
             _items.AddRange(items);
@@ -172,11 +184,11 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <summary>
-        /// Determines whether the specified item is selected.
+        ///     Determines whether the specified item is selected.
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns>
-        ///   <c>true</c> if the specified item is selected; otherwise, <c>false</c>.
+        ///     <c>true</c> if the specified item is selected; otherwise, <c>false</c>.
         /// </returns>
         public bool IsSelected(ContentItem item)
         {
@@ -184,32 +196,41 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <summary>
-        /// Clears the selected items collection.
+        ///     Clears the selected items collection.
         /// </summary>
         public void ClearSelection()
         {
             if (_selection.Count == 0)
+            {
                 return;
+            }
 
             _selection.Clear();
         }
 
         /// <summary>
-        /// Selects the specified items.
+        ///     Selects the specified items.
         /// </summary>
         /// <param name="items">The items.</param>
-        /// <param name="additive">If set to <c>true</c> items will be added to the current selection. Otherwise selection will be cleared before.</param>
+        /// <param name="additive">
+        ///     If set to <c>true</c> items will be added to the current selection. Otherwise selection will be
+        ///     cleared before.
+        /// </param>
         public void Select(List<ContentItem> items, bool additive = false)
         {
             if (items == null)
+            {
                 throw new ArgumentNullException();
+            }
 
             // Check if nothing to select
             if (items.Count == 0)
             {
                 // Deselect items if need to
                 if (!additive)
+                {
                     ClearSelection();
+                }
                 return;
             }
 
@@ -218,8 +239,10 @@ namespace FlaxEditor.Content.GUI
             IsLayoutLocked = true;
 
             // Deselect items if need to
-            if(!additive)
+            if (!additive)
+            {
                 _selection.Clear();
+            }
 
             // Select items
             Assert.IsTrue(items.TrueForAll(x => _items.Contains(x)));
@@ -231,14 +254,19 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <summary>
-        /// Selects the specified item.
+        ///     Selects the specified item.
         /// </summary>
         /// <param name="item">The item.</param>
-        /// <param name="additive">If set to <c>true</c> item will be added to the current selection. Otherwise selection will be cleared before.</param>
+        /// <param name="additive">
+        ///     If set to <c>true</c> item will be added to the current selection. Otherwise selection will be
+        ///     cleared before.
+        /// </param>
         public void Select(ContentItem item, bool additive = false)
         {
             if (item == null)
+            {
                 throw new ArgumentNullException();
+            }
 
             // Lock layout
             var wasLayoutLocked = IsLayoutLocked;
@@ -246,7 +274,9 @@ namespace FlaxEditor.Content.GUI
 
             // Deselect items if need to
             if (!additive)
+            {
                 _selection.Clear();
+            }
 
             // Select item
             Assert.IsTrue(_items.Contains(item));
@@ -256,15 +286,17 @@ namespace FlaxEditor.Content.GUI
             IsLayoutLocked = wasLayoutLocked;
             PerformLayout();
         }
-        
+
         /// <summary>
-        /// Deselects the specified item.
+        ///     Deselects the specified item.
         /// </summary>
         /// <param name="item">The item.</param>
         public void Deselect(ContentItem item)
         {
             if (item == null)
+            {
                 throw new ArgumentNullException();
+            }
 
             // Lock layout
             var wasLayoutLocked = IsLayoutLocked;
@@ -280,15 +312,7 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <summary>
-        /// Duplicates the selected items.
-        /// </summary>
-        public void DuplicateSelection()
-        {
-            OnDuplicate?.Invoke(_selection);
-        }
-
-        /// <summary>
-        /// Gives focus and selects the first item in the view.
+        ///     Gives focus and selects the first item in the view.
         /// </summary>
         public void SelectFirstItem()
         {
@@ -304,18 +328,177 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <summary>
-        /// Refreshes thumbnails of all itmes in the <see cref="ContentView"/>.
+        ///     Refreshes thumbnails of all itmes in the <see cref="ContentView" />.
         /// </summary>
         public void RefreshThumbnails()
         {
             for (int i = 0; i < _items.Count; i++)
+            {
                 _items[i].RefreshThumbnail();
+            }
+        }
+
+        /// <summary>
+        ///     If valid items are selected method will remove it from <see cref="ContentView" />
+        /// </summary>
+        public void DeleteSelected()
+        {
+            if (HasSelection)
+            {
+                OnDelete?.Invoke(_selection);
+            }
+        }
+
+        /// <summary>
+        ///     If single valid item is selected method will open it
+        /// </summary>
+        public void OpenSelected()
+        {
+            if (HasSelection && _selection.Count == 1)
+            {
+                OnOpen?.Invoke(_selection[0]);
+            }
+        }
+
+        /// <summary>
+        ///     If valid items are selected method will duplicate them
+        /// </summary>
+        public void DuplicateSelection()
+        {
+            if (HasSelection)
+            {
+                OnDuplicate?.Invoke(_selection);
+            }
+        }
+
+        /// <summary>
+        ///     Moves current selector to the first item of the grid or first item selected
+        /// </summary>
+        public void MoveSelectorToStart()
+        {
+            if (_selection.Count > 1)
+            {
+                var current = _selection[0];
+                _selection.Clear();
+                _selection.Add(current);
+            }
+            else
+            {
+                ClearSelection();
+                if(_items.Count > 0)
+                {
+                    _selection.Add(_items[0]);
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Moves current selector to the first item of the grid or first item selected
+        /// </summary>
+        public void MoveSelectorToEnd()
+        {
+            if (_selection.Count > 1)
+            {
+                var current = _selection[_selection.Count];
+                _selection.Clear();
+                _selection.Add(current);
+            }
+            else
+            {
+                ClearSelection();
+                if (_items.Count > 0)
+                {
+                    _selection.Add(_items[_items.Count]);
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Moves selector to the item at local cooridnates position
+        /// </summary>
+        /// <param name="position">Position in local coordinates</param>
+        public void MoveSelector(Vector2 position)
+        {
+            ClearSelection();
+            var item = GetChildAt(position) as ContentItem;
+            if (item != null)
+            {
+                Select(item);
+            }
+        }
+
+        /// <summary>
+        ///     Moves selector to the next item to the right after current selection
+        /// </summary>
+        public void MoveSelectorRight()
+        {
+            if(_selection.Count > 1)
+            {
+                MoveSelectorToEnd();
+            }
+            var current = _selection[0];
+            MoveSelector(current.Location + current.Size / 2 + current.Size.X);
+        }
+
+        /// <summary>
+        ///     Moves selector to the next item to the left after current selection
+        /// </summary>
+        public void MoveSelectorLeft()
+        {
+            if (_selection.Count > 1)
+            {
+                MoveSelectorToStart();
+            }
+            var current = _selection[0];
+            MoveSelector(current.Location + current.Size / 2 + -current.Size.X);
+        }
+
+        /// <summary>
+        ///     Moves selector to the item above current selection
+        /// </summary>
+        public void MoveSelectorUp()
+        {
+            if (_selection.Count > 1)
+            {
+                MoveSelectorToStart();
+            }
+            var current = _selection[0];
+            MoveSelector(current.Location + current.Size / 2 + -current.Size.Y);
+        }
+
+        /// <summary>
+        ///     Moves selector to the item below current selection
+        /// </summary>
+        public void MoveSelectorDown()
+        {
+            if (_selection.Count > 1)
+            {
+                MoveSelectorToEnd();
+            }
+            var current = _selection[0];
+            MoveSelector(current.Location + current.Size / 2 + current.Size.X);
+        }
+
+        /// <summary>
+        ///     Adds prepared list <see cref="InputCommand" /> to <see cref="InputCommandsController" />
+        /// </summary>
+        protected void AddCommandsToController()
+        {
+            CommandsController.Add(new InputCommand(() => { OnNavigateBack?.Invoke(); }, new InputChord(KeyCode.Backspace)));
+            CommandsController.Add(new InputCommand(DeleteSelected, new InputChord(KeyCode.Delete)));
+            CommandsController.Add(new InputCommand(OpenSelected, new InputChord(KeyCode.Return)));
+            CommandsController.Add(new InputCommand(DuplicateSelection, new InputChord(KeyCode.Control, KeyCode.D)));
+
+            CommandsController.Add(new InputCommand(MoveSelectorRight, new InputChord(KeyCode.ArrowRight)));
+            CommandsController.Add(new InputCommand(MoveSelectorLeft, new InputChord(KeyCode.ArrowLeft)));
+            CommandsController.Add(new InputCommand(MoveSelectorUp, new InputChord(KeyCode.ArrowUp)));
+            CommandsController.Add(new InputCommand(MoveSelectorDown, new InputChord(KeyCode.ArrowDown)));
         }
 
         #region Internal events
 
         /// <summary>
-        /// Called when user clicks on an item.
+        ///     Called when user clicks on an item.
         /// </summary>
         /// <param name="item">The item.</param>
         public void OnItemClick(ContentItem item)
@@ -326,9 +509,13 @@ namespace FlaxEditor.Content.GUI
             if (Input.GetKey(KeyCode.Control))
             {
                 if (isSelected)
+                {
                     Deselect(item);
+                }
                 else
-                    Select(item, true);
+                {
+                    Select(item, false);
+                }
             }
             else
             {
@@ -337,7 +524,7 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <summary>
-        /// Called when user wants to rename item.
+        ///     Called when user wants to rename item.
         /// </summary>
         /// <param name="item">The item.</param>
         public void OnItemDoubleClickName(ContentItem item)
@@ -346,7 +533,7 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <summary>
-        /// Called when user wants to open item.
+        ///     Called when user wants to open item.
         /// </summary>
         /// <param name="item">The item.</param>
         public void OnItemDoubleClick(ContentItem item)
@@ -391,14 +578,19 @@ namespace FlaxEditor.Content.GUI
 
             // Check if drag is over
             if (IsDragOver && _validDragOver)
+            {
                 Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), Style.Current.BackgroundSelected * 0.4f, true);
+            }
         }
+
         /// <inheritdoc />
         public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
         {
             var result = base.OnDragEnter(ref location, data);
             if (result != DragDropEffect.None)
+            {
                 return result;
+            }
 
             // Check if drop file(s)
             if (data is DragDataFiles)
@@ -406,7 +598,7 @@ namespace FlaxEditor.Content.GUI
                 _validDragOver = true;
                 result = DragDropEffect.Copy;
             }
-            
+
             return result;
         }
 
@@ -416,7 +608,9 @@ namespace FlaxEditor.Content.GUI
             _validDragOver = false;
             var result = base.OnDragMove(ref location, data);
             if (result != DragDropEffect.None)
+            {
                 return result;
+            }
 
             if (data is DragDataFiles)
             {
@@ -432,7 +626,9 @@ namespace FlaxEditor.Content.GUI
         {
             var result = base.OnDragDrop(ref location, data);
             if (result != DragDropEffect.None)
+            {
                 return result;
+            }
 
             // Check if drop file(s)
             if (data is DragDataFiles files)
@@ -440,7 +636,9 @@ namespace FlaxEditor.Content.GUI
                 // Import files
                 var currentFolder = Editor.Instance.Windows.ContentWin.CurrentViewFolder;
                 if (currentFolder != null)
+                {
                     Editor.Instance.ContentImporting.Import(files.Files, currentFolder);
+                }
                 result = DragDropEffect.Copy;
             }
 
@@ -476,77 +674,6 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyPressed(InputChord key)
-        {
-            // Navigate backward
-            if (key[KeyCode.Backspace])
-            {
-                OnNavigateBack?.Invoke();
-                return true;
-            }
-
-            // Check if sth is selected
-            if (HasSelection)
-            {
-                // Delete selection
-                if (key[KeyCode.Delete])
-                {
-                    OnDelete?.Invoke(_selection);
-                    return true;
-                }
-
-                // Open
-                if (key[KeyCode.Return] && _selection.Count == 1)
-                {
-                    OnOpen?.Invoke(_selection[0]);
-                    return true;
-                }
-
-                // Duplicate
-                if (key[KeyCode.D] && ParentWindow != null && Input.GetKey(KeyCode.Control))
-                {
-                    DuplicateSelection();
-                    return true;
-                }
-
-                // Movement with arrows
-                {
-                    var root = _selection[0];
-                    Vector2 size = root.Size;
-                    Vector2 offset = Vector2.Minimum;
-                    ContentItem item = null;
-                    if (key[KeyCode.ArrowUp])
-                    {
-                        offset = new Vector2(0, -size.Y);
-                    }
-                    else if (key[KeyCode.ArrowDown])
-                    {
-                        offset = new Vector2(0, size.Y);
-                    }
-                    else if (key[KeyCode.ArrowRight])
-                    {
-                        offset = new Vector2(size.X, 0);
-                    }
-                    else if (key[KeyCode.ArrowLeft])
-                    {
-                        offset = new Vector2(-size.X, 0);
-                    }
-                    if (offset != Vector2.Minimum)
-                    {
-                        item = GetChildAt(root.Location + size / 2 + offset) as ContentItem;
-                    }
-                    if (item != null)
-                    {
-                        OnItemClick(item);
-                        return true;
-                    }
-                }
-            }
-            
-            return base.OnKeyPressed(key);
-        }
-
-        /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
             // Calculate items size
@@ -572,11 +699,15 @@ namespace FlaxEditor.Content.GUI
                 }
             }
             if (x > 0)
+            {
                 y += itemsHeight;
+            }
 
             // Set maximum size and fit the parent container
             if (HasParent)
+            {
                 y = Mathf.Max(y, Parent.Height);
+            }
             Height = y;
         }
 

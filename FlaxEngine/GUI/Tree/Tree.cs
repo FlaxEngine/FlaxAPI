@@ -69,6 +69,7 @@ namespace FlaxEngine.GUI
 
             _supportMultiSelect = supportMultiSelect;
             _keyUpdateTime = KeyUpdateTimeout * 10;
+            AddCommandsToController();
         }
 
         internal void OnRightClickInternal(TreeNode node, ref Vector2 location)
@@ -323,6 +324,14 @@ namespace FlaxEngine.GUI
             Size = new Vector2(width, rightBottom.Y);
         }
 
+        /// <summary>
+        /// Adds prepared list <see cref="InputCommand"/> to <see cref="InputCommandsController"/>
+        /// </summary>
+        protected void AddCommandsToController()
+        {
+            CommandsController.Add(new InputCommand(SelectAllExpaned, new InputChord(KeyCode.Control, KeyCode.A)));
+        }
+
         /// <inheritdoc />
         /// TODO Refactor
         public override void Update(float deltaTime)
@@ -457,23 +466,6 @@ namespace FlaxEngine.GUI
             }
             
             base.Update(deltaTime);
-        }
-
-        /// <inheritdoc />
-        public override bool OnKeyPressed(InputChord key)
-        {
-            // Check if can use multi selection
-            if (_supportMultiSelect)
-            {                
-                // Select all expanded nodes
-                if (key[KeyCode.A] && key.IsControl())
-                {
-                    SelectAllExpaned();
-                    return true;
-                }
-            }
-
-            return base.OnKeyPressed(key);
         }
 
         /// <inheritdoc />
