@@ -66,6 +66,23 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Saves asset to the file. Saved are model and mesh properties but not a vertex data. Supported only in Editor.
+		/// </summary>
+		/// <returns>True if cannot save data, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public bool Save() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_Save(unmanagedPtr);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -76,6 +93,8 @@ namespace FlaxEngine
 		internal static extern float Internal_GetMinScreenSize(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetMinScreenSize(IntPtr obj, float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_Save(IntPtr obj);
 #endif
 #endregion
 	}

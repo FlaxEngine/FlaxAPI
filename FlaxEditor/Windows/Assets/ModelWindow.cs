@@ -21,9 +21,7 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public sealed class ModelWindow : AssetEditorWindowBase<Model>
     {
-        // - debug model uv channels
-        // - refesh properties on asset loaded/reimported
-        // - link for content pipeline and handle asset reimport event (refresh data, etc.)
+        // TODO: debug model UVs channels
         // TODO: adding/removing material slots
         // TODO: refresh material slots comboboxes on material slot rename
         // TODO: add button to draw model bounds
@@ -267,11 +265,6 @@ namespace FlaxEditor.Windows.Assets
                         }
                     }
 
-                    // LOD Settings
-                    {
-                        // TODO: show LODs settings
-                    }
-
                     // Import Settings
                     {
                         var group = layout.Group("Import Settings");
@@ -306,9 +299,9 @@ namespace FlaxEditor.Windows.Assets
         {
             // Toolstrip
             _toolstrip.AddButton(1, editor.UI.GetIcon("Save32")).LinkTooltip("Save");
-            _toolstrip.AddSeparator();
-            _toolstrip.AddButton(2, editor.UI.GetIcon("UV32")).LinkTooltip("Show model UVs (toggles across all channels)");
-
+            //_toolstrip.AddSeparator();
+            //_toolstrip.AddButton(2, editor.UI.GetIcon("UV32")).LinkTooltip("Show model UVs (toggles across all channels)"); // TODO: support gather mesh data
+            
             // Split Panel
             var splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
             {
@@ -338,7 +331,7 @@ namespace FlaxEditor.Windows.Assets
 
         private void CacheMeshData()
         {
-            // TODO: finish mesh data gather from c# API
+            // TODO: finish mesh data gather from c# API (use async task)
         }
 
         /// <summary>
@@ -408,18 +401,17 @@ namespace FlaxEditor.Windows.Assets
                 return;
             }
 
-            throw new NotImplementedException("Saving edited model asset");
             // Call asset saving
-            /*if (_asset.Save())
+            if (_asset.Save())
             {
                 // Error
-                LOG_EDITOR(Error, 63, _element->GetPath());
+                Editor.LogError("Failed to save model " + _item.Name);
                 return;
             }
 
             // Update
             ClearEditedFlag();
-            _item.RefreshThumbnail();*/
+            _item.RefreshThumbnail();
         }
 
         /// <inheritdoc />
