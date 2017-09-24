@@ -937,46 +937,6 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyHold(InputChord key)
-        {
-            for (int i = 0; i < _children.Count && _children.Count > 0; i++)
-            {
-                var child = _children[i];
-                if (child.Enabled && (child.ContainsFocus || child.HasMouseCapture))
-                {
-                    child.OnKeyHold(key);
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /// <inheritdoc />
-        public override bool OnKeyPressed(InputChord key)
-        {
-            for (int i = 0; i < _children.Count && _children.Count > 0; i++)
-            {
-                var child = _children[i];
-                if (child.Enabled && (child.ContainsFocus || child.HasMouseCapture))
-                {
-                    child.OnKeyPressed(key);
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /// <inheritdoc />
-        public override bool OnKeyReleased(InputChord key)
-        {
-            for (int i = 0; i < _children.Count && _children.Count > 0; i++)
-            {
-                 _children[i].OnKeyReleased(key);
-            }
-            return true;
-        }
-
-        /// <inheritdoc />
         public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
         {
             // Base

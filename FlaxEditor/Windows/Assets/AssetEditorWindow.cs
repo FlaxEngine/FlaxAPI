@@ -123,28 +123,6 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        public override bool OnKeyHold(InputChord key)
-        {
-            // Base
-            if (base.OnKeyHold(key) || !IsFocused)
-            {
-                return true;
-            }
-            return CommandsController.KeyHold(key);
-        }
-
-        /// <inheritdoc />
-        public override bool OnKeyPressed(InputChord key)
-        {
-            // Base
-            if (base.OnKeyPressed(key) || !IsFocused)
-            {
-                return true;
-            }
-            return CommandsController.KeyPressed(key);
-        }
-
-        /// <inheritdoc />
         protected override bool OnClosing(ClosingReason reason)
         {
             // Block closing only on user events

@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using FlaxEngine.Assertions;
 
 namespace FlaxEngine.GUI
 {
@@ -11,6 +12,11 @@ namespace FlaxEngine.GUI
     /// </summary>
     public partial class Control : IComparable
     {
+        /// <summary>
+        /// There can be only one focused element at the time and this is it reference
+        /// </summary>
+        public static Control CurrentlyFocused { get; set; }
+
         private ContainerControl _parent;
         private bool _isDisposing, _isFocused;
 
@@ -33,13 +39,13 @@ namespace FlaxEngine.GUI
         private float _rotation;
         internal Matrix3x3 _cachedTransform;
         internal Matrix3x3 _cachedTransformInv;
-        
+
         // Style
 
         private DockStyle _dockStyle;
         private AnchorStyle _anchorStyle;
         private Color _backgroundColor = Color.Transparent;
-        
+
         // Tooltip
 
         private string _tooltipText;
@@ -68,10 +74,10 @@ namespace FlaxEngine.GUI
         #region Public Properties
 
         /// <summary>
-        /// Gets or sets the name.
+        ///     Gets or sets the name.
         /// </summary>
         /// <value>
-        /// The name.
+        ///     The name.
         /// </value>
         public string Name { get; set; }
 
@@ -84,9 +90,11 @@ namespace FlaxEngine.GUI
             set
             {
                 if (_parent == value)
+                {
                     return;
+                }
 
-                Focus(null);
+                Defocus();
 
                 Vector2 oldParentSize;
                 if (_parent != null)
@@ -133,7 +141,8 @@ namespace FlaxEngine.GUI
 
         /// <summary>
         ///     Gets or sets the docking style of the control.
-        /// If vlue set is other than <see cref="FlaxEngine.GUI.DockStyle.None"/> then <see cref="IsScrollable"/> will be disabled by auto.
+        ///     If vlue set is other than <see cref="FlaxEngine.GUI.DockStyle.None" /> then <see cref="IsScrollable" /> will be
+        ///     disabled by auto.
         /// </summary>
         /// <returns>Dock style of the control</returns>
         public DockStyle DockStyle
@@ -147,7 +156,9 @@ namespace FlaxEngine.GUI
 
                     // Disable scrolling for docked controls (by default but can be manually restored)
                     if (_dockStyle != DockStyle.None)
+                    {
                         IsScrollable = false;
+                    }
 
                     // Update parent's container
                     _parent?.PerformLayout();
@@ -156,7 +167,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets the anchor style of the control.
+        ///     Gets or sets the anchor style of the control.
         /// </summary>
         public AnchorStyle AnchorStyle
         {
@@ -174,10 +185,10 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this control is scrollable (scroll bars affect it).
+        ///     Gets or sets a value indicating whether this control is scrollable (scroll bars affect it).
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this control is scrollable; otherwise, <c>false</c>.
+        ///     <c>true</c> if this control is scrollable; otherwise, <c>false</c>.
         /// </value>
         public bool IsScrollable { get; set; } = true;
 
@@ -200,9 +211,13 @@ namespace FlaxEngine.GUI
 
                         // Clear flags
                         if (_isMouseOver)
+                        {
                             OnMouseLeave();
+                        }
                         if (_isDragOver)
+                        {
                             OnDragLeave();
+                        }
                     }
                 }
             }
@@ -227,11 +242,15 @@ namespace FlaxEngine.GUI
 
                         // Clear flags
                         if (_isMouseOver)
+                        {
                             OnMouseLeave();
+                        }
                         if (_isDragOver)
+                        {
                             OnDragLeave();
+                        }
                     }
-                    
+
                     OnVisibleChanged();
                     if (HasParent)
                     {
@@ -252,7 +271,7 @@ namespace FlaxEngine.GUI
         public virtual Window ParentWindow => HasParent ? _parent.ParentWindow : null;
 
         /// <summary>
-        /// Gets screen position of the control (upper left corner).
+        ///     Gets screen position of the control (upper left corner).
         /// </summary>
         /// <returns>Screen position of the control.</returns>
         public Vector2 ScreenPos
@@ -261,21 +280,33 @@ namespace FlaxEngine.GUI
             {
                 var parentWin = ParentWindow;
                 if (parentWin == null)
+                {
                     throw new InvalidOperationException("Missing parent window.");
+                }
                 var clientPos = PointToWindow(Vector2.Zero);
                 return parentWin.ClientToScreen(clientPos);
             }
         }
 
+        /// <summary>
+        ///     Controller for command handling withing current control
+        /// </summary>
         public InputCommandsController CommandsController { get; private set; } = new InputCommandsController();
+
+        /// <summary>
+        ///     Should given controll pass input handling if current control didnt handle the input (didnt have any command mapping
+        ///     <see cref="InputCommandsController" />)
+        /// </summary>
+        public bool IsInputPassThrough { get; set; } = false;
 
         #endregion
 
         /// <summary>
-        /// Gets or sets the cursor (per window). Control should restore cursor to the default value eg. when mouse leaves it's area.
+        ///     Gets or sets the cursor (per window). Control should restore cursor to the default value eg. when mouse leaves it's
+        ///     area.
         /// </summary>
         /// <value>
-        /// The cursor.
+        ///     The cursor.
         /// </value>
         public CursorType Cursor
         {
@@ -284,7 +315,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// The custom tag object value linked to the control.
+        ///     The custom tag object value linked to the control.
         /// </summary>
         public object Tag;
 
@@ -420,47 +451,23 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Sets input focus to the control
         /// </summary>
-        public virtual void Focus()
+        public virtual bool Focus()
         {
-            if (!IsFocused)
+            if (CanFocus && !IsFocused)
             {
-                Focus(this);
+                if (this != CurrentlyFocused)
+                {
+                    CurrentlyFocused?.Defocus();
+                    CurrentlyFocused = this;
+                }
+                Input.OnKeyHold += OnInputOnOnKeyHold;
+                Input.OnKeyPressed += OnInputOnOnKeyPressed;
+                Input.OnKeyReleased += OnInputOnOnKeyReleased;
+                _isFocused = true;
+                return true;
             }
+            return false;
         }
-
-        /// <summary>
-        /// Wrapper to unregister event on dispose
-        /// </summary>
-        /// <param name="map"></param>
-        private void OnInputOnOnKeyPressed(InputChord map)
-        {
-            if (IsFocused)
-            {
-                OnKeyPressed(map);
-            }
-        }
-
-        /// <summary>
-        /// Wrapper to unregister event on dispose
-        /// </summary>
-        /// <param name="map"></param>
-        private void OnInputOnOnKeyHold(InputChord map)
-        {
-            if (IsFocused)
-            {
-                OnKeyHold(map);
-            }
-        }
-
-        /// <summary>
-        /// Wrapper to unregister event on dispose
-        /// </summary>
-        /// <param name="map"></param>
-        private void OnInputOnOnKeyReleased(InputChord map)
-        {
-            OnKeyReleased(map);
-        }
-
 
         /// <summary>
         ///     Removes input focus from the control
@@ -472,21 +479,10 @@ namespace FlaxEngine.GUI
                 Input.OnKeyHold -= OnInputOnOnKeyHold;
                 Input.OnKeyPressed -= OnInputOnOnKeyPressed;
                 Input.OnKeyReleased -= OnInputOnOnKeyReleased;
-                Focus(null);
+                //Invoke release key event as we might want to handle something that was initialized by pressing.
+                OnInputOnOnKeyReleased(new InputChord());
+                _isFocused = false;
             }
-        }
-
-        /// <summary>
-        ///     Focus that control
-        /// </summary>
-        /// <param name="c">Control to focus</param>
-        /// <returns>True if control got a focus</returns>
-        protected virtual bool Focus(Control c)
-        {
-            Input.OnKeyHold += OnInputOnOnKeyHold;
-            Input.OnKeyPressed += OnInputOnOnKeyPressed;
-            Input.OnKeyReleased += OnInputOnOnKeyReleased;
-            return _parent != null && _parent.Focus(c);
         }
 
         /// <summary>
@@ -494,8 +490,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void OnGotFocus()
         {
-            // Cache flag
-            _isFocused = true;
+
         }
 
         /// <summary>
@@ -503,8 +498,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void OnLostFocus()
         {
-            // Clear flag
-            _isFocused = false;
+            Defocus();
         }
 
         /// <summary>
@@ -520,7 +514,6 @@ namespace FlaxEngine.GUI
         public virtual void OnEndContainsFocus()
         {
         }
-
 
 
         /// <summary>
@@ -558,7 +551,9 @@ namespace FlaxEngine.GUI
 
             // Update tooltip
             if (_tooltipText != null)
+            {
                 Tooltip.OnMouseEnterControl(this);
+            }
         }
 
         /// <summary>
@@ -579,7 +574,9 @@ namespace FlaxEngine.GUI
 
             // Update tooltip
             if (_tooltipText != null)
+            {
                 Tooltip.OnMouseLeaveControl(this);
+            }
         }
 
         /// <summary>
@@ -587,8 +584,8 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="delta">
-        ///   Mosue wheeel move delta. A positive value indicates that the wheel was rotated forward, away from
-        ///   the user; a negative value indicates that the wheel was rotated backward, toward the user
+        ///     Mosue wheeel move delta. A positive value indicates that the wheel was rotated forward, away from
+        ///     the user; a negative value indicates that the wheel was rotated backward, toward the user
         /// </param>
         /// <returns>True if event has been handled</returns>
         public virtual bool OnMouseWheel(Vector2 location, int delta)
@@ -604,7 +601,7 @@ namespace FlaxEngine.GUI
         /// <returns>True if event has been handled, otherwise false</returns>
         public virtual bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
-            return _canFocus && Focus(this);
+            return _canFocus && Focus();
         }
 
         /// <summary>
@@ -634,19 +631,48 @@ namespace FlaxEngine.GUI
         #region Keyboard
 
         /// <summary>
+        ///     Wrapper to unregister event on dispose
+        /// </summary>
+        /// <param name="map"></param>
+        private void OnInputOnOnKeyPressed(InputChord map)
+        {
+            OnKeyPressed(map);
+        }
+
+        /// <summary>
+        ///     Wrapper to unregister event on dispose
+        /// </summary>
+        /// <param name="map"></param>
+        private void OnInputOnOnKeyHold(InputChord map)
+        {
+            OnKeyHold(map);
+        }
+
+        /// <summary>
+        ///     Wrapper to unregister event on dispose
+        /// </summary>
+        /// <param name="map"></param>
+        private void OnInputOnOnKeyReleased(InputChord map)
+        {
+            OnKeyReleased(map);
+        }
+
+        /// <summary>
         ///     When key goes down
         /// </summary>
         /// <param name="key">Key value</param>
         /// <returns>True if event has been handled, otherwise false</returns>
         public virtual bool OnKeyPressed(InputChord key)
         {
-            // Do not process input if control is not focused
-            if (!IsFocused)
+            if (CommandsController.KeyPressed(key))
             {
                 return true;
             }
-
-            return CommandsController.KeyPressed(key);
+            if (IsInputPassThrough && Parent != null)
+            {
+                return Parent.OnKeyPressed(key);
+            }
+            return false;
         }
 
         /// <summary>
@@ -656,13 +682,15 @@ namespace FlaxEngine.GUI
         /// <returns>True if event has been handled, otherwise false</returns>
         public virtual bool OnKeyHold(InputChord key)
         {
-            // Do not process input if control is not focused
-            if (!IsFocused)
+            if (CommandsController.KeyHold(key))
             {
                 return true;
             }
-
-            return CommandsController.KeyHold(key);
+            if (IsInputPassThrough && Parent != null)
+            {
+                return Parent.OnKeyHold(key);
+            }
+            return false;
         }
 
         /// <summary>
@@ -672,6 +700,10 @@ namespace FlaxEngine.GUI
         /// <returns>True if event has been handled, otherwise false</returns>
         public virtual bool OnKeyReleased(InputChord key)
         {
+            if (IsInputPassThrough && Parent != null)
+            {
+                return Parent.OnKeyReleased(key);
+            }
             return false;
         }
 
@@ -689,7 +721,7 @@ namespace FlaxEngine.GUI
         ///     When mouse dragging enters control's area
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
-        /// <param name="data">The data. See <see cref="DragDataText"/> and <see cref="DragDataFiles"/>.</param>
+        /// <param name="data">The data. See <see cref="DragDataText" /> and <see cref="DragDataFiles" />.</param>
         public virtual DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
         {
             // Set flag
@@ -702,7 +734,7 @@ namespace FlaxEngine.GUI
         ///     When mouse dragging moves over control's area
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
-        /// <param name="data">The data. See <see cref="DragDataText"/> and <see cref="DragDataFiles"/>.</param>
+        /// <param name="data">The data. See <see cref="DragDataText" /> and <see cref="DragDataFiles" />.</param>
         public virtual DragDropEffect OnDragMove(ref Vector2 location, DragData data)
         {
             return DragDropEffect.None;
@@ -712,7 +744,7 @@ namespace FlaxEngine.GUI
         ///     When mouse dragging drops on control's area
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
-        /// <param name="data">The data. See <see cref="DragDataText"/> and <see cref="DragDataFiles"/>.</param>
+        /// <param name="data">The data. See <see cref="DragDataText" /> and <see cref="DragDataFiles" />.</param>
         public virtual DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
         {
             // Clear flag
@@ -731,7 +763,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Starts the drag and drop operation.
+        ///     Starts the drag and drop operation.
         /// </summary>
         /// <param name="data">The data.</param>
         public void DoDragDrop(DragData data)
@@ -744,7 +776,7 @@ namespace FlaxEngine.GUI
         #region Tooltip
 
         /// <summary>
-        /// Gets or sets the tooltip text.
+        ///     Gets or sets the tooltip text.
         /// </summary>
         public string TooltipText
         {
@@ -753,7 +785,8 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets the custom tooltip control linked. Use null to show default shared tooltip from the current <see cref="Style"/>.
+        ///     Gets or sets the custom tooltip control linked. Use null to show default shared tooltip from the current
+        ///     <see cref="Style" />.
         /// </summary>
         [HideInEditor]
         public Tooltip CustomTooltip
@@ -763,12 +796,12 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets the tooltip used by this control (custom or shared one).
+        ///     Gets the tooltip used by this control (custom or shared one).
         /// </summary>
         public Tooltip Tooltip => _tooltip ?? Style.Current.SharedTooltip;
 
         /// <summary>
-        /// Links the tooltip.
+        ///     Links the tooltip.
         /// </summary>
         /// <param name="text">The text.</param>
         /// <param name="customTooltip">The custom tooltip.</param>
@@ -779,7 +812,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Unlinks the tooltip.
+        ///     Unlinks the tooltip.
         /// </summary>
         public void UnlinkTooltip()
         {
@@ -788,7 +821,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Called when tooltip wants to be shown. Allows modifying its appearance.
+        ///     Called when tooltip wants to be shown. Allows modifying its appearance.
         /// </summary>
         /// <param name="text">The tooltip text to show.</param>
         /// <param name="location">The popup start location (in this control local space).</param>
@@ -807,7 +840,7 @@ namespace FlaxEngine.GUI
         #region Helper Functions
 
         /// <summary>
-        /// Checks if given location point in Parent Space intresects with the control content and calculates local position.
+        ///     Checks if given location point in Parent Space intresects with the control content and calculates local position.
         /// </summary>
         /// <param name="locationParent">The location in Parent Space.</param>
         /// <param name="location">The location of intersection in Control Space.</param>
@@ -894,7 +927,9 @@ namespace FlaxEngine.GUI
         {
             location = PointToParent(location);
             if (HasParent)
+            {
                 return _parent.ClientToScreen(location);
+            }
             return location;
         }
 
@@ -945,7 +980,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Sets the scale and updates the transform.
+        ///     Sets the scale and updates the transform.
         /// </summary>
         /// <param name="scale">The scale.</param>
         protected virtual void SetScaleInternal(ref Vector2 scale)
@@ -957,7 +992,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Sets the pivot and updates the transform.
+        ///     Sets the pivot and updates the transform.
         /// </summary>
         /// <param name="pivot">The pivot.</param>
         protected virtual void SetPivotInternal(ref Vector2 pivot)
@@ -969,7 +1004,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Sets the shear and updates the transform.
+        ///     Sets the shear and updates the transform.
         /// </summary>
         /// <param name="shear">The shear.</param>
         protected virtual void SetShearInternal(ref Vector2 shear)
@@ -981,7 +1016,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Sets the rotation angle and updates the transform.
+        ///     Sets the rotation angle and updates the transform.
         /// </summary>
         /// <param name="rotation">The rotation (in degrees).</param>
         protected virtual void SetRotationInternal(float rotation)
@@ -993,7 +1028,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Called when visible state gets changed.
+        ///     Called when visible state gets changed.
         /// </summary>
         protected virtual void OnVisibleChanged()
         {
@@ -1015,10 +1050,12 @@ namespace FlaxEngine.GUI
         public virtual void OnParentResized(ref Vector2 oldSize)
         {
             if (_anchorStyle == AnchorStyle.UpperLeft || oldSize.LengthSquared < Mathf.Epsilon)
+            {
                 return;
+            }
 
             var bounds = Bounds;
-            
+
             // TODO: finish all anchor styles logic
 
             switch (_anchorStyle)
@@ -1092,12 +1129,14 @@ namespace FlaxEngine.GUI
         public int CompareTo(object obj)
         {
             if (obj is Control c)
+            {
                 return Compare(c);
+            }
             return 0;
         }
 
         /// <summary>
-        /// Compares this control with the otheer control.
+        ///     Compares this control with the otheer control.
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>Comparision result.</returns>

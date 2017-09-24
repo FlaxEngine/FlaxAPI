@@ -16,48 +16,48 @@ using Object = FlaxEngine.Object;
 namespace FlaxEditor.Windows
 {
     /// <summary>
-    /// Editor window used to show debug info, warning and error messages. Captures <see cref="Debug"/> messages.
+    ///     Editor window used to show debug info, warning and error messages. Captures <see cref="Debug" /> messages.
     /// </summary>
     /// <seealso cref="FlaxEditor.Windows.EditorWindow" />
     public class DebugLogWindow : EditorWindow
     {
         /// <summary>
-        /// Debug log entry description;
+        ///     Debug log entry description;
         /// </summary>
         public struct LogEntryDescription
         {
             /// <summary>
-            /// The log level.
+            ///     The log level.
             /// </summary>
             public LogType Level;
 
             /// <summary>
-            /// The message title.
+            ///     The message title.
             /// </summary>
             public string Title;
 
             /// <summary>
-            /// The message description.
+            ///     The message description.
             /// </summary>
             public string Description;
 
             /// <summary>
-            /// The target object hint id (don't store ref, object may be an actor that can be removed and restored later or sth).
+            ///     The target object hint id (don't store ref, object may be an actor that can be removed and restored later or sth).
             /// </summary>
             public Guid ContextObject;
 
             /// <summary>
-            /// True if entry is scripts compilation result.
+            ///     True if entry is scripts compilation result.
             /// </summary>
             public bool IsCompileResult;
 
             /// <summary>
-            /// The location of the issue (file path).
+            ///     The location of the issue (file path).
             /// </summary>
             public string LocationFile;
 
             /// <summary>
-            /// The location line number (zero or less to not use it);
+            ///     The location line number (zero or less to not use it);
             /// </summary>
             public int LocationLine;
         };
@@ -73,7 +73,7 @@ namespace FlaxEditor.Windows
         private class LogEntry : Control
         {
             /// <summary>
-            /// The default height of the entries.
+            ///     The default height of the entries.
             /// </summary>
             public const float DefaultHeight = 48.0f;
 
@@ -101,12 +101,63 @@ namespace FlaxEditor.Windows
                         Group = LogGroup.Error;
                         break;
                 }
+
+                AddCommandsToController();
             }
 
             /// <summary>
-            /// Gets the information text.
+            ///     Gets the information text.
             /// </summary>
             public string Info => Desc.Title + '\n' + Desc.Description;
+
+            /// <summary>
+            ///     Adds prepared list <see cref="InputCommand" /> to <see cref="InputCommandsController" />
+            /// </summary>
+            protected void AddCommandsToController()
+            {
+                CommandsController.Add(new InputCommand(MoveToPrevLogEntry, new InputChord(KeyCode.ArrowUp)));
+                CommandsController.Add(new InputCommand(MoveToNextLogEntry, new InputChord(KeyCode.ArrowDown)));
+                CommandsController.Add(new InputCommand(() => { Application.ClipboardText = Info; }, new InputChord(KeyCode.Control, KeyCode.C)));
+            }
+
+            /// <summary>
+            ///     Moves to the next log entry if possible (Up)
+            /// </summary>
+            public void MoveToPrevLogEntry()
+            {
+                int index = IndexInParent - 1;
+                if (index >= 1) // at 0 is scroll bar
+                {
+                    var target = Parent.GetChild(index);
+                    target.Focus();
+                    ((Panel)Parent).ScrollViewTo(target);
+                }
+            }
+
+            /// <summary>
+            ///     Moves to previous log entry if possible (Down)
+            /// </summary>
+            public void MoveToNextLogEntry()
+            {
+                int index = IndexInParent + 1;
+                if (index < Parent.ChildrenCount)
+                {
+                    var target = Parent.GetChild(index);
+                    target.Focus();
+                    ((Panel)Parent).ScrollViewTo(target);
+                }
+            }
+
+            /// <inheritdoc />
+            public override bool Focus()
+            {
+                var result = base.Focus();
+                if (result)
+                {
+                    _window.Selected = this;
+                }
+                return result;
+            }
 
             /// <inheritdoc />
             public override void Draw()
@@ -120,69 +171,20 @@ namespace FlaxEditor.Windows
 
                 // Background
                 if (_window._selected == this)
+                {
                     Render2D.FillRectangle(clientRect, IsFocused ? style.BackgroundSelected : style.LightBackground);
+                }
                 else if (IsMouseOver)
+                {
                     Render2D.FillRectangle(clientRect, style.BackgroundHighlighted);
+                }
                 else if (index % 2 == 0)
+                {
                     Render2D.FillRectangle(clientRect, style.Background * 0.9f);
+                }
 
                 // Title
                 Render2D.DrawText(style.FontMedium, Desc.Title, new Rectangle(5, 5, clientRect.Width - 10, clientRect.Height - 10), style.Foreground);
-            }
-
-            /// <inheritdoc />
-            public override void OnGotFocus()
-            {
-                base.OnGotFocus();
-
-                _window.Selected = this;
-            }
-
-            /// <inheritdoc />
-            protected override void OnVisibleChanged()
-            {
-                // Deselect on hide
-                if (!Visible && _window.Selected == this)
-                    _window.Selected = null;
-
-                base.OnVisibleChanged();
-            }
-
-            /// <inheritdoc />
-            public override bool OnKeyPressed(InputChord key)
-            {
-                // Up
-                if (key[KeyCode.ArrowUp])
-                {
-                    int index = IndexInParent - 1;
-                    if (index >= 1)// at 0 is scroll bar
-                    {
-                        var target = Parent.GetChild(index);
-                        target.Focus();
-                        ((Panel)Parent).ScrollViewTo(target);
-                        return true;
-                    }
-                }
-                // Down
-                else if (key[KeyCode.ArrowDown])
-                {
-                    int index = IndexInParent + 1;
-                    if (index < Parent.ChildrenCount)
-                    {
-                        var target = Parent.GetChild(index);
-                        target.Focus();
-                        ((Panel)Parent).ScrollViewTo(target);
-                        return true;
-                    }
-                }
-                // Ctrl+C
-                else if (key[KeyCode.C] && key.IsControl())
-                {
-                    Application.ClipboardText = Info;
-                    return true;
-                }
-
-                return base.OnKeyPressed(key);
             }
 
             public override bool OnMouseDoubleClick(Vector2 location, MouseButtons buttons)
@@ -207,7 +209,7 @@ namespace FlaxEditor.Windows
         private readonly List<LogEntry> _pendingEntries = new List<LogEntry>(32);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DebugLogWindow"/> class.
+        ///     Initializes a new instance of the <see cref="DebugLogWindow" /> class.
         /// </summary>
         /// <param name="editor">The editor.</param>
         public DebugLogWindow(Editor editor)
@@ -255,28 +257,34 @@ namespace FlaxEditor.Windows
             ScriptsBuilder.CompilationError += OnCompilationError;
             ScriptsBuilder.CompilationWarning += OnCompilationWarning;
             Editor.StateMachine.StateChanged += StateMachineOnStateChanged;
+
+            AddCommandsToController();
         }
 
         /// <summary>
-        /// Clears the log.
+        ///     Clears the log.
         /// </summary>
         public void Clear()
         {
             if (_entriesPanel == null)
+            {
                 return;
+            }
 
             // Remove normal entries, keep compilation results
             RemoveEntries(false);
         }
 
         /// <summary>
-        /// Adds the specified log entry.
+        ///     Adds the specified log entry.
         /// </summary>
         /// <param name="desc">The log entry description.</param>
         public void Add(ref LogEntryDescription desc)
         {
             if (_entriesPanel == null)
+            {
                 return;
+            }
 
             // Create new entry
             var newEntry = new LogEntry(this, ref desc);
@@ -295,7 +303,7 @@ namespace FlaxEditor.Windows
         }
 
         /// <summary>
-        /// Gets or sets the selected entry.
+        ///     Gets or sets the selected entry.
         /// </summary>
         private LogEntry Selected
         {
@@ -320,7 +328,9 @@ namespace FlaxEditor.Windows
             for (int i = 0; i < children.Count; i++)
             {
                 if (children[i] is LogEntry logEntry && logEntry.Group == group)
+                {
                     logEntry.Visible = isVisible;
+                }
             }
 
             _entriesPanel.IsLayoutLocked = false;
@@ -396,7 +406,7 @@ namespace FlaxEditor.Windows
                 }
                 desc.Description = fineStackTrace.ToString();
             }
-            
+
             Add(ref desc);
         }
 
@@ -435,11 +445,11 @@ namespace FlaxEditor.Windows
 
         private void OnCompilationError(string message, string file, int line)
         {
-            if(file == null)
+            if (file == null)
             {
                 file = string.Empty;
             }
-            if(message == null)
+            if (message == null)
             {
                 Debug.LogError("Message for on Compilation error was null");
                 return;
@@ -505,6 +515,37 @@ namespace FlaxEditor.Windows
             _entriesPanel.PerformLayout();
         }
 
+        /// <summary>
+        ///     Adds prepared list <see cref="InputCommand" /> to <see cref="InputCommandsController" />
+        /// </summary>
+        protected void AddCommandsToController()
+        {
+            //TODO Add log scrolling
+        }
+
+
+        /// <inheritdoc />
+        public override bool OnKeyPressed(InputChord key)
+        {
+            if (!IsFocused)
+            {
+                return true;
+            }
+
+            return CommandsController.KeyPressed(key);
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyHold(InputChord key)
+        {
+            if (!IsFocused)
+            {
+                return true;
+            }
+
+            return CommandsController.KeyHold(key);
+        }
+
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
@@ -524,7 +565,7 @@ namespace FlaxEditor.Windows
                     // TODO: we should provide max limit for entries count and remove if too many
 
                     // Check if user want's to scroll view by var (or is vewing earlier entry)
-                    bool scrollView = (_entriesPanel.VScrollBar.Maximum - _entriesPanel.VScrollBar.TargetValue) < LogEntry.DefaultHeight * 1.5f;
+                    bool scrollView = _entriesPanel.VScrollBar.Maximum - _entriesPanel.VScrollBar.TargetValue < LogEntry.DefaultHeight * 1.5f;
 
                     // Add pending entries
                     LogEntry newEntry = null;
@@ -541,7 +582,9 @@ namespace FlaxEditor.Windows
 
                     // Scroll to the new entry
                     if (scrollView)
+                    {
                         _entriesPanel.ScrollViewTo(newEntry);
+                    }
                 }
             }
 

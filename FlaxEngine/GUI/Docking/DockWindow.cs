@@ -352,11 +352,14 @@ namespace FlaxEngine.GUI.Docking
         }
 
         /// <inheritdoc />
-        public override void Focus()
+        public override bool Focus()
         {
-            base.Focus();
-
-            SelectTab();
+            var result = base.Focus();
+            if (result)
+            {
+                SelectTab();
+            }
+            return result;
         }
 
         /// <inheritdoc />

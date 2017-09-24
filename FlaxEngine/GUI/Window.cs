@@ -284,20 +284,14 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override void Focus()
+        public override bool Focus()
         {
-            _window.Focus();
-        }
-
-        /// <inheritdoc />
-        protected override bool Focus(Control c)
-        {
-            if (IsDisposing || _focusedControl == c)
+            if (IsDisposing || _focusedControl == this)
                 return false;
 
             // Change focused control
             Control prevous = _focusedControl;
-            _focusedControl = c;
+            _focusedControl = this;
 
             // Fire events
             if (prevous != null)

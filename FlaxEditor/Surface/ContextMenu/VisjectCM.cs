@@ -158,7 +158,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <inheritdoc />
         protected override void OnHide()
         {
-            Focus(null);
+            Defocus();
             
             base.OnHide();
         }

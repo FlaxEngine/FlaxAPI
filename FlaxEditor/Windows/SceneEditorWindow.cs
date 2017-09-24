@@ -53,27 +53,5 @@ namespace FlaxEditor.Windows
             CommandsController.Add(new InputCommand(() => { Editor.Windows.SceneWin.Search(); }, new InputChord(KeyCode.Control, KeyCode.F)));
             CommandsController.Add(new InputCommand(Editor.SceneEditing.Delete, new InputChord(KeyCode.Delete)));
         }
-
-        /// <inheritdoc />
-        public override bool OnKeyHold(InputChord key)
-        {
-            // Base
-            if (base.OnKeyHold(key) || !IsFocused)
-            {
-                return true;
-            }
-            return CommandsController.KeyHold(key);
-        }
-
-        /// <inheritdoc />
-        public override bool OnKeyPressed(InputChord key)
-        {
-            // Base
-            if (base.OnKeyPressed(key) || !IsFocused)
-            {
-                return true;
-            }
-            return CommandsController.KeyPressed(key);
-        }
     }
 }
