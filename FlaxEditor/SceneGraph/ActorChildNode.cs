@@ -37,6 +37,9 @@ namespace FlaxEditor.SceneGraph
         public override SceneNode ParentScene => ParentNode.ParentScene;
 
         /// <inheritdoc />
+        public override bool CanTransform => ParentNode.CanTransform;
+
+        /// <inheritdoc />
         public override bool IsActive => ParentNode.IsActive;
 
         /// <inheritdoc />

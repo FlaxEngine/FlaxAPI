@@ -162,6 +162,9 @@ namespace FlaxEditor.SceneGraph
         }
 
         /// <inheritdoc />
+        public override bool CanTransform => (_actor.StaticFlags & StaticFlags.Transform) == 0;
+        
+        /// <inheritdoc />
         public override bool IsActive => _actor.IsActive;
 
         /// <inheritdoc />

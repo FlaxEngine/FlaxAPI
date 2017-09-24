@@ -342,9 +342,14 @@ namespace FlaxEditor.Viewport
             Vector3 gizmoPosition = TransformGizmo.Position;
 
             // Transform selected objects
+            bool isPlayMode = Editor.Instance.StateMachine.IsPlayMode;
             for (int i = 0; i < selection.Count; i++)
             {
                 var obj = selection[i];
+                
+                // Block transforming static objects in play mode
+                if(isPlayMode && obj.CanTransform == false)
+                    continue;
                 var trans = obj.Transform;
 
                 // Apply translation
