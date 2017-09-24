@@ -66,7 +66,11 @@ namespace FlaxEditor.Utilities
             var type = finalMember.Type;
             if (value != null)
             {
-                if (value is long && type == typeof(int))
+                if (type.IsEnum)
+                {
+                    value = Convert.ChangeType(value, Enum.GetUnderlyingType(type));
+                }
+                else if (value is long && type == typeof(int))
                 {
                     value = (int)(long)value;
                 }
@@ -75,7 +79,7 @@ namespace FlaxEditor.Utilities
                     value = (float)(double)value;
                 }
             }
-
+            
             finalMember.SetValue(instance, value);
         }
 
