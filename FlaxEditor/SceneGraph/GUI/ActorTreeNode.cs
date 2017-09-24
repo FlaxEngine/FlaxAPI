@@ -106,13 +106,20 @@ namespace FlaxEditor.SceneGraph.GUI
             if (Parent is ActorTreeNode parent)
             {
                 var style = Style.Current;
-                if (parent._isActive)
+                bool isActive = parent._isActive && _isActive;
+                if (!isActive)
                 {
-                    if (_isActive)
-                        return style.Foreground;
+                    // Inactive
+                    return style.ForegroundDisabled;
+                }
+                if (Editor.Instance.StateMachine.IsPlayMode && Actor.IsStatic)
+                {
+                    // Static
+                    return style.Foreground * 0.85f;
                 }
 
-                return style.ForegroundDisabled;
+                // Default
+                return style.Foreground;
             }
 
             return base.CacheTextColor();
