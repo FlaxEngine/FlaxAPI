@@ -71,6 +71,19 @@ namespace FlaxEditor
 #endif
 		}
 
+		/// <summary>
+		/// Gets the name of the opened project.
+		/// </summary>
+		[UnmanagedCall]
+		public static string ProjectName
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetProjectName(); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -79,6 +92,8 @@ namespace FlaxEditor
 		internal static extern bool Internal_CreateAsset(NewAssetType type, string outputPath);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_CanImport(string extension);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern string Internal_GetProjectName();
 #endif
 #endregion
 	}

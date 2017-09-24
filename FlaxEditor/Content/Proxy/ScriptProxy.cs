@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -46,10 +46,12 @@ namespace FlaxEditor.Content
             // Load template
             var templatePath = StringUtils.CombinePaths(Globals.EditorFolder, "Scripting/ScriptTemplate.cs");
             var scriptTemplate = File.ReadAllText(templatePath);
-
+            var scriptNamespace = Editor.ProjectName.Replace(" ", "");
+            
             // Format
             var scriptName = ScriptItem.CreateScriptName(outputPath);
-            scriptTemplate = scriptTemplate.Replace("ScriptName", scriptName);
+            scriptTemplate = scriptTemplate.Replace("%class%", scriptName);
+            scriptTemplate = scriptTemplate.Replace("%namespace%", scriptNamespace);
 
             // Save
             File.WriteAllText(outputPath, scriptTemplate, Encoding.Unicode);
