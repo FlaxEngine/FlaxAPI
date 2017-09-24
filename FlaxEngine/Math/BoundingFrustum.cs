@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 // -----------------------------------------------------------------------------
 // Original code from SharpDX project. https://github.com/sharpdx/SharpDX/
@@ -51,7 +51,7 @@ namespace FlaxEngine
         /// </summary>
         public Matrix Matrix
         {
-            get { return pMatrix; }
+            get => pMatrix;
             set
             {
                 pMatrix = value;
@@ -62,50 +62,32 @@ namespace FlaxEngine
         /// <summary>
         /// Gets the near plane of the BoundingFrustum.
         /// </summary>
-        public Plane Near
-        {
-            get { return pNear; }
-        }
+        public Plane Near => pNear;
 
         /// <summary>
         /// Gets the far plane of the BoundingFrustum.
         /// </summary>
-        public Plane Far
-        {
-            get { return pFar; }
-        }
+        public Plane Far => pFar;
 
         /// <summary>
         /// Gets the left plane of the BoundingFrustum.
         /// </summary>
-        public Plane Left
-        {
-            get { return pLeft; }
-        }
+        public Plane Left => pLeft;
 
         /// <summary>
         /// Gets the right plane of the BoundingFrustum.
         /// </summary>
-        public Plane Right
-        {
-            get { return pRight; }
-        }
+        public Plane Right => pRight;
 
         /// <summary>
         /// Gets the top plane of the BoundingFrustum.
         /// </summary>
-        public Plane Top
-        {
-            get { return pTop; }
-        }
+        public Plane Top => pTop;
 
         /// <summary>
         /// Gets the bottom plane of the BoundingFrustum.
         /// </summary>
-        public Plane Bottom
-        {
-            get { return pBottom; }
-        }
+        public Plane Bottom => pBottom;
 
         /// <summary>
         /// Creates a new instance of BoundingFrustum.
@@ -890,9 +872,6 @@ namespace FlaxEngine
         /// <value>
         /// <c>true</c> if the current BoundingFrustrum is Orthographic; otherwise, <c>false</c>.
         /// </value>
-        public bool IsOrthographic
-        {
-            get { return (pLeft.Normal == -pRight.Normal) && (pTop.Normal == -pBottom.Normal); }
-        }
+        public bool IsOrthographic => (pLeft.Normal == -pRight.Normal) && (pTop.Normal == -pBottom.Normal);
     }
 }

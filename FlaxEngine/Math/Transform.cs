@@ -83,10 +83,7 @@ namespace FlaxEngine
         /// <summary>
         /// Gets a value indicting whether this transform is identity
         /// </summary>
-        public bool IsIdentity
-        {
-            get { return Equals(Identity); }
-        }
+        public bool IsIdentity => Equals(Identity);
 
         /// <summary>
         /// Gets the forward vector.

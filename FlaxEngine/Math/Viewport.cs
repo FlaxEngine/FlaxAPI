@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 // -----------------------------------------------------------------------------
 // Original code from SharpDX project. https://github.com/sharpdx/SharpDX/
@@ -123,7 +123,7 @@ namespace FlaxEngine
         /// <value>The bounds.</value>
         public Rectangle Bounds
         {
-            get { return new Rectangle(X, Y, Width, Height); }
+            get => new Rectangle(X, Y, Width, Height);
             set
             {
                 X = value.X;

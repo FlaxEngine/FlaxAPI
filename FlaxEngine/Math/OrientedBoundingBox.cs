@@ -215,10 +215,7 @@ namespace FlaxEngine
         /// The property will return the actual size even if the scaling is applied using Scale method,
         /// but if the scaling is applied to transformation matrix, use GetSize Function instead.
         /// </remarks>
-        public Vector3 Size
-        {
-            get { return Extents * 2; }
-        }
+        public Vector3 Size => Extents * 2;
 
         /// <summary>
         /// Returns the size of the <see cref="OrientedBoundingBox" /> taking into consideration the scaling applied to the
@@ -261,10 +258,7 @@ namespace FlaxEngine
         /// <summary>
         /// Returns the center of the <see cref="OrientedBoundingBox" />.
         /// </summary>
-        public Vector3 Center
-        {
-            get { return Transformation.TranslationVector; }
-        }
+        public Vector3 Center => Transformation.TranslationVector;
 
         /// <summary>
         /// Determines whether a <see cref="OrientedBoundingBox" /> contains a point.

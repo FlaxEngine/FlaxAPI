@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 // -----------------------------------------------------------------------------
 // Original code from SharpDX project. https://github.com/sharpdx/SharpDX/
@@ -350,9 +350,9 @@ namespace FlaxEngine
         public Matrix(float[] values)
         {
             if (values == null)
-                throw new ArgumentNullException("values");
+                throw new ArgumentNullException(nameof(values));
             if (values.Length != 16)
-                throw new ArgumentOutOfRangeException("values", "There must be sixteen and only sixteen input values for Matrix.");
+                throw new ArgumentOutOfRangeException(nameof(values), "There must be sixteen and only sixteen input values for Matrix.");
 
             M11 = values[0];
             M12 = values[1];
@@ -380,7 +380,7 @@ namespace FlaxEngine
         /// </summary>
         public Vector4 Row1
         {
-            get { return new Vector4(M11, M12, M13, M14); }
+            get => new Vector4(M11, M12, M13, M14);
             set
             {
                 M11 = value.X;
@@ -395,7 +395,7 @@ namespace FlaxEngine
         /// </summary>
         public Vector4 Row2
         {
-            get { return new Vector4(M21, M22, M23, M24); }
+            get => new Vector4(M21, M22, M23, M24);
             set
             {
                 M21 = value.X;
@@ -410,7 +410,7 @@ namespace FlaxEngine
         /// </summary>
         public Vector4 Row3
         {
-            get { return new Vector4(M31, M32, M33, M34); }
+            get => new Vector4(M31, M32, M33, M34);
             set
             {
                 M31 = value.X;
@@ -425,7 +425,7 @@ namespace FlaxEngine
         /// </summary>
         public Vector4 Row4
         {
-            get { return new Vector4(M41, M42, M43, M44); }
+            get => new Vector4(M41, M42, M43, M44);
             set
             {
                 M41 = value.X;
@@ -440,7 +440,7 @@ namespace FlaxEngine
         /// </summary>
         public Vector4 Column1
         {
-            get { return new Vector4(M11, M21, M31, M41); }
+            get => new Vector4(M11, M21, M31, M41);
             set
             {
                 M11 = value.X;
@@ -455,7 +455,7 @@ namespace FlaxEngine
         /// </summary>
         public Vector4 Column2
         {
-            get { return new Vector4(M12, M22, M32, M42); }
+            get => new Vector4(M12, M22, M32, M42);
             set
             {
                 M12 = value.X;
@@ -470,7 +470,7 @@ namespace FlaxEngine
         /// </summary>
         public Vector4 Column3
         {
-            get { return new Vector4(M13, M23, M33, M43); }
+            get => new Vector4(M13, M23, M33, M43);
             set
             {
                 M13 = value.X;
@@ -485,7 +485,7 @@ namespace FlaxEngine
         /// </summary>
         public Vector4 Column4
         {
-            get { return new Vector4(M14, M24, M34, M44); }
+            get => new Vector4(M14, M24, M34, M44);
             set
             {
                 M14 = value.X;
@@ -500,7 +500,7 @@ namespace FlaxEngine
         /// </summary>
         public Vector3 TranslationVector
         {
-            get { return new Vector3(M41, M42, M43); }
+            get => new Vector3(M41, M42, M43);
             set
             {
                 M41 = value.X;
@@ -514,7 +514,7 @@ namespace FlaxEngine
         /// </summary>
         public Vector3 ScaleVector
         {
-            get { return new Vector3(M11, M22, M33); }
+            get => new Vector3(M11, M22, M33);
             set
             {
                 M11 = value.X;
@@ -529,10 +529,7 @@ namespace FlaxEngine
         /// <value>
         /// <c>true</c> if this instance is an identity matrix; otherwise, <c>false</c>.
         /// </value>
-        public bool IsIdentity
-        {
-            get { return Equals(Identity); }
-        }
+        public bool IsIdentity => Equals(Identity);
 
         /// <summary>
         /// Gets or sets the component at the specified index.
@@ -584,7 +581,7 @@ namespace FlaxEngine
                         return M44;
                 }
 
-                throw new ArgumentOutOfRangeException("index", "Indices for Matrix run from 0 to 15, inclusive.");
+                throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix run from 0 to 15, inclusive.");
             }
 
             set
@@ -640,7 +637,7 @@ namespace FlaxEngine
                         M44 = value;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException("index", "Indices for Matrix run from 0 to 15, inclusive.");
+                        throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix run from 0 to 15, inclusive.");
                 }
             }
         }
@@ -661,9 +658,9 @@ namespace FlaxEngine
             get
             {
                 if ((row < 0) || (row > 3))
-                    throw new ArgumentOutOfRangeException("row", "Rows and columns for matrices run from 0 to 3, inclusive.");
+                    throw new ArgumentOutOfRangeException(nameof(row), "Rows and columns for matrices run from 0 to 3, inclusive.");
                 if ((column < 0) || (column > 3))
-                    throw new ArgumentOutOfRangeException("column", "Rows and columns for matrices run from 0 to 3, inclusive.");
+                    throw new ArgumentOutOfRangeException(nameof(column), "Rows and columns for matrices run from 0 to 3, inclusive.");
 
                 return this[row * 4 + column];
             }
@@ -671,9 +668,9 @@ namespace FlaxEngine
             set
             {
                 if ((row < 0) || (row > 3))
-                    throw new ArgumentOutOfRangeException("row", "Rows and columns for matrices run from 0 to 3, inclusive.");
+                    throw new ArgumentOutOfRangeException(nameof(row), "Rows and columns for matrices run from 0 to 3, inclusive.");
                 if ((column < 0) || (column > 3))
-                    throw new ArgumentOutOfRangeException("column", "Rows and columns for matrices run from 0 to 3, inclusive.");
+                    throw new ArgumentOutOfRangeException(nameof(column), "Rows and columns for matrices run from 0 to 3, inclusive.");
 
                 this[row * 4 + column] = value;
             }
@@ -927,13 +924,13 @@ namespace FlaxEngine
         public void ExchangeRows(int firstRow, int secondRow)
         {
             if (firstRow < 0)
-                throw new ArgumentOutOfRangeException("firstRow", "The parameter firstRow must be greater than or equal to zero.");
+                throw new ArgumentOutOfRangeException(nameof(firstRow), "The parameter firstRow must be greater than or equal to zero.");
             if (firstRow > 3)
-                throw new ArgumentOutOfRangeException("firstRow", "The parameter firstRow must be less than or equal to three.");
+                throw new ArgumentOutOfRangeException(nameof(firstRow), "The parameter firstRow must be less than or equal to three.");
             if (secondRow < 0)
-                throw new ArgumentOutOfRangeException("secondRow", "The parameter secondRow must be greater than or equal to zero.");
+                throw new ArgumentOutOfRangeException(nameof(secondRow), "The parameter secondRow must be greater than or equal to zero.");
             if (secondRow > 3)
-                throw new ArgumentOutOfRangeException("secondRow", "The parameter secondRow must be less than or equal to three.");
+                throw new ArgumentOutOfRangeException(nameof(secondRow), "The parameter secondRow must be less than or equal to three.");
 
             if (firstRow == secondRow)
                 return;
@@ -962,13 +959,13 @@ namespace FlaxEngine
         public void ExchangeColumns(int firstColumn, int secondColumn)
         {
             if (firstColumn < 0)
-                throw new ArgumentOutOfRangeException("firstColumn", "The parameter firstColumn must be greater than or equal to zero.");
+                throw new ArgumentOutOfRangeException(nameof(firstColumn), "The parameter firstColumn must be greater than or equal to zero.");
             if (firstColumn > 3)
-                throw new ArgumentOutOfRangeException("firstColumn", "The parameter firstColumn must be less than or equal to three.");
+                throw new ArgumentOutOfRangeException(nameof(firstColumn), "The parameter firstColumn must be less than or equal to three.");
             if (secondColumn < 0)
-                throw new ArgumentOutOfRangeException("secondColumn", "The parameter secondColumn must be greater than or equal to zero.");
+                throw new ArgumentOutOfRangeException(nameof(secondColumn), "The parameter secondColumn must be greater than or equal to zero.");
             if (secondColumn > 3)
-                throw new ArgumentOutOfRangeException("secondColumn", "The parameter secondColumn must be less than or equal to three.");
+                throw new ArgumentOutOfRangeException(nameof(secondColumn), "The parameter secondColumn must be less than or equal to three.");
 
             if (firstColumn == secondColumn)
                 return;
@@ -1249,7 +1246,7 @@ namespace FlaxEngine
             //Reference: http://rosettacode.org/wiki/Matrix-exponentiation_operator
 
             if (exponent < 0)
-                throw new ArgumentOutOfRangeException("exponent", "The exponent can not be negative.");
+                throw new ArgumentOutOfRangeException(nameof(exponent), "The exponent can not be negative.");
 
             if (exponent == 0)
             {
