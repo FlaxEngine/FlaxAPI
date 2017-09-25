@@ -26,6 +26,11 @@ namespace FlaxEditor.Surface
         public Vector2 Position;
 
         /// <summary>
+        /// The element size for some types.
+        /// </summary>
+        public Vector2 Size;
+
+        /// <summary>
         /// Custom text value.
         /// </summary>
         public string Text;
@@ -162,7 +167,7 @@ namespace FlaxEditor.Surface
                     ConnectionsType = ConnectionType.Invalid
                 };
             }
-            
+
             /// <summary>
             /// Creates new Float value element description.
             /// </summary>
@@ -271,7 +276,7 @@ namespace FlaxEditor.Surface
                     Text = null,
                     Single = false,
                     ValueIndex = valueIndex,
-                    BoxID = (int)domain, // Pack it to int
+                    BoxID = (int)domain,// Pack it to int
                     ConnectionsType = ConnectionType.Invalid
                 };
             }
@@ -285,16 +290,16 @@ namespace FlaxEditor.Surface
             /// <param name="valueIndex">The index of the node variable linked as the input. Usefull to make a physical connection between input box and default value for it.</param>
             /// <param name="values">The set of combo box items to present. May be nul if provided at runtime.</param>
             /// <returns>The archetype.</returns>
-            public static NodeElementArchetype CmoboBox(float x, float y, int width, int valueIndex = -1, string[] values = null)
+            public static NodeElementArchetype ComboBox(float x, float y, float width, int valueIndex = -1, string[] values = null)
             {
                 return new NodeElementArchetype
                 {
                     Type = NodeElementType.ComboBox,
                     Position = new Vector2(x, y),
-                    Text = values != null ? string.Join("\n", values) : null, // Pack all values to string separated with new line characters
+                    Size = new Vector2(width, 0),
+                    Text = values != null ? string.Join("\n", values) : null,// Pack all values to string separated with new line characters
                     Single = false,
                     ValueIndex = valueIndex,
-                    BoxID = width, // Use Box ID to store combo box width
                     ConnectionsType = ConnectionType.Invalid
                 };
             }
@@ -308,7 +313,7 @@ namespace FlaxEditor.Surface
             /// <param name="valueIndex">The index of the node variable linked as the input. Usefull to make a physical connection between input box and default value for it.</param>
             /// <param name="enumType">The enum type to present all it's values. Important: first value should be 0 and so on.</param>
             /// <returns>The archetype.</returns>
-            public static NodeElementArchetype CmoboBox(float x, float y, int width, int valueIndex, Type enumType)
+            public static NodeElementArchetype ComboBox(float x, float y, int width, int valueIndex, Type enumType)
             {
                 if (enumType == null || !enumType.IsEnum)
                     throw new ArgumentException();
@@ -320,12 +325,12 @@ namespace FlaxEditor.Surface
                     var field = fields[i];
                     if (field.Name.Equals("value__"))
                         continue;
-                    
+
                     var name = CustomEditorsUtil.GetPropertyNameUI(field.Name);
                     values.Add(name);
                 }
-                
-                return CmoboBox(x, y, width, valueIndex, values.ToArray());
+
+                return ComboBox(x, y, width, valueIndex, values.ToArray());
             }
 
             /// <summary>
@@ -345,6 +350,30 @@ namespace FlaxEditor.Surface
                     Single = false,
                     ValueIndex = -1,
                     BoxID = 0,
+                    ConnectionsType = ConnectionType.Invalid
+                };
+            }
+
+            /// <summary>
+            /// Creates new TextBox element description.
+            /// </summary>
+            /// <param name="x">The x location (in node area space).</param>
+            /// <param name="y">The y location (in node area space).</param>
+            /// <param name="width">The width.</param>
+            /// <param name="height">The height.</param>
+            /// <param name="valueIndex">The index of the node variable linked as the input. Usefull to make a physical connection between input box and default value for it.</param>
+            /// <param name="isMultiline">Enable/disable multiline text input support</param>
+            /// <returns>The archetype.</returns>
+            public static NodeElementArchetype TextBox(float x, float y, float width, float height, int valueIndex, bool isMultiline = true)
+            {
+                return new NodeElementArchetype
+                {
+                    Type = NodeElementType.TextBox,
+                    Position = new Vector2(Constants.NodeMarginX + x, Constants.NodeMarginY + Constants.NodeHeaderSize + y),
+                    Size = new Vector2(width, height),
+                    Single = false,
+                    ValueIndex = valueIndex,
+                    BoxID = isMultiline ? 1 : 0,
                     ConnectionsType = ConnectionType.Invalid
                 };
             }

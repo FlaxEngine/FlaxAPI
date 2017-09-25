@@ -320,7 +320,7 @@ namespace FlaxEditor.Surface.Archetypes
                 },
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.CmoboBox(2, 0, 116)
+                    NodeElementArchetype.Factory.ComboBox(2, 0, 116)
                 }
             },
         };

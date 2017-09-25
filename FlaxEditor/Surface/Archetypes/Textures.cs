@@ -147,7 +147,7 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(4, "Heightmap Texture", true, ConnectionType.Object, 4),
                     NodeElementArchetype.Factory.Output(0, "Parallax UVs", ConnectionType.Vector2, 5),
                     NodeElementArchetype.Factory.Text(Surface.Constants.BoxSize + 4, 5 * Surface.Constants.LayoutOffsetY, "Channel"),
-                    NodeElementArchetype.Factory.CmoboBox(70, 5 * Surface.Constants.LayoutOffsetY, 50, 3, new[]
+                    NodeElementArchetype.Factory.ComboBox(70, 5 * Surface.Constants.LayoutOffsetY, 50, 3, new[]
                     {
                         "R",
                         "G",
@@ -176,7 +176,7 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(3, "G", ConnectionType.Float, 3),
                     NodeElementArchetype.Factory.Output(4, "B", ConnectionType.Float, 4),
                     NodeElementArchetype.Factory.Output(5, "A", ConnectionType.Float, 5),
-                    NodeElementArchetype.Factory.CmoboBox(0, Surface.Constants.LayoutOffsetY, 120, 0, typeof(MaterialSceneTextures))
+                    NodeElementArchetype.Factory.ComboBox(0, Surface.Constants.LayoutOffsetY, 120, 0, typeof(MaterialSceneTextures))
                 }
             },
             new NodeArchetype
@@ -231,7 +231,7 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(3, "Offset", true, ConnectionType.Vector2, 3),
                     NodeElementArchetype.Factory.Output(0, "Color", ConnectionType.Vector4, 4),
                     NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 4, "Sampler"),
-                    NodeElementArchetype.Factory.CmoboBox(50, Surface.Constants.LayoutOffsetY * 4, 100, 0, typeof(CommonSamplerType))
+                    NodeElementArchetype.Factory.ComboBox(50, Surface.Constants.LayoutOffsetY * 4, 100, 0, typeof(CommonSamplerType))
                 }
             },
         };

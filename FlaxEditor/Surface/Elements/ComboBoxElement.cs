@@ -31,7 +31,7 @@ namespace FlaxEditor.Surface.Elements
 
         /// <inheritdoc />
         public ComboBoxElement(SurfaceNode parentNode, NodeElementArchetype archetype)
-            : base(archetype.ActualPositionX, archetype.ActualPositionY, archetype.BoxID)
+            : base(archetype.ActualPositionX, archetype.ActualPositionY, archetype.Size.X)
         {
             ParentNode = parentNode;
             Archetype = archetype;
