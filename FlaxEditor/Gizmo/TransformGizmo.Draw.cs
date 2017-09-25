@@ -82,12 +82,6 @@ namespace FlaxEditor.Gizmo
                     break;
                 }
 
-                case Mode.Rotate:
-                {
-                    // TODO: render rotation gizmo
-                    break;
-                }
-
                 case Mode.Scale:
                 {
                     if (!_modelScaleAxis || !_modelScaleAxis.IsLoaded)

@@ -335,8 +335,9 @@ namespace FlaxEditor.Viewport
         /// <param name="translationDelta">The translation delta.</param>
         /// <param name="rotationDelta">The rotation delta.</param>
         /// <param name="scaleDelta">The scale delta.</param>
-        public void ApplyTransform(List<SceneGraphNode> selection, ref Vector3 translationDelta, ref Matrix rotationDelta, ref Vector3 scaleDelta)
+        public void ApplyTransform(List<SceneGraphNode> selection, ref Vector3 translationDelta, ref Quaternion rotationDelta, ref Vector3 scaleDelta)
         {
+            bool applyRotation = !rotationDelta.IsIdentity;
             bool useObjCenter = TransformGizmo.ActivePivot == TransformGizmo.PivotType.ObjectCenter;
             Vector3 gizmoPosition = TransformGizmo.Position;
 
@@ -351,27 +352,30 @@ namespace FlaxEditor.Viewport
                     continue;
                 var trans = obj.Transform;
 
-                // Apply translation
-                trans.Translation += translationDelta;
+                // Apply rotation
+                if (applyRotation)
+                {
+                    Vector3 pivotOffset = trans.Translation - gizmoPosition;
+                    if (useObjCenter || pivotOffset.IsZero)
+                    {
+                        trans.Orientation *= rotationDelta;
+                    }
+                    else
+                    {
+                        Matrix.RotationQuaternion(ref trans.Orientation, out var transWorld);
+                        Matrix.RotationQuaternion(ref rotationDelta, out var deltaWorld);
+                        Matrix world = transWorld * Matrix.Translation(pivotOffset) * deltaWorld * Matrix.Translation(-pivotOffset);
+                        trans.SetRotation(ref world);
+                        trans.Translation += world.TranslationVector;
+                    }
+                }
 
                 // Apply scale
                 const float scaleLimit = 99_999_999.0f;
                 trans.Scale = Vector3.Clamp(trans.Scale + scaleDelta, new Vector3(-scaleLimit), new Vector3(scaleLimit));
 
-                // Apply rotation
-                if (!rotationDelta.IsIdentity)
-                {
-                    Matrix localRot = Matrix.Identity;
-                    Vector3 rotationCenter = useObjCenter ? trans.Translation : gizmoPosition;
-                    localRot.Forward = trans.Forward;
-                    localRot.Up = trans.Up;
-                    localRot.Right = Vector3.Normalize(Vector3.Cross(trans.Forward, trans.Up));
-                    localRot.TranslationVector = trans.Translation - rotationCenter;
-                    Matrix newRot = localRot * rotationDelta;
-                    trans.SetRotation(ref newRot);
-                    if (newRot.TranslationVector.LengthSquared > 0.0001f)
-                        trans.Translation = newRot.TranslationVector + rotationCenter;
-                }
+                // Apply translation
+                trans.Translation += translationDelta;
 
                 obj.Transform = trans;
             }
