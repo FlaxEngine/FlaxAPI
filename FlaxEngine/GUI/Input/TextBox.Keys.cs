@@ -33,7 +33,7 @@ namespace FlaxEngine.GUI
             CommandsController.Add(new InputCommand(MoveSelectorDown, new InputChord(KeyCode.ArrowDown)));
 
             CommandsController.Add(new InputCommand(ExtendSelectorRight, new InputChord(KeyCode.Shift, KeyCode.ArrowRight)));
-            CommandsController.Add(new InputCommand(ExtendSelelectorLeft, new InputChord(KeyCode.Shift, KeyCode.ArrowLeft)));
+            CommandsController.Add(new InputCommand(ExtendSelectorLeft, new InputChord(KeyCode.Shift, KeyCode.ArrowLeft)));
             CommandsController.Add(new InputCommand(ExtendSelectorUp, new InputChord(KeyCode.Shift, KeyCode.ArrowUp)));
             CommandsController.Add(new InputCommand(ExtendSelectorDown, new InputChord(KeyCode.Shift, KeyCode.ArrowDown)));
 
