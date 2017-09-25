@@ -97,6 +97,10 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Refresh()
         {
+            // No support for different collections for now
+            if (HasDiffrentValues || HasDiffrentTypes)
+                return;
+
             // Check if collection has been resized (by UI or from external source)
             if (Count != _elementsCount)
             {
