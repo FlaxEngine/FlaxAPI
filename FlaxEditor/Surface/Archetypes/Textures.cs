@@ -14,6 +14,32 @@ namespace FlaxEditor.Surface.Archetypes
     public static class Textures
     {
         /// <summary>
+        /// Common samplers types.
+        /// </summary>
+        public enum CommonSamplerType
+        {
+            /// <summary>
+            /// The linear clamp
+            /// </summary>
+            LinearClamp = 0,
+
+            /// <summary>
+            /// The point clamp
+            /// </summary>
+            PointClamp = 1,
+
+            /// <summary>
+            /// The linear wrap
+            /// </summary>
+            LinearWrap = 2,
+
+            /// <summary>
+            /// The point wrap
+            /// </summary>
+            PointWrap = 3,
+        }
+
+        /// <summary>
         /// The nodes for that group.
         /// </summary>
         public static NodeArchetype[] Nodes =
@@ -183,6 +209,29 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Object, 6),
                     NodeElementArchetype.Factory.Output(1, "Depth", ConnectionType.Float, 1),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 9,
+                Title = "Sample Texture",
+                Description = "Custom texture sampling",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(150, 110),
+                DefaultValues = new object[]
+                {
+                    0,
+                    -1,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Texture", true, ConnectionType.Object, 0),
+                    NodeElementArchetype.Factory.Input(1, "UVs", true, ConnectionType.Vector2, 1),
+                    NodeElementArchetype.Factory.Input(2, "Level", true, ConnectionType.Integer, 2, 1),
+                    NodeElementArchetype.Factory.Input(3, "Offset", true, ConnectionType.Vector2, 3),
+                    NodeElementArchetype.Factory.Output(0, "Color", ConnectionType.Vector4, 4),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 4, "Sampler"),
+                    NodeElementArchetype.Factory.CmoboBox(50, Surface.Constants.LayoutOffsetY * 4, 100, 0, typeof(CommonSamplerType))
                 }
             },
         };
