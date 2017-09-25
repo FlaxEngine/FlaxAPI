@@ -99,6 +99,7 @@
     <Compile Include="CustomEditors\Values\ListValueContainer.cs" />
     <Compile Include="CustomEditors\Values\ValueContainer.cs" />
     <Compile Include="EditorAssets.cs" />
+    <Compile Include="Gizmo\SelectionOutline.cs" />
     <Compile Include="GUI\AssetPicker.cs" />
     <Compile Include="GUI\Drag\DragActors.cs" />
     <Compile Include="GUI\Drag\DragScripts.cs" />
@@ -229,6 +230,7 @@
     <Compile Include="Surface\Elements\InputBox.cs" />
     <Compile Include="Surface\Elements\InteagerValue.cs" />
     <Compile Include="Surface\Elements\OutputBox.cs" />
+    <Compile Include="Surface\Elements\TextBoxView.cs" />
     <Compile Include="Surface\Elements\TextView.cs" />
     <Compile Include="Surface\GroupArchetype.cs" />
     <Compile Include="Surface\IParametersDependantNode.cs" />

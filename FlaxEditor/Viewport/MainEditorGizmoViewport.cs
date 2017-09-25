@@ -38,6 +38,11 @@ namespace FlaxEditor.Viewport
         public readonly TransformGizmo TransformGizmo;
 
         /// <summary>
+        /// The selection outline postFx.
+        /// </summary>
+        public SelectionOutline SelectionOutline;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MainEditorGizmoViewport"/> class.
         /// </summary>
         /// <param name="editor">Editor instance.</param>
@@ -46,12 +51,18 @@ namespace FlaxEditor.Viewport
         {
             _editor = editor;
 
+            // Prepare rendering task
             Task.ActorsSource = ActorsSources.ScenesAndCustomActors;
             Task.Flags = ViewFlags.DefaultEditor;
             Task.Begin += RenderTaskOnBegin;
             Task.End += RenderTaskOnEnd;
             Task.Draw += RenderTaskOnDraw;
 
+            // Create selection outline postFx
+            SelectionOutline = FlaxEngine.Object.New<SelectionOutline>();
+            Task.CustomPostFx.Add(SelectionOutline);
+
+            // Add transformation gizmo
             TransformGizmo = new TransformGizmo(this);
             TransformGizmo.OnApplyTransformation += ApplyTransform;
             TransformGizmo.OnModeChanged += OnGizmoModeChanged;
@@ -618,6 +629,7 @@ namespace FlaxEditor.Viewport
         public override void OnDestroy()
         {
             _debugDrawData.Dispose();
+            FlaxEngine.Object.Destroy(ref SelectionOutline);
 
             base.OnDestroy();
         }
