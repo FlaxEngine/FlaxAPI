@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 
 namespace FlaxEngine.Rendering
 {
@@ -26,7 +27,7 @@ namespace FlaxEngine.Rendering
         /// </summary>
         ScenesAndCustomActors = Scenes | CustomActors,
     }
-
+    
     public partial class GPUContext
     {
         /// <summary>
@@ -44,7 +45,7 @@ namespace FlaxEngine.Rendering
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void DrawScene(RenderTask task, RenderTarget output, RenderBuffers buffers, RenderView view, ViewFlags flags, ViewMode mode, Actor[] customActors = null, ActorsSources actorsSource = ActorsSources.ScenesAndCustomActors)
+        public void DrawScene(RenderTask task, RenderTarget output, RenderBuffers buffers, RenderView view, ViewFlags flags, ViewMode mode, Actor[] customActors = null, ActorsSources actorsSource = ActorsSources.ScenesAndCustomActors, HashSet<PostProcessEffect> customPostFx = null)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -60,7 +61,21 @@ namespace FlaxEngine.Rendering
                 }
             }
 
-            Internal_DrawScene(unmanagedPtr, Object.GetUnmanagedPtr(task), Object.GetUnmanagedPtr(output), Object.GetUnmanagedPtr(buffers), ref view, flags, mode, actors, actorsSource);
+            // Get unmanaged postFx
+            IntPtr[] postFx = null;
+            if (customPostFx != null)
+            {
+                var postFxList = new List<IntPtr>(customPostFx.Count);
+                foreach (var e in customPostFx)
+                {
+                    if (e && e.CanRender)
+                        postFxList.Add(e.unmanagedPtr);
+                }
+                if (postFxList.Count > 0)
+                    postFx = postFxList.ToArray();
+            }
+
+            Internal_DrawScene(unmanagedPtr, Object.GetUnmanagedPtr(task), Object.GetUnmanagedPtr(output), Object.GetUnmanagedPtr(buffers), ref view, flags, mode, actors, actorsSource, postFx);
 #endif
         }
     }
