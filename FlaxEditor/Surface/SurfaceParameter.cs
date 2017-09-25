@@ -109,6 +109,7 @@ namespace FlaxEditor.Surface
                 case ParameterType.CubeTexture:
                 case ParameterType.Texture:
                 case ParameterType.NormalMap:
+                case ParameterType.RenderTarget:
                     param.Value = Guid.Empty;
                     break;
                 default: throw new IndexOutOfRangeException();

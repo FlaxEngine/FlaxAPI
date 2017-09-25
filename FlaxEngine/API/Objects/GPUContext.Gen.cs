@@ -102,31 +102,6 @@ namespace FlaxEngine.Rendering
 #endif
 		}
 
-		/// <summary>
-		/// Draws scene.
-		/// </summary>
-		/// <param name="task">Calling render task.</param>
-		/// <param name="output">Output texture.</param>
-		/// <param name="buffers">Frame rendering buffers.</param>
-		/// <param name="view">Rendering view description structure.</param>
-		/// <param name="flags">Custom view flags collection.</param>
-		/// <param name="mode">Custom view mode option.</param>
-		/// <param name="customActors">Custom set of actors to render. If set to null default scene will be rendered.</param>
-		/// <param name="actorsSource">Actors source to use during rendering.</param>
-		/// <param name="customPostFx">Custom set of post effects to render.</param>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-		[UnmanagedCall]
-		public void DrawScene(RenderTask task, RenderTarget output, RenderBuffers buffers, RenderView view, ViewFlags flags, ViewMode mode, IntPtr[] customActors = null, ActorsSources actorsSource = ActorsSources.Scenes, IntPtr[] customPostFx = null) 
-		{
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-			Internal_DrawScene(unmanagedPtr, Object.GetUnmanagedPtr(task), Object.GetUnmanagedPtr(output), Object.GetUnmanagedPtr(buffers), ref view, flags, mode, customActors, actorsSource, customPostFx);
-#endif
-		}
-
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -137,8 +112,6 @@ namespace FlaxEngine.Rendering
 		internal static extern void Internal_DrawPostFxMaterial1(IntPtr obj, IntPtr material, IntPtr output, IntPtr input);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_DrawPostFxMaterial2(IntPtr obj, IntPtr material, IntPtr output, IntPtr input, ref RenderView view, IntPtr buffers);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_DrawScene(IntPtr obj, IntPtr task, IntPtr output, IntPtr buffers, ref RenderView view, ViewFlags flags, ViewMode mode, IntPtr[] customActors, ActorsSources actorsSource, IntPtr[] customPostFx);
 #endif
 #endregion
 	}

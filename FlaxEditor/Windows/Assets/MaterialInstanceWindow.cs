@@ -93,6 +93,9 @@ namespace FlaxEditor.Windows.Assets
                             case MaterialParameterType.NormalMap:
                                 pType = typeof(Texture);
                                 break;
+                            case MaterialParameterType.RenderTarget:
+                                pType = typeof(RenderTarget);
+                                break;
                             default:
                                 pType = p.Value.GetType();
                                 break;

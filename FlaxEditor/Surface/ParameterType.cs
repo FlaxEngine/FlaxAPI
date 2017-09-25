@@ -98,5 +98,10 @@ namespace FlaxEditor.Surface
         /// The scene texture type.
         /// </summary>
         SceneTexture = 17,
+
+        /// <summary>
+        /// The render target (created from code).
+        /// </summary>
+        RenderTarget = 18,
     }
 }
