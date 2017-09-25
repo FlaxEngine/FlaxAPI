@@ -27,7 +27,7 @@ namespace FlaxEngine.Rendering
         /// </summary>
         ScenesAndCustomActors = Scenes | CustomActors,
     }
-    
+
     public partial class GPUContext
     {
         /// <summary>
@@ -76,6 +76,26 @@ namespace FlaxEngine.Rendering
             }
 
             Internal_DrawScene(unmanagedPtr, Object.GetUnmanagedPtr(task), Object.GetUnmanagedPtr(output), Object.GetUnmanagedPtr(buffers), ref view, flags, mode, actors, actorsSource, postFx);
+#endif
+        }
+
+        /// <summary>
+        /// Draws postFx material to the render target.
+        /// </summary>
+        /// <param name="material">The material to render. It must be a post fx material.</param>
+        /// <param name="output">The output texture. Must be valid and created.</param>
+        /// <param name="input">The input texture. It's optional.</param>
+        /// <param name="sceneRenderTask">Render task to use it's view description and the render buffers.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void DrawPostFxMaterial(MaterialBase material, RenderTarget output, RenderTarget input, SceneRenderTask sceneRenderTask)
+        {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawPostFxMaterial2(unmanagedPtr, Object.GetUnmanagedPtr(material), Object.GetUnmanagedPtr(output), Object.GetUnmanagedPtr(input), ref sceneRenderTask.View, Object.GetUnmanagedPtr(sceneRenderTask.Buffers));
 #endif
         }
     }
