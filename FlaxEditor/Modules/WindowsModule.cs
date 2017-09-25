@@ -279,8 +279,7 @@ namespace FlaxEditor.Modules
                 // Close all asset editor windows
                 for (int i = 0; i < Windows.Count; i++)
                 {
-                    var assetEditorWindow = Windows[i] as AssetEditorWindow;
-                    if (assetEditorWindow != null)
+                    if (Windows[i] is AssetEditorWindow assetEditorWindow)
                     {
                         if (assetEditorWindow.Close(ClosingReason.User))
                         {

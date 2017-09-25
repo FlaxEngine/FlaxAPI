@@ -626,6 +626,16 @@ namespace FlaxEditor
             return result;
         }
 
+        internal bool Internal_OnAppExit()
+        {
+            if (StateMachine.IsPlayMode)
+            {
+                Simulation.RequestStopPlay();
+                return false;
+            }
+            return true;
+        }
+
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_CloneAssetFile(string dstPath, string srcPath, ref Guid dstId);
