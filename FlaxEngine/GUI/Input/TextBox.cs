@@ -561,7 +561,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Create new selection or extends current one to the right
         /// </summary>
-        public void ExtendSelectionRight()
+        public void ExtendSelectorRight()
         {
             if (SelectionRight < TextLength)
             {
@@ -572,7 +572,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Create new selection or extends current one to the left
         /// </summary>
-        public void ExtendSelectionLeft()
+        public void ExtendSelelectorLeft()
         {
             if (SelectionRight > 0)
             {
@@ -583,7 +583,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Create new selection or extends current upwards
         /// </summary>
-        public void ExtendSelectionUp()
+        public void ExtendSelectorUp()
         {
             int position = FindLineUpChar(CaretPosition);
             SetSelection(_selectionStart, position);
@@ -592,7 +592,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Create new selection or extends current downwards
         /// </summary>
-        public void ExtendSelectionDown()
+        public void ExtendSelectorDown()
         {
             int position = FindLineDownChar(CaretPosition);
             SetSelection(_selectionStart, position);

@@ -24,6 +24,7 @@ namespace FlaxEditor.Content.GUI
 
         private float _scale = 1.0f;
         private bool _validDragOver;
+        private ContentItem _currentlyControllerdItem;
 
         #region External Events
 
@@ -93,6 +94,7 @@ namespace FlaxEditor.Content.GUI
         ///     <c>true</c> if any item is selected; otherwise, <c>false</c>.
         /// </value>
         public bool HasSelection => _selection.Count > 0;
+
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ContentView" /> class.
@@ -479,6 +481,7 @@ namespace FlaxEditor.Content.GUI
             MoveSelector(current.Location + current.Size / 2 + new Vector2(0, current.Size.Y));
         }
 
+
         /// <summary>
         ///     Adds prepared list <see cref="InputCommand" /> to <see cref="InputCommandsController" />
         /// </summary>
@@ -514,7 +517,7 @@ namespace FlaxEditor.Content.GUI
                 }
                 else
                 {
-                    Select(item, false);
+                    Select(item, true);
                 }
             }
             else
