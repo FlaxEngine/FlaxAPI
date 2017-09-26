@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using FlaxEditor.SceneGraph.Actors;
+using FlaxEngine;
 
 namespace FlaxEditor.SceneGraph.GUI
 {
@@ -20,6 +21,12 @@ namespace FlaxEditor.SceneGraph.GUI
             // Append star character to modified scenes
             if (ActorNode is SceneNode node && node.IsEdited)
                 Text += "*";
+        }
+
+        /// <inheritdoc />
+        protected override Color CacheTextColor()
+        {
+            return Color.White;
         }
     }
 }

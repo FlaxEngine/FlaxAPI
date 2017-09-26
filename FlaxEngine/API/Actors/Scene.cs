@@ -3,60 +3,74 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
+using FlaxEngine.Rendering;
 
 namespace FlaxEngine
 {
-	public sealed partial class Scene
-	{
-	    /// <summary>
-	    /// Saves this scene to the asset.
-	    /// </summary>
-	    /// <returns>True if action fails, otherwise false.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-	    public bool SaveScene(Scene scene)
-	    {
-	        return SceneManager.SaveScene(this);
+    public sealed partial class Scene
+    {
+        /// <summary>
+        /// Saves this scene to the asset.
+        /// </summary>
+        /// <returns>True if action fails, otherwise false.</returns>
+        public bool SaveScene(Scene scene)
+        {
+            return SceneManager.SaveScene(this);
         }
 
-	    /// <summary>
-	    /// Saves this scene to the asset. Done in the background.
-	    /// </summary>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-	    public void SaveSceneAsync(Scene scene)
-	    {
-	        SceneManager.SaveSceneAsync(this);
-	    }
+        /// <summary>
+        /// Saves this scene to the asset. Done in the background.
+        /// </summary>
+        public void SaveSceneAsync(Scene scene)
+        {
+            SceneManager.SaveSceneAsync(this);
+        }
 
-	    /// <summary>
+        /// <summary>
         /// Unloads this scene.
         /// </summary>
         /// <returns>True if action fails, otherwise false.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
         public bool UnloadScene(Scene scene)
-	    {
-	        return SceneManager.UnloadScene(this);
+        {
+            return SceneManager.UnloadScene(this);
         }
 
         /// <summary>
         /// Unloads this scene. Done in the background.
         /// </summary>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
         public void UnloadSceneAsync(Scene scene)
-	    {
-	        SceneManager.UnloadSceneAsync(this);
-	    }
+        {
+            SceneManager.UnloadSceneAsync(this);
+        }
 
+        /// <summary>
+        /// Gets or sets the lightmap settings (per scene).
+        /// </summary>
+        [EditorDisplay("Lightmap Settings")]
+        public LightmapSettings LightmapSettings
+        {
+            get
+            {
+                Internal_GetLightmapSettings(unmanagedPtr, out var data);
+                return LightmapSettings.FromInternal(ref data);
+            }
+            set
+            {
+                var data = LightmapSettings.ToInternal(ref value);
+                Internal_SetLightmapSettings(unmanagedPtr, ref data);
+            }
+        }
+
+        #region Internal Calls
+
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetLightmapSettings(IntPtr obj, out LightmapSettings.Internal data);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetLightmapSettings(IntPtr obj, ref LightmapSettings.Internal data);
+#endif
+
+        #endregion
     }
 }
