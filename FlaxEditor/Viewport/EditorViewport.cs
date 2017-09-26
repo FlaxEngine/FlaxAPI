@@ -19,12 +19,34 @@ namespace FlaxEditor.Viewport
     {
         // TODO: maybe cache view/projection matricies to reuse them
 
+        /// <summary>
+        /// Input state.
+        /// </summary>
         protected struct Input
         {
+            /// <summary>
+            /// Is camera panning.
+            /// </summary>
             public bool IsPanning;
+
+            /// <summary>
+            /// Is camera rotating.
+            /// </summary>
             public bool IsRotating;
+
+            /// <summary>
+            /// Is camera moving.
+            /// </summary>
             public bool IsMoving;
+
+            /// <summary>
+            /// Is camera zooming.
+            /// </summary>
             public bool IsZooming;
+
+            /// <summary>
+            /// Is camera orgiting.
+            /// </summary>
             public bool IsOrbiting;
 
             public bool IsControlDown;

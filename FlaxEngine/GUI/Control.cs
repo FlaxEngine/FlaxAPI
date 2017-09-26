@@ -433,8 +433,9 @@ namespace FlaxEngine.GUI
             {
                 if (this != CurrentlyFocused)
                 {
-                    CurrentlyFocused?.Defocus();
+                    var prev = CurrentlyFocused;
                     CurrentlyFocused = this;
+                    prev?.Defocus();
                 }
                 
                 Input.OnKeyHold += OnInputOnOnKeyHold;
@@ -443,7 +444,7 @@ namespace FlaxEngine.GUI
 
                 _isFocused = true;
                 OnGotFocus();
-                Parent.UpdateContainsFocus();
+                ParentWindow?.UpdateContainsFocus();
 
                 return true;
             }
@@ -467,7 +468,11 @@ namespace FlaxEngine.GUI
 
                 _isFocused = false;
                 OnLostFocus();
-                Parent.UpdateContainsFocus();
+                if (CurrentlyFocused != null)
+                {
+                    // Update focus flags only once (here or in Focus)
+                    ParentWindow?.UpdateContainsFocus();
+                }
             }
         }
 

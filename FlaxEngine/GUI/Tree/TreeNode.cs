@@ -17,7 +17,14 @@ namespace FlaxEngine.GUI
         /// </summary>
         public const float DefaultHeaderHeight = 16.0f;
 
+        /// <summary>
+        /// The default drag insert position margin.
+        /// </summary>
         public const float DefaultDragInsertPositionMargin = 2.0f;
+
+        /// <summary>
+        /// The default node offset y.
+        /// </summary>
         public const float DefaultNodeOffsetY = 1;
 
         private Tree _tree;
@@ -36,9 +43,7 @@ namespace FlaxEngine.GUI
 
         protected DragItemPositioning _dragOverMode;
         protected bool _isDragOverHeader;
-
-        public InputCommandsController CommandsController { get; private set; } = new InputCommandsController();
-
+        
         /// <summary>
         /// Gets or sets the text.
         /// </summary>
