@@ -436,12 +436,13 @@ namespace FlaxEngine.GUI
                     CurrentlyFocused?.Defocus();
                     CurrentlyFocused = this;
                 }
-
+                
                 Input.OnKeyHold += OnInputOnOnKeyHold;
                 Input.OnKeyPressed += OnInputOnOnKeyPressed;
                 Input.OnKeyReleased += OnInputOnOnKeyReleased;
 
                 _isFocused = true;
+                OnGotFocus();
                 Parent.UpdateContainsFocus();
 
                 return true;
@@ -465,6 +466,7 @@ namespace FlaxEngine.GUI
                 OnInputOnOnKeyReleased(new InputChord());
 
                 _isFocused = false;
+                OnLostFocus();
                 Parent.UpdateContainsFocus();
             }
         }
@@ -481,7 +483,6 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void OnLostFocus()
         {
-            Defocus();
         }
 
         /// <summary>
@@ -579,7 +580,7 @@ namespace FlaxEngine.GUI
         /// <returns>True if event has been handled, otherwise false</returns>
         public virtual bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
-            return CanFocus && Focus();
+            return Focus();
         }
 
         /// <summary>
