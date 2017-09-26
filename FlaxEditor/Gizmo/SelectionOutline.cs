@@ -31,12 +31,19 @@ namespace FlaxEditor.Gizmo
         /// </summary>
         public SelectionOutline()
         {
-            _outlineMaterial = FlaxEngine.Content.LoadAsync<Material>("Editor/Gizmo/SelectionOutlineMaterial");
-            _material = _outlineMaterial.CreateVirtualInstance();
+            _outlineMaterial = FlaxEngine.Content.LoadAsyncInternal<Material>("Editor/Gizmo/SelectionOutlineMaterial");
+            if (_outlineMaterial)
+            {
+                _material = _outlineMaterial.CreateVirtualInstance();
+            }
+            else
+            {
+                Editor.LogWarning("Failed to load gizmo selection outline material");
+            }
         }
 
         /// <inheritdoc />
-        public override bool CanRender => _outlineMaterial.IsLoaded && Editor.Instance.SceneEditing.HasSthSelected;
+        public override bool CanRender => _outlineMaterial && _outlineMaterial.IsLoaded && Editor.Instance.SceneEditing.HasSthSelected;
 
         /// <inheritdoc />
         public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)

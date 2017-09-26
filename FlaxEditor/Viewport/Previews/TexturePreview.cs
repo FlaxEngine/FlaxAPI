@@ -270,7 +270,7 @@ namespace FlaxEditor.Viewport.Previews
         protected TexturePreviewCustomBase(bool useWidgets)
         {
             // Create preview material (virtual)
-            var baseMaterial = FlaxEngine.Content.LoadAsync<Material>("Editor/TexturePreviewMaterial");
+            var baseMaterial = FlaxEngine.Content.LoadAsyncInternal<Material>("Editor/TexturePreviewMaterial");
             if (baseMaterial == null)
                 throw new FlaxException("Cannot load texture preview material.");
             _previewMaterial = baseMaterial.CreateVirtualInstance();

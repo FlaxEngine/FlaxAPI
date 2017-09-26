@@ -38,7 +38,7 @@ namespace FlaxEditor.Viewport.Previews
         public IESProfilePreview()
         {
             // Create preview material (virtual)
-            var baseMaterial = FlaxEngine.Content.LoadAsync<Material>("Editor/IesProfilePreviewMaterial");
+            var baseMaterial = FlaxEngine.Content.LoadAsyncInternal<Material>("Editor/IesProfilePreviewMaterial");
             if (baseMaterial == null)
                 throw new FlaxException("Cannot load IES Profile preview material.");
             _previewMaterial = baseMaterial.CreateVirtualInstance();

@@ -28,7 +28,7 @@ namespace FlaxEditor
         {
             _actors = new List<IntPtr>(actorsCapacity);
             _highlights = new List<HighlightData>(actorsCapacity);
-            _highlightMaterial = FlaxEngine.Content.LoadAsync<MaterialBase>(EditorAssets.HighlightMaterial);
+            _highlightMaterial = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.HighlightMaterial);
         }
 
         /// <summary>
@@ -86,6 +86,9 @@ namespace FlaxEditor
         /// <param name="collector">The draw calls collector.</param>
         public virtual void OnDraw(DrawCallsCollector collector)
         {
+            if (_highlightMaterial == null)
+                return;
+            
             Matrix m1, m2, world;
             for (var i = 0; i < _highlights.Count; i++)
             {
