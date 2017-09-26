@@ -587,6 +587,12 @@ namespace FlaxEditor.Viewport
                                 using (new UndoBlock(Undo, meshNode.ModelActor, "Change material"))
                                     meshNode.Entry.Material = material;
                             }
+                            else if (hit is BoxBrushNode.SideLinkNode brushSurfaceNode)
+                            {
+                                var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
+                                using (new UndoBlock(Undo, brushSurfaceNode.Brush, "Change material"))
+                                    brushSurfaceNode.Surface.Material = material;
+                            }
 
                             break;
                         }

@@ -27,6 +27,11 @@ namespace FlaxEditor.SceneGraph.Actors
             public BoxBrush Brush => (BoxBrush)((BoxBrushNode)ParentNode).Actor;
 
             /// <summary>
+            /// Gets the brush surface.
+            /// </summary>
+            public BrushSurface Surface => Brush.Surfaces[Index];
+
+            /// <summary>
             /// Initializes a new instance of the <see cref="SideLinkNode"/> class.
             /// </summary>
             /// <param name="actor">The parent node.</param>
