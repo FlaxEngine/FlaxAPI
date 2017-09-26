@@ -103,7 +103,7 @@ namespace FlaxEditor.CustomEditors.Editors
             /// Initializes a new instance of the <see cref="ReferencePickerControl"/> class.
             /// </summary>
             public ReferencePickerControl()
-                : base(true, 0, 0, 50, 16)
+                : base(0, 0, 50, 16)
             {
                 _type = typeof(Object);
             }

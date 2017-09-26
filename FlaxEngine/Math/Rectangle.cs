@@ -33,8 +33,8 @@ namespace FlaxEngine
         /// </summary>
         public float X
         {
-            get { return Location.X; }
-            set { Location.X = value; }
+            get => Location.X;
+            set => Location.X = value;
         }
 
         /// <summary>
@@ -42,8 +42,8 @@ namespace FlaxEngine
         /// </summary>
         public float Y
         {
-            get { return Location.Y; }
-            set { Location.Y = value; }
+            get => Location.Y;
+            set => Location.Y = value;
         }
 
         /// <summary>
@@ -51,8 +51,8 @@ namespace FlaxEngine
         /// </summary>
         public float Width
         {
-            get { return Size.X; }
-            set { Size.X = value; }
+            get => Size.X;
+            set => Size.X = value;
         }
 
         /// <summary>
@@ -60,8 +60,8 @@ namespace FlaxEngine
         /// </summary>
         public float Height
         {
-            get { return Size.Y; }
-            set { Size.Y = value; }
+            get => Size.Y;
+            set => Size.Y = value;
         }
 
         /// <summary>

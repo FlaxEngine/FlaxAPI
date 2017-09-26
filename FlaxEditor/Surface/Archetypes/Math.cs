@@ -180,8 +180,8 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     NodeElementArchetype.Factory.Input(0, "Input", true, ConnectionType.Vector3, 0),
                     NodeElementArchetype.Factory.Output(0, "Output", ConnectionType.Vector3, 1),
-                    NodeElementArchetype.Factory.CmoboBox(0, 22, 70, 0, _vectorTransformSpaces),
-                    NodeElementArchetype.Factory.CmoboBox(100, 22, 70, 1, _vectorTransformSpaces),
+                    NodeElementArchetype.Factory.ComboBox(0, 22, 70, 0, _vectorTransformSpaces),
+                    NodeElementArchetype.Factory.ComboBox(100, 22, 70, 1, _vectorTransformSpaces),
                 }
             },
             new NodeArchetype

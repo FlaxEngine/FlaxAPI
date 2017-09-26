@@ -11,7 +11,6 @@ using FlaxEditor.GUI.Drag;
 using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.CustomEditors.Dedicated
 {
@@ -39,8 +38,9 @@ namespace FlaxEditor.CustomEditors.Dedicated
             /// Initializes a new instance of the <see cref="DragAreaControl"/> class.
             /// </summary>
             public DragAreaControl()
-                : base(false, 0, 0, 120, 32)
+                : base(0, 0, 120, 32)
             {
+                CanFocus = false;
             }
 
             /// <inheritdoc />
@@ -112,7 +112,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     result = _dragScripts.Effect;
 
                     var actions = new List<IUndoAction>(4);
-                    
+
                     for (int i = 0; i < _dragScripts.Objects.Count; i++)
                     {
                         var item = _dragScripts.Objects[i];
@@ -130,7 +130,6 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     var multiAction = new MultiUndoAction(actions);
                     multiAction.Do();
                     Editor.Instance.Undo.AddAction(multiAction);
-                    ScriptsEditor.OnScriptsEdited();
                 }
 
                 _dragScripts.OnDragDrop();
@@ -163,7 +162,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 dragArea.CustomControl.ScriptsEditor = this;
 
                 // No support to show scripts for more than one actor selected
-                if (Values.Count > 1)
+                if (Values.Count != 1)
                     return;
 
                 // Scripts
@@ -180,11 +179,13 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     // Create group
                     var title = CustomEditorsUtil.GetPropertyNameUI(type.Name);
                     var group = layout.Group(title);
+                    group.Panel.Open(false);
 
                     // Add settings button to the group
                     const float settingsButtonSize = 14;
-                    var settingsButton = new Image(true, group.Panel.Width - settingsButtonSize, 0, settingsButtonSize, settingsButtonSize)
+                    var settingsButton = new Image(group.Panel.Width - settingsButtonSize, 0, settingsButtonSize, settingsButtonSize)
                     {
+                        CanFocus = true,
                         AnchorStyle = AnchorStyle.UpperRight,
                         IsScrollable = false,
                         Color = new Color(0.7f),
@@ -240,23 +241,30 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
                     // Remove
                     case 1:
+                    {
                         var action = AddRemoveScript.Remove(script);
                         action.Do();
                         Editor.Instance.Undo.AddAction(action);
-                        OnScriptsEdited();
                         break;
+                    }
 
                     // Move up
                     case 2:
-                        script.OrderInParent -= 1;
-                        OnScriptsEdited();
+                    {
+                        var action = ChangeScriptAction.ChangeOrder(script, script.OrderInParent - 1);
+                        action.Do();
+                        Editor.Instance.Undo.AddAction(action);
                         break;
+                    }
 
                     // Move down
                     case 3:
-                        script.OrderInParent += 1;
-                        OnScriptsEdited();
+                    {
+                        var action = ChangeScriptAction.ChangeOrder(script, script.OrderInParent + 1);
+                        action.Do();
+                        Editor.Instance.Undo.AddAction(action);
                         break;
+                    }
 
                     // Edit script
                     case 4:
@@ -278,24 +286,16 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 }
             }
 
-            /// <summary>
-            /// Called when scripts collection gets edited (change size or scripts order).
-            /// </summary>
-            public void OnScriptsEdited()
-            {
-                ParentEditor.RebuildLayout();
-            }
-
             /// <inheritdoc />
             public override void Refresh()
             {
-                if (Values.Count <= 1)
+                if (Values.Count == 1)
                 {
-                    var scripts = (Script[])Values[0];
+                    var scripts = ((Actor)ParentEditor.Values[0]).Scripts;
                     if (!Utils.ArraysEqual(scripts, _scripts))
                     {
-                        // Sync
-                        OnScriptsEdited();
+                        ParentEditor.RebuildLayout();
+                        return;
                     }
                 }
 

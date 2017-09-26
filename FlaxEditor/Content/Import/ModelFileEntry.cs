@@ -72,18 +72,24 @@ namespace FlaxEditor.Content.Import
         /// </summary>
         [EditorOrder(40), Tooltip("Enable model tangent vectors recalculating")]
         public bool CalculateTangents { get; set; } = true;
-
-        /// <summary>
-        /// Enable/disable drawing model two sided by force.
-        /// </summary>
-        [EditorOrder(50), Tooltip("Enable/disable drawing model two sided by force")]
-        public bool ForceTwoSided { get; set; }
-
+        
         /// <summary>
         /// Enable/disable meshes geometry optimization.
         /// </summary>
         [EditorOrder(60), Tooltip("Enable/disable meshes geometry optimization")]
         public bool OptimizeMeshes { get; set; } = true;
+
+        /// <summary>
+        /// Enable/disable geometry merge for meshes with the same materials.
+        /// </summary>
+        [EditorOrder(60), Tooltip("Enable/disable geometry merge for meshes with the same materials")]
+        public bool MergeMeshes { get; set; } = true;
+        
+        /// <summary>
+        /// Enable/disable importing meshes Level of Details.
+        /// </summary>
+        [EditorOrder(70), Tooltip("Enable/disable importing meshes Level of Details")]
+        public bool ImportLODs { get; set; } = true;
 
         /// <summary>
         /// The lighmap UVs source.
@@ -98,8 +104,9 @@ namespace FlaxEditor.Content.Import
             public bool CalculateNormals;
             public float SmoothigNormalsAngle;
             public bool CalculateTangents;
-            public bool ForceTwoSided;
             public bool OptimizeMeshes;
+            public bool MergeMeshes;
+            public bool ImportLODs;
             public ModelLightmapUVsSource LighmapUVsSource;
         }
 
@@ -111,10 +118,40 @@ namespace FlaxEditor.Content.Import
                 CalculateNormals = CalculateNormals,
                 SmoothigNormalsAngle = SmoothigNormalsAngle,
                 CalculateTangents = CalculateTangents,
-                ForceTwoSided = ForceTwoSided,
                 OptimizeMeshes = OptimizeMeshes,
+                MergeMeshes = MergeMeshes,
+                ImportLODs = ImportLODs,
                 LighmapUVsSource = LighmapUVsSource
             };
+        }
+        
+        internal void FromInternal(ref InternalOptions options)
+        {
+            Scale = options.Scale;
+            CalculateNormals = options.CalculateNormals;
+            SmoothigNormalsAngle = options.SmoothigNormalsAngle;
+            CalculateTangents = options.CalculateTangents;
+            OptimizeMeshes = options.OptimizeMeshes;
+            MergeMeshes = options.MergeMeshes;
+            ImportLODs = options.ImportLODs;
+            LighmapUVsSource = options.LighmapUVsSource;
+        }
+        
+        /// <summary>
+        /// Tries the restore the asset import options from the target resource file.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <param name="assetPath">The asset path.</param>
+        /// <returns>True settings has been restored, otherwise false.</returns>
+        public static bool TryRestore(ref ModelImportSettings options, string assetPath)
+        {
+            if (ModelFileEntry.Internal_GetModelImportOptions(assetPath, out var internalOptions))
+            {
+                // Restore settings
+                options.FromInternal(ref internalOptions);
+                return true;
+            }
+            return false;
         }
     }
 
@@ -135,18 +172,7 @@ namespace FlaxEditor.Content.Import
             : base(url, resultUrl)
         {
             // Try to restore target asset model import options (usefull for fast reimport)
-            ModelImportSettings.InternalOptions options;
-            if (Internal_GetModelImportOptions(resultUrl, out options))
-            {
-                // Restore settings
-                _settings.Scale = options.Scale;
-                _settings.CalculateNormals = options.CalculateNormals;
-                _settings.SmoothigNormalsAngle = options.SmoothigNormalsAngle;
-                _settings.CalculateTangents = options.CalculateTangents;
-                _settings.ForceTwoSided = options.ForceTwoSided;
-                _settings.OptimizeMeshes = options.OptimizeMeshes;
-                _settings.LighmapUVsSource = options.LighmapUVsSource;
-            }
+            ModelImportSettings.TryRestore(ref _settings, resultUrl);
         }
 
         /// <inheritdoc />

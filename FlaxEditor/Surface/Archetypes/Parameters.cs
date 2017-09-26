@@ -54,7 +54,7 @@ namespace FlaxEditor.Surface.Archetypes
                 NodeElementArchetype.Factory.Output(3, "G", ConnectionType.Float, 2),
                 NodeElementArchetype.Factory.Output(4, "B", ConnectionType.Float, 3),
                 NodeElementArchetype.Factory.Output(5, "A", ConnectionType.Float, 4),
-                // 20: Texture/Cube Texture
+                // 20: Texture/Cube Texture/Render Target
                 NodeElementArchetype.Factory.Input(1, "UVs", true, ConnectionType.Vector2, 0, -1),
                 NodeElementArchetype.Factory.Output(1, "", ConnectionType.Object, 6),
                 NodeElementArchetype.Factory.Output(2, "Color", ConnectionType.Vector4, 1),
@@ -129,6 +129,7 @@ namespace FlaxEditor.Surface.Archetypes
                             break;
                         case ParameterType.Texture:
                         case ParameterType.CubeTexture:
+                        case ParameterType.RenderTarget:
                             AddInput(Prototypes[20]);
                             AddOutput(Prototypes[21]);
                             AddOutput(Prototypes[22]);
@@ -319,7 +320,7 @@ namespace FlaxEditor.Surface.Archetypes
                 },
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.CmoboBox(2, 0, 116)
+                    NodeElementArchetype.Factory.ComboBox(2, 0, 116)
                 }
             },
         };

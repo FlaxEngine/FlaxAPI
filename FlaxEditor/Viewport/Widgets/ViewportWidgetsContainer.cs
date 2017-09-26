@@ -33,8 +33,9 @@ namespace FlaxEditor.Viewport.Widgets
         /// </summary>
         /// <param name="location">The location.</param>
         public ViewportWidgetsContainer(ViewportWidgetLocation location)
-            : base(false, 0, WidgetsMargin, 64, WidgetsHeight + 2)
+            : base(0, WidgetsMargin, 64, WidgetsHeight + 2)
         {
+            CanFocus = false;
             WidgetLocation = location;
         }
 

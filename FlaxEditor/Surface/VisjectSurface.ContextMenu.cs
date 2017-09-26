@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,7 +25,6 @@ namespace FlaxEditor.Surface
         /// </summary>
         /// <param name="node">The node.</param>
         /// <param name="location">The location in the Surface Space.</param>
-        /// <exception cref="System.NotImplementedException"></exception>
         public void ShowSecondaryCM(SurfaceNode node, Vector2 location)
         {
             // Select that node

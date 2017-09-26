@@ -102,6 +102,22 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Builds the CSG geometry for the given scene.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void BuildCSG() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new FlaxTestCompilantNotImplementedException();
+#else
+			Internal_BuildCSG(unmanagedPtr);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -112,6 +128,8 @@ namespace FlaxEngine
 		internal static extern string Internal_GetDataFolderPath(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_ClearLightmaps(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_BuildCSG(IntPtr obj);
 #endif
 #endregion
 	}

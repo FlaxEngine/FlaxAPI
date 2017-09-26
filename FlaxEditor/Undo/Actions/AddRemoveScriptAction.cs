@@ -120,12 +120,12 @@ namespace FlaxEditor.Actions
                 return;
             }
             Object.Internal_ChangeID(_script.unmanagedPtr, ref _scriptId);
-            parentActor.AddScript(_script);
             if (_scriptData != null)
                 FlaxEngine.Json.InternalJsonSerializer.Deserialize(_script, _scriptData);
+            _script.Enabled = _enabled;
+            parentActor.AddScript(_script);
             if (_orderInParent != -1)
                 _script.OrderInParent = _orderInParent;
-            _script.Enabled = _enabled;
             Editor.Instance.Scene.MarkSceneEdited(parentActor.Scene);
         }
     }

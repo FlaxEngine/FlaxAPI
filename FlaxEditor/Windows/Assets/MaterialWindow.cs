@@ -93,6 +93,7 @@ namespace FlaxEditor.Windows.Assets
                     Texture = (int)ParameterType.Texture,
                     CubeTexture = (int)ParameterType.CubeTexture,
                     NormalMap = (int)ParameterType.NormalMap,
+                    RenderTarget = (int)ParameterType.RenderTarget,
                 }
 
                 /// <inheritdoc />
@@ -137,6 +138,10 @@ namespace FlaxEditor.Windows.Assets
                             case MaterialParameterType.Texture:
                             case MaterialParameterType.NormalMap:
                                 pType = typeof(Texture);
+                                pGuidType = true;
+                                break;
+                            case MaterialParameterType.RenderTarget:
+                                pType = typeof(RenderTarget);
                                 pGuidType = true;
                                 break;
                             default:

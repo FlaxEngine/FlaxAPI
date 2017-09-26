@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -26,8 +26,10 @@ namespace FlaxEngine.GUI.Docking
         /// </summary>
         /// <param name="panel">The panel.</param>
         internal DockPanelProxy(DockPanel panel)
-            : base(false, 0, 0, 64, 64)
+            : base(0, 0, 64, 64)
         {
+            CanFocus = false;
+
             _panel = panel;
             DockStyle = DockStyle.Fill;
         }

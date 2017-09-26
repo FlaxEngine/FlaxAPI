@@ -37,7 +37,7 @@ namespace FlaxEditor.Windows
         private readonly Stack<ContentTreeNode> _navigationRedo = new Stack<ContentTreeNode>(32);
 
         private NewItem _newElement;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="ContentWindow"/> class.
         /// </summary>
@@ -485,7 +485,7 @@ namespace FlaxEditor.Windows
             switch (id)
             {
                 case 0:
-                    Editor.ContentImporting.ShowImportFileDialog();
+                    Editor.ContentImporting.ShowImportFileDialog(CurrentViewFolder);
                     break;
                 case 1:
                     NavigateBackward();
@@ -560,6 +560,8 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void OnInit()
         {
+            base.OnInit();
+
             // Setup content root node
             _root = new ContentTreeNode(null, string.Empty);
             _root.Expand();

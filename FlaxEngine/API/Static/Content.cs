@@ -9,9 +9,6 @@ namespace FlaxEngine
 {
     public static partial class Content
     {
-        // TODO: expose import files methods (only in editor?)
-        // TODO: expose create assets methods (only in editor?)
-        // TODO: expose create temporary asset path method
         // TODO: assets list get
 
         /// <summary>
@@ -193,6 +190,8 @@ namespace FlaxEngine
             int typeId;
             if (typeof(T) == typeof(MaterialInstance))
                 typeId = MaterialInstance.TypeID;
+            else if (typeof(T) == typeof(Model))
+                typeId = Model.TypeID;
             else
                 throw new InvalidOperationException("Asset type " + typeof(T).FullName + " does not support virtual assets.");
 

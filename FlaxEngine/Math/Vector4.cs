@@ -199,9 +199,9 @@ namespace FlaxEngine
         public Vector4(float[] values)
         {
             if (values == null)
-                throw new ArgumentNullException("values");
+                throw new ArgumentNullException(nameof(values));
             if (values.Length != 4)
-                throw new ArgumentOutOfRangeException("values", "There must be four and only four input values for Vector4.");
+                throw new ArgumentOutOfRangeException(nameof(values), "There must be four and only four input values for Vector4.");
 
             X = values[0];
             Y = values[1];
@@ -212,18 +212,22 @@ namespace FlaxEngine
         /// <summary>
         /// Gets a value indicting whether this instance is normalized.
         /// </summary>
-        public bool IsNormalized
-        {
-            get { return Mathf.IsOne(X * X + Y * Y + Z * Z + W * W); }
-        }
+        public bool IsNormalized => Mathf.IsOne(X * X + Y * Y + Z * Z + W * W);
 
         /// <summary>
         /// Gets a value indicting whether this vector is zero
         /// </summary>
-        public bool IsZero
-        {
-            get { return (X == 0) && (Y == 0) && (Z == 0) && (W == 0); }
-        }
+        public bool IsZero => Mathf.IsZero(X) && Mathf.IsZero(Y) && Mathf.IsZero(Z) && Mathf.IsZero(W);
+        
+        /// <summary>
+        /// Gets a value indicting whether this vector is one
+        /// </summary>
+        public bool IsOne => Mathf.IsOne(X) && Mathf.IsOne(Y) && Mathf.IsOne(Z) && Mathf.IsOne(W);
+
+        /// <summary>
+        /// Gets an arithmetic average value of all vector components.
+        /// </summary>
+        public float AvgValue => (X + Y + Z + W) * (1.0f / 4.0f);
 
         /// <summary>
         /// Gets a sum of the component values.
@@ -259,7 +263,7 @@ namespace FlaxEngine
                         return W;
                 }
 
-                throw new ArgumentOutOfRangeException("index", "Indices for Vector4 run from 0 to 3, inclusive.");
+                throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector4 run from 0 to 3, inclusive.");
             }
 
             set
@@ -279,7 +283,7 @@ namespace FlaxEngine
                         W = value;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException("index", "Indices for Vector4 run from 0 to 3, inclusive.");
+                        throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector4 run from 0 to 3, inclusive.");
                 }
             }
         }
@@ -292,10 +296,7 @@ namespace FlaxEngine
         /// <see cref="Vector4.LengthSquared" /> may be preferred when only the relative length is needed
         /// and speed is of the essence.
         /// </remarks>
-        public float Length
-        {
-            get { return (float)Math.Sqrt(X * X + Y * Y + Z * Z + W * W); }
-        }
+        public float Length => (float)Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
 
         /// <summary>
         /// Calculates the squared length of the vector.
@@ -305,10 +306,7 @@ namespace FlaxEngine
         /// This method may be preferred to <see cref="Vector4.Length" /> when only a relative length is needed
         /// and speed is of the essence.
         /// </remarks>
-        public float LengthSquared
-        {
-            get { return X * X + Y * Y + Z * Z + W * W; }
-        }
+        public float LengthSquared => X * X + Y * Y + Z * Z + W * W;
 
         /// <summary>
         /// Converts the vector into a unit vector.
@@ -1022,11 +1020,11 @@ namespace FlaxEngine
             //q5 = ...
 
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
             if (destination == null)
-                throw new ArgumentNullException("destination");
+                throw new ArgumentNullException(nameof(destination));
             if (destination.Length < source.Length)
-                throw new ArgumentOutOfRangeException("destination", "The destination array must be of same length or larger length than the source array.");
+                throw new ArgumentOutOfRangeException(nameof(destination), "The destination array must be of same length or larger length than the source array.");
 
             for (var i = 0; i < source.Length; ++i)
             {
@@ -1077,11 +1075,11 @@ namespace FlaxEngine
             //q5 = ...
 
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
             if (destination == null)
-                throw new ArgumentNullException("destination");
+                throw new ArgumentNullException(nameof(destination));
             if (destination.Length < source.Length)
-                throw new ArgumentOutOfRangeException("destination", "The destination array must be of same length or larger length than the source array.");
+                throw new ArgumentOutOfRangeException(nameof(destination), "The destination array must be of same length or larger length than the source array.");
 
             for (var i = 0; i < source.Length; ++i)
             {
@@ -1156,11 +1154,11 @@ namespace FlaxEngine
         public static void Transform(Vector4[] source, ref Quaternion rotation, Vector4[] destination)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
             if (destination == null)
-                throw new ArgumentNullException("destination");
+                throw new ArgumentNullException(nameof(destination));
             if (destination.Length < source.Length)
-                throw new ArgumentOutOfRangeException("destination", "The destination array must be of same length or larger length than the source array.");
+                throw new ArgumentOutOfRangeException(nameof(destination), "The destination array must be of same length or larger length than the source array.");
 
             float x = rotation.X + rotation.X;
             float y = rotation.Y + rotation.Y;
@@ -1241,11 +1239,11 @@ namespace FlaxEngine
         public static void Transform(Vector4[] source, ref Matrix transform, Vector4[] destination)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
             if (destination == null)
-                throw new ArgumentNullException("destination");
+                throw new ArgumentNullException(nameof(destination));
             if (destination.Length < source.Length)
-                throw new ArgumentOutOfRangeException("destination", "The destination array must be of same length or larger length than the source array.");
+                throw new ArgumentOutOfRangeException(nameof(destination), "The destination array must be of same length or larger length than the source array.");
 
             for (var i = 0; i < source.Length; ++i)
                 Transform(ref source[i], ref transform, out destination[i]);

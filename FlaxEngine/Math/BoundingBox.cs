@@ -336,7 +336,7 @@ namespace FlaxEngine
         public static void FromPoints(Vector3[] points, out BoundingBox result)
         {
             if (points == null)
-                throw new ArgumentNullException("points");
+                throw new ArgumentNullException(nameof(points));
 
             var min = new Vector3(float.MaxValue);
             var max = new Vector3(float.MinValue);
@@ -359,7 +359,7 @@ namespace FlaxEngine
         public static BoundingBox FromPoints(Vector3[] points)
         {
             if (points == null)
-                throw new ArgumentNullException("points");
+                throw new ArgumentNullException(nameof(points));
 
             var min = new Vector3(float.MaxValue);
             var max = new Vector3(float.MinValue);

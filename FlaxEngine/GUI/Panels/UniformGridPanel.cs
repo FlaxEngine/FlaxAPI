@@ -82,7 +82,6 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="slotPadding">The slot padding.</param>
         public UniformGridPanel(float slotPadding = 2)
-            : base(true)
         {
             SlotPadding = new Margin(slotPadding);
             _slotsH = _slotsV = 5;

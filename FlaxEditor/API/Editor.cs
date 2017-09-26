@@ -588,6 +588,11 @@ namespace FlaxEditor
             return StateMachine.CurrentState.CanReloadScripts;
         }
 
+        internal bool Internal_CanAutoBuildCSG()
+        {
+            return StateMachine.CurrentState.CanEditScene;
+        }
+
         internal void Internal_GetMousePosition(out Vector2 resultAsRef)
         {
             resultAsRef = Vector2.Minimum;
@@ -619,6 +624,16 @@ namespace FlaxEditor
                     result = win.NativeWindow.unmanagedPtr;
             }
             return result;
+        }
+
+        internal bool Internal_OnAppExit()
+        {
+            if (StateMachine.IsPlayMode)
+            {
+                Simulation.RequestStopPlay();
+                return false;
+            }
+            return true;
         }
 
 #if !UNIT_TEST_COMPILANT

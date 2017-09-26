@@ -51,8 +51,9 @@ namespace FlaxEngine.GUI
         /// <param name="scrollBars">The scroll bars.</param>
         /// <param name="canFocus">True if control can accept user focus</param>
         public Panel(ScrollBars scrollBars, bool canFocus = false)
-            : base(canFocus)
         {
+            CanFocus = canFocus;
+
             if ((scrollBars & ScrollBars.Vertical) == ScrollBars.Vertical)
             {
                 // Create vertical sroll bar

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProjectTypeGuids>{BE633490-FBA4-41EB-80D4-EFA312592B8E};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectTypeGuids>{BE633490-FBA4-41EB-80D4-EFA312592B8E};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ProjectGuid>{D534E201-9DC6-4A26-B7FB-CEB3E16A58B1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -80,6 +80,7 @@
     <Compile Include="CustomEditors\Editors\Vector3Editor.cs" />
     <Compile Include="CustomEditors\Editors\Vector4Editor.cs" />
     <Compile Include="CustomEditors\Elements\CheckBoxElement.cs" />
+    <Compile Include="CustomEditors\Elements\ComboBoxElement.cs" />
     <Compile Include="CustomEditors\Elements\CustomElement.cs" />
     <Compile Include="CustomEditors\Elements\EnumElement.cs" />
     <Compile Include="CustomEditors\Elements\FloatValueElement.cs" />
@@ -97,6 +98,8 @@
     <Compile Include="CustomEditors\Values\CustomValueContainer.cs" />
     <Compile Include="CustomEditors\Values\ListValueContainer.cs" />
     <Compile Include="CustomEditors\Values\ValueContainer.cs" />
+    <Compile Include="EditorAssets.cs" />
+    <Compile Include="Gizmo\SelectionOutline.cs" />
     <Compile Include="GUI\AssetPicker.cs" />
     <Compile Include="GUI\Drag\DragActors.cs" />
     <Compile Include="GUI\Drag\DragScripts.cs" />
@@ -178,6 +181,7 @@
     <Compile Include="SceneGraph\ActorChildNode.cs" />
     <Compile Include="SceneGraph\ActorNode.cs" />
     <Compile Include="SceneGraph\ActorNodeWithIcon.cs" />
+    <Compile Include="SceneGraph\Actors\BoxBrushNode.cs" />
     <Compile Include="SceneGraph\Actors\CameraNode.cs" />
     <Compile Include="SceneGraph\Actors\DirectionalLightNode.cs" />
     <Compile Include="SceneGraph\Actors\EnvironmentProbeNode.cs" />
@@ -226,6 +230,7 @@
     <Compile Include="Surface\Elements\InputBox.cs" />
     <Compile Include="Surface\Elements\InteagerValue.cs" />
     <Compile Include="Surface\Elements\OutputBox.cs" />
+    <Compile Include="Surface\Elements\TextBoxView.cs" />
     <Compile Include="Surface\Elements\TextView.cs" />
     <Compile Include="Surface\GroupArchetype.cs" />
     <Compile Include="Surface\IParametersDependantNode.cs" />
@@ -251,7 +256,8 @@
     <Compile Include="Surface\VisjectSurface.Mouse.cs" />
     <Compile Include="Surface\VisjectSurface.Paramaters.cs" />
     <Compile Include="Surface\VisjectSurface.Serialization.cs" />
-    <Compile Include="Undo\Actions\AddRemoveScript.cs" />
+    <Compile Include="Undo\Actions\AddRemoveScriptAction.cs" />
+    <Compile Include="Undo\Actions\ChangeScriptAction.cs" />
     <Compile Include="Undo\Actions\DeleteActorsAction.cs" />
     <Compile Include="Undo\Actions\PasteActorsAction.cs" />
     <Compile Include="Undo\EditorUndo.cs" />
@@ -277,6 +283,7 @@
     <Compile Include="Viewport\Previews\MaterialPreview.cs" />
     <Compile Include="Viewport\Previews\ModelPreview.cs" />
     <Compile Include="Viewport\Previews\TexturePreview.cs" />
+    <Compile Include="ViewportDebugDrawData.cs" />
     <Compile Include="Viewport\Widgets\ViewportWidgetButton.cs" />
     <Compile Include="Viewport\Widgets\ViewportWidgetsContainer.cs" />
     <Compile Include="Windows\AboutDialog.cs" />
@@ -287,6 +294,7 @@
     <Compile Include="Windows\Assets\MaterialInstanceWindow.cs" />
     <Compile Include="Windows\Assets\MaterialWindow.cs" />
     <Compile Include="Windows\Assets\ModelWindow.cs" />
+    <Compile Include="Windows\Assets\PreviewsCacheWindow.cs" />
     <Compile Include="Windows\Assets\SpriteAtlasWindow.cs" />
     <Compile Include="Windows\Assets\TextureWindow.cs" />
     <Compile Include="Windows\ContentWindow.ContextMenu.cs" />

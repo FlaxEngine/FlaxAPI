@@ -57,6 +57,19 @@ namespace FlaxEngine.Rendering
 		}
 
 		/// <summary>
+		/// Gets the texture surface flags.
+		/// </summary>
+		[UnmanagedCall]
+		public TextureFlags Flags
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetFlags(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether this texture has been allocated.
 		/// </summary>
 		[UnmanagedCall]
@@ -151,6 +164,8 @@ namespace FlaxEngine.Rendering
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern PixelFormat Internal_GetFormat(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern TextureFlags Internal_GetFlags(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetIsAllocated(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]

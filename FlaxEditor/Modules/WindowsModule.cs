@@ -230,7 +230,6 @@ namespace FlaxEditor.Modules
             if (MainWindow == null)
             {
                 // Error
-                // TODO: make it fatal error
                 Debug.LogError("Failed to create editor main window!");
                 return;
             }
@@ -241,11 +240,11 @@ namespace FlaxEditor.Modules
             MainWindow.OnClosed += MainWindow_OnClosed;
 
             // Create default editor windows
+            SceneWin = new SceneTreeWindow(Editor);
             ContentWin = new ContentWindow(Editor);
             EditWin = new EditGameWindow(Editor);
             GameWin = new GameWindow(Editor);
             PropertiesWin = new PropertiesWindow(Editor);
-            SceneWin = new SceneTreeWindow(Editor);
             DebugWin = new DebugLogWindow(Editor);
             ToolboxWin = new ToolboxWindow(Editor);
 
@@ -258,8 +257,6 @@ namespace FlaxEditor.Modules
             SceneManager.OnSceneSaving += OnSceneSaving;
             SceneManager.OnSceneUnloaded += OnSceneUnloaded;
             SceneManager.OnSceneUnloading += OnSceneUnloading;
-
-            // TODO: link for OnScriptsReloadStart/OnScriptsReloadEnd events and don't fire scene events on scripts reload?
         }
 
         private void MainWindow_OnClosing(ClosingReason reason, ref bool cancel)
@@ -282,8 +279,7 @@ namespace FlaxEditor.Modules
                 // Close all asset editor windows
                 for (int i = 0; i < Windows.Count; i++)
                 {
-                    var assetEditorWindow = Windows[i] as AssetEditorWindow;
-                    if (assetEditorWindow != null)
+                    if (Windows[i] is AssetEditorWindow assetEditorWindow)
                     {
                         if (assetEditorWindow.Close(ClosingReason.User))
                         {

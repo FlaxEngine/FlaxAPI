@@ -175,7 +175,7 @@ namespace FlaxEditor.Windows
                     break;
                 case 12:
                     _view.ClearSelection();
-                    Editor.ContentImporting.ShowImportFileDialog();
+                    Editor.ContentImporting.ShowImportFileDialog(CurrentViewFolder);
                     break;
                 case 13:
                     Editor.ContentDatabase.RefreshFolder(item ?? currentFolder, true);

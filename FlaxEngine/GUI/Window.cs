@@ -20,18 +20,9 @@ namespace FlaxEngine.GUI
         /// <param name="reason">The reason.</param>
         /// <param name="cancel">If set to <c>true</c> closing window will be canceled.</param>
         public delegate void ClosingDelegate(Window window, ClosingReason reason, ref bool cancel);
-
-        private Control _focusedControl;
+        
         private FlaxEngine.Window _window;
-
-        /// <summary>
-        /// Gets current focused control
-        /// </summary>
-        public Control FocusedControl
-        {
-            get { return _focusedControl; }
-        }
-
+        
         /// <summary>
         /// Sets the window title.
         /// </summary>
@@ -40,8 +31,8 @@ namespace FlaxEngine.GUI
         /// </value>
         public string Title
         {
-            get { return _window.Title; }
-            set { _window.Title = value; }
+            get => _window.Title;
+            set => _window.Title = value;
         }
 
         /// <summary>
@@ -102,15 +93,6 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets the mouse cursor.
-        /// </summary>
-        public CursorType Cursor
-        {
-            get { return _window.Cursor; }
-            set { _window.Cursor = value; }
-        }
-
-        /// <summary>
         /// Gets the native window object.
         /// </summary>
         /// <value>
@@ -123,12 +105,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="window">Native window object.</param>
         internal Window(FlaxEngine.Window window)
-            : base(false, 0, 0, 100, 60)
+            : base(0, 0, 100, 60)
         {
-            if (window == null)
-                throw new ArgumentNullException(nameof(window));
-            _window = window;
-
+            _window = window ?? throw new ArgumentNullException(nameof(window));
+            
+            CanFocus = false;
             if (Style.Current != null)
                 BackgroundColor = Style.Current.Background;
         }
@@ -281,34 +262,6 @@ namespace FlaxEngine.GUI
         public override Vector2 ClientToScreen(Vector2 location)
         {
             return _window.ClientToScreen(location);
-        }
-
-        /// <inheritdoc />
-        public override bool Focus()
-        {
-            if (IsDisposing || _focusedControl == this)
-                return false;
-
-            // Change focused control
-            Control prevous = _focusedControl;
-            _focusedControl = this;
-
-            // Fire events
-            if (prevous != null)
-            {
-                prevous.OnLostFocus();
-                Assert.IsFalse(prevous.IsFocused);
-            }
-            if (_focusedControl != null)
-            {
-                _focusedControl.OnGotFocus();
-                Assert.IsTrue(_focusedControl.IsFocused);
-            }
-
-            // Update flags
-            UpdateContainsFocus();
-
-            return true;
         }
 
         #endregion

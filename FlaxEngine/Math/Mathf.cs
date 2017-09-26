@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 using System;
 using System.ComponentModel;
@@ -1042,7 +1042,7 @@ namespace FlaxEngine
         public static int Wrap(int value, int min, int max)
         {
             if (min > max)
-                throw new ArgumentException(string.Format("min {0} should be less than or equal to max {1}", min, max), "min");
+                throw new ArgumentException(string.Format("min {0} should be less than or equal to max {1}", min, max), nameof(min));
 
             // Code from http://stackoverflow.com/a/707426/1356325
             int range_size = max - min + 1;
@@ -1071,7 +1071,7 @@ namespace FlaxEngine
             double valued = value;
 
             if (mind > maxd)
-                throw new ArgumentException(string.Format("min {0} should be less than or equal to max {1}", min, max), "min");
+                throw new ArgumentException(string.Format("min {0} should be less than or equal to max {1}", min, max), nameof(min));
 
             double range_size = maxd - mind;
             return (float)(mind + (valued - mind) - range_size * Math.Floor((valued - mind) / range_size));

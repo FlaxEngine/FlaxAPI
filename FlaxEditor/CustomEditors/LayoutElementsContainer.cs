@@ -194,11 +194,13 @@ namespace FlaxEditor.CustomEditors
         /// Adds new label element.
         /// </summary>
         /// <param name="text">The label text.</param>
+        /// <param name="horizontalAlignment">The label text horizontal alignment.</param>
         /// <returns>The created element.</returns>
-        public LabelElement Label(string text)
+        public LabelElement Label(string text, TextAlignment horizontalAlignment = TextAlignment.Near)
         {
             LabelElement element = new LabelElement();
             element.Label.Text = text;
+            element.Label.HorizontalAlignment = horizontalAlignment;
             OnAddElement(element);
             return element;
         }
@@ -260,6 +262,29 @@ namespace FlaxEditor.CustomEditors
         {
             var property = AddPropertyItem(name, tooltip);
             return property.IntegerValue();
+        }
+        
+        /// <summary>
+        /// Adds new combobox element.
+        /// </summary>
+        /// <returns>The created element.</returns>
+        public ComboBoxElement ComboBox()
+        {
+            ComboBoxElement element = new ComboBoxElement();
+            OnAddElement(element);
+            return element;
+        }
+
+        /// <summary>
+        /// Adds new combobox element with name label.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="tooltip">The property label tooltip text.</param>
+        /// <returns>The created element.</returns>
+        public ComboBoxElement ComboBox(string name, string tooltip = null)
+        {
+            var property = AddPropertyItem(name, tooltip);
+            return property.ComboBox();
         }
 
         /// <summary>

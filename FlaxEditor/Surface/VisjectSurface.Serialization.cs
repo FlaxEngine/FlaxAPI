@@ -136,14 +136,26 @@ namespace FlaxEditor.Surface
                     value = new Guid(stream.ReadBytes(16));
                 }
                     break;
-                /*case 8:// CommonType::String:
+                case 8:// CommonType::String:
                 {
-                    String v;
-                    ReadString(&v, 953);
-                    data.Set(v);
-                }
+                    int length = stream.ReadInt32();
+                    if (length <= 0)
+                    {
+                        value = string.Empty;
+                    }
+                    else
+                    {
+                        var data = new char[length];
+                        for (int i = 0; i < length; i++)
+                        {
+                            var c = stream.ReadUInt16();
+                            data[i] = (char)(c ^ 953);
+                        }
+                        value = new string(data);
+                    }
                     break;
-                case 9:// CommonType::Box:
+                }
+                /*case 9:// CommonType::Box:
                 {
                     BoundingBox v;
                     ReadBox(&v);
@@ -233,9 +245,16 @@ namespace FlaxEditor.Surface
                 stream.Write((byte)7);
                 stream.Write(asGuid.ToByteArray());
             }
+            else if (value is string asString)
+            {
+                stream.Write((byte)8);
+                stream.Write(asString.Length);
+                for (int i = 0; i < asString.Length; i++)
+                    stream.Write((ushort)(asString[i] ^ 953));
+            }
             else
             {
-                throw new SystemException();
+                throw new NotSupportedException();
             }
         }
 

@@ -235,6 +235,8 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void OnInit()
         {
+            base.OnInit();
+
             Editor.SceneEditing.OnSelectionChanged += OnOnSelectionChanged;
         }
 

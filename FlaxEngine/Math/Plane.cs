@@ -159,9 +159,9 @@ namespace FlaxEngine
         public Plane(float[] values)
         {
             if (values == null)
-                throw new ArgumentNullException("values");
+                throw new ArgumentNullException(nameof(values));
             if (values.Length != 4)
-                throw new ArgumentOutOfRangeException("values", "There must be four and only four input values for Plane.");
+                throw new ArgumentOutOfRangeException(nameof(values), "There must be four and only four input values for Plane.");
 
             Normal.X = values[0];
             Normal.Y = values[1];
@@ -198,7 +198,7 @@ namespace FlaxEngine
                         return D;
                 }
 
-                throw new ArgumentOutOfRangeException("index", "Indices for Plane run from 0 to 3, inclusive.");
+                throw new ArgumentOutOfRangeException(nameof(index), "Indices for Plane run from 0 to 3, inclusive.");
             }
 
             set
@@ -218,7 +218,7 @@ namespace FlaxEngine
                         D = value;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException("index", "Indices for Plane run from 0 to 3, inclusive.");
+                        throw new ArgumentOutOfRangeException(nameof(index), "Indices for Plane run from 0 to 3, inclusive.");
                 }
             }
         }
@@ -729,7 +729,7 @@ namespace FlaxEngine
         public static void Transform(Plane[] planes, ref Quaternion rotation)
         {
             if (planes == null)
-                throw new ArgumentNullException("planes");
+                throw new ArgumentNullException(nameof(planes));
 
             float x2 = rotation.X + rotation.X;
             float y2 = rotation.Y + rotation.Y;
@@ -814,7 +814,7 @@ namespace FlaxEngine
         public static void Transform(Plane[] planes, ref Matrix transformation)
         {
             if (planes == null)
-                throw new ArgumentNullException("planes");
+                throw new ArgumentNullException(nameof(planes));
 
             Matrix inverse;
             Matrix.Invert(ref transformation, out inverse);

@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 using System;
 using System.Collections.Generic;
@@ -77,8 +77,10 @@ namespace FlaxEngine.GUI
         /// <param name="panel1Scroll">The panel1 scroll bars.</param>
         /// <param name="panel2Scroll">The panel2 scroll bars.</param>
         public SplitPanel(Orientation orientation = Orientation.Horizontal, ScrollBars panel1Scroll = ScrollBars.Both, ScrollBars panel2Scroll = ScrollBars.Both)
-            : base(false)
+            : base()
         {
+            CanFocus = false;
+
             _orientation = orientation;
             _splitterValue = 0.5f;
 

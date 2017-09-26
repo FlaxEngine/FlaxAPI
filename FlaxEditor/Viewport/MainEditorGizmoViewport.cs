@@ -30,11 +30,17 @@ namespace FlaxEditor.Viewport
         private readonly ViewportWidgetButton _gizmoModeScale;
 
         private readonly DragAssets _dragAssets = new DragAssets();
+        private readonly ViewportDebugDrawData _debugDrawData = new ViewportDebugDrawData(32);
 
         /// <summary>
         /// The transform gizmo.
         /// </summary>
         public readonly TransformGizmo TransformGizmo;
+
+        /// <summary>
+        /// The selection outline postFx.
+        /// </summary>
+        public SelectionOutline SelectionOutline;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainEditorGizmoViewport"/> class.
@@ -45,9 +51,18 @@ namespace FlaxEditor.Viewport
         {
             _editor = editor;
 
+            // Prepare rendering task
+            Task.ActorsSource = ActorsSources.ScenesAndCustomActors;
             Task.Flags = ViewFlags.DefaultEditor;
+            Task.Begin += RenderTaskOnBegin;
             Task.End += RenderTaskOnEnd;
+            Task.Draw += RenderTaskOnDraw;
 
+            // Create selection outline postFx
+            SelectionOutline = FlaxEngine.Object.New<SelectionOutline>();
+            Task.CustomPostFx.Add(SelectionOutline);
+
+            // Add transformation gizmo
             TransformGizmo = new TransformGizmo(this);
             TransformGizmo.OnApplyTransformation += ApplyTransform;
             TransformGizmo.OnModeChanged += OnGizmoModeChanged;
@@ -161,23 +176,31 @@ namespace FlaxEditor.Viewport
             AddCommandsToController();
         }
 
-        private void RenderTaskOnEnd(SceneRenderTask task)
+        private void RenderTaskOnBegin(SceneRenderTask task)
         {
-            // Draw selected objects debug shapes
-            IntPtr[] selectedActors = null;
+            _debugDrawData.Clear();
+
+            // Collect selected objects debug shapes and visuals
             var selectedParents = TransformGizmo.SelectedParents;
             if (selectedParents.Count > 0)
             {
-                var actors = new List<IntPtr>(selectedParents.Count);
                 for (int i = 0; i < selectedParents.Count; i++)
                 {
                     if (selectedParents[i].IsActiveInHierarchy)
-                        selectedParents[i].OnDebugDraw(actors);
+                        selectedParents[i].OnDebugDraw(_debugDrawData);
                 }
-                if (actors.Count > 0)
-                    selectedActors = actors.ToArray();
             }
-            DebugDraw.Draw(task, selectedActors);
+        }
+
+        private void RenderTaskOnEnd(SceneRenderTask task)
+        {
+            // Draw selected objects debug shapes and visuals
+            DebugDraw.Draw(task, _debugDrawData.ActorsPtrs);
+        }
+
+        private void RenderTaskOnDraw(DrawCallsCollector collector)
+        {
+            _debugDrawData.OnDraw(collector);
         }
 
         private void onGizmoModeToggle(ViewportWidgetButton button)
@@ -325,43 +348,47 @@ namespace FlaxEditor.Viewport
         /// <param name="translationDelta">The translation delta.</param>
         /// <param name="rotationDelta">The rotation delta.</param>
         /// <param name="scaleDelta">The scale delta.</param>
-        public void ApplyTransform(List<SceneGraphNode> selection, ref Vector3 translationDelta, ref Matrix rotationDelta, ref Vector3 scaleDelta)
+        public void ApplyTransform(List<SceneGraphNode> selection, ref Vector3 translationDelta, ref Quaternion rotationDelta, ref Vector3 scaleDelta)
         {
+            bool applyRotation = !rotationDelta.IsIdentity;
             bool useObjCenter = TransformGizmo.ActivePivot == TransformGizmo.PivotType.ObjectCenter;
-            bool uniformScale = TransformGizmo.ActiveAxis == TransformGizmo.Axis.Center;
             Vector3 gizmoPosition = TransformGizmo.Position;
 
             // Transform selected objects
+            bool isPlayMode = Editor.Instance.StateMachine.IsPlayMode;
             for (int i = 0; i < selection.Count; i++)
             {
                 var obj = selection[i];
+                
+                // Block transforming static objects in play mode
+                if(isPlayMode && obj.CanTransform == false)
+                    continue;
                 var trans = obj.Transform;
+
+                // Apply rotation
+                if (applyRotation)
+                {
+                    Vector3 pivotOffset = trans.Translation - gizmoPosition;
+                    if (useObjCenter || pivotOffset.IsZero)
+                    {
+                        trans.Orientation *= rotationDelta;
+                    }
+                    else
+                    {
+                        Matrix.RotationQuaternion(ref trans.Orientation, out var transWorld);
+                        Matrix.RotationQuaternion(ref rotationDelta, out var deltaWorld);
+                        Matrix world = transWorld * Matrix.Translation(pivotOffset) * deltaWorld * Matrix.Translation(-pivotOffset);
+                        trans.SetRotation(ref world);
+                        trans.Translation += world.TranslationVector;
+                    }
+                }
+
+                // Apply scale
+                const float scaleLimit = 99_999_999.0f;
+                trans.Scale = Vector3.Clamp(trans.Scale + scaleDelta, new Vector3(-scaleLimit), new Vector3(scaleLimit));
 
                 // Apply translation
                 trans.Translation += translationDelta;
-
-                // Apply scale
-                if (uniformScale)
-                    trans.Scale *= scaleDelta;
-                else
-                    trans.Scale += scaleDelta;
-                const float scaleLimit = 99_999_999.0f;
-                trans.Scale = Vector3.Clamp(trans.Scale, new Vector3(-scaleLimit), new Vector3(scaleLimit));
-
-                // Apply rotation
-                if (!rotationDelta.IsIdentity)
-                {
-                    Matrix localRot = Matrix.Identity;
-                    Vector3 rotationCenter = useObjCenter ? trans.Translation : gizmoPosition;
-                    localRot.Forward = trans.Forward;
-                    localRot.Up = trans.Up;
-                    localRot.Right = Vector3.Normalize(Vector3.Cross(trans.Forward, trans.Up));
-                    localRot.TranslationVector = trans.Translation - rotationCenter;
-                    Matrix newRot = localRot * rotationDelta;
-                    trans.SetRotation(ref newRot);
-                    if (newRot.TranslationVector.LengthSquared > 0.0001f)
-                        trans.Translation = newRot.TranslationVector + rotationCenter;
-                }
 
                 obj.Transform = trans;
             }
@@ -537,11 +564,11 @@ namespace FlaxEditor.Viewport
                     {
                         case ContentDomain.Material:
                         {
-                            if (hit is ModelActorNode.MeshNode meshNode)
+                            if (hit is ModelActorNode.EntryNode meshNode)
                             {
                                 var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
                                 using (new UndoBlock(Undo, meshNode.ModelActor, "Change material"))
-                                    meshNode.Mesh.Material = material;
+                                    meshNode.Entry.Material = material;
                             }
 
                             break;
@@ -579,6 +606,15 @@ namespace FlaxEditor.Viewport
             }
 
             return result;
+        }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            _debugDrawData.Dispose();
+            FlaxEngine.Object.Destroy(ref SelectionOutline);
+
+            base.OnDestroy();
         }
     }
 }

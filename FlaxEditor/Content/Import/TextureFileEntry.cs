@@ -326,6 +326,23 @@ namespace FlaxEditor.Content.Import
                 }
             }
         }
+
+        /// <summary>
+        /// Tries the restore the asset import options from the target resource file.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <param name="assetPath">The asset path.</param>
+        /// <returns>True settings has been restored, otherwise false.</returns>
+        public static bool TryRestore(ref TextureImportSettings options, string assetPath)
+        {
+            if (TextureFileEntry.Internal_GetTextureImportOptions(assetPath, out var internalOptions))
+            {
+                // Restore settings
+                options.FromInternal(ref internalOptions);
+                return true;
+            }
+            return false;
+        }
     }
 
     /// <summary>
@@ -345,12 +362,7 @@ namespace FlaxEditor.Content.Import
             : base(url, resultUrl)
         {
             // Try to restore target asset texture import options (usefull for fast reimport)
-            TextureImportSettings.InternalOptions options;
-            if (Internal_GetTextureImportOptions(resultUrl, out options))
-            {
-                // Restore settings
-                _settings.FromInternal(ref options);
-            }
+            TextureImportSettings.TryRestore(ref _settings, resultUrl);
 
             // Try to guess format type based on file name
             var shortName = System.IO.Path.GetFileNameWithoutExtension(url);

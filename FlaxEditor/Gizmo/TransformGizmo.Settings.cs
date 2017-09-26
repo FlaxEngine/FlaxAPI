@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -15,9 +15,13 @@ namespace FlaxEditor.Gizmo
         private const float MultiAxisThickness = 0.05f;
         private const float SingleAxisThickness = 0.3f;
         private const float ScaleSpheresRadius = 0.7f;
-        private const float RotateSpheresRadius = 0.9f;
         private const float CenterBoxSize = 0.8f;
+        private const float CenterSphereRadius = 0.1f;
         private const float HalfLineOffset = LineOffset / 2;
+        private static readonly Color AxisColorFocus = new Color(255, 229, 10);
+        private static readonly Color AxisColorX = new Color(255, 0, 7);
+        private static readonly Color AxisColorY = new Color(61, 255, 12);
+        private static readonly Color AxisColorZ = new Color(0, 6, 255);
 
         private Vector3[] _translationLineVertices =
         {
@@ -52,15 +56,15 @@ namespace FlaxEditor.Gizmo
         private BoundingBox XZBox = new BoundingBox(Vector3.Zero, new Vector3(LineOffset, MultiAxisThickness, LineOffset));
         private BoundingBox XYBox = new BoundingBox(Vector3.Zero, new Vector3(LineOffset, LineOffset, MultiAxisThickness));
         private BoundingBox YZBox = new BoundingBox(Vector3.Zero, new Vector3(MultiAxisThickness, LineOffset, LineOffset));
-        private BoundingBox CenterBoxRaw = new BoundingBox(new Vector3(-0.5f) * CenterBoxSize, new Vector3(0.5f) * CenterBoxSize);
+        private BoundingBox CenterBoxRaw = new BoundingBox(new Vector3(-0.5f * CenterBoxSize), new Vector3(0.5f * CenterBoxSize));
+        private float RotateRadiusRaw = 4.0f;
 
-        private BoundingSphere RotateXSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[1], _gizmoWorld), RotateSpheresRadius* _screenScale);
-        private BoundingSphere RotateYSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[7], _gizmoWorld), RotateSpheresRadius* _screenScale);
-        private BoundingSphere RotateZSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[13], _gizmoWorld), RotateSpheresRadius* _screenScale);
-        private BoundingSphere ScaleXSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[1], _gizmoWorld), ScaleSpheresRadius* _screenScale);
-        private BoundingSphere ScaleYSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[7], _gizmoWorld), ScaleSpheresRadius* _screenScale);
-        private BoundingSphere ScaleZSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[13], _gizmoWorld), ScaleSpheresRadius* _screenScale);
-        private BoundingBox CenterBox => CenterBoxRaw * _gizmoWorld;
+        private BoundingSphere ScaleXSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[1], _gizmoWorld), ScaleSpheresRadius * _screenScale);
+        private BoundingSphere ScaleYSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[7], _gizmoWorld), ScaleSpheresRadius * _screenScale);
+        private BoundingSphere ScaleZSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[13], _gizmoWorld), ScaleSpheresRadius * _screenScale);
+        private OrientedBoundingBox CenterBox => new OrientedBoundingBox(CenterBoxRaw) * _gizmoWorld;
+        private BoundingSphere CenterSphere => new BoundingSphere(_gizmoWorld.TranslationVector, CenterSphereRadius * _screenScale);
+        private float RotateRadius => RotateRadiusRaw * _screenScale;
 
         private bool _precisionModeEnabled = false;
         private Mode _activeMode = Mode.Translate;
@@ -76,7 +80,7 @@ namespace FlaxEditor.Gizmo
         /// <summary>
         /// Gizmo scale factor
         /// </summary>
-        public float ScaleFactor = 0.05f;
+        public float ScaleFactor = 0.01f;
 
         /// <summary>
         /// True if enable grid snapping when moving objects

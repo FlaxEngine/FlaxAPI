@@ -33,6 +33,11 @@ namespace FlaxEditor.Viewport.Previews
         }
 
         /// <summary>
+        /// Gets the model actor used to preview selected asset.
+        /// </summary>
+        public ModelActor PreviewModelActor => _previewModel;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ModelPreview"/> class.
         /// </summary>
         /// <param name="useWidgets">if set to <c>true</c> use widgets.</param>
@@ -61,6 +66,7 @@ namespace FlaxEditor.Viewport.Previews
             _sky.SunLight = _previewLight;
 
             // Link actors for rendering
+            Task.ActorsSource = ActorsSources.CustomActors;
             Task.CustomActors.Add(_previewModel);
             Task.CustomActors.Add(_previewLight);
             Task.CustomActors.Add(_envProbe);

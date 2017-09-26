@@ -51,8 +51,8 @@ namespace FlaxEngine
         /// </summary>
         public uint RawValue
         {
-            get { return value; }
-            set { this.value = value; }
+            get => value;
+            set => this.value = value;
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -22,12 +22,12 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="ContextMenuItem"/> class.
         /// </summary>
         /// <param name="parent">The parent context menu.</param>
-        /// <param name="canFocus">if set to <c>true</c> can focus this control.</param>
         /// <param name="width">The initial width.</param>
         /// <param name="height">The initial height.</param>
-        protected ContextMenuItem(ContextMenu parent, bool canFocus, float width, float height)
-            : base(canFocus, 0, 0, width, height)
+        protected ContextMenuItem(ContextMenu parent, float width, float height)
+            : base(0, 0, width, height)
         {
+            CanFocus = false;
             ParentContextMenu = parent;
         }
 

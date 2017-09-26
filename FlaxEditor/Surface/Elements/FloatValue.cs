@@ -23,9 +23,6 @@ namespace FlaxEditor.Surface.Elements
         /// <summary>
         /// Gets the surface.
         /// </summary>
-        /// <value>
-        /// The surface.
-        /// </value>
         public VisjectSurface Surface => ParentNode.Surface;
 
         /// <inheritdoc />

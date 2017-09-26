@@ -9,61 +9,61 @@ namespace FlaxEngine
 {
     public sealed partial class ModelActor
     {
-        private MeshInfo[] _meshes;
+        private ModelEntryInfo[] _entries;
 
         /// <summary>
-        /// Gets the model mesh infos collection. Each <see cref="MeshInfo"/> contains data how to render each mesh (transformation, material, shadows casting, etc.).
+        /// Gets the model entries collection. Each <see cref="ModelEntryInfo"/> contains data how to render meshes using this entry (transformation, material, shadows casting, etc.).
         /// </summary>
         /// <remarks>
         /// It's null if the <see cref="Model"/> property is null or asset is not loaded yet.
         /// </remarks>
         [Serialize]
-        [EditorOrder(100), EditorDisplay("Model")]
+        [EditorOrder(100), EditorDisplay("Entries", "__inline__")]
         [MemberCollection(CanReorderItems = false, NotNullItems = true, ReadOnly = true)]
-        public MeshInfo[] Meshes
+        public ModelEntryInfo[] Entries
         {
             get
             {
                 // Check if has cached data
-                if (_meshes != null)
-                    return _meshes;
+                if (_entries != null)
+                    return _entries;
 
                 // Cache data
                 var model = Model;
                 if (model && model.IsLoaded)
                 {
                     var meshesCount = model.LODs[0].Meshes.Length;
-                    _meshes = new MeshInfo[meshesCount];
+                    _entries = new ModelEntryInfo[meshesCount];
                     for (int i = 0; i < meshesCount; i++)
                     {
-                        _meshes[i] = new MeshInfo(this, i);
+                        _entries[i] = new ModelEntryInfo(this, i);
                     }
                 }
 
-                return _meshes;
+                return _entries;
             }
             internal set
             {
                 // Used by the serialization system
                 
-                _meshes = value;
+                _entries = value;
 
-                MeshesChanged?.Invoke(this);
+                EntriesChanged?.Invoke(this);
             }
         }
 
         /// <summary>
-        /// Occurs when meshes collection gets changed.
+        /// Occurs when entries collection gets changed.
         /// It's called on <see cref="ModelActor"/> model changed or when model asset gets reloaded, etc.
         /// </summary>
-        public event Action<ModelActor> MeshesChanged;
+        public event Action<ModelActor> EntriesChanged;
 
         internal void Internal_OnModelChanged()
         {
             // Clear cached data
-            _meshes = null;
+            _entries = null;
 
-            MeshesChanged?.Invoke(this);
+            EntriesChanged?.Invoke(this);
         }
 
 #if !UNIT_TEST_COMPILANT
@@ -92,7 +92,13 @@ namespace FlaxEngine
         internal static extern void Internal_SetMeshVisible(IntPtr obj, int index, bool value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_IntersectsMesh(IntPtr obj, int index, ref Ray ray, out float distance);
+        internal static extern ShadowsCastingMode Internal_GetMeshShadowsMode(IntPtr obj, int index);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetMeshShadowsMode(IntPtr obj, int index, ShadowsCastingMode value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_IntersectsEntry(IntPtr obj, int index, ref Ray ray, out float distance);
 #endif
     }
 }

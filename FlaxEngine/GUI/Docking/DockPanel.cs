@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -134,10 +134,12 @@ namespace FlaxEngine.GUI.Docking
         /// </summary>
         /// <param name="parentPanel">The parent panel.</param>
         public DockPanel(DockPanel parentPanel)
-            : base(false, 0, 0, 64, 64)
         {
+            CanFocus = false;
+
             _parentPanel = parentPanel;
             _parentPanel?._childPanels.Add(this);
+
             DockStyle = DockStyle.Fill;
         }
 

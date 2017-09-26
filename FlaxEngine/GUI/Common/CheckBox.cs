@@ -81,7 +81,7 @@ namespace FlaxEngine.GUI
         /// <param name="y">The y.</param>
         /// <param name="isChecked">if set to <c>true</c> set checked on start.</param>
         public CheckBox(float x, float y, bool isChecked = false)
-            : base(true, x, y, 18, 18)
+            : base(x, y, 18, 18)
         {
             _checked = isChecked;
             _boxSize = 16.0f;

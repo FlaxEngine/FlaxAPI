@@ -462,12 +462,12 @@ namespace FlaxEditor.Viewport.Previews
     /// <seealso cref="TexturePreviewCustomBase" />
     public class TexturePreview : TexturePreviewCustomBase
     {
-        private Texture _asset;
+        private TextureBase _asset;
 
         /// <summary>
         /// Gets or sets the texture to preview.
         /// </summary>
-        public Texture Asset
+        public TextureBase Asset
         {
             get => _asset;
             set

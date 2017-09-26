@@ -186,9 +186,9 @@ namespace FlaxEngine
         public Quaternion(float[] values)
         {
             if (values == null)
-                throw new ArgumentNullException("values");
+                throw new ArgumentNullException(nameof(values));
             if (values.Length != 4)
-                throw new ArgumentOutOfRangeException("values", "There must be four and only four input values for Quaternion.");
+                throw new ArgumentOutOfRangeException(nameof(values), "There must be four and only four input values for Quaternion.");
 
             X = values[0];
             Y = values[1];
@@ -202,18 +202,12 @@ namespace FlaxEngine
         /// <value>
         /// <c>true</c> if this instance is an identity quaternion; otherwise, <c>false</c>.
         /// </value>
-        public bool IsIdentity
-        {
-            get { return Equals(Identity); }
-        }
+        public bool IsIdentity => Equals(Identity);
 
         /// <summary>
         /// Gets a value indicting whether this instance is normalized.
         /// </summary>
-        public bool IsNormalized
-        {
-            get { return Mathf.IsOne(X * X + Y * Y + Z * Z + W * W); }
-        }
+        public bool IsNormalized => Mathf.IsOne(X * X + Y * Y + Z * Z + W * W);
 
         /// <summary>
         /// The rotation as Euler angles in degrees.
@@ -327,7 +321,7 @@ namespace FlaxEngine
                         return W;
                 }
 
-                throw new ArgumentOutOfRangeException("index", "Indices for Quaternion run from 0 to 3, inclusive.");
+                throw new ArgumentOutOfRangeException(nameof(index), "Indices for Quaternion run from 0 to 3, inclusive.");
             }
 
             set
@@ -347,7 +341,7 @@ namespace FlaxEngine
                         W = value;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException("index", "Indices for Quaternion run from 0 to 3, inclusive.");
+                        throw new ArgumentOutOfRangeException(nameof(index), "Indices for Quaternion run from 0 to 3, inclusive.");
                 }
             }
         }
@@ -387,10 +381,7 @@ namespace FlaxEngine
         /// <see cref="Quaternion.LengthSquared" /> may be preferred when only the relative length is needed
         /// and speed is of the essence.
         /// </remarks>
-        public float Length
-        {
-            get { return (float)Math.Sqrt(X * X + Y * Y + Z * Z + W * W); }
-        }
+        public float Length => (float)Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
 
         /// <summary>
         /// Calculates the squared length of the quaternion.
@@ -400,10 +391,7 @@ namespace FlaxEngine
         /// This method may be preferred to <see cref="Quaternion.Length" /> when only a relative length is needed
         /// and speed is of the essence.
         /// </remarks>
-        public float LengthSquared
-        {
-            get { return X * X + Y * Y + Z * Z + W * W; }
-        }
+        public float LengthSquared => X * X + Y * Y + Z * Z + W * W;
 
         /// <summary>
         /// Converts the quaternion into a unit quaternion.

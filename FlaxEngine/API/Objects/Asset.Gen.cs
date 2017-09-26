@@ -53,6 +53,19 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Determines whether this asset is virtual (generated or temporary, has no storage so it won't be saved).
+		/// </summary>
+		[UnmanagedCall]
+		public bool IsVirtual
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetIsVirtual(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
 		/// Gets amount of references to that asset.
 		/// </summary>
 		[UnmanagedCall]
@@ -105,6 +118,8 @@ namespace FlaxEngine
 		internal static extern string Internal_GetPath(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetIsLoaded(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_GetIsVirtual(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern int Internal_GetRefCount(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]

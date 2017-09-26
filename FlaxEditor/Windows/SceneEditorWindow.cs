@@ -22,15 +22,22 @@ namespace FlaxEditor.Windows
         protected SceneEditorWindow(Editor editor, bool hideOnClose, ScrollBars scrollBars)
             : base(editor, hideOnClose, scrollBars)
         {
-            AddCommandsToController();
         }
-
+        
         /// <summary>
         ///     Saves all changes.
         /// </summary>
         public void SaveAll()
         {
             Editor.SaveAll();
+        }
+
+        /// <inheritdoc />
+        public override void OnInit()
+        {
+            base.OnInit();
+
+            AddCommandsToController();
         }
 
         /// <summary>
@@ -41,17 +48,19 @@ namespace FlaxEditor.Windows
             CommandsController.Add(new InputCommand(Editor.SaveAll, new InputChord(KeyCode.Control, KeyCode.S)));
             CommandsController.Add(new InputCommand(Editor.PerformUndo, new InputChord(KeyCode.Control, KeyCode.Z)));
             CommandsController.Add(new InputCommand(() =>
-            {
-                Editor.PerformRedo();
-                Focus();
-            }, new InputChord(KeyCode.Control, KeyCode.Y)));
+                                                    {
+                                                        Editor.PerformRedo();
+                                                        Focus();
+                                                    }, new InputChord(KeyCode.Control, KeyCode.Y)));
             CommandsController.Add(new InputCommand(Editor.SceneEditing.Cut, new InputChord(KeyCode.Control, KeyCode.X)));
             CommandsController.Add(new InputCommand(Editor.SceneEditing.Copy, new InputChord(KeyCode.Control, KeyCode.C)));
-            CommandsController.Add(new InputCommand(() => { Editor.SceneEditing.Paste(); }, new InputChord(KeyCode.Control, KeyCode.V)));
+            CommandsController.Add(new InputCommand(Editor.SceneEditing.Paste, new InputChord(KeyCode.Control, KeyCode.V)));
             CommandsController.Add(new InputCommand(Editor.SceneEditing.Duplicate, new InputChord(KeyCode.Control, KeyCode.D)));
             CommandsController.Add(new InputCommand(Editor.SceneEditing.SelectAllScenes, new InputChord(KeyCode.Control, KeyCode.A)));
-            CommandsController.Add(new InputCommand(() => { Editor.Windows.SceneWin.Search(); }, new InputChord(KeyCode.Control, KeyCode.F)));
+            CommandsController.Add(new InputCommand(Editor.Windows.SceneWin.Search, new InputChord(KeyCode.Control, KeyCode.F)));
             CommandsController.Add(new InputCommand(Editor.SceneEditing.Delete, new InputChord(KeyCode.Delete)));
+            CommandsController.Add(new InputCommand(Editor.Simulation.RequestStartPlay, new InputChord(KeyCode.F5)));
+            CommandsController.Add(new InputCommand(Editor.Simulation.RequestPlayOneFrame, new InputChord(KeyCode.F11)));
         }
     }
 }

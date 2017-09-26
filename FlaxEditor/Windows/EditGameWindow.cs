@@ -60,6 +60,9 @@ namespace FlaxEditor.Windows
             public CameraPreview()
                 : base(RenderTask.Create<SceneRenderTask>())
             {
+                // Don't steal focus
+                CanFocus = false;
+
                 const float PinSize = 12.0f;
                 const float PinMargin = 2.0f;
 
@@ -345,6 +348,7 @@ namespace FlaxEditor.Windows
         protected override void AddCommandsToController()
         {
             base.AddCommandsToController();
+
             CommandsController.Add(new InputCommand(() => { Viewport.TakeScreenshot(); }, new InputChord(KeyCode.F12)));
         }
 

@@ -162,6 +162,9 @@ namespace FlaxEditor.SceneGraph
         }
 
         /// <inheritdoc />
+        public override bool CanTransform => (_actor.StaticFlags & StaticFlags.Transform) == 0;
+        
+        /// <inheritdoc />
         public override bool IsActive => _actor.IsActive;
 
         /// <inheritdoc />
@@ -203,9 +206,9 @@ namespace FlaxEditor.SceneGraph
         }
 
         /// <inheritdoc />
-        public override void OnDebugDraw(List<IntPtr> actorsPtr)
+        public override void OnDebugDraw(ViewportDebugDrawData data)
         {
-            actorsPtr.Add(_actor.unmanagedPtr);
+            data.Add(_actor);
         }
 
         /// <inheritdoc />

@@ -108,10 +108,15 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Shows the dialog for selecting files to import.
         /// </summary>
-        public void ShowImportFileDialog()
+        /// <param name="targetLocation">The target location.</param>
+        public void ShowImportFileDialog(ContentFolder targetLocation)
         {
-            // TODO: add API to show files selecting dialog
-            throw new NotImplementedException("import files dialog");
+            // Ask user to select files to import
+            var files = MessageBox.OpenFileDialog(Editor.Windows.MainWindow, null, "All files (*.*)\0*.*\0", true, "Select files to import");
+            if (files != null && files.Length > 0)
+            {
+                Import(files, targetLocation);
+            }
         }
 
         /// <summary>
@@ -149,7 +154,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         /// <param name="files">The files.</param>
         /// <param name="targetLocation">The target location.</param>
-        public void Import(List<string> files, ContentFolder targetLocation)
+        public void Import(IEnumerable<string> files, ContentFolder targetLocation)
         {
             if (targetLocation == null)
                 throw new ArgumentNullException();
@@ -157,9 +162,9 @@ namespace FlaxEditor.Modules
             lock (_requests)
             {
                 bool skipDialog = false;
-                for (int i = 0; i < files.Count; i++)
+                foreach (var file in files)
                 {
-                    Import(files[i], targetLocation, ref skipDialog);
+                    Import(file, targetLocation, ref skipDialog);
                 }
             }
         }

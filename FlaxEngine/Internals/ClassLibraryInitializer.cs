@@ -13,7 +13,7 @@ namespace FlaxEngine
         /// </summary>
         internal static void Init()
         {
-            UnhandledExceptionHandler.RegisterUECatcher();
+            UnhandledExceptionHandler.RegisterCatcher();
             FlaxLogWriter.Init();
             Globals.Init();
 

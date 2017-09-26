@@ -175,7 +175,9 @@ namespace FlaxEditor.Windows.Assets
 
         private bool _isEdited;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Occurs when object gets edited.
+        /// </summary>
         public event Action OnEdited;
 
         /// <inheritdoc />
@@ -289,6 +291,11 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public abstract class AssetEditorWindowBase<T> : AssetEditorWindow where T : Asset
     {
+        private bool _isWaitingForLoaded;
+
+        /// <summary>
+        /// The asset.
+        /// </summary>
         protected T _asset;
 
         /// <summary>
@@ -328,6 +335,25 @@ namespace FlaxEditor.Windows.Assets
         protected virtual void OnAssetLoaded()
         {
         }
+        
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            if (_isWaitingForLoaded)
+            {
+                if (_asset == null)
+                {
+                    _isWaitingForLoaded = false;
+                }
+                else if (_asset.IsLoaded)
+                {
+                    _isWaitingForLoaded = false;
+                    OnAssetLoaded();
+                }
+            }
+
+            base.Update(deltaTime);
+        }
 
         /// <inheritdoc />
         protected override void OnShow()
@@ -340,25 +366,21 @@ namespace FlaxEditor.Windows.Assets
                 if (_asset == null)
                 {
                     // Error
-                    Debug.LogError("Cannot load asset" + _item.Path);
+                    Debug.LogError(string.Format("Cannot load asset \'{0}\' ({1})", _item.Path, typeof(T)));
 
                     // Close window
                     Close();
                     return;
                 }
 
-                // Fire events
+                // Fire event
                 OnAssetLinked();
-                _asset.WaitForLoaded(); // TODO: expose loaded/reloaded/unload events to c# API and wait here
-                if (_asset.IsLoaded)
-                {
-                    OnAssetLoaded();
-                }
+                _isWaitingForLoaded = true;
             }
 
             // Base
             base.OnShow();
-
+            
             // Update
             UpdateTitle();
             UpdateToolstrip();
@@ -371,6 +393,15 @@ namespace FlaxEditor.Windows.Assets
             _asset = null;
 
             base.UnlinkItem();
+        }
+
+        /// <inheritdoc />
+        public override void OnItemReimported(ContentItem item)
+        {
+            // Wait for loaded after reimport
+            _isWaitingForLoaded = true;
+            
+            base.OnItemReimported(item);
         }
     }
 

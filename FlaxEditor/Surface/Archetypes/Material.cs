@@ -33,10 +33,9 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 // Try get parent material window
                 // Maybe too hacky :D
-                var materialWindow = Surface.Owner as MaterialWindow;
-                if (materialWindow == null || materialWindow.Item == null)
+                if (!(Surface.Owner is MaterialWindow materialWindow) || materialWindow.Item == null)
                     return;
-                
+
                 // Get material info
                 MaterialInfo info;
                 materialWindow.FillMaterialInfo(out info);
@@ -190,6 +189,36 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     NodeElementArchetype.Factory.Output(0, "Size", ConnectionType.Vector2, 0),
                     NodeElementArchetype.Factory.Output(1, "Inv Size", ConnectionType.Vector2, 1),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 8,
+                Title = "Custom Code",
+                Description = "Custom HLSL shader code expression",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(300, 200),
+                DefaultValues = new object[]
+                {
+                    "// Here you can add HLSL code\nOutput0 = Input0;"
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Input0", true, ConnectionType.Vector4, 0),
+                    NodeElementArchetype.Factory.Input(1, "Input1", true, ConnectionType.Vector4, 1),
+                    NodeElementArchetype.Factory.Input(2, "Input2", true, ConnectionType.Vector4, 2),
+                    NodeElementArchetype.Factory.Input(3, "Input3", true, ConnectionType.Vector4, 3),
+                    NodeElementArchetype.Factory.Input(4, "Input4", true, ConnectionType.Vector4, 4),
+                    NodeElementArchetype.Factory.Input(5, "Input5", true, ConnectionType.Vector4, 5),
+                    NodeElementArchetype.Factory.Input(6, "Input6", true, ConnectionType.Vector4, 6),
+                    NodeElementArchetype.Factory.Input(7, "Input7", true, ConnectionType.Vector4, 7),
+
+                    NodeElementArchetype.Factory.Output(0, "Output0", ConnectionType.Vector4, 8),
+                    NodeElementArchetype.Factory.Output(1, "Output1", ConnectionType.Vector4, 9),
+                    NodeElementArchetype.Factory.Output(2, "Output2", ConnectionType.Vector4, 10),
+                    NodeElementArchetype.Factory.Output(3, "Output3", ConnectionType.Vector4, 11),
+
+                    NodeElementArchetype.Factory.TextBox(60, 0, 175, 200, 0),
                 }
             },
         };

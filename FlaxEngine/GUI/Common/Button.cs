@@ -48,7 +48,7 @@ namespace FlaxEngine.GUI
         /// <param name="y">Position Y coordinate</param>
         /// <param name="width">Width</param>
         public Button(float x = 0, float y = 0, float width = 120)
-            : base(true, x, y, width, DefaultHeight)
+            : base(x, y, width, DefaultHeight)
         {
             var style = Style.Current;
             Font = style.FontMedium;

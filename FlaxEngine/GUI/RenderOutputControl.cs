@@ -51,7 +51,6 @@ namespace FlaxEngine.GUI
         /// <param name="task">The task. Cannot be null.</param>
         /// <exception cref="System.ArgumentNullException">Invalid task.</exception>
         public RenderOutputControl(SceneRenderTask task)
-            : base(true)
         {
             if (task == null)
                 throw new ArgumentNullException();

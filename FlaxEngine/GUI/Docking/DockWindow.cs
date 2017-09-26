@@ -200,6 +200,7 @@ namespace FlaxEngine.GUI.Docking
 
                 // Then dock
                 (toDock ?? _masterPanel).DockWindowInternal(state, this);
+                PerformLayout();
                 OnShow();
             }
         }
@@ -289,11 +290,17 @@ namespace FlaxEngine.GUI.Docking
             OnUnlink();
         }
 
+        /// <summary>
+        /// Called when window is unlinked from the master panel.
+        /// </summary>
         protected virtual void OnUnlink()
         {
             _masterPanel = null;
         }
 
+        /// <summary>
+        /// Undocks this window.
+        /// </summary>
         protected virtual void Undock()
         {
             // Defocus itself
@@ -309,29 +316,28 @@ namespace FlaxEngine.GUI.Docking
             }
         }
 
+        /// <summary>
+        /// Called when window is closing. Operation can be cancelled.
+        /// </summary>
+        /// <param name="reason">The reason.</param>
+        /// <returns>True if cancel, otherise false to allow.</returns>
         protected virtual bool OnClosing(ClosingReason reason)
         {
-            // Unlink window
-            //_window = nullptr;
-
-            //if (reason == ClosingReason::EngineExit)
-            //	return true;
-
-            // Check if unlink from window and prevent destruction
-            /*if(HideOnClose || (reason != ClosingReason::User && reason != ClosingReason::CloseEvent))
-            {
-                SetParent(nullptr);
-            }*/
-
             // Allow
             return false;
         }
 
+        /// <summary>
+        /// Called when window is closed.
+        /// </summary>
         protected virtual void OnClose()
         {
             // Nothing to do
         }
 
+        /// <summary>
+        /// Called when window shows.
+        /// </summary>
         protected virtual void OnShow()
         {
             // Nothing to do
@@ -366,7 +372,7 @@ namespace FlaxEngine.GUI.Docking
         protected override void PerformLayoutSelf()
         {
             // Cache window title dimensions
-            if (_titleSize.X < 0)
+            if (_titleSize.X <= 0)
             {
                 var style = Style.Current;
                 if (style?.FontMedium != null)

@@ -32,6 +32,11 @@ namespace FlaxEngine.Rendering
         public delegate void DrawDelegate(DrawCallsCollector collector);
 
         /// <summary>
+        /// The actors source to use during rendering.
+        /// </summary>
+        public ActorsSources ActorsSource = ActorsSources.Scenes;
+
+        /// <summary>
         /// The custom set of actors to render.
         /// If collection is empty whole scene actors will be used.
         /// </summary>
@@ -76,6 +81,11 @@ namespace FlaxEngine.Rendering
         /// </summary>
         public Func<bool> CanSkipRendering;
 
+        /// <summary>
+        /// The custom post processing effects.
+        /// </summary>
+        public readonly HashSet<PostProcessEffect> CustomPostFx = new HashSet<PostProcessEffect>();
+        
         /// <summary>
         /// The action called on rendering begin.
         /// </summary>
@@ -133,13 +143,24 @@ namespace FlaxEngine.Rendering
             OnBegin();
             if (Camera != null)
                 View.CopyFrom(Camera);
+            
+            // Get custom post effects to render (registered ones and from the current camera)
+            var postFx = new HashSet<PostProcessEffect>(CustomPostFx);
+            if (Camera != null)
+            {
+                var perCameraPostFx = Camera.GetScripts<PostProcessEffect>();
+                for (int i = 0; i < perCameraPostFx.Length; i++)
+                {
+                    postFx.Add(perCameraPostFx[i]);
+                }
+            }
 
             // Resize buffers
             Buffers.Size = Output.Size;
 
             // Call scene rendering
             var customActors = CustomActors.Count > 0 ? CustomActors.ToArray() : null;
-            context.DrawScene(this, Output, Buffers, View, Flags, Mode, customActors);
+            context.DrawScene(this, Output, Buffers, View, Flags, Mode, customActors, ActorsSource, postFx);
 
             // Finish
             OnEnd();

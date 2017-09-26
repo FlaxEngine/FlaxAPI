@@ -255,7 +255,7 @@ namespace FlaxEditor.Content
         /// </summary>
         /// <param name="path">The path to the item.</param>
         protected ContentItem(string path)
-            : base(true, 0, 0, DefaultWidth, DefaultHeight)
+            : base(0, 0, DefaultWidth, DefaultHeight)
         {
             // Set path
             Path = path;

@@ -127,7 +127,7 @@ namespace FlaxEngine.GUI
         /// <param name="y">The y.</param>
         /// <param name="width">The width.</param>
         public ComboBox(float x = 0, float y = 0, float width = 120.0f)
-            : base(true, x, y, width, DefaultHeight)
+            : base(x, y, width, DefaultHeight)
         {
         }
 

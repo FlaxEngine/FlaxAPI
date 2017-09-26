@@ -70,6 +70,11 @@ namespace FlaxEngine.Rendering
         /// The scene texture.
         /// </summary>
         SceneTexture,
+
+        /// <summary>
+        /// The render target (created from code).
+        /// </summary>
+        RenderTarget,
     }
 
     /// <summary>
@@ -139,9 +144,7 @@ namespace FlaxEngine.Rendering
                 // Validate the hash
                 if (_material._parametersHash != _hash)
                     throw new InvalidOperationException("Cannot use invalid material parameter.");
-                if (!_isPublic)
-                    throw new InvalidOperationException("Cannot set private material parameters.");
-
+                
                 IntPtr ptr;
                 bool vBool = false;
                 int vInt = 0;
@@ -179,6 +182,7 @@ namespace FlaxEngine.Rendering
                     case MaterialParameterType.CubeTexture:
                     case MaterialParameterType.Texture:
                     case MaterialParameterType.NormalMap:
+                    case MaterialParameterType.RenderTarget:
                         ptr = new IntPtr(&vGuid);
                         break;
 
@@ -199,7 +203,8 @@ namespace FlaxEngine.Rendering
 
                     case MaterialParameterType.CubeTexture:
                     case MaterialParameterType.Texture:
-                    case MaterialParameterType.NormalMap: return Object.Find<Object>(ref vGuid);
+                    case MaterialParameterType.NormalMap: 
+                    case MaterialParameterType.RenderTarget: return Object.Find<Object>(ref vGuid);
 
                     default: throw new ArgumentOutOfRangeException();
                 }
@@ -255,6 +260,7 @@ namespace FlaxEngine.Rendering
                     case MaterialParameterType.CubeTexture:
                     case MaterialParameterType.Texture:
                     case MaterialParameterType.NormalMap:
+                    case MaterialParameterType.RenderTarget:
                         ptr = Object.GetUnmanagedPtr(value as Object);
                         break;
 

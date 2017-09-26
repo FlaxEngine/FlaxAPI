@@ -147,8 +147,10 @@ namespace FlaxEngine.GUI
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         protected ScrollBar(Orientation orientation, float x, float y, float width, float height)
-            : base(false, x, y, width, height)
+            : base(x, y, width, height)
         {
+            CanFocus = false;
+
             _orientation = orientation;
         }
         
@@ -314,9 +316,7 @@ namespace FlaxEngine.GUI
             if (buttons == MouseButtons.Left)
             {
                 // Remove focus
-                var parentWin = ParentWindow;
-                if (parentWin.FocusedControl != null)
-                    parentWin.FocusedControl.Defocus();
+                CurrentlyFocused?.Defocus();
 
                 float mousePosition = _orientation == Orientation.Vertical ? location.Y : location.X;
 
@@ -327,7 +327,7 @@ namespace FlaxEngine.GUI
                     _mouseOffset = mousePosition - _thumbCenter;
 
                     // Start capturing mouse
-                    parentWin.StartTrackingMouse(false);
+                    ParentWindow.StartTrackingMouse(false);
                 }
                 else
                 {

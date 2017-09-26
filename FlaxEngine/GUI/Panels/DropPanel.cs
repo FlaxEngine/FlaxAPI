@@ -114,9 +114,10 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="text">The header text.</param>
         public DropPanel(string text)
-            : base(false, 0, 0, 64, 16.0f)
+            : base(0, 0, 64, 16.0f)
         {
             _performChildrenLayoutFirst = true;
+            CanFocus = false;
 
             HeaderText = text;
 

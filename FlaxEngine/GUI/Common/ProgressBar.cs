@@ -113,20 +113,23 @@ namespace FlaxEngine.GUI
 
         /// <inheritdoc />
         public ProgressBar(float x, float y, float width, float height = 28)
-            : base(false, x, y, width, height)
+            : base(x, y, width, height)
         {
+            CanFocus = false;
         }
 
         /// <inheritdoc />
         public ProgressBar(Vector2 location, Vector2 size)
-            : base(false, location, size)
+            : base(location, size)
         {
+            CanFocus = false;
         }
 
         /// <inheritdoc />
         public ProgressBar(Rectangle bounds)
-            : base(false, bounds)
+            : base(bounds)
         {
+            CanFocus = false;
         }
 
         /// <inheritdoc />

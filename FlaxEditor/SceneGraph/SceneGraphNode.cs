@@ -26,9 +26,6 @@ namespace FlaxEditor.SceneGraph
         /// <summary>
         /// Gets the children list.
         /// </summary>
-        /// <value>
-        /// The children.
-        /// </value>
         public List<SceneGraphNode> ChildNodes { get; } = new List<SceneGraphNode>();
 
         /// <summary>
@@ -44,25 +41,16 @@ namespace FlaxEditor.SceneGraph
         /// <summary>
         /// Gets the name.
         /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
         public abstract string Name { get; }
 
         /// <summary>
         /// Gets the identifier. Must be unique and immutable.
         /// </summary>
-        /// <value>
-        /// The identifier.
-        /// </value>
         public Guid ID { get; }
 
         /// <summary>
         /// Gets the parent scene.
         /// </summary>
-        /// <value>
-        /// The scene.
-        /// </value>
         public abstract SceneNode ParentScene { get; }
 
         /// <inheritdoc />
@@ -71,41 +59,31 @@ namespace FlaxEditor.SceneGraph
         /// <summary>
         /// Gets a value indicating whether this instance can be copied or/and pasted.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance can be used for copy and paste; otherwise, <c>false</c>.
-        /// </value>
         public virtual bool CanCopyPaste => true;
         
         /// <summary>
         /// Gets a value indicating whether this node can be deleted by the user.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance can be deleted; otherwise, <c>false</c>.
-        /// </value>
         public virtual bool CanDelete => true;
 
         /// <summary>
         /// Gets a value indicating whether this node can be dragged by the user.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance can be dragged; otherwise, <c>false</c>.
-        /// </value>
         public virtual bool CanDrag => true;
-
+        
+        /// <summary>
+        /// Gets a value indicating whether this node can be transformed by the user.
+        /// </summary>
+        public virtual bool CanTransform => true;
+        
         /// <summary>
         /// Gets a value indicating whether this <see cref="SceneGraphNode"/> is active.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if active; otherwise, <c>false</c>.
-        /// </value>
         public abstract bool IsActive { get; }
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="SceneGraphNode"/> is active and all parent nodes are also active.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if active in hierarchy; otherwise, <c>false</c>.
-        /// </value>
         public abstract bool IsActiveInHierarchy { get; }
 
         /// <summary>
@@ -116,9 +94,6 @@ namespace FlaxEditor.SceneGraph
         /// <summary>
         /// Gets or sets the parent node.
         /// </summary>
-        /// <value>
-        /// The parent node.
-        /// </value>
         public virtual SceneGraphNode ParentNode
         {
             get => parentNode;
@@ -146,17 +121,11 @@ namespace FlaxEditor.SceneGraph
         /// <summary>
         /// Gets the object to edit via properties editor when this node is being selected.
         /// </summary>
-        /// <value>
-        /// The editable object.
-        /// </value>
         public virtual object EditableObject => this;
 
         /// <summary>
         /// Gets the object used to record undo changes.
         /// </summary>
-        /// <value>
-        /// The undo record object.
-        /// </value>
         public virtual object UndoRecordObject => EditableObject;
 
         /// <summary>
@@ -219,7 +188,7 @@ namespace FlaxEditor.SceneGraph
                 var hit = ChildNodes[i].RayCast(ref ray, ref distance);
                 if (hit != null)
                 {
-                    if (distance < minDistance)
+                    if (distance <= minDistance)
                     {
                         minDistance = distance;
                         minTarget = hit;
@@ -247,8 +216,8 @@ namespace FlaxEditor.SceneGraph
         /// <summary>
         /// Called when selected nodes should draw debug shapes using <see cref="DebugDraw"/> interface.
         /// </summary>
-        /// <param name="actorsPtr">The actors pointers collection to call them fron unmanaged side.</param>
-        public virtual void OnDebugDraw(List<IntPtr> actorsPtr)
+        /// <param name="data">The debug draw data.</param>
+        public virtual void OnDebugDraw(ViewportDebugDrawData data)
         {
         }
 
