@@ -186,7 +186,7 @@ namespace FlaxEditor.Windows
             // Spawn buttons
             List<ContentTreeNode> nodes = new List<ContentTreeNode>(8);
             ContentTreeNode node = SelectedNode;
-            while (node != _root && node != null)
+            while (node != null)
             {
                 nodes.Add(node);
                 node = node.ParentNode;

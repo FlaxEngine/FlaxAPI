@@ -58,6 +58,7 @@
     <Compile Include="Content\Import\ImportFilesDialog.cs" />
     <Compile Include="Content\Import\ModelFileEntry.cs" />
     <Compile Include="Content\Import\TextureFileEntry.cs" />
+    <Compile Include="Content\Tree\RootContentTreeNode.cs" />
     <Compile Include="CustomEditors\CustomEditor.cs" />
     <Compile Include="CustomEditors\CustomEditorsUtil.cs" />
     <Compile Include="CustomEditors\Dedicated\ActorEditor.cs" />

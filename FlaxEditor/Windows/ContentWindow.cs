@@ -30,7 +30,7 @@ namespace FlaxEditor.Windows
         private NavigationBar _navigationBar;
         private Tree _tree;
 
-        private ContentTreeNode _root;
+        private RootContentTreeNode _root;
 
         private bool _navigationUnlocked;
         private readonly Stack<ContentTreeNode> _navigationUndo = new Stack<ContentTreeNode>(32);
@@ -561,7 +561,7 @@ namespace FlaxEditor.Windows
         public override void OnInit()
         {
             // Setup content root node
-            _root = new ContentTreeNode(null, string.Empty);
+            _root = new RootContentTreeNode();
             _root.Expand();
             addFolder2Root(Editor.ContentDatabase.ProjectContent);
             addFolder2Root(Editor.ContentDatabase.ProjectSource);

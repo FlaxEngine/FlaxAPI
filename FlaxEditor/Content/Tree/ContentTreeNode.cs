@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,9 +25,6 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Gets the content folder item.
         /// </summary>
-        /// <value>
-        /// The folder.
-        /// </value>
         public ContentFolder Folder => _folder;
 
         /// <summary>
@@ -65,19 +62,18 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Gets the parent node.
         /// </summary>
-        /// <value>
-        /// The parent node.
-        /// </value>
         public ContentTreeNode ParentNode => Parent as ContentTreeNode;
 
         /// <summary>
         /// Gets the folderpath.
         /// </summary>
-        /// <value>
-        /// The path.
-        /// </value>
         public string Path => _folder.Path;
 
+        /// <summary>
+        /// Gets the navigation button label.
+        /// </summary>
+        public virtual string NavButtonLabel => _folder.ShortName;
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="ContentTreeNode"/> class.
         /// </summary>

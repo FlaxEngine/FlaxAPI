@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,9 +21,6 @@ namespace FlaxEditor.Content.GUI
         /// <summary>
         /// Gets the target node.
         /// </summary>
-        /// <value>
-        /// The target node.
-        /// </value>
         public ContentTreeNode TargetNode { get; }
 
         /// <summary>
@@ -38,7 +35,7 @@ namespace FlaxEditor.Content.GUI
         {
             TargetNode = targetNode;
             Height = height;
-            Text = targetNode.Folder.ShortName + "/";
+            Text = targetNode.NavButtonLabel + "/";
         }
 
         /// <inheritdoc />
