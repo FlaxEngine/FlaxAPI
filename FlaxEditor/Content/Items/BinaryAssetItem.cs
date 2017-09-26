@@ -42,9 +42,13 @@ namespace FlaxEditor.Content
         /// <returns>True if fails, otherwise false.</returns>
         public bool GetImportPath(out string importPath)
         {
+            // TODO: add internal call to content backend with fast import asset metadata gather (without asset loading)
+
             var asset = FlaxEngine.Content.LoadAsync(ID);
             if (asset is BinaryAsset binaryAsset)
             {
+                binaryAsset.WaitForLoaded(100);
+
                 // Get meta from loaded asset
                 importPath = binaryAsset.ImportPath;
                 return string.IsNullOrEmpty(importPath);
