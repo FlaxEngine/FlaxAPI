@@ -622,10 +622,11 @@ namespace FlaxEditor.Windows
             {
                 // Find control that is under the mouse
                 var c = GetChildAtRecursive(location);
-
+                
                 if (c is ContentItem item)
                 {
-                    _view.Select(item);
+                    if (_view.IsSelected(item) == false)
+                        _view.Select(item);
                     ShowContextMenuForItem(item, ref location);
                 }
                 else if (c is ContentView)

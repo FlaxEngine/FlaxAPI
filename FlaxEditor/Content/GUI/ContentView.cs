@@ -257,6 +257,24 @@ namespace FlaxEditor.Content.GUI
         }
         
         /// <summary>
+        /// Selects all the items.
+        /// </summary>
+        public void SelectAll()
+        {
+            // Lock layout
+            var wasLayoutLocked = IsLayoutLocked;
+            IsLayoutLocked = true;
+
+            // Select items
+            _selection.Clear();
+            _selection.AddRange(_items);
+            
+            // Unload and perform UI layout
+            IsLayoutLocked = wasLayoutLocked;
+            PerformLayout();
+        }
+        
+        /// <summary>
         /// Deselects the specified item.
         /// </summary>
         /// <param name="item">The item.</param>
@@ -481,6 +499,13 @@ namespace FlaxEditor.Content.GUI
             if (key == KeyCode.Backspace)
             {
                 OnNavigateBack?.Invoke();
+                return true;
+            }
+
+            // Select all
+            if (key == KeyCode.A && ParentWindow.GetKey(KeyCode.Control))
+            {
+                SelectAll();
                 return true;
             }
 

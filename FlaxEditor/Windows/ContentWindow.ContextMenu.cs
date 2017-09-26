@@ -57,9 +57,7 @@ namespace FlaxEditor.Windows
                 {
                     b = cm.AddButton(2, "Reimport");
                     b.Enabled = proxy != null && proxy.CanReimport(item);
-
-                    b = cm.AddButton(15, "Reimport all");
-
+                    
                     if (item is BinaryAssetItem binaryAsset)
                     {
                         string importPath;
@@ -96,8 +94,6 @@ namespace FlaxEditor.Windows
                 cm.AddButton(14, "Show in explorer");
 
                 b = cm.AddButton(13, "Refresh");
-
-                b = cm.AddButton(15, "Reimport all");
 
                 b = cm.AddButton(16, "Refresh all thumbnails");
             }
@@ -142,7 +138,7 @@ namespace FlaxEditor.Windows
                     item.RefreshThumbnail();
                     break;
                 case 2:
-                    Editor.ContentImporting.Reimport(item as BinaryAssetItem);
+                    ReimportSelection();
                     break;
                 case 3:
                     Delete(item);
@@ -183,9 +179,6 @@ namespace FlaxEditor.Windows
                 case 14:
                     Application.StartProcess(item != null ? System.IO.Path.GetDirectoryName(item.Path) : currentFolder.Path);
                     break;
-                case 15:
-                    ReimportViewAll();
-                    break;
                 case 16:
                     RefreshViewItemsThumbnails();
                     break;
@@ -216,14 +209,14 @@ namespace FlaxEditor.Windows
         }
 
         /// <summary>
-        /// Reimports all the assets in the view.
+        /// Reimports the selected assets.
         /// </summary>
-        private void ReimportViewAll()
+        private void ReimportSelection()
         {
-            var items = _view.Items;
-            for (int i = 0; i < items.Count; i++)
+            var selection = _view.Selection;
+            for (int i = 0; i < selection.Count; i++)
             {
-                if (items[i] is BinaryAssetItem binaryAssetItem)
+                if(selection[i] is BinaryAssetItem binaryAssetItem)
                     Editor.ContentImporting.Reimport(binaryAssetItem);
             }
         }
