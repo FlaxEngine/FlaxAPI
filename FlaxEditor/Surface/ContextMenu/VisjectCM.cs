@@ -17,6 +17,7 @@ namespace FlaxEditor.Surface.ContextMenu
     {
         private readonly List<VisjectCMGroup> _groups = new List<VisjectCMGroup>(16);
         private readonly TextBox _searchBox;
+        private bool _waitingForInput;
 
         /// <summary>
         /// The type of the surface.
@@ -151,6 +152,7 @@ namespace FlaxEditor.Surface.ContextMenu
             // Prepare
             ResetView();
             Focus();
+            _waitingForInput = true;
             
             base.OnShow();
         }
@@ -161,6 +163,24 @@ namespace FlaxEditor.Surface.ContextMenu
             Focus(null);
             
             base.OnHide();
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(KeyCode key)
+        {
+            if (key == KeyCode.Escape)
+            {
+                Hide();
+                return true;
+            }
+            if (_waitingForInput)
+            {
+                _waitingForInput = false;
+                _searchBox.Focus();
+                return _searchBox.OnKeyDown(key);
+            }
+
+            return base.OnKeyDown(key);
         }
     }
 }
