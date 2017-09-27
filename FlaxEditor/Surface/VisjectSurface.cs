@@ -408,6 +408,8 @@ namespace FlaxEditor.Surface
             node.OnSurfaceLoaded();
             node.Location = location;
 
+            MarkAsEdited();
+
             return node;
         }
 

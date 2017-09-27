@@ -288,7 +288,7 @@ namespace FlaxEditor.Modules
                     {
                         if (failed)
                         {
-                            Editor.LogError("Failed to import " + entry.Url);
+                            Editor.LogWarning("Failed to import " + entry.Url);
                         }
 
                         _importBatchDone++;
