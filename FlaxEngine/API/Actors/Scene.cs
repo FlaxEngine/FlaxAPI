@@ -47,7 +47,7 @@ namespace FlaxEngine
         /// <summary>
         /// Gets or sets the lightmap settings (per scene).
         /// </summary>
-        [EditorDisplay("Lightmap Settings")]
+        [EditorDisplay("Lightmap Settings", "__inline__")]
         public LightmapSettings LightmapSettings
         {
             get

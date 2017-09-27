@@ -75,7 +75,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Amount of indirect light GI bounce passes
         /// </summary>
-        [EditorOrder(40), Limit(0, 8, 0.1f), Tooltip("Amount of indirect light GI bounce passes")]
+        [EditorOrder(40), Limit(1, 16, 0.1f), Tooltip("Amount of indirect light GI bounce passes")]
         public int BounceCount;
 
         /// <summary>
