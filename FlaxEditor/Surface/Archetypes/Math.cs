@@ -216,6 +216,30 @@ namespace FlaxEditor.Surface.Archetypes
             Op1(33, "asin", "Returns arcus sine of A"),
             Op1(34, "acos", "Returns arcus cosinus of A"),
             Op1(35, "atan", "Returns arcus tangent of A"),
+            new NodeArchetype
+            {
+                TypeID = 36,
+                Title = "Bias and Scale",
+                Description = "Adds a constant to input and scales it",
+                Size = new Vector2(200, 60),
+                IndependentBoxes = new[] { 0 },
+                DependentBoxes = new[] { 1 },
+                DefaultType = ConnectionType.Variable,
+                DefaultValues = new object[]
+                {
+                    0.0f,
+                    1.0f,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Input", true, ConnectionType.Variable, 0),
+                    NodeElementArchetype.Factory.Output(0, "Output", ConnectionType.Variable, 1),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 1, "Bias"),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 2, "Scale"),
+                    NodeElementArchetype.Factory.Float(40, Surface.Constants.LayoutOffsetY * 1, 0),
+                    NodeElementArchetype.Factory.Float(40, Surface.Constants.LayoutOffsetY * 2, 1),
+                }
+            },
         };
     }
 }
