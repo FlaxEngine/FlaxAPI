@@ -289,8 +289,7 @@ namespace FlaxEngine.GUI.Docking
                     tab.Close(ClosingReason.User);
                 MouseDownWindow = null;
             }
-
-
+            
             return base.OnMouseUp(location, buttons);
         }
 

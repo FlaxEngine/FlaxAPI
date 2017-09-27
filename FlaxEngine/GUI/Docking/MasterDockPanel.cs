@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 using System;
 using System.Collections.Generic;
@@ -82,15 +82,15 @@ namespace FlaxEngine.GUI.Docking
                 Windows[i].Close();
 
             // Ensure that has no docked windows
-            while (_childPanels.Count > 0)
-                _childPanels[0].Dispose();
-
+            while (ChildPanels.Count > 0)
+                ChildPanels[0].Dispose();
+            
             // Delete reaming controls (except tabs proxy)
-            if (_tabsProxy != null)
-                _tabsProxy.Parent = null;
+            if (TabsProxy != null)
+                TabsProxy.Parent = null;
             DisposeChildren();
-            if (_tabsProxy != null)
-                _tabsProxy.Parent = this;
+            if (TabsProxy != null)
+                TabsProxy.Parent = this;
         }
 
         /// <summary>

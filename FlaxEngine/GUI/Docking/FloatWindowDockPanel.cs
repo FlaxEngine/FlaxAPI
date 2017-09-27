@@ -1,6 +1,4 @@
-﻿// Flax Engine scripting API
-
-using System;
+// Flax Engine scripting API
 
 namespace FlaxEngine.GUI.Docking
 {
@@ -10,23 +8,17 @@ namespace FlaxEngine.GUI.Docking
     /// <seealso cref="FlaxEngine.GUI.Docking.DockPanel" />
     public class FloatWindowDockPanel : DockPanel
     {
-        protected MasterDockPanel _masterPanel;
-        protected Window _window;
+        private MasterDockPanel _masterPanel;
+        private Window _window;
 
         /// <summary>
         /// Gets the master panel.
         /// </summary>
-        /// <value>
-        /// The master panel.
-        /// </value>
         public MasterDockPanel MasterPanel => _masterPanel;
 
         /// <summary>
         /// Gets the window.
         /// </summary>
-        /// <value>
-        /// The window.
-        /// </value>
         public Window Window => _window;
 
         /// <summary>
@@ -115,9 +107,9 @@ namespace FlaxEngine.GUI.Docking
         private void onClosing(ClosingReason reason, ref bool cancel)
         {
             // Close all docked windows
-            while (_tabs.Count > 0)
+            while (Tabs.Count > 0)
             {
-                if (_tabs[0].Close(reason))
+                if (Tabs[0].Close(reason))
                 {
                     // Cancel
                     cancel = true;
@@ -131,7 +123,7 @@ namespace FlaxEngine.GUI.Docking
             _window = null;
 
             // Remove object
-            Assertions.Assert.IsTrue(_tabs.Count == 0 && _childPanels.Count == 0);
+            Assertions.Assert.IsTrue(TabsCount == 0 && ChildPanelsCount == 0);
             Dispose();
         }
 
@@ -145,18 +137,27 @@ namespace FlaxEngine.GUI.Docking
             return DockState.Float;
         }
 
+        /// <inheritdoc />
         protected override void OnLastTabRemoved()
         {
             // Close window
-            if (_window != null)
-                _window.Close(ClosingReason.CloseEvent);
+            _window?.Close();
+        }
+
+        /// <inheritdoc />
+        protected override void OnSelectedTabChanged()
+        {
+            base.OnSelectedTabChanged();
+
+            if (_window != null && SelectedTab != null)
+                _window.Title = SelectedTab.Title;
         }
 
         /// <inheritdoc />
         public override void OnDestroy()
         {
             _masterPanel?.FloatingPanels.Remove(this);
-        
+
             base.OnDestroy();
         }
     }

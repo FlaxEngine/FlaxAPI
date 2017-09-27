@@ -21,25 +21,16 @@ namespace FlaxEngine.GUI.Docking
         /// <summary>
         /// Gets or sets a value indicating whether hide window on close.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if hide window on close; otherwise, <c>false</c>.
-        /// </value>
         public bool HideOnClose { get; protected set; }
 
         /// <summary>
         /// Gets the master panel.
         /// </summary>
-        /// <value>
-        /// The master panel.
-        /// </value>
         public MasterDockPanel MasterPanel => _masterPanel;
 
         /// <summary>
         /// Gets the parent dock panel.
         /// </summary>
-        /// <value>
-        /// The parent dock panel.
-        /// </value>
         public DockPanel ParentDockPanel
         {
             get => _dockedTo;
@@ -49,41 +40,26 @@ namespace FlaxEngine.GUI.Docking
         /// <summary>
         /// Gets a value indicating whether this window is docked.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this window is docked; otherwise, <c>false</c>.
-        /// </value>
         public bool IsDocked => _dockedTo != null;
 
         /// <summary>
         /// Gets a value indicating whether this window is selected.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this window is selected; otherwise, <c>false</c>.
-        /// </value>
         public bool IsSelected => _dockedTo?.SelectedTab == this;
 
         /// <summary>
         /// Gets the default window size.
         /// </summary>
-        /// <value>
-        /// The default window size.
-        /// </value>
         public virtual Vector2 DefaultSize => new Vector2(900, 580);
 
         /// <summary>
         /// Gets the serialization typename.
         /// </summary>
-        /// <value>
-        /// The serialization typename.
-        /// </value>
         public virtual string SerializationTypename => "::" + GetType().FullName;
 
         /// <summary>
         /// Gets or sets the window title.
         /// </summary>
-        /// <value>
-        /// The window title.
-        /// </value>
         public string Title
         {
             get => _title;
@@ -93,19 +69,12 @@ namespace FlaxEngine.GUI.Docking
 
                 // Invalidate cached title size
                 _titleSize = new Vector2(-1);
+                PerformLayoutSelf();
 
-                // Check if is docked to the floating window
-                if (_dockedTo is FloatWindowDockPanel floatPanel)
+                // Check if is docked to the floating window and is selected so update window title
+                if (IsSelected && _dockedTo is FloatWindowDockPanel floatPanel)
                 {
-                    // Check if is the first window in the floating panel
-                    if (floatPanel.GetTab(0) == this)
-                    {
-                        // Update window title
-                        floatPanel.Window.Title = Title;
-                    }
-
-                    // Update tabs
-                    floatPanel.PerformLayout();
+                    floatPanel.Window.Title = Title;
                 }
             }
         }
@@ -113,9 +82,6 @@ namespace FlaxEngine.GUI.Docking
         /// <summary>
         /// Gets the size of the title.
         /// </summary>
-        /// <value>
-        /// The size of the title.
-        /// </value>
         public Vector2 TitleSize => _titleSize;
 
         /// <summary>
@@ -200,8 +166,8 @@ namespace FlaxEngine.GUI.Docking
 
                 // Then dock
                 (toDock ?? _masterPanel).DockWindowInternal(state, this);
-                PerformLayout();
                 OnShow();
+                PerformLayout();
             }
         }
 

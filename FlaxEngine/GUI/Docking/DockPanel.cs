@@ -13,17 +13,49 @@ namespace FlaxEngine.GUI.Docking
     /// </summary>
     public enum DockState
     {
+        /// <summary>
+        /// The unknown state.
+        /// </summary>
         Unknown = 0,
+
+        /// <summary>
+        /// The floating window.
+        /// </summary>
         Float = 1,
+
         //DockTopAutoHide = 2,
         //DockLeftAutoHide = 3,
         //DockBottomAutoHide = 4,
         //DockRightAutoHide = 5,
+
+        /// <summary>
+        /// The dock fill as a tab.
+        /// </summary>
         DockFill = 6,
+
+        /// <summary>
+        /// The dock top.
+        /// </summary>
         DockTop = 7,
+
+        /// <summary>
+        /// The dock left.
+        /// </summary>
         DockLeft = 8,
+
+        /// <summary>
+        /// The dock bottom.
+        /// </summary>
         DockBottom = 9,
+
+        /// <summary>
+        /// The dock right.
+        /// </summary>
         DockRight = 10,
+
+        /// <summary>
+        /// The hidden state.
+        /// </summary>
         Hidden = 11
     }
 
@@ -33,39 +65,55 @@ namespace FlaxEngine.GUI.Docking
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class DockPanel : ContainerControl
     {
+        /// <summary>
+        /// The default dock tabs header height.
+        /// </summary>
         public const float DefaultHeaderHeight = 20;
-        public const float DefaultLeftTextMargin = 4;
-        public const float DefaultRightTextMargin = 8;
-        public const float DefaultButtonsSize = 12;
-        public const float DefaultButtonsMargin = 2;
 
+        /// <summary>
+        /// The default tabs header text left margin.
+        /// </summary>
+        public const float DefaultLeftTextMargin = 4;
+
+        /// <summary>
+        /// The default tabs header text mright argin.
+        /// </summary>
+        public const float DefaultRightTextMargin = 8;
+
+        /// <summary>
+        /// The default tabs header buttons size.
+        /// </summary>
+        public const float DefaultButtonsSize = 12;
+
+        /// <summary>
+        /// The default tabs header buttons margin.
+        /// </summary>
+        public const float DefaultButtonsMargin = 2;
+        
         /// <summary>
         /// The default splitters value.
         /// </summary>
         public const float DefaultSplitterValue = 0.25f;
 
-        protected readonly DockPanel _parentPanel;
-        protected readonly List<DockPanel> _childPanels = new List<DockPanel>();
-        protected readonly List<DockWindow> _tabs = new List<DockWindow>();
-        protected DockWindow _selectedTab;
-        protected DockPanelProxy _tabsProxy;
+        private readonly DockPanel _parentPanel;
+        private readonly List<DockPanel> _childPanels = new List<DockPanel>();
+        private readonly List<DockWindow> _tabs = new List<DockWindow>();
+        private DockWindow _selectedTab;
+        private DockPanelProxy _tabsProxy;
 
         /// <summary>
         /// Returns true if this panel is a master panel.
         /// </summary>
-        /// <returns>True if this panel is a master panel.</returns>
         public virtual bool IsMaster => false;
 
         /// <summary>
         /// Returns true if this panel is a floating window panel.
         /// </summary>
-        /// <returns>True if this panel is a floating window panel.</returns>
         public virtual bool IsFloating => false;
 
         /// <summary>
         /// Gets docking area bounds (tabs rectangle) in a screen space.
         /// </summary>
-        /// <returns>Tabs rectangle area.</returns>
         public Rectangle DockAreaBounds
         {
             get
@@ -80,54 +128,54 @@ namespace FlaxEngine.GUI.Docking
         }
 
         /// <summary>
+        /// Gets the child panels.
+        /// </summary>
+        public List<DockPanel> ChildPanels => _childPanels;
+
+        /// <summary>
         /// Gets the child panels count.
         /// </summary>
-        /// <value>
-        /// The child panels count.
-        /// </value>
         public int ChildPanelsCount => _childPanels.Count;
+
+        /// <summary>
+        /// Gets the tabs.
+        /// </summary>
+        public List<DockWindow> Tabs => _tabs;
 
         /// <summary>
         /// Gets amount of the tabs in a dock panel.
         /// </summary>
-        /// <returns>The amount of tabs.</returns>
         public int TabsCount => _tabs.Count;
 
         /// <summary>
         /// Gets index of the selected tab.
         /// </summary>
-        /// <returns>The selected tab index.</returns>
         public int SelectedTabIndex => _tabs.IndexOf(_selectedTab);
 
         /// <summary>
         /// Gets the selected tab.
         /// </summary>
-        /// <returns>The selected tab.</returns>
         public DockWindow SelectedTab => _selectedTab;
 
         /// <summary>
         /// Gets the first tab.
         /// </summary>
-        /// <value>
-        /// The first tab.
-        /// </value>
         public DockWindow FirstTab => _tabs.Count > 0 ? _tabs[0] : null;
 
         /// <summary>
         /// Gets the last tab.
         /// </summary>
-        /// <value>
-        /// The last tab.
-        /// </value>
         public DockWindow LastTab => _tabs.Count > 0 ? _tabs[_tabs.Count - 1] : null;
 
         /// <summary>
         /// Gets the parent panel.
         /// </summary>
-        /// <value>
-        /// The parent panel.
-        /// </value>
         public DockPanel ParentDockPanel => _parentPanel;
+
+        /// <summary>
+        /// Gets the tabs header proxy.
+        /// </summary>
+        public DockPanelProxy TabsProxy => _tabsProxy;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DockPanel"/> class.
@@ -215,7 +263,15 @@ namespace FlaxEngine.GUI.Docking
                     _selectedTab.Parent = proxy;
                     _selectedTab.Focus();
                 }
+                OnSelectedTabChanged();
             }
+        }
+
+        /// <summary>
+        /// Called when selected tab gets changed.
+        /// </summary>
+        protected virtual void OnSelectedTabChanged()
+        {
         }
 
         /// <summary>
@@ -372,6 +428,9 @@ namespace FlaxEngine.GUI.Docking
             return dockPanel;
         }
 
+        /// <summary>
+        /// Called when last tab gets removed.
+        /// </summary>
         protected virtual void OnLastTabRemoved()
         {
             // Check if dock panel is linked to the split panel
@@ -426,6 +485,11 @@ namespace FlaxEngine.GUI.Docking
             DockWindow(state, window);
         }
 
+        /// <summary>
+        /// Docks the window.
+        /// </summary>
+        /// <param name="state">The state.</param>
+        /// <param name="window">The window.</param>
         protected virtual void DockWindow(DockState state, DockWindow window)
         {
             createTabsProxy();
@@ -451,6 +515,10 @@ namespace FlaxEngine.GUI.Docking
             UndockWindow(window);
         }
 
+        /// <summary>
+        /// Undocks the window.
+        /// </summary>
+        /// <param name="window">The window.</param>
         protected virtual void UndockWindow(DockWindow window)
         {
             var index = GetTabIndex(window);
@@ -483,6 +551,10 @@ namespace FlaxEngine.GUI.Docking
             }
         }
 
+        /// <summary>
+        /// Adds the tab.
+        /// </summary>
+        /// <param name="window">The window to insert as a tab.</param>
         protected virtual void addTab(DockWindow window)
         {
             // Dock
@@ -501,7 +573,7 @@ namespace FlaxEngine.GUI.Docking
                 // Create proxy and make set simple full dock
                 _tabsProxy = new DockPanelProxy(this);
                 _tabsProxy.Parent = this;
-                _tabsProxy.IsLayoutLocked = false;
+                _tabsProxy.UnlockChildrenRecursive();
             }
         }
 
