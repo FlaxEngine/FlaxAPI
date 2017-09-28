@@ -118,7 +118,11 @@ namespace FlaxEditor.Surface
         /// <param name="box">The start box.</param>
         public void ConnectingStart(Box box)
         {
-            _startBox = box;
+            if (box != null && box != _startBox)
+            {
+                _startBox = box;
+                ParentWindow.StartTrackingMouse(false);
+            }
         }
 
         /// <summary>

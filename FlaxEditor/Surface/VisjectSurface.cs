@@ -43,6 +43,7 @@ namespace FlaxEditor.Surface
         private bool _edited;
         private float _targeScale = 1.0f;
         private readonly List<SurfaceNode> _nodes = new List<SurfaceNode>(64);
+        private float _moveViewWithMouseDragSpeed = 1.0f;
 
         private bool _leftMouseDown;
         private bool _rightMouseDown;
@@ -52,6 +53,7 @@ namespace FlaxEditor.Surface
         private float _mouseMoveAmount;
 
         private bool _isMovingSelection;
+        private Vector2 _movingSelectionViewPos;
         private Box _startBox;
         private Box _lastBoxUnderMouse;
 
@@ -123,6 +125,16 @@ namespace FlaxEditor.Surface
         /// Gets a value indicating whether user is selecting nodes.
         /// </summary>
         public bool IsSelecting => _leftMouseDown && !_isMovingSelection && _startBox == null;
+
+        /// <summary>
+        /// Gets a value indicating whether user is moving selected nodes.
+        /// </summary>
+        public bool IsMovignSelection => _leftMouseDown && _isMovingSelection && _startBox == null;
+        
+        /// <summary>
+        /// Gets a value indicating whether user is connecting nodes.
+        /// </summary>
+        public bool IsConnecting => _startBox != null;
 
         /// <summary>
         /// The metadata.
@@ -501,6 +513,37 @@ namespace FlaxEditor.Surface
                 _surface.Scale = scale;
             }
 
+            // Navigate when mouse is near the edge and is doing sth
+            bool isMovingWithMouse = false;
+            if (IsMovignSelection || IsConnecting)
+            {
+                Vector2 moveVector = Vector2.Zero;
+                float edgeDetectDistance = 22.0f;
+                if (_mousePos.X < edgeDetectDistance)
+                {
+                    moveVector.X -= 1;
+                }
+                if (_mousePos.Y < edgeDetectDistance)
+                {
+                    moveVector.Y -= 1;
+                }
+                if (_mousePos.X > Width - edgeDetectDistance)
+                {
+                    moveVector.X += 1;
+                }
+                if (_mousePos.Y > Height - edgeDetectDistance)
+                {
+                    moveVector.Y += 1;
+                }
+                moveVector.Normalize();
+                isMovingWithMouse = moveVector.LengthSquared > Mathf.Epsilon;
+                if (isMovingWithMouse)
+                {
+                    _surface.Location -= moveVector * _moveViewWithMouseDragSpeed;
+                }
+            }
+            _moveViewWithMouseDragSpeed = isMovingWithMouse ? Mathf.Clamp(_moveViewWithMouseDragSpeed + deltaTime * 20.0f, 1.0f, 8.0f) : 1.0f;
+
             base.Update(deltaTime);
         }
 
@@ -562,7 +605,7 @@ namespace FlaxEditor.Surface
             }
 
             // Draw connecting line
-            if (_startBox != null)
+            if (IsConnecting)
             {
                 // Get start position
                 Vector2 startPos = _startBox.ConnectionOrigin;
