@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +29,27 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(1, "Base Reflect Fraction", true, ConnectionType.Float, 1),
                     NodeElementArchetype.Factory.Input(2, "Normal", true, ConnectionType.Vector3, 2),
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Float, 3)
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 2,
+                Title = "Desaturation",
+                Description = "Desaturates input, or converts the colors of its input into shades of gray, based a certain percentage",
+                Size = new Vector2(140, 130),
+                DefaultValues = new object[]
+                {
+                    new Vector3(0.3f, 0.59f, 0.11f)
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Input", true, ConnectionType.Vector3, 0),
+                    NodeElementArchetype.Factory.Input(1, "Scale", true, ConnectionType.Float, 1),
+                    NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Vector3, 2),
+                    NodeElementArchetype.Factory.Text(0,  Surface.Constants.LayoutOffsetY * 2 + 5, "Luminance Factors"),
+                    NodeElementArchetype.Factory.Vector_X(0, Surface.Constants.LayoutOffsetY * 3 + 5, 0),
+                    NodeElementArchetype.Factory.Vector_Y(0, Surface.Constants.LayoutOffsetY * 3 + 5, 0),
+                    NodeElementArchetype.Factory.Vector_Z(0, Surface.Constants.LayoutOffsetY * 3 + 5, 0)
                 }
             },
         };
