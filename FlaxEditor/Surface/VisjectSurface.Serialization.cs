@@ -26,7 +26,7 @@ namespace FlaxEditor.Surface
         [StructLayout(LayoutKind.Sequential)]
         struct VisjectSurfaceMeta10// TypeID: 10, for surface
         {
-            public Vector2 ViewPosition;
+            public Vector2 ViewCenterPosition;
             public float Scale;
         }
 
@@ -494,13 +494,13 @@ namespace FlaxEditor.Surface
             {
                 var meta10 = ByteArrayToStructure<VisjectSurfaceMeta10>(meta.Data);
                 ViewScale = meta10.Scale;
-                ViewPosition = meta10.ViewPosition;
+                ViewCenterPosition = meta10.ViewCenterPosition;
             }
             else
             {
                 // Reset view
                 ViewScale = 1.0f;
-                ViewPosition = Vector2.Zero;
+                ViewCenterPosition = Vector2.Zero;
             }
 
             // Post load
@@ -639,7 +639,7 @@ namespace FlaxEditor.Surface
 
             // Save surface meta
             VisjectSurfaceMeta10 meta10;
-            meta10.ViewPosition = ViewPosition;
+            meta10.ViewCenterPosition = ViewCenterPosition;
             meta10.Scale = ViewScale;
             Meta.Release();
             Meta.AddEntry(10, StructureToByteArray(ref meta10));

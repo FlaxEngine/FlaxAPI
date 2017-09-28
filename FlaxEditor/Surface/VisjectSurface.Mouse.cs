@@ -61,7 +61,7 @@ namespace FlaxEditor.Surface
                 {
                     // Move view
                     _mouseMoveAmount += delta.Length;
-                    ViewPosition += delta;
+                    _surface.Location += delta;
                     _rightMouseDownPos = location;
                     Cursor = CursorType.SizeAll;
                 }
@@ -135,13 +135,19 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public override bool OnMouseWheel(Vector2 location, int delta)
         {
-            if (IsMouseOver)
+            if (base.OnMouseWheel(location, delta))
+                return true;
+
+            // Change scale (disable scalig during selecting nodes)
+            if (IsMouseOver && !_leftMouseDown)
             {
-                // Change scale
-                AddScale(delta * 0.0008f);
+                var viewCenter = ViewCenterPosition;
+                ViewScale += delta * 0.0008f;
+                ViewCenterPosition = viewCenter;
+                return true;
             }
 
-            return base.OnMouseWheel(location, delta);
+            return false;
         }
 
         /// <inheritdoc />

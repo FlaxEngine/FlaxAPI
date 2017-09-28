@@ -27,6 +27,7 @@ namespace FlaxEditor.Surface
             {
                 CanFocus = false;
                 ClipChildren = false;
+                Pivot = Vector2.Zero;
             }
 
             /// <inheritdoc />
@@ -79,12 +80,21 @@ namespace FlaxEditor.Surface
         public bool IsEdited => _edited;
 
         /// <summary>
-        /// Gets or sets the view position (upper left corner of the view).
+        /// Gets or sets the view position (upper left corner of the view) in the surface space.
         /// </summary>
         public Vector2 ViewPosition
         {
-            get => _surface.Location;
-            set => _surface.Location = value;
+            get => _surface.PointFromParent(Vector2.Zero);
+            set => _surface.Location = value * -ViewScale;
+        }
+
+        /// <summary>
+        /// Gets or sets the view center position (middle point of the view) in the surface space.
+        /// </summary>
+        public Vector2 ViewCenterPosition
+        {
+            get => _surface.PointFromParent(Size * 0.5f);
+            set => _surface.Location = Size * 0.5f + value * -ViewScale;
         }
 
         /// <summary>
@@ -104,6 +114,8 @@ namespace FlaxEditor.Surface
                     // Set new target scale
                     _targeScale = value;
                 }
+
+                _surface.Scale = new Vector2(_targeScale);
             }
         }
 
@@ -153,15 +165,6 @@ namespace FlaxEditor.Surface
             _surface.Scale = new Vector2(0.5f);
         }
 
-        private void AddScale(float delta)
-        {
-            // Disable scalig during selecting nodes
-            if (_leftMouseDown)
-                return;
-
-            ViewScale += delta;
-        }
-
         /// <summary>
         /// Shows the whole graph by changing the view scale and the position.
         /// </summary>
@@ -185,7 +188,7 @@ namespace FlaxEditor.Surface
         public void ShowArea(Rectangle areaRect)
         {
             ViewScale = (Size / areaRect.Size).MinValue * 0.95f;
-            ViewPosition = areaRect.Location * -ViewScale;
+            ViewCenterPosition = areaRect.Center;
         }
 
         /// <summary>

@@ -531,8 +531,8 @@ namespace FlaxEditor.Windows.Assets
                 return;
 
             // Change scale and position
-            _surface.ViewScale = 1.0f;
-            _surface.ViewPosition = -mainNode.Location;
+            _surface.ViewScale = 0.5f;
+            _surface.ViewCenterPosition = mainNode.Center;
         }
 
         /// <inheritdoc />

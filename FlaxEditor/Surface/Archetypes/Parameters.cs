@@ -160,7 +160,7 @@ namespace FlaxEditor.Surface.Archetypes
                         default: break;
                     }
                 }
-                Resize(120, height);
+                Resize(140, height);
             }
 
             private void UpdateCombo()
@@ -312,8 +312,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = (id, surface, arch, groupArch) => new SurfaceNodeParamsGet(id, surface, arch, groupArch),
                 Title = "Get Parameter",
                 Description = "Parameter value getter",
-                Flags = NodeFlags.MaterialOnly,
-                Size = new Vector2(120, 60),
+                Size = new Vector2(140, 60),
                 DefaultValues = new object[]
                 {
                     Guid.Empty
