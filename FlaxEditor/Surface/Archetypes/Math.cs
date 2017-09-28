@@ -102,15 +102,15 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 24,
                 Title = "Clamp",
                 Description = "Clamps value to the specified range",
-                Size = new Vector2(110, 50),
+                Size = new Vector2(110, 60),
                 DefaultType = ConnectionType.Variable,
                 IndependentBoxes = new[] { 0 },
                 DependentBoxes = new[] { 1, 2, 3 },
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Input(0, "A", true, ConnectionType.Variable, 0),
-                    NodeElementArchetype.Factory.Input(1, "B", true, ConnectionType.Variable, 1),
-                    NodeElementArchetype.Factory.Input(2, "B", true, ConnectionType.Variable, 2),
+                    NodeElementArchetype.Factory.Input(0, "Input", true, ConnectionType.Variable, 0),
+                    NodeElementArchetype.Factory.Input(1, "Min", true, ConnectionType.Variable, 1),
+                    NodeElementArchetype.Factory.Input(2, "Max", true, ConnectionType.Variable, 2),
                     NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Variable, 3)
                 }
             },
@@ -196,7 +196,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "Value", true, ConnectionType.Variable, 0),
-                    NodeElementArchetype.Factory.Input(1, "Mul", true, ConnectionType.Variable, 1),
+                    NodeElementArchetype.Factory.Input(1, "Multiply", true, ConnectionType.Variable, 1),
                     NodeElementArchetype.Factory.Input(2, "Add", true, ConnectionType.Variable, 2),
                     NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Variable, 3)
                 }
@@ -238,6 +238,21 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 2, "Scale"),
                     NodeElementArchetype.Factory.Float(40, Surface.Constants.LayoutOffsetY * 1, 0),
                     NodeElementArchetype.Factory.Float(40, Surface.Constants.LayoutOffsetY * 2, 1),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 37,
+                Title = "Rotate About Axis",
+                Description = "Rotates given vector using the rotation axis, a point on the axis, and the angle to rotate",
+                Size = new Vector2(200, 80),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Normalized Rotation Axis", true, ConnectionType.Vector3, 0),
+                    NodeElementArchetype.Factory.Input(1, "Rotation Angle", true, ConnectionType.Float, 1),
+                    NodeElementArchetype.Factory.Input(2, "Pivot Point", true, ConnectionType.Vector3, 2),
+                    NodeElementArchetype.Factory.Input(3, "Normalized Rotation Axis", true, ConnectionType.Vector3, 3),
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Vector3, 4),
                 }
             },
         };
