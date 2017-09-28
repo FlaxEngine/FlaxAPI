@@ -248,9 +248,6 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        protected override string WindowTitleName => "Sprite Atlas";
-
-        /// <inheritdoc />
         public override void Save()
         {
             // Check if don't need to push any new changes to the orginal asset

@@ -568,10 +568,7 @@ namespace FlaxEditor.Windows.Assets
             OnSurfaceEditedChanged();
             _item.RefreshThumbnail();
         }
-
-        /// <inheritdoc />
-        protected override string WindowTitleName => "Material";
-
+        
         /// <inheritdoc />
         protected override void OnToolstripButtonClicked(int id)
         {

@@ -415,9 +415,6 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        protected override string WindowTitleName => "Model";
-
-        /// <inheritdoc />
         protected override void OnToolstripButtonClicked(int id)
         {
             switch (id)

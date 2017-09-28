@@ -130,9 +130,6 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        protected override string WindowTitleName => "Texture";
-
-        /// <inheritdoc />
         protected override void OnToolstripButtonClicked(int id)
         {
             switch (id)

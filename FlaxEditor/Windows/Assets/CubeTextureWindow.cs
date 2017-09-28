@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,9 +25,6 @@ namespace FlaxEditor.Windows.Assets
             _preview = new CubeTexturePreview(true);
             _preview.Parent = this;
         }
-
-        /// <inheritdoc />
-        protected override string WindowTitleName => "Cube Texture";
 
         /// <inheritdoc />
         protected override void UnlinkItem()

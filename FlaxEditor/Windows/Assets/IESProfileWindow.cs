@@ -33,10 +33,6 @@ namespace FlaxEditor.Windows.Assets
                 Parent = this
             };
         }
-
-        /// <inheritdoc />
-        protected override string WindowTitleName => "IES Profile";
-
         /// <inheritdoc />
         protected override void OnToolstripButtonClicked(int id)
         {

@@ -249,7 +249,7 @@ namespace FlaxEditor.Windows.Assets
             // Check if don't need to push any new changes to the orginal asset
             if (!IsEdited)
                 return;
-            
+
             // Save
             if (Asset.Save())
             {
@@ -257,15 +257,12 @@ namespace FlaxEditor.Windows.Assets
                 Editor.LogError("Cannot save material instance.");
                 return;
             }
-            
+
             // Update
             _properties.PeekState();
             ClearEditedFlag();
             _item.RefreshThumbnail();
         }
-
-        /// <inheritdoc />
-        protected override string WindowTitleName => "Material Instance";
 
         /// <inheritdoc />
         protected override void OnToolstripButtonClicked(int id)

@@ -80,19 +80,16 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <summary>
-        /// Gets the name of the window title.
+        /// Gets the name of the window title format text ({0} to insert asset short name).
         /// </summary>
-        /// <value>
-        /// The name of the window title.
-        /// </value>
-        protected virtual string WindowTitleName => "Asset";
+        protected virtual string WindowTitleName => "{0}";
 
         /// <summary>
         /// Updates the window title text.
         /// </summary>
         protected void UpdateTitle()
         {
-            string title = string.Format("{0} - {1}", WindowTitleName, _item?.ShortName ?? string.Empty);
+            string title = string.Format(WindowTitleName, _item?.ShortName ?? string.Empty);
             if (IsEdited)
                 title += '*';
             Title = title;

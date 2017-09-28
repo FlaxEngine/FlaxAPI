@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -12,16 +12,16 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Cull back-facing geometry.
         /// </summary>
-        Normal = 3,
+        Normal = 0,
 
         /// <summary>
         /// Cull front-facing geometry.
         /// </summary>
-        Inverted = 2,
+        Inverted = 1,
 
         /// <summary>
         /// Disable culling.
         /// </summary>
-        TwoSided = 1,
+        TwoSided = 2,
     }
 }

@@ -54,9 +54,6 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        protected override string WindowTitleName => "Font";
-
-        /// <inheritdoc />
         protected override void UnlinkItem()
         {
             Object.Destroy(_textPreview.Font);
