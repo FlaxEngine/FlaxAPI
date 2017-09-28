@@ -4,8 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEditor.Surface.Elements;
@@ -78,17 +76,11 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Gets a value indicating whether surface is edited.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this surface is edited; otherwise, <c>false</c>.
-        /// </value>
         public bool IsEdited => _edited;
 
         /// <summary>
         /// Gets or sets the view position (upper left corner of the view).
         /// </summary>
-        /// <value>
-        /// The view position.
-        /// </value>
         public Vector2 ViewPosition
         {
             get => _surface.Location;
@@ -96,30 +88,15 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
-        /// Gets or sets the view center position.
-        /// </summary>
-        /// <value>
-        /// The view center position.
-        /// </value>
-        public Vector2 ViewCenterPosition
-        {
-            get => _surface.Location + Size * 0.5f;
-            set => _surface.Location = value - Size * 0.5f;
-        }
-
-        /// <summary>
         /// Gets or sets the view scale.
         /// </summary>
-        /// <value>
-        /// The view scale.
-        /// </value>
         public float ViewScale
         {
             get => _targeScale;
             set
             {
                 // Clamp
-                value = Mathf.Clamp(value, 0.1f, 1.6f);
+                value = Mathf.Clamp(value, 0.05f, 1.6f);
 
                 // Check if value will change
                 if (Mathf.Abs(value - _targeScale) > 0.0001f)
@@ -133,9 +110,6 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Gets a value indicating whether user is selecting nodes.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if user is selecting nodes; otherwise, <c>false</c>.
-        /// </value>
         public bool IsSelecting => _leftMouseDown && !_isMovingSelection && _startBox == null;
 
         /// <summary>
@@ -186,6 +160,32 @@ namespace FlaxEditor.Surface
                 return;
 
             ViewScale += delta;
+        }
+
+        /// <summary>
+        /// Shows the whole graph by changing the view scale and the position.
+        /// </summary>
+        public void ShowWholeGraph()
+        {
+            if (_nodes.Count == 0)
+                return;
+
+            // Find surface bounds
+            Rectangle area = _nodes[0].Bounds;
+            for (int i = 1; i < _nodes.Count; i++)
+                area = Rectangle.Union(area, _nodes[i].Bounds);
+
+            ShowArea(area);
+        }
+
+        /// <summary>
+        /// Shows the given surface area by changing the view scale and the position.
+        /// </summary>
+        /// <param name="areaRect">The area rectangle.</param>
+        public void ShowArea(Rectangle areaRect)
+        {
+            ViewScale = (Size / areaRect.Size).MinValue * 0.95f;
+            ViewPosition = areaRect.Location * -ViewScale;
         }
 
         /// <summary>

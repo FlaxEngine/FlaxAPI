@@ -384,8 +384,9 @@ namespace FlaxEditor.Windows.Assets
             : base(editor, item)
         {
             // Toolstrip
-            _toolstrip.AddButton(1, Editor.UI.GetIcon("Save32")).LinkTooltip("Save");// Save material
-            // TODO: option to center view to main node (use ScrollViewToMain function)
+            _toolstrip.AddButton(1, Editor.UI.GetIcon("Save32")).LinkTooltip("Save");
+            _toolstrip.AddSeparator();
+            _toolstrip.AddButton(2, Editor.UI.GetIcon("PageScale32")).LinkTooltip("Show whole graph");
 
             // Split Panel 1
             var splitPanel1 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
@@ -531,7 +532,7 @@ namespace FlaxEditor.Windows.Assets
 
             // Change scale and position
             _surface.ViewScale = 1.0f;
-            _surface.ViewCenterPosition = mainNode.Center;
+            _surface.ViewPosition = -mainNode.Location;
         }
 
         /// <inheritdoc />
@@ -578,6 +579,9 @@ namespace FlaxEditor.Windows.Assets
             {
                 case 1:
                     Save();
+                    break;
+                case 2:
+                    _surface.ShowWholeGraph();
                     break;
                 default:
                     base.OnToolstripButtonClicked(id);

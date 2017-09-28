@@ -310,7 +310,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 1,
                 Create = (id, surface, arch, groupArch) => new SurfaceNodeParamsGet(id, surface, arch, groupArch),
-                Title = "Get",
+                Title = "Get Parameter",
                 Description = "Parameter value getter",
                 Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(120, 60),
