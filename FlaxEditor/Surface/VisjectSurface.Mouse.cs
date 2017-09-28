@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -14,7 +14,6 @@ namespace FlaxEditor.Surface
         /// <returns>The node or null if no intersection.</returns>
         private SurfaceNode GetNodeUnderMouse()
         {
-            // TODO: optimize it later -> calculate mouse pos in children space and perform box vs point test faster
             var pos = _surface.PointFromParent(_mousePos);
             if (_surface.GetChildAt(pos) is SurfaceNode node)
                 return node;
@@ -74,10 +73,10 @@ namespace FlaxEditor.Surface
             // Check if user is selecting or moving node(s)
             if (_leftMouseDown)
             {
-                if (_startBox != null) // Connecting
+                if (_startBox != null)// Connecting
                 {
                 }
-                else if (_isMovingSelection) // Moving
+                else if (_isMovingSelection)// Moving
                 {
                     // Calculate delta
                     Vector2 delta = location - _leftMouseDownPos;
@@ -100,10 +99,10 @@ namespace FlaxEditor.Surface
                     // Handled
                     return;
                 }
-                else // Selecting
+                else// Selecting
                 {
                     UpdateSelectionRectangle();
-                    
+
                     // Handled
                     return;
                 }
@@ -190,7 +189,6 @@ namespace FlaxEditor.Surface
                     }
 
                     // Start moving
-                    _leftMouseDown = true;
                     _leftMouseDownPos = location;
 
                     Focus();
@@ -285,22 +283,32 @@ namespace FlaxEditor.Surface
             {
                 ConnectingEnd(null);
             }
-            
+
             return true;
         }
 
         /// <inheritdoc />
-        public override void OnKeyUp(KeyCode key)
+        public override bool OnKeyDown(KeyCode key)
         {
-            if (ContainsFocus)
+            if (base.OnKeyDown(key))
+                return true;
+
+            if (key == KeyCode.Delete)
             {
-                if (key == KeyCode.Delete)
+                DeleteSelection();
+                return true;
+            }
+            if (ParentWindow.GetKey(KeyCode.Control))
+            {
+                switch (key)
                 {
-                    DeleteSelection();
+                    case KeyCode.A:
+                        SelectAll();
+                        return true;
                 }
             }
 
-            base.OnKeyUp(key);
+            return false;
         }
     }
 }

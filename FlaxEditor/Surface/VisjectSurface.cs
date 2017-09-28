@@ -207,6 +207,15 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Selects all the nodes.
+        /// </summary>
+        public void SelectAll()
+        {
+            for (int i = 0; i < _nodes.Count; i++)
+                _nodes[i].IsSelected = true;
+        }
+
+        /// <summary>
         /// Clears the selection.
         /// </summary>
         public void ClearSelection()
