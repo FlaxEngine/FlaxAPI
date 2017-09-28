@@ -86,7 +86,7 @@ namespace FlaxEditor.Surface
         /// </summary>
         public Vector2 ViewPosition
         {
-            get => _surface.PointFromParent(Vector2.Zero);
+            get => _surface.Location / -ViewScale;
             set => _surface.Location = value * -ViewScale;
         }
 
@@ -95,7 +95,7 @@ namespace FlaxEditor.Surface
         /// </summary>
         public Vector2 ViewCenterPosition
         {
-            get => _surface.PointFromParent(Size * 0.5f);
+            get => (_surface.Location - Size * 0.5f) / -ViewScale;
             set => _surface.Location = Size * 0.5f + value * -ViewScale;
         }
 
@@ -117,6 +117,7 @@ namespace FlaxEditor.Surface
                     _targeScale = value;
                 }
 
+                // disable view scale animation
                 _surface.Scale = new Vector2(_targeScale);
             }
         }

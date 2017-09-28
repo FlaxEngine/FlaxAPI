@@ -49,17 +49,11 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Gets a value indicating whether this instance is importing assets.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is importing; otherwise, <c>false</c>.
-        /// </value>
         public bool IsImporting => _importBatchSize > 0;
 
         /// <summary>
         /// Gets the importing assets progress.
         /// </summary>
-        /// <value>
-        /// The importing progress.
-        /// </value>
         public float ImportingProgress => _importBatchSize > 0 ? (float)_importBatchDone / _importBatchSize : 1.0f;
 
         /// <summary>
