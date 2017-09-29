@@ -251,7 +251,7 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(0, "Normalized Rotation Axis", true, ConnectionType.Vector3, 0),
                     NodeElementArchetype.Factory.Input(1, "Rotation Angle", true, ConnectionType.Float, 1),
                     NodeElementArchetype.Factory.Input(2, "Pivot Point", true, ConnectionType.Vector3, 2),
-                    NodeElementArchetype.Factory.Input(3, "Normalized Rotation Axis", true, ConnectionType.Vector3, 3),
+                    NodeElementArchetype.Factory.Input(3, "Position", true, ConnectionType.Vector3, 3),
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Vector3, 4),
                 }
             },

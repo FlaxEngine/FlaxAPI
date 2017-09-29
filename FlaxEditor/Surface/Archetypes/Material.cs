@@ -221,6 +221,18 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.TextBox(60, 0, 175, 200, 0),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 9,
+                Title = "Object Position",
+                Description = "Absolute world space object position",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(150, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "XYZ", ConnectionType.Vector3, 0),
+                }
+            },
         };
     }
 }
