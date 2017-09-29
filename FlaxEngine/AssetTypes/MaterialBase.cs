@@ -112,6 +112,12 @@ namespace FlaxEngine
             return Parameters[Internal_GetParamIndexByName(unmanagedPtr, name)];
         }
 
+        /// <summary>
+        /// Creates the virtual material instance of this material which allows to override any material parameters.
+        /// </summary>
+        /// <returns>The created virtual material instance asset.</returns>
+        public abstract MaterialInstance CreateVirtualInstance();
+
         internal void Internal_ClearParams()
         {
             _parametersHash++;

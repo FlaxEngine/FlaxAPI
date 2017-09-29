@@ -1317,6 +1317,25 @@ namespace FlaxEngine
         /// <param name="x">The pitch of rotation (in degrees).</param>
         /// <param name="y">The yaw of rotation (in degrees).</param>
         /// <param name="z">The roll of rotation (in degrees).</param>
+        /// <returns>When the method completes, contains the newly created quaternion.</returns>
+        public static Quaternion Euler(float x, float y, float z)
+        {
+            Quaternion result;
+            RotationYawPitchRoll(
+                y * Mathf.DegreesToRadians,
+                x * Mathf.DegreesToRadians,
+                z * Mathf.DegreesToRadians,
+                out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a quaternion given a pitch, yaw and roll values.
+        /// Angles are in degrees.
+        /// </summary>
+        /// <param name="x">The pitch of rotation (in degrees).</param>
+        /// <param name="y">The yaw of rotation (in degrees).</param>
+        /// <param name="z">The roll of rotation (in degrees).</param>
         /// <param name="result">When the method completes, contains the newly created quaternion.</param>
         public static void Euler(float x, float y, float z, out Quaternion result)
         {

@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -16,7 +16,7 @@ namespace FlaxEngine.Utilities
         /// <param name="instance">Current instance of an object</param>
         /// <typeparam name="T">Instance type of an object</typeparam>
         /// <returns>Returns new object of provided class</returns>
-        public static T DeepClone <T>(this T instance)
+        public static T DeepClone<T>(this T instance)
             where T : new()
         {
             using (var ms = new MemoryStream())
@@ -37,7 +37,76 @@ namespace FlaxEngine.Utilities
         /// <returns>Array with all lines</returns>
         public static string[] GetLines(this string str, bool removeEmptyLines = false)
         {
-            return str.Split(new[] {"\r\n", "\r", "\n"}, removeEmptyLines ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None);
+            return str.Split(new[] { "\r\n", "\r", "\n" }, removeEmptyLines ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None);
+        }
+
+        /// <summary>
+        /// Gets a random double.
+        /// </summary>
+        /// <param name="random"></param>
+        /// <param name="maxValue">The maximum value</param>
+        /// <returns>A random double</returns>
+        public static double NextDouble(this Random random, double maxValue)
+        {
+            return random.NextDouble() * maxValue;
+        }
+
+        /// <summary>
+        /// Gets a random double.
+        /// </summary>
+        /// <param name="random"></param>
+        /// <param name="minValue">The minimum value</param>
+        /// <param name="maxValue">The maximum value</param>
+        /// <returns>A random double</returns>
+        public static double NextDouble(this Random random, double minValue, double maxValue)
+        {
+            return random.NextDouble() * (maxValue - minValue) + minValue;
+        }
+
+        /// <summary>
+        /// Gets a random float.
+        /// </summary>
+        /// <param name="random"></param>
+        /// <returns>A random float</returns>
+        public static float NextFloat(this Random random)
+        {
+            return (float)random.NextDouble();
+        }
+
+        /// <summary>
+        /// Gets a random float.
+        /// </summary>
+        /// <param name="random"></param>
+        /// <param name="maxValue">The maximum value</param>
+        /// <returns>A random float</returns>
+        public static float NextFloat(this Random random, float maxValue)
+        {
+            return (float)random.NextDouble() * maxValue;
+        }
+
+        /// <summary>
+        /// Gets a random float.
+        /// </summary>
+        /// <param name="random"></param>
+        /// <param name="minValue">The minimum value</param>
+        /// <param name="maxValue">The maximum value</param>
+        /// <returns></returns>
+        public static float NextFloat(this Random random, float minValue, float maxValue)
+        {
+            return (float)random.NextDouble() * (maxValue - minValue) + minValue;
+        }
+
+        /// <summary>
+        /// Gets a random Color.
+        /// </summary>
+        /// <param name="random"></param>
+        /// <returns></returns>
+        public static Color NextColor(this Random random)
+        {
+            return new Color(NextFloat(random, 1.0f),
+                             NextFloat(random, 1.0f),
+                             NextFloat(random, 1.0f),
+                             NextFloat(random, 1.0f));
         }
     }
 }
