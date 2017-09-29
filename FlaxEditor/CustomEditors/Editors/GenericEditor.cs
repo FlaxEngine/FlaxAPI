@@ -127,6 +127,13 @@ namespace FlaxEditor.CustomEditors.Editors
                     else if (other.Order != null)
                         return 1;
 
+                    // By group name
+                    if (Display?.Group != null)
+                    {
+                        if (other.Display?.Group != null)
+                            return string.Compare(Display.Group, other.Display.Group, StringComparison.InvariantCulture);
+                    }
+
                     // By name
                     return string.Compare(Info.Name, other.Info.Name, StringComparison.InvariantCulture);
                 }
