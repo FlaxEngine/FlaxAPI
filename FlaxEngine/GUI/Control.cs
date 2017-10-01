@@ -231,12 +231,9 @@ namespace FlaxEngine.GUI
                         if (_isDragOver)
                             OnDragLeave();
                     }
-                    
+
                     OnVisibleChanged();
-                    if (HasParent)
-                    {
-                        _parent.PerformLayout();
-                    }
+                    _parent?.PerformLayout();
                 }
             }
         }

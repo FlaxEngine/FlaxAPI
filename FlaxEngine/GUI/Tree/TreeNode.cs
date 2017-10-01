@@ -21,6 +21,8 @@ namespace FlaxEngine.GUI
         public const float DefaultNodeOffsetY = 1;
 
         private Tree _tree;
+        private int _visibleChildNodesCount;
+
         protected bool _opened, _canChangeOrder;
         protected float _animationProgress, _cachedHeight;
         protected bool _mouseOverArrow, _mouseOverHeader;
@@ -453,7 +455,6 @@ namespace FlaxEngine.GUI
                 // Cache data
                 var style = Style.Current;
                 var tree = ParentTree;
-                bool hasChildren = _children.Count > 0;
                 bool isSelected = tree.Selection.Contains(this);
                 bool isFocused = tree.ContainsFocus;
                 var textRect = new Rectangle(_xOffset + 4 + DefaultHeaderHeight, 0, 10000, DefaultHeaderHeight);
@@ -463,7 +464,7 @@ namespace FlaxEngine.GUI
                     Render2D.FillRectangle(_headerRect, (isSelected && isFocused) ? style.BackgroundSelected : (_mouseOverHeader ? style.BackgroundHighlighted : style.LightBackground));
 
                 // Draw arrow
-                if (hasChildren)
+                if (_visibleChildNodesCount > 0)
                     Render2D.DrawSprite(_opened ? style.ArrowDown : style.ArrowRight, ArrowRect, _mouseOverHeader ? Color.White : new Color(0.8f, 0.8f, 0.8f, 0.8f));
 
                 // Draw icon
@@ -846,15 +847,17 @@ namespace FlaxEngine.GUI
             {
                 y -= _cachedHeight * (_opened ? 1.0f - _animationProgress : _animationProgress);
             }
+            _visibleChildNodesCount = 0;
             for (int i = 0; i < _children.Count; i++)
             {
-                if (_children[i] is TreeNode node)
+                if (_children[i] is TreeNode node && node.Visible)
                 {
                     node._xOffset = xOffset;
                     node.Location = new Vector2(0, y);
                     float nodeHeight = node.Height + DefaultNodeOffsetY;
                     y += nodeHeight;
                     height += nodeHeight;
+                    _visibleChildNodesCount++;
                 }
             }
 
