@@ -37,6 +37,19 @@ namespace FlaxEngine
             get => Internal_GetScreenSize(_model.unmanagedPtr, _lodIndex);
             set => Internal_SetScreenSize(_model.unmanagedPtr, _lodIndex, value);
         }
+        
+        /// <summary>
+        /// Gets the bounding box combined for all mshes in this model LOD.
+        /// </summary>
+        public BoundingBox Bounds
+        {
+            get
+            {
+                BoundingBox result;
+                Internal_GetBounds(_model.unmanagedPtr, _lodIndex, out result);
+                return result;
+            }
+        }
 
         internal ModelLOD(Model model, int lodIndex, int meshesCount)
         {
@@ -55,6 +68,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetScreenSize(IntPtr obj, int lodIndex, float value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetBounds(IntPtr obj, int lodIndex, out BoundingBox result);
 #endif
     }
 }

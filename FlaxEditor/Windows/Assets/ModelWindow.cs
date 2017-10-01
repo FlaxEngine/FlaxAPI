@@ -229,6 +229,7 @@ namespace FlaxEditor.Windows.Assets
 
                         var group = layout.Group("LOD " + lodIndex);
                         group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", triangleCount, vertexCount));
+                        group.Label("Size: " + lod.Bounds.Size);
                         var screenSize = group.FloatValue("Screen Size", "The screen size to switch LODs. Bottom limit of the model screen size to render this LOD.");
                         screenSize.FloatValue.MinValue = 0.0f;
                         screenSize.FloatValue.MaxValue = 1.0f;
