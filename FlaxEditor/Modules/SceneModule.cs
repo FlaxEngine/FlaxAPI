@@ -388,6 +388,12 @@ namespace FlaxEditor.Modules
 
         private void OnActorSpawned(Actor actor)
         {
+            // Skip for not loaded scenes (spawning actors during scene loading in script Start function)
+            var sceneNode = GetActorNode(actor.Scene);
+            if(sceneNode == null)
+                return;
+
+            // Skip for missing parent
             var parent = actor.Parent;
             if (parent == null)
                 return;
