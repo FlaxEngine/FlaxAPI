@@ -84,7 +84,7 @@ namespace FlaxEditor.SceneGraph
         public static ActorNode BuildActorNode(Actor actor)
         {
             ActorNode result = null;
-
+            
             try
             {
                 // Try to pick custom node type for that actor object
@@ -120,9 +120,7 @@ namespace FlaxEditor.SceneGraph
             {
                 var childNode = BuildActorNode(children[i]);
                 if (childNode != null)
-                {
                     childNode.ParentNode = node;
-                }
             }
         }
     }

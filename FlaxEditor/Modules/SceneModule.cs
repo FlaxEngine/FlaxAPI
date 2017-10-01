@@ -401,7 +401,8 @@ namespace FlaxEditor.Modules
             }
 
             var node = SceneGraphFactory.BuildActorNode(actor);
-            node.ParentNode = parentNode;
+            if (node != null)
+                node.ParentNode = parentNode;
         }
 
         private void OnActorDeleted(Actor actor)
@@ -431,8 +432,6 @@ namespace FlaxEditor.Modules
                 if (node == null)
                 {
                     node = GetActorNode(actor);
-                    if (node == null)
-                        return;
                 }
             }
             else
@@ -440,6 +439,8 @@ namespace FlaxEditor.Modules
                 // Create new node for that actor (user may unlink it from the scene before and now link it)
                 node = SceneGraphFactory.BuildActorNode(actor);
             }
+            if (node == null)
+                return;
 
             // Get the new parent node (may be missing)
             var parentNode = GetActorNode(actor.Parent);

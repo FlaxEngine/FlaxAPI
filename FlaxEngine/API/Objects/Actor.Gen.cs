@@ -90,6 +90,21 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets or sets object hide flags.
+		/// </summary>
+		[UnmanagedCall]
+		[HideInEditor]
+		public HideFlags HideFlags
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetHideFlags(unmanagedPtr); }
+			set { Internal_SetHideFlags(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
 		/// Gets or sets the actor name.
 		/// </summary>
 		[UnmanagedCall]
@@ -601,6 +616,10 @@ namespace FlaxEngine
 		internal static extern int Internal_GetOrderInParent(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetOrderInParent(IntPtr obj, int val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern HideFlags Internal_GetHideFlags(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetHideFlags(IntPtr obj, HideFlags val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern string Internal_GetName(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]

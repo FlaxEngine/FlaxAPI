@@ -173,6 +173,7 @@
     <Compile Include="Attributes\UnmanagedCallAttribute.cs" />
     <Compile Include="Configurations\PersistentDataConfig.cs" />
     <Compile Include="Engine\BrushSurface.cs" />
+    <Compile Include="Engine\HideFlags.cs" />
     <Compile Include="Engine\ITransformable.cs" />
     <Compile Include="Engine\MaterialSlot.cs" />
     <Compile Include="Engine\Mesh.cs" />

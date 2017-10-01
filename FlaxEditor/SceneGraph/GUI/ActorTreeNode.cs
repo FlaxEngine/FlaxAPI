@@ -31,17 +31,11 @@ namespace FlaxEditor.SceneGraph.GUI
         /// <summary>
         /// Gets the actor.
         /// </summary>
-        /// <value>
-        /// The actor.
-        /// </value>
         public Actor Actor => _actorNode.Actor;
 
         /// <summary>
         /// Gets the actor node.
         /// </summary>
-        /// <value>
-        /// The actor node.
-        /// </value>
         public ActorNode ActorNode => _actorNode;
 
         /// <summary>
@@ -97,6 +91,19 @@ namespace FlaxEditor.SceneGraph.GUI
         public virtual void UpdateText()
         {
             Text = _actorNode.Name;
+        }
+
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            // Update hidden state
+            var actor = Actor;
+            if (actor != null)
+            {
+                Visible = (actor.HideFlags & HideFlags.HideInHierarchy) == 0;
+            }
+
+            base.Update(deltaTime);
         }
 
         /// <inheritdoc />
