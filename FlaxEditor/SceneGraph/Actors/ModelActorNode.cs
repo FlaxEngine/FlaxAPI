@@ -77,8 +77,8 @@ namespace FlaxEditor.SceneGraph.Actors
             var entries = actor.Entries;
             if (entries != null)
             {
-                ChildNodes.Capacity = entries.Length;
-
+                ChildNodes.Capacity = Mathf.Max(ChildNodes.Capacity, entries.Length);
+                
                 var id = ID;
                 var idBytes = id.ToByteArray();
                 for (int i = 0; i < entries.Length; i++)
