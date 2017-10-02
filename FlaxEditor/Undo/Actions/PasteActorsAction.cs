@@ -36,13 +36,22 @@ namespace FlaxEditor.Actions
             _data = data;
         }
 
-        internal static PasteActorsAction TryCreate(byte[] data, Guid pasteParent, bool isDuplicate = false)
+        internal static PasteActorsAction Paste(byte[] data, Guid pasteParent)
         {
             var objectIds = Actor.TryGetSerializedObjectsIds(data);
             if (objectIds == null)
                 return null;
 
-            return new PasteActorsAction(data, objectIds, ref pasteParent, isDuplicate);
+            return new PasteActorsAction(data, objectIds, ref pasteParent, false);
+        }
+
+        internal static PasteActorsAction Duplicate(byte[] data, Guid pasteParent)
+        {
+            var objectIds = Actor.TryGetSerializedObjectsIds(data);
+            if (objectIds == null)
+                return null;
+
+            return new PasteActorsAction(data, objectIds, ref pasteParent, true);
         }
 
         /// <inheritdoc />

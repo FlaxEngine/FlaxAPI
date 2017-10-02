@@ -247,9 +247,9 @@ namespace FlaxEditor.Modules
             {
                 pasteTargetActor = actorNode.Actor;
             }
-
+            
             // Create paste action
-            var action = PasteActorsAction.TryCreate(data, pasteTargetActor?.ID ?? Guid.Empty);
+            var action = PasteActorsAction.Paste(data, pasteTargetActor?.ID ?? Guid.Empty);
             if (action != null)
             {
                 action.Do();
@@ -286,7 +286,7 @@ namespace FlaxEditor.Modules
             }
 
             // Create paste action
-            var action = PasteActorsAction.TryCreate(data, Guid.Empty, true);
+            var action = PasteActorsAction.Duplicate(data, Guid.Empty);
             if (action != null)
             {
                 action.Do();
