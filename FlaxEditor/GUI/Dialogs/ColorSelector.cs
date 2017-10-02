@@ -35,9 +35,6 @@ namespace FlaxEditor.GUI.Dialogs
         /// <summary>
         /// Gets or sets the color.
         /// </summary>
-        /// <value>
-        /// The color.
-        /// </value>
         public Color Color
         {
             get => _color;
@@ -135,7 +132,6 @@ namespace FlaxEditor.GUI.Dialogs
                     while (degrees > 360)
                         degrees -= 360;
                     while (degrees < 360)
-
                         degrees += 360;
                 }
 
@@ -212,7 +208,9 @@ namespace FlaxEditor.GUI.Dialogs
                 _isMouseDownWheel = _boxRect.Contains(location);
                 _isMouseDownSlider1 = _slider1Rect.Contains(location);
                 _isMouseDownSlider2 = _slider2Rect.Contains(location);
-
+                if (_isMouseDownWheel || _isMouseDownSlider1 || _isMouseDownSlider2)
+                    ParentWindow.StartTrackingMouse(false);
+                
                 UpdateMouse(ref location);
             }
 
@@ -229,6 +227,7 @@ namespace FlaxEditor.GUI.Dialogs
                 _isMouseDownWheel = false;
                 _isMouseDownSlider1 = false;
                 _isMouseDownSlider2 = false;
+                ParentWindow.EndTrackingMouse();
             }
 
             return base.OnMouseUp(location, buttons);

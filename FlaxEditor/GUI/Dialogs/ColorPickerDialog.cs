@@ -132,20 +132,24 @@ namespace FlaxEditor.GUI.Dialogs
             // Hex
             const float hexTextBoxWidth = 80;
             _cHex = new TextBox(false, Width - hexTextBoxWidth - PICKER_MARGIN, _cSelector.Bottom + PICKER_MARGIN, hexTextBoxWidth);
-            _cHex.EditEnd += OnHexChanged;
             _cHex.Parent = this;
+            _cHex.EditEnd += OnHexChanged;
 
             // Cancel
-            _cCancel = new Button(Width - BUTTONS_WIDTH - PICKER_MARGIN, Height - Button.DefaultHeight - PICKER_MARGIN, BUTTONS_WIDTH);
-            _cCancel.Text = "Cancel";
+            _cCancel = new Button(Width - BUTTONS_WIDTH - PICKER_MARGIN, Height - Button.DefaultHeight - PICKER_MARGIN, BUTTONS_WIDTH)
+            {
+                Text = "Cancel",
+                Parent = this
+            };
             _cCancel.Clicked += OnCancelClicked;
-            _cCancel.Parent = this;
 
             // OK
-            _cOK = new Button(_cCancel.Left - BUTTONS_WIDTH - PICKER_MARGIN, _cCancel.Y, BUTTONS_WIDTH);
-            _cOK.Text = "Ok";
+            _cOK = new Button(_cCancel.Left - BUTTONS_WIDTH - PICKER_MARGIN, _cCancel.Y, BUTTONS_WIDTH)
+            {
+                Text = "Ok",
+                Parent = this
+            };
             _cOK.Clicked += OnOkClicked;
-            _cOK.Parent = this;
 
             // Set initial color
             SelectedColor = startColor;
@@ -188,7 +192,7 @@ namespace FlaxEditor.GUI.Dialogs
             if (Color.TryParseHex(_cHex.Text, out color))
                 SelectedColor = color;
         }
-
+        
         /// <inheritdoc />
         public override void Draw()
         {

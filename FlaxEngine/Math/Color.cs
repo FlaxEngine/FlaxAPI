@@ -122,7 +122,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Constructs a new Color with given r,g,b,a components.
+        /// Constructs a new Color with given r,g,b,a components (values in range [0;1]).
         /// </summary>
         /// <param name="r">Red component.</param>
         /// <param name="g">Green component.</param>
@@ -137,7 +137,22 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Constructs a new Color with given r,g,b,a components.
+        /// Constructs a new Color with given r,g,b,a components (values in range [0;255]).
+        /// </summary>
+        /// <param name="r">Red component.</param>
+        /// <param name="g">Green component.</param>
+        /// <param name="b">Blue component.</param>
+        /// <param name="a">Alpha component.</param>
+        public Color(int r, int g, int b, int a = 255)
+        {
+            R = r / 255.0f;
+            G = g / 255.0f;
+            B = b / 255.0f;
+            A = a / 255.0f;
+        }
+
+        /// <summary>
+        /// Constructs a new Color with given r,g,b,a components (values in range [0;255]).
         /// </summary>
         /// <param name="r">Red component.</param>
         /// <param name="g">Green component.</param>
@@ -152,7 +167,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Constructs a new Color with given r,g,b components and sets a to 1.
+        /// Constructs a new Color with given r,g,b components and sets alpha to 1.
         /// </summary>
         /// <param name="r">Red component.</param>
         /// <param name="g">Green component.</param>
@@ -255,8 +270,9 @@ namespace FlaxEngine
             byte r = (byte)(R * 255);
             byte g = (byte)(G * 255);
             byte b = (byte)(B * 255);
+            byte a = (byte)(A * 255);
 
-            var result = new char[6];
+            var result = new char[8];
 
             result[0] = digits[(r >> 4) & 0x0f];
             result[1] = digits[(r) & 0x0f];
@@ -267,6 +283,9 @@ namespace FlaxEngine
             result[4] = digits[(b >> 4) & 0x0f];
             result[5] = digits[(b) & 0x0f];
 
+            result[6] = digits[(a >> 4) & 0x0f];
+            result[7] = digits[(a) & 0x0f];
+            
             return new string(result);
         }
 
