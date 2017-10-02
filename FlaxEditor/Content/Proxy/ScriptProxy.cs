@@ -54,7 +54,7 @@ namespace FlaxEditor.Content
             scriptTemplate = scriptTemplate.Replace("%namespace%", scriptNamespace);
 
             // Save
-            File.WriteAllText(outputPath, scriptTemplate, Encoding.Unicode);
+            File.WriteAllText(outputPath, scriptTemplate, Encoding.UTF8);
         }
 
         /// <inheritdoc />
