@@ -255,6 +255,9 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Vector3, 4),
                 }
             },
+            Op1(38, "Trunc", "Truncates a floating-point value to the integer component"),
+            Op1(39, "Frac", "Returns fractional part of the value"),
+            Op2(40, "Fmod", "Returns the floating-point remainder of A/B"),
         };
     }
 }
