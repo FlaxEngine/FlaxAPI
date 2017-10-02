@@ -3,7 +3,9 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Security;
 
 namespace FlaxEngine
 {
@@ -22,7 +24,7 @@ namespace FlaxEngine
         public void LogException(Exception exception, Object context)
         {
             Internal_LogException(exception, context?.unmanagedPtr ?? IntPtr.Zero);
-            
+
             SendExceptionLog?.Invoke(exception, context);
         }
 
@@ -47,11 +49,18 @@ namespace FlaxEngine
         {
             Debug.Logger.LogException(exception);
         }
-        
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Log(LogType level, string msg, IntPtr obj, string stackTrace);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_LogException(Exception exception, IntPtr obj);
+
+        [SecuritySafeCritical]
+        public static string Internal_GetStackTrace()
+        {
+            var stackTrace = new StackTrace(1, true);
+            return stackTrace.ToString();
+        }
     }
 }
