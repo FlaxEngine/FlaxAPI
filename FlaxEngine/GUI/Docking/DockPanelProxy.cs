@@ -110,12 +110,12 @@ namespace FlaxEngine.GUI.Docking
             StartDragAsyncWindow = win;
 
             // Register for late update in an async manner (to prevent from crash due to changing UI structure on window undock)
-            Scripting.OnLateUpdate += startDragAsync;
+            Scripting.LateUpdate += startDragAsync;
         }
 
         private void startDragAsync()
         {
-            Scripting.OnLateUpdate -= startDragAsync;
+            Scripting.LateUpdate -= startDragAsync;
 
             if (StartDragAsyncWindow != null)
             {

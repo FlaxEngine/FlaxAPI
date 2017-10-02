@@ -263,6 +263,11 @@ namespace FlaxEditor.Modules
         {
             Editor.Log("Main window is closing, reason: " + reason);
 
+            if (Editor.StateMachine.IsPlayMode)
+            {
+                Editor.Simulation.RequestStopPlay();
+            }
+
             SaveCurrentLayout();
             
             // Block closing only on user events
@@ -302,9 +307,12 @@ namespace FlaxEditor.Modules
         {
             Editor.Log("Main window is closed");
             MainWindow = null;
-
-            // TODO: capture project icon screenshot before exit (like in c++ editor)
             
+            if (!Editor.StateMachine.IsPlayMode)
+            {
+                // TODO: capture project icon screenshot before exit (like in c++ editor)
+            }
+
             Application.Exit();
         }
 

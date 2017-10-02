@@ -99,7 +99,7 @@ namespace FlaxEngine.Rendering
 
         static RenderTarget()
         {
-            Scripting.OnUpdate += Update;
+            Scripting.Update += Update;
         }
 
         private static void Update()

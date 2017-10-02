@@ -628,7 +628,8 @@ namespace FlaxEditor
 
         internal bool Internal_OnAppExit()
         {
-            if (StateMachine.IsPlayMode)
+            // In editor play mode (when main window is not closed) just skip engine exit and leave the play mode
+            if (StateMachine.IsPlayMode && Windows.MainWindow != null)
             {
                 Simulation.RequestStopPlay();
                 return false;

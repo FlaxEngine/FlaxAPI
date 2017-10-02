@@ -2,7 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEngine;
+using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Utilities
 {
@@ -34,6 +36,7 @@ namespace FlaxEditor.Utilities
             int scenesCount = scenes.Length;
             if (scenesCount == 0)
                 throw new InvalidOperationException("Cannot gather scene data. No scene loaded.");
+            var sceneIds = scenes.ToList().ConvertAll(x => x.ID);
 
             // Serialize scenes
             _scenesData.Capacity = scenesCount;
@@ -45,14 +48,15 @@ namespace FlaxEditor.Utilities
             // Delete old scenes
             if (SceneManager.UnloadAllScenes())
                 throw new FlaxException("Failed to unload scenes.");
+            FlaxEngine.Scripting.Internal_FlushRemovedObjects();
 
             // Ensure that old scenes has been unregistered
             {
                 var noScenes = SceneManager.Scenes;
-                if (noScenes != null && noScenes.Length != 0)
+                if (noScenes != null && noScenes.Length != 0 && sceneIds.TrueForAll(x => Object.Find<Object>(ref x) == null))
                     throw new FlaxException("Failed to unregister scene objects.");
             }
-
+            
             // Deserialize new scenes
             var duplicatedScenes = new Scene[scenesCount];
             for (int i = 0; i < scenesCount; i++)
@@ -80,6 +84,7 @@ namespace FlaxEditor.Utilities
             // Delete new scenes
             if (SceneManager.UnloadAllScenes())
                 throw new FlaxException("Failed to unload scenes.");
+            FlaxEngine.Scripting.Internal_FlushRemovedObjects();
 
             // Deserialize oldd scenes
             for (int i = 0; i < _scenesData.Count; i++)
