@@ -52,6 +52,17 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Vector_Z(0, Surface.Constants.LayoutOffsetY * 3 + 5, 0)
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 3,
+                Title = "Time",
+                Description = "Game time constant",
+                Size = new Vector2(110, 20),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Float, 0),
+                }
+            },
         };
     }
 }
