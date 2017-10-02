@@ -258,13 +258,14 @@ namespace FlaxEditor.SceneGraph.GUI
             // Drag actors
             if (_dragActors != null && _dragActors.HasValidDrag)
             {
+                bool worldPositionLock = ParentWindow.GetKey(KeyCode.Control) == false;
                 var singleObject = _dragActors.Objects.Count == 1;
                 if (singleObject)
                 {
                     var targetActor = _dragActors.Objects[0].Actor;
                     using (new UndoBlock(Editor.Instance.Undo, targetActor, "Change actor parent"))
                     {
-                        targetActor.Parent = newParent;
+                        targetActor.SetParent(newParent, worldPositionLock);
                         targetActor.OrderInParent = newOrder;
                     }
                 }
@@ -276,7 +277,7 @@ namespace FlaxEditor.SceneGraph.GUI
                         for (int i = 0; i < targetActors.Count; i++)
                         {
                             var targetActor = targetActors[i];
-                            targetActor.Parent = newParent;
+                            targetActor.SetParent(newParent, worldPositionLock);
                             targetActor.OrderInParent = newOrder;
                         }
                     }
@@ -301,7 +302,8 @@ namespace FlaxEditor.SceneGraph.GUI
                             actor.StaticFlags = Actor.StaticFlags;
                             actor.Name = item.ShortName;
                             actor.Model = model;
-                            
+                            actor.Transform = Actor.Transform;
+
                             // Spawn
                             Editor.Instance.SceneEditing.Spawn(actor, Actor);
                             
