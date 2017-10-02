@@ -109,7 +109,9 @@ namespace FlaxEngine
         /// <returns>The material parameter.</returns>
         public MaterialParameter GetParam(string name)
         {
-            return Parameters[Internal_GetParamIndexByName(unmanagedPtr, name)];
+            var parameters = Parameters;
+            var index = Internal_GetParamIndexByName(unmanagedPtr, name);
+            return index >= 0 && index < parameters.Length ? parameters[index] : null;
         }
 
         /// <summary>

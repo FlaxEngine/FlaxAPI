@@ -2,8 +2,6 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
-
 namespace FlaxEngine
 {
     public sealed partial class MaterialInstance
@@ -21,14 +19,14 @@ namespace FlaxEngine
         /// <inheritdoc />
         public override MaterialInstance CreateVirtualInstance()
         {
-            if (!IsLoaded)
-            {
-                WaitForLoaded();
-            }
+            WaitForLoaded();
 
             var instance = Content.CreateVirtualAsset<MaterialInstance>();
-            instance.BaseMaterial = BaseMaterial;
-
+            var baseMaterial = BaseMaterial;
+            if (baseMaterial)
+                baseMaterial.WaitForLoaded();
+            instance.BaseMaterial = baseMaterial;
+            
             // Copy parameters
             var src = Parameters;
             var dst = instance.Parameters;
