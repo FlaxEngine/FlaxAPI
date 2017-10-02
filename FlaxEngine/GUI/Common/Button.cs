@@ -19,7 +19,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The mosue down flag.
         /// </summary>
-        protected bool _mosueDown;
+        protected bool _mouseDown;
 
         /// <summary>
         /// Button text property.
@@ -42,6 +42,26 @@ namespace FlaxEngine.GUI
         public Color BorderColor { get; set; }
 
         /// <summary>
+        /// Gets or sets the background color when button is selected.
+        /// </summary>
+        public Color BackgroundColorSelected { get; set; }
+
+        /// <summary>
+        /// Gets or sets the border color when button is selected.
+        /// </summary>
+        public Color BorderColorSelected { get; set; }
+
+        /// <summary>
+        /// Gets or sets the background color when button is highlighted.
+        /// </summary>
+        public Color BackgroundColorHighlighted { get; set; }
+
+        /// <summary>
+        /// Gets or sets the border color when button is highlighted.
+        /// </summary>
+        public Color BorderColorHighlighted { get; set; }
+
+        /// <summary>
         /// Init
         /// </summary>
         /// <param name="x">Position X coordinate</param>
@@ -54,12 +74,16 @@ namespace FlaxEngine.GUI
             Font = style.FontMedium;
             BackgroundColor = style.BackgroundNormal;
             BorderColor = style.BorderNormal;
+            BackgroundColorSelected = style.BackgroundSelected;
+            BorderColorSelected = style.BorderSelected;
+            BackgroundColorHighlighted = style.BackgroundHighlighted;
+            BorderColorHighlighted = style.BorderHighlighted;
         }
 
         /// <summary>
-        /// Called when mouse clicks button.
+        /// Called when mouse clicks the button.
         /// </summary>
-        protected virtual void onClick()
+        protected virtual void OnClick()
         {
             Clicked?.Invoke();
         }
@@ -73,7 +97,7 @@ namespace FlaxEngine.GUI
             var style = Style.Current;
             Rectangle clientRect = new Rectangle(Vector2.Zero, Size);
             
-            // Background
+            // Draw background
             Color backgroundColor = BackgroundColor;
             Color borderColor = BorderColor;
             if (!Enabled)
@@ -81,20 +105,20 @@ namespace FlaxEngine.GUI
                 backgroundColor *= 0.5f;
                 borderColor *= 0.5f;
             }
-            else if (_mosueDown)
+            else if (_mouseDown)
             {
-                backgroundColor = style.BackgroundSelected;
-                borderColor = style.BorderSelected;
+                backgroundColor = BackgroundColorSelected;
+                borderColor = BorderColorSelected;
             }
             else if (IsMouseOver)
             {
-                backgroundColor = style.BackgroundHighlighted;
-                borderColor = style.BorderHighlighted;
+                backgroundColor = BackgroundColorHighlighted;
+                borderColor = BorderColorHighlighted;
             }
             Render2D.FillRectangle(clientRect, backgroundColor);
             Render2D.DrawRectangle(clientRect, borderColor);
-
-            // Text
+            
+            // Draw text
             Render2D.DrawText(Font, Text, clientRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
         }
 
@@ -102,7 +126,7 @@ namespace FlaxEngine.GUI
         public override void OnMouseLeave()
         {
             // Clear flag
-            _mosueDown = false;
+            _mouseDown = false;
 
             base.OnMouseLeave();
         }
@@ -114,7 +138,7 @@ namespace FlaxEngine.GUI
             if (buttons == MouseButtons.Left)
             {
                 // Set flag
-                _mosueDown = true;
+                _mouseDown = true;
             }
 
             return base.OnMouseDown(location, buttons);
@@ -124,13 +148,13 @@ namespace FlaxEngine.GUI
         public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
         {
             // Check mouse button and flag
-            if (_mosueDown && buttons == MouseButtons.Left)
+            if (_mouseDown && buttons == MouseButtons.Left)
             {
                 // Clear flag
-                _mosueDown = false;
+                _mouseDown = false;
 
                 // Call event
-                onClick();
+                OnClick();
 
                 // Handled
                 return true;
@@ -143,7 +167,7 @@ namespace FlaxEngine.GUI
         public override void OnLostFocus()
         {
             // Clear flag
-            _mosueDown = false;
+            _mouseDown = false;
 
             base.OnLostFocus();
         }

@@ -47,7 +47,7 @@ namespace FlaxEditor.Content.GUI
             var textRect = new Rectangle(4, 0, clientRect.Width - 4, clientRect.Height);
 
             // Draw background
-            if (_mosueDown)
+            if (_mouseDown)
             {
                 Render2D.FillRectangle(clientRect, style.BackgroundSelected);
             }
@@ -72,12 +72,12 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <inheritdoc />
-        protected override void onClick()
+        protected override void OnClick()
         {
             // Navigate
             Editor.Instance.Windows.ContentWin.Navigate(TargetNode);
 
-            base.onClick();
+            base.OnClick();
         }
     }
 }
