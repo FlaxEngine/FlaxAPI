@@ -36,6 +36,7 @@ namespace FlaxEditor.Modules
             var window = Editor.Windows.FindEditor(item);
             if (window != null)
             {
+                window.Focus();
                 return window;
             }
 
