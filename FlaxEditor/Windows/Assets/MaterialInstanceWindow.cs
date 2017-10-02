@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.Viewport.Previews;
@@ -26,7 +27,7 @@ namespace FlaxEditor.Windows.Assets
         private sealed class PropertiesProxy
         {
             private Material _restoreBase;
-            private object[] _restoreParamsValues;
+            private Dictionary<string, object> _restoreParams;
 
             [EditorOrder(10), EditorDisplay("General"), Tooltip("The base material used to override it's properties")]
             public Material BaseMaterial
@@ -168,12 +169,15 @@ namespace FlaxEditor.Windows.Assets
             /// </summary>
             public void PeekState()
             {
+                if (MaterialWinRef == null)
+                    return;
+
                 var material = MaterialWinRef.Asset;
                 _restoreBase = material.BaseMaterial;
                 var parameters = material.Parameters;
-                _restoreParamsValues = new object[parameters.Length];
+                _restoreParams = new Dictionary<string, object>();
                 for (int i = 0; i < parameters.Length; i++)
-                    _restoreParamsValues[i] = parameters[i].Value;
+                    _restoreParams[parameters[i].Name] = parameters[i].Value;
             }
 
             /// <summary>
@@ -181,14 +185,19 @@ namespace FlaxEditor.Windows.Assets
             /// </summary>
             public void DiscardChanges()
             {
+                if (MaterialWinRef == null)
+                    return;
+
                 var material = MaterialWinRef.Asset;
                 material.BaseMaterial = _restoreBase;
                 var parameters = material.Parameters;
                 for (int i = 0; i < parameters.Length; i++)
                 {
                     var p = parameters[i];
-                    if (p.IsPublic)
-                        p.Value = _restoreParamsValues[i];
+                    if (p.IsPublic && _restoreParams.TryGetValue(p.Name, out var value))
+                    {
+                        p.Value = value;
+                    }
                 }
             }
 
@@ -320,11 +329,11 @@ namespace FlaxEditor.Windows.Assets
             base.Update(deltaTime);
             
             // Check if need to load
-            if (_isWaitingForLoad && _asset.IsLoaded)
+            if (_isWaitingForLoad && _asset.IsLoaded && (_asset.BaseMaterial == null || _asset.BaseMaterial.IsLoaded))
             {
                 // Clear flag
                 _isWaitingForLoad = false;
-                
+
                 // Init material properties and parameters proxy
                 _properties.OnLoad(this);
 

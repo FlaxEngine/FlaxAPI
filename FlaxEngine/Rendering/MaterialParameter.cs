@@ -233,13 +233,27 @@ namespace FlaxEngine.Rendering
                         ptr = new IntPtr(&vBool);
                         break;
                     case MaterialParameterType.Inteager:
-                        vInt = (int)value;
+                    {
+                        if (value is int)
+                            vInt = (int)value;
+                        else if (value is float)
+                            vInt = (int)(float)value;
+                        else
+                            throw new InvalidCastException();
                         ptr = new IntPtr(&vInt);
                         break;
+                    }
                     case MaterialParameterType.Float:
-                        vFloat = (float)value;
+                    {
+                        if (value is int)
+                            vFloat = (int)value;
+                        else if (value is float)
+                            vFloat = (float)value;
+                        else
+                            throw new InvalidCastException();
                         ptr = new IntPtr(&vFloat);
                         break;
+                    }
                     case MaterialParameterType.Vector2:
                         vVector2 = (Vector2)value;
                         ptr = new IntPtr(&vVector2);
