@@ -4,7 +4,6 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using FlaxEngine.Rendering;
 
 namespace FlaxEngine
 {
@@ -97,6 +96,34 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Gets the amount of the memory used by this resource.
+        /// Exact value may differ due to memory alignment and resource allocation policy.
+        /// </summary>
+        [UnmanagedCall]
+        public ulong CurrentMemoryUsage
+        {
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+            get { return Internal_GetCurrentMemoryUsage(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets the total memory usage that texture may have in use (if loaded to the maximum quality).
+        /// Exact value may differ due to memory alignment and resource allocation policy.
+        /// </summary>
+        [UnmanagedCall]
+        public ulong TotalMemoryUsage
+        {
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+            get { return Internal_GetTotalMemoryUsage(unmanagedPtr); }
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -117,6 +144,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetResidentMipLevels(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ulong Internal_GetCurrentMemoryUsage(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ulong Internal_GetTotalMemoryUsage(IntPtr obj);
 #endif
 
         #endregion

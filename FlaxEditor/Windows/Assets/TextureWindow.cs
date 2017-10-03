@@ -35,7 +35,22 @@ namespace FlaxEditor.Windows.Assets
                 public override void Initialize(LayoutElementsContainer layout)
                 {
                     var window = ((PropertiesProxy)Values[0])._window;
-                    
+                    if (window == null)
+                    {
+                        layout.Label("Loading...", TextAlignment.Center);
+                        return;
+                    }
+
+                    // Texture properties
+                    {
+                        var texture = window.Asset;
+                        
+                        var group = layout.Group("General");
+                        group.Label(string.Format("Size: {0}x{1}", texture.Width, texture.Height));
+                        group.Label("Mip levels: " + texture.MipLevels);
+                        group.Label("Memory usage: " + Utilities.Utils.FormatBytesCount(texture.TotalMemoryUsage));
+                    }
+
                     base.Initialize(layout);
 
                     layout.Space(10);
