@@ -261,6 +261,12 @@ namespace FlaxEditor.Windows
 
                 // Select nodes
                 _tree.Select(nodes);
+
+                // For single node selected scroll view so user can see it
+                if (nodes.Count == 1)
+                {
+                    ScrollViewTo(nodes[0]);
+                }
             }
 
             _isUpdatingSelection = false;
