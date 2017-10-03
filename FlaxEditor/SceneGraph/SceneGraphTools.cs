@@ -41,12 +41,12 @@ namespace FlaxEditor.SceneGraph
         /// <typeparam name="T">The scene graph node type.</typeparam>
         /// <param name="nodes">The nodes.</param>
         /// <returns>The result.</returns>
-        public static T[] BuildNodesParents<T>(this List<T> nodes)
+        public static List<T> BuildNodesParents<T>(this List<T> nodes)
             where T : SceneGraphNode
         {
             var list = new List<T>();
             BuildNodesParents(nodes, list);
-            return list.ToArray();
+            return list;
         }
 
         /// <summary>
@@ -63,23 +63,16 @@ namespace FlaxEditor.SceneGraph
 
             result.Clear();
 
+            // Build solid part of the tree
+            var fullTree = BuildAllNodes(nodes);
+
             for (var i = 0; i < nodes.Count; i++)
             {
                 var target = nodes[i];
 
-                // Check if any other object in selection is parent object of this one
-                bool isChild = false;
-                for (var j = 0; j < nodes.Count; j++)
-                {
-                    var test = nodes[j];
-                    if (i != j && test.ContainsInHierarchy(target))
-                    {
-                        isChild = true;
-                        break;
-                    }
-                }
-
-                if (!isChild)
+                // If there is no target node parent in the solid tree list,
+                // then it means it's a local root node and can be added to the results.
+                if (!fullTree.Contains(target.ParentNode))
                     result.Add(target);
             }
         }
@@ -89,11 +82,12 @@ namespace FlaxEditor.SceneGraph
         /// </summary>
         /// <param name="nodes">The nodes.</param>
         /// <returns>The result.</returns>
-        public static SceneGraphNode[] BuildAllNodes(this List<SceneGraphNode> nodes)
+        public static List<SceneGraphNode> BuildAllNodes<T>(this List<T> nodes)
+            where T : SceneGraphNode
         {
             var list = new List<SceneGraphNode>();
             BuildAllNodes(nodes, list);
-            return list.ToArray();
+            return list;
         }
 
         private static void FillTree(SceneGraphNode node, List<SceneGraphNode> result)
@@ -110,7 +104,8 @@ namespace FlaxEditor.SceneGraph
         /// </summary>
         /// <param name="nodes">The nodes.</param>
         /// <param name="result">The result.</param>
-        public static void BuildAllNodes(this List<SceneGraphNode> nodes, List<SceneGraphNode> result)
+        public static void BuildAllNodes<T>(this List<T> nodes, List<SceneGraphNode> result)
+            where T : SceneGraphNode
         {
             if (nodes == null || result == null)
                 throw new ArgumentNullException();

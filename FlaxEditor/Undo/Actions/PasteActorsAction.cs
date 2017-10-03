@@ -96,23 +96,23 @@ namespace FlaxEditor.Actions
 
             // Cache pasted nodes ids (parents only)
             _nodeParents.Clear();
-            _nodeParents.Capacity = Mathf.Max(_nodeParents.Capacity, nodeParents.Length);
-            for (int i = 0; i < nodeParents.Length; i++)
+            _nodeParents.Capacity = Mathf.Max(_nodeParents.Capacity, nodeParents.Count);
+            for (int i = 0; i < nodeParents.Count; i++)
             {
                 _nodeParents.Add(nodeParents[i].ID);
             }
-
+            
             var pasteParentNode = Editor.Instance.Scene.GetActorNode(_pasteParent);
             if (pasteParentNode != null)
             {
                 // Move pasted actors to the parent target (if specified and valid)
-                for (int i = 0; i < nodeParents.Length; i++)
+                for (int i = 0; i < nodeParents.Count; i++)
                 {
                     nodeParents[i].Actor.SetParent(pasteParentNode.Actor, false);
                 }
             }
 
-            for (int i = 0; i < nodeParents.Length; i++)
+            for (int i = 0; i < nodeParents.Count; i++)
             {
                 // Fix name collisions (only for parents)
                 var node = nodeParents[i];

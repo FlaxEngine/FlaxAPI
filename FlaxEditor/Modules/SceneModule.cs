@@ -401,11 +401,10 @@ namespace FlaxEditor.Modules
             var parentNode = GetActorNode(parent);
             if (parentNode == null)
             {
-                // Error
-                Debug.LogError("Failed to find parent node for actor " + actor.Name);
+                // Missing parent node when adding child actor to not spawned or unlinked actor
                 return;
             }
-
+            
             var node = SceneGraphFactory.BuildActorNode(actor);
             if (node != null)
                 node.ParentNode = parentNode;
