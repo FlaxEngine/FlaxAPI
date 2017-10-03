@@ -32,17 +32,11 @@ namespace FlaxEditor.SceneGraph
         /// <summary>
         /// Gets the actor.
         /// </summary>
-        /// <value>
-        /// The actor.
-        /// </value>
         public Actor Actor => _actor;
 
         /// <summary>
         /// Gets the tree node (part of the GUI).
         /// </summary>
-        /// <value>
-        /// The tree node.
-        /// </value>
         public ActorTreeNode TreeNode => _treeNode;
 
         /// <summary>
@@ -163,6 +157,9 @@ namespace FlaxEditor.SceneGraph
 
         /// <inheritdoc />
         public override bool CanTransform => (_actor.StaticFlags & StaticFlags.Transform) == 0;
+
+        /// <inheritdoc />
+        public override bool CanCopyPaste => (_actor.HideFlags & HideFlags.HideInHierarchy) == 0;
         
         /// <inheritdoc />
         public override bool IsActive => _actor.IsActive;

@@ -26,5 +26,10 @@ namespace FlaxEngine
         /// The object will not be saved.
         /// </summary>
         DontSave = 2,
+
+        /// <summary>
+        /// The fully hidden object flags mask.
+        /// </summary>
+        FullyHidden = HideInHierarchy | DontSave,
     }
 }
