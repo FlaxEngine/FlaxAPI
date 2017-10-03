@@ -360,6 +360,19 @@ namespace FlaxEngine.GUI
             OnChildControlResized?.Invoke(control);
         }
 
+        /// <summary>
+        /// Called when children collection gets changed (child added or removed).
+        /// </summary>
+        public virtual void OnChildrenChanged()
+        {
+            // Check if control isn't durig disposing state
+            if (!IsDisposing)
+            {
+                // Arrange child controls
+                PerformLayout();
+            }
+        }
+
         #region Internal Events
 
         /// <summary>
@@ -373,8 +386,7 @@ namespace FlaxEngine.GUI
             // Add child
             _children.Add(child);
 
-            // Arrange child controls
-            PerformLayout();
+            OnChildrenChanged();
         }
 
         /// <summary>
@@ -388,12 +400,7 @@ namespace FlaxEngine.GUI
             // Remove child
             _children.Remove(child);
 
-            // Check if control isn't durig disposing state
-            if (!IsDisposing)
-            {
-                // Arrange child controls
-                PerformLayout();
-            }
+            OnChildrenChanged();
         }
 
         /// <summary>

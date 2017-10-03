@@ -42,9 +42,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the text.
         /// </summary>
-        /// <value>
-        /// The text.
-        /// </value>
         public string Text
         {
             get => _text;
@@ -59,9 +56,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets a value indicating whether this node is expanded.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this node is expanded; otherwise, <c>false</c>.
-        /// </value>
         public bool IsExpanded
         {
             get => _opened;
@@ -77,9 +71,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets a value indicating whether this node is collapsed.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this node is collapsed; otherwise, <c>false</c>.
-        /// </value>
         public bool IsCollapsed
         {
             get => !_opened;
@@ -95,9 +86,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets the parent tree control.
         /// </summary>
-        /// <value>
-        /// The parent tree.
-        /// </value>
         public Tree ParentTree
         {
             get
@@ -117,17 +105,11 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets a value indicating whether this node is root.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this node is root; otherwise, <c>false</c>.
-        /// </value>
         public bool IsRoot => !(Parent is TreeNode);
 
         /// <summary>
         /// Gets the minimum width of the node sub-tree.
         /// </summary>
-        /// <value>
-        /// The minimum width.
-        /// </value>
         public virtual float MinimumWidth
         {
             get
@@ -829,7 +811,19 @@ namespace FlaxEngine.GUI
             // Cache data
             _headerRect = new Rectangle(0, 0, Width, DefaultHeaderHeight);
         }
-        
+
+        private void CacheVisibleChildren()
+        {
+            _visibleChildNodesCount = 0;
+            for (int i = 0; i < _children.Count; i++)
+            {
+                if (_children[i] is TreeNode node && node.Visible)
+                {
+                    _visibleChildNodesCount++;
+                }
+            }
+        }
+
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
@@ -847,7 +841,6 @@ namespace FlaxEngine.GUI
             {
                 y -= _cachedHeight * (_opened ? 1.0f - _animationProgress : _animationProgress);
             }
-            _visibleChildNodesCount = 0;
             for (int i = 0; i < _children.Count; i++)
             {
                 if (_children[i] is TreeNode node && node.Visible)
@@ -857,9 +850,9 @@ namespace FlaxEngine.GUI
                     float nodeHeight = node.Height + DefaultNodeOffsetY;
                     y += nodeHeight;
                     height += nodeHeight;
-                    _visibleChildNodesCount++;
                 }
             }
+            CacheVisibleChildren();
 
             // Cache calculated height
             _cachedHeight = height;
@@ -883,6 +876,14 @@ namespace FlaxEngine.GUI
                 Width = Parent.Width;
 
             base.OnParentChangedInternal();
+        }
+        
+        /// <inheritdoc />
+        public override void OnChildrenChanged()
+        {
+            base.OnChildrenChanged();
+
+            CacheVisibleChildren();
         }
 
         /// <inheritdoc />

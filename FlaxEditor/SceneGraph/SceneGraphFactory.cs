@@ -84,7 +84,7 @@ namespace FlaxEditor.SceneGraph
         public static ActorNode BuildActorNode(Actor actor)
         {
             ActorNode result = null;
-            
+
             try
             {
                 // Try to pick custom node type for that actor object
@@ -109,6 +109,9 @@ namespace FlaxEditor.SceneGraph
                 Debug.LogWarning($"Failed to create scene graph node for actor {actor.Name} (type: {actor.GetType()}).");
                 Debug.LogException(ex);
             }
+
+            // Unlock tree UI
+            result?.TreeNode.UnlockChildrenRecursive();
 
             return result;
         }
