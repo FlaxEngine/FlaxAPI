@@ -166,9 +166,17 @@ namespace FlaxEditor.Modules
         internal void OnSelectionUndo(SceneGraphNode[] toSelect)
         {
             Selection.Clear();
-            if (toSelect != null && toSelect.Length > 0)
-                Selection.AddRange(toSelect);
-
+            if (toSelect != null)
+            {
+                for (int i = 0; i < toSelect.Length; i++)
+                {
+                    if (toSelect[i] != null)
+                        Selection.Add(toSelect[i]);
+                    else
+                        Editor.LogWarning("Null scene graph node to select");
+                }
+            }
+            
             OnSelectionChanged?.Invoke();
         }
 
@@ -249,11 +257,10 @@ namespace FlaxEditor.Modules
             }
             
             // Create paste action
-            var action = PasteActorsAction.Paste(data, pasteTargetActor?.ID ?? Guid.Empty);
-            if (action != null)
+            var pasteAction = PasteActorsAction.Paste(data, pasteTargetActor?.ID ?? Guid.Empty);
+            if (pasteAction != null)
             {
-                action.Do();
-                Undo.AddAction(action);
+                OnPasteAcction(pasteAction);
             }
         }
 
@@ -285,13 +292,24 @@ namespace FlaxEditor.Modules
                 return;
             }
 
-            // Create paste action
-            var action = PasteActorsAction.Duplicate(data, Guid.Empty);
-            if (action != null)
+            // Create paste action (with selecting spawned objects)
+            var pasteAction = PasteActorsAction.Duplicate(data, Guid.Empty);
+            if (pasteAction != null)
             {
-                action.Do();
-                Undo.AddAction(action);
+                OnPasteAcction(pasteAction);
             }
+        }
+
+        private void OnPasteAcction(PasteActorsAction pasteAction)
+        {
+            pasteAction.Do(out var nodes);
+
+            // Select spawned objects
+            var selectAction = new SelectionChangeAction(Selection.ToArray(), nodes.Cast<SceneGraphNode>().ToArray());
+            selectAction.Do();
+            
+            Undo.AddAction(new MultiUndoAction(pasteAction, selectAction));
+            OnSelectionChanged?.Invoke();
         }
 
         /// <inheritdoc />

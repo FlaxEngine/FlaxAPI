@@ -17,13 +17,13 @@ namespace FlaxEditor.Actions
     public sealed class PasteActorsAction : IUndoAction
     {
         private Dictionary<Guid, Guid> _idsMapping;
-        private List<ActorNode> _nodeParents;
+        private List<Guid> _nodeParents;
         private byte[] _data;
         private Guid _pasteParent;
 
-        private PasteActorsAction(byte[] data, Guid[] objectIds, ref Guid pasteParent, bool isDuplicate)
+        private PasteActorsAction(byte[] data, Guid[] objectIds, ref Guid pasteParent, string name)
         {
-            ActionString = isDuplicate ? "Duplicate actors" : "Paste actors";
+            ActionString = name;
 
             _pasteParent = pasteParent;
             _idsMapping = new Dictionary<Guid, Guid>(objectIds.Length * 4);
@@ -32,7 +32,7 @@ namespace FlaxEditor.Actions
                 _idsMapping[objectIds[i]] = Guid.NewGuid();
             }
 
-            _nodeParents = new List<ActorNode>();
+            _nodeParents = new List<Guid>(objectIds.Length);
             _data = data;
         }
 
@@ -42,7 +42,7 @@ namespace FlaxEditor.Actions
             if (objectIds == null)
                 return null;
 
-            return new PasteActorsAction(data, objectIds, ref pasteParent, false);
+            return new PasteActorsAction(data, objectIds, ref pasteParent, "Paste actors");
         }
 
         internal static PasteActorsAction Duplicate(byte[] data, Guid pasteParent)
@@ -51,20 +51,26 @@ namespace FlaxEditor.Actions
             if (objectIds == null)
                 return null;
 
-            return new PasteActorsAction(data, objectIds, ref pasteParent, true);
+            return new PasteActorsAction(data, objectIds, ref pasteParent, "Duplicate actors");
         }
 
         /// <inheritdoc />
         public string ActionString { get; }
 
-        /// <inheritdoc />
-        public void Do()
+        /// <summary>
+        /// Performs the paste/duplicate action and outputs created objects nodes.
+        /// </summary>
+        /// <param name="nodes">The nodes.</param>
+        public void Do(out List<ActorNode> nodes)
         {
             // Restore objects
             var actors = Actor.FromBytes(_data, _idsMapping);
             if (actors == null)
+            {
+                nodes = null;
                 return;
-            var actorNodes = new List<ActorNode>(actors.Length);
+            }
+            nodes = new List<ActorNode>(actors.Length);
             Scene[] scenes = null;
             for (int i = 0; i < actors.Length; i++)
             {
@@ -82,26 +88,34 @@ namespace FlaxEditor.Actions
                 var foundNode = SceneGraphFactory.FindNode(actor.ID);
                 if (foundNode is ActorNode node)
                 {
-                    actorNodes.Add(node);
+                    nodes.Add(node);
                 }
             }
 
-            actorNodes.BuildNodesParents(_nodeParents);
+            var nodeParents = nodes.BuildNodesParents();
+
+            // Cache pasted nodes ids (parents only)
+            _nodeParents.Clear();
+            _nodeParents.Capacity = Mathf.Max(_nodeParents.Capacity, nodeParents.Length);
+            for (int i = 0; i < nodeParents.Length; i++)
+            {
+                _nodeParents.Add(nodeParents[i].ID);
+            }
 
             var pasteParentNode = Editor.Instance.Scene.GetActorNode(_pasteParent);
             if (pasteParentNode != null)
             {
                 // Move pasted actors to the parent target (if specified and valid)
-                for (int i = 0; i < _nodeParents.Count; i++)
+                for (int i = 0; i < nodeParents.Length; i++)
                 {
-                    _nodeParents[i].Actor.SetParent(pasteParentNode.Actor, false);
+                    nodeParents[i].Actor.SetParent(pasteParentNode.Actor, false);
                 }
             }
 
-            for (int i = 0; i < _nodeParents.Count; i++)
+            for (int i = 0; i < nodeParents.Length; i++)
             {
                 // Fix name collisions (only for parents)
-                var node = _nodeParents[i];
+                var node = nodeParents[i];
                 var parent = node.Actor?.Parent;
                 if (parent != null)
                 {
@@ -119,12 +133,18 @@ namespace FlaxEditor.Actions
         }
 
         /// <inheritdoc />
+        public void Do()
+        {
+            Do(out _);
+        }
+
+        /// <inheritdoc />
         public void Undo()
         {
             // Remove objects
             for (int i = 0; i < _nodeParents.Count; i++)
             {
-                var node = _nodeParents[i];
+                var node = SceneGraphFactory.FindNode(_nodeParents[i]);
                 Editor.Instance.Scene.MarkSceneEdited(node.ParentScene);
                 node.Delete();
             }
