@@ -4,6 +4,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using FlaxEngine.Rendering;
 
 namespace FlaxEngine
 {
@@ -13,6 +14,19 @@ namespace FlaxEngine
     /// <seealso cref="FlaxEngine.BinaryAsset" />
     public abstract class TextureBase : BinaryAsset
     {
+        /// <summary>
+        /// Gets the texture data format.
+        /// </summary>
+        [UnmanagedCall]
+        public PixelFormat Format
+        {
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+            get { return Internal_GetFormat(unmanagedPtr); }
+#endif
+        }
+
         /// <summary>
         /// Gets the total width of the texture. Actual resident size may be different due to dynamic content streaming. Returns 0 if texture is not loaded.
         /// </summary>
@@ -127,6 +141,9 @@ namespace FlaxEngine
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern PixelFormat Internal_GetFormat(IntPtr obj);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetWidth(IntPtr obj);
 
