@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -41,7 +41,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Linear Layer Blend",
                 Description = "Create blended layer using linear math",
                 Flags = NodeFlags.MaterialOnly,
-                Size = new Vector2(150, 80),
+                Size = new Vector2(170, 80),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "Bottom", true, ConnectionType.Impulse, 0),
@@ -49,7 +49,53 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(2, "Alpha", true, ConnectionType.Float, 2),
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 3)
                 }
-            }
+            },
+            new NodeArchetype
+            {
+                TypeID = 3,
+                Title = "Pack Material Layer",
+                Description = "Pack material properties",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(180, 240),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 0),
+                    NodeElementArchetype.Factory.Input(0, "Color", true, ConnectionType.Vector3, 1),
+                    NodeElementArchetype.Factory.Input(1, "Mask", true, ConnectionType.Float, 2),
+                    NodeElementArchetype.Factory.Input(2, "Emissive", true, ConnectionType.Vector3, 3),
+                    NodeElementArchetype.Factory.Input(3, "Metalness", true, ConnectionType.Float, 4),
+                    NodeElementArchetype.Factory.Input(4, "Specular", true, ConnectionType.Float, 5),
+                    NodeElementArchetype.Factory.Input(5, "Roughness", true, ConnectionType.Float, 6),
+                    NodeElementArchetype.Factory.Input(6, "Ambient Occlusion", true, ConnectionType.Float, 7),
+                    NodeElementArchetype.Factory.Input(7, "Normal", true, ConnectionType.Vector3, 8),
+                    NodeElementArchetype.Factory.Input(8, "Opacity", true, ConnectionType.Float, 9),
+                    NodeElementArchetype.Factory.Input(9, "Refraction", true, ConnectionType.Float, 10),
+                    NodeElementArchetype.Factory.Input(10, "Position Offset", true, ConnectionType.Vector3, 11),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 4,
+                Title = "Unpack Material Layer",
+                Description = "Unpack material properties",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(180, 240),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "", true, ConnectionType.Impulse, 0),
+                    NodeElementArchetype.Factory.Output(0, "Color", ConnectionType.Vector3, 1),
+                    NodeElementArchetype.Factory.Output(1, "Mask", ConnectionType.Float, 2),
+                    NodeElementArchetype.Factory.Output(2, "Emissive", ConnectionType.Vector3, 3),
+                    NodeElementArchetype.Factory.Output(3, "Metalness", ConnectionType.Float, 4),
+                    NodeElementArchetype.Factory.Output(4, "Specular", ConnectionType.Float, 5),
+                    NodeElementArchetype.Factory.Output(5, "Roughness", ConnectionType.Float, 6),
+                    NodeElementArchetype.Factory.Output(6, "Ambient Occlusion", ConnectionType.Float, 7),
+                    NodeElementArchetype.Factory.Output(7, "Normal", ConnectionType.Vector3, 8),
+                    NodeElementArchetype.Factory.Output(8, "Opacity", ConnectionType.Float, 9),
+                    NodeElementArchetype.Factory.Output(9, "Refraction", ConnectionType.Float, 10),
+                    NodeElementArchetype.Factory.Output(10, "Position Offset", ConnectionType.Vector3, 11),
+                }
+            },
         };
     }
 }
