@@ -74,6 +74,36 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets or sets the spot light's inner cone angle (in degrees).
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(20), EditorDisplay("Light"), Tooltip("Light inner cone angle (in degrees)"), Limit(1, 80, 0.1f)]
+		public float InnerConeAngle
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetInnerConeAngle(unmanagedPtr); }
+			set { Internal_SetInnerConeAngle(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the spot light's outer cone angle (in degrees).
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(21), EditorDisplay("Light"), Tooltip("Light outer cone angle (in degrees)"), Limit(1, 80, 0.1f)]
+		public float OuterConeAngle
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetOuterConeAngle(unmanagedPtr); }
+			set { Internal_SetOuterConeAngle(unmanagedPtr, value); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -84,6 +114,14 @@ namespace FlaxEngine
 		internal static extern float Internal_GetSourceRadius(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetSourceRadius(IntPtr obj, float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetInnerConeAngle(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetInnerConeAngle(IntPtr obj, float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetOuterConeAngle(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetOuterConeAngle(IntPtr obj, float val);
 #endif
 #endregion
 	}
