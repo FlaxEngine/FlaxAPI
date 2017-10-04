@@ -191,11 +191,20 @@ namespace FlaxEngine.GUI
             // Drop/down animation
             if (_animationProgress < 1.0f)
             {
+                bool isDeltaSlow = deltaTime > (1 / 20.0f);
+
                 // Update progress
-                const float openCloseAniamtionTime = 0.2f;
-                _animationProgress += deltaTime / openCloseAniamtionTime;
-                if (_animationProgress > 1.0f)
+                if (isDeltaSlow)
+                {
                     _animationProgress = 1.0f;
+                }
+                else
+                {
+                    const float openCloseAniamtionTime = 0.2f;
+                    _animationProgress += deltaTime / openCloseAniamtionTime;
+                    if (_animationProgress > 1.0f)
+                        _animationProgress = 1.0f;
+                }
 
                 // Arrange controls
                 PerformLayout();

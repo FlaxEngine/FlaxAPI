@@ -715,10 +715,12 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
+            bool isDeltaSlow = deltaTime > (1 / 20.0f);
+
             _animateTime += deltaTime;
 
             // Animate view offset
-            _viewOffset = Vector2.Lerp(_viewOffset, _targetViewOffset, deltaTime * 20.0f);
+            _viewOffset = isDeltaSlow ? _targetViewOffset : Vector2.Lerp(_viewOffset, _targetViewOffset, deltaTime * 20.0f);
 
             base.Update(deltaTime);
         }
