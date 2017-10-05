@@ -1,6 +1,10 @@
-# Flax Engine API and Editor [![Build Status](https://travis-ci.org/FlaxEngine/FlaxAPI.svg?branch=master)](https://travis-ci.org/FlaxEngine/FlaxAPI)
+<img align="left" src="Logo.png" width="100px"/>
+
+# Flax Editor and Flax Engine API
+[![Build Status](https://travis-ci.org/FlaxEngine/FlaxAPI.svg?branch=master)](https://travis-ci.org/FlaxEngine/FlaxAPI)
+
 Flax Engine is a high quality modern game engine written in C++.
-This repository contains open source public API of the engine as well as Editor.
+This repository contains open source public C# API as well as full source code of the Editor.
 The engine offers a wide variety of high level systems needed for game development.
 
 # Features
@@ -8,8 +12,8 @@ The engine offers a wide variety of high level systems needed for game developme
 * C# Scripting (C# 6.0)
 * Physics (NVIDIA PhysX)
 * Global Illumination (lightmaps baking on GPU)
-* Advanced Content Management and Streaming
-* Great Editor
+* Model LODs and content streaming
+* Great Editor with many tools
 * In-Editor Playmode
 * Node-based Materials Editor
 * CSG Editor
@@ -22,8 +26,8 @@ The engine offers a wide variety of high level systems needed for game developme
 
 # Screenshots
 
+![rendering](http://flaxengine.com/wp-content/images/Screenshot_2017_03_11_18_12_35.png "Rendering")
 ![pbr-rendering](http://flaxengine.com/wp-content/images/visuals/pbr.jpg "PBR Rendering")
 ![gi](http://flaxengine.com/wp-content/images/visuals/gi.jpg "Global Illumination")
-![env-probes](http://flaxengine.com/wp-content/images/visuals/env-probes.jpg "Env Probes")
 ![materials-editor](http://flaxengine.com/wp-content/images/editor/materials-editor.jpg "Materials Editor")
 ![editor](http://flaxengine.com/wp-content/uploads/2017/05/HistoryOfTheCelelej_0029.png "Editor")
