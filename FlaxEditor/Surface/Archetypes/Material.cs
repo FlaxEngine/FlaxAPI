@@ -233,6 +233,18 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "XYZ", ConnectionType.Vector3, 0),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 10,
+                Title = "Two Sided Sign",
+                Description = "Scalar valeu with surface side sign. 1 for normal facing, -1 for inverted",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(150, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Float, 0),
+                }
+            },
         };
     }
 }
