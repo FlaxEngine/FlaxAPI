@@ -30,6 +30,7 @@ namespace FlaxEditor.Modules
         public static string WorkingLayoutName = "Current";
 
         private DateTime _lastLayoutSaveTime;
+        private float _projectIconScreenshotTimeout = -1;
 
         /// <summary>
         /// The main editor window.
@@ -307,13 +308,19 @@ namespace FlaxEditor.Modules
         {
             Editor.Log("Main window is closed");
             MainWindow = null;
-            
-            if (!Editor.StateMachine.IsPlayMode)
-            {
-                // TODO: capture project icon screenshot before exit (like in c++ editor)
-            }
 
-            Application.Exit();
+            // Capture project icon screenshot (not in play mode and if editor was used for some time)
+            if (!Editor.StateMachine.IsPlayMode && Time.RealtimeSinceStartup >= 5.0f)
+            {
+                Editor.Log("Capture project icon screenshot");
+                EditWin.Viewport.TakeScreenshot(StringUtils.CombinePaths(Globals.ProjectCacheFolder, "icon.png"));
+                _projectIconScreenshotTimeout = Time.RealtimeSinceStartup + 0.3f;// wait 300ms for a screenshot task
+            }
+            else
+            {
+                // Close editor
+                Application.Exit();
+            }
         }
 
         /// <inheritdoc />
@@ -340,6 +347,13 @@ namespace FlaxEditor.Modules
             if (_lastLayoutSaveTime.Ticks > 10 && now - _lastLayoutSaveTime >= TimeSpan.FromSeconds(5))
             {
                 SaveCurrentLayout();
+            }
+
+            // Auto close on project icon saving end
+            if (_projectIconScreenshotTimeout > 0 && Time.RealtimeSinceStartup > _projectIconScreenshotTimeout)
+            {
+                Editor.Log("Closing Editor after project icon screenshot");
+                Application.Exit();
             }
         }
 
