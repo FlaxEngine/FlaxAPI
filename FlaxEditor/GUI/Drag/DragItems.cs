@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -70,6 +70,19 @@ namespace FlaxEditor.GUI.Drag
                 throw new ArgumentNullException();
 
             return new DragDataText(DragPrefix + item.Path);
+        }
+
+        /// <summary>
+        /// Gets the drag data.
+        /// </summary>
+        /// <param name="path">The full content item path.</param>
+        /// <returns>The data.</returns>
+        public static DragDataText GetDragData(string path)
+        {
+            if (path == null)
+                throw new ArgumentNullException();
+
+            return new DragDataText(DragPrefix + path);
         }
 
         /// <summary>

@@ -30,6 +30,7 @@ namespace FlaxEditor.Viewport
         private readonly ViewportWidgetButton _gizmoModeScale;
 
         private readonly DragAssets _dragAssets = new DragAssets();
+        private readonly DragActorType _dragActorType = new DragActorType();
         private readonly ViewportDebugDrawData _debugDrawData = new ViewportDebugDrawData(32);
 
         /// <summary>
@@ -357,9 +358,9 @@ namespace FlaxEditor.Viewport
             for (int i = 0; i < selection.Count; i++)
             {
                 var obj = selection[i];
-                
+
                 // Block transforming static objects in play mode
-                if(isPlayMode && obj.CanTransform == false)
+                if (isPlayMode && obj.CanTransform == false)
                     continue;
                 var trans = obj.Transform;
 
@@ -508,9 +509,11 @@ namespace FlaxEditor.Viewport
             var result = base.OnDragEnter(ref location, data);
             if (result != DragDropEffect.None)
                 return result;
-
+            
             if (_dragAssets.OnDragEnter(data, ValidateDragItem))
                 result = _dragAssets.Effect;
+            if (_dragActorType.OnDragEnter(data, ValidateDragActorType))
+                result = _dragActorType.Effect;
 
             return result;
         }
@@ -521,10 +524,15 @@ namespace FlaxEditor.Viewport
             {
                 case ContentDomain.Material:
                 case ContentDomain.Model:
-                case ContentDomain.Prefab:
+                case ContentDomain.Prefab: return SceneManager.IsAnySceneLoaded;
                 case ContentDomain.Scene: return true;
                 default: return false;
             }
+        }
+
+        private bool ValidateDragActorType(Type actorType)
+        {
+            return SceneManager.IsAnySceneLoaded;
         }
 
         /// <inheritdoc />
@@ -533,14 +541,20 @@ namespace FlaxEditor.Viewport
             var result = base.OnDragMove(ref location, data);
             if (result != DragDropEffect.None)
                 return result;
-            
-            return _dragAssets.Effect;
+
+            if (_dragAssets.HasValidDrag)
+                return _dragAssets.Effect;
+            if (_dragActorType.HasValidDrag)
+                return _dragActorType.Effect;
+
+            return DragDropEffect.None;
         }
 
         /// <inheritdoc />
         public override void OnDragLeave()
         {
             _dragAssets.OnDragLeave();
+            _dragActorType.OnDragLeave();
 
             base.OnDragLeave();
         }
@@ -552,15 +566,15 @@ namespace FlaxEditor.Viewport
             if (result != DragDropEffect.None)
                 return result;
 
-            if (_dragAssets.HasValidDrag)
+            // Check if drag sth
+            Vector3 hitLocation = ViewPosition;
+            SceneGraphNode hit = null;
+            if (_dragAssets.HasValidDrag || _dragActorType.HasValidDrag)
             {
-                result = _dragAssets.Effect;
-
                 // Get mouse ray and try to hit any object
                 var ray = ConvertMouseToRay(ref location);
                 float closest = float.MaxValue;
-                var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest);
-                Vector3 hitLocation;
+                hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest);
                 if (hit != null)
                 {
                     // Use hit location
@@ -571,6 +585,12 @@ namespace FlaxEditor.Viewport
                     // Use area in front of the viewport
                     hitLocation = ViewPosition + ViewDirection * 10;
                 }
+            }
+
+            // Drag assets
+            if (_dragAssets.HasValidDrag)
+            {
+                result = _dragAssets.Effect;
 
                 // Process items
                 for (int i = 0; i < _dragAssets.Objects.Count; i++)
@@ -611,7 +631,7 @@ namespace FlaxEditor.Viewport
 
                             // Spawn
                             Editor.Instance.SceneEditing.Spawn(actor);
-                            
+
                             break;
                         }
                         case ContentDomain.Prefab:
@@ -625,6 +645,34 @@ namespace FlaxEditor.Viewport
                         }
                         default: throw new ArgumentOutOfRangeException();
                     }
+                }
+            }
+            // Drag actor type
+            else if (_dragActorType.HasValidDrag)
+            {
+                result = _dragActorType.Effect;
+
+                // Process items
+                for (int i = 0; i < _dragActorType.Objects.Count; i++)
+                {
+                    var item = _dragActorType.Objects[i];
+
+                    // Create actor
+                    var actor = FlaxEngine.Object.New(item) as Actor;
+                    if (actor == null)
+                    {
+                        Editor.LogWarning("Failed to spawn actor of type " + item.FullName);
+                        continue;
+                    }
+                    actor.StaticFlags = StaticFlags.FullyStatic;
+                    actor.Name = item.Name;
+
+                    // Place it
+                    var box = actor.Box;
+                    actor.Position = hitLocation - (box.Size.Length * 0.5f) * ViewDirection;
+
+                    // Spawn
+                    Editor.Instance.SceneEditing.Spawn(actor);
                 }
             }
 

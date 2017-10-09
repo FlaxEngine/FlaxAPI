@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
 
 namespace FlaxEngine.GUI.Tabs
 {
@@ -13,20 +12,26 @@ namespace FlaxEngine.GUI.Tabs
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class Tabs : ContainerControl
     {
-        protected readonly List<Tab> _tabs = new List<Tab>();
+        private Vector2 _mosuePosition;
+
+        /// <summary>
+        /// The selected tab index.
+        /// </summary>
         protected int _selectedIndex;
-        protected Vector2 _mosuePosition;
-        protected Vector2 _mouseDownPos;
-        protected bool _isMouseDown;
+
+        /// <summary>
+        /// The tabs size.
+        /// </summary>
         protected Vector2 _tabsSize;
+
+        /// <summary>
+        /// The orientation.
+        /// </summary>
         protected Orientation _orientation;
 
         /// <summary>
         /// Gets the size of the tabs.
         /// </summary>
-        /// <value>
-        /// The size of the tabs.
-        /// </value>
         public Vector2 TabsSize
         {
             get => _tabsSize;
@@ -35,14 +40,11 @@ namespace FlaxEngine.GUI.Tabs
                 _tabsSize = value;
                 PerformLayout();
             }
-        } 
+        }
 
         /// <summary>
         /// Gets or sets the orientation.
         /// </summary>
-        /// <value>
-        /// The orientation.
-        /// </value>
         public Orientation Orientation
         {
             get => _orientation;
@@ -56,10 +58,52 @@ namespace FlaxEngine.GUI.Tabs
         /// <summary>
         /// Gets or sets the color of the tab strip background.
         /// </summary>
-        /// <value>
-        /// The color of the tab strip.
-        /// </value>
         public Color TabStripColor { get; set; }
+
+        /// <summary>
+        /// Occurs when selected tab gets changed.
+        /// </summary>
+        public event Action<Tabs> SelectedTabChanged;
+
+        /// <summary>
+        /// Gets or sets the selected tab.
+        /// </summary>
+        public Tab SelectedTab
+        {
+            get => _selectedIndex == -1 ? null : Children[_selectedIndex] as Tab;
+            set => SelectedTabIndex = Children.IndexOf(value);
+        }
+
+        /// <summary>
+        /// Gets or sets the selected tab index.
+        /// </summary>
+        public int SelectedTabIndex
+        {
+            get => _selectedIndex;
+            set
+            {
+                var index = value;
+
+                // Clamp index
+                if (index < -1)
+                    index = -1;
+                else if (index >= Children.Count)
+                    index = Children.Count - 1;
+
+                // Check if index will change
+                if (_selectedIndex != index)
+                {
+                    // Change selected index
+                    _selectedIndex = index;
+
+                    // Update
+                    PerformLayout();
+
+                    // Fire events
+                    OnSelectedTabChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tabs"/> class.
@@ -86,52 +130,16 @@ namespace FlaxEngine.GUI.Tabs
         {
             if (tab == null)
                 throw new ArgumentNullException();
-            Assertions.Assert.IsFalse(_tabs.Contains(tab));
+            Assertions.Assert.IsFalse(Children.Contains(tab));
 
             // Add
-            _tabs.Add(tab);
             tab.Parent = this;
 
             // Check if has no selected tab
             if (_selectedIndex == -1)
-                SelectTab(tab);
+                SelectedTab = tab;
 
             return tab;
-        }
-
-        /// <summary>
-        /// Selects the tab.
-        /// </summary>
-        /// <param name="tab">The tab.</param>
-        public void SelectTab(Tab tab)
-        {
-            SelectTab(_tabs.IndexOf(tab));
-        }
-
-        /// <summary>
-        /// Selects the tab.
-        /// </summary>
-        /// <param name="tabIndex">Index of the tab.</param>
-        public void SelectTab(int tabIndex)
-        {
-            // Clamp index
-            if (tabIndex < -1)
-                tabIndex = -1;
-            else if (tabIndex >= _tabs.Count)
-                tabIndex = _tabs.Count - 1;
-
-            // Check if index will change
-            if (tabIndex != _selectedIndex)
-            {
-                // Change selected index
-                _selectedIndex = tabIndex;
-
-                // Update
-                PerformLayout();
-
-                // Fire events
-                OnSelectedTabChanged();
-            }
         }
 
         /// <summary>
@@ -139,13 +147,14 @@ namespace FlaxEngine.GUI.Tabs
         /// </summary>
         protected virtual void OnSelectedTabChanged()
         {
+            SelectedTabChanged?.Invoke(this);
         }
 
         /// <inheritdoc />
         public override void Draw()
         {
             base.Draw();
-            
+
             // Cache data
             var style = Style.Current;
             var tabRect = new Rectangle(Vector2.Zero, _tabsSize);
@@ -166,50 +175,52 @@ namespace FlaxEngine.GUI.Tabs
             Render2D.FillRectangle(tabStripRect, TabStripColor);
 
             // Draw all tabs
-            for (int i = 0; i < _tabs.Count; i++)
+            for (int i = 0; i < Children.Count; i++)
             {
-                var tab = _tabs[i];
-                bool isTabSelected = i == _selectedIndex;
-                bool isMouseOverTab = IsMouseOver && tabRect.MakeExpanded(-1).Contains(_mosuePosition);
-
-                // Draw bar
-                if (isTabSelected)
+                if (Children[i] is Tab tab)
                 {
-                    if (_orientation == Orientation.Horizontal)
+                    bool isTabSelected = i == _selectedIndex;
+                    bool isMouseOverTab = IsMouseOver && tabRect.MakeExpanded(-1).Contains(_mosuePosition);
+
+                    // Draw bar
+                    if (isTabSelected)
                     {
-                        Render2D.FillRectangle(tabRect, style.BackgroundSelected);
+                        if (_orientation == Orientation.Horizontal)
+                        {
+                            Render2D.FillRectangle(tabRect, style.BackgroundSelected);
+                        }
+                        else
+                        {
+                            const float lefEdgeWidth = 4;
+                            var leftEdgeRect = tabRect;
+                            leftEdgeRect.Size.X = lefEdgeWidth;
+                            var fillRect = tabRect;
+                            fillRect.Size.X -= lefEdgeWidth;
+                            fillRect.Location.X += lefEdgeWidth;
+                            Render2D.FillRectangle(fillRect, style.Background);
+                            Render2D.FillRectangle(leftEdgeRect, style.BackgroundSelected);
+                        }
                     }
-                    else
+                    else if (isMouseOverTab)
                     {
-                        const float lefEdgeWidth = 4;
-                        var leftEdgeRect = tabRect;
-                        leftEdgeRect.Size.X = lefEdgeWidth;
-                        var fillRect = tabRect;
-                        fillRect.Size.X -= lefEdgeWidth;
-                        fillRect.Location.X += lefEdgeWidth;
-                        Render2D.FillRectangle(fillRect, style.Background);
-                        Render2D.FillRectangle(leftEdgeRect, style.BackgroundSelected);
+                        Render2D.FillRectangle(tabRect, style.BackgroundHighlighted);
                     }
-                }
-                else if (isMouseOverTab)
-                {
-                    Render2D.FillRectangle(tabRect, style.BackgroundHighlighted);
-                }
 
-                // Draw icon
-                if (tab.Icon.IsValid)
-                {
-                    Render2D.DrawSprite(tab.Icon, tabRect.MakeExpanded(-8));
-                }
+                    // Draw icon
+                    if (tab.Icon.IsValid)
+                    {
+                        Render2D.DrawSprite(tab.Icon, tabRect.MakeExpanded(-8));
+                    }
 
-                // Draw text
-                if (!string.IsNullOrEmpty(tab.Text))
-                {
-                    // TODO: draw text
-                }
+                    // Draw text
+                    if (!string.IsNullOrEmpty(tab.Text))
+                    {
+                        Render2D.DrawText(style.FontMedium, tab.Text, new Rectangle(tabRect.X + 8, tabRect.Y, tabRect.Width - 8, tabRect.Height), Color.White, TextAlignment.Near, TextAlignment.Center);
+                    }
 
-                // Move
-                tabRect.Offset(tabStripOffset);
+                    // Move
+                    tabRect.Offset(tabStripOffset);
+                }
             }
         }
 
@@ -230,37 +241,27 @@ namespace FlaxEngine.GUI.Tabs
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
-        {
-            // Check if mosue is over the header
-            if (location.Y <= _tabsSize.Y)
-            {
-                // TODO: drag and drop pages like ContentItem or TreeNode....
-
-                // Handled
-                Focus();
-                return true;
-            }
-
-            return base.OnMouseDown(location, buttons);
-        }
-
-        /// <inheritdoc />
         public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
         {
-            // Check if mosue is over the header
-            if (location.Y <= _tabsSize.Y)
+            if (_orientation == Orientation.Horizontal)
             {
-                // Check if any tab is being selected
-                int index = Mathf.FloorToInt(location.X / _tabsSize.X);
-                if (index < _tabs.Count)
-                    SelectTab(index);
-
-                // Handled
-                Focus();
-                return true;
+                if (location.Y <= _tabsSize.Y)
+                {
+                    SelectedTabIndex = Mathf.FloorToInt(location.X / _tabsSize.X);
+                    Focus();
+                    return true;
+                }
             }
-
+            else
+            {
+                if (location.X <= _tabsSize.X)
+                {
+                    SelectedTabIndex = Mathf.FloorToInt(location.Y / _tabsSize.Y);
+                    Focus();
+                    return true;
+                }
+            }
+            
             return base.OnMouseUp(location, buttons);
         }
 
@@ -271,22 +272,23 @@ namespace FlaxEngine.GUI.Tabs
             var clientArea = _orientation == Orientation.Horizontal
                 ? new Rectangle(0, _tabsSize.Y, Width, Height - _tabsSize.Y)
                 : new Rectangle(_tabsSize.X, 0, Width - _tabsSize.X, Height);
-            for (int i = 0; i < _tabs.Count; i++)
+            for (int i = 0; i < Children.Count; i++)
             {
-                var tab = _tabs[i];
-
-                // Check if is selected or not
-                if (i == _selectedIndex)
+                if (Children[i] is Tab tab)
                 {
-                    // Show and fit size
-                    tab.Bounds = clientArea;
-                    tab.UnlockChildrenRecursive();
-                    tab.Visible = true;
-                }
-                else
-                {
-                    // Hide
-                    tab.Visible = false;
+                    // Check if is selected or not
+                    if (i == _selectedIndex)
+                    {
+                        // Show and fit size
+                        tab.Bounds = clientArea;
+                        tab.UnlockChildrenRecursive();
+                        tab.Visible = true;
+                    }
+                    else
+                    {
+                        // Hide
+                        tab.Visible = false;
+                    }
                 }
             }
         }

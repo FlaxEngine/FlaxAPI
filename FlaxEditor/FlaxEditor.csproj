@@ -103,6 +103,7 @@
     <Compile Include="Gizmo\SelectionOutline.cs" />
     <Compile Include="GUI\AssetPicker.cs" />
     <Compile Include="GUI\Drag\DragActors.cs" />
+    <Compile Include="GUI\Drag\DragActorType.cs" />
     <Compile Include="GUI\Drag\DragScripts.cs" />
     <Compile Include="GUI\RenamePopup.cs" />
     <Compile Include="Content\Proxy\BinaryAssetProxy.cs" />

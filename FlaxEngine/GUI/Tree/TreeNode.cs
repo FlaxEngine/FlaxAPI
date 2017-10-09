@@ -167,7 +167,7 @@ namespace FlaxEngine.GUI
 
             _performChildrenLayoutFirst = true;
         }
-
+        
         /// <summary>
         /// Expand node.
         /// </summary>
@@ -836,20 +836,21 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
-            // Arrange children
+            // Prepare
             float y = DefaultHeaderHeight;
             float height = DefaultHeaderHeight;
             float xOffset = _xOffset + 12;
-            bool root = IsRoot;
-            if (root)
+            if (Parent is Tree tree)
             {
                 y = 4;
-                xOffset = 0;
+                xOffset = tree.RootNodesOffset;
             }
             else
             {
                 y -= _cachedHeight * (_opened ? 1.0f - _animationProgress : _animationProgress);
             }
+
+            // Arrange children
             for (int i = 0; i < _children.Count; i++)
             {
                 if (_children[i] is TreeNode node && node.Visible)

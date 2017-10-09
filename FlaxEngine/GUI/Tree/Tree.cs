@@ -36,7 +36,8 @@ namespace FlaxEngine.GUI
 
         private float _keyUpdateTime;
         private readonly bool _supportMultiSelect;
-        
+        private float _rootNodesOffset;
+
         /// <summary>
         /// Action fired when tree nodes selection gets changed.
         /// </summary>
@@ -56,6 +57,22 @@ namespace FlaxEngine.GUI
         /// Gets the first selected node or null.
         /// </summary>
         public TreeNode SelectedNode => Selection.Count > 0 ? Selection[0] : null;
+
+        /// <summary>
+        /// Gets or sets the root nodes offset (in x axis).
+        /// </summary>
+        public float RootNodesOffset
+        {
+            get => _rootNodesOffset;
+            set
+            {
+                if (!Mathf.NearEqual(_rootNodesOffset, value))
+                {
+                    _rootNodesOffset = value;
+                    PerformLayout();
+                }
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tree"/> class.

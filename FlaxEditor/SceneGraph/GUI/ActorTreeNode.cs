@@ -22,6 +22,7 @@ namespace FlaxEditor.SceneGraph.GUI
         private int _orderInParent;
         private DragActors _dragActors;
         private DragAssets _dragAssets;
+        private DragActorType _dragActorType;
 
         /// <summary>
         /// The actor node that owns this node.
@@ -190,6 +191,12 @@ namespace FlaxEditor.SceneGraph.GUI
                 _dragAssets = new DragAssets();
             if (_dragAssets.OnDragEnter(data, ValidateDragAsset))
                 return _dragAssets.Effect;
+            
+            // Check if drag actor type
+            if(_dragActorType == null)
+                _dragActorType = new DragActorType();
+            if (_dragActorType.OnDragEnter(data, ValidateDragActorType))
+                return _dragActorType.Effect;
 
             return DragDropEffect.None;
         }
@@ -201,6 +208,8 @@ namespace FlaxEditor.SceneGraph.GUI
                 return _dragActors.Effect;
             if (_dragAssets != null && _dragAssets.HasValidDrag)
                 return _dragAssets.Effect;
+            if (_dragActorType != null && _dragActorType.HasValidDrag)
+                return _dragActorType.Effect;
 
             return DragDropEffect.None;
         }
@@ -210,6 +219,7 @@ namespace FlaxEditor.SceneGraph.GUI
         {
             _dragActors?.OnDragLeave();
             _dragAssets?.OnDragLeave();
+            _dragActorType?.OnDragLeave();
         }
 
         /// <inheritdoc />
@@ -319,10 +329,35 @@ namespace FlaxEditor.SceneGraph.GUI
 
                 result = DragDropEffect.Move;
             }
+            // Drag actor type
+            else if (_dragActorType != null && _dragActorType.HasValidDrag)
+            {
+                for (int i = 0; i < _dragActorType.Objects.Count; i++)
+                {
+                    var item = _dragActorType.Objects[i];
+
+                    // Create actor
+                    var actor = FlaxEngine.Object.New(item) as Actor;
+                    if (actor == null)
+                    {
+                        Editor.LogWarning("Failed to spawn actor of type " + item.FullName);
+                        continue;
+                    }
+                    actor.StaticFlags = Actor.StaticFlags;
+                    actor.Name = item.Name;
+                    actor.Transform = Actor.Transform;
+
+                    // Spawn
+                    Editor.Instance.SceneEditing.Spawn(actor, Actor);
+                }
+
+                result = DragDropEffect.Move;
+            }
 
             // Clear cache
             _dragActors?.OnDragDrop();
             _dragAssets?.OnDragDrop();
+            _dragActorType?.OnDragDrop();
 
             // Check if scene has been modified
             if (result != DragDropEffect.None)
@@ -348,6 +383,11 @@ namespace FlaxEditor.SceneGraph.GUI
                 case ContentDomain.Prefab: return true;
                 default: return false;
             }
+        }
+
+        private bool ValidateDragActorType(Type actorType)
+        {
+            return true;
         }
 
         /// <inheritdoc />
