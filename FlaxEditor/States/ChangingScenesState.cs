@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.Utilities;
@@ -62,7 +63,28 @@ namespace FlaxEditor.States
 
             TryEnter();
         }
-        
+
+        /// <summary>
+        /// Unloades the scenes collection.
+        /// </summary>
+        /// <param name="scenes">The scenes to unload.</param>
+        public void UnloadScene(IEnumerable<Scene> scenes)
+        {
+            if (scenes == null)
+                throw new ArgumentNullException();
+            if (!scenes.Any())
+                return;
+            
+            // Clear request
+            _scenesToLoad.Clear();
+            _scenesToUnload.Clear();
+
+            // Setup request
+            _scenesToUnload.AddRange(scenes);
+
+            TryEnter();
+        }
+
         /// <summary>
         /// Changes the scenes.
         /// </summary>

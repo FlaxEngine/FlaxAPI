@@ -231,6 +231,23 @@ namespace FlaxEditor.Modules
             // Unload scene
             Editor.StateMachine.ChangingScenesState.UnloadScene(scene);
         }
+        
+        /// <summary>
+        /// Closes all opened scene (async).
+        /// </summary>
+        public void CloseAllScenes()
+        {
+            // Check if cannot change scene now
+            if (!Editor.StateMachine.CurrentState.CanChangeScene)
+                return;
+
+            // Ensure to save all pending changes
+            if (CheckSaveBeforeClose())
+                return;
+            
+            // Unload scenes
+            Editor.StateMachine.ChangingScenesState.UnloadScene(SceneManager.Scenes);
+        }
 
         /// <summary>
         /// Show save before scene load/unload action.

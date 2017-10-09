@@ -330,8 +330,10 @@ namespace FlaxEditor.Modules
             // File
             var mm_File = MainMenu.AddButton("File");
             mm_File.ContextMenu.OnButtonClicked += mm_File_Click;
+            mm_File.ContextMenu.VisibleChanged += mm_File_ShowHide;
             mm_File.ContextMenu.AddButton(2, "Save Scenes");
             mm_File.ContextMenu.AddButton(3, "Save All", "Ctrl+S");
+            mm_File.ContextMenu.AddButton(4, "Close scenes");
             mm_File.ContextMenu.AddSeparator();
             mm_File.ContextMenu.AddButton(7, "Open Visual Studio project");
             mm_File.ContextMenu.AddButton(8, "Regenerate solution file");
@@ -577,6 +579,11 @@ namespace FlaxEditor.Modules
                     Editor.SaveAll();
                     break;
 
+                // Close scenes
+                case 4:
+                    Editor.Scene.CloseAllScenes();
+                    break;
+                    
                 // Exit
                 case 6:
                     Editor.Windows.MainWindow.Close(ClosingReason.User);
@@ -605,6 +612,20 @@ namespace FlaxEditor.Modules
                     ScriptsBuilder.Internal_GenerateApi(ScriptsBuilder.ApiEngineType.Editor);
                     break;
             }
+        }
+
+        private void mm_File_ShowHide(Control control)
+        {
+            if (control.Visible == false)
+                return;
+            var c = (ContextMenu)control;
+
+            bool hasOpenedScene = SceneManager.IsAnySceneLoaded;
+
+            c.GetButton(2).Enabled = hasOpenedScene;// Save Scenes
+            c.GetButton(4).Enabled = hasOpenedScene;// Close scenes
+
+            c.PerformLayout();
         }
 
         private void mm_Edit_Click(int id, ContextMenuBase cm)

@@ -16,15 +16,19 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.EditorWindow" />
     public abstract class AssetEditorWindow : EditorWindow, IEditable, IContentItemOwner
     {
+        /// <summary>
+        /// The item.
+        /// </summary>
         protected AssetItem _item;
+
+        /// <summary>
+        /// The toolstrip.
+        /// </summary>
         protected readonly ToolStrip _toolstrip;
 
         /// <summary>
         /// Gets the item.
         /// </summary>
-        /// <value>
-        /// The item.
-        /// </value>
         public AssetItem Item => _item;
 
         /// <summary>

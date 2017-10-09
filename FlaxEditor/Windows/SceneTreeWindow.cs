@@ -20,7 +20,9 @@ namespace FlaxEditor.Windows
     {
         private Tree _tree;
         private bool _isUpdatingSelection;
+        private bool _isMouseDown;
         private ContextMenu _contextMenu;
+        private ContextMenuChildMenu _spawnMenu;
 
         private struct ActorsGroup
         {
@@ -110,7 +112,8 @@ namespace FlaxEditor.Windows
             _contextMenu.AddButton(4, "Paste");
             _contextMenu.AddButton(5, "Cut");
             _contextMenu.AddSeparator();
-            var newActorCm = _contextMenu.AddChildMenu("New").ContextMenu;
+            _spawnMenu = _contextMenu.AddChildMenu("New");
+            var newActorCm = _spawnMenu.ContextMenu;
             for (int i = 0; i < groups.Length; i++)
             {
                 var group = groups[i];
@@ -132,12 +135,24 @@ namespace FlaxEditor.Windows
                 }
             }
             newActorCm.OnButtonClicked += ContextMenuOnButtonClicked;
+            _contextMenu.VisibleChanged += ContextMenuOnVisibleChanged;
             _contextMenu.OnButtonClicked += ContextMenuOnButtonClicked;
         }
 
         private void GroupCmOnButtonClicked(int id, ContextMenu contextMenu)
         {
             Spawn((Type)contextMenu.GetButton(id).Tag);
+        }
+
+        private void ContextMenuOnVisibleChanged(Control control)
+        {
+            bool hasSthSelected = Editor.SceneEditing.HasSthSelected;
+
+            _contextMenu.GetButton(1).Enabled = hasSthSelected;
+            _contextMenu.GetButton(2).Enabled = hasSthSelected;
+            _contextMenu.GetButton(3).Enabled = hasSthSelected;
+            _contextMenu.GetButton(5).Enabled = hasSthSelected;
+            _spawnMenu.Enabled = Editor.StateMachine.CurrentState.CanEditScene && SceneManager.IsAnySceneLoaded;
         }
 
         private void ContextMenuOnButtonClicked(int id, ContextMenu contextMenu)
@@ -173,16 +188,22 @@ namespace FlaxEditor.Windows
             if (Editor.SceneEditing.HasSthSelected && Editor.SceneEditing.Selection[0] is ActorNode actorNode)
             {
                 parentActor = actorNode.Actor;
-
+                actorNode.TreeNode.Expand();
+            }
+            if (parentActor == null)
+            {
+                var scenes = SceneManager.Scenes;
+                if (scenes.Length > 0)
+                    parentActor = scenes[scenes.Length - 1];
+            }
+            if (parentActor != null)
+            {
                 // Use parent flags and the same location
                 actor.StaticFlags = parentActor.StaticFlags;
                 actor.Transform = parentActor.Transform;
 
                 // Rename actor to identify it easly
                 actor.Name = StringUtils.IncrementNameNumber(type.Name, x => parentActor.GetChild(x) == null);
-
-                // Expand parent tree node
-                actorNode.TreeNode.Expand();
             }
 
             // Spawn it
@@ -296,6 +317,52 @@ namespace FlaxEditor.Windows
             }
 
             base.Draw();
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
+        {
+            if (base.OnMouseDown(location, buttons))
+                return true;
+
+            if (buttons == MouseButtons.Right)
+            {
+                _isMouseDown = true;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        {
+            if (base.OnMouseUp(location, buttons))
+                return true;
+
+            if (_isMouseDown && buttons == MouseButtons.Right)
+            {
+                _isMouseDown = false;
+
+                if (Editor.StateMachine.CurrentState.CanEditScene)
+                {
+                    // Show context menu
+                    Editor.SceneEditing.Deselect();
+                    _contextMenu.Show(this, location);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc />
+        public override void OnLostFocus()
+        {
+            _isMouseDown = false;
+
+            base.OnLostFocus();
         }
 
         /// <inheritdoc />
