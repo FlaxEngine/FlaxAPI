@@ -172,6 +172,11 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 for (int i = 0; i < scripts.Length; i++)
                 {
                     var script = scripts[i];
+                    if (script == null)
+                    {
+                        layout.Group("Missing script");
+                        continue;
+                    }
                     var values = new ListValueContainer(elementType, i, Values);
                     var type = script.GetType();
                     var editor = CustomEditorsUtil.CreateEditor(type, false);
