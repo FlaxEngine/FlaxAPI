@@ -822,7 +822,9 @@ namespace FlaxEditor.Modules
                 // Build CSG mesh
                 case 6:
                 {
-                    SceneManager.Scenes.ToList().ForEach(x => x.BuildCSG());
+                    var scenes = SceneManager.Scenes;
+                    scenes.ToList().ForEach(x => x.BuildCSG());
+                    Editor.Scene.MarkSceneEdited(scenes);
                     break;
                 }
             }
