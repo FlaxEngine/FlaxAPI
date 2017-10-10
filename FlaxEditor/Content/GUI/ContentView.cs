@@ -56,41 +56,27 @@ namespace FlaxEditor.Content.GUI
         /// <summary>
         /// Gets the items.
         /// </summary>
-        /// <value>
-        /// The items.
-        /// </value>
         public List<ContentItem> Items => _items;
 
         /// <summary>
         /// Gets the items count.
         /// </summary>
-        /// <value>
-        /// The items count.
-        /// </value>
         public int ItemsCount => _items.Count;
 
         /// <summary>
         /// Gets the selected items.
         /// </summary>
-        /// <value>
-        /// The selection.
-        /// </value>
         public List<ContentItem> Selection => _selection;
 
         /// <summary>
         /// Gets the selected count.
         /// </summary>
-        /// <value>
-        /// The selected count.
-        /// </value>
+
         public int SelectedCount => _selection.Count;
 
         /// <summary>
         /// Gets a value indicating whether any item is selected.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if any item is selected; otherwise, <c>false</c>.
-        /// </value>
         public bool HasSelection => _selection.Count > 0;
 
         /// <summary>

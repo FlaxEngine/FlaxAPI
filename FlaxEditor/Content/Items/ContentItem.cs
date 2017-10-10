@@ -82,89 +82,83 @@ namespace FlaxEditor.Content
     /// <seealso cref="FlaxEngine.GUI.Control" />
     public abstract class ContentItem : Control
     {
+        /// <summary>
+        /// The default margin size.
+        /// </summary>
         public const int DefaultMarginSize = 4;
+
+        /// <summary>
+        /// The default text height.
+        /// </summary>
         public const int DefaultTextHeight = 42;
+
+        /// <summary>
+        /// The default thumbnail size.
+        /// </summary>
         public const int DefaultThumbnailSize = PreviewsCache.AssetIconSize;
+
+        /// <summary>
+        /// The default width.
+        /// </summary>
         public const int DefaultWidth = (DefaultThumbnailSize + 2 * DefaultMarginSize);
+
+        /// <summary>
+        /// The default height.
+        /// </summary>
         public const int DefaultHeight = (DefaultThumbnailSize + 2 * DefaultMarginSize + DefaultTextHeight);
 
         private ContentFolder _parentFolder;
 
-        protected bool _isMouseDown;
-        protected Vector2 _mouseDownStartPos;
-        protected readonly List<IContentItemOwner> _references = new List<IContentItemOwner>(4);
+        private bool _isMouseDown;
+        private Vector2 _mouseDownStartPos;
+        private readonly List<IContentItemOwner> _references = new List<IContentItemOwner>(4);
 
-        protected Sprite _thumbnail;
-        protected Sprite _shadowIcon;
+        private Sprite _thumbnail;
+        private Sprite _shadowIcon;
 
         /// <summary>
         /// Gets the item domain.
         /// </summary>
-        /// <value>
-        /// The item domain.
-        /// </value>
         public virtual ContentDomain ItemDomain => ContentDomain.Invalid;
 
         /// <summary>
         /// Gets the type of the item.
         /// </summary>
-        /// <value>
-        /// The type of the item.
-        /// </value>
         public abstract ContentItemType ItemType { get; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is asset.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is asset; otherwise, <c>false</c>.
-        /// </value>
         public bool IsAsset => ItemType == ContentItemType.Asset;
 
         /// <summary>
         /// Gets a value indicating whether this instance is folder.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is folder; otherwise, <c>false</c>.
-        /// </value>
         public bool IsFolder => ItemType == ContentItemType.Folder;
 
         /// <summary>
         /// Gets a value indicating whether this instance can have children.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance can have children; otherwise, <c>false</c>.
-        /// </value>
         public bool CanHaveChildren => ItemType == ContentItemType.Folder;
 
         /// <summary>
         /// Determines whether this item can be renamed.
         /// </summary>
-        /// <returns>True if this item can be renamed, otherwise false.</returns>
         public virtual bool CanRename => true;
 
         /// <summary>
         /// Gets a value indicating whether this item can be dragged and droped.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance can use drag; otherwise, <c>false</c>.
-        /// </value>
         public virtual bool CanDrag => true;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="ContentItem"/> exists on drive.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if exists; otherwise, <c>false</c>.
-        /// </value>
         public virtual bool Exists => System.IO.File.Exists(Path);
 
         /// <summary>
         /// Gets the parent folder.
         /// </summary>
-        /// <value>
-        /// The parent folder.
-        /// </value>
         public ContentFolder ParentFolder
         {
             get => _parentFolder;
@@ -189,25 +183,16 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Gets the path to the item.
         /// </summary>
-        /// <value>
-        /// The item path.
-        /// </value>
         public string Path { get; private set; }
 
         /// <summary>
         /// Gets the item short name (filename without extension).
         /// </summary>
-        /// <value>
-        /// The item short name.
-        /// </value>
         public string ShortName { get; private set; }
 
         /// <summary>
         /// Gets the asset name relative to the project root folder (without asset file extension)
         /// </summary>
-        /// <value>
-        /// The name path.
-        /// </value>
         public string NamePath
         {
             get
@@ -225,25 +210,16 @@ namespace FlaxEditor.Content
         /// Gets the default name of the content item thumbnail.
         /// Returns null if not used.
         /// </summary>
-        /// <value>
-        /// The default name of the preview.
-        /// </value>
         public virtual string DefaultThumbnailName => null;
 
         /// <summary>
         /// Gets a value indicating whether this item has default thumbnail.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this item has default thumbnail; otherwise, <c>false</c>.
-        /// </value>
         public bool HasDefaultThumbnail => DefaultThumbnailName != null;
 
         /// <summary>
         /// Gets or sets the item thumbnail. Warning, thumbnail may not be available if item has no references (<see cref="ReferencesCount"/>).
         /// </summary>
-        /// <value>
-        /// The thumbnail.
-        /// </value>
         public Sprite Thumbnail
         {
             get => _thumbnail;

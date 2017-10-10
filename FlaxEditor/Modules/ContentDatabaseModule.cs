@@ -67,17 +67,11 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Gets the amount of created items.
         /// </summary>
-        /// <value>
-        /// The items created.
-        /// </value>
         public int ItemsCreated => _itemsCreated;
 
         /// <summary>
         /// Gets the amount of deleted items.
         /// </summary>
-        /// <value>
-        /// The items deleted.
-        /// </value>
         public int ItemsDeleted => _itemsDeleted;
 
         internal ContentDatabaseModule(Editor editor)
@@ -95,7 +89,6 @@ namespace FlaxEditor.Modules
                 Editor.Windows.CloseAllEditors(item);
 
                 // Dispose
-                item.ParentFolder = null;
                 item.Dispose();
             }
         }
@@ -531,7 +524,7 @@ namespace FlaxEditor.Modules
                 else
                 {
                     // Check if use content pool
-                    if (item.IsAsset)
+                    if (item.IsAsset || item.ItemType == ContentItemType.Scene)
                     {
                         // Rename asset
                         // Note: we use content backend because file may be in use or sth, it's safe
