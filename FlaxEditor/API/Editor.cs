@@ -255,6 +255,9 @@ namespace FlaxEditor
             // Cleanup
             Undo.Dispose();
             Instance = null;
+
+            ScriptsBuilder.ScriptsReloadBegin -= ScriptsBuilder_ScriptsReloadBegin;
+            ScriptsBuilder.ScriptsReloadEnd -= ScriptsBuilder_ScriptsReloadEnd;
         }
 
         /// <summary>

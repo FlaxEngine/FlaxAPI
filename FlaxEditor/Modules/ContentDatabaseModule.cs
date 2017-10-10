@@ -87,6 +87,19 @@ namespace FlaxEditor.Modules
             InitOrder = -80;
         }
 
+        private void Content_OnAssetDisposing(Asset asset)
+        {
+            var item = Find(asset.ID);
+            if (item != null)
+            {
+                Editor.Windows.CloseAllEditors(item);
+
+                // Dispose
+                item.ParentFolder = null;
+                item.Dispose();
+            }
+        }
+
         /// <summary>
         /// Gets the proxy object for the given content item.
         /// </summary>
@@ -783,6 +796,8 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnInit()
         {
+            FlaxEngine.Content.AssetDisposing += Content_OnAssetDisposing;
+
             // Setup content proxies
             Proxy.Add(new TextureProxy());
             Proxy.Add(new ModelProxy());
@@ -901,6 +916,8 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnExit()
         {
+            FlaxEngine.Content.AssetDisposing -= Content_OnAssetDisposing;
+
             // Disable events
             _enableEvents = false;
 

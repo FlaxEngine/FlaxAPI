@@ -12,6 +12,23 @@ namespace FlaxEngine
         // TODO: assets list get
 
         /// <summary>
+        /// Occurs when asset is being disposed and will be unloaded (by force). All references to it should be released.
+        /// </summary>
+        public static event Action<Asset> AssetDisposing;
+
+        internal static void Internal_AssetDisposing(Asset asset)
+        {
+            try
+            {
+                AssetDisposing?.Invoke(asset);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+        }
+
+        /// <summary>
         /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
         /// </summary>
         /// <param name="id">Asset unique ID.</param>
