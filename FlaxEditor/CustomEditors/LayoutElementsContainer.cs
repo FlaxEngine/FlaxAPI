@@ -153,6 +153,18 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Adds new header control.
+        /// </summary>
+        /// <param name="text">The header text.</param>
+        /// <returns>The created element.</returns>
+        public LabelElement Header(string text)
+        {
+            var element = Label(text);
+            element.Label.Font = Style.Current.FontLarge;
+            return element;
+        }
+
+        /// <summary>
         /// Adds new text box element.
         /// </summary>
         /// <param name="isMultiline">Enable/disable multiline text input support</param>

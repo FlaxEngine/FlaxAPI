@@ -49,6 +49,16 @@ namespace FlaxEditor.CustomEditors.Editors
             public CustomEditorAttribute CustomEditor;
 
             /// <summary>
+            /// The space attribute.
+            /// </summary>
+            public SpaceAttribute Space;
+
+            /// <summary>
+            /// The header attribute.
+            /// </summary>
+            public HeaderAttribute Header;
+
+            /// <summary>
             /// Gets the display name.
             /// </summary>
             public string DisplayName { get; }
@@ -89,6 +99,8 @@ namespace FlaxEditor.CustomEditors.Editors
                 Display = (EditorDisplayAttribute)attributes.FirstOrDefault(x => x is EditorDisplayAttribute);
                 Tooltip = (TooltipAttribute)attributes.FirstOrDefault(x => x is TooltipAttribute);
                 CustomEditor = (CustomEditorAttribute)attributes.FirstOrDefault(x => x is CustomEditorAttribute);
+                Space = (SpaceAttribute)attributes.FirstOrDefault(x => x is SpaceAttribute);
+                Header = (HeaderAttribute)attributes.FirstOrDefault(x => x is HeaderAttribute);
                 
                 if (Display?.Name != null)
                 {
@@ -319,6 +331,14 @@ namespace FlaxEditor.CustomEditors.Editors
                     lastGroup = null;
                     itemLayout = layout;
                 }
+
+                // Space
+                if (item.Space != null)
+                    itemLayout.Space(item.Space.Height);
+
+                // Header
+                if (item.Header != null)
+                    itemLayout.Header(item.Header.Text);
 
                 // Peek values
                 ValueContainer itemValues;
