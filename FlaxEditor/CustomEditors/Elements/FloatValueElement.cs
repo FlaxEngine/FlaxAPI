@@ -13,7 +13,7 @@ namespace FlaxEditor.CustomEditors.Elements
     /// The floating point value element.
     /// </summary>
     /// <seealso cref="FlaxEditor.CustomEditors.LayoutElement" />
-    public class FloatValueElement : LayoutElement
+    public class FloatValueElement : LayoutElement, IFloatValueEditor
     {
         /// <summary>
         /// The float value box.
@@ -60,5 +60,12 @@ namespace FlaxEditor.CustomEditors.Elements
 
         /// <inheritdoc />
         public override Control Control => FloatValue;
+
+        /// <inheritdoc />
+        public float Value
+        {
+            get => FloatValue.Value;
+            set => FloatValue.Value = value;
+        }
     }
 }

@@ -219,22 +219,22 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Index of the character on left edge of the selection
         /// </summary>
-        private int SelectionLeft => Mathf.Min(_selectionStart, _selectionEnd);
+        protected int SelectionLeft => Mathf.Min(_selectionStart, _selectionEnd);
 
         /// <summary>
         /// Index of the character on right edge of the selection
         /// </summary>
-        private int SelectionRight => Mathf.Max(_selectionStart, _selectionEnd);
+        protected int SelectionRight => Mathf.Max(_selectionStart, _selectionEnd);
 
         /// <summary>
         /// Gets current caret position (index of the character)
         /// </summary>
-        private int CaretPosition => _selectionEnd;
+        protected int CaretPosition => _selectionEnd;
 
         /// <summary>
         /// Calculates caret rectangle
         /// </summary>
-        private Rectangle CaretBounds
+        protected Rectangle CaretBounds
         {
             get
             {
@@ -270,6 +270,11 @@ namespace FlaxEngine.GUI
         {
             get { return new Rectangle(1, 1, Width - 2, Height - 2); }
         }
+
+        /// <summary>
+        /// Gets the current view offset.
+        /// </summary>
+        protected Vector2 ViewOffset => _viewOffset;
         
         /// <summary>
         /// Init

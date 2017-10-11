@@ -24,7 +24,7 @@ namespace FlaxEngine.GUI
         protected float _slideSpeed;
         protected bool _isSliding;
         protected T _startSlideValue;
-        protected Vector2 _startSlideLocation;
+        private Vector2 _startSlideLocation;
 
         /// <summary>
         /// Occurs when value gets changed.
@@ -34,25 +34,16 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the value.
         /// </summary>
-        /// <value>
-        /// The value.
-        /// </value>
         public abstract T Value { get; set; }
 
         /// <summary>
         /// Gets or sets the minimum value.
         /// </summary>
-        /// <value>
-        /// The minimum value.
-        /// </value>
         public abstract T MinValue { get; set; }
 
         /// <summary>
         /// Gets or sets the maximum value.
         /// </summary>
-        /// <value>
-        /// The maximum value.
-        /// </value>
         public abstract T MaxValue { get; set; }
 
         /// <summary>
@@ -101,17 +92,11 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets a value indicating whether this value box can use sliding.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this value box can use sliding; otherwise, <c>false</c>.
-        /// </value>
         protected virtual bool CanUseSliding => _slideSpeed > Mathf.Epsilon;
 
         /// <summary>
         /// Gets the slide rectangle.
         /// </summary>
-        /// <value>
-        /// The slide rectangle.
-        /// </value>
         protected virtual Rectangle SlideRect
         {
             get

@@ -28,7 +28,7 @@ namespace FlaxEngine
         {
             Update?.Invoke();
         }
-
+        
         internal static void Internal_LateUpdate()
         {
             LateUpdate?.Invoke();
@@ -39,13 +39,10 @@ namespace FlaxEngine
             FixedUpdate?.Invoke();
         }
 
-        #region Internal Calls
-
-#if !UNIT_TEST_COMPILANT
+        /// <summary>
+        /// Flushes the removed objects (disposed objects using Object.Destroy).
+        /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_FlushRemovedObjects();
-#endif
-
-        #endregion
+        public static extern void FlushRemovedObjects();
     }
 }

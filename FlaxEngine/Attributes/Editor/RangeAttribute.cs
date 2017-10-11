@@ -25,21 +25,14 @@ namespace FlaxEngine
         public readonly float Max;
         
         /// <summary>
-        /// The slider speed used to edit value.
-        /// </summary>
-        public readonly float SliderSpeed;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="RangeAttribute"/> class.
         /// </summary>
         /// <param name="min">The minimum range value.</param>
         /// <param name="max">The maximum range value.</param>
-        /// <param name="sliderSpeed">The slider speed.</param>
-        public RangeAttribute(float min, float max, float sliderSpeed = 1.0f)
+        public RangeAttribute(float min, float max)
         {
             Min = min;
             Max = max;
-            SliderSpeed = sliderSpeed;
         }
     }
 }

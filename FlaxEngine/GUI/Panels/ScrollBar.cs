@@ -12,10 +12,24 @@ namespace FlaxEngine.GUI
     /// <seealso cref="FlaxEngine.GUI.Control" />
     public abstract class ScrollBar : Control
     {
-        // Scroll bars options
+        /// <summary>
+        /// The default size.
+        /// </summary>
         public const int DefaultSize = 16;
+
+        /// <summary>
+        /// The default thickness.
+        /// </summary>
         public const int DefaultThickness = 6;
+
+        /// <summary>
+        /// The default minimum opacity.
+        /// </summary>
         public const float DefaultMinimumOpacity = 0.4f;
+
+        /// <summary>
+        /// The default minimum size.
+        /// </summary>
         public const int DefaultMinimumSize = 12;
 
         // Scrolling
@@ -38,36 +52,24 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets the orientation.
         /// </summary>
-        /// <value>
-        /// The orientation.
-        /// </value>
         public Orientation Orientation => _orientation;
 
         /// <summary>
         /// Gets or sets the value smoothing scale (0 to not use it).
         /// </summary>
-        /// <value>
-        /// The value smoothing scale.
-        /// </value>
         public float SmoothingScale { get; set; } = 1;
 
         /// <summary>
         /// Gets a value indicating whether use scroll value smoothing.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if use scroll value smoothing; otherwise, <c>false</c>.
-        /// </value>
         public bool UseSmoothing => !Mathf.IsZero(SmoothingScale);
 
         /// <summary>
         /// Gets or sets the minimum value.
         /// </summary>
-        /// <value>
-        /// The minimum value.
-        /// </value>
         public float Minimum
         {
-            get { return _minimum; }
+            get => _minimum;
             set
             {
                 if (value > _maximum)
@@ -81,12 +83,9 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the maximum value.
         /// </summary>
-        /// <value>
-        /// The maximum value.
-        /// </value>
         public float Maximum
         {
-            get { return _maximum; }
+            get => _maximum;
             set
             {
                 if (value < _minimum)
@@ -100,12 +99,9 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the scroll value (current, smooth).
         /// </summary>
-        /// <value>
-        /// The scroll value.
-        /// </value>
         public float Value
         {
-            get { return _value; }
+            get => _value;
             set
             {
                 value = Mathf.Clamp(value, _minimum, _maximum);
@@ -125,18 +121,17 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the target value (target, not smooth).
         /// </summary>
-        /// <value>
-        /// The target value.
-        /// </value>
         public float TargetValue => _targetValue;
         
         /// <summary>
         /// Gets the value slow down.
         /// </summary>
-        /// <value>
-        /// The value slow down.
-        /// </value>
         public float ValueSlowDown => _targetValue - _value;
+
+        /// <summary>
+        /// Gets the size of the track.
+        /// </summary>
+        protected abstract float TrackSize { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScrollBar"/> class.
@@ -201,19 +196,9 @@ namespace FlaxEngine.GUI
                 _thumbClicked = false;
 
                 // End capturing mouse
-                var parentWin = ParentWindow;
-                if (parentWin != null)
-                    parentWin.EndTrackingMouse();
+                ParentWindow?.EndTrackingMouse();
             }
         }
-
-        /// <summary>
-        /// Gets the size of the track.
-        /// </summary>
-        /// <value>
-        /// The size of the track.
-        /// </value>
-        protected abstract float TrackSize { get; }
 
         internal void Reset()
         {
@@ -228,8 +213,8 @@ namespace FlaxEngine.GUI
             updateThumb();
 
             // Change parent panel view offset
-            var panel = Parent as Panel;
-            panel.setViewOffset(_orientation, _value);
+            if (Parent is Panel panel)
+                panel.setViewOffset(_orientation, _value);
         }
 
         /// <inheritdoc />
@@ -317,8 +302,7 @@ namespace FlaxEngine.GUI
             {
                 // Remove focus
                 var parentWin = ParentWindow;
-                if (parentWin.FocusedControl != null)
-                    parentWin.FocusedControl.Defocus();
+                parentWin.FocusedControl?.Defocus();
 
                 float mousePosition = _orientation == Orientation.Vertical ? location.Y : location.X;
 

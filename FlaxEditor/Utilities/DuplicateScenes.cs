@@ -48,7 +48,7 @@ namespace FlaxEditor.Utilities
             // Delete old scenes
             if (SceneManager.UnloadAllScenes())
                 throw new FlaxException("Failed to unload scenes.");
-            FlaxEngine.Scripting.Internal_FlushRemovedObjects();
+            FlaxEngine.Scripting.FlushRemovedObjects();
 
             // Ensure that old scenes has been unregistered
             {
@@ -84,7 +84,7 @@ namespace FlaxEditor.Utilities
             // Delete new scenes
             if (SceneManager.UnloadAllScenes())
                 throw new FlaxException("Failed to unload scenes.");
-            FlaxEngine.Scripting.Internal_FlushRemovedObjects();
+            FlaxEngine.Scripting.FlushRemovedObjects();
 
             // Deserialize oldd scenes
             for (int i = 0; i < _scenesData.Count; i++)

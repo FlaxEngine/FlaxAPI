@@ -86,6 +86,17 @@ namespace FlaxEngine.GUI
         /// Sets the limits from the attribute.
         /// </summary>
         /// <param name="limits">The limits.</param>
+        public void SetLimits(RangeAttribute limits)
+        {
+            _min = limits.Min;
+            _max = Mathf.Max(_min, limits.Max);
+            Value = Value;
+        }
+
+        /// <summary>
+        /// Sets the limits from the attribute.
+        /// </summary>
+        /// <param name="limits">The limits.</param>
         public void SetLimits(LimitAttribute limits)
         {
             _min = limits.Min;
