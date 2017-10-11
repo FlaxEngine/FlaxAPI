@@ -2,8 +2,10 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System.Linq;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors.Editors
 {
@@ -13,7 +15,7 @@ namespace FlaxEditor.CustomEditors.Editors
     [CustomEditor(typeof(float)), DefaultEditor]
     public sealed class FloatEditor : CustomEditor
     {
-        private FloatValueElement element;
+        private IFloatValueEditor element;
 
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.Inline;
@@ -21,9 +23,38 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
-            element = layout.FloatValue();
-            element.SetLimits(Values.Info);
-            element.FloatValue.ValueChanged += () => SetValue(element.FloatValue.Value);
+            element = null;
+
+            // Try get limit attribute for value min/max range setting and slider speed
+            if (Values.Info != null)
+            {
+                var attributes = Values.Info.GetCustomAttributes(true);
+                var range = attributes.FirstOrDefault(x => x is RangeAttribute);
+                if (range != null)
+                {
+                    // Use slider
+                    var slider = layout.Slider();
+                    slider.SetLimits((RangeAttribute)range);
+                    slider.Slider.ValueChanged += () => SetValue(element.Value);
+                    element = slider;
+                }
+                var limit = attributes.FirstOrDefault(x => x is LimitAttribute);
+                if (limit != null)
+                {
+                    // Use float value editor with limit
+                    var floatValue = layout.FloatValue();
+                    floatValue.SetLimits((LimitAttribute)limit);
+                    floatValue.FloatValue.ValueChanged += () => SetValue(element.Value);
+                    element = floatValue;
+                }
+            }
+            if (element == null)
+            {
+                // Use float value editor
+                var floatValue = layout.FloatValue();
+                floatValue.FloatValue.ValueChanged += () => SetValue(element.Value);
+                element = floatValue;
+            }
         }
 
         /// <inheritdoc />
@@ -35,7 +66,7 @@ namespace FlaxEditor.CustomEditors.Editors
             }
             else
             {
-                element.FloatValue.Value = (float)Values[0];
+                element.Value = (float)Values[0];
             }
         }
     }

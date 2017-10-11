@@ -32,9 +32,6 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// Gets the control represented by this element.
         /// </summary>
-        /// <value>
-        /// The control.
-        /// </value>
         public abstract ContainerControl ContainerControl { get; }
 
         /// <summary>
@@ -239,6 +236,29 @@ namespace FlaxEditor.CustomEditors
         {
             var property = AddPropertyItem(name, tooltip);
             return property.FloatValue();
+        }
+
+        /// <summary>
+        /// Adds new slider element.
+        /// </summary>
+        /// <returns>The created element.</returns>
+        public SliderElement Slider()
+        {
+            SliderElement element = new SliderElement();
+            OnAddElement(element);
+            return element;
+        }
+
+        /// <summary>
+        /// Adds new slider element with name label.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="tooltip">The property label tooltip text.</param>
+        /// <returns>The created element.</returns>
+        public SliderElement Slider(string name, string tooltip = null)
+        {
+            var property = AddPropertyItem(name, tooltip);
+            return property.Slider();
         }
 
         /// <summary>

@@ -220,6 +220,7 @@
     <Compile Include="GUI\Input\ColorValueBox.cs" />
     <Compile Include="GUI\Input\FloatValueBox.cs" />
     <Compile Include="GUI\Input\IntValueBox.cs" />
+    <Compile Include="GUI\Input\SliderControl.cs" />
     <Compile Include="GUI\Input\TextBox.cs" />
     <Compile Include="GUI\Input\TextBox.Keys.cs">
       <DependentUpon>TextBox.cs</DependentUpon>

@@ -85,9 +85,11 @@
     <Compile Include="CustomEditors\Elements\CustomElement.cs" />
     <Compile Include="CustomEditors\Elements\EnumElement.cs" />
     <Compile Include="CustomEditors\Elements\FloatValueElement.cs" />
+    <Compile Include="CustomEditors\Elements\IFloatValueEditor.cs" />
     <Compile Include="CustomEditors\Elements\IntegerValueElement.cs" />
     <Compile Include="CustomEditors\Elements\LabelElement.cs" />
     <Compile Include="CustomEditors\Elements\PropertiesListElement.cs" />
+    <Compile Include="CustomEditors\Elements\SliderElement.cs" />
     <Compile Include="CustomEditors\GUI\CheckablePropertyNameLabel.cs" />
     <Compile Include="CustomEditors\GUI\ClickablePropertyNameLabel.cs" />
     <Compile Include="CustomEditors\GUI\PropertiesList.cs" />

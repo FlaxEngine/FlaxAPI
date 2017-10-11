@@ -602,7 +602,22 @@ namespace FlaxEngine
             t = -2f * t * t * t + 3f * t * t;
             return to * t + from * (1f - t);
         }
-        
+
+        /// <summary>
+        /// Maps the specified value from the given range into another.
+        /// </summary>
+        /// <param name="value">The value to map from range [fromMin; fromMax].</param>
+        /// <param name="fromMin">The source range minimum value.</param>
+        /// <param name="fromMax">The source range maximum value.</param>
+        /// <param name="toMin">The destination range minimum value.</param>
+        /// <param name="toMax">The destination range maximum value.</param>
+        /// <returns>The mapped value in range [toMin; toMax].</returns>
+        public static float Map(float value, float fromMin, float fromMax, float toMin, float toMax)
+        {
+            float t = (value - fromMin) / (fromMax - fromMin);
+            return toMin + t * (toMax - toMin);
+        }
+
         /// <summary>
         /// Determines whether the specified x is pow of 2.
         /// </summary>
