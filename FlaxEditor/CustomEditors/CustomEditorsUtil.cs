@@ -114,10 +114,9 @@ namespace FlaxEditor.CustomEditors
                 {
                     return new ListEditor();
                 }
-                if (targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+                if (DictionaryEditor.CanEditType(targetType))
                 {
-                    // TODO: dedicated Dictionary<T> editor
-                    return new GenericEditor();
+                    return new DictionaryEditor();
                 }
             }
             

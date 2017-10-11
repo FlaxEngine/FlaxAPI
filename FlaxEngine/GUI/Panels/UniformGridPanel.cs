@@ -16,9 +16,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the padding given to each slot.
         /// </summary>
-        /// <value>
-        /// The slots padding.
-        /// </value>
         public Margin SlotPadding
         {
             get => _slotPadding;
@@ -32,9 +29,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the amount of slots horizontally. Use 0 to don't limit it.
         /// </summary>
-        /// <value>
-        /// The slots horizontally.
-        /// </value>
         public int SlotsHorizontally
         {
             get => _slotsH;
@@ -52,9 +46,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the amount of slots vertically. Use 0 to don't limit it.
         /// </summary>
-        /// <value>
-        /// The slots vertically.
-        /// </value>
         public int SlotsVertically
         {
             get => _slotsV;

@@ -69,6 +69,7 @@
     <Compile Include="CustomEditors\Editors\BooleanEditor.cs" />
     <Compile Include="CustomEditors\Editors\CollectionEditor.cs" />
     <Compile Include="CustomEditors\Editors\ColorEditor.cs" />
+    <Compile Include="CustomEditors\Editors\DictionaryEditor.cs" />
     <Compile Include="CustomEditors\Editors\EnumEditor.cs" />
     <Compile Include="CustomEditors\Editors\FlaxObjectRefEditor.cs" />
     <Compile Include="CustomEditors\Editors\FloatEditor.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="CustomEditors\Elements\VerticalPanelElement.cs" />
     <Compile Include="CustomEditors\SyncPointEditor.cs" />
     <Compile Include="CustomEditors\Values\CustomValueContainer.cs" />
+    <Compile Include="CustomEditors\Values\DictionaryValueContainer.cs" />
     <Compile Include="CustomEditors\Values\ListValueContainer.cs" />
     <Compile Include="CustomEditors\Values\ValueContainer.cs" />
     <Compile Include="EditorAssets.cs" />
