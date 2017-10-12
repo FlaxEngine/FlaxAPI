@@ -78,7 +78,7 @@ namespace FlaxEngine
 		/// Gets or sets the spot light's inner cone angle (in degrees).
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(20), EditorDisplay("Light"), Tooltip("Light inner cone angle (in degrees)"), Limit(1, 80, 0.1f)]
+		[EditorOrder(21), EditorDisplay("Light"), Tooltip("Light inner cone angle (in degrees)"), Limit(1, 80, 0.1f)]
 		public float InnerConeAngle
 		{
 #if UNIT_TEST_COMPILANT
@@ -93,7 +93,7 @@ namespace FlaxEngine
 		/// Gets or sets the spot light's outer cone angle (in degrees).
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(21), EditorDisplay("Light"), Tooltip("Light outer cone angle (in degrees)"), Limit(1, 80, 0.1f)]
+		[EditorOrder(22), EditorDisplay("Light"), Tooltip("Light outer cone angle (in degrees)"), Limit(1, 80, 0.1f)]
 		public float OuterConeAngle
 		{
 #if UNIT_TEST_COMPILANT

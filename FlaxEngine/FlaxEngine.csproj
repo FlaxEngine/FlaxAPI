@@ -84,6 +84,8 @@
     <Compile Include="API\BinaryAssets\FontAsset.Gen.cs" />
     <Compile Include="API\BinaryAssets\Model.cs" />
     <Compile Include="API\BinaryAssets\Model.Gen.cs" />
+    <Compile Include="API\BinaryAssets\RawDataAsset.cs" />
+    <Compile Include="API\BinaryAssets\RawDataAsset.Gen.cs" />
     <Compile Include="API\CreateWindowSettings.cs" />
     <Compile Include="API\LightActors\DirectionalLight.cs" />
     <Compile Include="API\LightActors\DirectionalLight.Gen.cs" />
