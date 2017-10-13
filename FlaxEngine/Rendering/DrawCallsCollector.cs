@@ -73,21 +73,5 @@ namespace FlaxEngine.Rendering
 
             _drawCalls.Add(drawCall);
         }
-
-        /// <summary>
-        /// Adds the draw call.
-        /// </summary>
-        /// <param name="surface">The CSG surface to render. Cannot be null.</param>
-        /// <param name="material">The material to apply during rendering. Cannot be null.</param>
-        public void AddDrawCall(BrushSurface surface, MaterialBase material)
-        {
-            if (surface == null)
-                throw new ArgumentNullException(nameof(surface));
-            if (material == null)
-                throw new ArgumentNullException(nameof(material));
-
-            // CSG surfaces are rendered directly using the internal call
-            BrushSurface.Internal_Draw(surface.ParentActor.unmanagedPtr, surface.Index, material.unmanagedPtr);
-        }
     }
 }

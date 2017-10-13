@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEngine;
 using FlaxEngine.Rendering;
 
@@ -17,6 +18,10 @@ namespace FlaxEditor
         private readonly List<IntPtr> _actors;
         private readonly List<HighlightData> _highlights;
         private MaterialBase _highlightMaterial;
+        private readonly List<Vector3> _highlightTriangles = new List<Vector3>(64);
+        private Vector3[] _highlightTrianglesSet;
+        private int[] _highlightIndicesSet;
+        private Model _highlightTrianglesModel;
 
         internal IntPtr[] ActorsPtrs => _actors.Count > 0 ? _actors.ToArray() : null;
 
@@ -29,6 +34,7 @@ namespace FlaxEditor
             _actors = new List<IntPtr>(actorsCapacity);
             _highlights = new List<HighlightData>(actorsCapacity);
             _highlightMaterial = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.HighlightMaterial);
+            _highlightTrianglesModel = FlaxEngine.Content.CreateVirtualAsset<Model>();
         }
 
         /// <summary>
@@ -74,10 +80,11 @@ namespace FlaxEditor
         /// <param name="surface">The surface.</param>
         public void HighlightBrushSurface(BrushSurface surface)
         {
-            _highlights.Add(new HighlightData
+            var vertices = surface.GetVertices();
+            if (vertices.Length > 0)
             {
-                Target = surface
-            });
+                _highlightTriangles.AddRange(vertices);
+            }
         }
 
         /// <summary>
@@ -88,7 +95,7 @@ namespace FlaxEditor
         {
             if (_highlightMaterial == null)
                 return;
-            
+
             Matrix m1, m2, world;
             for (var i = 0; i < _highlights.Count; i++)
             {
@@ -105,10 +112,21 @@ namespace FlaxEditor
 
                     collector.AddDrawCall(modelActor.Model, highlight.EntryIndex, _highlightMaterial, ref bounds, ref world);
                 }
-                else if (highlight.Target is BrushSurface brushSurface)
+            }
+
+            if (_highlightTriangles.Count > 0)
+            {
+                if (!Utils.ArraysEqual(_highlightTrianglesSet, _highlightTriangles))
                 {
-                    collector.AddDrawCall(brushSurface, _highlightMaterial);
+                    _highlightIndicesSet = new int[_highlightTriangles.Count];
+                    for (int i = 0; i < _highlightIndicesSet.Length; i++)
+                        _highlightIndicesSet[i] = i;
+                    _highlightTrianglesSet = _highlightTriangles.ToArray();
+                    _highlightTrianglesModel.UpdateMesh(_highlightTrianglesSet, _highlightIndicesSet);
                 }
+
+                world = Matrix.Identity;
+                collector.AddDrawCall(_highlightTrianglesModel.LODs[0].Meshes[0], _highlightMaterial, ref world);
             }
         }
 
@@ -119,6 +137,7 @@ namespace FlaxEditor
         {
             _actors.Clear();
             _highlights.Clear();
+            _highlightTriangles.Clear();
         }
 
         /// <summary>
@@ -127,6 +146,7 @@ namespace FlaxEditor
         public virtual void Dispose()
         {
             _highlightMaterial = null;
+            FlaxEngine.Object.Destroy(ref _highlightTrianglesModel);
         }
 
         private struct HighlightData

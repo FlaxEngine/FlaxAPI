@@ -115,6 +115,15 @@ namespace FlaxEngine
             return Internal_Intersects(_brushActor.unmanagedPtr, _index, ref ray, out distance);
         }
 
+        /// <summary>
+        /// Gets the brush surface triangles array (group by 3 verticies).
+        /// </summary>
+        /// <returns>The vertices buffer with triangles or empty if no data loaded.</returns>
+        public Vector3[] GetVertices()
+        {
+            return Internal_GetVertices(_brushActor.unmanagedPtr, _index);
+        }
+
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern MaterialBase Internal_GetMaterial(IntPtr obj, int index);
@@ -150,7 +159,7 @@ namespace FlaxEngine
         internal static extern bool Internal_Intersects(IntPtr obj, int index, ref Ray ray, out float distance);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_Draw(IntPtr obj, int index, IntPtr materialObj);
+        internal static extern Vector3[] Internal_GetVertices(IntPtr obj, int index);
 #endif
     }
 }
