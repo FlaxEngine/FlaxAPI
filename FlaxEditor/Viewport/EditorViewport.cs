@@ -37,7 +37,7 @@ namespace FlaxEditor.Viewport
             public int MouseWheelDelta;
 
             public bool IsControllingMouse => IsMouseMiddleDown || IsMouseRightDown || (IsAltDown && IsMouseLeftDown);
-            
+
             public void Gather(FlaxEngine.Window window)
             {
                 IsControlDown = window.GetKey(KeyCode.Control);
@@ -66,6 +66,7 @@ namespace FlaxEditor.Viewport
 
         // Movement
         protected ViewportWidgetButton _speedWidget;
+
         protected float _movementSpeed;
         protected float _mouseAccelerationScale;
         protected bool _useMouseFiltering;
@@ -73,6 +74,7 @@ namespace FlaxEditor.Viewport
 
         // Input
         private bool _isControllingMouse;
+
         protected Input _prevInput;
         protected Input _input;
         protected int _deltaFilteringStep;
@@ -86,11 +88,12 @@ namespace FlaxEditor.Viewport
 
         // Camera
         protected float _yaw;
+
         protected float _pitch;
         protected float _fieldOfView = 60.0f;
         protected float _nearPlane = 0.1f;
         protected float _farPlane = 10000.0f;
-        
+
         /// <summary>
         /// Speed of the mouse.
         /// </summary>
@@ -131,7 +134,7 @@ namespace FlaxEditor.Viewport
         /// Gets the view transform.
         /// </summary>
         public Transform ViewTransform => new Transform(ViewPosition, ViewOrientation);
-        
+
         /// <summary>
         /// Gets or sets the view position.
         /// </summary>
@@ -226,7 +229,7 @@ namespace FlaxEditor.Viewport
             _mouseAccelerationScale = 0.1f;
             _useMouseFiltering = false;
             _useMouseAcceleration = false;
-            
+
             DockStyle = DockStyle.Fill;
 
             if (useWidgets)
@@ -261,8 +264,18 @@ namespace FlaxEditor.Viewport
                     InitFpsCounter();
                     _showFpsButon = ViewWidgetButtonMenu.AddButton("Show FPS", () => ShowFpsCounter = !ShowFpsCounter);
                 }
-                
+
                 // View Flags
+                {
+                    var viewFlags = ViewWidgetButtonMenu.AddChildMenu("View Flags").ContextMenu;
+                    for (int i = 0; i < EditorViewportViewFlagsValues.Length; i++)
+                    {
+                        viewFlags.AddButton(i, EditorViewportViewFlagsValues[i].Name);
+                    }
+                    viewFlags.Tag = this;
+                    viewFlags.OnButtonClicked += widgetViewFlagsClick;
+                    viewFlags.VisibleChanged += widgetViewFlagsShowHide;
+                }
 
                 // Debug View
                 {
@@ -277,7 +290,7 @@ namespace FlaxEditor.Viewport
                 }
 
                 //ViewWidgetButtonMenu.AddSeparator();
-                
+
                 // Field of View
 
 
@@ -529,7 +542,7 @@ namespace FlaxEditor.Viewport
             {
                 // Get input buttons and keys (skip if viewort has no focus or mouse is over a child control)
                 _prevInput = _input;
-                if(ContainsFocus && GetChildAt(_viewMousePos) == null)
+                if (ContainsFocus && GetChildAt(_viewMousePos) == null)
                     _input.Gather(win.NativeWindow);
                 else
                     _input.Clear();
@@ -696,7 +709,7 @@ namespace FlaxEditor.Viewport
 
             return base.OnMouseWheel(location, delta);
         }
-        
+
         /// <inheritdoc />
         public override void OnChildResized(Control control)
         {
@@ -792,6 +805,62 @@ namespace FlaxEditor.Viewport
             for (int i = 0; i < EditorViewportViewModeValues.Length; i++)
             {
                 ccm.GetButton(i).Icon = viewport.Task.Mode == EditorViewportViewModeValues[i].Mode ? Style.Current.CheckBoxTick : Sprite.Invalid;
+            }
+        }
+
+        private struct ViewFlagOptions
+        {
+            public ViewFlags Mode;
+            public string Name;
+
+            public ViewFlagOptions(ViewFlags mode, string name)
+            {
+                Mode = mode;
+                Name = name;
+            }
+        }
+
+        private ViewFlagOptions[] EditorViewportViewFlagsValues =
+        {
+            new ViewFlagOptions(ViewFlags.AntiAliasing, "Anti Aliasing"),
+            new ViewFlagOptions(ViewFlags.Shadows, "Shadows"),
+            new ViewFlagOptions(ViewFlags.DynamicActors, "Dynamic Actors"),
+            new ViewFlagOptions(ViewFlags.EditorSprites, "Editor Sprites"),
+            new ViewFlagOptions(ViewFlags.Reflections, "Reflectons"),
+            new ViewFlagOptions(ViewFlags.SSR, "Screen Space Reflections"),
+            new ViewFlagOptions(ViewFlags.AO, "Ambient Occlusion"),
+            new ViewFlagOptions(ViewFlags.GI, "Global Illumination"),
+            new ViewFlagOptions(ViewFlags.DirectionalLights, "Directional Lights"),
+            new ViewFlagOptions(ViewFlags.PointLights, "Point Lights"),
+            new ViewFlagOptions(ViewFlags.SpotLights, "Spot Lights"),
+            new ViewFlagOptions(ViewFlags.SkyLights, "Sky Lights"),
+            new ViewFlagOptions(ViewFlags.SpecularLight, "Specula Light"),
+            new ViewFlagOptions(ViewFlags.CustomPostProcess, "Custom Post Process"),
+            new ViewFlagOptions(ViewFlags.Bloom, "Bloom"),
+            new ViewFlagOptions(ViewFlags.ToneMapping, "Tone Mapping"),
+            new ViewFlagOptions(ViewFlags.EyeAdaptation, "Eye Adaptaion"),
+            new ViewFlagOptions(ViewFlags.CameraArtifacts, "Camera Artifacts"),
+            new ViewFlagOptions(ViewFlags.LensFlares, "Lens Flares"),
+            new ViewFlagOptions(ViewFlags.CSG, "CSG"),
+            new ViewFlagOptions(ViewFlags.DepthOfField, "Depth of Field"),
+        };
+
+        private void widgetViewFlagsClick(int id, ContextMenuBase cm)
+        {
+            var viewport = (EditorViewport)cm.Tag;
+            viewport.Task.Flags ^= EditorViewportViewFlagsValues[id].Mode;
+        }
+
+        private void widgetViewFlagsShowHide(Control cm)
+        {
+            if (cm.Visible == false)
+                return;
+
+            var ccm = (ContextMenu)cm;
+            var viewport = (EditorViewport)cm.Tag;
+            for (int i = 0; i < EditorViewportViewFlagsValues.Length; i++)
+            {
+                ccm.GetButton(i).Icon = (viewport.Task.Flags & EditorViewportViewFlagsValues[i].Mode) != 0 ? Style.Current.CheckBoxTick : Sprite.Invalid;
             }
         }
     }
