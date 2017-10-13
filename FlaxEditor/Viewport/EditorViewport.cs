@@ -104,12 +104,9 @@ namespace FlaxEditor.Viewport
         /// <summary>
         /// Gets or sets the camera movement speed.
         /// </summary>
-        /// <value>
-        /// The movement speed.
-        /// </value>
         public float MovementSpeed
         {
-            get { return _movementSpeed; }
+            get => _movementSpeed;
             set
             {
                 for (int i = 0; i < EditorViewportCameraSpeedValues.Length; i++)
@@ -133,25 +130,16 @@ namespace FlaxEditor.Viewport
         /// <summary>
         /// Gets the view transform.
         /// </summary>
-        /// <value>
-        /// The view transform.
-        /// </value>
         public Transform ViewTransform => new Transform(ViewPosition, ViewOrientation);
         
         /// <summary>
         /// Gets or sets the view position.
         /// </summary>
-        /// <value>
-        /// The view position.
-        /// </value>
         public Vector3 ViewPosition { get; protected set; }
 
         /// <summary>
         /// Gets or sets the view orientation.
         /// </summary>
-        /// <value>
-        /// The view orientation.
-        /// </value>
         public Quaternion ViewOrientation
         {
             get => Quaternion.RotationYawPitchRoll(_yaw * Mathf.DegreesToRadians, _pitch * Mathf.DegreesToRadians, 0);
@@ -193,9 +181,6 @@ namespace FlaxEditor.Viewport
         /// <summary>
         /// Gets or sets the absolute mouse position (normalized, not in pixels). Yaw is X, Pitch is Y.
         /// </summary>
-        /// <value>
-        /// The absolute mouse position.
-        /// </value>
         protected Vector2 YawPitch
         {
             get => new Vector2(_yaw, _pitch);
@@ -209,9 +194,6 @@ namespace FlaxEditor.Viewport
         /// <summary>
         /// Gets or sets the euler angles (pitch, yaw, roll).
         /// </summary>
-        /// <value>
-        /// The euler angles.
-        /// </value>
         protected Vector3 EulerAngles
         {
             get => new Vector3(_pitch, _yaw, 0);
@@ -226,6 +208,11 @@ namespace FlaxEditor.Viewport
         /// Gets a value indicating whether this viewport has loaded dependant assets.
         /// </summary>
         public virtual bool HasLoadedAssets => true;
+
+        /// <summary>
+        /// The 'View' widget button context menu.
+        /// </summary>
+        public ContextMenu ViewWidgetButtonMenu;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EditorViewport"/> class.
@@ -263,25 +250,110 @@ namespace FlaxEditor.Viewport
 
                 // View mode widget
                 var viewMode = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperLeft);
-                var viewModeCM = new ContextMenu();
-                for (int i = 0; i < EditorViewportViewModeValues.Length; i++)
-                {
-                    viewModeCM.AddButton(i, EditorViewportViewModeValues[i].Name);
-                }
-                viewModeCM.Tag = this;
-                viewModeCM.OnButtonClicked += widgetViewModeClick;
-                viewModeCM.VisibleChanged += widgetViewModeShowHide;
-                var viewModeButton = new ViewportWidgetButton("View", Sprite.Invalid, viewModeCM);
+                ViewWidgetButtonMenu = new ContextMenu();
+                var viewModeButton = new ViewportWidgetButton("View", Sprite.Invalid, ViewWidgetButtonMenu);
                 viewModeButton.TooltipText = "View properties";
                 viewModeButton.Parent = viewMode;
                 viewMode.Parent = this;
 
-                // TODO: provide widget for chaging near and far plane
+                // Show FPS
+                {
+                    InitFpsCounter();
+                    _showFpsButon = ViewWidgetButtonMenu.AddButton("Show FPS", () => ShowFpsCounter = !ShowFpsCounter);
+                }
+                
+                // View Flags
+
+                // Debug View
+                {
+                    var debugView = ViewWidgetButtonMenu.AddChildMenu("Debug View").ContextMenu;
+                    for (int i = 0; i < EditorViewportViewModeValues.Length; i++)
+                    {
+                        debugView.AddButton(i, EditorViewportViewModeValues[i].Name);
+                    }
+                    debugView.Tag = this;
+                    debugView.OnButtonClicked += widgetViewModeClick;
+                    debugView.VisibleChanged += widgetViewModeShowHide;
+                }
+
+                //ViewWidgetButtonMenu.AddSeparator();
+                
+                // Field of View
+
+
+                // Far Plane
             }
 
             // Link for task event
             task.Begin += x => CopyViewData(ref x.View);
         }
+
+        #region FPS Counter
+
+        private class FpsCounter : Control
+        {
+            private float frameCount;
+            private float dt;
+            private float fps;
+            private float updateRate = 4.0f;
+
+            public FpsCounter(float x, float y)
+                : base(x, y, 64, 32)
+            {
+            }
+
+            public override void Update(float deltaTime)
+            {
+                base.Update(deltaTime);
+
+                frameCount++;
+                dt += deltaTime;
+                if (dt > 1.0 / updateRate)
+                {
+                    fps = frameCount / dt;
+                    frameCount = 0;
+                    dt -= 1.0f / updateRate;
+                }
+            }
+
+            public override void Draw()
+            {
+                base.Draw();
+
+                Color color = Color.Green;
+                if (fps < 24.0f)
+                    color = Color.Yellow;
+                else if (fps < 15.0f)
+                    color = Color.Red;
+                string text = string.Format("FPS: {0}", (int)fps);
+                Render2D.DrawText(Style.Current.FontMedium, text, new Rectangle(Vector2.Zero, Size), color);
+            }
+        }
+
+        private FpsCounter _fpsCounter;
+        private ContextMenuButton _showFpsButon;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether show or hide FPS counter.
+        /// </summary>
+        public bool ShowFpsCounter
+        {
+            get => _fpsCounter.Visible;
+            set
+            {
+                _fpsCounter.Visible = value;
+                _showFpsButon.Icon = value ? Style.Current.CheckBoxTick : Sprite.Invalid;
+            }
+        }
+
+        private void InitFpsCounter()
+        {
+            _fpsCounter = new FpsCounter(10, ViewportWidgetsContainer.WidgetsHeight + 14);
+            _fpsCounter.Visible = false;
+            _fpsCounter.Parent = this;
+        }
+
+        #endregion
 
         /// <summary>
         /// Takes the screenshot of the current viewport.

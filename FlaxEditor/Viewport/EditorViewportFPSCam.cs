@@ -20,9 +20,6 @@ namespace FlaxEditor.Viewport
         /// <summary>
         /// Gets a value indicating whether this viewport is animating movement.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this viewport is animating movement; otherwise, <c>false</c>.
-        /// </value>
         public bool IsAnimatingMove => _moveStartTime > Mathf.Epsilon;
 
         /// <summary>

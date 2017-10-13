@@ -17,15 +17,12 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets the identifier.
         /// </summary>
-        /// <value>
-        /// The identifier.
-        /// </value>
         public int ID { get; }
 
         /// <summary>
         /// Event fired when user clicks on the button.
         /// </summary>
-        public event Action OnClicked;
+        public event Action Clicked;
 
         /// <summary>
         /// The button text.
@@ -41,7 +38,7 @@ namespace FlaxEngine.GUI
         /// Item icon (best is 16x16).
         /// </summary>
         public Sprite Icon;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="ContextMenuButton"/> class.
         /// </summary>
@@ -115,7 +112,7 @@ namespace FlaxEngine.GUI
                 ParentContextMenu?.TopmostCM.Hide();
 
                 // Fire event
-                OnClicked?.Invoke();
+                Clicked?.Invoke();
                 ParentContextMenu?.OnButtonClicked_Internal(this);
 
                 // Event handled

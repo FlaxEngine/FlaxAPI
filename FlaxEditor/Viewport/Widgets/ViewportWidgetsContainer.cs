@@ -19,8 +19,19 @@ namespace FlaxEditor.Viewport.Widgets
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class ViewportWidgetsContainer : ContainerControl
     {
+        /// <summary>
+        /// The widgets margin.
+        /// </summary>
         public const float WidgetsMargin = 4;
+
+        /// <summary>
+        /// The widgets height.
+        /// </summary>
         public const float WidgetsHeight = 18;
+
+        /// <summary>
+        /// The widgets icon size.
+        /// </summary>
         public const float WidgetsIconSize = 16;
 
         /// <summary>

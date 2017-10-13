@@ -1,6 +1,8 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
+
+using System;
 
 namespace FlaxEngine.GUI
 {
@@ -62,6 +64,35 @@ namespace FlaxEngine.GUI
         {
             var item = new ContextMenuButton(this, id, text, shortkeys);
             item.Parent = this;
+            return item;
+        }
+
+        /// <summary>
+        /// Adds the button.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="clicked">On button clicked event.</param>
+        /// <returns>Created context menu item control.</returns>
+        public ContextMenuButton AddButton(string text, Action clicked)
+        {
+            var item = new ContextMenuButton(this, -1, text);
+            item.Parent = this;
+            item.Clicked += clicked;
+            return item;
+        }
+
+        /// <summary>
+        /// Adds the button.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="shortkeys">The shortkeys.</param>
+        /// <param name="clicked">On button clicked event.</param>
+        /// <returns>Created context menu item control.</returns>
+        public ContextMenuButton AddButton(string text, string shortkeys, Action clicked)
+        {
+            var item = new ContextMenuButton(this, -1, text, shortkeys);
+            item.Parent = this;
+            item.Clicked += clicked;
             return item;
         }
 
