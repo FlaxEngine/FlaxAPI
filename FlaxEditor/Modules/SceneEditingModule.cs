@@ -187,6 +187,9 @@ namespace FlaxEditor.Modules
         /// <param name="parent">The parent actor. Set null as default.</param>
         public void Spawn(Actor actor, Actor parent = null)
         {
+            if(SceneManager.IsAnySceneLoaded == false)
+                throw new InvalidOperationException("Cannot spawn actor when no scene is loaded.");
+
             // Add it
             SceneManager.SpawnActor(actor, parent);
 

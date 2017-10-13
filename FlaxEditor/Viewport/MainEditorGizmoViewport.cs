@@ -173,6 +173,24 @@ namespace FlaxEditor.Viewport
             };
             _gizmoModeScale.OnToggle += onGizmoModeToggle;
             gizmoMode.Parent = this;
+
+            // Create Camera Here widget
+            ViewWidgetButtonMenu.AddButton("Create camera here", CreateCameraAtView);
+        }
+
+        private void CreateCameraAtView()
+        {
+            if(!SceneManager.IsAnySceneLoaded)
+                return;
+
+            // Create actor
+            var actor = Camera.New();
+            actor.StaticFlags = StaticFlags.None;
+            actor.Name = "Camera";
+            actor.Transform = ViewTransform;
+
+            // Spawn
+            Editor.Instance.SceneEditing.Spawn(actor);
         }
 
         private void RenderTaskOnBegin(SceneRenderTask task)
