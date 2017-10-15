@@ -318,38 +318,20 @@ namespace FlaxEditor.Viewport
 
         private class FpsCounter : Control
         {
-            private float frameCount;
-            private float dt;
-            private float fps;
-            private float updateRate = 4.0f;
-
             public FpsCounter(float x, float y)
                 : base(x, y, 64, 32)
             {
-            }
-
-            public override void Update(float deltaTime)
-            {
-                base.Update(deltaTime);
-
-                frameCount++;
-                dt += deltaTime;
-                if (dt > 1.0 / updateRate)
-                {
-                    fps = frameCount / dt;
-                    frameCount = 0;
-                    dt -= 1.0f / updateRate;
-                }
             }
 
             public override void Draw()
             {
                 base.Draw();
 
+                float fps = Time.FramesPerSecond;
                 Color color = Color.Green;
-                if (fps < 15.0f)
+                if (fps < 13.0f)
                     color = Color.Red;
-                else if (fps < 24.0f)
+                else if (fps < 22.0f)
                     color = Color.Yellow;
                 string text = string.Format("FPS: {0}", (int)fps);
                 Render2D.DrawText(Style.Current.FontMedium, text, new Rectangle(Vector2.Zero, Size), color);
