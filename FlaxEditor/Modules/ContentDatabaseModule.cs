@@ -121,7 +121,7 @@ namespace FlaxEditor.Modules
         /// <returns>Content proxy for that item or null if cannot find.</returns>
         public ContentProxy GetProxy(string extension)
         {
-            if(string.IsNullOrEmpty(extension))
+            if (string.IsNullOrEmpty(extension))
                 throw new ArgumentNullException();
 
             extension = StringUtils.NormalizeExtension(extension);
@@ -167,7 +167,7 @@ namespace FlaxEditor.Modules
             ContentFolder folder = item.IsFolder ? item as ContentFolder : item.ParentFolder;
             if (folder == null)
                 return;
-            
+
             // Update
             loadFolder(folder.Node, checkSubDirs);
         }
@@ -468,7 +468,7 @@ namespace FlaxEditor.Modules
             // Link item
             item.ParentFolder = newParent;
 
-            if(_enableEvents)
+            if (_enableEvents)
                 OnWorkspaceModified?.Invoke();
         }
 
@@ -649,7 +649,7 @@ namespace FlaxEditor.Modules
                     {
                         // Send info
                         Editor.Log(string.Format($"Content item \'{child.Path}\' has been removed"));
-                        
+
                         // Destroy it
                         Delete(child);
 
@@ -671,7 +671,7 @@ namespace FlaxEditor.Modules
 
             // Get child directories
             var childFolders = Directory.GetDirectories(path);
-            
+
             // Load child folders
             bool sortChildren = false;
             for (int i = 0; i < childFolders.Length; i++)
@@ -686,7 +686,7 @@ namespace FlaxEditor.Modules
                     ContentTreeNode n = new ContentTreeNode(node, childPath);
                     if (!_isDuringFastSetup)
                         sortChildren = true;
-                    
+
                     // Load child folder
                     loadFolder(n, true);
 
@@ -752,7 +752,7 @@ namespace FlaxEditor.Modules
             for (int i = 0; i < files.Length; i++)
             {
                 var path = StringUtils.NormalizePath(files[i]);
-                
+
                 // Check if node already has that element (skip during init when we want to walk project dir very fast)
                 if (_isDuringFastSetup || !parent.Folder.ContainsChild(path))
                 {
@@ -760,14 +760,14 @@ namespace FlaxEditor.Modules
                     // The best idea is to just ask Flax.
                     // Flax isn't John Snow. Flax knows something :)
                     // Also Flax Content Layer is using smart caching so this query gonna be fast.
-                    
+
                     int typeId;
                     Guid id;
                     if (FlaxEngine.Content.GetAssetInfo(path, out typeId, out id))
                     {
                         var proxy = GetAssetProxy(typeId, path);
                         var item = proxy?.ConstructItem(path, typeId, ref id);
-                        
+
                         if (item != null)
                         {
                             // Link
@@ -916,14 +916,26 @@ namespace FlaxEditor.Modules
 
             // Cleanup
             Proxy.ForEach(x => x.Dispose());
-            ProjectContent.Dispose();
-            ProjectSource.Dispose();
-            EnginePrivate.Dispose();
-            EditorPrivate.Dispose();
-            ProjectContent = null;
-            ProjectSource = null;
-            EnginePrivate = null;
-            EditorPrivate = null;
+            if (ProjectContent != null)
+            {
+                ProjectContent.Dispose();
+                ProjectContent = null;
+            }
+            if (ProjectSource != null)
+            {
+                ProjectSource.Dispose();
+                ProjectSource = null;
+            }
+            if (EnginePrivate != null)
+            {
+                EnginePrivate.Dispose();
+                EnginePrivate = null;
+            }
+            if (EditorPrivate != null)
+            {
+                EditorPrivate.Dispose();
+                EditorPrivate = null;
+            }
             Proxy.Clear();
         }
     }

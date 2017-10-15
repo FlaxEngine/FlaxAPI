@@ -73,8 +73,8 @@ namespace FlaxEditor.Viewport
         protected bool _useMouseAcceleration;
 
         // Input
-        private bool _isControllingMouse;
 
+        private bool _isControllingMouse;
         protected Input _prevInput;
         protected Input _input;
         protected int _deltaFilteringStep;
@@ -87,11 +87,11 @@ namespace FlaxEditor.Viewport
         protected Vector2[] _deltaFilteringBuffer = new Vector2[FpsCameraFilteringFrames];
 
         // Camera
-        protected float _yaw;
 
+        protected float _yaw;
         protected float _pitch;
         protected float _fieldOfView = 60.0f;
-        protected float _nearPlane = 0.1f;
+        protected float _nearPlane = 0.2f;
         protected float _farPlane = 10000.0f;
 
         /// <summary>
@@ -288,13 +288,26 @@ namespace FlaxEditor.Viewport
                     debugView.OnButtonClicked += widgetViewModeClick;
                     debugView.VisibleChanged += widgetViewModeShowHide;
                 }
-
-                //ViewWidgetButtonMenu.AddSeparator();
+                
+                ViewWidgetButtonMenu.AddSeparator();
 
                 // Field of View
-
-
+                {
+                    var fov = ViewWidgetButtonMenu.AddButton("Field Of View", null);
+                    var fovValue = new FloatValueBox(1, 75, 2, 50.0f, 35.0f, 160.0f);
+                    fovValue.Parent = fov;
+                    fovValue.ValueChanged += () => _fieldOfView = fovValue.Value;
+                    ViewWidgetButtonMenu.VisibleChanged += control => fovValue.Value = _fieldOfView;
+                }
+                
                 // Far Plane
+                {
+                    var farPlane = ViewWidgetButtonMenu.AddButton("Far Plane", null);
+                    var farPlaneValue = new FloatValueBox(1000, 75, 2, 50.0f, 10.0f, 100000.0f);
+                    farPlaneValue.Parent = farPlane;
+                    farPlaneValue.ValueChanged += () => _farPlane = farPlaneValue.Value;
+                    ViewWidgetButtonMenu.VisibleChanged += control => farPlaneValue.Value = _farPlane;
+                }
             }
 
             // Link for task event
@@ -834,14 +847,14 @@ namespace FlaxEditor.Viewport
             new ViewFlagOptions(ViewFlags.PointLights, "Point Lights"),
             new ViewFlagOptions(ViewFlags.SpotLights, "Spot Lights"),
             new ViewFlagOptions(ViewFlags.SkyLights, "Sky Lights"),
-            new ViewFlagOptions(ViewFlags.SpecularLight, "Specula Light"),
+            new ViewFlagOptions(ViewFlags.SpecularLight, "Specular Light"),
             new ViewFlagOptions(ViewFlags.CustomPostProcess, "Custom Post Process"),
             new ViewFlagOptions(ViewFlags.Bloom, "Bloom"),
             new ViewFlagOptions(ViewFlags.ToneMapping, "Tone Mapping"),
             new ViewFlagOptions(ViewFlags.EyeAdaptation, "Eye Adaptaion"),
             new ViewFlagOptions(ViewFlags.CameraArtifacts, "Camera Artifacts"),
             new ViewFlagOptions(ViewFlags.LensFlares, "Lens Flares"),
-            new ViewFlagOptions(ViewFlags.CSG, "CSG"),
+            new ViewFlagOptions(ViewFlags.CSG, "CSG Brushes"),
             new ViewFlagOptions(ViewFlags.DepthOfField, "Depth of Field"),
         };
 

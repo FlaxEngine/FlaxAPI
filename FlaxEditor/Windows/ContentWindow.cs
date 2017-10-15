@@ -608,9 +608,12 @@ namespace FlaxEditor.Windows
             _view.ClearItems();
 
             // Unlink used directories
-            while (_root.HasChildren)
+            if (_root != null)
             {
-                removeFolder2Root((MainContentTreeNode)_root.GetChild(0));
+                while (_root.HasChildren)
+                {
+                    removeFolder2Root((MainContentTreeNode)_root.GetChild(0));
+                }
             }
         }
 

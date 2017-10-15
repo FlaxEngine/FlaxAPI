@@ -62,7 +62,6 @@ namespace FlaxEditor.Modules
         internal UIModule(Editor editor)
             : base(editor)
         {
-            // Init content database after Widows module
             InitOrder = -90;
 
             CreateStyle();
@@ -111,7 +110,6 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Checks if toolstrip pause button is being checked.
         /// </summary>
-        /// <returns>True if toolstrip pause button is checked, otherwise false.</returns>
         public bool IsPauseButtonChecked => ToolStrip != null && ToolStrip.GetButton(9).Checked;
 
         /// <summary>
@@ -205,10 +203,10 @@ namespace FlaxEditor.Modules
         {
             Editor.Windows.OnMainWindowClosing += OnOnMainWindowClosing;
             var mainWindow = Editor.Windows.MainWindow.GUI;
-
-            VisjectSurfaceBackground = FlaxEngine.Content.LoadAsyncInternal<Texture>("Editor/VisjectSurface");
-
-            InitStyle(mainWindow);
+            
+            // Update window background
+            mainWindow.BackgroundColor = Style.Current.Background;
+            
             InitMainMenu(mainWindow);
             InitToolstrip(mainWindow);
             InitStatusBar(mainWindow);
@@ -269,20 +267,14 @@ namespace FlaxEditor.Modules
 
             // Color picking
             style.ShowPickColorDialog += (color, handler) => new ColorPickerDialog(color, handler).Show();
-
-            // Set as default
-            Style.Current = style;
-        }
-
-        private void InitStyle(FlaxEngine.GUI.Window mainWindow)
-        {
-            var style = Style.Current;
-
+            
             // Font
             string primaryFontNameInternal = "Editor/Segoe Media Center Regular";
             var primaryFont = FlaxEngine.Content.LoadInternal<FontAsset>(primaryFontNameInternal);
             if (primaryFont)
             {
+                primaryFont.WaitForLoaded();
+
                 // Create fonts
                 style.FontTitle = primaryFont.CreateFont(18);
                 style.FontLarge = primaryFont.CreateFont(14);
@@ -317,9 +309,10 @@ namespace FlaxEditor.Modules
             // Cache icons
             FolderClosed12 = GetIcon("FolderClosed12");
             FolderOpened12 = GetIcon("FolderOpened12");
+            VisjectSurfaceBackground = FlaxEngine.Content.LoadAsyncInternal<Texture>("Editor/VisjectSurface");
 
-            // Update window background
-            mainWindow.BackgroundColor = style.Background;
+            // Set as default
+            Style.Current = style;
         }
 
         private void InitMainMenu(FlaxEngine.GUI.Window mainWindow)

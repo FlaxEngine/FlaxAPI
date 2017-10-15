@@ -175,6 +175,7 @@ namespace FlaxEditor.Viewport
             gizmoMode.Parent = this;
 
             // Create Camera Here widget
+            ViewWidgetButtonMenu.AddSeparator();
             ViewWidgetButtonMenu.AddButton("Create camera here", CreateCameraAtView);
         }
 
@@ -188,6 +189,7 @@ namespace FlaxEditor.Viewport
             actor.StaticFlags = StaticFlags.None;
             actor.Name = "Camera";
             actor.Transform = ViewTransform;
+            actor.FieldOfView = _fieldOfView;
 
             // Spawn
             Editor.Instance.SceneEditing.Spawn(actor);
