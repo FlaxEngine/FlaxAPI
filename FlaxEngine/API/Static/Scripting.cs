@@ -26,16 +26,19 @@ namespace FlaxEngine
 
         internal static void Internal_Update()
         {
+            Time.SyncData();
             Update?.Invoke();
         }
-        
+
         internal static void Internal_LateUpdate()
         {
+            Time.SyncData();
             LateUpdate?.Invoke();
         }
 
         internal static void Internal_FixedUpdate()
         {
+            Time.SyncData();
             FixedUpdate?.Invoke();
         }
 
