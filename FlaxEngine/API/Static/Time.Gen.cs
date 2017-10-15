@@ -32,7 +32,7 @@ namespace FlaxEngine
 			set { Internal_SetTimeScale(value); }
 #endif
 		}
-        
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]

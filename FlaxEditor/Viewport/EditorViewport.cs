@@ -347,10 +347,10 @@ namespace FlaxEditor.Viewport
                 base.Draw();
 
                 Color color = Color.Green;
-                if (fps < 24.0f)
-                    color = Color.Yellow;
-                else if (fps < 15.0f)
+                if (fps < 15.0f)
                     color = Color.Red;
+                else if (fps < 24.0f)
+                    color = Color.Yellow;
                 string text = string.Format("FPS: {0}", (int)fps);
                 Render2D.DrawText(Style.Current.FontMedium, text, new Rectangle(Vector2.Zero, Size), color);
             }
