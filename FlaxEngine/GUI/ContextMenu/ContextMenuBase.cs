@@ -2,7 +2,6 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using FlaxEngine.Assertions;
 
 namespace FlaxEngine.GUI
@@ -12,9 +11,24 @@ namespace FlaxEngine.GUI
     /// </summary>
     public enum ContextMenuDirection
     {
+        /// <summary>
+        /// The right down.
+        /// </summary>
         RightDown,
+
+        /// <summary>
+        /// The right up.
+        /// </summary>
         RightUp,
+
+        /// <summary>
+        /// The left down.
+        /// </summary>
         LeftDown,
+
+        /// <summary>
+        /// The left up.
+        /// </summary>
         LeftUp,
     }
 
@@ -24,7 +38,14 @@ namespace FlaxEngine.GUI
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class ContextMenuBase : ContainerControl
     {
+        /// <summary>
+        /// The default items margin.
+        /// </summary>
         public const int DefaultItemsMargin = 2;
+
+        /// <summary>
+        /// The default items left margin.
+        /// </summary>
         public const int DefaultItemsLeftMargin = 16;
 
         private ContextMenuDirection _direction;
@@ -39,27 +60,18 @@ namespace FlaxEngine.GUI
         public bool IsOpened => Parent != null;
 
         /// <summary>
-        /// Gets the pipup direction.
+        /// Gets the popup direction.
         /// </summary>
-        /// <value>
-        /// The direction.
-        /// </value>
         public ContextMenuDirection Direction => _direction;
 
         /// <summary>
         /// Gets a value indicating whether any child context menu has been opened.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if any child context menu has been opened; otherwise, <c>false</c>.
-        /// </value>
         public bool HasChildCMOpened => _childCM != null;
 
         /// <summary>
         /// Gets the topmost context menu.
         /// </summary>
-        /// <value>
-        /// The topmost context menu.
-        /// </value>
         public ContextMenuBase TopmostCM => _parentCM != null ? _parentCM.TopmostCM : this;
 
         /// <summary>

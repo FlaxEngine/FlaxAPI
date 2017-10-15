@@ -57,8 +57,6 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void Draw()
         {
-            base.Draw();
-
             // Cache data
             var style = Style.Current;
             var backgroundRect = new Rectangle(-X + 3, 0, Parent.Width - 6, Height);
@@ -69,6 +67,8 @@ namespace FlaxEngine.GUI
             if (IsMouseOver && Enabled)
                 Render2D.FillRectangle(backgroundRect, style.LightBackground);
 
+            base.Draw();
+
             // Draw text
             Render2D.DrawText(style.FontMedium, Text, textRect, textColor, TextAlignment.Near, TextAlignment.Center);
 
@@ -76,9 +76,9 @@ namespace FlaxEngine.GUI
             Render2D.DrawText(style.FontMedium, Shortkeys, textRect, textColor, TextAlignment.Far, TextAlignment.Center);
 
             // Draw icon
-            const float iconSize = 16;
+            const float iconSize = 14;
             if (Icon.IsValid)
-                Render2D.DrawSprite(Icon, new Rectangle(-X, (Height - iconSize) / 2, iconSize, iconSize));
+                Render2D.DrawSprite(Icon, new Rectangle(-iconSize - 1, (Height - iconSize) / 2, iconSize, iconSize));
         }
 
         /// <inheritdoc />
@@ -93,15 +93,21 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
         {
+            if (base.OnMouseDown(location, buttons))
+                return true;
+
             // Set flag
             _isMouseDown = true;
 
-            return base.OnMouseDown(location, buttons);
+            return true;
         }
 
         /// <inheritdoc />
         public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
         {
+            if (base.OnMouseUp(location, buttons))
+                return true;
+
             // Check if mouse was pressing
             if (_isMouseDown)
             {
@@ -130,24 +136,27 @@ namespace FlaxEngine.GUI
 
             base.OnLostFocus();
         }
-
+        
         /// <inheritdoc />
-        public override void PerformLayout()
+        public override float MinimumWidth
         {
-            var style = Style.Current;
-            float width = 20;
-
-            if (style.FontMedium)
+            get
             {
-                width += style.FontMedium.MeasureText(Text).X;
+                var style = Style.Current;
+                float width = 20;
 
-                if (Shortkeys.Length > 0)
+                if (style.FontMedium)
                 {
-                    width += 40 + style.FontMedium.MeasureText(Shortkeys).X;
-                }
-            }
+                    width += style.FontMedium.MeasureText(Text).X;
 
-            Width = width;
+                    if (Shortkeys.Length > 0)
+                    {
+                        width += 40 + style.FontMedium.MeasureText(Shortkeys).X;
+                    }
+                }
+                
+                return Mathf.Max(width, base.MinimumWidth);
+            }
         }
     }
 }

@@ -22,9 +22,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the minimum width.
         /// </summary>
-        /// <value>
-        /// The minimum width.
-        /// </value>
         public float MinimumWidth { get; set; }
 
         /// <summary>
@@ -169,11 +166,10 @@ namespace FlaxEngine.GUI
             for (int i = 0; i < _children.Count; i++)
             {
                 var c = _children[i];
-                if (c.Visible)
+                if (c is ContextMenuItem item && c.Visible)
                 {
-                    Vector2 itemSize = c.Size;
-                    height += itemSize.Y + DefaultItemsMargin;
-                    maxWidth = Mathf.Max(maxWidth, itemSize.X);
+                    height += c.Height + DefaultItemsMargin;
+                    maxWidth = Mathf.Max(maxWidth, item.MinimumWidth);
                 }
             }
             maxWidth = Mathf.Max(maxWidth + 20, MinimumWidth);

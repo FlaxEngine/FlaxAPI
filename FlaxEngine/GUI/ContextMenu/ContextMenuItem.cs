@@ -7,16 +7,35 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// Context Menu child control.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.Control" />
-    public abstract class ContextMenuItem : Control
+    /// <seealso cref="ContainerControl" />
+    public abstract class ContextMenuItem : ContainerControl
     {
         /// <summary>
         /// Gets the parent context menu.
         /// </summary>
-        /// <value>
-        /// The parent context menu.
-        /// </value>
         public ContextMenu ParentContextMenu { get; }
+
+        /// <summary>
+        /// Gets the minimum width of this item.
+        /// </summary>
+        public virtual float MinimumWidth
+        {
+            get
+            {
+                float width = 0;
+
+                for (int i = 0; i < _children.Count; i++)
+                {
+                    var c = _children[i];
+                    if (c.Visible)
+                    {
+                        width = Mathf.Max(width, c.Right + 4.0f);
+                    }
+                }
+
+                return width;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContextMenuItem"/> class.

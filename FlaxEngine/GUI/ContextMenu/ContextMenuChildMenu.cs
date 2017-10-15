@@ -37,12 +37,14 @@ namespace FlaxEngine.GUI
             // Cache data
             var style = Style.Current;
             var backgroundRect = new Rectangle(-X + 3, 0, Parent.Width - 6, Height);
-            var clientRect = new Rectangle(0, 0, Width, Height);
+            var clientRect = new Rectangle(Vector2.Zero, Size);
             bool isCMopened = ContextMenu.IsOpened;
-
+            
             // Draw background
             if (isCMopened || (IsMouseOver && Enabled))
                 Render2D.FillRectangle(backgroundRect, style.LightBackground);
+
+            base.Draw();
 
             // Draw text
             Render2D.DrawText(style.FontMedium, Text, clientRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
@@ -69,17 +71,22 @@ namespace FlaxEngine.GUI
             // Hide parent CM popups and set itself as child
             parentContextMenu.ShowChild(ContextMenu, new Vector2(Right + ContextMenuBase.DefaultItemsMargin - 1, Y));
         }
-
+        
         /// <inheritdoc />
-        public override void PerformLayout()
+        public override float MinimumWidth
         {
-            var style = Style.Current;
-            float width = 16;
+            get
+            {
+                var style = Style.Current;
+                float width = 16;
 
-            if (style.FontMedium)
-                width += style.FontMedium.MeasureText(Text).X;
+                if (style.FontMedium)
+                {
+                    width += style.FontMedium.MeasureText(Text).X;
+                }
 
-            Width = width;
+                return Mathf.Max(width, base.MinimumWidth);
+            }
         }
     }
 }
