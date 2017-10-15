@@ -58,6 +58,9 @@
     <Compile Include="Content\Import\ImportFilesDialog.cs" />
     <Compile Include="Content\Import\ModelFileEntry.cs" />
     <Compile Include="Content\Import\TextureFileEntry.cs" />
+    <Compile Include="Content\Settings\GameSettings.cs" />
+    <Compile Include="Content\Settings\SettingsBase.cs" />
+    <Compile Include="Content\Settings\TimeSettings.cs" />
     <Compile Include="Content\Tree\RootContentTreeNode.cs" />
     <Compile Include="CustomEditors\CustomEditor.cs" />
     <Compile Include="CustomEditors\CustomEditorsUtil.cs" />
