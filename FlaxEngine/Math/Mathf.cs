@@ -258,44 +258,7 @@ namespace FlaxEngine
         {
             return a + (b - a) * t;
         }
-
-        internal static bool LineIntersection(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, ref Vector2 result)
-        {
-            float single = p2.X - p1.X;
-            float single1 = p2.Y - p1.Y;
-            float single2 = p4.X - p3.X;
-            float single3 = p4.Y - p3.Y;
-            float single4 = single * single3 - single1 * single2;
-            if (single4 == 0f)
-                return false;
-            float single5 = p3.X - p1.X;
-            float single6 = p3.Y - p1.Y;
-            float single7 = (single5 * single3 - single6 * single2) / single4;
-            result = new Vector2(p1.X + single7 * single, p1.Y + single7 * single1);
-            return true;
-        }
-
-        internal static bool LineSegmentIntersection(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, ref Vector2 result)
-        {
-            float single = p2.X - p1.X;
-            float single1 = p2.Y - p1.Y;
-            float single2 = p4.X - p3.X;
-            float single3 = p4.Y - p3.Y;
-            float single4 = single * single3 - single1 * single2;
-            if (single4 == 0f)
-                return false;
-            float single5 = p3.X - p1.X;
-            float single6 = p3.Y - p1.Y;
-            float single7 = (single5 * single3 - single6 * single2) / single4;
-            if ((single7 < 0f) || (single7 > 1f))
-                return false;
-            float single8 = (single5 * single1 - single6 * single) / single4;
-            if ((single8 < 0f) || (single8 > 1f))
-                return false;
-            result = new Vector2(p1.X + single7 * single, p1.Y + single7 * single1);
-            return true;
-        }
-
+        
         /// <summary>
         /// Returns the logarithm of a specified number in a specified base.
         /// </summary>
@@ -485,13 +448,6 @@ namespace FlaxEngine
             return (float)Math.Pow(f, p);
         }
 
-        internal static long RandomToLong(System.Random r)
-        {
-            var numArray = new byte[8];
-            r.NextBytes(numArray);
-            return (long)(BitConverter.ToUInt64(numArray, 0) & 9223372036854775807L);
-        }
-
         /// <summary>
         /// Loops the value t, so that it is never larger than length and never smaller than 0.
         /// </summary>
@@ -550,7 +506,7 @@ namespace FlaxEngine
             return SmoothDamp(current, target, ref currentVelocity, smoothTime, float.PositiveInfinity, single);
         }
 
-        public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, [DefaultValue("Mathf.Infinity")] float maxSpeed, [DefaultValue("Time.deltaTime")] float deltaTime)
+        public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, [DefaultValue("float.PositiveInfinity")] float maxSpeed, [DefaultValue("Time.DeltaTime")] float deltaTime)
         {
             smoothTime = Max(0.0001f, smoothTime);
             float single = 2f / smoothTime;
@@ -574,17 +530,15 @@ namespace FlaxEngine
 
         public static float SmoothDampAngle(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed)
         {
-            float single = Time.DeltaTime;
-            return SmoothDampAngle(current, target, ref currentVelocity, smoothTime, maxSpeed, single);
+            return SmoothDampAngle(current, target, ref currentVelocity, smoothTime, maxSpeed, Time.DeltaTime);
         }
 
         public static float SmoothDampAngle(float current, float target, ref float currentVelocity, float smoothTime)
         {
-            float single = Time.DeltaTime;
-            return SmoothDampAngle(current, target, ref currentVelocity, smoothTime, float.PositiveInfinity, single);
+            return SmoothDampAngle(current, target, ref currentVelocity, smoothTime, float.PositiveInfinity, Time.DeltaTime);
         }
 
-        public static float SmoothDampAngle(float current, float target, ref float currentVelocity, float smoothTime, [DefaultValue("Mathf.Infinity")] float maxSpeed, [DefaultValue("Time.deltaTime")] float deltaTime)
+        public static float SmoothDampAngle(float current, float target, ref float currentVelocity, float smoothTime, [DefaultValue("float.PositiveInfinity")] float maxSpeed, [DefaultValue("Time.DeltaTime")] float deltaTime)
         {
             target = current + DeltaAngle(current, target);
             return SmoothDamp(current, target, ref currentVelocity, smoothTime, maxSpeed, deltaTime);
@@ -1060,12 +1014,12 @@ namespace FlaxEngine
                 throw new ArgumentException(string.Format("min {0} should be less than or equal to max {1}", min, max), nameof(min));
 
             // Code from http://stackoverflow.com/a/707426/1356325
-            int range_size = max - min + 1;
+            int rangeSize = max - min + 1;
 
             if (value < min)
-                value += range_size * ((min - value) / range_size + 1);
+                value += rangeSize * ((min - value) / rangeSize + 1);
 
-            return min + (value - min) % range_size;
+            return min + (value - min) % rangeSize;
         }
 
         /// <summary>
@@ -1088,8 +1042,8 @@ namespace FlaxEngine
             if (mind > maxd)
                 throw new ArgumentException(string.Format("min {0} should be less than or equal to max {1}", min, max), nameof(min));
 
-            double range_size = maxd - mind;
-            return (float)(mind + (valued - mind) - range_size * Math.Floor((valued - mind) / range_size));
+            double rangeSize = maxd - mind;
+            return (float)(mind + (valued - mind) - rangeSize * Math.Floor((valued - mind) / rangeSize));
         }
 
         /// <summary>

@@ -43,7 +43,7 @@ namespace FlaxEngine.Utilities
         /// <summary>
         /// Gets a random double.
         /// </summary>
-        /// <param name="random"></param>
+        /// <param name="random">The random.</param>
         /// <param name="maxValue">The maximum value</param>
         /// <returns>A random double</returns>
         public static double NextDouble(this Random random, double maxValue)
@@ -54,7 +54,7 @@ namespace FlaxEngine.Utilities
         /// <summary>
         /// Gets a random double.
         /// </summary>
-        /// <param name="random"></param>
+        /// <param name="random">The random.</param>
         /// <param name="minValue">The minimum value</param>
         /// <param name="maxValue">The maximum value</param>
         /// <returns>A random double</returns>
@@ -66,7 +66,7 @@ namespace FlaxEngine.Utilities
         /// <summary>
         /// Gets a random float.
         /// </summary>
-        /// <param name="random"></param>
+        /// <param name="random">The random.</param>
         /// <returns>A random float</returns>
         public static float NextFloat(this Random random)
         {
@@ -76,7 +76,7 @@ namespace FlaxEngine.Utilities
         /// <summary>
         /// Gets a random float.
         /// </summary>
-        /// <param name="random"></param>
+        /// <param name="random">The random.</param>
         /// <param name="maxValue">The maximum value</param>
         /// <returns>A random float</returns>
         public static float NextFloat(this Random random, float maxValue)
@@ -87,7 +87,7 @@ namespace FlaxEngine.Utilities
         /// <summary>
         /// Gets a random float.
         /// </summary>
-        /// <param name="random"></param>
+        /// <param name="random">The random.</param>
         /// <param name="minValue">The minimum value</param>
         /// <param name="maxValue">The maximum value</param>
         /// <returns></returns>
@@ -99,7 +99,7 @@ namespace FlaxEngine.Utilities
         /// <summary>
         /// Gets a random Color.
         /// </summary>
-        /// <param name="random"></param>
+        /// <param name="random">The random.</param>
         /// <returns></returns>
         public static Color NextColor(this Random random)
         {
@@ -107,6 +107,18 @@ namespace FlaxEngine.Utilities
                              NextFloat(random, 1.0f),
                              NextFloat(random, 1.0f),
                              NextFloat(random, 1.0f));
+        }
+
+        /// <summary>
+        /// Gets a random 64-bit signed inteager value.
+        /// </summary>
+        /// <param name="random">The random.</param>
+        /// <returns></returns>
+        internal static long NextLong(this Random random)
+        {
+            var numArray = new byte[8];
+            random.NextBytes(numArray);
+            return (long)(BitConverter.ToUInt64(numArray, 0) & 9223372036854775807L);
         }
     }
 }
