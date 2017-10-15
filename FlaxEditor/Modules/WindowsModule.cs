@@ -310,11 +310,11 @@ namespace FlaxEditor.Modules
             MainWindow = null;
 
             // Capture project icon screenshot (not in play mode and if editor was used for some time)
-            if (!Editor.StateMachine.IsPlayMode && Time.RealtimeSinceStartup >= 5.0f)
+            if (!Editor.StateMachine.IsPlayMode && Time.TimeSinceStartup >= 5.0f)
             {
                 Editor.Log("Capture project icon screenshot");
                 EditWin.Viewport.TakeScreenshot(StringUtils.CombinePaths(Globals.ProjectCacheFolder, "icon.png"));
-                _projectIconScreenshotTimeout = Time.RealtimeSinceStartup + 0.3f;// wait 300ms for a screenshot task
+                _projectIconScreenshotTimeout = Time.TimeSinceStartup + 0.3f;// wait 300ms for a screenshot task
             }
             else
             {
@@ -350,7 +350,7 @@ namespace FlaxEditor.Modules
             }
 
             // Auto close on project icon saving end
-            if (_projectIconScreenshotTimeout > 0 && Time.RealtimeSinceStartup > _projectIconScreenshotTimeout)
+            if (_projectIconScreenshotTimeout > 0 && Time.TimeSinceStartup > _projectIconScreenshotTimeout)
             {
                 Editor.Log("Closing Editor after project icon screenshot");
                 Application.Exit();
