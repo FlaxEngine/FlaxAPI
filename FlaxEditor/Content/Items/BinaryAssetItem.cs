@@ -14,11 +14,6 @@ namespace FlaxEditor.Content
     public class BinaryAssetItem : AssetItem
     {
         /// <summary>
-        /// Gets the asset type identifier.
-        /// </summary>
-        public string TypeName { get; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="BinaryAssetItem"/> class.
         /// </summary>
         /// <param name="path">The asset path.</param>
@@ -26,9 +21,8 @@ namespace FlaxEditor.Content
         /// <param name="typeName">The asset type name identifier.</param>
         /// <param name="domain">The asset domain.</param>
         public BinaryAssetItem(string path, Guid id, string typeName, ContentDomain domain)
-            : base(path, id)
+            : base(path, typeName, ref id)
         {
-            TypeName = typeName;
             ItemDomain = domain;
         }
 

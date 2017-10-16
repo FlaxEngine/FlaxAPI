@@ -2,7 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
+using FlaxEditor.CustomEditors;
 using FlaxEngine;
 
 namespace FlaxEditor.Content.Settings
@@ -15,7 +15,7 @@ namespace FlaxEditor.Content.Settings
         /// <summary>
         /// Reference to <see cref="TimeSettings"/> asset.
         /// </summary>
-        [EditorOrder(10), Tooltip("Reference to Time Settings asset")]
-        public Guid Time;
+        [EditorOrder(10), AssetReference(typeof(TimeSettings), true), Tooltip("Reference to Time Settings asset")]
+        public JsonAsset Time;
     }
 }

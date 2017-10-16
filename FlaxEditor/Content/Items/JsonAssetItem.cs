@@ -14,20 +14,14 @@ namespace FlaxEditor.Content
     public class JsonAssetItem : AssetItem
     {
         /// <summary>
-        /// Gets the name of the asset data type.
-        /// </summary>
-        public string DataTypeName { get; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="JsonAssetItem"/> class.
         /// </summary>
         /// <param name="path">The path.</param>
         /// <param name="id">The identifier.</param>
         /// <param name="typeName">Name of the resource type.</param>
         public JsonAssetItem(string path, Guid id, string typeName)
-            : base(path, id)
+            : base(path, typeName, ref id)
         {
-            DataTypeName = typeName;
         }
 
         /// <inheritdoc />

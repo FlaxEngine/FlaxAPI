@@ -13,6 +13,10 @@ using Newtonsoft.Json.Serialization;
 
 namespace FlaxEngine.Json
 {
+    /// <summary>
+    /// Serialize references to the FlaxEngine.Object as Guid (format N).
+    /// </summary>
+    /// <seealso cref="Newtonsoft.Json.JsonConverter" />
     internal class FlaxObjectConverter : JsonConverter
     {
         /// <inheritdoc />
@@ -50,7 +54,39 @@ namespace FlaxEngine.Json
             return typeof(Object).IsAssignableFrom(objectType);
         }
     }
+    /*
+    /// <summary>
+    /// Serialize Guid values using `N` format
+    /// </summary>
+    /// <seealso cref="Newtonsoft.Json.JsonConverter" />
+    internal class GuidConverter : JsonConverter
+    {
+        /// <inheritdoc />
+        public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+        {
+            Guid id = (Guid)value;
+            writer.WriteValue(id.ToString("N"));
+        }
 
+        /// <inheritdoc />
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+        {
+            if (reader.TokenType == JsonToken.String)
+            {
+                var id = Guid.Parse((string)reader.Value);
+                return id;
+            }
+
+            return Guid.Empty;
+        }
+
+        /// <inheritdoc />
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(Guid);
+        }
+    }
+    */
     /// <summary>
     /// Objects serialization tool (json format).
     /// </summary>
@@ -66,8 +102,10 @@ namespace FlaxEngine.Json
                 ContractResolver = new ExtendedDefaultContractResolver(),
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                 TypeNameHandling = TypeNameHandling.Auto,
+                NullValueHandling = NullValueHandling.Ignore,
             };
             settings.Converters.Add(new FlaxObjectConverter());
+            //settings.Converters.Add(new GuidConverter());
             return settings;
         }
 

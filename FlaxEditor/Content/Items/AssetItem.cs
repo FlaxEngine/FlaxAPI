@@ -19,13 +19,20 @@ namespace FlaxEditor.Content
         public Guid ID { get; protected set; }
 
         /// <summary>
+        /// Gets the asset type identifier.
+        /// </summary>
+        public string TypeName { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="AssetItem"/> class.
         /// </summary>
         /// <param name="path">The asset path.</param>
+        /// <param name="typeName">The asset type name.</param>
         /// <param name="id">The asset identifier.</param>
-        protected AssetItem(string path, Guid id)
+        protected AssetItem(string path, string typeName, ref Guid id)
             : base(path)
         {
+            TypeName = typeName;
             ID = id;
         }
 
