@@ -80,6 +80,8 @@
     </Compile>
     <Compile Include="API\Assets\BinaryAsset.cs" />
     <Compile Include="API\Assets\BinaryAsset.Gen.cs" />
+    <Compile Include="API\Assets\JsonAsset.cs" />
+    <Compile Include="API\Assets\JsonAsset.Gen.cs" />
     <Compile Include="API\BinaryAssets\FontAsset.cs" />
     <Compile Include="API\BinaryAssets\FontAsset.Gen.cs" />
     <Compile Include="API\BinaryAssets\Model.cs" />
