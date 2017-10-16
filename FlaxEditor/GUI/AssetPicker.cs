@@ -32,9 +32,6 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// Gets or sets the selected item.
         /// </summary>
-        /// <value>
-        /// The selected item.
-        /// </value>
         public AssetItem SelectedItem
         {
             get => _selected;
@@ -43,7 +40,7 @@ namespace FlaxEditor.GUI
                 // Check if value won't change
                 if (value == _selected)
                     return;
-                if (value != null && value.ItemDomain != _domain)
+                if (value != null && !IsValid(value))
                     throw new ArgumentException("Invalid asset domain.");
 
                 // Change value
@@ -61,9 +58,6 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// Gets or sets the selected asset identifier.
         /// </summary>
-        /// <value>
-        /// The selected asset identifier.
-        /// </value>
         public Guid SelectedID
         {
             get => _selected?.ID ?? Guid.Empty;
@@ -79,9 +73,6 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// Gets or sets the selected asset object.
         /// </summary>
-        /// <value>
-        /// The selected assetobject .
-        /// </value>
         public Asset SelectedAsset
         {
             get => _selected != null ? FlaxEngine.Content.Load(_selected.ID) : null;
@@ -101,9 +92,6 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// Gets or sets the assets domain that this picker acepts.
         /// </summary>
-        /// <value>
-        /// The domain.
-        /// </value>
         public ContentDomain Domain
         {
             get => _domain;
@@ -123,6 +111,23 @@ namespace FlaxEditor.GUI
         /// Occurs when selected item gets changed.
         /// </summary>
         public event Action SelectedItemChanged;
+
+        /// <summary>
+        /// Checks if given value is valid and can be assigned to the picker.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>True if is valid, otherwise false.</returns>
+        public delegate bool IsValueValid(AssetItem item);
+
+        /// <summary>
+        /// The performs value validation before assigment.
+        /// </summary>
+        public IsValueValid ValidateValue;
+
+        private bool IsValid(AssetItem item)
+        {
+            return item.ItemDomain == _domain && (ValidateValue == null || ValidateValue(item));
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssetPicker"/> class.
@@ -357,14 +362,14 @@ namespace FlaxEditor.GUI
             // Handled
             return true;
         }
-
+        
         /// <inheritdoc />
         public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
         {
             base.OnDragEnter(ref location, data);
 
             // Check if drop asset
-            if (_dragOverElement.OnDragEnter(data, x => x.ItemDomain == _domain))
+            if (_dragOverElement.OnDragEnter(data, IsValid))
             {
             }
 
