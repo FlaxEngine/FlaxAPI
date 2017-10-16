@@ -29,7 +29,7 @@ namespace FlaxEditor.Actions
             _script = script;
             _scriptId = script.ID;
             _scriptType = script.GetType();
-            _scriptData = FlaxEngine.Json.InternalJsonSerializer.Serialize(script);
+            _scriptData = FlaxEngine.Json.JsonSerializer.Serialize(script);
             _parentId = script.Actor.ID;
             _orderInParent = script.OrderInParent;
             _enabled = script.Enabled;
@@ -121,7 +121,7 @@ namespace FlaxEditor.Actions
             }
             Object.Internal_ChangeID(_script.unmanagedPtr, ref _scriptId);
             if (_scriptData != null)
-                FlaxEngine.Json.InternalJsonSerializer.Deserialize(_script, _scriptData);
+                FlaxEngine.Json.JsonSerializer.Deserialize(_script, _scriptData);
             _script.Enabled = _enabled;
             parentActor.AddScript(_script);
             if (_orderInParent != -1)

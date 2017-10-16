@@ -2,7 +2,9 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using FlaxEngine.Rendering;
+using System;
+using System.Linq;
+using System.Reflection;
 
 namespace FlaxEditor.Utilities
 {

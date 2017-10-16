@@ -16,7 +16,7 @@ namespace FlaxEngine.Json
     internal class FlaxObjectConverter : JsonConverter
     {
         /// <inheritdoc />
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
         {
             Guid id = Guid.Empty;
             if (value is Object obj)
@@ -26,7 +26,7 @@ namespace FlaxEngine.Json
         }
 
         /// <inheritdoc />
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.String)
             {
@@ -41,7 +41,7 @@ namespace FlaxEngine.Json
         public override bool CanConvert(Type objectType)
         {
             // Skip serialziation as reference id for the root object serialization (eg. Script)
-            var writer = InternalJsonSerializer.CurrentWriter.Value;
+            var writer = JsonSerializer.CurrentWriter.Value;
             if (writer != null && writer.SerializeStackSize == 0)
             {
                 return false;
@@ -51,12 +51,15 @@ namespace FlaxEngine.Json
         }
     }
 
-    internal static class InternalJsonSerializer
+    /// <summary>
+    /// Objects serialization tool (json format).
+    /// </summary>
+    public static class JsonSerializer
     {
-        public static JsonSerializerSettings Settings = CreateDefaultSettings();
-        public static ThreadLocal<JsonSerializerInternalWriter> CurrentWriter = new ThreadLocal<JsonSerializerInternalWriter>();
+        internal static JsonSerializerSettings Settings = CreateDefaultSettings();
+        internal static ThreadLocal<JsonSerializerInternalWriter> CurrentWriter = new ThreadLocal<JsonSerializerInternalWriter>();
 
-        public static JsonSerializerSettings CreateDefaultSettings()
+        internal static JsonSerializerSettings CreateDefaultSettings()
         {
             var settings = new JsonSerializerSettings
             {
@@ -68,11 +71,16 @@ namespace FlaxEngine.Json
             return settings;
         }
 
-        internal static string Serialize(object obj)
+        /// <summary>
+        /// Serializes the specified object.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <returns>The output json string.</returns>
+        public static string Serialize(object obj)
         {
             Type type = obj.GetType();
 
-            JsonSerializer jsonSerializer = JsonSerializer.CreateDefault(Settings);
+            Newtonsoft.Json.JsonSerializer jsonSerializer = Newtonsoft.Json.JsonSerializer.CreateDefault(Settings);
             jsonSerializer.Formatting = Formatting.Indented;
 
             StringBuilder sb = new StringBuilder(256);
@@ -101,7 +109,12 @@ namespace FlaxEngine.Json
             return sw.ToString();
         }
 
-        internal static void Deserialize(object input, string json)
+        /// <summary>
+        /// Deserializes the specified object (from the input json data).
+        /// </summary>
+        /// <param name="input">The objeect.</param>
+        /// <param name="json">The input json data.</param>
+        public static void Deserialize(object input, string json)
         {
             JsonConvert.PopulateObject(json, input, Settings);
         }

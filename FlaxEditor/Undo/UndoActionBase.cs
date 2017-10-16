@@ -7,13 +7,14 @@ using FlaxEditor.SceneGraph;
 using FlaxEngine;
 using FlaxEngine.Json;
 using Newtonsoft.Json;
+using JsonSerializer = FlaxEngine.Json.JsonSerializer;
 
 namespace FlaxEditor
 {
     internal class SceneTreeNodeConverter : JsonConverter
     {
         /// <inheritdoc />
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
         {
             Guid id = Guid.Empty;
             if (value is SceneGraphNode obj)
@@ -23,7 +24,7 @@ namespace FlaxEditor
         }
 
         /// <inheritdoc />
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.String)
             {
@@ -58,8 +59,8 @@ namespace FlaxEditor
         /// </value>
         public TData Data
         {
-            get => JsonConvert.DeserializeObject<TData>(_data, InternalJsonSerializer.Settings);
-            protected set => _data = JsonConvert.SerializeObject(value, Formatting.None, InternalJsonSerializer.Settings);
+            get => JsonConvert.DeserializeObject<TData>(_data, JsonSerializer.Settings);
+            protected set => _data = JsonConvert.SerializeObject(value, Formatting.None, JsonSerializer.Settings);
             /*protected set
             {
                 _data = JsonConvert.SerializeObject(value, Formatting.Indented, InternalJsonSerializer.Settings);

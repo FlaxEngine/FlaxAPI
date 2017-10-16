@@ -30,7 +30,7 @@ namespace FlaxEditor
 
         static Editor()
         {
-            InternalJsonSerializer.Settings.Converters.Add(new SceneTreeNodeConverter());
+            JsonSerializer.Settings.Converters.Add(new SceneTreeNodeConverter());
         }
 
         private readonly List<EditorModule> _modules = new List<EditorModule>(16);
@@ -457,7 +457,7 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            string str = InternalJsonSerializer.Serialize(obj);
+            string str = JsonSerializer.Serialize(obj);
             return Internal_SaveJsonAsset(outputPath, str, obj.GetType().FullName);
 #endif
         }

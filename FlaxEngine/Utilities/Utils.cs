@@ -4,6 +4,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace FlaxEngine
 {
@@ -21,7 +23,7 @@ namespace FlaxEngine
         {
             return (float)Math.Round(value * 10) / 10;
         }
-        
+
         /// <summary>
         /// Rounds the floating point value up to 2 decimal places.
         /// </summary>
@@ -31,7 +33,7 @@ namespace FlaxEngine
         {
             return (float)Math.Round(value * 100) / 100;
         }
-        
+
         /// <summary>
         /// Rounds the floating point value up to 3 decimal places.
         /// </summary>
@@ -96,6 +98,16 @@ namespace FlaxEngine
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Gets the assembly with the given name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The assembly or null if not found.</returns>
+        public static Assembly GetAssemblyByName(string name)
+        {
+            return AppDomain.CurrentDomain.GetAssemblies().SingleOrDefault(assembly => assembly.GetName().Name == name);
         }
     }
 }

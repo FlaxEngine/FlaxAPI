@@ -39,10 +39,25 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets the data from the asset. Allows to deserialize stored object properties (from json format).
+		/// </summary>
+		[UnmanagedCall]
+		public string Data
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetData(unmanagedPtr); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern string Internal_GetDataTypeName(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern string Internal_GetData(IntPtr obj);
 #endif
 #endregion
 	}
