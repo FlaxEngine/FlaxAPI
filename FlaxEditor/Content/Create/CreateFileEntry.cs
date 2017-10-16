@@ -17,7 +17,7 @@ namespace FlaxEditor.Content.Create
         /// <summary>
         /// Gets a value indicating whether this entry has settings to modify.
         /// </summary>
-        public virtual bool HasSettings => false;
+        public virtual bool HasSettings => Settings != null;
 
         /// <summary>
         /// Gets or sets the settings object to modify.

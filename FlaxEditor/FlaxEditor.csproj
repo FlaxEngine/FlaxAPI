@@ -61,6 +61,7 @@
     <Compile Include="Content\Import\ImportFilesDialog.cs" />
     <Compile Include="Content\Import\ModelImportEntry.cs" />
     <Compile Include="Content\Import\TextureImportEntry.cs" />
+    <Compile Include="Content\Proxy\SettingsProxy.cs" />
     <Compile Include="Content\Settings\GameSettings.cs" />
     <Compile Include="Content\Settings\SettingsBase.cs" />
     <Compile Include="Content\Settings\TimeSettings.cs" />

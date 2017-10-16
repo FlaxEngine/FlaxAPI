@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using FlaxEditor.Content;
+using FlaxEditor.Content.Settings;
 using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.Assertions;
@@ -804,6 +805,10 @@ namespace FlaxEditor.Modules
             Proxy.Add(new SceneProxy());
             Proxy.Add(new IESProfileProxy());
 
+            // Settings
+            Proxy.Add(new SettingsProxy<GameSettings>());
+            Proxy.Add(new SettingsProxy<TimeSettings>());
+            
             // Create content folders nodes
             ProjectContent = new MainContentTreeNode(ContentFolderType.Content, Globals.ContentFolder);
             ProjectSource = new MainContentTreeNode(ContentFolderType.Source, Globals.SourceFolder);

@@ -27,11 +27,6 @@ namespace FlaxEditor.Content
         /// </summary>
         public static readonly string Extension = "json";
 
-        /// <summary>
-        /// Gets the name of the data type (full name with namespace and the class name).
-        /// </summary>
-        public abstract string DataTypeName { get; }
-
         /// <inheritdoc />
         public override string Name => "Json";
 
@@ -59,13 +54,13 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override bool AcceptsAsset(string typeName, string path)
         {
-            return typeName == DataTypeName && base.AcceptsAsset(typeName, path);
+            return typeName == TypeName && base.AcceptsAsset(typeName, path);
         }
 
         /// <inheritdoc />
         public override AssetItem ConstructItem(string path, string typeName, ref Guid id)
         {
-            return new JsonAssetItem(path, id, DataTypeName);
+            return new JsonAssetItem(path, id, TypeName);
         }
     }
 }

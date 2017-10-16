@@ -176,9 +176,6 @@ namespace FlaxEditor.Content.Import
         }
 
         /// <inheritdoc />
-        public override bool HasSettings => true;
-
-        /// <inheritdoc />
         public override object Settings => _settings;
 
         /// <inheritdoc />

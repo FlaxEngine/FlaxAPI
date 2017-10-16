@@ -50,7 +50,14 @@ namespace FlaxEditor.Modules
             }
 
             // Open
-            window = proxy.Open(Editor, item);
+            try
+            {
+                window = proxy.Open(Editor, item);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
             if (window != null && !disableAutoShow)
             {
                 // Check if there is a floating window that has the same size

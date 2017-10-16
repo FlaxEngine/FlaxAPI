@@ -411,10 +411,7 @@ namespace FlaxEditor.Content.Import
                 _settings.Type = TextureImportSettings.CustomTextureFormatType.GrayScale;
             }
         }
-
-        /// <inheritdoc />
-        public override bool HasSettings => true;
-
+        
         /// <inheritdoc />
         public override object Settings => _settings;
 

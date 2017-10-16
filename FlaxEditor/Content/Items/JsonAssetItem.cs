@@ -34,7 +34,7 @@ namespace FlaxEditor.Content
         public override ContentDomain ItemDomain => ContentDomain.Document;
 
         /// <inheritdoc />
-        public override string DefaultThumbnailName => "Scene64";
+        public override string DefaultThumbnailName => "Document64";
 
         /// <inheritdoc />
         protected override bool DrawShadow => false;

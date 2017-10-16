@@ -30,7 +30,7 @@ namespace FlaxEditor.Content.Create
             _entry = entry ?? throw new ArgumentNullException();
             
             const float TotalWidth = 520;
-            const float EditorHeight = 450;
+            const float EditorHeight = 250;
             Width = TotalWidth;
 
             // Header and help description
@@ -82,6 +82,8 @@ namespace FlaxEditor.Content.Create
             _settingsEditor.Panel.Parent = panel;
 
             Size = new Vector2(TotalWidth, panel.Bottom);
+
+            _settingsEditor.Select(_entry.Settings);
         }
 
         private void OnCreate()
