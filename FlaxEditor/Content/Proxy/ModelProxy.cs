@@ -22,13 +22,7 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override string Name => "Model";
-
-        /// <inheritdoc />
-        public override bool AcceptsTypeID(int typeID)
-        {
-            return typeID == Model.TypeID;
-        }
-
+        
         /// <inheritdoc />
         public override bool CanReimport(ContentItem item)
         {
@@ -46,6 +40,9 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override ContentDomain Domain => Model.Domain;
+
+        /// <inheritdoc />
+        public override string TypeName => typeof(Model).FullName;
 
         /// <inheritdoc />
         public override void OnThumbnailDrawPrepare(ThumbnailRequest request)

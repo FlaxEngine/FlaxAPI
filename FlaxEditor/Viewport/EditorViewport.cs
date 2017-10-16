@@ -327,13 +327,13 @@ namespace FlaxEditor.Viewport
             {
                 base.Draw();
 
-                float fps = Time.FramesPerSecond;
+                int fps = Time.FramesPerSecond;
                 Color color = Color.Green;
-                if (fps < 13.0f)
+                if (fps < 13)
                     color = Color.Red;
-                else if (fps < 22.0f)
+                else if (fps < 22)
                     color = Color.Yellow;
-                string text = string.Format("FPS: {0}", (int)fps);
+                string text = string.Format("FPS: {0}", fps);
                 Render2D.DrawText(Style.Current.FontMedium, text, new Rectangle(Vector2.Zero, Size), color);
             }
         }

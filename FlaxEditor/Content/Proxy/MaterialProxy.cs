@@ -25,12 +25,6 @@ namespace FlaxEditor.Content
         public override string Name => "Material";
 
         /// <inheritdoc />
-        public override bool AcceptsTypeID(int typeID)
-        {
-            return typeID == Material.TypeID;
-        }
-
-        /// <inheritdoc />
         public override EditorWindow Open(Editor editor, ContentItem item)
         {
             return new MaterialWindow(editor, item as AssetItem);
@@ -41,7 +35,10 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override ContentDomain Domain => Material.Domain;
-        
+
+        /// <inheritdoc />
+        public override string TypeName => typeof(Material).FullName;
+
         /// <inheritdoc />
         public override bool CanCreate(ContentFolder targetLocation)
         {

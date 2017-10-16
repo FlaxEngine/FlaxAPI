@@ -2,12 +2,6 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace FlaxEditor.Content
 {
     /// <summary>
@@ -19,9 +13,6 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Gets the proxy object related to the created asset.
         /// </summary>
-        /// <value>
-        /// The content proxy.
-        /// </value>
         public ContentProxy Proxy { get; }
 
         /// <summary>

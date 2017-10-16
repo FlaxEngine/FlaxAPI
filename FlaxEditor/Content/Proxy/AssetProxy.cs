@@ -23,26 +23,31 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override bool IsAsset => true;
+        
+        /// <summary>
+        /// Gets the full name of the asset type (stored data format).
+        /// </summary>
+        public abstract string TypeName { get; }
 
         /// <summary>
         /// Checks if this proxy supports the given asset type id at the given path.
         /// </summary>
-        /// <param name="typeID">The asset type identifier.</param>
+        /// <param name="typeName">The asset type identifier.</param>
         /// <param name="path">The asset path.</param>
         /// <returns>True if proxy supports assets of the given type id and path.</returns>
-        public virtual bool AcceptsAsset(int typeID, string path)
+        public virtual bool AcceptsAsset(string typeName, string path)
         {
-            return path.EndsWith(FileExtension, StringComparison.OrdinalIgnoreCase);
+            return typeName == TypeName && path.EndsWith(FileExtension, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
         /// Constructs the item for the asset.
         /// </summary>
         /// <param name="path">The asset path.</param>
-        /// <param name="typeId">The asset type identifier.</param>
+        /// <param name="typeName">The asset type name identifier.</param>
         /// <param name="id">The asset identifier.</param>
         /// <returns>Created item.</returns>
-        public abstract AssetItem ConstructItem(string path, int typeId, ref Guid id);
+        public abstract AssetItem ConstructItem(string path, string typeName, ref Guid id);
 
         /// <summary>
         /// Called when thumbnail request gets prepared for drawing.

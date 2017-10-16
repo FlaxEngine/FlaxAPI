@@ -25,12 +25,6 @@ namespace FlaxEditor.Content
         public override string Name => "Sprite Atlas";
 
         /// <inheritdoc />
-        public override bool AcceptsTypeID(int typeID)
-        {
-            return typeID == SpriteAtlas.TypeID;
-        }
-
-        /// <inheritdoc />
         public override bool CanReimport(ContentItem item)
         {
             return true;
@@ -47,6 +41,9 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override ContentDomain Domain => SpriteAtlas.Domain;
+
+        /// <inheritdoc />
+        public override string TypeName => typeof(SpriteAtlas).FullName;
 
         /// <inheritdoc />
         public override void OnThumbnailDrawPrepare(ThumbnailRequest request)

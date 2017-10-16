@@ -37,7 +37,7 @@ namespace FlaxEngine
 		/// Gets the current Frames Per Second amount. User scripts updates or fixed updates for physics may run at a different frequency than scene rendering. Use this property to get an accurate amount of frames rendered during the last second.
 		/// </summary>
 		[UnmanagedCall]
-		public static float FramesPerSecond
+		public static int FramesPerSecond
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
@@ -53,7 +53,7 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetTimeScale(float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetFPS();
+		internal static extern int Internal_GetFPS();
 #endif
 #endregion
 	}

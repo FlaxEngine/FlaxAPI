@@ -21,12 +21,6 @@ namespace FlaxEditor.Content
         public override string Name => "Font";
 
         /// <inheritdoc />
-        public override bool AcceptsTypeID(int typeID)
-        {
-            return typeID == FontAsset.TypeID;
-        }
-
-        /// <inheritdoc />
         public override bool CanReimport(ContentItem item)
         {
             return true;
@@ -43,6 +37,9 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override ContentDomain Domain => FontAsset.Domain;
+
+        /// <inheritdoc />
+        public override string TypeName => typeof(FontAsset).FullName;
 
         /// <inheritdoc />
         public override void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)

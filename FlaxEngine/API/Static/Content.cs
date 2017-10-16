@@ -152,19 +152,19 @@ namespace FlaxEngine
         /// Find asset info by id.
         /// </summary>
         /// <param name="id">The asset path (full path).</param>
-        /// <param name="typeId">If method returns true, this contains found asset type id.</param>
+        /// <param name="typeName">If method returns true, this contains found asset type name.</param>
         /// <param name="path">If method returns true, this contains found asset path.</param>
         /// <returns>True if found any asset, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static bool GetAssetInfo(Guid id, out int typeId, out string path)
+        public static bool GetAssetInfo(Guid id, out string typeName, out string path)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_GetAssetInfo1(ref id, out typeId, out path);
+            return Internal_GetAssetInfo1(ref id, out typeName, out path);
 #endif
         }
 
@@ -172,19 +172,19 @@ namespace FlaxEngine
         /// Find asset info by path.
         /// </summary>
         /// <param name="path">The asset id.</param>
-        /// <param name="typeId">If method returns true, this contains found asset type id.</param>
+        /// <param name="typeName">If method returns true, this contains found asset type name.</param>
         /// <param name="id">If method returns true, this contains found asset id.</param>
         /// <returns>True if found any asset, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static bool GetAssetInfo(string path, out int typeId, out Guid id)
+        public static bool GetAssetInfo(string path, out string typeName, out Guid id)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_GetAssetInfo2(path, out typeId, out id);
+            return Internal_GetAssetInfo2(path, out typeName, out id);
 #endif
         }
 
@@ -204,27 +204,24 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            int typeId;
-            if (typeof(T) == typeof(MaterialInstance))
-                typeId = MaterialInstance.TypeID;
-            else if (typeof(T) == typeof(Model))
-                typeId = Model.TypeID;
-            else
-                throw new InvalidOperationException("Asset type " + typeof(T).FullName + " does not support virtual assets.");
+            string typeName = typeof(T).FullName;
+            if (typeof(T) != typeof(MaterialInstance) &&
+                typeof(T) != typeof(Model))
+                throw new InvalidOperationException("Asset type " + typeName + " does not support virtual assets.");
 
-            return (T)Internal_CreateVirtualAsset(typeof(T), typeId);
+            return (T)Internal_CreateVirtualAsset(typeof(T), typeName);
 #endif
         }
 
         #region Internal Calls
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_GetAssetInfo1(ref Guid id, out int typeId, out string path);
+        internal static extern bool Internal_GetAssetInfo1(ref Guid id, out string typeName, out string path);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_GetAssetInfo2(string path, out int typeId, out Guid id);
+        internal static extern bool Internal_GetAssetInfo2(string path, out string typeName, out Guid id);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Asset Internal_CreateVirtualAsset(Type type, int typeId);
+        internal static extern Asset Internal_CreateVirtualAsset(Type type, string typeName);
 #endif
         #endregion
     }

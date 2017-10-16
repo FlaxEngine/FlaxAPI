@@ -52,41 +52,31 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Gets the type of the folder.
         /// </summary>
-        /// <value>
-        /// The type of the folder.
-        /// </value>
         public ContentFolderType FolderType { get; }
 
         /// <summary>
         /// Returns true if that folder can import/manage scripts.
         /// </summary>
-        /// <returns>True if can contain scripts for project, otherwise false</returns>
         public bool CanHaveScripts => FolderType == ContentFolderType.Source;
 
         /// <summary>
         /// Returns true if that folder can import/manage assets.
         /// </summary>
-        /// <returns>True if can contain assets for project, otherwise false</returns>
         public bool CanHaveAssets => FolderType == ContentFolderType.Content || FolderType == ContentFolderType.Editor || FolderType == ContentFolderType.Engine;
 
         /// <summary>
         /// Returns true if that folder belongs to the project workspace.
         /// </summary>
-        /// <returns>True if folder belogns to the project workspace otherwise false</returns>
         public bool IsProjectOnly => FolderType == ContentFolderType.Content || FolderType == ContentFolderType.Source;
 
         /// <summary>
         /// Returns true if that folder belongs to the Engine or Editor private files.
         /// </summary>
-        /// <returns>True if folder belogns to Engine private files otherwise false</returns>
         public bool IsEnginePrivate => FolderType == ContentFolderType.Editor || FolderType == ContentFolderType.Engine;
 
         /// <summary>
         /// Gets the content node.
         /// </summary>
-        /// <value>
-        /// The node.
-        /// </value>
         public ContentTreeNode Node { get; }
 
         /// <summary>

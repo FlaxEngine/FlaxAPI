@@ -140,14 +140,14 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Gets the proxy object for the given asset type id.
         /// </summary>
-        /// <param name="typeId">The asset type id.</param>
+        /// <param name="typeName">The asset type name.</param>
         /// <param name="path">The asset path.</param>
         /// <returns>Asset proxy or null if cannot find.</returns>
-        public AssetProxy GetAssetProxy(int typeId, string path)
+        public AssetProxy GetAssetProxy(string typeName, string path)
         {
             for (int i = 0; i < Proxy.Count; i++)
             {
-                if (Proxy[i] is AssetProxy proxy && proxy.AcceptsAsset(typeId, path))
+                if (Proxy[i] is AssetProxy proxy && proxy.AcceptsAsset(typeName, path))
                 {
                     return proxy;
                 }
@@ -761,12 +761,12 @@ namespace FlaxEditor.Modules
                     // Flax isn't John Snow. Flax knows something :)
                     // Also Flax Content Layer is using smart caching so this query gonna be fast.
 
-                    int typeId;
+                    string typeName;
                     Guid id;
-                    if (FlaxEngine.Content.GetAssetInfo(path, out typeId, out id))
+                    if (FlaxEngine.Content.GetAssetInfo(path, out typeName, out id))
                     {
-                        var proxy = GetAssetProxy(typeId, path);
-                        var item = proxy?.ConstructItem(path, typeId, ref id);
+                        var proxy = GetAssetProxy(typeName, path);
+                        var item = proxy?.ConstructItem(path, typeName, ref id);
 
                         if (item != null)
                         {
@@ -837,16 +837,16 @@ namespace FlaxEditor.Modules
             if (item is BinaryAssetItem binaryAssetItem)
             {
                 // Get asset info from the registry (content layer will update cache it just after import)
-                int typeId;
+                string typeName;
                 Guid id;
-                if (FlaxEngine.Content.GetAssetInfo(binaryAssetItem.Path, out typeId, out id))
+                if (FlaxEngine.Content.GetAssetInfo(binaryAssetItem.Path, out typeName, out id))
                 {
                     // If asset type id has been changed we HAVE TO close all windows that use it
                     // For eg. change texture to sprite atlas on reimport
-                    if (binaryAssetItem.TypeID != typeId)
+                    if (binaryAssetItem.TypeName != typeName)
                     {
                         // Asset type has been changed!
-                        Editor.LogWarning(string.Format("Asset \'{0}\' changed type from {1} to {2}", item.Path, binaryAssetItem.TypeID, typeId));
+                        Editor.LogWarning(string.Format("Asset \'{0}\' changed type from {1} to {2}", item.Path, binaryAssetItem.TypeName, typeName));
                         Editor.Windows.CloseAllEditors(item);
 
                         // Remove this item from the database and call refresh

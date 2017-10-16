@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using FlaxEngine;
 
 namespace FlaxEditor.Content
 {
@@ -17,34 +16,20 @@ namespace FlaxEditor.Content
         /// The binary asset files extension.
         /// </summary>
         public static readonly string Extension = "flax";
-
-        /// <summary>
-        /// Checks if this proxy supports the given asset type id.
-        /// </summary>
-        /// <param name="typeID">The asset type identifier.</param>
-        /// <returns>True if proxy supports assets of the given type id.</returns>
-        public abstract bool AcceptsTypeID(int typeID);
         
         /// <inheritdoc />
         public override bool IsProxyFor(ContentItem item)
         {
-            return item is BinaryAssetItem binaryAssetItem && AcceptsTypeID(binaryAssetItem.TypeID);
-        }
-
-        /// <inheritdoc />
-        public override bool AcceptsAsset(int typeID, string path)
-        {
-            // Just check type id
-            return AcceptsTypeID(typeID);
+            return item is BinaryAssetItem binaryAssetItem && TypeName == binaryAssetItem.TypeName;
         }
 
         /// <inheritdoc />
         public override string FileExtension => Extension;
 
         /// <inheritdoc />
-        public override AssetItem ConstructItem(string path, int typeId, ref Guid id)
+        public override AssetItem ConstructItem(string path, string typeName, ref Guid id)
         {
-            return new BinaryAssetItem(path, id, typeId, Domain);
+            return new BinaryAssetItem(path, id, typeName, Domain);
         }
     }
 }

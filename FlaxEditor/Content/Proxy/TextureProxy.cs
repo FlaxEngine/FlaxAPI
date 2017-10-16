@@ -24,12 +24,6 @@ namespace FlaxEditor.Content
         public override string Name => "Texture";
 
         /// <inheritdoc />
-        public override bool AcceptsTypeID(int typeID)
-        {
-            return typeID == Texture.TypeID;
-        }
-
-        /// <inheritdoc />
         public override bool CanReimport(ContentItem item)
         {
             return true;
@@ -46,6 +40,9 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override ContentDomain Domain => Texture.Domain;
+
+        /// <inheritdoc />
+        public override string TypeName => typeof(Texture).FullName;
 
         /// <inheritdoc />
         public override void OnThumbnailDrawPrepare(ThumbnailRequest request)

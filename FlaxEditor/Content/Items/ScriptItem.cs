@@ -16,9 +16,6 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Gets the name of the script (deducted from the asset name).
         /// </summary>
-        /// <value>
-        /// The name of the script.
-        /// </value>
         public string ScriptName => FilterScriptName(ShortName);
 
         /// <summary>

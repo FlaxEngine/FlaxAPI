@@ -18,12 +18,6 @@ namespace FlaxEditor.Content
         public override string Name => "Previews Cache";
 
         /// <inheritdoc />
-        public override bool AcceptsTypeID(int typeID)
-        {
-            return typeID == PreviewsCache.TypeID;
-        }
-
-        /// <inheritdoc />
         public override EditorWindow Open(Editor editor, ContentItem item)
         {
             return new PreviewsCacheWindow(editor, (AssetItem)item);
@@ -34,5 +28,8 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override ContentDomain Domain => PreviewsCache.Domain;
+
+        /// <inheritdoc />
+        public override string TypeName => typeof(PreviewsCache).FullName;
     }
 }
