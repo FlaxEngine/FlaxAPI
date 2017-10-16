@@ -65,7 +65,7 @@ namespace FlaxEditor
         /// The simulation module.
         /// </summary>
         public readonly SimulationModule Simulation;
-        
+
         /// <summary>
         /// The scene module.
         /// </summary>
@@ -405,7 +405,7 @@ namespace FlaxEditor
         [UnmanagedCall]
         public static bool Import(string inputPath, string outputPath, TextureImportSettings settings)
         {
-            if(settings == null)
+            if (settings == null)
                 throw new ArgumentNullException();
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -429,7 +429,7 @@ namespace FlaxEditor
         [UnmanagedCall]
         public static bool Import(string inputPath, string outputPath, ModelImportSettings settings)
         {
-            if(settings == null)
+            if (settings == null)
                 throw new ArgumentNullException();
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -439,6 +439,29 @@ namespace FlaxEditor
             return Internal_ImportModel(inputPath, outputPath, ref internalOptions);
 #endif
         }
+
+        /// <summary>
+        /// Serializes the given object to json asset.
+        /// </summary>
+        /// <param name="outputPath">The result asset file path.</param>
+        /// <param name="obj">The obj to serialize.</param>
+        /// <returns>True if saving failed, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool SaveJsonAsset(string outputPath, object obj)
+        {
+            if (obj == null)
+                throw new ArgumentNullException();
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            string str = InternalJsonSerializer.Serialize(obj);
+            return Internal_SaveJsonAsset(outputPath, str, obj.GetType().FullName);
+#endif
+        }
+
 
         #region Env Probes Baking
 
@@ -454,7 +477,7 @@ namespace FlaxEditor
 
         internal static void Internal_EnvProbeBake(bool started, EnvironmentProbe probe)
         {
-            if(started)
+            if (started)
                 EnvProbeBakeStart?.Invoke(probe);
             else
                 EnvProbeBakeEnd?.Invoke(probe);
@@ -538,7 +561,7 @@ namespace FlaxEditor
         /// Occurs when lightmaps baking progress changes.
         /// </summary>
         public static event LightmapsBakeProgressDelegate LightmapsBakeProgress;
-        
+
         internal static void Internal_LightmapsBake(LightmapsBakeSteps step, float stepProgress, float totalProgress, bool isProgressEvent)
         {
             if (isProgressEvent)
@@ -643,16 +666,25 @@ namespace FlaxEditor
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_CloneAssetFile(string dstPath, string srcPath, ref Guid dstId);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_Import(string inputPath, string outputPath, IntPtr arg);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_ImportTexture(string inputPath, string outputPath, ref TextureImportSettings.InternalOptions options);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_ImportModel(string inputPath, string outputPath, ref ModelImportSettings.InternalOptions options);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_SaveJsonAsset(string outputPath, string data, string typename);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_CopyCache(ref Guid dstId, ref Guid srcId);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_BakeLightmaps(bool cancel);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_LogWrite(LogType type, string msg);
 #endif
