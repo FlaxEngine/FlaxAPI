@@ -4,6 +4,7 @@
 
 using System;
 using FlaxEditor.Windows;
+using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 
 namespace FlaxEditor.Content
@@ -39,7 +40,7 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override EditorWindow Open(Editor editor, ContentItem item)
         {
-            throw new NotImplementedException();
+            return new JsonAssetWindow(editor, (JsonAssetItem)item);
         }
 
         /// <inheritdoc />
