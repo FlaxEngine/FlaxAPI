@@ -15,7 +15,7 @@ namespace FlaxEditor.Content.Settings
         /// <summary>
         /// Reference to <see cref="TimeSettings"/> asset.
         /// </summary>
-        [EditorOrder(10), AssetReference(typeof(TimeSettings), true), Tooltip("Reference to Time Settings asset")]
+        [EditorOrder(1010), EditorDisplay("Other Settings"), AssetReference(typeof(TimeSettings), true), Tooltip("Reference to Time Settings asset")]
         public JsonAsset Time;
     }
 }
