@@ -16,9 +16,6 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Gets the asset unique identifier.
         /// </summary>
-        /// <value>
-        /// The identifier.
-        /// </value>
         public Guid ID { get; protected set; }
 
         /// <summary>

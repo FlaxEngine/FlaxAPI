@@ -2,7 +2,6 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using FlaxEditor;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
 using FlaxEngine;
@@ -18,6 +17,7 @@ namespace FlaxEditor.Windows.Assets
     public sealed class JsonAssetWindow : AssetEditorWindowBase<JsonAsset>
     {
         private readonly CustomEditorPresenter _presenter;
+        private object _object;
 
         /// <inheritdoc />
         public JsonAssetWindow(Editor editor, AssetItem item)
@@ -45,16 +45,15 @@ namespace FlaxEditor.Windows.Assets
             if (!IsEdited)
                 return;
 
-            // Wait until model asset file be fully loaded
+            // Wait until asset file be fully loaded
             if (_asset.WaitForLoaded())
             {
                 // Error
                 return;
             }
 
-            // Call asset saving
-            // TODO: saving json asset
-            //if (_asset.Save())
+            // Save
+            if (Editor.SaveJsonAsset(_item.Path, _object))
             {
                 // Error
                 Editor.LogError("Failed to save " + _item.Name);
@@ -93,8 +92,8 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         protected override void OnAssetLoaded()
         {
-
-            //_presenter.Select();
+            _object = Asset.CreateInstance();
+            _presenter.Select(_object);
             ClearEditedFlag();
 
             base.OnAssetLoaded();
