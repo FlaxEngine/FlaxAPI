@@ -25,9 +25,9 @@ namespace FlaxEditor.Progress.Handlers
             importing.ImportFileBegin += OnImportFileBegin;
         }
 
-        private void OnImportFileBegin(FileEntry fileEntry)
+        private void OnImportFileBegin(ImportFileEntry importFileEntry)
         {
-            _currentFilename = System.IO.Path.GetFileName(fileEntry.Url);
+            _currentFilename = System.IO.Path.GetFileName(importFileEntry.Url);
             UpdateProgress();
         }
 

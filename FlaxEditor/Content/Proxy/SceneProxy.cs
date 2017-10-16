@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -11,8 +11,8 @@ namespace FlaxEditor.Content
     /// <summary>
     /// Content proxy for <see cref="SceneItem"/>.
     /// </summary>
-    /// <seealso cref="FlaxEditor.Content.JsonAssetProxy" />
-    public sealed class SceneProxy : JsonAssetProxy
+    /// <seealso cref="FlaxEditor.Content.JsonAssetBaseProxy" />
+    public sealed class SceneProxy : JsonAssetBaseProxy
     {
         /// <summary>
         /// The scene files extension.
@@ -50,7 +50,7 @@ namespace FlaxEditor.Content
         public override EditorWindow Open(Editor editor, ContentItem item)
         {
             // Load scene
-            Editor.Instance.Scene.OpenScene((item as SceneItem).ID);
+            Editor.Instance.Scene.OpenScene(((SceneItem)item).ID);
 
             return null;
         }

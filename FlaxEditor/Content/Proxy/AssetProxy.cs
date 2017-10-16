@@ -19,9 +19,6 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Gets the assets domain.
         /// </summary>
-        /// <value>
-        /// The domain.
-        /// </value>
         public abstract ContentDomain Domain { get; }
 
         /// <inheritdoc />

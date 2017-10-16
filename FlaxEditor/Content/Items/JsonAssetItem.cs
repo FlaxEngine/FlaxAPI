@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using FlaxEngine;
 
 namespace FlaxEditor.Content
 {
@@ -15,9 +16,6 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Gets the name of the asset type.
         /// </summary>
-        /// <value>
-        /// The name of the type.
-        /// </value>
         public string TypeName { get; }
 
         /// <summary>
@@ -33,6 +31,12 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
-        public override string DefaultThumbnailName => "Document64";
+        public override ContentDomain ItemDomain => ContentDomain.Document;
+
+        /// <inheritdoc />
+        public override string DefaultThumbnailName => "Scene64";
+
+        /// <inheritdoc />
+        protected override bool DrawShadow => false;
     }
 }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using FlaxEditor.Content;
+using FlaxEditor.Content.Create;
 using FlaxEditor.Content.Import;
 using FlaxEngine;
 
@@ -40,7 +41,7 @@ namespace FlaxEditor.Modules
 
         // Firstly service is collecting import requests and then performs actual importing in the background.
 
-        private readonly Queue<FileEntry> _importingQueue = new Queue<FileEntry>();
+        private readonly Queue<ImportFileEntry> _importingQueue = new Queue<ImportFileEntry>();
         private readonly List<Request> _requests = new List<Request>();
 
         private long _workerEndFlag;
@@ -74,14 +75,14 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Occurs when file is being imported.
         /// </summary>
-        public event Action<FileEntry> ImportFileBegin;
+        public event Action<ImportFileEntry> ImportFileBegin;
 
         /// <summary>
         /// Import file end delegate.
         /// </summary>
         /// <param name="entry">The imported file entry.</param>
         /// <param name="failed">if set to <c>true</c> if importing failed, otherwise false.</param>
-        public delegate void ImportFileEndDelegate(FileEntry entry, bool failed);
+        public delegate void ImportFileEndDelegate(ImportFileEntry entry, bool failed);
 
         /// <summary>
         /// Occurs when file importing end.
@@ -97,6 +98,25 @@ namespace FlaxEditor.Modules
         internal ContentImportingModule(Editor editor)
             : base(editor)
         {
+        }
+
+        /// <summary>
+        /// Creates the specified file entry (can show create settigns dialog if needed).
+        /// </summary>
+        /// <param name="entry">The entry.</param>
+        public void Create(CreateFileEntry entry)
+        {
+            if (entry.HasSettings)
+            {
+                // Use settings dialog
+                var dialog = new CreateFilesDialog(entry);
+                dialog.Show(Editor.Windows.MainWindow);
+            }
+            else
+            {
+                // Use direct creation
+                LetThemBeCreatedxD(entry);
+            }
         }
 
         /// <summary>
@@ -242,7 +262,7 @@ namespace FlaxEditor.Modules
 
         private void WorkerMain()
         {
-            FileEntry entry;
+            ImportFileEntry entry;
             bool wasLastTickWorking = false;
 
             while (Interlocked.Read(ref _workerEndFlag) == 0)
@@ -306,7 +326,7 @@ namespace FlaxEditor.Modules
             }
         }
 
-        internal void LetThemBeImportedxD(List<FileEntry> entries)
+        internal void LetThemBeImportedxD(List<ImportFileEntry> entries)
         {
             int count = entries.Count;
             if (count > 0)
@@ -316,6 +336,26 @@ namespace FlaxEditor.Modules
                     _importingQueue.Enqueue(entries[i]);
 
                 StartWorker();
+            }
+        }
+
+        internal void LetThemBeCreatedxD(CreateFileEntry entry)
+        {
+            bool failed = true;
+            try
+            {
+                failed = entry.Create();
+            }
+            catch (Exception ex)
+            {
+                Editor.LogWarning(ex);
+            }
+            finally
+            {
+                if (failed)
+                {
+                    Editor.LogWarning("Failed to create " + entry.ResultUrl);
+                }
             }
         }
 
@@ -349,7 +389,7 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnInit()
         {
-            FileEntry.RegisterDefaultTypes();
+            ImportFileEntry.RegisterDefaultTypes();
         }
 
         /// <inheritdoc />
@@ -364,12 +404,12 @@ namespace FlaxEditor.Modules
                 try
                 {
                     // Get entries
-                    List<FileEntry> entries = new List<FileEntry>(_requests.Count);
+                    List<ImportFileEntry> entries = new List<ImportFileEntry>(_requests.Count);
                     bool needSettingsDialog = false;
                     for (int i = 0; i < _requests.Count; i++)
                     {
                         var request = _requests[i];
-                        var entry = FileEntry.CreateEntry(request.InputPath, request.OutputPath, request.IsBinaryAsset);
+                        var entry = ImportFileEntry.CreateEntry(request.InputPath, request.OutputPath, request.IsBinaryAsset);
                         if (entry != null)
                         {
                             if (request.Settings != null && entry.TryOverrideSettings(request.Settings))

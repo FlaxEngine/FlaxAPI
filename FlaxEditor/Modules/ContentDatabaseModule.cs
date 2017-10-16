@@ -827,7 +827,7 @@ namespace FlaxEditor.Modules
             Editor.Log("Project database created. Items count: " + _itemsCreated);
         }
 
-        private void ContentImporting_ImportFileDone(Content.Import.FileEntry obj, bool failed)
+        private void ContentImporting_ImportFileDone(Content.Import.ImportFileEntry obj, bool failed)
         {
             if (failed)
                 return;

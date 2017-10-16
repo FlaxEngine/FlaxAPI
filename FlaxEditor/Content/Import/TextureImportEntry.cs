@@ -335,7 +335,7 @@ namespace FlaxEditor.Content.Import
         /// <returns>True settings has been restored, otherwise false.</returns>
         public static bool TryRestore(ref TextureImportSettings options, string assetPath)
         {
-            if (TextureFileEntry.Internal_GetTextureImportOptions(assetPath, out var internalOptions))
+            if (TextureImportEntry.Internal_GetTextureImportOptions(assetPath, out var internalOptions))
             {
                 // Restore settings
                 options.FromInternal(ref internalOptions);
@@ -348,17 +348,17 @@ namespace FlaxEditor.Content.Import
     /// <summary>
     /// Texture asset import entry.
     /// </summary>
-    /// <seealso cref="FlaxEditor.Content.Import.AssetFileEntry" />
-    public class TextureFileEntry : AssetFileEntry
+    /// <seealso cref="AssetImportEntry" />
+    public class TextureImportEntry : AssetImportEntry
     {
         private TextureImportSettings _settings = new TextureImportSettings();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextureFileEntry"/> class.
+        /// Initializes a new instance of the <see cref="TextureImportEntry"/> class.
         /// </summary>
         /// <param name="url">The source file url.</param>
         /// <param name="resultUrl">The result file url.</param>
-        public TextureFileEntry(string url, string resultUrl)
+        public TextureImportEntry(string url, string resultUrl)
             : base(url, resultUrl)
         {
             // Try to restore target asset texture import options (usefull for fast reimport)

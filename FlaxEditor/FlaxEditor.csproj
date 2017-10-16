@@ -50,14 +50,17 @@
     <Compile Include="API\Static\ScriptsBuilder.Gen.cs" />
     <Compile Include="API\TextureBases\PreviewsCache.cs" />
     <Compile Include="API\TextureBases\PreviewsCache.Gen.cs" />
+    <Compile Include="Content\Create\CreateFileEntry.cs" />
+    <Compile Include="Content\Create\CreateFilesDialog.cs" />
+    <Compile Include="Content\Create\SettingsCreateEntry.cs" />
     <Compile Include="Content\GUI\ContentView.cs" />
     <Compile Include="Content\GUI\NavigationBar.cs" />
     <Compile Include="Content\GUI\NavigationButton.cs" />
-    <Compile Include="Content\Import\AssetFileEntry.cs" />
-    <Compile Include="Content\Import\FileEntry.cs" />
+    <Compile Include="Content\Import\AssetImportEntry.cs" />
+    <Compile Include="Content\Import\ImportFileEntry.cs" />
     <Compile Include="Content\Import\ImportFilesDialog.cs" />
-    <Compile Include="Content\Import\ModelFileEntry.cs" />
-    <Compile Include="Content\Import\TextureFileEntry.cs" />
+    <Compile Include="Content\Import\ModelImportEntry.cs" />
+    <Compile Include="Content\Import\TextureImportEntry.cs" />
     <Compile Include="Content\Settings\GameSettings.cs" />
     <Compile Include="Content\Settings\SettingsBase.cs" />
     <Compile Include="Content\Settings\TimeSettings.cs" />
@@ -300,6 +303,7 @@
     <Compile Include="Windows\Assets\CubeTextureWindow.cs" />
     <Compile Include="Windows\Assets\FontWindow.cs" />
     <Compile Include="Windows\Assets\IESProfileWindow.cs" />
+    <Compile Include="Windows\Assets\JsonAssetWindow.cs" />
     <Compile Include="Windows\Assets\MaterialInstanceWindow.cs" />
     <Compile Include="Windows\Assets\MaterialWindow.cs" />
     <Compile Include="Windows\Assets\ModelWindow.cs" />
@@ -328,6 +332,7 @@
       <Name>FlaxEngine</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <Exec Command="call &quot;$(SolutionDir)onbuild.bat&quot;" Condition=" '$(OS)' == 'Windows_NT' " />

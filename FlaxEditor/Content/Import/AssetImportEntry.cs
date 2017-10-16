@@ -7,10 +7,10 @@ namespace FlaxEditor.Content.Import
     /// <summary>
     /// Asset import entry.
     /// </summary>
-    public class AssetFileEntry : FileEntry
+    public class AssetImportEntry : ImportFileEntry
     {
         /// <inheritdoc />
-        public AssetFileEntry(string url, string resultUrl)
+        public AssetImportEntry(string url, string resultUrl)
             : base(url, resultUrl)
         {
         }

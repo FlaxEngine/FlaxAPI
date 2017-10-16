@@ -36,8 +36,5 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override string DefaultThumbnailName => "Scene64";
-
-        /// <inheritdoc />
-        protected override bool DrawShadow => false;
     }
 }

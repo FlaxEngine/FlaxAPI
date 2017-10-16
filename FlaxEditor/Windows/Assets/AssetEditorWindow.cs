@@ -308,9 +308,6 @@ namespace FlaxEditor.Windows.Assets
         /// <summary>
         /// Gets the asset.
         /// </summary>
-        /// <value>
-        /// The asset.
-        /// </value>
         public T Asset => _asset;
 
         /// <inheritdoc />

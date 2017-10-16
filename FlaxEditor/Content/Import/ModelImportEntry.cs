@@ -145,7 +145,7 @@ namespace FlaxEditor.Content.Import
         /// <returns>True settings has been restored, otherwise false.</returns>
         public static bool TryRestore(ref ModelImportSettings options, string assetPath)
         {
-            if (ModelFileEntry.Internal_GetModelImportOptions(assetPath, out var internalOptions))
+            if (ModelImportEntry.Internal_GetModelImportOptions(assetPath, out var internalOptions))
             {
                 // Restore settings
                 options.FromInternal(ref internalOptions);
@@ -158,17 +158,17 @@ namespace FlaxEditor.Content.Import
     /// <summary>
     /// Model asset import entry.
     /// </summary>
-    /// <seealso cref="FlaxEditor.Content.Import.AssetFileEntry" />
-    public class ModelFileEntry : AssetFileEntry
+    /// <seealso cref="AssetImportEntry" />
+    public class ModelImportEntry : AssetImportEntry
     {
         private ModelImportSettings _settings = new ModelImportSettings();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModelFileEntry"/> class.
+        /// Initializes a new instance of the <see cref="ModelImportEntry"/> class.
         /// </summary>
         /// <param name="url">The source file url.</param>
         /// <param name="resultUrl">The result file url.</param>
-        public ModelFileEntry(string url, string resultUrl)
+        public ModelImportEntry(string url, string resultUrl)
             : base(url, resultUrl)
         {
             // Try to restore target asset model import options (usefull for fast reimport)

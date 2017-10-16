@@ -25,7 +25,7 @@ namespace FlaxEditor.Content.Import
         /// Initializes a new instance of the <see cref="ImportFilesDialog"/> class.
         /// </summary>
         /// <param name="entries">The entries to edit settings.</param>
-        public ImportFilesDialog(List<FileEntry> entries)
+        public ImportFilesDialog(List<ImportFileEntry> entries)
             : base("Import files settings")
         {
             if (entries == null || entries.Count < 1)
@@ -69,7 +69,7 @@ namespace FlaxEditor.Content.Import
                 Parent = this
             };
             cancelButton.Clicked += OnCancel;
-            
+
             // Split panel for entries list and settings editor
             var splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.Vertical, ScrollBars.Vertical)
             {
@@ -112,10 +112,10 @@ namespace FlaxEditor.Content.Import
 
         private void OnImport()
         {
-            var entries = new List<FileEntry>(_rootNode.ChildrenCount);
+            var entries = new List<ImportFileEntry>(_rootNode.ChildrenCount);
             for (int i = 0; i < _rootNode.ChildrenCount; i++)
             {
-                var fileEntry = _rootNode.Children[i].Tag as FileEntry;
+                var fileEntry = _rootNode.Children[i].Tag as ImportFileEntry;
                 if (fileEntry != null)
                     entries.Add(fileEntry);
             }
@@ -134,7 +134,7 @@ namespace FlaxEditor.Content.Import
             var selection = new List<object>(after.Count);
             for (int i = 0; i < after.Count; i++)
             {
-                if (after[i].Tag is FileEntry fileEntry && fileEntry.HasSettings)
+                if (after[i].Tag is ImportFileEntry fileEntry && fileEntry.HasSettings)
                     selection.Add(fileEntry.Settings);
             }
 

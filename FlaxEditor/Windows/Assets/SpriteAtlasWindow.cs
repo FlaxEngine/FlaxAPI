@@ -164,7 +164,7 @@ namespace FlaxEditor.Windows.Assets
 
                 // Try to restore target asset texture import options (usefull for fast reimport)
                 TextureImportSettings.InternalOptions options;
-                if (TextureFileEntry.Internal_GetTextureImportOptions(win.Item.Path, out options))
+                if (TextureImportEntry.Internal_GetTextureImportOptions(win.Item.Path, out options))
                 {
                     // Restore settings
                     ImportSettings.FromInternal(ref options);

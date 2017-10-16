@@ -5,22 +5,21 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using FlaxEngine;
 
 namespace FlaxEditor.Content.Import
 {
     /// <summary>
-    /// Creates new <see cref="FileEntry"/> for the given source file.
+    /// Creates new <see cref="ImportFileEntry"/> for the given source file.
     /// </summary>
     /// <param name="url">The source file url.</param>
     /// <param name="resultUrl">The result file url.</param>
     /// <returns>The file entry.</returns>
-    public delegate FileEntry CreateFileEntry(string url, string resultUrl);
+    public delegate ImportFileEntry ImportFileEntryHandler(string url, string resultUrl);
 
     /// <summary>
     /// File import entry.
     /// </summary>
-    public class FileEntry
+    public class ImportFileEntry
     {
         /// <summary>
         /// The path to the source file.
@@ -35,17 +34,11 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Gets a value indicating whether this entry has settings to modify.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this entr has settings; otherwise, <c>false</c>.
-        /// </value>
         public virtual bool HasSettings => false;
 
         /// <summary>
         /// Gets or sets the settings object to modify.
         /// </summary>
-        /// <value>
-        /// The settings object.
-        /// </value>
         public virtual object Settings => null;
 
         /// <summary>
@@ -59,11 +52,11 @@ namespace FlaxEditor.Content.Import
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileEntry"/> class.
+        /// Initializes a new instance of the <see cref="ImportFileEntry"/> class.
         /// </summary>
         /// <param name="url">The source file url.</param>
         /// <param name="resultUrl">The result file url.</param>
-        public FileEntry(string url, string resultUrl)
+        public ImportFileEntry(string url, string resultUrl)
         {
             Url = url;
             ResultUrl = resultUrl;
@@ -89,7 +82,7 @@ namespace FlaxEditor.Content.Import
         /// The file types registered for importing. Key is a file extension (without a leading dot).
         /// Allows to plug custom importing options gather for diffrent input file types.
         /// </summary>
-        public static readonly Dictionary<string, CreateFileEntry> FileTypes = new Dictionary<string, CreateFileEntry>(32);
+        public static readonly Dictionary<string, ImportFileEntryHandler> FileTypes = new Dictionary<string, ImportFileEntryHandler>(32);
 
         /// <summary>
         /// Creates the entry.
@@ -98,7 +91,7 @@ namespace FlaxEditor.Content.Import
         /// <param name="resultUrl">The result file url.</param>
         /// <param name="isBinaryAsset">True if result file is binary asset.</param>
         /// <returns>Created file entry.</returns>
-        public static FileEntry CreateEntry(string url, string resultUrl, bool isBinaryAsset)
+        public static ImportFileEntry CreateEntry(string url, string resultUrl, bool isBinaryAsset)
         {
             // Get extension (without a dot)
             var extension = Path.GetExtension(url);
@@ -109,12 +102,12 @@ namespace FlaxEditor.Content.Import
             extension = extension.ToLower();
 
             // Check if use overriden type
-            CreateFileEntry createDelegate;
+            ImportFileEntryHandler createDelegate;
             if (FileTypes.TryGetValue(extension, out createDelegate))
                 return createDelegate(url, resultUrl);
 
             // Use default type
-            return isBinaryAsset ? new AssetFileEntry(url, resultUrl) : new FileEntry(url, resultUrl);
+            return isBinaryAsset ? new AssetImportEntry(url, resultUrl) : new ImportFileEntry(url, resultUrl);
         }
 
         internal static void RegisterDefaultTypes()
@@ -156,14 +149,14 @@ namespace FlaxEditor.Content.Import
             FileTypes["lxo"] = ImportModel;
         }
 
-        private static FileEntry ImportModel(string url, string resultUrl)
+        private static ImportFileEntry ImportModel(string url, string resultUrl)
         {
-            return new ModelFileEntry(url, resultUrl);
+            return new ModelImportEntry(url, resultUrl);
         }
 
-        private static FileEntry ImportTexture(string url, string resultUrl)
+        private static ImportFileEntry ImportTexture(string url, string resultUrl)
         {
-            return new TextureFileEntry(url, resultUrl);
+            return new TextureImportEntry(url, resultUrl);
         }
     }
 }
