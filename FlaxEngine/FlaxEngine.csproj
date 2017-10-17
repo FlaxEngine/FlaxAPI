@@ -55,6 +55,8 @@
     <Compile Include="API\Actors\Camera.Gen.cs">
       <DependentUpon>Camera.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Actors\Collider.cs" />
+    <Compile Include="API\Actors\Collider.Gen.cs" />
     <Compile Include="API\Actors\EmptyActor.Gen.cs" />
     <Compile Include="API\Actors\EnvironmentProbe.cs" />
     <Compile Include="API\Actors\EnvironmentProbe.Gen.cs">
@@ -88,6 +90,8 @@
     <Compile Include="API\BinaryAssets\Model.Gen.cs" />
     <Compile Include="API\BinaryAssets\RawDataAsset.cs" />
     <Compile Include="API\BinaryAssets\RawDataAsset.Gen.cs" />
+    <Compile Include="API\Colliders\BoxCollider.cs" />
+    <Compile Include="API\Colliders\BoxCollider.Gen.cs" />
     <Compile Include="API\CreateWindowSettings.cs" />
     <Compile Include="API\LightActors\DirectionalLight.cs" />
     <Compile Include="API\LightActors\DirectionalLight.Gen.cs" />
