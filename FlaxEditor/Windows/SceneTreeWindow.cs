@@ -83,7 +83,14 @@ namespace FlaxEditor.Windows
                         new KeyValuePair<string, Type>("Skybox", typeof(Skybox)),
                     }
                 },
-                // TODO: physics group with rigid and kinematic bodies and stuff
+                new ActorsGroup
+                {
+                    Name = "Physics",
+                    Types = new[]
+                    {
+                        new KeyValuePair<string, Type>("Box Collider", typeof(BoxCollider)),
+                    }
+                },
                 new ActorsGroup
                 {
                     Name = "CSG",
