@@ -63,6 +63,7 @@
     <Compile Include="Content\Import\TextureImportEntry.cs" />
     <Compile Include="Content\Proxy\SettingsProxy.cs" />
     <Compile Include="Content\Settings\GameSettings.cs" />
+    <Compile Include="Content\Settings\LayersAndTagsSettings.cs" />
     <Compile Include="Content\Settings\SettingsBase.cs" />
     <Compile Include="Content\Settings\TimeSettings.cs" />
     <Compile Include="Content\Tree\RootContentTreeNode.cs" />

@@ -61,7 +61,23 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override AssetItem ConstructItem(string path, string typeName, ref Guid id)
         {
-            return new JsonAssetItem(path, id, TypeName);
+            return new JsonAssetItem(path, id, typeName);
+        }
+    }
+
+    /// <summary>
+    /// Generic Json assets proxy (supports all json assets that don't have dedicated proxy).
+    /// </summary>
+    /// <seealso cref="FlaxEditor.Content.JsonAssetBaseProxy" />
+    public sealed class GenericJsonAssetProxy : JsonAssetProxy
+    {
+        /// <inheritdoc />
+        public override string TypeName => typeof(JsonAsset).FullName;
+
+        /// <inheritdoc />
+        public override bool AcceptsAsset(string typeName, string path)
+        {
+            return path.EndsWith(FileExtension, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

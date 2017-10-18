@@ -17,5 +17,11 @@ namespace FlaxEditor.Content.Settings
         /// </summary>
         [EditorOrder(1010), EditorDisplay("Other Settings"), AssetReference(typeof(TimeSettings), true), Tooltip("Reference to Time Settings asset")]
         public JsonAsset Time;
+
+        /// <summary>
+        /// Reference to <see cref="LayersAndTagsSettings"/> asset.
+        /// </summary>
+        [EditorOrder(1020), EditorDisplay("Other Settings"), AssetReference(typeof(LayersAndTagsSettings), true), Tooltip("Reference to Layers & Tags Settings asset")]
+        public JsonAsset LayersAndTags;
     }
 }

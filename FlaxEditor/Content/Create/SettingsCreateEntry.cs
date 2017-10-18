@@ -22,18 +22,24 @@ namespace FlaxEditor.Content.Create
             /// <summary>
             /// The game settings.
             /// </summary>
-            GameSettings = 0,
+            GameSettings,
 
             /// <summary>
             /// The time settings.
             /// </summary>
-            TimeSettings = 1,
+            TimeSettings,
+
+            /// <summary>
+            /// The layers and tags settings.
+            /// </summary>
+            LayersAndTags,
         }
 
         private static Type[] _types =
         {
             typeof(GameSettings),
             typeof(TimeSettings),
+            typeof(LayersAndTagsSettings),
         };
 
         /// <summary>

@@ -808,7 +808,11 @@ namespace FlaxEditor.Modules
             // Settings
             Proxy.Add(new SettingsProxy<GameSettings>());
             Proxy.Add(new SettingsProxy<TimeSettings>());
+            Proxy.Add(new SettingsProxy<LayersAndTagsSettings>());
             
+            // Last add generic json (won't override other json proxies)
+            Proxy.Add(new GenericJsonAssetProxy());
+
             // Create content folders nodes
             ProjectContent = new MainContentTreeNode(ContentFolderType.Content, Globals.ContentFolder);
             ProjectSource = new MainContentTreeNode(ContentFolderType.Source, Globals.SourceFolder);
