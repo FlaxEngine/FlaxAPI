@@ -147,7 +147,6 @@ namespace FlaxEditor.States
                 _lastSceneFromRequest = _scenesToUnload[i].ID;
                 SceneManager.UnloadSceneAsync(_scenesToUnload[i]);
             }
-            FlaxEngine.Scripting.FlushRemovedObjects();
             for (int i = 0; i < _scenesToLoad.Count; i++)
             {
                 var id = _scenesToLoad[i];
