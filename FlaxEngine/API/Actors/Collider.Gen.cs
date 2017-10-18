@@ -27,7 +27,7 @@ namespace FlaxEngine
 		/// A trigger doesn't register a collision with an incoming Rigidbody. Instead, it sends OnTriggerEnter, OnTriggerExit and OnTriggerStay message when a rigidbody enters or exits the trigger volume.
 		/// </remarks>
 		[UnmanagedCall]
-		[EditorOrder(-100), EditorDisplay("Collider"), Tooltip("Check if use collider shape to detect objects or turn if off to collide with others")]
+		[EditorOrder(0), EditorDisplay("Collider"), Tooltip("Check if use collider shape to detect objects or turn if off to collide with others")]
 		public bool IsTrigger
 		{
 #if UNIT_TEST_COMPILANT
@@ -42,7 +42,7 @@ namespace FlaxEngine
 		/// Gets or sets the center of the collider, measured in the object's local space.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(-10), EditorDisplay("Collider"), Tooltip("Center point of the collider in the actor local space")]
+		[EditorOrder(10), EditorDisplay("Collider"), Tooltip("Center point of the collider in the actor local space")]
 		public Vector3 Center
 		{
 #if UNIT_TEST_COMPILANT
@@ -60,7 +60,7 @@ namespace FlaxEngine
 		/// Colliders whose distance is less than the sum of their ContactOffset values will generate contacts. The contact offset must be positive. Contact offset allows the collision detection system to predictively enforce the contact constraint even when the objects are slightly separated.
 		/// </remarks>
 		[UnmanagedCall]
-		[EditorOrder(-90), EditorDisplay("Collider"), Tooltip("Determinates distance ")]
+		[EditorOrder(1), Limit(0, 100), EditorDisplay("Collider"), Tooltip("Determinates distance ")]
 		public float ContactOffset
 		{
 #if UNIT_TEST_COMPILANT
