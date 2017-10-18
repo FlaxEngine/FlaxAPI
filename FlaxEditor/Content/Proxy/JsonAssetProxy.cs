@@ -80,4 +80,29 @@ namespace FlaxEditor.Content
             return path.EndsWith(FileExtension, StringComparison.OrdinalIgnoreCase);
         }
     }
+
+    /// <summary>
+    /// Content proxy for a json assets of the given type that can be spawned in the editor.
+    /// </summary>
+    /// <seealso cref="FlaxEditor.Content.JsonAssetProxy" />
+    public sealed class SpawnableJsonAssetProxy<T> : JsonAssetProxy where T : new()
+    {
+        /// <inheritdoc />
+        public override string Name { get; } = CustomEditors.CustomEditorsUtil.GetPropertyNameUI(typeof(T).Name);
+        
+        /// <inheritdoc />
+        public override bool CanCreate(ContentFolder targetLocation)
+        {
+            return targetLocation.CanHaveAssets;
+        }
+
+        /// <inheritdoc />
+        public override void Create(string outputPath)
+        {
+            Editor.SaveJsonAsset(outputPath, new T());
+        }
+
+        /// <inheritdoc />
+        public override string TypeName { get; } = typeof(T).FullName;
+    }
 }
