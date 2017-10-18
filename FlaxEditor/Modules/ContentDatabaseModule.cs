@@ -809,6 +809,7 @@ namespace FlaxEditor.Modules
             Proxy.Add(new SettingsProxy<GameSettings>());
             Proxy.Add(new SettingsProxy<TimeSettings>());
             Proxy.Add(new SettingsProxy<LayersAndTagsSettings>());
+            Proxy.Add(new SettingsProxy<PhysicsSettings>());
             
             // Last add generic json (won't override other json proxies)
             Proxy.Add(new GenericJsonAssetProxy());

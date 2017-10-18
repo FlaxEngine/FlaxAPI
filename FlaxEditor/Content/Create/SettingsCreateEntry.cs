@@ -32,7 +32,12 @@ namespace FlaxEditor.Content.Create
             /// <summary>
             /// The layers and tags settings.
             /// </summary>
-            LayersAndTags,
+            LayersAndTagsSettings,
+
+            /// <summary>
+            /// The physics settings.
+            /// </summary>
+            PhysicsSettings,
         }
 
         private static Type[] _types =
@@ -40,6 +45,7 @@ namespace FlaxEditor.Content.Create
             typeof(GameSettings),
             typeof(TimeSettings),
             typeof(LayersAndTagsSettings),
+            typeof(PhysicsSettings),
         };
 
         /// <summary>

@@ -23,5 +23,11 @@ namespace FlaxEditor.Content.Settings
         /// </summary>
         [EditorOrder(1020), EditorDisplay("Other Settings"), AssetReference(typeof(LayersAndTagsSettings), true), Tooltip("Reference to Layers & Tags Settings asset")]
         public JsonAsset LayersAndTags;
+
+        /// <summary>
+        /// Reference to <see cref="PhysicsSettings"/> asset.
+        /// </summary>
+        [EditorOrder(1030), EditorDisplay("Other Settings"), AssetReference(typeof(PhysicsSettings), true), Tooltip("Reference to Physics Settings asset")]
+        public JsonAsset Physics;
     }
 }

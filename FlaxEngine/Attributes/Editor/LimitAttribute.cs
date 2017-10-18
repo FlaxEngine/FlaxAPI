@@ -34,7 +34,7 @@ namespace FlaxEngine
         /// <param name="min">The minimum limit value.</param>
         /// <param name="max">The maximum limit value.</param>
         /// <param name="sliderSpeed">The slider speed.</param>
-        public LimitAttribute(float min, float max, float sliderSpeed = 1.0f)
+        public LimitAttribute(float min, float max = float.MaxValue, float sliderSpeed = 1.0f)
         {
             Min = min;
             Max = max;
