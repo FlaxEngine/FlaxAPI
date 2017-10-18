@@ -838,6 +838,7 @@ namespace FlaxEditor.Viewport
             new ViewFlagOptions(ViewFlags.LensFlares, "Lens Flares"),
             new ViewFlagOptions(ViewFlags.CSG, "CSG Brushes"),
             new ViewFlagOptions(ViewFlags.DepthOfField, "Depth of Field"),
+            new ViewFlagOptions(ViewFlags.PhysicsDebug, "Physics Debug"),
         };
 
         private void widgetViewFlagsClick(int id, ContextMenuBase cm)
