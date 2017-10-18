@@ -60,7 +60,7 @@ namespace FlaxEngine
 		/// Colliders whose distance is less than the sum of their ContactOffset values will generate contacts. The contact offset must be positive. Contact offset allows the collision detection system to predictively enforce the contact constraint even when the objects are slightly separated.
 		/// </remarks>
 		[UnmanagedCall]
-		[EditorOrder(1), Limit(0, 100), EditorDisplay("Collider"), Tooltip("Determinates distance ")]
+		[EditorOrder(1), Limit(0, 100), EditorDisplay("Collider"), Tooltip("Determinates distance for detecting contacts with other colliders.")]
 		public float ContactOffset
 		{
 #if UNIT_TEST_COMPILANT
@@ -68,6 +68,21 @@ namespace FlaxEngine
 #else
 			get { return Internal_GetContactOffset(unmanagedPtr); }
 			set { Internal_SetContactOffset(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the phuysical material used by this collider.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(2), AssetReference(typeof(PhysicalMaterial), true), EditorDisplay("Collider"), Tooltip("The phuysical material used by this collider.")]
+		public JsonAsset Material
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetMaterial(unmanagedPtr); }
+			set { Internal_SetMaterial(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
 #endif
 		}
 
@@ -85,6 +100,10 @@ namespace FlaxEngine
 		internal static extern float Internal_GetContactOffset(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetContactOffset(IntPtr obj, float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern JsonAsset Internal_GetMaterial(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetMaterial(IntPtr obj, IntPtr val);
 #endif
 #endregion
 	}
