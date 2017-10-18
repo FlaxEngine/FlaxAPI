@@ -2,7 +2,6 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using FlaxEditor.CustomEditors;
 using FlaxEngine;
 
 namespace FlaxEditor.Content.Settings

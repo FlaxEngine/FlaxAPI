@@ -68,7 +68,6 @@
     <Compile Include="Content\Settings\SettingsBase.cs" />
     <Compile Include="Content\Settings\TimeSettings.cs" />
     <Compile Include="Content\Tree\RootContentTreeNode.cs" />
-    <Compile Include="CustomEditors\AssetReferenceAttribute.cs" />
     <Compile Include="CustomEditors\CustomEditor.cs" />
     <Compile Include="CustomEditors\CustomEditorsUtil.cs" />
     <Compile Include="CustomEditors\Dedicated\ActorEditor.cs" />

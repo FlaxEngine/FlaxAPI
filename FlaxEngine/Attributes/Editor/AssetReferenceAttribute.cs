@@ -4,7 +4,7 @@
 
 using System;
 
-namespace FlaxEditor.CustomEditors
+namespace FlaxEngine
 {
     /// <summary>
     /// Specifies a options for a asset reference picker in the editor. Allows to customize view or provide custom value assign policy.
@@ -33,7 +33,7 @@ namespace FlaxEditor.CustomEditors
             TypeName = typeName?.FullName;
             UseSmallPicker = useSmallPicker;
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AssetReferenceAttribute"/> class.
         /// </summary>

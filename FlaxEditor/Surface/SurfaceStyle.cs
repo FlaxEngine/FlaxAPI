@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -17,22 +17,74 @@ namespace FlaxEditor.Surface
         /// </summary>
         public struct ColorsData
         {
-            // Connecting nodes
+            /// <summary>
+            /// The connecting nodes color.
+            /// </summary>
             public Color Connecting;
+
+            /// <summary>
+            /// The connecting nodes color (for valid connection).
+            /// </summary>
             public Color ConnectingValid;
+
+            /// <summary>
+            /// The connecting nodes color (for invalid connection).
+            /// </summary>
             public Color ConnectingInvalid;
 
-            // Boxes
+            /// <summary>
+            /// The impulse boxes color.
+            /// </summary>
             public Color Impulse;
+
+            /// <summary>
+            /// The boolean boxes color.
+            /// </summary>
             public Color Bool;
+
+            /// <summary>
+            /// The integer boxes color.
+            /// </summary>
             public Color Integer;
+
+            /// <summary>
+            /// The floating point boxes color.
+            /// </summary>
             public Color Float;
+
+            /// <summary>
+            /// The vector boxes color.
+            /// </summary>
             public Color Vector;
+
+            /// <summary>
+            /// The string boxes color.
+            /// </summary>
             public Color String;
+
+            /// <summary>
+            /// The object boxes color.
+            /// </summary>
             public Color Object;
+
+            /// <summary>
+            /// The rotation boxes color.
+            /// </summary>
             public Color Rotation;
+
+            /// <summary>
+            /// The transform boxes color.
+            /// </summary>
             public Color Transform;
+
+            /// <summary>
+            /// The box boxes color.
+            /// </summary>
             public Color Box;
+
+            /// <summary>
+            /// The default boxes color.
+            /// </summary>
             public Color Default;
         }
 
@@ -41,9 +93,24 @@ namespace FlaxEditor.Surface
         /// </summary>
         public struct IconsData
         {
+            /// <summary>
+            /// Icon for boxes without connections.
+            /// </summary>
             public Sprite BoxOpen;
+
+            /// <summary>
+            /// Icon for boxes with connections.
+            /// </summary>
             public Sprite BoxClose;
+
+            /// <summary>
+            /// Icon for impulse boxes without connections.
+            /// </summary>
             public Sprite ArowOpen;
+
+            /// <summary>
+            /// Icon for impulse boxes with connections.
+            /// </summary>
             public Sprite ArowClose;
         }
 

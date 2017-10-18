@@ -20,7 +20,7 @@ namespace FlaxEngine
 
         /// <summary>
         /// Gets the parent model asset.
-        /// </summary
+        /// </summary>
         public Model ParentModel => _model;
 
         /// <summary>
