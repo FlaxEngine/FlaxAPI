@@ -22,25 +22,16 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// Gets the values type.
         /// </summary>
-        /// <value>
-        /// The values type.
-        /// </value>
         public Type Type { get; }
 
         /// <summary>
         /// Gets a value indicating whether single object is selected.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if single object is selected; otherwise, <c>false</c>.
-        /// </value>
         public bool IsSingleObject => Count == 1;
 
         /// <summary>
         /// Gets a value indicating whether selected objects are diffrent values.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if selected objects are diffrent values; otherwise, <c>false</c>.
-        /// </value>
         public bool HasDiffrentValues
         {
             get
@@ -57,9 +48,6 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// Gets a value indicating whether selected objects are diffrent types.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if selected objects are diffrent types; otherwise, <c>false</c>.
-        /// </value>
         public bool HasDiffrentTypes
         {
             get
@@ -79,9 +67,6 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// Gets the values types array (without duplicates).
         /// </summary>
-        /// <value>
-        /// The values types.
-        /// </value>
         public Type[] ValuesTypes
         {
             get

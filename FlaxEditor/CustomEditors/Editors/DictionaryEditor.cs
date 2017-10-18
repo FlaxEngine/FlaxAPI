@@ -9,6 +9,7 @@ using System.Linq;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using Utils = FlaxEditor.Utilities.Utils;
 
 namespace FlaxEditor.CustomEditors.Editors
 {
@@ -181,7 +182,7 @@ namespace FlaxEditor.CustomEditors.Editors
                             }
                         } while (!isUnique);
 
-                        newValues[uniqueKey] = GetDefaultValue(valueType);
+                        newValues[uniqueKey] = Utils.GetDefaultValue(valueType);
                     }
                     else if (keyType == typeof(string))
                     {
@@ -201,7 +202,7 @@ namespace FlaxEditor.CustomEditors.Editors
                             }
                         } while (!isUnique);
 
-                        newValues[uniqueKey] = GetDefaultValue(valueType);
+                        newValues[uniqueKey] = Utils.GetDefaultValue(valueType);
                     }
                     else
                     {
@@ -213,24 +214,6 @@ namespace FlaxEditor.CustomEditors.Editors
             }
         }
         
-        /// <summary>
-        /// Gets the default value for the given type (can be value type or reference type).
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns>The created instace.</returns>
-        public static object GetDefaultValue(Type type)
-        {
-            if (type == typeof(string))
-                return string.Empty;
-            if (type.IsValueType)
-            {
-                if (type == typeof(int))
-                    return 0;
-                return null;
-            }
-            return Activator.CreateInstance(type);
-        }
-
         /// <inheritdoc />
         public override void Refresh()
         {

@@ -3,8 +3,6 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Linq;
-using System.Reflection;
 
 namespace FlaxEditor.Utilities
 {
@@ -30,6 +28,24 @@ namespace FlaxEditor.Utilities
             }
 
             return string.Format("{0:0.##} {1}", bytes, sizes[order]);
+        }
+
+        /// <summary>
+        /// Gets the default value for the given type (can be value type or reference type).
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>The created instace.</returns>
+        public static object GetDefaultValue(Type type)
+        {
+            if (type == typeof(string))
+                return String.Empty;
+            if (type.IsValueType)
+            {
+                if (type == typeof(int))
+                    return 0;
+                return null;
+            }
+            return Activator.CreateInstance(type);
         }
     }
 }

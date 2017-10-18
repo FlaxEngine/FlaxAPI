@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Linq;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine;
@@ -23,6 +24,18 @@ namespace FlaxEditor.CustomEditors.Editors
         /// Gets the length of the collection.
         /// </summary>
         public abstract int Count { get; }
+
+        /// <summary>
+        /// Gets the type of the collection elements.
+        /// </summary>
+        public Type ElementType
+        {
+            get
+            {
+                var type = Values.Type;
+                return type.IsGenericType ? type.GetGenericArguments()[0] : type.GetElementType();
+            }
+        }
 
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
@@ -71,7 +84,7 @@ namespace FlaxEditor.CustomEditors.Editors
             // Elements
             if (size > 0)
             {
-                var elementType = type.IsGenericType ? type.GetGenericArguments()[0] : type.GetElementType();
+                var elementType = ElementType;
                 for (int i = 0; i < size; i++)
                 {
                     layout.Object("Element " + i, new ListValueContainer(elementType, i, Values));

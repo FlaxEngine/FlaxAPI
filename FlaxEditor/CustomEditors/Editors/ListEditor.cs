@@ -45,7 +45,16 @@ namespace FlaxEditor.CustomEditors.Editors
                         newValues.Add(list[oldSize - 1]);
                     }
                 }
-
+                else if (newSize > 0)
+                {
+                    // Fill new entries
+                    var defaultValue = Utilities.Utils.GetDefaultValue(ElementType);
+                    for (int i = oldSize; i < newSize; i++)
+                    {
+                        newValues.Add(defaultValue);
+                    }
+                }
+                
                 SetValue(newValues);
             }
         }
