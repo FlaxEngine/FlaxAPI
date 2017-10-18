@@ -36,9 +36,6 @@ namespace FlaxEditor.Viewport
             : base(task, useWidgets)
         {
             _moveStartTime = -1;
-
-            _nearPlane = 1;
-            _farPlane = 10000;
         }
 
         /// <summary>

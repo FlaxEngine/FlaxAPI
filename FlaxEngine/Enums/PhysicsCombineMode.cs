@@ -5,8 +5,13 @@
 namespace FlaxEngine
 {
     /// <summary>
-    /// Physical material properties combine modes.
+    /// Enumeration that determines the way in which two material properties will be combined to yield a friction or restitution coefficient for a collision.
     /// </summary>
+    /// <remarks>
+    /// Physics doesn't have any inherent combinations because the coefficients are determined empirically on a case by case basis.
+    /// However, simulating this with a pairwise lookup table is often impractical.
+    /// The effective combine mode for the pair is maximum(material0.combineMode, material1.combineMode).
+    /// </remarks>
     public enum PhysicsCombineMode
     {
         /// <summary>

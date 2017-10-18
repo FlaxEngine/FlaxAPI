@@ -189,6 +189,7 @@
     <Compile Include="Engine\Mesh.cs" />
     <Compile Include="Engine\ModelEntryInfo.cs" />
     <Compile Include="Engine\ModelLOD.cs" />
+    <Compile Include="Enums\PhysicsCombineMode.cs" />
     <Compile Include="Enums\Quality.cs" />
     <Compile Include="Enums\UI.cs" />
     <Compile Include="Attributes\Editor\CustomEditorAttribute.cs" />

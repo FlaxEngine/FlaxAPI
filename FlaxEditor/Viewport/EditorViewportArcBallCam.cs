@@ -26,9 +26,6 @@ namespace FlaxEditor.Viewport
         public EditorViewportArcBallCam(SceneRenderTask task, bool useWidgets, float orbitRadius, Vector3 orbitCenter)
             : base(task, useWidgets)
         {
-            _nearPlane = 1;
-            _farPlane = 10000;
-
             _orbitRadius = orbitRadius;
             _orbitCenter = orbitCenter;
 
