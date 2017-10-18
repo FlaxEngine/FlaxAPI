@@ -19,6 +19,69 @@ namespace FlaxEngine.Json
     /// <seealso cref="Newtonsoft.Json.JsonConverter" />
     internal class FlaxObjectConverter : JsonConverter
     {
+        private struct GuidInterop
+        {
+            public uint A;
+            public uint B;
+            public uint C;
+            public uint D;
+        }
+
+        private static unsafe void ParseHex(char* str, int length, out uint result)
+        {
+            uint sum = 0;
+            char* p = str;
+            char* end = str + length;
+
+            if (*p == '0' && *(p + 1) == 'x')
+                p += 2;
+            
+            while (*p != 0 && p < end)
+            {
+                int c = *p - '0';
+
+                if (c < 0 || c > 9)
+                {
+                    c = char.ToLower(*p) - 'a' + 10;
+                    if (c < 10 || c > 15)
+                    {
+                        result = 0;
+                        return;
+                    }
+                }
+
+                sum = 16 * sum + (uint)c;
+
+                p++;
+            }
+
+            result = sum;
+        }
+
+        private static unsafe string GetStringID(Guid id)
+        {
+            GuidInterop* g = (GuidInterop*)&id;
+            return string.Format("{0:x8}{1:x8}{2:x8}{3:x8}", g->A, g->B, g->C, g->D);
+        }
+
+        private static unsafe void ParseID(string str, out Guid id)
+        {
+            GuidInterop g;
+            fixed (char* a = str)
+            {
+                char* b = a + 8;
+                char* c = b + 8;
+                char* d = c + 8;
+
+                ParseHex(a, 8, out g.A);
+                ParseHex(b, 8, out g.B);
+                ParseHex(c, 8, out g.C);
+                ParseHex(d, 8, out g.D);
+            }
+
+            id = *(Guid*)&g;
+        }
+
         /// <inheritdoc />
         public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
         {
@@ -26,7 +89,7 @@ namespace FlaxEngine.Json
             if (value is Object obj)
                 id = obj.ID;
 
-            writer.WriteValue(id.ToString("N"));
+            writer.WriteValue(GetStringID(id));
         }
 
         /// <inheritdoc />
@@ -34,7 +97,8 @@ namespace FlaxEngine.Json
         {
             if (reader.TokenType == JsonToken.String)
             {
-                var id = Guid.Parse((string)reader.Value);
+                Guid id;
+                ParseID((string)reader.Value, out id);
                 return Object.Find<Object>(ref id);
             }
 
