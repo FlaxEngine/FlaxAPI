@@ -92,6 +92,10 @@
     <Compile Include="API\BinaryAssets\RawDataAsset.Gen.cs" />
     <Compile Include="API\Colliders\BoxCollider.cs" />
     <Compile Include="API\Colliders\BoxCollider.Gen.cs" />
+    <Compile Include="API\Colliders\CapsuleCollider.cs" />
+    <Compile Include="API\Colliders\CapsuleCollider.Gen.cs" />
+    <Compile Include="API\Colliders\SphereCollider.cs" />
+    <Compile Include="API\Colliders\SphereCollider.Gen.cs" />
     <Compile Include="API\CreateWindowSettings.cs" />
     <Compile Include="API\LightActors\DirectionalLight.cs" />
     <Compile Include="API\LightActors\DirectionalLight.Gen.cs" />
