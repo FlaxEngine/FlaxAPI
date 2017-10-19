@@ -46,13 +46,7 @@ namespace FlaxEditor.Content.Settings
         /// </summary>
         [EditorOrder(50), EditorDisplay("Simulation"), Tooltip("Default restitution combine mode, controls how restitution is computed for multiple materials.")]
         public PhysicsCombineMode RestitutionCombineMode = PhysicsCombineMode.Average;
-
-        /// <summary>
-        /// The maximum angular velocity that a simulated object can achieve.
-        /// </summary>
-        [EditorOrder(60), EditorDisplay("Simulation"), Tooltip("The maximum angular velocity that a simulated object can achieve.")]
-        public float MaxAngularVelocity = 7.0f;
-
+        
         /// <summary>
         /// If true CCD will be ignored. This is an optimization when CCD is never used which removes the need for physx to check it internally.
         /// </summary>

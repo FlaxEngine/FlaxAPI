@@ -271,7 +271,6 @@
     <Compile Include="Assertions\FloatComparer.cs" />
     <Compile Include="AssetTypes\MaterialBase.cs" />
     <Compile Include="AssetTypes\Shader.cs" />
-    <Compile Include="Bodies\BoxBody.cs" />
     <Compile Include="Enums\BrushMode.cs" />
     <Compile Include="Enums\Input.Enums.cs" />
     <Compile Include="Json\JsonSerializer.cs" />
@@ -317,7 +316,6 @@
     <Compile Include="Engine\Exceptions\MissingReferenceException.cs" />
     <Compile Include="Engine\Object.cs" />
     <Compile Include="Math\Plane.cs" />
-    <Compile Include="Bodies\PhysicBody.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Math\Quaternion.cs" />
     <Compile Include="Math\Ray.cs" />
