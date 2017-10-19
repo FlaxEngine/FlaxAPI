@@ -17,6 +17,9 @@ namespace FlaxEngine
 	/// <summary>
 	/// A capsule-shaped primitive collider.
 	/// </summary>
+	/// <remarks>
+	/// Capsules are cylinders with a half-sphere at each end.
+	/// </remarks>
 	[Serializable]
 	public sealed partial class CapsuleCollider : Collider
 	{
