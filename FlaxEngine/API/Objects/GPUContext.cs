@@ -42,6 +42,7 @@ namespace FlaxEngine.Rendering
         /// <param name="mode">Custom view mode option.</param>
         /// <param name="customActors">Custom set of actors to render.</param>
         /// <param name="actorsSource">Actors source to use during rendering.</param>
+        /// <param name="customPostFx">The set of custom post effects to use during rendering. Use null to skip it.</param>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif

@@ -224,6 +224,7 @@ namespace FlaxEngine.GUI
             }
         }
 
+        /// <inheritdoc />
         public override bool OnShowTooltip(out string text, out Vector2 location, out Rectangle area)
         {
             base.OnShowTooltip(out text, out location, out area);

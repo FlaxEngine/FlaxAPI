@@ -99,11 +99,13 @@ namespace FlaxEngine.Assertions
             return Math.Abs((actual - expected) / (single <= single1 ? single1 : single)) <= error;
         }
 
+        /// <inheritdoc />
         public bool Equals(float a, float b)
         {
             return !_relative ? AreEqual(a, b, _error) : AreEqualRelative(a, b, _error);
         }
 
+        /// <inheritdoc />
         public int GetHashCode(float obj)
         {
             return GetHashCode();

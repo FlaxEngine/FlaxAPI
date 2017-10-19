@@ -687,6 +687,10 @@ namespace FlaxEngine
             return new Color(R * multiplier.R, G * multiplier.G, B * multiplier.B, A);
         }
 
+        /// <summary>
+        /// Converts the color to HSV color space (retured as vector).
+        /// </summary>
+        /// <returns>The HSV color.</returns>
         public Vector3 ToHSV()
         {
             float RGBMin = Mathf.Min(R, G, B);
@@ -711,6 +715,13 @@ namespace FlaxEngine
             return new Vector3(Hue, Saturation, Value);
         }
 
+        /// <summary>
+        /// Convert color from the RGB colro space to HSV color space.
+        /// </summary>
+        /// <param name="rgbColor">Color of the RGB.</param>
+        /// <param name="h">The output Hue.</param>
+        /// <param name="s">The output Saturation.</param>
+        /// <param name="v">The output Value.</param>
         public static void RGBToHSV(Color rgbColor, out float h, out float s, out float v)
         {
             if ((rgbColor.B > rgbColor.G) && (rgbColor.B > rgbColor.R))

@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -141,13 +141,28 @@ namespace FlaxEngine.GUI
     }
 
     /// <summary>
-    /// Drag item positioning
+    /// The drag item positioning modes.
     /// </summary>
     public enum DragItemPositioning
     {
+        /// <summary>
+        /// The none.
+        /// </summary>
         None = 0,
+
+        /// <summary>
+        /// At the item.
+        /// </summary>
         At,
+
+        /// <summary>
+        /// Above the item (near the upper/left edge).
+        /// </summary>
         Above,
+
+        /// <summary>
+        /// Below the item (near the bottom/right edge)
+        /// </summary>
         Below
     }
 

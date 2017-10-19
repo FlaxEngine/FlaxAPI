@@ -95,6 +95,10 @@ namespace FlaxEngine.GUI
             return true;
         }
 
+        /// <summary>
+        /// Performs a check if rendering a current frame can be skipped (if control size is too small, has missing data, etc.).
+        /// </summary>
+        /// <returns>True if skip rendering, otherwise false.</returns>
         protected virtual bool CanSkipRendering()
         {
             _task.Output = _backBuffer;
@@ -113,6 +117,10 @@ namespace FlaxEngine.GUI
             return false;
         }
 
+        /// <summary>
+        /// Called when ask rendering ends.
+        /// </summary>
+        /// <param name="task">The task.</param>
         protected virtual void OnEnd(SceneRenderTask task)
         {
             // Check if was using old backuffer

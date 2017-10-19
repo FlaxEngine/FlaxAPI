@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -9,8 +9,19 @@ namespace FlaxEngine
     /// </summary>
     public enum TextAlignment
     {
+        /// <summary>
+        /// Align text near the edge.
+        /// </summary>
         Near = 0,
+
+        /// <summary>
+        /// Align text to the center.
+        /// </summary>
         Center,
+
+        /// <summary>
+        /// Align text to the far edge.
+        /// </summary>
         Far
     };
 
@@ -19,8 +30,19 @@ namespace FlaxEngine
     /// </summary>
     public enum TextWrapping
     {
+        /// <summary>
+        /// No text wrapping.
+        /// </summary>
         NoWrap = 0,
+
+        /// <summary>
+        /// Wrap only whole words that overflow.
+        /// </summary>
         WrapWords,
+
+        /// <summary>
+        /// Wrap single characters that overflow.
+        /// </summary>
         WrapChars
     };
 
@@ -55,13 +77,13 @@ namespace FlaxEngine
         public float BaseLinesGapScale;
 
         /// <summary>
-        /// Gets default layout
+        /// Gets the default layout.
         /// </summary>
         public static TextLayoutOptions Default
         {
             get
             {
-                return new TextLayoutOptions()
+                return new TextLayoutOptions
                 {
                     Bounds = new Rectangle(0, 0, float.MaxValue, float.MaxValue),
                     BaseLinesGapScale = 1.0f,

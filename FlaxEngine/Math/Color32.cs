@@ -68,11 +68,25 @@ namespace FlaxEngine
             return new Color32((byte)(a.R + (b.R - a.R) * t), (byte)(a.G + (b.G - a.G) * t), (byte)(a.B + (b.B - a.B) * t), (byte)(a.A + (b.A - a.A) * t));
         }
 
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Color"/> to <see cref="Color32"/>.
+        /// </summary>
+        /// <param name="c">The color.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator Color32(Color c)
         {
             return new Color32((byte)(Mathf.Clamp01(c.R) * 255f), (byte)(Mathf.Clamp01(c.G) * 255f), (byte)(Mathf.Clamp01(c.B) * 255f), (byte)(Mathf.Clamp01(c.A) * 255f));
         }
 
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Color32"/> to <see cref="Color"/>.
+        /// </summary>
+        /// <param name="c">The color.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator Color(Color32 c)
         {
             return new Color(c.R / 255f, c.G / 255f, c.B / 255f, c.A / 255f);
