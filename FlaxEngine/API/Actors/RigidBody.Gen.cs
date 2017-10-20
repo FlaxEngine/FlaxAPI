@@ -369,6 +369,48 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Applies a force (or impulse) defined in the world space to the rigidbody at its center of mass.
+		/// </summary>
+		/// <remarks>
+		/// This will not induce a torque<para>ForceMode determines if the force is to be conventional or impulsive.</para><para>Each actor has an acceleration and a velocity change accumulator which are directly modified using the modes ForceMode.Acceleration and ForceMode.VelocityChange respectively. The modes ForceMode.Force and ForceMode.Impulse also modify these same accumulators and are just short hand for multiplying the vector parameter by inverse mass and then using ForceMode.Acceleration and ForceMode.VelocityChange respectively.</para>
+		/// </remarks>
+		/// <param name="force">The force/impulse to apply defined in the world space.</param>
+		/// <param name="mode">The mode to use when applying the force/impulse.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void AddForce(Vector3 force, ForceMode mode = ForceMode.Force) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_AddForce(unmanagedPtr, ref force, mode);
+#endif
+		}
+
+		/// <summary>
+		/// Applies an impulsive torque defined in the world space to the rigidbody.
+		/// </summary>
+		/// <remarks>
+		/// ForceMode determines if the force is to be conventional or impulsive.<para>Each actor has an angular acceleration and an angular velocity change accumulator which are directly modified using the modes ForceMode.Acceleration and ForceMode.VelocityChange respectively.The modes ForceMode.Force and ForceMode.Impulse also modify these same accumulators and are just short hand for multiplying the vector parameter by inverse inertia and then using ForceMode.Acceleration and ForceMode.VelocityChange respectively.
+		/// </remarks>
+		/// <param name="torque">The torque to apply defined in the world space.</param>
+		/// <param name="mode">The mode to use when applying the force/impulse.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void AddTorque(Vector3 torque, ForceMode mode = ForceMode.Force) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_AddTorque(unmanagedPtr, ref torque, mode);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -447,6 +489,10 @@ namespace FlaxEngine
 		internal static extern void Internal_Sleep(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_WakeUp(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_AddForce(IntPtr obj, ref Vector3 force, ForceMode mode);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_AddTorque(IntPtr obj, ref Vector3 torque, ForceMode mode);
 #endif
 #endregion
 	}
