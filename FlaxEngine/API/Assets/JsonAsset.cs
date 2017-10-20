@@ -28,12 +28,13 @@ namespace FlaxEngine
             if(!IsLoaded)
                 throw new InvalidOperationException("Cannot use unloaded asset.");
 
+            var allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
             var assemblies = new[]
             {
-                Utils.GetAssemblyByName("Assembly"),
-                Utils.GetAssemblyByName("Assembly.Editor"),
-                Utils.GetAssemblyByName("FlaxEditor"),
-                Utils.GetAssemblyByName("FlaxEngine"),
+                Utils.GetAssemblyByName("Assembly", allAssemblies),
+                Utils.GetAssemblyByName("Assembly.Editor", allAssemblies),
+                Utils.GetAssemblyByName("FlaxEditor", allAssemblies),
+                Utils.GetAssemblyByName("FlaxEngine", allAssemblies),
             };
 
             var dataTypeName = DataTypeName;

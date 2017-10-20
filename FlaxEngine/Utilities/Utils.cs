@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 namespace FlaxEngine
@@ -107,7 +106,28 @@ namespace FlaxEngine
         /// <returns>The assembly or null if not found.</returns>
         public static Assembly GetAssemblyByName(string name)
         {
-            return AppDomain.CurrentDomain.GetAssemblies().SingleOrDefault(assembly => assembly.GetName().Name == name);
+            return GetAssemblyByName(name, AppDomain.CurrentDomain.GetAssemblies());
+        }
+
+        /// <summary>
+        /// Gets the assembly with the given name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="assemblies">The assemblies collection to search for.</param>
+        /// <returns>The assembly or null if not found.</returns>
+        public static Assembly GetAssemblyByName(string name, Assembly[] assemblies)
+        {
+            Assembly result = null;
+            for (int i = 0; i < assemblies.Length; i++)
+            {
+                var assemblyName = assemblies[i].GetName();
+                if (assemblyName.Name == name)
+                {
+                    result = assemblies[i];
+                    break;
+                }
+            }
+            return result;
         }
     }
 }
