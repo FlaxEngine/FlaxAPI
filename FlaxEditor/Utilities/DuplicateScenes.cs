@@ -13,12 +13,16 @@ namespace FlaxEditor.Utilities
     /// </summary>
     public class DuplicateScenes
     {
-        private readonly List<byte[]> _scenesData = new List<byte[]>();
-
+        private struct SceneData
+        {
+            public bool IsDirty;
+            public byte[] Bytes;
+        }
+        private readonly List<SceneData> _scenesData = new List<SceneData>(16);
+        
         /// <summary>
         /// Checks if scene data has been gathered.
         /// </summary>
-        /// <returns>True if has scene data, oherwise false.</returns>
         public bool HasData => _scenesData.Count > 0;
 
         /// <summary>
@@ -42,7 +46,13 @@ namespace FlaxEditor.Utilities
             _scenesData.Capacity = scenesCount;
             for (int i = 0; i < scenesCount; i++)
             {
-                _scenesData.Add(SceneManager.SaveSceneToBytes(scenes[i]));
+                var scene = scenes[i];
+                var data = new SceneData
+                {
+                    IsDirty = Editor.Instance.Scene.IsEdited(scene),
+                    Bytes = SceneManager.SaveSceneToBytes(scene),
+                };
+                _scenesData.Add(data);
             }
 
             // Delete old scenes
@@ -61,7 +71,8 @@ namespace FlaxEditor.Utilities
             var duplicatedScenes = new Scene[scenesCount];
             for (int i = 0; i < scenesCount; i++)
             {
-                duplicatedScenes[i] = SceneManager.LoadSceneFromBytes(_scenesData[i]);
+                var data = _scenesData[i];
+                duplicatedScenes[i] = SceneManager.LoadSceneFromBytes(data.Bytes);
                 if (duplicatedScenes[i] == null)
                     throw new FlaxException("Failed to deserialize scene");
             }
@@ -89,9 +100,14 @@ namespace FlaxEditor.Utilities
             // Deserialize oldd scenes
             for (int i = 0; i < _scenesData.Count; i++)
             {
-                var scene = SceneManager.LoadSceneFromBytes(_scenesData[i]);
+                var data = _scenesData[i];
+                var scene = SceneManager.LoadSceneFromBytes(data.Bytes);
                 if (scene == null)
                     throw new FlaxException("Failed to deserialize scene");
+
+                // Restore `dirty` state
+                if (data.IsDirty)
+                    Editor.Instance.Scene.MarkSceneEdited(scene);
             }
             _scenesData.Clear();
 
