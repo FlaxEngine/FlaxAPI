@@ -312,13 +312,28 @@ namespace FlaxEngine
 		/// Gets or sets the ceneter of the mass in the local space.
 		/// </summary>
 		[UnmanagedCall]
-		[HideInEditor]
 		public Vector3 CenterOfMass
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
 			get { Vector3 resultAsRef; Internal_GetCenterOfMass(unmanagedPtr, out resultAsRef); return resultAsRef; }
+#endif
+		}
+
+		/// <summary>
+		/// Determines whether this rigidbody is sleeping.
+		/// </summary>
+		/// <remarks>
+		/// When an actor does not move for a period of time, it is no longer simulated in order to save time. This state is called sleeping. However, because the object automatically wakes up when it is either touched by an awake object, or one of its properties is changed by the user, the entire sleep mechanism should be transparent to the user.
+		/// </remarks>
+		[UnmanagedCall]
+		public bool IsSleeping
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetIsSleeping(unmanagedPtr); }
 #endif
 		}
 
@@ -426,6 +441,8 @@ namespace FlaxEngine
 		internal static extern void Internal_SetSleepThreshold(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetCenterOfMass(IntPtr obj, out Vector3 resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_GetIsSleeping(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_Sleep(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
