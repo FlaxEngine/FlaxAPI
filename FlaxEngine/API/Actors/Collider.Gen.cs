@@ -39,21 +39,6 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets the center of the collider, measured in the object's local space.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(10), EditorDisplay("Collider"), Tooltip("Center point of the collider in the actor local space")]
-		public Vector3 Center
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { Vector3 resultAsRef; Internal_GetCenter(unmanagedPtr, out resultAsRef); return resultAsRef; }
-			set { Internal_SetCenter(unmanagedPtr, ref value); }
-#endif
-		}
-
-		/// <summary>
 		/// Gets or sets the contact offset.
 		/// </summary>
 		/// <remarks>
@@ -72,7 +57,7 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets the phuysical material used by this collider.
+		/// Gets or sets the physical material used by this collider.
 		/// </summary>
 		[UnmanagedCall]
 		[EditorOrder(2), AssetReference(typeof(PhysicalMaterial), true), EditorDisplay("Collider"), Tooltip("The phuysical material used by this collider.")]
@@ -86,16 +71,26 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets the attached rigidbody.
+		/// </summary>
+		[UnmanagedCall]
+		[HideInEditor]
+		public RigidBody AttachedRigidBody
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetAttachedRigidBody(unmanagedPtr); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetIsTrigger(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetIsTrigger(IntPtr obj, bool val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetCenter(IntPtr obj, out Vector3 resultAsRef);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetCenter(IntPtr obj, ref Vector3 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetContactOffset(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -104,6 +99,8 @@ namespace FlaxEngine
 		internal static extern JsonAsset Internal_GetMaterial(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetMaterial(IntPtr obj, IntPtr val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern RigidBody Internal_GetAttachedRigidBody(IntPtr obj);
 #endif
 #endregion
 	}

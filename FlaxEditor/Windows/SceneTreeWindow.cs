@@ -88,6 +88,7 @@ namespace FlaxEditor.Windows
                     Name = "Physics",
                     Types = new[]
                     {
+                        new KeyValuePair<string, Type>("Rigid Body", typeof(RigidBody)),
                         new KeyValuePair<string, Type>("Box Collider", typeof(BoxCollider)),
                         new KeyValuePair<string, Type>("Sphere Collider", typeof(SphereCollider)),
                         new KeyValuePair<string, Type>("Capsule Collider", typeof(CapsuleCollider)),

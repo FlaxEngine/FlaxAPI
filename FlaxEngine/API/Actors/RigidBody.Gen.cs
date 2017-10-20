@@ -57,7 +57,7 @@ namespace FlaxEngine
 		/// If true Continuous Collision Detection (CCD) will be used for this component.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(30), EditorDisplay("Rigid Body"), Tooltip("If true Continuous Collision Detection (CCD) will be used for this component.")]
+		[EditorOrder(30), EditorDisplay("Rigid Body", "Use CCD"), Tooltip("If true Continuous Collision Detection (CCD) will be used for this component.")]
 		public bool UseCCD
 		{
 #if UNIT_TEST_COMPILANT
@@ -309,6 +309,20 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets or sets the ceneter of the mass in the local space.
+		/// </summary>
+		[UnmanagedCall]
+		[HideInEditor]
+		public Vector3 CenterOfMass
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { Vector3 resultAsRef; Internal_GetCenterOfMass(unmanagedPtr, out resultAsRef); return resultAsRef; }
+#endif
+		}
+
+		/// <summary>
 		/// Forces a rigidbody to sleep (for at least one frame).
 		/// </summary>
 #if UNIT_TEST_COMPILANT
@@ -410,6 +424,8 @@ namespace FlaxEngine
 		internal static extern float Internal_GetSleepThreshold(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetSleepThreshold(IntPtr obj, float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetCenterOfMass(IntPtr obj, out Vector3 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_Sleep(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
