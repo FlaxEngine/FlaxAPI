@@ -411,6 +411,27 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Sets the solver iteration counts for the rigidbody.
+		/// </summary>
+		/// <remarks>
+		/// The solver iteration count determines how accurately joints and contacts are resolved. If you are having trouble with jointed bodies oscillating and behaving erratically, then setting a higher position iteration count may improve their stability.<para>If intersecting bodies are being depenetrated too violently, increase the number of velocity  iterations. More velocity iterations will drive the relative exit velocity of the intersecting objects closer to the correct value given the restitution.</para><para>Default: 4 position iterations, 1 velocity iteration.</para>
+		/// </remarks>
+		/// <param name="minPositionIters">The minimum number of position iterations the solver should perform for this body.</param>
+		/// <param name="minVelocityIters">The minimum number of velocity iterations the solver should perform for this body.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void SetSolverIterationCounts(int minPositionIters, int minVelocityIters = 1) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_SetSolverIterationCounts(unmanagedPtr, minPositionIters, minVelocityIters);
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -493,6 +514,8 @@ namespace FlaxEngine
 		internal static extern void Internal_AddForce(IntPtr obj, ref Vector3 force, ForceMode mode);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_AddTorque(IntPtr obj, ref Vector3 torque, ForceMode mode);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetSolverIterationCounts(IntPtr obj, int minPositionIters, int minVelocityIters);
 #endif
 #endregion
 	}
