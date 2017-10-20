@@ -199,6 +199,9 @@ namespace FlaxEditor.Windows
             {
                 parentActor = actorNode.Actor;
                 actorNode.TreeNode.Expand();
+
+                // Use parent flags
+                actor.StaticFlags = parentActor.StaticFlags;
             }
             if (parentActor == null)
             {
@@ -208,8 +211,7 @@ namespace FlaxEditor.Windows
             }
             if (parentActor != null)
             {
-                // Use parent flags and the same location
-                actor.StaticFlags = parentActor.StaticFlags;
+                // Use the same location
                 actor.Transform = parentActor.Transform;
 
                 // Rename actor to identify it easly

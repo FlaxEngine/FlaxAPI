@@ -641,7 +641,6 @@ namespace FlaxEditor.Viewport
                             // Create actor
                             var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
                             var actor = ModelActor.New();
-                            actor.StaticFlags = StaticFlags.FullyStatic;
                             actor.Name = item.ShortName;
                             actor.Model = model;
 
@@ -684,7 +683,6 @@ namespace FlaxEditor.Viewport
                         Editor.LogWarning("Failed to spawn actor of type " + item.FullName);
                         continue;
                     }
-                    actor.StaticFlags = StaticFlags.FullyStatic;
                     actor.Name = item.Name;
 
                     // Place it
