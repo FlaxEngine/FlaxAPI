@@ -39,6 +39,21 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets or sets the center of the collider, measured in the object's local space.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(10), EditorDisplay("Collider"), Tooltip("Center point of the collider in the actor local space")]
+		public Vector3 Center
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { Vector3 resultAsRef; Internal_GetCenter(unmanagedPtr, out resultAsRef); return resultAsRef; }
+			set { Internal_SetCenter(unmanagedPtr, ref value); }
+#endif
+		}
+
+		/// <summary>
 		/// Gets or sets the contact offset.
 		/// </summary>
 		/// <remarks>
@@ -91,6 +106,10 @@ namespace FlaxEngine
 		internal static extern bool Internal_GetIsTrigger(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetIsTrigger(IntPtr obj, bool val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetCenter(IntPtr obj, out Vector3 resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetCenter(IntPtr obj, ref Vector3 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetContactOffset(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
