@@ -199,9 +199,6 @@ namespace FlaxEditor.Windows
             {
                 parentActor = actorNode.Actor;
                 actorNode.TreeNode.Expand();
-
-                // Use parent flags
-                actor.StaticFlags = parentActor.StaticFlags;
             }
             if (parentActor == null)
             {
