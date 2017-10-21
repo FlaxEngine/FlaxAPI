@@ -155,6 +155,8 @@
     </Compile>
     <Compile Include="API\Static\MessageBox.cs" />
     <Compile Include="API\Static\MessageBox.Gen.cs" />
+    <Compile Include="API\Static\Physics.cs" />
+    <Compile Include="API\Static\Physics.Gen.cs" />
     <Compile Include="API\Static\Render2D.cs" />
     <Compile Include="API\Static\Render2D.Gen.cs">
       <DependentUpon>Render2D.cs</DependentUpon>
