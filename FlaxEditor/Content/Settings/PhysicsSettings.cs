@@ -46,7 +46,7 @@ namespace FlaxEditor.Content.Settings
         /// </summary>
         [EditorOrder(50), EditorDisplay("Simulation"), Tooltip("Default restitution combine mode, controls how restitution is computed for multiple materials.")]
         public PhysicsCombineMode RestitutionCombineMode = PhysicsCombineMode.Average;
-        
+
         /// <summary>
         /// If true CCD will be ignored. This is an optimization when CCD is never used which removes the need for physx to check it internally.
         /// </summary>
@@ -70,5 +70,23 @@ namespace FlaxEditor.Content.Settings
         /// </summary>
         [EditorOrder(1020), EditorDisplay("Framerate"), Limit(1, 16), Tooltip("The maximum number of substeps for physics simulation.")]
         public int MaxSubsteps = 5;
+
+        /// <summary>
+        /// The collision layers masks. Used to define layer-based collision detection.
+        /// </summary>
+        [HideInEditor]
+        // TODO: `Layers Collision Matrix` editor
+        public uint[] LayerMasks = new uint[32];
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PhysicsSettings"/> class.
+        /// </summary>
+        public PhysicsSettings()
+        {
+            for (int i = 0; i < 32; i++)
+            {
+                LayerMasks[i] = uint.MaxValue;
+            }
+        }
     }
 }
