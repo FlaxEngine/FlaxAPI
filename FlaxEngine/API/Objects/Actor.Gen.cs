@@ -135,6 +135,36 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets or sets the layer actor is in. Can be used for selective rendering or ignoring raycasts.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorDisplay("General"), EditorOrder(-69), Tooltip("The layer object is in")]
+		public int Layer
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetLayer(unmanagedPtr); }
+			set { Internal_SetLayer(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the object tag. Can be used to identify the objects.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorDisplay("General"), EditorOrder(-68), Tooltip("The object tag. Can be used to identify it.")]
+		public string Tag
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetTag(unmanagedPtr); }
+			set { Internal_SetTag(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
 		/// Gets or sets active state of actor
 		/// </summary>
 		[UnmanagedCall]
@@ -628,6 +658,14 @@ namespace FlaxEngine
 		internal static extern StaticFlags Internal_GetStaticFlags(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetStaticFlags(IntPtr obj, StaticFlags val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern int Internal_GetLayer(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetLayer(IntPtr obj, int val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern string Internal_GetTag(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetTag(IntPtr obj, string val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetIsActive(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
