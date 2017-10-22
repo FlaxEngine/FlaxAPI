@@ -252,7 +252,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public PlaneIntersectionType Intersects(ref Vector3 point)
         {
-            return Collision.PlaneIntersectsPoint(ref this, ref point);
+            return CollisionsHelper.PlaneIntersectsPoint(ref this, ref point);
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace FlaxEngine
         public bool Intersects(ref Ray ray)
         {
             float distance;
-            return Collision.RayIntersectsPlane(ref ray, ref this, out distance);
+            return CollisionsHelper.RayIntersectsPlane(ref ray, ref this, out distance);
         }
 
         /// <summary>
@@ -277,7 +277,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Ray ray, out float distance)
         {
-            return Collision.RayIntersectsPlane(ref ray, ref this, out distance);
+            return CollisionsHelper.RayIntersectsPlane(ref ray, ref this, out distance);
         }
 
         /// <summary>
@@ -291,7 +291,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Ray ray, out Vector3 point)
         {
-            return Collision.RayIntersectsPlane(ref ray, ref this, out point);
+            return CollisionsHelper.RayIntersectsPlane(ref ray, ref this, out point);
         }
 
         /// <summary>
@@ -301,7 +301,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Plane plane)
         {
-            return Collision.PlaneIntersectsPlane(ref this, ref plane);
+            return CollisionsHelper.PlaneIntersectsPlane(ref this, ref plane);
         }
 
         /// <summary>
@@ -315,7 +315,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Plane plane, out Ray line)
         {
-            return Collision.PlaneIntersectsPlane(ref this, ref plane, out line);
+            return CollisionsHelper.PlaneIntersectsPlane(ref this, ref plane, out line);
         }
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public PlaneIntersectionType Intersects(ref Vector3 vertex1, ref Vector3 vertex2, ref Vector3 vertex3)
         {
-            return Collision.PlaneIntersectsTriangle(ref this, ref vertex1, ref vertex2, ref vertex3);
+            return CollisionsHelper.PlaneIntersectsTriangle(ref this, ref vertex1, ref vertex2, ref vertex3);
         }
 
         /// <summary>
@@ -337,7 +337,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public PlaneIntersectionType Intersects(ref BoundingBox box)
         {
-            return Collision.PlaneIntersectsBox(ref this, ref box);
+            return CollisionsHelper.PlaneIntersectsBox(ref this, ref box);
         }
 
         /// <summary>
@@ -347,7 +347,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public PlaneIntersectionType Intersects(ref BoundingSphere sphere)
         {
-            return Collision.PlaneIntersectsSphere(ref this, ref sphere);
+            return CollisionsHelper.PlaneIntersectsSphere(ref this, ref sphere);
         }
 
         /// <summary>

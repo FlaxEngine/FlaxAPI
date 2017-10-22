@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 // -----------------------------------------------------------------------------
 // Original code from SharpDX project. https://github.com/sharpdx/SharpDX/
@@ -122,7 +122,7 @@ namespace FlaxEngine
     /// <summary>
     /// Contains static methods to help in determining intersections, containment, etc.
     /// </summary>
-    public static class Collision
+    public static class CollisionsHelper
     {
         /// <summary>
         /// Determines the closest point between a point and a triangle.

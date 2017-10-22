@@ -625,7 +625,7 @@ namespace FlaxEngine
 
             //Perform a regular ray to BoundingBox check
             var bb = new BoundingBox(-Extents, Extents);
-            bool intersects = Collision.RayIntersectsBox(ref bRay, ref bb, out point);
+            bool intersects = CollisionsHelper.RayIntersectsBox(ref bRay, ref bb, out point);
 
             //Put the result intersection back to world
             if (intersects)

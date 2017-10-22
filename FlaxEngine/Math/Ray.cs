@@ -1,4 +1,4 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
 
 // -----------------------------------------------------------------------------
 // Original code from SharpDX project. https://github.com/sharpdx/SharpDX/
@@ -91,7 +91,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Vector3 point)
         {
-            return Collision.RayIntersectsPoint(ref this, ref point);
+            return CollisionsHelper.RayIntersectsPoint(ref this, ref point);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace FlaxEngine
         public bool Intersects(ref Ray ray)
         {
             Vector3 point;
-            return Collision.RayIntersectsRay(ref this, ref ray, out point);
+            return CollisionsHelper.RayIntersectsRay(ref this, ref ray, out point);
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Ray ray, out Vector3 point)
         {
-            return Collision.RayIntersectsRay(ref this, ref ray, out point);
+            return CollisionsHelper.RayIntersectsRay(ref this, ref ray, out point);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace FlaxEngine
         public bool Intersects(ref Plane plane)
         {
             float distance;
-            return Collision.RayIntersectsPlane(ref this, ref plane, out distance);
+            return CollisionsHelper.RayIntersectsPlane(ref this, ref plane, out distance);
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Plane plane, out float distance)
         {
-            return Collision.RayIntersectsPlane(ref this, ref plane, out distance);
+            return CollisionsHelper.RayIntersectsPlane(ref this, ref plane, out distance);
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Plane plane, out Vector3 point)
         {
-            return Collision.RayIntersectsPlane(ref this, ref plane, out point);
+            return CollisionsHelper.RayIntersectsPlane(ref this, ref plane, out point);
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace FlaxEngine
         public bool Intersects(ref Vector3 vertex1, ref Vector3 vertex2, ref Vector3 vertex3)
         {
             float distance;
-            return Collision.RayIntersectsTriangle(ref this, ref vertex1, ref vertex2, ref vertex3, out distance);
+            return CollisionsHelper.RayIntersectsTriangle(ref this, ref vertex1, ref vertex2, ref vertex3, out distance);
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Vector3 vertex1, ref Vector3 vertex2, ref Vector3 vertex3, out float distance)
         {
-            return Collision.RayIntersectsTriangle(ref this, ref vertex1, ref vertex2, ref vertex3, out distance);
+            return CollisionsHelper.RayIntersectsTriangle(ref this, ref vertex1, ref vertex2, ref vertex3, out distance);
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Vector3 vertex1, ref Vector3 vertex2, ref Vector3 vertex3, out Vector3 point)
         {
-            return Collision.RayIntersectsTriangle(ref this, ref vertex1, ref vertex2, ref vertex3, out point);
+            return CollisionsHelper.RayIntersectsTriangle(ref this, ref vertex1, ref vertex2, ref vertex3, out point);
         }
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace FlaxEngine
         public bool Intersects(ref BoundingBox box)
         {
             float distance;
-            return Collision.RayIntersectsBox(ref this, ref box, out distance);
+            return CollisionsHelper.RayIntersectsBox(ref this, ref box, out distance);
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref BoundingBox box, out float distance)
         {
-            return Collision.RayIntersectsBox(ref this, ref box, out distance);
+            return CollisionsHelper.RayIntersectsBox(ref this, ref box, out distance);
         }
 
         /// <summary>
@@ -249,7 +249,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref BoundingBox box, out Vector3 point)
         {
-            return Collision.RayIntersectsBox(ref this, ref box, out point);
+            return CollisionsHelper.RayIntersectsBox(ref this, ref box, out point);
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace FlaxEngine
         public bool Intersects(ref BoundingSphere sphere)
         {
             float distance;
-            return Collision.RayIntersectsSphere(ref this, ref sphere, out distance);
+            return CollisionsHelper.RayIntersectsSphere(ref this, ref sphere, out distance);
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref BoundingSphere sphere, out float distance)
         {
-            return Collision.RayIntersectsSphere(ref this, ref sphere, out distance);
+            return CollisionsHelper.RayIntersectsSphere(ref this, ref sphere, out distance);
         }
 
         /// <summary>
@@ -298,7 +298,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref BoundingSphere sphere, out Vector3 point)
         {
-            return Collision.RayIntersectsSphere(ref this, ref sphere, out point);
+            return CollisionsHelper.RayIntersectsSphere(ref this, ref sphere, out point);
         }
 
         /// <summary>

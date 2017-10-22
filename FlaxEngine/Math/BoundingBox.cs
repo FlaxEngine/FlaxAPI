@@ -158,7 +158,7 @@ namespace FlaxEngine
         public bool Intersects(ref Ray ray)
         {
             float distance;
-            return Collision.RayIntersectsBox(ref ray, ref this, out distance);
+            return CollisionsHelper.RayIntersectsBox(ref ray, ref this, out distance);
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Ray ray, out float distance)
         {
-            return Collision.RayIntersectsBox(ref ray, ref this, out distance);
+            return CollisionsHelper.RayIntersectsBox(ref ray, ref this, out distance);
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Ray ray, out Vector3 point)
         {
-            return Collision.RayIntersectsBox(ref ray, ref this, out point);
+            return CollisionsHelper.RayIntersectsBox(ref ray, ref this, out point);
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public PlaneIntersectionType Intersects(ref Plane plane)
         {
-            return Collision.PlaneIntersectsBox(ref plane, ref this);
+            return CollisionsHelper.PlaneIntersectsBox(ref plane, ref this);
         }
 
         /* This implementation is wrong
@@ -220,7 +220,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref BoundingBox box)
         {
-            return Collision.BoxIntersectsBox(ref this, ref box);
+            return CollisionsHelper.BoxIntersectsBox(ref this, ref box);
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref BoundingSphere sphere)
         {
-            return Collision.BoxIntersectsSphere(ref this, ref sphere);
+            return CollisionsHelper.BoxIntersectsSphere(ref this, ref sphere);
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace FlaxEngine
         /// <returns>The type of containment the two objects have.</returns>
         public ContainmentType Contains(ref Vector3 point)
         {
-            return Collision.BoxContainsPoint(ref this, ref point);
+            return CollisionsHelper.BoxContainsPoint(ref this, ref point);
         }
 
         /// <summary>
@@ -294,7 +294,7 @@ namespace FlaxEngine
         /// <returns>The type of containment the two objects have.</returns>
         public ContainmentType Contains(ref BoundingBox box)
         {
-            return Collision.BoxContainsBox(ref this, ref box);
+            return CollisionsHelper.BoxContainsBox(ref this, ref box);
         }
 
         /// <summary>
@@ -314,7 +314,7 @@ namespace FlaxEngine
         /// <returns>The type of containment the two objects have.</returns>
         public ContainmentType Contains(ref BoundingSphere sphere)
         {
-            return Collision.BoxContainsSphere(ref this, ref sphere);
+            return CollisionsHelper.BoxContainsSphere(ref this, ref sphere);
         }
 
         /// <summary>

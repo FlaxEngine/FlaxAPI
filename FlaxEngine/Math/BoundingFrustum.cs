@@ -496,10 +496,10 @@ namespace FlaxEngine
             {
                 plane = GetPlane(i);
                 GetBoxToPlanePVertexNVertex(ref box, ref plane.Normal, out p, out n);
-                if (Collision.PlaneIntersectsPoint(ref plane, ref p) == PlaneIntersectionType.Back)
+                if (CollisionsHelper.PlaneIntersectsPoint(ref plane, ref p) == PlaneIntersectionType.Back)
                     return ContainmentType.Disjoint;
 
-                if (Collision.PlaneIntersectsPoint(ref plane, ref n) == PlaneIntersectionType.Back)
+                if (CollisionsHelper.PlaneIntersectsPoint(ref plane, ref n) == PlaneIntersectionType.Back)
                     result = ContainmentType.Intersects;
             }
             return result;
@@ -667,9 +667,9 @@ namespace FlaxEngine
 
         private PlaneIntersectionType PlaneIntersectsPoints(ref Plane plane, Vector3[] points)
         {
-            PlaneIntersectionType result = Collision.PlaneIntersectsPoint(ref plane, ref points[0]);
+            PlaneIntersectionType result = CollisionsHelper.PlaneIntersectsPoint(ref plane, ref points[0]);
             for (var i = 1; i < points.Length; i++)
-                if (Collision.PlaneIntersectsPoint(ref plane, ref points[i]) != result)
+                if (CollisionsHelper.PlaneIntersectsPoint(ref plane, ref points[i]) != result)
                     return PlaneIntersectionType.Intersecting;
             return result;
         }
@@ -758,7 +758,7 @@ namespace FlaxEngine
                 {
                     Plane plane = GetPlane(i);
                     float distance;
-                    if (Collision.RayIntersectsPlane(ref ray, ref plane, out distance) && (distance < nearstPlaneDistance))
+                    if (CollisionsHelper.RayIntersectsPlane(ref ray, ref plane, out distance) && (distance < nearstPlaneDistance))
                         nearstPlaneDistance = distance;
                 }
 
@@ -775,7 +775,7 @@ namespace FlaxEngine
             {
                 Plane plane = GetPlane(i);
                 float distance;
-                if (Collision.RayIntersectsPlane(ref ray, ref plane, out distance))
+                if (CollisionsHelper.RayIntersectsPlane(ref ray, ref plane, out distance))
                 {
                     minDist = Math.Min(minDist, distance);
                     maxDist = Math.Max(maxDist, distance);
@@ -818,10 +818,10 @@ namespace FlaxEngine
             float maxPointDist = float.MinValue;
             for (var i = 0; i < points.Length; i++)
             {
-                float pointDist = Collision.DistancePlanePoint(ref ioFrustrum.pTop, ref points[i]);
-                pointDist = Math.Max(pointDist, Collision.DistancePlanePoint(ref ioFrustrum.pBottom, ref points[i]));
-                pointDist = Math.Max(pointDist, Collision.DistancePlanePoint(ref ioFrustrum.pLeft, ref points[i]) * horizontalToVerticalMapping);
-                pointDist = Math.Max(pointDist, Collision.DistancePlanePoint(ref ioFrustrum.pRight, ref points[i]) * horizontalToVerticalMapping);
+                float pointDist = CollisionsHelper.DistancePlanePoint(ref ioFrustrum.pTop, ref points[i]);
+                pointDist = Math.Max(pointDist, CollisionsHelper.DistancePlanePoint(ref ioFrustrum.pBottom, ref points[i]));
+                pointDist = Math.Max(pointDist, CollisionsHelper.DistancePlanePoint(ref ioFrustrum.pLeft, ref points[i]) * horizontalToVerticalMapping);
+                pointDist = Math.Max(pointDist, CollisionsHelper.DistancePlanePoint(ref ioFrustrum.pRight, ref points[i]) * horizontalToVerticalMapping);
 
                 maxPointDist = Math.Max(maxPointDist, pointDist);
             }

@@ -22,7 +22,7 @@ namespace FlaxEditor.SceneGraph
         public override bool RayCastSelf(ref Ray ray, out float distance)
         {
             BoundingSphere sphere = new BoundingSphere(Transform.Translation, 7.0f);
-            return Collision.RayIntersectsSphere(ref ray, ref sphere, out distance);
+            return CollisionsHelper.RayIntersectsSphere(ref ray, ref sphere, out distance);
         }
     }
 }
