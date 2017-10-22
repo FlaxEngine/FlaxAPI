@@ -192,6 +192,8 @@
     <Compile Include="Attributes\UnmanagedCallAttribute.cs" />
     <Compile Include="Configurations\PersistentDataConfig.cs" />
     <Compile Include="Engine\BrushSurface.cs" />
+    <Compile Include="Engine\Collision.cs" />
+    <Compile Include="Engine\ContactPoint.cs" />
     <Compile Include="Engine\HideFlags.cs" />
     <Compile Include="Engine\ITransformable.cs" />
     <Compile Include="Engine\MaterialSlot.cs" />
@@ -283,7 +285,7 @@
     <Compile Include="Math\BoundingFrustum.cs" />
     <Compile Include="Math\BoundingSphere.cs" />
     <Compile Include="Internals\ClassLibraryInitializer.cs" />
-    <Compile Include="Math\Collision.cs" />
+    <Compile Include="Math\CollisionsHelper.cs" />
     <Compile Include="Math\Color.cs" />
     <Compile Include="Math\Color.Palette.cs">
       <DependentUpon>Color.cs</DependentUpon>
