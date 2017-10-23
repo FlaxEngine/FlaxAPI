@@ -201,6 +201,7 @@
     <Compile Include="Engine\ModelEntryInfo.cs" />
     <Compile Include="Engine\ModelLOD.cs" />
     <Compile Include="Engine\PhysicalMaterial.cs" />
+    <Compile Include="Engine\RayCastHit.cs" />
     <Compile Include="Enums\ForceMode.cs" />
     <Compile Include="Enums\PhysicsCombineMode.cs" />
     <Compile Include="Enums\Quality.cs" />
