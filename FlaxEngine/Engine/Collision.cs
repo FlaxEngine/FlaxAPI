@@ -2,7 +2,14 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices;
+using FlaxEngine.Assertions;
+
+// ReSharper disable InconsistentNaming
 
 namespace FlaxEngine
 {
@@ -76,6 +83,98 @@ namespace FlaxEngine
             return _contacts.GetEnumerator();
         }
 
+        private Collision(int contactsCount)
+        {
+            _contacts = new ContactPoint[contactsCount];
+        }
+
+        internal static List<Collision> _pool = new List<Collision>();
+        internal static Collision[] _data;
+
+        internal static Collision GetCollision(int contactsCount)
+        {
+            for (int i = _pool.Count - 1; i >= 0; i--)
+            {
+                Collision result = _pool[i];
+                if (result.Contacts.Length == contactsCount)
+                {
+                    _pool.RemoveAt(i);
+                    return result;
+                }
+            }
+            return new Collision(contactsCount);
+        }
+
+        internal static unsafe Collision[] Internal_ExtractCollisions(byte[] data)
+        {
+            // Return used collisions to pool
+            if (_data != null)
+            {
+                _pool.AddRange(_data);
+                _data = null;
+            }
+
+            //CollisionData collisionData = new CollisionData();
+            fixed (byte* dataPtr = data)
+            {
+                using (var memoryStream = new MemoryStream(data, false))
+                using (var stream = new BinaryReader(memoryStream))
+                {
+                    int version = stream.ReadInt32();
+                    if (version != 1)
+                        return null;
+                    int collisionsCount = stream.ReadInt32();
+                    
+                    int index = 0;
+                    _data = new Collision[collisionsCount * 2];
+                    for (int i = 0; i < collisionsCount; i++)
+                    {
+                        var ptr = dataPtr + memoryStream.Position;
+                        CollisionData* collisionData = (CollisionData*)ptr;
+
+                        var c1 = GetCollision(collisionData->ContactsCount);
+                        var c2 = GetCollision(collisionData->ContactsCount);
+
+                        c1.CopyFrom(collisionData);
+                        c2.CopyFrom(c1);
+                        c2.SwapObjects();
+
+                        _data[index++] = c1;
+                        _data[index++] = c2;
+                    }
+                }
+            }
+
+            return _data;
+        }
+
+        internal unsafe void CopyFrom(CollisionData* data)
+        {
+            _impulse = data->Impulse;
+            _velocityA = data->VelocityA;
+            _velocityB = data->VelocityB;
+            _colliderA = Object.Find<Collider>(ref data->ColliderA);
+            _colliderB = Object.Find<Collider>(ref data->ColliderB);
+
+            Assert.AreEqual(data->ContactsCount, _contacts.Length);
+
+            ContactPointData* ptr = &data->Contacts0;
+            for (int i = 0; i < data->ContactsCount; i++)
+            {
+                _contacts[i] = new ContactPoint(ref ptr[i], ref data->ColliderA, ref data->ColliderB);
+            }
+        }
+
+        internal void CopyFrom(Collision data)
+        {
+            _impulse = data._impulse;
+            _velocityA = data._velocityA;
+            _velocityB = data._velocityB;
+            _colliderA = data._colliderA;
+            _colliderB = data._colliderB;
+            _contacts = (ContactPoint[])data._contacts.Clone();
+        }
+
         internal void SwapObjects()
         {
             var tmp1 = _velocityA;
@@ -88,6 +187,34 @@ namespace FlaxEngine
 
             for (int i = 0; i < _contacts.Length; i++)
                 _contacts[i].SwapObjects();
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct ContactPointData
+        {
+            public Vector3 Point;
+            public float Separation;
+            public Vector3 Normal;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct CollisionData
+        {
+            public Guid ColliderA;
+            public Guid ColliderB;
+            public Vector3 Impulse;
+            public Vector3 VelocityA;
+            public Vector3 VelocityB;
+            public int ContactsCount;
+
+            public ContactPointData Contacts0;
+            public ContactPointData Contacts1;
+            public ContactPointData Contacts2;
+            public ContactPointData Contacts3;
+            public ContactPointData Contacts4;
+            public ContactPointData Contacts5;
+            public ContactPointData Contacts6;
+            public ContactPointData Contacts7;
         }
     }
 }

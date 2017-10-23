@@ -44,7 +44,16 @@ namespace FlaxEngine
         /// Gets the other collider in the contact point (other instance).
         /// </summary>
         public Collider OtherCollider => Object.Find<Collider>(ref _otherCollider);
-        
+
+        internal ContactPoint(ref Collision.ContactPointData data, ref Guid colliderA, ref Guid colliderB)
+        {
+            _point = data.Point;
+            _separation = data.Separation;
+            _normal = data.Normal;
+            _thisCollider = colliderA;
+            _otherCollider = colliderB;
+        }
+
         internal void SwapObjects()
         {
             var tmp = _thisCollider;
