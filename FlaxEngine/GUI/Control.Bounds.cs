@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -146,9 +146,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the scale.
         /// </summary>
-        /// <value>
-        /// The scale.
-        /// </value>
         public Vector2 Scale
         {
             get => _scale;
@@ -162,9 +159,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the normalized pivot location (used to transform control around it).
         /// </summary>
-        /// <value>
-        /// The pivot.
-        /// </value>
         public Vector2 Pivot
         {
             get => _pivot;
@@ -178,9 +172,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the shear.
         /// </summary>
-        /// <value>
-        /// The shear.
-        /// </value>
         public Vector2 Shear
         {
             get => _shear;
@@ -194,9 +185,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the rotation angle (in degrees).
         /// </summary>
-        /// <value>
-        /// The rotation.
-        /// </value>
         public float Rotation
         {
             get => _rotation;

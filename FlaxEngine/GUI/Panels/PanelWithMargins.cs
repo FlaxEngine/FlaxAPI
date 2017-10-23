@@ -10,16 +10,34 @@ namespace FlaxEngine.GUI
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public abstract class PanelWithMargins : ContainerControl
     {
-        protected float _leftMargin = 2, _rightMargin = 2;
-        protected float _topMargin = 2, _bottomMargin = 2;
+        /// <summary>
+        /// The left margin.
+        /// </summary>
+        protected float _leftMargin = 2;
+
+        /// <summary>
+        /// The right margin.
+        /// </summary>
+        protected float _rightMargin = 2;
+
+        /// <summary>
+        /// The top margin.
+        /// </summary>
+        protected float _topMargin = 2;
+
+        /// <summary>
+        /// The bottom margin.
+        /// </summary>
+        protected float _bottomMargin = 2;
+
+        /// <summary>
+        /// The space between the items.
+        /// </summary>
         protected float _spacing = 2;
 
         /// <summary>
         /// Gets or sets the left margin.
         /// </summary>
-        /// <value>
-        /// The left margin.
-        /// </value>
         public float LeftMargin
         {
             get => _leftMargin;
@@ -33,9 +51,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the right margin.
         /// </summary>
-        /// <value>
-        /// The right margin.
-        /// </value>
         public float RightMargin
         {
             get => _rightMargin;
@@ -49,9 +64,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the top margin.
         /// </summary>
-        /// <value>
-        /// The top margin.
-        /// </value>
         public float TopMargin
         {
             get => _topMargin;
@@ -65,9 +77,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the bottom margin.
         /// </summary>
-        /// <value>
-        /// The bottom margin.
-        /// </value>
         public float BottomMargin
         {
             get => _bottomMargin;
@@ -81,9 +90,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the child controls spacing.
         /// </summary>
-        /// <value>
-        /// The spacing.
-        /// </value>
         public float Spacing
         {
             get => _spacing;

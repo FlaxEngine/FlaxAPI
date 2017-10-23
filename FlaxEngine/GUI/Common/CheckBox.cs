@@ -12,19 +12,39 @@ namespace FlaxEngine.GUI
     /// <seealso cref="FlaxEngine.GUI.Control" />
     public class CheckBox : Control
     {
+        /// <summary>
+        /// The mouse is down.
+        /// </summary>
         protected bool _mouseDown;
+
+        /// <summary>
+        /// The checked state.
+        /// </summary>
         protected bool _checked;
+
+        /// <summary>
+        /// The intermediate state.
+        /// </summary>
         protected bool _intermediate;
+
+        /// <summary>
+        /// The mouse over box state.
+        /// </summary>
         protected bool _mouseOverBox;
+
+        /// <summary>
+        /// The box size.
+        /// </summary>
         protected float _boxSize;
+
+        /// <summary>
+        /// The box rectangle.
+        /// </summary>
         protected Rectangle _box;
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="CheckBox"/> is checked.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if is checked; otherwise, <c>false</c>.
-        /// </value>
         public bool Checked
         {
             get => _checked;
@@ -44,9 +64,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="CheckBox"/> is in the intermediate state.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if checkbox is in the intermediate state; otherwise, <c>false</c>.
-        /// </value>
         public bool Intermediate
         {
             get => _intermediate;
@@ -56,9 +73,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the size of the box.
         /// </summary>
-        /// <value>
-        /// The size of the box.
-        /// </value>
         public float BoxSize
         {
             get => _boxSize;
