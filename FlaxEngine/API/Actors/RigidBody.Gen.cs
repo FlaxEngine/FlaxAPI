@@ -156,7 +156,7 @@ namespace FlaxEngine
 		/// Override the auto computed mass.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(100), EditorDisplay("Rigid Body"), Tooltip("Override the auto computed mass.")]
+		[HideInEditor]
 		public bool OverrideMass
 		{
 #if UNIT_TEST_COMPILANT
