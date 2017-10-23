@@ -314,7 +314,10 @@ namespace FlaxEditor.CustomEditors.Dedicated
             // Override layer editor
             if(item.Order?.Order == -69)
                 item.CustomEditor = new CustomEditorAttribute(typeof(ActorLayerEditor));
-            
+            // Override tag editor
+            else if (item.Order?.Order == -68)
+                item.CustomEditor = new CustomEditorAttribute(typeof(ActorTagEditor));
+
             base.SpawnProperty(itemLayout, itemValues, item);
         }
 
