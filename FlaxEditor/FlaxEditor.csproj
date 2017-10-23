@@ -72,6 +72,7 @@
     <Compile Include="CustomEditors\CustomEditorsUtil.cs" />
     <Compile Include="CustomEditors\Dedicated\ActorEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\EnvironmentProbeEditor.cs" />
+    <Compile Include="CustomEditors\Dedicated\PhysicalMaterialEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\PostProcessSettingsEditor.cs" />
     <Compile Include="CustomEditors\Editors\ArrayEditor.cs" />
     <Compile Include="CustomEditors\Editors\AssetRefEditor.cs" />

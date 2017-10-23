@@ -24,7 +24,7 @@ namespace FlaxEngine
         /// <summary>
         /// If set we will use the FrictionCombineMode of this material, instead of the FrictionCombineMode found in the Physics settings. 
         /// </summary>
-        [EditorOrder(2), EditorDisplay("Physical Material"), Tooltip("If set we will use the FrictionCombineMode of this material, instead of the FrictionCombineMode found in the Physics settings. ")]
+        [HideInEditor]
         public bool OverrideFrictionCombineMode = false;
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace FlaxEngine
         /// <summary>
         /// If set we will use the RestitutionCombineMode of this material, instead of the RestitutionCombineMode found in the Physics settings.
         /// </summary>
-        [EditorOrder(5), EditorDisplay("Physical Material"), Tooltip("If set we will use the RestitutionCombineMode of this material, instead of the RestitutionCombineMode found in the Physics settings.")]
+        [HideInEditor]
         public bool OverrideRestitutionCombineMode = false;
     }
 }
