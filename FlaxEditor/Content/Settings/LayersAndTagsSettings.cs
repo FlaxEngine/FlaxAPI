@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using FlaxEngine;
 
 namespace FlaxEditor.Content.Settings
@@ -23,5 +24,19 @@ namespace FlaxEditor.Content.Settings
         /// </summary>
         [EditorOrder(10), EditorDisplay("Layers", "__inline__"), MemberCollection(ReadOnly = true)]
         public string[] Layers = new string[32];
+
+        /// <summary>
+        /// Gets the current tags collection.
+        /// </summary>
+        /// <returns>The tags collection.</returns>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern string[] GetCurrentTags();
+
+        /// <summary>
+        /// Gets the current layer names (max 32 items but trims last empty items).
+        /// </summary>
+        /// <returns>The layers.</returns>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern string[] GetCurrentLayers();
     }
 }

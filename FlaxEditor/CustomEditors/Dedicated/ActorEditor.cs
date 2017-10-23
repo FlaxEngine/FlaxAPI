@@ -309,6 +309,16 @@ namespace FlaxEditor.CustomEditors.Dedicated
         }
 
         /// <inheritdoc />
+        protected override void SpawnProperty(LayoutElementsContainer itemLayout, ValueContainer itemValues, ItemInfo item)
+        {
+            // Override layer editor
+            if(item.Order?.Order == -69)
+                item.CustomEditor = new CustomEditorAttribute(typeof(ActorLayerEditor));
+            
+            base.SpawnProperty(itemLayout, itemValues, item);
+        }
+
+        /// <inheritdoc />
         protected override List<ItemInfo> GetItemsForType(Type type)
         {
             var items = base.GetItemsForType(type);

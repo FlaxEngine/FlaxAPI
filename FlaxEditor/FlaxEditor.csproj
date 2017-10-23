@@ -75,6 +75,7 @@
     <Compile Include="CustomEditors\Dedicated\PhysicalMaterialEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\PostProcessSettingsEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\RigidBodyEditor.cs" />
+    <Compile Include="CustomEditors\Editors\ActorLayerEditor.cs" />
     <Compile Include="CustomEditors\Editors\ArrayEditor.cs" />
     <Compile Include="CustomEditors\Editors\AssetRefEditor.cs" />
     <Compile Include="CustomEditors\Editors\BooleanEditor.cs" />
