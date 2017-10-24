@@ -25,6 +25,7 @@ namespace FlaxEditor.Viewport
     {
         private readonly Editor _editor;
 
+        private ContextMenuButton _showGridButton;
         private readonly ViewportWidgetButton _gizmoModeTranslate;
         private readonly ViewportWidgetButton _gizmoModeRotate;
         private readonly ViewportWidgetButton _gizmoModeScale;
@@ -37,6 +38,11 @@ namespace FlaxEditor.Viewport
         /// The transform gizmo.
         /// </summary>
         public readonly TransformGizmo TransformGizmo;
+
+        /// <summary>
+        /// The grid gizmo.
+        /// </summary>
+        public readonly GridGizmo Grid;
 
         /// <summary>
         /// The selection outline postFx.
@@ -68,6 +74,10 @@ namespace FlaxEditor.Viewport
             TransformGizmo.OnApplyTransformation += ApplyTransform;
             TransformGizmo.OnModeChanged += OnGizmoModeChanged;
             Gizmos.Active = TransformGizmo;
+
+            // Add grid
+            Grid = new GridGizmo(this);
+            Grid.EnabledChanged += gizmo => _showGridButton.Icon = gizmo.Enabled ? Style.Current.CheckBoxTick : Sprite.Invalid;
 
             editor.SceneEditing.OnSelectionChanged += OnSelectionChanged;
 
@@ -175,6 +185,9 @@ namespace FlaxEditor.Viewport
             gizmoMode.Parent = this;
 
             // Create Camera Here widget
+            _showGridButton = ViewWidgetButtonMenu.AddButton("Show grid", () => Grid.Enabled = !Grid.Enabled);
+            _showGridButton.Icon = Style.Current.CheckBoxTick;
+            _showGridButton.IndexInParent = 1;
             ViewWidgetButtonMenu.AddSeparator();
             ViewWidgetButtonMenu.AddButton("Create camera here", CreateCameraAtView);
         }
