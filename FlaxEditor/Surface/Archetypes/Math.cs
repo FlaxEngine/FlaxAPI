@@ -54,6 +54,7 @@ namespace FlaxEditor.Surface.Archetypes
         {
             "World",
             "Tangent",
+            "View",
         };
 
         /// <summary>
