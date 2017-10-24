@@ -66,6 +66,10 @@ namespace FlaxEditor.States
             // Restore editor scene
             _duplicateScenes.RestoreSceneData();
 
+            // Restore game settings
+            Time.TimeScale = 1.0f;
+            Physics.AutoSimulation = true;
+
             // Fire events
             Editor.OnPlayEnd();
             IsPaused = true;
