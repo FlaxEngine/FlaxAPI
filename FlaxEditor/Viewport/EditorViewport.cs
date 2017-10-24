@@ -721,7 +721,7 @@ namespace FlaxEditor.Viewport
                 var dt = Math.Min(Time.UnscaledDeltaTime, 1.0f);
 
                 // Update
-                moveDelta *= dt * 60.0f;
+                moveDelta *= dt * (60.0f * 4.0f);
                 mouseDelta *= 200.0f * MouseSpeed;
                 UpdateView(dt, ref moveDelta, ref mouseDelta);
 
