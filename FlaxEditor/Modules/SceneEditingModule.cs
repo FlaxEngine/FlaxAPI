@@ -187,7 +187,7 @@ namespace FlaxEditor.Modules
         /// <param name="parent">The parent actor. Set null as default.</param>
         public void Spawn(Actor actor, Actor parent = null)
         {
-            if(SceneManager.IsAnySceneLoaded == false)
+            if (SceneManager.IsAnySceneLoaded == false)
                 throw new InvalidOperationException("Cannot spawn actor when no scene is loaded.");
 
             // Add it
@@ -197,6 +197,10 @@ namespace FlaxEditor.Modules
             var actorNode = Editor.Instance.Scene.GetActorNode(actor);
             var action = new DeleteActorsAction(new List<SceneGraphNode>(1) { actorNode }, true);
             Undo.AddAction(action);
+
+            // Auto CSG mesh rebuild
+            if (actor is BoxBrush && actor.Scene)
+                actor.Scene.BuildCSG();
         }
 
         /// <summary>
@@ -219,6 +223,13 @@ namespace FlaxEditor.Modules
             var action = new MultiUndoAction(new IUndoAction[] { action1, action2 }, action2.ActionString);
             action.Do();
             Undo.AddAction(action);
+
+            // Auto CSG mesh rebuild
+            foreach (var obj in objects)
+            {
+                if (obj is ActorNode node && node.Actor is BoxBrush)
+                    node.Actor.Scene.BuildCSG();
+            }
         }
 
         /// <summary>
