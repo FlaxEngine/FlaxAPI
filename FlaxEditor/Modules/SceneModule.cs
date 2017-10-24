@@ -123,22 +123,31 @@ namespace FlaxEditor.Modules
             var scene = Scene.New();
             var sky = Sky.New();
             var sun = DirectionalLight.New();
-            var floor = BoxBrush.New();
+            var floor = ModelActor.New();
             //
             scene.AddChild(sky);
             scene.AddChild(sun);
             scene.AddChild(floor);
             //
             sky.Name = "Sky";
-            sky.LocalPosition = new Vector3(0, 40, 0);
+            sky.LocalPosition = new Vector3(40, 150, 0);
             sky.SunLight = sun;
+            sky.StaticFlags = StaticFlags.FullyStatic;
             //
             sun.Name = "Sun";
-            sun.LocalPosition = new Vector3(0, 30, 0);
+            sun.LocalPosition = new Vector3(40, 160, 0);
             sun.LocaEulerAngles = new Vector3(45, 0, 0);
+            sun.StaticFlags = StaticFlags.FullyStatic;
             //
             floor.Name = "Floor";
-            floor.Size = new Vector3(200, 10, 200);
+            floor.Scale = new Vector3(4, 0.5f, 4);
+            floor.Model = FlaxEngine.Content.LoadAsync<Model>(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Cube.flax"));
+            if (floor.Model)
+            {
+                floor.Model.WaitForLoaded();
+                floor.Entries[0].Material = FlaxEngine.Content.LoadAsync<MaterialBase>(StringUtils.CombinePaths(Globals.EngineFolder, "WhiteMaterial.flax"));
+            }
+            floor.StaticFlags = StaticFlags.FullyStatic;
 
             // Serialize
             var bytes = SceneManager.SaveSceneToBytes(scene);
