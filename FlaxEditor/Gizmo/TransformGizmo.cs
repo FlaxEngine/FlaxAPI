@@ -182,6 +182,9 @@ namespace FlaxEditor.Gizmo
         /// <inheritdoc />
         public override void Update(float dt)
         {
+            if (!IsActive)
+                return;
+            
             bool isLeftBtnDown = Owner.IsLeftMouseButtonDown;
 
             // Only when is active

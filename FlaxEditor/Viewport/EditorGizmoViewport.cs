@@ -28,8 +28,10 @@ namespace FlaxEditor.Viewport
 
         private void OnDraw(DrawCallsCollector collector)
         {
-            // Draw gizmo
-            Gizmos.Active?.Draw(collector);
+            for (int i = 0; i < Gizmos.Count; i++)
+            {
+                Gizmos[i].Draw(collector);
+            }
         }
 
         /// <inheritdoc />
@@ -58,8 +60,10 @@ namespace FlaxEditor.Viewport
         {
             base.Update(deltaTime);
 
-            // Update gizmo
-            Gizmos.Active?.Update(deltaTime);
+            for (int i = 0; i < Gizmos.Count; i++)
+            {
+                Gizmos[i].Update(deltaTime);
+            }
         }
     }
 }

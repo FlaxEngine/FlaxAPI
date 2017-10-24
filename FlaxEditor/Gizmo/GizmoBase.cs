@@ -16,17 +16,11 @@ namespace FlaxEditor.Gizmo
         /// <summary>
         /// Gets the gizmo wner.
         /// </summary>
-        /// <value>
-        /// The owner.
-        /// </value>
         public IGizmoOwner Owner { get; }
 
         /// <summary>
         /// Gets a value indicating whether this gizmo is active.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this gizmo is active; otherwise, <c>false</c>.
-        /// </value>
         public bool IsActive => Owner.Gizmos.Active == this;
 
         /// <summary>

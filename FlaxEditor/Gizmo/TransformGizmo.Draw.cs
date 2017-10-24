@@ -43,7 +43,7 @@ namespace FlaxEditor.Gizmo
         /// <inheritdoc />
         public override void Draw(DrawCallsCollector collector)
         {
-            if (!_isActive)
+            if (!_isActive || !IsActive)
                 return;
 
             Matrix m1, m2, m3;
