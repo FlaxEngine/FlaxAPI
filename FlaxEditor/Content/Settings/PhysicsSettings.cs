@@ -74,8 +74,7 @@ namespace FlaxEditor.Content.Settings
         /// <summary>
         /// The collision layers masks. Used to define layer-based collision detection.
         /// </summary>
-        [HideInEditor]
-        // TODO: `Layers Collision Matrix` editor
+        [EditorOrder(1040), EditorDisplay("Layers Matrix"), CustomEditor(typeof(FlaxEditor.CustomEditors.Dedicated.LayersMatrixEditor))]
         public uint[] LayerMasks = new uint[32];
         
         /// <summary>
