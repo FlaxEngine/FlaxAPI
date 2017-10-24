@@ -28,9 +28,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets the scrolling right corner.
         /// </summary>
-        /// <value>
-        /// The scrolling right corner.
-        /// </value>
         public Vector2 ScrollRightCorner
         {
             get => _scrollRightCorner;
@@ -40,9 +37,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets the view bottom.
         /// </summary>
-        /// <value>
-        /// The view bottom.
-        /// </value>
         public Vector2 ViewBottom => Size + _viewOffset;
 
         /// <summary>

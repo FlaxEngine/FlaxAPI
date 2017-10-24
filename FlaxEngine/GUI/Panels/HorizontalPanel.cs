@@ -29,7 +29,7 @@ namespace FlaxEngine.GUI
                 if (c.Visible)
                 {
                     var w = c.Width;
-                    c.Bounds = new Rectangle(x + _spacing, _topMargin, h, w);
+                    c.Bounds = new Rectangle(x + _spacing + _offset.X, _topMargin + _offset.Y, h, w);
                     x = c.Bottom;
                 }
             }

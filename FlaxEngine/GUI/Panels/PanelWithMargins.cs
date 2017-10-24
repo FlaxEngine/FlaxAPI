@@ -36,6 +36,11 @@ namespace FlaxEngine.GUI
         protected float _spacing = 2;
 
         /// <summary>
+        /// The ocontorls ffset.
+        /// </summary>
+        protected Vector2 _offset;
+
+        /// <summary>
         /// Gets or sets the left margin.
         /// </summary>
         public float LeftMargin
@@ -96,6 +101,19 @@ namespace FlaxEngine.GUI
             set
             {
                 _spacing = value;
+                PerformLayout();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the child controls offset (additive).
+        /// </summary>
+        public Vector2 Offset
+        {
+            get => _offset;
+            set
+            {
+                _offset = value;
                 PerformLayout();
             }
         }
