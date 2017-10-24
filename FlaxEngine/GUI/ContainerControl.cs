@@ -219,6 +219,13 @@ namespace FlaxEngine.GUI
             return _children.IndexOf(child);
         }
 
+        internal void ChangeChildIndex(Control child, int newIndex)
+        {
+            int oldIndex = _children.IndexOf(child);
+            _children.RemoveAt(oldIndex);
+            _children.Insert(newIndex, child);
+        }
+
         /// <summary>
         ///     Tries to find any child contol at given point in control local coordinates
         /// </summary>

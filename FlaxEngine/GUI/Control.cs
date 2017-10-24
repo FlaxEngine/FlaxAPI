@@ -118,9 +118,18 @@ namespace FlaxEngine.GUI
         public bool HasParent => _parent != null;
 
         /// <summary>
-        ///     Gets zero-based index of the control inside the parent container list
+        /// Gets or sets zero-based index of the control inside the parent container list.
         /// </summary>
-        public int IndexInParent => HasParent ? _parent.GetChildIndex(this) : -1;
+        public int IndexInParent
+        {
+            get => HasParent ? _parent.GetChildIndex(this) : -1;
+            set
+            {
+                if (!HasParent)
+                    throw new InvalidOperationException("Cannot reorder control that has no parent.");
+                Parent.ChangeChildIndex(this, value);
+            }
+        }
 
         /// <summary>
         ///     Gets or sets control background color (transparent color (alpha=0) means no background rendering)
