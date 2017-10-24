@@ -19,25 +19,80 @@ namespace FlaxEditor.Viewport
     {
         // TODO: maybe cache view/projection matricies to reuse them
 
+        /// <summary>
+        /// Gathered input data.
+        /// </summary>
         protected struct Input
         {
+            /// <summary>
+            /// The is panning state.
+            /// </summary>
             public bool IsPanning;
+
+            /// <summary>
+            /// The is rotating state.
+            /// </summary>
             public bool IsRotating;
+
+            /// <summary>
+            /// The is moving state.
+            /// </summary>
             public bool IsMoving;
+
+            /// <summary>
+            /// The is zooming state.
+            /// </summary>
             public bool IsZooming;
+
+            /// <summary>
+            /// The is orbiting state.
+            /// </summary>
             public bool IsOrbiting;
 
+            /// <summary>
+            /// The is control down flag.
+            /// </summary>
             public bool IsControlDown;
+
+            /// <summary>
+            /// The is shift down flag.
+            /// </summary>
             public bool IsShiftDown;
+
+            /// <summary>
+            /// The is alt down flag.
+            /// </summary>
             public bool IsAltDown;
+
+            /// <summary>
+            /// The is mouse right down flag.
+            /// </summary>
             public bool IsMouseRightDown;
+
+            /// <summary>
+            /// The is mouse middle down flag.
+            /// </summary>
             public bool IsMouseMiddleDown;
+
+            /// <summary>
+            /// The is mouse left down flag.
+            /// </summary>
             public bool IsMouseLeftDown;
 
+            /// <summary>
+            /// The mouse wheel delta.
+            /// </summary>
             public int MouseWheelDelta;
 
+            /// <summary>
+            /// Gets a value indicating whether use is controlling mouse.
+            /// </summary>
             public bool IsControllingMouse => IsMouseMiddleDown || IsMouseRightDown || (IsAltDown && IsMouseLeftDown);
 
+            /// <summary>
+            /// Gathers input from the specified window.
+            /// </summary>
+            /// <param name="window">The window.</param>
             public void Gather(FlaxEngine.Window window)
             {
                 IsControlDown = window.GetKey(KeyCode.Control);
@@ -49,6 +104,9 @@ namespace FlaxEditor.Viewport
                 IsMouseLeftDown = window.GetMouseButton(MouseButtons.Left);
             }
 
+            /// <summary>
+            /// Clears the data.
+            /// </summary>
             public void Clear()
             {
                 IsControlDown = false;
@@ -61,16 +119,20 @@ namespace FlaxEditor.Viewport
             }
         }
 
-        // how much frames we want to keep in the buffer to calculate the avg. delta currently hardcoded
+        /// <summary>
+        /// The FPS camera filtering frames count (how much frames we want to keep in the buffer to calculate the avg. delta currently hardcoded).
+        /// </summary>
         public const int FpsCameraFilteringFrames = 3;
 
-        // Movement
+        /// <summary>
+        /// The speed widget button.
+        /// </summary>
         protected ViewportWidgetButton _speedWidget;
 
-        protected float _movementSpeed;
-        protected float _mouseAccelerationScale;
-        protected bool _useMouseFiltering;
-        protected bool _useMouseAcceleration;
+        private float _movementSpeed;
+        private float _mouseAccelerationScale;
+        private bool _useMouseFiltering;
+        private bool _useMouseAcceleration;
 
         // Input
 
