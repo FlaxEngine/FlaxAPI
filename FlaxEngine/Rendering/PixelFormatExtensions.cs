@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -72,7 +72,7 @@ namespace FlaxEngine.Rendering
             PixelFormat[] formats4 = {
                 PixelFormat.B8G8R8X8_Typeless,
                 PixelFormat.B8G8R8X8_UNorm,
-                PixelFormat.B8G8R8X8_UNorm_SRgb,
+                PixelFormat.B8G8R8X8_UNorm_sRGB,
                 PixelFormat.D24_UNorm_S8_UInt,
                 PixelFormat.D32_Float,
                 PixelFormat.D32_Float_S8X24_UInt,
@@ -101,11 +101,11 @@ namespace FlaxEngine.Rendering
                 PixelFormat.R8G8B8A8_Typeless,
                 PixelFormat.R8G8B8A8_UInt,
                 PixelFormat.R8G8B8A8_UNorm,
-                PixelFormat.R8G8B8A8_UNorm_SRgb,
+                PixelFormat.R8G8B8A8_UNorm_sRGB,
                 PixelFormat.B8G8R8A8_Typeless,
                 PixelFormat.B8G8R8A8_UNorm,
-                PixelFormat.B8G8R8A8_UNorm_SRgb,
-                PixelFormat.R9G9B9E5_Sharedexp,
+                PixelFormat.B8G8R8A8_UNorm_sRGB,
+                PixelFormat.R9G9B9E5_SharedExp,
                 PixelFormat.X24_Typeless_G8_UInt,
                 PixelFormat.X32_Typeless_G8X24_UInt,
             };
@@ -145,7 +145,7 @@ namespace FlaxEngine.Rendering
             PixelFormat[] formats8 = {
                 PixelFormat.BC1_Typeless,
                 PixelFormat.BC1_UNorm,
-                PixelFormat.BC1_UNorm_SRgb,
+                PixelFormat.BC1_UNorm_sRGB,
                 PixelFormat.BC4_SNorm,
                 PixelFormat.BC4_Typeless,
                 PixelFormat.BC4_UNorm,
@@ -155,10 +155,10 @@ namespace FlaxEngine.Rendering
             PixelFormat[] formats9 = {
                 PixelFormat.BC2_Typeless,
                 PixelFormat.BC2_UNorm,
-                PixelFormat.BC2_UNorm_SRgb,
+                PixelFormat.BC2_UNorm_sRGB,
                 PixelFormat.BC3_Typeless,
                 PixelFormat.BC3_UNorm,
-                PixelFormat.BC3_UNorm_SRgb,
+                PixelFormat.BC3_UNorm_sRGB,
                 PixelFormat.BC5_SNorm,
                 PixelFormat.BC5_Typeless,
                 PixelFormat.BC5_UNorm,
@@ -167,7 +167,7 @@ namespace FlaxEngine.Rendering
                 PixelFormat.BC6H_Uf16,
                 PixelFormat.BC7_Typeless,
                 PixelFormat.BC7_UNorm,
-                PixelFormat.BC7_UNorm_SRgb,
+                PixelFormat.BC7_UNorm_sRGB,
             };
             InitFormat(formats9, 8);
         }
@@ -223,13 +223,13 @@ namespace FlaxEngine.Rendering
 
                 case PixelFormat.R8G8B8A8_Typeless:
                 case PixelFormat.R8G8B8A8_UNorm:
-                case PixelFormat.R8G8B8A8_UNorm_SRgb:
+                case PixelFormat.R8G8B8A8_UNorm_sRGB:
                 case PixelFormat.R8G8B8A8_UInt:
                 case PixelFormat.R8G8B8A8_SNorm:
                 case PixelFormat.R8G8B8A8_SInt:
                 case PixelFormat.B8G8R8A8_UNorm:
                 case PixelFormat.B8G8R8A8_Typeless:
-                case PixelFormat.B8G8R8A8_UNorm_SRgb:
+                case PixelFormat.B8G8R8A8_UNorm_sRGB:
                 case PixelFormat.A8_UNorm:
                     return 8;
 
@@ -238,22 +238,22 @@ namespace FlaxEngine.Rendering
 
                 case PixelFormat.BC1_Typeless:
                 case PixelFormat.BC1_UNorm:
-                case PixelFormat.BC1_UNorm_SRgb:
+                case PixelFormat.BC1_UNorm_sRGB:
                     return 1;// or 0
 
                 case PixelFormat.BC2_Typeless:
                 case PixelFormat.BC2_UNorm:
-                case PixelFormat.BC2_UNorm_SRgb:
+                case PixelFormat.BC2_UNorm_sRGB:
                     return 4;
 
                 case PixelFormat.BC3_Typeless:
                 case PixelFormat.BC3_UNorm:
-                case PixelFormat.BC3_UNorm_SRgb:
+                case PixelFormat.BC3_UNorm_sRGB:
                     return 8;
 
                 case PixelFormat.BC7_Typeless:
                 case PixelFormat.BC7_UNorm:
-                case PixelFormat.BC7_UNorm_SRgb:
+                case PixelFormat.BC7_UNorm_sRGB:
                     return 8;// or 0
 
                 default: return 0;
@@ -379,13 +379,13 @@ namespace FlaxEngine.Rendering
             {
                 case PixelFormat.BC1_Typeless:
                 case PixelFormat.BC1_UNorm:
-                case PixelFormat.BC1_UNorm_SRgb:
+                case PixelFormat.BC1_UNorm_sRGB:
                 case PixelFormat.BC2_Typeless:
                 case PixelFormat.BC2_UNorm:
-                case PixelFormat.BC2_UNorm_SRgb:
+                case PixelFormat.BC2_UNorm_sRGB:
                 case PixelFormat.BC3_Typeless:
                 case PixelFormat.BC3_UNorm:
-                case PixelFormat.BC3_UNorm_SRgb:
+                case PixelFormat.BC3_UNorm_sRGB:
                 case PixelFormat.BC4_Typeless:
                 case PixelFormat.BC4_UNorm:
                 case PixelFormat.BC4_SNorm:
@@ -397,7 +397,7 @@ namespace FlaxEngine.Rendering
                 case PixelFormat.BC6H_Sf16:
                 case PixelFormat.BC7_Typeless:
                 case PixelFormat.BC7_UNorm:
-                case PixelFormat.BC7_UNorm_SRgb:
+                case PixelFormat.BC7_UNorm_sRGB:
                     return true;
 
                 default:
@@ -436,21 +436,21 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="PixelFormat"/> is a SRgb format.
+        /// Determines whether the specified <see cref="PixelFormat"/> is a sRGB format.
         /// </summary>
         /// <param name="format">The <see cref="PixelFormat"/>.</param>
-        /// <returns><c>true</c> if the specified <see cref="PixelFormat"/> is a SRgb format; otherwise, <c>false</c>.</returns>
-        public static bool IsSRgb(this PixelFormat format)
+        /// <returns><c>true</c> if the specified <see cref="PixelFormat"/> is a sRGB format; otherwise, <c>false</c>.</returns>
+        public static bool IsSRGB(this PixelFormat format)
         {
             switch (format)
             {
-                case PixelFormat.R8G8B8A8_UNorm_SRgb:
-                case PixelFormat.BC1_UNorm_SRgb:
-                case PixelFormat.BC2_UNorm_SRgb:
-                case PixelFormat.BC3_UNorm_SRgb:
-                case PixelFormat.B8G8R8A8_UNorm_SRgb:
-                case PixelFormat.B8G8R8X8_UNorm_SRgb:
-                case PixelFormat.BC7_UNorm_SRgb:
+                case PixelFormat.R8G8B8A8_UNorm_sRGB:
+                case PixelFormat.BC1_UNorm_sRGB:
+                case PixelFormat.BC2_UNorm_sRGB:
+                case PixelFormat.BC3_UNorm_sRGB:
+                case PixelFormat.B8G8R8A8_UNorm_sRGB:
+                case PixelFormat.B8G8R8X8_UNorm_sRGB:
+                case PixelFormat.BC7_UNorm_sRGB:
                     return true;
 
                 default:
@@ -515,7 +515,7 @@ namespace FlaxEngine.Rendering
                 case PixelFormat.R11G11B10_Float:
                 case PixelFormat.R8G8B8A8_Typeless:
                 case PixelFormat.R8G8B8A8_UNorm:
-                case PixelFormat.R8G8B8A8_UNorm_SRgb:
+                case PixelFormat.R8G8B8A8_UNorm_sRGB:
                 case PixelFormat.R8G8B8A8_UInt:
                 case PixelFormat.R8G8B8A8_SNorm:
                 case PixelFormat.R8G8B8A8_SInt:
@@ -540,9 +540,9 @@ namespace FlaxEngine.Rendering
                 case PixelFormat.B8G8R8A8_UNorm:
                 case PixelFormat.B8G8R8X8_UNorm:
                 case PixelFormat.B8G8R8A8_Typeless:
-                case PixelFormat.B8G8R8A8_UNorm_SRgb:
+                case PixelFormat.B8G8R8A8_UNorm_sRGB:
                 case PixelFormat.B8G8R8X8_Typeless:
-                case PixelFormat.B8G8R8X8_UNorm_SRgb:
+                case PixelFormat.B8G8R8X8_UNorm_sRGB:
                     return true;
 
                 default:
@@ -562,13 +562,13 @@ namespace FlaxEngine.Rendering
             {
                 case PixelFormat.BC1_Typeless:
                 case PixelFormat.BC1_UNorm:
-                case PixelFormat.BC1_UNorm_SRgb:
+                case PixelFormat.BC1_UNorm_sRGB:
                 case PixelFormat.BC2_Typeless:
                 case PixelFormat.BC2_UNorm:
-                case PixelFormat.BC2_UNorm_SRgb:
+                case PixelFormat.BC2_UNorm_sRGB:
                 case PixelFormat.BC3_Typeless:
                 case PixelFormat.BC3_UNorm:
-                case PixelFormat.BC3_UNorm_SRgb:
+                case PixelFormat.BC3_UNorm_sRGB:
                 case PixelFormat.BC4_Typeless:
                 case PixelFormat.BC4_UNorm:
                 case PixelFormat.BC4_SNorm:
@@ -580,7 +580,7 @@ namespace FlaxEngine.Rendering
                 case PixelFormat.BC6H_Sf16:
                 case PixelFormat.BC7_Typeless:
                 case PixelFormat.BC7_UNorm:
-                case PixelFormat.BC7_UNorm_SRgb:
+                case PixelFormat.BC7_UNorm_sRGB:
                     return Math.Max(1, (height + 3) / 4);
 
                 default:
@@ -589,34 +589,34 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Find the equivalent SRgb format to the provided format.
+        /// Find the equivalent sRGB format to the provided format.
         /// </summary>
-        /// <param name="format">The non SRgb format.</param>
-        /// <returns>The equivalent SRgb format if any, the provided format else.</returns>
-        public static PixelFormat ToSRgb(this PixelFormat format)
+        /// <param name="format">The non sRGB format.</param>
+        /// <returns>The equivalent sRGB format if any, the provided format else.</returns>
+        public static PixelFormat TosRGB(this PixelFormat format)
         {
             switch (format)
             {
                 case PixelFormat.R8G8B8A8_UNorm:
-                    return PixelFormat.R8G8B8A8_UNorm_SRgb;
+                    return PixelFormat.R8G8B8A8_UNorm_sRGB;
 
                 case PixelFormat.BC1_UNorm:
-                    return PixelFormat.BC1_UNorm_SRgb;
+                    return PixelFormat.BC1_UNorm_sRGB;
 
                 case PixelFormat.BC2_UNorm:
-                    return PixelFormat.BC2_UNorm_SRgb;
+                    return PixelFormat.BC2_UNorm_sRGB;
 
                 case PixelFormat.BC3_UNorm:
-                    return PixelFormat.BC3_UNorm_SRgb;
+                    return PixelFormat.BC3_UNorm_sRGB;
 
                 case PixelFormat.B8G8R8A8_UNorm:
-                    return PixelFormat.B8G8R8A8_UNorm_SRgb;
+                    return PixelFormat.B8G8R8A8_UNorm_sRGB;
 
                 case PixelFormat.B8G8R8X8_UNorm:
-                    return PixelFormat.B8G8R8X8_UNorm_SRgb;
+                    return PixelFormat.B8G8R8X8_UNorm_sRGB;
 
                 case PixelFormat.BC7_UNorm:
-                    return PixelFormat.BC7_UNorm_SRgb;
+                    return PixelFormat.BC7_UNorm_sRGB;
 
                 default:
                     return format;
@@ -624,33 +624,33 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Find the equivalent non SRgb format to the provided SRgb format.
+        /// Find the equivalent non sRGB format to the provided sRGB format.
         /// </summary>
-        /// <param name="format">The non SRgb format.</param>
-        /// <returns>The equivalent non SRgb format if any, the provided format else.</returns>
-        public static PixelFormat ToNonSRgb(this PixelFormat format)
+        /// <param name="format">The non sRGB format.</param>
+        /// <returns>The equivalent non sRGB format if any, the provided format else.</returns>
+        public static PixelFormat ToNonsRGB(this PixelFormat format)
         {
             switch (format)
             {
-                case PixelFormat.R8G8B8A8_UNorm_SRgb:
+                case PixelFormat.R8G8B8A8_UNorm_sRGB:
                     return PixelFormat.R8G8B8A8_UNorm;
 
-                case PixelFormat.BC1_UNorm_SRgb:
+                case PixelFormat.BC1_UNorm_sRGB:
                     return PixelFormat.BC1_UNorm;
 
-                case PixelFormat.BC2_UNorm_SRgb:
+                case PixelFormat.BC2_UNorm_sRGB:
                     return PixelFormat.BC2_UNorm;
 
-                case PixelFormat.BC3_UNorm_SRgb:
+                case PixelFormat.BC3_UNorm_sRGB:
                     return PixelFormat.BC3_UNorm;
 
-                case PixelFormat.B8G8R8A8_UNorm_SRgb:
+                case PixelFormat.B8G8R8A8_UNorm_sRGB:
                     return PixelFormat.B8G8R8A8_UNorm;
 
-                case PixelFormat.B8G8R8X8_UNorm_SRgb:
+                case PixelFormat.B8G8R8X8_UNorm_sRGB:
                     return PixelFormat.B8G8R8X8_UNorm;
 
-                case PixelFormat.BC7_UNorm_SRgb:
+                case PixelFormat.BC7_UNorm_sRGB:
                     return PixelFormat.BC7_UNorm;
 
                 default:
