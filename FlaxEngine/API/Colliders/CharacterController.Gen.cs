@@ -27,7 +27,7 @@ namespace FlaxEngine
 		/// The character capsule radius will be scaled by the actor's world scale.
 		/// </remarks>
 		[UnmanagedCall]
-		[EditorOrder(60), EditorDisplay("Collider"), Tooltip("Radius of the character capsule, measured in the object's local space")]
+		[EditorOrder(100), EditorDisplay("Collider"), Tooltip("Radius of the character capsule, measured in the object's local space")]
 		public float Radius
 		{
 #if UNIT_TEST_COMPILANT
@@ -45,7 +45,7 @@ namespace FlaxEngine
 		/// The character height will be scaled by the actor's world scale.
 		/// </remarks>
 		[UnmanagedCall]
-		[EditorOrder(50), EditorDisplay("Collider"), Tooltip("Height of the character, measured in the object's local space")]
+		[EditorOrder(110), EditorDisplay("Collider"), Tooltip("Height of the character, measured in the object's local space")]
 		public float Height
 		{
 #if UNIT_TEST_COMPILANT
@@ -63,7 +63,7 @@ namespace FlaxEngine
 		/// Limits the collider to only climb slopes that are less steep (in degrees) than the indicated value.
 		/// </remarks>
 		[UnmanagedCall]
-		[EditorOrder(10), Limit(0, 100), EditorDisplay("Character Controller"), Tooltip("Limits the collider to only climb slopes that are less steep (in degrees) than the indicated value")]
+		[EditorOrder(210), Limit(0, 100), EditorDisplay("Character Controller"), Tooltip("Limits the collider to only climb slopes that are less steep (in degrees) than the indicated value")]
 		public float SlopeLimit
 		{
 #if UNIT_TEST_COMPILANT
@@ -81,7 +81,7 @@ namespace FlaxEngine
 		/// The character will step up a stair only if it is closer to the ground than the indicated value. This should not be greater than the Character Controller�s height or it will generate an error.
 		/// </remarks>
 		[UnmanagedCall]
-		[EditorOrder(20), Limit(0), EditorDisplay("Character Controller"), Tooltip("The character will step up a stair only if it is closer to the ground than the indicated value.")]
+		[EditorOrder(220), Limit(0), EditorDisplay("Character Controller"), Tooltip("The character will step up a stair only if it is closer to the ground than the indicated value.")]
 		public float StepOffset
 		{
 #if UNIT_TEST_COMPILANT
@@ -99,7 +99,7 @@ namespace FlaxEngine
 		/// The minimum travelled distance to consider. If travelled distance is smaller, the character doesn't move. This is used to stop the recursive motion algorithm when remaining distance to travel is small.
 		/// </remarks>
 		[UnmanagedCall]
-		[EditorOrder(25), Limit(0, 1000), EditorDisplay("Character Controller"), Tooltip("The minimum travelled distance to consider.If travelled distance is smaller, the character doesn't move.")]
+		[EditorOrder(230), Limit(0, 1000), EditorDisplay("Character Controller"), Tooltip("The minimum travelled distance to consider.If travelled distance is smaller, the character doesn't move.")]
 		public float MinMoveDistance
 		{
 #if UNIT_TEST_COMPILANT
