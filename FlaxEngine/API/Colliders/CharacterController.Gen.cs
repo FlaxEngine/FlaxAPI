@@ -126,6 +126,23 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets the current collision flags.
+		/// </summary>
+		/// <remarks>
+		/// Tells which parts of the character capsule collided with the environment during the last move call. It can be used to trigger various character animations.
+		/// </remarks>
+		[UnmanagedCall]
+		[HideInEditor]
+		public CollisionFlags Flags
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetFlags(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
 		/// Moves the character with the given speed.
 		/// </summary>
 		/// <remarks>
@@ -193,6 +210,8 @@ namespace FlaxEngine
 		internal static extern void Internal_GetVelocity(IntPtr obj, out Vector3 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetVelocity(IntPtr obj, ref Vector3 val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern CollisionFlags Internal_GetFlags(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern CollisionFlags Internal_SimpleMove(IntPtr obj, ref Vector3 speed);
 		[MethodImpl(MethodImplOptions.InternalCall)]

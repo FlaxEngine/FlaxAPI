@@ -2,6 +2,8 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+
 namespace FlaxEngine
 {
     public sealed partial class CharacterController
@@ -9,6 +11,7 @@ namespace FlaxEngine
         /// <summary>
         /// Specifies which sides a character is colliding with.
         /// </summary>
+        [Flags]
         public enum CollisionFlags
         {
             /// <summary>
@@ -31,5 +34,13 @@ namespace FlaxEngine
             /// </summary>
             Below = (1 << 2),
         }
+
+        /// <summary>
+        /// Gets a value indicating whether this characters is grounded.
+        /// </summary>
+        /// <remarks>
+        /// Returns true is the CharacterController was touching the ground during the last move.
+        /// </remarks>
+        public bool IsGrounded => (Flags & CollisionFlags.Below) != 0;
     }
 }

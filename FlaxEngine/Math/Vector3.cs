@@ -226,6 +226,19 @@ namespace FlaxEngine
         public bool IsNormalized => Mathf.IsOne(X * X + Y * Y + Z * Z);
 
         /// <summary>
+        /// Gets the normalized vector. Returned vector has length equal 1.
+        /// </summary>
+        public Vector3 Normalized
+        {
+            get
+            {
+                Vector3 result = this;
+                result.Normalize();
+                return result;
+            }
+        }
+
+        /// <summary>
         /// Gets a value indicting whether this vector is zero
         /// </summary>
         public bool IsZero => Mathf.IsZero(X) && Mathf.IsZero(Y) && Mathf.IsZero(Z);
