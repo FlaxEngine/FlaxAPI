@@ -96,6 +96,8 @@
     <Compile Include="API\Colliders\BoxCollider.Gen.cs" />
     <Compile Include="API\Colliders\CapsuleCollider.cs" />
     <Compile Include="API\Colliders\CapsuleCollider.Gen.cs" />
+    <Compile Include="API\Colliders\CharacterController.cs" />
+    <Compile Include="API\Colliders\CharacterController.Gen.cs" />
     <Compile Include="API\Colliders\SphereCollider.cs" />
     <Compile Include="API\Colliders\SphereCollider.Gen.cs" />
     <Compile Include="API\CreateWindowSettings.cs" />

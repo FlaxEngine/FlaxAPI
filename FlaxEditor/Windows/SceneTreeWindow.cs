@@ -89,6 +89,7 @@ namespace FlaxEditor.Windows
                     Types = new[]
                     {
                         new KeyValuePair<string, Type>("Rigid Body", typeof(RigidBody)),
+                        new KeyValuePair<string, Type>("Character Controller", typeof(CharacterController)),
                         new KeyValuePair<string, Type>("Box Collider", typeof(BoxCollider)),
                         new KeyValuePair<string, Type>("Sphere Collider", typeof(SphereCollider)),
                         new KeyValuePair<string, Type>("Capsule Collider", typeof(CapsuleCollider)),
