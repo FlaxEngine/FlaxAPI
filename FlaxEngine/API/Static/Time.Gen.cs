@@ -20,6 +20,48 @@ namespace FlaxEngine
 	public static partial class Time
 	{
 		/// <summary>
+		/// Gets or sets the target amount of the game logic updates per second (script updates frequency).
+		/// </summary>
+		[UnmanagedCall]
+		public static float UpdateFPS
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetUpdateFPS(); }
+			set { Internal_SetUpdateFPS(value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the target amount of the physics simulation updates per second (also fixed updates frequency).
+		/// </summary>
+		[UnmanagedCall]
+		public static float PhysicsFPS
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetPhysicsFPS(); }
+			set { Internal_SetPhysicsFPS(value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the target amount of the frames rendered per second (actual game FPS).
+		/// </summary>
+		[UnmanagedCall]
+		public static float DrawFPS
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetDrawFPS(); }
+			set { Internal_SetDrawFPS(value); }
+#endif
+		}
+
+		/// <summary>
 		/// Gets or sets scale at which the time is passing. This can be used for slow motion effects.
 		/// </summary>
 		[UnmanagedCall]
@@ -48,6 +90,18 @@ namespace FlaxEngine
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetUpdateFPS();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetUpdateFPS(float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetPhysicsFPS();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetPhysicsFPS(float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetDrawFPS();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetDrawFPS(float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetTimeScale();
 		[MethodImpl(MethodImplOptions.InternalCall)]
