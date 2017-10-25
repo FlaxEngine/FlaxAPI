@@ -23,7 +23,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         public const float ResizeCheckTime = 0.9f;
 
+        /// <summary>
+        /// The task.
+        /// </summary>
         protected SceneRenderTask _task;
+
         private RenderTarget _backBuffer;
         private RenderTarget _backBufferOld;
         private int _oldBackbufferLiveTimeLeft;
@@ -32,17 +36,11 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets the task.
         /// </summary>
-        /// <value>
-        /// The task.
-        /// </value>
         public SceneRenderTask Task => _task;
 
         /// <summary>
         /// Gets a value indicating whether render to that output only if parent window exists, otherwise false.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if render only with window attached; otherwise, <c>false</c>.
-        /// </value>
         public bool RenderOnlyWithWindow { get; set; } = true;
 
         /// <summary>

@@ -394,7 +394,7 @@ namespace FlaxEngine
 		/// Applies an impulsive torque defined in the world space to the rigidbody.
 		/// </summary>
 		/// <remarks>
-		/// ForceMode determines if the force is to be conventional or impulsive.<para>Each actor has an angular acceleration and an angular velocity change accumulator which are directly modified using the modes ForceMode.Acceleration and ForceMode.VelocityChange respectively.The modes ForceMode.Force and ForceMode.Impulse also modify these same accumulators and are just short hand for multiplying the vector parameter by inverse inertia and then using ForceMode.Acceleration and ForceMode.VelocityChange respectively.
+		/// ForceMode determines if the force is to be conventional or impulsive.<para>Each actor has an angular acceleration and an angular velocity change accumulator which are directly modified using the modes ForceMode.Acceleration and ForceMode.VelocityChange respectively.The modes ForceMode.Force and ForceMode.Impulse also modify these same accumulators and are just short hand for multiplying the vector parameter by inverse inertia and then using ForceMode.Acceleration and ForceMode.VelocityChange respectively.</para>
 		/// </remarks>
 		/// <param name="torque">The torque to apply defined in the world space.</param>
 		/// <param name="mode">The mode to use when applying the force/impulse.</param>

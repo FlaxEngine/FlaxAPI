@@ -10,15 +10,19 @@ namespace FlaxEngine.Utilities
     /// </summary>
     public abstract class StateMachine
     {
+        /// <summary>
+        /// The current state.
+        /// </summary>
         protected State currentState;
+
+        /// <summary>
+        /// The states.
+        /// </summary>
         protected readonly List<State> states = new List<State>();
 
         /// <summary>
         /// Gets the current state.
         /// </summary>
-        /// <value>
-        /// The current state.
-        /// </value>
         public State CurrentState => currentState;
 
         /// <summary>

@@ -18,7 +18,14 @@ namespace FlaxEditor.Surface
         /// </summary>
         public struct Entry
         {
+            /// <summary>
+            /// The type identifier.
+            /// </summary>
             public int TypeID;
+
+            /// <summary>
+            /// The data.
+            /// </summary>
             public byte[] Data;
         }
 

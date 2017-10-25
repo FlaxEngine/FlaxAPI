@@ -18,12 +18,36 @@ namespace FlaxEngine.GUI
         /// </summary>
         protected const float SlidingBoxSize = 12.0f;
 
+        /// <summary>
+        /// The current value.
+        /// </summary>
         protected T _value;
-        protected T _min, _max;
 
+        /// <summary>
+        /// The minimum value.
+        /// </summary>
+        protected T _min;
+
+        /// <summary>
+        /// The maximum value.
+        /// </summary>
+        protected T _max;
+
+        /// <summary>
+        /// The slider speed.
+        /// </summary>
         protected float _slideSpeed;
+
+        /// <summary>
+        /// True if slider is in use.
+        /// </summary>
         protected bool _isSliding;
+
+        /// <summary>
+        /// The value cached on sliding start.
+        /// </summary>
         protected T _startSlideValue;
+
         private Vector2 _startSlideLocation;
 
         /// <summary>
@@ -114,8 +138,7 @@ namespace FlaxEngine.GUI
 
             // End capturing mouse
             var parentWin = ParentWindow;
-            if (parentWin != null)
-                parentWin.EndTrackingMouse();
+            parentWin?.EndTrackingMouse();
         }
 
         /// <inheritdoc />
