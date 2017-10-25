@@ -88,49 +88,31 @@ namespace FlaxEngine
         /// <summary>
         /// Gets the forward vector.
         /// </summary>
-        /// <value>
-        /// The forward vector.
-        /// </value>
         public Vector3 Forward => Vector3.Transform(Vector3.ForwardLH, Orientation);
 
         /// <summary>
         /// Gets the backward vector.
         /// </summary>
-        /// <value>
-        /// The backward vector.
-        /// </value>
         public Vector3 Backward => Vector3.Transform(Vector3.BackwardLH, Orientation);
 
         /// <summary>
         /// Gets the up vector.
         /// </summary>
-        /// <value>
-        /// The up vector.
-        /// </value>
         public Vector3 Up => Vector3.Transform(Vector3.Up, Orientation);
 
         /// <summary>
         /// Gets the down vector.
         /// </summary>
-        /// <value>
-        /// The down vector.
-        /// </value>
         public Vector3 Down => Vector3.Transform(Vector3.Down, Orientation);
 
         /// <summary>
         /// Gets the left vector.
         /// </summary>
-        /// <value>
-        /// The left vector.
-        /// </value>
         public Vector3 Left => Vector3.Transform(Vector3.Left, Orientation);
 
         /// <summary>
         /// Gets the right vector.
         /// </summary>
-        /// <value>
-        /// The right vector.
-        /// </value>
         public Vector3 Right => Vector3.Transform(Vector3.Right, Orientation);
 
         /// <summary>
@@ -314,6 +296,35 @@ namespace FlaxEngine
                 result[i] = points[i] - Translation;
                 Vector3.Transform(ref result[i], ref scale, out result[i]);
             }
+        }
+
+        /// <summary>
+        /// Transforms the direction vector from the local space to the world space.
+        /// </summary>
+        /// <remarks>
+        /// This operation is not affected by scale or position of the transform. The returned vector has the same length as direction.
+        /// Use <see cref="TransformPoint"/> for the conversion if the vector represents a position rather than a direction.
+        /// </remarks>
+        /// <param name="direction">The direction.</param>
+        /// <returns>The transformed direction vector.</returns>
+        public Vector3 TransformDirection(Vector3 direction)
+        {
+            Vector3 result;
+            Vector3.Transform(ref direction, ref Orientation, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Transforms the position from the local space to the world space.
+        /// </summary>
+        /// <remarks>
+        /// Use <see cref="TransformDirection"/> for the conversion if the vector represents a direction rather than a position.
+        /// </remarks>
+        /// <param name="position">The position.</param>
+        /// <returns>The transformed position.</returns>
+        public Vector3 TransformPoint(Vector3 position)
+        {
+            return WorldToLocal(position);
         }
 
         /// <summary>

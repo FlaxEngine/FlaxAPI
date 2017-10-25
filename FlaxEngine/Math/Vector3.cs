@@ -1329,7 +1329,7 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="vector">The vector to rotate.</param>
         /// <param name="rotation">The <see cref="Quaternion" /> rotation to apply.</param>
-        /// <param name="result">When the method completes, contains the transformed <see cref="Vector4" />.</param>
+        /// <param name="result">When the method completes, contains the transformed <see cref="Vector3" />.</param>
         public static void Transform(ref Vector3 vector, ref Quaternion rotation, out Vector3 result)
         {
             float x = rotation.X + rotation.X;
@@ -1356,7 +1356,7 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="vector">The vector to rotate.</param>
         /// <param name="rotation">The <see cref="Quaternion" /> rotation to apply.</param>
-        /// <returns>The transformed <see cref="Vector4" />.</returns>
+        /// <returns>The transformed <see cref="Vector3" />.</returns>
         public static Vector3 Transform(Vector3 vector, Quaternion rotation)
         {
             Vector3 result;
