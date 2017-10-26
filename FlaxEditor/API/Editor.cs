@@ -652,6 +652,15 @@ namespace FlaxEditor
             return result;
         }
 
+        internal void Internal_GetGameWindowSize(out Vector2 resultAsRef)
+        {
+            resultAsRef = Vector2.Zero;
+            if (Windows.GameWin != null)
+            {
+                resultAsRef = Windows.GameWin.Size;
+            }
+        }
+
         internal bool Internal_OnAppExit()
         {
             // In editor play mode (when main window is not closed) just skip engine exit and leave the play mode

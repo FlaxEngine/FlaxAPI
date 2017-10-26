@@ -9,6 +9,11 @@ namespace FlaxEngine.Rendering
     /// <summary>
     /// The main game rendering task used by the engine.
     /// </summary>
+    /// <remarks>
+    /// For Main Render Task its <see cref="SceneRenderTask.Output"/> may be null because game can be rendered directly to the native window backbuffer.
+    /// This allows to increase game rendering performance (reduced memory usage and data transfer).
+    /// User should use post effects pipeline to modify the final frame.
+    /// </remarks>
     /// <seealso cref="FlaxEngine.Rendering.SceneRenderTask" />
     public sealed class MainRenderTask : SceneRenderTask
     {
@@ -33,7 +38,27 @@ namespace FlaxEngine.Rendering
             // Use the main camera for the game
             Camera = Camera.MainCamera;
 
+            if (!Application.IsEditor)
+            {
+                // Sync render buffers size with the backbuffer
+                Buffers.Size = Screen.Size;
+            }
+
             base.OnBegin();
+        }
+
+        internal override bool Internal_Begin(out IntPtr outputPtr)
+        {
+            bool result = base.Internal_Begin(out outputPtr);
+
+            if (!Application.IsEditor)
+            {
+                // Standalone build uses hidden, internal output (native window backbuffer in most cases)
+                // So pass rendering even with missing output
+                result = true;
+            }
+
+            return result;
         }
     }
 }

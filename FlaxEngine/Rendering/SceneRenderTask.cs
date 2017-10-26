@@ -155,9 +155,6 @@ namespace FlaxEngine.Rendering
                 }
             }
 
-            // Resize buffers
-            Buffers.Size = Output.Size;
-
             // Call scene rendering
             var customActors = CustomActors.Count > 0 ? CustomActors.ToArray() : null;
             context.DrawScene(this, Output, Buffers, View, Flags, Mode, customActors, ActorsSource, postFx);
@@ -172,8 +169,12 @@ namespace FlaxEngine.Rendering
         protected virtual void OnBegin()
         {
             Begin?.Invoke(this);
+
+            // Resize buffers
+            if (Output)
+                Buffers.Size = Output.Size;
         }
-        
+
         /// <summary>
         /// Called when on rendering end.
         /// </summary>
