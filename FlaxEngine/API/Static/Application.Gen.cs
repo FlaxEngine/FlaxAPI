@@ -20,19 +20,6 @@ namespace FlaxEngine
 	public static partial class Application
 	{
 		/// <summary>
-		/// Returns true if is running 64 bit application (otherwise 32 bit).
-		/// </summary>
-		[UnmanagedCall]
-		public static bool Is64bitApp
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { return Internal_Is64bitApp(); }
-#endif
-		}
-
-		/// <summary>
 		/// Gets the name of the computer machine.
 		/// </summary>
 		[UnmanagedCall]
@@ -194,8 +181,6 @@ namespace FlaxEngine
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_Is64bitApp();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern string Internal_GetComputerName();
 		[MethodImpl(MethodImplOptions.InternalCall)]

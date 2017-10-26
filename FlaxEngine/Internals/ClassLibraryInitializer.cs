@@ -11,8 +11,14 @@ namespace FlaxEngine
         /// <summary>
         /// Initializes Flax API. Called before everything else from native code.
         /// </summary>
-        internal static void Init()
+        /// <param name="flags">The packed flags with small meta for the API.</param>
+        /// <param name="platform">The runtime platform.</param>
+        internal static void Init(int flags, PlatformType platform)
         {
+            Application._is64Bit = (flags & 0x01) != 0;
+            Application._isEditor = (flags & 0x02) != 0;
+            Application._platform = platform;
+
             UnhandledExceptionHandler.RegisterCatcher();
             FlaxLogWriter.Init();
             Globals.Init();
