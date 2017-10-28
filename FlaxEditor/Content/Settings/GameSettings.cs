@@ -12,6 +12,36 @@ namespace FlaxEditor.Content.Settings
     public sealed class GameSettings : SettingsBase
     {
         /// <summary>
+        /// The product full name.
+        /// </summary>
+        [EditorOrder(0), EditorDisplay("General"), Tooltip("The name of your product.")]
+        public string ProductName;
+
+        /// <summary>
+        /// The company full name.
+        /// </summary>
+        [EditorOrder(10), EditorDisplay("General"), Tooltip("The name of you company.")]
+        public string CompanyName;
+
+        /// <summary>
+        /// The product version. Separated with dots: major.minor.build.revision.
+        /// </summary>
+        [EditorOrder(20), EditorDisplay("General"), Tooltip("The product version. Separated with dots: major.minor.build.revision.")]
+        public string Version;
+
+        /// <summary>
+        /// The default application icon.
+        /// </summary>
+        [EditorOrder(30), EditorDisplay("General"), Tooltip("The default icon of the application.")]
+        public Texture Icon;
+
+        /// <summary>
+        /// Reference to the first scene to load on a game startup.
+        /// </summary>
+        [EditorOrder(900), EditorDisplay("Startup"), AssetReference(SceneItem.SceneAssetTypename, true), Tooltip("Reference to the first scene to load on a game startup")]
+        public JsonAssetItem FirstScene;
+
+        /// <summary>
         /// Reference to <see cref="TimeSettings"/> asset.
         /// </summary>
         [EditorOrder(1010), EditorDisplay("Other Settings"), AssetReference(typeof(TimeSettings), true), Tooltip("Reference to Time Settings asset")]
