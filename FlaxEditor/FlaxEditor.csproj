@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="API\Editor.cs" />
     <Compile Include="API\Editor.Gen.cs" />
+    <Compile Include="API\Static\GameCooker.cs" />
+    <Compile Include="API\Static\GameCooker.Gen.cs" />
     <Compile Include="API\Static\ScriptsBuilder.cs" />
     <Compile Include="API\Static\ScriptsBuilder.Gen.cs" />
     <Compile Include="API\TextureBases\PreviewsCache.cs" />
