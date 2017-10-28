@@ -80,6 +80,9 @@ namespace FlaxEditor.Modules
         {
             // Init content database after UI module
             InitOrder = -80;
+
+            // Register AssetItems serialization helper (serialize ref ID only)
+            FlaxEngine.Json.JsonSerializer.Settings.Converters.Add(new AssetItemConverter());
         }
 
         private void Content_OnAssetDisposing(Asset asset)

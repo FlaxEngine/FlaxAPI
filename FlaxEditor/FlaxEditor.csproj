@@ -50,6 +50,7 @@
     <Compile Include="API\Static\ScriptsBuilder.Gen.cs" />
     <Compile Include="API\TextureBases\PreviewsCache.cs" />
     <Compile Include="API\TextureBases\PreviewsCache.Gen.cs" />
+    <Compile Include="Content\AssetItemConverter.cs" />
     <Compile Include="Content\Create\CreateFileEntry.cs" />
     <Compile Include="Content\Create\CreateFilesDialog.cs" />
     <Compile Include="Content\Create\SettingsCreateEntry.cs" />

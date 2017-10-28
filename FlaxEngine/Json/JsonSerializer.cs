@@ -19,7 +19,7 @@ namespace FlaxEngine.Json
     /// <seealso cref="Newtonsoft.Json.JsonConverter" />
     internal class FlaxObjectConverter : JsonConverter
     {
-        private struct GuidInterop
+        internal struct GuidInterop
         {
             public uint A;
             public uint B;
@@ -27,7 +27,7 @@ namespace FlaxEngine.Json
             public uint D;
         }
 
-        private static unsafe void ParseHex(char* str, int length, out uint result)
+        internal static unsafe void ParseHex(char* str, int length, out uint result)
         {
             uint sum = 0;
             char* p = str;
@@ -58,13 +58,13 @@ namespace FlaxEngine.Json
             result = sum;
         }
 
-        private static unsafe string GetStringID(Guid id)
+        internal static unsafe string GetStringID(Guid id)
         {
             GuidInterop* g = (GuidInterop*)&id;
             return string.Format("{0:x8}{1:x8}{2:x8}{3:x8}", g->A, g->B, g->C, g->D);
         }
 
-        private static unsafe void ParseID(string str, out Guid id)
+        internal static unsafe void ParseID(string str, out Guid id)
         {
             GuidInterop g;
             fixed (char* a = str)
