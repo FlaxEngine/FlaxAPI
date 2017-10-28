@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Linq;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors.Elements;
@@ -11,10 +12,19 @@ using FlaxEngine;
 namespace FlaxEditor.CustomEditors.Editors
 {
     /// <summary>
+    /// Default implementation of the inspector used to edit reference to the <see cref="AssetItem"/>.
+    /// </summary>
+    [CustomEditor(typeof(AssetItem)), DefaultEditor]
+    public sealed class AssetItemRefEditor : AssetRefEditor
+    {
+    }
+
+    /// <summary>
     /// Default implementation of the inspector used to edit reference to the <see cref="FlaxEngine.Asset"/>.
     /// </summary>
+    /// <remarks>Supports editing reference to the asset using various containers: <see cref="Asset"/> or <see cref="AssetItem"/> or <see cref="Guid"/>.</remarks>
     [CustomEditor(typeof(Asset)), DefaultEditor]
-    public sealed class AssetRefEditor : CustomEditor
+    public class AssetRefEditor : CustomEditor
     {
         private CustomElement<AssetPicker> element;
         private string typeName;
@@ -62,15 +72,28 @@ namespace FlaxEditor.CustomEditors.Editors
                         typeName = assetReference.TypeName;
                         if (assetReference.UseSmallPicker)
                             height = 24;
+
+                        if (typeName == SceneItem.SceneAssetTypename)
+                            domain = ContentDomain.Scene;
                     }
                 }
 
                 element = layout.Custom<AssetPicker>();
                 element.CustomControl.Domain = domain;
                 element.CustomControl.Height = height;
-                element.CustomControl.SelectedItemChanged += () => SetValue(element.CustomControl.SelectedAsset);
+                element.CustomControl.SelectedItemChanged += OnSelectedItemChanged;
                 element.CustomControl.ValidateValue += ValidateValue;
             }
+        }
+
+        private void OnSelectedItemChanged()
+        {
+            if (Values[0] is AssetItem)
+                SetValue(element.CustomControl.SelectedItem);
+            else if (Values[0] is Guid)
+                SetValue(element.CustomControl.SelectedID);
+            else
+                SetValue(element.CustomControl.SelectedAsset);
         }
 
         private bool ValidateValue(AssetItem item)
@@ -81,7 +104,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 if (item.TypeName != typeName)
                     return false;
             }
-            
+
             return true;
         }
 
@@ -90,7 +113,12 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             if (!HasDiffrentValues)
             {
-                element.CustomControl.SelectedAsset = Values[0] as Asset;
+                if (Values[0] is AssetItem assetItem)
+                    element.CustomControl.SelectedItem = assetItem;
+                else if (Values[0] is Guid guid)
+                    element.CustomControl.SelectedID = guid;
+                else
+                    element.CustomControl.SelectedAsset = Values[0] as Asset;
             }
         }
     }
