@@ -160,20 +160,12 @@ namespace FlaxEditor.Windows
                 TabsSize = new Vector2(120, 32),
                 Parent = this
             };
-            
-            CreateGameSettingsTab(sections);
+
             CreateBuildTab(sections);
 
             sections.SelectedTabIndex = 0;
         }
-
-        private void CreateGameSettingsTab(Tabs sections)
-        {
-            var gameSettings = sections.AddTab(new Tab("Game Settings"));
-
-            // TODO: insert game settings asset editor
-        }
-
+        
         public override void Update(float deltaTime)
         {
             base.Update(deltaTime);
