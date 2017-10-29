@@ -265,6 +265,7 @@
     <Compile Include="GUI\Panels\ScrollBar.cs" />
     <Compile Include="GUI\Panels\Panel.cs" />
     <Compile Include="GUI\Panels\SplitPanel.cs" />
+    <Compile Include="GUI\Panels\TilesPanel.cs" />
     <Compile Include="GUI\Panels\UniformGridPanel.cs" />
     <Compile Include="GUI\Panels\VerticalPanel.cs" />
     <Compile Include="GUI\Panels\VScrollBar.cs" />

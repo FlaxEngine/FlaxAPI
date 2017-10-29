@@ -88,8 +88,9 @@ namespace FlaxEngine.GUI
             Vector2 slotSize;
             if (_slotsV + _slotsH == 0)
             {
-                // TODO: what to do here?
-                return;
+                slotSize = HasChildren ? Children[0].Size : new Vector2(32);
+                slotsH = Mathf.CeilToInt(Width / slotSize.X);
+                slotsV = Mathf.CeilToInt(Height / slotSize.Y);
             }
             else if (slotsH == 0)
             {
