@@ -119,6 +119,7 @@
     <Compile Include="CustomEditors\Values\CustomValueContainer.cs" />
     <Compile Include="CustomEditors\Values\DictionaryValueContainer.cs" />
     <Compile Include="CustomEditors\Values\ListValueContainer.cs" />
+    <Compile Include="CustomEditors\Values\ReadOnlyValueContainer.cs" />
     <Compile Include="CustomEditors\Values\ValueContainer.cs" />
     <Compile Include="EditorAssets.cs" />
     <Compile Include="Gizmo\GridGizmo.cs" />
