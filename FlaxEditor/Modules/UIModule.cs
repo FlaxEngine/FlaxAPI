@@ -373,7 +373,7 @@ namespace FlaxEditor.Modules
             mm_Game.ContextMenu.VisibleChanged += mm_Game_ShowHide;
             mm_Game.ContextMenu.AddButton(1, "Play", "F5");
             mm_Game.ContextMenu.AddButton(2, "Pause");
-            
+
             // Tools
             var mm_Tools = MainMenu.AddButton("Tools");
             mm_Tools.ContextMenu.OnButtonClicked += mm_Tools_Click;
@@ -383,6 +383,8 @@ namespace FlaxEditor.Modules
             mm_Tools.ContextMenu.AddButton(3, "Clear lightmaps data");
             mm_Tools.ContextMenu.AddButton(5, "Bake all env probes");
             mm_Tools.ContextMenu.AddButton(6, "Build CSG mesh");
+            mm_Tools.ContextMenu.AddSeparator();
+            mm_Tools.ContextMenu.AddButton(7, "Game Cooker");
             mm_Tools.ContextMenu.AddSeparator();
             mm_Tools.ContextMenu.AddButton(4, "Take screenshot!", "F12");
             //mm_Tools.ContextMenu.AddSeparator();
@@ -818,6 +820,13 @@ namespace FlaxEditor.Modules
                     var scenes = SceneManager.Scenes;
                     scenes.ToList().ForEach(x => x.BuildCSG());
                     Editor.Scene.MarkSceneEdited(scenes);
+                    break;
+                }
+
+                // Game Cooker
+                case 7:
+                {
+                    Editor.Windows.GameCookerWin.ShowFloating();
                     break;
                 }
             }

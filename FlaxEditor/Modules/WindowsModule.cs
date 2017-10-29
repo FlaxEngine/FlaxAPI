@@ -78,6 +78,11 @@ namespace FlaxEditor.Modules
         public ToolboxWindow ToolboxWin;
 
         /// <summary>
+        /// The game cooker window.
+        /// </summary>
+        public GameCookerWindow GameCookerWin;
+
+        /// <summary>
         /// List with all created editor windows.
         /// </summary>
         public readonly List<EditorWindow> Windows = new List<EditorWindow>(32);
@@ -206,6 +211,9 @@ namespace FlaxEditor.Modules
             EditWin.Show(FlaxEngine.GUI.Docking.DockState.DockFill);
             GameWin.Show(FlaxEngine.GUI.Docking.DockState.DockFill);
             EditWin.SelectTab();
+
+            GameCookerWin.Show(FlaxEngine.GUI.Docking.DockState.DockFill);
+            GameCookerWin.SelectTab();
         }
 
         /// <summary>
@@ -248,6 +256,7 @@ namespace FlaxEditor.Modules
             SceneWin = new SceneTreeWindow(Editor);
             DebugWin = new DebugLogWindow(Editor);
             ToolboxWin = new ToolboxWindow(Editor);
+            GameCookerWin = new GameCookerWindow(Editor);
 
             // Bind events
             SceneManager.OnSceneSaveError += OnSceneSaveError;
