@@ -127,6 +127,7 @@
     <Compile Include="GUI\Drag\DragActors.cs" />
     <Compile Include="GUI\Drag\DragActorType.cs" />
     <Compile Include="GUI\Drag\DragScripts.cs" />
+    <Compile Include="GUI\PlatformSelector.cs" />
     <Compile Include="GUI\RenamePopup.cs" />
     <Compile Include="Content\Proxy\BinaryAssetProxy.cs" />
     <Compile Include="Content\Proxy\ContentProxy.cs" />
@@ -197,6 +198,7 @@
     <Compile Include="Modules\WindowsModule.cs" />
     <Compile Include="Progress\Handlers\BakeEnvProbesProgress.cs" />
     <Compile Include="Progress\Handlers\BakeLightmapsProgress.cs" />
+    <Compile Include="Progress\Handlers\BuildingGameProgress.cs" />
     <Compile Include="Progress\Handlers\CodeEditorOpenProgress.cs" />
     <Compile Include="Progress\Handlers\CompileScriptsProgress.cs" />
     <Compile Include="Progress\Handlers\ImportAssetsProgress.cs" />
@@ -332,6 +334,7 @@
     <Compile Include="Utilities\Extenstions.cs" />
     <Compile Include="Utilities\MemberComparison.cs" />
     <Compile Include="Utilities\Utils.cs" />
+    <Compile Include="Windows\GameCookerWindow.cs" />
     <Compile Include="Windows\GameWindow.cs" />
     <Compile Include="Windows\PropertiesWindow.cs" />
     <Compile Include="Windows\SceneEditorWindow.cs" />

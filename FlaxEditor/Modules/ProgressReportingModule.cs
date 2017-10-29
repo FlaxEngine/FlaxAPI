@@ -19,6 +19,11 @@ namespace FlaxEditor.Modules
         private readonly List<ProgressHandler> _handlers = new List<ProgressHandler>(8);
 
         /// <summary>
+        /// The game building progress handler.
+        /// </summary>
+        public readonly BuildingGameProgress BuildingGame = new BuildingGameProgress();
+
+        /// <summary>
         /// The assets importing progress handler.
         /// </summary>
         public readonly ImportAssetsProgress ImportAssets = new ImportAssetsProgress();
@@ -59,6 +64,7 @@ namespace FlaxEditor.Modules
             InitOrder = 1000;
 
             // Register common handlers
+            RegisterHandler(BuildingGame);
             RegisterHandler(ImportAssets);
             RegisterHandler(CompileScripts);
             RegisterHandler(BakeLightmaps);
