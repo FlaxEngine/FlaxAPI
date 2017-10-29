@@ -85,7 +85,7 @@ namespace FlaxEditor.GUI
                 new PlatformData(PlatformType.XboxOne, ui.GetIcon("XboxOne")),
                 new PlatformData(PlatformType.WindowsStore, ui.GetIcon("WindowsStore")),
             };
-            
+
             const float IconSize = 48.0f;
             TileSize = new Vector2(IconSize);
             AutoResize = true;
@@ -93,7 +93,7 @@ namespace FlaxEditor.GUI
             _mouseOverColor = Color.White;
             _selectedColor = Color.White;
             _defaultColor = new Color(0.6f);
-            
+
             for (int i = 0; i < platforms.Length; i++)
             {
                 var tile = new Image
