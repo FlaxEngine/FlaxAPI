@@ -111,7 +111,7 @@ namespace FlaxEngine.GUI.Tabs
         public Tabs()
         {
             CanFocus = false;
-
+            
             _selectedIndex = -1;
             _tabsSize = new Vector2(70, 16);
             _orientation = Orientation.Horizontal;
@@ -280,9 +280,8 @@ namespace FlaxEngine.GUI.Tabs
                     if (i == _selectedIndex)
                     {
                         // Show and fit size
-                        tab.Bounds = clientArea;
-                        tab.UnlockChildrenRecursive();
                         tab.Visible = true;
+                        tab.Bounds = clientArea;
                     }
                     else
                     {

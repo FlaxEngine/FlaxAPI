@@ -95,9 +95,6 @@ namespace FlaxEngine.GUI
 
             if (_autoResize)
             {
-                // Set maximum size and fit the parent container
-                if (HasParent)
-                    y = Mathf.Max(y, Parent.Height);
                 Height = y;
             }
         }
