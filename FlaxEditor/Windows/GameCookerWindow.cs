@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Collections.Generic;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI;
@@ -26,7 +27,7 @@ namespace FlaxEditor.Windows
             public readonly GameCookerWindow GameCookerWin;
             public readonly PlatformSelector Selector;
 
-            public Dictionary<PlatformType, object> PerPlatformOptions = new Dictionary<PlatformType, object>
+            public Dictionary<PlatformType, Platform> PerPlatformOptions = new Dictionary<PlatformType, Platform>
             {
                 { PlatformType.Windows, new Windows() },
                 { PlatformType.XboxOne, new UWP() },
@@ -39,19 +40,13 @@ namespace FlaxEditor.Windows
                 Selector = platformSelector;
 
                 // TODO: restore build settings from the Editor cache!
-                ((Windows)PerPlatformOptions[PlatformType.Windows]).Output = StringUtils.CombinePaths(Globals.ProjectFolder, "Output/Windows");
-                ((UWP)PerPlatformOptions[PlatformType.XboxOne]).Output = StringUtils.CombinePaths(Globals.ProjectFolder, "Output/XboxOne");
-                ((UWP)PerPlatformOptions[PlatformType.WindowsStore]).Output = StringUtils.CombinePaths(Globals.ProjectFolder, "Output/WindowsStore");
+                PerPlatformOptions[PlatformType.Windows].Output = StringUtils.CombinePaths(Globals.ProjectFolder, "Output/Windows");
+                PerPlatformOptions[PlatformType.XboxOne].Output = StringUtils.CombinePaths(Globals.ProjectFolder, "Output/XboxOne");
+                PerPlatformOptions[PlatformType.WindowsStore].Output = StringUtils.CombinePaths(Globals.ProjectFolder, "Output/WindowsStore");
             }
 
-            private class Windows
+            public abstract class Platform
             {
-                public enum Arch
-                {
-                    x86,
-                    x64,
-                };
-
                 public enum Mode
                 {
                     Release,
@@ -60,62 +55,87 @@ namespace FlaxEditor.Windows
 
                 [EditorOrder(10), Tooltip("Output folder path")]
                 public string Output;
+
+                [EditorOrder(20), Tooltip("Configuration build mode")]
+                public Mode ConfigurationMode;
+
+                protected abstract BuildPlatform BuildPlatform
+                {
+                    get;
+                }
+
+                protected virtual BuildOptions Options
+                {
+                    get { return ConfigurationMode == Mode.Debug ? BuildOptions.Debug : BuildOptions.None; }
+                }
+
+                public virtual void Build()
+                {
+                    GameCooker.Build(BuildPlatform, Options, Output);
+                }
+            }
+
+            public class Windows : Platform
+            {
+                public enum Arch
+                {
+                    x64,
+                    x86,
+                };
 
                 [EditorOrder(20), Tooltip("Target platform CPU type (32bit or 64bit)")]
                 public Arch Architecture;
 
-                [EditorOrder(30), Tooltip("Configuration build mode")]
-                public Mode ConfigurationMode;
+                protected override BuildPlatform BuildPlatform => Architecture == Arch.x86 ? BuildPlatform.Windows32 : BuildPlatform.Windows64;
             }
 
-            private class UWP
+            public class UWP : Platform
             {
                 public enum Arch
                 {
-                    x86,
                     x64,
+                    x86,
                 };
 
-                public enum Mode
-                {
-                    Release,
-                    Debug,
-                }
-
-                [EditorOrder(10), Tooltip("Output folder path")]
-                public string Output;
-
-                [EditorOrder(20), Tooltip("Target platform CPU type")]
+                [EditorOrder(30), Tooltip("Target platform CPU type")]
                 public Arch Architecture;
 
-                [EditorOrder(30), Tooltip("Configuration build mode")]
-                public Mode ConfigurationMode;
+                protected override BuildPlatform BuildPlatform => throw new NotImplementedException("Implement UWP platform building.");
             }
 
             public class Editor : CustomEditor
             {
                 private PlatformType _platform;
+                private Button _buildButton;
 
                 public override void Initialize(LayoutElementsContainer layout)
                 {
                     var proxy = (BuildTabProxy)Values[0];
                     _platform = proxy.Selector.Selected;
+                    var platformObj = proxy.PerPlatformOptions[_platform];
 
                     var group = layout.Group(CustomEditorsUtil.GetPropertyNameUI(_platform.ToString()));
 
-                    group.Object(new ReadOnlyValueContainer(proxy.PerPlatformOptions[_platform]));
-                    
-                    var buildButton = layout.Button("Build");
-                    buildButton.Button.Clicked += OnBuildClicked;
+                    group.Object(new ReadOnlyValueContainer(platformObj));
+
+                    _buildButton = layout.Button("Build").Button;
+                    _buildButton.Clicked += OnBuildClicked;
                 }
 
                 private void OnBuildClicked()
                 {
-                    MessageBox.Show("call building!");
+                    var proxy = (BuildTabProxy)Values[0];
+                    var platformObj = proxy.PerPlatformOptions[_platform];
+                    platformObj.Build();
                 }
 
                 public override void Refresh()
                 {
+                    if (_buildButton != null)
+                    {
+                        _buildButton.Enabled = !GameCooker.IsRunning;
+                    }
+
                     if (Values.Count > 0 && Values[0] is BuildTabProxy proxy && proxy.Selector.Selected != _platform)
                     {
                         RebuildLayout();
