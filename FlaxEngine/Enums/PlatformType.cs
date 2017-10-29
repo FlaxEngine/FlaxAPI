@@ -13,5 +13,15 @@ namespace FlaxEngine
         /// Running on Windows (standalone or editor).
         /// </summary>
         Windows = 1,
+
+        /// <summary>
+        /// Running on Xbox One.
+        /// </summary>
+        XboxOne = 2,
+
+        /// <summary>
+        /// Running Windows Store App (Universal Windows Platform).
+        /// </summary>
+        WindowsStore = 3,
     }
 }
