@@ -212,7 +212,7 @@ namespace FlaxEditor.Modules
             GameWin.Show(FlaxEngine.GUI.Docking.DockState.DockFill);
             EditWin.SelectTab();
 
-            GameCookerWin.Show(FlaxEngine.GUI.Docking.DockState.DockFill);
+            GameCookerWin.Show(FlaxEngine.GUI.Docking.DockState.DockRight, ContentWin);
             GameCookerWin.SelectTab();
         }
 
