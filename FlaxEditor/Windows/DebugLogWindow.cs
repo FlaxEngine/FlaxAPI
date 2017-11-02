@@ -80,6 +80,7 @@ namespace FlaxEditor.Windows
             private DebugLogWindow _window;
             public LogGroup Group;
             public LogEntryDescription Desc;
+            public Sprite Icon;
 
             public LogEntry(DebugLogWindow window, ref LogEntryDescription desc)
                 : base(0, 0, 120, DefaultHeight)
@@ -93,12 +94,15 @@ namespace FlaxEditor.Windows
                 {
                     case LogType.Warning:
                         Group = LogGroup.Warning;
+                        Icon = _window._iconWarning;
                         break;
                     case LogType.Log:
                         Group = LogGroup.Info;
+                        Icon = _window._iconInfo;
                         break;
                     default:
                         Group = LogGroup.Error;
+                        Icon = _window._iconError;
                         break;
                 }
             }
@@ -126,8 +130,11 @@ namespace FlaxEditor.Windows
                 else if (index % 2 == 0)
                     Render2D.FillRectangle(clientRect, style.Background * 0.9f);
 
+                // Icon
+                Render2D.DrawSprite(Icon, new Rectangle(5, 8, 32, 32), Color.White, true);
+
                 // Title
-                Render2D.DrawText(style.FontMedium, Desc.Title, new Rectangle(5, 5, clientRect.Width - 10, clientRect.Height - 10), style.Foreground);
+                Render2D.DrawText(style.FontMedium, Desc.Title, new Rectangle(38, 8, clientRect.Width - 40, clientRect.Height - 10), style.Foreground);
             }
 
             /// <inheritdoc />
@@ -204,6 +211,10 @@ namespace FlaxEditor.Windows
         private readonly object _locker = new object();
         private bool _hasCompilationStarted;
         private readonly List<LogEntry> _pendingEntries = new List<LogEntry>(32);
+
+        internal Sprite _iconInfo;
+        internal Sprite _iconWarning;
+        internal Sprite _iconError;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DebugLogWindow"/> class.
@@ -538,6 +549,11 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void OnInit()
         {
+            // Cache entries icons
+            _iconInfo = Editor.UI.GetIcon("Info32");
+            _iconWarning = Editor.UI.GetIcon("Warning32");
+            _iconError = Editor.UI.GetIcon("Error32");
+
             // TODO: restore cached buttons 'Checked' state from editor prefs
         }
 
