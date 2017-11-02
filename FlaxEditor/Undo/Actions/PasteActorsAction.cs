@@ -61,13 +61,15 @@ namespace FlaxEditor.Actions
         /// Performs the paste/duplicate action and outputs created objects nodes.
         /// </summary>
         /// <param name="nodes">The nodes.</param>
-        public void Do(out List<ActorNode> nodes)
+        /// <param name="nodeParents">The node parents.</param>
+        public void Do(out List<ActorNode> nodes, out List<ActorNode> nodeParents)
         {
             // Restore objects
             var actors = Actor.FromBytes(_data, _idsMapping);
             if (actors == null)
             {
                 nodes = null;
+                nodeParents = null;
                 return;
             }
             nodes = new List<ActorNode>(actors.Length);
@@ -92,7 +94,7 @@ namespace FlaxEditor.Actions
                 }
             }
 
-            var nodeParents = nodes.BuildNodesParents();
+            nodeParents = nodes.BuildNodesParents();
 
             // Cache pasted nodes ids (parents only)
             _nodeParents.Clear();
@@ -135,7 +137,7 @@ namespace FlaxEditor.Actions
         /// <inheritdoc />
         public void Do()
         {
-            Do(out _);
+            Do(out _, out _);
         }
 
         /// <inheritdoc />

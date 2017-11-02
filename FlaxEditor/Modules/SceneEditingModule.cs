@@ -316,10 +316,10 @@ namespace FlaxEditor.Modules
 
         private void OnPasteAcction(PasteActorsAction pasteAction)
         {
-            pasteAction.Do(out var nodes);
+            pasteAction.Do(out _, out var nodeParents);
 
             // Select spawned objects
-            var selectAction = new SelectionChangeAction(Selection.ToArray(), nodes.Cast<SceneGraphNode>().ToArray());
+            var selectAction = new SelectionChangeAction(Selection.ToArray(), nodeParents.Cast<SceneGraphNode>().ToArray());
             selectAction.Do();
             
             Undo.AddAction(new MultiUndoAction(pasteAction, selectAction));
