@@ -8,12 +8,13 @@ This repository contains open source public C# API as well as full source code o
 The engine offers a wide variety of high level systems needed for game development.
 
 # Features
-* PBR Rendering (DirectX 11, 12)
+* PBR Rendering (DirectX 10, 11, 12)
 * C# Scripting (C# 6.0)
 * Physics (NVIDIA PhysX)
+* Top Performance
 * Global Illumination (lightmaps baking on GPU)
 * Model LODs and content streaming
-* Great Editor with many tools
+* Rich & Extensible editor
 * In-Editor Playmode
 * Node-based Materials Editor
 * CSG Editor

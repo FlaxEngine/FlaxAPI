@@ -30,8 +30,8 @@ namespace FlaxEditor.Windows
             public Dictionary<PlatformType, Platform> PerPlatformOptions = new Dictionary<PlatformType, Platform>
             {
                 { PlatformType.Windows, new Windows() },
-                { PlatformType.XboxOne, new UWP() },
-                { PlatformType.WindowsStore, new UWP() },
+                { PlatformType.XboxOne, new WPA() },
+                { PlatformType.WindowsStore, new Xbox() },
             };
 
             public BuildTabProxy(GameCookerWindow win, PlatformSelector platformSelector)
@@ -89,18 +89,30 @@ namespace FlaxEditor.Windows
                 protected override BuildPlatform BuildPlatform => Architecture == Arch.x86 ? BuildPlatform.Windows32 : BuildPlatform.Windows64;
             }
 
-            public class UWP : Platform
+            public abstract class UWP : Platform
             {
                 public enum Arch
                 {
                     x64,
                     x86,
                 };
+                
+                protected override BuildPlatform BuildPlatform => throw new NotImplementedException("Implement UWP platform building.");
 
+                protected abstract Arch CPUArch { get; }
+            }
+
+            public class WPA : UWP
+            {
                 [EditorOrder(30), Tooltip("Target platform CPU type")]
                 public Arch Architecture;
 
-                protected override BuildPlatform BuildPlatform => throw new NotImplementedException("Implement UWP platform building.");
+                protected override Arch CPUArch => Architecture;
+            }
+
+            public class Xbox : UWP
+            {
+                protected override Arch CPUArch => Arch.x64;
             }
 
             public class Editor : CustomEditor
