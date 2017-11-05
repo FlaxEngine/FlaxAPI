@@ -47,14 +47,15 @@ namespace FlaxEditor
         /// <param name="platform">The target platform.</param>
         /// <param name="options">The build options.</param>
         /// <param name="outputPath">The output path (output directory).</param>
-        public static void Build(BuildPlatform platform, BuildOptions options, string outputPath)
+        /// <param name="defines">Scripts compilation define symbols (macros).</param>
+        public static void Build(BuildPlatform platform, BuildOptions options, string outputPath, string[] defines = null)
         {
             if (IsRunning)
                 throw new InvalidOperationException("Cannot start build while already running.");
             if (string.IsNullOrEmpty(outputPath))
                 throw new ArgumentNullException(nameof(outputPath));
 
-            Internal_Build(platform, options, outputPath);
+            Internal_Build(platform, options, outputPath, defines);
         }
 
         /// <summary>
@@ -92,7 +93,7 @@ namespace FlaxEditor
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_Build(BuildPlatform platform, BuildOptions options, string outputPath);
+        internal static extern void Internal_Build(BuildPlatform platform, BuildOptions options, string outputPath, string[] defines);
 #endif
 
         #endregion

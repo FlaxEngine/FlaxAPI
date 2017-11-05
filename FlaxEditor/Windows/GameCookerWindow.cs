@@ -59,6 +59,9 @@ namespace FlaxEditor.Windows
                 [EditorOrder(20), Tooltip("Configuration build mode")]
                 public Mode ConfigurationMode;
 
+                [EditorOrder(100), Tooltip("Custom macros")]
+                public string[] Defines;
+
                 protected abstract BuildPlatform BuildPlatform
                 {
                     get;
@@ -71,7 +74,7 @@ namespace FlaxEditor.Windows
 
                 public virtual void Build()
                 {
-                    GameCooker.Build(BuildPlatform, Options, Output);
+                    GameCooker.Build(BuildPlatform, Options, Output, Defines);
                 }
             }
 
@@ -83,7 +86,7 @@ namespace FlaxEditor.Windows
                     x86,
                 };
 
-                [EditorOrder(20), Tooltip("Target platform CPU type (32bit or 64bit)")]
+                [EditorOrder(30), Tooltip("Target platform CPU type (32bit or 64bit)")]
                 public Arch Architecture;
 
                 protected override BuildPlatform BuildPlatform => Architecture == Arch.x86 ? BuildPlatform.Windows32 : BuildPlatform.Windows64;
