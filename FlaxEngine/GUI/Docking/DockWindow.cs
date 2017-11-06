@@ -312,14 +312,13 @@ namespace FlaxEngine.GUI.Docking
         /// <inheritdoc />
         public override void OnDestroy()
         {
-            Undock();
+            // Auto undock from non-disposing parent (user wants to remvoe only the dock window)
+            if(HasParent && !Parent.IsDisposing)
+                Undock();
             
             // Unlink from the master panel
             _masterPanel?.unlinkWindow(this);
-
-            // Ensure that dock panel has no parent
-            Assert.IsFalse(HasParent);
-
+            
             base.OnDestroy();
         }
 

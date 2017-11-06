@@ -331,13 +331,8 @@ namespace FlaxEngine.GUI
         public virtual void Dispose()
         {
             if (_isDisposing)
-            {
                 return;
-            }
-
-            // Set disposing flag
-            _isDisposing = true;
-
+            
             // Call event
             OnDestroy();
 
@@ -1018,6 +1013,9 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void OnDestroy()
         {
+            // Set disposing flag
+            _isDisposing = true;
+
             Defocus();
 
             UnlinkTooltip();
