@@ -10,6 +10,7 @@ namespace FlaxEditor
     /// <summary>
     /// Game building options. Used as flags.
     /// </summary>
+    [Flags]
     public enum BuildOptions
     {
         /// <summary>
@@ -21,6 +22,11 @@ namespace FlaxEditor
         /// The debug build mode (opposite to release mode).
         /// </summary>
         Debug = 1,
+
+        /// <summary>
+        /// Shows the output directory folder on building end.
+        /// </summary>
+        ShowOutput = 1 << 1,
     }
 
     /// <summary>

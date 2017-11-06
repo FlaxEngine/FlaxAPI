@@ -56,6 +56,9 @@ namespace FlaxEditor.Windows
                 [EditorOrder(10), Tooltip("Output folder path")]
                 public string Output;
 
+                [EditorOrder(11), Tooltip("Show output folder in Explorer after build")]
+                public bool ShowOutput = true;
+
                 [EditorOrder(20), Tooltip("Configuration build mode")]
                 public Mode ConfigurationMode;
 
@@ -69,7 +72,15 @@ namespace FlaxEditor.Windows
 
                 protected virtual BuildOptions Options
                 {
-                    get { return ConfigurationMode == Mode.Debug ? BuildOptions.Debug : BuildOptions.None; }
+                    get
+                    {
+                        BuildOptions options = BuildOptions.None;
+                        if (ConfigurationMode == Mode.Debug)
+                            options |= BuildOptions.Debug;
+                        if (ShowOutput)
+                            options |= BuildOptions.ShowOutput;
+                        return options;
+                    }
                 }
 
                 public virtual void Build()
