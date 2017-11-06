@@ -99,8 +99,6 @@ namespace FlaxEditor.Windows
                     x64,
                     x86,
                 };
-                
-                protected override BuildPlatform BuildPlatform => throw new NotImplementedException("Implement UWP platform building.");
 
                 protected abstract Arch CPUArch { get; }
             }
@@ -110,12 +108,16 @@ namespace FlaxEditor.Windows
                 [EditorOrder(30), Tooltip("Target platform CPU type")]
                 public Arch Architecture;
 
+                protected override BuildPlatform BuildPlatform => Architecture == Arch.x86 ? BuildPlatform.WindowsStoreX86 : BuildPlatform.WindowsStoreX64;
+                
                 protected override Arch CPUArch => Architecture;
             }
 
             public class Xbox : UWP
             {
                 protected override Arch CPUArch => Arch.x64;
+
+                protected override BuildPlatform BuildPlatform => throw new NotImplementedException("Implement Xbox One platform building.");
             }
 
             public class Editor : CustomEditor

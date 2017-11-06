@@ -37,6 +37,21 @@ namespace FlaxEditor
         /// Windows x64 (64-bit architecture)
         /// </summary>
         Windows64 = 2,
+        
+        /// <summary>
+        /// Universal Windows Platform (UWP) (x86 architecture)
+        /// </summary>
+        WindowsStoreX86 = 3,
+
+        /// <summary>
+        /// Universal Windows Platform (UWP) (x64 architecture)
+        /// </summary>
+        WindowsStoreX64 = 4,
+
+        /// <summary>
+        /// Xbox One (x64 architecture)
+        /// </summary>
+        XboxOne = 5,
     }
 
     public static partial class GameCooker
