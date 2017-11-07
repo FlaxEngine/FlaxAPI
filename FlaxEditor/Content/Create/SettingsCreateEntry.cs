@@ -40,6 +40,11 @@ namespace FlaxEditor.Content.Create
             PhysicsSettings,
 
             /// <summary>
+            /// The graphics settings.
+            /// </summary>
+            GraphicsSettings,
+
+            /// <summary>
             /// The Windows settings.
             /// </summary>
             WindowsPlatformSettings,
@@ -56,6 +61,7 @@ namespace FlaxEditor.Content.Create
             typeof(TimeSettings),
             typeof(LayersAndTagsSettings),
             typeof(PhysicsSettings),
+            typeof(GraphicsSettings),
             typeof(WindowsPlatformSettings),
             typeof(UWPPlatformSettings),
         };
