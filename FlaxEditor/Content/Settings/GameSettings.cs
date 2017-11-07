@@ -58,5 +58,17 @@ namespace FlaxEditor.Content.Settings
         /// </summary>
         [EditorOrder(1030), EditorDisplay("Other Settings"), AssetReference(typeof(PhysicsSettings), true), Tooltip("Reference to Physics Settings asset")]
         public JsonAsset Physics;
+
+        /// <summary>
+        /// Reference to <see cref="WindowsPlatformSettings"/> asset. Used to apply configuration on Windows platform.
+        /// </summary>
+        [EditorOrder(2010), EditorDisplay("Platform Settings", "Windows"), AssetReference(typeof(WindowsPlatformSettings), true), Tooltip("Reference to Windows Platform Settings asset")]
+        public JsonAsset WindowsPlatform;
+        
+        /// <summary>
+        /// Reference to <see cref="UWPPlatformSettings"/> asset. Used to apply configuration on Universal Windows Platform.
+        /// </summary>
+        [EditorOrder(2020), EditorDisplay("Platform Settings", "Universal Windows Platform"), AssetReference(typeof(UWPPlatformSettings), true), Tooltip("Reference to Universal Windows Platform Settings asset")]
+        public JsonAsset UWPPlatform;
     }
 }

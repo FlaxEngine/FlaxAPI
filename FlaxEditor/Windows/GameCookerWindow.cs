@@ -30,8 +30,8 @@ namespace FlaxEditor.Windows
             public Dictionary<PlatformType, Platform> PerPlatformOptions = new Dictionary<PlatformType, Platform>
             {
                 { PlatformType.Windows, new Windows() },
-                { PlatformType.XboxOne, new WPA() },
-                { PlatformType.WindowsStore, new Xbox() },
+                { PlatformType.XboxOne, new Xbox() },
+                { PlatformType.WindowsStore, new WPA() },
             };
 
             public BuildTabProxy(GameCookerWindow win, PlatformSelector platformSelector)

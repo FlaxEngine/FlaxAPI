@@ -38,6 +38,16 @@ namespace FlaxEditor.Content.Create
             /// The physics settings.
             /// </summary>
             PhysicsSettings,
+
+            /// <summary>
+            /// The Windows settings.
+            /// </summary>
+            WindowsPlatformSettings,
+
+            /// <summary>
+            /// The UWP settings.
+            /// </summary>
+            UWPPlatformSettings,
         }
 
         private static Type[] _types =
@@ -46,6 +56,8 @@ namespace FlaxEditor.Content.Create
             typeof(TimeSettings),
             typeof(LayersAndTagsSettings),
             typeof(PhysicsSettings),
+            typeof(WindowsPlatformSettings),
+            typeof(UWPPlatformSettings),
         };
 
         /// <summary>

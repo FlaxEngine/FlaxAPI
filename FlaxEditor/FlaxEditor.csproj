@@ -70,6 +70,8 @@
     <Compile Include="Content\Settings\PhysicsSettings.cs" />
     <Compile Include="Content\Settings\SettingsBase.cs" />
     <Compile Include="Content\Settings\TimeSettings.cs" />
+    <Compile Include="Content\Settings\UWPPlatformSettings.cs" />
+    <Compile Include="Content\Settings\WindowsPlatformSettings.cs" />
     <Compile Include="Content\Tree\RootContentTreeNode.cs" />
     <Compile Include="CustomEditors\CustomEditor.cs" />
     <Compile Include="CustomEditors\CustomEditorsUtil.cs" />
