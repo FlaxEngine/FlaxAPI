@@ -98,16 +98,33 @@ namespace FlaxEditor
             /// The build done.
             /// </summary>
             BuildDone = 2,
-        }
+        }      
+        
+        /// <summary>
+        /// Game building progress reporitng delegate type.
+        /// </summary>
+        /// <param name="info">The information text.</param>
+        /// <param name="totalProgress">The total progress percentage (normalized to 0-1).</param>
+        public delegate void BuildProgressDelegate(string info, float totalProgress);
 
         /// <summary>
         /// Occurs when building event rises.
         /// </summary>
         public static event Action<EventType> OnEvent;
 
+        /// <summary>
+        /// Occurs when building gane progress fires.
+        /// </summary>
+        public static event BuildProgressDelegate Progress;
+
         internal static void Internal_OnEvent(EventType type)
         {
             OnEvent?.Invoke(type);
+        }
+
+        internal static void Internal_OnProgress(string info, float totalProgress)
+        {
+            Progress?.Invoke(info, totalProgress);
         }
 
         #region Internal Calls

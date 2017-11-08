@@ -18,6 +18,15 @@ namespace FlaxEditor.Progress.Handlers
         public BuildingGameProgress()
         {
             GameCooker.OnEvent += OnGameCookerEvent;
+            GameCooker.Progress += OnGameCookerProgress;
+        }
+
+        private void OnGameCookerProgress(string info, float totalProgress)
+        {
+            if (IsActive)
+            {
+                OnUpdate(totalProgress, string.Format("{0} ({1}%)...", info, (int)(totalProgress * 100.0f)));
+            }
         }
 
         private void OnGameCookerEvent(GameCooker.EventType eventType)
@@ -26,7 +35,7 @@ namespace FlaxEditor.Progress.Handlers
             {
                 case GameCooker.EventType.BuildStarted:
                     OnStart();
-                    OnUpdate(0, "Building gane...");
+                    OnUpdate(0, "Starting building game..");
                     break;
                 case GameCooker.EventType.BuildFailed:
                     OnEnd();
