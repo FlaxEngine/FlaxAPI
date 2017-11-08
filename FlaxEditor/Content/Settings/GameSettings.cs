@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System.Collections.Generic;
 using FlaxEngine;
 
 namespace FlaxEditor.Content.Settings
@@ -58,6 +59,18 @@ namespace FlaxEditor.Content.Settings
         /// </summary>
         [EditorOrder(1030), EditorDisplay("Other Settings"), AssetReference(typeof(PhysicsSettings), true), Tooltip("Reference to Physics Settings asset")]
         public JsonAsset Physics;
+
+        /// <summary>
+        /// Reference to <see cref="GraphicsSettings"/> asset.
+        /// </summary>
+        [EditorOrder(1040), EditorDisplay("Other Settings"), AssetReference(typeof(GraphicsSettings), true), Tooltip("Reference to Graphics Settings asset")]
+        public JsonAsset Graphics;
+        
+        /// <summary>
+        /// The custom settings to use with a game. Can be specified by the user to define game-specific options and be used by the external plugins (used as key-value pair).
+        /// </summary>
+        [EditorOrder(1100), EditorDisplay("Other Settings"), Tooltip("The custom settings to use with a game. Can be specified by the user to define game-specific options and be used by the external plugins (used as key-value pair).")]
+        public Dictionary<string, JsonAsset> CustomSettings;
 
         /// <summary>
         /// Reference to <see cref="WindowsPlatformSettings"/> asset. Used to apply configuration on Windows platform.
