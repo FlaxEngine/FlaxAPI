@@ -46,7 +46,7 @@ namespace FlaxEditor.Windows
             if (camera)
             {
                 // Fix aspect ratio to fit the current output dimensions
-                camera.CustomAspectRatio = Width / Height;
+                //camera.CustomAspectRatio = Width / Height;
             }
         }
 

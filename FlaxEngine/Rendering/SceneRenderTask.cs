@@ -142,7 +142,10 @@ namespace FlaxEngine.Rendering
             // Prepare view
             OnBegin();
             if (Camera != null)
+            {
+                Camera.UpdateCache();
                 View.CopyFrom(Camera);
+            }
             
             // Get custom post effects to render (registered ones and from the current camera)
             var postFx = new HashSet<PostProcessEffect>(CustomPostFx);
