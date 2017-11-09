@@ -279,7 +279,7 @@ namespace FlaxEditor.Windows.Assets
                     var materialWin = Values[0] as MaterialWindow;
                     var material = materialWin?.Asset;
                     int parametersHash = -1;
-                    if (material != null)
+                    if (material)
                     {
                         if (material.IsLoaded)
                         {
