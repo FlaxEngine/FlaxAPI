@@ -194,7 +194,7 @@ namespace FlaxEditor.Viewport
 
         private void CreateCameraAtView()
         {
-            if(!SceneManager.IsAnySceneLoaded)
+            if (!SceneManager.IsAnySceneLoaded)
                 return;
 
             // Create actor
@@ -542,7 +542,7 @@ namespace FlaxEditor.Viewport
             var result = base.OnDragEnter(ref location, data);
             if (result != DragDropEffect.None)
                 return result;
-            
+
             if (_dragAssets.OnDragEnter(data, ValidateDragItem))
                 result = _dragAssets.Effect;
             if (_dragActorType.OnDragEnter(data, ValidateDragActorType))
@@ -717,6 +717,30 @@ namespace FlaxEditor.Viewport
             FlaxEngine.Object.Destroy(ref SelectionOutline);
 
             base.OnDestroy();
+        }
+
+        private RenderTask _savedTask;
+        private RenderTarget _savedBackBuffer;
+
+        internal void SaveProjectIcon()
+        {
+            TakeScreenshot(StringUtils.CombinePaths(Globals.ProjectCacheFolder, "icon.png"));
+
+            _savedTask = _task;
+            _savedBackBuffer = _backBuffer;
+
+            _task = null;
+            _backBuffer = null;
+        }
+
+        internal void SaveProjectIconEnd()
+        {
+            if (_savedTask)
+            {
+                _savedTask.Dispose();
+                _savedTask = null;
+            }
+            FlaxEngine.Object.Destroy(ref _savedBackBuffer);
         }
     }
 }

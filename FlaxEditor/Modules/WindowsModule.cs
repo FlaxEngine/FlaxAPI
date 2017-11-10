@@ -322,8 +322,8 @@ namespace FlaxEditor.Modules
             if (!Editor.StateMachine.IsPlayMode && Time.TimeSinceStartup >= 5.0f)
             {
                 Editor.Log("Capture project icon screenshot");
-                EditWin.Viewport.TakeScreenshot(StringUtils.CombinePaths(Globals.ProjectCacheFolder, "icon.png"));
-                _projectIconScreenshotTimeout = Time.TimeSinceStartup + 0.3f;// wait 300ms for a screenshot task
+                _projectIconScreenshotTimeout = Time.TimeSinceStartup + 0.8f; // wait 800ms for a screenshot task
+                EditWin.Viewport.SaveProjectIcon();
             }
             else
             {
@@ -362,6 +362,7 @@ namespace FlaxEditor.Modules
             if (_projectIconScreenshotTimeout > 0 && Time.TimeSinceStartup > _projectIconScreenshotTimeout)
             {
                 Editor.Log("Closing Editor after project icon screenshot");
+                EditWin.Viewport.SaveProjectIconEnd();
                 Application.Exit();
             }
         }

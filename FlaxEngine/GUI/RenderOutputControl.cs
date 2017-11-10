@@ -28,7 +28,10 @@ namespace FlaxEngine.GUI
         /// </summary>
         protected SceneRenderTask _task;
 
-        private RenderTarget _backBuffer;
+        /// <summary>
+        /// The back buffer.
+        /// </summary>
+        protected RenderTarget _backBuffer;
         private RenderTarget _backBufferOld;
         private int _oldBackbufferLiveTimeLeft;
         private float _resizeTime;
@@ -99,6 +102,9 @@ namespace FlaxEngine.GUI
         /// <returns>True if skip rendering, otherwise false.</returns>
         protected virtual bool CanSkipRendering()
         {
+            if (_task == null)
+                return true;
+
             _task.Output = _backBuffer;
 
             // Disable task rendering if control is very small
@@ -191,10 +197,10 @@ namespace FlaxEngine.GUI
         public override void OnDestroy()
         {
             // Cleanup
-            _task.Dispose();
+            _task?.Dispose();
             Object.Destroy(ref _backBuffer);
             Object.Destroy(ref _backBufferOld);
-
+            
             base.OnDestroy();
         }
     }
