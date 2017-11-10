@@ -815,6 +815,7 @@ namespace FlaxEditor.Modules
             Proxy.Add(new SettingsProxy<LayersAndTagsSettings>());
             Proxy.Add(new SettingsProxy<PhysicsSettings>());
             Proxy.Add(new SettingsProxy<GraphicsSettings>());
+            Proxy.Add(new SettingsProxy<BuildSettings>());
             Proxy.Add(new SettingsProxy<WindowsPlatformSettings>());
             Proxy.Add(new SettingsProxy<UWPPlatformSettings>());
             

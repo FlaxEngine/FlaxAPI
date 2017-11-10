@@ -65,6 +65,12 @@ namespace FlaxEditor.Content.Settings
         /// </summary>
         [EditorOrder(1040), EditorDisplay("Other Settings"), AssetReference(typeof(GraphicsSettings), true), Tooltip("Reference to Graphics Settings asset")]
         public JsonAsset Graphics;
+
+        /// <summary>
+        /// Reference to <see cref="BuildSettings"/> asset.
+        /// </summary>
+        [EditorOrder(1050), EditorDisplay("Other Settings"), AssetReference(typeof(BuildSettings), true), Tooltip("Reference to Build Settings asset")]
+        public JsonAsset GameCooking;
         
         /// <summary>
         /// The custom settings to use with a game. Can be specified by the user to define game-specific options and be used by the external plugins (used as key-value pair).
