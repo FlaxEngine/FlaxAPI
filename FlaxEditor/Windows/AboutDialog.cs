@@ -116,6 +116,7 @@ namespace FlaxEditor.Windows
                 "DirectXMesh - Copyright (c) Microsoft Corporation. All rights reserved.",
                 "DirectXTex - Copyright (c) Microsoft Corporation. All rights reserved.",
                 "UVAtlas - Copyright (c) Microsoft Corporation. All rights reserved.",
+                "LZ4 Library - Copyright (c) Yann Collet. All rights reserved.",
                 "fmt - www.fmtlib.net",
                 "pugixml - www.pugixml.org",
                 "rapidjson - www.rapidjson.org",
