@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
 
 namespace FlaxEngine
@@ -23,7 +24,36 @@ namespace FlaxEngine
             FlaxLogWriter.Init();
             Globals.Init();
 
+            if (!Application.IsEditor)
+            {
+                CreateGuiStyle();
+            }
+
             MainRenderTask.Instance = RenderTask.Create<MainRenderTask>();
+        }
+
+        private static void CreateGuiStyle()
+        {
+            var style = new Style
+            {
+                Background = Color.FromBgra(0xFF1C1C1C),
+                LightBackground = Color.FromBgra(0xFF2D2D30),
+                Foreground = Color.FromBgra(0xFFFFFFFF),
+                ForegroundDisabled = new Color(0.6f),
+                BackgroundHighlighted = Color.FromBgra(0xFF54545C),
+                BorderHighlighted = Color.FromBgra(0xFF6A6A75),
+                BackgroundSelected = Color.FromBgra(0xFF007ACC),
+                BorderSelected = Color.FromBgra(0xFF1C97EA),
+                BackgroundNormal = Color.FromBgra(0xFF3F3F46),
+                BorderNormal = Color.FromBgra(0xFF54545C),
+                TextBoxBackground = Color.FromBgra(0xFF333337),
+                ProgressNormal = Color.FromBgra(0xFF0ad328),
+                TextBoxBackgroundSelected = Color.FromBgra(0xFF3F3F46),
+                SharedTooltip = new Tooltip(),
+            };
+            style.DragWindow = style.BackgroundSelected * 0.7f;
+
+            Style.Current = style;
         }
     }
 }
