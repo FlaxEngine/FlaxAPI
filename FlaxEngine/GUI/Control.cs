@@ -992,7 +992,12 @@ namespace FlaxEngine.GUI
                     break;
                 }
 
-                //case AnchorStyle.BottomLeft: break;
+                case AnchorStyle.BottomLeft:
+                {
+                    float distance = oldSize.Y - bounds.Y;
+                    bounds.Y = _parent.Height - distance;
+                    break;
+                }
                 //case AnchorStyle.BottomCenter: break;
                 //case AnchorStyle.BottomRight: break;
                 //case AnchorStyle.Bottom: break;

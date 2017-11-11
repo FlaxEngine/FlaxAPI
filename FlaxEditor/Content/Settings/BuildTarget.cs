@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using FlaxEngine;
 
 namespace FlaxEditor.Content.Settings
@@ -9,6 +10,7 @@ namespace FlaxEditor.Content.Settings
     /// <summary>
     /// A <see cref="GameCooker"/> game building target with configuration properties.
     /// </summary>
+    [Serializable]
     public class BuildTarget
     {
         /// <summary>
@@ -56,7 +58,7 @@ namespace FlaxEditor.Content.Settings
         /// <summary>
         /// Gets the build options computed from the target configuration.
         /// </summary>
-        [HideInEditor]
+        [HideInEditor, NoSerialize]
         public virtual BuildOptions Options
         {
             get

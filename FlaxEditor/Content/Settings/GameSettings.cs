@@ -138,7 +138,7 @@ namespace FlaxEditor.Content.Settings
         {
             var gameSettings = Load();
             var type = typeof(T);
-
+            
             if (type == typeof(GameSettings))
                 return gameSettings as T;
 
@@ -175,7 +175,7 @@ namespace FlaxEditor.Content.Settings
             if (asset)
             {
                 // Override settings
-                return Editor.SaveJsonAsset(gameSettings.Time.Path, obj);
+                return Editor.SaveJsonAsset(asset.Path, obj);
             }
 
             // Create new settings asset and link it to the game settings
