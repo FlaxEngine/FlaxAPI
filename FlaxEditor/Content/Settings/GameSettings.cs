@@ -43,6 +43,12 @@ namespace FlaxEditor.Content.Settings
         public JsonAssetItem FirstScene;
 
         /// <summary>
+        /// The custom macros used using scripts compilation.
+        /// </summary>
+        [EditorOrder(950), EditorDisplay("Scripts"), Tooltip("Custom macros used using scripts compilation.")]
+        public string[] Defines;
+
+        /// <summary>
         /// Reference to <see cref="TimeSettings"/> asset.
         /// </summary>
         [EditorOrder(1010), EditorDisplay("Other Settings"), AssetReference(typeof(TimeSettings), true), Tooltip("Reference to Time Settings asset")]
