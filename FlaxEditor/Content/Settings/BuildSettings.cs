@@ -29,6 +29,54 @@ namespace FlaxEditor.Content.Settings
         [EditorOrder(30), EditorDisplay("General"), Tooltip("The game content cooking keycode. Use the same value for a game and DLC packages to support loading them by the builded game. Use 0 to randomize it during building.")]
         public int ContentKey = 0;
 
-        // TODO: add build presets and custom targets configuration
+        /// <summary>
+        /// The build presets.
+        /// </summary>
+        [EditorOrder(100), EditorDisplay("Presets", "__inline__"), Tooltip("Build presets configuration")]
+        public BuildPreset[] Presets =
+        {
+            new BuildPreset
+            {
+                Name = "Development",
+                Targets = new[]
+                {
+                    new BuildTarget
+                    {
+                        Name = "Windows 64bit",
+                        Output = "Output\\Win64",
+                        Platform = BuildPlatform.Windows64,
+                        ConfigurationMode = BuildMode.Debug,
+                    },
+                    new BuildTarget
+                    {
+                        Name = "Windows 32bit",
+                        Output = "Output\\Win32",
+                        Platform = BuildPlatform.Windows32,
+                        ConfigurationMode = BuildMode.Debug,
+                    },
+                }
+            },
+            new BuildPreset
+            {
+                Name = "Release",
+                Targets = new[]
+                {
+                    new BuildTarget
+                    {
+                        Name = "Windows 64bit",
+                        Output = "Output\\Win64",
+                        Platform = BuildPlatform.Windows64,
+                        ConfigurationMode = BuildMode.Release,
+                    },
+                    new BuildTarget
+                    {
+                        Name = "Windows 32bit",
+                        Output = "Output\\Win32",
+                        Platform = BuildPlatform.Windows32,
+                        ConfigurationMode = BuildMode.Release,
+                    },
+                }
+            },
+        };
     }
 }

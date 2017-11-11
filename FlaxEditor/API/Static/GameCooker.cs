@@ -60,6 +60,22 @@ namespace FlaxEditor
         XboxOne = 5,
     }
 
+    /// <summary>
+    /// The build mode.
+    /// </summary>
+    public enum BuildMode
+    {
+        /// <summary>
+        /// The release configuration.
+        /// </summary>
+        Release = 0,
+
+        /// <summary>
+        /// The debug configuration.
+        /// </summary>
+        Debug = 1,
+    }
+
     public static partial class GameCooker
     {
         /// <summary>

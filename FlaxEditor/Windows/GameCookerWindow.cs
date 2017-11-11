@@ -47,12 +47,6 @@ namespace FlaxEditor.Windows
 
             public abstract class Platform
             {
-                public enum Mode
-                {
-                    Release,
-                    Debug,
-                }
-
                 [EditorOrder(10), Tooltip("Output folder path")]
                 public string Output;
 
@@ -60,7 +54,7 @@ namespace FlaxEditor.Windows
                 public bool ShowOutput = true;
 
                 [EditorOrder(20), Tooltip("Configuration build mode")]
-                public Mode ConfigurationMode;
+                public BuildMode ConfigurationMode;
 
                 [EditorOrder(100), Tooltip("Custom macros")]
                 public string[] Defines;
@@ -75,7 +69,7 @@ namespace FlaxEditor.Windows
                     get
                     {
                         BuildOptions options = BuildOptions.None;
-                        if (ConfigurationMode == Mode.Debug)
+                        if (ConfigurationMode == BuildMode.Debug)
                             options |= BuildOptions.Debug;
                         if (ShowOutput)
                             options |= BuildOptions.ShowOutput;
