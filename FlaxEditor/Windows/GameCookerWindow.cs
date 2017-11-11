@@ -296,7 +296,23 @@ namespace FlaxEditor.Windows
                     AnchorStyle = AnchorStyle.BottomLeft,
                     Parent = this,
                 };
-                buildButton.Clicked += _cooker.BuildTarget;
+                buildAllButton.Clicked += _cooker.BuildAllTargets;
+                var discardButton = new Button
+                {
+                    Text = "Discard",
+                    Bounds = new Rectangle(6, buildButton.Top - height, Width - 12, 22),
+                    AnchorStyle = AnchorStyle.BottomLeft,
+                    Parent = this,
+                };
+                discardButton.Clicked += _cooker.GatherData;
+                var saveButton = new Button
+                {
+                    Text = "Save",
+                    Bounds = new Rectangle(6, discardButton.Top - height, Width - 12, 22),
+                    AnchorStyle = AnchorStyle.BottomLeft,
+                    Parent = this,
+                };
+                saveButton.Clicked += _cooker.SaveData;
             }
 
             public void RefreshColumn(BuildTarget[] targets, int selectedIndex)
@@ -323,6 +339,8 @@ namespace FlaxEditor.Windows
         private int _selectedTargetIndex = -1;
         private CustomEditorPresenter _targetSettings;
         private Queue<BuildTarget> _buildingQueue = new Queue<BuildTarget>();
+        private BuildPreset[] _data;
+        private bool _isDataDirty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameCookerWindow"/> class.
@@ -349,26 +367,24 @@ namespace FlaxEditor.Windows
 
         private void BuildTarget()
         {
-            var settings = GameSettings.Load<BuildSettings>();
-            if (settings.Presets == null || settings.Presets.Length <= _selectedPresetIndex || _selectedPresetIndex == -1)
+            if (_data == null || _data.Length <= _selectedPresetIndex || _selectedPresetIndex == -1)
                 return;
-            if (settings.Presets[_selectedPresetIndex].Targets == null || settings.Presets[_selectedPresetIndex].Targets.Length <= _selectedTargetIndex)
+            if (_data[_selectedPresetIndex].Targets == null || _data[_selectedPresetIndex].Targets.Length <= _selectedTargetIndex)
                 return;
 
             Editor.Log("Building target");
-            _buildingQueue.Enqueue(settings.Presets[_selectedPresetIndex].Targets[_selectedTargetIndex].DeepClone());
+            _buildingQueue.Enqueue(_data[_selectedPresetIndex].Targets[_selectedTargetIndex].DeepClone());
         }
 
         private void BuildAllTargets()
         {
-            var settings = GameSettings.Load<BuildSettings>();
-            if (settings.Presets == null || settings.Presets.Length <= _selectedPresetIndex || _selectedPresetIndex == -1)
+            if (_data == null || _data.Length <= _selectedPresetIndex || _selectedPresetIndex == -1)
                 return;
-            if (settings.Presets[_selectedPresetIndex].Targets == null || settings.Presets[_selectedPresetIndex].Targets.Length == 0)
+            if (_data[_selectedPresetIndex].Targets == null || _data[_selectedPresetIndex].Targets.Length == 0)
                 return;
 
             Editor.Log("Building all targets");
-            foreach (var e in settings.Presets[_selectedPresetIndex].Targets)
+            foreach (var e in _data[_selectedPresetIndex].Targets)
             {
                 _buildingQueue.Enqueue(e.DeepClone());
             }
@@ -376,11 +392,10 @@ namespace FlaxEditor.Windows
 
         private void AddPreset()
         {
-            var settings = GameSettings.Load<BuildSettings>();
-            var count = settings.Presets?.Length ?? 0;
+            var count = _data?.Length ?? 0;
             var presets = new BuildPreset[count + 1];
             if (count > 0)
-                Array.Copy(settings.Presets, presets, count);
+                Array.Copy(_data, presets, count);
             presets[count] = new BuildPreset
             {
                 Name = "Preset " + (count + 1),
@@ -402,20 +417,21 @@ namespace FlaxEditor.Windows
                     },
                 }
             };
-            settings.Presets = presets;
-            GameSettings.Save(settings);
-            RefreshColumns(settings);
+            _data = presets;
+
+            MarkAsEdited();
+            RefreshColumns();
         }
 
         private void AddTarget()
         {
-            var settings = GameSettings.Load<BuildSettings>();
-            if (settings.Presets == null || settings.Presets.Length <= _selectedPresetIndex)
+            if (_data == null || _data.Length <= _selectedPresetIndex)
                 return;
-            var count = settings.Presets[_selectedPresetIndex].Targets?.Length ?? 0;
+
+            var count = _data[_selectedPresetIndex].Targets?.Length ?? 0;
             var targets = new BuildTarget[count + 1];
             if (count > 0)
-                Array.Copy(settings.Presets[_selectedPresetIndex].Targets, targets, count);
+                Array.Copy(_data[_selectedPresetIndex].Targets, targets, count);
             targets[count] = new BuildTarget
             {
                 Name = "Xbox One",
@@ -423,9 +439,10 @@ namespace FlaxEditor.Windows
                 Platform = BuildPlatform.XboxOne,
                 Mode = BuildMode.Release,
             };
-            settings.Presets[_selectedPresetIndex].Targets = targets;
-            GameSettings.Save(settings);
-            RefreshColumns(settings);
+            _data[_selectedPresetIndex].Targets = targets;
+
+            MarkAsEdited();
+            RefreshColumns();
         }
 
         private void SelectPreset(int index)
@@ -440,13 +457,13 @@ namespace FlaxEditor.Windows
 
         private void RemovePreset(int index)
         {
-            var settings = GameSettings.Load<BuildSettings>();
-            if (settings.Presets == null || settings.Presets.Length <= index)
+            if (_data == null || _data.Length <= index)
                 return;
-            var presets = settings.Presets.ToList();
+            var presets = _data.ToList();
             presets.RemoveAt(index);
-            settings.Presets = presets.ToArray();
-            GameSettings.Save(settings);
+            _data = presets.ToArray();
+            MarkAsEdited();
+
             if (presets.Count == 0)
             {
                 SelectTarget(-1, -1);
@@ -457,22 +474,21 @@ namespace FlaxEditor.Windows
             }
             else
             {
-                RefreshColumns(settings);
+                RefreshColumns();
             }
         }
 
         private void RemoveTarget(int index)
         {
-            if (_selectedPresetIndex == -1)
+            if (_selectedPresetIndex == -1 || _data == null || _data.Length <= _selectedPresetIndex)
                 return;
-            var settings = GameSettings.Load<BuildSettings>();
-            if (settings.Presets == null || settings.Presets.Length <= _selectedPresetIndex)
-                return;
-            var preset = settings.Presets[_selectedPresetIndex];
+
+            var preset = _data[_selectedPresetIndex];
             var targets = preset.Targets.ToList();
             targets.RemoveAt(index);
             preset.Targets = targets.ToArray();
-            GameSettings.Save(settings);
+            MarkAsEdited();
+
             if (targets.Count == 0)
             {
                 SelectTarget(_selectedPresetIndex, -1);
@@ -483,31 +499,32 @@ namespace FlaxEditor.Windows
             }
             else
             {
-                RefreshColumns(settings);
+                RefreshColumns();
             }
         }
 
-        private void RefreshColumns(BuildSettings settings)
+        private void RefreshColumns()
         {
-            _presets.RefreshColumn(settings.Presets, _selectedPresetIndex);
-            var presets = settings.Presets != null && settings.Presets.Length > _selectedPresetIndex && _selectedPresetIndex != -1 ? settings.Presets[_selectedPresetIndex].Targets : null;
+            _presets.RefreshColumn(_data, _selectedPresetIndex);
+            var presets = _data != null && _data.Length > _selectedPresetIndex && _selectedPresetIndex != -1 ? _data[_selectedPresetIndex].Targets : null;
             _targets.RefreshColumn(presets, _selectedTargetIndex);
         }
 
         private void SelectTarget(int presetIndex, int targetIndex)
         {
             object obj = null;
-            var settings = GameSettings.Load<BuildSettings>();
-            if (presetIndex != -1 && targetIndex != -1 && settings.Presets != null && settings.Presets.Length > presetIndex)
+            if (presetIndex != -1 && targetIndex != -1 && _data != null && _data.Length > presetIndex)
             {
-                var preset = settings.Presets[presetIndex];
+                var preset = _data[presetIndex];
                 if (preset.Targets != null && preset.Targets.Length > targetIndex)
                     obj = preset.Targets[targetIndex];
             }
+
             _targetSettings.Select(obj);
             _selectedPresetIndex = presetIndex;
             _selectedTargetIndex = targetIndex;
-            RefreshColumns(settings);
+
+            RefreshColumns();
         }
 
         private void CreatePresetsTab(Tabs sections)
@@ -530,6 +547,23 @@ namespace FlaxEditor.Windows
 
             _targetSettings = new CustomEditorPresenter(null);
             _targetSettings.Panel.Parent = panel;
+            _targetSettings.Modified += MarkAsEdited;
+        }
+
+        private void MarkAsEdited()
+        {
+            if (!_isDataDirty)
+            {
+                _isDataDirty = true;
+            }
+        }
+
+        private void ClearDirtyFlag()
+        {
+            if (_isDataDirty)
+            {
+                _isDataDirty = false;
+            }
         }
 
         private void CreateBuildTab(Tabs sections)
@@ -553,10 +587,46 @@ namespace FlaxEditor.Windows
             settings.Select(new BuildTabProxy(this, platformSelector));
         }
 
+        /// <summary>
+        /// Load the build presets from the settings.
+        /// </summary>
+        private void GatherData()
+        {
+            _data = null;
+
+            var settings = GameSettings.Load<BuildSettings>();
+            if (settings.Presets != null)
+            {
+                _data = new BuildPreset[settings.Presets.Length];
+                for (int i = 0; i < _data.Length; i++)
+                {
+                    _data[i] = settings.Presets[i].DeepClone();
+                }
+            }
+
+            ClearDirtyFlag();
+            SelectTarget(0, 0);
+        }
+
+        /// <summary>
+        /// Saves the build presets to the settings.
+        /// </summary>
+        private void SaveData()
+        {
+            if (_data == null)
+                return;
+
+            var settings = GameSettings.Load<BuildSettings>();
+            settings.Presets = _data;
+            GameSettings.Save(settings);
+
+            ClearDirtyFlag();
+        }
+
         /// <inheritdoc />
         public override void OnInit()
         {
-            SelectTarget(0, 0);
+            GatherData();
         }
 
         /// <inheritdoc />
