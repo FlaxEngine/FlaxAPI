@@ -71,7 +71,7 @@ namespace FlaxEditor.Content.Settings
         /// </summary>
         [EditorOrder(1050), EditorDisplay("Other Settings"), AssetReference(typeof(BuildSettings), true), Tooltip("Reference to Build Settings asset")]
         public JsonAsset GameCooking;
-        
+
         /// <summary>
         /// The custom settings to use with a game. Can be specified by the user to define game-specific options and be used by the external plugins (used as key-value pair).
         /// </summary>
@@ -83,11 +83,149 @@ namespace FlaxEditor.Content.Settings
         /// </summary>
         [EditorOrder(2010), EditorDisplay("Platform Settings", "Windows"), AssetReference(typeof(WindowsPlatformSettings), true), Tooltip("Reference to Windows Platform Settings asset")]
         public JsonAsset WindowsPlatform;
-        
+
         /// <summary>
         /// Reference to <see cref="UWPPlatformSettings"/> asset. Used to apply configuration on Universal Windows Platform.
         /// </summary>
         [EditorOrder(2020), EditorDisplay("Platform Settings", "Universal Windows Platform"), AssetReference(typeof(UWPPlatformSettings), true), Tooltip("Reference to Universal Windows Platform Settings asset")]
         public JsonAsset UWPPlatform;
+
+        /// <summary>
+        /// Gets the absolute path to the game settigns asset file.
+        /// </summary>
+        public static string GameSettignsAssetPath
+        {
+            get { return StringUtils.CombinePaths(Globals.ContentFolder, "GameSettings.json"); }
+        }
+
+        /// <summary>
+        /// Loads the game settings asset.
+        /// </summary>
+        /// <returns>The loaded game settings.</returns>
+        public static GameSettings Load()
+        {
+            var asset = FlaxEngine.Content.Load<JsonAsset>(GameSettignsAssetPath);
+            if (asset)
+            {
+                if (asset.CreateInstance() is GameSettings result)
+                    return result;
+            }
+            return new GameSettings();
+        }
+
+        private static T LoadAsset<T>(JsonAsset asset) where T : new()
+        {
+            if (asset && !asset.WaitForLoaded())
+            {
+                if (asset.CreateInstance() is T result)
+                    return result;
+            }
+            return new T();
+        }
+
+        /// <summary>
+        /// Loads the settings of the given type.
+        /// </summary>
+        /// <remarks>
+        /// Supports loading game settings, any sub settings container (e.g. <see cref="PhysicsSettings"/>) and custom settings (see <see cref="CustomSettings"/>).
+        /// </remarks>
+        /// <code>
+        /// var time = GameSettings.Load&amp;ltTimeSettings&amp;gt;();
+        /// </code>
+        /// <typeparam name="T">The game settings type (e.g. <see cref="TimeSettings"/>).</typeparam>
+        /// <returns>Loaded settings object or null if fails.</returns>
+        public static T Load<T>() where T : SettingsBase
+        {
+            var gameSettings = Load();
+            var type = typeof(T);
+
+            if (type == typeof(GameSettings))
+                return gameSettings as T;
+
+            if (type == typeof(TimeSettings))
+                return LoadAsset<TimeSettings>(gameSettings.Time) as T;
+            if (type == typeof(LayersAndTagsSettings))
+                return LoadAsset<LayersAndTagsSettings>(gameSettings.LayersAndTags) as T;
+            if (type == typeof(PhysicsSettings))
+                return LoadAsset<PhysicsSettings>(gameSettings.Physics) as T;
+            if (type == typeof(GraphicsSettings))
+                return LoadAsset<GraphicsSettings>(gameSettings.Graphics) as T;
+            if (type == typeof(BuildSettings))
+                return LoadAsset<BuildSettings>(gameSettings.GameCooking) as T;
+            if (type == typeof(WindowsPlatformSettings))
+                return LoadAsset<WindowsPlatformSettings>(gameSettings.WindowsPlatform) as T;
+            if (type == typeof(UWPPlatformSettings))
+                return LoadAsset<UWPPlatformSettings>(gameSettings.UWPPlatform) as T;
+
+            foreach (var e in gameSettings.CustomSettings)
+            {
+                if (e.Value && !e.Value.WaitForLoaded() && e.Value.DataTypeName == type.FullName)
+                {
+                    var custom = e.Value.CreateInstance();
+                    if (custom is T result)
+                        return result;
+                }
+            }
+
+            return null;
+        }
+
+        private static bool SaveAsset<T>(GameSettings gameSettings, ref JsonAsset asset, T obj) where T : SettingsBase
+        {
+            if (asset)
+            {
+                // Override settings
+                return Editor.SaveJsonAsset(gameSettings.Time.Path, obj);
+            }
+
+            // Create new settings asset and link it to the game settings
+            var path = StringUtils.CombinePaths(Globals.ContentFolder, CustomEditors.CustomEditorsUtil.GetPropertyNameUI(typeof(T).Name) + ".json");
+            if (Editor.SaveJsonAsset(path, obj))
+                return true;
+            asset = FlaxEngine.Content.LoadAsync<JsonAsset>(path);
+            return Editor.SaveJsonAsset(GameSettignsAssetPath, gameSettings);
+        }
+
+        /// <summary>
+        /// Saves the settings of the given type.
+        /// </summary>
+        /// <remarks>
+        /// Supports saving game settings, any sub settings container (e.g. <see cref="PhysicsSettings"/>).
+        /// </remarks>
+        /// <code>
+        /// var time = GameSettings.Load&amp;ltTimeSettings&amp;gt;();
+        /// time.TimeScale = 0.5f;
+        /// GameSettings.Save&amp;ltTimeSettings&amp;gt;(time);
+        /// </code>
+        /// <typeparam name="T">The game settings type (e.g. <see cref="TimeSettings"/>).</typeparam>
+        /// <returns>True if failed otherwise false.</returns>
+        public static bool Load<T>(T obj) where T : SettingsBase
+        {
+            var type = typeof(T);
+
+            if (type == typeof(GameSettings))
+            {
+                return Editor.SaveJsonAsset(GameSettignsAssetPath, obj);
+            }
+
+            var gameSettings = Load();
+
+            if (type == typeof(TimeSettings))
+                return SaveAsset(gameSettings, ref gameSettings.Time, obj);
+            if (type == typeof(LayersAndTagsSettings))
+                return SaveAsset(gameSettings, ref gameSettings.LayersAndTags, obj);
+            if (type == typeof(PhysicsSettings))
+                return SaveAsset(gameSettings, ref gameSettings.Physics, obj);
+            if (type == typeof(GraphicsSettings))
+                return SaveAsset(gameSettings, ref gameSettings.Graphics, obj);
+            if (type == typeof(BuildSettings))
+                return SaveAsset(gameSettings, ref gameSettings.GameCooking, obj);
+            if (type == typeof(WindowsPlatformSettings))
+                return SaveAsset(gameSettings, ref gameSettings.WindowsPlatform, obj);
+            if (type == typeof(UWPPlatformSettings))
+                return SaveAsset(gameSettings, ref gameSettings.UWPPlatform, obj);
+
+            return true;
+        }
     }
 }
