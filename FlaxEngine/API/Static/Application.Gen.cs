@@ -166,16 +166,17 @@ namespace FlaxEngine
 		/// <param name="args">Custom command line arguments to pass to the new application.</param>
 		/// <param name="hiddenWindow">True if hide processs window, otherwise false (it's not always possible).</param>
 		/// <param name="waitForEnd">True if wait for the process end, otherwise false.</param>
+		/// <returns>Retrieves the termination status of the specified process. Invalid if process is still running.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static void StartProcess(string path, string args = null, bool hiddenWindow = false, bool waitForEnd = false) 
+		public static int StartProcess(string path, string args = null, bool hiddenWindow = false, bool waitForEnd = false) 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_StartProcess(path, args, hiddenWindow, waitForEnd);
+			return Internal_StartProcess(path, args, hiddenWindow, waitForEnd);
 #endif
 		}
 
@@ -208,7 +209,7 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetClipboardDataRaw(byte[] val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_StartProcess(string path, string args, bool hiddenWindow, bool waitForEnd);
+		internal static extern int Internal_StartProcess(string path, string args, bool hiddenWindow, bool waitForEnd);
 #endif
 #endregion
 	}

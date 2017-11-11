@@ -4,7 +4,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using FlaxEditor.Content.Settings;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI;
@@ -296,7 +298,7 @@ namespace FlaxEditor.Windows
                     AnchorStyle = AnchorStyle.BottomLeft,
                     Parent = this,
                 };
-                buildAllButton.Clicked += _cooker.BuildAllTargets;
+                buildButton.Clicked += _cooker.BuildTarget;
                 var discardButton = new Button
                 {
                     Text = "Discard",
@@ -339,6 +341,8 @@ namespace FlaxEditor.Windows
         private int _selectedTargetIndex = -1;
         private CustomEditorPresenter _targetSettings;
         private Queue<BuildTarget> _buildingQueue = new Queue<BuildTarget>();
+        private string _preBuildAction;
+        private string _postBuildAction;
         private BuildPreset[] _data;
         private bool _isDataDirty;
 
@@ -362,7 +366,53 @@ namespace FlaxEditor.Windows
             CreatePresetsTab(sections);
             CreateBuildTab(sections);
 
+            GameCooker.Event += OnGameCookerEvent;
+
             sections.SelectedTabIndex = 1;
+        }
+
+        private void OnGameCookerEvent(GameCooker.EventType type, ref GameCooker.Options options1)
+        {
+            if (type == GameCooker.EventType.BuildStarted)
+            {
+                // Execute pre-build action
+                if (!string.IsNullOrEmpty(_preBuildAction))
+                    ExecueAction(_preBuildAction);
+                _preBuildAction = null;
+            }
+            else if (type == GameCooker.EventType.BuildDone)
+            {
+                // Execute post-build action
+                if (!string.IsNullOrEmpty(_postBuildAction))
+                    ExecueAction(_postBuildAction);
+                _postBuildAction = null;
+            }
+            else if (type == GameCooker.EventType.BuildFailed)
+            {
+                _postBuildAction = null;
+            }
+        }
+
+        private void ExecueAction(string action)
+        {
+            string command = "echo off\ncd \"" + Globals.ProjectFolder.Replace('/', '\\') + "\"\necho on\n" + action;
+            command = command.Replace("\n", "\r\n");
+
+            // TODO: postprocess text using $(OutputPath) etc. macros
+            // TODO: capture std out of the action (maybe call system() to execute it)
+
+            try
+            {
+                var tmpBat = StringUtils.CombinePaths(Globals.TemporaryFolder, Guid.NewGuid().ToString("N") + ".bat");
+                File.WriteAllText(tmpBat, command);
+                Application.StartProcess(tmpBat, null, true, true);
+                File.Delete(tmpBat);
+            }
+            catch (Exception ex)
+            {
+                Editor.LogWarning(ex);
+                Debug.LogError("Failed to execute build action.");
+            }
         }
 
         private void BuildTarget()
@@ -639,8 +689,19 @@ namespace FlaxEditor.Windows
             {
                 var target = _buildingQueue.Dequeue();
 
+                _preBuildAction = target.PreBuildAction;
+                _postBuildAction = target.PostBuildAction;
+
                 GameCooker.Build(target.Platform, target.Options, target.Output, target.Defines);
             }
+        }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            GameCooker.Event -= OnGameCookerEvent;
+
+            base.OnDestroy();
         }
     }
 }
