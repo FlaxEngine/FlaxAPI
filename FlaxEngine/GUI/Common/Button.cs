@@ -35,6 +35,11 @@ namespace FlaxEngine.GUI
         /// Event fired when user clicks on the button
         /// </summary>
         public event Action Clicked;
+
+        /// <summary>
+        /// Event fired when user clicks on the button
+        /// </summary>
+        public event Action<Button> ButtonClicked;
         
         /// <summary>
         /// Gets or sets the color of the border.
@@ -86,6 +91,21 @@ namespace FlaxEngine.GUI
         protected virtual void OnClick()
         {
             Clicked?.Invoke();
+            ButtonClicked?.Invoke(this);
+        }
+
+        /// <summary>
+        /// Sets the button colors palette based on a given main color.
+        /// </summary>
+        /// <param name="color">The main color.</param>
+        public void SetColors(Color color)
+        {
+            BackgroundColor = color;
+            BorderColor = color.RGBMultiplied(0.5f);
+            BackgroundColorSelected = color.RGBMultiplied(0.8f);
+            BorderColorSelected = BorderColor;
+            BackgroundColorHighlighted = color.RGBMultiplied(1.2f);
+            BorderColorHighlighted = BorderColor;
         }
 
         #region Control

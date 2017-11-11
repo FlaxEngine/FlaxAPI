@@ -199,7 +199,7 @@ namespace FlaxEditor.Content.Settings
         /// </code>
         /// <typeparam name="T">The game settings type (e.g. <see cref="TimeSettings"/>).</typeparam>
         /// <returns>True if failed otherwise false.</returns>
-        public static bool Load<T>(T obj) where T : SettingsBase
+        public static bool Save<T>(T obj) where T : SettingsBase
         {
             var type = typeof(T);
 

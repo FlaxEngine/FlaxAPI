@@ -213,6 +213,8 @@ namespace FlaxEditor.Modules
             if (id == Guid.Empty)
                 return null;
 
+            // TODO: use AssetInfo via Content manager to get asset path very quickly (it's O(1))
+
             // TODO: if it's a bottleneck try to optimize searching by caching items IDs
 
             var result = ProjectContent.Folder.Find(id);

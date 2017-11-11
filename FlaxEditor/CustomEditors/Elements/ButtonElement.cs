@@ -35,12 +35,7 @@ namespace FlaxEditor.CustomEditors.Elements
         public void Init(string text, Color color)
         {
             Button.Text = text;
-            Button.BackgroundColor = color;
-            Button.BorderColor = color.RGBMultiplied(0.5f);
-            Button.BackgroundColorSelected = color.RGBMultiplied(0.8f);
-            Button.BorderColorSelected = Button.BorderColor;
-            Button.BackgroundColorHighlighted = color.RGBMultiplied(1.2f);
-            Button.BorderColorHighlighted = Button.BorderColor;
+            Button.SetColors(color);
         }
 
         /// <inheritdoc />
