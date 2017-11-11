@@ -4,6 +4,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using FlaxEngine;
 
 namespace FlaxEditor
 {
@@ -43,7 +44,7 @@ namespace FlaxEditor
         /// Windows x64 (64-bit architecture)
         /// </summary>
         Windows64 = 2,
-        
+
         /// <summary>
         /// Universal Windows Platform (UWP) (x86 architecture)
         /// </summary>
@@ -79,6 +80,34 @@ namespace FlaxEditor
     public static partial class GameCooker
     {
         /// <summary>
+        /// Build options data.
+        /// </summary>
+        public struct Options
+        {
+            /// <summary>
+            /// The platform.
+            /// </summary>
+            public BuildPlatform Platform;
+
+            /// <summary>
+            /// The options.
+            /// </summary>
+            public BuildOptions Flags;
+
+            /// <summary>
+            /// The output path (normalized, absolute).
+            /// </summary>
+            public string OutputPath;
+
+            /// <summary>
+            /// The custom defines.
+            /// </summary>
+            public string[] Defines;
+        }
+
+        private static Options _lastOptions;
+
+        /// <summary>
         /// Starts building game for the specified platform.
         /// </summary>
         /// <param name="platform">The target platform.</param>
@@ -92,6 +121,12 @@ namespace FlaxEditor
             if (string.IsNullOrEmpty(outputPath))
                 throw new ArgumentNullException(nameof(outputPath));
 
+            // Cache options (reuse them for build step events)
+            _lastOptions.Platform = platform;
+            _lastOptions.Flags = options;
+            _lastOptions.OutputPath = StringUtils.ConvertRelativePathToAbsolute(Globals.ProjectFolder, StringUtils.NormalizePath(outputPath));
+            _lastOptions.Defines = defines;
+
             Internal_Build(platform, options, outputPath, defines);
         }
 
@@ -104,18 +139,25 @@ namespace FlaxEditor
             /// The build started.
             /// </summary>
             BuildStarted = 0,
-		
+
             /// <summary>
             /// The build failed.
             /// </summary>
             BuildFailed = 1,
-		
+
             /// <summary>
             /// The build done.
             /// </summary>
             BuildDone = 2,
-        }      
-        
+        }
+
+        /// <summary>
+        /// Game building event delegate.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="options">The build options (read only).</param>
+        public delegate void BuildEventDelegate(EventType type, ref Options options);
+
         /// <summary>
         /// Game building progress reporitng delegate type.
         /// </summary>
@@ -126,7 +168,7 @@ namespace FlaxEditor
         /// <summary>
         /// Occurs when building event rises.
         /// </summary>
-        public static event Action<EventType> OnEvent;
+        public static event BuildEventDelegate Event;
 
         /// <summary>
         /// Occurs when building gane progress fires.
@@ -135,7 +177,7 @@ namespace FlaxEditor
 
         internal static void Internal_OnEvent(EventType type)
         {
-            OnEvent?.Invoke(type);
+            Event?.Invoke(type, ref _lastOptions);
         }
 
         internal static void Internal_OnProgress(string info, float totalProgress)

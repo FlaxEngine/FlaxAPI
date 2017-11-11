@@ -264,10 +264,10 @@ namespace FlaxEditor.Windows
             ScriptsBuilder.CompilationBegin += OnCompilationBegin;
             ScriptsBuilder.CompilationError += OnCompilationError;
             ScriptsBuilder.CompilationWarning += OnCompilationWarning;
-            GameCooker.OnEvent += OnGameCookerEvent;
+            GameCooker.Event += OnGameCookerEvent;
         }
 
-        private void OnGameCookerEvent(GameCooker.EventType eventType)
+        private void OnGameCookerEvent(GameCooker.EventType eventType, ref GameCooker.Options options)
         {
             if (eventType == GameCooker.EventType.BuildFailed)
                 FocusOrShow();
@@ -576,7 +576,7 @@ namespace FlaxEditor.Windows
             ScriptsBuilder.CompilationBegin -= OnCompilationBegin;
             ScriptsBuilder.CompilationError -= OnCompilationError;
             ScriptsBuilder.CompilationWarning -= OnCompilationWarning;
-            GameCooker.OnEvent -= OnGameCookerEvent;
+            GameCooker.Event -= OnGameCookerEvent;
 
             base.OnDestroy();
         }

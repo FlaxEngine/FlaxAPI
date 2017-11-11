@@ -3,11 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
@@ -53,7 +49,7 @@ namespace FlaxEngine
         public static string GetPathWithoutExtension(string path)
         {
             int num = path.LastIndexOf('.');
-            if(num != -1)
+            if (num != -1)
             {
                 return path.Substring(0, num);
             }
@@ -116,6 +112,57 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Determines whether the specified path is relative or is absolute.
+        /// </summary>
+        /// <param name="path">The input path.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified path is relative; otherwise, <c>false</c> if is relative.
+        /// </returns>
+        public static bool IsRelative(string path)
+        {
+            bool isRooted =
+                (path.Length >= 2 && char.IsLetterOrDigit(path[0]) && path[1] == ':') ||
+                path.StartsWith("\\\\") ||
+                path.StartsWith("/") ||
+                path.StartsWith("\\") ||
+                path.StartsWith("/");
+            return !isRooted;
+        }
+
+        /// <summary>
+        /// Converts path relative to the engine startup folder into absolute path.
+        /// </summary>
+        /// <param name="path">Path relative to the engine directory.</param>
+        /// <returns>Absolute path</returns>
+        public static string ConvertRelativePathToAbsolute(string path)
+        {
+            return ConvertRelativePathToAbsolute(Globals.StartupPath, path);
+        }
+
+        /// <summary>
+        /// Converts path relative to basePath into absolute path.
+        /// </summary>
+        /// <param name="basePath">The base path.</param>
+        /// <param name="path">Path relative to basePath.</param>
+        /// <returns>Absolute path</returns>
+        public static string ConvertRelativePathToAbsolute(string basePath, string path)
+        {
+            string fullyPathed;
+            if (IsRelative(path))
+            {
+                fullyPathed = CombinePaths(basePath, path);
+            }
+            else
+            {
+                fullyPathed = path;
+
+            }
+
+            NormalizePath(fullyPathed);
+            return fullyPathed;
+        }
+
+        /// <summary>
         /// Reverses the specified input string.
         /// </summary>
         /// <param name="s">The string to reverse.</param>
@@ -129,7 +176,7 @@ namespace FlaxEngine
 
         private static readonly Regex IncNameRegex1 = new Regex("^(\\d+)");
         private static readonly Regex IncNameRegex2 = new Regex("^\\)(\\d+)\\(");
-        
+
         /// <summary>
         /// Tries to parse number in the name brackets at the end of the value and then increment it to create a new name.
         /// Supports numbers at the end without brackets.
@@ -142,7 +189,7 @@ namespace FlaxEngine
             // Validate input name
             if (isValid == null || isValid(name))
                 return name;
-            
+
             // Temporary data
             int index;
             int MaxChecks = 10000;
