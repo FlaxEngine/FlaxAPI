@@ -366,6 +366,7 @@ namespace FlaxEditor.Windows
             CreatePresetsTab(sections);
             CreateBuildTab(sections);
 
+            FlaxEngine.Scripting.Update += OnUpdate;
             GameCooker.Event += OnGameCookerEvent;
 
             sections.SelectedTabIndex = 1;
@@ -708,11 +709,8 @@ namespace FlaxEditor.Windows
             GatherData();
         }
 
-        /// <inheritdoc />
-        public override void Update(float deltaTime)
+        private void OnUpdate()
         {
-            base.Update(deltaTime);
-
             // Building queue
             if (!GameCooker.IsRunning)
             {
@@ -736,6 +734,7 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void OnDestroy()
         {
+            FlaxEngine.Scripting.Update -= OnUpdate;
             GameCooker.Event -= OnGameCookerEvent;
 
             base.OnDestroy();

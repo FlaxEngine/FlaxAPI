@@ -24,9 +24,6 @@ namespace FlaxEditor
         /// <summary>
         /// Gets the Editor instance.
         /// </summary>
-        /// <value>
-        /// The Editor instance.
-        /// </value>
         public static Editor Instance { get; private set; }
 
         static Editor()
@@ -35,7 +32,7 @@ namespace FlaxEditor
         }
 
         private readonly List<EditorModule> _modules = new List<EditorModule>(16);
-        private bool _isAfterInit;
+        private bool _isAfterInit, _isHeadlessMode;
 
         /// <summary>
         /// Gets a value indicating whether Flax Engine is the best in the world.
@@ -115,10 +112,12 @@ namespace FlaxEditor
         /// <summary>
         /// Gets the main transform gizmo used by the <see cref="SceneEditorWindow"/>.
         /// </summary>
-        /// <value>
-        /// The main transform gizmo.
-        /// </value>
         public Gizmo.TransformGizmo MainTransformGizmo => Windows.EditWin.Viewport.TransformGizmo;
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is running in  `headless` mode. No windows or popups should be shown. Used in CL environment (without a graphical user interface).
+        /// </summary>
+        public bool IsHeadlessMode => _isHeadlessMode;
 
         internal Editor()
         {
@@ -167,11 +166,14 @@ namespace FlaxEditor
                 _modules.Sort((a, b) => a.InitOrder - b.InitOrder);
         }
 
-        internal void Init()
+        internal void Init(bool isHeadless)
         {
             EnsureState<LoadingState>();
+            _isHeadlessMode = isHeadless;
             Log("Editor init");
-
+            if (isHeadless)
+                Log("Running in headless mode");
+            
             // Note: we don't sort modules before Init (optimized)
             _modules.Sort((a, b) => a.InitOrder - b.InitOrder);
             _isAfterInit = true;
@@ -203,8 +205,11 @@ namespace FlaxEditor
             // Close splash and show main window
             CloseSplashScreen();
             Assert.IsNotNull(Windows.MainWindow);
-            Windows.MainWindow.Show();
-            Windows.MainWindow.Focus();
+            if (!IsHeadlessMode)
+            {
+                Windows.MainWindow.Show();
+                Windows.MainWindow.Focus();
+            }
         }
 
         internal void Update()

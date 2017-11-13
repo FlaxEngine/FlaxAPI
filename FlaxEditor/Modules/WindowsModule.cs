@@ -198,6 +198,9 @@ namespace FlaxEditor.Modules
         /// <param name="name">The layout name.</param>
         public void LoadLayout(string name)
         {
+            if (Editor.IsHeadlessMode)
+                return;
+
             // TODO: finish this
 
             // for now just show default windows
@@ -222,6 +225,9 @@ namespace FlaxEditor.Modules
         /// <param name="name">The layout name.</param>
         public void SaveLayout(string name)
         {
+            if (Editor.IsHeadlessMode)
+                return;
+
             // TODO: finish this
         }
 

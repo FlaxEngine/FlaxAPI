@@ -31,7 +31,7 @@ namespace FlaxEditor.Tests
         {
             Editor editor = new Editor();
 
-            editor.Init();
+            editor.Init(true);
             editor.EnsureState<LoadingState>();
             
             // Mock scripts compilation finish
