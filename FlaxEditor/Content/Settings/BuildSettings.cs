@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using FlaxEngine;
 
 namespace FlaxEditor.Content.Settings
@@ -78,5 +79,23 @@ namespace FlaxEditor.Content.Settings
                 }
             },
         };
+
+        /// <summary>
+        /// Gets the preset of the given name (ignore case search) or returns null if cannot find it.
+        /// </summary>
+        /// <param name="name">The preset name.</param>
+        /// <returns>Found preset or null if is missing.</returns>
+        public BuildPreset GetPreset(string name)
+        {
+            if (Presets != null)
+            {
+                for (int i = 0; i < Presets.Length; i++)
+                {
+                    if (string.Equals(Presets[i].Name, name, StringComparison.OrdinalIgnoreCase))
+                        return Presets[i];
+                }
+            }
+            return null;
+        }
     }
 }

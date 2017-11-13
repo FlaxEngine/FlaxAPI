@@ -24,5 +24,23 @@ namespace FlaxEditor.Content.Settings
         /// </summary>
         [EditorOrder(20), Tooltip("Target configurations")]
         public BuildTarget[] Targets;
+
+        /// <summary>
+        /// Gets the target of the given name (ignore case search) or returns null if cannot find it.
+        /// </summary>
+        /// <param name="name">The target name.</param>
+        /// <returns>Found target or null if is missing.</returns>
+        public BuildTarget GeTarget(string name)
+        {
+            if (Targets != null)
+            {
+                for (int i = 0; i < Targets.Length; i++)
+                {
+                    if (string.Equals(Targets[i].Name, name, StringComparison.OrdinalIgnoreCase))
+                        return Targets[i];
+                }
+            }
+            return null;
+        }
     }
 }

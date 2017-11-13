@@ -84,6 +84,19 @@ namespace FlaxEditor
 #endif
 		}
 
+		/// <summary>
+		/// Checks if every managed assembly has been loaded (including user scripts assembly).
+		/// </summary>
+		[UnmanagedCall]
+		public static bool IsEveryAssemblyLoaded
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetIsEveryAssemblyLoaded(); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -94,6 +107,8 @@ namespace FlaxEditor
 		internal static extern bool Internal_CanImport(string extension);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern string Internal_GetProjectName();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_GetIsEveryAssemblyLoaded();
 #endif
 #endregion
 	}

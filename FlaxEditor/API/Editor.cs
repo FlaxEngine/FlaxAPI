@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using FlaxEditor.Content.Import;
+using FlaxEditor.Content.Settings;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Modules;
 using FlaxEditor.Scripting;
@@ -603,6 +604,61 @@ namespace FlaxEditor
         #endregion
 
         #region Internal Calls
+
+        internal void BuildCommand(string arg)
+        {
+            if (TryBuildCommand(arg))
+                Application.Exit();
+        }
+
+        private bool TryBuildCommand(string arg)
+        {
+            if (GameCooker.IsRunning)
+                return true;
+            if (arg == null)
+                return true;
+
+            Editor.Log("Using CL build for \"" + arg + "\"");
+            
+            int dotPos = arg.IndexOf('.');
+            string presetName = string.Empty, targetName = string.Empty;
+            if (dotPos == -1)
+            {
+                presetName = arg;
+                targetName = string.Empty;
+            }
+            else
+            {
+                presetName = arg.Substring(0, dotPos);
+                targetName = arg.Substring(dotPos + 1);
+            }
+
+            var settings = GameSettings.Load<BuildSettings>();
+            var preset = settings.GetPreset(presetName);
+            if (preset == null)
+            {
+                Editor.LogWarning("Missing preset.");
+                return true;
+            }
+
+            if (string.IsNullOrEmpty(targetName))
+            {
+                Windows.GameCookerWin.BuildAll(preset);
+            }
+            else
+            {
+                var target = preset.GeTarget(targetName);
+                if (target == null)
+                {
+                    Editor.LogWarning("Missing target.");
+                    return true;
+                }
+                Windows.GameCookerWin.Build(target);
+            }
+
+            Windows.GameCookerWin.ExitOnBuildQueueEnd();
+            return false;
+        }
 
         internal IntPtr GetMainWindowPtr()
         {

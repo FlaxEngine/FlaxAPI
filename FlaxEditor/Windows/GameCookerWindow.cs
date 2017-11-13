@@ -344,7 +344,7 @@ namespace FlaxEditor.Windows
         private string _preBuildAction;
         private string _postBuildAction;
         private BuildPreset[] _data;
-        private bool _isDataDirty;
+        private bool _isDataDirty, _exitOnBuildEnd;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameCookerWindow"/> class.
@@ -415,6 +415,40 @@ namespace FlaxEditor.Windows
             }
         }
 
+        internal void ExitOnBuildQueueEnd()
+        {
+            _exitOnBuildEnd = true;
+        }
+
+        /// <summary>
+        /// Builds all the targets from the given preset.
+        /// </summary>
+        /// <param name="preset">The preset.</param>
+        public void BuildAll(BuildPreset preset)
+        {
+            if (preset == null)
+                throw new ArgumentNullException(nameof(preset));
+
+            Editor.Log("Building all targets");
+            foreach (var e in preset.Targets)
+            {
+                _buildingQueue.Enqueue(e.DeepClone());
+            }
+        }
+
+        /// <summary>
+        /// Builds the target.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        public void Build(BuildTarget target)
+        {
+            if (target == null)
+                throw new ArgumentNullException(nameof(target));
+
+            Editor.Log("Building target");
+            _buildingQueue.Enqueue(target.DeepClone());
+        }
+
         private void BuildTarget()
         {
             if (_data == null || _data.Length <= _selectedPresetIndex || _selectedPresetIndex == -1)
@@ -422,8 +456,7 @@ namespace FlaxEditor.Windows
             if (_data[_selectedPresetIndex].Targets == null || _data[_selectedPresetIndex].Targets.Length <= _selectedTargetIndex)
                 return;
 
-            Editor.Log("Building target");
-            _buildingQueue.Enqueue(_data[_selectedPresetIndex].Targets[_selectedTargetIndex].DeepClone());
+            Build(_data[_selectedPresetIndex].Targets[_selectedTargetIndex]);
         }
 
         private void BuildAllTargets()
@@ -433,11 +466,7 @@ namespace FlaxEditor.Windows
             if (_data[_selectedPresetIndex].Targets == null || _data[_selectedPresetIndex].Targets.Length == 0)
                 return;
 
-            Editor.Log("Building all targets");
-            foreach (var e in _data[_selectedPresetIndex].Targets)
-            {
-                _buildingQueue.Enqueue(e.DeepClone());
-            }
+            BuildAll(_data[_selectedPresetIndex]);
         }
 
         private void AddPreset()
@@ -685,14 +714,22 @@ namespace FlaxEditor.Windows
             base.Update(deltaTime);
 
             // Building queue
-            if (_buildingQueue.Count > 0 && !GameCooker.IsRunning)
+            if (!GameCooker.IsRunning)
             {
-                var target = _buildingQueue.Dequeue();
+                if (_buildingQueue.Count > 0)
+                {
+                    var target = _buildingQueue.Dequeue();
 
-                _preBuildAction = target.PreBuildAction;
-                _postBuildAction = target.PostBuildAction;
+                    _preBuildAction = target.PreBuildAction;
+                    _postBuildAction = target.PostBuildAction;
 
-                GameCooker.Build(target.Platform, target.Options, target.Output, target.Defines);
+                    GameCooker.Build(target.Platform, target.Options, target.Output, target.Defines);
+                }
+                else if (_exitOnBuildEnd)
+                {
+                    _exitOnBuildEnd = false;
+                    Application.Exit();
+                }
             }
         }
 
