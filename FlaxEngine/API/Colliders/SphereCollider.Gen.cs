@@ -21,6 +21,30 @@ namespace FlaxEngine
 	public sealed partial class SphereCollider : Collider
 	{
 		/// <summary>
+		/// Creates new <see cref="SphereCollider"/> object.
+		/// </summary>
+		private SphereCollider() : base()
+		{
+		}
+
+		/// <summary>
+		/// Creates new instance of <see cref="SphereCollider"/> object.
+		/// </summary>
+		/// <returns>Created object.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static SphereCollider New() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_Create(typeof(SphereCollider)) as SphereCollider;
+#endif
+		}
+
+		/// <summary>
 		/// Gets or sets the radius of the sphere, measured in the object's local space.
 		/// </summary>
 		/// <remarks>

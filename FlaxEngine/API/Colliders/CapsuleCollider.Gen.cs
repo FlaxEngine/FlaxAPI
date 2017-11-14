@@ -24,6 +24,30 @@ namespace FlaxEngine
 	public sealed partial class CapsuleCollider : Collider
 	{
 		/// <summary>
+		/// Creates new <see cref="CapsuleCollider"/> object.
+		/// </summary>
+		private CapsuleCollider() : base()
+		{
+		}
+
+		/// <summary>
+		/// Creates new instance of <see cref="CapsuleCollider"/> object.
+		/// </summary>
+		/// <returns>Created object.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static CapsuleCollider New() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_Create(typeof(CapsuleCollider)) as CapsuleCollider;
+#endif
+		}
+
+		/// <summary>
 		/// Gets or sets the radius of the sphere, measured in the object's local space.
 		/// </summary>
 		/// <remarks>

@@ -21,6 +21,30 @@ namespace FlaxEngine
 	public sealed partial class BoxCollider : Collider
 	{
 		/// <summary>
+		/// Creates new <see cref="BoxCollider"/> object.
+		/// </summary>
+		private BoxCollider() : base()
+		{
+		}
+
+		/// <summary>
+		/// Creates new instance of <see cref="BoxCollider"/> object.
+		/// </summary>
+		/// <returns>Created object.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static BoxCollider New() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_Create(typeof(BoxCollider)) as BoxCollider;
+#endif
+		}
+
+		/// <summary>
 		/// Gets or sets the size of the box, measured in the object's local space.
 		/// </summary>
 		/// <remarks>
