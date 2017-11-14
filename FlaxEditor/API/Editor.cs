@@ -626,7 +626,7 @@ namespace FlaxEditor
             Editor.Log("Using CL build for \"" + arg + "\"");
             
             int dotPos = arg.IndexOf('.');
-            string presetName = string.Empty, targetName = string.Empty;
+            string presetName, targetName;
             if (dotPos == -1)
             {
                 presetName = arg;
