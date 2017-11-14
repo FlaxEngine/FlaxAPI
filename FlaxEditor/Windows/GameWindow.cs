@@ -16,6 +16,7 @@ namespace FlaxEditor.Windows
     public class GameWindow : EditorWindow
     {
         private readonly RenderOutputControl _viewport;
+        private float _gameStartTime;
 
         /// <summary>
         /// Gets the viewport.
@@ -30,6 +31,7 @@ namespace FlaxEditor.Windows
             : base(editor, true, ScrollBars.None)
         {
             Title = "Game";
+            CanFocus = true;
 
             var task = MainRenderTask.Instance;
             task.Begin += OnBegin;
@@ -51,14 +53,63 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
-        public override void Update(float deltaTime)
+        public override void OnPlayBegin()
         {
-            if (ParentWindow.GetKeyDown(KeyCode.F12))
+            _gameStartTime = Time.UnscaledTime;
+        }
+
+        /// <inheritdoc />
+        public override void Draw()
+        {
+            base.Draw();
+
+            if (Editor.StateMachine.IsPlayMode)
+            {
+                float time = Time.UnscaledTime - _gameStartTime;
+                float timeout = 3.0f;
+                float fadeOutTime = 1.0f;
+                time -= timeout;
+                if (time < 0)
+                {
+                    float alpha = Mathf.Clamp01(-time / fadeOutTime);
+                    Render2D.DrawText(Style.Current.FontSmall, "Press Shift+F11 to unlock the mouse", new Rectangle(new Vector2(1.0f, 1.0f), Size), Color.Black * alpha, TextAlignment.Near, TextAlignment.Far);
+                    Render2D.DrawText(Style.Current.FontSmall, "Press Shift+F11 to unlock the mouse", new Rectangle(Vector2.Zero, Size), Color.White * alpha, TextAlignment.Near, TextAlignment.Far);
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(KeyCode key)
+        {
+            if (key == KeyCode.F12)
             {
                 Screenshot.Capture();
             }
+            else if (key == KeyCode.F11)
+            {
+                if (ParentWindow.GetKey(KeyCode.Shift))
+                {
+                    // Unlock mouse in game mode
+                    if (Editor.StateMachine.IsPlayMode)
+                    {
+                        Focus();
+                        Defocus();
+                        if (Editor.Windows.PropertiesWin.IsDocked)
+                            Editor.Windows.PropertiesWin.Focus();
+                    }
+                }
+            }
 
-            base.Update(deltaTime);
+            return base.OnKeyDown(key);
+        }
+
+        /// <inheritdoc />
+        public override void OnLostFocus()
+        {
+            base.OnLostFocus();
+
+            // Restore cursor visibility (could be hidden by the game)
+            Screen.CursorVisible = true;
         }
     }
 }

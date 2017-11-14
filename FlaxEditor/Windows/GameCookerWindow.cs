@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using FlaxEditor.Content.Settings;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI;
@@ -14,6 +13,9 @@ using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.GUI.Tabs;
 using FlaxEngine.Utilities;
+// ReSharper disable InconsistentNaming
+// ReSharper disable MemberCanBePrivate.Local
+#pragma warning disable 649
 
 namespace FlaxEditor.Windows
 {
@@ -89,10 +91,20 @@ namespace FlaxEditor.Windows
             {
                 public enum Arch
                 {
+                    /// <summary>
+                    /// The x64.
+                    /// </summary>
                     x64,
+
+                    /// <summary>
+                    /// The x86.
+                    /// </summary>
                     x86,
                 };
 
+                /// <summary>
+                /// The architecture.
+                /// </summary>
                 [EditorOrder(30), Tooltip("Target platform CPU type (32bit or 64bit)")]
                 public Arch Architecture;
 
@@ -112,6 +124,9 @@ namespace FlaxEditor.Windows
 
             public class WPA : UWP
             {
+                /// <summary>
+                /// The architecture.
+                /// </summary>
                 [EditorOrder(30), Tooltip("Target platform CPU type")]
                 public Arch Architecture;
 
@@ -340,7 +355,7 @@ namespace FlaxEditor.Windows
         private int _selectedPresetIndex = -1;
         private int _selectedTargetIndex = -1;
         private CustomEditorPresenter _targetSettings;
-        private Queue<BuildTarget> _buildingQueue = new Queue<BuildTarget>();
+        private readonly Queue<BuildTarget> _buildingQueue = new Queue<BuildTarget>();
         private string _preBuildAction;
         private string _postBuildAction;
         private BuildPreset[] _data;
