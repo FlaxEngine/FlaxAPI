@@ -25,6 +25,8 @@ namespace FlaxEditor.Progress.Handlers
         {
             if (IsActive)
             {
+                if (string.IsNullOrEmpty(info))
+                    info = "Building";
                 OnUpdate(totalProgress, string.Format("{0} ({1}%)...", info, (int)(totalProgress * 100.0f)));
             }
         }

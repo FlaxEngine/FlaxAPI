@@ -139,7 +139,7 @@ namespace FlaxEditor.Windows
             {
                 protected override Arch CPUArch => Arch.x64;
 
-                protected override BuildPlatform BuildPlatform => throw new NotImplementedException("Implement Xbox One platform building.");
+                protected override BuildPlatform BuildPlatform => BuildPlatform.XboxOne;
             }
 
             public class Editor : CustomEditor
