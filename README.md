@@ -32,3 +32,9 @@ The engine offers a wide variety of high level systems needed for game developme
 ![gi](http://flaxengine.com/wp-content/images/visuals/gi.jpg "Global Illumination")
 ![materials-editor](http://flaxengine.com/wp-content/images/editor/materials-editor.jpg "Materials Editor")
 ![editor](http://flaxengine.com/wp-content/uploads/2017/05/HistoryOfTheCelelej_0029.png "Editor")
+
+# Licensing and Contributions
+
+As FlaxAPI contains parts of the Flax Engine source code using it is strictly governed by the Flax Engine End User License Agreement. If you don't agree to those terms, as amended from time to time, you are not permitted to access or use Flax Engine.
+
+We welcome any contributions to Flax Engine development through pull requests on GitHub. Most of our active development is in the master branch, so we prefer to take pull requests there (particularly for new features). We try to make sure that all new code adheres to the Flax coding standards. All contributions are governed by the terms of the EULA.
