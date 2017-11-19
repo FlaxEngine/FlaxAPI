@@ -167,9 +167,9 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void SyncBackbufferSize()
         {
-            int width = (int)Width;
-            int height = (int)Height;
-            if (_backBuffer.Width == width && _backBuffer.Height == height)
+            int width = Mathf.CeilToInt(Width);
+            int height = Mathf.CeilToInt(Height);
+            if (_backBuffer == null || _backBuffer.Width == width && _backBuffer.Height == height)
                 return;
             if (width < 1 || height < 1)
             {

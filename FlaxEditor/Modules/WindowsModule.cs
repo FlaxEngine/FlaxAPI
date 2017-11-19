@@ -397,6 +397,14 @@ namespace FlaxEditor.Modules
             // Close main window
             MainWindow?.Close(ClosingReason.EngineExit);
             MainWindow = null;
+
+            // Close all windows
+            var windows = Window.Windows.ToArray();
+            for (int i = 0; i < windows.Length; i++)
+            {
+                if (windows[i].IsVisible)
+                    windows[i].Close(ClosingReason.EngineExit);
+            }
         }
 
         #region Window Events
