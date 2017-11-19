@@ -280,6 +280,49 @@ namespace FlaxEditor.Modules
                             LoadPanel(masterPanelNode, masterPanel);
                         }
 
+                        // Load all floating windows structure
+                        var floating = root.SelectNodes("Float");
+                        if (floating != null)
+                        {
+                            foreach (XmlElement child in floating)
+                            {
+                                if (child == null)
+                                    continue;
+
+                                // Get window properties
+                                Rectangle bounds = LoadBounds(child["Bounds"]);
+
+                                // Create window and floating dock panel
+                                var window = FloatWindowDockPanel.CreateFloatWindow(MainWindow.GUI, bounds.Location, bounds.Size, WindowStartPosition.Manual, string.Empty);
+                                var panel = new FloatWindowDockPanel(masterPanel, window.GUI);
+
+                                // Load structure
+                                LoadPanel(child, panel);
+
+                                // Check if no child windows loaded (due to file errors or loading problems)
+                                if (panel.TabsCount == 0 && panel.ChildPanelsCount == 0)
+                                {
+                                    // Close empty window
+                                    Editor.LogWarning("Empty floating window inside layout.");
+                                    window.Close();
+                                }
+                                else
+                                {
+                                    // Perform layout
+                                    var windowGUI = window.GUI;
+                                    windowGUI.UnlockChildrenRecursive();
+                                    windowGUI.PerformLayout();
+
+                                    // Show
+                                    window.Show();
+                                    window.Focus();
+
+                                    // Perform layout again
+                                    windowGUI.PerformLayout();
+                                }
+                            }
+                        }
+
                         break;
                     }
 
@@ -343,15 +386,12 @@ namespace FlaxEditor.Modules
             {
                 foreach (XmlElement child in windows)
                 {
-                    if (child != null)
-                    {
-                        var typename = child.GetAttribute("Typename");
-                        var window = GetWindow(typename);
-                        if (window != null)
-                        {
-                            window.Show(DockState.DockFill, panel);
-                        }
-                    }
+                    if (child == null)
+                        continue;
+
+                    var typename = child.GetAttribute("Typename");
+                    var window = GetWindow(typename);
+                    window?.Show(DockState.DockFill, panel);
                 }
             }
 
@@ -361,21 +401,22 @@ namespace FlaxEditor.Modules
             {
                 foreach (XmlElement child in panels)
                 {
-                    if (child != null)
+                    if (child == null)
+                        continue;
+
+                    // Create child panel
+                    DockState state = (DockState)int.Parse(child.GetAttribute("DockState"), CultureInfo.InvariantCulture);
+                    float splitterValue = float.Parse(child.GetAttribute("SplitterValue"), CultureInfo.InvariantCulture);
+                    var p = panel.CreateChildPanel(state, splitterValue);
+
+                    LoadPanel(child, p);
+
+                    // Check if panel has no docked window (due to loading problems or sth)
+                    if (p.TabsCount == 0 && p.ChildPanelsCount == 0)
                     {
-                        // Create child panel
-                        DockState state = (DockState)int.Parse(child.GetAttribute("DockState"), CultureInfo.InvariantCulture);
-                        float splitterValue = float.Parse(child.GetAttribute("SplitterValue"), CultureInfo.InvariantCulture);
-                        var p = panel.CreateChildPanel(state, splitterValue);
-
-                        LoadPanel(child, p);
-
-                        // Check if panel has no docked window (due to loading problems or sth)
-                        if (p.TabsCount == 0 && p.ChildPanelsCount == 0)
-                        {
-                            // Remove empty panel
-                            p.RemoveIt();
-                        }
+                        // Remove empty panel
+                        Editor.LogWarning("Empty panel inside layout.");
+                        p.RemoveIt();
                     }
                 }
             }
@@ -461,11 +502,11 @@ namespace FlaxEditor.Modules
 
                     writer.WriteStartElement("Float");
 
+                    SavePanel(writer, panel);
+
                     writer.WriteStartElement("Bounds");
                     SaveBounds(writer, window.NativeWindow);
                     writer.WriteEndElement();
-
-                    SavePanel(writer, panel);
 
                     writer.WriteEndElement();
                 }
@@ -491,12 +532,16 @@ namespace FlaxEditor.Modules
                 }
             }
 
-            // Try to find asset with that name
-            var el = Editor.ContentDatabase.Find(typename);
-            if (el != null)
+            // Check if it's an asset ID
+            Guid id;
+            if (Guid.TryParse(typename, out id))
             {
-                // Open asset
-                return Editor.ContentEditing.Open(el, true);
+                var el = Editor.ContentDatabase.Find(id);
+                if (el != null)
+                {
+                    // Open asset
+                    return Editor.ContentEditing.Open(el, true);
+                }
             }
 
             return null;
