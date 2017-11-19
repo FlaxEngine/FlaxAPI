@@ -117,16 +117,12 @@ namespace FlaxEngine.GUI
         protected override void TryGetValue()
         {
             var text = Text.Replace(',', '.');
-
-            // Try to parse float
-            float value;
-            if (float.TryParse(text, out value))
+            if (double.TryParse(text, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var value))
             {
-                // Set value
                 Value = (float)Math.Round(value, 5);
             }
         }
-
+        
         /// <inheritdoc />
         protected override void ApplySliding(float delta)
         {
