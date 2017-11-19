@@ -256,6 +256,16 @@ namespace FlaxEngine.GUI
         public Font Font { get; set; }
 
         /// <summary>
+        /// Gets or sets the color of the border (null if not used).
+        /// </summary>
+        public Color? BorderColor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color of the border when control is focused (null if not used).
+        /// </summary>
+        public Color? BorderSelectedColor { get; set; }
+
+        /// <summary>
         /// Gets rectangle with area for text
         /// </summary>
         protected virtual Rectangle TextRectangle
@@ -294,7 +304,9 @@ namespace FlaxEngine.GUI
             _layout.VerticalAlignment = IsMultiline ? TextAlignment.Near : TextAlignment.Center;
             _layout.TextWrapping = TextWrapping.NoWrap;
 
-            Font = Style.Current.FontMedium;
+            var style = Style.Current;
+            Font = style.FontMedium;
+            BorderSelectedColor = style.BackgroundSelected;
 
             UpdateTextRect();
 
@@ -746,8 +758,10 @@ namespace FlaxEngine.GUI
             if (BackgroundColor.A > 0)
                 backColor = BackgroundColor;
             Render2D.FillRectangle(rect, backColor);
-            if (IsFocused)
-                Render2D.DrawRectangle(rect, style.BackgroundSelected);
+            if(IsFocused && BorderSelectedColor.HasValue)
+                Render2D.DrawRectangle(rect, BorderSelectedColor.Value);
+            else if(BorderColor.HasValue)
+                Render2D.DrawRectangle(rect, BorderColor.Value);
 
             // Apply view offset and clip mask
             Render2D.PushClip(TextClipRectangle);
