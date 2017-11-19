@@ -35,7 +35,6 @@ namespace FlaxEditor.Windows
             CanFocus = true;
 
             var task = MainRenderTask.Instance;
-            task.Begin += OnBegin;
 
             // Setup viewport
             _viewport = new RenderOutputControl(task)
@@ -43,16 +42,6 @@ namespace FlaxEditor.Windows
                 DockStyle = DockStyle.Fill,
                 Parent = this
             };
-        }
-
-        private void OnBegin(SceneRenderTask sceneRenderTask)
-        {
-            var camera = sceneRenderTask.Camera;
-            if (camera)
-            {
-                // Fix aspect ratio to fit the current output dimensions
-                //camera.CustomAspectRatio = Width / Height;
-            }
         }
 
         /// <inheritdoc />
