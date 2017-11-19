@@ -78,13 +78,15 @@ namespace FlaxEngine.GUI.Docking
         public void ResetLayout()
         {
             // Close all windows
-            for (int i = Windows.Count - 1; i >= 0 && Windows.Count > 0; i--)
-                Windows[i].Close();
+            var windows = Windows.ToArray();
+            for (int i = 0; i < windows.Length; i++)
+                windows[i].Close();
 
             // Ensure that has no docked windows
-            while (ChildPanels.Count > 0)
-                ChildPanels[0].Dispose();
-            
+            var childPanels = ChildPanels.ToArray();
+            for (int i = 0; i < childPanels.Length; i++)
+                childPanels[i].Dispose();
+
             // Delete reaming controls (except tabs proxy)
             if (TabsProxy != null)
                 TabsProxy.Parent = null;

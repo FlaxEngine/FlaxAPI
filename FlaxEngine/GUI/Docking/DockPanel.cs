@@ -428,6 +428,11 @@ namespace FlaxEngine.GUI.Docking
             return dockPanel;
         }
 
+        internal void RemoveIt()
+        {
+            OnLastTabRemoved();
+        }
+
         /// <summary>
         /// Called when last tab gets removed.
         /// </summary>

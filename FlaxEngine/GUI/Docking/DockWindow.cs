@@ -96,6 +96,9 @@ namespace FlaxEngine.GUI.Docking
             _masterPanel = masterPanel;
             HideOnClose = hideOnClose;
             DockStyle = DockStyle.Fill;
+
+            // Link to the master panel
+            _masterPanel?.linkWindow(this);
         }
 
         /// <summary>

@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using System.Xml;
 using FlaxEditor.Content;
@@ -197,7 +198,7 @@ namespace FlaxEditor.Modules
                 return;
 
             // TODO: finish this
-
+            
             // for now just show default windows
             ContentWin.Show(FlaxEngine.GUI.Docking.DockState.DockBottom);
             DebugWin.Show(FlaxEngine.GUI.Docking.DockState.DockFill, ContentWin);
@@ -212,13 +213,93 @@ namespace FlaxEditor.Modules
 
             GameCookerWin.Show(FlaxEngine.GUI.Docking.DockState.DockRight, ContentWin);
             GameCookerWin.SelectTab();
+            
+
+
+            if (!File.Exists(path))
+            {
+                Editor.LogWarning("Cannot load windows layout. File is missing.");
+                return;
+            }
+
+            XmlDocument doc = new XmlDocument();
+            var masterPanel = Editor.UI.MasterPanel;
+
+            try
+            {
+                doc.Load(path);
+                var root = doc["DockPanelLayout"];
+                if (root == null)
+                {
+                    Editor.LogWarning("Invalid windows layout file.");
+                    return;
+                }
+
+                // Reset existing layout
+                masterPanel.ResetLayout();
+
+                // Get metadata
+                int version = int.Parse(root.Attributes["Version"].Value, CultureInfo.InvariantCulture);
+                var virtualDesktopSize = Application.VirtualDesktopSize;
+                var virtualDesktopSafeLefttCorner = new Vector2(0, 23); // 23 is a window strip size
+                var virtualDesktopSafeRightCorner = virtualDesktopSize - new Vector2(50, 50); // apply some safe area
+
+                switch (version)
+                {
+                    case 4:
+                    {
+                        // Main window info
+                        if (MainWindow)
+                        {
+                            var mainWindowNode = root["MainWindow"];
+                            Rectangle bounds = LoadBounds(mainWindowNode["Bounds"]);
+                            bool isMaximized = bool.Parse(mainWindowNode.GetAttribute("IsMaximized"));
+
+                            // Clamp position to match current destop dimensions (if window was on desktop that is now inactive)
+                            if (bounds.X < 0 || bounds.Y < 0 || bounds.X > virtualDesktopSafeRightCorner.X || bounds.Y > virtualDesktopSafeRightCorner.Y)
+                                bounds.Location = virtualDesktopSafeLefttCorner;
+
+                            if (isMaximized)
+                            {
+                                MainWindow.Maximize();
+                            }
+                            else if (Mathf.Min(bounds.Size.X, bounds.Size.Y) >= 1)
+                            {
+                                MainWindow.ClientBounds = bounds;
+                            }
+                            else
+                            {
+                                MainWindow.ClientPosition = bounds.Location;
+                            }
+                        }
+
+                        // Load master panel structure
+                        var masterPanelNode = root["MasterPanel"];
+                        if (masterPanelNode != null)
+                        {
+                            LoadPanel(masterPanelNode, masterPanel);
+                        }
+
+                        break;
+                    }
+
+                    default:
+                    {
+                        Editor.LogWarning("Unsupported windows layout version");
+                        return;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Editor.LogWarning("Failed to load windows layout.");
+                Editor.LogWarning(ex);
+            }
         }
 
         private void SavePanel(XmlWriter writer, DockPanel panel)
         {
             writer.WriteAttributeString("SelectedTab", panel.SelectedTabIndex.ToString());
-            writer.WriteAttributeString("Tabs", panel.TabsCount.ToString());
-            writer.WriteAttributeString("ChildPanels", panel.ChildPanelsCount.ToString());
 
             for (int i = 0; i < panel.TabsCount; i++)
             {
@@ -252,14 +333,73 @@ namespace FlaxEditor.Modules
             }
         }
 
+        private void LoadPanel(XmlElement node, DockPanel panel)
+        {
+            int selectedTab = int.Parse(node.GetAttribute("SelectedTab"), CultureInfo.InvariantCulture);
+
+            // Load docked windows
+            var windows = node.SelectNodes("Window");
+            if (windows != null)
+            {
+                foreach (XmlElement child in windows)
+                {
+                    if (child != null)
+                    {
+                        var typename = child.GetAttribute("Typename");
+                        var window = GetWindow(typename);
+                        if (window != null)
+                        {
+                            window.Show(DockState.DockFill, panel);
+                        }
+                    }
+                }
+            }
+
+            // Load child panels
+            var panels = node.SelectNodes("Panel");
+            if (panels != null)
+            {
+                foreach (XmlElement child in panels)
+                {
+                    if (child != null)
+                    {
+                        // Create child panel
+                        DockState state = (DockState)int.Parse(child.GetAttribute("DockState"), CultureInfo.InvariantCulture);
+                        float splitterValue = float.Parse(child.GetAttribute("SplitterValue"), CultureInfo.InvariantCulture);
+                        var p = panel.CreateChildPanel(state, splitterValue);
+
+                        LoadPanel(child, p);
+
+                        // Check if panel has no docked window (due to loading problems or sth)
+                        if (p.TabsCount == 0 && p.ChildPanelsCount == 0)
+                        {
+                            // Remove empty panel
+                            p.RemoveIt();
+                        }
+                    }
+                }
+            }
+
+            panel.SelectTab(selectedTab);
+        }
+
         private static void SaveBounds(XmlWriter writer, Window win)
         {
             var bounds = win.ClientBounds;
 
-            writer.WriteElementString("X", bounds.X.ToString(CultureInfo.InvariantCulture));
-            writer.WriteElementString("Y", bounds.Y.ToString(CultureInfo.InvariantCulture));
-            writer.WriteElementString("Width", bounds.Width.ToString(CultureInfo.InvariantCulture));
-            writer.WriteElementString("Height", bounds.Height.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("X", bounds.X.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("Y", bounds.Y.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("Width", bounds.Width.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("Height", bounds.Height.ToString(CultureInfo.InvariantCulture));
+        }
+
+        private static Rectangle LoadBounds(XmlElement node)
+        {
+            float x = float.Parse(node.GetAttribute("X"), CultureInfo.InvariantCulture);
+            float y = float.Parse(node.GetAttribute("Y"), CultureInfo.InvariantCulture);
+            float width = float.Parse(node.GetAttribute("Width"), CultureInfo.InvariantCulture);
+            float height = float.Parse(node.GetAttribute("Height"), CultureInfo.InvariantCulture);
+            return new Rectangle(x, y, width, height);
         }
 
         /// <summary>
@@ -288,15 +428,16 @@ namespace FlaxEditor.Modules
 
                 // Metadata
                 writer.WriteAttributeString("Version", "4");
-                writer.WriteAttributeString("WindowsCount", masterPanel.Windows.Count.ToString());
-                writer.WriteAttributeString("FloatingPanelsCount", masterPanel.FloatingPanels.Count.ToString());
-
+                
                 // Main window info
                 if (MainWindow)
                 {
                     writer.WriteStartElement("MainWindow");
+                    writer.WriteAttributeString("IsMaximized", MainWindow.IsMaximized.ToString());
 
+                    writer.WriteStartElement("Bounds");
                     SaveBounds(writer, MainWindow);
+                    writer.WriteEndElement();
 
                     writer.WriteEndElement();
                 }
@@ -320,7 +461,10 @@ namespace FlaxEditor.Modules
 
                     writer.WriteStartElement("Float");
 
+                    writer.WriteStartElement("Bounds");
                     SaveBounds(writer, window.NativeWindow);
+                    writer.WriteEndElement();
+
                     SavePanel(writer, panel);
 
                     writer.WriteEndElement();
@@ -329,6 +473,33 @@ namespace FlaxEditor.Modules
                 writer.WriteEndElement();
                 writer.WriteEndDocument();
             }
+        }
+
+        /// <summary>
+        /// Gets <see cref="EditorWindow"/> that is represented by the given serialized typename. Used to restore workspace layout.
+        /// </summary>
+        /// <param name="typename">The typename.</param>
+        /// <returns>The window or null if failed.</returns>
+        private EditorWindow GetWindow(string typename)
+        {
+            // Try use already opened window
+            for (int i = 0; i < Windows.Count; i++)
+            {
+                if (string.Equals(Windows[i].SerializationTypename, typename, StringComparison.OrdinalIgnoreCase))
+                {
+                    return Windows[i];
+                }
+            }
+
+            // Try to find asset with that name
+            var el = Editor.ContentDatabase.Find(typename);
+            if (el != null)
+            {
+                // Open asset
+                return Editor.ContentEditing.Open(el, true);
+            }
+
+            return null;
         }
 
         /// <inheritdoc />
