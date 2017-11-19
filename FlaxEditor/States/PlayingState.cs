@@ -15,6 +15,11 @@ namespace FlaxEditor.States
     {
         private readonly DuplicateScenes _duplicateScenes = new DuplicateScenes();
 
+        /// <summary>
+        /// Gets a value indicating whether any scene was dirty before entering the play mode.
+        /// </summary>
+        public bool WasDirty => _duplicateScenes.WasDirty;
+
         /// <inheritdoc />
         public override bool CanEditScene => true;
 

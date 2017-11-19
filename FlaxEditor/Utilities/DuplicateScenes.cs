@@ -26,6 +26,11 @@ namespace FlaxEditor.Utilities
         public bool HasData => _scenesData.Count > 0;
 
         /// <summary>
+        /// Gets a value indicating whether any scene was dirty before gathering.
+        /// </summary>
+        public bool WasDirty => _scenesData.Any(x => x.IsDirty);
+
+        /// <summary>
         /// Collect loaded scenes data.
         /// </summary>
         public void GatherSceneData()

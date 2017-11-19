@@ -281,7 +281,11 @@ namespace FlaxEditor.Modules
 
             if (Editor.StateMachine.IsPlayMode)
             {
+                // Cancel closing buut leave the play mode
+                cancel = true;
+                Editor.Log("Skip closing ediotr and leave the play mode");
                 Editor.Simulation.RequestStopPlay();
+                return;
             }
 
             SaveCurrentLayout();
