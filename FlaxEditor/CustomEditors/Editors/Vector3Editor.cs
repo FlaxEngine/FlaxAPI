@@ -13,11 +13,22 @@ namespace FlaxEditor.CustomEditors.Editors
     /// Default implementation of the inspector used to edit Vector3 value type properties.
     /// </summary>
     [CustomEditor(typeof(Vector3)), DefaultEditor]
-    public sealed class Vector3Editor : CustomEditor
+    public class Vector3Editor : CustomEditor
     {
-        private FloatValueElement xElement;
-        private FloatValueElement yElement;
-        private FloatValueElement zElement;
+        /// <summary>
+        /// The X component element.
+        /// </summary>
+        protected FloatValueElement XElement;
+
+        /// <summary>
+        /// The Y component element.
+        /// </summary>
+        protected FloatValueElement YElement;
+
+        /// <summary>
+        /// The Z component element.
+        /// </summary>
+        protected FloatValueElement ZElement;
 
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.Inline;
@@ -38,17 +49,17 @@ namespace FlaxEditor.CustomEditors.Editors
                 limit = (LimitAttribute)attributes.FirstOrDefault(x => x is LimitAttribute);
             }
 
-            xElement = grid.FloatValue();
-            xElement.SetLimits(limit);
-            xElement.FloatValue.ValueChanged += OnValueChanged;
+            XElement = grid.FloatValue();
+            XElement.SetLimits(limit);
+            XElement.FloatValue.ValueChanged += OnValueChanged;
 
-            yElement = grid.FloatValue();
-            yElement.SetLimits(limit);
-            yElement.FloatValue.ValueChanged += OnValueChanged;
+            YElement = grid.FloatValue();
+            YElement.SetLimits(limit);
+            YElement.FloatValue.ValueChanged += OnValueChanged;
 
-            zElement = grid.FloatValue();
-            zElement.SetLimits(limit);
-            zElement.FloatValue.ValueChanged += OnValueChanged;
+            ZElement = grid.FloatValue();
+            ZElement.SetLimits(limit);
+            ZElement.FloatValue.ValueChanged += OnValueChanged;
         }
 
         private void OnValueChanged()
@@ -57,9 +68,9 @@ namespace FlaxEditor.CustomEditors.Editors
                 return;
 
             SetValue(new Vector3(
-                xElement.FloatValue.Value,
-                yElement.FloatValue.Value,
-                zElement.FloatValue.Value));
+                XElement.FloatValue.Value,
+                YElement.FloatValue.Value,
+                ZElement.FloatValue.Value));
         }
 
         /// <inheritdoc />
@@ -72,9 +83,9 @@ namespace FlaxEditor.CustomEditors.Editors
             else
             {
                 var value = (Vector3)Values[0];
-                xElement.FloatValue.Value = value.X;
-                yElement.FloatValue.Value = value.Y;
-                zElement.FloatValue.Value = value.Z;
+                XElement.FloatValue.Value = value.X;
+                YElement.FloatValue.Value = value.Y;
+                ZElement.FloatValue.Value = value.Z;
             }
         }
     }

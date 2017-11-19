@@ -12,11 +12,22 @@ namespace FlaxEditor.CustomEditors.Editors
     /// Default implementation of the inspector used to edit Quaternion value type properties.
     /// </summary>
     [CustomEditor(typeof(Quaternion)), DefaultEditor]
-    public sealed class QuaternionEditor : CustomEditor
+    public class QuaternionEditor : CustomEditor
     {
-        private FloatValueElement xElement;
-        private FloatValueElement yElement;
-        private FloatValueElement zElement;
+        /// <summary>
+        /// The X component element
+        /// </summary>
+        protected FloatValueElement XElement;
+
+        /// <summary>
+        /// The Y component element
+        /// </summary>
+        protected FloatValueElement YElement;
+
+        /// <summary>
+        /// The Z component element
+        /// </summary>
+        protected FloatValueElement ZElement;
 
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.Inline;
@@ -30,14 +41,14 @@ namespace FlaxEditor.CustomEditors.Editors
             gridControl.SlotsHorizontally = 3;
             gridControl.SlotsVertically = 1;
 
-            xElement = grid.FloatValue();
-            xElement.FloatValue.ValueChanged += OnValueChanged;
+            XElement = grid.FloatValue();
+            XElement.FloatValue.ValueChanged += OnValueChanged;
 
-            yElement = grid.FloatValue();
-            yElement.FloatValue.ValueChanged += OnValueChanged;
+            YElement = grid.FloatValue();
+            YElement.FloatValue.ValueChanged += OnValueChanged;
 
-            zElement = grid.FloatValue();
-            zElement.FloatValue.ValueChanged += OnValueChanged;
+            ZElement = grid.FloatValue();
+            ZElement.FloatValue.ValueChanged += OnValueChanged;
         }
 
         private void OnValueChanged()
@@ -45,9 +56,9 @@ namespace FlaxEditor.CustomEditors.Editors
             if (IsSetBlocked)
                 return;
 
-            float x = xElement.FloatValue.Value;
-            float y = yElement.FloatValue.Value;
-            float z = zElement.FloatValue.Value;
+            float x = XElement.FloatValue.Value;
+            float y = YElement.FloatValue.Value;
+            float z = ZElement.FloatValue.Value;
             Quaternion quat;
             Quaternion.Euler(x, y, z, out quat);
             SetValue(quat);
@@ -64,9 +75,9 @@ namespace FlaxEditor.CustomEditors.Editors
             {
                 var value = (Quaternion)Values[0];
                 var euler = value.EulerAngles;
-                xElement.FloatValue.Value = euler.X;
-                yElement.FloatValue.Value = euler.Y;
-                zElement.FloatValue.Value = euler.Z;
+                XElement.FloatValue.Value = euler.X;
+                YElement.FloatValue.Value = euler.Y;
+                ZElement.FloatValue.Value = euler.Z;
             }
         }
     }
