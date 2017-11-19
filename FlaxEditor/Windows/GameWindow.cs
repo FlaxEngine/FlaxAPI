@@ -37,9 +37,11 @@ namespace FlaxEditor.Windows
             task.Begin += OnBegin;
 
             // Setup viewport
-            _viewport = new RenderOutputControl(task);
-            _viewport.DockStyle = DockStyle.Fill;
-            _viewport.Parent = this;
+            _viewport = new RenderOutputControl(task)
+            {
+                DockStyle = DockStyle.Fill,
+                Parent = this
+            };
         }
 
         private void OnBegin(SceneRenderTask sceneRenderTask)
@@ -65,15 +67,27 @@ namespace FlaxEditor.Windows
 
             if (Editor.StateMachine.IsPlayMode)
             {
+                var style = Style.Current;
+
                 float time = Time.UnscaledTime - _gameStartTime;
                 float timeout = 3.0f;
                 float fadeOutTime = 1.0f;
-                time -= timeout;
-                if (time < 0)
+                float animTime = time - timeout;
+                if (animTime < 0)
                 {
-                    float alpha = Mathf.Clamp01(-time / fadeOutTime);
-                    Render2D.DrawText(Style.Current.FontSmall, "Press Shift+F11 to unlock the mouse", new Rectangle(new Vector2(1.0f, 1.0f), Size), Color.Black * alpha, TextAlignment.Near, TextAlignment.Far);
-                    Render2D.DrawText(Style.Current.FontSmall, "Press Shift+F11 to unlock the mouse", new Rectangle(Vector2.Zero, Size), Color.White * alpha, TextAlignment.Near, TextAlignment.Far);
+                    float alpha = Mathf.Clamp01(-animTime / fadeOutTime);
+                    Rectangle rect = new Rectangle(new Vector2(6), Size - 12);
+                    Render2D.DrawText(style.FontSmall, "Press Shift+F11 to unlock the mouse", rect + new Vector2(1.0f), Color.Black * alpha, TextAlignment.Near, TextAlignment.Far);
+                    Render2D.DrawText(style.FontSmall, "Press Shift+F11 to unlock the mouse", rect, Color.White * alpha, TextAlignment.Near, TextAlignment.Far);
+                }
+
+                timeout = 1.0f;
+                fadeOutTime = 0.6f;
+                animTime = time - timeout;
+                if (animTime < 0)
+                {
+                    float alpha = Mathf.Clamp01(-animTime / fadeOutTime);
+                    Render2D.DrawRectangle(new Rectangle(new Vector2(4), Size - 8), Color.Orange * alpha, true);
                 }
             }
         }
