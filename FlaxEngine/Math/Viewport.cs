@@ -116,6 +116,21 @@ namespace FlaxEngine
             MinDepth = 0f;
             MaxDepth = 1f;
         }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Viewport"/> struct.
+        /// </summary>
+        /// <param name="location">The loation of the upper-left corner of the viewport in pixels.</param>
+        /// <param name="size">The size of the viewport in pixels.</param>
+        public Viewport(Vector2 location, Vector2 size)
+        {
+            X = location.X;
+            Y = location.Y;
+            Width = size.X;
+            Height = size.Y;
+            MinDepth = 0f;
+            MaxDepth = 1f;
+        }
 
         /// <summary>
         /// Gets the size of this resource.

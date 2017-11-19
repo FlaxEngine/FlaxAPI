@@ -114,5 +114,20 @@ namespace FlaxEngine.Rendering
             View = camera.View;
             Projection = camera.Projection;
         }
+
+        /// <summary>
+        /// Copies render view data from the camera.
+        /// </summary>
+        /// <param name="camera">The camera.</param>
+        /// <param name="customViewport">The custom viewport to use for view/projeection matrices override.</param>
+        public void CopyFrom(Camera camera, ref Viewport customViewport)
+        {
+            // Get data
+            Position = camera.Position;
+            Direction = camera.Direction;
+            Near = camera.NearPlane;
+            Far = camera.FarPlane;
+            camera.GetMatrices(out View, out Projection, ref customViewport);
+        }
     }
 }
