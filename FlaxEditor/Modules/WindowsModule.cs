@@ -2,11 +2,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
+using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.Assertions;
+using FlaxEngine.GUI.Docking;
 using FlaxEngine.Rendering;
 using FlaxEngine.Utilities;
 using Window = FlaxEngine.Window;
@@ -19,18 +23,9 @@ namespace FlaxEditor.Modules
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class WindowsModule : EditorModule
     {
-        /// <summary>
-        /// The default workspace layout name.
-        /// </summary>
-        public static string DefaultLayoutName = "Default";
-
-        /// <summary>
-        /// The working workspace layout name.
-        /// </summary>
-        public static string WorkingLayoutName = "Current";
-
         private DateTime _lastLayoutSaveTime;
         private float _projectIconScreenshotTimeout = -1;
+        private string _windowsLayoutPath;
 
         /// <summary>
         /// The main editor window.
@@ -181,22 +176,22 @@ namespace FlaxEditor.Modules
         public void SaveCurrentLayout()
         {
             _lastLayoutSaveTime = DateTime.UtcNow;
-            SaveLayout(WorkingLayoutName);
+            SaveLayout(_windowsLayoutPath);
         }
 
         /// <summary>
-        /// Loads the default workspace layout.
+        /// Loads the default workspace layout for the current editor version.
         /// </summary>
         public void LoadDefaultLayout()
         {
-            LoadLayout(DefaultLayoutName);
+            LoadLayout(StringUtils.CombinePaths(Globals.EditorFolder, "DefaultLayout.xml"));
         }
 
         /// <summary>
-        /// Loads the layout.
+        /// Loads the layout from the file.
         /// </summary>
-        /// <param name="name">The layout name.</param>
-        public void LoadLayout(string name)
+        /// <param name="path">The layout file path.</param>
+        public void LoadLayout(string path)
         {
             if (Editor.IsHeadlessMode)
                 return;
@@ -219,23 +214,130 @@ namespace FlaxEditor.Modules
             GameCookerWin.SelectTab();
         }
 
+        private void SavePanel(XmlWriter writer, DockPanel panel)
+        {
+            writer.WriteAttributeString("SelectedTab", panel.SelectedTabIndex.ToString());
+            writer.WriteAttributeString("Tabs", panel.TabsCount.ToString());
+            writer.WriteAttributeString("ChildPanels", panel.ChildPanelsCount.ToString());
+
+            for (int i = 0; i < panel.TabsCount; i++)
+            {
+                var win = panel.Tabs[i];
+                writer.WriteStartElement("Window");
+
+                writer.WriteAttributeString("Typename", win.SerializationTypename);
+
+                writer.WriteEndElement();
+            }
+
+            for (int i = 0; i < panel.ChildPanelsCount; i++)
+            {
+                var p = panel.ChildPanels[i];
+
+                // Skip empty panels
+                if (p.TabsCount == 0)
+                    continue;
+
+                writer.WriteStartElement("Panel");
+
+                float splitterValue;
+                DockState state = p.TryGetDockState(out splitterValue);
+
+                writer.WriteAttributeString("DockState", ((int)state).ToString());
+                writer.WriteAttributeString("SplitterValue", splitterValue.ToString(CultureInfo.InvariantCulture));
+
+                SavePanel(writer, p);
+
+                writer.WriteEndElement();
+            }
+        }
+
+        private static void SaveBounds(XmlWriter writer, Window win)
+        {
+            var bounds = win.ClientBounds;
+
+            writer.WriteElementString("X", bounds.X.ToString(CultureInfo.InvariantCulture));
+            writer.WriteElementString("Y", bounds.Y.ToString(CultureInfo.InvariantCulture));
+            writer.WriteElementString("Width", bounds.Width.ToString(CultureInfo.InvariantCulture));
+            writer.WriteElementString("Height", bounds.Height.ToString(CultureInfo.InvariantCulture));
+        }
+
         /// <summary>
-        /// Saves the layout.
+        /// Saves the layout to the file.
         /// </summary>
-        /// <param name="name">The layout name.</param>
-        public void SaveLayout(string name)
+        /// <param name="path">The layout file path.</param>
+        public void SaveLayout(string path)
         {
             if (Editor.IsHeadlessMode)
                 return;
 
-            // TODO: finish this
+            var settings = new XmlWriterSettings
+            {
+                Indent = true,
+                IndentChars = "\t",
+                Encoding = Encoding.UTF8,
+                OmitXmlDeclaration = true,
+            };
+
+            var masterPanel = Editor.UI.MasterPanel;
+
+            using (XmlWriter writer = XmlWriter.Create(path, settings))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("DockPanelLayout");
+
+                // Metadata
+                writer.WriteAttributeString("Version", "4");
+                writer.WriteAttributeString("WindowsCount", masterPanel.Windows.Count.ToString());
+                writer.WriteAttributeString("FloatingPanelsCount", masterPanel.FloatingPanels.Count.ToString());
+
+                // Main window info
+                if (MainWindow)
+                {
+                    writer.WriteStartElement("MainWindow");
+
+                    SaveBounds(writer, MainWindow);
+
+                    writer.WriteEndElement();
+                }
+
+                // Master panel structure
+                writer.WriteStartElement("MasterPanel");
+                SavePanel(writer, masterPanel);
+                writer.WriteEndElement();
+
+                // Save all floating windows structure
+                for (int i = 0; i < masterPanel.FloatingPanels.Count; i++)
+                {
+                    var panel = masterPanel.FloatingPanels[i];
+                    var window = panel.Window;
+
+                    if (window == null)
+                    {
+                        Editor.LogWarning("Floating panel has missing window");
+                        continue;
+                    }
+
+                    writer.WriteStartElement("Float");
+
+                    SaveBounds(writer, window.NativeWindow);
+                    SavePanel(writer, panel);
+
+                    writer.WriteEndElement();
+                }
+
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
         }
 
         /// <inheritdoc />
         public override void OnInit()
         {
             Assert.IsNull(MainWindow);
-            
+
+            _windowsLayoutPath = StringUtils.CombinePaths(Globals.ProjectCacheFolder, "WindowsLayout.xml");
+
             // Create main window
             var settings = CreateWindowSettings.Default;
             settings.Title = "Flax Editor";
@@ -352,7 +454,7 @@ namespace FlaxEditor.Modules
                 Windows[i].OnInit();
 
             // Load current workspace layout
-            LoadLayout(WorkingLayoutName);
+            LoadLayout(_windowsLayoutPath);
 
             // Clear timer flag
             _lastLayoutSaveTime = DateTime.UtcNow;
