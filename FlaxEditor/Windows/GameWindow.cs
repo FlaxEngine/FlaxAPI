@@ -17,6 +17,7 @@ namespace FlaxEditor.Windows
     {
         private readonly RenderOutputControl _viewport;
         private float _gameStartTime;
+        private bool _centerMouse;
 
         /// <summary>
         /// Gets the viewport.
@@ -58,6 +59,23 @@ namespace FlaxEditor.Windows
         public override void OnPlayBegin()
         {
             _gameStartTime = Time.UnscaledTime;
+            _centerMouse = true;
+        }
+
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            base.Update(deltaTime);
+            
+            if (_centerMouse)
+            {
+                _centerMouse = false;
+
+                // Move mouse to the game window center (provides better usage when game is locking a cursor)
+                Vector2 center = PointToWindow(Size * 0.5f);
+                ParentWindow.MousePosition = center;
+            }
+
         }
 
         /// <inheritdoc />
