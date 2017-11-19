@@ -86,7 +86,7 @@ namespace FlaxEngine.GUI
                 if (_parent == value)
                     return;
 
-                Focus(null);
+                Defocus();
 
                 Vector2 oldParentSize;
                 if (_parent != null)
