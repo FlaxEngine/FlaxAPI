@@ -247,7 +247,9 @@ namespace FlaxEngine.GUI.Tabs
             {
                 if (location.Y <= _tabsSize.Y)
                 {
-                    SelectedTabIndex = Mathf.FloorToInt(location.X / _tabsSize.X);
+                    int index = Mathf.FloorToInt(location.X / _tabsSize.X);
+                    if (index < Children.Count)
+                        SelectedTabIndex = index;
                     Focus();
                     return true;
                 }
@@ -256,7 +258,9 @@ namespace FlaxEngine.GUI.Tabs
             {
                 if (location.X <= _tabsSize.X)
                 {
-                    SelectedTabIndex = Mathf.FloorToInt(location.Y / _tabsSize.Y);
+                    int index = Mathf.FloorToInt(location.Y / _tabsSize.Y);
+                    if (index < Children.Count)
+                        SelectedTabIndex = index;
                     Focus();
                     return true;
                 }

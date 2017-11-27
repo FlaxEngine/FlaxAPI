@@ -86,7 +86,7 @@ namespace FlaxEngine.GUI
                 if (_parent == value)
                     return;
 
-                Focus(null);
+                Defocus();
 
                 Vector2 oldParentSize;
                 if (_parent != null)
@@ -331,13 +331,8 @@ namespace FlaxEngine.GUI
         public virtual void Dispose()
         {
             if (_isDisposing)
-            {
                 return;
-            }
-
-            // Set disposing flag
-            _isDisposing = true;
-
+            
             // Call event
             OnDestroy();
 
@@ -997,7 +992,12 @@ namespace FlaxEngine.GUI
                     break;
                 }
 
-                //case AnchorStyle.BottomLeft: break;
+                case AnchorStyle.BottomLeft:
+                {
+                    float distance = oldSize.Y - bounds.Y;
+                    bounds.Y = _parent.Height - distance;
+                    break;
+                }
                 //case AnchorStyle.BottomCenter: break;
                 //case AnchorStyle.BottomRight: break;
                 //case AnchorStyle.Bottom: break;
@@ -1018,6 +1018,9 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void OnDestroy()
         {
+            // Set disposing flag
+            _isDisposing = true;
+
             Defocus();
 
             UnlinkTooltip();

@@ -65,11 +65,17 @@
     <Compile Include="Content\Import\ModelImportEntry.cs" />
     <Compile Include="Content\Import\TextureImportEntry.cs" />
     <Compile Include="Content\Proxy\SettingsProxy.cs" />
+    <Compile Include="Content\Settings\BuildPreset.cs" />
+    <Compile Include="Content\Settings\BuildSettings.cs" />
+    <Compile Include="Content\Settings\BuildTarget.cs" />
     <Compile Include="Content\Settings\GameSettings.cs" />
+    <Compile Include="Content\Settings\GraphicsSettings.cs" />
     <Compile Include="Content\Settings\LayersAndTagsSettings.cs" />
     <Compile Include="Content\Settings\PhysicsSettings.cs" />
     <Compile Include="Content\Settings\SettingsBase.cs" />
     <Compile Include="Content\Settings\TimeSettings.cs" />
+    <Compile Include="Content\Settings\UWPPlatformSettings.cs" />
+    <Compile Include="Content\Settings\WindowsPlatformSettings.cs" />
     <Compile Include="Content\Tree\RootContentTreeNode.cs" />
     <Compile Include="CustomEditors\CustomEditor.cs" />
     <Compile Include="CustomEditors\CustomEditorsUtil.cs" />
@@ -81,6 +87,7 @@
     <Compile Include="CustomEditors\Dedicated\RigidBodyEditor.cs" />
     <Compile Include="CustomEditors\Editors\ActorLayerEditor.cs" />
     <Compile Include="CustomEditors\Editors\ActorTagEditor.cs" />
+    <Compile Include="CustomEditors\Editors\ActorTransformEditor.cs" />
     <Compile Include="CustomEditors\Editors\ArrayEditor.cs" />
     <Compile Include="CustomEditors\Editors\AssetRefEditor.cs" />
     <Compile Include="CustomEditors\Editors\BooleanEditor.cs" />

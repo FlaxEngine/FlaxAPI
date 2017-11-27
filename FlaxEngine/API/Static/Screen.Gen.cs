@@ -53,6 +53,20 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets or sets the cursor visible flag. Allows to hide the cursor or show it.
+		/// </summary>
+		[UnmanagedCall]
+		public static bool CursorVisible
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetCursorVisible(); }
+			set { Internal_SetCursorVisible(value); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -63,6 +77,10 @@ namespace FlaxEngine
 		internal static extern void Internal_GetSize(out Vector2 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetSize(ref Vector2 val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_GetCursorVisible();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetCursorVisible(bool val);
 #endif
 #endregion
 	}

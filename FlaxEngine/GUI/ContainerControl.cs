@@ -638,6 +638,8 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void OnDestroy()
         {
+            base.OnDestroy();
+
             // Pass event futher
             // ReSharper disable once ForCanBeConvertedToForeach
             for (int i = 0; i < _children.Count; i++)
@@ -645,8 +647,6 @@ namespace FlaxEngine.GUI
                 _children[i].OnDestroy();
             }
             _children.Clear();
-
-            base.OnDestroy();
         }
 
         /// <inheritdoc />

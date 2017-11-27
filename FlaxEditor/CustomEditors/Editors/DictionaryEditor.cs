@@ -103,7 +103,8 @@ namespace FlaxEditor.CustomEditors.Editors
                 var argTypes = type.GetGenericArguments();
                 var keyType = argTypes[0];
                 var valueType = argTypes[1];
-                var keys = ((IDictionary)Values[0]).Keys.OfType<object>();
+                var keysEnumerable = ((IDictionary)Values[0]).Keys.OfType<object>();
+                var keys = keysEnumerable as object[] ?? keysEnumerable.ToArray();
                 for (int i = 0; i < size; i++)
                 {
                     var item = layout.CustomContainer<UniformGridPanel>();
@@ -140,7 +141,7 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             var dictionary = Values[0] as IDictionary;
             var oldSize = dictionary?.Count ?? 0;
-
+            
             if (oldSize != newSize)
             {
                 // Allocate new collection
@@ -152,12 +153,15 @@ namespace FlaxEditor.CustomEditors.Editors
 
                 // Copy all keys/values
                 int itemsLeft = newSize;
-                foreach (var e in dictionary.Keys)
+                if (dictionary != null)
                 {
-                    if (itemsLeft == 0)
-                        break;
-                    newValues[e] = dictionary[e];
-                    itemsLeft--;
+                    foreach (var e in dictionary.Keys)
+                    {
+                        if (itemsLeft == 0)
+                            break;
+                        newValues[e] = dictionary[e];
+                        itemsLeft--;
+                    }
                 }
 
                 // Insert new items (find unique keys)

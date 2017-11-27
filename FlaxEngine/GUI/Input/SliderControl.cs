@@ -334,7 +334,7 @@ namespace FlaxEngine.GUI
                 return;
 
             var text = _textBox.Text.Replace(',', '.');
-            if (float.TryParse(text, out var value))
+            if (double.TryParse(text, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var value))
             {
                 Value = (float)Math.Round(value, 5);
             }

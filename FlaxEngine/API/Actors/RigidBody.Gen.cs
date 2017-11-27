@@ -21,6 +21,30 @@ namespace FlaxEngine
 	public sealed partial class RigidBody : Actor
 	{
 		/// <summary>
+		/// Creates new <see cref="RigidBody"/> object.
+		/// </summary>
+		private RigidBody() : base()
+		{
+		}
+
+		/// <summary>
+		/// Creates new instance of <see cref="RigidBody"/> object.
+		/// </summary>
+		/// <returns>Created object.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static RigidBody New() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_Create(typeof(RigidBody)) as RigidBody;
+#endif
+		}
+
+		/// <summary>
 		/// Enables kinematic mode for the rigidbody.
 		/// </summary>
 		/// <remarks>

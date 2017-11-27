@@ -213,6 +213,8 @@ namespace FlaxEditor.Modules
             if (id == Guid.Empty)
                 return null;
 
+            // TODO: use AssetInfo via Content manager to get asset path very quickly (it's O(1))
+
             // TODO: if it's a bottleneck try to optimize searching by caching items IDs
 
             var result = ProjectContent.Folder.Find(id);
@@ -814,6 +816,10 @@ namespace FlaxEditor.Modules
             Proxy.Add(new SettingsProxy<TimeSettings>());
             Proxy.Add(new SettingsProxy<LayersAndTagsSettings>());
             Proxy.Add(new SettingsProxy<PhysicsSettings>());
+            Proxy.Add(new SettingsProxy<GraphicsSettings>());
+            Proxy.Add(new SettingsProxy<BuildSettings>());
+            Proxy.Add(new SettingsProxy<WindowsPlatformSettings>());
+            Proxy.Add(new SettingsProxy<UWPPlatformSettings>());
             
             // Last add generic json (won't override other json proxies)
             Proxy.Add(new GenericJsonAssetProxy());

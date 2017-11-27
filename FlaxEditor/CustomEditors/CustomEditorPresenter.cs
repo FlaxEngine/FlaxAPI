@@ -156,8 +156,11 @@ namespace FlaxEditor.CustomEditors
         /// <param name="obj">The object.</param>
         public void Select(object obj)
         {
-            if(obj == null)
-                throw new ArgumentNullException();
+            if (obj == null)
+            {
+                Deselect();
+                return;
+            }
             if (Selection.Count == 1 && Selection[0] == obj)
                 return;
 

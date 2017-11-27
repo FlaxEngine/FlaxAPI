@@ -45,6 +45,8 @@ namespace FlaxEditor.Utilities
                     return 0;
                 return null;
             }
+            if (typeof(Object).IsAssignableFrom(type))
+                return null;
             return Activator.CreateInstance(type);
         }
     }

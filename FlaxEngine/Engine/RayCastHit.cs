@@ -28,5 +28,10 @@ namespace FlaxEngine
         /// The point in the world space where ray hit the collider.
         /// </summary>
         public Vector3 Point;
+
+        /// <summary>
+        /// The barycentric coordinates of hit point, for triangle mesh and height field.
+        /// </summary>
+        public Vector2 UV;
     }
 }

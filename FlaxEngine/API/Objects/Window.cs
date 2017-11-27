@@ -438,9 +438,6 @@ namespace FlaxEngine
         /// <summary>
         /// Gets a value indicating whether this window is in windowed mode.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this window is in windowed mode; otherwise, <c>false</c>.
-        /// </value>
         public bool IsWindowed => !IsFullscreen;
 
         /// <summary>
@@ -644,6 +641,8 @@ namespace FlaxEngine
         internal void Internal_OnClosed()
         {
             OnClosed?.Invoke();
+
+            GUI.Dispose();
 
             Windows.Remove(this);
 

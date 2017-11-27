@@ -385,6 +385,7 @@ namespace FlaxEditor.Modules
             mm_Tools.ContextMenu.AddButton(6, "Build CSG mesh");
             mm_Tools.ContextMenu.AddSeparator();
             mm_Tools.ContextMenu.AddButton(7, "Game Cooker");
+            mm_Tools.ContextMenu.AddButton(8, "Cancel building game");
             mm_Tools.ContextMenu.AddSeparator();
             mm_Tools.ContextMenu.AddButton(4, "Take screenshot!", "F12");
             //mm_Tools.ContextMenu.AddSeparator();
@@ -829,6 +830,13 @@ namespace FlaxEditor.Modules
                     Editor.Windows.GameCookerWin.ShowFloating();
                     break;
                 }
+
+                // Cancel building game
+                case 8:
+                {
+                    GameCooker.Cancel();
+                    break;
+                }
             }
         }
 
@@ -846,7 +854,8 @@ namespace FlaxEditor.Modules
             c.GetButton(3).Enabled = canEdit;// Clear lightmaps data
             c.GetButton(5).Enabled = canEdit;// Bake all env probes
             c.GetButton(6).Enabled = canEdit;// Build CSG mesh
-            
+            c.GetButton(8).Enabled = GameCooker.IsRunning;//Cancel building game
+
             c.PerformLayout();
         }
 

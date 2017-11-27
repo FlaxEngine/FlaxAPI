@@ -15,6 +15,11 @@ namespace FlaxEditor.States
     {
         private readonly DuplicateScenes _duplicateScenes = new DuplicateScenes();
 
+        /// <summary>
+        /// Gets a value indicating whether any scene was dirty before entering the play mode.
+        /// </summary>
+        public bool WasDirty => _duplicateScenes.WasDirty;
+
         /// <inheritdoc />
         public override bool CanEditScene => true;
 
@@ -66,9 +71,13 @@ namespace FlaxEditor.States
             // Restore editor scene
             _duplicateScenes.RestoreSceneData();
 
-            // Restore game settings
+            // Restore game settings and state for editor environment
             Time.TimeScale = 1.0f;
             Physics.AutoSimulation = true;
+            Screen.CursorVisible = true;
+            var win = Editor.Windows.GameWin?.ParentWindow;
+            if (win != null)
+                win.Cursor = CursorType.Default;
 
             // Fire events
             Editor.OnPlayEnd();

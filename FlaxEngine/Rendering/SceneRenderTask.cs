@@ -141,9 +141,12 @@ namespace FlaxEngine.Rendering
 
             // Prepare view
             OnBegin();
+            Viewport viewport = new Viewport(Vector2.Zero, Buffers.Size);
             if (Camera != null)
-                View.CopyFrom(Camera);
-            
+            {
+                View.CopyFrom(Camera, ref viewport);
+            }
+
             // Get custom post effects to render (registered ones and from the current camera)
             var postFx = new HashSet<PostProcessEffect>(CustomPostFx);
             if (Camera != null)

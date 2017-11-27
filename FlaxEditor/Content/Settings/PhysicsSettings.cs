@@ -54,9 +54,15 @@ namespace FlaxEditor.Content.Settings
         public bool DisableCCD;
 
         /// <summary>
+        /// The maximum allowed delta time (in seconds) for the physics simulation step.
+        /// </summary>
+        [EditorOrder(1000), EditorDisplay("Framerate"), Limit(0.0013f, 2.0f), Tooltip("The maximum allowed delta time (in seconds) for the physics simulation step.")]
+        public float MaxDeltaTime = 1.0f / 10.0f;
+
+        /// <summary>
         /// Whether to substep the physics simulation.
         /// </summary>
-        [EditorOrder(1000), EditorDisplay("Framerate"), Tooltip("Whether to substep the physics simulation.")]
+        [EditorOrder(1005), EditorDisplay("Framerate"), Tooltip("Whether to substep the physics simulation.")]
         public bool EnableSubstepping;
 
         /// <summary>

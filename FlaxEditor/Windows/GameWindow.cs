@@ -16,6 +16,8 @@ namespace FlaxEditor.Windows
     public class GameWindow : EditorWindow
     {
         private readonly RenderOutputControl _viewport;
+        private float _gameStartTime;
+        private bool _centerMouse;
 
         /// <summary>
         /// Gets the viewport.
@@ -30,35 +32,105 @@ namespace FlaxEditor.Windows
             : base(editor, true, ScrollBars.None)
         {
             Title = "Game";
+            CanFocus = true;
 
             var task = MainRenderTask.Instance;
-            task.Begin += OnBegin;
 
             // Setup viewport
-            _viewport = new RenderOutputControl(task);
-            _viewport.DockStyle = DockStyle.Fill;
-            _viewport.Parent = this;
+            _viewport = new RenderOutputControl(task)
+            {
+                DockStyle = DockStyle.Fill,
+                Parent = this
+            };
         }
 
-        private void OnBegin(SceneRenderTask sceneRenderTask)
+        /// <inheritdoc />
+        public override void OnPlayBegin()
         {
-            var camera = sceneRenderTask.Camera;
-            if (camera)
-            {
-                // Fix aspect ratio to fit the current output dimensions
-                camera.CustomAspectRatio = Width / Height;
-            }
+            _gameStartTime = Time.UnscaledTime;
+            _centerMouse = true;
         }
 
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
-            if (ParentWindow.GetKeyDown(KeyCode.F12))
+            base.Update(deltaTime);
+            
+            if (_centerMouse)
+            {
+                _centerMouse = false;
+
+                // Move mouse to the game window center (provides better usage when game is locking a cursor)
+                Vector2 center = PointToWindow(Size * 0.5f);
+                ParentWindow.MousePosition = center;
+            }
+
+        }
+
+        /// <inheritdoc />
+        public override void Draw()
+        {
+            base.Draw();
+
+            if (Editor.StateMachine.IsPlayMode)
+            {
+                var style = Style.Current;
+
+                float time = Time.UnscaledTime - _gameStartTime;
+                float timeout = 3.0f;
+                float fadeOutTime = 1.0f;
+                float animTime = time - timeout;
+                if (animTime < 0)
+                {
+                    float alpha = Mathf.Clamp01(-animTime / fadeOutTime);
+                    Rectangle rect = new Rectangle(new Vector2(6), Size - 12);
+                    Render2D.DrawText(style.FontSmall, "Press Shift+F11 to unlock the mouse", rect + new Vector2(1.0f), Color.Black * alpha, TextAlignment.Near, TextAlignment.Far);
+                    Render2D.DrawText(style.FontSmall, "Press Shift+F11 to unlock the mouse", rect, Color.White * alpha, TextAlignment.Near, TextAlignment.Far);
+                }
+
+                timeout = 1.0f;
+                fadeOutTime = 0.6f;
+                animTime = time - timeout;
+                if (animTime < 0)
+                {
+                    float alpha = Mathf.Clamp01(-animTime / fadeOutTime);
+                    Render2D.DrawRectangle(new Rectangle(new Vector2(4), Size - 8), Color.Orange * alpha, true);
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(KeyCode key)
+        {
+            if (key == KeyCode.F12)
             {
                 Screenshot.Capture();
             }
+            else if (key == KeyCode.F11)
+            {
+                if (ParentWindow.GetKey(KeyCode.Shift))
+                {
+                    // Unlock mouse in game mode
+                    if (Editor.StateMachine.IsPlayMode)
+                    {
+                        Focus();
+                        Defocus();
+                        if (Editor.Windows.PropertiesWin.IsDocked)
+                            Editor.Windows.PropertiesWin.Focus();
+                    }
+                }
+            }
 
-            base.Update(deltaTime);
+            return base.OnKeyDown(key);
+        }
+
+        /// <inheritdoc />
+        public override void OnLostFocus()
+        {
+            base.OnLostFocus();
+
+            // Restore cursor visibility (could be hidden by the game)
+            Screen.CursorVisible = true;
         }
     }
 }

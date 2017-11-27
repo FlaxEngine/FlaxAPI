@@ -120,6 +120,17 @@ namespace FlaxEditor.States
                 }
             }
 
+            // Skip already loaded scenes
+            for (int j = 0; j < _scenesToLoad.Count; j++)
+            {
+                if (SceneManager.FindScene(_scenesToLoad[j]))
+                {
+                    _scenesToLoad.RemoveAt(j--);
+                    if (_scenesToLoad.Count == 0)
+                        break;
+                }
+            }
+
             // Check if won't change anything
             if (_scenesToLoad.Count + _scenesToUnload.Count == 0)
                 return;

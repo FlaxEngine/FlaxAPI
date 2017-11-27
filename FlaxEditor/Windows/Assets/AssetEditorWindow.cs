@@ -31,6 +31,9 @@ namespace FlaxEditor.Windows.Assets
         /// </summary>
         public AssetItem Item => _item;
 
+        /// <inheritdoc />
+        public override string SerializationTypename => _item.ID.ToString();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AssetEditorWindow"/> class.
         /// </summary>

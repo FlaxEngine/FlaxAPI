@@ -1,6 +1,5 @@
 // Flax Engine scripting API
 
-using System;
 using FlaxEditor.Scripting;
 using FlaxEditor.States;
 using FlaxEditor.Windows;
@@ -16,6 +15,7 @@ namespace FlaxEditor.Modules
     {
         private bool _isPlayModeRequested;
         private bool _isPlayModeStopRequested;
+        private bool _stepFrame;
         private EditorWindow _enterPlayFocusedWindow;
 
         internal SimulationModule(Editor editor)
@@ -130,19 +130,20 @@ namespace FlaxEditor.Modules
             {
                 Editor.Log("[PlayMode] Step one frame");
 
-                // TODO: step one frame using playing state internal logic
-                throw new NotImplementedException("Step one frame in playmode");
+                // Set flag
+                _stepFrame = true;
+                Editor.StateMachine.PlayingState.IsPaused = false;
 
                 // Update
                 Editor.UI.UpdateToolstrip();
             }
         }
-        
+
         /// <inheritdoc />
         public override void OnPlayBegin()
         {
             Editor.Windows.FlashMainWindow();
-            
+
             // Pick focused window to restore it
             var gameWin = Editor.Windows.GameWin;
             var editWin = Editor.Windows.EditWin;
@@ -150,7 +151,7 @@ namespace FlaxEditor.Modules
                 _enterPlayFocusedWindow = editWin;
             else if (gameWin != null && gameWin.IsSelected)
                 _enterPlayFocusedWindow = gameWin;
-            
+
             // Focus `Game` window
             gameWin?.FocusOrShow();
 
@@ -206,12 +207,21 @@ namespace FlaxEditor.Modules
                     // Exit play mode
                     Editor.StateMachine.GoToState<EditingSceneState>();
                 }
+                // Check if step one frame
+                else if (_stepFrame)
+                {
+                    // Clear flag and pause
+                    _stepFrame = false;
+                    Editor.StateMachine.PlayingState.IsPaused = true;
+                    Editor.UI.UpdateToolstrip();
+                }
             }
             else
             {
                 // Clear flags
                 _isPlayModeRequested = false;
                 _isPlayModeStopRequested = false;
+                _stepFrame = false;
             }
         }
     }
