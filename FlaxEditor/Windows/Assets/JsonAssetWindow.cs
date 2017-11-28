@@ -34,7 +34,7 @@ namespace FlaxEditor.Windows.Assets
             };
 
             // Properties
-            _presenter = new CustomEditorPresenter(null);
+            _presenter = new CustomEditorPresenter(null, "Loading...");
             _presenter.Panel.Parent = panel;
             _presenter.Modified += MarkAsEdited;
         }

@@ -46,11 +46,22 @@ namespace FlaxEditor.CustomEditors
         /// <seealso cref="FlaxEditor.CustomEditors.SyncPointEditor" />
         protected class RootEditor : SyncPointEditor
         {
+            private readonly string _noSelectionText;
+
             /// <summary>
             /// The selected objects editor.
             /// </summary>
             public CustomEditor Editor;
-            
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="RootEditor"/> class.
+            /// </summary>
+            /// <param name="noSelectionText">The text to show when no item is selected.</param>
+            public RootEditor(string noSelectionText)
+            {
+                _noSelectionText = noSelectionText ?? "No selection";
+            }
+
             /// <summary>
             /// Setups editor for selected objects.
             /// </summary>
@@ -76,7 +87,7 @@ namespace FlaxEditor.CustomEditors
                 }
                 else
                 {
-                    var label = layout.Label("No selection", TextAlignment.Center);
+                    var label = layout.Label(_noSelectionText, TextAlignment.Center);
                     label.Label.Height = 20.0f;
                 }
                 
@@ -142,11 +153,12 @@ namespace FlaxEditor.CustomEditors
         /// Initializes a new instance of the <see cref="CustomEditorPresenter"/> class.
         /// </summary>
         /// <param name="undo">The undo. It's optional.</param>
-        public CustomEditorPresenter(Undo undo)
+        /// <param name="noSelectionText">The custom text to disaply when no object is selected. Default is No selection.</param>
+        public CustomEditorPresenter(Undo undo, string noSelectionText = null)
         {
             Undo = undo;
             Panel = new PresenterPanel(this);
-            Editor = new RootEditor();
+            Editor = new RootEditor(noSelectionText);
             Editor.Initialize(this, this, null);
         }
 
