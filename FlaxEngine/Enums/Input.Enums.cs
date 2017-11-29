@@ -1,7 +1,5 @@
 // Flax Engine scripting API
 
-using System;
-
 namespace FlaxEngine
 {
     /// <summary>
@@ -38,7 +36,6 @@ namespace FlaxEngine
     /// <summary>
     /// Axis for gamepad.
     /// </summary>
-    [Flags]
     public enum GamePadAxis
     {
         /// <summary>
@@ -49,119 +46,123 @@ namespace FlaxEngine
         /// <summary>
         /// The X-Axis of the left thumb stick
         /// </summary>
-        LeftThumbX = 1 << 1,
+        LeftThumbX = 1,
 
         /// <summary>
         /// The Y-Axis of the left thumb stick
         /// </summary>
-        LeftThumbY = 1 << 2,
+        LeftThumbY = 2,
 
         /// <summary>
         /// The X-Axis of the right thumb stick
         /// </summary>
-        RightThumbX = 1 << 3,
+        RightThumbX = 3,
 
         /// <summary>
         /// The Y-Axis of the right thumb stick
         /// </summary>
-        RightThumbY = 1 << 4,
+        RightThumbY = 4,
 
         /// <summary>
         /// The left trigger
         /// </summary>
-        LeftTrigger = 1 << 5,
+        LeftTrigger = 5,
 
         /// <summary>
         /// The right trigger
         /// </summary>
-        RightTrigger = 1 << 6
+        RightTrigger = 6
     }
 
     /// <summary>
     /// Buttons for gamepad.
     /// </summary>
-    [Flags]
     public enum GamePadButton
     {
         /// <summary>
-        /// No buttons.
+        /// No buttons.	
         /// </summary>
         None = 0,
 
         /// <summary>
         /// PadUp button. (DPad / Directional Pad)
         /// </summary>
-        PadUp = 1 << 0,
+        DPadUp = 1,
 
         /// <summary>
         /// PadDown button. (DPad / Directional Pad)
         /// </summary>
-        PadDown = 1 << 1,
+        DPadDown = 2,
 
         /// <summary>
         /// PadLeft button. (DPad / Directional Pad)
-        /// </summary>
-        PadLeft = 1 << 2,
+        /// </summary>	
+        DPadLeft = 3,
 
         /// <summary>
         /// PadRight button. (DPad / Directional Pad)
-        /// </summary>
-        PadRight = 1 << 3,
-
-        /// <summary>
-        /// Any pad button (DPad / Directional Pad).
-        /// </summary>
-        Pad = PadUp | PadDown | PadLeft | PadRight,
+        /// </summary>	
+        DPadRight = 4,
 
         /// <summary>
         /// Start button.
         /// </summary>
-        Start = 1 << 4,
+        Start = 5,
 
         /// <summary>
         /// Back button.
         /// </summary>
-        Back = 1 << 5,
+        Back = 6,
 
         /// <summary>
-        /// Left thumb button.
+        /// Left thumbstick button.
         /// </summary>
-        LeftThumb = 1 << 6,
+        LeftThumb = 7,
 
         /// <summary>
-        /// Right thumb button.
+        /// Right thumbstick button.
         /// </summary>
-        RightThumb = 1 << 7,
+        RightThumb = 8,
 
         /// <summary>
         /// Left shoulder button.
         /// </summary>
-        LeftShoulder = 1 << 8,
+        LeftShoulder = 9,
 
         /// <summary>
         /// Right shoulder button.
         /// </summary>
-        RightShoulder = 1 << 9,
+        RightShoulder = 10,
+
+        /// <summary>
+        /// Left trigger button.
+        /// </summary>
+        LeftTrigger = 11,
+
+        /// <summary>
+        /// Right trigger button.
+        /// </summary>
+        RightTrigger = 12,
 
         /// <summary>
         /// A button.
         /// </summary>
-        A = 1 << 12,
+        A = 13,
 
         /// <summary>
         /// B button.
         /// </summary>
-        B = 1 << 13,
+        B = 14,
 
         /// <summary>
         /// X button.
         /// </summary>
-        X = 1 << 14,
+        X = 15,
 
         /// <summary>
         /// Y button.
         /// </summary>
-        Y = 1 << 15
+        Y = 16
     }
 
     /// <summary>
