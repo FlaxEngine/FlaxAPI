@@ -185,7 +185,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void LoadDefaultLayout()
         {
-            LoadLayout(StringUtils.CombinePaths(Globals.EditorFolder, "DefaultLayout.xml"));
+            LoadLayout(StringUtils.CombinePaths(Globals.EditorFolder, "LayoutDefault.xml"));
         }
 
         /// <summary>
@@ -196,25 +196,6 @@ namespace FlaxEditor.Modules
         {
             if (Editor.IsHeadlessMode)
                 return;
-
-            // TODO: finish this
-            
-            // for now just show default windows
-            ContentWin.Show(FlaxEngine.GUI.Docking.DockState.DockBottom);
-            DebugWin.Show(FlaxEngine.GUI.Docking.DockState.DockFill, ContentWin);
-            ContentWin.SelectTab();
-            ((FlaxEngine.GUI.SplitPanel)ContentWin.Parent.Parent.Parent.Parent).SplitterValue = 0.5f;
-            SceneWin.Show(FlaxEngine.GUI.Docking.DockState.DockLeft);
-            PropertiesWin.Show(FlaxEngine.GUI.Docking.DockState.DockRight);
-            ToolboxWin.Show(FlaxEngine.GUI.Docking.DockState.DockTop, PropertiesWin);
-            EditWin.Show(FlaxEngine.GUI.Docking.DockState.DockFill);
-            GameWin.Show(FlaxEngine.GUI.Docking.DockState.DockFill);
-            EditWin.SelectTab();
-
-            GameCookerWin.Show(FlaxEngine.GUI.Docking.DockState.DockRight, ContentWin);
-            GameCookerWin.SelectTab();
-            
-
 
             if (!File.Exists(path))
             {

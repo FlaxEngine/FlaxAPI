@@ -152,8 +152,19 @@ namespace FlaxEditor.Modules
             else if (gameWin != null && gameWin.IsSelected)
                 _enterPlayFocusedWindow = gameWin;
 
-            // Focus `Game` window
-            gameWin?.FocusOrShow();
+            // Show Game widow if hidden
+            if (gameWin != null)
+            {
+                if (!gameWin.IsDocked)
+                {
+                    gameWin.ShowFloating();
+                }
+                else if (!gameWin.IsSelected)
+                {
+                    gameWin.SelectTab();
+                    gameWin.Defocus();
+                }
+            }
 
             Editor.Log("[PlayMode] Enter");
         }

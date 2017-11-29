@@ -2,7 +2,6 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using System.Linq;
 using FlaxEditor.Gizmo;
 using FlaxEditor.GUI;
@@ -398,7 +397,6 @@ namespace FlaxEditor.Modules
             mm_Window.ContextMenu.AddButton(11, "Scene Tree");
             mm_Window.ContextMenu.AddButton(12, "Toolbox");
             mm_Window.ContextMenu.AddButton(13, "Properties");
-            //mm_Window.ContextMenu.AddButton(14, "Quality");
             mm_Window.ContextMenu.AddButton(15, "Game");
             mm_Window.ContextMenu.AddButton(16, "Editor");
             mm_Window.ContextMenu.AddButton(17, "Debug Log");
@@ -881,7 +879,6 @@ namespace FlaxEditor.Modules
                 case 13:
                     Editor.Windows.PropertiesWin.FocusOrShow();
                     break;
-                //case 14: Editor.Windows.QualityWin.FocusOrShow(); break;
                 case 15:
                     Editor.Windows.GameWin.FocusOrShow();
                     break;
