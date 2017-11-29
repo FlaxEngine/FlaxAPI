@@ -74,10 +74,10 @@ namespace FlaxEditor.Surface.Elements
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
             // Check mouse down
-            if (buttons == MouseButtons.Left)
+            if (buttons == MouseButton.Left)
             {
                 // Set flag
                 _mouseDown = true;
@@ -87,9 +87,9 @@ namespace FlaxEditor.Surface.Elements
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
-            if (_mouseDown && buttons == MouseButtons.Left)
+            if (_mouseDown && buttons == MouseButton.Left)
             {
                 _mouseDown = false;
                 Toggle();

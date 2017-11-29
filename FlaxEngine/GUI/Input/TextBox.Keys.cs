@@ -9,14 +9,14 @@ namespace FlaxEngine.GUI
     public partial class TextBox
     {
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyDown(Keys key)
         {
             // Check if use lowercase or uppercase
             var window = ParentWindow;
-            bool shftDown = window.GetKey(KeyCode.Shift);
-            bool ctrDown = window.GetKey(KeyCode.Control);
+            bool shftDown = window.GetKey(Keys.Shift);
+            bool ctrDown = window.GetKey(Keys.Control);
             bool uppercase = shftDown;
-            if (window.GetKey(KeyCode.Capital))
+            if (window.GetKey(Keys.Capital))
             	uppercase = !uppercase;// TODO: capslock
 
             // Check if use combination with a control key
@@ -24,23 +24,23 @@ namespace FlaxEngine.GUI
             {
                 switch (key)
                 {
-                    case KeyCode.C:
+                    case Keys.C:
                         Copy();
                         break;
 
-                    case KeyCode.V:
+                    case Keys.V:
                         Paste();
                         break;
 
-                    case KeyCode.D:
+                    case Keys.D:
                         Duplicate();
                         break;
 
-                    case KeyCode.X:
+                    case Keys.X:
                         Cut();
                         break;
 
-                    case KeyCode.A:
+                    case Keys.A:
                         SelectAll();
                         break;
                 }
@@ -52,8 +52,8 @@ namespace FlaxEngine.GUI
             switch (key)
             {
                 // Delete
-                case KeyCode.Backspace:
-                case KeyCode.Delete:
+                case Keys.Backspace:
+                case Keys.Delete:
                 {
                     int left = SelectionLeft;
                     if (HasSelection)
@@ -74,7 +74,7 @@ namespace FlaxEngine.GUI
                 }
 
                 // Cancel
-                case KeyCode.Escape:
+                case Keys.Escape:
                 {
                     // Restore text from start
                     setSelection(-1);
@@ -87,7 +87,7 @@ namespace FlaxEngine.GUI
                 }
 
                 // Enter
-                case KeyCode.Return:
+                case Keys.Return:
                 {
                     if (IsMultiline)
                     {
@@ -104,7 +104,7 @@ namespace FlaxEngine.GUI
                 }
 
                 // Scroll to begin
-                case KeyCode.Home:
+                case Keys.Home:
                 {
                     // Move caret to the first character
                     setSelection(0);
@@ -112,26 +112,26 @@ namespace FlaxEngine.GUI
                 }
 
                 // Scroll to end
-                case KeyCode.End:
+                case Keys.End:
                 {
                     // Move caret after last character
                     setSelection(TextLength);
                     return true;
                 }
 
-                case KeyCode.ArrowRight:
+                case Keys.ArrowRight:
                     MoveRight(shftDown, ctrDown);
                     return true;
 
-                case KeyCode.ArrowLeft:
+                case Keys.ArrowLeft:
                     MoveLeft(shftDown, ctrDown);
                     return true;
 
-                case KeyCode.ArrowUp:
+                case Keys.ArrowUp:
                     MoveUp(shftDown, ctrDown);
                     return true;
 
-                case KeyCode.ArrowDown:
+                case Keys.ArrowDown:
                     MoveDown(shftDown, ctrDown);
                     return true;
             }
@@ -140,154 +140,154 @@ namespace FlaxEngine.GUI
             char ascii = '\0';
             switch (key)
             {
-                case KeyCode.Alpha0:
+                case Keys.Alpha0:
                     ascii = uppercase ? ')' : '0';
                     break;
-                case KeyCode.Alpha1:
+                case Keys.Alpha1:
                     ascii = uppercase ? '!' : '1';
                     break;
-                case KeyCode.Alpha2:
+                case Keys.Alpha2:
                     ascii = uppercase ? '@' : '2';
                     break;
-                case KeyCode.Alpha3:
+                case Keys.Alpha3:
                     ascii = uppercase ? '#' : '3';
                     break;
-                case KeyCode.Alpha4:
+                case Keys.Alpha4:
                     ascii = uppercase ? '$' : '4';
                     break;
-                case KeyCode.Alpha5:
+                case Keys.Alpha5:
                     ascii = uppercase ? '%' : '5';
                     break;
-                case KeyCode.Alpha6:
+                case Keys.Alpha6:
                     ascii = uppercase ? '^' : '6';
                     break;
-                case KeyCode.Alpha7:
+                case Keys.Alpha7:
                     ascii = uppercase ? '&' : '7';
                     break;
-                case KeyCode.Alpha8:
+                case Keys.Alpha8:
                     ascii = uppercase ? '*' : '8';
                     break;
-                case KeyCode.Alpha9:
+                case Keys.Alpha9:
                     ascii = uppercase ? '(' : '9';
                     break;
-                case KeyCode.Plus:
+                case Keys.Plus:
                     ascii = uppercase ? '=' : '+';
                     break;
-                case KeyCode.Comma:
+                case Keys.Comma:
                     ascii = uppercase ? '<' : ',';
                     break;
-                case KeyCode.Minus:
+                case Keys.Minus:
                     ascii = uppercase ? '_' : '-';
                     break;
-                case KeyCode.Period:
+                case Keys.Period:
                     ascii = uppercase ? '>' : '.';
                     break;
-                case KeyCode.Colon:
+                case Keys.Colon:
                     ascii = uppercase ? ':' : ';';
                     break;
-                case KeyCode.Slash:
+                case Keys.Slash:
                     ascii = uppercase ? '?' : '/';
                     break;
-                case KeyCode.BackQuote:
+                case Keys.BackQuote:
                     ascii = uppercase ? '~' : '`';
                     break;
-                case KeyCode.LeftBracket:
+                case Keys.LeftBracket:
                     ascii = uppercase ? '{' : '[';
                     break;
-                case KeyCode.Backslash:
+                case Keys.Backslash:
                     ascii = uppercase ? '|' : '\\';
                     break;
-                case KeyCode.RightBracket:
+                case Keys.RightBracket:
                     ascii = uppercase ? '}' : ']';
                     break;
-                case KeyCode.Quote:
+                case Keys.Quote:
                     ascii = uppercase ? '\"' : '\'';
                     break;
-                case KeyCode.Oem8:
+                case Keys.Oem8:
                     ascii = uppercase ? '@' : '#';
                     break;
 
-                case KeyCode.Tab:
+                case Keys.Tab:
                     ascii = '\t';
                     break;
-                case KeyCode.Spacebar:
+                case Keys.Spacebar:
                     ascii = ' ';
                     break;
-                case KeyCode.Numpad0:
+                case Keys.Numpad0:
                     ascii = '0';
                     break;
-                case KeyCode.Numpad1:
+                case Keys.Numpad1:
                     ascii = '1';
                     break;
-                case KeyCode.Numpad2:
+                case Keys.Numpad2:
                     ascii = '2';
                     break;
-                case KeyCode.Numpad3:
+                case Keys.Numpad3:
                     ascii = '3';
                     break;
-                case KeyCode.Numpad4:
+                case Keys.Numpad4:
                     ascii = '4';
                     break;
-                case KeyCode.Numpad5:
+                case Keys.Numpad5:
                     ascii = '5';
                     break;
-                case KeyCode.Numpad6:
+                case Keys.Numpad6:
                     ascii = '6';
                     break;
-                case KeyCode.Numpad7:
+                case Keys.Numpad7:
                     ascii = '7';
                     break;
-                case KeyCode.Numpad8:
+                case Keys.Numpad8:
                     ascii = '8';
                     break;
-                case KeyCode.Numpad9:
+                case Keys.Numpad9:
                     ascii = '9';
                     break;
-                case KeyCode.NumpadMultiply:
+                case Keys.NumpadMultiply:
                     ascii = '*';
                     break;
-                case KeyCode.NumpadAdd:
+                case Keys.NumpadAdd:
                     ascii = '+';
                     break;
-                case KeyCode.NumpadSeparator:
+                case Keys.NumpadSeparator:
                     ascii = ',';
                     break;
-                case KeyCode.NumpadSubtract:
+                case Keys.NumpadSubtract:
                     ascii = '-';
                     break;
-                case KeyCode.NumpadDecimal:
+                case Keys.NumpadDecimal:
                     ascii = '.';
                     break;
-                case KeyCode.NumpadDivide:
+                case Keys.NumpadDivide:
                     ascii = '/';
                     break;
 
-                case KeyCode.A:
-                case KeyCode.B:
-                case KeyCode.C:
-                case KeyCode.D:
-                case KeyCode.E:
-                case KeyCode.F:
-                case KeyCode.G:
-                case KeyCode.H:
-                case KeyCode.I:
-                case KeyCode.J:
-                case KeyCode.K:
-                case KeyCode.L:
-                case KeyCode.M:
-                case KeyCode.N:
-                case KeyCode.O:
-                case KeyCode.P:
-                case KeyCode.Q:
-                case KeyCode.R:
-                case KeyCode.S:
-                case KeyCode.T:
-                case KeyCode.U:
-                case KeyCode.V:
-                case KeyCode.W:
-                case KeyCode.X:
-                case KeyCode.Y:
-                case KeyCode.Z:
+                case Keys.A:
+                case Keys.B:
+                case Keys.C:
+                case Keys.D:
+                case Keys.E:
+                case Keys.F:
+                case Keys.G:
+                case Keys.H:
+                case Keys.I:
+                case Keys.J:
+                case Keys.K:
+                case Keys.L:
+                case Keys.M:
+                case Keys.N:
+                case Keys.O:
+                case Keys.P:
+                case Keys.Q:
+                case Keys.R:
+                case Keys.S:
+                case Keys.T:
+                case Keys.U:
+                case Keys.V:
+                case Keys.W:
+                case Keys.X:
+                case Keys.Y:
+                case Keys.Z:
                     ascii = (char)key;
                     if (!uppercase)
                         ascii += (char)0x20;

@@ -154,7 +154,7 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
             // Check if user is connecting boxes
             if (_startBox != null)
@@ -163,12 +163,12 @@ namespace FlaxEditor.Surface
             // Cache data
             _isMovingSelection = false;
             _mousePos = location;
-            if (buttons == MouseButtons.Left)
+            if (buttons == MouseButton.Left)
             {
                 _leftMouseDown = true;
                 _leftMouseDownPos = location;
             }
-            if (buttons == MouseButtons.Right)
+            if (buttons == MouseButton.Right)
             {
                 _rightMouseDown = true;
                 _rightMouseDownPos = location;
@@ -183,7 +183,7 @@ namespace FlaxEditor.Surface
                 if (_leftMouseDown && nodeAtMouse.HitsHeader(ref cLocation))
                 {
                     // Check if user is pressing control
-                    if (ParentWindow.GetKey(KeyCode.Control))
+                    if (ParentWindow.GetKey(Keys.Control))
                     {
                         // Add to selection
                         AddToSelection(nodeAtMouse);
@@ -236,7 +236,7 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             // Cache mouse location
             _mousePos = location;
@@ -253,7 +253,7 @@ namespace FlaxEditor.Surface
             }
 
             // Cache flags and state
-            if (_leftMouseDown && buttons == MouseButtons.Left)
+            if (_leftMouseDown && buttons == MouseButton.Left)
             {
                 _leftMouseDown = false;
                 ParentWindow.EndTrackingMouse();
@@ -264,7 +264,7 @@ namespace FlaxEditor.Surface
                     UpdateSelectionRectangle();
                 }
             }
-            if (_rightMouseDown && buttons == MouseButtons.Right)
+            if (_rightMouseDown && buttons == MouseButton.Right)
             {
                 _rightMouseDown = false;
                 ParentWindow.EndTrackingMouse();
@@ -293,7 +293,7 @@ namespace FlaxEditor.Surface
             if (base.OnMouseUp(location, buttons))
                 return true;
 
-            if (buttons == MouseButtons.Left)
+            if (buttons == MouseButton.Left)
             {
                 ConnectingEnd(null);
                 ParentWindow.EndTrackingMouse();
@@ -303,21 +303,21 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyDown(Keys key)
         {
             if (base.OnKeyDown(key))
                 return true;
 
-            if (key == KeyCode.Delete)
+            if (key == Keys.Delete)
             {
                 DeleteSelection();
                 return true;
             }
-            if (ParentWindow.GetKey(KeyCode.Control))
+            if (ParentWindow.GetKey(Keys.Control))
             {
                 switch (key)
                 {
-                    case KeyCode.A:
+                    case Keys.A:
                         SelectAll();
                         return true;
                 }

@@ -354,8 +354,8 @@ namespace FlaxEngine.GUI
                 // Check if can perform update
                 if (_keyUpdateTime >= KeyUpdateTimeout)
                 {
-                    bool keyUpArrow = window.GetKeyUp(KeyCode.ArrowUp);
-                    bool keyDownArrow = window.GetKeyUp(KeyCode.ArrowDown);
+                    bool keyUpArrow = window.GetKeyUp(Keys.ArrowUp);
+                    bool keyDownArrow = window.GetKeyUp(Keys.ArrowDown);
 
                     // Check if arrow flags are dffrent
                     if (keyDownArrow != keyUpArrow)
@@ -438,7 +438,7 @@ namespace FlaxEngine.GUI
                     _keyUpdateTime += deltaTime;
                 }
 
-                if (window.GetKeyDown(KeyCode.ArrowRight))
+                if (window.GetKeyDown(Keys.ArrowRight))
                 {
                     // Check if is expanded
                     if (node.IsExpanded)
@@ -456,7 +456,7 @@ namespace FlaxEngine.GUI
                         node.Expand();
                     }
                 }
-                else if (window.GetKeyDown(KeyCode.ArrowLeft))
+                else if (window.GetKeyDown(Keys.ArrowLeft))
                 {
                     if (node.IsCollapsed)
                     {
@@ -479,15 +479,15 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyDown(Keys key)
         {
             // Check if can use multi selection
             if (_supportMultiSelect)
             {
-                bool isCtrlDown = ParentWindow.GetKey(KeyCode.Control);
+                bool isCtrlDown = ParentWindow.GetKey(Keys.Control);
                 
                 // Select all expanded nodes
-                if (key == KeyCode.A && isCtrlDown)
+                if (key == Keys.A && isCtrlDown)
                 {
                     SelectAllExpaned();
                     return true;

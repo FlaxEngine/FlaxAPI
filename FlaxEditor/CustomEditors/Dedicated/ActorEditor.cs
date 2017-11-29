@@ -207,9 +207,9 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 base.Initialize(layout);
             }
 
-            private void SettingsButtonOnClicked(Image image, MouseButtons mouseButtons)
+            private void SettingsButtonOnClicked(Image image, MouseButton MouseButton)
             {
-                if (mouseButtons != MouseButtons.Left)
+                if (MouseButton != MouseButton.Left)
                     return;
 
                 var script = (Script)image.Tag;

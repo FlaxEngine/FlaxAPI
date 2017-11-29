@@ -336,9 +336,9 @@ namespace FlaxEditor.Surface.Elements
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
-            if (buttons == MouseButtons.Left)
+            if (buttons == MouseButton.Left)
             {
                 Surface.ConnectingStart(this);
             }
@@ -354,11 +354,11 @@ namespace FlaxEditor.Surface.Elements
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             bool result = false;
 
-            if (buttons == MouseButtons.Left)
+            if (buttons == MouseButton.Left)
             {
                 Surface.ConnectingEnd(this);
                 result = true;

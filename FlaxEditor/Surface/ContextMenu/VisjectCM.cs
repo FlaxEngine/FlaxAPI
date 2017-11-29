@@ -166,9 +166,9 @@ namespace FlaxEditor.Surface.ContextMenu
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyDown(Keys key)
         {
-            if (key == KeyCode.Escape)
+            if (key == Keys.Escape)
             {
                 Hide();
                 return true;

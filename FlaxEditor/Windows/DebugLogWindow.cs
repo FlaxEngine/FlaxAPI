@@ -156,10 +156,10 @@ namespace FlaxEditor.Windows
             }
 
             /// <inheritdoc />
-            public override bool OnKeyDown(KeyCode key)
+            public override bool OnKeyDown(Keys key)
             {
                 // Up
-                if (key == KeyCode.ArrowUp)
+                if (key == Keys.ArrowUp)
                 {
                     int index = IndexInParent - 1;
                     if (index >= 1)// at 0 is scroll bar
@@ -171,7 +171,7 @@ namespace FlaxEditor.Windows
                     }
                 }
                 // Down
-                else if (key == KeyCode.ArrowDown)
+                else if (key == Keys.ArrowDown)
                 {
                     int index = IndexInParent + 1;
                     if (index < Parent.ChildrenCount)
@@ -183,7 +183,7 @@ namespace FlaxEditor.Windows
                     }
                 }
                 // Ctrl+C
-                else if (key == KeyCode.C && ParentWindow.GetKey(KeyCode.Control))
+                else if (key == Keys.C && ParentWindow.GetKey(Keys.Control))
                 {
                     Application.ClipboardText = Info;
                     return true;
@@ -192,7 +192,7 @@ namespace FlaxEditor.Windows
                 return base.OnKeyDown(key);
             }
 
-            public override bool OnMouseDoubleClick(Vector2 location, MouseButtons buttons)
+            public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
             {
                 // Show the location
                 ScriptsBuilder.OpenFile(Desc.LocationFile, Desc.LocationLine);

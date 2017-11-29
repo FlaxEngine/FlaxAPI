@@ -306,9 +306,9 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
-            if (buttons == MouseButtons.Left)
+            if (buttons == MouseButton.Left)
             {
                 _isMosueDown = false;
             }
@@ -333,10 +333,10 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
             // Set flag for dragging asset
-            if (buttons == MouseButtons.Left && IconRect.Contains(location))
+            if (buttons == MouseButton.Left && IconRect.Contains(location))
             {
                 _isMosueDown = true;
                 _mosueDownPos = location;
@@ -347,7 +347,7 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
         {
             // Focus
             Focus();

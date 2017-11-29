@@ -82,15 +82,15 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyDown(Keys key)
         {
-            if (key == KeyCode.F12)
+            if (key == Keys.F12)
             {
                 Screenshot.Capture();
             }
-            else if (key == KeyCode.F11)
+            else if (key == Keys.F11)
             {
-                if (ParentWindow.GetKey(KeyCode.Shift))
+                if (ParentWindow.GetKey(Keys.Shift))
                 {
                     // Unlock mouse in game mode
                     if (Editor.StateMachine.IsPlayMode)

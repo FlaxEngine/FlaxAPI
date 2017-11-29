@@ -114,9 +114,9 @@ namespace FlaxEditor.GUI
             ((Image)Children[0]).MouseOverColor = _selectedColor;
         }
 
-        private void OnTileClicked(Image image, MouseButtons mouseButtons)
+        private void OnTileClicked(Image image, MouseButton MouseButton)
         {
-            if (mouseButtons == MouseButtons.Left)
+            if (MouseButton == MouseButton.Left)
             {
                 Selected = (PlatformType)image.Tag;
             }

@@ -201,9 +201,9 @@ namespace FlaxEditor.GUI.Dialogs
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
-            if (buttons == MouseButtons.Left)
+            if (buttons == MouseButton.Left)
             {
                 _isMouseDownWheel = _boxRect.Contains(location);
                 _isMouseDownSlider1 = _slider1Rect.Contains(location);
@@ -219,9 +219,9 @@ namespace FlaxEditor.GUI.Dialogs
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
-            if (buttons == MouseButtons.Left)
+            if (buttons == MouseButton.Left)
             {
                 // Clear flags
                 _isMouseDownWheel = false;

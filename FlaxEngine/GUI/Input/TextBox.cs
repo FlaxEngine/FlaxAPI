@@ -861,7 +861,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
         {
             SelectAll();
             return base.OnMouseDoubleClick(location, buttons);
@@ -882,9 +882,9 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
-            if (buttons == MouseButtons.Left && _text.Length > 0)
+            if (buttons == MouseButton.Left && _text.Length > 0)
             {
                 OnSelectingBegin();
 
@@ -898,7 +898,7 @@ namespace FlaxEngine.GUI
         }
         
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             if (_isSelecting)
                 OnSelectingEnd();

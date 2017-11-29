@@ -116,17 +116,17 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyDown(Keys key)
         {
             // Base
             bool result = base.OnKeyDown(key);
             if (!result)
             {
-                if (ParentWindow.GetKey(KeyCode.Control))
+                if (ParentWindow.GetKey(Keys.Control))
                 {
                     switch (key)
                     {
-                        case KeyCode.S:
+                        case Keys.S:
                             Save();
                             return true;
                     }

@@ -338,7 +338,7 @@ namespace FlaxEditor.Windows
         {
             UpdateCameraPreview();
 
-            if (ParentWindow.GetKeyDown(KeyCode.F12))
+            if (ParentWindow.GetKeyDown(Keys.F12))
             {
                 Viewport.TakeScreenshot();
             }

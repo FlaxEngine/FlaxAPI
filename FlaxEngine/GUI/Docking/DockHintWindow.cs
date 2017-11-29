@@ -315,9 +315,9 @@ namespace FlaxEngine.GUI.Docking
             Proxy.Window.ClientBounds = _rectWindow;
         }
 
-        private void onMouseUp(Vector2 location, MouseButtons buttons)
+        private void onMouseUp(Vector2 location, MouseButton buttons)
         {
-            if (buttons == MouseButtons.Left)
+            if (buttons == MouseButton.Left)
             {
                 Dispose();
             }

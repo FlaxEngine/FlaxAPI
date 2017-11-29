@@ -95,13 +95,13 @@ namespace FlaxEditor.Viewport
             /// <param name="window">The window.</param>
             public void Gather(FlaxEngine.Window window)
             {
-                IsControlDown = window.GetKey(KeyCode.Control);
-                IsShiftDown = window.GetKey(KeyCode.Shift);
-                IsAltDown = window.GetKey(KeyCode.Alt);
+                IsControlDown = window.GetKey(Keys.Control);
+                IsShiftDown = window.GetKey(Keys.Shift);
+                IsAltDown = window.GetKey(Keys.Alt);
 
-                IsMouseRightDown = window.GetMouseButton(MouseButtons.Right);
-                IsMouseMiddleDown = window.GetMouseButton(MouseButtons.Middle);
-                IsMouseLeftDown = window.GetMouseButton(MouseButtons.Left);
+                IsMouseRightDown = window.GetMouseButton(MouseButton.Right);
+                IsMouseMiddleDown = window.GetMouseButton(MouseButton.Middle);
+                IsMouseLeftDown = window.GetMouseButton(MouseButton.Left);
             }
 
             /// <summary>
@@ -649,27 +649,27 @@ namespace FlaxEditor.Viewport
 
                 // Get input movement
                 Vector3 moveDelta = Vector3.Zero;
-                if (win.GetKey(KeyCode.W))
+                if (win.GetKey(Keys.W))
                 {
                     moveDelta += Vector3.ForwardLH;
                 }
-                if (win.GetKey(KeyCode.S))
+                if (win.GetKey(Keys.S))
                 {
                     moveDelta += Vector3.BackwardLH;
                 }
-                if (win.GetKey(KeyCode.D))
+                if (win.GetKey(Keys.D))
                 {
                     moveDelta += Vector3.Right;
                 }
-                if (win.GetKey(KeyCode.A))
+                if (win.GetKey(Keys.A))
                 {
                     moveDelta += Vector3.Left;
                 }
-                if (win.GetKey(KeyCode.E))
+                if (win.GetKey(Keys.E))
                 {
                     moveDelta += Vector3.Up;
                 }
-                if (win.GetKey(KeyCode.Q))
+                if (win.GetKey(Keys.Q))
                 {
                     moveDelta += Vector3.Down;
                 }
@@ -751,7 +751,7 @@ namespace FlaxEditor.Viewport
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
             Focus();
 

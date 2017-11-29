@@ -84,7 +84,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             // Show color picker dialog
             Style.Current.ShowPickColorDialog?.Invoke(_value, x => Value = x);

@@ -478,7 +478,7 @@ namespace FlaxEditor.Viewport
                     }
                 }
 
-                bool addRemove = ParentWindow.GetKey(KeyCode.Control);
+                bool addRemove = ParentWindow.GetKey(Keys.Control);
                 bool isSelected = sceneEditing.Selection.Contains(hit);
 
                 if (addRemove)
@@ -505,29 +505,29 @@ namespace FlaxEditor.Viewport
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyDown(Keys key)
         {
-            if (key == KeyCode.Delete)
+            if (key == Keys.Delete)
             {
                 _editor.SceneEditing.Delete();
                 return true;
             }
-            if (key == KeyCode.Alpha1)
+            if (key == Keys.Alpha1)
             {
                 TransformGizmo.ActiveMode = TransformGizmo.Mode.Translate;
                 return true;
             }
-            if (key == KeyCode.Alpha2)
+            if (key == Keys.Alpha2)
             {
                 TransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate;
                 return true;
             }
-            if (key == KeyCode.Alpha3)
+            if (key == Keys.Alpha3)
             {
                 TransformGizmo.ActiveMode = TransformGizmo.Mode.Scale;
                 return true;
             }
-            if (key == KeyCode.F)
+            if (key == Keys.F)
             {
                 _editor.Windows.EditWin.ShowSelectedActors();
                 return true;

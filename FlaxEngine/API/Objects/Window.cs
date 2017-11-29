@@ -343,7 +343,7 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="mouse">The mouse position.</param>
         /// <param name="buttons">The mouse buttons state.</param>
-        public delegate void MouseButtonsDelegate(Vector2 mouse, MouseButtons buttons);
+        public delegate void MouseButtonDelegate(Vector2 mouse, MouseButton buttons);
 
         /// <summary>
         /// Perform mouse move action.
@@ -362,7 +362,7 @@ namespace FlaxEngine
         /// Perform keyboard action.
         /// </summary>
         /// <param name="key">The key.</param>
-        public delegate void KeyboardDelegate(KeyCode key);
+        public delegate void KeyboardDelegate(Keys key);
 
         /// <summary>
         /// Event fired on key pressed.
@@ -377,17 +377,17 @@ namespace FlaxEngine
         /// <summary>
         /// Event fired when mouse goes down.
         /// </summary>
-        public event MouseButtonsDelegate OnMouseDown;
+        public event MouseButtonDelegate OnMouseDown;
 
         /// <summary>
         /// Event fired when mouse goes up.
         /// </summary>
-        public event MouseButtonsDelegate OnMouseUp;
+        public event MouseButtonDelegate OnMouseUp;
 
         /// <summary>
         /// Event fired when mouse double clicks.
         /// </summary>
-        public event MouseButtonsDelegate OnMouseDoubleClick;
+        public event MouseButtonDelegate OnMouseDoubleClick;
 
         /// <summary>
         /// Event fired when mouse wheel is scrolling.
@@ -521,31 +521,31 @@ namespace FlaxEngine
             GUI.SetSize(width, height);
         }
 
-        internal void Internal_OnKeyDown(KeyCode key)
+        internal void Internal_OnKeyDown(Keys key)
         {
             OnKeyDown?.Invoke(key);
             GUI.OnKeyDown(key);
         }
 
-        internal void Internal_OnKeyUp(KeyCode key)
+        internal void Internal_OnKeyUp(Keys key)
         {
             OnKeyUp?.Invoke(key);
             GUI.OnKeyUp(key);
         }
 
-        internal void Internal_OnMouseDown(ref Vector2 mousePos, MouseButtons buttons)
+        internal void Internal_OnMouseDown(ref Vector2 mousePos, MouseButton buttons)
         {
             OnMouseDown?.Invoke(mousePos, buttons);
             GUI.OnMouseDown(mousePos, buttons);
         }
 
-        internal void Internal_OnMouseUp(ref Vector2 mousePos, MouseButtons buttons)
+        internal void Internal_OnMouseUp(ref Vector2 mousePos, MouseButton buttons)
         {
             OnMouseUp?.Invoke(mousePos, buttons);
             GUI.OnMouseUp(mousePos, buttons);
         }
 
-        internal void Internal_OnMouseDoubleClick(ref Vector2 mousePos, MouseButtons buttons)
+        internal void Internal_OnMouseDoubleClick(ref Vector2 mousePos, MouseButton buttons)
         {
             OnMouseDoubleClick?.Invoke(mousePos, buttons);
             GUI.OnMouseDoubleClick(mousePos, buttons);

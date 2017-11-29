@@ -134,7 +134,7 @@ namespace FlaxEditor.SceneGraph.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
         {
             var actor = Actor;
             if (actor && testHeaderHit(ref location))
@@ -268,7 +268,7 @@ namespace FlaxEditor.SceneGraph.GUI
             // Drag actors
             if (_dragActors != null && _dragActors.HasValidDrag)
             {
-                bool worldPositionLock = ParentWindow.GetKey(KeyCode.Control) == false;
+                bool worldPositionLock = ParentWindow.GetKey(Keys.Control) == false;
                 var singleObject = _dragActors.Objects.Count == 1;
                 if (singleObject)
                 {

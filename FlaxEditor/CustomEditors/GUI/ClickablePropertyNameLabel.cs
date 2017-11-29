@@ -46,14 +46,14 @@ namespace FlaxEditor.CustomEditors.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             // Fire events
-            if (buttons == MouseButtons.Left)
+            if (buttons == MouseButton.Left)
             {
                 MouseLeftClick?.Invoke(this, location);
             }
-            else if (buttons == MouseButtons.Right)
+            else if (buttons == MouseButton.Right)
             {
                 MouseRightClick?.Invoke(this, location);
             }
@@ -62,14 +62,14 @@ namespace FlaxEditor.CustomEditors.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
         {
             // Fire events
-            if (buttons == MouseButtons.Left)
+            if (buttons == MouseButton.Left)
             {
                 MouseLeftDoubleClick?.Invoke(this, location);
             }
-            else if (buttons == MouseButtons.Right)
+            else if (buttons == MouseButton.Right)
             {
                 MouseRightDoubleClick?.Invoke(this, location);
             }

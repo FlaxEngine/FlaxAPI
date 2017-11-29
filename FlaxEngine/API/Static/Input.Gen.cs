@@ -42,7 +42,7 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static bool GetKey(KeyCode key) 
+		public static bool GetKey(Keys key) 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -60,7 +60,7 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static bool GetKeyDown(KeyCode key) 
+		public static bool GetKeyDown(Keys key) 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -78,7 +78,7 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static bool GetKeyUp(KeyCode key) 
+		public static bool GetKeyUp(Keys key) 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -96,7 +96,7 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static bool GetMouseButton(MouseButtons button) 
+		public static bool GetMouseButton(MouseButton button) 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -114,7 +114,7 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static bool GetMouseButtonDown(MouseButtons button) 
+		public static bool GetMouseButtonDown(MouseButton button) 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -132,7 +132,7 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static bool GetMouseButtonUp(MouseButtons button) 
+		public static bool GetMouseButtonUp(MouseButton button) 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -148,17 +148,17 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetMousePosition(ref Vector2 val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetKey(KeyCode key);
+		internal static extern bool Internal_GetKey(Keys key);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetKeyDown(KeyCode key);
+		internal static extern bool Internal_GetKeyDown(Keys key);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetKeyUp(KeyCode key);
+		internal static extern bool Internal_GetKeyUp(Keys key);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetMouseButton(MouseButtons button);
+		internal static extern bool Internal_GetMouseButton(MouseButton button);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetMouseButtonDown(MouseButtons button);
+		internal static extern bool Internal_GetMouseButtonDown(MouseButton button);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetMouseButtonUp(MouseButtons button);
+		internal static extern bool Internal_GetMouseButtonUp(MouseButton button);
 #endif
 #endregion
 	}

@@ -27,7 +27,7 @@ namespace FlaxEngine
         /// <summary>
         /// Converts virtual key code to unicode character
         /// </summary>
-        /// <param name="virtualKeyCode"></param>
+        /// <param name="virtualKeys"></param>
         /// <param name="scanCode"></param>
         /// <param name="keyboardState"></param>
         /// <param name="receivingBuffer"></param>
@@ -36,7 +36,7 @@ namespace FlaxEngine
         /// <returns></returns>
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         internal static extern int ToUnicode(
-            uint virtualKeyCode,
+            uint virtualKeys,
             uint scanCode,
             byte[] keyboardState,
             StringBuilder receivingBuffer,
@@ -47,18 +47,18 @@ namespace FlaxEngine
         /// <summary>
         /// TODO
         /// </summary>
-        /// <param name="keyCode"></param>
+        /// <param name="Keys"></param>
         /// <param name="shift"></param>
         /// <returns></returns>
-        public static string GetCharsFromKeys(KeyCode keyCode, bool shift)
+        public static string GetCharsFromKeys(Keys Keys, bool shift)
         {
             var stringBuilder = new StringBuilder(256);
             var keyboardState = new byte[256];
             if (shift)
             {
-                keyboardState[(int)KeyCode.Shift] = 0xff;
+                keyboardState[(int)Keys.Shift] = 0xff;
             }
-            ToUnicode((uint)keyCode, 0, keyboardState, stringBuilder, 256, 0);
+            ToUnicode((uint)Keys, 0, keyboardState, stringBuilder, 256, 0);
             return stringBuilder.ToString();
         }
 
@@ -71,7 +71,7 @@ namespace FlaxEngine
             //var a = "";
             //foreach (var b in keyPressedArray)
             //{
-            //    a += (KeyCode)b + " ";
+            //    a += (Keys)b + " ";
             //}
             //Debug.Log(a);
             ActiveKeys = keyPressedArray;

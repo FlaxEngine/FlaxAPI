@@ -500,13 +500,13 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
             // Check if mosue hits bar and node isn't a root
             if (_mouseOverHeader && !IsRoot)
             {
                 // Check if left buton goes down
-                if (buttons == MouseButtons.Left)
+                if (buttons == MouseButton.Left)
                 {
                     _isMouseDown = true;
                     _mouseDownPos = location;
@@ -528,16 +528,16 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             // Check if mouse hits bar
-            if (buttons == MouseButtons.Right && testHeaderHit(ref location))
+            if (buttons == MouseButton.Right && testHeaderHit(ref location))
             {
                 ParentTree.OnRightClickInternal(this, ref location);
             }
 
             // Clear flag for left button
-            if (buttons == MouseButtons.Left)
+            if (buttons == MouseButton.Left)
             {
                 // Clear flag
                 _isMouseDown = false;
@@ -553,12 +553,12 @@ namespace FlaxEngine.GUI
                     // Check if user is pressing control key
                     var tree = ParentTree;
                     var window = tree.ParentWindow;
-                    if (window.GetKey(KeyCode.Shift))
+                    if (window.GetKey(Keys.Shift))
                     {
                         // Select range
                         tree.SelectRange(this);
                     }
-                    else if (window.GetKey(KeyCode.Control))
+                    else if (window.GetKey(Keys.Control))
                     {
                         // Add/Remove
                         tree.AddOrRemoveSelection(this);
@@ -590,7 +590,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
         {
             // Check if mosue hits bar
             if (!IsRoot && testHeaderHit(ref location))
@@ -665,20 +665,20 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyDown(Keys key)
         {
             // Check if is focused and has any children
             if (IsFocused && _children.Count > 0)
             {
                 // Collapse
-                if (key == KeyCode.ArrowLeft)
+                if (key == Keys.ArrowLeft)
                 {
                     Collapse();
                     return true;
                 }
 
                 // Expand
-                if (key == KeyCode.ArrowRight)
+                if (key == Keys.ArrowRight)
                 {
                     Expand();
                     return true;

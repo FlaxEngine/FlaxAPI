@@ -559,7 +559,7 @@ namespace FlaxEngine.GUI
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="buttons">Mouse buttons state (flags)</param>
         /// <returns>True if event has been handled, otherwise false</returns>
-        public virtual bool OnMouseDown(Vector2 location, MouseButtons buttons)
+        public virtual bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
             return _canFocus && Focus(this);
         }
@@ -570,7 +570,7 @@ namespace FlaxEngine.GUI
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="buttons">Mouse buttons state (flags)</param>
         /// <returns>True if event has been handled, oherwise false</returns>
-        public virtual bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        public virtual bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             return false;
         }
@@ -581,7 +581,7 @@ namespace FlaxEngine.GUI
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="buttons">Mouse buttons state (flags)</param>
         /// <returns>True if event has been handled, otherwise false</returns>
-        public virtual bool OnMouseDoubleClick(Vector2 location, MouseButtons buttons)
+        public virtual bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
         {
             return false;
         }
@@ -595,7 +595,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="key">Key value</param>
         /// <returns>True if event has been handled, otherwise false</returns>
-        public virtual bool OnKeyDown(KeyCode key)
+        public virtual bool OnKeyDown(Keys key)
         {
             return false;
         }
@@ -604,7 +604,7 @@ namespace FlaxEngine.GUI
         ///     When key goes up
         /// </summary>
         /// <param name="key">Key value</param>
-        public virtual void OnKeyUp(KeyCode key)
+        public virtual void OnKeyUp(Keys key)
         {
         }
 

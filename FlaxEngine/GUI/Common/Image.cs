@@ -45,7 +45,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Occurs when mouse clicks on the image.
         /// </summary>
-        public event Action<Image, MouseButtons> Clicked;
+        public event Action<Image, MouseButton> Clicked;
 
         /// <inheritdoc />
         public Image()
@@ -114,7 +114,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             if (base.OnMouseUp(location, buttons))
                 return true;

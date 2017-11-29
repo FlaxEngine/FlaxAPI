@@ -241,7 +241,7 @@ namespace FlaxEngine.GUI.Tabs
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             if (_orientation == Orientation.Horizontal)
             {

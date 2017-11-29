@@ -270,14 +270,14 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
             if (base.OnMouseDown(location, buttons))
                 return true;
 
             _mouseOverHeader = HeaderRectangle.Contains(location);
 
-            if (buttons == MouseButtons.Left && _mouseOverHeader)
+            if (buttons == MouseButton.Left && _mouseOverHeader)
             {
                 _mouseDown = true;
                 return true;
@@ -295,14 +295,14 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             if (base.OnMouseUp(location, buttons))
                 return true;
             
             _mouseOverHeader = HeaderRectangle.Contains(location);
 
-            if (buttons == MouseButtons.Left && _mouseDown)
+            if (buttons == MouseButton.Left && _mouseDown)
             {
                 _mouseDown = false;
 

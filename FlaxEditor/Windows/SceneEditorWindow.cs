@@ -33,44 +33,44 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyDown(Keys key)
         {
             // Base
             bool result = base.OnKeyDown(key);
             if (!result)
             {
                 var parentWin = ParentWindow;
-                if (parentWin.GetKey(KeyCode.Control))
+                if (parentWin.GetKey(Keys.Control))
                 {
                     switch (key)
                     {
-                        case KeyCode.S:
+                        case Keys.S:
                             Editor.SaveAll();
                             return true;
-                        case KeyCode.Z:
+                        case Keys.Z:
                             Editor.PerformUndo();
                             Focus();
                             return true;
-                        case KeyCode.Y:
+                        case Keys.Y:
                             Editor.PerformRedo();
                             Focus();
                             return true;
-                        case KeyCode.X:
+                        case Keys.X:
                             Editor.SceneEditing.Cut();
                             break;
-                        case KeyCode.C:
+                        case Keys.C:
                             Editor.SceneEditing.Copy();
                             break;
-                        case KeyCode.V:
+                        case Keys.V:
                             Editor.SceneEditing.Paste();
                             break;
-                        case KeyCode.D:
+                        case Keys.D:
                             Editor.SceneEditing.Duplicate();
                             break;
-                        case KeyCode.A:
+                        case Keys.A:
                             Editor.SceneEditing.SelectAllScenes();
                             break;
-                        case KeyCode.F:
+                        case Keys.F:
                             Editor.Windows.SceneWin.Search();
                             break;
                     }
@@ -79,14 +79,14 @@ namespace FlaxEditor.Windows
                 {
                     switch (key)
                     {
-                        case KeyCode.Delete:
+                        case Keys.Delete:
                             Editor.SceneEditing.Delete();
                             break;
 
-                        case KeyCode.F5:
+                        case Keys.F5:
                             Editor.Simulation.RequestStartPlay();
                             break;
-                        case KeyCode.F11:
+                        case Keys.F11:
                             Editor.Simulation.RequestPlayOneFrame();
                             break;
                     }

@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -99,16 +99,16 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyDown(Keys key)
         {
             // Enter
-            if (key == KeyCode.Return)
+            if (key == Keys.Return)
             {
                 OnTextChanged();
                 return true;
             }
             // Esc
-            if (key == KeyCode.Escape)
+            if (key == Keys.Escape)
             {
                 Hide();
                 return true;

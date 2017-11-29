@@ -152,10 +152,10 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
             // Check mouse button
-            if (buttons == MouseButtons.Left)
+            if (buttons == MouseButton.Left)
             {
                 // Set flag
                 _mouseDown = true;
@@ -165,10 +165,10 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             // Check mouse button and flag
-            if (_mouseDown && buttons == MouseButtons.Left)
+            if (_mouseDown && buttons == MouseButton.Left)
             {
                 // Clear flag
                 _mouseDown = false;

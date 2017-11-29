@@ -326,7 +326,7 @@ namespace FlaxEditor.Content.GUI
             bool isSelected = _selection.Contains(item);
 
             // Switch based on input (control, alt and shift keys)
-            if (ParentWindow.GetKey(KeyCode.Control))
+            if (ParentWindow.GetKey(Keys.Control))
             {
                 if (isSelected)
                     Deselect(item);
@@ -465,7 +465,7 @@ namespace FlaxEditor.Content.GUI
         public override bool OnMouseWheel(Vector2 location, int delta)
         {
             // Check if pressing control key
-            if (ParentWindow.GetKey(KeyCode.Control))
+            if (ParentWindow.GetKey(Keys.Control))
             {
                 // Zoom
                 _scale = Mathf.Clamp(_scale + (delta > 0 ? 1 : -1) * 0.05f, 0.3f, 3.0f);
@@ -479,17 +479,17 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyDown(Keys key)
         {
             // Navigate backward
-            if (key == KeyCode.Backspace)
+            if (key == Keys.Backspace)
             {
                 OnNavigateBack?.Invoke();
                 return true;
             }
 
             // Select all
-            if (key == KeyCode.A && ParentWindow.GetKey(KeyCode.Control))
+            if (key == Keys.A && ParentWindow.GetKey(Keys.Control))
             {
                 SelectAll();
                 return true;
@@ -499,21 +499,21 @@ namespace FlaxEditor.Content.GUI
             if (HasSelection)
             {
                 // Delete selection
-                if (key == KeyCode.Delete)
+                if (key == Keys.Delete)
                 {
                     OnDelete?.Invoke(_selection);
                     return true;
                 }
 
                 // Open
-                if (key == KeyCode.Return && _selection.Count == 1)
+                if (key == Keys.Return && _selection.Count == 1)
                 {
                     OnOpen?.Invoke(_selection[0]);
                     return true;
                 }
 
                 // Duplicate
-                if (key == KeyCode.D && ParentWindow.GetKey(KeyCode.Control))
+                if (key == Keys.D && ParentWindow.GetKey(Keys.Control))
                 {
                     DuplicateSelection();
                     return true;
@@ -525,19 +525,19 @@ namespace FlaxEditor.Content.GUI
                     Vector2 size = root.Size;
                     Vector2 offset = Vector2.Minimum;
                     ContentItem item = null;
-                    if (key == KeyCode.ArrowUp)
+                    if (key == Keys.ArrowUp)
                     {
                         offset = new Vector2(0, -size.Y);
                     }
-                    else if (key == KeyCode.ArrowDown)
+                    else if (key == Keys.ArrowDown)
                     {
                         offset = new Vector2(0, size.Y);
                     }
-                    else if (key == KeyCode.ArrowRight)
+                    else if (key == Keys.ArrowRight)
                     {
                         offset = new Vector2(size.X, 0);
                     }
-                    else if (key == KeyCode.ArrowLeft)
+                    else if (key == Keys.ArrowLeft)
                     {
                         offset = new Vector2(-size.X, 0);
                     }

@@ -236,7 +236,7 @@ namespace FlaxEngine.GUI
         /// <param name="key">Key to check.</param>
         /// <returns>True while the user holds down the key identified by id.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool GetKey(KeyCode key)
+        public bool GetKey(Keys key)
         {
             return _window.GetKey(key);
         }
@@ -247,7 +247,7 @@ namespace FlaxEngine.GUI
         /// <param name="key">Key to check.</param>
         /// <returns>True during the frame the user releases the key.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool GetKeyDown(KeyCode key)
+        public bool GetKeyDown(Keys key)
         {
             return _window.GetKeyDown(key);
         }
@@ -258,7 +258,7 @@ namespace FlaxEngine.GUI
         /// <param name="key">Key to check.</param>
         /// <returns>True during the frame the user starts pressing down the key.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool GetKeyUp(KeyCode key)
+        public bool GetKeyUp(Keys key)
         {
             return _window.GetKeyUp(key);
         }
@@ -269,7 +269,7 @@ namespace FlaxEngine.GUI
         /// <param name="button">Mouse button to check.</param>
         /// <returns>True while the user holds down the button.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool GetMouseButton(MouseButtons button)
+        public bool GetMouseButton(MouseButton button)
         {
             return _window.GetMouseButton(button);
         }
@@ -280,7 +280,7 @@ namespace FlaxEngine.GUI
         /// <param name="button">Mouse button to check.</param>
         /// <returns>True during the frame the user starts pressing down the button.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool GetMouseButtonDown(MouseButtons button)
+        public bool GetMouseButtonDown(MouseButton button)
         {
             return _window.GetMouseButtonDown(button);
         }
@@ -291,7 +291,7 @@ namespace FlaxEngine.GUI
         /// <param name="button">Mouse button to check.</param>
         /// <returns>True during the frame the user releases the button.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool GetMouseButtonUp(MouseButtons button)
+        public bool GetMouseButtonUp(MouseButton button)
         {
             return _window.GetMouseButtonUp(button);
         }

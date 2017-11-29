@@ -324,7 +324,7 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             if (base.OnMouseUp(location, buttons))
                 return true;
@@ -339,7 +339,7 @@ namespace FlaxEditor.Surface
                 }
             }
             // Secondary Context Menu
-            if (buttons == MouseButtons.Right)
+            if (buttons == MouseButton.Right)
             {
                 Surface.ShowSecondaryCM(this, Parent.PointToParent(PointToParent(location)));
                 return true;

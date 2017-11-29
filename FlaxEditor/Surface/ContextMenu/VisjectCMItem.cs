@@ -113,9 +113,9 @@ namespace FlaxEditor.Surface.ContextMenu
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
-            if (buttons == MouseButtons.Left)
+            if (buttons == MouseButton.Left)
             {
                 _isMouseDown = true;
             }
@@ -124,9 +124,9 @@ namespace FlaxEditor.Surface.ContextMenu
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
-            if (buttons == MouseButtons.Left && _isMouseDown)
+            if (buttons == MouseButton.Left && _isMouseDown)
             {
                 _isMouseDown = false;
                 _group.ContextMenu.OnClickItem(this);

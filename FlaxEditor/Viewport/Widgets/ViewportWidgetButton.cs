@@ -117,7 +117,7 @@ namespace FlaxEditor.Viewport.Widgets
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
             // Check if auto check feature is enabled
             if (_autoCheck)

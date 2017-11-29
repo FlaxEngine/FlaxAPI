@@ -853,7 +853,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
             // Check all children collisions with mouse and fire events for them
             for (int i = _children.Count - 1; i >= 0 && _children.Count > 0; i--)
@@ -884,7 +884,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             // Check all children collisions with mouse and fire events for them
             for (int i = _children.Count - 1; i >= 0 && _children.Count > 0; i--)
@@ -925,7 +925,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButtons buttons)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
         {
             // Check all children collisions with mouse and fire events for them
             for (int i = _children.Count - 1; i >= 0 && _children.Count > 0; i--)
@@ -951,7 +951,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(KeyCode key)
+        public override bool OnKeyDown(Keys key)
         {
             for (int i = 0; i < _children.Count && _children.Count > 0; i++)
             {
@@ -965,7 +965,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override void OnKeyUp(KeyCode key)
+        public override void OnKeyUp(Keys key)
         {
             for (int i = 0; i < _children.Count && _children.Count > 0; i++)
             {

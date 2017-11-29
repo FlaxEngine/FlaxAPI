@@ -25,9 +25,9 @@ namespace FlaxEditor.Content.Settings
         public int MaxPackageSizeMB = 256;
 
         /// <summary>
-        /// The game content cooking keycode. Use the same value for a game and DLC packages to support loading them by the builded game. Use 0 to randomize it during building.
+        /// The game content cooking Keys. Use the same value for a game and DLC packages to support loading them by the builded game. Use 0 to randomize it during building.
         /// </summary>
-        [EditorOrder(30), EditorDisplay("General"), Tooltip("The game content cooking keycode. Use the same value for a game and DLC packages to support loading them by the builded game. Use 0 to randomize it during building.")]
+        [EditorOrder(30), EditorDisplay("General"), Tooltip("The game content cooking Keys. Use the same value for a game and DLC packages to support loading them by the builded game. Use 0 to randomize it during building.")]
         public int ContentKey = 0;
 
         /// <summary>
