@@ -1,738 +1,890 @@
-﻿// Flax Engine scripting API
+// Flax Engine scripting API
+
+using System;
 
 namespace FlaxEngine
 {
-    public enum MouseButtons : byte
+    /// <summary>
+    /// Mouse buttons types.
+    /// </summary>
+    public enum MouseButton
     {
-        None = 0,
-        Left = 1,
-        Right = 2,
-        Middle = 4,
-        XButton1 = 8,
-        XButton2 = 16,
-    }
-
-    public enum KeyCode : byte
-    {
-        // TODO: create more platform independent key mappings, without OEM stuff etc.
-        // Note: these are just raw values copied right from C++ source
+        /// <summary>
+        /// Left button.
+        /// </summary>
+        Left = 0,
 
         /// <summary>
-        ///     BACKSPACE key
+        /// Middle button.
+        /// </summary>
+        Middle = 1,
+
+        /// <summary>
+        /// Right button.
+        /// </summary>
+        Right = 2,
+
+        /// <summary>
+        /// Extended button 1 (or XButton1).
+        /// </summary>
+        Extended1 = 3,
+
+        /// <summary>
+        /// Extended button 2 (or XButton2).
+        /// </summary>
+        Extended2 = 4
+    }
+
+    /// <summary>
+    /// Axis for gamepad.
+    /// </summary>
+    [Flags]
+    public enum GamePadAxis
+    {
+        /// <summary>
+        /// No axis
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// The X-Axis of the left thumb stick
+        /// </summary>
+        LeftThumbX = 1 << 1,
+
+        /// <summary>
+        /// The Y-Axis of the left thumb stick
+        /// </summary>
+        LeftThumbY = 1 << 2,
+
+        /// <summary>
+        /// The X-Axis of the right thumb stick
+        /// </summary>
+        RightThumbX = 1 << 3,
+
+        /// <summary>
+        /// The Y-Axis of the right thumb stick
+        /// </summary>
+        RightThumbY = 1 << 4,
+
+        /// <summary>
+        /// The left trigger
+        /// </summary>
+        LeftTrigger = 1 << 5,
+
+        /// <summary>
+        /// The right trigger
+        /// </summary>
+        RightTrigger = 1 << 6
+    }
+
+    /// <summary>
+    /// Buttons for gamepad.
+    /// </summary>
+    [Flags]
+    public enum GamePadButton
+    {
+        /// <summary>
+        /// No buttons.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// PadUp button. (DPad / Directional Pad)
+        /// </summary>
+        PadUp = 1 << 0,
+
+        /// <summary>
+        /// PadDown button. (DPad / Directional Pad)
+        /// </summary>
+        PadDown = 1 << 1,
+
+        /// <summary>
+        /// PadLeft button. (DPad / Directional Pad)
+        /// </summary>
+        PadLeft = 1 << 2,
+
+        /// <summary>
+        /// PadRight button. (DPad / Directional Pad)
+        /// </summary>
+        PadRight = 1 << 3,
+
+        /// <summary>
+        /// Any pad button (DPad / Directional Pad).
+        /// </summary>
+        Pad = PadUp | PadDown | PadLeft | PadRight,
+
+        /// <summary>
+        /// Start button.
+        /// </summary>
+        Start = 1 << 4,
+
+        /// <summary>
+        /// Back button.
+        /// </summary>
+        Back = 1 << 5,
+
+        /// <summary>
+        /// Left thumb button.
+        /// </summary>
+        LeftThumb = 1 << 6,
+
+        /// <summary>
+        /// Right thumb button.
+        /// </summary>
+        RightThumb = 1 << 7,
+
+        /// <summary>
+        /// Left shoulder button.
+        /// </summary>
+        LeftShoulder = 1 << 8,
+
+        /// <summary>
+        /// Right shoulder button.
+        /// </summary>
+        RightShoulder = 1 << 9,
+
+        /// <summary>
+        /// A button.
+        /// </summary>
+        A = 1 << 12,
+
+        /// <summary>
+        /// B button.
+        /// </summary>
+        B = 1 << 13,
+
+        /// <summary>
+        /// X button.
+        /// </summary>
+        X = 1 << 14,
+
+        /// <summary>
+        /// Y button.
+        /// </summary>
+        Y = 1 << 15
+    }
+
+    /// <summary>
+    /// Enumeration for key codes.
+    /// </summary>
+    public enum Keys
+    {
+        /// <summary>
+        /// The 'none' key
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// BACKSPACE key
         /// </summary>
         Backspace = 0x08,
 
         /// <summary>
-        ///     TAB key
+        /// TAB key
         /// </summary>
         Tab = 0x09,
 
         /// <summary>
-        ///     CLEAR key
+        /// CLEAR key
         /// </summary>
         Clear = 0x0C,
 
         /// <summary>
-        ///     ENTER key
+        /// ENTER key
         /// </summary>
         Return = 0x0D,
 
         /// <summary>
-        ///     Any SHIFT key, right or left
+        /// Any SHIFT key, right or left
         /// </summary>
         Shift = 0x10,
 
         /// <summary>
-        ///     Any CTRL key, right or left
+        /// Any CTRL key, right or left
         /// </summary>
         Control = 0x11,
 
         /// <summary>
-        ///     Any ALT key, right or left
+        /// Any ALT key, right or left
         /// </summary>
         Alt = 0x12,
 
         /// <summary>
-        ///     PAUSE key
+        /// PAUSE key
         /// </summary>
         Pause = 0x13,
 
         /// <summary>
-        ///     CAPS LOCK key
+        /// CAPS LOCK key
         /// </summary>
         Capital = 0x14,
 
         /// <summary>
-        ///     IME Kana mode
+        /// IME Kana mode
         /// </summary>
         Kana = 0x15,
 
         /// <summary>
-        ///     IME Hanguel mode (maintained for compatibility; use HANGUL)
-        /// </summary>
-        Hanguel = 0x15,
-
-        /// <summary>
-        ///     IME Hangul mode
+        /// IME Hangul mode
         /// </summary>
         Hangul = 0x15,
 
         /// <summary>
-        ///     IME Junja mode
+        /// IME Junja mode
         /// </summary>
         Junja = 0x17,
 
         /// <summary>
-        ///     IME final mode
+        /// IME final mode
         /// </summary>
         Final = 0x18,
 
         /// <summary>
-        ///     IME Hanja mode
+        /// IME Hanja mode
         /// </summary>
         Hanja = 0x19,
 
         /// <summary>
-        ///     IME Kanji mode
+        /// IME Kanji mode
         /// </summary>
         Kanji = 0x19,
 
         /// <summary>
-        ///     ESC key
+        /// ESC key
         /// </summary>
         Escape = 0x1B,
 
         /// <summary>
-        ///     IME convert
+        /// IME convert
         /// </summary>
         Convert = 0x1C,
 
         /// <summary>
-        ///     IME nonconvert
+        /// IME nonconvert
         /// </summary>
         Nonconvert = 0x1D,
 
         /// <summary>
-        ///     IME accept
+        /// IME accept
         /// </summary>
         Accept = 0x1E,
 
         /// <summary>
-        ///     IME mode change request
+        /// IME mode change request
         /// </summary>
         Modechange = 0x1F,
 
         /// <summary>
-        ///     SPACEBAR key
+        /// SPACEBAR key
         /// </summary>
         Spacebar = 0x20,
 
         /// <summary>
-        ///     PAGE UP key
+        /// PAGE UP key
         /// </summary>
         PageUp = 0x21,
 
         /// <summary>
-        ///     PAGE DOWN key
+        /// PAGE DOWN key
         /// </summary>
         PageDown = 0x22,
 
         /// <summary>
-        ///     END key
+        /// END key
         /// </summary>
         End = 0x23,
 
         /// <summary>
-        ///     HOME key
+        /// HOME key
         /// </summary>
         Home = 0x24,
 
         /// <summary>
-        ///     LEFT ARROW key
+        /// LEFT ARROW key
         /// </summary>
         ArrowLeft = 0x25,
 
         /// <summary>
-        ///     UP ARROW key
+        /// UP ARROW key
         /// </summary>
         ArrowUp = 0x26,
 
         /// <summary>
-        ///     RIGHT ARROW key
+        /// RIGHT ARROW key
         /// </summary>
         ArrowRight = 0x27,
 
         /// <summary>
-        ///     DOWN ARROW key
+        /// DOWN ARROW key
         /// </summary>
         ArrowDown = 0x28,
 
         /// <summary>
-        ///     SELECT key
+        /// SELECT key
         /// </summary>
         Select = 0x29,
 
         /// <summary>
-        ///     PRINT key
+        /// PRINT key
         /// </summary>
         Print = 0x2A,
 
         /// <summary>
-        ///     EXECUTE key
+        /// EXECUTE key
         /// </summary>
         Execute = 0x2B,
 
         /// <summary>
-        ///     PRINT SCREEN key
+        /// PRINT SCREEN key
         /// </summary>
         PrintScreen = 0x2C,
 
         /// <summary>
-        ///     INSERT key
+        /// INSERT key
         /// </summary>
         Insert = 0x2D,
 
         /// <summary>
-        ///     DELETE key
+        /// DELETE key
         /// </summary>
         Delete = 0x2E,
 
         /// <summary>
-        ///     HELP key
+        /// HELP key
         /// </summary>
         Help = 0x2F,
 
         /// <summary>
-        ///     The '0' key on the top of the alphanumeric keyboard.
+        /// The '0' key on the top of the alphanumeric keyboard.
         /// </summary>
         Alpha0 = 0x30,
 
         /// <summary>
-        ///     The '1' key on the top of the alphanumeric keyboard.
+        /// The '1' key on the top of the alphanumeric keyboard.
         /// </summary>
         Alpha1 = 0x31,
 
         /// <summary>
-        ///     The '2' key on the top of the alphanumeric keyboard.
+        /// The '2' key on the top of the alphanumeric keyboard.
         /// </summary>
         Alpha2 = 0x32,
 
         /// <summary>
-        ///     The '3' key on the top of the alphanumeric keyboard.
+        /// The '3' key on the top of the alphanumeric keyboard.
         /// </summary>
         Alpha3 = 0x33,
 
         /// <summary>
-        ///     The '4' key on the top of the alphanumeric keyboard.
+        /// The '4' key on the top of the alphanumeric keyboard.
         /// </summary>
         Alpha4 = 0x34,
 
         /// <summary>
-        ///     The '5' key on the top of the alphanumeric keyboard.
+        /// The '5' key on the top of the alphanumeric keyboard.
         /// </summary>
         Alpha5 = 0x35,
 
         /// <summary>
-        ///     The '6' key on the top of the alphanumeric keyboard.
+        /// The '6' key on the top of the alphanumeric keyboard.
         /// </summary>
         Alpha6 = 0x36,
 
         /// <summary>
-        ///     The '7' key on the top of the alphanumeric keyboard.
+        /// The '7' key on the top of the alphanumeric keyboard.
         /// </summary>
         Alpha7 = 0x37,
 
         /// <summary>
-        ///     The '8' key on the top of the alphanumeric keyboard.
+        /// The '8' key on the top of the alphanumeric keyboard.
         /// </summary>
         Alpha8 = 0x38,
 
         /// <summary>
-        ///     The '9' key on the top of the alphanumeric keyboard.
+        /// The '9' key on the top of the alphanumeric keyboard.
         /// </summary>
         Alpha9 = 0x39,
 
         /// <summary>
-        ///     A key
+        /// A key
         /// </summary>
         A = 0x41,
 
         /// <summary>
-        ///     B key
+        /// B key
         /// </summary>
         B = 0x42,
 
         /// <summary>
-        ///     C key
+        /// C key
         /// </summary>
         C = 0x43,
 
         /// <summary>
-        ///     D key
+        /// D key
         /// </summary>
         D = 0x44,
 
         /// <summary>
-        ///     E key
+        /// E key
         /// </summary>
         E = 0x45,
 
         /// <summary>
-        ///     F key
+        /// F key
         /// </summary>
         F = 0x46,
 
         /// <summary>
-        ///     G key
+        /// G key
         /// </summary>
         G = 0x47,
 
         /// <summary>
-        ///     H key
+        /// H key
         /// </summary>
         H = 0x48,
 
         /// <summary>
-        ///     I key
+        /// I key
         /// </summary>
         I = 0x49,
 
         /// <summary>
-        ///     J key
+        /// J key
         /// </summary>
         J = 0x4A,
 
         /// <summary>
-        ///     K key
+        /// K key
         /// </summary>
         K = 0x4B,
 
         /// <summary>
-        ///     L key
+        /// L key
         /// </summary>
         L = 0x4C,
 
         /// <summary>
-        ///     M key
+        /// M key
         /// </summary>
         M = 0x4D,
 
         /// <summary>
-        ///     N key
+        /// N key
         /// </summary>
         N = 0x4E,
 
         /// <summary>
-        ///     O key
+        /// O key
         /// </summary>
         O = 0x4F,
 
         /// <summary>
-        ///     P key
+        /// P key
         /// </summary>
         P = 0x50,
 
         /// <summary>
-        ///     Q key
+        /// Q key
         /// </summary>
         Q = 0x51,
 
         /// <summary>
-        ///     R key
+        /// R key
         /// </summary>
         R = 0x52,
 
         /// <summary>
-        ///     S key
+        /// S key
         /// </summary>
         S = 0x53,
 
         /// <summary>
-        ///     T key
+        /// T key
         /// </summary>
         T = 0x54,
 
         /// <summary>
-        ///     U key
+        /// U key
         /// </summary>
         U = 0x55,
 
         /// <summary>
-        ///     V key
+        /// V key
         /// </summary>
         V = 0x56,
 
         /// <summary>
-        ///     W key
+        /// W key
         /// </summary>
         W = 0x57,
 
         /// <summary>
-        ///     X key
+        /// X key
         /// </summary>
         X = 0x58,
 
         /// <summary>
-        ///     Y key
+        /// Y key
         /// </summary>
         Y = 0x59,
 
         /// <summary>
-        ///     Z key
+        /// Z key
         /// </summary>
         Z = 0x5A,
 
         /// <summary>
-        ///     Left Windows key (Natural keyboard)
+        /// Left Windows key (Natural keyboard)
         /// </summary>
         LeftWindows = 0x5B,
 
         /// <summary>
-        ///     Right Windows key (Natural keyboard)
+        /// Right Windows key (Natural keyboard)
         /// </summary>
         RightWindows = 0x5C,
 
         /// <summary>
-        ///     Applications key (Natural keyboard)
+        /// Applications key (Natural keyboard)
         /// </summary>
         Applications = 0x5D,
 
         /// <summary>
-        ///     Computer Sleep key
+        /// Computer Sleep key
         /// </summary>
         Sleep = 0x5F,
 
         /// <summary>
-        ///     Numeric keypad 0 key
+        /// Numeric keypad 0 key
         /// </summary>
         Numpad0 = 0x60,
 
         /// <summary>
-        ///     Numeric keypad 1 key
+        /// Numeric keypad 1 key
         /// </summary>
         Numpad1 = 0x61,
 
         /// <summary>
-        ///     Numeric keypad 2 key
+        /// Numeric keypad 2 key
         /// </summary>
         Numpad2 = 0x62,
 
         /// <summary>
-        ///     Numeric keypad 3 key
+        /// Numeric keypad 3 key
         /// </summary>
         Numpad3 = 0x63,
 
         /// <summary>
-        ///     Numeric keypad 4 key
+        /// Numeric keypad 4 key
         /// </summary>
         Numpad4 = 0x64,
 
         /// <summary>
-        ///     Numeric keypad 5 key
+        /// Numeric keypad 5 key
         /// </summary>
         Numpad5 = 0x65,
 
         /// <summary>
-        ///     Numeric keypad 6 key
+        /// Numeric keypad 6 key
         /// </summary>
         Numpad6 = 0x66,
 
         /// <summary>
-        ///     Numeric keypad 7 key
+        /// Numeric keypad 7 key
         /// </summary>
         Numpad7 = 0x67,
 
         /// <summary>
-        ///     Numeric keypad 8 key
+        /// Numeric keypad 8 key
         /// </summary>
         Numpad8 = 0x68,
 
         /// <summary>
-        ///     Numeric keypad 9 key
+        /// Numeric keypad 9 key
         /// </summary>
         Numpad9 = 0x69,
 
         /// <summary>
-        ///     Numeric keypad Multiply key '*'
+        /// Numeric keypad Multiply key '*'
         /// </summary>
         NumpadMultiply = 0x6A,
 
         /// <summary>
-        ///     Numeric keypad Add key '+'
+        /// Numeric keypad Add key '+'
         /// </summary>
         NumpadAdd = 0x6B,
 
         /// <summary>
-        ///     Numeric Separator key
+        /// Numeric Separator key
         /// </summary>
         NumpadSeparator = 0x6C,
 
         /// <summary>
-        ///     Numeric keypad Subtract key '-'
+        /// Numeric keypad Subtract key '-'
         /// </summary>
         NumpadSubtract = 0x6D,
 
         /// <summary>
-        ///     Numeric keypad Decimal key ','
+        /// Numeric keypad Decimal key ','
         /// </summary>
         NumpadDecimal = 0x6E,
 
         /// <summary>
-        ///     Numeric keypad Divide key '/'
+        /// Numeric keypad Divide key '/'
         /// </summary>
         NumpadDivide = 0x6F,
 
         /// <summary>
-        ///     F1 funcion key
+        /// F1 funcion key
         /// </summary>
         F1 = 0x70,
 
         /// <summary>
-        ///     F2 funcion key
+        /// F2 funcion key
         /// </summary>
         F2 = 0x71,
 
         /// <summary>
-        ///     F3 funcion key
+        /// F3 funcion key
         /// </summary>
         F3 = 0x72,
 
         /// <summary>
-        ///     F4 funcion key
+        /// F4 funcion key
         /// </summary>
         F4 = 0x73,
 
         /// <summary>
-        ///     F5 funcion key
+        /// F5 funcion key
         /// </summary>
         F5 = 0x74,
 
         /// <summary>
-        ///     F6 funcion key
+        /// F6 funcion key
         /// </summary>
         F6 = 0x75,
 
         /// <summary>
-        ///     F7 funcion key
+        /// F7 funcion key
         /// </summary>
         F7 = 0x76,
 
         /// <summary>
-        ///     F8 funcion key
+        /// F8 funcion key
         /// </summary>
         F8 = 0x77,
 
         /// <summary>
-        ///     F9 funcion key
+        /// F9 funcion key
         /// </summary>
         F9 = 0x78,
 
         /// <summary>
-        ///     F10 funcion key
+        /// F10 funcion key
         /// </summary>
         F10 = 0x79,
 
         /// <summary>
-        ///     F11 funcion key
+        /// F11 funcion key
         /// </summary>
         F11 = 0x7A,
 
         /// <summary>
-        ///     F12 funcion key
+        /// F12 funcion key
         /// </summary>
         F12 = 0x7B,
 
         /// <summary>
-        ///     F13 funcion key
+        /// F13 funcion key
         /// </summary>
         F13 = 0x7C,
 
         /// <summary>
-        ///     F14 funcion key
+        /// F14 funcion key
         /// </summary>
         F14 = 0x7D,
 
         /// <summary>
-        ///     F15 funcion key
+        /// F15 funcion key
         /// </summary>
         F15 = 0x7E,
 
         /// <summary>
-        ///     F16 funcion key
+        /// F16 funcion key
         /// </summary>
         F16 = 0x7F,
 
         /// <summary>
-        ///     F17 funcion key
+        /// F17 funcion key
         /// </summary>
         F17 = 0x80,
 
         /// <summary>
-        ///     F18 funcion key
+        /// F18 funcion key
         /// </summary>
         F18 = 0x81,
 
         /// <summary>
-        ///     F19 funcion key
+        /// F19 funcion key
         /// </summary>
         F19 = 0x82,
 
         /// <summary>
-        ///     F20 funcion key
+        /// F20 funcion key
         /// </summary>
         F20 = 0x83,
 
         /// <summary>
-        ///     F21 funcion key
+        /// F21 funcion key
         /// </summary>
         F21 = 0x84,
 
         /// <summary>
-        ///     F22 funcion key
+        /// F22 funcion key
         /// </summary>
         F22 = 0x85,
 
         /// <summary>
-        ///     F23 funcion key
+        /// F23 funcion key
         /// </summary>
         F23 = 0x86,
 
         /// <summary>
-        ///     F24 funcion key
+        /// F24 funcion key
         /// </summary>
         F24 = 0x87,
 
         /// <summary>
-        ///     Numeric keypad NUM LOCK key
+        /// Numeric keypad NUM LOCK key
         /// </summary>
         Numlock = 0x90,
 
         /// <summary>
-        ///     SCROLL LOCK key
+        /// SCROLL LOCK key
         /// </summary>
         Scroll = 0x91,
 
         /// <summary>
-        ///     Left SHIFT key
+        /// Left SHIFT key
         /// </summary>
         /// <seealso cref="Shift" />
         LeftShift = 0xA0,
 
         /// <summary>
-        ///     Right SHIFT key
+        /// Right SHIFT key
         /// </summary>
         /// <seealso cref="Shift" />
         RightShift = 0xA1,
 
         /// <summary>
-        ///     Left CONTROL key
+        /// Left CONTROL key
         /// </summary>
         /// <seealso cref="Control" />
         LeftControl = 0xA2,
 
         /// <summary>
-        ///     Right CONTROL key
+        /// Right CONTROL key
         /// </summary>
         /// <seealso cref="Control" />
         RightControl = 0xA3,
 
         /// <summary>
-        ///     Left MENU key
+        /// Left MENU key
         /// </summary>
         LeftMenu = 0xA4,
 
         /// <summary>
-        ///     Right MENU key
+        /// Right MENU key
         /// </summary>
         RightMenu = 0xA5,
 
         /// <summary>
-        ///     Browser Back key
+        /// Browser Back key
         /// </summary>
         BrowserBack = 0xA6,
 
         /// <summary>
-        ///     Browser Forward key
+        /// Browser Forward key
         /// </summary>
         BrowserForward = 0xA7,
 
         /// <summary>
-        ///     Browser Refresh key
+        /// Browser Refresh key
         /// </summary>
         BrowserRefresh = 0xA8,
 
         /// <summary>
-        ///     Browser Stop key
+        /// Browser Stop key
         /// </summary>
         BrowserStop = 0xA9,
 
         /// <summary>
-        ///     Browser Search key
+        /// Browser Search key
         /// </summary>
         BrowserSearch = 0xAA,
 
         /// <summary>
-        ///     Browser Favorites key
+        /// Browser Favorites key
         /// </summary>
         BrowserFavorites = 0xAB,
 
         /// <summary>
-        ///     Browser Start and Home key
+        /// Browser Start and Home key
         /// </summary>
         BrowserHome = 0xAC,
 
         /// <summary>
-        ///     Volume Mute key
+        /// Volume Mute key
         /// </summary>
         VolumeMute = 0xAD,
 
         /// <summary>
-        ///     Volume Down key
+        /// Volume Down key
         /// </summary>
         VolumeDown = 0xAE,
 
         /// <summary>
-        ///     Volume Up key
+        /// Volume Up key
         /// </summary>
         VolumeUp = 0xAF,
 
         /// <summary>
-        ///     Next Track key
+        /// Next Track key
         /// </summary>
         MediaNextTrack = 0xB0,
 
         /// <summary>
-        ///     Previous Track key
+        /// Previous Track key
         /// </summary>
         MediaPrevTrack = 0xB1,
 
         /// <summary>
-        ///     Stop Media key
+        /// Stop Media key
         /// </summary>
         MediaStop = 0xB2,
 
         /// <summary>
-        ///     Play/Pause Media key
+        /// Play/Pause Media key
         /// </summary>
         MediaPlayPause = 0xB3,
 
         /// <summary>
-        ///     Start Mail key
+        /// Start Mail key
         /// </summary>
         LaunchMail = 0xB4,
 
         /// <summary>
-        ///     Select Media key
+        /// Select Media key
         /// </summary>
         LaunchMediaSelect = 0xB5,
 
         /// <summary>
-        ///     Start Application 1 key
+        /// Start Application 1 key
         /// </summary>
         LaunchApp1 = 0xB6,
 
         /// <summary>
-        ///     Start Application 2 key
+        /// Start Application 2 key
         /// </summary>
         LaunchApp2 = 0xB7,
 
@@ -787,7 +939,8 @@ namespace FlaxEngine
         RightBracket = 0xDD,
 
         /// <summary>
-        /// Used for miscellaneous characters; it can vary by keyboard. For the US standard keyboard the 'single-quote/double-quote' key
+        /// Used for miscellaneous characters; it can vary by keyboard. For the US standard keyboard the
+        /// 'single-quote/double-quote' key
         /// </summary>
         Quote = 0xDE,
 
@@ -807,7 +960,8 @@ namespace FlaxEngine
         Processkey = 0xE5,
 
         /// <summary>
-        /// Used to pass Unicode characters as if they were keystrokes. The PACKET key is the low word of a 32-bit Virtual Key value used for non-keyboard input methods.
+        /// Used to pass Unicode characters as if they were keystrokes. The PACKET key is the low word of a 32-bit Virtual Key
+        /// value used for non-keyboard input methods.
         /// </summary>
         Packet = 0xE7,
 
@@ -849,6 +1003,6 @@ namespace FlaxEngine
         /// <summary>
         /// Clear key
         /// </summary>
-        OemClear = 0xFE,
+        OemClear = 0xFE
     }
 }
