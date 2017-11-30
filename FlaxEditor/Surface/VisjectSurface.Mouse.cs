@@ -136,7 +136,7 @@ namespace FlaxEditor.Surface
         public override bool HasMouseCapture => _leftMouseDown || _rightMouseDown || _startBox != null || base.HasMouseCapture;
 
         /// <inheritdoc />
-        public override bool OnMouseWheel(Vector2 location, int delta)
+        public override bool OnMouseWheel(Vector2 location, float delta)
         {
             if (base.OnMouseWheel(location, delta))
                 return true;
@@ -145,7 +145,7 @@ namespace FlaxEditor.Surface
             if (IsMouseOver && !_leftMouseDown)
             {
                 var viewCenter = ViewCenterPosition;
-                ViewScale += delta * 0.0008f;
+                ViewScale += delta * 0.1f;
                 ViewCenterPosition = viewCenter;
                 return true;
             }

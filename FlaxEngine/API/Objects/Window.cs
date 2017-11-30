@@ -355,8 +355,8 @@ namespace FlaxEngine
         /// Perform mouse wheel action.
         /// </summary>
         /// <param name="mouse">The mouse position.</param>
-        /// <param name="delta">The mouse wheel move delta (can be positive or negative).</param>
-        public delegate void MouseWheelDelegate(Vector2 mouse, int delta);
+        /// <param name="delta">The mouse wheel move delta (can be positive or negative; normalized to [-1;1] range).</param>
+        public delegate void MouseWheelDelegate(Vector2 mouse, float delta);
 
         /// <summary>
         /// Perform keyboard action.
@@ -551,7 +551,7 @@ namespace FlaxEngine
             GUI.OnMouseDoubleClick(mousePos, buttons);
         }
 
-        internal void Internal_OnMouseWheel(ref Vector2 mousePos, int delta)
+        internal void Internal_OnMouseWheel(ref Vector2 mousePos, float delta)
         {
             OnMouseWheel?.Invoke(mousePos, delta);
             GUI.OnMouseWheel(mousePos, delta);

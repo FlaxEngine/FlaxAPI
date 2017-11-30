@@ -74,7 +74,7 @@ namespace FlaxEditor.Viewport
             // Zoom
             if (_input.IsZooming)
             {
-                _orbitRadius = Mathf.Clamp(_orbitRadius - (MouseWheelZoomSpeedFactor * _input.MouseWheelDelta * 0.1f), 0.001f, 10000.0f);
+                _orbitRadius = Mathf.Clamp(_orbitRadius - (MouseWheelZoomSpeedFactor * _input.MouseWheelDelta * 25.0f), 0.001f, 10000.0f);
             }
 
             // Update view position

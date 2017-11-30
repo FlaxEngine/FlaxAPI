@@ -82,7 +82,7 @@ namespace FlaxEditor.Viewport
             /// <summary>
             /// The mouse wheel delta.
             /// </summary>
-            public int MouseWheelDelta;
+            public float MouseWheelDelta;
 
             /// <summary>
             /// Gets a value indicating whether use is controlling mouse.
@@ -760,7 +760,7 @@ namespace FlaxEditor.Viewport
         }
 
         /// <inheritdoc />
-        public override bool OnMouseWheel(Vector2 location, int delta)
+        public override bool OnMouseWheel(Vector2 location, float delta)
         {
             _input.MouseWheelDelta += delta;
 

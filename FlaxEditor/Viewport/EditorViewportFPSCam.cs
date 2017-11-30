@@ -176,7 +176,7 @@ namespace FlaxEditor.Viewport
             // Zoom in/out
             if (_input.IsZooming)
             {
-                position += forward * (MouseWheelZoomSpeedFactor * _input.MouseWheelDelta * 0.1f);
+                position += forward * (MouseWheelZoomSpeedFactor * _input.MouseWheelDelta * 25.0f);
                 if (_input.IsAltDown)
                 {
                     position += forward * (MouseSpeed * 40 * _mouseDeltaRight.ValuesSum);

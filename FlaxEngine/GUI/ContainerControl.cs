@@ -827,7 +827,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseWheel(Vector2 location, int delta)
+        public override bool OnMouseWheel(Vector2 location, float delta)
         {
             // Check all children collisions with mouse and fire events for them
             for (int i = _children.Count - 1; i >= 0 && _children.Count > 0; i--)

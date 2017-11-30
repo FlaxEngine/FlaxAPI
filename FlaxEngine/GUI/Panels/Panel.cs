@@ -128,7 +128,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseWheel(Vector2 location, int delta)
+        public override bool OnMouseWheel(Vector2 location, float delta)
         {
             // Base
             if (base.OnMouseWheel(location, delta))

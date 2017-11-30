@@ -462,13 +462,13 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseWheel(Vector2 location, int delta)
+        public override bool OnMouseWheel(Vector2 location, float delta)
         {
             // Check if pressing control key
             if (ParentWindow.GetKey(Keys.Control))
             {
                 // Zoom
-                _scale = Mathf.Clamp(_scale + (delta > 0 ? 1 : -1) * 0.05f, 0.3f, 3.0f);
+                _scale = Mathf.Clamp(_scale + delta * 0.05f, 0.3f, 3.0f);
                 PerformLayout();
 
                 // Handled

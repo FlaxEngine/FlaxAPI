@@ -288,10 +288,10 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseWheel(Vector2 location, int delta)
+        public override bool OnMouseWheel(Vector2 location, float delta)
         {
             // Scroll
-            Value = _value + (delta > 0 ? -_scrollChange : _scrollChange);
+            Value = _value - delta * _scrollChange;
             return true;
         }
 

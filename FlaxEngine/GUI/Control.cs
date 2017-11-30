@@ -544,11 +544,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="delta">
-        ///   Mosue wheeel move delta. A positive value indicates that the wheel was rotated forward, away from
-        ///   the user; a negative value indicates that the wheel was rotated backward, toward the user
+        ///   Mosue wheel move delta. A positive value indicates that the wheel was rotated forward, away from
+        ///   the user; a negative value indicates that the wheel was rotated backward, toward the user. Normalized to [-1;1] range.
         /// </param>
         /// <returns>True if event has been handled</returns>
-        public virtual bool OnMouseWheel(Vector2 location, int delta)
+        public virtual bool OnMouseWheel(Vector2 location, float delta)
         {
             return false;
         }

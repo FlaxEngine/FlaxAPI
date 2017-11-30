@@ -142,14 +142,14 @@ namespace FlaxEditor.Viewport.Previews
         }
 
         /// <inheritdoc />
-        public override bool OnMouseWheel(Vector2 location, int delta)
+        public override bool OnMouseWheel(Vector2 location, float delta)
         {
             if (base.OnMouseWheel(location, delta))
                 return true;
 
             // Zoom
             float prevScale = _viewScale;
-            _viewScale = Mathf.Clamp(_viewScale + delta * 0.002f, 0.001f, 20.0f);
+            _viewScale = Mathf.Clamp(_viewScale + delta * 0.24f, 0.001f, 20.0f);
 
             // Move view to make use of the control much more soother
             //float coeff = (prevScale + (_viewScale - prevScale)) / prevScale;
