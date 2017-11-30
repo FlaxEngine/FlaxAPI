@@ -217,6 +217,7 @@
     <Compile Include="Collections\OrderedDictionary.cs">
       <DependentUpon>IOrderedDictionary.cs</DependentUpon>
     </Compile>
+    <Compile Include="Enums\WindowEnums.cs" />
     <Compile Include="GUI\Common\Button.cs" />
     <Compile Include="GUI\Common\CheckBox.cs" />
     <Compile Include="GUI\Common\ComboBox.cs" />

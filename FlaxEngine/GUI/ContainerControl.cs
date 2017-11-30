@@ -951,6 +951,20 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
+        public override bool OnCharInput(char c)
+        {
+            for (int i = 0; i < _children.Count && _children.Count > 0; i++)
+            {
+                var child = _children[i];
+                if (child.Enabled && (child.ContainsFocus || child.HasMouseCapture))
+                {
+                    return child.OnCharInput(c);
+                }
+            }
+            return false;
+        }
+
+        /// <inheritdoc />
         public override bool OnKeyDown(Keys key)
         {
             for (int i = 0; i < _children.Count && _children.Count > 0; i++)

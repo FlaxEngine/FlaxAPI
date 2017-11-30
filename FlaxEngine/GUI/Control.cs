@@ -591,6 +591,16 @@ namespace FlaxEngine.GUI
         #region Keyboard
 
         /// <summary>
+        ///     On input character
+        /// </summary>
+        /// <param name="c">Input character</param>
+        /// <returns>True if event has been handled, otherwise false</returns>
+        public virtual bool OnCharInput(char c)
+        {
+            return false;
+        }
+
+        /// <summary>
         ///     When key goes down
         /// </summary>
         /// <param name="key">Key value</param>
