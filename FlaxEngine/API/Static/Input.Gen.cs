@@ -20,6 +20,19 @@ namespace FlaxEngine
 	public static partial class Input
 	{
 		/// <summary>
+		/// Gets the text entered during the current frame (Unicode).
+		/// </summary>
+		[UnmanagedCall]
+		public static string InputText
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetInputText(); }
+#endif
+		}
+
+		/// <summary>
 		/// Gets or sets the current mouse position.
 		/// </summary>
 		[UnmanagedCall]
@@ -143,6 +156,8 @@ namespace FlaxEngine
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern string Internal_GetInputText();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetMousePosition(out Vector2 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
