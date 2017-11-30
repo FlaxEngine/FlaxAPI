@@ -95,10 +95,11 @@ namespace FlaxEditor.Windows
                     // Unlock mouse in game mode
                     if (Editor.StateMachine.IsPlayMode)
                     {
-                        Focus();
-                        Defocus();
+                        Screen.CursorVisible = true;
                         if (Editor.Windows.PropertiesWin.IsDocked)
                             Editor.Windows.PropertiesWin.Focus();
+                        else
+                            Focus(null);
                     }
                 }
             }
@@ -107,9 +108,22 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
-        public override void OnLostFocus()
+        public override void OnStartContainsFocus()
         {
-            base.OnLostFocus();
+            base.OnStartContainsFocus();
+
+            // Center mouse in play mode
+            if (Editor.StateMachine.IsPlayMode)
+            {
+                Vector2 center = PointToWindow(Size * 0.5f);
+                ParentWindow.MousePosition = center;
+            }
+        }
+
+        /// <inheritdoc />
+        public override void OnEndContainsFocus()
+        {
+            base.OnEndContainsFocus();
 
             // Restore cursor visibility (could be hidden by the game)
             Screen.CursorVisible = true;

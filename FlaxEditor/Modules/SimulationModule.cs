@@ -161,8 +161,7 @@ namespace FlaxEditor.Modules
                 }
                 else if (!gameWin.IsSelected)
                 {
-                    gameWin.SelectTab();
-                    gameWin.Defocus();
+                    gameWin.SelectTab(false);
                 }
             }
 

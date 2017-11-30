@@ -249,9 +249,10 @@ namespace FlaxEngine.GUI.Docking
         /// <summary>
         /// Selects this tab page.
         /// </summary>
-        public void SelectTab()
+        /// <param name="autoFocus">True if focus tab after selection change.</param>
+        public void SelectTab(bool autoFocus = true)
         {
-            _dockedTo?.SelectTab(this);
+            _dockedTo?.SelectTab(this, autoFocus);
         }
 
         internal void OnUnlinkInternal()

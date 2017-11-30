@@ -239,10 +239,11 @@ namespace FlaxEngine.GUI.Docking
         /// Selects the tab page.
         /// </summary>
         /// <param name="tab">The tab page to select.</param>
-        public void SelectTab(DockWindow tab)
+        /// <param name="autoFocus">True if focus tab after selection change.</param>
+        public void SelectTab(DockWindow tab, bool autoFocus = true)
         {
             // Check if tab will change
-            if (SelectedTab != tab)
+            if (_selectedTab != tab)
             {
                 // Change
                 ContainerControl proxy;
@@ -261,7 +262,8 @@ namespace FlaxEngine.GUI.Docking
                 {
                     _selectedTab.UnlockChildrenRecursive();
                     _selectedTab.Parent = proxy;
-                    _selectedTab.Focus();
+                    if (autoFocus)
+                        _selectedTab.Focus();
                 }
                 OnSelectedTabChanged();
             }
