@@ -197,6 +197,7 @@
     <Compile Include="Engine\BrushSurface.cs" />
     <Compile Include="Engine\Collision.cs" />
     <Compile Include="Engine\ContactPoint.cs" />
+    <Compile Include="Engine\GamepadVibrationState.cs" />
     <Compile Include="Engine\HideFlags.cs" />
     <Compile Include="Engine\ITransformable.cs" />
     <Compile Include="Engine\MaterialSlot.cs" />
