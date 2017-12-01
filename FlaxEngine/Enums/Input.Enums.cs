@@ -162,7 +162,47 @@ namespace FlaxEngine
         /// <summary>
         /// Y button.
         /// </summary>
-        Y = 16
+        Y = 16,
+        
+        /// <summary>
+        /// The left stick up.
+        /// </summary>
+        LeftStickUp = 17,
+
+        /// <summary>
+        /// The left stick down.
+        /// </summary>
+        LeftStickDown = 18,
+
+        /// <summary>
+        /// The left stick left.
+        /// </summary>
+        LeftStickLeft = 19,
+
+        /// <summary>
+        /// The left stick right.
+        /// </summary>
+        LeftStickRight = 20,
+
+        /// <summary>
+        /// The right stick up.
+        /// </summary>
+        RightStickUp = 21,
+
+        /// <summary>
+        /// The right stick down.
+        /// </summary>
+        RightStickDown = 22,
+
+        /// <summary>
+        /// The right stick left.
+        /// </summary>
+        RightStickLeft = 23,
+
+        /// <summary>
+        /// The right stick right.
+        /// </summary>
+        RightStickRight = 24,
     }
 
     /// <summary>
