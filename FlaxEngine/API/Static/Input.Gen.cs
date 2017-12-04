@@ -47,6 +47,32 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets the mouse position delta during the last frame.
+		/// </summary>
+		[UnmanagedCall]
+		public static Vector2 MousePositionDelta
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { Vector2 resultAsRef; Internal_GetMousePositionDelta(out resultAsRef); return resultAsRef; }
+#endif
+		}
+
+		/// <summary>
+		/// Gets the mouse wheel delta during the last frame.
+		/// </summary>
+		[UnmanagedCall]
+		public static float MouseScrollDelta
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetMouseScrollDelta(); }
+#endif
+		}
+
+		/// <summary>
 		/// Gets keyboard key state.
 		/// </summary>
 		/// <param name="key">Key to check.</param>
@@ -162,6 +188,10 @@ namespace FlaxEngine
 		internal static extern void Internal_GetMousePosition(out Vector2 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetMousePosition(ref Vector2 val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetMousePositionDelta(out Vector2 resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetMouseScrollDelta();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetKey(Keys key);
 		[MethodImpl(MethodImplOptions.InternalCall)]
