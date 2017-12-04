@@ -31,5 +31,33 @@ namespace FlaxEngine
         /// The right small motor vibration.
         /// </summary>
         public float RightSmall;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GamepadVibrationState"/> struct.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        public GamepadVibrationState(float left, float right)
+        {
+            LeftLarge = left;
+            LeftSmall = left;
+            RightLarge = right;
+            RightSmall = right;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GamepadVibrationState"/> struct.
+        /// </summary>
+        /// <param name="leftLarge">The left large.</param>
+        /// <param name="leftSmall">The left small.</param>
+        /// <param name="rightLarge">The right large.</param>
+        /// <param name="rightSmall">The right small.</param>
+        public GamepadVibrationState(float leftLarge, float leftSmall, float rightLarge, float rightSmall)
+        {
+            LeftLarge = leftLarge;
+            LeftSmall = leftSmall;
+            RightLarge = rightLarge;
+            RightSmall = rightSmall;
+        }
     }
 }

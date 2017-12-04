@@ -3,79 +3,64 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
     public static partial class Input
     {
-        /// <summary>
-        /// Event that is fired when at least one key is pressed.
-        /// </summary>
-        public static event Action<byte[]> OnKeyPressed;
+        internal static int gamepadsVersion;
+        internal static Gamepad[] gamepads;
 
         /// <summary>
-        /// All currently acitve keys, can be null
+        /// The gamepads changed event. Called when new gamepad device gets disconnected or added. Called always on main thread before the scripts update or during <see cref="ScanGamepads"/> call.
         /// </summary>
-        public static byte[] ActiveKeys { get; private set; }
+        public static Action GamepadsChanged;
 
         /// <summary>
-        /// Converts virtual key code to unicode character
+        /// Gets the gamepad devices detected by the engine.
         /// </summary>
-        /// <param name="virtualKeys"></param>
-        /// <param name="scanCode"></param>
-        /// <param name="keyboardState"></param>
-        /// <param name="receivingBuffer"></param>
-        /// <param name="bufferSize"></param>
-        /// <param name="flags"></param>
-        /// <returns></returns>
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        internal static extern int ToUnicode(
-            uint virtualKeys,
-            uint scanCode,
-            byte[] keyboardState,
-            StringBuilder receivingBuffer,
-            int bufferSize,
-            uint flags
-        );
-
-        /// <summary>
-        /// TODO
-        /// </summary>
-        /// <param name="Keys"></param>
-        /// <param name="shift"></param>
-        /// <returns></returns>
-        public static string GetCharsFromKeys(Keys Keys, bool shift)
+        public static Gamepad[] Gamepads
         {
-            var stringBuilder = new StringBuilder(256);
-            var keyboardState = new byte[256];
-            if (shift)
+            get
             {
-                keyboardState[(int)Keys.Shift] = 0xff;
+                if (gamepads == null)
+                {
+                    int count = Internal_GetGamepadsCount();
+                    gamepads = new Gamepad[count];
+                    for (int i = 0; i < count; i++)
+                        gamepads[i] = new Gamepad(i, gamepadsVersion);
+                }
+                return gamepads;
             }
-            ToUnicode((uint)Keys, 0, keyboardState, stringBuilder, 256, 0);
-            return stringBuilder.ToString();
         }
 
         /// <summary>
-        /// Internal method used to get all currently active keys
+        /// Scans the connected gamepad devices to find the new ones.
         /// </summary>
-        /// <param name="keyPressedArray"></param>
-        internal static void Internal_KeyInputEvent(byte[] keyPressedArray)
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void ScanGamepads();
+#else
+        public static void ScanGamepads()
         {
-            //var a = "";
-            //foreach (var b in keyPressedArray)
-            //{
-            //    a += (Keys)b + " ";
-            //}
-            //Debug.Log(a);
-            ActiveKeys = keyPressedArray;
-            OnKeyPressed?.Invoke(keyPressedArray);
         }
+#endif
+
+        internal static void Internal_GamepadsChanged()
+        {
+            gamepadsVersion++;
+            gamepads = null;
+            GamepadsChanged?.Invoke();
+        }
+
+        #region Internal Calls
+
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetGamepadsCount();
+#endif
+
+        #endregion
     }
 }

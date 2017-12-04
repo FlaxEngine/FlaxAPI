@@ -46,22 +46,22 @@ namespace FlaxEngine
         /// <summary>
         /// The X-Axis of the left thumb stick
         /// </summary>
-        LeftThumbX = 1,
+        LeftStickX = 1,
 
         /// <summary>
         /// The Y-Axis of the left thumb stick
         /// </summary>
-        LeftThumbY = 2,
+        LeftStickY = 2,
 
         /// <summary>
         /// The X-Axis of the right thumb stick
         /// </summary>
-        RightThumbX = 3,
+        RightStickX = 3,
 
         /// <summary>
         /// The Y-Axis of the right thumb stick
         /// </summary>
-        RightThumbY = 4,
+        RightStickY = 4,
 
         /// <summary>
         /// The left trigger
@@ -71,7 +71,7 @@ namespace FlaxEngine
         /// <summary>
         /// The right trigger
         /// </summary>
-        RightTrigger = 6
+        RightTrigger = 6,
     }
 
     /// <summary>
