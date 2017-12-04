@@ -192,15 +192,16 @@ namespace FlaxEditor.Modules
         /// Loads the layout from the file.
         /// </summary>
         /// <param name="path">The layout file path.</param>
-        public void LoadLayout(string path)
+        /// <returns>True if layout has been loaded otherwise if failed (e.g. missing file).</returns>
+        public bool LoadLayout(string path)
         {
             if (Editor.IsHeadlessMode)
-                return;
+                return false;
 
             if (!File.Exists(path))
             {
                 Editor.LogWarning("Cannot load windows layout. File is missing.");
-                return;
+                return false;
             }
 
             XmlDocument doc = new XmlDocument();
@@ -213,7 +214,7 @@ namespace FlaxEditor.Modules
                 if (root == null)
                 {
                     Editor.LogWarning("Invalid windows layout file.");
-                    return;
+                    return false;
                 }
 
                 // Reset existing layout
@@ -310,7 +311,7 @@ namespace FlaxEditor.Modules
                     default:
                     {
                         Editor.LogWarning("Unsupported windows layout version");
-                        return;
+                        return false;
                     }
                 }
             }
@@ -318,7 +319,10 @@ namespace FlaxEditor.Modules
             {
                 Editor.LogWarning("Failed to load windows layout.");
                 Editor.LogWarning(ex);
+                return false;
             }
+
+            return true;
         }
 
         private void SavePanel(XmlWriter writer, DockPanel panel)
@@ -651,7 +655,8 @@ namespace FlaxEditor.Modules
                 Windows[i].OnInit();
 
             // Load current workspace layout
-            LoadLayout(_windowsLayoutPath);
+            if (!LoadLayout(_windowsLayoutPath))
+                LoadDefaultLayout();
 
             // Clear timer flag
             _lastLayoutSaveTime = DateTime.UtcNow;
