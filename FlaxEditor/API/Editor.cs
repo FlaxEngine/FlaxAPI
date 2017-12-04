@@ -701,10 +701,10 @@ namespace FlaxEditor
             }
         }
 
-        internal IntPtr Internal_GetGameWinPtr()
+        internal IntPtr Internal_GetGameWinPtr(bool forceGet)
         {
             IntPtr result = IntPtr.Zero;
-            if (Windows.GameWin != null && Windows.GameWin.ContainsFocus)
+            if (Windows.GameWin != null && (forceGet || Windows.GameWin.ContainsFocus))
             {
                 var win = Windows.GameWin.ParentWindow;
                 if (win != null)
