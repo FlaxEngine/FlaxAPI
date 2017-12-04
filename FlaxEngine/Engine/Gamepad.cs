@@ -167,7 +167,7 @@ namespace FlaxEngine
             if (_version != Input.gamepadsVersion)
                 throw new AccessViolationException();
             int state = Internal_GetButton(_index, button);
-            return (state & 0x1) != 0;
+            return (state & 1) != 0;
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace FlaxEngine
             if (_version != Input.gamepadsVersion)
                 throw new AccessViolationException();
             int state = Internal_GetButton(_index, button);
-            return (state & 0x1) != 0 && (state & 0x2) == 0;
+            return (state & 1) != 0 && (state & 2) == 0;
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace FlaxEngine
             if (_version != Input.gamepadsVersion)
                 throw new AccessViolationException();
             int state = Internal_GetButton(_index, button);
-            return (state & 0x1) == 0 && (state & 0x2) != 0;
+            return (state & 1) == 0 && (state & 2) != 0;
         }
 
         /// <summary>
