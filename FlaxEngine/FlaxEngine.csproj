@@ -209,6 +209,7 @@
     <Compile Include="Engine\PhysicalMaterial.cs" />
     <Compile Include="Engine\RayCastHit.cs" />
     <Compile Include="Enums\ForceMode.cs" />
+    <Compile Include="Enums\Keys.cs" />
     <Compile Include="Enums\PhysicsCombineMode.cs" />
     <Compile Include="Enums\PlatformType.cs" />
     <Compile Include="Enums\Quality.cs" />
