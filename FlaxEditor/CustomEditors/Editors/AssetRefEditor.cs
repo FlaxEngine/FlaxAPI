@@ -28,6 +28,7 @@ namespace FlaxEditor.CustomEditors.Editors
     {
         private CustomElement<AssetPicker> element;
         private string typeName;
+        private Type type;
 
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.Inline;
@@ -39,7 +40,7 @@ namespace FlaxEditor.CustomEditors.Editors
             {
                 // TODO: find better way to get content domain from the asset type (mayb util function?)
                 var domain = ContentDomain.Other;
-                var type = Values.Type != typeof(object) || Values[0] == null ? Values.Type : Values[0].GetType();
+                type = Values.Type != typeof(object) || Values[0] == null ? Values.Type : Values[0].GetType();
                 if (type == typeof(Texture) || type == typeof(SpriteAtlas))
                     domain = ContentDomain.Texture;
                 else if (type == typeof(CubeTexture))
@@ -88,9 +89,9 @@ namespace FlaxEditor.CustomEditors.Editors
 
         private void OnSelectedItemChanged()
         {
-            if (Values[0] is AssetItem)
+            if (typeof(AssetItem).IsAssignableFrom(type))
                 SetValue(element.CustomControl.SelectedItem);
-            else if (Values[0] is Guid)
+            else if (type == typeof(Guid))
                 SetValue(element.CustomControl.SelectedID);
             else
                 SetValue(element.CustomControl.SelectedAsset);
