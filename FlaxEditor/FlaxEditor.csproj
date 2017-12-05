@@ -70,6 +70,7 @@
     <Compile Include="Content\Settings\BuildTarget.cs" />
     <Compile Include="Content\Settings\GameSettings.cs" />
     <Compile Include="Content\Settings\GraphicsSettings.cs" />
+    <Compile Include="Content\Settings\InputSettings.cs" />
     <Compile Include="Content\Settings\LayersAndTagsSettings.cs" />
     <Compile Include="Content\Settings\PhysicsSettings.cs" />
     <Compile Include="Content\Settings\SettingsBase.cs" />

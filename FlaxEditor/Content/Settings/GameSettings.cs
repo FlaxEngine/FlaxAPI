@@ -67,6 +67,12 @@ namespace FlaxEditor.Content.Settings
         public JsonAsset Physics;
 
         /// <summary>
+        /// Reference to <see cref="InputSettings"/> asset.
+        /// </summary>
+        [EditorOrder(1035), EditorDisplay("Other Settings"), AssetReference(typeof(InputSettings), true), Tooltip("Reference to Input Settings asset")]
+        public JsonAsset Input;
+        
+        /// <summary>
         /// Reference to <see cref="GraphicsSettings"/> asset.
         /// </summary>
         [EditorOrder(1040), EditorDisplay("Other Settings"), AssetReference(typeof(GraphicsSettings), true), Tooltip("Reference to Graphics Settings asset")]
@@ -158,6 +164,8 @@ namespace FlaxEditor.Content.Settings
                 return LoadAsset<GraphicsSettings>(gameSettings.Graphics) as T;
             if (type == typeof(BuildSettings))
                 return LoadAsset<BuildSettings>(gameSettings.GameCooking) as T;
+            if (type == typeof(InputSettings))
+                return LoadAsset<InputSettings>(gameSettings.Input) as T;
             if (type == typeof(WindowsPlatformSettings))
                 return LoadAsset<WindowsPlatformSettings>(gameSettings.WindowsPlatform) as T;
             if (type == typeof(UWPPlatformSettings))
@@ -226,6 +234,8 @@ namespace FlaxEditor.Content.Settings
                 return SaveAsset(gameSettings, ref gameSettings.Graphics, obj);
             if (type == typeof(BuildSettings))
                 return SaveAsset(gameSettings, ref gameSettings.GameCooking, obj);
+            if (type == typeof(InputSettings))
+                return SaveAsset(gameSettings, ref gameSettings.Input, obj);
             if (type == typeof(WindowsPlatformSettings))
                 return SaveAsset(gameSettings, ref gameSettings.WindowsPlatform, obj);
             if (type == typeof(UWPPlatformSettings))

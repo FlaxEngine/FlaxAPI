@@ -50,6 +50,11 @@ namespace FlaxEditor.Content.Create
             BuildSettings,
 
             /// <summary>
+            /// The input settings.
+            /// </summary>
+            InputSettings,
+
+            /// <summary>
             /// The Windows settings.
             /// </summary>
             WindowsPlatformSettings,
@@ -68,6 +73,7 @@ namespace FlaxEditor.Content.Create
             typeof(PhysicsSettings),
             typeof(GraphicsSettings),
             typeof(BuildSettings),
+            typeof(InputSettings),
             typeof(WindowsPlatformSettings),
             typeof(UWPPlatformSettings),
         };
