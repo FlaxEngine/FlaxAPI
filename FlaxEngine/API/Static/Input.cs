@@ -4,6 +4,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace FlaxEngine
 {
@@ -13,9 +14,217 @@ namespace FlaxEngine
         internal static Gamepad[] gamepads;
 
         /// <summary>
+        /// Maps keyboard, controller, or mouse inputs to a "friendly name" that will later be bound to continuous game behavior, such as movement. The inputs mapped in AxisMappings are continuously polled, even if they are just reporting that their input value.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct ActionConfig
+        {
+            /// <summary>
+            /// The action "friendly name" used to access it from code.
+            /// </summary>
+            [EditorOrder(0), Tooltip("The action \"friendly name\" used to access it from code.")]
+            public string Name;
+
+            /// <summary>
+            /// The keyboard key to map for this action. Use <see cref="Keys.None"/> to ignore it.
+            /// </summary>
+            [EditorOrder(10), Tooltip("The keyboard key to map for this action. Use None to ignore it.")]
+            public Keys Key;
+
+            /// <summary>
+            /// The mouse button to map for this action. Use <see cref="MouseButton.None"/> to ignore it.
+            /// </summary>
+            [EditorOrder(20), Tooltip("The mouse button to map for this action. Use None to ignore it.")]
+            public MouseButton MouseButton;
+
+            /// <summary>
+            /// The gamepad button to map for this action. Use <see cref="GamePadButton.None"/> to ignore it.
+            /// </summary>
+            [EditorOrder(30), Tooltip("The gamepad button to map for this action. Use None to ignore it.")]
+            public GamePadButton GampadButton;
+
+            /// <summary>
+            /// Which gamepad should be used.
+            /// </summary>
+            [EditorOrder(40), Tooltip("Which gamepad should be used.")]
+            public InputGamepadIndex Gamepad;
+        }
+
+        /// <summary>
+        /// Maps keyboard, controller, or mouse inputs to a "friendly name" that will later be bound to continuous game behavior, such as movement. The inputs mapped in AxisMappings are continuously polled, even if they are just reporting that their input value.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct AxisConfig
+        {
+            /// <summary>
+            /// The axis "friendly name" used to access it from code.
+            /// </summary>
+            [EditorOrder(0), Tooltip("The axis \"friendly name\" used to access it from code.")]
+            public string Name;
+
+            /// <summary>
+            /// The axis type (mouse, gamepad, etc.).
+            /// </summary>
+            [EditorOrder(10), Tooltip("The axis type (mouse, gamepad, etc.).")]
+            public InputAxisType Axis;
+
+            /// <summary>
+            /// Which gamepad should be used.
+            /// </summary>
+            [EditorOrder(20), Tooltip("Which gamepad should be used.")]
+            public InputGamepadIndex Gamepad;
+
+            /// <summary>
+            /// The button to be pressed for movement in positive direction. Use <see cref="Keys.None"/> to ignore it.
+            /// </summary>
+            [EditorOrder(30), Tooltip("The button to be pressed for movement in positive direction. None to ignore it.")]
+            public Keys PositiveButton;
+
+            /// <summary>
+            /// The button to be pressed for movement in negative direction. Use <see cref="Keys.None"/> to ignore it.
+            /// </summary>
+            [EditorOrder(40), Tooltip("The button to be pressed for movement in negative direction. None to ignore it.")]
+            public Keys NegativeButton;
+
+            /// <summary>
+            /// Any positive or negative values that are less than this number will register as zero. Useful for gamepads to specify the deadzone.
+            /// </summary>
+            [EditorOrder(50), Limit(0.0f, 0.5f, 0.001f), Tooltip("Any positive or negative values that are less than this number will register as zero. Useful for gamepads  to specify the deadzone.")]
+            public float DeadZone;
+
+            /// <summary>
+            /// For keyboard input, a larger value will result in faster response time (in units/s). A lower value will be more smooth. For Mouse delta the value will scale the actual mouse delta.
+            /// </summary>
+            [EditorOrder(60), Limit(0.0f, 100.0f, 0.1f), Tooltip("For keyboard input, a larger value will result in faster response time (in units/s). A lower value will be more smooth. For Mouse delta the value will scale the actual mouse delta.")]
+            public float Sensitivity;
+            
+            /// <summary>
+            /// For keyboard input describes how fast will the input recenter. Speed (in units/s) that output value will rest to neutral value if not when device at rest.
+            /// </summary>
+            [EditorOrder(70), Limit(0.0f, 100.0f, 0.1f), Tooltip("For keyboard input describes how fast will the input recenter. Speed (in units/s) that output value will rest to neutral value if not when device at rest.")]
+            public float Gravity;
+
+            /// <summary>
+            /// Additional scale parameter applied to the axis value. Allows to invert it or modify the range.
+            /// </summary>
+            [EditorOrder(80), Limit(-100.0f, 100.0f, 0.01f), Tooltip("Additional scale parameter applied to the axis value. Allows to invert it or modify the range.")]
+            public float Scale;
+        }
+
+        /// <summary>
+        /// Maps a discrete button or key press events to a "friendly name" that will later be bound to event-driven behavior. The end effect is that pressing (and/or releasing) a key, mouse button, or keypad button.
+        /// </summary>
+        /// <remarks>
+        /// Allocates the memory on get. Use <see cref="GetActionMappingsCount"/> and <see cref="GetActionMapping"/> to reduce dynamic memory allocations.
+        /// </remarks>
+        public static ActionConfig[] ActionMappings
+        {
+            get
+            {
+                int count = GetActionMappingsCount();
+                var result = new ActionConfig[count];
+                for (int i = 0; i < count; i++)
+                {
+                    GetActionMapping(i, out result[i]);
+                }
+                return result;
+            }
+            set
+            {
+                // TODO: implement it
+            }
+        }
+
+        /// <summary>
+        /// Maps keyboard, controller, or mouse inputs to a "friendly name" that will later be bound to continuous game behavior, such as movement. The inputs mapped in AxisMappings are continuously polled, even if they are just reporting that their input value.
+        /// </summary>
+        /// <remarks>
+        /// Allocates the memory on get. Use <see cref="GetAxisMappingsCount"/> and <see cref="GetAxisMapping"/> to reduce dynamic memory allocations.
+        /// </remarks>
+        public static AxisConfig[] AxisMappings
+        {
+            get
+            {
+                int count = GetAxisMappingsCount();
+                var result = new AxisConfig[count];
+                for (int i = 0; i < count; i++)
+                {
+                    GetAxisMapping(i, out result[i]);
+                }
+                return result;
+            }
+            set
+            {
+                // TODO: implement it
+            }
+        }
+
+        /// <summary>
+        /// Gets the amount of assigned action mappings.
+        /// </summary>
+        /// <seealso cref="ActionMappings"/>
+        /// <returns>The amount of mappings.</returns>
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int GetActionMappingsCount();
+#else
+        public static int GetActionMappingsCount()
+        {
+            return 0;
+        }
+#endif
+        
+        /// <summary>
+        /// Gets the action mapping configuration.
+        /// </summary>
+        /// <param name="index">The action mapping index.</param>
+        /// <param name="result">The result configuration.</param>
+        /// <seealso cref="ActionMappings"/>
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetActionMapping(int index, out ActionConfig result);
+#else
+        public static void GetActionMapping(int index, out ActionConfig result)
+        {
+            result = new ActionConfig();
+        }
+#endif
+
+        /// <summary>
+        /// Gets the axis mapping configuration.
+        /// </summary>
+        /// <param name="index">The axis mapping index.</param>
+        /// <param name="result">The result configuration.</param>
+        /// <seealso cref="AxisMappings"/>
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetAxisMapping(int index, out AxisConfig result);
+#else
+        public static void GetAxisMapping(int index, out AxisConfig result)
+        {
+            result = new AxisConfig();
+        }
+#endif
+
+        /// <summary>
+        /// Gets the amount of assigned axis mappings.
+        /// </summary>
+        /// <seealso cref="AxisMappings"/>
+        /// <returns>The amount of mappings.</returns>
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int GetAxisMappingsCount();
+#else
+        public static int GetAxisMappingsCount()
+        {
+            return 0;
+        }
+#endif
+
+        /// <summary>
         /// The gamepads changed event. Called when new gamepad device gets disconnected or added. Called always on main thread before the scripts update or during <see cref="ScanGamepads"/> call.
         /// </summary>
-        public static Action GamepadsChanged;
+        public static event Action GamepadsChanged;
 
         /// <summary>
         /// Gets the gamepad devices detected by the engine.
