@@ -289,6 +289,12 @@ namespace FlaxEngine
 #endif
 
         /// <summary>
+        /// Event fired when virtual input action is triggered. Called before scripts update. See <see cref="ActionMappings"/> to edit configuration.
+        /// </summary>
+        /// <seealso cref="InputEvent"/>
+        public static event Action<string> ActionTriggered;
+
+        /// <summary>
         /// The gamepads changed event. Called when new gamepad device gets disconnected or added. Called always on main thread before the scripts update or during <see cref="ScanGamepads"/> call.
         /// </summary>
         public static event Action GamepadsChanged;
@@ -322,6 +328,11 @@ namespace FlaxEngine
         {
         }
 #endif
+
+        internal static void Internal_ActionTriggered(string name)
+        {
+            ActionTriggered?.Invoke(name);
+        }
 
         internal static void Internal_GamepadsChanged()
         {
