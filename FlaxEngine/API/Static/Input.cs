@@ -97,7 +97,7 @@ namespace FlaxEngine
             /// </summary>
             [EditorOrder(60), Limit(0.0f, 100.0f, 0.1f), Tooltip("For keyboard input, a larger value will result in faster response time (in units/s). A lower value will be more smooth. For Mouse delta the value will scale the actual mouse delta.")]
             public float Sensitivity;
-            
+
             /// <summary>
             /// For keyboard input describes how fast will the input recenter. Speed (in units/s) that output value will rest to neutral value if not when device at rest.
             /// </summary>
@@ -129,10 +129,6 @@ namespace FlaxEngine
                 }
                 return result;
             }
-            set
-            {
-                // TODO: implement it
-            }
         }
 
         /// <summary>
@@ -153,10 +149,6 @@ namespace FlaxEngine
                 }
                 return result;
             }
-            set
-            {
-                // TODO: implement it
-            }
         }
 
         /// <summary>
@@ -173,7 +165,21 @@ namespace FlaxEngine
             return 0;
         }
 #endif
-        
+        /// <summary>
+        /// Gets the amount of assigned axis mappings.
+        /// </summary>
+        /// <seealso cref="AxisMappings"/>
+        /// <returns>The amount of mappings.</returns>
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int GetAxisMappingsCount();
+#else
+        public static int GetAxisMappingsCount()
+        {
+            return 0;
+        }
+#endif
+
         /// <summary>
         /// Gets the action mapping configuration.
         /// </summary>
@@ -207,17 +213,78 @@ namespace FlaxEngine
 #endif
 
         /// <summary>
-        /// Gets the amount of assigned axis mappings.
+        /// Sets the action mapping configuration. Use <see cref="ActionMappings"/> to get the current config.
         /// </summary>
-        /// <seealso cref="AxisMappings"/>
-        /// <returns>The amount of mappings.</returns>
+        /// <param name="value">The value to set.</param>
+        /// <seealso cref="ActionMappings"/>
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern int GetAxisMappingsCount();
+        public static extern void SetActionMappings(ActionConfig[] value);
 #else
-        public static int GetAxisMappingsCount()
+        public static void SetActionMapping(ActionConfig[] value)
         {
-            return 0;
+        }
+#endif
+
+        /// <summary>
+        /// Sets the axis mapping configuration. Use <see cref="AxisMappings"/> to get the current config.
+        /// </summary>
+        /// <param name="value">The value to set.</param>
+        /// <seealso cref="AxisMappings"/>
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetAxisMappings(AxisConfig[] value);
+#else
+        public static void SetAxisMapping(AxisConfig[] value)
+        {
+        }
+#endif
+
+        /// <summary>
+        /// Gets the value of the virtual action identified by name. Use <see cref="ActionMappings"/> to get the current config.
+        /// </summary>
+        /// <param name="name">The action name.</param>
+        /// <returns>True if action has been triggered in the current frame (e.g. button pressed), otherwise false.</returns>
+        /// <seealso cref="ActionMappings"/>
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool GetAction(string name);
+#else
+        public static bool GetAction(string name)
+        {
+            return false;
+        }
+#endif
+
+        /// <summary>
+        /// Gets the value of the virtual axis identified by name. Use <see cref="AxisMappings"/> to get the current config.
+        /// </summary>
+        /// <param name="name">The action name.</param>
+        /// <returns>The current axis value (e.g for gamepads it's in the range -1..1). Value is smoothed to redue artifacts.</returns>
+        /// <seealso cref="AxisMappings"/>
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern float GetAxis(string name);
+#else
+        public static float GetAction(string name)
+        {
+            return 0.0f;
+        }
+#endif
+
+        /// <summary>
+        /// Gets the raw value of the virtual axis identified by name with no smoothing filtering applied. Use <see cref="AxisMappings"/> to get the current config.
+        /// </summary>
+        /// <param name="name">The action name.</param>
+        /// <returns>The current axis value (e.g for gamepads it's in the range -1..1). No smoothing applied.</returns>
+        /// <seealso cref="AxisMappings"/>
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern float GetAxisRaw(string name);
+#else
+        public static float GetAxisRaw(string name)
+        {
+            return 0.0f;
         }
 #endif
 
