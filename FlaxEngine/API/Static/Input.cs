@@ -115,6 +115,12 @@ namespace FlaxEngine
             /// </summary>
             [EditorOrder(80), Limit(-100.0f, 100.0f, 0.01f), Tooltip("Additional scale parameter applied to the axis value. Allows to invert it or modify the range.")]
             public float Scale;
+
+            /// <summary>
+            /// If enabled, the axis value will be immediately reset to zero after it receives opposite inputs. For keyboard input only.
+            /// </summary>
+            [EditorOrder(90), Tooltip("If enabled, the axis value will be immediately reset to zero after it receives opposite inputs. For keyboard input only.")]
+            public bool Snap;
         }
 
         /// <summary>
