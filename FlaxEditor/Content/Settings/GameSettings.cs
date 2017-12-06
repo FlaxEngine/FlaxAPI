@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using FlaxEngine;
 
 namespace FlaxEditor.Content.Settings
@@ -71,7 +72,7 @@ namespace FlaxEditor.Content.Settings
         /// </summary>
         [EditorOrder(1035), EditorDisplay("Other Settings"), AssetReference(typeof(InputSettings), true), Tooltip("Reference to Input Settings asset")]
         public JsonAsset Input;
-        
+
         /// <summary>
         /// Reference to <see cref="GraphicsSettings"/> asset.
         /// </summary>
@@ -150,7 +151,7 @@ namespace FlaxEditor.Content.Settings
         {
             var gameSettings = Load();
             var type = typeof(T);
-            
+
             if (type == typeof(GameSettings))
                 return gameSettings as T;
 
@@ -243,5 +244,11 @@ namespace FlaxEditor.Content.Settings
 
             return true;
         }
+
+        /// <summary>
+        /// Loads the current game settings asset and applies it to the engine runtime configuration.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void Apply();
     }
 }

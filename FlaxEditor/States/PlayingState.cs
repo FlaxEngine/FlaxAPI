@@ -1,6 +1,7 @@
 // Flax Engine scripting API
 
 using System;
+using FlaxEditor.Content.Settings;
 using FlaxEditor.Utilities;
 using FlaxEngine;
 using FlaxEngine.Utilities;
@@ -53,6 +54,9 @@ namespace FlaxEditor.States
 
             // Remove references to the scene objects
             Editor.Scene.ClearRefsToSceneObjects();
+
+            // Apply game settings (user may modify them before the gameplay)
+            GameSettings.Apply();
 
             // Duplicate editor scene for simulation
             _duplicateScenes.GatherSceneData();
