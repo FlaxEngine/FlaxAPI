@@ -211,6 +211,27 @@ namespace FlaxEngine
     }
 
     /// <summary>
+    /// The input action event trigger modes.
+    /// </summary>
+    public enum InputActionMode
+    {
+        /// <summary>
+        /// Uuser is pressing the key/button.
+        /// </summary>
+        Pressing = 0,
+
+        /// <summary>
+        /// User pressed the key/button (but wasn't pressing it in the previous frame).
+        /// </summary>
+        Press = 1,
+
+        /// <summary>
+        /// User released the key/button (was presssing it in the previous frame).
+        /// </summary>
+        Release = 2,
+    }
+
+    /// <summary>
     /// The input gamepad index.
     /// </summary>
     public enum InputGamepadIndex

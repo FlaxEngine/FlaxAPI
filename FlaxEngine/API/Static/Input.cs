@@ -26,6 +26,12 @@ namespace FlaxEngine
             public string Name;
 
             /// <summary>
+            /// The trigger mode. Allows to specify when input event should be fired.
+            /// </summary>
+            [EditorOrder(5), Tooltip("The action trigger mode. Allows to specify when input event should be fired.")]
+            public InputActionMode Mode;
+
+            /// <summary>
             /// The keyboard key to map for this action. Use <see cref="Keys.None"/> to ignore it.
             /// </summary>
             [EditorOrder(10), Tooltip("The keyboard key to map for this action. Use None to ignore it.")]
