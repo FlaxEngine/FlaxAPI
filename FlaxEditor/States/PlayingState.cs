@@ -28,6 +28,26 @@ namespace FlaxEditor.States
         public override bool CanEnterPlayMode => true;
 
         /// <summary>
+        /// Occurs when play mode is starting (before scene duplicating).
+        /// </summary>
+        public event Action SceneDuplicating;
+
+        /// <summary>
+        /// Occurs when play mode is starting (after scene duplicating).
+        /// </summary>
+        public event Action SceneDuplicated;
+
+        /// <summary>
+        /// Occurs when play mode is ending (before scene restoring).
+        /// </summary>
+        public event Action SceneRestoring;
+
+        /// <summary>
+        /// Occurs when play mode is ending (after scene restoring).
+        /// </summary>
+        public event Action SceneRestored;
+
+        /// <summary>
         /// Gets or sets a value indicating whether game logic is paused.
         /// </summary>
         public bool IsPaused
@@ -57,9 +77,11 @@ namespace FlaxEditor.States
 
             // Apply game settings (user may modify them before the gameplay)
             GameSettings.Apply();
-
+            
             // Duplicate editor scene for simulation
+            SceneDuplicating?.Invoke();
             _duplicateScenes.GatherSceneData();
+            SceneDuplicated?.Invoke();
 
             // Fire events
             Editor.OnPlayBegin();
@@ -75,7 +97,9 @@ namespace FlaxEditor.States
             Editor.Scene.ClearRefsToSceneObjects();
 
             // Restore editor scene
+            SceneRestoring?.Invoke();
             _duplicateScenes.RestoreSceneData();
+            SceneRestored?.Invoke();
 
             // Restore game settings and state for editor environment
             Time.TimeScale = 1.0f;
