@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
@@ -16,12 +17,33 @@ namespace FlaxEditor.Windows
     public class GameWindow : EditorWindow
     {
         private readonly RenderOutputControl _viewport;
+        private readonly ContainerControl _guiRoot;
+        private bool _showGUI = true;
         private float _gameStartTime;
-
+        
         /// <summary>
         /// Gets the viewport.
         /// </summary>
         public RenderOutputControl Viewport => _viewport;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether show game GUI in the view or keep it hidden.
+        /// </summary>
+        public bool ShowGUI
+        {
+            get => _showGUI;
+            set
+            {
+                if (value != _showGUI)
+                {
+                    _showGUI = value;
+
+                    // Update root if it's in game
+                    if (Editor.StateMachine.IsPlayMode)
+                        _guiRoot.Visible = value;
+                }
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameWindow"/> class.
@@ -41,6 +63,38 @@ namespace FlaxEditor.Windows
                 DockStyle = DockStyle.Fill,
                 Parent = this
             };
+
+            // Override the game GUI root
+            _guiRoot = new ContainerControl
+            {
+                DockStyle = DockStyle.Fill,
+                Visible = false,
+                Enabled = false,
+                Parent = _viewport
+            };
+            FlaxEngine.GUI.Window.Root = _guiRoot;
+            Editor.StateMachine.PlayingState.SceneDuplicating += PlayingStateOnSceneDuplicating;
+            Editor.StateMachine.PlayingState.SceneRestored += PlayingStateOnSceneRestored;
+        }
+
+        private void PlayingStateOnSceneDuplicating()
+        {
+            // Remove reaming GUI controls so loaded scene can add own GUI
+            _guiRoot.DisposeChildren();
+
+            // Show GUI
+            _guiRoot.Visible = _showGUI;
+            _guiRoot.Enabled = true;
+        }
+
+        private void PlayingStateOnSceneRestored()
+        {
+            // Remove reaming GUI controls so loaded scene can add own GUI
+            _guiRoot.DisposeChildren();
+
+            // Hide GUI
+            _guiRoot.Visible = false;
+            _guiRoot.Enabled = false;
         }
 
         /// <inheritdoc />
