@@ -32,6 +32,17 @@ namespace FlaxEngine
             MainRenderTask.Instance = RenderTask.Create<MainRenderTask>();
         }
 
+        /// <summary>
+        /// Sets the managed window as a main game window. Called after creating game window by the native code.
+        /// </summary>
+        /// <param name="window">The window.</param>
+        internal static void SetWindow(Window window)
+        {
+            // Link it as a GUI root control
+            window.GUI.BackgroundColor = Color.Transparent;
+            GUI.Window.Root = window.GUI;
+        }
+
         private static void CreateGuiStyle()
         {
             var style = new Style

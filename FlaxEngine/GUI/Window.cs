@@ -14,6 +14,11 @@ namespace FlaxEngine.GUI
     public class Window : ContainerControl
     {
         /// <summary>
+        /// Gets the main GUI control (it can be window or editor overriden control). Use it to plug-in custom GUI controls.
+        /// </summary>
+        public static ContainerControl Root { get; internal set; }
+        
+        /// <summary>
         /// Closing window delegate.
         /// </summary>
         /// <param name="window">The window.</param>
