@@ -36,28 +36,28 @@ namespace FlaxEngine.GUI
         public event Action<Control> OnChildControlResized;
 
         ///<inheritdoc />
-        protected ContainerControl()
+        public ContainerControl()
             : base(0, 0, 64, 64)
         {
             IsLayoutLocked = true;
         }
 
         /// <inheritdoc />
-        protected ContainerControl(float x, float y, float width, float height)
+        public ContainerControl(float x, float y, float width, float height)
             : base(x, y, width, height)
         {
             IsLayoutLocked = true;
         }
 
         /// <inheritdoc />
-        protected ContainerControl(Vector2 location, Vector2 size)
+        public ContainerControl(Vector2 location, Vector2 size)
             : base(location, size)
         {
             IsLayoutLocked = true;
         }
 
         /// <inheritdoc />
-        protected ContainerControl(Rectangle bounds)
+        public ContainerControl(Rectangle bounds)
             : base(bounds)
         {
             IsLayoutLocked = true;
