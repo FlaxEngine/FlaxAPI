@@ -2,7 +2,6 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
@@ -20,7 +19,7 @@ namespace FlaxEditor.Windows
         private readonly ContainerControl _guiRoot;
         private bool _showGUI = true;
         private float _gameStartTime;
-        
+
         /// <summary>
         /// Gets the viewport.
         /// </summary>
@@ -44,6 +43,11 @@ namespace FlaxEditor.Windows
                 }
             }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether center mouse position on focus get in play mode. Helps when working with games that lock mouse cursor.
+        /// </summary>
+        public bool CenterMouseOnFocus { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameWindow"/> class.
@@ -167,7 +171,7 @@ namespace FlaxEditor.Windows
             base.OnStartContainsFocus();
 
             // Center mouse in play mode
-            if (Editor.StateMachine.IsPlayMode)
+            if (CenterMouseOnFocus && Editor.StateMachine.IsPlayMode)
             {
                 Vector2 center = PointToWindow(Size * 0.5f);
                 ParentWindow.MousePosition = center;
