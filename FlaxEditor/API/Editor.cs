@@ -219,6 +219,15 @@ namespace FlaxEditor
                 // Update state machine
                 StateMachine.Update();
 
+                // Drop performance if app has no focus (only when game is not running)
+                if (!StateMachine.IsPlayMode)
+                {
+                    bool isFocused = Application.HasFocus;
+                    Time.DrawFPS = isFocused ? 60 : 15;
+                    Time.UpdateFPS = isFocused ? 30 : 15;
+                    Time.PhysicsFPS = isFocused ? 60 : 20;
+                }
+
                 // Update modules
                 for (int i = 0; i < _modules.Count; i++)
                 {

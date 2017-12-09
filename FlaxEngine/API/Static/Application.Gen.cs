@@ -99,6 +99,19 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// True if app has focus.
+		/// </summary>
+		[UnmanagedCall]
+		public static bool HasFocus
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetHasFocus(); }
+#endif
+		}
+
+		/// <summary>
 		/// Requests normal engine exit.
 		/// </summary>
 #if UNIT_TEST_COMPILANT
@@ -196,6 +209,8 @@ namespace FlaxEngine
 		internal static extern void Internal_GetMousePosition(out Vector2 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetMousePosition(ref Vector2 val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_GetHasFocus();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_Exit();
 		[MethodImpl(MethodImplOptions.InternalCall)]
