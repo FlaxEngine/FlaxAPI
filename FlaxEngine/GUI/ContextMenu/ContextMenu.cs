@@ -128,7 +128,7 @@ namespace FlaxEngine.GUI
         public ContextMenu()
         {
             MinimumWidth = 10;
-            MaximumItemsInViewCount = 1000000;
+            MaximumItemsInViewCount = 20;
 
             _panel = new ItemsPanel(this);
             _panel.Parent = this;

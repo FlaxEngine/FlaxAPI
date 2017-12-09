@@ -124,8 +124,7 @@ namespace FlaxEngine.GUI
         /// Gets or sets the maximum amount of items in the view. If popup has more items to show it uses a additional scroll panel.
         /// </summary>
         public int MaximumItemsInViewCount { get; set; }
-
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="ComboBox"/> class.
         /// </summary>
@@ -135,7 +134,7 @@ namespace FlaxEngine.GUI
         public ComboBox(float x = 0, float y = 0, float width = 120.0f)
             : base(x, y, width, DefaultHeight)
         {
-            MaximumItemsInViewCount = 100000;
+            MaximumItemsInViewCount = 20;
         }
 
         /// <summary>

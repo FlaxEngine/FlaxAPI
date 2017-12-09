@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using FlaxEditor.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -261,8 +262,11 @@ namespace FlaxEditor.CustomEditors.Elements
             _underlyingType = Enum.GetUnderlyingType(_enumType);
             IsFlags = _enumType.GetCustomAttribute<FlagsAttribute>() != null;
 
-            _comboBox = new EnumComboBox(this);
-            _comboBox.SupportMultiSelect = IsFlags;
+            _comboBox = new EnumComboBox(this)
+            {
+                SupportMultiSelect = IsFlags,
+                MaximumItemsInViewCount = 15,
+            };
             _comboBox.SelectedIndexChanged += ComboBoxOnSelectedIndexChanged;
 
             if (cusstomBuildEntriesDelegate != null)
