@@ -321,5 +321,10 @@ namespace FlaxEngine
         /// The gamepad right trigger.
         /// </summary>
         GamepadRightTrigger = 8,
+
+        /// <summary>
+        /// The keyboard only mode. For key inputs.
+        /// </summary>
+        KeyboardOnly = 9,
     }
 }
