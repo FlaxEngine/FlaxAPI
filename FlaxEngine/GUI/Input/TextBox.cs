@@ -285,7 +285,15 @@ namespace FlaxEngine.GUI
         /// Gets the current view offset.
         /// </summary>
         protected Vector2 ViewOffset => _viewOffset;
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextBox"/> class.
+        /// </summary>
+        public TextBox()
+            : this(true, 0, 0)
+        {
+        }
+
         /// <summary>
         /// Init
         /// </summary>

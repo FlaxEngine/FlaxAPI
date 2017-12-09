@@ -38,16 +38,6 @@ namespace FlaxEngine.GUI
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class ContextMenuBase : ContainerControl
     {
-        /// <summary>
-        /// The default items margin.
-        /// </summary>
-        public const int DefaultItemsMargin = 2;
-
-        /// <summary>
-        /// The default items left margin.
-        /// </summary>
-        public const int DefaultItemsLeftMargin = 16;
-
         private ContextMenuDirection _direction;
         private ContextMenuBase _parentCM;
         private ContextMenuBase _childCM;

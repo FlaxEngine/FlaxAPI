@@ -46,7 +46,7 @@ namespace FlaxEngine.GUI
         /// Gets or sets a value indicating whether support multi items selection.
         /// </summary>
         public bool SupportMultiSelect { get; set; }
-        
+
         /// <summary>
         /// Event fired when selected index gets changed.
         /// </summary>
@@ -119,6 +119,12 @@ namespace FlaxEngine.GUI
                 }
             }
         }
+        
+        /// <summary>
+        /// Gets or sets the maximum amount of items in the view. If popup has more items to show it uses a additional scroll panel.
+        /// </summary>
+        public int MaximumItemsInViewCount { get; set; }
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ComboBox"/> class.
@@ -129,6 +135,7 @@ namespace FlaxEngine.GUI
         public ComboBox(float x = 0, float y = 0, float width = 120.0f)
             : base(x, y, width, DefaultHeight)
         {
+            MaximumItemsInViewCount = 100000;
         }
 
         /// <summary>
@@ -202,25 +209,9 @@ namespace FlaxEngine.GUI
         /// </summary>
         protected virtual ContextMenu CreatePopup()
         {
-            var popup = new ContextMenu();
-
-            // Bind events
-            popup.VisibleChanged += cm =>
-            {
-                var win = ParentWindow;
-                _blockPopup = win != null && new Rectangle(Vector2.Zero, Size).Contains(PointFromWindow(win.MousePosition));
-                if (!_blockPopup)
-                    Focus();
-            };
-            popup.OnButtonClicked += (id, cm) =>
-            {
-                OnItemClicked(id);
-                cm.Hide();
-            };
-
-            return popup;
+            return new ContextMenu();
         }
-
+        
         /// <inheritdoc />
         public override void OnDestroy()
         {
@@ -319,7 +310,24 @@ namespace FlaxEngine.GUI
 
                 // Ensure to have valid menu
                 if (_popupMenu == null)
+                {
                     _popupMenu = CreatePopup();
+                    _popupMenu.MaximumItemsInViewCount = MaximumItemsInViewCount;
+
+                    // Bind events
+                    _popupMenu.VisibleChanged += cm =>
+                    {
+                        var win = ParentWindow;
+                        _blockPopup = win != null && new Rectangle(Vector2.Zero, Size).Contains(PointFromWindow(win.MousePosition));
+                        if (!_blockPopup)
+                            Focus();
+                    };
+                    _popupMenu.OnButtonClicked += (id, cm) =>
+                    {
+                        OnItemClicked(id);
+                        cm.Hide();
+                    };
+                }
 
                 // Check if menu hs been already shown
                 if (_popupMenu.Visible)
@@ -333,7 +341,9 @@ namespace FlaxEngine.GUI
                 if (_items.Count > 0)
                 {
                     // Setup items list
-                    _popupMenu.DisposeChildren();
+                    var itemControls = _popupMenu.Items.ToArray();
+                    foreach (var e in itemControls)
+                        e.Dispose();
                     if (Sorted)
                         _items.Sort();
                     var style = Style.Current;

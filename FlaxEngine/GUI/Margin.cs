@@ -35,6 +35,16 @@ namespace FlaxEngine.GUI
         public Vector2 Size => new Vector2(Left + Right, Top + Bottom);
 
         /// <summary>
+        /// Gets the width (left + right).
+        /// </summary>
+        public float Width => Left + Right;
+
+        /// <summary>
+        /// Gets the height (top + bottom).
+        /// </summary>
+        public float Height => Top + Bottom;
+        
+        /// <summary>
         /// Initializes a new instance of the <see cref="Margin"/> struct.
         /// </summary>
         /// <param name="value">The value.</param>

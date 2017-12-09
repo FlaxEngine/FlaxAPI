@@ -3,6 +3,8 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FlaxEngine.GUI
 {
@@ -20,9 +22,59 @@ namespace FlaxEngine.GUI
     public class ContextMenu : ContextMenuBase
     {
         /// <summary>
-        /// Gets or sets the minimum width.
+        /// The items container.
         /// </summary>
-        public float MinimumWidth { get; set; }
+        /// <seealso cref="FlaxEngine.GUI.Panel" />
+        protected class ItemsPanel : Panel
+        {
+            private readonly ContextMenu _menu;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ItemsPanel"/> class.
+            /// </summary>
+            /// <param name="menu">The menu.</param>
+            public ItemsPanel(ContextMenu menu)
+                : base(ScrollBars.Vertical)
+            {
+                _menu = menu;
+            }
+
+            /// <inheritdoc />
+            protected override void Arrage()
+            {
+                base.Arrage();
+
+                // Arrange controls
+                Margin margin = _menu._itemsMargin;
+                float y = margin.Top;
+                float x = margin.Left;
+                float width = Width - margin.Width;
+                for (int i = 0; i < _children.Count; i++)
+                {
+                    if (_children[i] is ContextMenuItem item && item.Visible)
+                    {
+                        var hight = item.Height;
+                        item.Bounds = new Rectangle(x, y, width, hight);
+                        y += hight + margin.Height;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// The items area margin.
+        /// </summary>
+        protected Margin _itemsAreaMargin = new Margin(0, 0, 2, 2);
+
+        /// <summary>
+        /// The items margin.
+        /// </summary>
+        protected Margin _itemsMargin = new Margin(16, 0, 2, 0);
+
+        /// <summary>
+        /// The items panel.
+        /// </summary>
+        protected ItemsPanel _panel;
 
         /// <summary>
         /// Event fired when any button in this popup menu gets clicked.
@@ -30,11 +82,56 @@ namespace FlaxEngine.GUI
         public event OnContextMenuButtonClicked OnButtonClicked;
 
         /// <summary>
+        /// Gets or sets the items area margin (items container area margin).
+        /// </summary>
+        public Margin ItemsAreaMargin
+        {
+            get => _itemsAreaMargin;
+            set
+            {
+                _itemsAreaMargin = value;
+                PerformLayout();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the items margin.
+        /// </summary>
+        public Margin ItemsMargin
+        {
+            get => _itemsMargin;
+            set
+            {
+                _itemsMargin = value;
+                PerformLayout();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the minimum popup width.
+        /// </summary>
+        public float MinimumWidth { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maximum amount of items in the view. If popup has more items to show it uses a additional scroll panel.
+        /// </summary>
+        public int MaximumItemsInViewCount { get; set; }
+
+        /// <summary>
+        /// Gets the items (readonly).
+        /// </summary>
+        public IEnumerable<ContextMenuItem> Items => _panel.Children.OfType<ContextMenuItem>();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ContextMenu"/> class.
         /// </summary>
         public ContextMenu()
         {
             MinimumWidth = 10;
+            MaximumItemsInViewCount = 1000000;
+
+            _panel = new ItemsPanel(this);
+            _panel.Parent = this;
         }
 
         /// <summary>
@@ -46,7 +143,7 @@ namespace FlaxEngine.GUI
         public ContextMenuButton AddButton(int id, string text)
         {
             var item = new ContextMenuButton(this, id, text);
-            item.Parent = this;
+            item.Parent = _panel;
             return item;
         }
 
@@ -60,7 +157,7 @@ namespace FlaxEngine.GUI
         public ContextMenuButton AddButton(int id, string text, string shortkeys)
         {
             var item = new ContextMenuButton(this, id, text, shortkeys);
-            item.Parent = this;
+            item.Parent = _panel;
             return item;
         }
 
@@ -73,7 +170,7 @@ namespace FlaxEngine.GUI
         public ContextMenuButton AddButton(string text, Action clicked)
         {
             var item = new ContextMenuButton(this, -1, text);
-            item.Parent = this;
+            item.Parent = _panel;
             item.Clicked += clicked;
             return item;
         }
@@ -88,7 +185,7 @@ namespace FlaxEngine.GUI
         public ContextMenuButton AddButton(string text, string shortkeys, Action clicked)
         {
             var item = new ContextMenuButton(this, -1, text, shortkeys);
-            item.Parent = this;
+            item.Parent = _panel;
             item.Clicked += clicked;
             return item;
         }
@@ -101,7 +198,7 @@ namespace FlaxEngine.GUI
         public ContextMenuChildMenu AddChildMenu(string text)
         {
             var item = new ContextMenuChildMenu(this, text);
-            item.Parent = this;
+            item.Parent = _panel;
             return item;
         }
 
@@ -112,7 +209,7 @@ namespace FlaxEngine.GUI
         public ContextMenuSeparator AddSeparator()
         {
             var item = new ContextMenuSeparator(this);
-            item.Parent = this;
+            item.Parent = _panel;
             return item;
         }
 
@@ -125,9 +222,9 @@ namespace FlaxEngine.GUI
         {
             // TODO: could we provide some fast access cache for using ids?
 
-            for (int i = 0; i < _children.Count; i++)
+            for (int i = 0; i < _panel.Children.Count; i++)
             {
-                if (_children[i] is ContextMenuButton button && button.ID == id)
+                if (_panel.Children[i] is ContextMenuButton button && button.ID == id)
                     return button;
             }
 
@@ -146,9 +243,9 @@ namespace FlaxEngine.GUI
                 return true;
 
             Vector2 cLocation = location - Location;
-            for (int i = 0; i < _children.Count; i++)
+            for (int i = 0; i < _panel.Children.Count; i++)
             {
-                if (_children[i].ContainsPoint(ref cLocation))
+                if (_panel.Children[i].ContainsPoint(ref cLocation))
                     return true;
             }
 
@@ -159,16 +256,20 @@ namespace FlaxEngine.GUI
         protected override void PerformLayoutSelf()
         {
             var prevSize = Size;
-
-            // Calculate size of the context menu
+            
+            // Calculate size of the context menu (items only)
             float maxWidth = 0;
-            float height = DefaultItemsMargin * 2;
-            for (int i = 0; i < _children.Count; i++)
+            float height = _itemsAreaMargin.Height;
+            int itemsLeft = MaximumItemsInViewCount;
+            for (int i = 0; i < _panel.Children.Count; i++)
             {
-                var c = _children[i];
-                if (c is ContextMenuItem item && c.Visible)
+                if (_panel.Children[i] is ContextMenuItem item && item.Visible)
                 {
-                    height += c.Height + DefaultItemsMargin;
+                    if (itemsLeft > 0)
+                    {
+                        height += item.Height + _itemsMargin.Height;
+                        itemsLeft--;
+                    }
                     maxWidth = Mathf.Max(maxWidth, item.MinimumWidth);
                 }
             }
@@ -177,19 +278,10 @@ namespace FlaxEngine.GUI
             // Resize container
             Size = new Vector2(Mathf.Ceil(maxWidth), Mathf.Ceil(height));
 
-            // Arrange controls
-            float y = DefaultItemsMargin;
-            float x = DefaultItemsMargin + DefaultItemsLeftMargin;
-            float width = Width - x - DefaultItemsMargin;
-            for (int i = 0; i < _children.Count; i++)
-            {
-                if (_children[i] is ContextMenuItem item && item.Visible)
-                {
-                    var hight = item.Height;
-                    item.Bounds = new Rectangle(x, y, width, hight);
-                    y += hight + DefaultItemsMargin;
-                }
-            }
+            // Arrange items view panel
+            var panelBounds = new Rectangle(Vector2.Zero, Size);
+            _itemsAreaMargin.ShrinkRectangle(ref panelBounds);
+            _panel.Bounds = panelBounds;
 
             // Check if is visible size get changed
             if (Visible && prevSize != Size)

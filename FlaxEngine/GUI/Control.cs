@@ -775,6 +775,30 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        ///     Converts point in local control's space into one of the parent control coordinates
+        /// </summary>
+        /// <param name="parent">This control parent of any other parent.</param>
+        /// <param name="location">Input location of the point to convert</param>
+        /// <returns>Converted point location in parent control coordinates</returns>
+        public Vector2 PointToParent(ContainerControl parent, Vector2 location)
+        {
+            if (parent == null)
+                throw new ArgumentNullException();
+
+            Control c = this;
+            while (c != null)
+            {
+                location = c.PointToParent(location);
+
+                c = c.Parent;
+                if (c == parent)
+                    return location;
+            }
+
+            throw new ArgumentException();
+        }
+
+        /// <summary>
         ///     Converts point in local control's space into parent control coordinates
         /// </summary>
         /// <param name="location">Input location of the point to convert</param>
