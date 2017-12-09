@@ -34,6 +34,16 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="InputEvent"/> class.
+        /// </summary>
+        /// <param name="name">The action name.</param>
+        public InputEvent(string name)
+        {
+            Input.ActionTriggered += Handler;
+            Name = name;
+        }
+
+        /// <summary>
         /// Finalizes an instance of the <see cref="InputEvent"/> class.
         /// </summary>
         ~InputEvent()

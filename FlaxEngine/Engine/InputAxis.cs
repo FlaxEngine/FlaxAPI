@@ -22,5 +22,21 @@ namespace FlaxEngine
         /// Gets the current axis raw value.
         /// </summary>
         public float ValueRaw => Input.GetAxisRaw(Name);
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InputAxis"/> class.
+        /// </summary>
+        public InputAxis()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InputAxis"/> class.
+        /// </summary>
+        /// <param name="name">The axis name.</param>
+        public InputAxis(string name)
+        {
+            Name = name;
+        }
     }
 }
