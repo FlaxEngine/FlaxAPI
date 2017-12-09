@@ -12,6 +12,7 @@ namespace FlaxEngine
     {
         internal static int gamepadsVersion;
         internal static Gamepad[] gamepads;
+        private static float lastScanTimeAccumulatedTime;
 
         /// <summary>
         /// Maps keyboard, controller, or mouse inputs to a "friendly name" that will later be bound to continuous game behavior, such as movement. The inputs mapped in AxisMappings are continuously polled, even if they are just reporting that their input value.
@@ -330,6 +331,11 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// The automatic gamepads scanning interval in seconds. Calls <see cref="ScanGamepads"/>. Use value equal to 0 or lower to disable that feature.
+        /// </summary>
+        public static float AutoGamepadsScanInterval = 2.0f;
+
+        /// <summary>
         /// Scans the connected gamepad devices to find the new ones.
         /// </summary>
 #if !UNIT_TEST_COMPILANT
@@ -340,6 +346,30 @@ namespace FlaxEngine
         {
         }
 #endif
+
+        internal static void Init()
+        {
+            Scripting.Update += OnUpdate;
+            lastScanTimeAccumulatedTime = -1.0f;
+        }
+
+        internal static void OnUpdate()
+        {
+            if (AutoGamepadsScanInterval > 0)
+            {
+                var dt = Time.DeltaTime;
+                lastScanTimeAccumulatedTime += dt;
+                if (lastScanTimeAccumulatedTime >= AutoGamepadsScanInterval)
+                {
+                    lastScanTimeAccumulatedTime = 0.0f;
+                    ScanGamepads();
+                }
+            }
+            else
+            {
+                lastScanTimeAccumulatedTime = 0;
+            }
+        }
 
         internal static void Internal_ActionTriggered(string name)
         {
