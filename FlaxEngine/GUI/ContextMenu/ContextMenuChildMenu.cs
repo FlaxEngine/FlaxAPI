@@ -69,7 +69,7 @@ namespace FlaxEngine.GUI
                 return;
 
             // Hide parent CM popups and set itself as child
-            parentContextMenu.ShowChild(ContextMenu, PointToParent(ContextMenu, new Vector2(Right, Y)));
+            parentContextMenu.ShowChild(ContextMenu, PointToParent(ParentContextMenu, new Vector2(Width, 0)));
         }
 
         /// <inheritdoc />
