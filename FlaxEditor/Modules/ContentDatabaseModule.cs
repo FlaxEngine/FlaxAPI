@@ -185,6 +185,9 @@ namespace FlaxEditor.Modules
         {
             Assert.IsFalse(_isDuringFastSetup);
 
+            // Ensure path is normalized to the Flax format
+            path = StringUtils.NormalizePath(path);
+            
             // TODO: if it's a bottleneck try to optimize searching by spliting path
 
             var result = ProjectContent.Folder.Find(path);
@@ -376,7 +379,7 @@ namespace FlaxEditor.Modules
         {
             if (newParent == null || item == null)
                 throw new ArgumentNullException();
-
+            
             // Skip nothing to change
             if (item.ParentFolder == newParent)
                 return;
