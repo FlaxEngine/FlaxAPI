@@ -102,19 +102,19 @@ namespace FlaxEngine
             /// <summary>
             /// For keyboard input, a larger value will result in faster response time (in units/s). A lower value will be more smooth. For Mouse delta the value will scale the actual mouse delta.
             /// </summary>
-            [EditorOrder(60), Limit(0.0f, 100.0f, 0.1f), Tooltip("For keyboard input, a larger value will result in faster response time (in units/s). A lower value will be more smooth. For Mouse delta the value will scale the actual mouse delta.")]
+            [EditorOrder(60), Limit(0.0f, 10000.0f, 0.1f), Tooltip("For keyboard input, a larger value will result in faster response time (in units/s). A lower value will be more smooth. For Mouse delta the value will scale the actual mouse delta.")]
             public float Sensitivity;
 
             /// <summary>
             /// For keyboard input describes how fast will the input recenter. Speed (in units/s) that output value will rest to neutral value if not when device at rest.
             /// </summary>
-            [EditorOrder(70), Limit(0.0f, 100.0f, 0.1f), Tooltip("For keyboard input describes how fast will the input recenter. Speed (in units/s) that output value will rest to neutral value if not when device at rest.")]
+            [EditorOrder(70), Limit(0.0f, 10000.0f, 0.1f), Tooltip("For keyboard input describes how fast will the input recenter. Speed (in units/s) that output value will rest to neutral value if not when device at rest.")]
             public float Gravity;
 
             /// <summary>
             /// Additional scale parameter applied to the axis value. Allows to invert it or modify the range.
             /// </summary>
-            [EditorOrder(80), Limit(-100.0f, 100.0f, 0.01f), Tooltip("Additional scale parameter applied to the axis value. Allows to invert it or modify the range.")]
+            [EditorOrder(80), Limit(-1000.0f, 1000.0f, 0.01f), Tooltip("Additional scale parameter applied to the axis value. Allows to invert it or modify the range.")]
             public float Scale;
 
             /// <summary>
