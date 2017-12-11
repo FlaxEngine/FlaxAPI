@@ -78,6 +78,12 @@ namespace FlaxEditor.Windows
             groupPhysics.AddChild(CreateActorItem("Box Collider", typeof(BoxCollider)));
             groupPhysics.AddChild(CreateActorItem("Sphere Collider", typeof(SphereCollider)));
             groupPhysics.AddChild(CreateActorItem("Capsule Collider", typeof(CapsuleCollider)));
+            groupPhysics.AddChild(CreateActorItem("Fixed Joint", typeof(FixedJoint)));
+            groupPhysics.AddChild(CreateActorItem("Distance Joint", typeof(DistanceJoint)));
+            groupPhysics.AddChild(CreateActorItem("Slider Joint", typeof(SliderJoint)));
+            groupPhysics.AddChild(CreateActorItem("Spherical Joint", typeof(SphericalJoint)));
+            groupPhysics.AddChild(CreateActorItem("Hinge Joint", typeof(HingeJoint)));
+            groupPhysics.AddChild(CreateActorItem("D6 Joint", typeof(D6Joint)));
 
             var groupCsg = createGroupWithList(actorGroups, "CSG");
             groupCsg.AddChild(CreateActorItem("Box Brush", typeof(BoxBrush)));

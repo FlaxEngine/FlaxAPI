@@ -93,6 +93,12 @@ namespace FlaxEditor.Windows
                         new KeyValuePair<string, Type>("Box Collider", typeof(BoxCollider)),
                         new KeyValuePair<string, Type>("Sphere Collider", typeof(SphereCollider)),
                         new KeyValuePair<string, Type>("Capsule Collider", typeof(CapsuleCollider)),
+                        new KeyValuePair<string, Type>("Fixed Joint", typeof(FixedJoint)),
+                        new KeyValuePair<string, Type>("Distance Joint", typeof(DistanceJoint)),
+                        new KeyValuePair<string, Type>("Slider Joint", typeof(SliderJoint)),
+                        new KeyValuePair<string, Type>("Spherical Joint", typeof(SphericalJoint)),
+                        new KeyValuePair<string, Type>("Hinge Joint", typeof(HingeJoint)),
+                        new KeyValuePair<string, Type>("D6 Joint", typeof(D6Joint)),
                     }
                 },
                 new ActorsGroup
