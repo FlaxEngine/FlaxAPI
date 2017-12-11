@@ -99,6 +99,12 @@ namespace FlaxEngine
             GetPlanesFromMatrix(ref pMatrix, out pNear, out pFar, out pLeft, out pRight, out pTop, out pBottom);
         }
 
+        /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// </returns>
         public override int GetHashCode()
         {
             return pMatrix.GetHashCode();
@@ -489,13 +495,11 @@ namespace FlaxEngine
         /// <returns>Type of the containment</returns>
         public ContainmentType Contains(ref BoundingBox box)
         {
-            Vector3 p, n;
-            Plane plane;
             var result = ContainmentType.Contains;
             for (var i = 0; i < 6; i++)
             {
-                plane = GetPlane(i);
-                GetBoxToPlanePVertexNVertex(ref box, ref plane.Normal, out p, out n);
+                var plane = GetPlane(i);
+                GetBoxToPlanePVertexNVertex(ref box, ref plane.Normal, out var p, out var n);
                 if (CollisionsHelper.PlaneIntersectsPoint(ref plane, ref p) == PlaneIntersectionType.Back)
                     return ContainmentType.Disjoint;
 
@@ -735,8 +739,7 @@ namespace FlaxEngine
         /// <returns><c>true</c> if the current BoundingFrustum intersects the specified Ray.</returns>
         public bool Intersects(ref Ray ray)
         {
-            float? inDist, outDist;
-            return Intersects(ref ray, out inDist, out outDist);
+            return Intersects(ref ray, out _, out _);
         }
 
         /// <summary>
@@ -774,8 +777,7 @@ namespace FlaxEngine
             for (var i = 0; i < 6; i++)
             {
                 Plane plane = GetPlane(i);
-                float distance;
-                if (CollisionsHelper.RayIntersectsPlane(ref ray, ref plane, out distance))
+                if (CollisionsHelper.RayIntersectsPlane(ref ray, ref plane, out float distance))
                 {
                     minDist = Math.Min(minDist, distance);
                     maxDist = Math.Max(maxDist, distance);

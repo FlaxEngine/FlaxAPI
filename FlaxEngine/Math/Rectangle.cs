@@ -335,16 +335,40 @@ namespace FlaxEngine
 
         #region Operators
 
+        /// <summary>
+        /// Implements the operator +.
+        /// </summary>
+        /// <param name="rectangle">The rectangle.</param>
+        /// <param name="offset">The offset.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static Rectangle operator+(Rectangle rectangle, Vector2 offset)
         {
             return new Rectangle(rectangle.Location + offset, rectangle.Size);
         }
 
+        /// <summary>
+        /// Implements the operator -.
+        /// </summary>
+        /// <param name="rectangle">The rectangle.</param>
+        /// <param name="offset">The offset.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static Rectangle operator-(Rectangle rectangle, Vector2 offset)
         {
             return new Rectangle(rectangle.Location - offset, rectangle.Size);
         }
 
+        /// <summary>
+        /// Implements the operator *.
+        /// </summary>
+        /// <param name="rectangle">The rectangle.</param>
+        /// <param name="scale">The scale.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static Rectangle operator *(Rectangle rectangle, float scale)
         {
             return rectangle.MakeScaled(scale);
