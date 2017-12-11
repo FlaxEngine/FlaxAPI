@@ -61,6 +61,8 @@
     <Compile Include="API\Actors\EnvironmentProbe.Gen.cs">
       <DependentUpon>EnvironmentProbe.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Actors\Joint.cs" />
+    <Compile Include="API\Actors\Joint.Gen.cs" />
     <Compile Include="API\Actors\LightActor.cs" />
     <Compile Include="API\Actors\LightActor.Gen.cs" />
     <Compile Include="API\Actors\ModelActor.cs" />
@@ -100,6 +102,18 @@
     <Compile Include="API\Colliders\SphereCollider.cs" />
     <Compile Include="API\Colliders\SphereCollider.Gen.cs" />
     <Compile Include="API\CreateWindowSettings.cs" />
+    <Compile Include="API\Joints\D6Joint.cs" />
+    <Compile Include="API\Joints\D6Joint.Gen.cs" />
+    <Compile Include="API\Joints\DistanceJoint.cs" />
+    <Compile Include="API\Joints\DistanceJoint.Gen.cs" />
+    <Compile Include="API\Joints\FixedJoint.cs" />
+    <Compile Include="API\Joints\FixedJoint.Gen.cs" />
+    <Compile Include="API\Joints\HingeJoint.cs" />
+    <Compile Include="API\Joints\HingeJoint.Gen.cs" />
+    <Compile Include="API\Joints\SliderJoint.cs" />
+    <Compile Include="API\Joints\SliderJoint.Gen.cs" />
+    <Compile Include="API\Joints\SphericalJoint.cs" />
+    <Compile Include="API\Joints\SphericalJoint.Gen.cs" />
     <Compile Include="API\LightActors\DirectionalLight.cs" />
     <Compile Include="API\LightActors\DirectionalLight.Gen.cs" />
     <Compile Include="API\LightActors\PointLight.cs" />
@@ -204,12 +218,14 @@
     <Compile Include="Engine\InputAxis.cs" />
     <Compile Include="Engine\InputEvent.cs" />
     <Compile Include="Engine\ITransformable.cs" />
+    <Compile Include="Engine\Limits.cs" />
     <Compile Include="Engine\MaterialSlot.cs" />
     <Compile Include="Engine\Mesh.cs" />
     <Compile Include="Engine\ModelEntryInfo.cs" />
     <Compile Include="Engine\ModelLOD.cs" />
     <Compile Include="Engine\PhysicalMaterial.cs" />
     <Compile Include="Engine\RayCastHit.cs" />
+    <Compile Include="Engine\SpringParameters.cs" />
     <Compile Include="Enums\ForceMode.cs" />
     <Compile Include="Enums\Keys.cs" />
     <Compile Include="Enums\PhysicsCombineMode.cs" />
