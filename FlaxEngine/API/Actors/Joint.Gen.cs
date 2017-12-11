@@ -31,7 +31,7 @@ namespace FlaxEngine
 			get; set;
 #else
 			get { return Internal_GetTarget(unmanagedPtr); }
-			set { Internal_SetTarget(unmanagedPtr, value); }
+			set { Internal_SetTarget(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
 #endif
 		}
 
@@ -147,7 +147,7 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Actor Internal_GetTarget(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetTarget(IntPtr obj, Actor val);
+		internal static extern void Internal_SetTarget(IntPtr obj, IntPtr val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetBreakForce(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
