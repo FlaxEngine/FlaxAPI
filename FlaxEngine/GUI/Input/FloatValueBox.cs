@@ -65,7 +65,7 @@ namespace FlaxEngine.GUI
                 }
             }
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FloatValueBox"/> class.
         /// </summary>
@@ -108,8 +108,14 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected sealed override void UpdateText()
         {
-            var text = _value.ToString(CultureInfo.InvariantCulture);
-            
+            string text;
+            if (float.IsPositiveInfinity(_value) || _value == float.MaxValue)
+                text = "Infinity";
+            else if (float.IsNegativeInfinity(_value) || _value == float.MinValue)
+                text = "-Infinity";
+            else
+                text = _value.ToString(CultureInfo.InvariantCulture);
+
             SetText(text);
         }
 
@@ -122,7 +128,7 @@ namespace FlaxEngine.GUI
                 Value = (float)Math.Round(value, 5);
             }
         }
-        
+
         /// <inheritdoc />
         protected override void ApplySliding(float delta)
         {
