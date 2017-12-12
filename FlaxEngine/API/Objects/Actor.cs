@@ -14,11 +14,6 @@ namespace FlaxEngine
     /// </summary>
     public abstract partial class Actor : ITransformable
     {
-        // TODO: Instantiate from prefab
-        // TODO: TransformDirection, TranformPoint
-        // TODO: InverseTransformDirection, InverseTransformPoint
-        // TODO: LootAt, Translate, Rotate
-
         /// <summary>
         /// Returns true if object is fully static on the scene
         /// </summary>
@@ -35,10 +30,12 @@ namespace FlaxEngine
 
         /// <summary>
         /// The rotation as Euler angles in degrees.
+        /// </summary>
+        /// <remarks>
         /// The x, y, and z angles represent a rotation z degrees around the z axis, x degrees around the x axis, and y degrees
         /// around the y axis (in that order).
         /// Angles order (xyz): pitch, yaw and roll.
-        /// </summary>
+        /// </remarks>
         [UnmanagedCall]
         [HideInEditor]
         [NoSerialize]
@@ -65,14 +62,16 @@ namespace FlaxEngine
 
         /// <summary>
         /// The local rotation as Euler angles in degrees.
+        /// </summary>
+        /// <remarks>
         /// The x, y, and z angles represent a rotation z degrees around the z axis, x degrees around the x axis, and y degrees
         /// around the y axis (in that order).
         /// Angles order (xyz): pitch, yaw and roll.
-        /// </summary>
+        /// </remarks>
         [UnmanagedCall]
         [HideInEditor]
         [NoSerialize]
-        public Vector3 LocaEulerAngles
+        public Vector3 LocalEulerAngles
         {
 #if UNIT_TEST_COMPILANT
 			get { return LocalOrientation.EulerAngles; }

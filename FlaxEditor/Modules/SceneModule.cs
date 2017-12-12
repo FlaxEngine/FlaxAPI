@@ -136,7 +136,7 @@ namespace FlaxEditor.Modules
             //
             sun.Name = "Sun";
             sun.LocalPosition = new Vector3(40, 160, 0);
-            sun.LocaEulerAngles = new Vector3(45, 0, 0);
+            sun.LocalEulerAngles = new Vector3(45, 0, 0);
             sun.StaticFlags = StaticFlags.FullyStatic;
             //
             floor.Name = "Floor";
