@@ -72,8 +72,8 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetLimit(unmanagedPtr); }
-			set { Internal_SetLimit(unmanagedPtr, value); }
+			get { LimitLinearRange resultAsRef; Internal_GetLimit(unmanagedPtr, out resultAsRef); return resultAsRef; }
+			set { Internal_SetLimit(unmanagedPtr, ref value); }
 #endif
 		}
 
@@ -110,9 +110,9 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetFlags(IntPtr obj, SliderJointFlag val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern LimitLinearRange Internal_GetLimit(IntPtr obj);
+		internal static extern void Internal_GetLimit(IntPtr obj, out LimitLinearRange resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetLimit(IntPtr obj, LimitLinearRange val);
+		internal static extern void Internal_SetLimit(IntPtr obj, ref LimitLinearRange val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetCurrentPosition(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
