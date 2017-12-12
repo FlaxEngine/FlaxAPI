@@ -81,25 +81,7 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Determines whether override target body anchor with a custom value.
-		/// </summary>
-		/// <remarks>
-		/// If it's disabled the target body anchor will be calculated automatically to match the global position of the object. Otherwise the TargetAnchor property will be used.
-		/// </remarks>
-		[UnmanagedCall]
-		[HideInEditor]
-		public bool OverrideTargetAnchor
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { return Internal_GetOverrideTargetAnchor(unmanagedPtr); }
-			set { Internal_SetOverrideTargetAnchor(unmanagedPtr, value); }
-#endif
-		}
-
-		/// <summary>
-		/// Gets or sets the target anchor. Used only when OverrideTargetAnchor is enabled.
+		/// Gets or sets the target anchor.
 		/// </summary>
 		/// <remarks>
 		/// This is the relative pose which locates the joint frame relative to the target actor.
@@ -113,6 +95,24 @@ namespace FlaxEngine
 #else
 			get { Vector3 resultAsRef; Internal_GetTargetAnchor(unmanagedPtr, out resultAsRef); return resultAsRef; }
 			set { Internal_SetTargetAnchor(unmanagedPtr, ref value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the target anchor rotation.
+		/// </summary>
+		/// <remarks>
+		/// This is the relative pose rotation which locates the joint frame relative to the target actor.
+		/// </remarks>
+		[UnmanagedCall]
+		[EditorOrder(50), EditorDisplay("Joint"), Tooltip("This is the relative pose rotation which locates the joint frame relative to the target actor.")]
+		public Quaternion TargetAnchorRotation
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { Quaternion resultAsRef; Internal_GetTargetAnchorRotation(unmanagedPtr, out resultAsRef); return resultAsRef; }
+			set { Internal_SetTargetAnchorRotation(unmanagedPtr, ref value); }
 #endif
 		}
 
@@ -161,13 +161,13 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetEnableCollision(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetOverrideTargetAnchor(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetOverrideTargetAnchor(IntPtr obj, bool val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetTargetAnchor(IntPtr obj, out Vector3 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetTargetAnchor(IntPtr obj, ref Vector3 val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetTargetAnchorRotation(IntPtr obj, out Quaternion resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetTargetAnchorRotation(IntPtr obj, ref Quaternion val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetCurrentForce(IntPtr obj, out Vector3 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
