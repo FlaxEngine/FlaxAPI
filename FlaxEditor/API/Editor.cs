@@ -386,7 +386,12 @@ namespace FlaxEditor
             /// The material instance. See <see cref="FlaxEngine.MaterialInstance"/>.
             /// </summary>
             MaterialInstance = 1,
-        };
+
+            /// <summary>
+            /// The collision data. See <see cref="FlaxEngine.CollisionData"/>.
+            /// </summary>
+            CollisionData = 2,
+        }
 
         /// <summary>
         /// Imports the asset file to the target location.

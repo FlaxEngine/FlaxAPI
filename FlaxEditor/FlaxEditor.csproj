@@ -64,6 +64,7 @@
     <Compile Include="Content\Import\ImportFilesDialog.cs" />
     <Compile Include="Content\Import\ModelImportEntry.cs" />
     <Compile Include="Content\Import\TextureImportEntry.cs" />
+    <Compile Include="Content\Proxy\CollisionDataProxy.cs" />
     <Compile Include="Content\Proxy\SettingsProxy.cs" />
     <Compile Include="Content\Settings\BuildPreset.cs" />
     <Compile Include="Content\Settings\BuildSettings.cs" />
@@ -323,6 +324,7 @@
     <Compile Include="Viewport\Widgets\ViewportWidgetsContainer.cs" />
     <Compile Include="Windows\AboutDialog.cs" />
     <Compile Include="Windows\Assets\AssetEditorWindow.cs" />
+    <Compile Include="Windows\Assets\CollisionDataWindow.cs" />
     <Compile Include="Windows\Assets\CubeTextureWindow.cs" />
     <Compile Include="Windows\Assets\FontWindow.cs" />
     <Compile Include="Windows\Assets\IESProfileWindow.cs" />

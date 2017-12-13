@@ -40,11 +40,6 @@ namespace FlaxEditor
         public const PixelFormat AssetIconsAtlasFormat = PixelFormat.R8G8B8A8_UNorm;
 
         /// <summary>
-        /// The previews cache asset type unique ID.
-        /// </summary>
-        public const int TypeID = 11;
-
-        /// <summary>
         /// The asset type content domain.
         /// </summary>
         public const ContentDomain Domain = ContentDomain.Texture;

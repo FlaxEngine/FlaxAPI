@@ -78,6 +78,7 @@ namespace FlaxEditor.Windows
             groupPhysics.AddChild(CreateActorItem("Box Collider", typeof(BoxCollider)));
             groupPhysics.AddChild(CreateActorItem("Sphere Collider", typeof(SphereCollider)));
             groupPhysics.AddChild(CreateActorItem("Capsule Collider", typeof(CapsuleCollider)));
+            groupPhysics.AddChild(CreateActorItem("Mesh Collider", typeof(MeshCollider)));
             groupPhysics.AddChild(CreateActorItem("Fixed Joint", typeof(FixedJoint)));
             groupPhysics.AddChild(CreateActorItem("Distance Joint", typeof(DistanceJoint)));
             groupPhysics.AddChild(CreateActorItem("Slider Joint", typeof(SliderJoint)));
