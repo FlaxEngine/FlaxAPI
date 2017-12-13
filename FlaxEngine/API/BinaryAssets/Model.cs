@@ -10,11 +10,6 @@ namespace FlaxEngine
     public sealed partial class Model
     {
         /// <summary>
-        /// The model asset type unique ID.
-        /// </summary>
-        public const int TypeID = 3;
-
-        /// <summary>
         /// The asset type content domain.
         /// </summary>
         public const ContentDomain Domain = ContentDomain.Model;

@@ -7,11 +7,6 @@ namespace FlaxEngine
     public sealed partial class MaterialInstance
     {
         /// <summary>
-        /// The material asset type unique ID.
-        /// </summary>
-        public const int TypeID = 4;
-
-        /// <summary>
         /// The asset type content domain.
         /// </summary>
         public const ContentDomain Domain = ContentDomain.Material;
