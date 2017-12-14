@@ -20,7 +20,7 @@ namespace FlaxEngine
         public Vector3 Normal;
 
         /// <summary>
-        /// The distance from the yar's orogin to the hit location.
+        /// The distance from the ray's orogin to the hit location.
         /// </summary>
         public float Distance;
 
