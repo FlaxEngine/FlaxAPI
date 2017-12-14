@@ -58,8 +58,6 @@ namespace FlaxEngine
 		internal static extern CollisionDataType Internal_GetType(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Model Internal_GetModel(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern int Internal_GetModelLodIndex(IntPtr obj);
 #endif
 #endregion
 	}

@@ -47,10 +47,10 @@ namespace FlaxEditor.Windows.Assets
             public int ModelLodIndex;
 
             [EditorOrder(100), EditorDisplay("Convex Mesh", "Convex Flags"), Tooltip("Convex mesh generation flags")]
-            private ConvexMeshGenerationFlags ConvexFlags;
+            public ConvexMeshGenerationFlags ConvexFlags;
 
             [EditorOrder(110), Limit(8, 255), EditorDisplay("Convex Mesh", "Vertex Limit"), Tooltip("Convex mesh vertex count limit")]
-            private int ConvexVertexLimit;
+            public int ConvexVertexLimit;
 
             public class Editor : GenericEditor
             {
