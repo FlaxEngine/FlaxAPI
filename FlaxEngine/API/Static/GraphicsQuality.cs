@@ -53,6 +53,15 @@ namespace FlaxEngine.Rendering
             set { Internal_SetValue(4, (int)value); }
         }
 
+        /// <summary>
+        /// Enables cascades splits blending for directional light shadows.
+        /// </summary>
+        public static bool AllowCSMBlending
+        {
+            get { return Internal_GetValue(5) != 0; }
+            set { Internal_SetValue(5, value ? 1 : 0); }
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT

@@ -23,24 +23,30 @@ namespace FlaxEditor.Content.Settings
         /// Screen Space Reflections quality.
         /// </summary>
         [EditorOrder(1000), EditorDisplay("Quality", "SSR Quality"), Tooltip("Screen Space Reflections quality.")]
-        public Quality SSRQuality;
+        public Quality SSRQuality = Quality.Medium;
 
         /// <summary>
         /// Screen Space Ambient Occlusion quality setting.
         /// </summary>
         [EditorOrder(1010), EditorDisplay("Quality", "SSAO Quality"), Tooltip("Screen Space Ambient Occlusion quality setting.")]
-        public Quality SSAOQuality;
+        public Quality SSAOQuality = Quality.Medium;
 
         /// <summary>
         /// The shadows quality.
         /// </summary>
         [EditorOrder(1020), EditorDisplay("Quality", "Shadows Quality"), Tooltip("The shadows quality.")]
-        public Quality ShadowsQuality;
+        public Quality ShadowsQuality = Quality.Medium;
 
         /// <summary>
         /// The shadow maps quality (textures resolution).
         /// </summary>
         [EditorOrder(1030), EditorDisplay("Quality", "Shadow Maps Quality"), Tooltip("The shadow maps quality (textures resolution).")]
-        public Quality ShadowMapsQuality;
+        public Quality ShadowMapsQuality = Quality.Medium;
+
+        /// <summary>
+        /// Enables cascades splits blending for directional light shadows.
+        /// </summary>
+        [EditorOrder(1040), EditorDisplay("Quality", "Allow CSM Blending"), Tooltip("Enables cascades splits blending for directional light shadows.")]
+        public bool AllowCSMBlending = true;
     }
 }

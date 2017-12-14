@@ -61,6 +61,16 @@ namespace FlaxEditor.Windows
                 get => GraphicsQuality.ShadowMapsQuality;
                 set => GraphicsQuality.ShadowMapsQuality = value;
             }
+
+            /// <summary>
+            /// Enables cascades splits blending for directional light shadows.
+            /// </summary>
+            [EditorOrder(1040), EditorDisplay("Quality", "Allow CSM Blending"), Tooltip("Enables cascades splits blending for directional light shadows.")]
+            public bool AllowCSMBlending
+            {
+                get => GraphicsQuality.AllowCSMBlending;
+                set => GraphicsQuality.AllowCSMBlending = value;
+            }
         }
 
         /// <summary>
