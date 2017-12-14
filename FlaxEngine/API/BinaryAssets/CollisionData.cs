@@ -31,6 +31,7 @@ namespace FlaxEngine
     /// <summary>
     /// Set of flags used to generate model convex mesh. Allows to customize process.
     /// </summary>
+    [Flags]
     public enum ConvexMeshGenerationFlags
     {
         /// <summary>
