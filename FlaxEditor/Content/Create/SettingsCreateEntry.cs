@@ -100,7 +100,7 @@ namespace FlaxEditor.Content.Create
         /// </summary>
         /// <param name="resultUrl">The result file url.</param>
         public SettingsCreateEntry(string resultUrl)
-            : base(resultUrl)
+            : base("Settings", resultUrl)
         {
         }
 

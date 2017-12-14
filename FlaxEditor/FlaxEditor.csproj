@@ -59,6 +59,7 @@
     <Compile Include="Content\GUI\ContentView.cs" />
     <Compile Include="Content\GUI\NavigationBar.cs" />
     <Compile Include="Content\GUI\NavigationButton.cs" />
+    <Compile Include="Content\IFileEntryAction.cs" />
     <Compile Include="Content\Import\AssetImportEntry.cs" />
     <Compile Include="Content\Import\ImportFileEntry.cs" />
     <Compile Include="Content\Import\ImportFilesDialog.cs" />

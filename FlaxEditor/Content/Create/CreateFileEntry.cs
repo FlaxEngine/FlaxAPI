@@ -7,12 +7,13 @@ namespace FlaxEditor.Content.Create
     /// <summary>
     /// File create entry.
     /// </summary>
-    public abstract class CreateFileEntry
+    public abstract class CreateFileEntry : IFileEntryAction
     {
-        /// <summary>
-        /// The result file path.
-        /// </summary>
-        public readonly string ResultUrl;
+        /// <inheritdoc />
+        public string SourceUrl { get; }
+
+        /// <inheritdoc />
+        public string ResultUrl { get; }
 
         /// <summary>
         /// Gets a value indicating whether this entry has settings to modify.
@@ -27,9 +28,11 @@ namespace FlaxEditor.Content.Create
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateFileEntry"/> class.
         /// </summary>
+        /// <param name="outputType">The output file type.</param>
         /// <param name="resultUrl">The result file url.</param>
-        protected CreateFileEntry(string resultUrl)
+        protected CreateFileEntry(string outputType, string resultUrl)
         {
+            SourceUrl = outputType;
             ResultUrl = resultUrl;
         }
 
@@ -38,5 +41,11 @@ namespace FlaxEditor.Content.Create
         /// </summary>
         /// <returns>True if failed, otherwise false.</returns>
         public abstract bool Create();
+
+        /// <inheritdoc />
+        public bool Execute()
+        {
+            return Create();
+        }
     }
 }

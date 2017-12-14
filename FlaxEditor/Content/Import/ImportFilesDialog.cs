@@ -94,11 +94,11 @@ namespace FlaxEditor.Content.Import
                 // TODO: add icons for textures/models/etc from FileEntry to tree node??
                 var node = new TreeNode(false)
                 {
-                    Text = Path.GetFileName(entry.Url),
+                    Text = Path.GetFileName(entry.SourceUrl),
                     Tag = entry,
                     Parent = _rootNode
                 };
-                node.LinkTooltip(entry.Url);
+                node.LinkTooltip(entry.SourceUrl);
             }
             _rootNode.Expand();
             _rootNode.Parent = tree;

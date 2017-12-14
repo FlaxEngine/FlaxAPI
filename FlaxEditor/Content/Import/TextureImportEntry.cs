@@ -429,7 +429,7 @@ namespace FlaxEditor.Content.Import
         /// <inheritdoc />
         public override bool Import()
         {
-            return Editor.Import(Url, ResultUrl, _settings);
+            return Editor.Import(SourceUrl, ResultUrl, _settings);
         }
 
         #region Internal Calls

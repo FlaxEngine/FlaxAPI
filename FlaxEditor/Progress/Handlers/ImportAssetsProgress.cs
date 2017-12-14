@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using FlaxEditor.Content;
 using FlaxEditor.Content.Import;
 
 namespace FlaxEditor.Progress.Handlers
@@ -12,7 +13,7 @@ namespace FlaxEditor.Progress.Handlers
     /// <seealso cref="FlaxEditor.Progress.ProgressHandler" />
     public sealed class ImportAssetsProgress : ProgressHandler
     {
-        private string _currentFilename;
+        private string _currentInfo;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportAssetsProgress"/> class.
@@ -25,16 +26,19 @@ namespace FlaxEditor.Progress.Handlers
             importing.ImportFileBegin += OnImportFileBegin;
         }
 
-        private void OnImportFileBegin(ImportFileEntry importFileEntry)
+        private void OnImportFileBegin(IFileEntryAction importFileEntry)
         {
-            _currentFilename = System.IO.Path.GetFileName(importFileEntry.Url);
+            if (importFileEntry is ImportFileEntry)
+                _currentInfo = string.Format("Importing \'{0}\'", System.IO.Path.GetFileName(importFileEntry.SourceUrl));
+            else
+                _currentInfo = string.Format("Creating \'{0}\'", importFileEntry.SourceUrl);
             UpdateProgress();
         }
 
         private void UpdateProgress()
         {
             var importing = Editor.Instance.ContentImporting;
-            var info = string.Format("Importing \'{0}\' ({1}/{2})...", _currentFilename, importing.ImportBatchDone, importing.ImportBatchSize);
+            var info = string.Format("{0} ({1}/{2})...", _currentInfo, importing.ImportBatchDone, importing.ImportBatchSize);
             OnUpdate(importing.ImportingProgress, info);
         }
     }

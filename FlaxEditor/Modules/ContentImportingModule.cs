@@ -41,7 +41,7 @@ namespace FlaxEditor.Modules
 
         // Firstly service is collecting import requests and then performs actual importing in the background.
 
-        private readonly Queue<ImportFileEntry> _importingQueue = new Queue<ImportFileEntry>();
+        private readonly Queue<IFileEntryAction> _importingQueue = new Queue<IFileEntryAction>();
         private readonly List<Request> _requests = new List<Request>();
 
         private long _workerEndFlag;
@@ -75,14 +75,14 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Occurs when file is being imported.
         /// </summary>
-        public event Action<ImportFileEntry> ImportFileBegin;
+        public event Action<IFileEntryAction> ImportFileBegin;
 
         /// <summary>
         /// Import file end delegate.
         /// </summary>
         /// <param name="entry">The imported file entry.</param>
         /// <param name="failed">if set to <c>true</c> if importing failed, otherwise false.</param>
-        public delegate void ImportFileEndDelegate(ImportFileEntry entry, bool failed);
+        public delegate void ImportFileEndDelegate(IFileEntryAction entry, bool failed);
 
         /// <summary>
         /// Occurs when file importing end.
@@ -262,7 +262,7 @@ namespace FlaxEditor.Modules
 
         private void WorkerMain()
         {
-            ImportFileEntry entry;
+            IFileEntryAction entry;
             bool wasLastTickWorking = false;
 
             while (Interlocked.Read(ref _workerEndFlag) == 0)
@@ -292,7 +292,7 @@ namespace FlaxEditor.Modules
                     try
                     {
                         ImportFileBegin?.Invoke(entry);
-                        failed = entry.Import();
+                        failed = entry.Execute();
                     }
                     catch (Exception ex)
                     {
@@ -302,7 +302,7 @@ namespace FlaxEditor.Modules
                     {
                         if (failed)
                         {
-                            Editor.LogWarning("Failed to import " + entry.Url);
+                            Editor.LogWarning("Failed to import " + entry.SourceUrl + " to " + entry.ResultUrl);
                         }
 
                         _importBatchDone++;
@@ -331,9 +331,12 @@ namespace FlaxEditor.Modules
             int count = entries.Count;
             if (count > 0)
             {
-                _importBatchSize += count;
-                for (int i = 0; i < count; i++)
-                    _importingQueue.Enqueue(entries[i]);
+                lock (_requests)
+                {
+                    _importBatchSize += count;
+                    for (int i = 0; i < count; i++)
+                        _importingQueue.Enqueue(entries[i]);
+                }
 
                 StartWorker();
             }
@@ -341,22 +344,13 @@ namespace FlaxEditor.Modules
 
         internal void LetThemBeCreatedxD(CreateFileEntry entry)
         {
-            bool failed = true;
-            try
+            lock (_requests)
             {
-                failed = entry.Create();
+                _importBatchSize += 1;
+                _importingQueue.Enqueue(entry);
             }
-            catch (Exception ex)
-            {
-                Editor.LogWarning(ex);
-            }
-            finally
-            {
-                if (failed)
-                {
-                    Editor.LogWarning("Failed to create " + entry.ResultUrl);
-                }
-            }
+
+            StartWorker();
         }
 
         private void StartWorker()

@@ -19,17 +19,13 @@ namespace FlaxEditor.Content.Import
     /// <summary>
     /// File import entry.
     /// </summary>
-    public class ImportFileEntry
+    public class ImportFileEntry : IFileEntryAction
     {
-        /// <summary>
-        /// The path to the source file.
-        /// </summary>
-        public readonly string Url;
+        /// <inheritdoc />
+        public string SourceUrl { get; }
 
-        /// <summary>
-        /// The result file path.
-        /// </summary>
-        public readonly string ResultUrl;
+        /// <inheritdoc />
+        public string ResultUrl { get; }
 
         /// <summary>
         /// Gets a value indicating whether this entry has settings to modify.
@@ -58,7 +54,7 @@ namespace FlaxEditor.Content.Import
         /// <param name="resultUrl">The result file url.</param>
         public ImportFileEntry(string url, string resultUrl)
         {
-            Url = url;
+            SourceUrl = url;
             ResultUrl = resultUrl;
         }
 
@@ -69,12 +65,12 @@ namespace FlaxEditor.Content.Import
         public virtual bool Import()
         {
             // Copy file by default
-            if (!File.Exists(Url))
+            if (!File.Exists(SourceUrl))
                 return true;
             string folder = Path.GetDirectoryName(ResultUrl);
             if (folder != null && !Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
-            File.Copy(Url, ResultUrl, true);
+            File.Copy(SourceUrl, ResultUrl, true);
             return false;
         }
 
@@ -157,6 +153,12 @@ namespace FlaxEditor.Content.Import
         private static ImportFileEntry ImportTexture(string url, string resultUrl)
         {
             return new TextureImportEntry(url, resultUrl);
+        }
+
+        /// <inheritdoc />
+        public bool Execute()
+        {
+            return Import();
         }
     }
 }
