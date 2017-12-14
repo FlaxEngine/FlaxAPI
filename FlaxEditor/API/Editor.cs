@@ -483,13 +483,16 @@ namespace FlaxEditor
         }
 
         /// <summary>
-        /// Cooks the mesh collision data and saves it to the asset using <see cref="CollisionData"/> format. Action is performed on a separate thread (from thread pool).
+        /// Cooks the mesh collision data and saves it to the asset using <see cref="CollisionData"/> format. action cannot be performed on a main thread.
         /// </summary>
         /// <param name="path">The output asset path.</param>
         /// <param name="type">The collision data type.</param>
         /// <param name="model">The source model.</param>
         /// <param name="modelLodIndex">The source model LOD index.</param>
-        public static void CookMeshCollision(string path, CollisionDataType type, Model model, int modelLodIndex)
+        /// <param name="convexFlags">The convex mesh generation flags.</param>
+        /// <param name="convexVertexLimit">The convex mesh vertex limit. Use values in range [8;255]</param>
+        /// <returns>True if failed, otherwise false.</returns>
+        public static bool CookMeshCollision(string path, CollisionDataType type, Model model, int modelLodIndex = 0, ConvexMeshGenerationFlags convexFlags = ConvexMeshGenerationFlags.None, int convexVertexLimit = 255)
         {
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException(nameof(path));
@@ -498,7 +501,7 @@ namespace FlaxEditor
             if (type == CollisionDataType.None)
                 throw new ArgumentException(nameof(type));
 
-            Internal_CookMeshCollision(path, type, model.unmanagedPtr, modelLodIndex);
+            return Internal_CookMeshCollision(path, type, model.unmanagedPtr, modelLodIndex, convexFlags, convexVertexLimit);
         }
 
         #region Env Probes Baking
@@ -791,7 +794,10 @@ namespace FlaxEditor
         internal static extern void Internal_LogWrite(LogType type, string msg);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_CookMeshCollision(string path, CollisionDataType type, IntPtr model, int modelLodIndex);
+        internal static extern bool Internal_CookMeshCollision(string path, CollisionDataType type, IntPtr model, int modelLodIndex, ConvexMeshGenerationFlags convexFlags, int convexVertexLimit);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetCollisionWires(IntPtr collisionData, out Vector3[] triangles, out int[] indices);
 #endif
 
         #endregion

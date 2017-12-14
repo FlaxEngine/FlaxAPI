@@ -52,19 +52,6 @@ namespace FlaxEngine
 #endif
 		}
 
-		/// <summary>
-		/// Gets the model asset LOD index used to generate a collision data (value provided during data cooking, may be higher than actual source model LODs collection size).
-		/// </summary>
-		[UnmanagedCall]
-		public int ModelLodIndex
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { return Internal_GetModelLodIndex(unmanagedPtr); }
-#endif
-		}
-
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
