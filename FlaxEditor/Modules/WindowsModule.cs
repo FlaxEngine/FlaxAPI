@@ -72,7 +72,12 @@ namespace FlaxEditor.Modules
         /// The toolbox window.
         /// </summary>
         public ToolboxWindow ToolboxWin;
-
+        
+        /// <summary>
+        /// The graphics quality window.
+        /// </summary>
+        public GraphicsQualityWindow GraphicsQualityWin;
+        
         /// <summary>
         /// The game cooker window.
         /// </summary>
@@ -565,6 +570,7 @@ namespace FlaxEditor.Modules
             SceneWin = new SceneTreeWindow(Editor);
             DebugWin = new DebugLogWindow(Editor);
             ToolboxWin = new ToolboxWindow(Editor);
+            GraphicsQualityWin = new GraphicsQualityWindow(Editor);
             GameCookerWin = new GameCookerWindow(Editor);
 
             // Bind events

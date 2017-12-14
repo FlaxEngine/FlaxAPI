@@ -400,6 +400,7 @@ namespace FlaxEditor.Modules
             mm_Window.ContextMenu.AddButton(15, "Game");
             mm_Window.ContextMenu.AddButton(16, "Editor");
             mm_Window.ContextMenu.AddButton(17, "Debug Log");
+            mm_Window.ContextMenu.AddButton(18, "Graphics Quality");
             mm_Window.ContextMenu.AddSeparator();
             mm_Window.ContextMenu.AddButton(1, "Restore default layout");
 
@@ -887,6 +888,9 @@ namespace FlaxEditor.Modules
                     break;
                 case 17:
                     Editor.Windows.DebugWin.FocusOrShow();
+                    break;
+                case 18:
+                    Editor.Windows.GraphicsQualityWin.FocusOrShow();
                     break;
             }
         }
