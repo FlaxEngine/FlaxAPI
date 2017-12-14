@@ -2,7 +2,9 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using FlaxEditor.Content;
+using FlaxEditor.Content.Create;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.Elements;
@@ -33,6 +35,7 @@ namespace FlaxEditor.Windows.Assets
         {
             private CollisionDataWindow Window;
             private CollisionData Asset;
+            private bool _isCooking;
 
             [EditorOrder(0), EditorDisplay("General"), Tooltip("Type of the collision data to use")]
             public CollisionDataType Type;
@@ -42,6 +45,12 @@ namespace FlaxEditor.Windows.Assets
 
             [EditorOrder(20), Limit(0, 5), EditorDisplay("General", "Model LOD Index"), Tooltip("Source model LOD index to use for collision data generation (will be clamped to the actual model LODs collection size)")]
             public int ModelLodIndex;
+
+            [EditorOrder(100), EditorDisplay("Convex Mesh", "Convex Flags"), Tooltip("Convex mesh generation flags")]
+            private ConvexMeshGenerationFlags ConvexFlags;
+
+            [EditorOrder(110), Limit(8, 255), EditorDisplay("Convex Mesh", "Vertex Limit"), Tooltip("Convex mesh vertex count limit")]
+            private int ConvexVertexLimit;
 
             public class Editor : GenericEditor
             {
@@ -63,7 +72,16 @@ namespace FlaxEditor.Windows.Assets
                     if (_cookButton != null && Values.Count == 1)
                     {
                         var p = (PropertiesProxy)Values[0];
-                        _cookButton.Button.Enabled = p.Type != CollisionDataType.None && p.Model != null;
+                        if (p._isCooking)
+                        {
+                            _cookButton.Button.Enabled = false;
+                            _cookButton.Button.Text = "Cooking...";
+                        }
+                        else
+                        {
+                            _cookButton.Button.Enabled = p.Type != CollisionDataType.None && p.Model != null;
+                            _cookButton.Button.Text = "Cook";
+                        }
                     }
 
                     base.Refresh();
@@ -75,10 +93,42 @@ namespace FlaxEditor.Windows.Assets
                 }
             }
 
+            private class CookData : CreateFileEntry
+            {
+                private PropertiesProxy Proxy;
+                private CollisionDataType Type;
+                private Model Model;
+                private int ModelLodIndex;
+                private ConvexMeshGenerationFlags ConvexFlags;
+                private int ConvexVertexLimit;
+
+                public CookData(PropertiesProxy proxy, string resultUrl, CollisionDataType type, Model model, int modelLodIndex, ConvexMeshGenerationFlags convexFlags, int convexVertexLimit)
+                    : base("Collision Data", resultUrl)
+                {
+                    Proxy = proxy;
+                    Type = type;
+                    Model = model;
+                    ModelLodIndex = modelLodIndex;
+                    ConvexFlags = convexFlags;
+                    ConvexVertexLimit = convexVertexLimit;
+                }
+
+                /// <inheritdoc />
+                public override bool Create()
+                {
+                    bool failed = FlaxEditor.Editor.CookMeshCollision(ResultUrl, Type, Model, ModelLodIndex, ConvexFlags, ConvexVertexLimit);
+
+                    Proxy._isCooking = false;
+                    Proxy.Window.UpdateWiresModel();
+
+                    return failed;
+                }
+            }
+
             public void Cook()
             {
-                FlaxEditor.Editor.CookMeshCollision(Window.Asset.Path, Type, Model, ModelLodIndex);
-                Window._preview.Model = Model;
+                _isCooking = true;
+                Window.Editor.ContentImporting.Create(new CookData(this, Asset.Path, Type, Model, ModelLodIndex, ConvexFlags, ConvexVertexLimit));
             }
 
             public void OnLoad(CollisionDataWindow window)
@@ -92,7 +142,7 @@ namespace FlaxEditor.Windows.Assets
                 if (Type == CollisionDataType.None)
                     Type = CollisionDataType.ConvexMesh;
                 Model = Asset.Model;
-                ModelLodIndex = Asset.ModelLodIndex;
+                Asset.GetCookOptions(out ModelLodIndex, out ConvexFlags, out ConvexVertexLimit);
             }
 
             public void OnClean()
@@ -107,8 +157,9 @@ namespace FlaxEditor.Windows.Assets
         private readonly ModelPreview _preview;
         private readonly CustomEditorPresenter _propertiesPresenter;
         private readonly PropertiesProxy _properties;
-        private MeshCollider _meshCollider;
-        
+        private Model _collisionWiresModel;
+        private ModelActor _collisionWiresShowActor;
+
         /// <inheritdoc />
         public CollisionDataWindow(Editor editor, AssetItem item)
             : base(editor, item)
@@ -126,17 +177,46 @@ namespace FlaxEditor.Windows.Assets
             {
                 Parent = splitPanel.Panel1
             };
-            _preview.Task.Flags |= ViewFlags.PhysicsDebug;
 
             // Asset properties
             _propertiesPresenter = new CustomEditorPresenter(null);
             _propertiesPresenter.Panel.Parent = splitPanel.Panel2;
             _properties = new PropertiesProxy();
             _propertiesPresenter.Select(_properties);
-            
-            // Mesh collider actor (used to show the convex/triangle mesh wires)
-            _meshCollider = MeshCollider.New();
-            _preview.Task.CustomActors.Add(_meshCollider);
+        }
+
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            // Sync helper actor size with actual preview model (preview scales model for better usage experiance)
+            if (_collisionWiresShowActor && _collisionWiresShowActor.IsActive)
+            {
+                _collisionWiresShowActor.Transform = _preview.PreviewModelActor.Transform;
+            }
+
+            base.Update(deltaTime);
+        }
+
+        /// <summary>
+        /// Updates the collision data debug model.
+        /// </summary>
+        private void UpdateWiresModel()
+        {
+            if (_collisionWiresModel == null)
+            {
+                _collisionWiresModel = FlaxEngine.Content.CreateVirtualAsset<Model>();
+            }
+            Editor.Internal_GetCollisionWires(Asset.unmanagedPtr, out var triangles, out var indices);
+            if (triangles != null && indices != null)
+                _collisionWiresModel.UpdateMesh(triangles, indices);
+            if (_collisionWiresShowActor == null)
+            {
+                _collisionWiresShowActor = ModelActor.New();
+                _preview.Task.CustomActors.Add(_collisionWiresShowActor);
+            }
+            _collisionWiresShowActor.Model = _collisionWiresModel;
+            _collisionWiresShowActor.Entries[0].Material = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.WiresDebugMaterial);
+            _preview.Model = _asset.Model;
         }
 
         /// <inheritdoc />
@@ -144,8 +224,7 @@ namespace FlaxEditor.Windows.Assets
         {
             _properties.OnClean();
             _preview.Model = null;
-            _meshCollider.CollisionData = null;
-
+            
             base.UnlinkItem();
         }
 
@@ -153,8 +232,7 @@ namespace FlaxEditor.Windows.Assets
         protected override void OnAssetLinked()
         {
             _preview.Model = null;
-            _meshCollider.CollisionData = _asset;
-
+            
             base.OnAssetLinked();
         }
 
@@ -164,7 +242,7 @@ namespace FlaxEditor.Windows.Assets
             _properties.OnLoad(this);
             _propertiesPresenter.BuildLayout();
             ClearEditedFlag();
-            _preview.Model = _asset.Model;
+            UpdateWiresModel();
 
             base.OnAssetLoaded();
         }
@@ -185,7 +263,8 @@ namespace FlaxEditor.Windows.Assets
         {
             base.OnDestroy();
 
-            FlaxEngine.Object.Destroy(ref _meshCollider);
+            FlaxEngine.Object.Destroy(ref _collisionWiresShowActor);
+            FlaxEngine.Object.Destroy(ref _collisionWiresModel);
         }
     }
 }

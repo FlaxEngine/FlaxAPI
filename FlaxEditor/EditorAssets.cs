@@ -8,5 +8,6 @@ namespace FlaxEditor
     internal static class EditorAssets
     {
         public static string HighlightMaterial = "Editor/Highlight Material";
+        public static string WiresDebugMaterial = "Editor/Wires Debug Material";
     }
 }
