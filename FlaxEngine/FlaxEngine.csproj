@@ -168,6 +168,8 @@
     <Compile Include="API\Static\Globals.Gen.cs" />
     <Compile Include="API\Static\GraphicsDevice.cs" />
     <Compile Include="API\Static\GraphicsDevice.Gen.cs" />
+    <Compile Include="API\Static\GraphicsQuality.cs" />
+    <Compile Include="API\Static\GraphicsQuality.Gen.cs" />
     <Compile Include="API\Static\Input.cs" />
     <Compile Include="API\Static\Input.Gen.cs">
       <DependentUpon>Input.cs</DependentUpon>
