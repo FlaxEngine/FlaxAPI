@@ -166,7 +166,7 @@ namespace FlaxEditor.SceneGraph
         /// <param name="ray">The ray.</param>
         /// <param name="distance">The result distance.</param>
         /// <returns>Hitted object or null if there is no interseciotn at all.</returns>
-        public SceneGraphNode RayCast(ref Ray ray, ref float distance)
+        public virtual SceneGraphNode RayCast(ref Ray ray, ref float distance)
         {
             if (!IsActive)
                 return null;

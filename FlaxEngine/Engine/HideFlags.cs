@@ -28,8 +28,13 @@ namespace FlaxEngine
         DontSave = 2,
 
         /// <summary>
+        /// The object will not selectable in the editor viewport.
+        /// </summary>
+        DontSelect = 4,
+
+        /// <summary>
         /// The fully hidden object flags mask.
         /// </summary>
-        FullyHidden = HideInHierarchy | DontSave,
+        FullyHidden = HideInHierarchy | DontSave | DontSelect,
     }
 }
