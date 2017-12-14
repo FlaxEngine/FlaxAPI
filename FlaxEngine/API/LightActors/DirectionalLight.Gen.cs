@@ -44,8 +44,30 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets or sets the number of cascades used for slicing the range of depth covered by the light during rendering shadows.
+		/// </summary>
+		/// <remarks>
+		/// Values are 1, 2 or 4 cascades; a typical scene uses 4 cascades.
+		/// </remarks>
+		[UnmanagedCall]
+		[EditorOrder(65), Limit(1, 4), EditorDisplay("Light"), Tooltip("The number of cascades used for slicing the range of depth covered by the light during rendering shadows. Values are 1, 2 or 4 cascades; a typical scene uses 4 cascades.")]
+		public int CascadeCount
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetCascadeCount(unmanagedPtr); }
+			set { Internal_SetCascadeCount(unmanagedPtr, value); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern int Internal_GetCascadeCount(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetCascadeCount(IntPtr obj, int val);
 #endif
 #endregion
 	}
