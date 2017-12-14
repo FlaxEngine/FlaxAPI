@@ -319,6 +319,23 @@ namespace FlaxEditor.SceneGraph.GUI
                             
                             break;
                         }
+                        case ContentDomain.Other:
+                        {
+                            if (item.TypeName == typeof(CollisionData).FullName)
+                            {
+                                // Create actor
+                                var actor = MeshCollider.New();
+                                actor.StaticFlags = Actor.StaticFlags;
+                                actor.Name = item.ShortName;
+                                actor.CollisionData = FlaxEngine.Content.LoadAsync<CollisionData>(item.ID);
+                                actor.Transform = Actor.Transform;
+
+                                // Spawn
+                                Editor.Instance.SceneEditing.Spawn(actor, Actor);
+                            }
+
+                            break;
+                        }
 
                         case ContentDomain.Prefab:
                         {
@@ -381,6 +398,12 @@ namespace FlaxEditor.SceneGraph.GUI
             {
                 case ContentDomain.Model:
                 case ContentDomain.Prefab: return true;
+                case ContentDomain.Other:
+                {
+                    if (item.TypeName == typeof(CollisionData).FullName)
+                        return true;
+                    return false;
+                }
                 default: return false;
             }
         }
