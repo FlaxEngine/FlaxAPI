@@ -24,8 +24,7 @@ namespace FlaxEditor.Windows.Assets
         // show convex shape wires
         // show source model
         // allow to change options (type and source model and params) and cook a new collision data
-        // show current type and show amount of vertices of the data in the upper left corner
-
+        
         /// <summary>
         /// The asset properties proxy object.
         /// </summary>
@@ -63,7 +62,7 @@ namespace FlaxEditor.Windows.Assets
                 {
                     if (_cookButton != null && Values.Count == 1)
                     {
-                        var p = ((PropertiesProxy)Values[0]);
+                        var p = (PropertiesProxy)Values[0];
                         _cookButton.Button.Enabled = p.Type != CollisionDataType.None && p.Model != null;
                     }
 
@@ -78,7 +77,8 @@ namespace FlaxEditor.Windows.Assets
 
             public void Cook()
             {
-                // TODO: collision data cooking
+                FlaxEditor.Editor.CookMeshCollision(Window.Asset.Path, Type, Model, ModelLodIndex);
+                Window._preview.Model = Model;
             }
 
             public void OnLoad(CollisionDataWindow window)
@@ -108,7 +108,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly CustomEditorPresenter _propertiesPresenter;
         private readonly PropertiesProxy _properties;
         private MeshCollider _meshCollider;
-
+        
         /// <inheritdoc />
         public CollisionDataWindow(Editor editor, AssetItem item)
             : base(editor, item)
@@ -133,11 +133,9 @@ namespace FlaxEditor.Windows.Assets
             _propertiesPresenter.Panel.Parent = splitPanel.Panel2;
             _properties = new PropertiesProxy();
             _propertiesPresenter.Select(_properties);
-            _propertiesPresenter.Modified += MarkAsEdited;
-
+            
             // Mesh collider actor (used to show the convex/triangle mesh wires)
             _meshCollider = MeshCollider.New();
-            _meshCollider.IsActive = false;
             _preview.Task.CustomActors.Add(_meshCollider);
         }
 

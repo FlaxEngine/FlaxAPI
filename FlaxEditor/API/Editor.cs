@@ -173,7 +173,7 @@ namespace FlaxEditor
             Log("Editor init");
             if (isHeadless)
                 Log("Running in headless mode");
-            
+
             // Note: we don't sort modules before Init (optimized)
             _modules.Sort((a, b) => a.InitOrder - b.InitOrder);
             _isAfterInit = true;
@@ -482,6 +482,24 @@ namespace FlaxEditor
 #endif
         }
 
+        /// <summary>
+        /// Cooks the mesh collision data and saves it to the asset using <see cref="CollisionData"/> format. Action is performed on a separate thread (from thread pool).
+        /// </summary>
+        /// <param name="path">The output asset path.</param>
+        /// <param name="type">The collision data type.</param>
+        /// <param name="model">The source model.</param>
+        /// <param name="modelLodIndex">The source model LOD index.</param>
+        public static void CookMeshCollision(string path, CollisionDataType type, Model model, int modelLodIndex)
+        {
+            if (string.IsNullOrEmpty(path))
+                throw new ArgumentNullException(nameof(path));
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+            if (type == CollisionDataType.None)
+                throw new ArgumentException(nameof(type));
+
+            Internal_CookMeshCollision(path, type, model.unmanagedPtr, modelLodIndex);
+        }
 
         #region Env Probes Baking
 
@@ -638,7 +656,7 @@ namespace FlaxEditor
                 return true;
 
             Editor.Log("Using CL build for \"" + arg + "\"");
-            
+
             int dotPos = arg.IndexOf('.');
             string presetName, targetName;
             if (dotPos == -1)
@@ -771,6 +789,9 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_LogWrite(LogType type, string msg);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_CookMeshCollision(string path, CollisionDataType type, IntPtr model, int modelLodIndex);
 #endif
 
         #endregion
