@@ -51,7 +51,7 @@ namespace FlaxEngine
 		/// Values are 1, 2 or 4 cascades; a typical scene uses 4 cascades.
 		/// </remarks>
 		[UnmanagedCall]
-		[EditorOrder(65), Limit(1, 4), EditorDisplay("Light"), Tooltip("The number of cascades used for slicing the range of depth covered by the light during rendering shadows. Values are 1, 2 or 4 cascades; a typical scene uses 4 cascades.")]
+		[EditorOrder(65), Limit(1, 4), EditorDisplay("Shadow"), Tooltip("The number of cascades used for slicing the range of depth covered by the light during rendering shadows. Values are 1, 2 or 4 cascades; a typical scene uses 4 cascades.")]
 		public int CascadeCount
 		{
 #if UNIT_TEST_COMPILANT
