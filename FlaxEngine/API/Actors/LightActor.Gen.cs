@@ -69,7 +69,7 @@ namespace FlaxEngine
 		/// Gets or sets light shadows casting distance from view.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(80), EditorDisplay("Shadow"), Tooltip("Light shadows rendering distance"), Limit(0, 100000)]
+		[EditorOrder(80), EditorDisplay("Shadow", "Distance"), Tooltip("Light shadows rendering distance"), Limit(0, 100000)]
 		public float ShadowsDistance
 		{
 #if UNIT_TEST_COMPILANT
@@ -84,7 +84,7 @@ namespace FlaxEngine
 		/// Gets light shadows fade off distance.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(90), EditorDisplay("Shadow"), Tooltip("Shadows fade off distance"), Limit(0.0f, 1000.0f, 0.1f)]
+		[EditorOrder(90), EditorDisplay("Shadow", "Fade Distance"), Tooltip("Shadows fade off distance"), Limit(0.0f, 1000.0f, 0.1f)]
 		public float ShadowsFadeDistance
 		{
 #if UNIT_TEST_COMPILANT
@@ -114,7 +114,7 @@ namespace FlaxEngine
 		/// Gets or sets value indicating if how visual element casts shadows.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(60), EditorDisplay("Shadow"), Tooltip("Describes how visual element casts shadows")]
+		[EditorOrder(60), EditorDisplay("Shadow", "Mode"), Tooltip("Describes how visual element casts shadows")]
 		public ShadowsCastingMode ShadowsMode
 		{
 #if UNIT_TEST_COMPILANT
@@ -129,7 +129,7 @@ namespace FlaxEngine
 		/// Gets or sets shadows sharpness value.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(70), EditorDisplay("Shadow"), Tooltip("Controls shadows sharpness value"), Limit(1.0f, 10.0f, 0.001f)]
+		[EditorOrder(70), EditorDisplay("Shadow", "Sharpness"), Tooltip("Controls shadows sharpness value"), Limit(1.0f, 10.0f, 0.001f)]
 		public float ShadowsSharpness
 		{
 #if UNIT_TEST_COMPILANT
@@ -147,7 +147,7 @@ namespace FlaxEngine
 		/// Dynamic shadows blending strength. Default is 1 for fully opaque shadows, value 0 disables shadows.
 		/// </remarks>
 		[UnmanagedCall]
-		[EditorOrder(75), EditorDisplay("Shadow"), Tooltip("Controls dynamic shadows blending strength. Default is 1 for fully opaque shadows, value 0 disables shadows."), Limit(0.0f, 1.0f, 0.001f)]
+		[EditorOrder(75), EditorDisplay("Shadow", "Strength"), Tooltip("Controls dynamic shadows blending strength. Default is 1 for fully opaque shadows, value 0 disables shadows."), Limit(0.0f, 1.0f, 0.001f)]
 		public float ShadowsStrength
 		{
 #if UNIT_TEST_COMPILANT
@@ -155,6 +155,36 @@ namespace FlaxEngine
 #else
 			get { return Internal_GetShadowsStrength(unmanagedPtr); }
 			set { Internal_SetShadowsStrength(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets depth bias used for shadow map comparison..
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(95), EditorDisplay("Shadow", "Depth Bias"), Tooltip("Controls dynamic shadows depth bias value. Depth bias used for shadow map comparison."), Limit(0.0f, 10.0f, 0.0001f)]
+		public float ShadowsDepthBias
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetShadowsDepthBias(unmanagedPtr); }
+			set { Internal_SetShadowsDepthBias(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets factor specifying the offset to add to the calculated shadow map depth with respect to the surface normal.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(96), EditorDisplay("Shadow", "Normal Offset Scale"), Tooltip("Controls dynamic shadows normal vector offset scale. A factor specifying the offset to add to the calculated shadow map depth with respect to the surface normal."), Limit(0.0f, 100.0f, 0.1f)]
+		public float ShadowsNormalOffsetScale
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetShadowsNormalOffsetScale(unmanagedPtr); }
+			set { Internal_SetShadowsNormalOffsetScale(unmanagedPtr, value); }
 #endif
 		}
 
@@ -196,6 +226,14 @@ namespace FlaxEngine
 		internal static extern float Internal_GetShadowsStrength(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetShadowsStrength(IntPtr obj, float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetShadowsDepthBias(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetShadowsDepthBias(IntPtr obj, float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetShadowsNormalOffsetScale(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetShadowsNormalOffsetScale(IntPtr obj, float val);
 #endif
 #endregion
 	}
