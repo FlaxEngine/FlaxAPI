@@ -83,6 +83,8 @@
     <Compile Include="API\Actors\Skybox.Gen.cs">
       <DependentUpon>Skybox.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Actors\SkyLight.cs" />
+    <Compile Include="API\Actors\SkyLight.Gen.cs" />
     <Compile Include="API\Assets\BinaryAsset.cs" />
     <Compile Include="API\Assets\BinaryAsset.Gen.cs" />
     <Compile Include="API\Assets\JsonAsset.cs" />
