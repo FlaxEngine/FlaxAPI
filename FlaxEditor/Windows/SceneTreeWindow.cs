@@ -68,9 +68,10 @@ namespace FlaxEditor.Windows
                     Name = "Lights",
                     Types = new[]
                     {
+                        new KeyValuePair<string, Type>("Directional Light", typeof(DirectionalLight)),
                         new KeyValuePair<string, Type>("Point Light", typeof(PointLight)),
                         new KeyValuePair<string, Type>("Spot Light", typeof(SpotLight)),
-                        new KeyValuePair<string, Type>("Directional Light", typeof(DirectionalLight)),
+                        new KeyValuePair<string, Type>("Sky Light", typeof(SkyLight)),
                     }
                 },
                 new ActorsGroup

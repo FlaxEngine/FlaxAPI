@@ -65,6 +65,7 @@ namespace FlaxEditor.Windows
             groupLights.AddChild(CreateActorItem("Directional Light", typeof(DirectionalLight)));
             groupLights.AddChild(CreateActorItem("Point Light", typeof(PointLight)));
             groupLights.AddChild(CreateActorItem("Spot Light", typeof(SpotLight)));
+            groupLights.AddChild(CreateActorItem("Sky Light", typeof(SkyLight)));
 
             var groupVisuals = createGroupWithList(actorGroups, "Visuals");
             groupVisuals.AddChild(CreateActorItem("Camera", typeof(Camera)));

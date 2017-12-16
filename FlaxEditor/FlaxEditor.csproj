@@ -226,6 +226,7 @@
     <Compile Include="SceneGraph\Actors\PointLightNode.cs" />
     <Compile Include="SceneGraph\Actors\PostFxVolumeNode.cs" />
     <Compile Include="SceneGraph\Actors\SkyboxNode.cs" />
+    <Compile Include="SceneGraph\Actors\SkyLightNode.cs" />
     <Compile Include="SceneGraph\Actors\SkyNode.cs" />
     <Compile Include="SceneGraph\Actors\SpotLightNode.cs" />
     <Compile Include="SceneGraph\GUI\ActorTreeNode.cs" />

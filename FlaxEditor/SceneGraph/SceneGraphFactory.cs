@@ -32,7 +32,7 @@ namespace FlaxEditor.SceneGraph
         public static SceneGraphNode FindNode(Guid id)
         {
             if (id == Guid.Empty)
-                return null;
+                return null; 
 
             SceneGraphNode result;
             Nodes.TryGetValue(id, out result);
@@ -52,6 +52,7 @@ namespace FlaxEditor.SceneGraph
             CustomNodesTypes.Add(typeof(SpotLight), typeof(SpotLightNode));
             CustomNodesTypes.Add(typeof(Skybox), typeof(SkyboxNode));
             CustomNodesTypes.Add(typeof(Sky), typeof(SkyNode));
+            CustomNodesTypes.Add(typeof(SkyLight), typeof(SkyLightNode));
             CustomNodesTypes.Add(typeof(PostFxVolume), typeof(PostFxVolumeNode));
             CustomNodesTypes.Add(typeof(ModelActor), typeof(ModelActorNode));
             CustomNodesTypes.Add(typeof(BoxBrush), typeof(BoxBrushNode));
