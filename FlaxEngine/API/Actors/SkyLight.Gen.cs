@@ -60,17 +60,47 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets the light emission color.
+		/// Gets or sets the color of the light. Source texture pixel colors are multiplied by it.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(20), EditorDisplay("Light"), Tooltip("Light emission color")]
-		public Color Color
+		[EditorOrder(20), EditorDisplay("Light"), Tooltip("Color of the light. Source texture pixel colors are multiplied by it.")]
+		public Color MultiplyColor
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { Color resultAsRef; Internal_GetColor(unmanagedPtr, out resultAsRef); return resultAsRef; }
-			set { Internal_SetColor(unmanagedPtr, ref value); }
+			get { Color resultAsRef; Internal_GetMultiplyColor(unmanagedPtr, out resultAsRef); return resultAsRef; }
+			set { Internal_SetMultiplyColor(unmanagedPtr, ref value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the additional color to add. Source texture colors are sumed with it. Can be used to apply custom ambient color.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(21), EditorDisplay("Light"), Tooltip("Additional color to add. Source texture colors are sumed with it. Can be used to apply custom ambient color.")]
+		public Color AdditiveColor
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { Color resultAsRef; Internal_GetAdditiveColor(unmanagedPtr, out resultAsRef); return resultAsRef; }
+			set { Internal_SetAdditiveColor(unmanagedPtr, ref value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets light radius.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(29), EditorDisplay("Light"), Tooltip("Light range. Use very high value to ue light globally."), Limit(0.0f, 1000000.0f, 1.0f)]
+		public float Radius
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetRadius(unmanagedPtr); }
+			set { Internal_SetRadius(unmanagedPtr, value); }
 #endif
 		}
 
@@ -142,9 +172,17 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetAffectsWorld(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetColor(IntPtr obj, out Color resultAsRef);
+		internal static extern void Internal_GetMultiplyColor(IntPtr obj, out Color resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetColor(IntPtr obj, ref Color val);
+		internal static extern void Internal_SetMultiplyColor(IntPtr obj, ref Color val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetAdditiveColor(IntPtr obj, out Color resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetAdditiveColor(IntPtr obj, ref Color val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetRadius(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetRadius(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetBrightness(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
