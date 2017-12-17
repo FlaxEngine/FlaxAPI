@@ -139,6 +139,10 @@ namespace FlaxEditor.GUI.Dialogs
                 hsv.X = degrees;
                 hsv.Y = Mathf.Saturate(distance / (_boxRect.Width * 0.5f));
 
+                // Auto set Value to 1 when color is black. Makes editing easier.
+                if (_color == Color.Black && hsv.Z <= 0.001f)
+                    hsv.Z = 1.0f;
+
                 Color = Color.FromHSV(hsv);
             }
         }
