@@ -19,6 +19,7 @@ namespace FlaxEditor.Viewport.Previews
         private DirectionalLight _previewLight;
         private EnvironmentProbe _envProbe;
         private Sky _sky;
+        private SkyLight _skyLight;
 
         /// <summary>
         /// Gets or sets the model asset to preview.
@@ -60,10 +61,15 @@ namespace FlaxEditor.Viewport.Previews
             //
             _envProbe = EnvironmentProbe.New();
             _envProbe.AutoUpdate = false;
-            _envProbe.CustomProbe = FlaxEngine.Content.LoadAsyncInternal<CubeTexture>("Editor/SimplySky");
+            _envProbe.CustomProbe = FlaxEngine.Content.LoadAsyncInternal<CubeTexture>(EditorAssets.DefaultSkyCubeTexture);
             //
             _sky = Sky.New();
             _sky.SunLight = _previewLight;
+            //
+            _skyLight = SkyLight.New();
+            _skyLight.Mode = SkyLight.Modes.CustomTexture;
+            _skyLight.Brightness = 1.1f;
+            _skyLight.CustomTexture = _envProbe.CustomProbe;
 
             // Link actors for rendering
             Task.ActorsSource = ActorsSources.CustomActors;
@@ -71,6 +77,7 @@ namespace FlaxEditor.Viewport.Previews
             Task.CustomActors.Add(_previewLight);
             Task.CustomActors.Add(_envProbe);
             Task.CustomActors.Add(_sky);
+            Task.CustomActors.Add(_skyLight);
 
             // Update actors
             for (int i = 0; i < Task.CustomActors.Count; i++)
@@ -100,6 +107,7 @@ namespace FlaxEditor.Viewport.Previews
             Object.Destroy(ref _previewLight);
             Object.Destroy(ref _envProbe);
             Object.Destroy(ref _sky);
+            Object.Destroy(ref _skyLight);
 
             base.OnDestroy();
         }

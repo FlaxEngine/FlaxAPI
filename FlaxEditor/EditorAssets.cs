@@ -9,5 +9,6 @@ namespace FlaxEditor
     {
         public static string HighlightMaterial = "Editor/Highlight Material";
         public static string WiresDebugMaterial = "Editor/Wires Debug Material";
+        public static string DefaultSkyCubeTexture = "Editor/SimplySky";
     }
 }
