@@ -1061,60 +1061,7 @@ namespace FlaxEngine
             RotationLookAtLH(ref forward, ref up, out result);
             return result;
         }
-
-        /// <summary>
-        /// Creates a right-handed, look-at quaternion.
-        /// </summary>
-        /// <param name="eye">The position of the viewer's eye.</param>
-        /// <param name="target">The camera look-at target.</param>
-        /// <param name="up">The camera's up vector.</param>
-        /// <param name="result">When the method completes, contains the created look-at quaternion.</param>
-        public static void LookAtRH(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Quaternion result)
-        {
-            Matrix3x3 matrix;
-            Matrix3x3.LookAtRH(ref eye, ref target, ref up, out matrix);
-            RotationMatrix(ref matrix, out result);
-        }
-
-        /// <summary>
-        /// Creates a right-handed, look-at quaternion.
-        /// </summary>
-        /// <param name="eye">The position of the viewer's eye.</param>
-        /// <param name="target">The camera look-at target.</param>
-        /// <param name="up">The camera's up vector.</param>
-        /// <returns>The created look-at quaternion.</returns>
-        public static Quaternion LookAtRH(Vector3 eye, Vector3 target, Vector3 up)
-        {
-            Quaternion result;
-            LookAtRH(ref eye, ref target, ref up, out result);
-            return result;
-        }
-
-        /// <summary>
-        /// Creates a right-handed, look-at quaternion.
-        /// </summary>
-        /// <param name="forward">The camera's forward direction.</param>
-        /// <param name="up">The camera's up vector.</param>
-        /// <param name="result">When the method completes, contains the created look-at quaternion.</param>
-        public static void RotationLookAtRH(ref Vector3 forward, ref Vector3 up, out Quaternion result)
-        {
-            Vector3 eye = Vector3.Zero;
-            LookAtRH(ref eye, ref forward, ref up, out result);
-        }
-
-        /// <summary>
-        /// Creates a right-handed, look-at quaternion.
-        /// </summary>
-        /// <param name="forward">The camera's forward direction.</param>
-        /// <param name="up">The camera's up vector.</param>
-        /// <returns>The created look-at quaternion.</returns>
-        public static Quaternion RotationLookAtRH(Vector3 forward, Vector3 up)
-        {
-            Quaternion result;
-            RotationLookAtRH(ref forward, ref up, out result);
-            return result;
-        }
-
+        
         /// <summary>
         /// Creates a rotation with the specified forward and upwards directions
         /// </summary>
@@ -1166,37 +1113,7 @@ namespace FlaxEngine
             BillboardLH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
             return result;
         }
-
-        /// <summary>
-        /// Creates a right-handed spherical billboard that rotates around a specified object position.
-        /// </summary>
-        /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
-        /// <param name="cameraPosition">The position of the camera.</param>
-        /// <param name="cameraUpVector">The up vector of the camera.</param>
-        /// <param name="cameraForwardVector">The forward vector of the camera.</param>
-        /// <param name="result">When the method completes, contains the created billboard quaternion.</param>
-        public static void BillboardRH(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Quaternion result)
-        {
-            Matrix3x3 matrix;
-            Matrix3x3.BillboardRH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out matrix);
-            RotationMatrix(ref matrix, out result);
-        }
-
-        /// <summary>
-        /// Creates a right-handed spherical billboard that rotates around a specified object position.
-        /// </summary>
-        /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
-        /// <param name="cameraPosition">The position of the camera.</param>
-        /// <param name="cameraUpVector">The up vector of the camera.</param>
-        /// <param name="cameraForwardVector">The forward vector of the camera.</param>
-        /// <returns>The created billboard quaternion.</returns>
-        public static Quaternion BillboardRH(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector)
-        {
-            Quaternion result;
-            BillboardRH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
-            return result;
-        }
-
+        
         /// <summary>
         /// Creates a quaternion given a rotation matrix.
         /// </summary>

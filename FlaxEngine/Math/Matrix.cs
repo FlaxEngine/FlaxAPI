@@ -2115,64 +2115,7 @@ namespace FlaxEngine
             BillboardLH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
             return result;
         }
-
-        /// <summary>
-        /// Creates a right-handed spherical billboard that rotates around a specified object position.
-        /// </summary>
-        /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
-        /// <param name="cameraPosition">The position of the camera.</param>
-        /// <param name="cameraUpVector">The up vector of the camera.</param>
-        /// <param name="cameraForwardVector">The forward vector of the camera.</param>
-        /// <param name="result">When the method completes, contains the created billboard matrix.</param>
-        public static void BillboardRH(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Matrix result)
-        {
-            Vector3 crossed;
-            Vector3 final;
-            Vector3 difference = objectPosition - cameraPosition;
-
-            float lengthSq = difference.LengthSquared;
-            if (Mathf.IsZero(lengthSq))
-                difference = -cameraForwardVector;
-            else
-                difference *= (float)(1.0 / Math.Sqrt(lengthSq));
-
-            Vector3.Cross(ref cameraUpVector, ref difference, out crossed);
-            crossed.Normalize();
-            Vector3.Cross(ref difference, ref crossed, out final);
-
-            result.M11 = crossed.X;
-            result.M12 = crossed.Y;
-            result.M13 = crossed.Z;
-            result.M14 = 0.0f;
-            result.M21 = final.X;
-            result.M22 = final.Y;
-            result.M23 = final.Z;
-            result.M24 = 0.0f;
-            result.M31 = difference.X;
-            result.M32 = difference.Y;
-            result.M33 = difference.Z;
-            result.M34 = 0.0f;
-            result.M41 = objectPosition.X;
-            result.M42 = objectPosition.Y;
-            result.M43 = objectPosition.Z;
-            result.M44 = 1.0f;
-        }
-
-        /// <summary>
-        /// Creates a right-handed spherical billboard that rotates around a specified object position.
-        /// </summary>
-        /// <param name="objectPosition">The position of the object around which the billboard will rotate.</param>
-        /// <param name="cameraPosition">The position of the camera.</param>
-        /// <param name="cameraUpVector">The up vector of the camera.</param>
-        /// <param name="cameraForwardVector">The forward vector of the camera.</param>
-        /// <returns>The created billboard matrix.</returns>
-        public static Matrix BillboardRH(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector)
-        {
-            Matrix result;
-            BillboardRH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
-            return result;
-        }
-
+        
         /// <summary>
         /// Creates a left-handed, look-at matrix.
         /// </summary>
@@ -2222,57 +2165,7 @@ namespace FlaxEngine
             LookAtLH(ref eye, ref target, ref up, out result);
             return result;
         }
-
-        /// <summary>
-        /// Creates a right-handed, look-at matrix.
-        /// </summary>
-        /// <param name="eye">The position of the viewer's eye.</param>
-        /// <param name="target">The camera look-at target.</param>
-        /// <param name="up">The camera's up vector.</param>
-        /// <param name="result">When the method completes, contains the created look-at matrix.</param>
-        public static void LookAtRH(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Matrix result)
-        {
-            Vector3 xaxis, yaxis, zaxis;
-            Vector3.Subtract(ref eye, ref target, out zaxis);
-            zaxis.Normalize();
-            Vector3.Cross(ref up, ref zaxis, out xaxis);
-            xaxis.Normalize();
-            Vector3.Cross(ref zaxis, ref xaxis, out yaxis);
-
-            result = Identity;
-            result.M11 = xaxis.X;
-            result.M21 = xaxis.Y;
-            result.M31 = xaxis.Z;
-            result.M12 = yaxis.X;
-            result.M22 = yaxis.Y;
-            result.M32 = yaxis.Z;
-            result.M13 = zaxis.X;
-            result.M23 = zaxis.Y;
-            result.M33 = zaxis.Z;
-
-            Vector3.Dot(ref xaxis, ref eye, out result.M41);
-            Vector3.Dot(ref yaxis, ref eye, out result.M42);
-            Vector3.Dot(ref zaxis, ref eye, out result.M43);
-
-            result.M41 = -result.M41;
-            result.M42 = -result.M42;
-            result.M43 = -result.M43;
-        }
-
-        /// <summary>
-        /// Creates a right-handed, look-at matrix.
-        /// </summary>
-        /// <param name="eye">The position of the viewer's eye.</param>
-        /// <param name="target">The camera look-at target.</param>
-        /// <param name="up">The camera's up vector.</param>
-        /// <returns>The created look-at matrix.</returns>
-        public static Matrix LookAtRH(Vector3 eye, Vector3 target, Vector3 up)
-        {
-            Matrix result;
-            LookAtRH(ref eye, ref target, ref up, out result);
-            return result;
-        }
-
+        
         /// <summary>
         /// Creates a left-handed, orthographic projection matrix.
         /// </summary>
@@ -2303,38 +2196,7 @@ namespace FlaxEngine
             OrthoLH(width, height, znear, zfar, out result);
             return result;
         }
-
-        /// <summary>
-        /// Creates a right-handed, orthographic projection matrix.
-        /// </summary>
-        /// <param name="width">Width of the viewing volume.</param>
-        /// <param name="height">Height of the viewing volume.</param>
-        /// <param name="znear">Minimum z-value of the viewing volume.</param>
-        /// <param name="zfar">Maximum z-value of the viewing volume.</param>
-        /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void OrthoRH(float width, float height, float znear, float zfar, out Matrix result)
-        {
-            float halfWidth = width * 0.5f;
-            float halfHeight = height * 0.5f;
-
-            OrthoOffCenterRH(-halfWidth, halfWidth, -halfHeight, halfHeight, znear, zfar, out result);
-        }
-
-        /// <summary>
-        /// Creates a right-handed, orthographic projection matrix.
-        /// </summary>
-        /// <param name="width">Width of the viewing volume.</param>
-        /// <param name="height">Height of the viewing volume.</param>
-        /// <param name="znear">Minimum z-value of the viewing volume.</param>
-        /// <param name="zfar">Maximum z-value of the viewing volume.</param>
-        /// <returns>The created projection matrix.</returns>
-        public static Matrix OrthoRH(float width, float height, float znear, float zfar)
-        {
-            Matrix result;
-            OrthoRH(width, height, znear, zfar, out result);
-            return result;
-        }
-
+        
         /// <summary>
         /// Creates a left-handed, customized orthographic projection matrix.
         /// </summary>
@@ -2374,40 +2236,7 @@ namespace FlaxEngine
             OrthoOffCenterLH(left, right, bottom, top, znear, zfar, out result);
             return result;
         }
-
-        /// <summary>
-        /// Creates a right-handed, customized orthographic projection matrix.
-        /// </summary>
-        /// <param name="left">Minimum x-value of the viewing volume.</param>
-        /// <param name="right">Maximum x-value of the viewing volume.</param>
-        /// <param name="bottom">Minimum y-value of the viewing volume.</param>
-        /// <param name="top">Maximum y-value of the viewing volume.</param>
-        /// <param name="znear">Minimum z-value of the viewing volume.</param>
-        /// <param name="zfar">Maximum z-value of the viewing volume.</param>
-        /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void OrthoOffCenterRH(float left, float right, float bottom, float top, float znear, float zfar, out Matrix result)
-        {
-            OrthoOffCenterLH(left, right, bottom, top, znear, zfar, out result);
-            result.M33 *= -1.0f;
-        }
-
-        /// <summary>
-        /// Creates a right-handed, customized orthographic projection matrix.
-        /// </summary>
-        /// <param name="left">Minimum x-value of the viewing volume.</param>
-        /// <param name="right">Maximum x-value of the viewing volume.</param>
-        /// <param name="bottom">Minimum y-value of the viewing volume.</param>
-        /// <param name="top">Maximum y-value of the viewing volume.</param>
-        /// <param name="znear">Minimum z-value of the viewing volume.</param>
-        /// <param name="zfar">Maximum z-value of the viewing volume.</param>
-        /// <returns>The created projection matrix.</returns>
-        public static Matrix OrthoOffCenterRH(float left, float right, float bottom, float top, float znear, float zfar)
-        {
-            Matrix result;
-            OrthoOffCenterRH(left, right, bottom, top, znear, zfar, out result);
-            return result;
-        }
-
+        
         /// <summary>
         /// Creates a left-handed, perspective projection matrix.
         /// </summary>
@@ -2438,38 +2267,7 @@ namespace FlaxEngine
             PerspectiveLH(width, height, znear, zfar, out result);
             return result;
         }
-
-        /// <summary>
-        /// Creates a right-handed, perspective projection matrix.
-        /// </summary>
-        /// <param name="width">Width of the viewing volume.</param>
-        /// <param name="height">Height of the viewing volume.</param>
-        /// <param name="znear">Minimum z-value of the viewing volume.</param>
-        /// <param name="zfar">Maximum z-value of the viewing volume.</param>
-        /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void PerspectiveRH(float width, float height, float znear, float zfar, out Matrix result)
-        {
-            float halfWidth = width * 0.5f;
-            float halfHeight = height * 0.5f;
-
-            PerspectiveOffCenterRH(-halfWidth, halfWidth, -halfHeight, halfHeight, znear, zfar, out result);
-        }
-
-        /// <summary>
-        /// Creates a right-handed, perspective projection matrix.
-        /// </summary>
-        /// <param name="width">Width of the viewing volume.</param>
-        /// <param name="height">Height of the viewing volume.</param>
-        /// <param name="znear">Minimum z-value of the viewing volume.</param>
-        /// <param name="zfar">Maximum z-value of the viewing volume.</param>
-        /// <returns>The created projection matrix.</returns>
-        public static Matrix PerspectiveRH(float width, float height, float znear, float zfar)
-        {
-            Matrix result;
-            PerspectiveRH(width, height, znear, zfar, out result);
-            return result;
-        }
-
+        
         /// <summary>
         /// Creates a left-handed, perspective projection matrix based on a field of view.
         /// </summary>
@@ -2505,43 +2303,7 @@ namespace FlaxEngine
             PerspectiveFovLH(fov, aspect, znear, zfar, out result);
             return result;
         }
-
-        /// <summary>
-        /// Creates a right-handed, perspective projection matrix based on a field of view.
-        /// </summary>
-        /// <param name="fov">Field of view in the y direction, in radians.</param>
-        /// <param name="aspect">Aspect ratio, defined as view space width divided by height.</param>
-        /// <param name="znear">Minimum z-value of the viewing volume.</param>
-        /// <param name="zfar">Maximum z-value of the viewing volume.</param>
-        /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void PerspectiveFovRH(float fov, float aspect, float znear, float zfar, out Matrix result)
-        {
-            var yScale = (float)(1.0f / Math.Tan(fov * 0.5f));
-            float q = zfar / (znear - zfar);
-
-            result = new Matrix();
-            result.M11 = yScale / aspect;
-            result.M22 = yScale;
-            result.M33 = q;
-            result.M34 = -1.0f;
-            result.M43 = q * znear;
-        }
-
-        /// <summary>
-        /// Creates a right-handed, perspective projection matrix based on a field of view.
-        /// </summary>
-        /// <param name="fov">Field of view in the y direction, in radians.</param>
-        /// <param name="aspect">Aspect ratio, defined as view space width divided by height.</param>
-        /// <param name="znear">Minimum z-value of the viewing volume.</param>
-        /// <param name="zfar">Maximum z-value of the viewing volume.</param>
-        /// <returns>The created projection matrix.</returns>
-        public static Matrix PerspectiveFovRH(float fov, float aspect, float znear, float zfar)
-        {
-            Matrix result;
-            PerspectiveFovRH(fov, aspect, znear, zfar, out result);
-            return result;
-        }
-
+        
         /// <summary>
         /// Creates a left-handed, customized perspective projection matrix.
         /// </summary>
@@ -2582,43 +2344,7 @@ namespace FlaxEngine
             PerspectiveOffCenterLH(left, right, bottom, top, znear, zfar, out result);
             return result;
         }
-
-        /// <summary>
-        /// Creates a right-handed, customized perspective projection matrix.
-        /// </summary>
-        /// <param name="left">Minimum x-value of the viewing volume.</param>
-        /// <param name="right">Maximum x-value of the viewing volume.</param>
-        /// <param name="bottom">Minimum y-value of the viewing volume.</param>
-        /// <param name="top">Maximum y-value of the viewing volume.</param>
-        /// <param name="znear">Minimum z-value of the viewing volume.</param>
-        /// <param name="zfar">Maximum z-value of the viewing volume.</param>
-        /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void PerspectiveOffCenterRH(float left, float right, float bottom, float top, float znear, float zfar, out Matrix result)
-        {
-            PerspectiveOffCenterLH(left, right, bottom, top, znear, zfar, out result);
-            result.M31 *= -1.0f;
-            result.M32 *= -1.0f;
-            result.M33 *= -1.0f;
-            result.M34 *= -1.0f;
-        }
-
-        /// <summary>
-        /// Creates a right-handed, customized perspective projection matrix.
-        /// </summary>
-        /// <param name="left">Minimum x-value of the viewing volume.</param>
-        /// <param name="right">Maximum x-value of the viewing volume.</param>
-        /// <param name="bottom">Minimum y-value of the viewing volume.</param>
-        /// <param name="top">Maximum y-value of the viewing volume.</param>
-        /// <param name="znear">Minimum z-value of the viewing volume.</param>
-        /// <param name="zfar">Maximum z-value of the viewing volume.</param>
-        /// <returns>The created projection matrix.</returns>
-        public static Matrix PerspectiveOffCenterRH(float left, float right, float bottom, float top, float znear, float zfar)
-        {
-            Matrix result;
-            PerspectiveOffCenterRH(left, right, bottom, top, znear, zfar, out result);
-            return result;
-        }
-
+        
         /// <summary>
         /// Creates a matrix that scales along the x-axis, y-axis, and y-axis.
         /// </summary>
