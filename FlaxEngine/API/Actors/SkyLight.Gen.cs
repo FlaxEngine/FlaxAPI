@@ -129,8 +129,23 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetModee(unmanagedPtr); }
+			get { return Internal_GetMode(unmanagedPtr); }
 			set { Internal_SetMode(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the distance from the light at which any geometry should be treated as part of the sky.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(45), Limit(0), EditorDisplay("Probe"), Tooltip("Distance from the light at which any geometry should be treated as part of the sky.")]
+		public float SkyDistanceThreshold
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetSkyDistanceThreshold(unmanagedPtr); }
+			set { Internal_SetSkyDistanceThreshold(unmanagedPtr, value); }
 #endif
 		}
 
@@ -188,9 +203,13 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetBrightness(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Modes Internal_GetModee(IntPtr obj);
+		internal static extern Modes Internal_GetMode(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetMode(IntPtr obj, Modes val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetSkyDistanceThreshold(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetSkyDistanceThreshold(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern CubeTexture Internal_GetCustomTexture(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
