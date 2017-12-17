@@ -162,7 +162,8 @@ namespace FlaxEngine.Rendering
             // Eye Adaptation
 
             public EyeAdaptationTechnique Eye_Technique;
-            public float Eye_Speed;
+            public float Eye_SpeedUp;
+            public float Eye_SpeedDown;
             public float Eye_Exposure;
             public float Eye_KeyValue;
             public float Eye_MinLuminance;
@@ -494,15 +495,29 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Gets or sets the speed of the eye adaptation effect.
+        /// Gets or sets the speed up of the eye adaptation effect.
         /// </summary>
-        [NoSerialize, EditorOrder(401), EditorDisplay("Eye Adaptation", "Speed"), Limit(0, 100.0f, 0.1f)]
-        public float Eye_Speed
+        [NoSerialize, EditorOrder(401), EditorDisplay("Eye Adaptation", "Speed Up"), Limit(0, 100.0f, 0.01f)]
+        public float Eye_SpeedUp
         {
-            get => data.Eye_Speed;
+            get => data.Eye_SpeedUp;
             set
             {
-                data.Eye_Speed = value;
+                data.Eye_SpeedUp = value;
+                isDataDirty = true;
+            }
+        }
+        
+        /// <summary>
+        /// Gets or sets the speed up of the eye adaptation effect.
+        /// </summary>
+        [NoSerialize, EditorOrder(402), EditorDisplay("Eye Adaptation", "Speed Down"), Limit(0, 100.0f, 0.01f)]
+        public float Eye_SpeedDown
+        {
+            get => data.Eye_SpeedDown;
+            set
+            {
+                data.Eye_SpeedDown = value;
                 isDataDirty = true;
             }
         }
@@ -510,7 +525,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the camera exposure.
         /// </summary>
-        [NoSerialize, EditorOrder(402), EditorDisplay("Eye Adaptation", "Exposure")]
+        [NoSerialize, EditorOrder(403), Limit(-1000, 1000, 0.001f), EditorDisplay("Eye Adaptation", "Exposure")]
         public float Eye_Exposure
         {
             get => data.Eye_Exposure;
@@ -524,7 +539,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the pixels light value to achieve.
         /// </summary>
-        [NoSerialize, EditorOrder(403), EditorDisplay("Eye Adaptation", "Key Value")]
+        [NoSerialize, EditorOrder(404), Limit(-100, 100, 0.001f), EditorDisplay("Eye Adaptation", "Key Value")]
         public float Eye_KeyValue
         {
             get => data.Eye_KeyValue;
@@ -538,7 +553,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the minimum luminance value used for tone mapping.
         /// </summary>
-        [NoSerialize, EditorOrder(404), EditorDisplay("Eye Adaptation", "Minimum luminance"), Limit(0, 10.0f, 0.001f)]
+        [NoSerialize, EditorOrder(405), EditorDisplay("Eye Adaptation", "Minimum luminance"), Limit(0, 50.0f, 0.01f)]
         public float Eye_MinLuminance
         {
             get => data.Eye_MinLuminance;
@@ -552,7 +567,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the maximum luminance value used for tone mapping.
         /// </summary>
-        [NoSerialize, EditorOrder(405), EditorDisplay("Eye Adaptation", "Maximum luminance"), Limit(0, 100.0f, 0.001f)]
+        [NoSerialize, EditorOrder(406), EditorDisplay("Eye Adaptation", "Maximum luminance"), Limit(0, 100.0f, 0.01f)]
         public float Eye_MaxLuminance
         {
             get => data.Eye_MaxLuminance;
