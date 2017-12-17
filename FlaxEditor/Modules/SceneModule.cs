@@ -123,10 +123,12 @@ namespace FlaxEditor.Modules
             var scene = Scene.New();
             var sky = Sky.New();
             var sun = DirectionalLight.New();
+            var skyLight = SkyLight.New();
             var floor = ModelActor.New();
             //
             scene.AddChild(sky);
             scene.AddChild(sun);
+            scene.AddChild(skyLight);
             scene.AddChild(floor);
             //
             sky.Name = "Sky";
@@ -138,6 +140,10 @@ namespace FlaxEditor.Modules
             sun.LocalPosition = new Vector3(40, 160, 0);
             sun.LocalEulerAngles = new Vector3(45, 0, 0);
             sun.StaticFlags = StaticFlags.FullyStatic;
+            //
+            skyLight.Mode = SkyLight.Modes.CustomTexture;
+            skyLight.Brightness = 0.8f;
+            skyLight.CustomTexture = FlaxEngine.Content.LoadAsyncInternal<CubeTexture>(EditorAssets.DefaultSkyCubeTexture);
             //
             floor.Name = "Floor";
             floor.Scale = new Vector3(4, 0.5f, 4);
