@@ -18,6 +18,15 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
+        /// Anti Aliasing quality.
+        /// </summary>
+        public static Quality AAQuality
+        {
+            get { return (Quality)Internal_GetValue(6); }
+            set { Internal_SetValue(6, (int)value); }
+        }
+        
+        /// <summary>
         /// Screen Space Reflections quality.
         /// </summary>
         public static Quality SSRQuality

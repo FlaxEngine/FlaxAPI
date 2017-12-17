@@ -2,7 +2,6 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using FlaxEditor.Content;
 using FlaxEditor.Content.Create;
 using FlaxEditor.CustomEditors;
@@ -11,7 +10,6 @@ using FlaxEditor.CustomEditors.Elements;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Windows.Assets
 {
@@ -22,11 +20,6 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public sealed class CollisionDataWindow : AssetEditorWindowBase<CollisionData>
     {
-        // TODO: Functionalities
-        // show convex shape wires
-        // show source model
-        // allow to change options (type and source model and params) and cook a new collision data
-        
         /// <summary>
         /// The asset properties proxy object.
         /// </summary>
@@ -224,7 +217,7 @@ namespace FlaxEditor.Windows.Assets
         {
             _properties.OnClean();
             _preview.Model = null;
-            
+
             base.UnlinkItem();
         }
 
@@ -232,7 +225,7 @@ namespace FlaxEditor.Windows.Assets
         protected override void OnAssetLinked()
         {
             _preview.Model = null;
-            
+
             base.OnAssetLinked();
         }
 
@@ -263,8 +256,8 @@ namespace FlaxEditor.Windows.Assets
         {
             base.OnDestroy();
 
-            FlaxEngine.Object.Destroy(ref _collisionWiresShowActor);
-            FlaxEngine.Object.Destroy(ref _collisionWiresModel);
+            Object.Destroy(ref _collisionWiresShowActor);
+            Object.Destroy(ref _collisionWiresModel);
         }
     }
 }
