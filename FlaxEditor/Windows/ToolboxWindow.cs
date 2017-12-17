@@ -72,6 +72,7 @@ namespace FlaxEditor.Windows
             groupVisuals.AddChild(CreateActorItem("Environment Probe", typeof(EnvironmentProbe)));
             groupVisuals.AddChild(CreateActorItem("Skybox", typeof(Skybox)));
             groupVisuals.AddChild(CreateActorItem("Sky", typeof(Sky)));
+            groupVisuals.AddChild(CreateActorItem("PostFx Volume", typeof(PostFxVolume)));
 
             var groupPhysics = createGroupWithList(actorGroups, "Physics");
             groupPhysics.AddChild(CreateActorItem("Rigid Body", typeof(RigidBody)));
@@ -89,10 +90,7 @@ namespace FlaxEditor.Windows
 
             var groupCsg = createGroupWithList(actorGroups, "CSG");
             groupCsg.AddChild(CreateActorItem("Box Brush", typeof(BoxBrush)));
-
-            var groupVolumes = createGroupWithList(actorGroups, "Volumes");
-            groupVolumes.AddChild(CreateActorItem("PostFx Volume", typeof(PostFxVolume)));
-
+            
             actorGroups.SelectedTabIndex = 0;
         }
 
