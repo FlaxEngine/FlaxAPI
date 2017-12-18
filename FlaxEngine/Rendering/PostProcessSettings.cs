@@ -29,7 +29,7 @@ namespace FlaxEngine.Rendering
         /// </summary>
         Auto = 2
     }
-    
+
     /// <summary>
     /// Depth of field bokeh shape types.
     /// </summary>
@@ -79,16 +79,16 @@ namespace FlaxEngine.Rendering
             // Bit fields contain flags if override every parameter.
             // Helper functions GetFlag/SetFlags are used to modify override flag per single setting.
 
-            public int Flags0;//
-            public int Flags1;// AO
-            public int Flags2;// Bloom
-            public int Flags3;// ToneMap
-            public int Flags4;// Eye
-            public int Flags5;// Cam
-            public int Flags6;// Flare
-            public int Flags7;// DOF
-            public int Flags8;// SSR
-            public int Flags9;// 
+            public int Flags0; //
+            public int Flags1; // AO
+            public int Flags2; // Bloom
+            public int Flags3; // ToneMap
+            public int Flags4; // Eye
+            public int Flags5; // Cam
+            public int Flags6; // Flare
+            public int Flags7; // DOF
+            public int Flags8; // SSR
+            public int Flags9; // ColorGrading
 
             // Ambient Occlusion
 
@@ -111,7 +111,7 @@ namespace FlaxEngine.Rendering
             public float Bloom_BlurSigma;
             public float Bloom_Scale;
 
-            // ToneMappingSettings
+            // Tone Mapping
 
             public float ToneMap_WhiteTemp;
             public float ToneMap_WhiteTint;
@@ -120,6 +120,31 @@ namespace FlaxEngine.Rendering
             public float ToneMap_FilmShoulder;
             public float ToneMap_FilmBlackClip;
             public float ToneMap_FilmWhiteClip;
+
+            // Color Grading
+
+            public Vector4 ColorGrading_ColorSaturation;
+            public Vector4 ColorGrading_ColorContrast;
+            public Vector4 ColorGrading_ColorGamma;
+            public Vector4 ColorGrading_ColorGain;
+            public Vector4 ColorGrading_ColorOffset;
+            public Vector4 ColorGrading_ColorSaturationShadows;
+            public Vector4 ColorGrading_ColorContrastShadows;
+            public Vector4 ColorGrading_ColorGammaShadows;
+            public Vector4 ColorGrading_ColorGainShadows;
+            public Vector4 ColorGrading_ColorOffsetShadows;
+            public Vector4 ColorGrading_ColorSaturationMidtones;
+            public Vector4 ColorGrading_ColorContrastMidtones;
+            public Vector4 ColorGrading_ColorGammaMidtones;
+            public Vector4 ColorGrading_ColorGainMidtones;
+            public Vector4 ColorGrading_ColorOffsetMidtones;
+            public Vector4 ColorGrading_ColorSaturationHighlights;
+            public Vector4 ColorGrading_ColorContrastHighlights;
+            public Vector4 ColorGrading_ColorGammaHighlights;
+            public Vector4 ColorGrading_ColorGainHighlights;
+            public Vector4 ColorGrading_ColorOffsetHighlights;
+            public float ColorGrading_ShadowsMax;
+            public float ColorGrading_HighlightsMin;
 
             // Eye Adaptation
 
@@ -131,7 +156,7 @@ namespace FlaxEngine.Rendering
             public float Eye_MinLuminance;
             public float Eye_MaxLuminance;
 
-            // CameraArtifactsSettings
+            // Camera Artifacts
 
             public float Cam_VignetteIntensity;
             public Vector3 Cam_VignetteColor;
@@ -140,7 +165,7 @@ namespace FlaxEngine.Rendering
             public float Cam_GrainParticleSize;
             public Vector3 Cam_ChromaticDistortion;
 
-            // LensFlaresSettings
+            // Lens Flares
 
             public float Flare_Intensity;
             public int Flare_Ghosts;
@@ -154,7 +179,7 @@ namespace FlaxEngine.Rendering
             public Guid Flare_LensStar;
             public Guid Flare_LensDirt;
 
-            // DepthOfFieldSettings
+            // Depth Of Field
 
             public bool DOF_Enabled;
             public float DOF_FocalDistance;
@@ -171,7 +196,7 @@ namespace FlaxEngine.Rendering
             public float DOF_BokehFalloff;
             public float DOF_BokehDepthCutoff;
 
-            // PostFxMaterials
+            // Post Fx Materials
 
             public int PostFxMaterialsCount;
             public Guid PostFxMaterial0;
@@ -381,11 +406,11 @@ namespace FlaxEngine.Rendering
         #endregion
 
         #region Tone Mapping
-        
+
         /// <summary>
         /// Gets or sets the white color temperature. Default is 6500.
         /// </summary>
-        [NoSerialize, EditorOrder(300), Limit(1500, 15000, 1.0f), EditorDisplay("Tone Mapping", "White Temperature"), Tooltip("White color temperature. Default is 6500.")]
+        [NoSerialize, EditorOrder(300), Limit(1500, 15000), EditorDisplay("Tone Mapping", "White Temperature"), Tooltip("White color temperature. Default is 6500.")]
         public float ToneMap_WhiteTemp
         {
             get => data.ToneMap_WhiteTemp;
@@ -511,7 +536,7 @@ namespace FlaxEngine.Rendering
                 isDataDirty = true;
             }
         }
-        
+
         /// <summary>
         /// Gets or sets the speed up of the eye adaptation effect.
         /// </summary>
@@ -1062,12 +1087,340 @@ namespace FlaxEngine.Rendering
 
         #endregion
 
+        #region Color Grading
+
+        #region Global
+
+        /// <summary>
+        /// Gets or sets the color saturation (applies globally to the whole image). Default is 1.
+        /// </summary>
+        [NoSerialize, EditorOrder(900), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Saturation"), Tooltip("Color saturation (applies globally to the whole image). Default is 1.")]
+        public Vector4 ColorGrading_ColorSaturation
+        {
+            get => data.ColorGrading_ColorSaturation;
+            set
+            {
+                data.ColorGrading_ColorSaturation = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the color contrast (applies globally to the whole image). Default is 1.
+        /// </summary>
+        [NoSerialize, EditorOrder(901), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Contrast"), Tooltip("Color contrast (applies globally to the whole image). Default is 1.")]
+        public Vector4 ColorGrading_ColorContrast
+        {
+            get => data.ColorGrading_ColorContrast;
+            set
+            {
+                data.ColorGrading_ColorContrast = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the color gamma (applies globally to the whole image). Default is 1.
+        /// </summary>
+        [NoSerialize, EditorOrder(902), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Gamma"), Tooltip("Color gamma (applies globally to the whole image). Default is 1.")]
+        public Vector4 ColorGrading_ColorGamma
+        {
+            get => data.ColorGrading_ColorGamma;
+            set
+            {
+                data.ColorGrading_ColorGamma = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the color gain (applies globally to the whole image). Default is 1.
+        /// </summary>
+        [NoSerialize, EditorOrder(903), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Gain"), Tooltip("Color gain (applies globally to the whole image). Default is 1.")]
+        public Vector4 ColorGrading_ColorGain
+        {
+            get => data.ColorGrading_ColorGain;
+            set
+            {
+                data.ColorGrading_ColorGain = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the color offset (applies globally to the whole image). Default is 0.
+        /// </summary>
+        [NoSerialize, EditorOrder(904), Limit(-1, 1, 0.001f), EditorDisplay("Color Grading", "Offset"), Tooltip("Color offset (applies globally to the whole image). Default is 0.")]
+        public Vector4 ColorGrading_ColorOffset
+        {
+            get => data.ColorGrading_ColorOffset;
+            set
+            {
+                data.ColorGrading_ColorOffset = value;
+                isDataDirty = true;
+            }
+        }
+
+        #endregion
+
+        #region Shadows
+
+        /// <summary>
+        /// Gets or sets the color saturation (applies to shadows only). Default is 1.
+        /// </summary>
+        [NoSerialize, EditorOrder(905), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Shadows Saturation"), Tooltip("Color saturation (applies to shadows only). Default is 1.")]
+        public Vector4 ColorGrading_ColorSaturationShadows
+        {
+            get => data.ColorGrading_ColorSaturationShadows;
+            set
+            {
+                data.ColorGrading_ColorSaturationShadows = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the color contrast (applies to shadows only). Default is 1.
+        /// </summary>
+        [NoSerialize, EditorOrder(906), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Shadows Contrast"), Tooltip("Color contrast (applies to shadows only). Default is 1.")]
+        public Vector4 ColorGrading_ColorContrastShadows
+        {
+            get => data.ColorGrading_ColorContrastShadows;
+            set
+            {
+                data.ColorGrading_ColorContrastShadows = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the color gamma (applies to shadows only). Default is 1.
+        /// </summary>
+        [NoSerialize, EditorOrder(907), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Shadows Gamma"), Tooltip("Color gamma (applies to shadows only). Default is 1.")]
+        public Vector4 ColorGrading_ColorGammaShadows
+        {
+            get => data.ColorGrading_ColorGammaShadows;
+            set
+            {
+                data.ColorGrading_ColorGammaShadows = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the color gain (applies to shadows only). Default is 1.
+        /// </summary>
+        [NoSerialize, EditorOrder(908), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Shadows Gain"), Tooltip("Color gain (applies to shadows only). Default is 1.")]
+        public Vector4 ColorGrading_ColorGainShadows
+        {
+            get => data.ColorGrading_ColorGainShadows;
+            set
+            {
+                data.ColorGrading_ColorGainShadows = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the color offset (applies to shadows only). Default is 0.
+        /// </summary>
+        [NoSerialize, EditorOrder(909), Limit(-1, 1, 0.001f), EditorDisplay("Color Grading", "Shadows Offset"), Tooltip("Color offset (applies to shadows only). Default is 0.")]
+        public Vector4 ColorGrading_ColorOffsetShadows
+        {
+            get => data.ColorGrading_ColorOffsetShadows;
+            set
+            {
+                data.ColorGrading_ColorOffsetShadows = value;
+                isDataDirty = true;
+            }
+        }
+
+        #endregion
+
+        #region Midtones
+
+        /// <summary>
+        /// Gets or sets the color saturation (applies to midtones only). Default is 1.
+        /// </summary>
+        [NoSerialize, EditorOrder(910), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Midtones Saturation"), Tooltip("Color saturation (applies to midtones only). Default is 1.")]
+        public Vector4 ColorGrading_ColorSaturationMidtones
+        {
+            get => data.ColorGrading_ColorSaturationMidtones;
+            set
+            {
+                data.ColorGrading_ColorSaturationMidtones = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the color contrast (applies to midtones only). Default is 1.
+        /// </summary>
+        [NoSerialize, EditorOrder(911), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Midtones Contrast"), Tooltip("Color contrast (applies to midtones only). Default is 1.")]
+        public Vector4 ColorGrading_ColorContrastMidtones
+        {
+            get => data.ColorGrading_ColorContrastMidtones;
+            set
+            {
+                data.ColorGrading_ColorContrastMidtones = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the color gamma (applies to midtones only). Default is 1.
+        /// </summary>
+        [NoSerialize, EditorOrder(912), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Midtones Gamma"), Tooltip("Color gamma (applies to midtones only). Default is 1.")]
+        public Vector4 ColorGrading_ColorGammaMidtones
+        {
+            get => data.ColorGrading_ColorGammaMidtones;
+            set
+            {
+                data.ColorGrading_ColorGammaMidtones = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the color gain (applies to midtones only). Default is 1.
+        /// </summary>
+        [NoSerialize, EditorOrder(913), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Midtones Gain"), Tooltip("Color gain (applies to midtones only). Default is 1.")]
+        public Vector4 ColorGrading_ColorGainMidtones
+        {
+            get => data.ColorGrading_ColorGainMidtones;
+            set
+            {
+                data.ColorGrading_ColorGainMidtones = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the color offset (applies to midtones only). Default is 0.
+        /// </summary>
+        [NoSerialize, EditorOrder(914), Limit(-1, 1, 0.001f), EditorDisplay("Color Grading", "Midtones Offset"), Tooltip("Color offset (applies to midtones only). Default is 0.")]
+        public Vector4 ColorGrading_ColorOffsetMidtones
+        {
+            get => data.ColorGrading_ColorOffsetMidtones;
+            set
+            {
+                data.ColorGrading_ColorOffsetMidtones = value;
+                isDataDirty = true;
+            }
+        }
+
+        #endregion
+
+        #region Highlights
+
+        /// <summary>
+        /// Gets or sets the color saturation (applies to highlights only). Default is 1.
+        /// </summary>
+        [NoSerialize, EditorOrder(915), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Highlights Saturation"), Tooltip("Color saturation (applies to highlights only). Default is 1.")]
+        public Vector4 ColorGrading_ColorSaturationHighlights
+        {
+            get => data.ColorGrading_ColorSaturationHighlights;
+            set
+            {
+                data.ColorGrading_ColorSaturationHighlights = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the color contrast (applies to highlights only). Default is 1.
+        /// </summary>
+        [NoSerialize, EditorOrder(916), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Highlights Contrast"), Tooltip("Color contrast (applies to highlights only). Default is 1.")]
+        public Vector4 ColorGrading_ColorContrastHighlights
+        {
+            get => data.ColorGrading_ColorContrastHighlights;
+            set
+            {
+                data.ColorGrading_ColorContrastHighlights = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the color gamma (applies to highlights only). Default is 1.
+        /// </summary>
+        [NoSerialize, EditorOrder(917), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Highlights Gamma"), Tooltip("Color gamma (applies to highlights only). Default is 1.")]
+        public Vector4 ColorGrading_ColorGammaHighlights
+        {
+            get => data.ColorGrading_ColorGammaHighlights;
+            set
+            {
+                data.ColorGrading_ColorGammaHighlights = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the color gain (applies to highlights only). Default is 1.
+        /// </summary>
+        [NoSerialize, EditorOrder(918), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Highlights Gain"), Tooltip("Color gain (applies to highlights only). Default is 1.")]
+        public Vector4 ColorGrading_ColorGainHighlights
+        {
+            get => data.ColorGrading_ColorGainHighlights;
+            set
+            {
+                data.ColorGrading_ColorGainHighlights = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the color offset (applies to highlights only). Default is 0.
+        /// </summary>
+        [NoSerialize, EditorOrder(919), Limit(-1, 1, 0.001f), EditorDisplay("Color Grading", "Highlights Offset"), Tooltip("Color offset (applies to highlights only). Default is 0.")]
+        public Vector4 ColorGrading_ColorOffsetHighlights
+        {
+            get => data.ColorGrading_ColorOffsetHighlights;
+            set
+            {
+                data.ColorGrading_ColorOffsetHighlights = value;
+                isDataDirty = true;
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Gets or sets the shadows maximum value. Default is 0.09.
+        /// </summary>
+        [NoSerialize, EditorOrder(920), Limit(-1, 1, 0.01f), EditorDisplay("Color Grading", "Shadows Max"), Tooltip("Shadows maximum value. Default is 0.09.")]
+        public float ColorGrading_ShadowsMax
+        {
+            get => data.ColorGrading_ShadowsMax;
+            set
+            {
+                data.ColorGrading_ShadowsMax = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the highlights minimum value. Default is 0.5.
+        /// </summary>
+        [NoSerialize, EditorOrder(921), Limit(-1, 1, 0.01f), EditorDisplay("Color Grading", "Highlights Min"), Tooltip("Highlights minimum value. Default is 0.5.")]
+        public float ColorGrading_HighlightsMin
+        {
+            get => data.ColorGrading_HighlightsMin;
+            set
+            {
+                data.ColorGrading_HighlightsMin = value;
+                isDataDirty = true;
+            }
+        }
+
+        #endregion
+
         #region PostFx Materials
 
         /// <summary>
         /// Gets the post effect materials collection.
         /// </summary>
-        [NoSerialize, EditorOrder(900), EditorDisplay("PostFx Materials", "__inline__"), Tooltip("Post effect materials to render")]
+        [NoSerialize, EditorOrder(10000), EditorDisplay("PostFx Materials", "__inline__"), Tooltip("Post effect materials to render")]
         public unsafe MaterialBase[] PostFxMaterials
         {
             get
@@ -1091,6 +1444,7 @@ namespace FlaxEngine.Rendering
 
                     for (int i = 0; i < postFxLength; i++)
                     {
+                        // ReSharper disable once PossibleNullReferenceException
                         Guid id = value[i]?.ID ?? Guid.Empty;
                         if (postFxMaterials[i] != id)
                         {
@@ -1124,7 +1478,7 @@ namespace FlaxEngine.Rendering
                 return data.Equals(other.data);
             return false;
         }
-        
+
         /// <inheritdoc />
         public bool Equals(PostProcessSettings other)
         {

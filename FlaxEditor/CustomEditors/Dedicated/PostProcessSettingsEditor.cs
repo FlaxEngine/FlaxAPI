@@ -35,7 +35,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             var order = item.Order.Order;
 
             // Skip for PosFx Materials
-            if (order == 900)
+            if (order == 10000)
             {
                 base.SpawnProperty(itemLayout, itemValues, item);
                 return;
