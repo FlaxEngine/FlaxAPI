@@ -438,7 +438,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the film curve slope. Default is 0.88.
         /// </summary>
-        [NoSerialize, EditorOrder(302), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film Slope"), Tooltip("Film curve slope. Default is 0.88.")]
+        [NoSerialize, EditorOrder(302), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film Slope"), Tooltip("This will adjust the steepness of the S-curve used for the tone mapper, where larger values will make the slope steeper (darker) and lower values will make the slope less steep (lighter). Default is 0.88.")]
         public float ToneMap_FilmSlope
         {
             get => data.ToneMap_FilmSlope;
@@ -452,7 +452,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the film curve toe. Default is 0.55.
         /// </summary>
-        [NoSerialize, EditorOrder(303), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film Toe"), Tooltip("Film curve toe. Default is 0.55.")]
+        [NoSerialize, EditorOrder(303), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film Toe"), Tooltip("This will adjust the dark color in the tone mapper. Default is 0.55.")]
         public float ToneMap_FilmToe
         {
             get => data.ToneMap_FilmToe;
@@ -466,7 +466,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the film curve shoulder. Default is 0.26.
         /// </summary>
-        [NoSerialize, EditorOrder(304), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film Shoulder"), Tooltip("Film curve shoulder. Default is 0.26.")]
+        [NoSerialize, EditorOrder(304), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film Shoulder"), Tooltip("This will adjust the bright color in the tone mapper. Default is 0.26.")]
         public float ToneMap_FilmShoulder
         {
             get => data.ToneMap_FilmShoulder;
@@ -480,7 +480,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the film curve black clip. Default is 0.
         /// </summary>
-        [NoSerialize, EditorOrder(305), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film Black Clip"), Tooltip("Film curve black color clip. Default is 0.")]
+        [NoSerialize, EditorOrder(305), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film Black Clip"), Tooltip("This will set where the crossover happens where black's start to cut off their value. In general, this value should not be adjusted. Default is 0.")]
         public float ToneMap_FilmBlackClip
         {
             get => data.ToneMap_FilmBlackClip;
@@ -494,7 +494,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the film curve white clip. Default is 0.04.
         /// </summary>
-        [NoSerialize, EditorOrder(306), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film White Clip"), Tooltip("Film curve white color clip. Default is 0.04.")]
+        [NoSerialize, EditorOrder(306), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film White Clip"), Tooltip("This will set where the crossover happens where white's start to cut off their values. This will appear as a subtle change in most cases. Default is 0.04.")]
         public float ToneMap_FilmWhiteClip
         {
             get => data.ToneMap_FilmWhiteClip;
