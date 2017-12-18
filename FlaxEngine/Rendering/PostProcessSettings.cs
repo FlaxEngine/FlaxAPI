@@ -29,48 +29,7 @@ namespace FlaxEngine.Rendering
         /// </summary>
         Auto = 2
     }
-
-    /// <summary>
-    /// Tone mapping techniques.
-    /// </summary>
-    public enum ToneMappingTechniqe
-    {
-        /// <summary>
-        /// The none.
-        /// </summary>
-        None = 0,
-
-        /// <summary>
-        /// The logarithmic.
-        /// </summary>
-        Logarithmic = 1,
-
-        /// <summary>
-        /// The exponential.
-        /// </summary>
-        Exponential = 2,
-
-        /// <summary>
-        /// The Drago-logarithmic.
-        /// </summary>
-        DragoLogarithmic = 3,
-
-        /// <summary>
-        /// The Reinhard.
-        /// </summary>
-        Reinhard = 4,
-
-        /// <summary>
-        /// The modified Reinhard.
-        /// </summary>
-        ReinhardModified = 5,
-
-        /// <summary>
-        /// The filmic ALU.
-        /// </summary>
-        FilmicALU = 6
-    }
-
+    
     /// <summary>
     /// Depth of field bokeh shape types.
     /// </summary>
@@ -154,10 +113,13 @@ namespace FlaxEngine.Rendering
 
             // ToneMappingSettings
 
-            public ToneMappingTechniqe ToneMap_Technique;
-            public float ToneMap_WhiteLevel;
-            public float ToneMap_LuminanceSaturation;
-            public float ToneMap_Bias;
+            public float ToneMap_WhiteTemp;
+            public float ToneMap_WhiteTint;
+            public float ToneMap_FilmSlope;
+            public float ToneMap_FilmToe;
+            public float ToneMap_FilmShoulder;
+            public float ToneMap_FilmBlackClip;
+            public float ToneMap_FilmWhiteClip;
 
             // Eye Adaptation
 
@@ -419,59 +381,101 @@ namespace FlaxEngine.Rendering
         #endregion
 
         #region Tone Mapping
-
+        
         /// <summary>
-        /// Gets or sets the tone mapping mode.
+        /// Gets or sets the white color temperature. Default is 6500.
         /// </summary>
-        [NoSerialize, EditorOrder(300), EditorDisplay("Tone Mapping", "Technique")]
-        public ToneMappingTechniqe ToneMap_Technique
+        [NoSerialize, EditorOrder(300), Limit(1500, 15000, 1.0f), EditorDisplay("Tone Mapping", "White Temperature"), Tooltip("White color temperature. Default is 6500.")]
+        public float ToneMap_WhiteTemp
         {
-            get => data.ToneMap_Technique;
+            get => data.ToneMap_WhiteTemp;
             set
             {
-                data.ToneMap_Technique = value;
+                data.ToneMap_WhiteTemp = value;
                 isDataDirty = true;
             }
         }
 
         /// <summary>
-        /// Gets or sets the tone mapping white level.
+        /// Gets or sets the white tint. Default is 0.
         /// </summary>
-        [NoSerialize, EditorOrder(301), EditorDisplay("Tone Mapping", "White Level")]
-        public float ToneMap_WhiteLevel
+        [NoSerialize, EditorOrder(301), Limit(-1, 1, 0.001f), EditorDisplay("Tone Mapping", "White Tint"), Tooltip("White color tint. Default is 0.")]
+        public float ToneMap_WhiteTint
         {
-            get => data.ToneMap_WhiteLevel;
+            get => data.ToneMap_WhiteTint;
             set
             {
-                data.ToneMap_WhiteLevel = value;
+                data.ToneMap_WhiteTint = value;
                 isDataDirty = true;
             }
         }
 
         /// <summary>
-        /// Gets or sets the tone mapping pixels luminance saturation.
+        /// Gets or sets the film curve slope. Default is 0.88.
         /// </summary>
-        [NoSerialize, EditorOrder(302), EditorDisplay("Tone Mapping", "Luminance Saturation")]
-        public float ToneMap_LuminanceSaturation
+        [NoSerialize, EditorOrder(302), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film Slope"), Tooltip("Film curve slope. Default is 0.88.")]
+        public float ToneMap_FilmSlope
         {
-            get => data.ToneMap_LuminanceSaturation;
+            get => data.ToneMap_FilmSlope;
             set
             {
-                data.ToneMap_LuminanceSaturation = value;
+                data.ToneMap_FilmSlope = value;
                 isDataDirty = true;
             }
         }
 
         /// <summary>
-        /// Gets or sets the tone mapping bias.
+        /// Gets or sets the film curve toe. Default is 0.55.
         /// </summary>
-        [NoSerialize, EditorOrder(303), EditorDisplay("Tone Mapping", "Bias")]
-        public float ToneMap_Bias
+        [NoSerialize, EditorOrder(303), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film Toe"), Tooltip("Film curve toe. Default is 0.55.")]
+        public float ToneMap_FilmToe
         {
-            get => data.ToneMap_Bias;
+            get => data.ToneMap_FilmToe;
             set
             {
-                data.ToneMap_Bias = value;
+                data.ToneMap_FilmToe = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the film curve shoulder. Default is 0.26.
+        /// </summary>
+        [NoSerialize, EditorOrder(304), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film Shoulder"), Tooltip("Film curve shoulder. Default is 0.26.")]
+        public float ToneMap_FilmShoulder
+        {
+            get => data.ToneMap_FilmShoulder;
+            set
+            {
+                data.ToneMap_FilmShoulder = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the film curve black clip. Default is 0.
+        /// </summary>
+        [NoSerialize, EditorOrder(305), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film Black Clip"), Tooltip("Film curve black color clip. Default is 0.")]
+        public float ToneMap_FilmBlackClip
+        {
+            get => data.ToneMap_FilmBlackClip;
+            set
+            {
+                data.ToneMap_FilmBlackClip = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the film curve white clip. Default is 0.04.
+        /// </summary>
+        [NoSerialize, EditorOrder(306), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film White Clip"), Tooltip("Film curve white color clip. Default is 0.04.")]
+        public float ToneMap_FilmWhiteClip
+        {
+            get => data.ToneMap_FilmWhiteClip;
+            set
+            {
+                data.ToneMap_FilmWhiteClip = value;
                 isDataDirty = true;
             }
         }
