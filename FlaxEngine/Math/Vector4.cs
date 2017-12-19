@@ -225,6 +225,16 @@ namespace FlaxEngine
         public bool IsOne => Mathf.IsOne(X) && Mathf.IsOne(Y) && Mathf.IsOne(Z) && Mathf.IsOne(W);
 
         /// <summary>
+        /// Gets a minimum component value
+        /// </summary>
+        public float MinValue => Mathf.Min(X, Mathf.Min(Y, Mathf.Min(Z, W)));
+
+        /// <summary>
+        /// Gets a maximum component value
+        /// </summary>
+        public float MaxValue => Mathf.Max(X, Mathf.Max(Y, Mathf.Max(Z, W)));
+        
+        /// <summary>
         /// Gets an arithmetic average value of all vector components.
         /// </summary>
         public float AvgValue => (X + Y + Z + W) * (1.0f / 4.0f);
