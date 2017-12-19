@@ -110,7 +110,7 @@ namespace FlaxEngine.GUI
                     _thumbClicked = false;
 
                     // End capturing mouse
-                    ParentWindow?.EndTrackingMouse();
+                    EndMouseCapture();
                 }
             }
 
@@ -118,10 +118,7 @@ namespace FlaxEngine.GUI
             /// Gets the size of the track.
             /// </summary>
             private float TrackSize => Width;
-
-            /// <inheritdoc />
-            public override bool HasMouseCapture => _thumbClicked;
-
+            
             /// <inheritdoc />
             public override void Draw()
             {
@@ -176,7 +173,7 @@ namespace FlaxEngine.GUI
                         _mouseOffset = mousePosition - _thumbCenter;
 
                         // Start capturing mouse
-                        parentWin.StartTrackingMouse(false);
+                        StartMouseCapture(false);
                     }
                     else
                     {

@@ -171,7 +171,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="child">Control to add</param>
         /// <returns>Added control.</returns>
-        public T AddChild <T>(T child) where T : Control
+        public T AddChild<T>(T child) where T : Control
         {
             if (child == null)
                 throw new ArgumentNullException();
@@ -294,8 +294,7 @@ namespace FlaxEngine.GUI
 
                 switch (child.DockStyle)
                 {
-                    case DockStyle.None:
-                        break;
+                    case DockStyle.None: break;
                     case DockStyle.Top:
                     {
                         float height = Mathf.Min(child.Height, clientArea.Height);
@@ -327,8 +326,7 @@ namespace FlaxEngine.GUI
                         clientArea.Size.X -= width;
                         break;
                     }
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    default: throw new ArgumentOutOfRangeException();
                 }
             }
 
@@ -482,8 +480,7 @@ namespace FlaxEngine.GUI
 
                 switch (child.DockStyle)
                 {
-                    case DockStyle.None:
-                        break;
+                    case DockStyle.None: break;
 
                     case DockStyle.Bottom:
                     {
@@ -530,8 +527,7 @@ namespace FlaxEngine.GUI
                         clientArea.Size.Y -= height;
                         break;
                     }
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    default: throw new ArgumentOutOfRangeException();
                 }
             }
         }
@@ -553,8 +549,7 @@ namespace FlaxEngine.GUI
 
                 switch (child.DockStyle)
                 {
-                    case DockStyle.None:
-                        break;
+                    case DockStyle.None: break;
                     case DockStyle.Top:
                     {
                         float height = child.Height;
@@ -584,8 +579,7 @@ namespace FlaxEngine.GUI
                         clientArea.Size.X -= child.Width;
                         break;
                     }
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    default: throw new ArgumentOutOfRangeException();
                 }
             }
         }
@@ -604,20 +598,6 @@ namespace FlaxEngine.GUI
         #endregion
 
         #region Control
-
-        /// <inheritdoc />
-        public override bool HasMouseCapture
-        {
-            get
-            {
-                for (int i = 0; i < _children.Count; i++)
-                {
-                    if (_children[i].HasMouseCapture)
-                        return true;
-                }
-                return false;
-            }
-        }
 
         /// <inheritdoc />
         public override void Dispose()
@@ -641,7 +621,6 @@ namespace FlaxEngine.GUI
             base.OnDestroy();
 
             // Pass event futher
-            // ReSharper disable once ForCanBeConvertedToForeach
             for (int i = 0; i < _children.Count; i++)
             {
                 _children[i].OnDestroy();
@@ -786,7 +765,7 @@ namespace FlaxEngine.GUI
                 {
                     // Fire events
                     Vector2 childLocation;
-                    if (IntersectsChildContent(child, location, out childLocation) || child.HasMouseCapture)
+                    if (IntersectsChildContent(child, location, out childLocation))
                     {
                         if (child.IsMouseOver)
                         {
@@ -871,11 +850,6 @@ namespace FlaxEngine.GUI
                             return true;
                         }
                     }
-                    else if (child.HasMouseCapture)
-                    {
-                        // Cancel forced user focus
-                        child.OnLostMouseCapture();
-                    }
                 }
             }
 
@@ -887,21 +861,6 @@ namespace FlaxEngine.GUI
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             // Check all children collisions with mouse and fire events for them
-            for (int i = _children.Count - 1; i >= 0 && _children.Count > 0; i--)
-            {
-                var child = _children[i];
-
-                if (child.HasMouseCapture)
-                {
-                    // Send event futher
-                    Vector2 childLocation;
-                    IntersectsChildContent(child, location, out childLocation);
-                    if (child.OnMouseUp(childLocation, buttons))
-                    {
-                        return true;
-                    }
-                }
-            }
             for (int i = _children.Count - 1; i >= 0 && _children.Count > 0; i--)
             {
                 var child = _children[i];
@@ -956,7 +915,7 @@ namespace FlaxEngine.GUI
             for (int i = 0; i < _children.Count && _children.Count > 0; i++)
             {
                 var child = _children[i];
-                if (child.Enabled && (child.ContainsFocus || child.HasMouseCapture))
+                if (child.Enabled && child.ContainsFocus)
                 {
                     return child.OnCharInput(c);
                 }
@@ -970,7 +929,7 @@ namespace FlaxEngine.GUI
             for (int i = 0; i < _children.Count && _children.Count > 0; i++)
             {
                 var child = _children[i];
-                if (child.Enabled && (child.ContainsFocus || child.HasMouseCapture))
+                if (child.Enabled && child.ContainsFocus)
                 {
                     return child.OnKeyDown(key);
                 }
@@ -984,7 +943,7 @@ namespace FlaxEngine.GUI
             for (int i = 0; i < _children.Count && _children.Count > 0; i++)
             {
                 var child = _children[i];
-                if (child.Enabled && (child.ContainsFocus || child.HasMouseCapture))
+                if (child.Enabled && child.ContainsFocus)
                 {
                     child.OnKeyUp(key);
                     break;

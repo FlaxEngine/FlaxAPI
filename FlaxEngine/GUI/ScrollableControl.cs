@@ -5,7 +5,7 @@
 namespace FlaxEngine.GUI
 {
     /// <summary>
-    /// 
+    /// Base class for container controls that can offset controls in a view (eg. scroll panels).
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class ScrollableControl : ContainerControl
@@ -16,10 +16,10 @@ namespace FlaxEngine.GUI
         protected Vector2 _viewOffset;
 
         /// <summary>
-        ///     Gets current view offset for all the controls (used by the scroll bars).
+        /// Gets current view offset for all the controls (used by the scroll bars).
         /// </summary>
         public Vector2 ViewOffset => _viewOffset;
-        
+
         /// <inheritdoc />
         protected override void DrawChildren()
         {
@@ -74,6 +74,18 @@ namespace FlaxEngine.GUI
         public override Vector2 PointFromParent(Vector2 location)
         {
             return base.PointFromParent(location) - _viewOffset;
+        }
+
+        /// <inheritdoc />
+        public override Vector2 PointToWindow(Vector2 location)
+        {
+            return base.PointToWindow(location) - _viewOffset;
+        }
+
+        /// <inheritdoc />
+        public override Vector2 PointFromWindow(Vector2 location)
+        {
+            return base.PointFromWindow(location) + _viewOffset;
         }
     }
 }

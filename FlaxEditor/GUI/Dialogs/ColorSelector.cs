@@ -174,7 +174,7 @@ namespace FlaxEditor.GUI.Dialogs
             if (buttons == MouseButton.Left && _wheelRect.Contains(location))
             {
                 _isMouseDownWheel = true;
-                ParentWindow.StartTrackingMouse(false);
+                StartMouseCapture(false);
                 UpdateMouse(ref location);
             }
 
@@ -188,23 +188,18 @@ namespace FlaxEditor.GUI.Dialogs
             if (buttons == MouseButton.Left && _isMouseDownWheel)
             {
                 _isMouseDownWheel = false;
-                ParentWindow.EndTrackingMouse();
+                EndMouseCapture();
                 return true;
             }
 
             return base.OnMouseUp(location, buttons);
         }
-
+        
         /// <inheritdoc />
-        public override bool HasMouseCapture => _isMouseDownWheel || base.HasMouseCapture;
-
-        /// <inheritdoc />
-        public override void OnLostMouseCapture()
+        public override void OnEndMouseCapture()
         {
             // Clear flags
             _isMouseDownWheel = false;
-
-            base.OnLostMouseCapture();
         }
 
         /// <inheritdoc />
@@ -310,13 +305,13 @@ namespace FlaxEditor.GUI.Dialogs
             if (buttons == MouseButton.Left && _slider1Rect.Contains(location))
             {
                 _isMouseDownSlider1 = true;
-                ParentWindow.StartTrackingMouse(false);
+                StartMouseCapture(false);
                 UpdateMouse(ref location);
             }
             if (buttons == MouseButton.Left && _slider2Rect.Contains(location))
             {
                 _isMouseDownSlider2 = true;
-                ParentWindow.StartTrackingMouse(false);
+                StartMouseCapture(false);
                 UpdateMouse(ref location);
             }
 
@@ -330,24 +325,21 @@ namespace FlaxEditor.GUI.Dialogs
             {
                 _isMouseDownSlider1 = false;
                 _isMouseDownSlider2 = false;
-                ParentWindow.EndTrackingMouse();
+                EndMouseCapture();
                 return true;
             }
 
             return base.OnMouseUp(location, buttons);
         }
-
+        
         /// <inheritdoc />
-        public override bool HasMouseCapture => _isMouseDownSlider1 || _isMouseDownSlider2 || base.HasMouseCapture;
-
-        /// <inheritdoc />
-        public override void OnLostMouseCapture()
+        public override void OnEndMouseCapture()
         {
             // Clear flags
             _isMouseDownSlider1 = false;
             _isMouseDownSlider2 = false;
 
-            base.OnLostMouseCapture();
+            base.OnEndMouseCapture();
         }
     }
 }

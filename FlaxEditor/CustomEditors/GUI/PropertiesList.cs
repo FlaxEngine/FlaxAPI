@@ -80,7 +80,7 @@ namespace FlaxEditor.CustomEditors.GUI
             _splitterClicked = true;
 
             // Start capturing mouse
-            ParentWindow.StartTrackingMouse(false);
+            StartMouseCapture(false);
         }
 
         private void EndTracking()
@@ -91,12 +91,9 @@ namespace FlaxEditor.CustomEditors.GUI
                 _splitterClicked = false;
 
                 // End capturing mouse
-                ParentWindow.EndTrackingMouse();
+                EndMouseCapture();
             }
         }
-
-        /// <inheritdoc />
-        public override bool HasMouseCapture => _splitterClicked || base.HasMouseCapture;
 
         /// <inheritdoc />
         public override void Draw()
@@ -168,9 +165,10 @@ namespace FlaxEditor.CustomEditors.GUI
         }
 
         /// <inheritdoc />
-        public override void OnLostMouseCapture()
+        public override void OnEndMouseCapture()
         {
-            EndTracking();
+            // Clear flag
+            _splitterClicked = false;
         }
 
         /// <inheritdoc />

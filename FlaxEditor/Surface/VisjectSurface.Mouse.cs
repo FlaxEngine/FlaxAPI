@@ -133,9 +133,6 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override bool HasMouseCapture => _leftMouseDown || _rightMouseDown || _startBox != null || base.HasMouseCapture;
-
-        /// <inheritdoc />
         public override bool OnMouseWheel(Vector2 location, float delta)
         {
             if (base.OnMouseWheel(location, delta))
@@ -196,7 +193,7 @@ namespace FlaxEditor.Surface
                     }
 
                     // Start moving selected nodes
-                    ParentWindow.StartTrackingMouse(false);
+                    StartMouseCapture(false);
                     _isMovingSelection = true;
                     _movingSelectionViewPos = _surface.Location;
                     Focus();
@@ -209,7 +206,7 @@ namespace FlaxEditor.Surface
                 if (_leftMouseDown)
                 {
                     // Start selecting
-                    ParentWindow.StartTrackingMouse(false);
+                    StartMouseCapture(false);
                     ClearSelection();
                     Focus();
                     return true;
@@ -217,7 +214,7 @@ namespace FlaxEditor.Surface
                 if (_rightMouseDown)
                 {
                     // Start navigating
-                    ParentWindow.StartTrackingMouse(false);
+                    StartMouseCapture(false);
                     Focus();
                     return true;
                 }
@@ -256,7 +253,7 @@ namespace FlaxEditor.Surface
             if (_leftMouseDown && buttons == MouseButton.Left)
             {
                 _leftMouseDown = false;
-                ParentWindow.EndTrackingMouse();
+                EndMouseCapture();
                 Cursor = CursorType.Default;
 
                 if (!_isMovingSelection && _startBox == null)
@@ -267,7 +264,7 @@ namespace FlaxEditor.Surface
             if (_rightMouseDown && buttons == MouseButton.Right)
             {
                 _rightMouseDown = false;
-                ParentWindow.EndTrackingMouse();
+                EndMouseCapture();
                 Cursor = CursorType.Default;
 
                 // Check if no move has been made at all
@@ -296,7 +293,7 @@ namespace FlaxEditor.Surface
             if (buttons == MouseButton.Left)
             {
                 ConnectingEnd(null);
-                ParentWindow.EndTrackingMouse();
+                EndMouseCapture();
             }
 
             return true;

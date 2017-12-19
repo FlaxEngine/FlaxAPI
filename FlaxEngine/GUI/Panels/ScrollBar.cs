@@ -196,7 +196,7 @@ namespace FlaxEngine.GUI
                 _thumbClicked = false;
 
                 // End capturing mouse
-                ParentWindow?.EndTrackingMouse();
+                EndMouseCapture();
             }
         }
 
@@ -247,10 +247,7 @@ namespace FlaxEngine.GUI
 
             base.Update(deltaTime);
         }
-
-        /// <inheritdoc />
-        public override bool HasMouseCapture => _thumbClicked;
-
+        
         /// <inheritdoc />
         public override void Draw()
         {
@@ -269,9 +266,9 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void OnLostFocus()
         {
-            base.OnLostFocus();
-
             EndTracking();
+
+            base.OnLostFocus();
         }
 
         /// <inheritdoc />
@@ -313,7 +310,7 @@ namespace FlaxEngine.GUI
                     _mouseOffset = mousePosition - _thumbCenter;
 
                     // Start capturing mouse
-                    parentWin.StartTrackingMouse(false);
+                    StartMouseCapture(false);
                 }
                 else
                 {
@@ -331,6 +328,12 @@ namespace FlaxEngine.GUI
             EndTracking();
 
             return base.OnMouseUp(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override void OnEndMouseCapture()
+        {
+            EndTracking();
         }
 
         /// <inheritdoc />

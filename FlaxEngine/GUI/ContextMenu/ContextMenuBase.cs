@@ -244,14 +244,11 @@ namespace FlaxEngine.GUI
             {
                 root.Hide();
             }
-            else if (!HasMouseCapture)
+            else if (!HasChildCMOpened)
             {
                 Hide();
             }
         }
-
-        /// <inheritdoc />
-        public override bool HasMouseCapture => HasChildCMOpened || base.HasMouseCapture;
 
         /// <inheritdoc />
         public override bool IsMouseOver

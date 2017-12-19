@@ -481,16 +481,29 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Returns true if user is using that control so OnMouseMove and other events will be send to that control even if
-        ///     shouldn't be (used by scroll bars, sliders etc.)
+        /// Starts the mouse tracking. Used by the scrollbars, splitters, etc.
         /// </summary>
-        public virtual bool HasMouseCapture => false;
+        /// <param name="useMouseScreenOffset">If set to <c>true</c> will use mouse screen offset.</param>
+        public void StartMouseCapture(bool useMouseScreenOffset)
+        {
+            var parent = ParentWindow;
+            parent.StartTrackingMouse(this, useMouseScreenOffset);
+        }
+
+        /// <summary>
+        /// Ends the mouse tracking.
+        /// </summary>
+        public void EndMouseCapture()
+        {
+            var parent = ParentWindow;
+            parent.EndTrackingMouse();
+        }
 
         /// <summary>
         ///     When mouse goes up/down not over the control but it has user focus so remove that focus from it (used by scroll
         ///     bars, sliders etc.)
         /// </summary>
-        public virtual void OnLostMouseCapture()
+        public virtual void OnEndMouseCapture()
         {
         }
 
@@ -851,7 +864,7 @@ namespace FlaxEngine.GUI
             }
             return location;
         }
-
+        
         /// <summary>
         ///     Converts point in the local control's space into screen coordinates
         /// </summary>

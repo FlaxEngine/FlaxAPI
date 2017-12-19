@@ -671,7 +671,7 @@ namespace FlaxEngine.GUI
             _isSelecting = true;
 
             // Start tracking mouse
-            ParentWindow.StartTrackingMouse(false);
+            StartMouseCapture(false);
         }
 
         /// <summary>
@@ -683,7 +683,7 @@ namespace FlaxEngine.GUI
             _isSelecting = false;
 
             // Stop tracking mouse
-            ParentWindow.EndTrackingMouse();
+            EndMouseCapture();
         }
 
         #endregion
@@ -857,14 +857,10 @@ namespace FlaxEngine.GUI
             base.OnLostFocus();
             OnEditEnd();
         }
-
+        
         /// <inheritdoc />
-        public override bool HasMouseCapture => _isSelecting;
-
-        /// <inheritdoc />
-        public override void OnLostMouseCapture()
+        public override void OnEndMouseCapture()
         {
-            base.OnLostMouseCapture();
             OnEditEnd();
         }
 

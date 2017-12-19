@@ -137,8 +137,7 @@ namespace FlaxEngine.GUI
             _isSliding = false;
 
             // End capturing mouse
-            var parentWin = ParentWindow;
-            parentWin?.EndTrackingMouse();
+            EndMouseCapture();
         }
 
         /// <inheritdoc />
@@ -201,8 +200,7 @@ namespace FlaxEngine.GUI
                 _startSlideValue = _value;
 
                 // Start capturing mouse
-                Focus();
-                ParentWindow.StartTrackingMouse(true);
+                StartMouseCapture(true);
                 return true;
             }
 
@@ -247,12 +245,9 @@ namespace FlaxEngine.GUI
 
             base.OnEditEnd();
         }
-
+        
         /// <inheritdoc />
-        public override bool HasMouseCapture => _isSliding || base.HasMouseCapture;
-
-        /// <inheritdoc />
-        public override void OnLostMouseCapture()
+        public override void OnEndMouseCapture()
         {
             // Check if was sliding
             if (_isSliding)
@@ -261,7 +256,7 @@ namespace FlaxEngine.GUI
             }
             else
             {
-                base.OnLostMouseCapture();
+                base.OnEndMouseCapture();
             }
         }
 

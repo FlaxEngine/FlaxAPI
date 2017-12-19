@@ -1,12 +1,5 @@
 // Flax Engine scripting API
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.SymbolStore;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace FlaxEngine.GUI
 {
     /// <summary>
@@ -20,6 +13,9 @@ namespace FlaxEngine.GUI
         /// </summary>
         public const int SpliterSize = 4;
 
+        /// <summary>
+        /// The spliter half size (in pixels).
+        /// </summary>
         private const int SpliterSizeHalf = SpliterSize / 2;
 
         private Orientation _orientation;
@@ -38,12 +34,24 @@ namespace FlaxEngine.GUI
         public readonly Panel Panel2;
 
         /// <summary>
-        /// Gets the panel orientation.
+        /// Gets or sets the panel orientation.
         /// </summary>
         /// <value>
         /// The orientation.
         /// </value>
-        public Orientation Orientation => _orientation;
+        public Orientation Orientation
+        {
+            get => _orientation;
+            set
+            {
+                if (_orientation != value)
+                {
+                    _orientation = value;
+                    UpdateSplitRect();
+                    PerformLayout();
+                }
+            }
+        }
 
         /// <summary>
         /// Gets or sets the splitter value (always in range [0; 1]).
@@ -77,7 +85,6 @@ namespace FlaxEngine.GUI
         /// <param name="panel1Scroll">The panel1 scroll bars.</param>
         /// <param name="panel2Scroll">The panel2 scroll bars.</param>
         public SplitPanel(Orientation orientation = Orientation.Horizontal, ScrollBars panel1Scroll = ScrollBars.Both, ScrollBars panel2Scroll = ScrollBars.Both)
-            : base()
         {
             CanFocus = false;
 
@@ -111,7 +118,7 @@ namespace FlaxEngine.GUI
             _splitterClicked = true;
 
             // Start capturing mouse
-            ParentWindow.StartTrackingMouse(false);
+            StartMouseCapture(false);
         }
 
         private void EndTracking()
@@ -122,13 +129,10 @@ namespace FlaxEngine.GUI
                 _splitterClicked = false;
 
                 // End capturing mouse
-                ParentWindow.EndTrackingMouse();
+                EndMouseCapture();
             }
         }
-
-        /// <inheritdoc />
-        public override bool HasMouseCapture => _splitterClicked || base.HasMouseCapture;
-
+        
         /// <inheritdoc />
         public override void Draw()
         {
@@ -198,7 +202,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override void OnLostMouseCapture()
+        public override void OnEndMouseCapture()
         {
             EndTracking();
         }

@@ -17,7 +17,7 @@ namespace FlaxEngine.GUI
         /// Gets the main GUI control (it can be window or editor overriden control). Use it to plug-in custom GUI controls.
         /// </summary>
         public static ContainerControl Root { get; internal set; }
-        
+
         /// <summary>
         /// Closing window delegate.
         /// </summary>
@@ -27,6 +27,7 @@ namespace FlaxEngine.GUI
         public delegate void ClosingDelegate(Window window, ClosingReason reason, ref bool cancel);
 
         private Control _focusedControl;
+        private Control _trackingControl;
         private FlaxEngine.Window _window;
 
         /// <summary>
@@ -136,7 +137,7 @@ namespace FlaxEngine.GUI
             : base(0, 0, 100, 60)
         {
             _window = window ?? throw new ArgumentNullException(nameof(window));
-            
+
             CanFocus = false;
             if (Style.Current != null)
                 BackgroundColor = Style.Current.Background;
@@ -219,11 +220,21 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Starts the mouse tracking.
+        /// Starts the mouse tracking. Used by the scrollbars, splitters, etc.
         /// </summary>
+        /// <param name="control">The target control that want to track mouse. It will recive OnMouseMove event.</param>
         /// <param name="useMouseScreenOffset">If set to <c>true</c> will use mouse screen offset.</param>
-        public void StartTrackingMouse(bool useMouseScreenOffset)
+        public void StartTrackingMouse(Control control, bool useMouseScreenOffset)
         {
+            if (control == null)
+                throw new ArgumentNullException();
+            if (_trackingControl == control)
+                return;
+            if (_trackingControl != null)
+                EndTrackingMouse();
+            if (control.CanFocus)
+                Focus(control);
+            _trackingControl = control;
             _window.StartTrackingMouse(useMouseScreenOffset);
         }
 
@@ -232,9 +243,15 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void EndTrackingMouse()
         {
-            _window.EndTrackingMouse();
+            if (_trackingControl != null)
+            {
+                var control = _trackingControl;
+                _trackingControl = null;
+                _window.EndTrackingMouse();
+                control.OnEndMouseCapture();
+            }
         }
-        
+
         /// <summary>
         /// Gets keyboard key state.
         /// </summary>
@@ -307,13 +324,6 @@ namespace FlaxEngine.GUI
         public override Window ParentWindow => this;
 
         /// <inheritdoc />
-        public override void OnMouseLeave()
-        {
-            base.OnMouseLeave();
-            OnLostMouseCapture();
-        }
-
-        /// <inheritdoc />
         public override Vector2 ScreenToClient(Vector2 location)
         {
             return _window.ScreenToClient(location);
@@ -357,6 +367,62 @@ namespace FlaxEngine.GUI
             UpdateContainsFocus();
 
             return true;
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        {
+            if (_trackingControl != null)
+            {
+                return _trackingControl.OnMouseDown(_trackingControl.PointFromWindow(location), buttons);
+            }
+
+            return base.OnMouseDown(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        {
+            if (_trackingControl != null)
+            {
+                return _trackingControl.OnMouseUp(_trackingControl.PointFromWindow(location), buttons);
+            }
+
+            return base.OnMouseUp(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        {
+            if (_trackingControl != null)
+            {
+                return _trackingControl.OnMouseDoubleClick(_trackingControl.PointFromWindow(location), buttons);
+            }
+
+            return base.OnMouseDoubleClick(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseWheel(Vector2 location, float delta)
+        {
+            if (_trackingControl != null)
+            {
+                return _trackingControl.OnMouseWheel(_trackingControl.PointFromWindow(location), delta);
+            }
+
+            return base.OnMouseWheel(location, delta);
+        }
+
+        /// <inheritdoc />
+        public override void OnMouseMove(Vector2 location)
+        {
+            if (_trackingControl != null)
+            {
+                _trackingControl.OnMouseMove(_trackingControl.PointFromWindow(location));
+                return;
+            }
+            
+            base.OnMouseMove(location);
         }
 
         #endregion
