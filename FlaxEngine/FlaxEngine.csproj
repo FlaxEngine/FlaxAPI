@@ -203,6 +203,7 @@
     <Compile Include="API\TextureBases\Texture.Gen.cs" />
     <Compile Include="AssetTypes\TextureBase.cs" />
     <Compile Include="Attributes\Editor\AssetReferenceAttribute.cs" />
+    <Compile Include="Attributes\Editor\CustomEditorAliasAttribute.cs" />
     <Compile Include="Attributes\Editor\DefaultEditorAttribute.cs" />
     <Compile Include="Attributes\Editor\EditorDisplayAttribute.cs" />
     <Compile Include="Attributes\Editor\HeaderAttribute.cs" />

@@ -49,6 +49,11 @@ namespace FlaxEditor.CustomEditors.Editors
             public CustomEditorAttribute CustomEditor;
 
             /// <summary>
+            /// The custom editor alias attribute.
+            /// </summary>
+            public CustomEditorAliasAttribute CustomEditorAlias;
+
+            /// <summary>
             /// The space attribute.
             /// </summary>
             public SpaceAttribute Space;
@@ -71,7 +76,17 @@ namespace FlaxEditor.CustomEditors.Editors
             /// <summary>
             /// Gets the overrided custom editor for item editing.
             /// </summary>
-            public CustomEditor OverrideEditor => CustomEditor != null ? (CustomEditor)Activator.CreateInstance(CustomEditor.Type) : null;
+            public CustomEditor OverrideEditor
+            {
+                get
+                {
+                    if (CustomEditor != null)
+                        return (CustomEditor)Activator.CreateInstance(CustomEditor.Type);
+                    if (CustomEditorAlias != null)
+                        return (CustomEditor)Utilities.Utils.CreateInstance(CustomEditorAlias.TypeName);
+                    return null;
+                }
+            }
 
             /// <summary>
             /// Gets the tooltip text (may be null if not provided).
@@ -99,6 +114,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 Display = (EditorDisplayAttribute)attributes.FirstOrDefault(x => x is EditorDisplayAttribute);
                 Tooltip = (TooltipAttribute)attributes.FirstOrDefault(x => x is TooltipAttribute);
                 CustomEditor = (CustomEditorAttribute)attributes.FirstOrDefault(x => x is CustomEditorAttribute);
+                CustomEditorAlias = (CustomEditorAliasAttribute)attributes.FirstOrDefault(x => x is CustomEditorAliasAttribute);
                 Space = (SpaceAttribute)attributes.FirstOrDefault(x => x is SpaceAttribute);
                 Header = (HeaderAttribute)attributes.FirstOrDefault(x => x is HeaderAttribute);
                 
