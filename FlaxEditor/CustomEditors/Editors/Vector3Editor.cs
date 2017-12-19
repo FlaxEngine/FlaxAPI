@@ -16,17 +16,17 @@ namespace FlaxEditor.CustomEditors.Editors
     public class Vector3Editor : CustomEditor
     {
         /// <summary>
-        /// The X component element.
+        /// The X component editor.
         /// </summary>
         protected FloatValueElement XElement;
 
         /// <summary>
-        /// The Y component element.
+        /// The Y component editor.
         /// </summary>
         protected FloatValueElement YElement;
 
         /// <summary>
-        /// The Z component element.
+        /// The Z component editor.
         /// </summary>
         protected FloatValueElement ZElement;
 
@@ -68,9 +68,9 @@ namespace FlaxEditor.CustomEditors.Editors
                 return;
 
             SetValue(new Vector3(
-                XElement.FloatValue.Value,
-                YElement.FloatValue.Value,
-                ZElement.FloatValue.Value));
+                         XElement.FloatValue.Value,
+                         YElement.FloatValue.Value,
+                         ZElement.FloatValue.Value));
         }
 
         /// <inheritdoc />

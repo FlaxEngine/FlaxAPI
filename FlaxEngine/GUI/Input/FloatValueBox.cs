@@ -105,6 +105,18 @@ namespace FlaxEngine.GUI
             Value = Value;
         }
 
+        /// <summary>
+        /// Sets the limits from the other <see cref="FloatValueBox"/>.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        public void SetLimits(FloatValueBox other)
+        {
+            _min = other._min;
+            _max = other._max;
+            _slideSpeed = other._slideSpeed;
+            Value = Value;
+        }
+
         /// <inheritdoc />
         protected sealed override void UpdateText()
         {

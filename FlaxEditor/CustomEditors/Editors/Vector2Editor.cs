@@ -13,10 +13,17 @@ namespace FlaxEditor.CustomEditors.Editors
     /// Default implementation of the inspector used to edit Vector2 value type properties.
     /// </summary>
     [CustomEditor(typeof(Vector2)), DefaultEditor]
-    public sealed class Vector2Editor : CustomEditor
+    public class Vector2Editor : CustomEditor
     {
-        private FloatValueElement xElement;
-        private FloatValueElement yElement;
+        /// <summary>
+        /// The X component editor.
+        /// </summary>
+        protected FloatValueElement XElement;
+
+        /// <summary>
+        /// The Y component editor.
+        /// </summary>
+        protected FloatValueElement YElement;
 
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.Inline;
@@ -37,13 +44,13 @@ namespace FlaxEditor.CustomEditors.Editors
                 limit = (LimitAttribute)attributes.FirstOrDefault(x => x is LimitAttribute);
             }
 
-            xElement = grid.FloatValue();
-            xElement.SetLimits(limit);
-            xElement.FloatValue.ValueChanged += OnValueChanged;
+            XElement = grid.FloatValue();
+            XElement.SetLimits(limit);
+            XElement.FloatValue.ValueChanged += OnValueChanged;
 
-            yElement = grid.FloatValue();
-            yElement.SetLimits(limit);
-            yElement.FloatValue.ValueChanged += OnValueChanged;
+            YElement = grid.FloatValue();
+            YElement.SetLimits(limit);
+            YElement.FloatValue.ValueChanged += OnValueChanged;
         }
 
         private void OnValueChanged()
@@ -52,8 +59,8 @@ namespace FlaxEditor.CustomEditors.Editors
                 return;
 
             SetValue(new Vector2(
-                xElement.FloatValue.Value,
-                yElement.FloatValue.Value));
+                         XElement.FloatValue.Value,
+                         YElement.FloatValue.Value));
         }
 
         /// <inheritdoc />
@@ -66,8 +73,8 @@ namespace FlaxEditor.CustomEditors.Editors
             else
             {
                 var value = (Vector2)Values[0];
-                xElement.FloatValue.Value = value.X;
-                yElement.FloatValue.Value = value.Y;
+                XElement.FloatValue.Value = value.X;
+                YElement.FloatValue.Value = value.Y;
             }
         }
     }

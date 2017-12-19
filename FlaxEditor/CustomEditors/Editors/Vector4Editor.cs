@@ -13,12 +13,27 @@ namespace FlaxEditor.CustomEditors.Editors
     /// Default implementation of the inspector used to edit Vector4 value type properties.
     /// </summary>
     [CustomEditor(typeof(Vector4)), DefaultEditor]
-    public sealed class Vector4Editor : CustomEditor
+    public class Vector4Editor : CustomEditor
     {
-        private FloatValueElement xElement;
-        private FloatValueElement yElement;
-        private FloatValueElement zElement;
-        private FloatValueElement wElement;
+        /// <summary>
+        /// The X component editor.
+        /// </summary>
+        protected FloatValueElement XElement;
+
+        /// <summary>
+        /// The Y component editor.
+        /// </summary>
+        protected FloatValueElement YElement;
+
+        /// <summary>
+        /// The Z component editor.
+        /// </summary>
+        protected FloatValueElement ZElement;
+
+        /// <summary>
+        /// The W component editor.
+        /// </summary>
+        protected FloatValueElement WElement;
 
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.Inline;
@@ -39,21 +54,21 @@ namespace FlaxEditor.CustomEditors.Editors
                 limit = (LimitAttribute)attributes.FirstOrDefault(x => x is LimitAttribute);
             }
 
-            xElement = grid.FloatValue();
-            xElement.SetLimits(limit);
-            xElement.FloatValue.ValueChanged += OnValueChanged;
+            XElement = grid.FloatValue();
+            XElement.SetLimits(limit);
+            XElement.FloatValue.ValueChanged += OnValueChanged;
 
-            yElement = grid.FloatValue();
-            yElement.SetLimits(limit);
-            yElement.FloatValue.ValueChanged += OnValueChanged;
+            YElement = grid.FloatValue();
+            YElement.SetLimits(limit);
+            YElement.FloatValue.ValueChanged += OnValueChanged;
 
-            zElement = grid.FloatValue();
-            zElement.SetLimits(limit);
-            zElement.FloatValue.ValueChanged += OnValueChanged;
+            ZElement = grid.FloatValue();
+            ZElement.SetLimits(limit);
+            ZElement.FloatValue.ValueChanged += OnValueChanged;
 
-            wElement = grid.FloatValue();
-            wElement.SetLimits(limit);
-            wElement.FloatValue.ValueChanged += OnValueChanged;
+            WElement = grid.FloatValue();
+            WElement.SetLimits(limit);
+            WElement.FloatValue.ValueChanged += OnValueChanged;
         }
 
         private void OnValueChanged()
@@ -62,10 +77,10 @@ namespace FlaxEditor.CustomEditors.Editors
                 return;
 
             SetValue(new Vector4(
-                xElement.FloatValue.Value,
-                yElement.FloatValue.Value,
-                zElement.FloatValue.Value,
-                wElement.FloatValue.Value));
+                         XElement.FloatValue.Value,
+                         YElement.FloatValue.Value,
+                         ZElement.FloatValue.Value,
+                         WElement.FloatValue.Value));
         }
 
         /// <inheritdoc />
@@ -78,10 +93,10 @@ namespace FlaxEditor.CustomEditors.Editors
             else
             {
                 var value = (Vector4)Values[0];
-                xElement.FloatValue.Value = value.X;
-                yElement.FloatValue.Value = value.Y;
-                zElement.FloatValue.Value = value.Z;
-                wElement.FloatValue.Value = value.W;
+                XElement.FloatValue.Value = value.X;
+                YElement.FloatValue.Value = value.Y;
+                ZElement.FloatValue.Value = value.Z;
+                WElement.FloatValue.Value = value.W;
             }
         }
     }

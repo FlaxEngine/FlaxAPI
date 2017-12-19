@@ -58,6 +58,18 @@ namespace FlaxEditor.CustomEditors.Elements
             }
         }
 
+        /// <summary>
+        /// Sets the editor limits from the other <see cref="FloatValueElement"/>.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        public void SetLimits(FloatValueElement other)
+        {
+            if (other != null)
+            {
+                FloatValue.SetLimits(other.FloatValue);
+            }
+        }
+
         /// <inheritdoc />
         public override Control Control => FloatValue;
 
