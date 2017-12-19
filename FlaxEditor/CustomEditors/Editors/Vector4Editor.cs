@@ -43,6 +43,7 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             var grid = layout.CustomContainer<UniformGridPanel>();
             var gridControl = grid.CustomControl;
+            gridControl.ClipChildren = false;
             gridControl.Height = TextBox.DefaultHeight;
             gridControl.SlotsHorizontally = 4;
             gridControl.SlotsVertically = 1;
