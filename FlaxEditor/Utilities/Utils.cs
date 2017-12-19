@@ -3,6 +3,9 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using FlaxEngine;
+using FlaxEngine.Json;
+using Object = System.Object;
 
 namespace FlaxEditor.Utilities
 {
@@ -48,6 +51,48 @@ namespace FlaxEditor.Utilities
             if (typeof(Object).IsAssignableFrom(type))
                 return null;
             return Activator.CreateInstance(type);
+        }
+
+        /// <summary>
+        /// Tries to create object instance of the given full typename. Searches in-build Flax Engine/Editor asssemblies and game assemblies.
+        /// </summary>
+        /// <param name="typeName">The full name of the type.</param>
+        /// <returns>The create object or null if failed.</returns>
+        public static object CreateInstance(string typeName)
+        {
+            var allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var assemblies = new[]
+            {
+                FlaxEngine.Utils.GetAssemblyByName("Assembly", allAssemblies),
+                FlaxEngine.Utils.GetAssemblyByName("Assembly.Editor", allAssemblies),
+                FlaxEngine.Utils.GetAssemblyByName("FlaxEditor", allAssemblies),
+                FlaxEngine.Utils.GetAssemblyByName("FlaxEngine", allAssemblies),
+            };
+
+            for (int i = 0; i < assemblies.Length; i++)
+            {
+                var assembly = assemblies[i];
+                if (assembly != null)
+                {
+                    var type = assembly.GetType(typeName);
+                    if (type != null)
+                    {
+                        object obj = null;
+                        try
+                        {
+                            // Create instance
+                            return obj = Activator.CreateInstance(type);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogException(ex);
+                        }
+
+                        return obj;
+                    }
+                }
+            }
+            return null;
         }
     }
 }
