@@ -11,21 +11,21 @@ namespace FlaxEditor.GUI.Dialogs
     /// <summary>
     /// Color selecting control.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.Control" />
-    public class ColorSelector : Control
+    /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    public class ColorSelector : ContainerControl
     {
-        private Color _color;
+        /// <summary>
+        /// The color.
+        /// </summary>
+        protected Color _color;
 
-        private Sprite _colorWheelSprite;
-        private float _boxSize;
-        private float _slidersThickness;
-        private Rectangle _boxRect;
-        private Rectangle _slider1Rect;
-        private Rectangle _slider2Rect;
+        /// <summary>
+        /// The wheel rectangle.
+        /// </summary>
+        protected Rectangle _wheelRect;
 
+        private readonly Sprite _colorWheelSprite;
         private bool _isMouseDownWheel;
-        private bool _isMouseDownSlider1;
-        private bool _isMouseDownSlider2;
 
         /// <summary>
         /// Occurs when selected color gets changed.
@@ -40,55 +40,42 @@ namespace FlaxEditor.GUI.Dialogs
             get => _color;
             set
             {
-                _color = value;
-                ColorChanged?.Invoke(_color);
+                if (_color != value)
+                {
+                    _color = value;
+                    ColorChanged?.Invoke(_color);
+                }
             }
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ColorSelector"/> class.
         /// </summary>
-        /// <param name="boxSize">Size of the box.</param>
-        /// <param name="slidersThickness">The sliders thickness.</param>
-        public ColorSelector(float boxSize, float slidersThickness)
-            : base(0, 0, 64, 64)
+        public ColorSelector()
+            : this(64)
         {
-            _boxSize = boxSize;
-            _slidersThickness = slidersThickness;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ColorSelector"/> class.
+        /// </summary>
+        /// <param name="wheelSize">Size of the wheel.</param>
+        public ColorSelector(float wheelSize = 64)
+            : base(0, 0, wheelSize, wheelSize)
+        {
             _colorWheelSprite = Editor.Instance.UI.GetIcon("ColorWheel");
-
-            // Setup dimensions
-            UpdateRect();
-            Size = new Vector2(_slider2Rect.Right + _boxRect.X, _boxRect.Bottom + _boxRect.Y);
+            _wheelRect = new Rectangle(0, 0, wheelSize, wheelSize);
         }
 
-        private void UpdateRect()
+        /// <summary>
+        /// Updates the color selected by the mouse.
+        /// </summary>
+        /// <param name="location">The location.</param>
+        protected virtual void UpdateMouse(ref Vector2 location)
         {
-            const float slidersMargin = 8.0f;
-            _boxRect = new Rectangle(0, 0, _boxSize, _boxSize);
-            _slider1Rect = new Rectangle(_boxRect.Right + slidersMargin, _boxRect.Y, _slidersThickness, _boxRect.Height);
-            _slider2Rect = new Rectangle(_slider1Rect.Right + slidersMargin, _slider1Rect.Y, _slidersThickness, _slider1Rect.Height);
-        }
-
-        private void UpdateMouse(ref Vector2 location)
-        {
-            if (_isMouseDownSlider1)
+            if (_isMouseDownWheel)
             {
-                var hsv = _color.ToHSV();
-                hsv.Z = 1.001f - Mathf.Saturate((location.Y - _slider1Rect.Y) / _slider1Rect.Height);
-
-                Color = Color.FromHSV(hsv);
-            }
-            else if (_isMouseDownSlider2)
-            {
-                var color = _color;
-                color.A = 1.0f - Mathf.Saturate((location.Y - _slider2Rect.Y) / _slider2Rect.Height);
-
-                Color = color;
-            }
-            else if (_isMouseDownWheel)
-            {
-                Vector2 delta = location - _boxRect.Center;
+                Vector2 delta = location - _wheelRect.Center;
                 float distance = delta.Length;
 
                 float degrees;
@@ -137,13 +124,144 @@ namespace FlaxEditor.GUI.Dialogs
 
                 var hsv = _color.ToHSV();
                 hsv.X = degrees;
-                hsv.Y = Mathf.Saturate(distance / (_boxRect.Width * 0.5f));
+                hsv.Y = Mathf.Saturate(distance / (_wheelRect.Width * 0.5f));
 
                 // Auto set Value to 1 when color is black. Makes editing easier.
                 if (_color == Color.Black && hsv.Z <= 0.001f)
                     hsv.Z = 1.0f;
 
                 Color = Color.FromHSV(hsv);
+            }
+        }
+
+        /// <inheritdoc />
+        public override void Draw()
+        {
+            base.Draw();
+
+            var hsv = _color.ToHSV();
+
+            // Wheel
+            float boxExpand = (2.0f * 4.0f / 128.0f) * _wheelRect.Width;
+            Render2D.DrawSprite(_colorWheelSprite, _wheelRect.MakeExpanded(boxExpand));
+            float hAngle = hsv.X * Mathf.DegreesToRadians;
+            float hRadius = hsv.Y * _wheelRect.Width * 0.5f;
+            Vector2 hsPos = new Vector2(hRadius * Mathf.Cos(hAngle), -hRadius * Mathf.Sin(hAngle));
+            const float wheelBoxSize = 4.0f;
+            Render2D.DrawRectangle(new Rectangle(hsPos - (wheelBoxSize * 0.5f) + _wheelRect.Center, new Vector2(wheelBoxSize)), _isMouseDownWheel ? Color.Gray : Color.Black);
+        }
+
+        /// <inheritdoc />
+        public override void OnLostFocus()
+        {
+            // Clear flags
+            _isMouseDownWheel = false;
+
+            base.OnLostFocus();
+        }
+
+        /// <inheritdoc />
+        public override void OnMouseMove(Vector2 location)
+        {
+            UpdateMouse(ref location);
+
+            base.OnMouseMove(location);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        {
+            if (buttons == MouseButton.Left && _wheelRect.Contains(location))
+            {
+                _isMouseDownWheel = true;
+                ParentWindow.StartTrackingMouse(false);
+                UpdateMouse(ref location);
+            }
+
+            Focus();
+            return true;
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        {
+            if (buttons == MouseButton.Left && _isMouseDownWheel)
+            {
+                _isMouseDownWheel = false;
+                ParentWindow.EndTrackingMouse();
+                return true;
+            }
+
+            return base.OnMouseUp(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override bool HasMouseCapture => _isMouseDownWheel || base.HasMouseCapture;
+
+        /// <inheritdoc />
+        public override void OnLostMouseCapture()
+        {
+            // Clear flags
+            _isMouseDownWheel = false;
+
+            base.OnLostMouseCapture();
+        }
+
+        /// <inheritdoc />
+        protected override void SetSizeInternal(Vector2 size)
+        {
+            _wheelRect = new Rectangle(0, 0, size.Y, size.Y);
+            
+            base.SetSizeInternal(size);
+        }
+    }
+
+    /// <summary>
+    /// Color selecting control with additional sliders.
+    /// </summary>
+    /// <seealso cref="ColorSelector" />
+    public class ColorSelectorWithSliders : ColorSelector
+    {
+        private Rectangle _slider1Rect;
+        private Rectangle _slider2Rect;
+        private bool _isMouseDownSlider1;
+        private bool _isMouseDownSlider2;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ColorSelectorWithSliders"/> class.
+        /// </summary>
+        /// <param name="wheelSize">Size of the wheel.</param>
+        /// <param name="slidersThickness">The sliders thickness.</param>
+        public ColorSelectorWithSliders(float wheelSize, float slidersThickness)
+            : base(wheelSize)
+        {
+            // Setup dimensions
+            const float slidersMargin = 8.0f;
+            _slider1Rect = new Rectangle(wheelSize + slidersMargin, 0, slidersThickness, wheelSize);
+            _slider2Rect = new Rectangle(_slider1Rect.Right + slidersMargin, _slider1Rect.Y, slidersThickness, _slider1Rect.Height);
+            Size = new Vector2(_slider2Rect.Right, wheelSize);
+        }
+
+        /// <inheritdoc />
+        protected override void UpdateMouse(ref Vector2 location)
+        {
+            if (_isMouseDownSlider1)
+            {
+                var hsv = _color.ToHSV();
+                hsv.Z = 1.001f - Mathf.Saturate((location.Y - _slider1Rect.Y) / _slider1Rect.Height);
+
+                Color = Color.FromHSV(hsv);
+            }
+            else if (_isMouseDownSlider2)
+            {
+                var color = _color;
+                color.A = 1.0f - Mathf.Saturate((location.Y - _slider2Rect.Y) / _slider2Rect.Height);
+
+                Color = color;
+            }
+            else
+            {
+                base.UpdateMouse(ref location);
             }
         }
 
@@ -160,15 +278,6 @@ namespace FlaxEditor.GUI.Dialogs
             Color hsC = Color.FromHSV(hs);
             const float slidersOffset = 3.0f;
             const float slidersThickness = 4.0f;
-
-            // Wheel
-            float boxExpand = (2.0f * 4.0f / 128.0f) * _boxRect.Width;
-            Render2D.DrawSprite(_colorWheelSprite, _boxRect.MakeExpanded(boxExpand));
-            float hAngle = hsv.X * Mathf.DegreesToRadians;
-            float hRadius = hsv.Y * _boxRect.Width * 0.5f;
-            Vector2 hsPos = new Vector2(hRadius * Mathf.Cos(hAngle), -hRadius * Mathf.Sin(hAngle));
-            const float wheelBoxSize = 4.0f;
-            Render2D.DrawRectangle(new Rectangle(hsPos - (wheelBoxSize * 0.5f) + _boxRect.Center, new Vector2(wheelBoxSize)), _isMouseDownWheel ? Color.Gray : Color.Black);
 
             // Value
             float valueY = _slider2Rect.Height * (1 - hsv.Z);
@@ -189,7 +298,6 @@ namespace FlaxEditor.GUI.Dialogs
         public override void OnLostFocus()
         {
             // Clear flags
-            _isMouseDownWheel = false;
             _isMouseDownSlider1 = false;
             _isMouseDownSlider2 = false;
 
@@ -197,54 +305,45 @@ namespace FlaxEditor.GUI.Dialogs
         }
 
         /// <inheritdoc />
-        public override void OnMouseMove(Vector2 location)
-        {
-            UpdateMouse(ref location);
-
-            base.OnMouseMove(location);
-        }
-
-        /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
-            if (buttons == MouseButton.Left)
+            if (buttons == MouseButton.Left && _slider1Rect.Contains(location))
             {
-                _isMouseDownWheel = _boxRect.Contains(location);
-                _isMouseDownSlider1 = _slider1Rect.Contains(location);
-                _isMouseDownSlider2 = _slider2Rect.Contains(location);
-                if (_isMouseDownWheel || _isMouseDownSlider1 || _isMouseDownSlider2)
-                    ParentWindow.StartTrackingMouse(false);
-                
+                _isMouseDownSlider1 = true;
+                ParentWindow.StartTrackingMouse(false);
+                UpdateMouse(ref location);
+            }
+            if (buttons == MouseButton.Left && _slider2Rect.Contains(location))
+            {
+                _isMouseDownSlider2 = true;
+                ParentWindow.StartTrackingMouse(false);
                 UpdateMouse(ref location);
             }
 
-            Focus();
-            return true;
+            return base.OnMouseDown(location, buttons);
         }
 
         /// <inheritdoc />
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
-            if (buttons == MouseButton.Left)
+            if (buttons == MouseButton.Left && (_isMouseDownSlider1 || _isMouseDownSlider2))
             {
-                // Clear flags
-                _isMouseDownWheel = false;
                 _isMouseDownSlider1 = false;
                 _isMouseDownSlider2 = false;
                 ParentWindow.EndTrackingMouse();
+                return true;
             }
 
             return base.OnMouseUp(location, buttons);
         }
 
         /// <inheritdoc />
-        public override bool HasMouseCapture => _isMouseDownWheel || _isMouseDownSlider1 || _isMouseDownSlider2 || base.HasMouseCapture;
+        public override bool HasMouseCapture => _isMouseDownSlider1 || _isMouseDownSlider2 || base.HasMouseCapture;
 
         /// <inheritdoc />
         public override void OnLostMouseCapture()
         {
             // Clear flags
-            _isMouseDownWheel = false;
             _isMouseDownSlider1 = false;
             _isMouseDownSlider2 = false;
 

@@ -22,7 +22,7 @@ namespace FlaxEditor.GUI.Dialogs
         private bool _disableEvents;
         private Action<Color> _onChangedOk;
 
-        private ColorSelector _cSelector;
+        private ColorSelectorWithSliders _cSelector;
         private IntValueBox _cRed;
         private IntValueBox _cGreen;
         private IntValueBox _cBlue;
@@ -86,7 +86,7 @@ namespace FlaxEditor.GUI.Dialogs
             _onChangedOk = onChangedOk;
 
             // Selector
-            _cSelector = new ColorSelector(180, 18);
+            _cSelector = new ColorSelectorWithSliders(180, 18);
             _cSelector.SetLocation(PICKER_MARGIN, PICKER_MARGIN);
             _cSelector.ColorChanged += x => SelectedColor = x;
             _cSelector.Parent = this;
