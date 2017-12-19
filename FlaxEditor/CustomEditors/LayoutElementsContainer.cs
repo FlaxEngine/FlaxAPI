@@ -9,6 +9,7 @@ using FlaxEditor.CustomEditors.GUI;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor.CustomEditors
 {
@@ -148,6 +149,45 @@ namespace FlaxEditor.CustomEditors
         {
             SpaceElement element = new SpaceElement();
             element.Init(height);
+            OnAddElement(element);
+            return element;
+        }
+
+        /// <summary>
+        /// Adds sprite image to the layout.
+        /// </summary>
+        /// <param name="sprite">The sprite.</param>
+        /// <returns>The created element.</returns>
+        public ImageElement Image(Sprite sprite)
+        {
+            ImageElement element = new ImageElement();
+            element.Image.ImageSource = new SpriteImageSource(sprite);
+            OnAddElement(element);
+            return element;
+        }
+
+        /// <summary>
+        /// Adds texture image to the layout.
+        /// </summary>
+        /// <param name="texture">The texture.</param>
+        /// <returns>The created element.</returns>
+        public ImageElement Image(Texture texture)
+        {
+            ImageElement element = new ImageElement();
+            element.Image.ImageSource = new TextureImageSource(texture);
+            OnAddElement(element);
+            return element;
+        }
+
+        /// <summary>
+        /// Adds render target image to the layout.
+        /// </summary>
+        /// <param name="renderTarget">The render target.</param>
+        /// <returns>The created element.</returns>
+        public ImageElement Image(RenderTarget renderTarget)
+        {
+            ImageElement element = new ImageElement();
+            element.Image.ImageSource = new RenderTargetImageSource(renderTarget);
             OnAddElement(element);
             return element;
         }
