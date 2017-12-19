@@ -82,7 +82,7 @@ namespace FlaxEngine.GUI
         protected override void PerformLayoutSelf()
         {
             base.PerformLayoutSelf();
-            
+
             int slotsV = _slotsV;
             int slotsH = _slotsH;
             Vector2 slotSize;
@@ -108,9 +108,9 @@ namespace FlaxEngine.GUI
             }
 
             int i = 0;
-            for (int y = 0; y < slotsH; y++)
+            for (int y = 0; y < slotsV; y++)
             {
-                int end = Mathf.Min(slotsH, _children.Count - i);
+                int end = Mathf.Min(i + slotsH, _children.Count) - i;
                 if (end <= 0)
                     break;
 
