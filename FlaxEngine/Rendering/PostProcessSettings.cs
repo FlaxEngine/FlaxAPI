@@ -1089,11 +1089,17 @@ namespace FlaxEngine.Rendering
 
         #region Color Grading
 
+        /// <summary>
+        /// The track ball editor typename used for color grading knobs. Use custom editor alias because FlaxEditor assembly is not referenced by the FlaxEngine.
+        /// </summary>
+        private const string TrackBallEditorTypename = "FlaxEditor.CustomEditors.Editors.ColorTrackball";
+        
         #region Global
 
         /// <summary>
         /// Gets or sets the color saturation (applies globally to the whole image). Default is 1.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(900), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Saturation"), Tooltip("Color saturation (applies globally to the whole image). Default is 1.")]
         public Vector4 ColorGrading_ColorSaturation
         {
@@ -1108,6 +1114,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color contrast (applies globally to the whole image). Default is 1.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(901), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Contrast"), Tooltip("Color contrast (applies globally to the whole image). Default is 1.")]
         public Vector4 ColorGrading_ColorContrast
         {
@@ -1122,6 +1129,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color gamma (applies globally to the whole image). Default is 1.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(902), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Gamma"), Tooltip("Color gamma (applies globally to the whole image). Default is 1.")]
         public Vector4 ColorGrading_ColorGamma
         {
@@ -1136,6 +1144,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color gain (applies globally to the whole image). Default is 1.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(903), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Gain"), Tooltip("Color gain (applies globally to the whole image). Default is 1.")]
         public Vector4 ColorGrading_ColorGain
         {
@@ -1150,6 +1159,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color offset (applies globally to the whole image). Default is 0.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(904), Limit(-1, 1, 0.001f), EditorDisplay("Color Grading", "Offset"), Tooltip("Color offset (applies globally to the whole image). Default is 0.")]
         public Vector4 ColorGrading_ColorOffset
         {
@@ -1168,6 +1178,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color saturation (applies to shadows only). Default is 1.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(905), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Shadows Saturation"), Tooltip("Color saturation (applies to shadows only). Default is 1.")]
         public Vector4 ColorGrading_ColorSaturationShadows
         {
@@ -1182,6 +1193,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color contrast (applies to shadows only). Default is 1.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(906), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Shadows Contrast"), Tooltip("Color contrast (applies to shadows only). Default is 1.")]
         public Vector4 ColorGrading_ColorContrastShadows
         {
@@ -1196,6 +1208,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color gamma (applies to shadows only). Default is 1.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(907), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Shadows Gamma"), Tooltip("Color gamma (applies to shadows only). Default is 1.")]
         public Vector4 ColorGrading_ColorGammaShadows
         {
@@ -1210,6 +1223,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color gain (applies to shadows only). Default is 1.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(908), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Shadows Gain"), Tooltip("Color gain (applies to shadows only). Default is 1.")]
         public Vector4 ColorGrading_ColorGainShadows
         {
@@ -1224,6 +1238,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color offset (applies to shadows only). Default is 0.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(909), Limit(-1, 1, 0.001f), EditorDisplay("Color Grading", "Shadows Offset"), Tooltip("Color offset (applies to shadows only). Default is 0.")]
         public Vector4 ColorGrading_ColorOffsetShadows
         {
@@ -1242,6 +1257,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color saturation (applies to midtones only). Default is 1.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(910), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Midtones Saturation"), Tooltip("Color saturation (applies to midtones only). Default is 1.")]
         public Vector4 ColorGrading_ColorSaturationMidtones
         {
@@ -1256,6 +1272,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color contrast (applies to midtones only). Default is 1.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(911), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Midtones Contrast"), Tooltip("Color contrast (applies to midtones only). Default is 1.")]
         public Vector4 ColorGrading_ColorContrastMidtones
         {
@@ -1270,6 +1287,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color gamma (applies to midtones only). Default is 1.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(912), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Midtones Gamma"), Tooltip("Color gamma (applies to midtones only). Default is 1.")]
         public Vector4 ColorGrading_ColorGammaMidtones
         {
@@ -1284,6 +1302,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color gain (applies to midtones only). Default is 1.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(913), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Midtones Gain"), Tooltip("Color gain (applies to midtones only). Default is 1.")]
         public Vector4 ColorGrading_ColorGainMidtones
         {
@@ -1298,6 +1317,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color offset (applies to midtones only). Default is 0.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(914), Limit(-1, 1, 0.001f), EditorDisplay("Color Grading", "Midtones Offset"), Tooltip("Color offset (applies to midtones only). Default is 0.")]
         public Vector4 ColorGrading_ColorOffsetMidtones
         {
@@ -1316,6 +1336,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color saturation (applies to highlights only). Default is 1.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(915), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Highlights Saturation"), Tooltip("Color saturation (applies to highlights only). Default is 1.")]
         public Vector4 ColorGrading_ColorSaturationHighlights
         {
@@ -1330,6 +1351,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color contrast (applies to highlights only). Default is 1.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(916), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Highlights Contrast"), Tooltip("Color contrast (applies to highlights only). Default is 1.")]
         public Vector4 ColorGrading_ColorContrastHighlights
         {
@@ -1344,6 +1366,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color gamma (applies to highlights only). Default is 1.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(917), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Highlights Gamma"), Tooltip("Color gamma (applies to highlights only). Default is 1.")]
         public Vector4 ColorGrading_ColorGammaHighlights
         {
@@ -1358,6 +1381,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color gain (applies to highlights only). Default is 1.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(918), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Highlights Gain"), Tooltip("Color gain (applies to highlights only). Default is 1.")]
         public Vector4 ColorGrading_ColorGainHighlights
         {
@@ -1372,6 +1396,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color offset (applies to highlights only). Default is 0.
         /// </summary>
+        [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(919), Limit(-1, 1, 0.001f), EditorDisplay("Color Grading", "Highlights Offset"), Tooltip("Color offset (applies to highlights only). Default is 0.")]
         public Vector4 ColorGrading_ColorOffsetHighlights
         {
