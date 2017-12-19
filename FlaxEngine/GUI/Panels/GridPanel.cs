@@ -30,7 +30,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// The cells widths in container width percentage (from left to right).
+        /// The cells widths in container width percentage (from top to bottom). Use negative values to set fixed widths for the cells.
         /// </summary>
         public float[] RowFill
         {
@@ -45,7 +45,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// The cells heights in container width percentage (from left to right).
+        /// The cells heights in container width percentage (from left to right). Use negative values to set fixed heights for the cells.
         /// </summary>
         public float[] ColumnFill
         {
@@ -85,16 +85,29 @@ namespace FlaxEngine.GUI
 
             int i = 0;
             Vector2 upperLeft = Vector2.Zero;
+            float reamingHeight = Height;
             for (int rowIndex = 0; rowIndex < _cellsV.Length; rowIndex++)
             {
                 upperLeft.X = 0;
-                float cellHeight = _cellsV[rowIndex] * Height;
+                float cellHeight = _cellsV[rowIndex] * reamingHeight;
+                if (_cellsV[rowIndex] < 0)
+                {
+                    cellHeight = -_cellsV[rowIndex];
+                    reamingHeight -= cellHeight;
+                }
+
+                float reamingWidth = Width;
                 for (int columnIndex = 0; columnIndex < _cellsH.Length; columnIndex++)
                 {
                     if (i >= ChildrenCount)
                         break;
 
-                    float cellWidth = _cellsH[columnIndex] * Width;
+                    float cellWidth = _cellsH[columnIndex] * reamingWidth;
+                    if (_cellsH[columnIndex] < 0)
+                    {
+                        cellWidth = -_cellsH[columnIndex];
+                        reamingWidth -= cellWidth;
+                    }
 
                     var slotBounds = new Rectangle(upperLeft, cellWidth, cellHeight);
                     _slotPadding.ShrinkRectangle(ref slotBounds);
