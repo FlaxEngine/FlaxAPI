@@ -52,6 +52,8 @@ namespace FlaxEditor.Content
                 _preview = new CubeTexturePreview(false);
                 _preview.RenderOnlyWithWindow = false;
                 _preview.Task.Enabled = false;
+                _preview.PostFxVolume.Settings.Eye_Technique = EyeAdaptationTechnique.None;
+                _preview.PostFxVolume.Settings.Eye_Exposure = 0.1f;
                 _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
                 _preview.SyncBackbufferSize();
             }

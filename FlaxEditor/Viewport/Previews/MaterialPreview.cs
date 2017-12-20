@@ -43,6 +43,11 @@ namespace FlaxEditor.Viewport.Previews
         }
 
         /// <summary>
+        /// Gets the post fx volume. Allows to modify rendering settings.
+        /// </summary>
+        public PostFxVolume PostFxVolume => _postFxVolume;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MaterialPreview"/> class.
         /// </summary>
         /// <param name="useWidgets">if set to <c>true</c> use widgets.</param>

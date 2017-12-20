@@ -20,6 +20,7 @@ namespace FlaxEditor.Viewport.Previews
         private EnvironmentProbe _envProbe;
         private Sky _sky;
         private SkyLight _skyLight;
+        private PostFxVolume _postFxVolume;
 
         /// <summary>
         /// Gets or sets the model asset to preview.
@@ -37,6 +38,11 @@ namespace FlaxEditor.Viewport.Previews
         /// Gets the model actor used to preview selected asset.
         /// </summary>
         public ModelActor PreviewModelActor => _previewModel;
+
+        /// <summary>
+        /// Gets the post fx volume. Allows to modify rendering settings.
+        /// </summary>
+        public PostFxVolume PostFxVolume => _postFxVolume;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ModelPreview"/> class.
@@ -70,6 +76,10 @@ namespace FlaxEditor.Viewport.Previews
             _skyLight.Mode = SkyLight.Modes.CustomTexture;
             _skyLight.Brightness = 1.1f;
             _skyLight.CustomTexture = _envProbe.CustomProbe;
+            //
+            _postFxVolume = PostFxVolume.New();
+            _postFxVolume.IsBounded = true;
+            _postFxVolume.Settings.Eye_MinLuminance = 0.1f;
 
             // Link actors for rendering
             Task.ActorsSource = ActorsSources.CustomActors;
@@ -78,6 +88,7 @@ namespace FlaxEditor.Viewport.Previews
             Task.CustomActors.Add(_envProbe);
             Task.CustomActors.Add(_sky);
             Task.CustomActors.Add(_skyLight);
+            Task.CustomActors.Add(_postFxVolume);
 
             // Update actors
             for (int i = 0; i < Task.CustomActors.Count; i++)
@@ -97,7 +108,7 @@ namespace FlaxEditor.Viewport.Previews
         }
 
         /// <inheritdoc />
-        public override bool HasLoadedAssets => base.HasLoadedAssets && _envProbe.Probe.IsLoaded && _sky.HasContentLoaded;
+        public override bool HasLoadedAssets => base.HasLoadedAssets && _envProbe.Probe.IsLoaded && _sky.HasContentLoaded && _postFxVolume.HasContentLoaded;
 
         /// <inheritdoc />
         public override void OnDestroy()
@@ -108,6 +119,7 @@ namespace FlaxEditor.Viewport.Previews
             Object.Destroy(ref _envProbe);
             Object.Destroy(ref _sky);
             Object.Destroy(ref _skyLight);
+            Object.Destroy(ref _postFxVolume);
 
             base.OnDestroy();
         }
