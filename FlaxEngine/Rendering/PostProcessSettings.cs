@@ -163,7 +163,8 @@ namespace FlaxEngine.Rendering
             public float Cam_VignetteShapeFactor;
             public float Cam_GrainAmount;
             public float Cam_GrainParticleSize;
-            public Vector3 Cam_ChromaticDistortion;
+            public float Cam_GrainSpeed;
+            public float Cam_ChromaticDistortion;
 
             // Lens Flares
 
@@ -682,10 +683,24 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Gets or sets the chromatic aberration distortion (per channel).
+        /// Gets or sets the grain noise particles size.
         /// </summary>
-        [NoSerialize, EditorOrder(505), EditorDisplay("Camera Artifacts", "Chromatic Distortion"), Limit(-30.0f, 30.0f, 0.1f)]
-        public Vector3 Cam_ChromaticDistortion
+        [NoSerialize, EditorOrder(505), EditorDisplay("Camera Artifacts", "Grain Speed"), Limit(0.0f, 10.0f, 0.01f), Tooltip("Specifies grain particles animation speed")]
+        public float Cam_GrainSpeed
+        {
+            get => data.Cam_GrainSpeed;
+            set
+            {
+                data.Cam_GrainSpeed = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the chromatic aberration distortion intensity.
+        /// </summary>
+        [NoSerialize, EditorOrder(506), EditorDisplay("Camera Artifacts", "Chromatic Distortion"), Limit(0.0f, 1.0f, 0.01f)]
+        public float Cam_ChromaticDistortion
         {
             get => data.Cam_ChromaticDistortion;
             set
