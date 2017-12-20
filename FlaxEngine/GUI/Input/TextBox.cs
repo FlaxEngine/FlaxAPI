@@ -334,8 +334,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void ClearSelection()
         {
-            if (_isSelecting)
-                OnSelectingEnd();
+            OnSelectingEnd();
             setSelection(-1);
         }
 
@@ -667,11 +666,14 @@ namespace FlaxEngine.GUI
         /// </summary>
         protected virtual void OnSelectingBegin()
         {
-            // Set flag
-            _isSelecting = true;
+            if (!_isSelecting)
+            {
+                // Set flag
+                _isSelecting = true;
 
-            // Start tracking mouse
-            StartMouseCapture(false);
+                // Start tracking mouse
+                StartMouseCapture(false);
+            }
         }
 
         /// <summary>
@@ -679,11 +681,14 @@ namespace FlaxEngine.GUI
         /// </summary>
         protected virtual void OnSelectingEnd()
         {
-            // Clear flag
-            _isSelecting = false;
+            if (_isSelecting)
+            {
+                // Clear flag
+                _isSelecting = false;
 
-            // Stop tracking mouse
-            EndMouseCapture();
+                // Stop tracking mouse
+                EndMouseCapture();
+            }
         }
 
         #endregion
@@ -861,7 +866,8 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void OnEndMouseCapture()
         {
-            OnEditEnd();
+            // Clear flag
+            _isSelecting = false;
         }
 
         /// <inheritdoc />
@@ -904,9 +910,14 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
-            if (_isSelecting)
+            if (buttons == MouseButton.Left)
+            {
                 OnSelectingEnd();
-            return base.OnMouseUp(location, buttons);
+            }
+
+            // Base
+            base.OnMouseUp(location, buttons);
+            return true;
         }
 
         private void ActionOnSizeChanged(Control control)
