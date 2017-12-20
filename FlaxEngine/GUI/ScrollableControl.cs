@@ -75,17 +75,5 @@ namespace FlaxEngine.GUI
         {
             return base.PointFromParent(location) - _viewOffset;
         }
-
-        /// <inheritdoc />
-        public override Vector2 PointToWindow(Vector2 location)
-        {
-            return base.PointToWindow(location) - _viewOffset;
-        }
-
-        /// <inheritdoc />
-        public override Vector2 PointFromWindow(Vector2 location)
-        {
-            return base.PointFromWindow(location) + _viewOffset;
-        }
     }
 }

@@ -34,6 +34,7 @@ namespace FlaxEngine.GUI
 
         // Scrolling
         private float _clickChange = 20, _scrollChange = 30;
+
         private float _minimum, _maximum = 100;
         private float _value, _targetValue;
         private readonly Orientation _orientation;
@@ -43,7 +44,8 @@ namespace FlaxEngine.GUI
 
         // Thumb data
         private Rectangle _thumbRect;
-        private  bool _thumbClicked;
+
+        private bool _thumbClicked;
         private float _thumbCenter, _thumbSize;
 
         // Smoothing
@@ -91,7 +93,7 @@ namespace FlaxEngine.GUI
                 if (value < _minimum)
                     throw new ArgumentOutOfRangeException();
                 _maximum = value;
-                if(Value > _maximum)
+                if (Value > _maximum)
                     Value = _maximum;
             }
         }
@@ -122,7 +124,7 @@ namespace FlaxEngine.GUI
         /// Gets or sets the target value (target, not smooth).
         /// </summary>
         public float TargetValue => _targetValue;
-        
+
         /// <summary>
         /// Gets the value slow down.
         /// </summary>
@@ -148,7 +150,7 @@ namespace FlaxEngine.GUI
 
             _orientation = orientation;
         }
-        
+
         /// <summary>
         /// Scrolls the view to the desire range (favors minimum value if cannot cover whole range in a bounds).
         /// </summary>
@@ -247,7 +249,7 @@ namespace FlaxEngine.GUI
 
             base.Update(deltaTime);
         }
-        
+
         /// <inheritdoc />
         public override void Draw()
         {
@@ -278,7 +280,7 @@ namespace FlaxEngine.GUI
             {
                 Vector2 slidePosition = location + ParentWindow.TrackingMouseOffset;
                 float mousePosition = _orientation == Orientation.Vertical ? slidePosition.Y : slidePosition.X;
-                
+
                 float perc = (mousePosition - _mouseOffset - _thumbSize / 2) / (TrackSize - _thumbSize);
                 Value = perc * _maximum;
             }
@@ -341,6 +343,14 @@ namespace FlaxEngine.GUI
         {
             base.SetSizeInternal(size);
             updateThumb();
+        }
+
+        /// <inheritdoc />
+        public override Vector2 PointFromWindow(Vector2 location)
+        {
+            if (Parent is Panel panel)
+                location += panel.ViewOffset;
+            return base.PointFromWindow(location);
         }
     }
 }
