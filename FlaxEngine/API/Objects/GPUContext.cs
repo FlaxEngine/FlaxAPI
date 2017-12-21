@@ -32,6 +32,24 @@ namespace FlaxEngine.Rendering
     public partial class GPUContext
     {
         /// <summary>
+        /// Draws sprite atlas texture to render target. Copies contents with resizing and format conversion support. Uses linear texture sampling.
+        /// </summary>
+        /// <param name="dst">Target surface.</param>
+        /// <param name="src">Source sprite atlas.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void Draw(RenderTarget dst, SpriteAtlas src)
+        {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_Draw2(unmanagedPtr, Object.GetUnmanagedPtr(dst), Object.GetUnmanagedPtr(src));
+#endif
+        }
+
+        /// <summary>
         /// Draws scene.
         /// </summary>
         /// <param name="task">Calling render task.</param>

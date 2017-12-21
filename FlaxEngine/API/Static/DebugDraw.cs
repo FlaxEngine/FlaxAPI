@@ -55,7 +55,7 @@ namespace FlaxEngine
                 }
             }
 
-            Internal_Draw(Object.GetUnmanagedPtr(task), actors);
+            Internal_Draw1(Object.GetUnmanagedPtr(task), actors);
 #endif
         }
     }

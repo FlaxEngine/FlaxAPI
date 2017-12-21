@@ -63,6 +63,42 @@ namespace FlaxEngine.Rendering
 		}
 
 		/// <summary>
+		/// Draws render target to other render target. Copies contents with resizing and format conversion support. Uses linear texture sampling.
+		/// </summary>
+		/// <param name="dst">Target surface.</param>
+		/// <param name="src">Source surface.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void Draw(RenderTarget dst, RenderTarget src) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_Draw1(unmanagedPtr, Object.GetUnmanagedPtr(dst), Object.GetUnmanagedPtr(src));
+#endif
+		}
+
+		/// <summary>
+		/// Draws texture to render target. Copies contents with resizing and format conversion support. Uses linear texture sampling.
+		/// </summary>
+		/// <param name="dst">Target surface.</param>
+		/// <param name="src">Source texture.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void Draw(RenderTarget dst, Texture src) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_Draw2(unmanagedPtr, Object.GetUnmanagedPtr(dst), Object.GetUnmanagedPtr(src));
+#endif
+		}
+
+		/// <summary>
 		/// Draws postFx material to the render target.
 		/// </summary>
 		/// <param name="material">The material to render. It must be a post fx material.</param>
@@ -108,6 +144,10 @@ namespace FlaxEngine.Rendering
 		internal static extern void Internal_Clear(IntPtr obj, IntPtr rt, ref Color color);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_ClearDepth(IntPtr obj, IntPtr depthBuffer, float depthValue);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_Draw1(IntPtr obj, IntPtr dst, IntPtr src);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_Draw2(IntPtr obj, IntPtr dst, IntPtr src);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_DrawPostFxMaterial1(IntPtr obj, IntPtr material, IntPtr output, IntPtr input);
 		[MethodImpl(MethodImplOptions.InternalCall)]
