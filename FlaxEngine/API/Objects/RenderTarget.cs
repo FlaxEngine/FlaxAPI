@@ -20,19 +20,20 @@ namespace FlaxEngine.Rendering
             public bool IsFree;
             public float LastUsage;
 
-            public Temporary(PixelFormat format, int width, int height, TextureFlags flags)
+            public Temporary(PixelFormat format, int width, int height, TextureFlags flags, MSAALevel msaa)
             {
                 Texture = New();
-                Texture.Init(format, width, height, flags);
+                Texture.Init(format, width, height, flags, 1, msaa);
             }
 
-            public bool TryReuse(PixelFormat format, int width, int height, TextureFlags flags)
+            public bool TryReuse(PixelFormat format, int width, int height, TextureFlags flags, MSAALevel msaa)
             {
                 return IsFree
                        && Texture.Format == format
                        && Texture.Width == width
                        && Texture.Height == height
-                       && Texture.Flags == flags;
+                       && Texture.Flags == flags
+                       && Texture.MultiSampleLevel == msaa;
             }
 
             public RenderTarget OnUse()
@@ -58,20 +59,21 @@ namespace FlaxEngine.Rendering
         /// <param name="width">The width in pixels.</param>
         /// <param name="height">The height in pixels.</param>
         /// <param name="flags">The texture usage flags.</param>
+        /// <param name="msaa">The texture multisampling level.</param>
         /// <returns>Created texture.</returns>
-        public static RenderTarget GetTemporary(PixelFormat format, int width, int height, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget)
+        public static RenderTarget GetTemporary(PixelFormat format, int width, int height, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget, MSAALevel msaa = MSAALevel.None)
         {
             // Try reuse
             for (int i = 0; i < _tmpRenderTargets.Count; i++)
             {
-                if (_tmpRenderTargets[i].TryReuse(format, width, height, flags))
+                if (_tmpRenderTargets[i].TryReuse(format, width, height, flags, msaa))
                 {
                     return _tmpRenderTargets[i].OnUse();
                 }
             }
 
             // Allocate new
-            var target = new Temporary(format, width, height, flags);
+            var target = new Temporary(format, width, height, flags, msaa);
             _tmpRenderTargets.Add(target);
             return target.OnUse();
         }
