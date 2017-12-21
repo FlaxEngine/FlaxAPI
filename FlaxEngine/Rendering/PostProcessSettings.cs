@@ -62,6 +62,22 @@ namespace FlaxEngine.Rendering
     }
 
     /// <summary>
+    /// The effect pass resolution.
+    /// </summary>
+    public enum ResolutionMode : int
+    {
+        /// <summary>
+        /// Full resolution
+        /// </summary>
+        Full = 1,
+
+        /// <summary>
+        /// Half resolution
+        /// </summary>
+        Half = 2,
+    }
+
+    /// <summary>
     /// Contains settings for rendering advanced visual effects and post effects.
     /// </summary>
     [Serializable]
@@ -100,8 +116,19 @@ namespace FlaxEngine.Rendering
 
             // Screen Space Reflections
 
-            public bool SSR_Enabled;
-            public float SSR_MaxRoughness;
+            public float SSR_Intensity;
+            public ResolutionMode SSR_DepthResolution;
+            public ResolutionMode SSR_RayTracePassResolution;
+            public float SSR_BRDFBias;
+            public float SSR_RoughnessThreshold;
+            public float SSR_WorldAntiSelfOcclusionBias;
+            public ResolutionMode SSR_ResolvePassResolution;
+            public int SSR_ResolveSamples;
+            public bool SSR_UseColorBufferMips;
+            public float SSR_EdgeFadeFactor;
+            public bool SSR_TemporalEffect;
+            public float SSR_TemporalScale;
+            public float SSR_TemporalResponse;
 
             // Bloom
 
@@ -1073,29 +1100,196 @@ namespace FlaxEngine.Rendering
         #region Screen Space Reflections
 
         /// <summary>
-        /// Enables or disables rendering of Screen Space Reflections.
+        /// Gets or sets the effect intensity (normalized to range [0;1]). Use 0 to disable it.
         /// </summary>
-        [NoSerialize, EditorOrder(800), EditorDisplay("Screen Space Reflections", "Enabled"), Tooltip("Enables or disables rendering Screen Space Reflections effect on camera")]
-        public bool SSR_Enabled
+        [Limit(0, 1.0f, 0.01f)]
+        [NoSerialize, EditorOrder(800), EditorDisplay("Screen Space Reflections", "Intensity"), Tooltip("Effect intensity (normalized to range [0;1]). Use 0 to disable it.")]
+        public float SSR_Intensity
         {
-            get => data.SSR_Enabled;
+            get => data.SSR_Intensity;
             set
             {
-                data.SSR_Enabled = value;
+                data.SSR_Intensity = value;
                 isDataDirty = true;
             }
         }
 
         /// <summary>
-        /// Gets or sets the maximum surface roughness to calculate screen space reflections for it.
+        /// Gets or sets the input depth resolution mode.
         /// </summary>
-        [NoSerialize, EditorOrder(801), EditorDisplay("Screen Space Reflections", "Max Roughness"), Tooltip("Maximum surface roughness values that can accept Screen Space Reflections"), Limit(0, 1.0f, 0.0001f)]
-        public float SSR_MaxRoughness
+        [NoSerialize, EditorOrder(801), EditorDisplay("Screen Space Reflections", "Depth Resolution"), Tooltip("Downscales the depth buffer to optimize raycast performance. Full gives better quality, but half improves performance. The default value is half.")]
+        public ResolutionMode SSR_DepthResolution
         {
-            get => data.SSR_MaxRoughness;
+            get => data.SSR_DepthResolution;
             set
             {
-                data.SSR_MaxRoughness = value;
+                data.SSR_DepthResolution = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the ray trace pass resolution mode.
+        /// </summary>
+        [NoSerialize, EditorOrder(802), EditorDisplay("Screen Space Reflections", "Ray Trace Resolution"), Tooltip("The raycast resolution. Full gives better quality, but half improves performance. The default value is half.")]
+        public ResolutionMode SSR_RayTracePassResolution
+        {
+            get => data.SSR_RayTracePassResolution;
+            set
+            {
+                data.SSR_RayTracePassResolution = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the BRDF bias. This value controlls source roughness effect on reflections blur.
+        /// Smaller values produce wider reflections spread but also introduce more noise.
+        /// Higher values provide more mirror-like reflections. Default value is 0.8.
+        /// </summary>
+        [Limit(0, 1.0f, 0.01f)]
+        [NoSerialize, EditorOrder(803), EditorDisplay("Screen Space Reflections", "BRDF Bias"), Tooltip("The reflection spread. Higher values provide finer, more mirror-like reflections. This setting has no effect on performance. The default value is 0.82")]
+        public float SSR_BRDFBias
+        {
+            get => data.SSR_BRDFBias;
+            set
+            {
+                data.SSR_BRDFBias = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Minimum allowed surface roughness value to use local reflections.
+        /// Pixels with higher values won't be affected by the effect.
+        /// </summary>
+        [Limit(0, 1.0f, 0.01f)]
+        [NoSerialize, EditorOrder(804), EditorDisplay("Screen Space Reflections", "Roughness Threshold"), Tooltip("The maximum amount of roughness a material must have to reflect the scene. For example, if this value is set to 0.4, only materials with a roughness value of 0.4 or below reflect the scene. The default value is 0.45.")]
+        public float SSR_RoughnessThreshold
+        {
+            get => data.SSR_RoughnessThreshold;
+            set
+            {
+                data.SSR_RoughnessThreshold = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Ray tracing starting position is offseted by a percent of the normal in world space to avoid self occlusions.
+        /// </summary>
+        [Limit(0, 10.0f, 0.01f)]
+        [NoSerialize, EditorOrder(805), EditorDisplay("Screen Space Reflections", "World Anti Self Occlusion Bias"), Tooltip("The offset of the raycast origin. Lower values produce more correct reflection placement, but produce more artefacts. We recommend values of 0.3 or lower. The default value is 0.1.")]
+        public float SSR_WorldAntiSelfOcclusionBias
+        {
+            get => data.SSR_WorldAntiSelfOcclusionBias;
+            set
+            {
+                data.SSR_WorldAntiSelfOcclusionBias = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the resolve pass resolution mode.
+        /// </summary>
+        [NoSerialize, EditorOrder(806), EditorDisplay("Screen Space Reflections", "Resolve Resolution"), Tooltip("The raycast resolution. Full gives better quality, but half improves performance. The default value is half.")]
+        public ResolutionMode SSR_ResolvePassResolution
+        {
+            get => data.SSR_ResolvePassResolution;
+            set
+            {
+                data.SSR_ResolvePassResolution = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the resolve pass samples amount. Higher values provide better quality but reduce effect performance.
+        /// Default value is 4. Use 1 for the highest speed.
+        /// </summary>
+        [Limit(1, 8)]
+        [NoSerialize, EditorOrder(807), EditorDisplay("Screen Space Reflections", "Resolve Samples"), Tooltip("The number of rays used to resolve the reflection color. Higher values produce less noise, but worse performance. The default value is 4.")]
+        public int SSR_ResolveSamples
+        {
+            get => data.SSR_ResolveSamples;
+            set
+            {
+                data.SSR_ResolveSamples = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the edge fade factor. It's used to fade off effect on screen edges to provide smoother image.
+        /// </summary>
+        [Limit(0, 1.0f, 0.02f)]
+        [NoSerialize, EditorOrder(808), EditorDisplay("Screen Space Reflections", "Edge Fade Factor"), Tooltip("The point at which the far edges of the reflection begin to fade. Has no effect on performance. The default value is 0.1.")]
+        public float SSR_EdgeFadeFactor
+        {
+            get => data.SSR_EdgeFadeFactor;
+            set
+            {
+                data.SSR_EdgeFadeFactor = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether use color buffer mipsmaps chain; otherwise will use raw input color buffer to sample reflections color.
+        /// Using mipmaps improves resolve pass performance and reduces GPU cache misses.
+        /// </summary>
+        [NoSerialize, EditorOrder(809), EditorDisplay("Screen Space Reflections", "Use Color Buffer Mips"), Tooltip("Downscales the input color buffer and uses blurred mipmaps when resolving the reflection color. Produces more realistic results by blurring distant parts of reflections in rough (low-gloss) materials. It also improves performance on most platforms but uses more memory.")]
+        public bool SSR_UseColorBufferMips
+        {
+            get => data.SSR_UseColorBufferMips;
+            set
+            {
+                data.SSR_UseColorBufferMips = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether use temporal effect to smooth reflections.
+        /// </summary>
+        [NoSerialize, EditorOrder(810), EditorDisplay("Screen Space Reflections", "Enable Temporal Effect"), Tooltip("Enables the temporal pass. Reduces noise, but produces an animated \"jittering\" effect that's sometimes noticeable. If disabled, the properties below have no effect.")]
+        public bool SSR_TemporalEffect
+        {
+            get => data.SSR_TemporalEffect;
+            set
+            {
+                data.SSR_TemporalEffect = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the temporal effect scale. Default is 4.
+        /// </summary>
+        [Limit(0, 20.0f, 0.5f)]
+        [NoSerialize, EditorOrder(811), EditorDisplay("Screen Space Reflections", "Temporal Scale"), Tooltip("The intensity of the temporal effect. Lower values produce reflections faster, but more noise. The default value is 4.")]
+        public float SSR_TemporalScale
+        {
+            get => data.SSR_TemporalScale;
+            set
+            {
+                data.SSR_TemporalScale = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the temporal response. Default is 0.8.
+        /// </summary>
+        [Limit(0.05f, 1.0f, 0.01f)]
+        [NoSerialize, EditorOrder(812), EditorDisplay("Screen Space Reflections", "Temporal Response"), Tooltip("How quickly reflections blend between the reflection in the current frame and the history buffer. Lower values produce reflections faster, but with more jittering. If the camera in your game doesn't move much, we recommend values closer to 1. The default value is 0.8.")]
+        public float SSR_TemporalResponse
+        {
+            get => data.SSR_TemporalResponse;
+            set
+            {
+                data.SSR_TemporalResponse = value;
                 isDataDirty = true;
             }
         }
@@ -1108,7 +1302,7 @@ namespace FlaxEngine.Rendering
         /// The track ball editor typename used for color grading knobs. Use custom editor alias because FlaxEditor assembly is not referenced by the FlaxEngine.
         /// </summary>
         private const string TrackBallEditorTypename = "FlaxEditor.CustomEditors.Editors.ColorTrackball";
-        
+
         #region Global
 
         /// <summary>
@@ -1473,6 +1667,7 @@ namespace FlaxEngine.Rendering
                         result[i] = Content.LoadAsync<MaterialBase>(postFxMaterials[i]);
                     }
                 }
+
                 return result;
             }
             set
@@ -1490,6 +1685,7 @@ namespace FlaxEngine.Rendering
                         {
                             posFxMaterialsChanged = true;
                         }
+
                         postFxMaterials[i] = id;
                     }
 
@@ -1499,6 +1695,7 @@ namespace FlaxEngine.Rendering
                         {
                             posFxMaterialsChanged = true;
                         }
+
                         postFxMaterials[i] = Guid.Empty;
                     }
 
