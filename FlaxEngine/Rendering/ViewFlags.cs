@@ -140,22 +140,6 @@ namespace FlaxEngine.Rendering
                         | AntiAliasing | CustomPostProcess | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares | EditorSprites,
 
         /// <summary>
-        /// Default flags for Assets Previews generating
-        /// </summary>
-        DefaultPreview = DynamicActors | Reflections
-                         | GI | DirectionalLights | PointLights | SpotLights | SkyLights | Shadows | SpecularLight
-                         | Bloom | ToneMapping | CameraArtifacts | LensFlares,
-
-        /// <summary>
-        /// Default flags for Preview Windows in Editor
-        /// </summary>
-        DefaultEditorPreview =
-            DynamicActors | Reflections
-            | DirectionalLights | PointLights | SpotLights | SkyLights | Shadows | SpecularLight
-            | Bloom | CameraArtifacts | LensFlares
-            | EditorSprites,
-
-        /// <summary>
         /// Default flags for Material Previews generating
         /// </summary>
         DefaultMaterialPreview = DynamicActors | Reflections
@@ -168,15 +152,5 @@ namespace FlaxEngine.Rendering
         DefaultModelPreview = DynamicActors | Reflections
                               | GI | DirectionalLights | PointLights | SpotLights | SkyLights | SpecularLight
                               | AntiAliasing | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares,
-
-        /// <summary>
-        /// Default flags for Probes rendering
-        /// </summary>
-        DefaultProbe = CSG | AO | GI | DirectionalLights | PointLights | SpotLights | Shadows | SkyLights | AntiAliasing,
-
-        /// <summary>
-        /// Default flags for Bake GI rendering
-        /// </summary>
-        DefaultBakeGI = CSG | GI | DirectionalLights | PointLights | SpotLights | Shadows | SkyLights | AntiAliasing,
     }
 }
