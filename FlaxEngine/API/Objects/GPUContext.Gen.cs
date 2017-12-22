@@ -63,6 +63,27 @@ namespace FlaxEngine.Rendering
 		}
 
 		/// <summary>
+		/// Resolves the multisamples texture by performing a copy of the resource into a non-multisampled resource.
+		/// </summary>
+		/// <param name="sourceMultisampleTexture">The source multisample texture. Must be multisampled.</param>
+		/// <param name="destTexture">The destination texture. Must be single-sampled.</param>
+		/// <param name="sourceSubResource">The source sub-resource index.</param>
+		/// <param name="destSubResource">The destination sub-resource index.</param>
+		/// <param name="format">The format. Indicates how the multisampled resource will be resolved to a single-sampled resource.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void ResolveMultisample(RenderTarget sourceMultisampleTexture, RenderTarget destTexture, int sourceSubResource = 0, int destSubResource = 0, PixelFormat format = PixelFormat.Unknown) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_ResolveMultisample(unmanagedPtr, Object.GetUnmanagedPtr(sourceMultisampleTexture), Object.GetUnmanagedPtr(destTexture), sourceSubResource, destSubResource, format);
+#endif
+		}
+
+		/// <summary>
 		/// Draws render target to other render target. Copies contents with resizing and format conversion support. Uses linear texture sampling.
 		/// </summary>
 		/// <param name="dst">Target surface.</param>
@@ -144,6 +165,8 @@ namespace FlaxEngine.Rendering
 		internal static extern void Internal_Clear(IntPtr obj, IntPtr rt, ref Color color);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_ClearDepth(IntPtr obj, IntPtr depthBuffer, float depthValue);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_ResolveMultisample(IntPtr obj, IntPtr sourceMultisampleTexture, IntPtr destTexture, int sourceSubResource, int destSubResource, PixelFormat format);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_Draw1(IntPtr obj, IntPtr dst, IntPtr src);
 		[MethodImpl(MethodImplOptions.InternalCall)]
