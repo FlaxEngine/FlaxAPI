@@ -167,40 +167,24 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Draws the debug shapes to the render task ouput buffer.
-		/// </summary>
-		/// <param name="task">The calling rendering task.</param>
-		/// <param name="selectedActors">The selected actors.</param>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-		[UnmanagedCall]
-		public static void Draw(FlaxEngine.Rendering.RenderTask task, IntPtr[] selectedActors) 
-		{
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-			Internal_Draw1(Object.GetUnmanagedPtr(task), selectedActors);
-#endif
-		}
-
-		/// <summary>
 		/// Draws the debug shapes to the custom texture using given GPU command context.
 		/// </summary>
 		/// <param name="task">The calling rendering task.</param>
 		/// <param name="selectedActors">The selected actors.</param>
-		/// <param name="context">The GPU commands context.</param>
 		/// <param name="target">The rendering output surface.</param>
+		/// <param name="context">The GPU commands context.</param>
+		/// <param name="depthBuffer">The custom depth texture used for depth test. Can be MSAA. Must match target surface size.</param>
+		/// <param name="enableDepthTest">True if perform manual depth test with scene depth buffer when rendering the primitives. Uses custom shader and the scene depth buffer.</param>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static void Draw(FlaxEngine.Rendering.RenderTask task, IntPtr[] selectedActors, FlaxEngine.Rendering.GPUContext context, FlaxEngine.Rendering.RenderTarget target) 
+		public static void Draw(FlaxEngine.Rendering.RenderTask task, IntPtr[] selectedActors, FlaxEngine.Rendering.RenderTarget target = null, FlaxEngine.Rendering.GPUContext context = null, FlaxEngine.Rendering.RenderTarget depthBuffer = null, bool enableDepthTest = false) 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_Draw2(Object.GetUnmanagedPtr(task), selectedActors, Object.GetUnmanagedPtr(context), Object.GetUnmanagedPtr(target));
+			Internal_Draw(Object.GetUnmanagedPtr(task), selectedActors, Object.GetUnmanagedPtr(target), Object.GetUnmanagedPtr(context), Object.GetUnmanagedPtr(depthBuffer), enableDepthTest);
 #endif
 		}
 
@@ -221,9 +205,7 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_DrawTube(ref Vector3 position, ref Quaternion orientation, float radius, float length, ref Color color, float duration, bool depthTest);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_Draw1(IntPtr task, IntPtr[] selectedActors);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_Draw2(IntPtr task, IntPtr[] selectedActors, IntPtr context, IntPtr target);
+		internal static extern void Internal_Draw(IntPtr task, IntPtr[] selectedActors, IntPtr target, IntPtr context, IntPtr depthBuffer, bool enableDepthTest);
 #endif
 #endregion
 	}

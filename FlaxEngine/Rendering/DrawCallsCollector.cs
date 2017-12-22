@@ -17,6 +17,14 @@ namespace FlaxEngine.Rendering
         internal RenderTask.DrawCall[] DrawCalls => _drawCalls.Count > 0 ? _drawCalls.ToArray() : null;
 
         /// <summary>
+        /// Clears this instance.
+        /// </summary>
+        public void Clear()
+        {
+            _drawCalls.Clear();
+        }
+
+        /// <summary>
         /// Adds the draw call. Calculates target mesh level of detail and picks a proper meshes to draw (based on a material slot index).
         /// </summary>
         /// <param name="model">The model mesh to render. Cannot be null.</param>

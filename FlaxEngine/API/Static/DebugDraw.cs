@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
@@ -55,7 +54,7 @@ namespace FlaxEngine
                 }
             }
 
-            Internal_Draw1(Object.GetUnmanagedPtr(task), actors);
+            Internal_Draw(Object.GetUnmanagedPtr(task), actors, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, false);
 #endif
         }
     }

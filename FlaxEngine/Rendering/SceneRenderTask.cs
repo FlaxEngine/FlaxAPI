@@ -18,7 +18,7 @@ namespace FlaxEngine.Rendering
         /// </summary>
         /// <param name="task">The task.</param>
         public delegate void BeginDelegate(SceneRenderTask task);
-        
+
         /// <summary>
         /// Action delegate called after scene rendering.
         /// </summary>
@@ -85,7 +85,7 @@ namespace FlaxEngine.Rendering
         /// The custom post processing effects.
         /// </summary>
         public readonly HashSet<PostProcessEffect> CustomPostFx = new HashSet<PostProcessEffect>();
-        
+
         /// <summary>
         /// The action called on rendering begin.
         /// </summary>
@@ -101,6 +101,8 @@ namespace FlaxEngine.Rendering
         /// It allows to extend rendering pipeline and draw custom geometry non-existing in the scene or custom actors set.
         /// </summary>
         public event DrawDelegate Draw;
+
+        private readonly DrawCallsCollector _collector = new DrawCallsCollector();
 
         internal SceneRenderTask()
         {
@@ -185,15 +187,15 @@ namespace FlaxEngine.Rendering
         {
             End?.Invoke(this);
         }
-        
+
         internal override DrawCall[] Internal_Draw()
         {
             if (Draw != null)
             {
                 // Collect draw calls and send them packed back to be rendered
-                var collector = new DrawCallsCollector();
-                Draw(collector);
-                return collector.DrawCalls;
+                _collector.Clear();
+                Draw(_collector);
+                return _collector.DrawCalls;
             }
 
             return null;
