@@ -56,10 +56,15 @@ namespace FlaxEditor.Gizmo
             var actors = Editor.Instance.SceneEditing.Selection.ConvertAll(x => (x as ActorNode)?.Actor).ToArray();
             context.DrawSceneDepth(task, customDepth, true, actors, ActorsSources.CustomActors);
 
+            var near = task.View.Near;
+            var far = task.View.Far;
+            var projection = task.View.Projection;
+
             // Render outline
             _material.GetParam("OutlineColor0").Value = OutlineColor0;
             _material.GetParam("OutlineColor1").Value = OutlineColor1;
             _material.GetParam("CustomDepth").Value = customDepth;
+            _material.GetParam("ViewInfo").Value = new Vector4(1.0f / projection.M11, 1.0f / projection.M22, far / (far - near), (-far * near) / (far - near) / far);
             context.DrawPostFxMaterial(_material, output, input, task);
 
             // Cleanup
