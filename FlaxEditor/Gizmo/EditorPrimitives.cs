@@ -46,7 +46,7 @@ namespace FlaxEditor.Gizmo
             DebugDraw.Draw(task, debugDrawData.ActorsPtrs, target, context, targetDepth, true);
 
             // Draw gizmos (actual drawing)
-            // TODO: submit draw calls
+            _drawCallsCollector.ExecuteDrawCalls(context, task, target, RenderPass.ForwardPass);
 
             // Resolve MSAA texture
             if (enableMsaa)

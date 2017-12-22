@@ -91,6 +91,7 @@ namespace FlaxEngine.Rendering
                     if (e && e.CanRender)
                         postFxList.Add(e.unmanagedPtr);
                 }
+
                 if (postFxList.Count > 0)
                     postFx = postFxList.ToArray();
             }
@@ -156,8 +157,12 @@ namespace FlaxEngine.Rendering
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawScene(IntPtr obj, IntPtr task, IntPtr output, IntPtr buffers, ref RenderView view, ViewFlags flags, ViewMode mode, IntPtr[] customActors, ActorsSources actorsSource, IntPtr[] customPostFx);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawSceneDepth(IntPtr obj, IntPtr task, IntPtr output, bool drawTransparency, IntPtr[] customActors, ActorsSources actorsSource);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_ExecuteDrawCalls(IntPtr obj, IntPtr task, IntPtr output, RenderTask.DrawCall[] drawCalls, RenderPass pass);
 #endif
 
         #endregion

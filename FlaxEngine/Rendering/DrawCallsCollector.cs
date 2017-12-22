@@ -81,5 +81,24 @@ namespace FlaxEngine.Rendering
 
             _drawCalls.Add(drawCall);
         }
+
+        /// <summary>
+        /// Executes the draw calls.
+        /// </summary>
+        /// <param name="context">The GPU command context.</param>
+        /// <param name="task">The render task.</param>
+        /// <param name="output">The output texture.</param>
+        /// <param name="pass">The rendering pass mode.</param>
+        public void ExecuteDrawCalls(GPUContext context, RenderTask task, RenderTarget output, RenderPass pass)
+        {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+            if (task == null)
+                throw new ArgumentNullException(nameof(task));
+            if (output == null)
+                throw new ArgumentNullException(nameof(output));
+
+            GPUContext.Internal_ExecuteDrawCalls(context.unmanagedPtr, task.unmanagedPtr, output.unmanagedPtr, DrawCalls, pass);
+        }
     }
 }
