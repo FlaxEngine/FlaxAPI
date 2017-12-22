@@ -11,7 +11,7 @@ namespace FlaxEditor.Gizmo
     /// <summary>
     /// In-build postFx used to render outline for selected objects in editor.
     /// </summary>
-    public class SelectionOutline : PostProcessEffect
+    public sealed class SelectionOutline : PostProcessEffect
     {
         private Material _outlineMaterial;
         private MaterialInstance _material;
@@ -51,7 +51,7 @@ namespace FlaxEditor.Gizmo
             // Pick a temporary depth buffer
             var customDepth = RenderTarget.GetTemporary(PixelFormat.R32_Typeless, input.Width, input.Height, TextureFlags.DepthStencil | TextureFlags.ShaderResource);
             context.ClearDepth(customDepth);
-            
+
             // Render selected objects depth
             var actors = Editor.Instance.SceneEditing.Selection.ConvertAll(x => (x as ActorNode)?.Actor).ToArray();
             context.DrawSceneDepth(task, customDepth, true, actors, ActorsSources.CustomActors);

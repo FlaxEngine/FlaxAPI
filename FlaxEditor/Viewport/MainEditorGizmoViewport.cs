@@ -50,6 +50,13 @@ namespace FlaxEditor.Viewport
         public SelectionOutline SelectionOutline;
 
         /// <summary>
+        /// The editor primitives postFx.
+        /// </summary>
+        public EditorPrimitives EditorPrimitives;
+
+        internal ViewportDebugDrawData DebugDrawData => _debugDrawData;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MainEditorGizmoViewport"/> class.
         /// </summary>
         /// <param name="editor">Editor instance.</param>
@@ -62,12 +69,13 @@ namespace FlaxEditor.Viewport
             Task.ActorsSource = ActorsSources.ScenesAndCustomActors;
             Task.Flags = ViewFlags.DefaultEditor;
             Task.Begin += RenderTaskOnBegin;
-            Task.End += RenderTaskOnEnd;
             Task.Draw += RenderTaskOnDraw;
 
-            // Create selection outline postFx
+            // Create post effects
             SelectionOutline = FlaxEngine.Object.New<SelectionOutline>();
             Task.CustomPostFx.Add(SelectionOutline);
+            EditorPrimitives = FlaxEngine.Object.New<EditorPrimitives>();
+            Task.CustomPostFx.Add(EditorPrimitives);
 
             // Add transformation gizmo
             TransformGizmo = new TransformGizmo(this);
@@ -222,12 +230,6 @@ namespace FlaxEditor.Viewport
                         selectedParents[i].OnDebugDraw(_debugDrawData);
                 }
             }
-        }
-
-        private void RenderTaskOnEnd(SceneRenderTask task)
-        {
-            // Draw selected objects debug shapes and visuals
-            DebugDraw.Draw(task, _debugDrawData.ActorsPtrs);
         }
 
         private void RenderTaskOnDraw(DrawCallsCollector collector)
@@ -715,6 +717,7 @@ namespace FlaxEditor.Viewport
         {
             _debugDrawData.Dispose();
             FlaxEngine.Object.Destroy(ref SelectionOutline);
+            FlaxEngine.Object.Destroy(ref EditorPrimitives);
 
             base.OnDestroy();
         }

@@ -135,6 +135,7 @@
     <Compile Include="CustomEditors\Values\ReadOnlyValueContainer.cs" />
     <Compile Include="CustomEditors\Values\ValueContainer.cs" />
     <Compile Include="EditorAssets.cs" />
+    <Compile Include="Gizmo\EditorPrimitives.cs" />
     <Compile Include="Gizmo\GridGizmo.cs" />
     <Compile Include="Gizmo\SelectionOutline.cs" />
     <Compile Include="GUI\AssetPicker.cs" />
