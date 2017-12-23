@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using FlaxEditor.Content;
 using FlaxEditor.Content.Import;
 using FlaxEditor.Content.Settings;
 using FlaxEditor.Content.Thumbnails;
@@ -217,6 +218,17 @@ namespace FlaxEditor
             {
                 Windows.MainWindow.Show();
                 Windows.MainWindow.Focus();
+            }
+
+            // Load scene
+            // TODO: loading last open scenes from Editor Cache
+            {
+                var defaultSceneAsset = ContentDatabase.Find(_projectInfo.DefaultSceneId);
+                if (defaultSceneAsset is SceneItem)
+                {
+                    Editor.Log("Loading default project scene");
+                    Scene.OpenScene(_projectInfo.DefaultSceneId);
+                }
             }
         }
 
