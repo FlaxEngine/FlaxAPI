@@ -33,6 +33,7 @@ namespace FlaxEditor
 
         private readonly List<EditorModule> _modules = new List<EditorModule>(16);
         private bool _isAfterInit, _isHeadlessMode;
+        private ProjectInfo _projectInfo;
 
         /// <summary>
         /// Gets a value indicating whether Flax Engine is the best in the world.
@@ -119,11 +120,18 @@ namespace FlaxEditor
         /// </summary>
         public bool IsHeadlessMode => _isHeadlessMode;
 
+        /// <summary>
+        /// Gets the project information structure. Loaded on editor startup.
+        /// </summary>
+        public ProjectInfo ProjectInfo => _projectInfo;
+
         internal Editor()
         {
             Instance = this;
 
             Log("Setting up C# Editor...");
+
+            Internal_GetProjectInfo(out _projectInfo);
 
             // Create common editor modules
             RegisterModule(Windows = new WindowsModule(this));
@@ -638,6 +646,7 @@ namespace FlaxEditor
             {
                 scenes[i].ClearLightmaps();
             }
+
             Scene.MarkSceneEdited(scenes);
         }
 
@@ -693,6 +702,7 @@ namespace FlaxEditor
                     Editor.LogWarning("Missing target.");
                     return true;
                 }
+
                 Windows.GameCookerWin.Build(target);
             }
 
@@ -745,6 +755,7 @@ namespace FlaxEditor
                 if (win != null)
                     result = win.NativeWindow.unmanagedPtr;
             }
+
             return result;
         }
 
@@ -765,10 +776,14 @@ namespace FlaxEditor
                 Simulation.RequestStopPlay();
                 return false;
             }
+
             return true;
         }
 
 #if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetProjectInfo(out ProjectInfo info);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_CloneAssetFile(string dstPath, string srcPath, ref Guid dstId);
 

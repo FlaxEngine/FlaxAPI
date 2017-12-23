@@ -70,20 +70,7 @@ namespace FlaxEditor
 			return Internal_CanImport(extension);
 #endif
 		}
-
-		/// <summary>
-		/// Gets the name of the opened project.
-		/// </summary>
-		[UnmanagedCall]
-		public static string ProjectName
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { return Internal_GetProjectName(); }
-#endif
-		}
-
+        
 		/// <summary>
 		/// Checks if every managed assembly has been loaded (including user scripts assembly).
 		/// </summary>

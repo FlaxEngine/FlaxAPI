@@ -218,6 +218,7 @@
     <Compile Include="Progress\Handlers\CompileScriptsProgress.cs" />
     <Compile Include="Progress\Handlers\ImportAssetsProgress.cs" />
     <Compile Include="Progress\ProgressHandler.cs" />
+    <Compile Include="ProjectInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SceneGraph\ActorChildNode.cs" />
     <Compile Include="SceneGraph\ActorNode.cs" />

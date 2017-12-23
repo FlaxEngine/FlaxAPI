@@ -46,7 +46,7 @@ namespace FlaxEditor.Content
             // Load template
             var templatePath = StringUtils.CombinePaths(Globals.EditorFolder, "Scripting/ScriptTemplate.cs");
             var scriptTemplate = File.ReadAllText(templatePath);
-            var scriptNamespace = Editor.ProjectName.Replace(" ", "");
+            var scriptNamespace = Editor.Instance.ProjectInfo.Name.Replace(" ", "");
             
             // Format
             var scriptName = ScriptItem.CreateScriptName(outputPath);

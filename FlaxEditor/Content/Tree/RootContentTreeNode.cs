@@ -10,6 +10,8 @@ namespace FlaxEditor.Content
     /// <seealso cref="FlaxEditor.Content.ContentTreeNode" />
     public sealed class RootContentTreeNode : ContentTreeNode
     {
+        private string _name;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RootContentTreeNode"/> class.
         /// </summary>
@@ -17,9 +19,10 @@ namespace FlaxEditor.Content
         public RootContentTreeNode()
             : base(null, string.Empty)
         {
+            _name = Editor.Instance.ProjectInfo.Name;
         }
 
         /// <inheritdoc />
-        public override string NavButtonLabel => Editor.ProjectName;
+        public override string NavButtonLabel => _name;
     }
 }
