@@ -162,7 +162,7 @@ namespace FlaxEditor.Windows.Profiler
         public override void OnInit()
         {
             // Create default modes
-            // TODO: ...
+            AddMode(new Overall());
 
             // Init view
             _frameIndex = 0;
