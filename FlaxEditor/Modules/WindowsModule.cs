@@ -692,6 +692,12 @@ namespace FlaxEditor.Modules
                 EditWin.Viewport.SaveProjectIconEnd();
                 Application.Exit();
             }
+
+            // Update editor windows
+            for (int i = 0; i < Windows.Count; i++)
+            {
+                Windows[i].OnUpdate();
+            }
         }
 
         /// <inheritdoc />

@@ -145,6 +145,14 @@ namespace FlaxEditor.Windows
         }
 
         /// <summary>
+        /// Called when every engine update.
+        /// Note: <see cref="Control.Update"/> may be called at the lower frequency than the engine updates.
+        /// </summary>
+        public virtual void OnUpdate()
+        {
+        }
+
+        /// <summary>
         /// Called when editor is being closed and window should perform release data operations.
         /// </summary>
         public virtual void OnExit()
