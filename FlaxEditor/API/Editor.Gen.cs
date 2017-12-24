@@ -70,7 +70,7 @@ namespace FlaxEditor
 			return Internal_CanImport(extension);
 #endif
 		}
-        
+
 		/// <summary>
 		/// Checks if every managed assembly has been loaded (including user scripts assembly).
 		/// </summary>
@@ -92,8 +92,6 @@ namespace FlaxEditor
 		internal static extern bool Internal_CreateAsset(NewAssetType type, string outputPath);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_CanImport(string extension);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern string Internal_GetProjectName();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetIsEveryAssemblyLoaded();
 #endif
