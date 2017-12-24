@@ -386,6 +386,8 @@ namespace FlaxEditor.Modules
             mm_Tools.ContextMenu.AddButton(7, "Game Cooker");
             mm_Tools.ContextMenu.AddButton(8, "Cancel building game");
             mm_Tools.ContextMenu.AddSeparator();
+            mm_Tools.ContextMenu.AddButton(9, "Profiler");
+            mm_Tools.ContextMenu.AddSeparator();
             mm_Tools.ContextMenu.AddButton(4, "Take screenshot!", "F12");
             //mm_Tools.ContextMenu.AddSeparator();
             //mm_Tools.ContextMenu.AddButton(4, "Options");
@@ -834,6 +836,13 @@ namespace FlaxEditor.Modules
                 case 8:
                 {
                     GameCooker.Cancel();
+                    break;
+                }
+
+                // Profiler
+                case 9:
+                {
+                    Editor.Windows.ProfilerWin.FocusOrShow();
                     break;
                 }
             }

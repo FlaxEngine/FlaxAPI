@@ -9,6 +9,7 @@ using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
+using FlaxEditor.Windows.Profiler;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI.Docking;
@@ -82,6 +83,11 @@ namespace FlaxEditor.Modules
         /// The game cooker window.
         /// </summary>
         public GameCookerWindow GameCookerWin;
+
+        /// <summary>
+        /// The profiler window.
+        /// </summary>
+        public ProfilerWindow ProfilerWin;
 
         /// <summary>
         /// List with all created editor windows.
@@ -572,6 +578,7 @@ namespace FlaxEditor.Modules
             ToolboxWin = new ToolboxWindow(Editor);
             GraphicsQualityWin = new GraphicsQualityWindow(Editor);
             GameCookerWin = new GameCookerWindow(Editor);
+            ProfilerWin = new ProfilerWindow(Editor);
 
             // Bind events
             SceneManager.OnSceneSaveError += OnSceneSaveError;
