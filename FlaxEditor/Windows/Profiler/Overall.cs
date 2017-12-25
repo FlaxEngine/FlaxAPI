@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Windows.Profiler
@@ -13,7 +14,7 @@ namespace FlaxEditor.Windows.Profiler
     internal sealed class Overall : ProfilerMode
     {
         private readonly SingleChart _fpsChart;
-        private readonly SingleChart _cpuChart;
+        private readonly SingleChart _updateTimeChart;
         private readonly SingleChart _cpuMemChart;
         private readonly SingleChart _gpuMemChart;
 
@@ -39,9 +40,10 @@ namespace FlaxEditor.Windows.Profiler
                 Title = "FPS",
                 Parent = layout,
             };
-            _cpuChart = new SingleChart
+            _updateTimeChart = new SingleChart
             {
-                Title = "CPU",
+                Title = "Update",
+                FormatSample = v => (Mathf.RoundToInt(v * 10.0f) / 10.0f) + " ms",
                 Parent = layout,
             };
             _cpuMemChart = new SingleChart
@@ -62,7 +64,7 @@ namespace FlaxEditor.Windows.Profiler
         public override void Clear()
         {
             _fpsChart.Clear();
-            _cpuChart.Clear();
+            _updateTimeChart.Clear();
             _cpuMemChart.Clear();
             _gpuMemChart.Clear();
         }
@@ -72,7 +74,7 @@ namespace FlaxEditor.Windows.Profiler
         {
             var stats = ProfilingTools.Stats;
             _fpsChart.AddSample(stats.FPS);
-            _cpuChart.AddSample(0); // TODO: cpu usage
+            _updateTimeChart.AddSample(stats.UpdateTimeMs);
             _cpuMemChart.AddSample(stats.MemoryCPU_UsedPhysicalMemory / 1024 / 1024);
             _gpuMemChart.AddSample(stats.MemoryGPU_Used / 1024 / 1024);
         }
