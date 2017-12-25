@@ -121,7 +121,7 @@ namespace FlaxEditor.Surface
             if (box != null && box != _startBox)
             {
                 _startBox = box;
-                StartMouseCapture(false);
+                StartMouseCapture();
             }
         }
 

@@ -193,7 +193,7 @@ namespace FlaxEditor.Surface
                     }
 
                     // Start moving selected nodes
-                    StartMouseCapture(false);
+                    StartMouseCapture();
                     _isMovingSelection = true;
                     _movingSelectionViewPos = _surface.Location;
                     Focus();
@@ -206,7 +206,7 @@ namespace FlaxEditor.Surface
                 if (_leftMouseDown)
                 {
                     // Start selecting
-                    StartMouseCapture(false);
+                    StartMouseCapture();
                     ClearSelection();
                     Focus();
                     return true;
@@ -214,7 +214,7 @@ namespace FlaxEditor.Surface
                 if (_rightMouseDown)
                 {
                     // Start navigating
-                    StartMouseCapture(false);
+                    StartMouseCapture();
                     Focus();
                     return true;
                 }

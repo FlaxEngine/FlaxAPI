@@ -672,7 +672,7 @@ namespace FlaxEngine.GUI
                 _isSelecting = true;
 
                 // Start tracking mouse
-                StartMouseCapture(false);
+                StartMouseCapture();
             }
         }
 

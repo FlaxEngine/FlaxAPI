@@ -173,7 +173,7 @@ namespace FlaxEngine.GUI
                         _mouseOffset = mousePosition - _thumbCenter;
 
                         // Start capturing mouse
-                        StartMouseCapture(false);
+                        StartMouseCapture();
                     }
                     else
                     {

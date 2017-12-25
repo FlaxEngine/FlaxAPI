@@ -80,7 +80,7 @@ namespace FlaxEditor.CustomEditors.GUI
             _splitterClicked = true;
 
             // Start capturing mouse
-            StartMouseCapture(false);
+            StartMouseCapture();
         }
 
         private void EndTracking()

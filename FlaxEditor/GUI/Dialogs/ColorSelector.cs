@@ -174,7 +174,7 @@ namespace FlaxEditor.GUI.Dialogs
             if (buttons == MouseButton.Left && _wheelRect.Contains(location))
             {
                 _isMouseDownWheel = true;
-                StartMouseCapture(false);
+                StartMouseCapture();
                 UpdateMouse(ref location);
             }
 
@@ -305,13 +305,13 @@ namespace FlaxEditor.GUI.Dialogs
             if (buttons == MouseButton.Left && _slider1Rect.Contains(location))
             {
                 _isMouseDownSlider1 = true;
-                StartMouseCapture(false);
+                StartMouseCapture();
                 UpdateMouse(ref location);
             }
             if (buttons == MouseButton.Left && _slider2Rect.Contains(location))
             {
                 _isMouseDownSlider2 = true;
-                StartMouseCapture(false);
+                StartMouseCapture();
                 UpdateMouse(ref location);
             }
 

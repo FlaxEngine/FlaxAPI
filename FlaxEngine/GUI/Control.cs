@@ -484,7 +484,7 @@ namespace FlaxEngine.GUI
         /// Starts the mouse tracking. Used by the scrollbars, splitters, etc.
         /// </summary>
         /// <param name="useMouseScreenOffset">If set to <c>true</c> will use mouse screen offset.</param>
-        public void StartMouseCapture(bool useMouseScreenOffset)
+        public void StartMouseCapture(bool useMouseScreenOffset = false)
         {
             var parent = ParentWindow;
             parent.StartTrackingMouse(this, useMouseScreenOffset);
