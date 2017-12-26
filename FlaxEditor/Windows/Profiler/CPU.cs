@@ -14,6 +14,8 @@ namespace FlaxEditor.Windows.Profiler
     internal sealed class CPU : ProfilerMode
     {
         private readonly SingleChart _mainChart;
+        private ProfilingTools.EventCPU[] _eventsBuffer;
+        private int _eventsCount;
 
         public CPU()
             : base("CPU")
@@ -52,6 +54,7 @@ namespace FlaxEditor.Windows.Profiler
         {
             var stats = ProfilingTools.Stats;
             _mainChart.AddSample(stats.UpdateTimeMs);
+            _eventsBuffer = ProfilingTools.GetEventsCPU(out _eventsCount, _eventsBuffer);
         }
 
         /// <inheritdoc />
