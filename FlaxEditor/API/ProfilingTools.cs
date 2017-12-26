@@ -15,6 +15,16 @@ namespace FlaxEditor
         public struct MainStats
         {
             /// <summary>
+            /// The process CPU memory stats. Amount of used physical memory in bytes.
+            /// </summary>
+            public ulong ProcessMemory_UsedPhysicalMemory;
+
+            /// <summary>
+            /// The process CPU memory stats.  Amount of used virtual memory in bytes.
+            /// </summary>
+            public ulong ProcessMemory_UsedVirtualMemory;
+
+            /// <summary>
             /// The CPU memory stats. Total amount of physical memory in bytes.
             /// </summary>
             public ulong MemoryCPU_TotalPhysicalMemory;

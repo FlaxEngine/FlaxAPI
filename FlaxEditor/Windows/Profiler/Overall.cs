@@ -79,7 +79,7 @@ namespace FlaxEditor.Windows.Profiler
             var stats = ProfilingTools.Stats;
             _fpsChart.AddSample(stats.FPS);
             _updateTimeChart.AddSample(stats.UpdateTimeMs);
-            _cpuMemChart.AddSample(stats.MemoryCPU_UsedPhysicalMemory / 1024 / 1024);
+            _cpuMemChart.AddSample(stats.ProcessMemory_UsedPhysicalMemory / 1024 / 1024);
             _gpuMemChart.AddSample(stats.MemoryGPU_Used / 1024 / 1024);
         }
 
