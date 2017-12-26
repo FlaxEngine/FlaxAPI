@@ -3,8 +3,6 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -18,9 +16,8 @@ namespace FlaxEditor.Windows.Profiler
     {
         private const float TitleHeight = 20;
         private const float PointsOffset = 4;
-        private readonly List<float> _samples;
+        private readonly SamplesBuffer<float> _samples;
         private string _sample;
-        private int _maxSamples;
         private int _selectedSampleIndex = -1;
         private bool _isSelecting;
 
@@ -37,16 +34,12 @@ namespace FlaxEditor.Windows.Profiler
             get => _selectedSampleIndex;
             set
             {
-                value = Mathf.Clamp(value, -1, _samples.Count);
+                value = Mathf.Clamp(value, -1, _samples.Count - 1);
                 if (_selectedSampleIndex != value)
                 {
                     _selectedSampleIndex = value;
-
-                    if (_samples.Count == 0)
-                        _sample = string.Empty;
-                    else
-                        _sample = FormatSample(_selectedSampleIndex == -1 ? _samples.Last() : _samples[_selectedSampleIndex]);
-
+                    _sample = _samples.Count == 0 ? string.Empty : FormatSample(_samples.Get(_selectedSampleIndex));
+                    
                     SelectedSampleChanged?.Invoke(_selectedSampleIndex);
                 }
             }
@@ -69,8 +62,7 @@ namespace FlaxEditor.Windows.Profiler
         public SingleChart(int maxSamples = ProfilerMode.MaxSamples)
             : base(0, 0, 100, 60 + TitleHeight)
         {
-            _maxSamples = maxSamples;
-            _samples = new List<float>(maxSamples);
+            _samples = new SamplesBuffer<float>(maxSamples);
             _sample = string.Empty;
         }
 
@@ -89,11 +81,6 @@ namespace FlaxEditor.Windows.Profiler
         /// <param name="value">The value.</param>
         public void AddSample(float value)
         {
-            if (_samples.Count == _maxSamples)
-            {
-                _samples.RemoveAt(0);
-            }
-
             _samples.Add(value);
             _sample = FormatSample(value);
         }
@@ -129,7 +116,7 @@ namespace FlaxEditor.Windows.Profiler
                 Vector2 chartRoot = chartRect.BottomRight;
                 float samplesRange = maxValue * 1.1f;
                 float samplesCoeff = -chartHeight / samplesRange;
-                Vector2 posPrev = chartRoot + new Vector2(0, _samples.Last() * samplesCoeff);
+                Vector2 posPrev = chartRoot + new Vector2(0, _samples.Last * samplesCoeff);
                 float posX = 0;
 
                 for (int i = _samples.Count - 1; i >= 0; i--)
