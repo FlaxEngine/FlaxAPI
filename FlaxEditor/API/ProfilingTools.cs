@@ -74,5 +74,32 @@ namespace FlaxEditor
             /// </summary>
             public float DrawTimeMs;
         }
+
+        /// <summary>
+        /// The CPU profiling event data.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct EventCPU
+        {
+            /// <summary>
+            /// The start time (in miliseconds).
+            /// </summary>
+            public double Start;
+
+            /// <summary>
+            /// The end time (in miliseconds).
+            /// </summary>
+            public double End;
+
+            /// <summary>
+            /// The event depth (0 for root events).
+            /// </summary>
+            public int Depth;
+
+            /// <summary>
+            /// The event name.
+            /// </summary>
+            public string Name;
+        }
     }
 }

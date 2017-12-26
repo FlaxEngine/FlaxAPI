@@ -47,7 +47,7 @@ namespace FlaxEditor.Windows.Profiler
             get => _frameIndex;
             set
             {
-                value = Mathf.Clamp(value, -1, _framesCount);
+                value = Mathf.Clamp(value, -1, _framesCount - 1);
                 if (_frameIndex != value)
                 {
                     _frameIndex = value;
@@ -183,6 +183,7 @@ namespace FlaxEditor.Windows.Profiler
         {
             // Create default modes
             AddMode(new Overall());
+            AddMode(new CPU());
 
             // Init view
             _frameIndex = -1;
