@@ -105,11 +105,11 @@ namespace FlaxEditor.Windows.Profiler
                     Render2D.DrawLine(new Vector2(selectedX, 0), new Vector2(selectedX, chartHeight), Color.White, 1.5f);
                 }
 
-                int samplesInViewCount = Math.Min((int)(Width / PointsOffset), _samples.Count);
-                float maxValue = _samples[0];
-                for (int i = 1; i < samplesInViewCount; i++)
+                int samplesInViewCount = Math.Min((int)(Width / PointsOffset), _samples.Count) - 1;
+                float maxValue = _samples[_samples.Count - 1];
+                for (int i = 2; i < samplesInViewCount; i++)
                 {
-                    maxValue = Mathf.Max(maxValue, _samples[i]);
+                    maxValue = Mathf.Max(maxValue, _samples[_samples.Count - i]);
                 }
 
                 Color chartColor = style.BackgroundSelected;
