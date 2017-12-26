@@ -12,7 +12,7 @@
 using System;
 using System.Runtime.CompilerServices;
 
-namespace FlaxEditor
+namespace FlaxEditor.Profiling
 {
 	/// <summary>
 	/// Profiler tools for editor. Allows to gather profiling data and events from the engine.

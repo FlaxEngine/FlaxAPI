@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using FlaxEditor.Profiling;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -14,7 +15,7 @@ namespace FlaxEditor.Windows.Profiler
     internal sealed class CPU : ProfilerMode
     {
         private readonly SingleChart _mainChart;
-        private ProfilingTools.EventCPU[] _eventsBuffer;
+        private EventCPU[] _eventsBuffer;
         private int _eventsCount;
 
         public CPU()
