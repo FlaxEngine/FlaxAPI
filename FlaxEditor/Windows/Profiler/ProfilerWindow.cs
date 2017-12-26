@@ -17,6 +17,7 @@ namespace FlaxEditor.Windows.Profiler
     public sealed class ProfilerWindow : EditorWindow
     {
         private readonly ToolStripButton _liveRecordingButton;
+        private readonly ToolStripButton _clearButton;
         private readonly ToolStripButton _prevFrameButton;
         private readonly ToolStripButton _nextFrameButton;
         private readonly ToolStripButton _lastframeButton;
@@ -76,7 +77,8 @@ namespace FlaxEditor.Windows.Profiler
             _liveRecordingButton = toolstrip.AddButton(1, editor.UI.GetIcon("Play32"));
             _liveRecordingButton.LinkTooltip("Live profiling events recording");
             _liveRecordingButton.AutoCheck = true;
-            toolstrip.AddButton(2, editor.UI.GetIcon("Rotate32")).LinkTooltip("Clear data");
+            _clearButton = toolstrip.AddButton(2, editor.UI.GetIcon("Rotate32"));
+            _clearButton.LinkTooltip("Clear data");
             toolstrip.AddSeparator();
             _prevFrameButton = toolstrip.AddButton(3, editor.UI.GetIcon("ArrowLeft32"));
             _prevFrameButton.LinkTooltip("Previous frame");
@@ -173,6 +175,7 @@ namespace FlaxEditor.Windows.Profiler
 
         private void UpdateButtons()
         {
+            _clearButton.Enabled = _framesCount > 0;
             _prevFrameButton.Enabled = _frameIndex > 0;
             _nextFrameButton.Enabled = (_framesCount - _frameIndex - 1) > 0;
             _lastframeButton.Enabled = _framesCount > 0;
