@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using FlaxEditor.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -18,8 +19,9 @@ namespace FlaxEditor.Windows.Profiler
         private readonly ToolStripButton _liveRecordingButton;
         private readonly ToolStripButton _prevFrameButton;
         private readonly ToolStripButton _nextFrameButton;
+        private readonly ToolStripButton _lastframeButton;
         private readonly Tabs _tabs;
-        private int _frameIndex;
+        private int _frameIndex = -1;
         private int _framesCount;
 
         /// <summary>
@@ -45,11 +47,12 @@ namespace FlaxEditor.Windows.Profiler
             get => _frameIndex;
             set
             {
-                value = Mathf.Clamp(value, 0, _framesCount);
+                value = Mathf.Clamp(value, -1, _framesCount);
                 if (_frameIndex != value)
                 {
                     _frameIndex = value;
 
+                    UpdateButtons();
                     if (_tabs.SelectedTab is ProfilerMode mode)
                         mode.UpdateView(_frameIndex);
                 }
@@ -79,7 +82,9 @@ namespace FlaxEditor.Windows.Profiler
             _prevFrameButton.LinkTooltip("Previous frame");
             _nextFrameButton = toolstrip.AddButton(4, editor.UI.GetIcon("ArrowRight32"));
             _nextFrameButton.LinkTooltip("Next frame");
-
+            _lastframeButton = toolstrip.AddButton(5, editor.UI.GetIcon("Step32"));
+            _lastframeButton.LinkTooltip("Current frame");
+            
             _tabs = new Tabs
             {
                 Orientation = Orientation.Vertical,
@@ -99,8 +104,16 @@ namespace FlaxEditor.Windows.Profiler
         /// <param name="mode">The mode.</param>
         public void AddMode(ProfilerMode mode)
         {
+            if(mode == null)
+                throw new ArgumentNullException();
             mode.Init();
             _tabs.AddTab(mode);
+            mode.SelectedSampleChanged += ModeOnSelectedSampleChanged;
+        }
+
+        private void ModeOnSelectedSampleChanged(int frameIndex)
+        {
+            ViewFrameIndex = frameIndex;
         }
 
         /// <summary>
@@ -108,14 +121,14 @@ namespace FlaxEditor.Windows.Profiler
         /// </summary>
         public void Clear()
         {
-            _frameIndex = 0;
+            _frameIndex = -1;
             _framesCount = 0;
             for (int i = 0; i < _tabs.ChildrenCount; i++)
             {
                 if (_tabs.Children[i] is ProfilerMode mode)
                 {
                     mode.Clear();
-                    mode.UpdateView(0);
+                    mode.UpdateView(ViewFrameIndex);
                 }
             }
 
@@ -143,19 +156,26 @@ namespace FlaxEditor.Windows.Profiler
                     ViewFrameIndex++;
                     break;
                 }
+                    
+                case 5:
+                {
+                    ViewFrameIndex = -1;
+                    break;
+                }
             }
         }
 
         private void OnSelectedTabChanged(Tabs tabs)
         {
             if (tabs.SelectedTab is ProfilerMode mode)
-                mode.UpdateView(_frameIndex);
+                mode.UpdateView(ViewFrameIndex);
         }
 
         private void UpdateButtons()
         {
             _prevFrameButton.Enabled = _frameIndex > 0;
             _nextFrameButton.Enabled = (_framesCount - _frameIndex - 1) > 0;
+            _lastframeButton.Enabled = _framesCount > 0;
         }
 
         /// <inheritdoc />
@@ -165,11 +185,11 @@ namespace FlaxEditor.Windows.Profiler
             AddMode(new Overall());
 
             // Init view
-            _frameIndex = 0;
+            _frameIndex = -1;
             for (int i = 0; i < _tabs.ChildrenCount; i++)
             {
                 if (_tabs.Children[i] is ProfilerMode mode)
-                    mode.UpdateView(0);
+                    mode.UpdateView(ViewFrameIndex);
             }
 
             UpdateButtons();
@@ -186,7 +206,7 @@ namespace FlaxEditor.Windows.Profiler
                         mode.Update();
                 }
 
-                _framesCount++;
+                _framesCount = Mathf.Min(_framesCount + 1, ProfilerMode.MaxSamples);
                 UpdateButtons();
             }
         }

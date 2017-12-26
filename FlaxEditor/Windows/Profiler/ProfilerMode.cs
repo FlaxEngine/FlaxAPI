@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using FlaxEngine.GUI.Tabs;
 
 namespace FlaxEditor.Windows.Profiler
@@ -11,6 +12,16 @@ namespace FlaxEditor.Windows.Profiler
     /// </summary>
     public class ProfilerMode : Tab
     {
+        /// <summary>
+        /// The maximum amount of samples to collect.
+        /// </summary>
+        public const int MaxSamples = 60 * 5;
+
+        /// <summary>
+        /// Occurs when selected sample gets changed. Profiling window should propagate this cahnge to all charts and view modes.
+        /// </summary>
+        public event Action<int> SelectedSampleChanged;
+
         /// <inheritdoc />
         public ProfilerMode(string text)
             : base(text)
@@ -44,6 +55,15 @@ namespace FlaxEditor.Windows.Profiler
         /// <param name="selectedFrame">The selected frame index.</param>
         public virtual void UpdateView(int selectedFrame)
         {
+        }
+
+        /// <summary>
+        /// Called when selected sample gets changed.
+        /// </summary>
+        /// <param name="frameIndex">Index of the view frame.</param>
+        protected virtual void OnSelectedSampleChanged(int frameIndex)
+        {
+            SelectedSampleChanged?.Invoke(frameIndex);
         }
     }
 }

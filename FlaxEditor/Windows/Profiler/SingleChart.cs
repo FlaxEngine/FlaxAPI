@@ -17,14 +17,45 @@ namespace FlaxEditor.Windows.Profiler
     internal class SingleChart : Control
     {
         private const float TitleHeight = 20;
+        private const float PointsOffset = 4;
         private readonly List<float> _samples;
         private string _sample;
         private int _maxSamples;
+        private int _selectedSampleIndex = -1;
+        private bool _isSelecting;
 
         /// <summary>
         /// Gets or sets the chart title.
         /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        /// Gets the index of the selected sample. Value -1 is used to indicate no selection (using the latest sample).
+        /// </summary>
+        public int SelectedSampleIndex
+        {
+            get => _selectedSampleIndex;
+            set
+            {
+                value = Mathf.Clamp(value, -1, _samples.Count);
+                if (_selectedSampleIndex != value)
+                {
+                    _selectedSampleIndex = value;
+
+                    if (_samples.Count == 0)
+                        _sample = string.Empty;
+                    else
+                        _sample = FormatSample(_selectedSampleIndex == -1 ? _samples.Last() : _samples[_selectedSampleIndex]);
+
+                    SelectedSampleChanged?.Invoke(_selectedSampleIndex);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Occurs when selected sample gets changed.
+        /// </summary>
+        public event Action<int> SelectedSampleChanged;
 
         /// <summary>
         /// The handler funtion to format sample value for label text.
@@ -35,7 +66,7 @@ namespace FlaxEditor.Windows.Profiler
         /// Initializes a new instance of the <see cref="SingleChart"/> class.
         /// </summary>
         /// <param name="maxSamples">The maximum samples to collect.</param>
-        public SingleChart(int maxSamples = 60 * 5)
+        public SingleChart(int maxSamples = ProfilerMode.MaxSamples)
             : base(0, 0, 100, 60 + TitleHeight)
         {
             _maxSamples = maxSamples;
@@ -74,20 +105,26 @@ namespace FlaxEditor.Windows.Profiler
 
             var style = Style.Current;
             float chartHeight = Height - TitleHeight;
-            float pointsOffset = 4.0f;
-
+            
             // Draw chart
             if (_samples.Count > 0)
             {
-                int samplesInViewCount = Math.Min((int)(Width / pointsOffset), _samples.Count);
+                var chartRect = new Rectangle(0, 0, Width, chartHeight);
+                Render2D.PushClip(ref chartRect);
+
+                if (_selectedSampleIndex != -1)
+                {
+                    float selectedX = Width - (_samples.Count - _selectedSampleIndex) * PointsOffset;
+                    Render2D.DrawLine(new Vector2(selectedX, 0), new Vector2(selectedX, chartHeight), Color.White, 1.5f);
+                }
+
+                int samplesInViewCount = Math.Min((int)(Width / PointsOffset), _samples.Count);
                 float maxValue = _samples[0];
                 for (int i = 1; i < samplesInViewCount; i++)
                 {
                     maxValue = Mathf.Max(maxValue, _samples[i]);
                 }
 
-                var chartRect = new Rectangle(0, 0, Width, chartHeight);
-                Render2D.PushClip(ref chartRect);
                 Color chartColor = style.BackgroundSelected;
                 Vector2 chartRoot = chartRect.BottomRight;
                 float samplesRange = maxValue * 1.1f;
@@ -101,7 +138,7 @@ namespace FlaxEditor.Windows.Profiler
                     Vector2 pos = chartRoot + new Vector2(posX, sample * samplesCoeff);
                     Render2D.DrawLine(posPrev, pos, chartColor);
                     posPrev = pos;
-                    posX -= pointsOffset;
+                    posX -= PointsOffset;
                 }
 
                 Render2D.PopClip();
@@ -113,6 +150,56 @@ namespace FlaxEditor.Windows.Profiler
             Render2D.FillRectangle(headerRect, style.BackgroundNormal);
             Render2D.DrawText(style.FontMedium, Title, headerTextRect, Color.White * 0.8f, TextAlignment.Near, TextAlignment.Center);
             Render2D.DrawText(style.FontMedium, _sample, headerTextRect, Color.White, TextAlignment.Far, TextAlignment.Center);
+        }
+
+        private void OnClick(ref Vector2 location)
+        {
+            float samplesWidth = _samples.Count * PointsOffset;
+            SelectedSampleIndex = (int)((samplesWidth - Width + location.X) / PointsOffset);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        {
+            if (buttons == MouseButton.Left)
+            {
+                _isSelecting = true;
+                OnClick(ref location);
+                StartMouseCapture();
+                return true;
+            }
+
+            return base.OnMouseDown(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override void OnMouseMove(Vector2 location)
+        {
+            if (_isSelecting)
+            {
+                OnClick(ref location);
+            }
+
+            base.OnMouseMove(location);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        {
+            if (buttons == MouseButton.Left && _isSelecting)
+            {
+                _isSelecting = false;
+                EndMouseCapture();
+                return true;
+            }
+
+            return base.OnMouseUp(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override void OnEndMouseCapture()
+        {
+            _isSelecting = false;
         }
     }
 }

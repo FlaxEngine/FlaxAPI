@@ -40,24 +40,28 @@ namespace FlaxEditor.Windows.Profiler
                 Title = "FPS",
                 Parent = layout,
             };
+            _fpsChart.SelectedSampleChanged += OnSelectedSampleChanged;
             _updateTimeChart = new SingleChart
             {
                 Title = "Update",
                 FormatSample = v => (Mathf.RoundToInt(v * 10.0f) / 10.0f) + " ms",
                 Parent = layout,
             };
+            _updateTimeChart.SelectedSampleChanged += OnSelectedSampleChanged;
             _cpuMemChart = new SingleChart
             {
                 Title = "CPU Memory",
                 FormatSample = v => ((int)v) + " MB",
                 Parent = layout,
             };
+            _cpuMemChart.SelectedSampleChanged += OnSelectedSampleChanged;
             _gpuMemChart = new SingleChart
             {
                 Title = "GPU Memory",
                 FormatSample = v => ((int)v) + " MB",
                 Parent = layout,
             };
+            _gpuMemChart.SelectedSampleChanged += OnSelectedSampleChanged;
         }
 
         /// <inheritdoc />
@@ -77,6 +81,15 @@ namespace FlaxEditor.Windows.Profiler
             _updateTimeChart.AddSample(stats.UpdateTimeMs);
             _cpuMemChart.AddSample(stats.MemoryCPU_UsedPhysicalMemory / 1024 / 1024);
             _gpuMemChart.AddSample(stats.MemoryGPU_Used / 1024 / 1024);
+        }
+
+        /// <inheritdoc />
+        public override void UpdateView(int selectedFrame)
+        {
+            _fpsChart.SelectedSampleIndex = selectedFrame;
+            _updateTimeChart.SelectedSampleIndex = selectedFrame;
+            _cpuMemChart.SelectedSampleIndex = selectedFrame;
+            _gpuMemChart.SelectedSampleIndex = selectedFrame;
         }
     }
 }
