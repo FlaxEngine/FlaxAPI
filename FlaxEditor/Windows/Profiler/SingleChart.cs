@@ -148,7 +148,7 @@ namespace FlaxEditor.Windows.Profiler
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
-            if (buttons == MouseButton.Left)
+            if (buttons == MouseButton.Left && location.Y < (Height - TitleHeight))
             {
                 _isSelecting = true;
                 OnClick(ref location);
