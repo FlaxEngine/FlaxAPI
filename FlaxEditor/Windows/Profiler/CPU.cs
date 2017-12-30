@@ -98,12 +98,12 @@ namespace FlaxEditor.Windows.Profiler
                 TooltipText = string.Format("{0}, {1} ms", e.Name, ((int)(length * 1000.0) / 1000.0f)),
                 Parent = parent,
             };
-
+            
             // Spawn sub events
             int childrenDepth = e.Depth + 1;
             if (childrenDepth <= maxDepth)
             {
-                while (index < events.Length)
+                while (++index < events.Length)
                 {
                     int subDepth = events[index].Depth;
 
@@ -111,10 +111,8 @@ namespace FlaxEditor.Windows.Profiler
                         break;
                     if (subDepth == childrenDepth)
                     {
-                        AddEvent(startTime, maxDepth, index, events, control);
+                        AddEvent(startTime, maxDepth, index, events, parent);
                     }
-
-                    index++;
                 }
             }
         }

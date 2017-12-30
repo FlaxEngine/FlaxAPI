@@ -100,7 +100,7 @@ namespace FlaxEditor.Windows.Profiler
             int childrenDepth = e.Depth + 1;
             if (childrenDepth <= maxDepth)
             {
-                while (index < events.Length)
+                while (++index < events.Length)
                 {
                     int subDepth = events[index].Depth;
 
@@ -108,10 +108,8 @@ namespace FlaxEditor.Windows.Profiler
                         break;
                     if (subDepth == childrenDepth)
                     {
-                        x += AddEvent(x, maxDepth, index, events, control);
+                        x += AddEvent(x, maxDepth, index, events, parent);
                     }
-
-                    index++;
                 }
             }
 
@@ -132,7 +130,7 @@ namespace FlaxEditor.Windows.Profiler
             container.UnlockChildrenRecursive();
             container.PerformLayout();
         }
-
+        
         private void UpdateTimelineInner()
         {
             if (_events.Count == 0)

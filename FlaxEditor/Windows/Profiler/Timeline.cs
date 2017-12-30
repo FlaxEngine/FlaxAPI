@@ -51,7 +51,7 @@ namespace FlaxEditor.Windows.Profiler
             /// <param name="depth">The timeline row index (event depth).</param>
             /// <param name="width">The width.</param>
             public Event(float x, int depth, float width)
-                : base(x, depth * 24, width, 24)
+                : base(x, depth * 26, width, 24)
             {
                 _nameLength = -1;
             }
@@ -77,6 +77,7 @@ namespace FlaxEditor.Windows.Profiler
                     color *= 1.1f;
 
                 Render2D.FillRectangle(bounds, color);
+                Render2D.DrawRectangle(bounds, color * 0.5f);
 
                 if (_nameLength < 0 && style.FontMedium)
                     _nameLength = style.FontMedium.MeasureText(Name).X;
