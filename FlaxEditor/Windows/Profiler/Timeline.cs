@@ -51,7 +51,7 @@ namespace FlaxEditor.Windows.Profiler
             /// <param name="depth">The timeline row index (event depth).</param>
             /// <param name="width">The width.</param>
             public Event(float x, int depth, float width)
-                : base(x, depth * 26, width, 24)
+                : base(x, depth * 25, width, 24)
             {
                 _nameLength = -1;
             }

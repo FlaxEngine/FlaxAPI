@@ -61,13 +61,16 @@ namespace FlaxEditor.Windows.Profiler
         /// <inheritdoc />
         public override void Update()
         {
-            var stats = ProfilingTools.Stats;
-            _mainChart.AddSample(stats.DrawTimeMs);
-
             // Gather GPU events
             var data = ProfilingTools.GetEventsGPU();
             _events.Add(data);
 
+            // Peek draw time
+            float drawTime = ProfilingTools.Stats.DrawTimeMs;
+            if (data != null && data.Length > 0)
+                drawTime = data[0].Time;
+            _mainChart.AddSample(drawTime);
+            
             // Update timeline if using the last frame
             if (_mainChart.SelectedSampleIndex == -1)
             {
@@ -86,7 +89,7 @@ namespace FlaxEditor.Windows.Profiler
         {
             EventGPU e = events[index];
 
-            double scale = 1000.0;
+            double scale = 100.0;
             float width = (float)(e.Time * scale);
 
             var control = new Timeline.Event(x, e.Depth, width)
