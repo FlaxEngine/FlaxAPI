@@ -99,4 +99,21 @@ namespace FlaxEditor.Profiling
         /// </summary>
         public string Name;
     }
+
+    /// <summary>
+    /// The CPU thread profiling data.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ThreadStats
+    {
+        /// <summary>
+        /// The thread name.
+        /// </summary>
+        public string Name;
+
+        /// <summary>
+        /// The events recorded since last profiling update.
+        /// </summary>
+        public EventCPU[] Events;
+    }
 }

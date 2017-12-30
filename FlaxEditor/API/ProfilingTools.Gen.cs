@@ -42,12 +42,12 @@ namespace FlaxEditor.Profiling
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static EventCPU[] GetEventsCPU(out int size, EventCPU[] buffer = null) 
+		public static ThreadStats[] GetEventsCPU() 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_GetEventsCPU(out size, buffer);
+			return Internal_GetEventsCPU();
 #endif
 		}
 
@@ -56,7 +56,7 @@ namespace FlaxEditor.Profiling
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetStats(out MainStats resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern EventCPU[] Internal_GetEventsCPU(out int size, EventCPU[] buffer);
+		internal static extern ThreadStats[] Internal_GetEventsCPU();
 #endif
 #endregion
 	}

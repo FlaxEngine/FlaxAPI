@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.IO;
 using FlaxEditor.Profiling;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -18,8 +17,7 @@ namespace FlaxEditor.Windows.Profiler
     {
         private readonly SingleChart _mainChart;
         private readonly Timeline _timeline;
-        private EventCPU[] _eventsBuffer;
-        private readonly SamplesBuffer<EventCPU[]> _events = new SamplesBuffer<EventCPU[]>();
+        private readonly SamplesBuffer<ThreadStats[]> _events = new SamplesBuffer<ThreadStats[]>();
 
         public CPU()
             : base("CPU")
@@ -68,11 +66,8 @@ namespace FlaxEditor.Windows.Profiler
             _mainChart.AddSample(stats.UpdateTimeMs);
 
             // Gather CPU events
-            int eventsCount;
-            _eventsBuffer = ProfilingTools.GetEventsCPU(out eventsCount, _eventsBuffer);
-            var events = new EventCPU[eventsCount]; // TODO: use event buffers pool to reduce allocations
-            Array.Copy(_eventsBuffer, events, eventsCount);
-            _events.Add(events);
+            var data = ProfilingTools.GetEventsCPU();
+            _events.Add(data);
 
             // Update timeline if using the last frame
             if (_mainChart.SelectedSampleIndex == -1)
@@ -94,11 +89,13 @@ namespace FlaxEditor.Windows.Profiler
 
             double scale = 100.0;
             float x = (float)((e.Start - startTime) * scale);
-            float width = (float)((e.End - e.Start) * scale);
-            
-            var control = new Timeline.Event(e.Name, x, width)
+            double length = e.End - e.Start;
+            float width = (float)(length * scale);
+
+            var control = new Timeline.Event(x, width)
             {
-                Height = 100,
+                Name = e.Name,
+                TooltipText = string.Format("{0}, {1} ms", e.Name, (int)((length * 100) / 100)),
                 Parent = parent,
             };
 
@@ -118,14 +115,16 @@ namespace FlaxEditor.Windows.Profiler
 
         private void UpdateTimeline()
         {
-            // Clear
+            // Clear previous events
             _timeline.EventsContainer.DisposeChildren();
 
             if (_events.Count == 0)
                 return;
             var data = _events.Get(_mainChart.SelectedSampleIndex);
+            if (data == null || data.Length == 0)
+                return;
 
-            double startTime = data[0].Start;
+            /*double startTime = data[0].Start;
             for (int i = 0; i < data.Length; i++)
             {
                 // Always should start from the root event
@@ -133,7 +132,7 @@ namespace FlaxEditor.Windows.Profiler
                 {
                     AddEvent(startTime, i, data, _timeline.EventsContainer);
                 }
-            }
+            }*/
         }
     }
 }
