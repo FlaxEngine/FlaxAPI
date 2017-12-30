@@ -103,15 +103,35 @@ namespace FlaxEditor.Windows.Profiler
             int childrenDepth = e.Depth + 1;
             if (childrenDepth <= maxDepth)
             {
-                while (++index < events.Length)
+                // Count sub events total duration
+                double subEventsDuration = 0;
+                int tmpIndex = index;
+                while (++tmpIndex < events.Length)
                 {
-                    int subDepth = events[index].Depth;
+                    int subDepth = events[tmpIndex].Depth;
 
                     if (subDepth <= e.Depth)
                         break;
                     if (subDepth == childrenDepth)
+                        subEventsDuration += events[tmpIndex].Time;
+                }
+                
+                // Skip if has no sub events
+                if (subEventsDuration > 0)
+                {
+                    // Apply some offset to sub-events (center them within this event)
+                    x += (float)((e.Time - subEventsDuration) * scale) * 0.5f;
+                    
+                    while (++index < events.Length)
                     {
-                        x += AddEvent(x, maxDepth, index, events, parent);
+                        int subDepth = events[index].Depth;
+
+                        if (subDepth <= e.Depth)
+                            break;
+                        if (subDepth == childrenDepth)
+                        {
+                            x += AddEvent(x, maxDepth, index, events, parent);
+                        }
                     }
                 }
             }
