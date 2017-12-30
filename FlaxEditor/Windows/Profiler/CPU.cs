@@ -83,56 +83,93 @@ namespace FlaxEditor.Windows.Profiler
             UpdateTimeline();
         }
 
-        private void AddEvent(double startTime, int index, EventCPU[] events, ContainerControl parent)
+        private void AddEvent(double startTime, int maxDepth, int index, EventCPU[] events, ContainerControl parent)
         {
             EventCPU e = events[index];
 
+            double length = e.End - e.Start;
             double scale = 100.0;
             float x = (float)((e.Start - startTime) * scale);
-            double length = e.End - e.Start;
             float width = (float)(length * scale);
-
-            var control = new Timeline.Event(x, width)
+            
+            var control = new Timeline.Event(x, e.Depth, width)
             {
                 Name = e.Name,
-                TooltipText = string.Format("{0}, {1} ms", e.Name, (int)((length * 100) / 100)),
+                TooltipText = string.Format("{0}, {1} ms", e.Name, ((int)(length * 1000.0) / 1000.0f)),
                 Parent = parent,
             };
 
             // Spawn sub events
-            /*while (index++ < events.Length)
+            int childrenDepth = e.Depth + 1;
+            if (childrenDepth <= maxDepth)
             {
-                int subDepth = events[index].Depth;
-
-                if (subDepth <= e.Depth)
-                    break;
-                if (subDepth == e.Depth + 1)
+                while (index++ < events.Length)
                 {
-                    AddEvent(startTime, index, events, control);
+                    int subDepth = events[index].Depth;
+
+                    if (subDepth <= e.Depth)
+                        break;
+                    if (subDepth == childrenDepth)
+                    {
+                        AddEvent(startTime, maxDepth, index, events, control);
+                    }
                 }
-            }*/
+            }
         }
 
         private void UpdateTimeline()
         {
-            // Clear previous events
-            _timeline.EventsContainer.DisposeChildren();
+            var container = _timeline.EventsContainer;
 
+            // Clear previous events
+            container.DisposeChildren();
+
+            container.LockChildrenRecursive();
+
+            UpdateTimelineInner();
+
+            container.UnlockChildrenRecursive();
+            container.PerformLayout();
+        }
+
+        private void UpdateTimelineInner()
+        {
             if (_events.Count == 0)
                 return;
             var data = _events.Get(_mainChart.SelectedSampleIndex);
             if (data == null || data.Length == 0)
                 return;
+            
+            // Find the first event start time (for the timeline start time)
+            double startTime = data[0].Events[0].Start;
+            for (int i = 1; i < data.Length; i++)
+            {
+                startTime = Math.Min(startTime, data[i].Events[0].Start);
+            }
 
-            /*double startTime = data[0].Start;
+            var container = _timeline.EventsContainer;
+
+            // Create timeline track per thread
             for (int i = 0; i < data.Length; i++)
             {
-                // Always should start from the root event
-                if (data[i].Depth == 0)
+                var events = data[i].Events;
+
+                // Check maximum depth
+                int maxDepth = 0;
+                for (int j = 0; j < events.Length; j++)
                 {
-                    AddEvent(startTime, i, data, _timeline.EventsContainer);
+                    maxDepth = Mathf.Max(maxDepth, events[j].Depth);
                 }
-            }*/
+
+                // Add events
+                for (int j = 0; j < events.Length; j++)
+                {
+                    if (events[j].Depth == 0)
+                    {
+                        AddEvent(startTime, j, maxDepth, events, container);
+                    }
+                }
+            }
         }
     }
 }

@@ -101,7 +101,7 @@ namespace FlaxEditor.Windows.Profiler
 
                 if (_selectedSampleIndex != -1)
                 {
-                    float selectedX = Width - (_samples.Count - _selectedSampleIndex) * PointsOffset;
+                    float selectedX = Width - (_samples.Count - _selectedSampleIndex - 1) * PointsOffset;
                     Render2D.DrawLine(new Vector2(selectedX, 0), new Vector2(selectedX, chartHeight), Color.White, 1.5f);
                 }
 

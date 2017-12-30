@@ -42,15 +42,18 @@ namespace FlaxEditor.Windows.Profiler
             };
 
             private Color _color;
+            private float _nameLength;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Event"/> class.
             /// </summary>
             /// <param name="x">The x position.</param>
+            /// <param name="depth">The timeline row index (event depth).</param>
             /// <param name="width">The width.</param>
-            public Event(float x, float width)
-                : base(x, 0, width, 24)
+            public Event(float x, int depth, float width)
+                : base(x, depth * 24, width, 24)
             {
+                _nameLength = -1;
             }
 
             /// <inheritdoc />
@@ -58,8 +61,8 @@ namespace FlaxEditor.Windows.Profiler
             {
                 base.OnParentChangedInternal();
 
-                int key = IndexInParent * (string.IsNullOrEmpty(Name) ? 1 : Name[0]);
-                _color = Colors[key % Colors.Length];
+                int key = (HasParent ? Parent.GetChildIndex(this) : 1) * (string.IsNullOrEmpty(Name) ? 1 : Name[0]);
+                _color = Colors[key % Colors.Length] * 0.8f;
             }
 
             /// <inheritdoc />
@@ -74,8 +77,34 @@ namespace FlaxEditor.Windows.Profiler
                     color *= 1.1f;
 
                 Render2D.FillRectangle(bounds, color);
-                Render2D.PushClip(bounds);
-                Render2D.DrawText(style.FontMedium, Name, bounds, Color.White, TextAlignment.Center, TextAlignment.Center);
+
+                if (_nameLength < 0 && style.FontMedium)
+                    _nameLength = style.FontMedium.MeasureText(Name).X;
+
+                if (_nameLength > bounds.Width + 4)
+                {
+                    Render2D.PushClip(bounds);
+                    Render2D.DrawText(style.FontMedium, Name, bounds, Color.White, TextAlignment.Center, TextAlignment.Center);
+                    Render2D.PopClip();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Timeline track label
+        /// </summary>
+        /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+        private class TrackLabel : ContainerControl
+        {
+            /// <inheritdoc />
+            public override void Draw()
+            {
+                base.Draw();
+
+                var style = Style.Current;
+                var rect = new Rectangle(Vector2.Zero, Size);
+                Render2D.PushClip(rect);
+                Render2D.DrawText(style.FontMedium, Name, rect, Color.White, TextAlignment.Center, TextAlignment.Center, TextWrapping.WrapChars);
                 Render2D.PopClip();
             }
         }
