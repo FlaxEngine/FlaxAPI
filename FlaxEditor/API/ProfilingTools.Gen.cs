@@ -35,9 +35,7 @@ namespace FlaxEditor.Profiling
 		/// <summary>
 		/// Gets the collected CPU events by the profiler from local or remote session.
 		/// </summary>
-		/// <param name="size">The result amount of value events in the returned array.</param>
-		/// <param name="buffer">The input buffer to fill. Will reuse it or allocate new one and return it. May be null.</param>
-		/// <returns>Buffer with input events. Events count is equal to returned size parameter value. It may be the input buffer or allocated one.</returns>
+		/// <returns>Buffer with events per thread.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -51,12 +49,31 @@ namespace FlaxEditor.Profiling
 #endif
 		}
 
+		/// <summary>
+		/// Gets the collected GPU events by the profiler from local or remote session.
+		/// </summary>
+		/// <returns>Buffer with rendering events.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static EventGPU[] GetEventsGPU() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_GetEventsGPU();
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetStats(out MainStats resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern ThreadStats[] Internal_GetEventsCPU();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern EventGPU[] Internal_GetEventsGPU();
 #endif
 #endregion
 	}

@@ -116,4 +116,63 @@ namespace FlaxEditor.Profiling
         /// </summary>
         public EventCPU[] Events;
     }
+
+    /// <summary>
+    /// The GPU profiling event data.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct EventGPU
+    {
+        /// <summary>
+        /// The event execution time on a GPU (in miliseconds).
+        /// </summary>
+        public float Time;
+
+        /// <summary>
+        /// The event depth (0 for root events).
+        /// </summary>
+        public int Depth;
+
+        /// <summary>
+        /// The rendering stats for this event.
+        /// </summary>
+        public RenderStatsData Stats;
+
+        /// <summary>
+        /// The event name.
+        /// </summary>
+        public string Name;
+    }
+
+    /// <summary>
+    /// Object that stores various render statistics.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct RenderStatsData
+    {
+        /// <summary>
+        /// The draw calls count.
+        /// </summary>
+        public long DrawCalls;
+
+        /// <summary>
+        /// The compute shader calls count.
+        /// </summary>
+        public long ComputeCalls;
+
+        /// <summary>
+        /// The vertices drawn count.
+        /// </summary>
+        public long Vertices;
+
+        /// <summary>
+        /// The triangles drawn count.
+        /// </summary>
+        public long Triangles;
+
+        /// <summary>
+        /// The pipeline state changes count.
+        /// </summary>
+        public long PipelineStateChanges;
+    }
 }
