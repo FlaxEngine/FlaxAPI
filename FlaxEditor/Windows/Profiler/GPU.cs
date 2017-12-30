@@ -2,7 +2,6 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using FlaxEditor.Profiling;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -10,17 +9,17 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.Windows.Profiler
 {
     /// <summary>
-    /// The CPU performance profiling mode.
+    /// The GPU performance profiling mode.
     /// </summary>
     /// <seealso cref="FlaxEditor.Windows.Profiler.ProfilerMode" />
-    internal sealed class CPU : ProfilerMode
+    internal sealed class GPU : ProfilerMode
     {
         private readonly SingleChart _mainChart;
         private readonly Timeline _timeline;
-        private readonly SamplesBuffer<ThreadStats[]> _events = new SamplesBuffer<ThreadStats[]>();
+        private readonly SamplesBuffer<EventGPU[]> _events = new SamplesBuffer<EventGPU[]>();
 
-        public CPU()
-            : base("CPU")
+        public GPU()
+            : base("GPU")
         {
             // Layout
             var panel = new Panel(ScrollBars.Vertical)
@@ -38,7 +37,7 @@ namespace FlaxEditor.Windows.Profiler
             // Chart
             _mainChart = new SingleChart
             {
-                Title = "Update",
+                Title = "Draw",
                 FormatSample = v => (Mathf.RoundToInt(v * 10.0f) / 10.0f) + " ms",
                 Parent = layout,
             };
@@ -63,10 +62,10 @@ namespace FlaxEditor.Windows.Profiler
         public override void Update()
         {
             var stats = ProfilingTools.Stats;
-            _mainChart.AddSample(stats.UpdateTimeMs);
+            _mainChart.AddSample(stats.DrawTimeMs);
 
-            // Gather CPU events
-            var data = ProfilingTools.GetEventsCPU();
+            // Gather GPU events
+            var data = ProfilingTools.GetEventsGPU();
             _events.Add(data);
 
             // Update timeline if using the last frame
@@ -83,19 +82,17 @@ namespace FlaxEditor.Windows.Profiler
             UpdateTimeline();
         }
 
-        private void AddEvent(double startTime, int maxDepth, int index, EventCPU[] events, ContainerControl parent)
+        private float AddEvent(float leftEdge, int maxDepth, int index, EventGPU[] events, ContainerControl parent)
         {
-            EventCPU e = events[index];
-
-            double length = e.End - e.Start;
-            double scale = 100.0;
-            float x = (float)((e.Start - startTime) * scale);
-            float width = (float)(length * scale);
+            EventGPU e = events[index];
             
-            var control = new Timeline.Event(x, e.Depth, width)
+            double scale = 100.0;
+            float width = (float)(e.Time * scale);
+
+            var control = new Timeline.Event(leftEdge, e.Depth, width)
             {
                 Name = e.Name,
-                TooltipText = string.Format("{0}, {1} ms", e.Name, ((int)(length * 1000.0) / 1000.0f)),
+                TooltipText = string.Format("{0}, {1} ms", e.Name, ((int)(e.Time * 1000.0) / 1000.0f)),
                 Parent = parent,
             };
 
@@ -111,10 +108,12 @@ namespace FlaxEditor.Windows.Profiler
                         break;
                     if (subDepth == childrenDepth)
                     {
-                        AddEvent(startTime, maxDepth, index, events, control);
+                        leftEdge += AddEvent(leftEdge, maxDepth, index, events, control);
                     }
                 }
             }
+
+            return control.Right;
         }
 
         private void UpdateTimeline()
@@ -140,34 +139,22 @@ namespace FlaxEditor.Windows.Profiler
             if (data == null || data.Length == 0)
                 return;
             
-            // Find the first event start time (for the timeline start time)
-            double startTime = data[0].Events[0].Start;
-            for (int i = 1; i < data.Length; i++)
+            var container = _timeline.EventsContainer;
+            var events = data;
+
+            // Check maximum depth
+            int maxDepth = 0;
+            for (int j = 0; j < events.Length; j++)
             {
-                startTime = Math.Min(startTime, data[i].Events[0].Start);
+                maxDepth = Mathf.Max(maxDepth, events[j].Depth);
             }
 
-            var container = _timeline.EventsContainer;
-
-            // Create timeline track per thread
-            for (int i = 0; i < data.Length; i++)
+            // Add events
+            for (int j = 0; j < events.Length; j++)
             {
-                var events = data[i].Events;
-
-                // Check maximum depth
-                int maxDepth = 0;
-                for (int j = 0; j < events.Length; j++)
+                if (events[j].Depth == 0)
                 {
-                    maxDepth = Mathf.Max(maxDepth, events[j].Depth);
-                }
-
-                // Add events
-                for (int j = 0; j < events.Length; j++)
-                {
-                    if (events[j].Depth == 0)
-                    {
-                        AddEvent(startTime, j, maxDepth, events, container);
-                    }
+                    AddEvent(0, j, maxDepth, events, container);
                 }
             }
         }
