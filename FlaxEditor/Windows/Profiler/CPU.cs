@@ -103,7 +103,7 @@ namespace FlaxEditor.Windows.Profiler
             int childrenDepth = e.Depth + 1;
             if (childrenDepth <= maxDepth)
             {
-                while (index++ < events.Length)
+                while (index < events.Length)
                 {
                     int subDepth = events[index].Depth;
 
@@ -113,6 +113,8 @@ namespace FlaxEditor.Windows.Profiler
                     {
                         AddEvent(startTime, maxDepth, index, events, control);
                     }
+
+                    index++;
                 }
             }
         }
@@ -166,7 +168,7 @@ namespace FlaxEditor.Windows.Profiler
                 {
                     if (events[j].Depth == 0)
                     {
-                        AddEvent(startTime, j, maxDepth, events, container);
+                        AddEvent(startTime, maxDepth, j, events, container);
                     }
                 }
             }

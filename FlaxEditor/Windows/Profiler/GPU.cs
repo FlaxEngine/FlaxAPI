@@ -82,14 +82,14 @@ namespace FlaxEditor.Windows.Profiler
             UpdateTimeline();
         }
 
-        private float AddEvent(float leftEdge, int maxDepth, int index, EventGPU[] events, ContainerControl parent)
+        private float AddEvent(float x, int maxDepth, int index, EventGPU[] events, ContainerControl parent)
         {
             EventGPU e = events[index];
-            
-            double scale = 100.0;
+
+            double scale = 1000.0;
             float width = (float)(e.Time * scale);
 
-            var control = new Timeline.Event(leftEdge, e.Depth, width)
+            var control = new Timeline.Event(x, e.Depth, width)
             {
                 Name = e.Name,
                 TooltipText = string.Format("{0}, {1} ms", e.Name, ((int)(e.Time * 1000.0) / 1000.0f)),
@@ -100,7 +100,7 @@ namespace FlaxEditor.Windows.Profiler
             int childrenDepth = e.Depth + 1;
             if (childrenDepth <= maxDepth)
             {
-                while (index++ < events.Length)
+                while (index < events.Length)
                 {
                     int subDepth = events[index].Depth;
 
@@ -108,12 +108,14 @@ namespace FlaxEditor.Windows.Profiler
                         break;
                     if (subDepth == childrenDepth)
                     {
-                        leftEdge += AddEvent(leftEdge, maxDepth, index, events, control);
+                        x += AddEvent(x, maxDepth, index, events, control);
                     }
+
+                    index++;
                 }
             }
 
-            return control.Right;
+            return width;
         }
 
         private void UpdateTimeline()
@@ -138,7 +140,7 @@ namespace FlaxEditor.Windows.Profiler
             var data = _events.Get(_mainChart.SelectedSampleIndex);
             if (data == null || data.Length == 0)
                 return;
-            
+
             var container = _timeline.EventsContainer;
             var events = data;
 
@@ -150,11 +152,12 @@ namespace FlaxEditor.Windows.Profiler
             }
 
             // Add events
+            float x = 0;
             for (int j = 0; j < events.Length; j++)
             {
                 if (events[j].Depth == 0)
                 {
-                    AddEvent(0, j, maxDepth, events, container);
+                    x += AddEvent(x, maxDepth, j, events, container);
                 }
             }
         }

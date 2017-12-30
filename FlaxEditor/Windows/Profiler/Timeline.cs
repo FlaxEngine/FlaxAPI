@@ -81,7 +81,7 @@ namespace FlaxEditor.Windows.Profiler
                 if (_nameLength < 0 && style.FontMedium)
                     _nameLength = style.FontMedium.MeasureText(Name).X;
 
-                if (_nameLength > bounds.Width + 4)
+                if (_nameLength < bounds.Width + 4)
                 {
                     Render2D.PushClip(bounds);
                     Render2D.DrawText(style.FontMedium, Name, bounds, Color.White, TextAlignment.Center, TextAlignment.Center);
