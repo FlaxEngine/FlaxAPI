@@ -17,7 +17,17 @@ namespace FlaxEditor.GUI
         /// <param name="value">The value.</param>
         /// <returns>The value string.</returns>
         public delegate string ValueFormatDelegate(object value);
-        
+
+        /// <summary>
+        /// True if use expand/collapse rows feature for this column. See <see cref="Row.Depth"/> property which is used to describe the rows hierarchy.
+        /// </summary>
+        public bool UseExpandCollapseMode;
+
+        /// <summary>
+        /// The cell text alignment horizontally.
+        /// </summary>
+        public TextAlignment CellAlignment = TextAlignment.Far;
+
         /// <summary>
         /// The column title.
         /// </summary>

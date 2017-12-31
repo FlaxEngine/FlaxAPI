@@ -60,6 +60,8 @@ namespace FlaxEditor.Windows.Profiler
                 {
                     new ColumnDefinition
                     {
+                        UseExpandCollapseMode = true,
+                        CellAlignment = TextAlignment.Near,
                         Title = "Event",
                         TitleBackgroundColor = headerColor,
                     },
@@ -281,6 +283,7 @@ namespace FlaxEditor.Windows.Profiler
                         // Vertices
                         e.Stats.Vertices,
                     },
+                    Depth = e.Depth,
                     Width = _table.Width,
                     Parent = _table,
                 };

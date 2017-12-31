@@ -144,11 +144,14 @@ namespace FlaxEditor.GUI
             for (int i = 0; i < Children.Count; i++)
             {
                 var c = Children[i];
-                var bounds = c.Bounds;
-                bounds.Width = Width;
-                bounds.Y = y;
-                c.Bounds = bounds;
-                y += bounds.Height + 1;
+                if (c.Visible)
+                {
+                    var bounds = c.Bounds;
+                    bounds.Width = Width;
+                    bounds.Y = y;
+                    c.Bounds = bounds;
+                    y += bounds.Height + 1;
+                }
             }
 
             Height = y;

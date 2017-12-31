@@ -24,7 +24,12 @@ namespace FlaxEditor.GUI
         /// Gets or sets the cell values.
         /// </summary>
         public object[] Values { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the row depth level.
+        /// </summary>
+        public int Depth { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Row"/> class.
         /// </summary>
@@ -32,6 +37,7 @@ namespace FlaxEditor.GUI
         public Row(float height = 16)
             : base(0, 0, 100, height)
         {
+            Depth = -1;
         }
 
         /// <inheritdoc />
@@ -65,8 +71,32 @@ namespace FlaxEditor.GUI
                         text = value.ToString();
 
                     var rect = new Rectangle(x, 0, width, Height);
+                    float leftDepthMargin = 0;
 
-                    Render2D.DrawText(style.FontMedium, text, rect, Color.White, TextAlignment.Far, TextAlignment.Center);
+                    if (column.UseExpandCollapseMode)
+                    {
+                        float arrowSize = 12.0f;
+                        leftDepthMargin = arrowSize * (Depth + 1);
+                        
+                        // Check if has any child events (next row should be it)
+                        int nextIndex = IndexInParent + 1;
+                        if (nextIndex < _table.ChildrenCount)
+                        {
+                            if (_table.Children[nextIndex] is Row row && row.Depth == Depth + 1)
+                            {
+                                // Tree node arrow                  
+                                var arrowRect = new Rectangle(x + leftDepthMargin - arrowSize, (Height - arrowSize) * 0.5f, arrowSize, arrowSize);
+                                Render2D.DrawSprite(row.Visible ? style.ArrowDown : style.ArrowRight, arrowRect, IsMouseOver ? Color.White : new Color(0.8f, 0.8f, 0.8f, 0.8f));
+                            }
+                        }
+                    }
+
+                    rect.X += leftDepthMargin;
+                    rect.Width -= leftDepthMargin;
+
+                    Render2D.PushClip(rect);
+                    Render2D.DrawText(style.FontMedium, text, rect, Color.White, column.CellAlignment, TextAlignment.Center);
+                    Render2D.PopClip();
 
                     x += width;
                 }
@@ -79,6 +109,88 @@ namespace FlaxEditor.GUI
             base.OnParentChangedInternal();
 
             _table = Parent as Table;
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        {
+            if (buttons == MouseButton.Left && Values != null && _table?.Columns != null)
+            {
+                float x = 0;
+                int end = Mathf.Min(Values.Length, _table.Columns.Length);
+                for (int i = 0; i < end; i++)
+                {
+                    var column = _table.Columns[i];
+                    var width = _table.GetColumnWidth(i);
+
+                    if (column.UseExpandCollapseMode)
+                    {
+                        float arrowSize = 12.0f;
+                        float leftDepthMargin = arrowSize * (Depth + 1);
+                        int nextIndex = IndexInParent + 1;
+                        if (nextIndex < _table.ChildrenCount)
+                        {
+                            if (_table.Children[nextIndex] is Row row && row.Depth == Depth + 1)
+                            {
+                                var arrowRect = new Rectangle(x + leftDepthMargin - arrowSize, (Height - arrowSize) * 0.5f, arrowSize, arrowSize);
+
+                                if (arrowRect.Contains(location))
+                                {
+                                    // Collapse/expand
+                                    SetSubRowsVisible(!GetSubRowsVisible());
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+
+                    x += width;
+                }
+            }
+
+            return base.OnMouseUp(location, buttons);
+        }
+
+        /// <inheritdoc />
+        protected override void OnVisibleChanged()
+        {
+            base.OnVisibleChanged();
+
+            // Show/hide child events (only if using depth mode)
+            if (HasParent && Depth != -1)
+            {
+                SetSubRowsVisible(Visible);
+            }
+        }
+
+        private bool GetSubRowsVisible()
+        {
+            for (int i = Parent.GetChildIndex(this) + 1; i < Parent.ChildrenCount; i++)
+            {
+                if (Parent.Children[i] is Row child)
+                {
+                    if (child.Depth == Depth + 1)
+                        return child.Visible;
+                    if (child.Depth <= Depth)
+                        break;
+                }
+            }
+
+            return true;
+        }
+
+        private void SetSubRowsVisible(bool visible)
+        {
+            for (int i = Parent.GetChildIndex(this) + 1; i < Parent.ChildrenCount; i++)
+            {
+                if (Parent.Children[i] is Row child)
+                {
+                    if (child.Depth == Depth + 1)
+                        child.Visible = visible;
+                    else if(child.Depth <= Depth)
+                        break;
+                }
+            }
         }
     }
 }
