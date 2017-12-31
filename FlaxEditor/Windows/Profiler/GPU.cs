@@ -95,6 +95,15 @@ namespace FlaxEditor.Windows.Profiler
                 },
                 Parent = layout,
             };
+            _table.Splits = new[]
+            {
+                0.5f,
+                0.1f,
+                0.1f,
+                0.1f,
+                0.1f,
+                0.1f,
+            };
         }
 
         /// <inheritdoc />
