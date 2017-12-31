@@ -142,6 +142,7 @@
     <Compile Include="Gizmo\GridGizmo.cs" />
     <Compile Include="Gizmo\SelectionOutline.cs" />
     <Compile Include="GUI\AssetPicker.cs" />
+    <Compile Include="GUI\ColumnDefinition.cs" />
     <Compile Include="GUI\Drag\DragActors.cs" />
     <Compile Include="GUI\Drag\DragActorType.cs" />
     <Compile Include="GUI\Drag\DragScripts.cs" />
@@ -194,7 +195,9 @@
     <Compile Include="GUI\Drag\DragItems.cs" />
     <Compile Include="GUI\MainMenu.cs" />
     <Compile Include="GUI\MainMenuButton.cs" />
+    <Compile Include="GUI\Row.cs" />
     <Compile Include="GUI\StatusBar.cs" />
+    <Compile Include="GUI\Table.cs" />
     <Compile Include="GUI\ToolStrip.cs" />
     <Compile Include="GUI\ToolStripButton.cs" />
     <Compile Include="GUI\ToolStripSeparator.cs" />
