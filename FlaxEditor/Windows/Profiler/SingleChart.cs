@@ -46,6 +46,11 @@ namespace FlaxEditor.Windows.Profiler
         }
 
         /// <summary>
+        /// Gets the selected sample value.
+        /// </summary>
+        public float SelectedSample => _samples.Get(_selectedSampleIndex);
+
+        /// <summary>
         /// Occurs when selected sample gets changed.
         /// </summary>
         public event Action<int> SelectedSampleChanged;

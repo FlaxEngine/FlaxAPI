@@ -45,13 +45,18 @@ namespace FlaxEditor.Windows.Profiler
             private float _nameLength;
 
             /// <summary>
+            /// The default height of the event.
+            /// </summary>
+            public const float DefaultHeight = 25.0f;
+
+            /// <summary>
             /// Initializes a new instance of the <see cref="Event"/> class.
             /// </summary>
             /// <param name="x">The x position.</param>
             /// <param name="depth">The timeline row index (event depth).</param>
             /// <param name="width">The width.</param>
             public Event(float x, int depth, float width)
-                : base(x, depth * 25, width, 24)
+                : base(x, depth * DefaultHeight, width, DefaultHeight - 1)
             {
                 _nameLength = -1;
             }

@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using FlaxEditor.GUI;
 using FlaxEditor.Profiling;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -16,6 +17,7 @@ namespace FlaxEditor.Windows.Profiler
     {
         private readonly SingleChart _mainChart;
         private readonly Timeline _timeline;
+        private readonly Table _table;
         private readonly SamplesBuffer<EventGPU[]> _events = new SamplesBuffer<EventGPU[]>();
 
         public GPU()
@@ -49,6 +51,48 @@ namespace FlaxEditor.Windows.Profiler
                 Height = 340,
                 Parent = layout,
             };
+
+            // Table
+            var headerColor = Style.Current.LightBackground;
+            _table = new Table
+            {
+                Columns = new[]
+                {
+                    new ColumnDefinition
+                    {
+                        Title = "Event",
+                        TitleBackgroundColor = headerColor,
+                    },
+                    new ColumnDefinition
+                    {
+                        Title = "Total",
+                        TitleBackgroundColor = headerColor,
+                        FormatValue = (x) => ((float)x).ToString("0.0") + '%',
+                    },
+                    new ColumnDefinition
+                    {
+                        Title = "GPU ms",
+                        TitleBackgroundColor = headerColor,
+                        FormatValue = (x) => ((float)x).ToString("0.000"),
+                    },
+                    new ColumnDefinition
+                    {
+                        Title = "Draw Calls",
+                        TitleBackgroundColor = headerColor,
+                    },
+                    new ColumnDefinition
+                    {
+                        Title = "Triangles",
+                        TitleBackgroundColor = headerColor,
+                    },
+                    new ColumnDefinition
+                    {
+                        Title = "Vertices",
+                        TitleBackgroundColor = headerColor,
+                    },
+                },
+                Parent = layout,
+            };
         }
 
         /// <inheritdoc />
@@ -70,11 +114,12 @@ namespace FlaxEditor.Windows.Profiler
             if (data != null && data.Length > 0)
                 drawTime = data[0].Time;
             _mainChart.AddSample(drawTime);
-            
+
             // Update timeline if using the last frame
             if (_mainChart.SelectedSampleIndex == -1)
             {
                 UpdateTimeline();
+                UpdateTable();
             }
         }
 
@@ -83,6 +128,7 @@ namespace FlaxEditor.Windows.Profiler
         {
             _mainChart.SelectedSampleIndex = selectedFrame;
             UpdateTimeline();
+            UpdateTable();
         }
 
         private float AddEvent(float x, int maxDepth, int index, EventGPU[] events, ContainerControl parent)
@@ -95,7 +141,7 @@ namespace FlaxEditor.Windows.Profiler
             var control = new Timeline.Event(x, e.Depth, width)
             {
                 Name = e.Name,
-                TooltipText = string.Format("{0}, {1} ms", e.Name, ((int)(e.Time * 1000.0) / 1000.0f)),
+                TooltipText = string.Format("{0}, {1} ms", e.Name, ((int)(e.Time * 10000.0) / 10000.0f)),
                 Parent = parent,
             };
 
@@ -115,13 +161,13 @@ namespace FlaxEditor.Windows.Profiler
                     if (subDepth == childrenDepth)
                         subEventsDuration += events[tmpIndex].Time;
                 }
-                
+
                 // Skip if has no sub events
                 if (subEventsDuration > 0)
                 {
                     // Apply some offset to sub-events (center them within this event)
                     x += (float)((e.Time - subEventsDuration) * scale) * 0.5f;
-                    
+
                     while (++index < events.Length)
                     {
                         int subDepth = events[index].Depth;
@@ -147,20 +193,20 @@ namespace FlaxEditor.Windows.Profiler
             container.DisposeChildren();
 
             container.LockChildrenRecursive();
-
-            UpdateTimelineInner();
+            
+            _timeline.Height = UpdateTimelineInner();
 
             container.UnlockChildrenRecursive();
             container.PerformLayout();
         }
-        
-        private void UpdateTimelineInner()
+
+        private float UpdateTimelineInner()
         {
             if (_events.Count == 0)
-                return;
+                return 0;
             var data = _events.Get(_mainChart.SelectedSampleIndex);
             if (data == null || data.Length == 0)
-                return;
+                return 0;
 
             var container = _timeline.EventsContainer;
             var events = data;
@@ -180,6 +226,67 @@ namespace FlaxEditor.Windows.Profiler
                 {
                     x += AddEvent(x, maxDepth, j, events, container);
                 }
+            }
+
+            return Timeline.Event.DefaultHeight * (maxDepth + 1);
+        }
+
+        private void UpdateTable()
+        {
+            _table.DisposeChildren();
+
+            _table.LockChildrenRecursive();
+
+            UpdateTableInner();
+
+            _table.UnlockChildrenRecursive();
+            _table.PerformLayout();
+        }
+
+        private void UpdateTableInner()
+        {
+            if (_events.Count == 0)
+                return;
+            var data = _events.Get(_mainChart.SelectedSampleIndex);
+            if (data == null || data.Length == 0)
+                return;
+
+            float totalTimeMs = _mainChart.SelectedSample;
+
+            // Add rows
+            var rowColor2 = Style.Current.Background * 1.02f;
+            for (int i = 0; i < data.Length; i++)
+            {
+                var e = data[i];
+
+                var row = new Row
+                {
+                    Values = new object[]
+                    {
+                        // Event
+                        e.Name,
+
+                        // Total (%)
+                        (int)(e.Time / totalTimeMs * 1000.0f) / 10.0f,
+
+                        // GPU ms
+                        (e.Time * 10000.0f) / 10000.0f,
+
+                        // Draw Calls
+                        e.Stats.DrawCalls,
+
+                        // Triangles
+                        e.Stats.Triangles,
+
+                        // Vertices
+                        e.Stats.Vertices,
+                    },
+                    Width = _table.Width,
+                    Parent = _table,
+                };
+
+                if (i % 2 == 0)
+                    row.BackgroundColor = rowColor2;
             }
         }
     }
