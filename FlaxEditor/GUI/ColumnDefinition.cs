@@ -72,5 +72,17 @@ namespace FlaxEditor.GUI
         /// The value formatting delegate.
         /// </summary>
         public ValueFormatDelegate FormatValue;
+
+        /// <summary>
+        /// Clamps the size of the column (in percantage size of the table).
+        /// </summary>
+        /// <param name="value">The percentage size of the column (split value).</param>
+        /// <param name="tableSize">Size of the table (width in pixels).</param>
+        /// <returns>The lampespercentage size of the column (split value).</returns>
+        public float ClampColumnSize(float value, float tableSize)
+        {
+            float width = Mathf.Clamp(value, MinSizePercentage, MaxSizePercentage) * tableSize;
+            return Mathf.Clamp(width, MinSize, MaxSize) / tableSize;
+        }
     }
 }

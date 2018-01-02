@@ -71,6 +71,7 @@ namespace FlaxEditor.GUI
                         text = value.ToString();
 
                     var rect = new Rectangle(x, 0, width, Height);
+                    rect.Expand(-4);
                     float leftDepthMargin = 0;
 
                     if (column.UseExpandCollapseMode)

@@ -18,6 +18,8 @@ namespace FlaxEditor.GUI
         private float _headerHeight = 20;
         private ColumnDefinition[] _columns;
         private float[] _splits;
+        private int _movingSplit = -1;
+        private Vector2 _mousePos;
 
         /// <summary>
         /// Gets or sets the height of the table column headers.
@@ -130,8 +132,90 @@ namespace FlaxEditor.GUI
             if (column.TitleBackgroundColor.A > 0)
                 Render2D.FillRectangle(rect, column.TitleBackgroundColor, true);
 
-            var font = column.TitleFont ?? Style.Current.FontMedium;
+            var style = Style.Current;
+            var font = column.TitleFont ?? style.FontMedium;
             Render2D.DrawText(font, column.Title, rect, column.TitleColor, TextAlignment.Center, TextAlignment.Center);
+
+            if (columnIndex < _columns.Length - 1)
+            {
+                var splitRect = new Rectangle(rect.Right - 1, 2, 2, rect.Height - 4);
+                Render2D.FillRectangle(splitRect, _movingSplit == columnIndex || splitRect.Contains(_mousePos) ? style.BorderNormal : column.TitleBackgroundColor * 0.9f);
+            }
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        {
+            if (buttons == MouseButton.Left)
+            {
+                if (_columns != null && _splits != null)
+                {
+                    Rectangle rect = new Rectangle(0, 0, 0, _headerHeight);
+                    for (int i = 0; i < _columns.Length - 1; i++)
+                    {
+                        rect.Width = GetColumnWidth(i);
+
+                        var splitRect = new Rectangle(rect.Right - 1, 2, 2, rect.Height - 4);
+                        if (splitRect.Contains(location))
+                        {
+                            // Start moving splitter
+                            _movingSplit = i;
+                            StartMouseCapture();
+                            Cursor = CursorType.SizeWE;
+                            break;
+                        }
+
+                        rect.X += rect.Width;
+                    }
+                }
+            }
+
+            return base.OnMouseDown(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override void OnMouseMove(Vector2 location)
+        {
+            _mousePos = location;
+
+            if (_movingSplit != -1)
+            {
+                int nextSplit = _movingSplit + 1;
+                float width = Width;
+                float leftPos = 0;
+                for (int i = 0; i < _movingSplit; i++)
+                    leftPos += _splits[i];
+                leftPos *= width;
+
+                float movingLength = GetColumnWidth(_movingSplit) + GetColumnWidth(nextSplit);
+                float splitsSum = _splits[_movingSplit] + _splits[nextSplit];
+                
+                float leftSplit = splitsSum * Mathf.Saturate((location.X - leftPos) / movingLength);
+                _splits[_movingSplit] = _columns[_movingSplit].ClampColumnSize(leftSplit, width);
+                float rightSplit = splitsSum - _splits[_movingSplit];
+                _splits[nextSplit] = _columns[nextSplit].ClampColumnSize(rightSplit, width);
+            }
+
+            base.OnMouseMove(location);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        {
+            if (buttons == MouseButton.Left && _movingSplit != -1)
+            {
+                _movingSplit = -1;
+                EndMouseCapture();
+            }
+
+            return base.OnMouseUp(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override void OnEndMouseCapture()
+        {
+            _movingSplit = -1;
+            Cursor = CursorType.Default;
         }
 
         /// <inheritdoc />
