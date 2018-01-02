@@ -21,9 +21,11 @@ namespace FlaxEditor.Windows.Profiler
         private readonly ToolStripButton _prevFrameButton;
         private readonly ToolStripButton _nextFrameButton;
         private readonly ToolStripButton _lastframeButton;
+        private readonly ToolStripButton _showOnlyLastUpdateEventsButton;
         private readonly Tabs _tabs;
         private int _frameIndex = -1;
         private int _framesCount;
+        private bool _showOnlyLastUpdateEvents = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether live events recording is enabled.
@@ -55,7 +57,26 @@ namespace FlaxEditor.Windows.Profiler
 
                     UpdateButtons();
                     if (_tabs.SelectedTab is ProfilerMode mode)
-                        mode.UpdateView(_frameIndex);
+                        mode.UpdateView(_frameIndex, _showOnlyLastUpdateEvents);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether show only last update events and hide events from the other callbacks (e.g. draw or fixed update).
+        /// </summary>
+        public bool ShowOnlyLastUpdateEvents
+        {
+            get => _showOnlyLastUpdateEvents;
+            set
+            {
+                if (_showOnlyLastUpdateEvents != value)
+                {
+                    _showOnlyLastUpdateEvents = value;
+
+                    UpdateButtons();
+                    if (_tabs.SelectedTab is ProfilerMode mode)
+                        mode.UpdateView(_frameIndex, _showOnlyLastUpdateEvents);
                 }
             }
         }
@@ -86,7 +107,10 @@ namespace FlaxEditor.Windows.Profiler
             _nextFrameButton.LinkTooltip("Next frame");
             _lastframeButton = toolstrip.AddButton(5, editor.UI.GetIcon("Step32"));
             _lastframeButton.LinkTooltip("Current frame");
-            
+            toolstrip.AddSeparator();
+            _showOnlyLastUpdateEventsButton = toolstrip.AddButton(6, editor.UI.GetIcon("PageScale32"));
+            _showOnlyLastUpdateEventsButton.LinkTooltip("Show only last update events and hide events from the other callbacks (e.g. draw or fixed update)");
+
             _tabs = new Tabs
             {
                 Orientation = Orientation.Vertical,
@@ -130,7 +154,7 @@ namespace FlaxEditor.Windows.Profiler
                 if (_tabs.Children[i] is ProfilerMode mode)
                 {
                     mode.Clear();
-                    mode.UpdateView(ViewFrameIndex);
+                    mode.UpdateView(ViewFrameIndex, _showOnlyLastUpdateEvents);
                 }
             }
 
@@ -164,13 +188,19 @@ namespace FlaxEditor.Windows.Profiler
                     ViewFrameIndex = -1;
                     break;
                 }
+
+                case 6:
+                {
+                    ShowOnlyLastUpdateEvents = !ShowOnlyLastUpdateEvents;
+                    break;
+                }
             }
         }
 
         private void OnSelectedTabChanged(Tabs tabs)
         {
             if (tabs.SelectedTab is ProfilerMode mode)
-                mode.UpdateView(ViewFrameIndex);
+                mode.UpdateView(ViewFrameIndex, _showOnlyLastUpdateEvents);
         }
 
         private void UpdateButtons()
@@ -179,6 +209,7 @@ namespace FlaxEditor.Windows.Profiler
             _prevFrameButton.Enabled = _frameIndex > 0;
             _nextFrameButton.Enabled = (_framesCount - _frameIndex - 1) > 0;
             _lastframeButton.Enabled = _framesCount > 0;
+            _showOnlyLastUpdateEventsButton.Checked = _showOnlyLastUpdateEvents;
         }
 
         /// <inheritdoc />
@@ -194,7 +225,7 @@ namespace FlaxEditor.Windows.Profiler
             for (int i = 0; i < _tabs.ChildrenCount; i++)
             {
                 if (_tabs.Children[i] is ProfilerMode mode)
-                    mode.UpdateView(ViewFrameIndex);
+                    mode.UpdateView(ViewFrameIndex, _showOnlyLastUpdateEvents);
             }
 
             UpdateButtons();

@@ -20,6 +20,7 @@ namespace FlaxEditor.Windows.Profiler
         private readonly Timeline _timeline;
         private readonly Table _table;
         private readonly SamplesBuffer<ThreadStats[]> _events = new SamplesBuffer<ThreadStats[]>();
+        private bool _showOnlyLastUpdateEvents;
 
         public CPU()
             : base("CPU")
@@ -133,17 +134,75 @@ namespace FlaxEditor.Windows.Profiler
             // Update timeline if using the last frame
             if (_mainChart.SelectedSampleIndex == -1)
             {
-                UpdateTimeline();
-                UpdateTable();
+                var viewRange = GetEventsViewRange();
+                UpdateTimeline(ref viewRange);
+                UpdateTable(ref viewRange);
             }
         }
 
         /// <inheritdoc />
-        public override void UpdateView(int selectedFrame)
+        public override void UpdateView(int selectedFrame, bool showOnlyLastUpdateEvents)
         {
+            _showOnlyLastUpdateEvents = showOnlyLastUpdateEvents;
             _mainChart.SelectedSampleIndex = selectedFrame;
-            UpdateTimeline();
-            UpdateTable();
+
+            var viewRange = GetEventsViewRange();
+            UpdateTimeline(ref viewRange);
+            UpdateTable(ref viewRange);
+        }
+
+        private struct ViewRange
+        {
+            public double Start;
+            public double End;
+
+            public static ViewRange Full = new ViewRange
+            {
+                Start = float.MinValue,
+                End = float.MaxValue
+            };
+
+            public ViewRange(ref EventCPU e)
+            {
+                Start = e.Start - MinEventTimeMs;
+                End = e.End + MinEventTimeMs;
+            }
+
+            public bool SkipEvent(ref EventCPU e)
+            {
+                return e.Start < Start || e.Start > End;
+            }
+        }
+
+        private ViewRange GetEventsViewRange()
+        {
+            if (_showOnlyLastUpdateEvents)
+            {
+                // Find root event named 'Update' and use it as a view range
+                if (_events.Count != 0)
+                {
+                    var data = _events.Get(_mainChart.SelectedSampleIndex);
+                    if (data != null)
+                    {
+                        for (int j = 0; j < data.Length; j++)
+                        {
+                            var events = data[j].Events;
+
+                            for (int i = 0; i < events.Length; i++)
+                            {
+                                var e = events[i];
+
+                                if (e.Depth == 0 && e.Name == "Update")
+                                {
+                                    return new ViewRange(ref e);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return ViewRange.Full;
         }
 
         private void AddEvent(double startTime, int maxDepth, float xOffset, int depthOffset, int index, EventCPU[] events, ContainerControl parent)
@@ -180,7 +239,7 @@ namespace FlaxEditor.Windows.Profiler
             }
         }
 
-        private void UpdateTimeline()
+        private void UpdateTimeline(ref ViewRange viewRange)
         {
             var container = _timeline.EventsContainer;
 
@@ -189,13 +248,13 @@ namespace FlaxEditor.Windows.Profiler
 
             container.LockChildrenRecursive();
 
-            _timeline.Height = UpdateTimelineInner();
+            _timeline.Height = UpdateTimelineInner(ref viewRange);
 
             container.UnlockChildrenRecursive();
             container.PerformLayout();
         }
 
-        private float UpdateTimelineInner()
+        private float UpdateTimelineInner(ref ViewRange viewRange)
         {
             if (_events.Count == 0)
                 return 0;
@@ -217,13 +276,23 @@ namespace FlaxEditor.Windows.Profiler
             for (int i = 0; i < data.Length; i++)
             {
                 var events = data[i].Events;
-
+                
                 // Check maximum depth
-                int maxDepth = 0;
+                int maxDepth = -1;
                 for (int j = 0; j < events.Length; j++)
                 {
-                    maxDepth = Mathf.Max(maxDepth, events[j].Depth);
+                    var e = events[j];
+
+                    // Reject events outside the view range
+                    if (viewRange.SkipEvent(ref e))
+                        continue;
+
+                    maxDepth = Mathf.Max(maxDepth, e.Depth);
                 }
+
+                // Skip empty tracks
+                if(maxDepth == -1)
+                    continue;
 
                 // Add thread label
                 float xOffset = 90;
@@ -238,8 +307,13 @@ namespace FlaxEditor.Windows.Profiler
                 // Add events
                 for (int j = 0; j < events.Length; j++)
                 {
-                    if (events[j].Depth == 0)
+                    var e = events[j];
+                    if (e.Depth == 0)
                     {
+                        // Reject events outside the view range
+                        if (viewRange.SkipEvent(ref e))
+                            continue;
+
                         AddEvent(startTime, maxDepth, xOffset, depthOffset, j, events, container);
                     }
                 }
@@ -250,19 +324,19 @@ namespace FlaxEditor.Windows.Profiler
             return Timeline.Event.DefaultHeight * depthOffset;
         }
 
-        private void UpdateTable()
+        private void UpdateTable(ref ViewRange viewRange)
         {
             _table.DisposeChildren();
 
             _table.LockChildrenRecursive();
 
-            UpdateTableInner();
+            UpdateTableInner(ref viewRange);
 
             _table.UnlockChildrenRecursive();
             _table.PerformLayout();
         }
 
-        private void UpdateTableInner()
+        private void UpdateTableInner(ref ViewRange viewRange)
         {
             if (_events.Count == 0)
                 return;
@@ -282,6 +356,10 @@ namespace FlaxEditor.Windows.Profiler
                 {
                     var e = events[i];
                     var time = Math.Max(e.End - e.Start, MinEventTimeMs);
+
+                    // Reject events outside the view range
+                    if (viewRange.SkipEvent(ref e))
+                        continue;
 
                     // Count sub-events time
                     double subEventsTimeTotal = 0;

@@ -85,7 +85,7 @@ namespace FlaxEditor.Windows.Profiler
         }
 
         /// <inheritdoc />
-        public override void UpdateView(int selectedFrame)
+        public override void UpdateView(int selectedFrame, bool showOnlyLastUpdateEvents)
         {
             _fpsChart.SelectedSampleIndex = selectedFrame;
             _updateTimeChart.SelectedSampleIndex = selectedFrame;

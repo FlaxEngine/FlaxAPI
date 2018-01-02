@@ -58,7 +58,8 @@ namespace FlaxEditor.Windows.Profiler
         /// Updates the mode view. Called after init and on selected frame changed.
         /// </summary>
         /// <param name="selectedFrame">The selected frame index.</param>
-        public virtual void UpdateView(int selectedFrame)
+        /// <param name="showOnlyLastUpdateEvents">True if show only events that happened during the last engine update (excluding events from fixed update or draw event), otherwise show all collected events.</param>
+        public virtual void UpdateView(int selectedFrame, bool showOnlyLastUpdateEvents)
         {
         }
 
