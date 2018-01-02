@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+// Copyright (c) 2012-2018 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System.Collections.Generic;
@@ -47,7 +47,7 @@ namespace FlaxEditor.Windows
             };
             new Label(nameLabel.Left, nameLabel.Bottom + 4, nameLabel.Width, 50)
             {
-                Text = string.Format("Version: {0}\nCopyright (c) 2012-2017 Wojciech Figat.\nAll rights reserved.", Globals.Version),
+                Text = string.Format("Version: {0}\nCopyright (c) 2012-2018 Wojciech Figat.\nAll rights reserved.", Globals.Version),
                 HorizontalAlignment = TextAlignment.Near,
                 VerticalAlignment = TextAlignment.Near,
                 Parent = this
