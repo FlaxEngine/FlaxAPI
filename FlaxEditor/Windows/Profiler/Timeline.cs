@@ -100,7 +100,7 @@ namespace FlaxEditor.Windows.Profiler
         /// Timeline track label
         /// </summary>
         /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
-        private class TrackLabel : ContainerControl
+        public class TrackLabel : ContainerControl
         {
             /// <inheritdoc />
             public override void Draw()

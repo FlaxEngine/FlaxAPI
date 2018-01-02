@@ -146,7 +146,7 @@ namespace FlaxEditor.Windows.Profiler
             UpdateTable();
         }
 
-        private void AddEvent(double startTime, int maxDepth, int index, EventCPU[] events, ContainerControl parent)
+        private void AddEvent(double startTime, int maxDepth, float xOffset, int depthOffset, int index, EventCPU[] events, ContainerControl parent)
         {
             EventCPU e = events[index];
 
@@ -155,7 +155,7 @@ namespace FlaxEditor.Windows.Profiler
             float x = (float)((e.Start - startTime) * scale);
             float width = (float)(length * scale);
             
-            var control = new Timeline.Event(x, e.Depth, width)
+            var control = new Timeline.Event(x + xOffset, e.Depth + depthOffset, width)
             {
                 Name = e.Name,
                 TooltipText = string.Format("{0}, {1} ms", e.Name, ((int)(length * 1000.0) / 1000.0f)),
@@ -174,7 +174,7 @@ namespace FlaxEditor.Windows.Profiler
                         break;
                     if (subDepth == childrenDepth)
                     {
-                        AddEvent(startTime, maxDepth, index, events, parent);
+                        AddEvent(startTime, maxDepth, xOffset, depthOffset, index, events, parent);
                     }
                 }
             }
@@ -202,7 +202,7 @@ namespace FlaxEditor.Windows.Profiler
             var data = _events.Get(_mainChart.SelectedSampleIndex);
             if (data == null || data.Length == 0)
                 return 0;
-            
+
             // Find the first event start time (for the timeline start time)
             double startTime = data[0].Events[0].Start;
             for (int i = 1; i < data.Length; i++)
@@ -213,7 +213,7 @@ namespace FlaxEditor.Windows.Profiler
             var container = _timeline.EventsContainer;
 
             // Create timeline track per thread
-            int maxDepthTotal = 0;
+            int depthOffset = 0;
             for (int i = 0; i < data.Length; i++)
             {
                 var events = data[i].Events;
@@ -224,19 +224,30 @@ namespace FlaxEditor.Windows.Profiler
                 {
                     maxDepth = Mathf.Max(maxDepth, events[j].Depth);
                 }
-                maxDepthTotal = Mathf.Max(maxDepthTotal, maxDepth);
 
+                // Add thread label
+                float xOffset = 90;
+                var label = new Timeline.TrackLabel
+                {
+                    Bounds = new Rectangle(0, depthOffset * Timeline.Event.DefaultHeight, xOffset, (maxDepth + 2) * Timeline.Event.DefaultHeight),
+                    Name = data[i].Name,
+                    BackgroundColor = Style.Current.Background * 1.1f,
+                    Parent = container,
+                };
+                
                 // Add events
                 for (int j = 0; j < events.Length; j++)
                 {
                     if (events[j].Depth == 0)
                     {
-                        AddEvent(startTime, maxDepth, j, events, container);
+                        AddEvent(startTime, maxDepth, xOffset, depthOffset, j, events, container);
                     }
                 }
+
+                depthOffset += maxDepth + 2;
             }
 
-            return Timeline.Event.DefaultHeight * (maxDepthTotal + 2);
+            return Timeline.Event.DefaultHeight * depthOffset;
         }
 
         private void UpdateTable()
