@@ -236,11 +236,12 @@ namespace FlaxEngine.GUI
             float boxSize = clientRect.Height - margin * 2;
             float arrowOpacity = IsMouseOver ? 1.0f : 0.6f;
             bool isOpened = IsPopupOpened;
+            bool enabled = EnabledInHierarchy;
 
             // Background
             Color backgroundColor = style.BackgroundNormal;
             Color borderColor = style.BorderNormal;
-            if (!Enabled)
+            if (!enabled)
             {
                 backgroundColor *= 0.4f;
                 arrowOpacity = 0.4f;
@@ -258,7 +259,7 @@ namespace FlaxEngine.GUI
             {
                 // Draw text of the selected item
                 float textScale = Height / DefaultHeight;
-                Render2D.DrawText(style.FontMedium, _items[selectedIndex], new Rectangle(margin, 0, clientRect.Width - boxSize, clientRect.Height), Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, textScale);
+                Render2D.DrawText(style.FontMedium, _items[selectedIndex], new Rectangle(margin, 0, clientRect.Width - boxSize, clientRect.Height), enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, textScale);
             }
 
             // Arrow

@@ -141,15 +141,16 @@ namespace FlaxEditor.GUI
             var clientRect = new Rectangle(Vector2.Zero, Size);
             var iconRect = new Rectangle(DefaultMargin, DefaultMargin, iconSize, iconSize);
             var textRect = new Rectangle(DefaultMargin, 0, 0, Height);
+            bool enabled = EnabledInHierarchy;
 
             // Draw background
-            if (Enabled && (IsMouseOver || Checked))
+            if (enabled && (IsMouseOver || Checked))
                 Render2D.FillRectangle(clientRect, Checked ? style.BackgroundSelected : _mouseDown ? style.BackgroundHighlighted : (style.LightBackground * 1.3f));
 
             // Draw icon
             if (_icon.IsValid)
             {
-                Render2D.DrawSprite(_icon, iconRect, Enabled ? Color.White : style.ForegroundDisabled);
+                Render2D.DrawSprite(_icon, iconRect, enabled ? Color.White : style.ForegroundDisabled);
                 textRect.Location.X += iconSize + DefaultMargin;
             }
 
@@ -161,7 +162,7 @@ namespace FlaxEditor.GUI
                     style.FontMedium,
                     _text,
                     textRect,
-                    Enabled ? style.Foreground : style.ForegroundDisabled,
+                    enabled ? style.Foreground : style.ForegroundDisabled,
                     TextAlignment.Near,
                     TextAlignment.Center);
             }

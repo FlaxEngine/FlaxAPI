@@ -116,11 +116,12 @@ namespace FlaxEngine.GUI
             // Cache data
             var style = Style.Current;
             Rectangle clientRect = new Rectangle(Vector2.Zero, Size);
-            
+            bool enabled = EnabledInHierarchy;
+
             // Draw background
             Color backgroundColor = BackgroundColor;
             Color borderColor = BorderColor;
-            if (!Enabled)
+            if (!enabled)
             {
                 backgroundColor *= 0.5f;
                 borderColor *= 0.5f;
@@ -139,7 +140,7 @@ namespace FlaxEngine.GUI
             Render2D.DrawRectangle(clientRect, borderColor);
             
             // Draw text
-            Render2D.DrawText(Font, Text, clientRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
+            Render2D.DrawText(Font, Text, clientRect, enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
         }
 
         /// <inheritdoc />

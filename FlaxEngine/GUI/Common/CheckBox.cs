@@ -121,10 +121,12 @@ namespace FlaxEngine.GUI
         {
             base.Draw();
 
+            bool enabled = EnabledInHierarchy;
+
             // Border
             var style = Style.Current;
             Color borderColor = style.BorderNormal;
-            if (!Enabled)
+            if (!enabled)
                 borderColor *= 0.5f;
             else if (_mouseDown || _mouseOverBox)
                 borderColor = style.BorderSelected;
@@ -132,7 +134,7 @@ namespace FlaxEngine.GUI
 
             // Icon
             if (_intermediate || _checked)
-                Render2D.DrawSprite(_checked ? style.CheckBoxTick : style.CheckBoxIntermediate, _box, Enabled ? style.BorderSelected * 1.2f : style.ForegroundDisabled);
+                Render2D.DrawSprite(_checked ? style.CheckBoxTick : style.CheckBoxIntermediate, _box, enabled ? style.BorderSelected * 1.2f : style.ForegroundDisabled);
         }
 
         /// <inheritdoc />

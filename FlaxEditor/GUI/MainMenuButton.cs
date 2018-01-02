@@ -41,13 +41,14 @@ namespace FlaxEditor.GUI
             var clientRect = new Rectangle(0, 0, Width, Height);
             var hasChildItems = ContextMenu.HasChildren;
             var isOpened = ContextMenu.IsOpened;
+            bool enabled = EnabledInHierarchy;
 
             // Draw background
-            if (Enabled && hasChildItems && (isOpened || IsMouseOver))
+            if (enabled && hasChildItems && (isOpened || IsMouseOver))
                 Render2D.FillRectangle(clientRect, isOpened ? style.Background : style.BackgroundHighlighted);
 
             // Draw text
-            Render2D.DrawText(style.FontMedium, Text, clientRect, Enabled && hasChildItems ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
+            Render2D.DrawText(style.FontMedium, Text, clientRect, enabled && hasChildItems ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
         }
 
         /// <inheritdoc />

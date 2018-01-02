@@ -763,6 +763,7 @@ namespace FlaxEngine.GUI
             var rect = new Rectangle(Vector2.Zero, Size);
             var font = Font;
             Assert.IsNotNull(font, "Missing font.");
+            bool enabled = EnabledInHierarchy;
 
             // Background
             Color backColor = style.TextBoxBackground;
@@ -828,7 +829,7 @@ namespace FlaxEngine.GUI
             // Text or watermark
             if (_text.Length > 0)
             {
-                Render2D.DrawText(font, _text, _layout.Bounds, Enabled ? style.Foreground : style.ForegroundDisabled, _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
+                Render2D.DrawText(font, _text, _layout.Bounds, enabled ? style.Foreground : style.ForegroundDisabled, _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
             }
             else if (!string.IsNullOrEmpty(WatermarkText) && !IsFocused)
             {
