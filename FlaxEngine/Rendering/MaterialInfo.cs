@@ -117,6 +117,11 @@ namespace FlaxEngine.Rendering
         /// The transparent materials option. Disable distortion.
         /// </summary>
         TransparentDisableDistortion = 1 << 8,
+
+        /// <summary>
+        /// The material is using world position offset (it may be animated insie a shader).
+        /// </summary>
+        UsePositionOffset = 1 << 9,
     }
 
     /// <summary>

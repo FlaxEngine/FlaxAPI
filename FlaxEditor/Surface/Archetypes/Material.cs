@@ -56,8 +56,7 @@ namespace FlaxEditor.Surface.Archetypes
                 GetBox(8).Enabled = isLitSurface;// Normal
                 GetBox(9).Enabled = isTransparent || isPostFx;// Opacity
                 GetBox(10).Enabled = isTransparent;// Refraction
-                GetBox(11).Enabled = false;// Position Offset
-                // TODO: support world position offset
+                GetBox(11).Enabled = isSurface;// Position Offset
             }
 
             /// <inheritdoc />
