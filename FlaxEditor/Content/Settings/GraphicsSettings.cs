@@ -53,6 +53,6 @@ namespace FlaxEditor.Content.Settings
         /// Enables cascades splits blending for directional light shadows.
         /// </summary>
         [EditorOrder(1320), EditorDisplay("Quality", "Allow CSM Blending"), Tooltip("Enables cascades splits blending for directional light shadows.")]
-        public bool AllowCSMBlending = true;
+        public bool AllowCSMBlending = false;
     }
 }
