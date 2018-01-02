@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using FlaxEditor.GUI;
 using FlaxEditor.Profiling;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -17,6 +18,7 @@ namespace FlaxEditor.Windows.Profiler
     {
         private readonly SingleChart _mainChart;
         private readonly Timeline _timeline;
+        private readonly Table _table;
         private readonly SamplesBuffer<ThreadStats[]> _events = new SamplesBuffer<ThreadStats[]>();
 
         public CPU()
@@ -50,6 +52,65 @@ namespace FlaxEditor.Windows.Profiler
                 Height = 340,
                 Parent = layout,
             };
+
+            // Table
+            var headerColor = Style.Current.LightBackground;
+            _table = new Table
+            {
+                Columns = new[]
+                {
+                    new ColumnDefinition
+                    {
+                        UseExpandCollapseMode = true,
+                        CellAlignment = TextAlignment.Near,
+                        Title = "Event",
+                        TitleBackgroundColor = headerColor,
+                    },
+                    new ColumnDefinition
+                    {
+                        Title = "Total",
+                        TitleBackgroundColor = headerColor,
+                        FormatValue = FormatCellPercentage,
+                    },
+                    new ColumnDefinition
+                    {
+                        Title = "Self",
+                        TitleBackgroundColor = headerColor,
+                        FormatValue = FormatCellPercentage,
+                    },
+                    new ColumnDefinition
+                    {
+                        Title = "Time ms",
+                        TitleBackgroundColor = headerColor,
+                        FormatValue = FormatCellMs,
+                    },
+                    new ColumnDefinition
+                    {
+                        Title = "Self ms",
+                        TitleBackgroundColor = headerColor,
+                        FormatValue = FormatCellMs,
+                    },
+                },
+                Parent = layout,
+            };
+            _table.Splits = new[]
+            {
+                0.6f,
+                0.1f,
+                0.1f,
+                0.1f,
+                0.1f,
+            };
+        }
+
+        private string FormatCellPercentage(object x)
+        {
+            return ((float)x).ToString("0.0") + '%';
+        }
+
+        private string FormatCellMs(object x)
+        {
+            return ((float)x).ToString("0.00");
         }
 
         /// <inheritdoc />
@@ -73,6 +134,7 @@ namespace FlaxEditor.Windows.Profiler
             if (_mainChart.SelectedSampleIndex == -1)
             {
                 UpdateTimeline();
+                UpdateTable();
             }
         }
 
@@ -81,6 +143,7 @@ namespace FlaxEditor.Windows.Profiler
         {
             _mainChart.SelectedSampleIndex = selectedFrame;
             UpdateTimeline();
+            UpdateTable();
         }
 
         private void AddEvent(double startTime, int maxDepth, int index, EventCPU[] events, ContainerControl parent)
@@ -126,19 +189,19 @@ namespace FlaxEditor.Windows.Profiler
 
             container.LockChildrenRecursive();
 
-            UpdateTimelineInner();
+            _timeline.Height = UpdateTimelineInner();
 
             container.UnlockChildrenRecursive();
             container.PerformLayout();
         }
 
-        private void UpdateTimelineInner()
+        private float UpdateTimelineInner()
         {
             if (_events.Count == 0)
-                return;
+                return 0;
             var data = _events.Get(_mainChart.SelectedSampleIndex);
             if (data == null || data.Length == 0)
-                return;
+                return 0;
             
             // Find the first event start time (for the timeline start time)
             double startTime = data[0].Events[0].Start;
@@ -150,6 +213,7 @@ namespace FlaxEditor.Windows.Profiler
             var container = _timeline.EventsContainer;
 
             // Create timeline track per thread
+            int maxDepthTotal = 0;
             for (int i = 0; i < data.Length; i++)
             {
                 var events = data[i].Events;
@@ -160,6 +224,7 @@ namespace FlaxEditor.Windows.Profiler
                 {
                     maxDepth = Mathf.Max(maxDepth, events[j].Depth);
                 }
+                maxDepthTotal = Mathf.Max(maxDepthTotal, maxDepth);
 
                 // Add events
                 for (int j = 0; j < events.Length; j++)
@@ -168,6 +233,82 @@ namespace FlaxEditor.Windows.Profiler
                     {
                         AddEvent(startTime, maxDepth, j, events, container);
                     }
+                }
+            }
+
+            return Timeline.Event.DefaultHeight * (maxDepthTotal + 2);
+        }
+
+        private void UpdateTable()
+        {
+            _table.DisposeChildren();
+
+            _table.LockChildrenRecursive();
+
+            UpdateTableInner();
+
+            _table.UnlockChildrenRecursive();
+            _table.PerformLayout();
+        }
+
+        private void UpdateTableInner()
+        {
+            if (_events.Count == 0)
+                return;
+            var data = _events.Get(_mainChart.SelectedSampleIndex);
+            if (data == null || data.Length == 0)
+                return;
+
+            float totalTimeMs = _mainChart.SelectedSample;
+
+            // Add rows
+            var rowColor2 = Style.Current.Background * 1.02f;
+            for (int j = 0; j < data.Length; j++)
+            {
+                var events = data[j].Events;
+
+                for (int i = 0; i < events.Length; i++)
+                {
+                    var e = events[i];
+                    var time = Math.Max(e.End - e.Start, MinEventTimeMs);
+
+                    // Count sub-events time
+                    double subEventsTimeTotal = 0;
+                    for (int k = i + 1; k < events.Length; k++)
+                    {
+                        var sub = events[k];
+                        if (sub.Depth == e.Depth + 1)
+                            subEventsTimeTotal += Math.Max(sub.End - sub.Start, MinEventTimeMs);
+                        else if (sub.Depth <= e.Depth)
+                            break;
+                    }
+                    
+                    var row = new Row
+                    {
+                        Values = new object[]
+                        {
+                            // Event
+                            e.Name,
+
+                            // Total (%)
+                            (int)(time / totalTimeMs * 1000.0f) / 10.0f,
+
+                            // Self (%)
+                            (int)((time - subEventsTimeTotal) / time * 1000.0f) / 10.0f,
+
+                            // Time ms
+                            (float)((time * 10000.0f) / 10000.0f),
+
+                            // Self ms
+                            (float)(((time - subEventsTimeTotal) * 10000.0f) / 10000.0f),
+                        },
+                        Depth = e.Depth,
+                        Width = _table.Width,
+                        Parent = _table,
+                    };
+
+                    if (i % 2 == 0)
+                        row.BackgroundColor = rowColor2;
                 }
             }
         }

@@ -18,6 +18,11 @@ namespace FlaxEditor.Windows.Profiler
         public const int MaxSamples = 60 * 5;
 
         /// <summary>
+        /// The minimum event time in ms.
+        /// </summary>
+        public const double MinEventTimeMs = 0.000000001;
+
+        /// <summary>
         /// Occurs when selected sample gets changed. Profiling window should propagate this cahnge to all charts and view modes.
         /// </summary>
         public event Action<int> SelectedSampleChanged;
