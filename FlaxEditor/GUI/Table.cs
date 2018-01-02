@@ -194,6 +194,8 @@ namespace FlaxEditor.GUI
                 _splits[_movingSplit] = _columns[_movingSplit].ClampColumnSize(leftSplit, width);
                 float rightSplit = splitsSum - _splits[_movingSplit];
                 _splits[nextSplit] = _columns[nextSplit].ClampColumnSize(rightSplit, width);
+
+                PerformLayout();
             }
 
             base.OnMouseMove(location);

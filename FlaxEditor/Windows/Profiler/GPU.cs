@@ -239,7 +239,7 @@ namespace FlaxEditor.Windows.Profiler
                 }
             }
 
-            return Timeline.Event.DefaultHeight * (maxDepth + 1);
+            return Timeline.Event.DefaultHeight * (maxDepth + 2);
         }
 
         private void UpdateTable()
