@@ -54,7 +54,7 @@ namespace FlaxEngine
 		/// Gets or sets light brightness parameter.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(30), EditorDisplay("Light"), Tooltip("Light brighness value"), Limit(0.0f, 1000.0f, 0.01f)]
+		[EditorOrder(30), EditorDisplay("Light"), Tooltip("Light brighness value"), Limit(0.0f, 100000000.0f, 0.1f)]
 		public float Brightness
 		{
 #if UNIT_TEST_COMPILANT

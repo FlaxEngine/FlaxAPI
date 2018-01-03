@@ -1199,7 +1199,7 @@ namespace FlaxEngine
         /// Creates a quaternion given a pitch, yaw and roll values.
         /// Angles are in degrees.
         /// </summary>
-        /// <param name="eulerAngles">The pitahc, yaw and roll angles of rotation.</param>
+        /// <param name="eulerAngles">The pitch, yaw and roll angles of rotation.</param>
         /// <returns>When the method completes, contains the newly created quaternion.</returns>
         public static Quaternion Euler(Vector3 eulerAngles)
         {
@@ -1216,7 +1216,7 @@ namespace FlaxEngine
         /// Creates a quaternion given a pitch, yaw and roll values.
         /// Angles are in degrees.
         /// </summary>
-        /// <param name="eulerAngles">The pitahc, yaw and roll angles of rotation.</param>
+        /// <param name="eulerAngles">The pitch, yaw and roll angles of rotation.</param>
         /// <param name="result">When the method completes, contains the newly created quaternion.</param>
         public static void Euler(ref Vector3 eulerAngles, out Quaternion result)
         {
