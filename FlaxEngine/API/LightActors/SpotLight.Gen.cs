@@ -75,6 +75,36 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets or sets light source radial falloff parameter. Controls the radial falloff of light when UseInverseSquaredFalloff is disabled.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(13), EditorDisplay("Light"), Tooltip("Controls the radial falloff of light when UseInverseSquaredFalloff is disabled."), Limit(2, 16, 0.01f)]
+		public float FallOffExponent
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetFallOffExponent(unmanagedPtr); }
+			set { Internal_SetFallOffExponent(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the value indicating whether to use physically based inverse squared distance falloff.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(14), EditorDisplay("Light"), Tooltip("Whether to use physically based inverse squared distance falloff, where Radius is only clamping the light's contribution.")]
+		public bool UseInverseSquaredFalloff
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetUseInverseSquaredFalloff(unmanagedPtr); }
+			set { Internal_SetUseInverseSquaredFalloff(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
 		/// Gets or sets the spot light's inner cone angle (in degrees).
 		/// </summary>
 		[UnmanagedCall]
@@ -114,6 +144,14 @@ namespace FlaxEngine
 		internal static extern float Internal_GetSourceRadius(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetSourceRadius(IntPtr obj, float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetFallOffExponent(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetFallOffExponent(IntPtr obj, float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_GetUseInverseSquaredFalloff(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetUseInverseSquaredFalloff(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetInnerConeAngle(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
