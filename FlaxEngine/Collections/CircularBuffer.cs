@@ -5,6 +5,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json;
 
 namespace FlaxEngine.Collections
 {
@@ -14,7 +16,8 @@ namespace FlaxEngine.Collections
     /// </summary>
     /// <typeparam name="T">Type of items inserted into buffer</typeparam>
     [Serializable]
-    public class CircularBuffer<T> : IReadOnlyCollection<T>
+    [JsonObject(MemberSerialization.OptIn)]
+    public class CircularBuffer<T>
     {
         /// <summary>
         ///     Arguments for new item added event
@@ -97,8 +100,11 @@ namespace FlaxEngine.Collections
             }
         }
 
+        [JsonProperty("buffer")]
         private T[] _buffer;
+        [JsonProperty("frontItem")]
         private int _frontItem;
+        [JsonProperty("backItem")]
         private int _backItem;
 
         /// <summary>
@@ -144,6 +150,34 @@ namespace FlaxEngine.Collections
         ///     Returns true if buffer is filled with whole of its capacity with items
         /// </summary>
         public bool IsFull => Count == Capacity;
+
+        /// <summary>
+        ///     Creates new instance of object with given capacity, copies given array as a framework
+        /// </summary>
+        /// <param name="items">Items inside an buffer to insert into</param>
+        /// <param name="frontItem">First index of an item in provided buffer</param>
+        /// <param name="backItem">Last index on an item in provided buffer</param>
+        [JsonConstructor]
+        public CircularBuffer(IEnumerable<T> buffer, int frontItem = 0, int backItem = 0)
+        {
+            var insertionArray = buffer.ToArray();
+            if (insertionArray.Length < frontItem)
+                throw new ArgumentOutOfRangeException(nameof(frontItem),
+                                                      "argument cannot be larger then requested capaclity");
+            if (-1 > frontItem)
+                throw new ArgumentOutOfRangeException(nameof(frontItem),
+                                                      "argument cannot be smaller then -1");
+            if (insertionArray.Length < backItem)
+                throw new ArgumentOutOfRangeException(nameof(frontItem),
+                                                      "argument cannot be larger then requested capaclity");
+            if (-1 > backItem)
+                throw new ArgumentOutOfRangeException(nameof(frontItem),
+                                                      "argument cannot be smaller then -1");
+            _buffer = insertionArray;
+            _backItem = backItem;
+            _frontItem = frontItem;
+            Count = insertionArray.Length;
+        }
 
         /// <summary>
         ///     Creates new instance of object with given capacity
@@ -352,10 +386,10 @@ namespace FlaxEngine.Collections
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        //IEnumerator IEnumerable.GetEnumerator()
+        //{
+        //     return GetEnumerator();
+        //}
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.

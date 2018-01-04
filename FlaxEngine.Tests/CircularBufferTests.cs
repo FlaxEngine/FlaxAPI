@@ -5,6 +5,8 @@
 using System;
 using System.Collections;
 using FlaxEngine.Collections;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Assert = FlaxEngine.Assertions.Assert;
 
@@ -483,6 +485,36 @@ namespace FlaxEngine.Tests
             buffer.OnItemOverflown -= overflownHandler;
             buffer.OnItemAdded -= addHandler;
             buffer.OnItemRemoved -= removeHandler;
+        }
+
+        [Test]
+        public void CircularBufferTestJsonConversion()
+        {
+            var buffer = new CircularBuffer<long>(3);
+            buffer.PushFront(0);
+
+            buffer.PushFront(1);
+            buffer.PushBack(-1);
+            buffer.PushFront(2);
+            buffer.PushBack(-2);
+            buffer.PushFront(3);
+            buffer.PushBack(-3);
+
+            var json = JsonConvert.SerializeObject(buffer);
+            Assert.IsTrue(json.Contains("buffer"));
+            Assert.IsTrue(json.Contains("frontItem"));
+            Assert.IsTrue(json.Contains("backItem"));
+            var deserializedBuffer = JsonConvert.DeserializeObject<CircularBuffer<long>>(json);
+
+
+            Assert.AreEqual(-3, deserializedBuffer[0]);
+            Assert.AreEqual(0, deserializedBuffer[1]);
+            Assert.AreEqual(1, deserializedBuffer[2]);
+            Assert.AreEqual(1, deserializedBuffer.Front());
+            Assert.AreEqual(-3, deserializedBuffer.Back());
+
+            Assert.AreEqual(deserializedBuffer.Count, 3);
+            Assert.AreEqual(deserializedBuffer.Capacity, 3);
         }
     }
 }
