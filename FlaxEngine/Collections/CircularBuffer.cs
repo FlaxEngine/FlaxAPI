@@ -386,11 +386,6 @@ namespace FlaxEngine.Collections
             }
         }
 
-        //IEnumerator IEnumerable.GetEnumerator()
-        //{
-        //     return GetEnumerator();
-        //}
-
         /// <summary>
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
