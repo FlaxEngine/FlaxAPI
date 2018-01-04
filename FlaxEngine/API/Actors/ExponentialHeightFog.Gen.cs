@@ -78,7 +78,7 @@ namespace FlaxEngine
 		/// Gets or sets the height density factor that controls how the density increases as height decreases.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(30), Limit(0.0001f, 2, 0.001f), EditorDisplay("Exponential Height Fog"), Tooltip("Height density factor, controls how the density increases as height decreases. Smaller values make the visible transition larger. Range: 0.001-2")]
+		[EditorOrder(30), Limit(0.0001f, 2, 0.001f), EditorDisplay("Exponential Height Fog"), Tooltip("Height density factor, controls how the density increases as height decreases.")]
 		public float FogHeightFalloff
 		{
 #if UNIT_TEST_COMPILANT
@@ -93,7 +93,7 @@ namespace FlaxEngine
 		/// Gets or sets the maximum opacity of the fog.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(40), EditorDisplay("Exponential Height Fog"), Tooltip("Maximum opacity of the fog. A value of 1 means the fog can become fully opaque at a distance and replace scene color completely. A value of 0 means the fog color will not be factored in at all.")]
+		[EditorOrder(40), EditorDisplay("Exponential Height Fog"), Tooltip("Maximum opacity of the fog.")]
 		public float FogMaxOpacity
 		{
 #if UNIT_TEST_COMPILANT
@@ -123,7 +123,7 @@ namespace FlaxEngine
 		/// Gets or sets the distance past which scene elements will have no fog applied. Use value 0 to disable it.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(60), EditorDisplay("Exponential Height Fog"), Tooltip("Scene elements past this distance will not have fog applied. This is useful for excluding skyboxes which already have fog baked in. Value 0 disables it.")]
+		[EditorOrder(60), EditorDisplay("Exponential Height Fog"), Tooltip("Scene elements past this distance will not have fog applied. Value 0 disables it.")]
 		public float FogCutoffDistance
 		{
 #if UNIT_TEST_COMPILANT
@@ -156,7 +156,7 @@ namespace FlaxEngine
 		/// Note: there must be a directional light enabled for Directional Inscattering to be used.
 		/// </remarks>
 		[UnmanagedCall]
-		[EditorOrder(210), Limit(2, 64, 0.1f), EditorDisplay("Directional Inscattering", "Exponent"), Tooltip("Controls the size of the directional inscattering cone, which is used to approximate inscattering from a directional light. Note: there must be a directional light enabled for Directiona lInscattering to be used. Range: 2-64.")]
+		[EditorOrder(210), Limit(2, 64, 0.1f), EditorDisplay("Directional Inscattering", "Exponent"), Tooltip("Controls the size of the directional inscattering cone used to approximate inscattering.")]
 		public float DirectionalInscatteringExponent
 		{
 #if UNIT_TEST_COMPILANT
@@ -174,7 +174,7 @@ namespace FlaxEngine
 		/// Note: there must be a directional light enabled for Directional Inscattering to be used.
 		/// </remarks>
 		[UnmanagedCall]
-		[EditorOrder(220), EditorDisplay("Directional Inscattering", "Start Distance"), Tooltip("Controls the start distance from the viewer of the directional inscattering, which is used to approximate inscattering from a directional light. Note: there must be a directional light enabled for Directional Inscattering to be used.")]
+		[EditorOrder(220), EditorDisplay("Directional Inscattering", "Start Distance"), Tooltip("Controls the start distance from the viewer of the directional inscattering, which is used to approximate inscattering.")]
 		public float DirectionalInscatteringStartDistance
 		{
 #if UNIT_TEST_COMPILANT
@@ -192,7 +192,7 @@ namespace FlaxEngine
 		/// Note: there must be a directional light enabled for Directional Inscattering to be used.
 		/// </remarks>
 		[UnmanagedCall]
-		[EditorOrder(230), EditorDisplay("Directional Inscattering", "Color"), Tooltip("Controls the color of the directional inscattering, which is used to approximate inscattering from a directional light. Note: there must be a directional light enabled for Directional Inscattering to be used.")]
+		[EditorOrder(230), EditorDisplay("Directional Inscattering", "Color"), Tooltip("Controls the color of the directional inscattering, which is used to approximate inscattering from a directional light.")]
 		public Color DirectionalInscatteringColor
 		{
 #if UNIT_TEST_COMPILANT
@@ -228,7 +228,7 @@ namespace FlaxEngine
 		/// A distribution value of 0 scatters equally in all directions, while 0.9 scatters predominantly in the light direction. In order to have visible volumetric fog light shafts from the side, the distribution will need to be closer to 0. Range: -0.9-0.9.
 		/// </remarks>
 		[UnmanagedCall]
-		[EditorOrder(310), Limit(-0.9f, 0.9f, 0.001f), EditorDisplay("Volumetric Fog", "Scattering Distribution"), Tooltip("Controls the scattering phase function - how much incoming light scatters in various directions. A distribution value of 0 scatters equally in all directions, while 0.9 scatters predominantly in the light direction. In order to have visible volumetric fog light shafts from the side, the distribution will need to be closer to 0. Range: -0.9-0.9.")]
+		[EditorOrder(310), Limit(-0.9f, 0.9f, 0.001f), EditorDisplay("Volumetric Fog", "Scattering Distribution"), Tooltip("Controls the scattering phase function - how much incoming light scatters in various directions.")]
 		public float VolumetricFogScatteringDistribution
 		{
 #if UNIT_TEST_COMPILANT
@@ -282,7 +282,7 @@ namespace FlaxEngine
 		/// Values larger than 1 cause fog particles everywhere absorb more light. Range: 0.1-10.
 		/// </remarks>
 		[UnmanagedCall]
-		[EditorOrder(340), Limit(0.1f, 10, 0.1f), EditorDisplay("Volumetric Fog", "Extinction Scale"), Tooltip("Scales the height fog particle extinction amount used by volumetric fog. Values larger than 1 cause fog particles everywhere absorb more light. Range: 0.1-10.")]
+		[EditorOrder(340), Limit(0.1f, 10, 0.1f), EditorDisplay("Volumetric Fog", "Extinction Scale"), Tooltip("Scales the height fog particle extinction amount used by volumetric fog. Values larger than 1 cause fog particles everywhere absorb more light.")]
 		public float VolumetricFogExtinctionScale
 		{
 #if UNIT_TEST_COMPILANT
