@@ -93,7 +93,7 @@ namespace FlaxEngine
 		/// Gets or sets the maximum opacity of the fog.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(40), EditorDisplay("Exponential Height Fog"), Tooltip("Maximum opacity of the fog.")]
+		[EditorOrder(40), Limit(0, 1, 0.001f), EditorDisplay("Exponential Height Fog"), Tooltip("Maximum opacity of the fog.")]
 		public float FogMaxOpacity
 		{
 #if UNIT_TEST_COMPILANT
@@ -108,7 +108,7 @@ namespace FlaxEngine
 		/// Gets or sets the distance from the camera that the fog will start, in world units..
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(50), EditorDisplay("Exponential Height Fog"), Tooltip("Distance from the camera that the fog will start, in world units.")]
+		[EditorOrder(50), Limit(0), EditorDisplay("Exponential Height Fog"), Tooltip("Distance from the camera that the fog will start, in world units.")]
 		public float StartDistance
 		{
 #if UNIT_TEST_COMPILANT
@@ -123,7 +123,7 @@ namespace FlaxEngine
 		/// Gets or sets the distance past which scene elements will have no fog applied. Use value 0 to disable it.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(60), EditorDisplay("Exponential Height Fog"), Tooltip("Scene elements past this distance will not have fog applied. Value 0 disables it.")]
+		[EditorOrder(60), Limit(0), EditorDisplay("Exponential Height Fog"), Tooltip("Scene elements past this distance will not have fog applied. Value 0 disables it.")]
 		public float FogCutoffDistance
 		{
 #if UNIT_TEST_COMPILANT
@@ -174,7 +174,7 @@ namespace FlaxEngine
 		/// Note: there must be a directional light enabled for Directional Inscattering to be used.
 		/// </remarks>
 		[UnmanagedCall]
-		[EditorOrder(220), EditorDisplay("Directional Inscattering", "Start Distance"), Tooltip("Controls the start distance from the viewer of the directional inscattering, which is used to approximate inscattering.")]
+		[EditorOrder(220), Limit(0), EditorDisplay("Directional Inscattering", "Start Distance"), Tooltip("Controls the start distance from the viewer of the directional inscattering, which is used to approximate inscattering.")]
 		public float DirectionalInscatteringStartDistance
 		{
 #if UNIT_TEST_COMPILANT
@@ -300,7 +300,7 @@ namespace FlaxEngine
 		/// Larger values extend the effect into the distance but expose under-sampling artifacts in details.
 		/// </remarks>
 		[UnmanagedCall]
-		[EditorOrder(350), EditorDisplay("Volumetric Fog", "Distance"), Tooltip("Distance over which volumetric fog should be computed. Larger values extend the effect into the distance but expose under-sampling artifacts in details.")]
+		[EditorOrder(350), Limit(0), EditorDisplay("Volumetric Fog", "Distance"), Tooltip("Distance over which volumetric fog should be computed. Larger values extend the effect into the distance but expose under-sampling artifacts in details.")]
 		public float VolumetricFogDistance
 		{
 #if UNIT_TEST_COMPILANT
