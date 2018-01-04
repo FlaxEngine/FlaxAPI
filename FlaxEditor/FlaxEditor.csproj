@@ -233,6 +233,7 @@
     <Compile Include="SceneGraph\Actors\CameraNode.cs" />
     <Compile Include="SceneGraph\Actors\DirectionalLightNode.cs" />
     <Compile Include="SceneGraph\Actors\EnvironmentProbeNode.cs" />
+    <Compile Include="SceneGraph\Actors\ExponentialHeightFogNode.cs" />
     <Compile Include="SceneGraph\Actors\ModelActorNode.cs" />
     <Compile Include="SceneGraph\Actors\PointLightNode.cs" />
     <Compile Include="SceneGraph\Actors\PostFxVolumeNode.cs" />

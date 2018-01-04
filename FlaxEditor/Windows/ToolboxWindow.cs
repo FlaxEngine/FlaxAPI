@@ -72,6 +72,7 @@ namespace FlaxEditor.Windows
             groupVisuals.AddChild(CreateActorItem("Environment Probe", typeof(EnvironmentProbe)));
             groupVisuals.AddChild(CreateActorItem("Skybox", typeof(Skybox)));
             groupVisuals.AddChild(CreateActorItem("Sky", typeof(Sky)));
+            groupVisuals.AddChild(CreateActorItem("Exponential Height Fog", typeof(ExponentialHeightFog)));
             groupVisuals.AddChild(CreateActorItem("PostFx Volume", typeof(PostFxVolume)));
 
             var groupPhysics = createGroupWithList(actorGroups, "Physics");
