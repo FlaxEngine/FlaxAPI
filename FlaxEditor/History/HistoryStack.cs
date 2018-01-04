@@ -157,7 +157,7 @@ namespace FlaxEditor.History
 
             if (_reverseActions.Count - skipElements <= 0)
             {
-                foreach (var reverseAction in _reverseActions.Reverse())
+                foreach (var reverseAction in _reverseActions.ToArray().Reverse())
                 {
                     _historyActions.PushFront(reverseAction);
                 }
