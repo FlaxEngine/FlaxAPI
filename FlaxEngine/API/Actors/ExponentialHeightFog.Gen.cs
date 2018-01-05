@@ -45,10 +45,10 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets the fog density fator. Range: 0-0.6.
+		/// Gets or sets the fog density factor. Range: 0-0.6.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(10), Limit(0, 0.6f, 0.001f), EditorDisplay("Exponential Height Fog"), Tooltip("Fog density fator. Range: 0-0.6")]
+		[EditorOrder(10), Limit(0.000001f, 0.8f, 0.001f), EditorDisplay("Exponential Height Fog"), Tooltip("Fog density factor. Range: 0-0.6")]
 		public float FogDensity
 		{
 #if UNIT_TEST_COMPILANT
@@ -75,17 +75,38 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets the height density factor that controls how the density increases as height decreases.
+		/// Gets or sets the offset from the fog object height where fog starts.
 		/// </summary>
+		/// <remarks>
+		/// It's a bottom level of the fog where it has density equal 1 (fully dense). This parameter controls the height of the fog.
+		/// </remarks>
 		[UnmanagedCall]
-		[EditorOrder(30), Limit(0.0001f, 2, 0.001f), EditorDisplay("Exponential Height Fog"), Tooltip("Height density factor, controls how the density increases as height decreases.")]
-		public float FogHeightFalloff
+		[EditorOrder(30), Limit(0), EditorDisplay("Exponential Height Fog"), Tooltip("Offset from the fog object height where fog starts.")]
+		public float FogBaseHeightOffset
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetFogHeightFalloff(unmanagedPtr); }
-			set { Internal_SetFogHeightFalloff(unmanagedPtr, value); }
+			get { return Internal_GetFogBaseHeightOffset(unmanagedPtr); }
+			set { Internal_SetFogBaseHeightOffset(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the fog density factor at top height level.
+		/// </summary>
+		/// <remarks>
+		/// Should be close to 0. It get's scaled by the global density parameter.
+		/// </remarks>
+		[UnmanagedCall]
+		[EditorOrder(35), Limit(0, 1, 0.001f), EditorDisplay("Exponential Height Fog"), Tooltip("Fog density factor at top height level. Should be close to 0. It get's scaled by the global density parameter.")]
+		public float FogTopHeightDensity
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetFogTopHeightDensity(unmanagedPtr); }
+			set { Internal_SetFogTopHeightDensity(unmanagedPtr, value); }
 #endif
 		}
 
@@ -105,7 +126,7 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets the distance from the camera that the fog will start, in world units..
+		/// Gets or sets the distance from the camera that the fog will start, in world units.
 		/// </summary>
 		[UnmanagedCall]
 		[EditorOrder(50), Limit(0), EditorDisplay("Exponential Height Fog"), Tooltip("Distance from the camera that the fog will start, in world units.")]
@@ -135,7 +156,7 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets the light used for Directional Inscattering..
+		/// Gets or sets the light used for Directional Inscattering.
 		/// </summary>
 		[UnmanagedCall]
 		[EditorOrder(200), EditorDisplay("Directional Inscattering", "Light"), Tooltip("Directional light actor used for Directional Inscattering.")]
@@ -322,9 +343,13 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetFogInscatteringColor(IntPtr obj, ref Color val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetFogHeightFalloff(IntPtr obj);
+		internal static extern float Internal_GetFogBaseHeightOffset(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetFogHeightFalloff(IntPtr obj, float val);
+		internal static extern void Internal_SetFogBaseHeightOffset(IntPtr obj, float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetFogTopHeightDensity(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetFogTopHeightDensity(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetFogMaxOpacity(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
