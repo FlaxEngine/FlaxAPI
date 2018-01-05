@@ -17,7 +17,7 @@ namespace FlaxEngine.Collections
     /// <typeparam name="T">Type of items inserted into buffer</typeparam>
     [Serializable]
     [JsonObject(MemberSerialization.OptIn)]
-    public class CircularBuffer<T>
+    public class CircularBuffer<T> : IEnumerable<T>
     {
         /// <summary>
         ///     Arguments for new item added event
@@ -384,6 +384,11 @@ namespace FlaxEngine.Collections
                 _backItem = 0;
                 Count = 0;
             }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         /// <summary>
