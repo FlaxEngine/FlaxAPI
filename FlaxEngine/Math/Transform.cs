@@ -188,10 +188,10 @@ namespace FlaxEngine
             Transform result = new Transform(Vector3.Zero);
 
             // Orientation
-            Quaternion.Multiply(ref other.Orientation, ref Orientation, out result.Orientation);
+            Quaternion.Multiply(ref Orientation, ref other.Orientation, out result.Orientation);
 
             // Scale
-            Vector3.Multiply(ref other.Scale, ref Scale, out result.Scale);
+            Vector3.Multiply(ref Scale, ref other.Scale, out result.Scale);
 
             // Translation
             Matrix scale, rotation, scaleRotation;

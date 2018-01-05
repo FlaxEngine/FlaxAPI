@@ -61,6 +61,8 @@
     <Compile Include="API\Actors\EnvironmentProbe.Gen.cs">
       <DependentUpon>EnvironmentProbe.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Actors\ExponentialHeightFog.cs" />
+    <Compile Include="API\Actors\ExponentialHeightFog.Gen.cs" />
     <Compile Include="API\Actors\Joint.cs" />
     <Compile Include="API\Actors\Joint.Gen.cs" />
     <Compile Include="API\Actors\LightActor.cs" />

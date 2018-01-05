@@ -218,6 +218,21 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Gets a value indicating whether the control is enabled in the hierarchy (it's enabled and all it's parents are enabled as well).
+        /// </summary>
+        public bool EnabledInHierarchy
+        {
+            get
+            {
+                if (!_isEnabled)
+                    return false;
+                if (_parent != null)
+                    return _parent.EnabledInHierarchy;
+                return true;
+            }
+        }
+
+        /// <summary>
         ///     Gets or sets a value indicating whether the control is visible
         /// </summary>
         public bool Visible
@@ -244,6 +259,21 @@ namespace FlaxEngine.GUI
                     OnVisibleChanged();
                     _parent?.PerformLayout();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the control is visible in the hierarchy (it's visible and all it's parents are visible as well).
+        /// </summary>
+        public bool VisibleInHierarchy
+        {
+            get
+            {
+                if (!_isVisible)
+                    return false;
+                if (_parent != null)
+                    return _parent.VisibleInHierarchy;
+                return true;
             }
         }
 

@@ -4,6 +4,7 @@
 
 using System;
 using FlaxEngine;
+using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors.GUI
@@ -34,17 +35,49 @@ namespace FlaxEditor.CustomEditors.GUI
                 Size = new Vector2(14),
                 Parent = this
             };
-            CheckBox.CheckChanged += UpdateStyle;
+            CheckBox.CheckChanged += OnCheckChanged;
             Margin = new Margin(CheckBox.Right + 4, 0, 0, 0);
+        }
+
+        private void OnCheckChanged()
+        {
+            CheckChanged?.Invoke(this);
+            UpdateStyle();
         }
 
         /// <summary>
         /// Updates the label style.
         /// </summary>
-        protected void UpdateStyle()
+        protected virtual void UpdateStyle()
         {
-            CheckChanged?.Invoke(this);
-            TextColor = CheckBox.Checked ? Color.White : new Color(0.6f);
+            bool check = CheckBox.Checked;
+
+            // Update label text color
+            TextColor = check ? Color.White : new Color(0.6f);
+
+            // Update child controls enabled state
+            if (FirstChildControlIndex >= 0 && Parent is PropertiesList propertiesList)
+            {
+                var controls = propertiesList.Children;
+                var labels = propertiesList.Element.Labels;
+                var thisIndex = labels.IndexOf(this);
+                Assert.AreNotEqual(-1, thisIndex, "Invalid label linkage.");
+                int childControlsCount = 0;
+                if (thisIndex + 1 < labels.Count)
+                    childControlsCount = labels[thisIndex + 1].FirstChildControlIndex - FirstChildControlIndex - 1;
+                else
+                    childControlsCount = controls.Count;
+                int lastControl = Mathf.Min(FirstChildControlIndex + childControlsCount, controls.Count);
+                for (int i = FirstChildControlIndex; i < lastControl; i++)
+                {
+                    controls[i].Enabled = check;
+                }
+            }
+            else
+            {
+                TextColor = Color.Red;
+                int a = 10;
+            }
         }
 
         /// <inheritdoc />

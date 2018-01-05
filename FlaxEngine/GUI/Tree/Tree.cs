@@ -217,13 +217,14 @@ namespace FlaxEngine.GUI
             {
                 if (node.GetChild(i) is TreeNode child)
                 {
-                    Vector2 pos = node.PointToWindow(Vector2.One);
+                    Vector2 pos = child.PointToParent(this, Vector2.One);
                     if (range.Contains(pos))
                     {
                         selection.Add(child);
                     }
-
-                    if (child.IsExpanded)
+                    
+                    var nodeArea = new Rectangle(pos, child.Size);
+                    if (child.IsExpanded && range.Intersects(ref nodeArea))
                         walkSelectRangeExpandedTree(selection, child, ref range);
                 }
             }
@@ -231,7 +232,7 @@ namespace FlaxEngine.GUI
 
         private Rectangle calcNodeRangeRect(TreeNode node)
         {
-            Vector2 pos = node.PointToWindow(Vector2.One);
+            Vector2 pos = node.PointToParent(this, Vector2.One);
             return new Rectangle(pos, new Vector2(10000, 4));
         }
 
@@ -245,7 +246,7 @@ namespace FlaxEngine.GUI
             {
                 // Cache previous state
                 var prev = new List<TreeNode>(Selection);
-
+                
                 // Update selection
                 var selectionRect = calcNodeRangeRect(Selection[0]);
                 for (int i = 1; i < Selection.Count; i++)

@@ -806,7 +806,7 @@ namespace FlaxEditor.Modules
                 {
                     Editor.Scene.ExecuteOnGraph(node =>
                                                 {
-                                                    if (node is EnvironmentProbeNode envProbeNode)
+                                                    if (node is EnvironmentProbeNode envProbeNode && envProbeNode.IsActive)
                                                     {
                                                         ((EnvironmentProbe)envProbeNode.Actor).Bake();
                                                         node.ParentScene.IsEdited = true;

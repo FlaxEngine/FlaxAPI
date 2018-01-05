@@ -122,20 +122,23 @@ namespace FlaxEngine.Rendering
         /// </summary>
         PhysicsDebug = 1 << 21,
 
-
+        /// <summary>
+        /// Shows/hides fogging effects.
+        /// </summary>
+        Fog = 1 << 22,
 
 
         /// <summary>
         /// Default flags for Game
         /// </summary>
-        DefaultGame = DynamicActors | Reflections | CSG | DepthOfField
+        DefaultGame = DynamicActors | Reflections | CSG | DepthOfField | Fog
                       | SSR | AO | GI | DirectionalLights | PointLights | SpotLights | SkyLights | Shadows | SpecularLight
                       | AntiAliasing | CustomPostProcess | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares,
 
         /// <summary>
         /// Default flags for Editor
         /// </summary>
-        DefaultEditor = DynamicActors | Reflections | CSG
+        DefaultEditor = DynamicActors | Reflections | CSG | Fog
                         | SSR | AO | GI | DirectionalLights | PointLights | SpotLights | SkyLights | Shadows | SpecularLight
                         | AntiAliasing | CustomPostProcess | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares | EditorSprites,
 

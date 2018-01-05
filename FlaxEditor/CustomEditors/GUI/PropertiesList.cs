@@ -57,6 +57,11 @@ namespace FlaxEditor.CustomEditors.GUI
         }
 
         /// <summary>
+        /// Gets the properties list element. It's a parent object for this control.
+        /// </summary>
+        public PropertiesListElement Element => _element;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PropertiesList"/> class.
         /// </summary>
         /// <param name="element">The element.</param>

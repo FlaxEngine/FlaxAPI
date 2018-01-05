@@ -140,10 +140,11 @@ namespace FlaxEditor.GUI.Dialogs
             base.Draw();
 
             var hsv = _color.ToHSV();
+            bool enabled = EnabledInHierarchy;
 
             // Wheel
             float boxExpand = (2.0f * 4.0f / 128.0f) * _wheelRect.Width;
-            Render2D.DrawSprite(_colorWheelSprite, _wheelRect.MakeExpanded(boxExpand));
+            Render2D.DrawSprite(_colorWheelSprite, _wheelRect.MakeExpanded(boxExpand), enabled ? Color.White : Color.Gray);
             float hAngle = hsv.X * Mathf.DegreesToRadians;
             float hRadius = hsv.Y * _wheelRect.Width * 0.5f;
             Vector2 hsPos = new Vector2(hRadius * Mathf.Cos(hAngle), -hRadius * Mathf.Sin(hAngle));
