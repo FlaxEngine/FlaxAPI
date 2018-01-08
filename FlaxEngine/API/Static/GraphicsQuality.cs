@@ -44,10 +44,19 @@ namespace FlaxEngine.Rendering
             set { Internal_SetValue(2, (int)value); }
         }
 
-        /// <summary>
-        /// The shadows quality.
-        /// </summary>
-        public static Quality ShadowsQuality
+	    /// <summary>
+	    /// Volumetric Fog quality setting.
+	    /// </summary>
+	    public static Quality VolumetricFogQuality
+	    {
+		    get { return (Quality)Internal_GetValue(7); }
+		    set { Internal_SetValue(7, (int)value); }
+	    }
+
+	    /// <summary>
+		/// The shadows quality.
+		/// </summary>
+		public static Quality ShadowsQuality
         {
             get { return (Quality)Internal_GetValue(3); }
             set { Internal_SetValue(3, (int)value); }

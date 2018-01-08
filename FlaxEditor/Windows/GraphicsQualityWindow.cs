@@ -52,10 +52,20 @@ namespace FlaxEditor.Windows
                 set => GraphicsQuality.SSAOQuality = value;
             }
 
-            /// <summary>
-            /// The shadows quality.
-            /// </summary>
-            [EditorOrder(1300), EditorDisplay("Quality", "Shadows Quality"), Tooltip("The shadows quality.")]
+	        /// <summary>
+	        /// Volumetric Fog quality setting.
+	        /// </summary>
+	        [EditorOrder(1250), EditorDisplay("Quality", "Volumetric Fog Quality"), Tooltip("Volumetric Fog quality setting.")]
+	        public Quality VolumetricFogQuality
+	        {
+		        get => GraphicsQuality.VolumetricFogQuality;
+		        set => GraphicsQuality.VolumetricFogQuality = value;
+	        }
+
+			/// <summary>
+			/// The shadows quality.
+			/// </summary>
+			[EditorOrder(1300), EditorDisplay("Quality", "Shadows Quality"), Tooltip("The shadows quality.")]
             public Quality ShadowsQuality
             {
                 get => GraphicsQuality.ShadowsQuality;
