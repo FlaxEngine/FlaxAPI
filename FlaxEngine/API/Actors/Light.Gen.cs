@@ -18,7 +18,7 @@ namespace FlaxEngine
 	/// Base class for all light types.
 	/// </summary>
 	[Serializable]
-	public abstract partial class LightActor : Actor
+	public abstract partial class Light : Actor
 	{
 		/// <summary>
 		/// Gets or sets value indicating if visual element affects the world.

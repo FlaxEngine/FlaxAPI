@@ -15,32 +15,32 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
 	/// <summary>
-	/// Point light emmits light from point in all directions.
+	/// Spot light emmits light from the point in a given direction
 	/// </summary>
 	[Serializable]
-	public sealed partial class PointLight : LightActor
+	public sealed partial class SpotLight : LightWithShadow
 	{
 		/// <summary>
-		/// Creates new <see cref="PointLight"/> object.
+		/// Creates new <see cref="SpotLight"/> object.
 		/// </summary>
-		private PointLight() : base()
+		private SpotLight() : base()
 		{
 		}
 
 		/// <summary>
-		/// Creates new instance of <see cref="PointLight"/> object.
+		/// Creates new instance of <see cref="SpotLight"/> object.
 		/// </summary>
 		/// <returns>Created object.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
 		[UnmanagedCall]
-		public static PointLight New() 
+		public static SpotLight New() 
 		{
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Create(typeof(PointLight)) as PointLight;
+			return Internal_Create(typeof(SpotLight)) as SpotLight;
 #endif
 		}
 
@@ -48,7 +48,7 @@ namespace FlaxEngine
 		/// Gets or sets light radius parameter.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(1), EditorDisplay("Light"), Tooltip("Light radius"), Limit(0, 100000, 0.1f)]
+		[EditorOrder(1), EditorDisplay("Light"), Tooltip("Light radius"), Limit(0, 10000, 0.1f)]
 		public float Radius
 		{
 #if UNIT_TEST_COMPILANT
@@ -71,21 +71,6 @@ namespace FlaxEngine
 #else
 			get { return Internal_GetSourceRadius(unmanagedPtr); }
 			set { Internal_SetSourceRadius(unmanagedPtr, value); }
-#endif
-		}
-
-		/// <summary>
-		/// Gets or sets light source bulb length parameter.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(3), EditorDisplay("Light"), Tooltip("Light build source length"), Limit(0, 1000, 0.01f)]
-		public float SourceLength
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { return Internal_GetSourceLength(unmanagedPtr); }
-			set { Internal_SetSourceLength(unmanagedPtr, value); }
 #endif
 		}
 
@@ -119,6 +104,36 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets or sets the spot light's inner cone angle (in degrees).
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(21), EditorDisplay("Light"), Tooltip("Light inner cone angle (in degrees)"), Limit(1, 80, 0.1f)]
+		public float InnerConeAngle
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetInnerConeAngle(unmanagedPtr); }
+			set { Internal_SetInnerConeAngle(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the spot light's outer cone angle (in degrees).
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(22), EditorDisplay("Light"), Tooltip("Light outer cone angle (in degrees)"), Limit(1, 80, 0.1f)]
+		public float OuterConeAngle
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetOuterConeAngle(unmanagedPtr); }
+			set { Internal_SetOuterConeAngle(unmanagedPtr, value); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -130,10 +145,6 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetSourceRadius(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetSourceLength(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetSourceLength(IntPtr obj, float val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetFallOffExponent(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetFallOffExponent(IntPtr obj, float val);
@@ -141,6 +152,14 @@ namespace FlaxEngine
 		internal static extern bool Internal_GetUseInverseSquaredFalloff(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetUseInverseSquaredFalloff(IntPtr obj, bool val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetInnerConeAngle(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetInnerConeAngle(IntPtr obj, float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetOuterConeAngle(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetOuterConeAngle(IntPtr obj, float val);
 #endif
 #endregion
 	}

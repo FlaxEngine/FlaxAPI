@@ -18,7 +18,7 @@ namespace FlaxEngine
 	/// Directional light emmits light from direction in space.
 	/// </summary>
 	[Serializable]
-	public sealed partial class DirectionalLight : LightActor
+	public sealed partial class DirectionalLight : LightWithShadow
 	{
 		/// <summary>
 		/// Creates new <see cref="DirectionalLight"/> object.

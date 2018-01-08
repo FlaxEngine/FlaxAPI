@@ -4,11 +4,7 @@
 
 namespace FlaxEngine
 {
-	public sealed partial class SpotLight
+	public abstract partial class LightWithShadow
 	{
-	    /// <summary>
-	    /// Gets the light scaled radius parameter.
-	    /// </summary>
-	    public float ScaledRadius => Scale.MaxValue * Radius;
 	}
 }

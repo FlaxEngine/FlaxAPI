@@ -18,7 +18,7 @@ namespace FlaxEngine
 	/// Sky light captures the distant parts of the scene and applies it as a light. Allows to add ambient light.
 	/// </summary>
 	[Serializable]
-	public sealed partial class SkyLight : Actor
+	public sealed partial class SkyLight : Light
 	{
 		/// <summary>
 		/// Creates new <see cref="SkyLight"/> object.
@@ -41,36 +41,6 @@ namespace FlaxEngine
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
 			return Internal_Create(typeof(SkyLight)) as SkyLight;
-#endif
-		}
-
-		/// <summary>
-		/// Gets or sets value indicating if visual element affects the world.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(-50), EditorDisplay("General"), Tooltip("True if visual element affects the world")]
-		public bool AffectsWorld
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { return Internal_GetAffectsWorld(unmanagedPtr); }
-			set { Internal_SetAffectsWorld(unmanagedPtr, value); }
-#endif
-		}
-
-		/// <summary>
-		/// Gets or sets the color of the light. Source texture pixel colors are multiplied by it.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(20), EditorDisplay("Light"), Tooltip("Color of the light. Source texture pixel colors are multiplied by it.")]
-		public Color MultiplyColor
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { Color resultAsRef; Internal_GetMultiplyColor(unmanagedPtr, out resultAsRef); return resultAsRef; }
-			set { Internal_SetMultiplyColor(unmanagedPtr, ref value); }
 #endif
 		}
 
@@ -182,14 +152,6 @@ namespace FlaxEngine
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetAffectsWorld(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetAffectsWorld(IntPtr obj, bool val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetMultiplyColor(IntPtr obj, out Color resultAsRef);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetMultiplyColor(IntPtr obj, ref Color val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetAdditiveColor(IntPtr obj, out Color resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
