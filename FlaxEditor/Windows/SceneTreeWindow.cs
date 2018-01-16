@@ -120,6 +120,14 @@ namespace FlaxEditor.Windows
                         new KeyValuePair<string, Type>("PostFx Volume", typeof(PostFxVolume)),
                     }
                 },
+	            new ActorsGroup
+                {
+                    Name = "GUI",
+                    Types = new[]
+                    {
+                        new KeyValuePair<string, Type>("Text Render", typeof(TextRender)),
+                    }
+                },
             };
 
             // Create context menu

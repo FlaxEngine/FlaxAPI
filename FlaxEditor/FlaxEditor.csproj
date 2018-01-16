@@ -241,6 +241,7 @@
     <Compile Include="SceneGraph\Actors\SkyLightNode.cs" />
     <Compile Include="SceneGraph\Actors\SkyNode.cs" />
     <Compile Include="SceneGraph\Actors\SpotLightNode.cs" />
+    <Compile Include="SceneGraph\Actors\TextRenderNode.cs" />
     <Compile Include="SceneGraph\GUI\ActorTreeNode.cs" />
     <Compile Include="SceneGraph\GUI\SceneTreeNode.cs" />
     <Compile Include="SceneGraph\RootNode.cs" />

@@ -92,6 +92,9 @@ namespace FlaxEditor.Windows
             var groupCsg = createGroupWithList(actorGroups, "CSG");
             groupCsg.AddChild(CreateActorItem("Box Brush", typeof(BoxBrush)));
             
+            var groupGui = createGroupWithList(actorGroups, "GUI");
+	        groupGui.AddChild(CreateActorItem("Text Render", typeof(TextRender)));
+
             actorGroups.SelectedTabIndex = 0;
         }
 
