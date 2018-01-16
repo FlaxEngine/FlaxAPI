@@ -93,7 +93,7 @@ namespace FlaxEngine
 		/// Gets or sets the font asset used as a text characters source.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(30), EditorDisplay("Text"), Tooltip("Font to use for rendering")]
+		[EditorOrder(30), AssetReference(true), EditorDisplay("Text"), Tooltip("Font to use for rendering")]
 		public FontAsset Font
 		{
 #if UNIT_TEST_COMPILANT

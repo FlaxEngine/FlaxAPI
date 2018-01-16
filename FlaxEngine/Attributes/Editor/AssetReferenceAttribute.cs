@@ -26,6 +26,16 @@ namespace FlaxEngine
         /// <summary>
         /// Initializes a new instance of the <see cref="AssetReferenceAttribute"/> class.
         /// </summary>
+        /// <param name="useSmallPicker">True if use asset picker with a smaller height (single line), otherwise will use with full icon.</param>
+        public AssetReferenceAttribute(bool useSmallPicker)
+        {
+	        TypeName = null;
+            UseSmallPicker = useSmallPicker;
+        }
+	    
+	    /// <summary>
+        /// Initializes a new instance of the <see cref="AssetReferenceAttribute"/> class.
+        /// </summary>
         /// <param name="typeName">The full name of the asset type to link. Use null or empty to skip it.</param>
         /// <param name="useSmallPicker">True if use asset picker with a smaller height (single line), otherwise will use with full icon.</param>
         public AssetReferenceAttribute(Type typeName = null, bool useSmallPicker = false)
