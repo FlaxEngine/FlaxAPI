@@ -565,7 +565,7 @@ namespace FlaxEditor.Windows
             _root.Expand();
             addFolder2Root(Editor.ContentDatabase.ProjectContent);
             addFolder2Root(Editor.ContentDatabase.ProjectSource);
-            if (Editor.IsDevInstance)
+            if (Editor.IsDevInstance())
             {
                 // Flax internal assets locations
                 addFolder2Root(Editor.ContentDatabase.EnginePrivate);

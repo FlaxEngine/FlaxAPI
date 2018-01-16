@@ -331,7 +331,7 @@ namespace FlaxEditor.Modules
             mm_File.ContextMenu.AddButton(8, "Regenerate solution file");
             mm_File.ContextMenu.AddButton(9, "Recompile scripts");
             mm_File.ContextMenu.AddSeparator();
-            if (Editor.IsDevInstance)
+            if (Editor.IsDevInstance())
             {
                 mm_File.ContextMenu.AddButton(98, "Regenerate Engine API");
                 mm_File.ContextMenu.AddButton(99, "Regenerate Editor API");
