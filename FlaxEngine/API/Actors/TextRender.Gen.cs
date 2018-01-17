@@ -78,7 +78,7 @@ namespace FlaxEngine
 		/// Gets or sets the material used for the text rendering.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(20), EditorDisplay("Text"), Tooltip("Material to use for rendering")]
+		[EditorOrder(20), AssetReference(true), EditorDisplay("Text"), Tooltip("Material to use for rendering")]
 		public MaterialBase Material
 		{
 #if UNIT_TEST_COMPILANT
@@ -119,6 +119,21 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets or sets the shadows casting mode by this visual element.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(80), EditorDisplay("Text"), Tooltip("Shadows casting mode by this visual element")]
+		public ShadowsCastingMode ShadowsMode
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetShadowsMode(unmanagedPtr); }
+			set { Internal_SetShadowsMode(unmanagedPtr, value); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -141,6 +156,10 @@ namespace FlaxEngine
 		internal static extern int Internal_GetFontSize(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetFontSize(IntPtr obj, int val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern ShadowsCastingMode Internal_GetShadowsMode(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetShadowsMode(IntPtr obj, ShadowsCastingMode val);
 #endif
 #endregion
 	}
