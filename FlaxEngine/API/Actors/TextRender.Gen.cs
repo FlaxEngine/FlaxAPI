@@ -48,7 +48,7 @@ namespace FlaxEngine
 		/// Gets or sets text to render.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(0), EditorDisplay("Text"), Tooltip("Text to render")]
+		[EditorOrder(0), MultilineText, EditorDisplay("Text"), Tooltip("Text to render")]
 		public string Text
 		{
 #if UNIT_TEST_COMPILANT
