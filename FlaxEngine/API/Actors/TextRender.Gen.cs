@@ -134,6 +134,84 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets or sets the text layout area rectangle.
+		/// </summary>
+		/// <remarks>
+		/// Layout is defined in local space of the object (on XY plane).
+		/// </remarks>
+		[UnmanagedCall]
+		[EditorOrder(100), EditorDisplay("Layout"), Tooltip("Layout area rectangle in local space of the object (on XY plane)")]
+		public Rectangle Bounds
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { Rectangle resultAsRef; Internal_GetBounds(unmanagedPtr, out resultAsRef); return resultAsRef; }
+			set { Internal_SetBounds(unmanagedPtr, ref value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the text horizontal alignment inside the layout rectangle.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(130), EditorDisplay("Layout"), Tooltip("Text horizontal alignment inside the layout rectangle")]
+		public TextAlignment HorizontalAlignment
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetHorizontalAlignment(unmanagedPtr); }
+			set { Internal_SetHorizontalAlignment(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the text vertical alignment inside the layout rectangle.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(130), EditorDisplay("Layout"), Tooltip("Text vertical alignment inside the layout rectangle")]
+		public TextAlignment VerticalAlignment
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetVerticalAlignment(unmanagedPtr); }
+			set { Internal_SetVerticalAlignment(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the text wrapping mode inside the layout bounds.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(130), EditorDisplay("Layout"), Tooltip("Text wrapping mode inside the layout bounds")]
+		public TextWrapping TextWrapping
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetTextWrapping(unmanagedPtr); }
+			set { Internal_SetTextWrapping(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the scale parameter for lines gap size
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(140), Limit(-1000, 1000, 0.01f), EditorDisplay("Layout"), Tooltip("Scale parameter for the lines gap")]
+		public float BaseLinesGapScale
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetBaseLinesGapScale(unmanagedPtr); }
+			set { Internal_SetBaseLinesGapScale(unmanagedPtr, value); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -160,6 +238,26 @@ namespace FlaxEngine
 		internal static extern ShadowsCastingMode Internal_GetShadowsMode(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetShadowsMode(IntPtr obj, ShadowsCastingMode val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetBounds(IntPtr obj, out Rectangle resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetBounds(IntPtr obj, ref Rectangle val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern TextAlignment Internal_GetHorizontalAlignment(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetHorizontalAlignment(IntPtr obj, TextAlignment val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern TextAlignment Internal_GetVerticalAlignment(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetVerticalAlignment(IntPtr obj, TextAlignment val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern TextWrapping Internal_GetTextWrapping(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetTextWrapping(IntPtr obj, TextWrapping val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetBaseLinesGapScale(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetBaseLinesGapScale(IntPtr obj, float val);
 #endif
 #endregion
 	}
