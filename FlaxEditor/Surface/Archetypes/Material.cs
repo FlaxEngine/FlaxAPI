@@ -263,6 +263,18 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(2, "Result", ConnectionType.Float, 2),
                 }
             },
-        };
+	        new NodeArchetype
+	        {
+		        TypeID = 12,
+		        Title = "Vertex Color",
+		        Description = "Per vertex color",
+		        Flags = NodeFlags.MaterialOnly,
+		        Size = new Vector2(150, 40),
+		        Elements = new[]
+		        {
+			        NodeElementArchetype.Factory.Output(0, "Color", ConnectionType.Vector4, 0),
+		        }
+	        },
+		};
     }
 }

@@ -70,16 +70,17 @@ namespace FlaxEngine
             }
         }
 
-        /// <summary>
-        /// Updates the model mesh vertex and index buffer data.
-        /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
-        /// Mesh data will be cached and uloaded to the GPU with a delay.
-        /// </summary>
-        /// <param name="vertices">The mesh verticies positions. Cannot be null.</param>
-        /// <param name="triangles">The mesh index buffer (triangles). Cannot be null.</param>
-        /// <param name="normals">The normal vectors (per vertex).</param>
-        /// <param name="uv">The texture cordinates (per vertex).</param>
-        public void UpdateMesh(Vector3[] vertices, int[] triangles, Vector3[] normals = null, Vector2[] uv = null)
+		/// <summary>
+		/// Updates the model mesh vertex and index buffer data.
+		/// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
+		/// Mesh data will be cached and uloaded to the GPU with a delay.
+		/// </summary>
+		/// <param name="vertices">The mesh verticies positions. Cannot be null.</param>
+		/// <param name="triangles">The mesh index buffer (triangles). Cannot be null.</param>
+		/// <param name="normals">The normal vectors (per vertex).</param>
+		/// <param name="uv">The texture cordinates (per vertex).</param>
+		/// <param name="colors">The vertex colors (per vertex).</param>
+		public void UpdateMesh(Vector3[] vertices, int[] triangles, Vector3[] normals = null, Vector2[] uv = null, Color32[] colors = null)
         {
             // Validate state and input
             if (!IsVirtual)
@@ -94,8 +95,10 @@ namespace FlaxEngine
                 throw new ArgumentOutOfRangeException(nameof(normals));
             if (uv != null && uv.Length != vertices.Length)
                 throw new ArgumentOutOfRangeException(nameof(uv));
+			if (colors != null && colors.Length != vertices.Length)
+                throw new ArgumentOutOfRangeException(nameof(colors));
 
-            if (Internal_UpdateMesh(unmanagedPtr, vertices, triangles, normals, uv))
+            if (Internal_UpdateMesh(unmanagedPtr, vertices, triangles, normals, uv, colors))
                 throw new FlaxException("Failed to update mesh data.");
         }
 
@@ -137,7 +140,7 @@ namespace FlaxEngine
         internal static extern int[] Internal_GetLODs(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_UpdateMesh(IntPtr obj, Vector3[] vertices, int[] triangles, Vector3[] normals, Vector2[] uv);
+        internal static extern bool Internal_UpdateMesh(IntPtr obj, Vector3[] vertices, int[] triangles, Vector3[] normals, Vector2[] uv, Color32[] colors);
 #endif
     }
 }
