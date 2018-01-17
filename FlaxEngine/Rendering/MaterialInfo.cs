@@ -122,7 +122,12 @@ namespace FlaxEngine.Rendering
         /// The material is using world position offset (it may be animated insie a shader).
         /// </summary>
         UsePositionOffset = 1 << 9,
-    }
+
+		/// <summary>
+		/// The material is using vertex colors. The render will try to feed the pipeline with a proper buffer so material can gather valid data.
+		/// </summary>
+		UseVertexColor = 1 << 10,
+	}
 
     /// <summary>
     /// Post Fx material rendering locations.
