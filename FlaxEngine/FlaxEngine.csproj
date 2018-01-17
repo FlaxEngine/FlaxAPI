@@ -216,6 +216,7 @@
     <Compile Include="Attributes\Editor\EditorDisplayAttribute.cs" />
     <Compile Include="Attributes\Editor\HeaderAttribute.cs" />
     <Compile Include="Attributes\Editor\LimitAttribute.cs" />
+    <Compile Include="Attributes\Editor\MultilineTextAttribute.cs" />
     <Compile Include="Attributes\Editor\RangeAttribute.cs" />
     <Compile Include="Attributes\Editor\SpaceAttribute.cs" />
     <Compile Include="Attributes\MemberCollectionAttribute.cs" />
