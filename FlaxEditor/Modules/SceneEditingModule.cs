@@ -193,9 +193,16 @@ namespace FlaxEditor.Modules
             // Add it
             SceneManager.SpawnActor(actor, parent);
 
-            // Create undo action
-            var actorNode = Editor.Instance.Scene.GetActorNode(actor);
-            var action = new DeleteActorsAction(new List<SceneGraphNode>(1) { actorNode }, true);
+			// Peek spawned node
+	        var actorNode = Editor.Instance.Scene.GetActorNode(actor);
+			if(actorNode == null)
+				throw new InvalidOperationException("Failed to create scene node for the spawned actor.");
+
+			// Call post spawn action (can possibly setup custom default values)
+	        actorNode.PostSpawn();
+
+			// Create undo action
+			var action = new DeleteActorsAction(new List<SceneGraphNode>(1) { actorNode }, true);
             Undo.AddAction(action);
 
             // Auto CSG mesh rebuild

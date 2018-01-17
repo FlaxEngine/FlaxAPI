@@ -224,6 +224,14 @@ namespace FlaxEditor.SceneGraph
             FlaxEngine.Object.Destroy(_actor);
         }
 
+		/// <summary>
+		/// Action called after spawning actor in editor (via drag to viewport, with toolbox, etc.).
+		/// Can be used to tweak default values of the actor.
+		/// </summary>
+		public virtual void PostSpawn()
+	    {
+	    }
+
         /// <inheritdoc />
         protected override void OnParentChanged()
         {
