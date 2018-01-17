@@ -17,5 +17,17 @@ namespace FlaxEditor.SceneGraph.Actors
 			: base(actor)
 		{
 		}
+
+		/// <inheritdoc />
+		public override void PostSpawn()
+		{
+			base.PostSpawn();
+
+			// Setup for default values
+			var text = (TextRender)Actor;
+			text.Text = "My Text";
+			text.Font = FlaxEngine.Content.LoadInternal<FontAsset>(EditorAssets.PrimaryFont);
+			text.Material = FlaxEngine.Content.LoadInternal<MaterialBase>(EditorAssets.DefaultFontMaterial);
+		}
 	}
 }
