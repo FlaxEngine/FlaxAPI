@@ -76,7 +76,7 @@ namespace FlaxEditor.Modules
             // Load asset if needed
             if (_iconsAtlas == null)
             {
-                _iconsAtlas = FlaxEngine.Content.LoadInternal<SpriteAtlas>("Editor/IconsAtlas");
+                _iconsAtlas = FlaxEngine.Content.LoadInternal<SpriteAtlas>(EditorAssets.IconsAtlas);
                 if (_iconsAtlas == null)
                 {
                     // Error
@@ -268,8 +268,7 @@ namespace FlaxEditor.Modules
             style.ShowPickColorDialog += (color, handler) => new ColorPickerDialog(color, handler).Show();
             
             // Font
-            string primaryFontNameInternal = "Editor/Segoe Media Center Regular";
-            var primaryFont = FlaxEngine.Content.LoadInternal<FontAsset>(primaryFontNameInternal);
+            var primaryFont = FlaxEngine.Content.LoadInternal<FontAsset>(EditorAssets.PrimaryFont);
             if (primaryFont)
             {
                 primaryFont.WaitForLoaded();
@@ -287,7 +286,7 @@ namespace FlaxEditor.Modules
             }
             else
             {
-                Debug.LogError("Cannot load primary GUI Style font " + primaryFontNameInternal);
+                Debug.LogError("Cannot load primary GUI Style font " + EditorAssets.PrimaryFont);
             }
 
             // Icons
