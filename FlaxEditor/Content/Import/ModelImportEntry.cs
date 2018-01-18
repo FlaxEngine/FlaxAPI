@@ -76,7 +76,7 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Enable/disable meshes geometry optimization.
         /// </summary>
-        [EditorOrder(60), Tooltip("Enable/disable meshes geometry optimization")]
+        [EditorOrder(50), Tooltip("Enable/disable meshes geometry optimization")]
         public bool OptimizeMeshes { get; set; } = true;
 
         /// <summary>
@@ -88,13 +88,19 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Enable/disable importing meshes Level of Details.
         /// </summary>
-        [EditorOrder(70), Tooltip("Enable/disable importing meshes Level of Details")]
+        [EditorOrder(70), EditorDisplay(null, "Import LODs"), Tooltip("Enable/disable importing meshes Level of Details")]
         public bool ImportLODs { get; set; } = true;
+
+        /// <summary>
+        /// Enable/disable importing vertex colors (channel 0 only).
+        /// </summary>
+        [EditorOrder(80), Tooltip("Enable/disable importing vertex colors (channel 0 only))")]
+        public bool ImportVertexColors { get; set; } = true;
 
         /// <summary>
         /// The lighmap UVs source.
         /// </summary>
-        [EditorOrder(70), Tooltip("Model lightmap UVs source")]
+        [EditorOrder(90), Tooltip("Model lightmap UVs source")]
         public ModelLightmapUVsSource LighmapUVsSource { get; set; } = ModelLightmapUVsSource.Disable;
 
         [StructLayout(LayoutKind.Sequential)]
@@ -107,6 +113,7 @@ namespace FlaxEditor.Content.Import
             public bool OptimizeMeshes;
             public bool MergeMeshes;
             public bool ImportLODs;
+            public bool ImportVertexColors;
             public ModelLightmapUVsSource LighmapUVsSource;
         }
 
@@ -121,6 +128,7 @@ namespace FlaxEditor.Content.Import
                 OptimizeMeshes = OptimizeMeshes,
                 MergeMeshes = MergeMeshes,
                 ImportLODs = ImportLODs,
+	            ImportVertexColors = ImportVertexColors,
                 LighmapUVsSource = LighmapUVsSource
             };
         }
@@ -134,6 +142,7 @@ namespace FlaxEditor.Content.Import
             OptimizeMeshes = options.OptimizeMeshes;
             MergeMeshes = options.MergeMeshes;
             ImportLODs = options.ImportLODs;
+	        ImportVertexColors = options.ImportVertexColors;
             LighmapUVsSource = options.LighmapUVsSource;
         }
         
