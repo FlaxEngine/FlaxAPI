@@ -199,15 +199,8 @@ namespace FlaxEditor.Windows.Assets
                 private void ShowParameterMenu(int index, Control label, ref Vector2 targetLocation)
                 {
                     var contextMenu = new ContextMenu();
-                    contextMenu.OnButtonClicked += (id, menu) =>
-                                                   {
-                                                       if (id == 1)
-                                                           StartParameterRenaming(index, label);
-                                                       else if (id == 2)
-                                                           DeleteParameter(index);
-                                                   };
-                    contextMenu.AddButton(1, "Rename");
-                    contextMenu.AddButton(2, "Delete");
+                    contextMenu.AddButton("Rename", () => StartParameterRenaming(index, label));
+                    contextMenu.AddButton("Delete", () => DeleteParameter(index));
                     contextMenu.Show(label, targetLocation);
                 }
 

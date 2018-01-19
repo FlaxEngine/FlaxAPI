@@ -322,10 +322,10 @@ namespace FlaxEngine.GUI
                         if (!_blockPopup)
                             Focus();
                     };
-                    _popupMenu.OnButtonClicked += (id, cm) =>
+                    _popupMenu.ButtonClicked += (button) =>
                     {
-                        OnItemClicked(id);
-                        cm.Hide();
+                        OnItemClicked((int)button.Tag);
+                        _popupMenu.Hide();
                     };
                 }
 
@@ -349,11 +349,13 @@ namespace FlaxEngine.GUI
                     var style = Style.Current;
                     for (int i = 0; i < _items.Count; i++)
                     {
-                        var button = _popupMenu.AddButton(i, _items[i]);
+                        var button = _popupMenu.AddButton( _items[i]);
                         if (_selectedIndicies.Contains(i))
                         {
                             button.Icon = style.CheckBoxTick;
                         }
+
+	                    button.Tag = i;
                     }
 
                     // Show dropdown list

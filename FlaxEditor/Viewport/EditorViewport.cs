@@ -300,15 +300,16 @@ namespace FlaxEditor.Viewport
                 var camSpeed = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperRight);
                 var camSpeedCM = new ContextMenu();
                 var camSpeedButton = new ViewportWidgetButton("1", Editor.Instance.UI.GetIcon("ArrowRightBorder16"), camSpeedCM);
-                camSpeedButton.TooltipText = "Camera speed scale";
+	            camSpeedButton.Tag = this;
+				camSpeedButton.TooltipText = "Camera speed scale";
                 _speedWidget = camSpeedButton;
                 for (int i = 0; i < EditorViewportCameraSpeedValues.Length; i++)
                 {
-                    var button = camSpeedCM.AddButton(i, EditorViewportCameraSpeedValues[i].ToString());
-                    button.Tag = camSpeedButton;
+	                var v = EditorViewportCameraSpeedValues[i];
+					var button = camSpeedCM.AddButton(v.ToString());
+                    button.Tag = v;
                 }
-                camSpeedCM.Tag = this;
-                camSpeedCM.OnButtonClicked += widgetCamSpeedClick;
+                camSpeedCM.ButtonClicked += (button) => MovementSpeed = (float)button.Tag;
                 camSpeedCM.VisibleChanged += widgetCamSpeedShowHide;
                 camSpeedButton.Parent = camSpeed;
                 camSpeed.Parent = this;
@@ -332,10 +333,11 @@ namespace FlaxEditor.Viewport
                     var viewFlags = ViewWidgetButtonMenu.AddChildMenu("View Flags").ContextMenu;
                     for (int i = 0; i < EditorViewportViewFlagsValues.Length; i++)
                     {
-                        viewFlags.AddButton(i, EditorViewportViewFlagsValues[i].Name);
-                    }
-                    viewFlags.Tag = this;
-                    viewFlags.OnButtonClicked += widgetViewFlagsClick;
+						var v = EditorViewportViewFlagsValues[i];
+						var button = viewFlags.AddButton(v.Name);
+	                    button.Tag = v.Mode;
+					}
+                    viewFlags.ButtonClicked += (button) => Task.Flags ^= (ViewFlags)button.Tag;
                     viewFlags.VisibleChanged += widgetViewFlagsShowHide;
                 }
 
@@ -344,10 +346,11 @@ namespace FlaxEditor.Viewport
                     var debugView = ViewWidgetButtonMenu.AddChildMenu("Debug View").ContextMenu;
                     for (int i = 0; i < EditorViewportViewModeValues.Length; i++)
                     {
-                        debugView.AddButton(i, EditorViewportViewModeValues[i].Name);
+	                    var v = EditorViewportViewModeValues[i];
+						var button = debugView.AddButton(v.Name);
+	                    button.Tag = v.Mode;
                     }
-                    debugView.Tag = this;
-                    debugView.OnButtonClicked += widgetViewModeClick;
+                    debugView.ButtonClicked += (button) => Task.Mode = (ViewMode)button.Tag;
                     debugView.VisibleChanged += widgetViewModeShowHide;
                 }
                 
@@ -355,7 +358,7 @@ namespace FlaxEditor.Viewport
 
                 // Field of View
                 {
-                    var fov = ViewWidgetButtonMenu.AddButton("Field Of View", null);
+                    var fov = ViewWidgetButtonMenu.AddButton("Field Of View");
                     var fovValue = new FloatValueBox(1, 75, 2, 50.0f, 35.0f, 160.0f);
                     fovValue.Parent = fov;
                     fovValue.ValueChanged += () => _fieldOfView = fovValue.Value;
@@ -364,7 +367,7 @@ namespace FlaxEditor.Viewport
                 
                 // Far Plane
                 {
-                    var farPlane = ViewWidgetButtonMenu.AddButton("Far Plane", null);
+                    var farPlane = ViewWidgetButtonMenu.AddButton("Far Plane");
                     var farPlaneValue = new FloatValueBox(1000, 75, 2, 50.0f, 10.0f, 100000.0f);
                     farPlaneValue.Parent = farPlane;
                     farPlaneValue.ValueChanged += () => _farPlane = farPlaneValue.Value;
@@ -480,9 +483,6 @@ namespace FlaxEditor.Viewport
         /// <summary>
         /// Gets the mouse ray.
         /// </summary>
-        /// <value>
-        /// The mouse ray.
-        /// </value>
         public Ray MouseRay
         {
             get
@@ -823,47 +823,42 @@ namespace FlaxEditor.Viewport
             new ViewModeOptions(ViewMode.Normals, "Normals"),
             new ViewModeOptions(ViewMode.AmbientOcclusion, "Ambient Occlusion"),
         };
-
-        private void widgetCamSpeedClick(int id, ContextMenuBase cm)
-        {
-            var ccm = (ContextMenu)cm;
-            var viewport = (EditorViewport)cm.Tag;
-            var button = (ViewportWidgetButton)ccm.GetButton(id).Tag;
-            viewport.MovementSpeed = EditorViewportCameraSpeedValues[id];
-            button.Text = EditorViewportCameraSpeedValues[id].ToString();
-        }
-
-        private void widgetCamSpeedShowHide(Control cm)
+		
+	    private void widgetCamSpeedShowHide(Control cm)
         {
             if (cm.Visible == false)
                 return;
 
             var ccm = (ContextMenu)cm;
-            var viewport = (EditorViewport)cm.Tag;
-            for (int i = 0; i < EditorViewportCameraSpeedValues.Length; i++)
-            {
-                ccm.GetButton(i).Icon = Math.Abs(viewport.MovementSpeed - EditorViewportCameraSpeedValues[i]) < 0.001f ? Style.Current.CheckBoxTick : Sprite.Invalid;
-            }
-        }
-
-        private void widgetViewModeClick(int id, ContextMenuBase cm)
-        {
-            var viewport = (EditorViewport)cm.Tag;
-            viewport.Task.Mode = EditorViewportViewModeValues[id].Mode;
-        }
-
+	        foreach (var e in ccm.Items)
+	        {
+		        if (e is ContextMenuButton b)
+		        {
+			        var v = (float)b.Tag;
+			        b.Icon = Mathf.Abs(MovementSpeed - v) < 0.001f
+				        ? Style.Current.CheckBoxTick
+				        : Sprite.Invalid;
+		        }
+	        }
+		}
+		
         private void widgetViewModeShowHide(Control cm)
         {
             if (cm.Visible == false)
                 return;
-
+			
             var ccm = (ContextMenu)cm;
-            var viewport = (EditorViewport)cm.Tag;
-            for (int i = 0; i < EditorViewportViewModeValues.Length; i++)
-            {
-                ccm.GetButton(i).Icon = viewport.Task.Mode == EditorViewportViewModeValues[i].Mode ? Style.Current.CheckBoxTick : Sprite.Invalid;
-            }
-        }
+	        foreach (var e in ccm.Items)
+	        {
+		        if (e is ContextMenuButton b)
+		        {
+			        var v = (ViewMode)b.Tag;
+			        b.Icon = Task.Mode == v
+				        ? Style.Current.CheckBoxTick
+				        : Sprite.Invalid;
+		        }
+	        }
+		}
 
         private struct ViewFlagOptions
         {
@@ -903,24 +898,23 @@ namespace FlaxEditor.Viewport
             new ViewFlagOptions(ViewFlags.DepthOfField, "Depth of Field"),
             new ViewFlagOptions(ViewFlags.PhysicsDebug, "Physics Debug"),
         };
-
-        private void widgetViewFlagsClick(int id, ContextMenuBase cm)
-        {
-            var viewport = (EditorViewport)cm.Tag;
-            viewport.Task.Flags ^= EditorViewportViewFlagsValues[id].Mode;
-        }
-
+		
         private void widgetViewFlagsShowHide(Control cm)
         {
             if (cm.Visible == false)
                 return;
-
+			
             var ccm = (ContextMenu)cm;
-            var viewport = (EditorViewport)cm.Tag;
-            for (int i = 0; i < EditorViewportViewFlagsValues.Length; i++)
-            {
-                ccm.GetButton(i).Icon = (viewport.Task.Flags & EditorViewportViewFlagsValues[i].Mode) != 0 ? Style.Current.CheckBoxTick : Sprite.Invalid;
-            }
+            foreach (var e in ccm.Items)
+	        {
+		        if (e is ContextMenuButton b)
+		        {
+			        var v = (ViewFlags)b.Tag;
+			        b.Icon = (Task.Flags & v) != 0
+				        ? Style.Current.CheckBoxTick
+				        : Sprite.Invalid;
+		        }
+	        }
         }
     }
 }

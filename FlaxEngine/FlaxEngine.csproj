@@ -229,6 +229,7 @@
     <Compile Include="Engine\BrushSurface.cs" />
     <Compile Include="Engine\Collision.cs" />
     <Compile Include="Engine\ContactPoint.cs" />
+    <Compile Include="Engine\Exceptions\MissingActorException.cs" />
     <Compile Include="Engine\Gamepad.cs" />
     <Compile Include="Engine\GamepadLayout.cs" />
     <Compile Include="Engine\GamepadVibrationState.cs" />
@@ -366,7 +367,6 @@
     <Compile Include="Math\SphericalHarmonics.cs" />
     <Compile Include="Math\Transform.cs" />
     <Compile Include="Math\Viewport.cs" />
-    <Compile Include="Engine\Exceptions\MissingActorException.cs" />
     <Compile Include="Engine\Exceptions\MissingReferenceException.cs" />
     <Compile Include="Engine\Object.cs" />
     <Compile Include="Math\Plane.cs" />

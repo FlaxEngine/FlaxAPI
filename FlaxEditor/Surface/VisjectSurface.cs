@@ -167,13 +167,27 @@ namespace FlaxEditor.Surface
 
             // Create secondary menu (for other actions)
             _cmSecondaryMenu = new FlaxEngine.GUI.ContextMenu();
-            _cmSecondaryMenu.AddButton(1, "Save");
+            _cmSecondaryMenu.AddButton("Save", Owner.OnSurfaceSave);
             _cmSecondaryMenu.AddSeparator();
-            _cmSecondaryMenu.AddButton(2, "Delete node");
-            _cmSecondaryMenu.AddButton(3, "Remove all connections to that node");
-            _cmSecondaryMenu.AddButton(4, "Remove all connections to that box");
-            _cmSecondaryMenu.OnButtonClicked += OnSecondaryMenuButtonClick;
+	        _cmDeleteNodeButton = _cmSecondaryMenu.AddButton("Delete node", () =>
+	        {
+		        var nodeUnderMouse = (SurfaceNode)_cmSecondaryMenu.Tag;
+				Delete(nodeUnderMouse);
+	        });
+            _cmSecondaryMenu.AddButton("Remove all connections to that node", () =>
+            {
+	            var nodeUnderMouse = (SurfaceNode)_cmSecondaryMenu.Tag;
+				nodeUnderMouse.RemoveConnections();
+	            MarkAsEdited();
 
+            });
+	        _cmRemoveBoxConnectionsButton = _cmSecondaryMenu.AddButton("Remove all connections to that box", () =>
+	        {
+		        var boxUnderMouse = (Box)_cmRemoveBoxConnectionsButton.Tag;
+		        boxUnderMouse.RemoveConnections();
+		        MarkAsEdited();
+			});
+            
             // Set initial scale to provide nice zoom in effect on startup
             _surface.Scale = new Vector2(0.5f);
         }

@@ -2,20 +2,23 @@
 // Copyright (c) 2012-2018 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEditor.Surface.Elements;
 using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.Surface
 {
     public partial class VisjectSurface
     {
-        /// <summary>
-        /// Shows the primary menu.
-        /// </summary>
-        /// <param name="location">The location in teh Surface Space.</param>
-        public void ShowPrimaryMenu(Vector2 location)
+	    private ContextMenuButton _cmDeleteNodeButton;
+	    private ContextMenuButton _cmRemoveBoxConnectionsButton;
+
+		/// <summary>
+		/// Shows the primary menu.
+		/// </summary>
+		/// <param name="location">The location in teh Surface Space.</param>
+		public void ShowPrimaryMenu(Vector2 location)
         {
             _cmPrimaryMenu.Show(this, location);
         }
@@ -31,13 +34,11 @@ namespace FlaxEditor.Surface
             Select(node);
 
             // Update context menu buttons
-            var deleteNodeButton = _cmSecondaryMenu.GetButton(2);
-            deleteNodeButton.Enabled = (node.Archetype.Flags & NodeFlags.NoRemove) == 0;
+	        _cmDeleteNodeButton.Enabled = (node.Archetype.Flags & NodeFlags.NoRemove) == 0;
             //
-            var removeBoxConnectionsButton = _cmSecondaryMenu.GetButton(4);
             var boxUnderMouse = GetChildAtRecursive(location) as Box;
-            removeBoxConnectionsButton.Enabled = boxUnderMouse != null && boxUnderMouse.HasAnyConnection;
-            removeBoxConnectionsButton.Tag = boxUnderMouse;
+	        _cmRemoveBoxConnectionsButton.Enabled = boxUnderMouse != null && boxUnderMouse.HasAnyConnection;
+	        _cmRemoveBoxConnectionsButton.Tag = boxUnderMouse;
 
             // Show secondary context menu
             _cmStartPos = location;
@@ -48,31 +49,6 @@ namespace FlaxEditor.Surface
         private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem)
         {
             SpawnNode(visjectCmItem.GroupArchetype, visjectCmItem.NodeArchetype, _surface.PointFromParent(_cmStartPos));
-        }
-
-        private void OnSecondaryMenuButtonClick(int id, FlaxEngine.GUI.ContextMenu contextMenu)
-        {
-            var nodeUnderMouse = (SurfaceNode)contextMenu.Tag;
-            switch (id)
-            {
-                case 1:
-                    Owner.OnSurfaceSave();
-                    break;
-                case 2:
-                    Delete(nodeUnderMouse);
-                    break;
-                case 3:
-                    nodeUnderMouse.RemoveConnections();
-                    MarkAsEdited();
-                    break;
-                case 4:
-                {
-                    var boxUnderMouse = (Box)_cmSecondaryMenu.GetButton(4).Tag;
-                    boxUnderMouse.RemoveConnections();
-                    MarkAsEdited();
-                    break;
-                }
-            }
         }
     }
 }

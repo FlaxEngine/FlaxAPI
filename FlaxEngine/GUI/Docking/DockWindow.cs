@@ -101,11 +101,19 @@ namespace FlaxEngine.GUI.Docking
             _masterPanel?.linkWindow(this);
         }
 
-        /// <summary>
-        /// Shows the window in a floating state.
-        /// </summary>
-        /// <param name="position">Window location.</param>
-        public void ShowFloating(WindowStartPosition position = WindowStartPosition.CenterParent)
+	    /// <summary>
+	    /// Shows the window in a floating state.
+	    /// </summary>
+	    public void ShowFloating()
+	    {
+		    ShowFloating(Vector2.Zero);
+	    }
+
+	    /// <summary>
+		/// Shows the window in a floating state.
+		/// </summary>
+		/// <param name="position">Window location.</param>
+		public void ShowFloating(WindowStartPosition position)
         {
             ShowFloating(Vector2.Zero, position);
         }
@@ -184,11 +192,19 @@ namespace FlaxEngine.GUI.Docking
             Show(state, toDock?.ParentDockPanel);
         }
 
-        /// <summary>
-        /// Focuses or shows the window.
-        /// </summary>
-        /// <param name="state">The state.</param>
-        public void FocusOrShow(DockState state = DockState.Float)
+	    /// <summary>
+	    /// Focuses or shows the window.
+	    /// </summary>
+	    public void FocusOrShow()
+	    {
+		    FocusOrShow(DockState.Float);
+	    }
+
+		/// <summary>
+		/// Focuses or shows the window.
+		/// </summary>
+		/// <param name="state">The state.</param>
+		public void FocusOrShow(DockState state)
         {
             if (Visible)
             {

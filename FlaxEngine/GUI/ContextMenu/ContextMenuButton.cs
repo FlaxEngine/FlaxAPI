@@ -13,21 +13,25 @@ namespace FlaxEngine.GUI
     public class ContextMenuButton : ContextMenuItem
     {
         private bool _isMouseDown;
-
-        /// <summary>
-        /// Gets the identifier.
-        /// </summary>
-        public int ID { get; }
-
+		
         /// <summary>
         /// Event fired when user clicks on the button.
         /// </summary>
         public event Action Clicked;
 
         /// <summary>
-        /// The button text.
+        /// Event fired when user clicks on the button.
         /// </summary>
-        public string Text;
+        public event Action<ContextMenuButton> ButtonClicked;
+
+	    /// <summary>
+	    /// The button text.
+	    /// </summary>
+	    public string Text
+	    {
+		    get => Name;
+		    set => Name = value;
+	    }
 
         /// <summary>
         /// The button short keys information (eg. 'Ctrl+C').
@@ -43,14 +47,12 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="ContextMenuButton"/> class.
         /// </summary>
         /// <param name="parent">The parent context menu.</param>
-        /// <param name="id">The identifier.</param>
         /// <param name="text">The text.</param>
         /// <param name="shortKeys">The short keys tip.</param>
-        public ContextMenuButton(ContextMenu parent, int id, string text, string shortKeys = "")
+        public ContextMenuButton(ContextMenu parent, string text, string shortKeys = "")
             : base(parent, 8, 22)
         {
-            ID = id;
-            Text = text;
+            Name = text;
             Shortkeys = shortKeys;
         }
 
@@ -70,7 +72,7 @@ namespace FlaxEngine.GUI
             base.Draw();
 
             // Draw text
-            Render2D.DrawText(style.FontMedium, Text, textRect, textColor, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(style.FontMedium, Name, textRect, textColor, TextAlignment.Near, TextAlignment.Center);
 
             // Draw shortkeys
             Render2D.DrawText(style.FontMedium, Shortkeys, textRect, textColor, TextAlignment.Far, TextAlignment.Center);
@@ -119,7 +121,8 @@ namespace FlaxEngine.GUI
 
                 // Fire event
                 Clicked?.Invoke();
-                ParentContextMenu?.OnButtonClicked_Internal(this);
+				ButtonClicked?.Invoke(this);
+	            ParentContextMenu?.OnButtonClicked(this);
 
                 // Event handled
                 return true;

@@ -216,82 +216,62 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
                 var cm = new ContextMenu();
                 cm.Tag = script;
-                cm.OnButtonClicked += SettingsMenuOnButtonClicked;
-                cm.AddButton(0, "Reset").Enabled = false;// TODO: finish this
+                cm.AddButton("Reset").Enabled = false;// TODO: finish this
                 cm.AddSeparator();
-                cm.AddButton(1, "Remove");
-                cm.AddButton(2, "Move up").Enabled = script.OrderInParent > 0;
-                cm.AddButton(3, "Move down").Enabled = script.OrderInParent < script.Actor.Scripts.Length - 1;
+                cm.AddButton("Remove", OnClickRemove);
+                cm.AddButton("Move up", OnClickMoveUp).Enabled = script.OrderInParent > 0;
+                cm.AddButton("Move down", OnClickMoveDown).Enabled = script.OrderInParent < script.Actor.Scripts.Length - 1;
                 // TODO: copy script
                 // TODO: paste script values
                 // TODO: paste script as new
                 // TODO: copt script reference
                 cm.AddSeparator();
-                cm.AddButton(4, "Edit script");
-                cm.AddButton(5, "Show in content window");
+                cm.AddButton("Edit script", OnClickEditScript);
+                cm.AddButton("Show in content window", OnClickShowScript);
                 cm.Show(image, image.Size);
             }
 
-            private void SettingsMenuOnButtonClicked(int id, ContextMenu contextMenu)
-            {
-                var script = (Script)contextMenu.Tag;
-                switch (id)
-                {
-                    // Reset
-                    case 0:
-                    {
-                        throw new NotImplementedException("Reset script");
-                        break;
-                    }
+	        private void OnClickRemove(ContextMenuButton button)
+	        {
+		        var script = (Script)button.ParentContextMenu.Tag;
+		        var action = AddRemoveScript.Remove(script);
+		        action.Do();
+		        Editor.Instance.Undo.AddAction(action);
+			}
 
-                    // Remove
-                    case 1:
-                    {
-                        var action = AddRemoveScript.Remove(script);
-                        action.Do();
-                        Editor.Instance.Undo.AddAction(action);
-                        break;
-                    }
+			private void OnClickMoveUp(ContextMenuButton button)
+	        {
+		        var script = (Script)button.ParentContextMenu.Tag;
+				var action = ChangeScriptAction.ChangeOrder(script, script.OrderInParent - 1);
+		        action.Do();
+		        Editor.Instance.Undo.AddAction(action);
+			}
 
-                    // Move up
-                    case 2:
-                    {
-                        var action = ChangeScriptAction.ChangeOrder(script, script.OrderInParent - 1);
-                        action.Do();
-                        Editor.Instance.Undo.AddAction(action);
-                        break;
-                    }
+			private void OnClickMoveDown(ContextMenuButton button)
+	        {
+		        var script = (Script)button.ParentContextMenu.Tag;
+				var action = ChangeScriptAction.ChangeOrder(script, script.OrderInParent + 1);
+		        action.Do();
+		        Editor.Instance.Undo.AddAction(action);
+			}
 
-                    // Move down
-                    case 3:
-                    {
-                        var action = ChangeScriptAction.ChangeOrder(script, script.OrderInParent + 1);
-                        action.Do();
-                        Editor.Instance.Undo.AddAction(action);
-                        break;
-                    }
+			private void OnClickEditScript(ContextMenuButton button)
+	        {
+		        var script = (Script)button.ParentContextMenu.Tag;
+				var item = Editor.Instance.ContentDatabase.FindScriptWitScriptName(script);
+		        if (item != null)
+			        Editor.Instance.ContentEditing.Open(item);
+			}
 
-                    // Edit script
-                    case 4:
-                    {
-                        var item = Editor.Instance.ContentDatabase.FindScriptWitScriptName(script);
-                        if (item != null)
-                            Editor.Instance.ContentEditing.Open(item);
-                        break;
-                    }
+	        private void OnClickShowScript(ContextMenuButton button)
+	        {
+		        var script = (Script)button.ParentContextMenu.Tag;
+		        var item = Editor.Instance.ContentDatabase.FindScriptWitScriptName(script);
+		        if (item != null)
+			        Editor.Instance.Windows.ContentWin.Select(item);
+	        }
 
-                    // Show in content window
-                    case 5:
-                    {
-                        var item = Editor.Instance.ContentDatabase.FindScriptWitScriptName(script);
-                        if (item != null)
-                            Editor.Instance.Windows.ContentWin.Select(item);
-                        break;
-                    }
-                }
-            }
-
-            /// <inheritdoc />
+	        /// <inheritdoc />
             public override void Refresh()
             {
                 if (Values.Count == 1)

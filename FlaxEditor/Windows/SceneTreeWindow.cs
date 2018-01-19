@@ -21,8 +21,12 @@ namespace FlaxEditor.Windows
         private Tree _tree;
         private bool _isUpdatingSelection;
         private bool _isMouseDown;
-        private ContextMenu _contextMenu;
-        private ContextMenuChildMenu _spawnMenu;
+        private readonly ContextMenu _contextMenu;
+	    private readonly ContextMenuButton _cmDuplicate;
+	    private readonly ContextMenuButton _cmDelete;
+	    private readonly ContextMenuButton _cmCopy;
+	    private readonly ContextMenuButton _cmCut;
+	    private readonly ContextMenuChildMenu _spawnMenu;
 
         private struct ActorsGroup
         {
@@ -120,7 +124,7 @@ namespace FlaxEditor.Windows
                         new KeyValuePair<string, Type>("PostFx Volume", typeof(PostFxVolume)),
                     }
                 },
-	            new ActorsGroup
+                new ActorsGroup
                 {
                     Name = "GUI",
                     Types = new[]
@@ -133,12 +137,12 @@ namespace FlaxEditor.Windows
             // Create context menu
             _contextMenu = new ContextMenu();
             _contextMenu.MinimumWidth = 120;
-            _contextMenu.AddButton(1, "Duplicate");
-            _contextMenu.AddButton(2, "Delete");
+	        _cmDuplicate = _contextMenu.AddButton("Duplicate", Editor.SceneEditing.Duplicate);
+            _cmDelete = _contextMenu.AddButton("Delete", Editor.SceneEditing.Delete);
             _contextMenu.AddSeparator();
-            _contextMenu.AddButton(3, "Copy");
-            _contextMenu.AddButton(4, "Paste");
-            _contextMenu.AddButton(5, "Cut");
+            _cmCopy = _contextMenu.AddButton("Copy", Editor.SceneEditing.Copy);
+            _contextMenu.AddButton("Paste", Editor.SceneEditing.Paste);
+            _cmCut = _contextMenu.AddButton("Cut", Editor.SceneEditing.Cut);
             _contextMenu.AddSeparator();
             _spawnMenu = _contextMenu.AddChildMenu("New");
             var newActorCm = _spawnMenu.ContextMenu;
@@ -148,65 +152,33 @@ namespace FlaxEditor.Windows
 
                 if (group.Types.Length == 1)
                 {
-                    var button = newActorCm.AddButton(6 + i, group.Types[0].Key);
-                    button.Tag = group.Types[0].Value;
+                    var type = group.Types[0].Value;
+                    newActorCm.AddButton(group.Types[0].Key, () => Spawn(type));
                 }
                 else
                 {
                     var groupCm = newActorCm.AddChildMenu(group.Name).ContextMenu;
                     for (int j = 0; j < group.Types.Length; j++)
                     {
-                        var button = groupCm.AddButton(j, group.Types[j].Key);
-                        button.Tag = group.Types[j].Value;
+                        var type = group.Types[j].Value;
+	                    groupCm.AddButton(group.Types[j].Key, () => Spawn(type));
                     }
-                    groupCm.OnButtonClicked += GroupCmOnButtonClicked;
                 }
             }
-            newActorCm.OnButtonClicked += ContextMenuOnButtonClicked;
-            _contextMenu.VisibleChanged += ContextMenuOnVisibleChanged;
-            _contextMenu.OnButtonClicked += ContextMenuOnButtonClicked;
-        }
 
-        private void GroupCmOnButtonClicked(int id, ContextMenu contextMenu)
-        {
-            Spawn((Type)contextMenu.GetButton(id).Tag);
+	        _contextMenu.VisibleChanged += ContextMenuOnVisibleChanged;
         }
 
         private void ContextMenuOnVisibleChanged(Control control)
-        {
-            bool hasSthSelected = Editor.SceneEditing.HasSthSelected;
+	    {
+		    bool hasSthSelected = Editor.SceneEditing.HasSthSelected;
 
-            _contextMenu.GetButton(1).Enabled = hasSthSelected;
-            _contextMenu.GetButton(2).Enabled = hasSthSelected;
-            _contextMenu.GetButton(3).Enabled = hasSthSelected;
-            _contextMenu.GetButton(5).Enabled = hasSthSelected;
-            _spawnMenu.Enabled = Editor.StateMachine.CurrentState.CanEditScene && SceneManager.IsAnySceneLoaded;
-        }
-
-        private void ContextMenuOnButtonClicked(int id, ContextMenu contextMenu)
-        {
-            switch (id)
-            {
-                case 1:
-                    Editor.SceneEditing.Duplicate();
-                    break;
-                case 2:
-                    Editor.SceneEditing.Delete();
-                    break;
-                case 3:
-                    Editor.SceneEditing.Copy();
-                    break;
-                case 4:
-                    Editor.SceneEditing.Paste();
-                    break;
-                case 5:
-                    Editor.SceneEditing.Cut();
-                    break;
-                default:
-                    Spawn((Type)contextMenu.GetButton(id).Tag);
-                    break;
-            }
-        }
+		    _cmDuplicate.Enabled = hasSthSelected;
+		    _cmDelete.Enabled = hasSthSelected;
+		    _cmCopy.Enabled = hasSthSelected;
+		    _cmCut.Enabled = hasSthSelected;
+		    _spawnMenu.Enabled = Editor.StateMachine.CurrentState.CanEditScene && SceneManager.IsAnySceneLoaded;
+	    }
 
         private void Spawn(Type type)
         {

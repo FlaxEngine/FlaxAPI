@@ -30,7 +30,11 @@ namespace FlaxEditor.Viewport
         private readonly ViewportWidgetButton _gizmoModeRotate;
         private readonly ViewportWidgetButton _gizmoModeScale;
 
-        private readonly DragAssets _dragAssets = new DragAssets();
+	    private ViewportWidgetButton _translateSnappng;
+	    private ViewportWidgetButton _rotateSnapping;
+	    private ViewportWidgetButton _scaleSnapping;
+		
+		private readonly DragAssets _dragAssets = new DragAssets();
         private readonly DragActorType _dragActorType = new DragActorType();
         private readonly ViewportDebugDrawData _debugDrawData = new ViewportDebugDrawData(32);
 
@@ -110,16 +114,17 @@ namespace FlaxEditor.Viewport
             };
             enableScaleSnapping.OnToggle += onScaleSnappingToggle;
             var scaleSnappingCM = new ContextMenu();
-            var scaleSnappng = new ViewportWidgetButton(TransformGizmo.ScaleSnapValue.ToString(), Sprite.Invalid, scaleSnappingCM);
-            scaleSnappng.TooltipText = "Scale snapping values";
+            _scaleSnapping = new ViewportWidgetButton(TransformGizmo.ScaleSnapValue.ToString(), Sprite.Invalid, scaleSnappingCM);
+	        _scaleSnapping.TooltipText = "Scale snapping values";
             for (int i = 0; i < EditorViewportScaleSnapValues.Length; i++)
             {
-                var button = scaleSnappingCM.AddButton(i, EditorViewportScaleSnapValues[i].ToString());
-                button.Tag = scaleSnappng;
+	            var v = EditorViewportScaleSnapValues[i];
+				var button = scaleSnappingCM.AddButton(v.ToString());
+	            button.Tag = v;
             }
-            scaleSnappingCM.OnButtonClicked += widgetScaleSnapClick;
+            scaleSnappingCM.ButtonClicked += widgetScaleSnapClick;
             scaleSnappingCM.VisibleChanged += widgetScaleSnapShowHide;
-            scaleSnappng.Parent = scaleSnappingWidget;
+	        _scaleSnapping.Parent = scaleSnappingWidget;
             scaleSnappingWidget.Parent = this;
 
             // Rotation snapping widget
@@ -132,16 +137,17 @@ namespace FlaxEditor.Viewport
             };
             enableRotateSnapping.OnToggle += onRotateSnappingToggle;
             var rotateSnappingCM = new ContextMenu();
-            var rotateSnappng = new ViewportWidgetButton(TransformGizmo.RotationSnapValue.ToString(), Sprite.Invalid, rotateSnappingCM);
-            rotateSnappng.TooltipText = "Rotation snapping values";
+	        _rotateSnapping = new ViewportWidgetButton(TransformGizmo.RotationSnapValue.ToString(), Sprite.Invalid, rotateSnappingCM);
+	        _rotateSnapping.TooltipText = "Rotation snapping values";
             for (int i = 0; i < EditorViewportRotateSnapValues.Length; i++)
             {
-                var button = rotateSnappingCM.AddButton(i, EditorViewportRotateSnapValues[i].ToString());
-                button.Tag = rotateSnappng;
+				var v = EditorViewportRotateSnapValues[i];
+	            var button = rotateSnappingCM.AddButton(v.ToString());
+	            button.Tag = v;
             }
-            rotateSnappingCM.OnButtonClicked += widgetRotateSnapClick;
+            rotateSnappingCM.ButtonClicked += widgetRotateSnapClick;
             rotateSnappingCM.VisibleChanged += widgetRotateSnapShowHide;
-            rotateSnappng.Parent = rotateSnappingWidget;
+	        _rotateSnapping.Parent = rotateSnappingWidget;
             rotateSnappingWidget.Parent = this;
 
             // Translation snapping widget
@@ -154,16 +160,17 @@ namespace FlaxEditor.Viewport
             };
             enableTranslateSnapping.OnToggle += onTranslateSnappingToggle;
             var translateSnappingCM = new ContextMenu();
-            var translateSnappng = new ViewportWidgetButton(TransformGizmo.TranslationSnapValue.ToString(), Sprite.Invalid, translateSnappingCM);
-            translateSnappng.TooltipText = "Position snapping values";
+            _translateSnappng = new ViewportWidgetButton(TransformGizmo.TranslationSnapValue.ToString(), Sprite.Invalid, translateSnappingCM);
+	        _translateSnappng.TooltipText = "Position snapping values";
             for (int i = 0; i < EditorViewportTranslateSnapValues.Length; i++)
             {
-                var button = translateSnappingCM.AddButton(i, EditorViewportTranslateSnapValues[i].ToString());
-                button.Tag = translateSnappng;
-            }
-            translateSnappingCM.OnButtonClicked += widgetTranslateSnapClick;
+	            var v = EditorViewportTranslateSnapValues[i];
+	            var button = translateSnappingCM.AddButton(v.ToString());
+	            button.Tag = v;
+			}
+            translateSnappingCM.ButtonClicked += widgetTranslateSnapClick;
             translateSnappingCM.VisibleChanged += widgetTranslateSnapShowHide;
-            translateSnappng.Parent = translateSnappingWidget;
+	        _translateSnappng.Parent = translateSnappingWidget;
             translateSnappingWidget.Parent = this;
 
             // Gizmo mode widget
@@ -283,12 +290,12 @@ namespace FlaxEditor.Viewport
             8.0f,
         };
 
-        private void widgetScaleSnapClick(int id, ContextMenu contextMenu)
+        private void widgetScaleSnapClick(ContextMenuButton button)
         {
-            var button = (ViewportWidgetButton)contextMenu.GetButton(id).Tag;
-            TransformGizmo.ScaleSnapValue = EditorViewportScaleSnapValues[id];
-            button.Text = EditorViewportScaleSnapValues[id].ToString();
-        }
+	        var v = (float)button.Tag;
+	        TransformGizmo.ScaleSnapValue = v;
+	        _scaleSnapping.Text = v.ToString();
+		}
 
         private void widgetScaleSnapShowHide(Control control)
         {
@@ -296,13 +303,17 @@ namespace FlaxEditor.Viewport
                 return;
 
             var ccm = (ContextMenu)control;
-            for (int i = 0; i < EditorViewportScaleSnapValues.Length; i++)
-            {
-                ccm.GetButton(i).Icon = Mathf.Abs(TransformGizmo.ScaleSnapValue - EditorViewportScaleSnapValues[i]) < 0.001f
-                    ? Style.Current.CheckBoxTick
-                    : Sprite.Invalid;
-            }
-        }
+			foreach (var e in ccm.Items)
+			{
+				if (e is ContextMenuButton b)
+				{
+					var v = (float)b.Tag;
+					b.Icon = Mathf.Abs(TransformGizmo.ScaleSnapValue - v) < 0.001f
+						? Style.Current.CheckBoxTick
+						: Sprite.Invalid;
+				}
+			}
+		}
 
         private static readonly float[] EditorViewportRotateSnapValues =
         {
@@ -316,12 +327,12 @@ namespace FlaxEditor.Viewport
             90.0f,
         };
 
-        private void widgetRotateSnapClick(int id, ContextMenu contextMenu)
+        private void widgetRotateSnapClick(ContextMenuButton button)
         {
-            var button = (ViewportWidgetButton)contextMenu.GetButton(id).Tag;
-            TransformGizmo.RotationSnapValue = EditorViewportRotateSnapValues[id];
-            button.Text = EditorViewportRotateSnapValues[id].ToString();
-        }
+	        var v = (float)button.Tag;
+	        TransformGizmo.RotationSnapValue = v;
+	        _rotateSnapping.Text = v.ToString();
+		}
 
         private void widgetRotateSnapShowHide(Control control)
         {
@@ -329,13 +340,17 @@ namespace FlaxEditor.Viewport
                 return;
 
             var ccm = (ContextMenu)control;
-            for (int i = 0; i < EditorViewportRotateSnapValues.Length; i++)
-            {
-                ccm.GetButton(i).Icon = Mathf.Abs(TransformGizmo.RotationSnapValue - EditorViewportRotateSnapValues[i]) < 0.001f
-                    ? Style.Current.CheckBoxTick
-                    : Sprite.Invalid;
-            }
-        }
+			foreach (var e in ccm.Items)
+			{
+				if (e is ContextMenuButton b)
+				{
+					var v = (float)b.Tag;
+					b.Icon = Mathf.Abs(TransformGizmo.RotationSnapValue - v) < 0.001f
+						? Style.Current.CheckBoxTick
+						: Sprite.Invalid;
+				}
+			}
+		}
 
         private static readonly float[] EditorViewportTranslateSnapValues =
         {
@@ -348,28 +363,32 @@ namespace FlaxEditor.Viewport
             1000.0f,
         };
 
-        private void widgetTranslateSnapClick(int id, ContextMenu contextMenu)
+        private void widgetTranslateSnapClick(ContextMenuButton button)
         {
-            var button = (ViewportWidgetButton)contextMenu.GetButton(id).Tag;
-            TransformGizmo.TranslationSnapValue = EditorViewportTranslateSnapValues[id];
-            button.Text = EditorViewportTranslateSnapValues[id].ToString();
+	        var v = (float)button.Tag;
+			TransformGizmo.TranslationSnapValue = v;
+	        _translateSnappng.Text = v.ToString();
         }
 
-        private void widgetTranslateSnapShowHide(Control control)
-        {
-            if (control.Visible == false)
-                return;
+	    private void widgetTranslateSnapShowHide(Control control)
+	    {
+		    if (control.Visible == false)
+			    return;
 
-            var ccm = (ContextMenu)control;
-            for (int i = 0; i < EditorViewportTranslateSnapValues.Length; i++)
-            {
-                ccm.GetButton(i).Icon = Mathf.Abs(TransformGizmo.TranslationSnapValue - EditorViewportTranslateSnapValues[i]) < 0.001f
-                    ? Style.Current.CheckBoxTick
-                    : Sprite.Invalid;
-            }
-        }
+		    var ccm = (ContextMenu)control;
+		    foreach (var e in ccm.Items)
+		    {
+			    if (e is ContextMenuButton b)
+			    {
+				    var v = (float)b.Tag;
+				    b.Icon = Mathf.Abs(TransformGizmo.TranslationSnapValue - v) < 0.001f
+					    ? Style.Current.CheckBoxTick
+					    : Sprite.Invalid;
+			    }
+		    }
+	    }
 
-        private void OnSelectionChanged()
+	    private void OnSelectionChanged()
         {
             var selection = _editor.SceneEditing.Selection;
             Gizmos.ForEach(x => x.OnSelectionChanged(selection));

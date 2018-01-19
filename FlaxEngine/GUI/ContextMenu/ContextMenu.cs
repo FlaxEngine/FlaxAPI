@@ -9,13 +9,6 @@ using System.Linq;
 namespace FlaxEngine.GUI
 {
     /// <summary>
-    /// Ebent for context menu buttons click actions handling.
-    /// </summary>
-    /// <param name="id">The identifier.</param>
-    /// <param name="contextMenu">The context menu.</param>
-    public delegate void OnContextMenuButtonClicked(int id, ContextMenu contextMenu);
-
-    /// <summary>
     /// Popup menu control.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContextMenuBase" />
@@ -75,12 +68,7 @@ namespace FlaxEngine.GUI
         /// The items panel.
         /// </summary>
         protected ItemsPanel _panel;
-
-        /// <summary>
-        /// Event fired when any button in this popup menu gets clicked.
-        /// </summary>
-        public event OnContextMenuButtonClicked OnButtonClicked;
-
+		
         /// <summary>
         /// Gets or sets the items area margin (items container area margin).
         /// </summary>
@@ -122,10 +110,20 @@ namespace FlaxEngine.GUI
         /// </summary>
         public IEnumerable<ContextMenuItem> Items => _panel.Children.OfType<ContextMenuItem>();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ContextMenu"/> class.
-        /// </summary>
-        public ContextMenu()
+	    /// <summary>
+	    /// Event fired when user clicks on the button.
+	    /// </summary>
+	    public event Action<ContextMenuButton> ButtonClicked;
+
+		/// <summary>
+		/// Gets the context menu items container control.
+		/// </summary>
+		public ContainerControl ItemsContainer => _panel;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ContextMenu"/> class.
+		/// </summary>
+		public ContextMenu()
         {
             MinimumWidth = 10;
             MaximumItemsInViewCount = 20;
@@ -137,12 +135,11 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Adds the button.
         /// </summary>
-        /// <param name="id">The identifier.</param>
         /// <param name="text">The text.</param>
         /// <returns>Created context menu item control.</returns>
-        public ContextMenuButton AddButton(int id, string text)
+        public ContextMenuButton AddButton(string text)
         {
-            var item = new ContextMenuButton(this, id, text);
+            var item = new ContextMenuButton(this, text);
             item.Parent = _panel;
             return item;
         }
@@ -150,13 +147,12 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Adds the button.
         /// </summary>
-        /// <param name="id">The identifier.</param>
         /// <param name="text">The text.</param>
         /// <param name="shortkeys">The shortkeys.</param>
         /// <returns>Created context menu item control.</returns>
-        public ContextMenuButton AddButton(int id, string text, string shortkeys)
+        public ContextMenuButton AddButton(string text, string shortkeys)
         {
-            var item = new ContextMenuButton(this, id, text, shortkeys);
+            var item = new ContextMenuButton(this, text, shortkeys);
             item.Parent = _panel;
             return item;
         }
@@ -169,9 +165,23 @@ namespace FlaxEngine.GUI
         /// <returns>Created context menu item control.</returns>
         public ContextMenuButton AddButton(string text, Action clicked)
         {
-            var item = new ContextMenuButton(this, -1, text);
+            var item = new ContextMenuButton(this, text);
             item.Parent = _panel;
             item.Clicked += clicked;
+            return item;
+        }
+
+        /// <summary>
+        /// Adds the button.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="clicked">On button clicked event.</param>
+        /// <returns>Created context menu item control.</returns>
+        public ContextMenuButton AddButton(string text, Action<ContextMenuButton> clicked)
+        {
+            var item = new ContextMenuButton(this, text);
+            item.Parent = _panel;
+            item.ButtonClicked += clicked;
             return item;
         }
 
@@ -184,7 +194,7 @@ namespace FlaxEngine.GUI
         /// <returns>Created context menu item control.</returns>
         public ContextMenuButton AddButton(string text, string shortkeys, Action clicked)
         {
-            var item = new ContextMenuButton(this, -1, text, shortkeys);
+            var item = new ContextMenuButton(this, text, shortkeys);
             item.Parent = _panel;
             item.Clicked += clicked;
             return item;
@@ -213,31 +223,17 @@ namespace FlaxEngine.GUI
             return item;
         }
 
-        /// <summary>
-        /// Tries to find button with the given ID.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns>Button or null if cannot find it.</returns>
-        public ContextMenuButton GetButton(int id)
-        {
-            // TODO: could we provide some fast access cache for using ids?
+		/// <summary>
+		/// Called when button get clicked.
+		/// </summary>
+		/// <param name="button">The button.</param>
+		public virtual void OnButtonClicked(ContextMenuButton button)
+	    {
+			ButtonClicked?.Invoke(button);
+	    }
 
-            for (int i = 0; i < _panel.Children.Count; i++)
-            {
-                if (_panel.Children[i] is ContextMenuButton button && button.ID == id)
-                    return button;
-            }
-
-            return null;
-        }
-
-        internal void OnButtonClicked_Internal(ContextMenuButton button)
-        {
-            OnButtonClicked?.Invoke(button.ID, this);
-        }
-
-        /// <inheritdoc />
-        public override bool ContainsPoint(ref Vector2 location)
+		/// <inheritdoc />
+		public override bool ContainsPoint(ref Vector2 location)
         {
             if (base.ContainsPoint(ref location))
                 return true;

@@ -262,12 +262,21 @@ namespace FlaxEditor.Modules
             Application.ClipboardRawData = data;
         }
 
-        /// <summary>
-        /// Pastes the copied objects. Supports undo/redo.
-        /// </summary>
-        /// <param name="pasteTargetActor">The target actor to paste copied data.</param>
-        public void Paste(Actor pasteTargetActor = null)
-        {
+
+	    /// <summary>
+	    /// Pastes the copied objects. Supports undo/redo.
+	    /// </summary>
+	    public void Paste()
+	    {
+		    Paste(null);
+	    }
+
+	    /// <summary>
+		/// Pastes the copied objects. Supports undo/redo.
+		/// </summary>
+		/// <param name="pasteTargetActor">The target actor to paste copied data.</param>
+		public void Paste(Actor pasteTargetActor)
+		{
             // Get clipboard data
             var data = Application.ClipboardRawData;
             
