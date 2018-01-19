@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using FlaxEditor.Utilities;
 using FlaxEngine;
 
@@ -92,17 +91,27 @@ namespace FlaxEditor.History
             public DataValue Instance;
         }
 
-        public struct DataPrepared
+		/// <summary>
+		/// Prepared undo data container object.
+		/// </summary>
+		public struct DataPrepared
         {
-            public MemberComparison[] Diff;
-            public object TargetInstance;
+			/// <summary>
+			/// The difference data.
+			/// </summary>
+			public MemberComparison[] Diff;
+
+			/// <summary>
+			/// The target object instance.
+			/// </summary>
+			public object TargetInstance;
         }
 
         // For objects that cannot be referenced in undo action like: FlaxEngine.Object or SceneGraphNode we store them in DataStorage,
         // otherwise here:
-        private object TargetInstance;
+        private readonly object TargetInstance;
 
-        private MemberInfoPath[] Members;
+        private readonly MemberInfoPath[] Members;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UndoActionObject"/> class.

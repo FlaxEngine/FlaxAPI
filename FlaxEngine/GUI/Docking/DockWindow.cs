@@ -15,8 +15,15 @@ namespace FlaxEngine.GUI.Docking
         private string _title;
         private Vector2 _titleSize;
 
-        protected MasterDockPanel _masterPanel;
-        protected DockPanel _dockedTo;
+		/// <summary>
+		/// The master panel.
+		/// </summary>
+		protected MasterDockPanel _masterPanel;
+
+		/// <summary>
+		/// The parent panel.
+		/// </summary>
+		protected DockPanel _dockedTo;
 
         /// <summary>
         /// Gets or sets a value indicating whether hide window on close.
