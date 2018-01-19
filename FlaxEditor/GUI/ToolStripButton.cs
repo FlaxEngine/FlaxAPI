@@ -18,16 +18,14 @@ namespace FlaxEditor.GUI
         /// The default margin for button parts (icon, text, etc.).
         /// </summary>
         public const int DefaultMargin = 2;
-
-        private int _id;
+		
         private Sprite _icon;
-        private string _text;
         private bool _mouseDown;
 
         /// <summary>
         /// Event fired when user clicks the button.
         /// </summary>
-        public Action OnClicked;
+        public Action Clicked;
 
         /// <summary>
         /// The checked state.
@@ -38,15 +36,7 @@ namespace FlaxEditor.GUI
         /// The automatic check mode.
         /// </summary>
         public bool AutoCheck;
-
-        /// <summary>
-        /// Gets the identifier.
-        /// </summary>
-        /// <value>
-        /// The identifier.
-        /// </value>
-        public int ID => _id;
-
+		
         /// <summary>
         /// The icon.
         /// </summary>
@@ -61,53 +51,16 @@ namespace FlaxEditor.GUI
         }
 
         /// <summary>
-        /// Gets or sets the text.
-        /// </summary>
-        /// <value>
-        /// The text.
-        /// </value>
-        public string Text
-        {
-            get { return _text; }
-            set
-            {
-                if (_text != value)
-                {
-                    _text = value;
-                    PerformLayout();
-                }
-            }
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ToolStripButton"/> class.
         /// </summary>
         /// <param name="height">The height.</param>
-        /// <param name="id">The identifier.</param>
         /// <param name="icon">The icon.</param>
-        public ToolStripButton(float height, int id, ref Sprite icon)
+        public ToolStripButton(float height, ref Sprite icon)
             : base(0, 0, height, height)
         {
-            _id = id;
             _icon = icon;
-            _text = string.Empty;
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ToolStripButton"/> class.
-        /// </summary>
-        /// <param name="height">The height.</param>
-        /// <param name="id">The identifier.</param>
-        /// <param name="icon">The icon.</param>
-        /// <param name="text">The text.</param>
-        public ToolStripButton(float height, int id, ref Sprite icon, ref string text)
-            : base(0, 0, height, height)
-        {
-            _id = id;
-            _icon = icon;
-            _text = text;
-        }
-
+		
         /// <summary>
         /// Sets the automatic check mode.
         /// </summary>
@@ -155,12 +108,12 @@ namespace FlaxEditor.GUI
             }
 
             // Draw text
-            if (_text.Length > 0)
+            if (!string.IsNullOrEmpty(Name))
             {
                 textRect.Size.X = Width - DefaultMargin - textRect.Left;
                 Render2D.DrawText(
                     style.FontMedium,
-                    _text,
+                    Name,
                     textRect,
                     enabled ? style.Foreground : style.ForegroundDisabled,
                     TextAlignment.Near,
@@ -178,8 +131,8 @@ namespace FlaxEditor.GUI
 
             if (hasSprite)
                 width += iconSize;
-            if (_text.Length > 0 && style.FontMedium)
-                width += style.FontMedium.MeasureText(_text).X + (hasSprite ? DefaultMargin : 0);
+            if (!string.IsNullOrEmpty(Name) && style.FontMedium)
+                width += style.FontMedium.MeasureText(Name).X + (hasSprite ? DefaultMargin : 0);
 
             Width = width;
         }
@@ -210,8 +163,8 @@ namespace FlaxEditor.GUI
                 // Fire events
                 if (AutoCheck)
                     Checked = !Checked;
-                OnClicked?.Invoke();
-                (Parent as ToolStrip)?.OnButtonClickedInternal(_id);
+                Clicked?.Invoke();
+                (Parent as ToolStrip)?.OnButtonClicked(this);
 
                 return true;
             }

@@ -94,15 +94,15 @@ namespace FlaxEditor.Windows
                 {
                     case LogType.Warning:
                         Group = LogGroup.Warning;
-                        Icon = _window._iconWarning;
+                        Icon = _window.IconWarning;
                         break;
                     case LogType.Log:
                         Group = LogGroup.Info;
-                        Icon = _window._iconInfo;
+                        Icon = _window.IconInfo;
                         break;
                     default:
                         Group = LogGroup.Error;
-                        Icon = _window._iconError;
+                        Icon = _window.IconError;
                         break;
                 }
             }
@@ -131,7 +131,7 @@ namespace FlaxEditor.Windows
                     Render2D.FillRectangle(clientRect, style.Background * 0.9f);
 
                 // Icon
-                Render2D.DrawSprite(Icon, new Rectangle(5, 8, 32, 32), Color.White, true);
+                Render2D.DrawSprite(Icon, new Rectangle(5, 8, 32, 32), Color.White);
 
                 // Title
                 Render2D.DrawText(style.FontMedium, Desc.Title, new Rectangle(38, 8, clientRect.Width - 40, clientRect.Height - 10), style.Foreground);
@@ -201,20 +201,23 @@ namespace FlaxEditor.Windows
             }
         }
 
-        private Label _logInfo;
-        private Panel _entriesPanel;
-        private ToolStrip _toolstrip;
-        private LogEntry _selected;
-        private int[] _logCountPerGroup = new int[(int)LogGroup.Max];
+        private readonly Label _logInfo;
+        private readonly Panel _entriesPanel;
+	    private LogEntry _selected;
+        private readonly int[] _logCountPerGroup = new int[(int)LogGroup.Max];
         private readonly Regex _logRegex = new Regex("at(.*) in (.*):(\\d*)");
 
         private readonly object _locker = new object();
         private bool _hasCompilationStarted;
         private readonly List<LogEntry> _pendingEntries = new List<LogEntry>(32);
 
-        internal Sprite _iconInfo;
-        internal Sprite _iconWarning;
-        internal Sprite _iconError;
+	    private readonly ToolStripButton _clearOnPlayButton;
+	    private readonly ToolStripButton _pauseOnErrorButton;
+		private readonly ToolStripButton[] _groupButtons = new ToolStripButton[3];
+
+        internal Sprite IconInfo;
+        internal Sprite IconWarning;
+        internal Sprite IconError;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DebugLogWindow"/> class.
@@ -223,20 +226,19 @@ namespace FlaxEditor.Windows
         public DebugLogWindow(Editor editor)
             : base(editor, true, ScrollBars.None)
         {
-            Title = "Debug";
+	        Title = "Debug";
 
             // Toolstrip
-            _toolstrip = new ToolStrip(22);
-            _toolstrip.ButtonClicked += OnTooltipButtonClicked;
-            _toolstrip.AddButton(0, "Clear").LinkTooltip("Clears all log entries");
-            _toolstrip.AddButton(1, "Clear on Play").SetAutoCheck(true).SetChecked(true).LinkTooltip("Clears all log entries on enter playmode");
-            _toolstrip.AddButton(2, "Pause on Error").SetAutoCheck(true).LinkTooltip("Performs auto pause on error");
-            _toolstrip.AddSeparator();
-            _toolstrip.AddButton(10, Editor.UI.GetIcon("Error32")).SetAutoCheck(true).SetChecked(true).LinkTooltip("Shows/hides error messages");
-            _toolstrip.AddButton(11, Editor.UI.GetIcon("Warning32")).SetAutoCheck(true).SetChecked(true).LinkTooltip("Shows/hides warning messages");
-            _toolstrip.AddButton(12, Editor.UI.GetIcon("Info32")).SetAutoCheck(true).SetChecked(true).LinkTooltip("Shows/hides info messages");
-            _toolstrip.Parent = this;
-            updateCount();
+            var toolstrip = new ToolStrip(22);
+            toolstrip.AddButton("Clear", Clear).LinkTooltip("Clears all log entries");
+	        _clearOnPlayButton = (ToolStripButton)toolstrip.AddButton("Clear on Play").SetAutoCheck(true).SetChecked(true).LinkTooltip("Clears all log entries on enter playmode");
+	        _pauseOnErrorButton = (ToolStripButton)toolstrip.AddButton("Pause on Error").SetAutoCheck(true).LinkTooltip("Performs auto pause on error");
+            toolstrip.AddSeparator();
+	        _groupButtons[0] = (ToolStripButton)toolstrip.AddButton(editor.UI.GetIcon("Error32"), () => UpdateLogTypeVisibility(LogGroup.Error, _groupButtons[0].Checked)).SetAutoCheck(true).SetChecked(true).LinkTooltip("Shows/hides error messages");
+	        _groupButtons[1] = (ToolStripButton)toolstrip.AddButton(editor.UI.GetIcon("Warning32"), () => UpdateLogTypeVisibility(LogGroup.Warning, _groupButtons[1].Checked)).SetAutoCheck(true).SetChecked(true).LinkTooltip("Shows/hides warning messages");
+	        _groupButtons[2] = (ToolStripButton)toolstrip.AddButton(editor.UI.GetIcon("Info32"), () => UpdateLogTypeVisibility(LogGroup.Info, _groupButtons[2].Checked)).SetAutoCheck(true).SetChecked(true).LinkTooltip("Shows/hides info messages");
+            toolstrip.Parent = this;
+            UpdateCount();
 
             // Split panel
             var splitPanel = new SplitPanel(Orientation.Vertical, ScrollBars.Vertical, ScrollBars.Vertical)
@@ -304,7 +306,7 @@ namespace FlaxEditor.Windows
             }
 
             // Pause on Error (we should do it as fast as possible)
-            if (newEntry.Group == LogGroup.Error && _toolstrip.GetButton(2).Checked && Editor.StateMachine.CurrentState == Editor.StateMachine.PlayingState)
+            if (newEntry.Group == LogGroup.Error && _pauseOnErrorButton.Checked && Editor.StateMachine.CurrentState == Editor.StateMachine.PlayingState)
             {
                 Editor.Simulation.RequestPausePlay();
             }
@@ -328,7 +330,7 @@ namespace FlaxEditor.Windows
             }
         }
 
-        private void updateLogTypeVisibility(LogGroup group, bool isVisible)
+        private void UpdateLogTypeVisibility(LogGroup group, bool isVisible)
         {
             _entriesPanel.IsLayoutLocked = true;
 
@@ -343,39 +345,18 @@ namespace FlaxEditor.Windows
             _entriesPanel.PerformLayout();
         }
 
-        private void updateCount()
+        private void UpdateCount()
         {
-            updateCount((int)LogGroup.Error, " Errors");
-            updateCount((int)LogGroup.Warning, " Warnings");
-            updateCount((int)LogGroup.Info, " Messages");
+            UpdateCount((int)LogGroup.Error, " Errors");
+            UpdateCount((int)LogGroup.Warning, " Warnings");
+            UpdateCount((int)LogGroup.Info, " Messages");
         }
 
-        private void updateCount(int group, string msg)
+        private void UpdateCount(int group, string msg)
         {
-            _toolstrip.GetButton(10 + group).Text = _logCountPerGroup[@group] + msg;
+            _groupButtons[group].Name = _logCountPerGroup[@group] + msg;
         }
-
-        private void OnTooltipButtonClicked(int id)
-        {
-            var button = _toolstrip.GetButton(id);
-            switch (id)
-            {
-                case 0:
-                    Clear();
-                    break;
-
-                case 10:
-                    updateLogTypeVisibility(LogGroup.Error, button.Checked);
-                    break;
-                case 11:
-                    updateLogTypeVisibility(LogGroup.Warning, button.Checked);
-                    break;
-                case 12:
-                    updateLogTypeVisibility(LogGroup.Info, button.Checked);
-                    break;
-            }
-        }
-
+		
         private void LogHandlerOnSendLog(LogType level, string msg, Object o, string stackTrace)
         {
             LogEntryDescription desc = new LogEntryDescription
@@ -497,7 +478,7 @@ namespace FlaxEditor.Windows
                     i--;
                 }
             }
-            updateCount();
+            UpdateCount();
 
             _entriesPanel.IsLayoutLocked = false;
             _entriesPanel.PerformLayout();
@@ -529,12 +510,12 @@ namespace FlaxEditor.Windows
                     for (int i = 0; i < _pendingEntries.Count; i++)
                     {
                         newEntry = _pendingEntries[i];
-                        newEntry.Visible = _toolstrip.GetButton(10 + (int)newEntry.Group).Checked;
+                        newEntry.Visible = _groupButtons[(int)newEntry.Group].Checked;
                         newEntry.Parent = _entriesPanel;
                         _logCountPerGroup[(int)newEntry.Group]++;
                     }
                     _pendingEntries.Clear();
-                    updateCount();
+                    UpdateCount();
                     Assert.IsNotNull(newEntry);
 
                     // Scroll to the new entry
@@ -550,9 +531,9 @@ namespace FlaxEditor.Windows
         public override void OnInit()
         {
             // Cache entries icons
-            _iconInfo = Editor.UI.GetIcon("Info32");
-            _iconWarning = Editor.UI.GetIcon("Warning32");
-            _iconError = Editor.UI.GetIcon("Error32");
+            IconInfo = Editor.UI.GetIcon("Info32");
+            IconWarning = Editor.UI.GetIcon("Warning32");
+            IconError = Editor.UI.GetIcon("Error32");
 
             // TODO: restore cached buttons 'Checked' state from editor prefs
         }
@@ -561,7 +542,7 @@ namespace FlaxEditor.Windows
         public override void OnPlayBegin()
         {
             // Clear on Play
-            if (_toolstrip.GetButton(1).Checked)
+            if (_clearOnPlayButton.Checked)
             {
                 Clear();
             }

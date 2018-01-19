@@ -25,7 +25,11 @@ namespace FlaxEditor.Windows
         private SplitPanel _split;
         private ContentView _view;
 
-        private ToolStrip _toolStrip;
+        private readonly ToolStrip _toolStrip;
+	    private readonly ToolStripButton _importButton;
+	    private readonly ToolStripButton _navigateBackwardButton;
+	    private readonly ToolStripButton _navigateForwardButton;
+	    private readonly ToolStripButton _nnavigateUpButton;
 
         private NavigationBar _navigationBar;
         private Tree _tree;
@@ -53,12 +57,11 @@ namespace FlaxEditor.Windows
 
             // Tool strip
             _toolStrip = new ToolStrip();
-            _toolStrip.AddButton(0, Editor.UI.GetIcon("Import32")).LinkTooltip("Import content");
+	        _importButton = (ToolStripButton)_toolStrip.AddButton(Editor.UI.GetIcon("Import32"), () => Editor.ContentImporting.ShowImportFileDialog(CurrentViewFolder)).LinkTooltip("Import content");
             _toolStrip.AddSeparator();
-            _toolStrip.AddButton(1, Editor.UI.GetIcon("ArrowLeft32")).LinkTooltip("Navigate backward");
-            _toolStrip.AddButton(2, Editor.UI.GetIcon("ArrowRight32")).LinkTooltip("Navigate forward");
-            _toolStrip.AddButton(3, Editor.UI.GetIcon("ArrowUp32")).LinkTooltip("Navigate up");
-            _toolStrip.ButtonClicked += toolstripButtonClicked;
+	        _navigateBackwardButton = (ToolStripButton)_toolStrip.AddButton(Editor.UI.GetIcon("ArrowLeft32"), NavigateBackward).LinkTooltip("Navigate backward");
+	        _navigateForwardButton = (ToolStripButton)_toolStrip.AddButton(Editor.UI.GetIcon("ArrowRight32"), NavigateForward).LinkTooltip("Navigate forward");
+	        _nnavigateUpButton = (ToolStripButton)_toolStrip.AddButton(Editor.UI.GetIcon("ArrowUp32"), NavigateUp).LinkTooltip("Navigate up");
             _toolStrip.Parent = this;
 
             // Navigation bar
@@ -479,26 +482,7 @@ namespace FlaxEditor.Windows
             // Focus
             _view.Focus();
         }
-
-        private void toolstripButtonClicked(int id)
-        {
-            switch (id)
-            {
-                case 0:
-                    Editor.ContentImporting.ShowImportFileDialog(CurrentViewFolder);
-                    break;
-                case 1:
-                    NavigateBackward();
-                    break;
-                case 2:
-                    NavigateForward();
-                    break;
-                case 3:
-                    NavigateUp();
-                    break;
-            }
-        }
-
+		
         private void RefreshView()
         {
             RefreshView(SelectedNode);
@@ -532,20 +516,20 @@ namespace FlaxEditor.Windows
             UpdateNavigationBar();
         }
 
-        private void UpdateToolstrip()
-        {
-            if (_toolStrip == null)
-                return;
+	    private void UpdateToolstrip()
+	    {
+		    if (_toolStrip == null)
+			    return;
 
-            // Update buttons
-            var folder = CurrentViewFolder;
-            _toolStrip.GetButton(0).Enabled = folder != null && folder.CanHaveAssets;
-            _toolStrip.GetButton(1).Enabled = _navigationUndo.Count > 0;
-            _toolStrip.GetButton(2).Enabled = _navigationRedo.Count > 0;
-            _toolStrip.GetButton(3).Enabled = folder != null && _tree.SelectedNode != _root;
-        }
+		    // Update buttons
+		    var folder = CurrentViewFolder;
+		    _importButton.Enabled = folder != null && folder.CanHaveAssets;
+		    _navigateBackwardButton.Enabled = _navigationUndo.Count > 0;
+		    _navigateForwardButton.Enabled = _navigationRedo.Count > 0;
+		    _nnavigateUpButton.Enabled = folder != null && _tree.SelectedNode != _root;
+	    }
 
-        private void addFolder2Root(MainContentTreeNode node)
+	    private void addFolder2Root(MainContentTreeNode node)
         {
             // Add to the root
             _root.AddChild(node);

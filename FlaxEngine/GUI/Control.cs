@@ -758,10 +758,12 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="text">The text.</param>
         /// <param name="customTooltip">The custom tooltip.</param>
-        public void LinkTooltip(string text, Tooltip customTooltip = null)
+        /// <returns>This control pointer. Usefull for creating controls in code.</returns>
+        public Control LinkTooltip(string text, Tooltip customTooltip = null)
         {
             _tooltipText = text;
             _tooltip = customTooltip;
+	        return this;
         }
 
         /// <summary>

@@ -48,6 +48,15 @@ namespace FlaxEditor.Modules
 		private ContextMenuButton _menuToolsBuildCSGMesh;
 		private ContextMenuButton _menuToolsCancelBuilding;
 
+		private ToolStripButton _toolStripUndo;
+		private ToolStripButton _toolStripRedo;
+		private ToolStripButton _toolStripTranslate;
+		private ToolStripButton _toolStripRotate;
+		private ToolStripButton _toolStripScale;
+		private ToolStripButton _toolStripPlay;
+		private ToolStripButton _toolStripPause;
+		private ToolStripButton _toolStripStep;
+
 		/// <summary>
 		/// The main menu control.
 		/// </summary>
@@ -158,14 +167,14 @@ namespace FlaxEditor.Modules
 		/// </summary>
 		public void UncheckPauseButton()
 		{
-			if (ToolStrip != null)
-				ToolStrip.GetButton(9).Checked = false;
+			if (_toolStripPause != null)
+				_toolStripPause.Checked = false;
 		}
 
 		/// <summary>
 		/// Checks if toolstrip pause button is being checked.
 		/// </summary>
-		public bool IsPauseButtonChecked => ToolStrip != null && ToolStrip.GetButton(9).Checked;
+		public bool IsPauseButtonChecked => _toolStripPause != null && _toolStripPause.Checked;
 
 		/// <summary>
 		/// Updates the toolstrip.
@@ -182,19 +191,18 @@ namespace FlaxEditor.Modules
 			// Update buttons
 			bool canEditScene = state.CanEditScene;
 			bool canEnterPlayMode = state.CanEnterPlayMode && SceneManager.IsAnySceneLoaded;
-			//ToolStrip.GetButton(2).Enabled = Editor.IsEdited;// Save All
 			//
-			ToolStrip.GetButton(3).Enabled = canEditScene && undoRedo.CanUndo; // Undo
-			ToolStrip.GetButton(4).Enabled = canEditScene && undoRedo.CanRedo; // Redo
+			_toolStripUndo.Enabled = canEditScene && undoRedo.CanUndo;
+			_toolStripRedo.Enabled = canEditScene && undoRedo.CanRedo;
 			//
 			var gizmoMode = gizmo.ActiveMode;
-			ToolStrip.GetButton(5).Checked = gizmoMode == TransformGizmo.Mode.Translate; // Translate mode
-			ToolStrip.GetButton(6).Checked = gizmoMode == TransformGizmo.Mode.Rotate; // Rotate mode
-			ToolStrip.GetButton(7).Checked = gizmoMode == TransformGizmo.Mode.Scale; // Scale mode
+			_toolStripTranslate.Checked = gizmoMode == TransformGizmo.Mode.Translate;
+			_toolStripRotate.Checked = gizmoMode == TransformGizmo.Mode.Rotate;
+			_toolStripScale.Checked = gizmoMode == TransformGizmo.Mode.Scale;
 			//
-			var play = ToolStrip.GetButton(8); // Play
-			var pause = ToolStrip.GetButton(9); // Pause
-			var step = ToolStrip.GetButton(10); // Step
+			var play = _toolStripPlay;
+			var pause = _toolStripPause;
+			var step = _toolStripStep;
 			play.Enabled = canEnterPlayMode;
 			if (Editor.StateMachine.IsPlayMode)
 			{
@@ -477,22 +485,20 @@ namespace FlaxEditor.Modules
 		private void InitToolstrip(FlaxEngine.GUI.Window mainWindow)
 		{
 			ToolStrip = new ToolStrip();
-			ToolStrip.ButtonClicked += onTootlstripButtonClicked;
 			ToolStrip.Parent = mainWindow;
 
-			//ToolStrip.AddButton(0, GetIcon("Logo32")).LinkTooltip("Flax Engine");// Welcome screen
-			ToolStrip.AddButton(2, GetIcon("Save32")).LinkTooltip("Save all (Ctrl+S)"); // Save all
+			ToolStrip.AddButton(GetIcon("Save32"), Editor.SaveAll).LinkTooltip("Save all (Ctrl+S)");
 			ToolStrip.AddSeparator();
-			ToolStrip.AddButton(3, GetIcon("Undo32")).LinkTooltip("Undo (Ctrl+Z)"); // Undo
-			ToolStrip.AddButton(4, GetIcon("Redo32")).LinkTooltip("Redo (Ctrl+Y)"); // Redo
+			_toolStripUndo = (ToolStripButton)ToolStrip.AddButton(GetIcon("Undo32"), Editor.PerformUndo).LinkTooltip("Undo (Ctrl+Z)");
+			_toolStripRedo = (ToolStripButton)ToolStrip.AddButton(GetIcon("Redo32"), Editor.PerformRedo).LinkTooltip("Redo (Ctrl+Y)");
 			ToolStrip.AddSeparator();
-			ToolStrip.AddButton(5, GetIcon("Translate32")).LinkTooltip("Change Gizmo tool mode to Translate (1)"); // Translate mode
-			ToolStrip.AddButton(6, GetIcon("Rotate32")).LinkTooltip("Change Gizmo tool mode to Rotate (2)"); // Rotate mode
-			ToolStrip.AddButton(7, GetIcon("Scale32")).LinkTooltip("Change Gizmo tool mode to Scale (3)"); // Scale mode
+			_toolStripTranslate = (ToolStripButton)ToolStrip.AddButton(GetIcon("Translate32"), () => Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Translate).LinkTooltip("Change Gizmo tool mode to Translate (1)");
+			_toolStripRotate = (ToolStripButton)ToolStrip.AddButton(GetIcon("Rotate32"), () => Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate).LinkTooltip("Change Gizmo tool mode to Rotate (2)");
+			_toolStripScale = (ToolStripButton)ToolStrip.AddButton(GetIcon("Scale32"), () => Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Scale).LinkTooltip("Change Gizmo tool mode to Scale (3)");
 			ToolStrip.AddSeparator();
-			ToolStrip.AddButton(8, GetIcon("Play32")).LinkTooltip("Start/Stop simulation (F5)"); // Play
-			ToolStrip.AddButton(9, GetIcon("Pause32")).LinkTooltip("Pause simulation"); // Pause
-			ToolStrip.AddButton(10, GetIcon("Step32")).LinkTooltip("Step one frame in simulation"); // Step
+			_toolStripPlay = (ToolStripButton)ToolStrip.AddButton(GetIcon("Play32"), Editor.Simulation.RequestPlayOrStopPlay).LinkTooltip("Start/Stop simulation (F5)");
+			_toolStripPause = (ToolStripButton)ToolStrip.AddButton(GetIcon("Pause32"), Editor.Simulation.RequestResumeOrPause).LinkTooltip("Pause simulation");
+			_toolStripStep = (ToolStripButton)ToolStrip.AddButton(GetIcon("Step32"), Editor.Simulation.RequestPlayOneFrame).LinkTooltip("Step one frame in simulation");
 
 			UpdateToolstrip();
 		}
@@ -541,81 +547,7 @@ namespace FlaxEditor.Modules
 			// Dock Panel
 			MasterPanel.Parent = mainWindow;
 		}
-
-		private void onTootlstripButtonClicked(int id)
-		{
-			switch (id)
-			{
-				// Welcome screen
-				case 0:
-					new AboutDialog().Show();
-					break;
-
-				// Save scene(s)
-				case 1:
-					Editor.Scene.SaveScenes();
-					break;
-
-				// Save all
-				case 2:
-					Editor.SaveAll();
-					break;
-
-				// Undo
-				case 3:
-					Editor.PerformUndo();
-					break;
-
-				// Redo
-				case 4:
-					Editor.PerformRedo();
-					break;
-
-				// Translate mode
-				case 5:
-					Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Translate;
-					break;
-
-				// Rotate mode
-				case 6:
-					Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate;
-					break;
-
-				// Scale mode
-				case 7:
-					Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Scale;
-					break;
-
-				// Play
-				case 8:
-					Editor.Simulation.RequestPlayOrStopPlay();
-					break;
-
-				// Pause
-				case 9:
-				{
-					// Check if Editor is in pause state
-					if (Editor.StateMachine.PlayingState.IsPaused)
-					{
-						// Resume game
-						Editor.Simulation.RequestResumePlay();
-					}
-					else
-					{
-						// Pause game
-						Editor.Simulation.RequestPausePlay();
-					}
-
-					break;
-				}
-
-				// Step
-				case 10:
-					Editor.Simulation.RequestPlayOneFrame();
-					break;
-			}
-		}
-
+		
 		private void OnMenuFileShowHide(Control control)
 		{
 			if (control.Visible == false)

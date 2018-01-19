@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
+using FlaxEditor.GUI;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -212,6 +213,7 @@ namespace FlaxEditor.Windows.Assets
         }
 
         private readonly MaterialPreview _preview;
+	    private readonly ToolStripButton _saveButton;
 
         private readonly PropertiesProxy _properties;
         private bool _isWaitingForLoad;
@@ -221,8 +223,8 @@ namespace FlaxEditor.Windows.Assets
         public MaterialInstanceWindow(Editor editor, AssetItem item)
             : base(editor, item)
         {
-            // Toolstrip
-            _toolstrip.AddButton(1, Editor.UI.GetIcon("Save32")).LinkTooltip("Save");// Save material
+			// Toolstrip
+	        _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Save32"), Save).LinkTooltip("Save");
 
             // Split Panel
             var splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
@@ -272,25 +274,11 @@ namespace FlaxEditor.Windows.Assets
             ClearEditedFlag();
             _item.RefreshThumbnail();
         }
-
-        /// <inheritdoc />
-        protected override void OnToolstripButtonClicked(int id)
-        {
-            switch (id)
-            {
-                case 1:
-                    Save();
-                    break;
-                default:
-                    base.OnToolstripButtonClicked(id);
-                    break;
-            }
-        }
-
+		
         /// <inheritdoc />
         protected override void UpdateToolstrip()
         {
-            _toolstrip.GetButton(1).Enabled = IsEdited;
+            _saveButton.Enabled = IsEdited;
 
             base.UpdateToolstrip();
         }

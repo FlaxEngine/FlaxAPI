@@ -8,6 +8,7 @@ using System.Reflection;
 using FlaxEditor.Content;
 using FlaxEditor.Content.Import;
 using FlaxEditor.CustomEditors;
+using FlaxEditor.GUI;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -289,6 +290,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly ModelPreview _preview;
         private readonly CustomEditorPresenter _propertiesPresenter;
         private readonly PropertiesProxy _properties;
+	    private readonly ToolStripButton _saveButton;
         private ModelActor _highlightActor;
         private bool _refreshOnLodsLoaded;
 
@@ -299,9 +301,9 @@ namespace FlaxEditor.Windows.Assets
             : base(editor, item)
         {
             // Toolstrip
-            _toolstrip.AddButton(1, editor.UI.GetIcon("Save32")).LinkTooltip("Save");
-            //_toolstrip.AddSeparator();
-            //_toolstrip.AddButton(2, editor.UI.GetIcon("UV32")).LinkTooltip("Show model UVs (toggles across all channels)"); // TODO: support gather mesh data
+            _saveButton = (ToolStripButton)_toolstrip.AddButton(editor.UI.GetIcon("Save32"), Save).LinkTooltip("Save");
+			//_toolstrip.AddSeparator();
+			//_toolstrip.AddButton(editor.UI.GetIcon("UV32"), () => {CacheMeshData(); _uvDebugIndex++; if (_uvDebugIndex >= 2) _uvDebugIndex = -1; }).LinkTooltip("Show model UVs (toggles across all channels)"); // TODO: support gather mesh data
             
             // Split Panel
             var splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
@@ -414,35 +416,11 @@ namespace FlaxEditor.Windows.Assets
             ClearEditedFlag();
             _item.RefreshThumbnail();
         }
-
-        /// <inheritdoc />
-        protected override void OnToolstripButtonClicked(int id)
-        {
-            switch (id)
-            {
-                // Save
-                case 1:
-                    Save();
-                    break;
-
-                // Show model UVs
-                case 2:
-                    CacheMeshData();
-                    _uvDebugIndex++;
-                    if (_uvDebugIndex >= 2)
-                        _uvDebugIndex = -1;
-                    break;
-
-                default:
-                    base.OnToolstripButtonClicked(id);
-                    break;
-            }
-        }
-
+		
         /// <inheritdoc />
         protected override void UpdateToolstrip()
         {
-            _toolstrip.GetButton(1).Enabled = IsEdited;
+            _saveButton.Enabled = IsEdited;
 
             base.UpdateToolstrip();
         }

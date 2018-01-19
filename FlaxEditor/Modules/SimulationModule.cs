@@ -84,10 +84,23 @@ namespace FlaxEditor.Modules
                 RequestStartPlay();
         }
 
-        /// <summary>
-        /// Requests pause in playing.
-        /// </summary>
-        public void RequestPausePlay()
+		/// <summary>
+		/// Requests the playing mode resume or pause if already running.
+		/// </summary>
+		public void RequestResumeOrPause()
+	    {
+		    // Check if is in pause state
+		    if (Editor.StateMachine.PlayingState.IsPaused)
+			    Editor.Simulation.RequestResumePlay();
+
+		    else
+			    Editor.Simulation.RequestPausePlay();
+	    }
+
+	    /// <summary>
+		/// Requests pause in playing.
+		/// </summary>
+		public void RequestPausePlay()
         {
             // Check if is in play mode and isn't paused
             if (Editor.StateMachine.IsPlayMode && !Editor.StateMachine.PlayingState.IsPaused)
@@ -234,5 +247,5 @@ namespace FlaxEditor.Modules
                 _stepFrame = false;
             }
         }
-    }
+	}
 }

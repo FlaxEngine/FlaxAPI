@@ -94,21 +94,20 @@ namespace FlaxEditor.Windows.Profiler
             {
                 Parent = this,
             };
-            toolstrip.ButtonClicked += OnToolstripButtonClicked;
-            _liveRecordingButton = toolstrip.AddButton(1, editor.UI.GetIcon("Play32"));
+            _liveRecordingButton = toolstrip.AddButton(editor.UI.GetIcon("Play32"));
             _liveRecordingButton.LinkTooltip("Live profiling events recording");
             _liveRecordingButton.AutoCheck = true;
-            _clearButton = toolstrip.AddButton(2, editor.UI.GetIcon("Rotate32"));
+            _clearButton = toolstrip.AddButton(editor.UI.GetIcon("Rotate32"), Clear);
             _clearButton.LinkTooltip("Clear data");
             toolstrip.AddSeparator();
-            _prevFrameButton = toolstrip.AddButton(3, editor.UI.GetIcon("ArrowLeft32"));
+            _prevFrameButton = toolstrip.AddButton(editor.UI.GetIcon("ArrowLeft32"), () => ViewFrameIndex--);
             _prevFrameButton.LinkTooltip("Previous frame");
-            _nextFrameButton = toolstrip.AddButton(4, editor.UI.GetIcon("ArrowRight32"));
+            _nextFrameButton = toolstrip.AddButton(editor.UI.GetIcon("ArrowRight32"), () => ViewFrameIndex++);
             _nextFrameButton.LinkTooltip("Next frame");
-            _lastframeButton = toolstrip.AddButton(5, editor.UI.GetIcon("Step32"));
+            _lastframeButton = toolstrip.AddButton(editor.UI.GetIcon("Step32"), () => ViewFrameIndex = -1);
             _lastframeButton.LinkTooltip("Current frame");
             toolstrip.AddSeparator();
-            _showOnlyLastUpdateEventsButton = toolstrip.AddButton(6, editor.UI.GetIcon("PageScale32"));
+            _showOnlyLastUpdateEventsButton = toolstrip.AddButton(editor.UI.GetIcon("PageScale32"), () => ShowOnlyLastUpdateEvents = !ShowOnlyLastUpdateEvents);
             _showOnlyLastUpdateEventsButton.LinkTooltip("Show only last update events and hide events from the other callbacks (e.g. draw or fixed update)");
 
             _tabs = new Tabs
@@ -160,43 +159,7 @@ namespace FlaxEditor.Windows.Profiler
 
             UpdateButtons();
         }
-
-        private void OnToolstripButtonClicked(int id)
-        {
-            switch (id)
-            {
-                case 2:
-                {
-                    Clear();
-                    break;
-                }
-
-                case 3:
-                {
-                    ViewFrameIndex--;
-                    break;
-                }
-
-                case 4:
-                {
-                    ViewFrameIndex++;
-                    break;
-                }
-                    
-                case 5:
-                {
-                    ViewFrameIndex = -1;
-                    break;
-                }
-
-                case 6:
-                {
-                    ShowOnlyLastUpdateEvents = !ShowOnlyLastUpdateEvents;
-                    break;
-                }
-            }
-        }
-
+		
         private void OnSelectedTabChanged(Tabs tabs)
         {
             if (tabs.SelectedTab is ProfilerMode mode)

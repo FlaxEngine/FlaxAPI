@@ -362,6 +362,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly MaterialPreview _preview;
         private readonly VisjectSurface _surface;
 
+	    private readonly ToolStripButton _saveButton;
         private readonly PropertiesProxy _properties;
         private bool _isWaitingForSurfaceLoad;
         private bool _tmpMaterialIsDirty;
@@ -376,11 +377,6 @@ namespace FlaxEditor.Windows.Assets
         public MaterialWindow(Editor editor, AssetItem item)
             : base(editor, item)
         {
-            // Toolstrip
-            _toolstrip.AddButton(1, Editor.UI.GetIcon("Save32")).LinkTooltip("Save");
-            _toolstrip.AddSeparator();
-            _toolstrip.AddButton(2, Editor.UI.GetIcon("PageScale32")).LinkTooltip("Show whole graph");
-
             // Split Panel 1
             var splitPanel1 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
             {
@@ -416,9 +412,14 @@ namespace FlaxEditor.Windows.Assets
                 Parent = splitPanel1.Panel1,
                 Enabled = false
             };
-        }
 
-        private void OnMaterialPropertyEdited()
+	        // Toolstrip
+	        _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Save32"), Save).LinkTooltip("Save");
+	        _toolstrip.AddSeparator();
+	        _toolstrip.AddButton(editor.UI.GetIcon("PageScale32"), _surface.ShowWholeGraph).LinkTooltip("Show whole graph");
+		}
+
+		private void OnMaterialPropertyEdited()
         {
             _surface.MarkAsEdited(!_paramValueChange);
             _paramValueChange = false;
@@ -561,36 +562,16 @@ namespace FlaxEditor.Windows.Assets
             OnSurfaceEditedChanged();
             _item.RefreshThumbnail();
         }
-        
-        /// <inheritdoc />
-        protected override void OnToolstripButtonClicked(int id)
-        {
-            switch (id)
-            {
-                case 1:
-                    Save();
-                    break;
-                case 2:
-                    _surface.ShowWholeGraph();
-                    break;
-                default:
-                    base.OnToolstripButtonClicked(id);
-                    break;
-            }
-        }
 
-        /// <inheritdoc />
-        protected override void UpdateToolstrip()
-        {
-            if (_toolstrip != null)
-            {
-                _toolstrip.GetButton(1).Enabled = IsEdited;
-            }
+		/// <inheritdoc />
+		protected override void UpdateToolstrip()
+		{
+			_saveButton.Enabled = IsEdited;
 
-            base.UpdateToolstrip();
-        }
+			base.UpdateToolstrip();
+		}
 
-        /// <inheritdoc />
+	    /// <inheritdoc />
         protected override void UnlinkItem()
         {
             _properties.OnClean();

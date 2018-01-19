@@ -14,14 +14,25 @@ namespace FlaxEditor.GUI
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class ToolStrip : ContainerControl
     {
-        public const int DefaultMarginV = 1;
-        public const int DefaultMarginH = 2;
-        public const int DefaultHeight = 34;
+		/// <summary>
+		/// The default margin vertically.
+		/// </summary>
+		public const int DefaultMarginV = 1;
+
+		/// <summary>
+		/// The default margin horizontally.
+		/// </summary>
+		public const int DefaultMarginH = 2;
+
+		/// <summary>
+		/// The default height.
+		/// </summary>
+		public const int DefaultHeight = 34;
 
         /// <summary>
         /// Event fired when button gets clicked.
         /// </summary>
-        public Action<int> ButtonClicked;
+        public Action<ToolStripButton> ButtonClicked;
 
         /// <summary>
         /// Tries to get the last button.
@@ -42,7 +53,6 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// Gets amount of buttons that has been added
         /// </summary>
-        /// <returns>Buttons count</returns>
         public int ButtonsCount
         {
             get
@@ -73,59 +83,59 @@ namespace FlaxEditor.GUI
             DockStyle = DockStyle.Top;
         }
 
-        /// <summary>
-        /// Tries to get button with given id.
-        /// </summary>
-        /// <param name="id">The button id.</param>
-        /// <returns>Found button or null.</returns>
-        public ToolStripButton GetButton(int id)
+		/// <summary>
+		/// Adds the button.
+		/// </summary>
+		/// <param name="sprite">The icon sprite.</param>
+		/// <param name="onClick">The custom action to call on button clicked.</param>
+		/// <returns>The button.</returns>
+		public ToolStripButton AddButton(Sprite sprite, Action onClick = null)
         {
-            // TODO: we could build cache for buttons to access O(1) from lookup by id
+	        var button = new ToolStripButton(ItemsHeight, ref sprite)
+	        {
+		        Parent = this,
+	        };
+	        if (onClick != null)
+		        button.Clicked += onClick;
+	        return button;
+		}
 
-            for (int i = 0; i < _children.Count; i++)
-            {
-                if (_children[i] is ToolStripButton button && button.ID == id)
-                {
-                    return button;
-                }
-            }
+	    /// <summary>
+	    /// Adds the button.
+	    /// </summary>
+	    /// <param name="sprite">The icon sprite.</param>
+	    /// <param name="text">The text.</param>
+	    /// <param name="onClick">The custom action to call on button clicked.</param>
+	    /// <returns>The button.</returns>
+	    public ToolStripButton AddButton(Sprite sprite, string text, Action onClick = null)
+	    {
+		    var button = new ToolStripButton(ItemsHeight, ref sprite)
+		    {
+				Name = text,
+			    Parent = this,
+		    };
+		    if (onClick != null)
+			    button.Clicked += onClick;
+		    return button;
+	    }
 
-            return null;
-        }
-
-        /// <summary>
-        /// Adds the button.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <param name="sprite">The icon sprite.</param>
-        /// <returns>The button.</returns>
-        public ToolStripButton AddButton(int id, Sprite sprite)
+		/// <summary>
+		/// Adds the button.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <param name="onClick">The custom action to call on button clicked.</param>
+		/// <returns>The button.</returns>
+		public ToolStripButton AddButton(string text, Action onClick = null)
         {
-            return AddChild(new ToolStripButton(ItemsHeight, id, ref sprite));
-        }
-
-        /// <summary>
-        /// Adds the button.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <param name="sprite">The icon sprite.</param>
-        /// <param name="text">The text.</param>
-        /// <returns>The button.</returns>
-        public ToolStripButton AddButton(int id, Sprite sprite, string text)
-        {
-            return AddChild(new ToolStripButton(ItemsHeight, id, ref sprite, ref text));
-        }
-
-        /// <summary>
-        /// Adds the button.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <param name="text">The text.</param>
-        /// <returns>The button.</returns>
-        public ToolStripButton AddButton(int id, string text)
-        {
-            return AddChild(new ToolStripButton(ItemsHeight, id, ref Sprite.Invalid, ref text));
-        }
+	        var button = new ToolStripButton(ItemsHeight, ref Sprite.Invalid)
+	        {
+		        Name = text,
+		        Parent = this,
+	        };
+	        if (onClick != null)
+		        button.Clicked += onClick;
+	        return button;
+		}
 
         /// <summary>
         /// Adds the separator.
@@ -136,9 +146,9 @@ namespace FlaxEditor.GUI
             return AddChild(new ToolStripSeparator(ItemsHeight));
         }
 
-        internal void OnButtonClickedInternal(int id)
+        internal void OnButtonClicked(ToolStripButton button)
         {
-            ButtonClicked?.Invoke(id);
+            ButtonClicked?.Invoke(button);
         }
 
         /// <inheritdoc />

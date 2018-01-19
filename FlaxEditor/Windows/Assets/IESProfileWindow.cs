@@ -21,37 +21,21 @@ namespace FlaxEditor.Windows.Assets
         public IESProfileWindow(Editor editor, AssetItem item)
             : base(editor, item)
         {
-            // Toolstrip
-            _toolstrip.AddButton(1, editor.UI.GetIcon("Import32")).LinkTooltip("Reimport");
-            _toolstrip.AddSeparator();
-            _toolstrip.AddButton(2, editor.UI.GetIcon("PageScale32")).LinkTooltip("Center view");
-
             // IES Profile preview
             _preview = new IESProfilePreview
             {
                 DockStyle = DockStyle.Fill,
                 Parent = this
             };
-        }
-        /// <inheritdoc />
-        protected override void OnToolstripButtonClicked(int id)
-        {
-            switch (id)
-            {
-                case 1:
-                    Editor.ContentImporting.Reimport((BinaryAssetItem)Item);
-                    break;
-                case 2:
-                    _preview.CenterView();
-                    break;
-                default:
-                    base.OnToolstripButtonClicked(id);
-                    break;
-            }
-        }
 
-        /// <inheritdoc />
-        protected override void UnlinkItem()
+	        // Toolstrip
+	        _toolstrip.AddButton(editor.UI.GetIcon("Import32"), () => Editor.ContentImporting.Reimport((BinaryAssetItem)Item)).LinkTooltip("Reimport");
+	        _toolstrip.AddSeparator();
+	        _toolstrip.AddButton(editor.UI.GetIcon("PageScale32"), _preview.CenterView).LinkTooltip("Center view");
+		}
+
+		/// <inheritdoc />
+		protected override void UnlinkItem()
         {
             _preview.Asset = null;
 

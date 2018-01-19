@@ -6,6 +6,7 @@ using FlaxEditor.Content;
 using FlaxEditor.Content.Import;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
+using FlaxEditor.GUI;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -110,6 +111,7 @@ namespace FlaxEditor.Windows.Assets
 
         private readonly TexturePreview _preview;
         private readonly CustomEditorPresenter _propertiesEditor;
+	    private readonly ToolStripButton _saveButton;
 
         private readonly PropertiesProxy _properties;
         private bool _isWaitingForLoad;
@@ -118,12 +120,6 @@ namespace FlaxEditor.Windows.Assets
         public TextureWindow(Editor editor, AssetItem item)
             : base(editor, item)
         {
-            // Toolstrip
-            _toolstrip.AddButton(1, Editor.UI.GetIcon("Save32")).LinkTooltip("Save");
-            _toolstrip.AddButton(2, Editor.UI.GetIcon("Import32")).LinkTooltip("Reimport");
-            _toolstrip.AddSeparator();
-            _toolstrip.AddButton(5, Editor.UI.GetIcon("PageScale32")).LinkTooltip("Center view");
-
             // Split Panel
             var splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
             {
@@ -143,35 +139,18 @@ namespace FlaxEditor.Windows.Assets
             _propertiesEditor.Panel.Parent = splitPanel.Panel2;
             _properties = new PropertiesProxy();
             _propertiesEditor.Select(_properties);
-        }
 
-        /// <inheritdoc />
-        protected override void OnToolstripButtonClicked(int id)
-        {
-            switch (id)
-            {
-                case 1:
-                    Save();
-                    break;
-                case 2:
-                    Editor.ContentImporting.Reimport((BinaryAssetItem)Item);
-                    break;
-                case 5:
-                    _preview.CenterView();
-                    break;
-                default:
-                    base.OnToolstripButtonClicked(id);
-                    break;
-            }
-        }
+	        // Toolstrip
+	        _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Save32"), Save).LinkTooltip("Save");
+	        _toolstrip.AddButton(Editor.UI.GetIcon("Import32"), () => Editor.ContentImporting.Reimport((BinaryAssetItem)Item)).LinkTooltip("Reimport");
+	        _toolstrip.AddSeparator();
+	        _toolstrip.AddButton(Editor.UI.GetIcon("PageScale32"), _preview.CenterView).LinkTooltip("Center view");
+		}
 
-        /// <inheritdoc />
-        protected override void UpdateToolstrip()
+		/// <inheritdoc />
+		protected override void UpdateToolstrip()
         {
-            if (_toolstrip != null)
-            {
-                _toolstrip.GetButton(1).Enabled = IsEdited;
-            }
+	        _saveButton.Enabled = IsEdited;
 
             base.UpdateToolstrip();
         }

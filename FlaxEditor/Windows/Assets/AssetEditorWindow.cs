@@ -46,8 +46,7 @@ namespace FlaxEditor.Windows.Assets
             _item.AddReference(this);
 
             _toolstrip = new ToolStrip();
-            _toolstrip.ButtonClicked += OnToolstripButtonClicked;
-            _toolstrip.AddButton(1000, editor.UI.GetIcon("Find32")).LinkTooltip("Show and select in Content Window");
+            _toolstrip.AddButton(editor.UI.GetIcon("Find32"), () => Editor.Windows.ContentWin.Select(_item)).LinkTooltip("Show and select in Content Window");
             _toolstrip.Parent = this;
 
             UpdateTitle();
@@ -70,20 +69,6 @@ namespace FlaxEditor.Windows.Assets
         /// </summary>
         protected virtual void UpdateToolstrip()
         {
-        }
-
-        /// <summary>
-        /// Called on toolstrip button clicked.
-        /// </summary>
-        /// <param name="id">Button id.</param>
-        protected virtual void OnToolstripButtonClicked(int id)
-        {
-            switch (id)
-            {
-                case 1000:
-                    Editor.Windows.ContentWin.Select(_item);
-                    break;
-            }
         }
 
         /// <summary>

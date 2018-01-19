@@ -20,32 +20,18 @@ namespace FlaxEditor.Windows.Assets
         public PreviewsCacheWindow(Editor editor, AssetItem item)
             : base(editor, item)
         {
-            // Toolstrip
-            _toolstrip.AddButton(5, Editor.UI.GetIcon("PageScale32")).LinkTooltip("Center view");
-
             // Texture preview
             _preview = new TexturePreview(true)
             {
                 Parent = this
             };
-        }
 
-        /// <inheritdoc />
-        protected override void OnToolstripButtonClicked(int id)
-        {
-            switch (id)
-            {
-                case 5:
-                    _preview.CenterView();
-                    break;
-                default:
-                    base.OnToolstripButtonClicked(id);
-                    break;
-            }
-        }
+	        // Toolstrip
+	        _toolstrip.AddButton(editor.UI.GetIcon("PageScale32"), _preview.CenterView).LinkTooltip("Center view");
+		}
 
-        /// <inheritdoc />
-        protected override void UnlinkItem()
+		/// <inheritdoc />
+		protected override void UnlinkItem()
         {
             _preview.Asset = null;
 
