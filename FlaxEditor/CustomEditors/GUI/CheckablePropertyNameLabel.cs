@@ -73,11 +73,6 @@ namespace FlaxEditor.CustomEditors.GUI
                     controls[i].Enabled = check;
                 }
             }
-            else
-            {
-                TextColor = Color.Red;
-                int a = 10;
-            }
         }
 
         /// <inheritdoc />

@@ -23,8 +23,7 @@ namespace FlaxEditor.Gizmo
         private Matrix _gizmoWorld = Matrix.Identity;
         private Vector3 _intersectPosition;
         private bool _isActive;
-        private bool _isCloning;
-
+        
         private bool _isTransforming;
         private Vector3 _lastIntersectionPosition;
 
@@ -108,7 +107,6 @@ namespace FlaxEditor.Gizmo
             Owner.Undo.AddAction(new TransformObjectsAction(SelectedParents, _startTransforms));
             _startTransforms.Clear();
             _isTransforming = false;
-            _isCloning = false;
         }
 
         private void UpdateGizmoPosition()

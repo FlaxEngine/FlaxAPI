@@ -315,9 +315,7 @@ namespace FlaxEngine.Rendering
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
-                return false;
-            return obj is MaterialInfo && Equals((MaterialInfo)obj);
+            return obj is MaterialInfo info && Equals(info);
         }
 
         /// <inheritdoc />

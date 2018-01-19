@@ -75,21 +75,6 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets light brightness parameter.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(30), EditorDisplay("Light"), Tooltip("Light brighness value"), Limit(0.0f, 1000.0f, 0.01f)]
-		public float Brightness
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { return Internal_GetBrightness(unmanagedPtr); }
-			set { Internal_SetBrightness(unmanagedPtr, value); }
-#endif
-		}
-
-		/// <summary>
 		/// Gets or sets the sky light source mode.
 		/// </summary>
 		[UnmanagedCall]
@@ -160,10 +145,6 @@ namespace FlaxEngine
 		internal static extern float Internal_GetRadius(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetRadius(IntPtr obj, float val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetBrightness(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetBrightness(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Modes Internal_GetMode(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
