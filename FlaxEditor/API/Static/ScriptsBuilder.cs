@@ -61,7 +61,7 @@ namespace FlaxEditor.Scripting
 
         /// <summary>
         /// Occurs when user scripts reload starts.
-        /// Usef objects should be removed at this point to reduce leaks and issues.
+        /// User objects should be removed at this point to reduce leaks and issues. Game scripts and game editor scripts assemblies will be reloaded.
         /// </summary>
         public static event Action ScriptsReloadBegin;
 

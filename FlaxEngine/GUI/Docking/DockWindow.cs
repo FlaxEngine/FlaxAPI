@@ -70,7 +70,7 @@ namespace FlaxEngine.GUI.Docking
         public string Title
         {
             get => _title;
-            protected set
+            set
             {
                 _title = value;
 
