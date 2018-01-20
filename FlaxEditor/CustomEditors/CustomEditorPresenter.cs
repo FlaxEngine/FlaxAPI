@@ -47,11 +47,25 @@ namespace FlaxEditor.CustomEditors
         protected class RootEditor : SyncPointEditor
         {
             private readonly string _noSelectionText;
+	        private CustomEditor _overrideEditor;
 
             /// <summary>
             /// The selected objects editor.
             /// </summary>
             public CustomEditor Editor;
+
+	        /// <summary>
+	        /// Gets or sets the override custom editor used to edit selected objects.
+	        /// </summary>
+	        public CustomEditor OverrideEditor
+	        {
+		        get => _overrideEditor;
+		        set
+		        {
+			        _overrideEditor = value;
+					RebuildLayout();
+		        }
+	        }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="RootEditor"/> class.
@@ -76,16 +90,24 @@ namespace FlaxEditor.CustomEditors
             public override void Initialize(LayoutElementsContainer layout)
             {
                 var selection = Presenter.Selection;
-                if (selection.Count > 0)
-                {
-                    Type type = typeof(object);
-                    if (selection.HasDiffrentTypes == false)
-                        type = selection[0].GetType();
-                    Editor = CustomEditorsUtil.CreateEditor(type, false);
-                    Editor.Initialize(Presenter, Presenter, selection);
-                    OnChildCreated(Editor);
-                }
-                else
+	            if (selection.Count > 0)
+	            {
+		            if (_overrideEditor != null)
+		            {
+			            Editor = _overrideEditor;
+		            }
+		            else
+		            {
+			            Type type = typeof(object);
+			            if (selection.HasDiffrentTypes == false)
+				            type = selection[0].GetType();
+			            Editor = CustomEditorsUtil.CreateEditor(type, false);
+		            }
+
+		            Editor.Initialize(Presenter, Presenter, selection);
+		            OnChildCreated(Editor);
+	            }
+	            else
                 {
                     var label = layout.Label(_noSelectionText, TextAlignment.Center);
                     label.Label.Height = 20.0f;
@@ -149,12 +171,21 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         public int SelectionCount => Selection.Count;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CustomEditorPresenter"/> class.
-        /// </summary>
-        /// <param name="undo">The undo. It's optional.</param>
-        /// <param name="noSelectionText">The custom text to disaply when no object is selected. Default is No selection.</param>
-        public CustomEditorPresenter(Undo undo, string noSelectionText = null)
+	    /// <summary>
+	    /// Gets or sets the override custom editor used to edit selected objects.
+	    /// </summary>
+	    public CustomEditor OverrideEditor
+	    {
+		    get => Editor.OverrideEditor;
+		    set => Editor.OverrideEditor = value;
+	    }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CustomEditorPresenter"/> class.
+		/// </summary>
+		/// <param name="undo">The undo. It's optional.</param>
+		/// <param name="noSelectionText">The custom text to disaply when no object is selected. Default is No selection.</param>
+		public CustomEditorPresenter(Undo undo, string noSelectionText = null)
         {
             Undo = undo;
             Panel = new PresenterPanel(this);
@@ -227,7 +258,7 @@ namespace FlaxEditor.CustomEditors
             Panel.PerformLayout();
 
             // Restore scroll value
-            if (parentScrollV != -1)
+            if (parentScrollV > -1)
                 ((Panel)Panel.Parent).VScrollBar.Value = parentScrollV;
         }
 
