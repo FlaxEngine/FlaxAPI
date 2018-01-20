@@ -230,12 +230,13 @@ namespace FlaxEditor.CustomEditors
 		/// Sets the object value. Actual update is performed during editor refresh in sync.
 		/// </summary>
 		/// <param name="value">The value.</param>
-		protected void SetValue(object value)
+		/// <param name="token">The source editor token used by the value setter to support batching Undo actions (eg. for sliders or color pickers).</param>
+		protected void SetValue(object value, object token = null)
 		{
 			if (_isSetBlocked)
 				return;
 
-			if (OnDirty(this, value))
+			if (OnDirty(this, value, token))
 			{
 				_hasValueDirty = true;
 				_valueToSet = value;
@@ -257,11 +258,20 @@ namespace FlaxEditor.CustomEditors
 		/// </summary>
 		/// <param name="editor">The editor.</param>
 		/// <param name="value">The value.</param>
+		/// <param name="token">The source editor token used by the value setter to support batching Undo actions (eg. for sliders or color pickers).</param>
 		/// <returns>True if allow to handle this event, otherwise false.</returns>
-		protected virtual bool OnDirty(CustomEditor editor, object value)
+		protected virtual bool OnDirty(CustomEditor editor, object value, object token = null)
 		{
-			ParentEditor.OnDirty(editor, value);
+			ParentEditor.OnDirty(editor, value, token);
 			return true;
+		}
+
+		/// <summary>
+		/// Clears the token assigned with <see cref="OnDirty"/> parameter. Called on merged undo action end (eg. users stops using slider).
+		/// </summary>
+		protected virtual void ClearToken()
+		{
+			ParentEditor.ClearToken();
 		}
 	}
 }

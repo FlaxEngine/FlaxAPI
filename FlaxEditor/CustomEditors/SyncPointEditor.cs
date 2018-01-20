@@ -3,21 +3,29 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FlaxEditor.CustomEditors
 {
     /// <summary>
     /// Synchronizes objects modifications and records undo operations.
-    /// Allows to override undo action target objects for the part of the custome ditors hierarchy.
+    /// Allows to override undo action target objects for the part of the custom editors hierarchy.
     /// </summary>
     /// <seealso cref="FlaxEditor.CustomEditors.CustomEditor" />
     public class SyncPointEditor : CustomEditor
     {
-        /// <summary>
-        /// The 'is dirty' flag.
-        /// </summary>
-        protected bool _isDirty;
-        
+	    private object[] _snapshotUndoInternal;
+
+		/// <summary>
+		/// The 'is dirty' flag.
+		/// </summary>
+		protected bool _isDirty;
+
+		/// <summary>
+		/// The cached token used by the value setter to support batching Undo actions (eg. for sliders or color pickers).
+		/// </summary>
+		protected object _setValueToken;
+
         /// <summary>
         /// Gets the undo objects used to record undo operation changes.
         /// </summary>
@@ -31,7 +39,9 @@ namespace FlaxEditor.CustomEditors
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
-            _isDirty = false;
+	        EndUndoRecord();
+
+			_isDirty = false;
         }
 
         internal override void RefreshInternal()
@@ -40,16 +50,35 @@ namespace FlaxEditor.CustomEditors
             _isDirty = false;
 
             // If any UI control has been modified we should try to record selected objects change
-            if (isDirty && Undo != null && Undo.Enabled)
-            {
-                using (new UndoMultiBlock(Undo, UndoObjects, "Edit object(s)"))
-                    Refresh();
-            }
-            else
+	        if (isDirty && Undo != null && Undo.Enabled)
+	        {
+		        string actionName = "Edit object(s)";
+
+				// Check if use token
+				if (_setValueToken != null)
+		        {
+					// Check if record start
+			        if (_snapshotUndoInternal == null)
+			        {
+				        // Record undo action start only (end called in EndUndoRecord)
+				        _snapshotUndoInternal = UndoObjects.ToArray();
+				        Undo.RecordMultiBegin(_snapshotUndoInternal, actionName);
+			        }
+
+			        Refresh();
+				}
+				else
+		        {
+					// Normal undo action recording
+			        using (new UndoMultiBlock(Undo, UndoObjects, actionName))
+				        Refresh();
+		        }
+	        }
+	        else
             {
                 Refresh();
             }
-
+			
             if (isDirty)
                 OnModified();
         }
@@ -68,11 +97,37 @@ namespace FlaxEditor.CustomEditors
         }
         
         /// <inheritdoc />
-        protected override bool OnDirty(CustomEditor editor, object value)
+        protected override bool OnDirty(CustomEditor editor, object value, object token = null)
         {
-            // Mark as modified and don't pass event futher
-            _isDirty = true;
+			// End any active Undo action batching
+	        if (token != _setValueToken)
+				EndUndoRecord();
+	        _setValueToken = token;
+
+			// Mark as modified and don't pass event futher
+			_isDirty = true;
             return false;
         }
+
+	    /// <inheritdoc />
+	    protected override void ClearToken()
+	    {
+		    EndUndoRecord();
+	    }
+
+	    /// <summary>
+		/// Ends the undo recording if started with custom token (eg. by value slider).
+		/// </summary>
+		protected void EndUndoRecord()
+	    {
+		    if (_snapshotUndoInternal != null)
+		    {
+			    Undo.RecordMultiEnd(_snapshotUndoInternal);
+				_snapshotUndoInternal = null;
+		    }
+
+			// Clear token
+		    _setValueToken = null;
+	    }
     }
 }
