@@ -137,6 +137,7 @@
     <Compile Include="CustomEditors\Values\ListValueContainer.cs" />
     <Compile Include="CustomEditors\Values\ReadOnlyValueContainer.cs" />
     <Compile Include="CustomEditors\Values\ValueContainer.cs" />
+    <Compile Include="CustomEditorWindow.cs" />
     <Compile Include="EditorAssets.cs" />
     <Compile Include="Gizmo\EditorPrimitives.cs" />
     <Compile Include="Gizmo\GridGizmo.cs" />
