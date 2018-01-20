@@ -58,33 +58,40 @@ namespace FlaxEditor.CustomEditors.Editors
             XElement = grid.FloatValue();
             XElement.SetLimits(limit);
             XElement.FloatValue.ValueChanged += OnValueChanged;
+	        XElement.FloatValue.SlidingEnd += ClearToken;
 
-            YElement = grid.FloatValue();
+			YElement = grid.FloatValue();
             YElement.SetLimits(limit);
             YElement.FloatValue.ValueChanged += OnValueChanged;
+	        YElement.FloatValue.SlidingEnd += ClearToken;
 
-            ZElement = grid.FloatValue();
+			ZElement = grid.FloatValue();
             ZElement.SetLimits(limit);
             ZElement.FloatValue.ValueChanged += OnValueChanged;
+	        ZElement.FloatValue.SlidingEnd += ClearToken;
 
-            WElement = grid.FloatValue();
+			WElement = grid.FloatValue();
             WElement.SetLimits(limit);
             WElement.FloatValue.ValueChanged += OnValueChanged;
+            WElement.FloatValue.SlidingEnd += ClearToken;
         }
 
-        private void OnValueChanged()
-        {
-            if (IsSetBlocked)
-                return;
+	    private void OnValueChanged()
+	    {
+		    if (IsSetBlocked)
+			    return;
 
-            SetValue(new Vector4(
-                         XElement.FloatValue.Value,
-                         YElement.FloatValue.Value,
-                         ZElement.FloatValue.Value,
-                         WElement.FloatValue.Value));
-        }
+		    var isSliding = XElement.IsSliding || YElement.IsSliding || ZElement.IsSliding || WElement.IsSliding;
+		    var token = isSliding ? this : null;
+		    var value = new Vector4(
+			    XElement.FloatValue.Value,
+			    YElement.FloatValue.Value,
+			    ZElement.FloatValue.Value,
+			    WElement.FloatValue.Value);
+		    SetValue(value, token);
+	    }
 
-        /// <inheritdoc />
+	    /// <inheritdoc />
         public override void Refresh()
         {
             if (HasDiffrentValues)

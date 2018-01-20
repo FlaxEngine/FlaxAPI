@@ -23,11 +23,19 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             element = layout.IntegerValue();
             element.SetLimits(Values.Info);
-            element.IntValue.ValueChanged += () => SetValue(element.IntValue.Value);
+	        element.IntValue.ValueChanged += OnValueChanged;
+	        element.IntValue.SlidingEnd += ClearToken;
         }
 
-        /// <inheritdoc />
-        public override void Refresh()
+	    private void OnValueChanged()
+	    {
+		    var isSliding = element.IntValue.IsSliding;
+		    var token = isSliding ? this : null;
+		    SetValue(element.IntValue.Value, token);
+	    }
+
+		/// <inheritdoc />
+		public override void Refresh()
         {
             if (HasDiffrentValues)
             {

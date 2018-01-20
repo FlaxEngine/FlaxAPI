@@ -5,7 +5,6 @@
 using System.Linq;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine;
-using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors.Editors
 {
@@ -35,8 +34,9 @@ namespace FlaxEditor.CustomEditors.Editors
                     // Use slider
                     var slider = layout.Slider();
                     slider.SetLimits((RangeAttribute)range);
-                    slider.Slider.ValueChanged += () => SetValue(element.Value);
-                    element = slider;
+                    slider.Slider.ValueChanged += OnValueChanged;
+	                slider.Slider.SlidingEnd += ClearToken;
+					element = slider;
                 }
                 var limit = attributes.FirstOrDefault(x => x is LimitAttribute);
                 if (limit != null)
@@ -44,21 +44,30 @@ namespace FlaxEditor.CustomEditors.Editors
                     // Use float value editor with limit
                     var floatValue = layout.FloatValue();
                     floatValue.SetLimits((LimitAttribute)limit);
-                    floatValue.FloatValue.ValueChanged += () => SetValue(element.Value);
-                    element = floatValue;
+                    floatValue.FloatValue.ValueChanged += OnValueChanged;
+	                floatValue.FloatValue.SlidingEnd += ClearToken;
+					element = floatValue;
                 }
             }
             if (element == null)
             {
                 // Use float value editor
                 var floatValue = layout.FloatValue();
-                floatValue.FloatValue.ValueChanged += () => SetValue(element.Value);
+                floatValue.FloatValue.ValueChanged += OnValueChanged;
+                floatValue.FloatValue.SlidingEnd += ClearToken;
                 element = floatValue;
             }
         }
 
-        /// <inheritdoc />
-        public override void Refresh()
+	    private void OnValueChanged()
+	    {
+		    var isSliding = element.IsSliding;
+		    var token = isSliding ? this : null;
+		    SetValue(element.Value, token);
+	    }
+
+	    /// <inheritdoc />
+		public override void Refresh()
         {
             if (HasDiffrentValues)
             {
