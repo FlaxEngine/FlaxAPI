@@ -2,7 +2,10 @@
 // Copyright (c) 2012-2018 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using FlaxEditor.Actions;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
 
@@ -23,6 +26,7 @@ namespace FlaxEditor.Gizmo
         private Matrix _gizmoWorld = Matrix.Identity;
         private Vector3 _intersectPosition;
         private bool _isActive;
+        private bool _isDuplicating;
         
         private bool _isTransforming;
         private Vector3 _lastIntersectionPosition;
@@ -46,7 +50,7 @@ namespace FlaxEditor.Gizmo
         private Vector3 _translationDelta;
 
         private Vector3 _translationScaleSnapDelta;
-
+		
         /// <summary>
         /// The event to apply objects transformation.
         /// </summary>
@@ -86,11 +90,19 @@ namespace FlaxEditor.Gizmo
             if (count <= 0 || _isTransforming)
                 return;
 
-            // Start
-            _isTransforming = true;
-
-            // Cache 'before' state
-            _startTransforms.Clear();
+			// Check if duplicate objects
+	        if (Owner.UseDuplicate && !_isDuplicating)
+	        {
+		        _isDuplicating = true;
+				Editor.Instance.SceneEditing.Duplicate();
+		        return;
+	        }
+			
+			// Start
+	        _isTransforming = true;
+			
+			// Cache 'before' state
+			_startTransforms.Clear();
             if (_startTransforms.Capacity < count)
                 _startTransforms.Capacity = Mathf.NextPowerOfTwo(count);
             for (var i = 0; i < count; i++)
@@ -107,6 +119,7 @@ namespace FlaxEditor.Gizmo
             Owner.Undo.AddAction(new TransformObjectsAction(SelectedParents, _startTransforms));
             _startTransforms.Clear();
             _isTransforming = false;
+	        _isDuplicating = false;
         }
 
         private void UpdateGizmoPosition()
@@ -405,7 +418,7 @@ namespace FlaxEditor.Gizmo
                     var anyValid = false;
 
                     // Translation
-                    Vector3 translationDelta;
+                    Vector3 translationDelta = Vector3.Zero;
                     if (_translationDelta.LengthSquared > 0.000001f)
                     {
                         anyValid = true;
@@ -418,26 +431,18 @@ namespace FlaxEditor.Gizmo
                         if (_accMoveDelta.Length > Owner.ViewFarPlane * 0.7f)
                             _accMoveDelta = prevMoveDelta;
                     }
-                    else
-                    {
-                        translationDelta = Vector3.Zero;
-                    }
-
+                    
                     // Rotation
-                    Quaternion rotationDelta;
+                    Quaternion rotationDelta = Quaternion.Identity;
                     if (!_rotationDelta.IsIdentity)
                     {
                         anyValid = true;
                         rotationDelta = _rotationDelta;
                         _rotationDelta = Quaternion.Identity;
                     }
-                    else
-                    {
-                        rotationDelta = Quaternion.Identity;
-                    }
-
+                    
                     // Scale
-                    Vector3 scaleDelta;
+                    Vector3 scaleDelta = Vector3.Zero;
                     if (_scaleDelta.LengthSquared > 0.000001f)
                     {
                         anyValid = true;
@@ -447,11 +452,7 @@ namespace FlaxEditor.Gizmo
                         if (ActiveAxis == Axis.Center)
                             scaleDelta = new Vector3(scaleDelta.AvgValue);
                     }
-                    else
-                    {
-                        scaleDelta = Vector3.Zero;
-                    }
-
+                    
                     // Apply transformation (but to the parents, not whole selection pool)
                     if (anyValid)
                     {
