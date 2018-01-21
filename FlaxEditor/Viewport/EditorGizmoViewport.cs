@@ -8,11 +8,12 @@ using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Viewport
 {
-    /// <summary>
-    /// Viewport with free camera and gizmo tools.
-    /// </summary>
-    /// <seealso cref="FlaxEditor.Viewport.EditorViewportFPSCam" />
-    public class EditorGizmoViewport : EditorViewportFPSCam, IGizmoOwner
+	/// <summary>
+	/// Viewport with free camera and gizmo tools.
+	/// </summary>
+	/// <seealso cref="FlaxEditor.Viewport.EditorViewportFPSCam" />
+	/// <seealso cref="IGizmoOwner" />
+	public class EditorGizmoViewport : EditorViewportFPSCam, IGizmoOwner
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EditorGizmoViewport"/> class.
@@ -42,8 +43,11 @@ namespace FlaxEditor.Viewport
 
         /// <inheritdoc />
         public bool UseSnapping => ParentWindow.GetKey(Keys.Control);
-        
-        /// <inheritdoc />
+
+	    /// <inheritdoc />
+	    public bool UseDuplicate => ParentWindow.GetKey(Keys.Shift);
+
+	    /// <inheritdoc />
         public Undo Undo { get; }
 
         /// <inheritdoc />
