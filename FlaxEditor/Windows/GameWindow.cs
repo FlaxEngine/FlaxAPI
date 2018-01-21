@@ -65,6 +65,7 @@ namespace FlaxEditor.Windows
             _viewport = new RenderOutputControl(task)
             {
                 DockStyle = DockStyle.Fill,
+				CanFocus = false,
                 Parent = this
             };
 
@@ -74,6 +75,7 @@ namespace FlaxEditor.Windows
                 DockStyle = DockStyle.Fill,
                 Visible = false,
                 Enabled = false,
+				CanFocus = false,
                 Parent = _viewport
             };
             FlaxEngine.GUI.Window.Root = _guiRoot;

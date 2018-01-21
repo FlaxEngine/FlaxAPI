@@ -9,7 +9,7 @@ using FlaxEngine.Rendering;
 namespace FlaxEditor.Gizmo
 {
     /// <summary>
-    /// Draws a grid to feel better wotld origin and the world units.
+    /// Draws a grid to feel better world origin position and the world units.
     /// </summary>
     /// <seealso cref="FlaxEditor.Gizmo.GizmoBase" />
     public class GridGizmo : GizmoBase
