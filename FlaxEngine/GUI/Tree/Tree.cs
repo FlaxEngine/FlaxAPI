@@ -152,9 +152,7 @@ namespace FlaxEngine.GUI
             {
                 Selection[i].ExpandAllParents();
             }
-
-            Focus();
-
+			
             // Fire event
             SelectedChanged?.Invoke(prev, Selection);
         }
@@ -174,8 +172,6 @@ namespace FlaxEngine.GUI
             // Update selection
             Selection.Clear();
             
-            Focus();
-
             // Fire event
             SelectedChanged?.Invoke(prev, Selection);
         }
@@ -204,9 +200,7 @@ namespace FlaxEngine.GUI
                 // Add
                 Selection.Add(node);
             }
-
-            Focus();
-
+			
             // Fire event
             SelectedChanged?.Invoke(prev, Selection);
         }
@@ -267,9 +261,7 @@ namespace FlaxEngine.GUI
                 }
                 Selection.Clear();
                 walkSelectRangeExpandedTree(Selection, _children[0] as TreeNode, ref selectionRect);
-
-                Focus();
-
+				
                 // Check if changed
                 if (Selection.Count != prev.Count || !Selection.SequenceEqual(prev))
                 {
@@ -316,8 +308,6 @@ namespace FlaxEngine.GUI
                     // Fire event
                     SelectedChanged?.Invoke(prev, Selection);
                 }
-
-                Focus();
             }
         }
 
