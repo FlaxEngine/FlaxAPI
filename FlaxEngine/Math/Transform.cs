@@ -41,7 +41,7 @@ namespace FlaxEngine
         /// <summary>
         /// Scale vector of the transform
         /// </summary>
-        [EditorOrder(30), EditorDisplay(null, "Scale"), Limit(float.MinValue, float.MaxValue, 0.1f)]
+        [EditorOrder(30), EditorDisplay(null, "Scale"), Limit(float.MinValue, float.MaxValue, 0.01f)]
         public Vector3 Scale;
 
         /// <summary>
