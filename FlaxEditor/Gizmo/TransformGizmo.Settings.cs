@@ -100,7 +100,7 @@ namespace FlaxEditor.Gizmo
         /// <summary>
         /// Translation snap value
         /// </summary>
-        public float TranslationSnapValue = 5;
+        public float TranslationSnapValue = 10;
 
         /// <summary>
         /// Rotatino snap value
