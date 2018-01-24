@@ -105,6 +105,21 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets or sets the probe capture camera near plane distance..
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(30), Limit(0, float.MaxValue, 0.01f), EditorDisplay("Probe"), Tooltip("The probe capture camera near plane distance.")]
+		public float CaptureNearPlane
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetCaptureNearPlane(unmanagedPtr); }
+			set { Internal_SetCaptureNearPlane(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
 		/// Gets or sets the custom probe texture to be used during reflections pass rendering. Use null if disable custom probe feature.
 		/// </summary>
 		[UnmanagedCall]
@@ -166,6 +181,10 @@ namespace FlaxEngine
 		internal static extern bool Internal_GetAutoUpdate(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetAutoUpdate(IntPtr obj, bool val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetCaptureNearPlane(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetCaptureNearPlane(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern CubeTexture Internal_GetCustomProbe(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
