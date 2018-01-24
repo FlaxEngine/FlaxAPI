@@ -53,10 +53,16 @@ namespace FlaxEditor.Content.Settings
         [EditorOrder(70), EditorDisplay("Simulation", "Disable CCD"), Tooltip("If true CCD will be ignored. This is an optimization when CCD is never used which removes the need for physx to check it internally.")]
         public bool DisableCCD;
 
-        /// <summary>
-        /// The maximum allowed delta time (in seconds) for the physics simulation step.
-        /// </summary>
-        [EditorOrder(1000), EditorDisplay("Framerate"), Limit(0.0013f, 2.0f), Tooltip("The maximum allowed delta time (in seconds) for the physics simulation step.")]
+		/// <summary>
+		/// Enables adaptive forces to accelerate convergence of the solver. Can improve physics simulation performance but lead to artifacts.
+		/// </summary>
+		[EditorOrder(80), EditorDisplay("Simulation"), Tooltip("Enables adaptive forces to accelerate convergence of the solver. Can improve physics simulation performance but lead to artifacts.")]
+        public bool EnableAdaptiveForce;
+
+		/// <summary>
+		/// The maximum allowed delta time (in seconds) for the physics simulation step.
+		/// </summary>
+		[EditorOrder(1000), EditorDisplay("Framerate"), Limit(0.0013f, 2.0f), Tooltip("The maximum allowed delta time (in seconds) for the physics simulation step.")]
         public float MaxDeltaTime = 1.0f / 10.0f;
 
         /// <summary>
