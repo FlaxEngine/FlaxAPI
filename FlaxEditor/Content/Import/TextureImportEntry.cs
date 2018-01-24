@@ -372,9 +372,9 @@ namespace FlaxEditor.Content.Import
                 // Skip checking
             }
             else if (snl.EndsWith("_n")
-                     || snl.Contains("nrm")
-                     || snl.Contains("nm")
-                     || snl.Contains("norm")
+                     || snl.EndsWith("nrm")
+                     || snl.EndsWith("nm")
+                     || snl.EndsWith("norm")
                      || snl.Contains("normal")
                      || snl.EndsWith("normals"))
             {
