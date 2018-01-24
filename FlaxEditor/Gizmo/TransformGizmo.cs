@@ -172,7 +172,7 @@ namespace FlaxEditor.Gizmo
             _axisAlignedWorld = _screenScaleMatrix * Matrix.CreateWorld(Position, Vector3.ForwardRH, Vector3.Up);
 
             // Assign world
-            if (_activeTransformSpace == TransformSpace.World || _activeMode == Mode.Rotate || _activeMode == Mode.Scale)
+            if (_activeTransformSpace == TransformSpace.World)
             {
                 _gizmoWorld = _axisAlignedWorld;
 
@@ -500,9 +500,9 @@ namespace FlaxEditor.Gizmo
                 }
                 case Mode.Rotate:
                 {
-                    DebugDraw.DrawCircle(Position, Vector3.UnitX, RotateRadius, _activeAxis == Axis.X ? AxisColorFocus : AxisColorX, 0, false);
-                    DebugDraw.DrawCircle(Position, Vector3.UnitY, RotateRadius, _activeAxis == Axis.Y ? AxisColorFocus : AxisColorY, 0, false);
-                    DebugDraw.DrawCircle(Position, Vector3.UnitZ, RotateRadius, _activeAxis == Axis.Z ? AxisColorFocus : AxisColorZ, 0, false);
+                    DebugDraw.DrawCircle(Position, _gizmoWorld.Right, RotateRadius, _activeAxis == Axis.X ? AxisColorFocus : AxisColorX, 0, false);
+                    DebugDraw.DrawCircle(Position, _gizmoWorld.Up, RotateRadius, _activeAxis == Axis.Y ? AxisColorFocus : AxisColorY, 0, false);
+                    DebugDraw.DrawCircle(Position, _gizmoWorld.Backward, RotateRadius, _activeAxis == Axis.Z ? AxisColorFocus : AxisColorZ, 0, false);
                     DebugDraw.DrawSphere(CenterSphere, _activeAxis == Axis.Center ? AxisColorFocus : Color.Gray, 0, false);
                     break;
                 }
