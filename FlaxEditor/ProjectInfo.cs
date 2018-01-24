@@ -4,6 +4,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using FlaxEngine;
 
 namespace FlaxEditor
 {
@@ -22,5 +23,10 @@ namespace FlaxEditor
         /// The default scene asset identifier to open on project startup.
         /// </summary>
         public Guid DefaultSceneId;
-    }
+
+		/// <summary>
+		/// The default scene spawn point (position and view direction).
+		/// </summary>
+		public Ray DefaultSceneSpawn;
+	}
 }

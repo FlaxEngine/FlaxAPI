@@ -200,7 +200,7 @@ namespace FlaxEditor.Viewport
         /// <summary>
         /// Gets or sets the view position.
         /// </summary>
-        public Vector3 ViewPosition { get; protected set; }
+        public Vector3 ViewPosition { get; set; }
 
         /// <summary>
         /// Gets or sets the view orientation.
@@ -217,7 +217,7 @@ namespace FlaxEditor.Viewport
         public Vector3 ViewDirection
         {
             get => Vector3.ForwardLH * ViewOrientation;
-            protected set
+	        set
             {
                 Vector3 right = Vector3.Cross(value, Vector3.Up);
                 Vector3 up = Vector3.Cross(right, value);

@@ -229,11 +229,15 @@ namespace FlaxEditor
             // TODO: loading last open scenes from Editor Cache
             {
                 var defaultSceneAsset = ContentDatabase.Find(_projectInfo.DefaultSceneId);
-                if (defaultSceneAsset is SceneItem)
-                {
-                    Editor.Log("Loading default project scene");
-                    Scene.OpenScene(_projectInfo.DefaultSceneId);
-                }
+	            if (defaultSceneAsset is SceneItem)
+	            {
+		            Editor.Log("Loading default project scene");
+		            Scene.OpenScene(_projectInfo.DefaultSceneId);
+
+		            // Use spawn point
+		            Windows.EditWin.Viewport.ViewPosition = _projectInfo.DefaultSceneSpawn.Position;
+		            Windows.EditWin.Viewport.ViewDirection = _projectInfo.DefaultSceneSpawn.Direction;
+	            }
             }
         }
 
