@@ -790,7 +790,7 @@ namespace FlaxEngine.Rendering
 		/// <summary>
 		/// Gets or sets the lens flares intensity.
 		/// </summary>
-		[NoSerialize, EditorOrder(600), EditorDisplay("Lens Flares", "Intensity"), Limit(0, 2.0f, 0.01f)]
+		[NoSerialize, EditorOrder(600), EditorDisplay("Lens Flares", "Intensity"), Limit(0, 10.0f, 0.01f)]
 		public float Flare_Intensity
 		{
 			get => data.Flare_Intensity;
@@ -832,7 +832,7 @@ namespace FlaxEngine.Rendering
 		/// <summary>
 		/// Gets or sets the lens flares halo intensity.
 		/// </summary>
-		[NoSerialize, EditorOrder(603), EditorDisplay("Lens Flares", "Halo Intensity"), Limit(0, 2.0f, 0.01f)]
+		[NoSerialize, EditorOrder(603), EditorDisplay("Lens Flares", "Halo Intensity"), Limit(0, 10.0f, 0.01f)]
 		public float Flare_HaloIntensity
 		{
 			get => data.Flare_HaloIntensity;

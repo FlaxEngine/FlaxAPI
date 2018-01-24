@@ -374,6 +374,7 @@ namespace FlaxEditor.Content.Import
             else if (snl.EndsWith("_n")
                      || snl.Contains("nrm")
                      || snl.Contains("nm")
+                     || snl.Contains("norm")
                      || snl.Contains("normal")
                      || snl.EndsWith("normals"))
             {
