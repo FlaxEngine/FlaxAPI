@@ -45,21 +45,6 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets value indicating if visual element affects the world.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(-50), EditorDisplay("General"), Tooltip("True if visual element affects the world")]
-		public bool AffectsWorld
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { return Internal_GetAffectsWorld(unmanagedPtr); }
-			set { Internal_SetAffectsWorld(unmanagedPtr, value); }
-#endif
-		}
-
-		/// <summary>
 		/// Gets or sets linked directional light actor that is used to simulate the sun.
 		/// </summary>
 		[UnmanagedCall]
@@ -106,10 +91,6 @@ namespace FlaxEngine
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetAffectsWorld(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetAffectsWorld(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern DirectionalLight Internal_GetSunLight(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]

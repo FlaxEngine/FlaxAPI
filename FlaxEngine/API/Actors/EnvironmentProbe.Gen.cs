@@ -45,25 +45,10 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets value indicating if visual element affects the world.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(-50), EditorDisplay("General"), Tooltip("True if visual element affects the world")]
-		public bool AffectsWorld
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { return Internal_GetAffectsWorld(unmanagedPtr); }
-			set { Internal_SetAffectsWorld(unmanagedPtr, value); }
-#endif
-		}
-
-		/// <summary>
 		/// Gets or sets probe brightness parameter.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(10), EditorDisplay("Probe"), Tooltip("Reflections brightness")]
+		[EditorOrder(10), Limit(0, 1000, 0.01f), EditorDisplay("Probe"), Tooltip("Reflections brightness")]
 		public float Brightness
 		{
 #if UNIT_TEST_COMPILANT
@@ -78,7 +63,7 @@ namespace FlaxEngine
 		/// Gets or sets probe radius.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(20), EditorDisplay("Probe"), Tooltip("Probe radius")]
+		[EditorOrder(20), Limit(0), EditorDisplay("Probe"), Tooltip("Probe radius")]
 		public float Radius
 		{
 #if UNIT_TEST_COMPILANT
@@ -165,10 +150,6 @@ namespace FlaxEngine
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetAffectsWorld(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetAffectsWorld(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetBrightness(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
