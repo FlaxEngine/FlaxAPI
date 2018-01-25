@@ -538,13 +538,26 @@ namespace FlaxEngine
             return result;
         }
 
-        /// <summary>
-        /// Divides a quaternion by another.
-        /// </summary>
-        /// <param name="left">The first quaternion to multiply.</param>
-        /// <param name="right">The second quaternion to multiply.</param>
-        /// <param name="result">When the method completes, contains the divided quaternion.</param>
-        public static void Divide(ref Quaternion left, ref Quaternion right, out Quaternion result)
+	    /// <summary>
+	    /// Divides a quaternion by another.
+	    /// </summary>
+	    /// <param name="left">The first quaternion to divided.</param>
+	    /// <param name="right">The second quaternion to divided.</param>
+	    /// <returns>The divided quaternion.</returns>
+	    public static Quaternion Divide(Quaternion left, Quaternion right)
+	    {
+		    Quaternion result;
+		    Divide(ref left, ref right, out result);
+		    return result;
+	    }
+
+	    /// <summary>
+		/// Divides a quaternion by another.
+		/// </summary>
+		/// <param name="left">The first quaternion to divided.</param>
+		/// <param name="right">The second quaternion to divided.</param>
+		/// <param name="result">When the method completes, contains the divided quaternion.</param>
+		public static void Divide(ref Quaternion left, ref Quaternion right, out Quaternion result)
         {
             float single = right.X * right.X + right.Y * right.Y + right.Z * right.Z + right.W * right.W;
             float single1 = 1.0f / single;
@@ -665,34 +678,46 @@ namespace FlaxEngine
             return result;
         }
 
-        /// <summary>
-        /// Calculates the dot product of two quaternions.
-        /// </summary>
-        /// <param name="left">First source quaternion.</param>
-        /// <param name="right">Second source quaternion.</param>
-        /// <param name="result">When the method completes, contains the dot product of the two quaternions.</param>
-        public static void Dot(ref Quaternion left, ref Quaternion right, out float result)
-        {
-            result = left.X * right.X + left.Y * right.Y + left.Z * right.Z + left.W * right.W;
-        }
-
-        /// <summary>
-        /// Calculates the dot product of two quaternions.
-        /// </summary>
-        /// <param name="left">First source quaternion.</param>
-        /// <param name="right">Second source quaternion.</param>
-        /// <returns>The dot product of the two quaternions.</returns>
-        public static float Dot(Quaternion left, Quaternion right)
+		/// <summary>
+		/// Calculates the dot product of two quaternions.
+		/// </summary>
+		/// <param name="left">First source quaternion.</param>
+		/// <param name="right">Second source quaternion.</param>
+		/// <returns>The dot product of the two quaternions.</returns>
+		public static float Dot(ref Quaternion left, ref Quaternion right)
         {
             return left.X * right.X + left.Y * right.Y + left.Z * right.Z + left.W * right.W;
         }
 
-        /// <summary>
-        /// Exponentiates a quaternion.
-        /// </summary>
-        /// <param name="value">The quaternion to exponentiate.</param>
-        /// <param name="result">When the method completes, contains the exponentiated quaternion.</param>
-        public static void Exponential(ref Quaternion value, out Quaternion result)
+	    /// <summary>
+	    /// Calculates the dot product of two quaternions.
+	    /// </summary>
+	    /// <param name="left">First source quaternion.</param>
+	    /// <param name="right">Second source quaternion.</param>
+	    /// <returns>The dot product of the two quaternions.</returns>
+	    public static float Dot(Quaternion left, Quaternion right)
+	    {
+		    return left.X * right.X + left.Y * right.Y + left.Z * right.Z + left.W * right.W;
+	    }
+
+	    /// <summary>
+	    /// Calculates the angle between two quaternions.
+	    /// </summary>
+	    /// <param name="a">First source quaternion.</param>
+	    /// <param name="b">Second source quaternion.</param>
+	    /// <returns>Returns the angle in degrees between two rotations a and b.</returns>
+	    public static float AngleBetween(Quaternion a, Quaternion b)
+	    {
+		    float num = Dot(a, b);
+		    return (num > 0.9999f) ? 0 : (Mathf.Acos(Mathf.Min(Mathf.Abs(num), 1f)) * 2f * 57.29578f);
+	    }
+
+	    /// <summary>
+		/// Exponentiates a quaternion.
+		/// </summary>
+		/// <param name="value">The quaternion to exponentiate.</param>
+		/// <param name="result">When the method completes, contains the exponentiated quaternion.</param>
+		public static void Exponential(ref Quaternion value, out Quaternion result)
         {
             var angle = (float)Math.Sqrt(value.X * value.X + value.Y * value.Y + value.Z * value.Z);
             var sin = (float)Math.Sin(angle);
@@ -742,9 +767,9 @@ namespace FlaxEngine
         /// <returns>The conjugated and renormalized quaternion.</returns>
         public static Quaternion Invert(Quaternion value)
         {
-            Quaternion result;
-            Invert(ref value, out result);
-            return result;
+	        var result = value;
+	        result.Invert();
+			return result;
         }
 
         /// <summary>
@@ -1593,20 +1618,21 @@ namespace FlaxEngine
             }
         }
 
-        /// <summary>
-        /// Determines whether the specified <see cref="Quaternion" /> is equal to this instance.
-        /// </summary>
-        /// <param name="other">The <see cref="Quaternion" /> to compare with this instance.</param>
-        /// <returns>
-        /// <c>true</c> if the specified <see cref="Quaternion" /> is equal to this instance; otherwise, <c>false</c>.
-        /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(ref Quaternion other)
-        {
-            return Mathf.NearEqual(other.X, X) && Mathf.NearEqual(other.Y, Y) && Mathf.NearEqual(other.Z, Z) && Mathf.NearEqual(other.W, W);
-        }
+	    /// <summary>
+	    /// Determines whether the specified <see cref="Quaternion" /> is equal to this instance.
+	    /// </summary>
+	    /// <param name="other">The <see cref="Quaternion" /> to compare with this instance.</param>
+	    /// <returns>
+	    /// <c>true</c> if the specified <see cref="Quaternion" /> is equal to this instance; otherwise, <c>false</c>.
+	    /// </returns>
+	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+	    public bool Equals(ref Quaternion other)
+	    {
+		    return Dot(ref this, ref other) > 0.9999f;
+		    //return Mathf.NearEqual(other.X, X) && Mathf.NearEqual(other.Y, Y) && Mathf.NearEqual(other.Z, Z) && Mathf.NearEqual(other.W, W);
+	    }
 
-        /// <summary>
+	    /// <summary>
         /// Determines whether the specified <see cref="Quaternion" /> is equal to this instance.
         /// </summary>
         /// <param name="other">The <see cref="Quaternion" /> to compare with this instance.</param>
