@@ -92,7 +92,9 @@ namespace FlaxEditor.States
 		private void SetupEditorEnvOptions()
 		{
 			Time.TimeScale = 1.0f;
+			Time.UpdateFPS = 30;
 			Time.PhysicsFPS = 30;
+			Time.DrawFPS = 60;
 			Physics.AutoSimulation = true;
 			Screen.CursorVisible = true;
 			Screen.CursorLock = CursorLockMode.None;
