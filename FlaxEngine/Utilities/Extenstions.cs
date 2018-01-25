@@ -109,7 +109,55 @@ namespace FlaxEngine.Utilities
                              NextFloat(random, 1.0f));
         }
 
-        /// <summary>
+	    /// <summary>
+	    /// Gets a random Vector2 with components in range [0;1].
+	    /// </summary>
+	    /// <param name="random">The random.</param>
+	    /// <returns></returns>
+	    public static Vector2 NextVector2(this Random random)
+	    {
+		    return new Vector2(NextFloat(random, 1.0f),
+		                       NextFloat(random, 1.0f));
+	    }
+
+		/// <summary>
+		/// Gets a random Vector3 with components in range [0;1].
+		/// </summary>
+		/// <param name="random">The random.</param>
+		/// <returns></returns>
+		public static Vector3 NextVector3(this Random random)
+	    {
+		    return new Vector3(NextFloat(random, 1.0f),
+		                       NextFloat(random, 1.0f),
+		                       NextFloat(random, 1.0f));
+	    }
+
+	    /// <summary>
+	    /// Gets a random Vector4 with components in range [0;1].
+	    /// </summary>
+	    /// <param name="random">The random.</param>
+	    /// <returns></returns>
+	    public static Vector4 NextVector4(this Random random)
+	    {
+		    return new Vector4(NextFloat(random, 1.0f),
+		                       NextFloat(random, 1.0f),
+		                       NextFloat(random, 1.0f),
+		                       NextFloat(random, 1.0f));
+	    }
+
+		/// <summary>
+		/// Gets a random Quaternion.
+		/// </summary>
+		/// <param name="random">The random.</param>
+		/// <returns></returns>
+		public static Quaternion NextQuaternion(this Random random)
+	    {
+		    return Quaternion.Euler(NextFloat(random, -180, 180),
+		                            NextFloat(random, -180, 180),
+		                            NextFloat(random, -180, 180));
+	    }
+
+	    /// <summary>
         /// Gets a random 64-bit signed inteager value.
         /// </summary>
         /// <param name="random">The random.</param>
