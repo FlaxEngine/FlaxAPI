@@ -67,6 +67,20 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets or sets the cursor lock mode. Allows to lock or unlock mouse cursor movement.
+		/// </summary>
+		[UnmanagedCall]
+		public static CursorLockMode CursorLock
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetCursorLock(); }
+			set { Internal_SetCursorLock(value); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -81,6 +95,10 @@ namespace FlaxEngine
 		internal static extern bool Internal_GetCursorVisible();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetCursorVisible(bool val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern CursorLockMode Internal_GetCursorLock();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetCursorLock(CursorLockMode val);
 #endif
 #endregion
 	}
