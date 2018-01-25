@@ -59,6 +59,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CircularBufferTests.cs" />
+    <Compile Include="TestQuaternion.cs" />
     <Compile Include="TestStringUtils.cs" />
     <Compile Include="TextControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
