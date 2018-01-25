@@ -78,7 +78,7 @@ namespace FlaxEditor.Viewport.Previews
             _skyLight.CustomTexture = _envProbe.CustomProbe;
             //
             _postFxVolume = PostFxVolume.New();
-            _postFxVolume.IsBounded = true;
+            _postFxVolume.IsBounded = false;
             _postFxVolume.Settings.Eye_MinLuminance = 0.1f;
 
             // Link actors for rendering

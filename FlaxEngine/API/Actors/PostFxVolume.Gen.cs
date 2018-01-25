@@ -120,7 +120,7 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets the value indicating whether the bounds of the volume are taken into account. If true, the volume affects the entire world, regardless of its bounds. If false, the volume only has an effect within its bounds.
+		/// Gets or sets the value indicating whether the bounds of the volume are taken into account. If false, the volume affects the entire world, regardless of its bounds. If true, the volume only has an effect within its bounds.
 		/// </summary>
 		[UnmanagedCall]
 		[EditorDisplay("PostFx Volume"), EditorOrder(90), Tooltip("Determinates whether the bounds of the volume are used when blending")]
