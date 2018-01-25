@@ -96,7 +96,7 @@ namespace FlaxEngine
             /// <summary>
             /// Any positive or negative values that are less than this number will register as zero. Useful for gamepads to specify the deadzone.
             /// </summary>
-            [EditorOrder(50), Limit(0.0f, 0.5f, 0.01f), Tooltip("Any positive or negative values that are less than this number will register as zero. Useful for gamepads  to specify the deadzone.")]
+            [EditorOrder(50), Limit(0.0f, 100.0f, 0.01f), Tooltip("Any positive or negative values that are less than this number will register as zero. Useful for gamepads  to specify the deadzone.")]
             public float DeadZone;
 
             /// <summary>
