@@ -89,11 +89,7 @@ namespace FlaxEditor.Viewport.Previews
             Task.CustomActors.Add(_sky);
             Task.CustomActors.Add(_skyLight);
             Task.CustomActors.Add(_postFxVolume);
-
-            // Update actors
-            for (int i = 0; i < Task.CustomActors.Count; i++)
-                Task.CustomActors[i].UpdateCache();
-        }
+		}
 
         private void OnBegin(SceneRenderTask task)
         {

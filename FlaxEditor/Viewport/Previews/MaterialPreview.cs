@@ -94,10 +94,6 @@ namespace FlaxEditor.Viewport.Previews
             Task.CustomActors.Add(_skyLight);
             Task.CustomActors.Add(_postFxVolume);
 
-            // Update actors
-            for (int i = 0; i < Task.CustomActors.Count; i++)
-                Task.CustomActors[i].UpdateCache();
-
             // TODO: don't wait for model but assign material in async on task begin or sth?
             // do it like in c++ editor
             _previewModel.Model?.WaitForLoaded();

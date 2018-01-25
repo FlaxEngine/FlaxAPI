@@ -601,22 +601,6 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Updates the actor internal cached data.
-		/// </summary>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-		[UnmanagedCall]
-		public void UpdateCache() 
-		{
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-			Internal_UpdateCache(unmanagedPtr);
-#endif
-		}
-
-		/// <summary>
 		/// Tries the get serialized objects ids from the raw bytes.
 		/// </summary>
 		/// <param name="data">The data.</param>
@@ -738,8 +722,6 @@ namespace FlaxEngine
 		internal static extern bool Internal_ContainsInHierarchy(IntPtr obj, Actor actor);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_ContainsChild(IntPtr obj, Actor actor);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_UpdateCache(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern Guid[] Internal_TryGetSerializedObjectsIds(byte[] data);
 #endif
