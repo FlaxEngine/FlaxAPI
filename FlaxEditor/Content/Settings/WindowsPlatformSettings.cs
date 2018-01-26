@@ -38,7 +38,7 @@ namespace FlaxEditor.Content.Settings
         /// <summary>
         /// Enables game running when application window loses focus.
         /// </summary>
-        [EditorOrder(1010), EditorDisplay("Other"), Tooltip("Enables game running when application window loses focus.")]
+        [EditorOrder(1010), EditorDisplay("Other", "Run In Background"), Tooltip("Enables game running when application window loses focus.")]
         public bool RunInBackground = false;
         
         /// <summary>
