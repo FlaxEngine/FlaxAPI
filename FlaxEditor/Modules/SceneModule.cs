@@ -125,11 +125,13 @@ namespace FlaxEditor.Modules
             var sun = DirectionalLight.New();
             var skyLight = SkyLight.New();
             var floor = ModelActor.New();
+	        var cam = Camera.New();
             //
             scene.AddChild(sky);
             scene.AddChild(sun);
             scene.AddChild(skyLight);
             scene.AddChild(floor);
+            scene.AddChild(cam);
             //
             sky.Name = "Sky";
             sky.LocalPosition = new Vector3(40, 150, 0);
@@ -144,6 +146,7 @@ namespace FlaxEditor.Modules
             skyLight.Mode = SkyLight.Modes.CustomTexture;
             skyLight.Brightness = 0.8f;
             skyLight.CustomTexture = FlaxEngine.Content.LoadAsyncInternal<CubeTexture>(EditorAssets.DefaultSkyCubeTexture);
+	        skyLight.StaticFlags = StaticFlags.FullyStatic;
             //
             floor.Name = "Floor";
             floor.Scale = new Vector3(4, 0.5f, 4);
@@ -154,6 +157,9 @@ namespace FlaxEditor.Modules
                 floor.Entries[0].Material = FlaxEngine.Content.LoadAsync<MaterialBase>(StringUtils.CombinePaths(Globals.EngineFolder, "WhiteMaterial.flax"));
             }
             floor.StaticFlags = StaticFlags.FullyStatic;
+			//
+	        cam.Name = "Camera";
+			cam.Position = new Vector3(0, 150, -300);
 
             // Serialize
             var bytes = SceneManager.SaveSceneToBytes(scene);
