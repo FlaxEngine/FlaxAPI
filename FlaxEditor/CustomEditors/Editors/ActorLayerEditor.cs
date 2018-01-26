@@ -46,7 +46,7 @@ namespace FlaxEditor.CustomEditors.Editors
 		    if (value == -1)
 			    value = 0;
 
-		    // If selected is single actor that has children, ask if apply flags to the sub objects as well
+		    // If selected is single actor that has children, ask if apply layer to the sub objects as well
 		    if (Values.IsSingleObject && (int)Values[0] != value && ParentEditor.Values[0] is Actor actor && actor.HasChildren)
 		    {
 			    var valueText = comboBox.SelectedItem;

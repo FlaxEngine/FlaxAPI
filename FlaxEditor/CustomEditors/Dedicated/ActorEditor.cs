@@ -295,6 +295,11 @@ namespace FlaxEditor.CustomEditors.Dedicated
             int order = item.Order?.Order ?? int.MinValue;
             switch (order)
             {
+				// Override static flags editor
+				case -80:
+					item.CustomEditor = new CustomEditorAttribute(typeof(ActorStaticFlagsEditor));
+					break;
+
                 // Override layer editor
                 case -69:
                     item.CustomEditor = new CustomEditorAttribute(typeof(ActorLayerEditor));

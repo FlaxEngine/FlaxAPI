@@ -93,6 +93,7 @@
     <Compile Include="CustomEditors\Dedicated\RigidBodyEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\SkyLightEditor.cs" />
     <Compile Include="CustomEditors\Editors\ActorLayerEditor.cs" />
+    <Compile Include="CustomEditors\Editors\ActorStaticFlagsEditor.cs" />
     <Compile Include="CustomEditors\Editors\ActorTagEditor.cs" />
     <Compile Include="CustomEditors\Editors\ActorTransformEditor.cs" />
     <Compile Include="CustomEditors\Editors\ArrayEditor.cs" />
