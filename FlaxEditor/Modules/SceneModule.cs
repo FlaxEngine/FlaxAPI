@@ -126,8 +126,9 @@ namespace FlaxEditor.Modules
             var skyLight = SkyLight.New();
             var floor = ModelActor.New();
 	        var cam = Camera.New();
-            //
-            scene.AddChild(sky);
+			//
+	        scene.StaticFlags = StaticFlags.FullyStatic;
+			scene.AddChild(sky);
             scene.AddChild(sun);
             scene.AddChild(skyLight);
             scene.AddChild(floor);
