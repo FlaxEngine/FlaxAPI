@@ -49,12 +49,27 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets the Flax build number.
+		/// </summary>
+		[UnmanagedCall]
+		public static int BuildNumber
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetBuildNumber(); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern string[] Internal_GetPaths();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern string Internal_GetVersion();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern int Internal_GetBuildNumber();
 #endif
 #endregion
 	}
