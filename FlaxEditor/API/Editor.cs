@@ -762,7 +762,7 @@ namespace FlaxEditor
             if (Windows.GameWin != null && Windows.GameWin.ContainsFocus)
             {
                 var win = Windows.GameWin.ParentWindow;
-                if (win != null && win.ContainsFocus)
+                if (win != null && win.ContainsFocus && win.NativeWindow.IsFocused)
                     win.MousePosition = Windows.GameWin.Viewport.PointToWindow(val);
             }
         }
