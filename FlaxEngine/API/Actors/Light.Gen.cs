@@ -69,7 +69,7 @@ namespace FlaxEngine
 		/// Gets or sets the factor that controls how much this light will contribute to the Volumetric Fog. When set to 0, there is no contribution.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(110), Limit(0, 10, 0.01f), EditorDisplay("Volumetric Fog", "Scattering Intensity"), Tooltip("Controls how much this light will contribute to the Volumetric Fog. When set to 0, there is no contribution.")]
+		[EditorOrder(110), Limit(0, 100, 0.01f), EditorDisplay("Volumetric Fog", "Scattering Intensity"), Tooltip("Controls how much this light will contribute to the Volumetric Fog. When set to 0, there is no contribution.")]
 		public float VolumetricScatteringIntensity
 		{
 #if UNIT_TEST_COMPILANT

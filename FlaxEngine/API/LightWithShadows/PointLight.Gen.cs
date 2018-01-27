@@ -119,6 +119,51 @@ namespace FlaxEngine
 #endif
 		}
 
+		/// <summary>
+		/// Gets or sets the IES texture (light profiles from real world measured data).
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(211), EditorDisplay("IES Profile", "IES Texture"), Tooltip("IES texture (light profiles from real world measured data)")]
+		public IESProfile IESTexture
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetIESTexture(unmanagedPtr); }
+			set { Internal_SetIESTexture(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+#endif
+		}
+
+		/// <summary>
+		/// Enables or diables using light brightness from IES profile.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(212), EditorDisplay("IES Profile", "Use IES Brightness"), Tooltip("Enable/disable using light brightness from IES profile")]
+		public bool UseIESBrightness
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetUseIESBrightness(unmanagedPtr); }
+			set { Internal_SetUseIESBrightness(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the global scale for IES brightness contribution.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(213), Limit(0, 10000, 0.01f), EditorDisplay("IES Profile", "Brightness Scale"), Tooltip("Global scale for IES brightness contribution")]
+		public float IESBrightnessScale
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetIESBrightnessScale(unmanagedPtr); }
+			set { Internal_SetIESBrightnessScale(unmanagedPtr, value); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -141,6 +186,18 @@ namespace FlaxEngine
 		internal static extern bool Internal_GetUseInverseSquaredFalloff(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetUseInverseSquaredFalloff(IntPtr obj, bool val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern IESProfile Internal_GetIESTexture(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetIESTexture(IntPtr obj, IntPtr val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_GetUseIESBrightness(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetUseIESBrightness(IntPtr obj, bool val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetIESBrightnessScale(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetIESBrightnessScale(IntPtr obj, float val);
 #endif
 #endregion
 	}
