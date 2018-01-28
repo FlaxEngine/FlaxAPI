@@ -208,6 +208,7 @@ namespace FlaxEngine.Rendering
 			public Guid Flare_LensColor;
 			public Guid Flare_LensStar;
 			public Guid Flare_LensDirt;
+			public float Flare_LensDirtIntensity;
 
 			// Depth Of Field
 
@@ -914,9 +915,23 @@ namespace FlaxEngine.Rendering
 		}
 
 		/// <summary>
+		/// Gets or sets the lens dirt intensity.
+		/// </summary>
+		[NoSerialize, EditorOrder(609), Limit(0, 100, 0.01f), EditorDisplay("Lens Flares", "Lens Dirt Intensity")]
+		public float Flare_LensDirtIntensity
+		{
+			get => data.Flare_LensDirtIntensity;
+			set
+			{
+				data.Flare_LensDirtIntensity = value;
+				isDataDirty = true;
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the camera lens color lookup texture.
 		/// </summary>
-		[NoSerialize, EditorOrder(609), EditorDisplay("Lens Flares", "Lens Color"), Tooltip("Custom texture for lens flares color")]
+		[NoSerialize, EditorOrder(610), EditorDisplay("Lens Flares", "Lens Color"), Tooltip("Custom texture for lens flares color")]
 		public Texture Flare_LensColor
 		{
 			get => Content.LoadAsync<Texture>(data.Flare_LensColor);
@@ -930,7 +945,7 @@ namespace FlaxEngine.Rendering
 		/// <summary>
 		/// Gets or sets the lens star lookup texture.
 		/// </summary>
-		[NoSerialize, EditorOrder(610), EditorDisplay("Lens Flares", "Lens Star"), Tooltip("Custom texture for lens flares star")]
+		[NoSerialize, EditorOrder(611), EditorDisplay("Lens Flares", "Lens Star"), Tooltip("Custom texture for lens flares star")]
 		public Texture Flare_LensStar
 		{
 			get => Content.LoadAsync<Texture>(data.Flare_LensStar);
