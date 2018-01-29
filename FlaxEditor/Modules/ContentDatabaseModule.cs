@@ -586,12 +586,16 @@ namespace FlaxEditor.Modules
                 // TODO: maybe dont' remove folders reqursive but at once?
 
                 // Delete all children
-                while (folder.Children.Count > 0)
-                {
-                    Delete(folder.Children[0]);
-                }
+	            if (folder.Children.Count > 0)
+	            {
+		            var children = folder.Children.ToArray();
+		            for (int i = 0; i < children.Length; i++)
+		            {
+			            Delete(children[0]);
+		            }
+	            }
 
-                // Remove directory
+	            // Remove directory
                 if (Directory.Exists(path))
                 {
                     try
