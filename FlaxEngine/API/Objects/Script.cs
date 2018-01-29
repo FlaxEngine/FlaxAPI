@@ -5,15 +5,23 @@
 namespace FlaxEngine
 {
 	public abstract partial class Script
-    {
-        /// <summary>
-        /// Gets the world space transformation of the actors owning this script.
-        /// </summary>
-        public Transform Transform => Actor.Transform;
-        
-        /// <summary>
-        /// Gets the local space transformation of the actors owning this script.
-        /// </summary>
-        public Transform LocalTransform => Actor.LocalTransform;
-    }
+	{
+		/// <summary>
+		/// Gets or sets the world space transformation of the actors owning this script.
+		/// </summary>
+		public Transform Transform
+		{
+			get => Actor.Transform;
+			set => Actor.Transform = value;
+		}
+
+		/// <summary>
+		/// Gets or sets the local space transformation of the actors owning this script.
+		/// </summary>
+		public Transform LocalTransform
+		{
+			get => Actor.LocalTransform;
+			set => Actor.LocalTransform = value;
+		}
+	}
 }
