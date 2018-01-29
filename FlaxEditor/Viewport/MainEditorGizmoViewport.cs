@@ -394,60 +394,61 @@ namespace FlaxEditor.Viewport
             Gizmos.ForEach(x => x.OnSelectionChanged(selection));
         }
 
-        /// <summary>
-        /// Applies the transform to the collection of scene graph nodes.
-        /// </summary>
-        /// <param name="selection">The selection.</param>
-        /// <param name="translationDelta">The translation delta.</param>
-        /// <param name="rotationDelta">The rotation delta.</param>
-        /// <param name="scaleDelta">The scale delta.</param>
-        public void ApplyTransform(List<SceneGraphNode> selection, ref Vector3 translationDelta, ref Quaternion rotationDelta, ref Vector3 scaleDelta)
-        {
-            bool applyRotation = !rotationDelta.IsIdentity;
-            bool useObjCenter = TransformGizmo.ActivePivot == TransformGizmo.PivotType.ObjectCenter;
-            Vector3 gizmoPosition = TransformGizmo.Position;
+	    /// <summary>
+	    /// Applies the transform to the collection of scene graph nodes.
+	    /// </summary>
+	    /// <param name="selection">The selection.</param>
+	    /// <param name="translationDelta">The translation delta.</param>
+	    /// <param name="rotationDelta">The rotation delta.</param>
+	    /// <param name="scaleDelta">The scale delta.</param>
+	    public void ApplyTransform(List<SceneGraphNode> selection, ref Vector3 translationDelta, ref Quaternion rotationDelta, ref Vector3 scaleDelta)
+	    {
+		    bool applyRotation = !rotationDelta.IsIdentity;
+		    bool useObjCenter = TransformGizmo.ActivePivot == TransformGizmo.PivotType.ObjectCenter;
+		    Vector3 gizmoPosition = TransformGizmo.Position;
 
-            // Transform selected objects
-            bool isPlayMode = Editor.Instance.StateMachine.IsPlayMode;
-            for (int i = 0; i < selection.Count; i++)
-            {
-                var obj = selection[i];
+		    // Transform selected objects
+		    bool isPlayMode = Editor.Instance.StateMachine.IsPlayMode;
+		    for (int i = 0; i < selection.Count; i++)
+		    {
+			    var obj = selection[i];
 
-                // Block transforming static objects in play mode
-                if (isPlayMode && obj.CanTransform == false)
-                    continue;
-                var trans = obj.Transform;
+			    // Block transforming static objects in play mode
+			    if (isPlayMode && obj.CanTransform == false)
+				    continue;
+			    var trans = obj.Transform;
 
-                // Apply rotation
-                if (applyRotation)
-                {
-                    Vector3 pivotOffset = trans.Translation - gizmoPosition;
-                    if (useObjCenter || pivotOffset.IsZero)
-                    {
-                        trans.Orientation *= rotationDelta;
-                    }
-                    else
-                    {
-                        Matrix.RotationQuaternion(ref trans.Orientation, out var transWorld);
-                        Matrix.RotationQuaternion(ref rotationDelta, out var deltaWorld);
-                        Matrix world = transWorld * Matrix.Translation(pivotOffset) * deltaWorld * Matrix.Translation(-pivotOffset);
-                        trans.SetRotation(ref world);
-                        trans.Translation += world.TranslationVector;
-                    }
-                }
+			    // Apply rotation
+			    if (applyRotation)
+			    {
+				    Vector3 pivotOffset = trans.Translation - gizmoPosition;
+				    if (useObjCenter || pivotOffset.IsZero)
+				    {
+					    //trans.Orientation *= rotationDelta;
+					    trans.Orientation *= Quaternion.Invert(trans.Orientation) * rotationDelta * trans.Orientation;
+				    }
+				    else
+				    {
+					    Matrix.RotationQuaternion(ref trans.Orientation, out var transWorld);
+					    Matrix.RotationQuaternion(ref rotationDelta, out var deltaWorld);
+					    Matrix world = transWorld * Matrix.Translation(pivotOffset) * deltaWorld * Matrix.Translation(-pivotOffset);
+					    trans.SetRotation(ref world);
+					    trans.Translation += world.TranslationVector;
+				    }
+			    }
 
-                // Apply scale
-                const float scaleLimit = 99_999_999.0f;
-                trans.Scale = Vector3.Clamp(trans.Scale + scaleDelta, new Vector3(-scaleLimit), new Vector3(scaleLimit));
+			    // Apply scale
+			    const float scaleLimit = 99_999_999.0f;
+			    trans.Scale = Vector3.Clamp(trans.Scale + scaleDelta, new Vector3(-scaleLimit), new Vector3(scaleLimit));
 
-                // Apply translation
-                trans.Translation += translationDelta;
+			    // Apply translation
+			    trans.Translation += translationDelta;
 
-                obj.Transform = trans;
-            }
-        }
+			    obj.Transform = trans;
+		    }
+	    }
 
-        /// <inheritdoc />
+	    /// <inheritdoc />
         protected override void OnLeftMouseButtonUp()
         {
             // Skip if was controlling mouse or mouse is not over the area
