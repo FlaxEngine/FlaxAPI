@@ -507,22 +507,14 @@ namespace FlaxEngine
         /// <param name="result">When the method completes, contains the multiplied quaternion.</param>
         public static void Multiply(ref Quaternion left, ref Quaternion right, out Quaternion result)
         {
-            float lx = left.X;
-            float ly = left.Y;
-            float lz = left.Z;
-            float lw = left.W;
-            float rx = right.X;
-            float ry = right.Y;
-            float rz = right.Z;
-            float rw = right.W;
-            float a = ly * rz - lz * ry;
-            float b = lz * rx - lx * rz;
-            float c = lx * ry - ly * rx;
-            float d = lx * rx + ly * ry + lz * rz;
-            result.X = lx * rw + rx * lw + a;
-            result.Y = ly * rw + ry * lw + b;
-            result.Z = lz * rw + rz * lw + c;
-            result.W = lw * rw - d;
+	        float a = (left.Y * right.Z - left.Z * right.Y);
+	        float b = (left.Z * right.X - left.X * right.Z);
+	        float c = (left.X * right.Y - left.Y * right.X);
+	        float d = (left.X * right.X + left.Y * right.Y + left.Z * right.Z);
+	        result.X = (left.X * right.W + right.X * left.W) + a;
+	        result.Y = (left.Y * right.W + right.Y * left.W) + b;
+	        result.Z = (left.Z * right.W + right.Z * left.W) + c;
+	        result.W = left.W * right.W - d;
         }
 
         /// <summary>
@@ -537,47 +529,7 @@ namespace FlaxEngine
             Multiply(ref left, ref right, out result);
             return result;
         }
-
-	    /// <summary>
-	    /// Divides a quaternion by another.
-	    /// </summary>
-	    /// <param name="left">The first quaternion to divided.</param>
-	    /// <param name="right">The second quaternion to divided.</param>
-	    /// <returns>The divided quaternion.</returns>
-	    public static Quaternion Divide(Quaternion left, Quaternion right)
-	    {
-		    Quaternion result;
-		    Divide(ref left, ref right, out result);
-		    return result;
-	    }
-
-	    /// <summary>
-		/// Divides a quaternion by another.
-		/// </summary>
-		/// <param name="left">The first quaternion to divided.</param>
-		/// <param name="right">The second quaternion to divided.</param>
-		/// <param name="result">When the method completes, contains the divided quaternion.</param>
-		public static void Divide(ref Quaternion left, ref Quaternion right, out Quaternion result)
-        {
-            float single = right.X * right.X + right.Y * right.Y + right.Z * right.Z + right.W * right.W;
-            float single1 = 1.0f / single;
-
-            float x1 = -right.X * single1;
-            float y1 = -right.Y * single1;
-            float z1 = -right.Z * single1;
-            float w1 = right.W * single1;
-
-            float single2 = left.Y * z1 - left.Z * y1;
-            float single3 = left.Z * x1 - left.X * z1;
-            float single4 = left.X * y1 - left.Y * x1;
-            float single5 = left.X * x1 + left.Y * y1 + left.Z * z1;
-
-            result = new Quaternion(left.X * w1 + x1 * left.W + single2,
-                left.Y * w1 + y1 * left.W + single3,
-                left.Z * w1 + z1 * left.W + single4,
-                left.W * w1 - single5);
-        }
-
+		
         /// <summary>
         /// Reverses the direction of a given quaternion.
         /// </summary>
@@ -1526,31 +1478,33 @@ namespace FlaxEngine
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Quaternion left, Quaternion right)
         {
-            return left.Equals(ref right);
-        }
+	        return Dot(ref left, ref right) > 0.999999f;
+			//return left.Equals(ref right);
+		}
 
-        /// <summary>
-        /// Tests for inequality between two objects.
-        /// </summary>
-        /// <param name="left">The first value to compare.</param>
-        /// <param name="right">The second value to compare.</param>
-        /// <returns>
-        /// <c>true</c> if <paramref name="left" /> has a different value than <paramref name="right" />; otherwise,
-        /// <c>false</c>.
-        /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+		/// <summary>
+		/// Tests for inequality between two objects.
+		/// </summary>
+		/// <param name="left">The first value to compare.</param>
+		/// <param name="right">The second value to compare.</param>
+		/// <returns>
+		/// <c>true</c> if <paramref name="left" /> has a different value than <paramref name="right" />; otherwise,
+		/// <c>false</c>.
+		/// </returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Quaternion left, Quaternion right)
         {
-            return !left.Equals(ref right);
-        }
+	        return Dot(ref left, ref right) <= 0.999999f;
+			//return !left.Equals(ref right);
+		}
 
-        /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String" /> that represents this instance.
-        /// </returns>
-        public override string ToString()
+		/// <summary>
+		/// Returns a <see cref="System.String" /> that represents this instance.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="System.String" /> that represents this instance.
+		/// </returns>
+		public override string ToString()
         {
             return string.Format(CultureInfo.CurrentCulture, _formatString, X, Y, Z, W);
         }
@@ -1628,8 +1582,8 @@ namespace FlaxEngine
 	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
 	    public bool Equals(ref Quaternion other)
 	    {
-		    return Dot(ref this, ref other) > 0.999999f;
-		    //return Mathf.NearEqual(other.X, X) && Mathf.NearEqual(other.Y, Y) && Mathf.NearEqual(other.Z, Z) && Mathf.NearEqual(other.W, W);
+		    //return Dot(ref this, ref other) > 0.999999f;
+		    return Mathf.NearEqual(other.X, X) && Mathf.NearEqual(other.Y, Y) && Mathf.NearEqual(other.Z, Z) && Mathf.NearEqual(other.W, W);
 	    }
 
 	    /// <summary>

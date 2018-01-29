@@ -34,22 +34,5 @@ namespace FlaxEngine.Tests
 				q *= delta;
 			Assert.AreEqual(Quaternion.Euler(0, 90, 0), q);
 		}
-
-		/// <summary>
-		/// Test divide operation.
-		/// </summary>
-		[Test]
-		public void TestDivide()
-		{
-			var r = new Random(10);
-			for (int i = 0; i < 20; i++)
-			{
-				var q1 = r.NextQuaternion();
-				var q2 = r.NextQuaternion();
-				var a = q1 * Quaternion.Invert(q2);
-				var b = Quaternion.Divide(q1, q2);
-				Assert.AreEqual(a, b);
-			}
-		}
 	}
 }

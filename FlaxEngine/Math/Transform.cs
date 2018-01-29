@@ -223,7 +223,9 @@ namespace FlaxEngine
 	    {
 		    Transform result = new Transform(Vector3.Zero);
 
-		    Quaternion.Divide(ref other.Orientation, ref Orientation, out result.Orientation);
+		    result.Orientation = Orientation;
+		    result.Orientation.Invert();
+		    Quaternion.Multiply(ref result.Orientation, ref other.Orientation, out result.Orientation);
 		    Vector3.Divide(ref other.Scale, ref Scale, out result.Scale);
 		    result.Translation = WorldToLocal(other.Translation);
 

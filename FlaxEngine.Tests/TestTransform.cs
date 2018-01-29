@@ -136,7 +136,7 @@ namespace FlaxEngine.Tests
 			for (int i = 0; i < 10; i++)
 			{
 				Transform a = new Transform(rand.NextVector3(), Quaternion.Euler(i * 10, 0, i), rand.NextVector3() * 10.0f);
-				Transform b = new Transform(rand.NextVector3(), Quaternion.Identity, rand.NextVector3() * 0.3f);
+				Transform b = new Transform(rand.NextVector3(), Quaternion.Euler(i, 1, 22), rand.NextVector3() * 0.3f);
 
 				Transform ab = a.LocalToWorld(b);
 				Transform ba = a.WorldToLocal(ab);
