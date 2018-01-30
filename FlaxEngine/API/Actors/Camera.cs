@@ -9,8 +9,6 @@ namespace FlaxEngine
 {
 	public sealed partial class Camera
 	{
-        // TODO: getMainCamera
-        // TODO: customViewport
         // TODO: ConvertMouseToRay
 
 	    /// <summary>

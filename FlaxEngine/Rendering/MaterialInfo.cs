@@ -39,10 +39,10 @@ namespace FlaxEngine.Rendering
         /// </summary>
         Transparent = 1,
 
-        /// <summary>
-        /// The unlit material. Emissive channel is used as a output color. Can perform custom lighting operations or just glow.
-        /// </summary>
-        Unlit = 2,
+		/// <summary>
+		/// The unlit material. Emissive channel is used as an output color. Can perform custom lighting operations or just glow. Won't be affected by the lighting pipeline
+		/// </summary>
+		Unlit = 2,
     }
 
     /// <summary>

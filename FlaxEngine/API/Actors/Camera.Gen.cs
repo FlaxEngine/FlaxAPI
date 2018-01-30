@@ -63,7 +63,7 @@ namespace FlaxEngine
 		/// Gets or sets camera's field of view (in degrees)
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(10), EditorDisplay("Camera"), Limit(0, 179), Tooltip("Field of view angle in degrees")]
+		[EditorOrder(10), Limit(0, 179), EditorDisplay("Camera"), Tooltip("Field of view angle in degrees")]
 		public float FieldOfView
 		{
 #if UNIT_TEST_COMPILANT
@@ -78,7 +78,7 @@ namespace FlaxEngine
 		/// Gets or sets the custom aspect ratio. 0 if not use custom value.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(50), EditorDisplay("Camera"), Limit(0, 10), Tooltip("Custom aspect ratio to use. Set to 0 to disable.")]
+		[EditorOrder(50), Limit(0, 10, 0.01f), EditorDisplay("Camera"), Tooltip("Custom aspect ratio to use. Set to 0 to disable.")]
 		public float CustomAspectRatio
 		{
 #if UNIT_TEST_COMPILANT
@@ -93,7 +93,7 @@ namespace FlaxEngine
 		/// Gets or sets camera's near plane distance
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(30), EditorDisplay("Camera"), Limit(0, 1000, 0.05f), Tooltip("Near clipping plane distance")]
+		[EditorOrder(30), Limit(0, 1000, 0.05f), EditorDisplay("Camera"), Tooltip("Near clipping plane distance")]
 		public float NearPlane
 		{
 #if UNIT_TEST_COMPILANT
@@ -108,7 +108,7 @@ namespace FlaxEngine
 		/// Gets or sets camera's far plane distance
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(40), EditorDisplay("Camera"), Limit(0, 1000000, 5), Tooltip("Far clipping plane distance")]
+		[EditorOrder(40), Limit(0, 1000000, 5), EditorDisplay("Camera"), Tooltip("Far clipping plane distance")]
 		public float FarPlane
 		{
 #if UNIT_TEST_COMPILANT
@@ -116,6 +116,21 @@ namespace FlaxEngine
 #else
 			get { return Internal_GetFarPlane(unmanagedPtr); }
 			set { Internal_SetFarPlane(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets or sets the orthographic projection scale
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(60), Limit(0.0001f, 1000, 0.01f), EditorDisplay("Camera"), Tooltip("Orthographic projection scale")]
+		public float OrthographicScale
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetOrthographicScale(unmanagedPtr); }
+			set { Internal_SetOrthographicScale(unmanagedPtr, value); }
 #endif
 		}
 
@@ -193,6 +208,10 @@ namespace FlaxEngine
 		internal static extern float Internal_GetFarPlane(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetFarPlane(IntPtr obj, float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetOrthographicScale(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetOrthographicScale(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetViewport(IntPtr obj, out Viewport resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
