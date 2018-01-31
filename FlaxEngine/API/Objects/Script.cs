@@ -9,6 +9,7 @@ namespace FlaxEngine
 		/// <summary>
 		/// Gets or sets the world space transformation of the actors owning this script.
 		/// </summary>
+		[HideInEditor]
 		public Transform Transform
 		{
 			get => Actor.Transform;
@@ -18,6 +19,7 @@ namespace FlaxEngine
 		/// <summary>
 		/// Gets or sets the local space transformation of the actors owning this script.
 		/// </summary>
+		[HideInEditor]
 		public Transform LocalTransform
 		{
 			get => Actor.LocalTransform;
