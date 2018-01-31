@@ -63,7 +63,7 @@ namespace FlaxEngine
 		/// Gets or sets camera's field of view (in degrees)
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(10), Limit(0, 179), EditorDisplay("Camera"), Tooltip("Field of view angle in degrees")]
+		[EditorOrder(10), Limit(0, 179), EditorDisplay("Camera", "Field Of View"), Tooltip("Field of view angle in degrees")]
 		public float FieldOfView
 		{
 #if UNIT_TEST_COMPILANT
