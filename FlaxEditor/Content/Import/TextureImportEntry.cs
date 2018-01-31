@@ -229,7 +229,7 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// True if texture contains sRGB format and engine should keep that data format
         /// </summary>
-        [EditorOrder(50), Tooltip("True if texture contains colors in sRGB format data")]
+        [EditorOrder(50), EditorDisplay(null, "Is sRGB"), Tooltip("True if texture contains colors in sRGB format data")]
         public bool IsSRGB { get; set; }
 
         /// <summary>
