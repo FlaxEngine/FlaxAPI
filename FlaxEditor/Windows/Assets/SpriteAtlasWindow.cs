@@ -103,7 +103,7 @@ namespace FlaxEditor.Windows.Assets
             [CustomEditor(typeof(SpritesColelctionEditor))]
             public SpriteEntry[] Sprites;
             
-            [EditorOrder(1000), EditorDisplay("Import Settings", "__inline__")]
+            [EditorOrder(1000), EditorDisplay("Import Settings", EditorDisplayAttribute.InlineStyle)]
             public TextureImportSettings ImportSettings { get; set; } = new TextureImportSettings();
 
             public sealed class ProxyEditor : GenericEditor

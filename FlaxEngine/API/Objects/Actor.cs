@@ -115,7 +115,7 @@ namespace FlaxEngine
         /// </summary>
         [UnmanagedCall]
         [HideInEditor]
-        [EditorDisplay("Scripts", "__inline__")]
+        [EditorDisplay("Scripts", EditorDisplayAttribute.InlineStyle)]
         [EditorOrder(-5)]
         [MemberCollection(ReadOnly = true, NotNullItems = true, CanReorderItems = false)]
         public Script[] Scripts

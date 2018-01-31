@@ -16,13 +16,13 @@ namespace FlaxEditor.Content.Settings
         /// <summary>
         /// The tag names.
         /// </summary>
-        [EditorOrder(10), EditorDisplay("Tags", "__inline__")]
+        [EditorOrder(10), EditorDisplay("Tags", EditorDisplayAttribute.InlineStyle)]
         public List<string> Tags = new List<string>();
 
         /// <summary>
         /// The layers names.
         /// </summary>
-        [EditorOrder(10), EditorDisplay("Layers", "__inline__"), MemberCollection(ReadOnly = true)]
+        [EditorOrder(10), EditorDisplay("Layers", EditorDisplayAttribute.InlineStyle), MemberCollection(ReadOnly = true)]
         public string[] Layers = new string[32];
 
         /// <summary>

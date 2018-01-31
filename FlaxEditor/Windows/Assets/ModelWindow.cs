@@ -33,7 +33,7 @@ namespace FlaxEditor.Windows.Assets
         /// </summary>
         private sealed class PropertiesProxy
         {
-            [EditorOrder(10), EditorDisplay("Materials", "__inline__"), MemberCollection(CanReorderItems = true, NotNullItems = true, ReadOnly = true)]
+            [EditorOrder(10), EditorDisplay("Materials", EditorDisplayAttribute.InlineStyle), MemberCollection(CanReorderItems = true, NotNullItems = true, ReadOnly = true)]
             public MaterialSlot[] MaterialSlots
             {
                 get => Asset?.MaterialSlots;

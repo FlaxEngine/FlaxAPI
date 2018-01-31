@@ -12,7 +12,7 @@ namespace FlaxEngine
         /// Gets the brush surfaces collection.
         /// </summary>
         [Serialize]
-        [EditorOrder(100), EditorDisplay("Surfaces", "__inline__")]
+        [EditorOrder(100), EditorDisplay("Surfaces", EditorDisplayAttribute.InlineStyle)]
         [MemberCollection(CanReorderItems = false, NotNullItems = true, ReadOnly = true)]
         public BrushSurface[] Surfaces
         {

@@ -33,7 +33,7 @@ namespace FlaxEditor.Content.Settings
         /// <summary>
         /// The build presets.
         /// </summary>
-        [EditorOrder(100), EditorDisplay("Presets", "__inline__"), Tooltip("Build presets configuration")]
+        [EditorOrder(100), EditorDisplay("Presets", EditorDisplayAttribute.InlineStyle), Tooltip("Build presets configuration")]
         public BuildPreset[] Presets =
         {
             new BuildPreset

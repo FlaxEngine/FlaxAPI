@@ -29,7 +29,7 @@ namespace FlaxEngine
         /// <summary>
         /// Gets or sets the material.
         /// </summary>
-        [EditorOrder(30), Tooltip("Material asset used to by this slot"), EditorDisplay(Name = "__inline__")]
+        [EditorOrder(30), Tooltip("Material asset used to by this slot"), EditorDisplay(null, EditorDisplayAttribute.InlineStyle)]
         public MaterialBase Material
         {
             get => Internal_GetMaterial(_model.unmanagedPtr, _index);
