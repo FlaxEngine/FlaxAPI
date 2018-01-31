@@ -6,7 +6,6 @@ using FlaxEditor.Content;
 using FlaxEditor.Content.Import;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
-using FlaxEditor.GUI;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -28,9 +27,9 @@ namespace FlaxEditor.Windows.Assets
         {
             private TextureWindow _window;
 
-            [EditorOrder(1000), EditorDisplay("Import Settings", "__inline__")]
+            [EditorOrder(1000), EditorDisplay("Import Settings", EditorDisplayAttribute.InlineStyle)]
             public TextureImportSettings ImportSettings = new TextureImportSettings();
-
+			
             public sealed class ProxyEditor : GenericEditor
             {
                 public override void Initialize(LayoutElementsContainer layout)
@@ -111,8 +110,7 @@ namespace FlaxEditor.Windows.Assets
 
         private readonly TexturePreview _preview;
         private readonly CustomEditorPresenter _propertiesEditor;
-	    private readonly ToolStripButton _saveButton;
-
+	    
         private readonly PropertiesProxy _properties;
         private bool _isWaitingForLoad;
 
@@ -141,20 +139,11 @@ namespace FlaxEditor.Windows.Assets
             _propertiesEditor.Select(_properties);
 
 	        // Toolstrip
-	        _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Save32"), Save).LinkTooltip("Save");
 	        _toolstrip.AddButton(Editor.UI.GetIcon("Import32"), () => Editor.ContentImporting.Reimport((BinaryAssetItem)Item)).LinkTooltip("Reimport");
 	        _toolstrip.AddSeparator();
 	        _toolstrip.AddButton(Editor.UI.GetIcon("PageScale32"), _preview.CenterView).LinkTooltip("Center view");
 		}
-
-		/// <inheritdoc />
-		protected override void UpdateToolstrip()
-        {
-	        _saveButton.Enabled = IsEdited;
-
-            base.UpdateToolstrip();
-        }
-
+		
         /// <inheritdoc />
         protected override void UnlinkItem()
         {
