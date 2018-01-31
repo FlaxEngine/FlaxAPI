@@ -453,7 +453,7 @@ namespace FlaxEngine.Rendering
 		/// <summary>
 		/// Gets or sets the bloom blur sigma parameter.
 		/// </summary>
-		[NoSerialize, EditorOrder(203), EditorDisplay("Bloom", "BlurSigma")]
+		[NoSerialize, EditorOrder(203), EditorDisplay("Bloom", "Blur Sigma")]
 		public float Bloom_BlurSigma
 		{
 			get => data.Bloom_BlurSigma;
