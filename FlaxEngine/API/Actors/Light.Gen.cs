@@ -66,6 +66,21 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets or sets the light view distance. Controls light visibility range. The distance at which the light be completely faded. Use value 0 to always draw a light.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(35), Limit(0, float.MaxValue, 10.0f), EditorDisplay("Light"), Tooltip("Controls light visibility range. The distance at which the light be completely faded. Use value 0 to always draw a light.")]
+		public float ViewDistance
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetViewDistance(unmanagedPtr); }
+			set { Internal_SetViewDistance(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
 		/// Gets or sets the factor that controls how much this light will contribute to the Volumetric Fog. When set to 0, there is no contribution.
 		/// </summary>
 		[UnmanagedCall]
@@ -112,6 +127,10 @@ namespace FlaxEngine
 		internal static extern float Internal_GetBrightness(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetBrightness(IntPtr obj, float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetViewDistance(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetViewDistance(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern float Internal_GetVolumetricScatteringIntensity(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
