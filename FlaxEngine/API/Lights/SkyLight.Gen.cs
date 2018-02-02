@@ -63,7 +63,7 @@ namespace FlaxEngine
 		/// Gets or sets light radius.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(29), Limit(0), EditorDisplay("Light"), Tooltip("Light range. Use very high value to ue light globally.")]
+		[EditorOrder(29), Limit(0), EditorDisplay("Light"), Tooltip("Light range (in world units). Use very high value to apply light globally.")]
 		public float Radius
 		{
 #if UNIT_TEST_COMPILANT

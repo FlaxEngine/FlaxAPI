@@ -5,27 +5,27 @@
 namespace FlaxEngine
 {
     /// <summary>
-    /// Shadows casting modes by visual elements
+    /// Shadows casting modes by visual elements.
     /// </summary>
     public enum ShadowsCastingMode
     {
         /// <summary>
-        /// Never render shadows
+        /// Never render shadows.
         /// </summary>
         None = 0,
 
         /// <summary>
-        /// Render shadows only in static views (env probes, lightmaps etc.)
+        /// Render shadows only in static views (env probes, lightmaps, etc.).
         /// </summary>
         StaticOnly,
 
         /// <summary>
-        /// Render shados only in dynamic views (game etc.)
+        /// Render shados only in dynamic views (game, editor, etc.).
         /// </summary>
         DynamicOnly,
 
         /// <summary>
-        /// Always render shadows
+        /// Always render shadows.
         /// </summary>
         All
     }
