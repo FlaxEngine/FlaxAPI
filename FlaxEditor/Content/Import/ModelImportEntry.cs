@@ -94,13 +94,13 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Enable/disable importing vertex colors (channel 0 only).
         /// </summary>
-        [EditorOrder(80), Tooltip("Enable/disable importing vertex colors (channel 0 only))")]
+        [EditorOrder(80), Tooltip("Enable/disable importing vertex colors (channel 0 only)")]
         public bool ImportVertexColors { get; set; } = true;
 
         /// <summary>
         /// The lighmap UVs source.
         /// </summary>
-        [EditorOrder(90), Tooltip("Model lightmap UVs source")]
+        [EditorOrder(90), EditorDisplay(null, "Lighmap UVs Source"), Tooltip("Model lightmap UVs source")]
         public ModelLightmapUVsSource LighmapUVsSource { get; set; } = ModelLightmapUVsSource.Disable;
 
         [StructLayout(LayoutKind.Sequential)]

@@ -73,7 +73,7 @@ namespace FlaxEngine
 		/// <summary>
 		/// Updates the model mesh vertex and index buffer data.
 		/// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
-		/// Mesh data will be cached and uloaded to the GPU with a delay.
+		/// Mesh data will be cached and uploaded to the GPU with a delay.
 		/// </summary>
 		/// <param name="vertices">The mesh verticies positions. Cannot be null.</param>
 		/// <param name="triangles">The mesh index buffer (triangles). Cannot be null.</param>
