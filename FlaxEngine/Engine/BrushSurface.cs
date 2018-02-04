@@ -37,7 +37,7 @@ namespace FlaxEngine
         /// <summary>
         /// Gets or sets the scale in lightmap (per surfcae).
         /// </summary>
-        [EditorOrder(20), EditorDisplay("Brush"), Limit(0, 10000, 0.1f)]
+        [EditorOrder(20), EditorDisplay("Brush", "Scale In Lightmap"), Limit(0, 10000, 0.1f)]
         public float ScaleInLightmap
         {
             get => Internal_GetScaleInLightmap(_brushActor.unmanagedPtr, _index);

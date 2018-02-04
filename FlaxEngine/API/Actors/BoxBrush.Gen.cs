@@ -48,7 +48,7 @@ namespace FlaxEngine
 		/// Gets or sets brush surfaces scale in lightmap parameter.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(30), EditorDisplay("CSG"), Tooltip("Brush surfaces master scale in lightmap"), Limit(0, 1000.0f, 0.1f)]
+		[EditorOrder(30), EditorDisplay("CSG", "Scale In Lightmap"), Tooltip("Brush surfaces master scale in lightmap"), Limit(0, 1000.0f, 0.1f)]
 		public float ScaleInLightmap
 		{
 #if UNIT_TEST_COMPILANT

@@ -51,7 +51,7 @@ namespace FlaxEngine
         /// Gets or sets the scale in lightmap (per mesh).
         /// Final mesh scale in lightmap is alsow multiplied by <see cref="ModelActor.ScaleInLightmap"/> and global scene scale parameter.
         /// </summary>
-        [EditorOrder(20), EditorDisplay("Mesh"), Limit(0, 10000, 0.1f)]
+        [EditorOrder(20), EditorDisplay("Mesh", "Scale In Lightmap"), Limit(0, 10000, 0.1f)]
         public float ScaleInLightmap
         {
             get => ModelActor.Internal_GetMeshScaleInLightmap(_modelActor.unmanagedPtr, _index);
