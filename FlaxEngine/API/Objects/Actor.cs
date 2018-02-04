@@ -167,7 +167,17 @@ namespace FlaxEngine
             LocalTransform = Transform.Identity;
         }
 
-        /// <summary>
+	    /// <summary>
+	    /// Casts this actor instance to the given actor type.
+	    /// </summary>
+	    /// <typeparam name="T">The actor type.</typeparam>
+	    /// <returns>The actor instance cast to the given actor type.</returns>
+	    public T As<T>() where T : Actor
+	    {
+		    return (T)this;
+	    }
+
+	    /// <summary>
         /// Creates new instance of the script and adds it to the actor.
         /// </summary>
         /// <typeparam name="T">The script type.</typeparam>
