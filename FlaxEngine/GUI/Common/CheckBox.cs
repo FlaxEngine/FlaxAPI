@@ -152,6 +152,8 @@ namespace FlaxEngine.GUI
             {
                 // Set flag
                 _mouseDown = true;
+	            Focus();
+	            return true;
             }
 
             return base.OnMouseDown(location, buttons);
@@ -169,7 +171,9 @@ namespace FlaxEngine.GUI
                 if (_mouseOverBox)
                 {
                     Toggle();
-                }
+	                Focus();
+	                return true;
+				}
             }
 
             return base.OnMouseUp(location, buttons);

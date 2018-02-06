@@ -184,10 +184,22 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     // Create group
                     var title = CustomEditorsUtil.GetPropertyNameUI(type.Name);
                     var group = layout.Group(title);
-                    group.Panel.Open(false);
+	                group.Panel.HeaderMargin = new Margin(15, 15, 2, 2);
+					group.Panel.Open(false);
+	                
+					// Add toggle button to the group
+					var scriptToggle = new CheckBox(2, 0, script.Enabled)
+					{
+						IsScrollable = false,
+						Size = new Vector2(14, 14),
+						BoxSize = 12.0f,
+						Tag = script,
+						Parent = group.Panel
+					};
+	                scriptToggle.CheckChanged += ScriptToggleOnCheckChanged;
 
-                    // Add settings button to the group
-                    const float settingsButtonSize = 14;
+					// Add settings button to the group
+					const float settingsButtonSize = 14;
                     var settingsButton = new Image(group.Panel.Width - settingsButtonSize, 0, settingsButtonSize, settingsButtonSize)
                     {
                         CanFocus = true,
@@ -207,9 +219,15 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 base.Initialize(layout);
             }
 
-            private void SettingsButtonOnClicked(Image image, MouseButton MouseButton)
+	        private void ScriptToggleOnCheckChanged(CheckBox box)
+	        {
+		        var script = (Script)box.Tag;
+		        script.Enabled = box.Checked;
+	        }
+
+	        private void SettingsButtonOnClicked(Image image, MouseButton mouseButton)
             {
-                if (MouseButton != MouseButton.Left)
+                if (mouseButton != MouseButton.Left)
                     return;
 
                 var script = (Script)image.Tag;
