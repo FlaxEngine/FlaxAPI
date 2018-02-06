@@ -39,7 +39,7 @@ namespace FlaxEditor.CustomEditors.GUI
             Margin = new Margin(CheckBox.Right + 4, 0, 0, 0);
         }
 
-        private void OnCheckChanged()
+        private void OnCheckChanged(CheckBox box)
         {
             CheckChanged?.Invoke(this);
             UpdateStyle();

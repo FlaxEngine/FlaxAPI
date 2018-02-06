@@ -56,7 +56,7 @@ namespace FlaxEngine.GUI
                     _intermediate = false;
 
                     _checked = value;
-                    CheckChanged?.Invoke();
+                    CheckChanged?.Invoke(this);
                 }
             }
         }
@@ -86,7 +86,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Event fired when 'checked' state gets changed.
         /// </summary>
-        public event Action CheckChanged;
+        public event Action<CheckBox> CheckChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CheckBox"/> class.
