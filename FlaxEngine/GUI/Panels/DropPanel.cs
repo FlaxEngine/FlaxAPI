@@ -12,8 +12,9 @@ namespace FlaxEngine.GUI
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class DropPanel : ContainerControl
     {
-        protected float _headerHeight = 14.0f, _headerMargin = 2.0f;
-        protected bool _isClosed;
+	    protected float _headerHeight = 14.0f;
+	    protected Margin _headerMargin = new Margin(2.0f);
+		protected bool _isClosed;
         protected bool _mouseOverHeader;
         protected bool _mouseDown;
         protected float _animationProgress = 1.0f;
@@ -49,7 +50,7 @@ namespace FlaxEngine.GUI
         /// <value>
         /// The header margin.
         /// </value>
-        public float HeaderMargin
+        public Margin HeaderMargin
         {
             get => _headerMargin;
             set
@@ -95,15 +96,7 @@ namespace FlaxEngine.GUI
         ///   <c>true</c> if this panel is closed; otherwise, <c>false</c>.
         /// </value>
         public bool IsClosed => _isClosed;
-
-        /// <summary>
-        /// Gets the left margin.
-        /// </summary>
-        /// <value>
-        /// The left margin.
-        /// </value>
-        protected virtual float LeftMargin => HeaderMargin;
-
+		
         /// <summary>
         /// Gets the header rectangle.
         /// </summary>
@@ -226,16 +219,18 @@ namespace FlaxEngine.GUI
                 Render2D.FillRectangle(new Rectangle(0, 0, Width, HeaderHeight), color);
             
             // Drop down icon
-            float textLeft = 4;
+            float textLeft = 0;
             if (EnableDropDownIcon)
             {
-                textLeft += 12;
+                textLeft += 14;
                 var dropDownRect = new Rectangle(2, (HeaderHeight - 12) / 2, 12, 12);
                 Render2D.DrawSprite(_isClosed ? style.ArrowRight : style.ArrowDown, dropDownRect, _mouseOverHeader ? Color.White : new Color(0.8f, 0.8f, 0.8f, 0.8f));
             }
 
             // Text
-            Render2D.DrawText(style.FontMedium, HeaderText, new Rectangle(textLeft, 0, Width - textLeft - 2, HeaderHeight), Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
+	        var textRect = new Rectangle(textLeft, 0, Width - textLeft, HeaderHeight);
+	        _headerMargin.ShrinkRectangle(ref textRect);
+			Render2D.DrawText(style.FontMedium, HeaderText, textRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
 
             // Draw child controls that are not arranged (pined to the header, etc.)
             for (int i = 0; i < _children.Count; i++)
@@ -337,7 +332,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void GetDesireClientArea(out Rectangle rect)
         {
-            var topMargin = HeaderHeight + HeaderMargin;
+            var topMargin = HeaderHeight + _headerMargin.Height;
             rect = new Rectangle(0, topMargin, Width, Height - topMargin);
         }
 
@@ -352,9 +347,9 @@ namespace FlaxEngine.GUI
             ArrangeDockedControls(ref clientArea);
 
             // Arrange undocked controls
-            float minHeight = HeaderHeight + HeaderMargin;
-            float leftMargin = clientArea.Left + LeftMargin;
-            float spacing = HeaderMargin;
+            float minHeight = HeaderHeight + _headerMargin.Height;
+            float leftMargin = clientArea.Left + 2.0f;
+            float spacing = 2.0f;
             float topMargin = clientArea.Top;
             float y = topMargin;
             float height = clientArea.Top + dropOffset;
