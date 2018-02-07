@@ -6,11 +6,11 @@ using System;
 
 namespace FlaxEngine
 {
-    /// <summary>
-    /// Overrides default editor provided for the target object/class/field/property. Allows to extend visuals and editing experaince of the objects.
-    /// </summary>
-    /// <seealso cref="System.Attribute" />
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Enum | AttributeTargets.Struct | AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Delegate | AttributeTargets.Event | AttributeTargets.Method)]
+	/// <summary>
+	/// Overrides the default editor provided for the target object/class/field/property. Allows to extend visuals and editing experience of the object.
+	/// </summary>
+	/// <seealso cref="System.Attribute" />
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Enum | AttributeTargets.Struct | AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Delegate | AttributeTargets.Event | AttributeTargets.Method)]
     public sealed class CustomEditorAttribute : Attribute
     {
         /// <summary>

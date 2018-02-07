@@ -7,7 +7,7 @@ using System;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Specifies a options for a asset reference picker in the editor. Allows to customize view or provide custom value assign policy.
+    /// Specifies a options for an asset reference picker in the editor. Allows to customize view or provide custom value assign policy.
     /// </summary>
     /// <seealso cref="System.Attribute" />
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
