@@ -81,20 +81,43 @@ namespace FlaxEngine.GUI
             UpdateText();
         }
 
-        /// <summary>
-        /// Sets the limits from the attribute.
-        /// </summary>
-        /// <param name="limits">The limits.</param>
-        public void SetLimits(LimitAttribute limits)
-        {
-            _min = (int)limits.Min;
-            _max = (int)Mathf.Max(_min, limits.Max);
-            _slideSpeed = limits.SliderSpeed;
-            Value = Value;
-        }
-        
-        /// <inheritdoc />
-        protected sealed override void UpdateText()
+		/// <summary>
+	    /// Sets the limits from the attribute.
+	    /// </summary>
+	    /// <param name="limits">The limits.</param>
+	    public void SetLimits(RangeAttribute limits)
+	    {
+		    _min = (int)limits.Min;
+		    _max = (int)Mathf.Max(_min, limits.Max);
+		    Value = Value;
+	    }
+
+	    /// <summary>
+	    /// Sets the limits from the attribute.
+	    /// </summary>
+	    /// <param name="limits">The limits.</param>
+	    public void SetLimits(LimitAttribute limits)
+	    {
+		    _min = (int)limits.Min;
+		    _max = (int)Mathf.Max(_min, limits.Max);
+		    _slideSpeed = limits.SliderSpeed;
+		    Value = Value;
+	    }
+
+		/// <summary>
+		/// Sets the limits from the other <see cref="IntValueBox"/>.
+		/// </summary>
+		/// <param name="other">The other.</param>
+		public void SetLimits(IntValueBox other)
+	    {
+		    _min = other._min;
+		    _max = other._max;
+		    _slideSpeed = other._slideSpeed;
+		    Value = Value;
+	    }
+
+		/// <inheritdoc />
+		protected sealed override void UpdateText()
         {
             var text = _value.ToString();
             

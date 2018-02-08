@@ -120,6 +120,7 @@
     <Compile Include="CustomEditors\Elements\EnumElement.cs" />
     <Compile Include="CustomEditors\Elements\FloatValueElement.cs" />
     <Compile Include="CustomEditors\Elements\IFloatValueEditor.cs" />
+    <Compile Include="CustomEditors\Elements\IIntegerValueEditor.cs" />
     <Compile Include="CustomEditors\Elements\ImageElement.cs" />
     <Compile Include="CustomEditors\Elements\IntegerValueElement.cs" />
     <Compile Include="CustomEditors\Elements\LabelElement.cs" />

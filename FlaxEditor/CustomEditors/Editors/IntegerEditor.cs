@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2018 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System.Linq;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine;
 
@@ -13,7 +14,7 @@ namespace FlaxEditor.CustomEditors.Editors
     [CustomEditor(typeof(int)), DefaultEditor]
     public sealed class IntegerEditor : CustomEditor
     {
-        private IntegerValueElement element;
+        private IIntegerValueEditor element;
 
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.Inline;
@@ -21,17 +22,48 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
-            element = layout.IntegerValue();
-            element.SetLimits(Values.Info);
-	        element.IntValue.ValueChanged += OnValueChanged;
-	        element.IntValue.SlidingEnd += ClearToken;
-        }
+	        element = null;
+
+	        // Try get limit attribute for value min/max range setting and slider speed
+	        if (Values.Info != null)
+	        {
+		        var attributes = Values.Info.GetCustomAttributes(true);
+		        var range = attributes.FirstOrDefault(x => x is RangeAttribute);
+		        if (range != null)
+		        {
+			        // Use slider
+			        var slider = layout.Slider();
+			        slider.SetLimits((RangeAttribute)range);
+			        slider.Slider.ValueChanged += OnValueChanged;
+			        slider.Slider.SlidingEnd += ClearToken;
+			        element = slider;
+		        }
+		        var limit = attributes.FirstOrDefault(x => x is LimitAttribute);
+		        if (limit != null)
+		        {
+					// Use int value editor with limit
+					var intValue = layout.IntegerValue();
+			        intValue.SetLimits((LimitAttribute)limit);
+			        intValue.IntValue.ValueChanged += OnValueChanged;
+			        intValue.IntValue.SlidingEnd += ClearToken;
+			        element = intValue;
+		        }
+	        }
+	        if (element == null)
+	        {
+		        // Use int value editor
+		        var intValue = layout.IntegerValue();
+		        intValue.IntValue.ValueChanged += OnValueChanged;
+		        intValue.IntValue.SlidingEnd += ClearToken;
+		        element = intValue;
+	        }
+		}
 
 	    private void OnValueChanged()
 	    {
-		    var isSliding = element.IntValue.IsSliding;
+		    var isSliding = element.IsSliding;
 		    var token = isSliding ? this : null;
-		    SetValue(element.IntValue.Value, token);
+		    SetValue(element.Value, token);
 	    }
 
 		/// <inheritdoc />
@@ -43,7 +75,7 @@ namespace FlaxEditor.CustomEditors.Editors
             }
             else
             {
-                element.IntValue.Value = (int)Values[0];
+                element.Value = (int)Values[0];
             }
         }
     }
