@@ -75,7 +75,7 @@ namespace FlaxEditor.CustomEditors.Elements
 			set => Slider.Value = value;
 		}
 
-		/// <inheritdoc />
-	    public bool IsSliding => Slider.IsSliding;
+		/// <inheritdoc cref="IFloatValueEditor.IsSliding" />
+		public bool IsSliding => Slider.IsSliding;
     }
 }
