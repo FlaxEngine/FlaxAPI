@@ -39,15 +39,15 @@ namespace FlaxEngine
             public Keys Key;
 
             /// <summary>
-            /// The mouse button to map for this action. Use <see cref="MouseButton.None"/> to ignore it.
+            /// The mouse button to map for this action. Use <see cref="FlaxEngine.MouseButton.None"/> to ignore it.
             /// </summary>
             [EditorOrder(20), Tooltip("The mouse button to map for this action. Use None to ignore it.")]
             public MouseButton MouseButton;
 
-            /// <summary>
-            /// The gamepad button to map for this action. Use <see cref="GamePadButton.None"/> to ignore it.
-            /// </summary>
-            [EditorOrder(30), Tooltip("The gamepad button to map for this action. Use None to ignore it.")]
+			/// <summary>
+			/// The gamepad button to map for this action. Use <see cref="GamePadButton.None"/> to ignore it.
+			/// </summary>
+			[EditorOrder(30), Tooltip("The gamepad button to map for this action. Use None to ignore it.")]
             public GamePadButton GampadButton;
 
             /// <summary>
@@ -331,7 +331,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// The automatic gamepads scanning interval in seconds. Calls <see cref="ScanGamepads"/>. Use value equal to 0 or lower to disable that feature.
+        /// The automatic gamepads scanning interval in seconds. Calls <see cref="ScanGamepads"/>. Use value equal to 0 or lower to disable that feature. The default value is 2s.
         /// </summary>
         public static float AutoGamepadsScanInterval = 2.0f;
 

@@ -20,17 +20,17 @@ namespace FlaxEngine
         Average = 0,
 
         /// <summary>
-        /// Uses the smaller value of the touching materials: min(a,b)
+        /// Uses the smaller value of the touching materials: min(a,b).
         /// </summary>
         Mininum = 1,
 
         /// <summary>
-        /// Multiplies the values of the touching materials: a*b
+        /// Multiplies the values of the touching materials: a*b.
         /// </summary>
         Multiply = 2,
 
         /// <summary>
-        /// Uses the larger value of the touching materials: max(a, b)
+        /// Uses the larger value of the touching materials: max(a, b).
         /// </summary>
         Maximum = 3,
     }
