@@ -507,8 +507,8 @@ namespace FlaxEditor.Modules
 
         private void OnActorActiveChanged(Actor actor)
         {
-            ActorNode node = GetActorNode(actor);
-            node?.TreeNode.OnActiveChanged();
+            //ActorNode node = GetActorNode(actor);
+            //node?.TreeNode.OnActiveChanged();
         }
 
         /// <summary>
