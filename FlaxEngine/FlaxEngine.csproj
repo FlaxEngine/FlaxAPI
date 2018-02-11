@@ -67,8 +67,6 @@
     <Compile Include="API\Actors\Joint.Gen.cs" />
     <Compile Include="API\Actors\Light.cs" />
     <Compile Include="API\Actors\Light.Gen.cs" />
-    <Compile Include="API\Actors\LightActor.cs" />
-    <Compile Include="API\Actors\LightActor.Gen.cs" />
     <Compile Include="API\Actors\ModelActor.cs" />
     <Compile Include="API\Actors\ModelActor.Gen.cs">
       <DependentUpon>ModelActor.cs</DependentUpon>
