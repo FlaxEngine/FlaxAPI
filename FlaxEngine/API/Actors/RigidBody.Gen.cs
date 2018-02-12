@@ -78,10 +78,10 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// If true Continuous Collision Detection (CCD) will be used for this component.
+		/// If true Continuous Collision Detection (CCD) will be used for this object.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(30), EditorDisplay("Rigid Body", "Use CCD"), Tooltip("If true Continuous Collision Detection (CCD) will be used for this component.")]
+		[EditorOrder(30), EditorDisplay("Rigid Body", "Use CCD"), Tooltip("If true Continuous Collision Detection (CCD) will be used for this object.")]
 		public bool UseCCD
 		{
 #if UNIT_TEST_COMPILANT
@@ -249,7 +249,7 @@ namespace FlaxEngine
 		/// Gets or sets the user specified offset for the center of mass of this object, from the calculated location.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(140), EditorDisplay("Rigid Body"), Tooltip("The user specified offset for the center of mass of this object, from the calculated location.")]
+		[EditorOrder(140), EditorDisplay("Rigid Body", "Center Of Mass Offset"), Tooltip("The user specified offset for the center of mass of this object, from the calculated location.")]
 		public Vector3 CenterOfMassOffset
 		{
 #if UNIT_TEST_COMPILANT

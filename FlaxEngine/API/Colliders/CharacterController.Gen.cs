@@ -102,7 +102,7 @@ namespace FlaxEngine
 		/// Gets or sets the step height.
 		/// </summary>
 		/// <remarks>
-		/// The character will step up a stair only if it is closer to the ground than the indicated value. This should not be greater than the Character Controller�s height or it will generate an error.
+		/// The character will step up a stair only if it is closer to the ground than the indicated value. This should not be greater than the Character Controller's height or it will generate an error.
 		/// </remarks>
 		[UnmanagedCall]
 		[EditorOrder(220), Limit(0), EditorDisplay("Character Controller"), Tooltip("The character will step up a stair only if it is closer to the ground than the indicated value.")]
