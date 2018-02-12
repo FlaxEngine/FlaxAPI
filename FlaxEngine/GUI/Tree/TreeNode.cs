@@ -413,7 +413,7 @@ namespace FlaxEngine.GUI
 
             // Check for long press
             const float longPressTimeSeconds = 0.6f;
-            if (_isMouseDown && Time.UnscaledTime - _mouseDownTime > longPressTimeSeconds)
+            if (_isMouseDown && Time.UnscaledGameTime - _mouseDownTime > longPressTimeSeconds)
             {
                 OnLongPress();
             }
@@ -510,7 +510,7 @@ namespace FlaxEngine.GUI
                 {
                     _isMouseDown = true;
                     _mouseDownPos = location;
-                    _mouseDownTime = Time.UnscaledTime;
+                    _mouseDownTime = Time.UnscaledGameTime;
                 }
 
                 // Handled

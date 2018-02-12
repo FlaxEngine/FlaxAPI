@@ -106,7 +106,7 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void OnPlayBegin()
         {
-            _gameStartTime = Time.UnscaledTime;
+            _gameStartTime = Time.UnscaledGameTime;
         }
 
         /// <inheritdoc />
@@ -118,7 +118,7 @@ namespace FlaxEditor.Windows
             {
                 var style = Style.Current;
 
-                float time = Time.UnscaledTime - _gameStartTime;
+                float time = Time.UnscaledGameTime - _gameStartTime;
                 float timeout = 3.0f;
                 float fadeOutTime = 1.0f;
                 float animTime = time - timeout;

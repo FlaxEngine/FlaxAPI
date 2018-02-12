@@ -43,10 +43,20 @@ namespace FlaxEngine
         /// </summary>
         public static long DeltaTimeTicks => data.DeltaTimeTicks;
 
-        /// <summary>
-        /// Gets real time in seconds since the game started
-        /// </summary>
-        public static float TimeSinceStartup => data.TimeSinceStartup;
+	    /// <summary>
+	    /// Gets time at the beginning of this frame. This is the time in seconds since the start of the game.
+	    /// </summary>
+	    public static float GameTime => data.Time;
+
+	    /// <summary>
+	    /// Gets time at the beginning of this frame in ticks. This is the time in seconds since the start of the game.
+	    /// </summary>
+	    public static long GameTimeTicks => data.TimeTicks;
+		
+		/// <summary>
+		/// Gets real time in seconds since the game started
+		/// </summary>
+		public static float TimeSinceStartup => data.TimeSinceStartup;
 
         /// <summary>
         /// Gets real time in seconds since the game started in ticks
@@ -76,12 +86,12 @@ namespace FlaxEngine
         /// <summary>
         /// Gets timeScale-independant time at the beginning of this frame. This is the time in seconds since the start of the game.
         /// </summary>
-        public static float UnscaledTime => data.UnscaledTime;
+        public static float UnscaledGameTime => data.UnscaledTime;
 
         /// <summary>
         /// Gets timeScale-independant time at the beginning of this frame in ticks. This is the time in seconds since the start of the game.
         /// </summary>
-        public static long UnscaledTimeTicks => data.UnscaledTimeTicks;
+        public static long UnscaledGameTimeTicks => data.UnscaledTimeTicks;
 
         #region Internal Calls
 

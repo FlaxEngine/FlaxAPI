@@ -86,7 +86,7 @@ namespace FlaxEditor.Viewport
         {
             _startMove = ViewTransform;
             _endMove = target;
-            _moveStartTime = Time.UnscaledTime;
+            _moveStartTime = Time.UnscaledGameTime;
         }
 
         /// <inheritdoc />
@@ -99,7 +99,7 @@ namespace FlaxEditor.Viewport
             {
                 // Calculate linear progress
                 float animationDuration = 0.5f;
-                float time = Time.UnscaledTime;
+                float time = Time.UnscaledGameTime;
                 float progress = (time - _moveStartTime) / animationDuration;
 
                 // Check for end

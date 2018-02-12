@@ -39,7 +39,7 @@ namespace FlaxEngine.Rendering
             public RenderTarget OnUse()
             {
                 IsFree = false;
-                LastUsage = Time.UnscaledTime;
+                LastUsage = Time.UnscaledGameTime;
                 return Texture;
             }
         }
@@ -107,7 +107,7 @@ namespace FlaxEngine.Rendering
         private static void Update()
         {
             // Flush old unused render targets
-            var time = Time.UnscaledTime;
+            var time = Time.UnscaledGameTime;
             for (int i = 0; i < _tmpRenderTargets.Count; i++)
             {
                 if (time - _tmpRenderTargets[i].LastUsage >= UnusedTemporaryRenderTargetLifeTime)
