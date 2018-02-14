@@ -66,10 +66,10 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Determines whether collision between the two bodies managed by the joint are enabled.
+		/// Determines whether collisions between the two bodies managed by the joint are enabled.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(30), EditorDisplay("Joint"), Tooltip("Determines whether collision between the two bodies managed by the joint are enabled.")]
+		[EditorOrder(30), EditorDisplay("Joint"), Tooltip("Determines whether collisions between the two bodies managed by the joint are enabled.")]
 		public bool EnableCollision
 		{
 #if UNIT_TEST_COMPILANT

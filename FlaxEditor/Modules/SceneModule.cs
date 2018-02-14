@@ -113,70 +113,71 @@ namespace FlaxEditor.Modules
             return true;
         }
 
-        /// <summary>
-        /// Creates the new scene file. The default scene contains set of simple actors.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        public void CreateSceneFile(string path)
-        {
-            // Create a sample scene
-            var scene = Scene.New();
-            var sky = Sky.New();
-            var sun = DirectionalLight.New();
-            var skyLight = SkyLight.New();
-            var floor = ModelActor.New();
-	        var cam = Camera.New();
-			//
-	        scene.StaticFlags = StaticFlags.FullyStatic;
-			scene.AddChild(sky);
-            scene.AddChild(sun);
-            scene.AddChild(skyLight);
-            scene.AddChild(floor);
-            scene.AddChild(cam);
-            //
-            sky.Name = "Sky";
-            sky.LocalPosition = new Vector3(40, 150, 0);
-            sky.SunLight = sun;
-            sky.StaticFlags = StaticFlags.FullyStatic;
-            //
-            sun.Name = "Sun";
-            sun.LocalPosition = new Vector3(40, 160, 0);
-            sun.LocalEulerAngles = new Vector3(45, 0, 0);
-            sun.StaticFlags = StaticFlags.FullyStatic;
-            //
-            skyLight.Mode = SkyLight.Modes.CustomTexture;
-            skyLight.Brightness = 0.8f;
-            skyLight.CustomTexture = FlaxEngine.Content.LoadAsyncInternal<CubeTexture>(EditorAssets.DefaultSkyCubeTexture);
-	        skyLight.StaticFlags = StaticFlags.FullyStatic;
-            //
-            floor.Name = "Floor";
-            floor.Scale = new Vector3(4, 0.5f, 4);
-            floor.Model = FlaxEngine.Content.LoadAsync<Model>(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Cube.flax"));
-            if (floor.Model)
-            {
-                floor.Model.WaitForLoaded();
-                floor.Entries[0].Material = FlaxEngine.Content.LoadAsync<MaterialBase>(StringUtils.CombinePaths(Globals.EngineFolder, "WhiteMaterial.flax"));
-            }
-            floor.StaticFlags = StaticFlags.FullyStatic;
-			//
-	        cam.Name = "Camera";
-			cam.Position = new Vector3(0, 150, -300);
+	    /// <summary>
+	    /// Creates the new scene file. The default scene contains set of simple actors.
+	    /// </summary>
+	    /// <param name="path">The path.</param>
+	    public void CreateSceneFile(string path)
+	    {
+		    // Create a sample scene
+		    var scene = Scene.New();
+		    var sky = Sky.New();
+		    var sun = DirectionalLight.New();
+		    var skyLight = SkyLight.New();
+		    var floor = ModelActor.New();
+		    var cam = Camera.New();
+		    //
+		    scene.StaticFlags = StaticFlags.FullyStatic;
+		    scene.AddChild(sky);
+		    scene.AddChild(sun);
+		    scene.AddChild(skyLight);
+		    scene.AddChild(floor);
+		    scene.AddChild(cam);
+		    //
+		    sky.Name = "Sky";
+		    sky.LocalPosition = new Vector3(40, 150, 0);
+		    sky.SunLight = sun;
+		    sky.StaticFlags = StaticFlags.FullyStatic;
+		    //
+		    sun.Name = "Sun";
+		    sun.Brightness = 4.0f;
+		    sun.LocalPosition = new Vector3(40, 160, 0);
+		    sun.LocalEulerAngles = new Vector3(45, 0, 0);
+		    sun.StaticFlags = StaticFlags.FullyStatic;
+		    //
+		    skyLight.Mode = SkyLight.Modes.CustomTexture;
+		    skyLight.Brightness = 1.8f;
+		    skyLight.CustomTexture = FlaxEngine.Content.LoadAsyncInternal<CubeTexture>(EditorAssets.DefaultSkyCubeTexture);
+		    skyLight.StaticFlags = StaticFlags.FullyStatic;
+		    //
+		    floor.Name = "Floor";
+		    floor.Scale = new Vector3(4, 0.5f, 4);
+		    floor.Model = FlaxEngine.Content.LoadAsync<Model>(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Cube.flax"));
+		    if (floor.Model)
+		    {
+			    floor.Model.WaitForLoaded();
+			    floor.Entries[0].Material = FlaxEngine.Content.LoadAsync<MaterialBase>(StringUtils.CombinePaths(Globals.EngineFolder, "WhiteMaterial.flax"));
+		    }
+		    floor.StaticFlags = StaticFlags.FullyStatic;
+		    //
+		    cam.Name = "Camera";
+		    cam.Position = new Vector3(0, 150, -300);
 
-            // Serialize
-            var bytes = SceneManager.SaveSceneToBytes(scene);
+		    // Serialize
+		    var bytes = SceneManager.SaveSceneToBytes(scene);
 
-            // Cleanup
-            Object.Destroy(scene);
+		    // Cleanup
+		    Object.Destroy(scene);
 
-            if (bytes == null || bytes.Length == 0)
-                throw new Exception("Failed to serialize scene.");
+		    if (bytes == null || bytes.Length == 0)
+			    throw new Exception("Failed to serialize scene.");
 
-            // Write to file
-            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read))
-                fileStream.Write(bytes, 0, bytes.Length);
-        }
+		    // Write to file
+		    using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read))
+			    fileStream.Write(bytes, 0, bytes.Length);
+	    }
 
-        /// <summary>
+	    /// <summary>
         /// Saves scene (async).
         /// </summary>
         /// <param name="scene">Scene to save.</param>
