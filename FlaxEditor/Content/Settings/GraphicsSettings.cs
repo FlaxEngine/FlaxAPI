@@ -16,7 +16,7 @@ namespace FlaxEditor.Content.Settings
         /// <summary>
         /// Enables rendering synchronization with the refresh rate of the display device to avoid "tearing" artifacts.
         /// </summary>
-        [EditorOrder(20), EditorDisplay("General"), Tooltip("Enables rendering synchronization with the refresh rate of the display device to avoid \"tearing\" artifacts.")]
+        [EditorOrder(20), EditorDisplay("General", "Use V-Sync"), Tooltip("Enables rendering synchronization with the refresh rate of the display device to avoid \"tearing\" artifacts.")]
         public bool UseVSync = false;
 
         /// <summary>

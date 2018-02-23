@@ -296,8 +296,7 @@ namespace FlaxEditor.Windows
                     AnchorStyle = AnchorStyle.BottomLeft,
                     Parent = this,
                 };
-                // TODO: update link to game cooker docs
-                helpButton.Clicked += () => Application.StartProcess("http://docs.flaxengine.com/manual/index.html");
+                helpButton.Clicked += () => Application.StartProcess("https://docs.flaxengine.com/manual/editor/game-cooker/");
                 var buildAllButton = new Button
                 {
                     Text = "Build All",

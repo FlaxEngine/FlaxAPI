@@ -22,7 +22,7 @@ namespace FlaxEditor.Content.Settings
         /// <summary>
         /// The company full name.
         /// </summary>
-        [EditorOrder(10), EditorDisplay("General"), Tooltip("The name of you company.")]
+        [EditorOrder(10), EditorDisplay("General"), Tooltip("The name of your company or organization.")]
         public string CompanyName;
 
         /// <summary>
