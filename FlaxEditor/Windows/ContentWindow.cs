@@ -41,12 +41,22 @@ namespace FlaxEditor.Windows
         private readonly Stack<ContentTreeNode> _navigationRedo = new Stack<ContentTreeNode>(32);
 
         private NewItem _newElement;
-        
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ContentWindow"/> class.
-        /// </summary>
-        /// <param name="editor">The editor.</param>
-        public ContentWindow(Editor editor)
+
+		/// <summary>
+		/// Gets the toolstrip.
+		/// </summary>
+		public ToolStrip Toolstrip => _toolStrip;
+
+		/// <summary>
+		/// Gets the assets view.
+		/// </summary>
+		public ContentView View => _view;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ContentWindow"/> class.
+		/// </summary>
+		/// <param name="editor">The editor.</param>
+		public ContentWindow(Editor editor)
             : base(editor, true, ScrollBars.None)
         {
             Title = "Content";
