@@ -60,14 +60,19 @@ namespace FlaxEngine
         Font,
 
         /// <summary>
-        /// The ies profile.
+        /// The IES profile.
         /// </summary>
         IESProfile,
 
         /// <summary>
         /// The scene.
         /// </summary>
-        Scene
+        Scene,
+
+		/// <summary>
+		/// The audio.
+		/// </summary>
+		Audio,
     }
 
     /// <summary>
