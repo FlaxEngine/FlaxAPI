@@ -24,10 +24,15 @@ namespace FlaxEditor.Content.Create
             /// </summary>
             GameSettings,
 
-            /// <summary>
-            /// The time settings.
-            /// </summary>
-            TimeSettings,
+			/// <summary>
+			/// The audio settings.
+			/// </summary>
+			AudioSettings,
+
+			/// <summary>
+			/// The time settings.
+			/// </summary>
+			TimeSettings,
 
             /// <summary>
             /// The layers and tags settings.
@@ -68,6 +73,7 @@ namespace FlaxEditor.Content.Create
         private static Type[] _types =
         {
             typeof(GameSettings),
+            typeof(AudioSettings),
             typeof(TimeSettings),
             typeof(LayersAndTagsSettings),
             typeof(PhysicsSettings),

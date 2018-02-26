@@ -70,6 +70,7 @@
     <Compile Include="Content\Import\TextureImportEntry.cs" />
     <Compile Include="Content\Proxy\CollisionDataProxy.cs" />
     <Compile Include="Content\Proxy\SettingsProxy.cs" />
+    <Compile Include="Content\Settings\AudioSettings.cs" />
     <Compile Include="Content\Settings\BuildPreset.cs" />
     <Compile Include="Content\Settings\BuildSettings.cs" />
     <Compile Include="Content\Settings\BuildTarget.cs" />

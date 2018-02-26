@@ -55,6 +55,12 @@ namespace FlaxEditor.Content.Settings
         [EditorOrder(1010), EditorDisplay("Other Settings"), AssetReference(typeof(TimeSettings), true), Tooltip("Reference to Time Settings asset")]
         public JsonAsset Time;
 
+		/// <summary>
+		/// Reference to <see cref="AudioSettings"/> asset.
+		/// </summary>
+		[EditorOrder(1015), EditorDisplay("Other Settings"), AssetReference(typeof(AudioSettings), true), Tooltip("Reference to Audio Settings asset")]
+        public JsonAsset Audio;
+
         /// <summary>
         /// Reference to <see cref="LayersAndTagsSettings"/> asset.
         /// </summary>
@@ -171,6 +177,8 @@ namespace FlaxEditor.Content.Settings
                 return LoadAsset<WindowsPlatformSettings>(gameSettings.WindowsPlatform) as T;
             if (type == typeof(UWPPlatformSettings))
                 return LoadAsset<UWPPlatformSettings>(gameSettings.UWPPlatform) as T;
+	        if (type == typeof(AudioSettings))
+                return LoadAsset<AudioSettings>(gameSettings.Audio) as T;
 
             foreach (var e in gameSettings.CustomSettings)
             {
@@ -241,6 +249,8 @@ namespace FlaxEditor.Content.Settings
                 return SaveAsset(gameSettings, ref gameSettings.WindowsPlatform, obj);
             if (type == typeof(UWPPlatformSettings))
                 return SaveAsset(gameSettings, ref gameSettings.UWPPlatform, obj);
+	        if (type == typeof(AudioSettings))
+                return SaveAsset(gameSettings, ref gameSettings.Audio, obj);
 
             return true;
         }
