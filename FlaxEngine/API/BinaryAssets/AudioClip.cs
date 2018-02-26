@@ -2,6 +2,8 @@
 // Copyright (c) 2012-2018 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+
 namespace FlaxEngine
 {
 	/// <summary>
@@ -41,6 +43,20 @@ namespace FlaxEngine
 			/// The number of bits per sample.
 			/// </summary>
 			public uint BitDepth;
+		}
+
+		/// <summary>
+		/// Gets the length of the audio clip (in seconds).
+		/// </summary>
+		/// <returns>The value.</returns>
+		public float Length
+		{
+			get
+			{
+				AudioDataInfo info;
+				GetInfo(out info);
+				return info.NumSamples / (float)Math.Max(1U, info.SampleRate * info.NumChannels);
+			}
 		}
 	}
 }
