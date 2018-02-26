@@ -64,10 +64,12 @@
     <Compile Include="Content\GUI\NavigationButton.cs" />
     <Compile Include="Content\IFileEntryAction.cs" />
     <Compile Include="Content\Import\AssetImportEntry.cs" />
+    <Compile Include="Content\Import\AudioImportSettings.cs" />
     <Compile Include="Content\Import\ImportFileEntry.cs" />
     <Compile Include="Content\Import\ImportFilesDialog.cs" />
     <Compile Include="Content\Import\ModelImportEntry.cs" />
     <Compile Include="Content\Import\TextureImportEntry.cs" />
+    <Compile Include="Content\Proxy\AudioClipProxy.cs" />
     <Compile Include="Content\Proxy\CollisionDataProxy.cs" />
     <Compile Include="Content\Proxy\SettingsProxy.cs" />
     <Compile Include="Content\Settings\AudioSettings.cs" />

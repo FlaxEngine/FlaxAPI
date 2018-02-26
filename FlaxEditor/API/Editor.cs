@@ -489,16 +489,40 @@ namespace FlaxEditor
 #endif
         }
 
-        /// <summary>
-        /// Serializes the given object to json asset.
-        /// </summary>
-        /// <param name="outputPath">The result asset file path.</param>
-        /// <param name="obj">The obj to serialize.</param>
-        /// <returns>True if saving failed, otherwise false.</returns>
+	    /// <summary>
+	    /// Imports the audio asset file to the target location.
+	    /// </summary>
+	    /// <param name="inputPath">The source file path.</param>
+	    /// <param name="outputPath">The result asset file path.</param>
+	    /// <param name="settings">The settings.</param>
+	    /// <returns>True if importing failed, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
-        [UnmanagedCall]
+	    [UnmanagedCall]
+	    public static bool Import(string inputPath, string outputPath, AudioImportSettings settings)
+	    {
+		    if (settings == null)
+			    throw new ArgumentNullException();
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+		    AudioImportSettings.InternalOptions internalOptions;
+		    settings.ToInternal(out internalOptions);
+		    return Internal_ImportAudio(inputPath, outputPath, ref internalOptions);
+#endif
+	    }
+
+		/// <summary>
+		/// Serializes the given object to json asset.
+		/// </summary>
+		/// <param name="outputPath">The result asset file path.</param>
+		/// <param name="obj">The obj to serialize.</param>
+		/// <returns>True if saving failed, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
         public static bool SaveJsonAsset(string outputPath, object obj)
         {
             if (obj == null)
@@ -816,6 +840,8 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_ImportModel(string inputPath, string outputPath, ref ModelImportSettings.InternalOptions options);
+	    [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_ImportAudio(string inputPath, string outputPath, ref AudioImportSettings.InternalOptions options);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_SaveJsonAsset(string outputPath, string data, string typename);

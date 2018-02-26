@@ -143,14 +143,23 @@ namespace FlaxEditor.Content.Import
             FileTypes["lwo"] = ImportModel;
             FileTypes["lws"] = ImportModel;
             FileTypes["lxo"] = ImportModel;
-        }
+
+			// Audio
+	        FileTypes["wav"] = ImportAudio;
+	        FileTypes["mp3"] = ImportAudio;
+		}
 
         private static ImportFileEntry ImportModel(string url, string resultUrl)
         {
             return new ModelImportEntry(url, resultUrl);
         }
 
-        private static ImportFileEntry ImportTexture(string url, string resultUrl)
+	    private static ImportFileEntry ImportAudio(string url, string resultUrl)
+	    {
+		    return new AudioImportEntry(url, resultUrl);
+	    }
+
+		private static ImportFileEntry ImportTexture(string url, string resultUrl)
         {
             return new TextureImportEntry(url, resultUrl);
         }
