@@ -46,6 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Actors\AudioListener.cs" />
+    <Compile Include="API\Actors\AudioListener.Gen.cs" />
+    <Compile Include="API\Actors\AudioSource.cs" />
+    <Compile Include="API\Actors\AudioSource.Gen.cs" />
     <Compile Include="API\Actors\BoxBrush.cs" />
     <Compile Include="API\Actors\BoxBrush.Gen.cs">
       <DependentUpon>BoxBrush.cs</DependentUpon>
@@ -91,6 +95,8 @@
     <Compile Include="API\Assets\BinaryAsset.Gen.cs" />
     <Compile Include="API\Assets\JsonAsset.cs" />
     <Compile Include="API\Assets\JsonAsset.Gen.cs" />
+    <Compile Include="API\BinaryAssets\AudioClip.cs" />
+    <Compile Include="API\BinaryAssets\AudioClip.Gen.cs" />
     <Compile Include="API\BinaryAssets\CollisionData.cs" />
     <Compile Include="API\BinaryAssets\CollisionData.Gen.cs" />
     <Compile Include="API\BinaryAssets\FontAsset.cs" />
