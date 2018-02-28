@@ -172,6 +172,8 @@
     <Compile Include="API\Objects\Window.Gen.cs" />
     <Compile Include="API\Static\Application.cs" />
     <Compile Include="API\Static\Application.Gen.cs" />
+    <Compile Include="API\Static\Audio.cs" />
+    <Compile Include="API\Static\Audio.Gen.cs" />
     <Compile Include="API\Static\Content.cs" />
     <Compile Include="API\Static\Content.Gen.cs">
       <DependentUpon>Content.cs</DependentUpon>
@@ -230,6 +232,7 @@
     <Compile Include="Attributes\Editor\TooltipAttribute.cs" />
     <Compile Include="Attributes\UnmanagedCallAttribute.cs" />
     <Compile Include="Configurations\PersistentDataConfig.cs" />
+    <Compile Include="Engine\AudioDevice.cs" />
     <Compile Include="Engine\BrushSurface.cs" />
     <Compile Include="Engine\Collision.cs" />
     <Compile Include="Engine\ContactPoint.cs" />

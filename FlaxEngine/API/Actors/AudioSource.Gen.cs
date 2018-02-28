@@ -66,7 +66,7 @@ namespace FlaxEngine
 		/// Gets or sets the volume of the audio played from this source, in [0, 1] range.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(20), EditorDisplay("Audio Source"), Tooltip("The volume of the audio played from this source, in [0, 1] range.")]
+		[EditorOrder(20), Limit(0, 1, 0.01f), EditorDisplay("Audio Source"), Tooltip("The volume of the audio played from this source, in [0, 1] range.")]
 		public float Volume
 		{
 #if UNIT_TEST_COMPILANT
@@ -81,7 +81,7 @@ namespace FlaxEngine
 		/// Gets or sets the pitch of the played audio. The default is 1.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(30), EditorDisplay("Audio Source"), Tooltip("The pitch of the played audio. The default is 1.")]
+		[EditorOrder(30), Limit(0.5f, 2.0f, 0.01f), EditorDisplay("Audio Source"), Tooltip("The pitch of the played audio. The default is 1.")]
 		public float Pitch
 		{
 #if UNIT_TEST_COMPILANT
@@ -111,7 +111,7 @@ namespace FlaxEngine
 		/// Determines whether the audio clip should auto play on level start.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(50), EditorDisplay("Audio Source"), Tooltip("Determines whether the audio clip should auto play on level start.")]
+		[EditorOrder(50), EditorDisplay("Audio Source", "Play On Start"), Tooltip("Determines whether the audio clip should auto play on level start.")]
 		public bool PlayOnStart
 		{
 #if UNIT_TEST_COMPILANT
@@ -126,7 +126,7 @@ namespace FlaxEngine
 		/// Gets or sets the minimum distance at which audio attenuation starts. When the listener is closer to the source than this value, audio is heard at full volume. Once farther away the audio starts attenuating.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(60), EditorDisplay("Audio Source"), Tooltip("The minimum distance at which audio attenuation starts. When the listener is closer to the source than this value, audio is heard at full volume. Once farther away the audio starts attenuating.")]
+		[EditorOrder(60), Limit(0, float.MaxValue, 0.1f), EditorDisplay("Audio Source"), Tooltip("The minimum distance at which audio attenuation starts. When the listener is closer to the source than this value, audio is heard at full volume. Once farther away the audio starts attenuating.")]
 		public float MinDistance
 		{
 #if UNIT_TEST_COMPILANT
@@ -141,7 +141,7 @@ namespace FlaxEngine
 		/// Gets or sets the attenuation that controls how quickly does audio volume drop off as the listener moves further from the source.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(70), EditorDisplay("Audio Source"), Tooltip("The attenuation that controls how quickly does audio volume drop off as the listener moves further from the source.")]
+		[EditorOrder(70), Limit(0, float.MaxValue, 0.1f), EditorDisplay("Audio Source"), Tooltip("The attenuation that controls how quickly does audio volume drop off as the listener moves further from the source.")]
 		public float Attenuation
 		{
 #if UNIT_TEST_COMPILANT
