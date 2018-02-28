@@ -57,6 +57,8 @@ namespace FlaxEditor.CustomEditors.Editors
                     domain = ContentDomain.Font;
                 else if (type == typeof(IESProfile))
                     domain = ContentDomain.IESProfile;
+                else if (type == typeof(AudioClip))
+                    domain = ContentDomain.Audio;
                 //else if (type == typeof(SceneAsset))
                 //    domain = ContentDomain.Scene;
                 else if (type == typeof(JsonAsset))
