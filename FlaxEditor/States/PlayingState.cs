@@ -82,11 +82,12 @@ namespace FlaxEditor.States
 			// Duplicate editor scene for simulation
 			SceneDuplicating?.Invoke();
 			_duplicateScenes.GatherSceneData();
+			IsPaused = false;
+			_duplicateScenes.CreateScenes();
 			SceneDuplicated?.Invoke();
 
-			// Fire events
+			// Fire event
 			Editor.OnPlayBegin();
-			IsPaused = false;
 		}
 
 		private void SetupEditorEnvOptions()
@@ -118,10 +119,10 @@ namespace FlaxEditor.States
 			var win = Editor.Windows.GameWin?.ParentWindow;
 			if (win != null)
 				win.Cursor = CursorType.Default;
-
-			// Fire events
-			Editor.OnPlayEnd();
 			IsPaused = true;
+
+			// Fire event
+			Editor.OnPlayEnd();
 		}
 	}
 }

@@ -71,24 +71,36 @@ namespace FlaxEditor.Utilities
                 if (noScenes != null && noScenes.Length != 0 && sceneIds.TrueForAll(x => Object.Find<Object>(ref x) == null))
                     throw new FlaxException("Failed to unregister scene objects.");
             }
-            
-            // Deserialize new scenes
-            var duplicatedScenes = new Scene[scenesCount];
-            for (int i = 0; i < scenesCount; i++)
-            {
-                var data = _scenesData[i];
-                duplicatedScenes[i] = SceneManager.LoadSceneFromBytes(data.Bytes);
-                if (duplicatedScenes[i] == null)
-                    throw new FlaxException("Failed to deserialize scene");
-            }
 
             Editor.Log(string.Format("Gathered {0} scene(s)!", scenesCount));
         }
 
-        /// <summary>
-        /// Restore captured scene data.
-        /// </summary>
-        public void RestoreSceneData()
+		/// <summary>
+		/// Deserialize captured scenes.
+		/// </summary>
+		public void CreateScenes()
+		{
+			if (!HasData)
+				throw new InvalidOperationException("DuplicateScenes has not gathered scene data yet.");
+
+			Editor.Log("Creating scenes");
+			
+			// Deserialize new scenes
+			int scenesCount = _scenesData.Count;
+			var duplicatedScenes = new Scene[scenesCount];
+			for (int i = 0; i < scenesCount; i++)
+			{
+				var data = _scenesData[i];
+				duplicatedScenes[i] = SceneManager.LoadSceneFromBytes(data.Bytes);
+				if (duplicatedScenes[i] == null)
+					throw new FlaxException("Failed to deserialize scene");
+			}
+		}
+
+		/// <summary>
+		/// Restore captured scene data.
+		/// </summary>
+		public void RestoreSceneData()
         {
             if (!HasData)
                 throw new InvalidOperationException("DuplicateScenes has not gathered scene data yet.");
