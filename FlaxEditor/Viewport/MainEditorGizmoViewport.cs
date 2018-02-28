@@ -579,6 +579,7 @@ namespace FlaxEditor.Viewport
             {
                 case ContentDomain.Material:
                 case ContentDomain.Model:
+                case ContentDomain.Audio:
                 case ContentDomain.Prefab: return SceneManager.IsAnySceneLoaded;
                 case ContentDomain.Scene: return true;
                 default: return false;
@@ -688,6 +689,17 @@ namespace FlaxEditor.Viewport
 
                             break;
                         }
+	                    case ContentDomain.Audio:
+	                    {
+		                    var clip = FlaxEngine.Content.LoadAsync<AudioClip>(item.ID);
+		                    var actor = AudioSource.New();
+		                    actor.Name = item.ShortName;
+		                    actor.Clip = clip;
+		                    actor.Position = hitLocation;
+		                    Editor.Instance.SceneEditing.Spawn(actor);
+
+							break;
+	                    }
                         case ContentDomain.Prefab:
                         {
                             throw new NotImplementedException("Spawning prefabs");

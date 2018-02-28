@@ -100,8 +100,10 @@ namespace FlaxEditor.Windows
             groupPhysics.AddChild(CreateActorItem("Hinge Joint", typeof(HingeJoint)));
             groupPhysics.AddChild(CreateActorItem("D6 Joint", typeof(D6Joint)));
 
-            var groupCsg = createGroupWithList(actorGroups, "CSG");
-            groupCsg.AddChild(CreateActorItem("Box Brush", typeof(BoxBrush)));
+            var groupOther = createGroupWithList(actorGroups, "Other");
+            groupOther.AddChild(CreateActorItem("CSG Box Brush", typeof(BoxBrush)));
+            groupOther.AddChild(CreateActorItem("Audio Source", typeof(AudioSource)));
+            groupOther.AddChild(CreateActorItem("Audio Listner", typeof(AudioListener)));
             
             var groupGui = createGroupWithList(actorGroups, "GUI");
 	        groupGui.AddChild(CreateActorItem("Text Render", typeof(TextRender)));

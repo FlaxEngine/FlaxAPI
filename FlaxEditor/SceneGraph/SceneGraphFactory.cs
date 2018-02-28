@@ -58,6 +58,8 @@ namespace FlaxEditor.SceneGraph
             CustomNodesTypes.Add(typeof(ModelActor), typeof(ModelActorNode));
             CustomNodesTypes.Add(typeof(BoxBrush), typeof(BoxBrushNode));
             CustomNodesTypes.Add(typeof(TextRender), typeof(TextRenderNode));
+            CustomNodesTypes.Add(typeof(AudioListener), typeof(AudioListenerNode));
+            CustomNodesTypes.Add(typeof(AudioSource), typeof(AudioSourceNode));
         }
 
         /// <summary>

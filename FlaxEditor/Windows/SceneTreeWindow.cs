@@ -87,7 +87,8 @@ namespace FlaxEditor.Windows
                         new KeyValuePair<string, Type>("Sky", typeof(Sky)),
                         new KeyValuePair<string, Type>("Skybox", typeof(Skybox)),
                         new KeyValuePair<string, Type>("Exponential Height Fog", typeof(ExponentialHeightFog)),
-                    }
+	                    new KeyValuePair<string, Type>("PostFx Volume", typeof(PostFxVolume)),
+					}
                 },
                 new ActorsGroup
                 {
@@ -110,18 +111,12 @@ namespace FlaxEditor.Windows
                 },
                 new ActorsGroup
                 {
-                    Name = "CSG",
+                    Name = "Other",
                     Types = new[]
                     {
-                        new KeyValuePair<string, Type>("Box Brush", typeof(BoxBrush)),
-                    }
-                },
-                new ActorsGroup
-                {
-                    Name = "Volumes",
-                    Types = new[]
-                    {
-                        new KeyValuePair<string, Type>("PostFx Volume", typeof(PostFxVolume)),
+                        new KeyValuePair<string, Type>("CSG Box Brush", typeof(BoxBrush)),
+                        new KeyValuePair<string, Type>("Audio Source", typeof(AudioSource)),
+                        new KeyValuePair<string, Type>("Audio Listener", typeof(AudioListener)),
                     }
                 },
                 new ActorsGroup
