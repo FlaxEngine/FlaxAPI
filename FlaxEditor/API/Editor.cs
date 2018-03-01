@@ -840,10 +840,14 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_ImportModel(string inputPath, string outputPath, ref ModelImportSettings.InternalOptions options);
+
 	    [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_ImportAudio(string inputPath, string outputPath, ref AudioImportSettings.InternalOptions options);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+	    [MethodImpl(MethodImplOptions.InternalCall)]
+	    internal static extern void Internal_GetAudioClipMetadata(IntPtr obj, out int originalSize, out int importedSize);
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_SaveJsonAsset(string outputPath, string data, string typename);
 
         [MethodImpl(MethodImplOptions.InternalCall)]

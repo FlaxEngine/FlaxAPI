@@ -337,6 +337,7 @@
     <Compile Include="Viewport\EditorViewportArcBallCam.cs" />
     <Compile Include="Viewport\EditorViewportFPSCam.cs" />
     <Compile Include="Viewport\MainEditorGizmoViewport.cs" />
+    <Compile Include="Viewport\Previews\AudioClipPreview.cs" />
     <Compile Include="Viewport\Previews\CubeTexturePreview.cs" />
     <Compile Include="Viewport\Previews\IESProfilePreview.cs" />
     <Compile Include="Viewport\Previews\MaterialPreview.cs" />
@@ -347,6 +348,7 @@
     <Compile Include="Viewport\Widgets\ViewportWidgetsContainer.cs" />
     <Compile Include="Windows\AboutDialog.cs" />
     <Compile Include="Windows\Assets\AssetEditorWindow.cs" />
+    <Compile Include="Windows\Assets\AudioClipWindow.cs" />
     <Compile Include="Windows\Assets\CollisionDataWindow.cs" />
     <Compile Include="Windows\Assets\CubeTextureWindow.cs" />
     <Compile Include="Windows\Assets\FontWindow.cs" />

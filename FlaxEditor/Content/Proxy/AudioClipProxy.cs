@@ -2,7 +2,6 @@
 // Copyright (c) 2012-2018 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
@@ -30,8 +29,7 @@ namespace FlaxEditor.Content
 		/// <inheritdoc />
 		public override EditorWindow Open(Editor editor, ContentItem item)
 		{
-			throw new NotImplementedException("No audio clip window");
-			//return new FontAssetWindow(editor, (AssetItem)item);
+			return new AudioClipWindow(editor, (AssetItem)item);
 		}
 
 		/// <inheritdoc />
