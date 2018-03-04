@@ -65,7 +65,13 @@ namespace FlaxEditor.Content.Import
 		/// The audio data format to import the audio clip as. 
 		/// </summary>
 		[EditorOrder(10), Tooltip("The audio data format to import the audio clip as.")]
-		public AudioFormat Format { get; set; } = AudioFormat.Raw;
+		public AudioFormat Format { get; set; } = AudioFormat.Vorbis;
+
+		/// <summary>
+		/// The audio data compression quality. Used only if target format is using compression. Value 0 means the smallest size, value 1 means the best quality.
+		/// </summary>
+		[EditorOrder(15), Limit(0, 1, 0.01f), Tooltip("The audio data compression quality. Used only if target format is using compression. Value 0 means the smallest size, value 1 means the best quality.")]
+		public float CompressionQuality { get; set; } = 0.4f;
 
 		/// <summary>
 		/// Disables dynamic audio streaming. The whole clip will be loaded into the memory. Useful for small clips (eg. gunfire sounds).
@@ -78,7 +84,7 @@ namespace FlaxEditor.Content.Import
 		/// </summary>
 		[EditorOrder(30), EditorDisplay(null, "Is 3D"), Tooltip("Checks should the clip be played as spatial (3D) audio or as normal audio. 3D audio is stored in Mono format.")]
 		public bool Is3D { get; set; } = false;
-
+		
 		/// <summary>
 		/// The size of a single sample in bits. The clip will be converted to this bit depth on import.
 		/// </summary>
@@ -92,6 +98,7 @@ namespace FlaxEditor.Content.Import
 			public bool DisableStreaming;
 			public bool Is3D;
 			public int BitDepth;
+			public float Quality;
 		}
 
 		internal void ToInternal(out InternalOptions options)
@@ -101,6 +108,7 @@ namespace FlaxEditor.Content.Import
 				Format = Format,
 				DisableStreaming = DisableStreaming,
 				Is3D = Is3D,
+				Quality = CompressionQuality,
 				BitDepth = (int)BitDepth,
 			};
 		}
@@ -110,6 +118,7 @@ namespace FlaxEditor.Content.Import
 			Format = options.Format;
 			DisableStreaming = options.DisableStreaming;
 			Is3D = options.Is3D;
+			CompressionQuality = options.Quality;
 			BitDepth = ConvertBitDepth(options.BitDepth);
 		}
 

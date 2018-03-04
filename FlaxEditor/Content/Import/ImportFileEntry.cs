@@ -147,6 +147,7 @@ namespace FlaxEditor.Content.Import
 			// Audio
 	        FileTypes["wav"] = ImportAudio;
 	        FileTypes["mp3"] = ImportAudio;
+	        FileTypes["ogg"] = ImportAudio;
 		}
 
         private static ImportFileEntry ImportModel(string url, string resultUrl)

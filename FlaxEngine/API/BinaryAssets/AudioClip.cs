@@ -15,6 +15,11 @@ namespace FlaxEngine
 		/// The raw PCM data.
 		/// </summary>
 		Raw = 0,
+
+		/// <summary>
+		/// The compressed audio data stored in the Vorbis format.
+		/// </summary>
+		Vorbis = 1,
 	}
 
 	public sealed partial class AudioClip
