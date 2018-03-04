@@ -118,7 +118,9 @@ namespace FlaxEditor.Windows
                 "UVAtlas - Copyright (c) Microsoft Corporation. All rights reserved.",
                 "LZ4 Library - Copyright (c) Yann Collet. All rights reserved.",
                 "fmt - www.fmtlib.net",
-                "pugixml - www.pugixml.org",
+				"minimp3 - www.github.com/lieff/minimp3",
+				"OpenAL Soft - www.github.com/kcat/openal-soft",
+				"pugixml - www.pugixml.org",
                 "rapidjson - www.rapidjson.org",
                 "Editor icons - www.icons8.com, www.iconfinder.com",
             };
