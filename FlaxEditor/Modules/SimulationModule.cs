@@ -16,14 +16,16 @@ namespace FlaxEditor.Modules
         private bool _isPlayModeRequested;
         private bool _isPlayModeStopRequested;
         private bool _stepFrame;
+        private bool _updateOrFixedUpdateWasCalled;
         private EditorWindow _enterPlayFocusedWindow;
 
         internal SimulationModule(Editor editor)
             : base(editor)
         {
+			FlaxEngine.Scripting.FixedUpdate += OnFixedUpdate;
         }
 
-        /// <summary>
+	    /// <summary>
         /// Checks if play mode should start only with single frame update and then enter step mode.
         /// </summary>
         public bool ShouldPlayModeStartWithStep => Editor.UI.IsPauseButtonChecked;
@@ -145,7 +147,8 @@ namespace FlaxEditor.Modules
 
                 // Set flag
                 _stepFrame = true;
-                Editor.StateMachine.PlayingState.IsPaused = false;
+	            _updateOrFixedUpdateWasCalled = false;
+				Editor.StateMachine.PlayingState.IsPaused = false;
 
                 // Update
                 Editor.UI.UpdateToolstrip();
@@ -232,12 +235,20 @@ namespace FlaxEditor.Modules
                 }
                 // Check if step one frame
                 else if (_stepFrame)
-                {
-                    // Clear flag and pause
-                    _stepFrame = false;
-                    Editor.StateMachine.PlayingState.IsPaused = true;
-                    Editor.UI.UpdateToolstrip();
-                }
+	            {
+		            if (_updateOrFixedUpdateWasCalled)
+		            {
+			            // Clear flag and pause
+			            _stepFrame = false;
+			            Editor.StateMachine.PlayingState.IsPaused = true;
+			            Editor.UI.UpdateToolstrip();
+		            }
+		            else
+		            {
+						// Fixed update may not be called but don't allow to call pdate for more than 2 times during single step
+			            _updateOrFixedUpdateWasCalled = true;
+		            }
+	            }
             }
             else
             {
@@ -245,7 +256,14 @@ namespace FlaxEditor.Modules
                 _isPlayModeRequested = false;
                 _isPlayModeStopRequested = false;
                 _stepFrame = false;
+	            _updateOrFixedUpdateWasCalled = false;
             }
         }
+
+	    private void OnFixedUpdate()
+	    {
+			// Rise the flag so play mode step end will be called after physics update (user see objects movement)
+		    _updateOrFixedUpdateWasCalled = true;
+	    }
 	}
 }
