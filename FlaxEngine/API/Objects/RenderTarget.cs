@@ -106,6 +106,8 @@ namespace FlaxEngine.Rendering
 
         private static void Update()
         {
+	        Profiler.BeginEvent("RenderTarget.Update");
+
             // Flush old unused render targets
             var time = Time.UnscaledGameTime;
             for (int i = 0; i < _tmpRenderTargets.Count; i++)
@@ -117,6 +119,8 @@ namespace FlaxEngine.Rendering
                     _tmpRenderTargets.RemoveAt(i);
                 }
             }
+
+			Profiler.EndEvent();
         }
 
 	    /// <summary>
