@@ -167,12 +167,59 @@ namespace FlaxEngine
             LocalTransform = Transform.Identity;
         }
 
+		/// <summary>
+		/// Rotates the actor so the forward vector points at target's current position.
+		/// </summary>
+		/// <param name="target">The target object to point towards.</param>
+		public void LookAt(Actor target)
+		{
+			if(target == null)
+				throw new ArgumentNullException();
+			var pos = target.Position;
+			var up = Vector3.Up;
+			LookAt(ref pos, ref up);
+		}
+
+		/// <summary>
+		/// Rotates the actor so the forward vector points at target's current position.
+		/// </summary>
+		/// <param name="target">The target object to point towards.</param>
+		/// <param name="worldUp">The upward direction vector (in world space).</param>
+		public void LookAt(Actor target, Vector3 worldUp)
+		{
+			if (target == null)
+				throw new ArgumentNullException();
+			var pos = target.Position;
+			LookAt(ref pos, ref worldUp);
+		}
+
+		/// <summary>
+		/// Rotates the actor so the forward vector points at target's current position.
+		/// </summary>
+		/// <param name="worldPosition">The target point to look at.</param>
+		public void LookAt(Vector3 worldPosition)
+	    {
+		    var up = Vector3.Up;
+			LookAt(ref worldPosition, ref up);
+		}
+
 	    /// <summary>
-	    /// Casts this actor instance to the given actor type.
+	    /// Rotates the actor so the forward vector points at target's current position.
 	    /// </summary>
-	    /// <typeparam name="T">The actor type.</typeparam>
-	    /// <returns>The actor instance cast to the given actor type.</returns>
-	    public T As<T>() where T : Actor
+	    /// <param name="worldPosition">The target point to look at.</param>
+	    /// <param name="worldUp">The upward direction vector (in world space).</param>
+	    public void LookAt(ref Vector3 worldPosition, ref Vector3 worldUp)
+	    {
+		    var direction = worldPosition - Position;
+		    Orientation = Quaternion.LookRotation(direction, worldUp);
+	    }
+
+	    /// <summary>
+		/// Casts this actor instance to the given actor type.
+		/// </summary>
+		/// <typeparam name="T">The actor type.</typeparam>
+		/// <returns>The actor instance cast to the given actor type.</returns>
+		public T As<T>() where T : Actor
 	    {
 		    return (T)this;
 	    }
