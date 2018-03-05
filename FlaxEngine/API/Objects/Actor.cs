@@ -347,11 +347,47 @@ namespace FlaxEngine
 #endif
         }
 
-        /// <summary>
-        /// Destroys the children. Calls Object.Destroy on every child actor and unlink them for the parent.
-        /// </summary>
-        /// <param name="timeLeft">The time left to destroy object (in seconds).</param>
-        public void DestroyChildren(float timeLeft = 0.0f)
+		/// <summary>
+		/// Searches for a child script of a specific type. If there are multiple scripts matching the type, only the first one found is returned.
+		/// </summary>
+		/// <param name="scriptType">Type of the script to search for. Includes any scripts derived from the type.</param>
+		/// <returns>Script instance if found, null otherwise.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+	    public Script GetScript(Type scriptType)
+	    {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+		    return Internal_GetScript(unmanagedPtr, scriptType);
+#endif
+	    }
+
+		/// <summary>
+		/// Searches for all scripts of a specific type.
+		/// </summary>
+		/// <param name="scriptType">Type of the script to search for. Includes any scripts derived from the type.</param>
+		/// <returns>All scripts matching the specified type.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+	    public Script[] GetScripts(Type scriptType)
+	    {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+		    return Internal_GetScriptsPerType(unmanagedPtr, scriptType);
+#endif
+	    }
+
+		/// <summary>
+		/// Destroys the children. Calls Object.Destroy on every child actor and unlink them for the parent.
+		/// </summary>
+		/// <param name="timeLeft">The time left to destroy object (in seconds).</param>
+		public void DestroyChildren(float timeLeft = 0.0f)
         {
             Actor[] children = GetChildren();
             for (var i = 0; i < children.Length; i++)
