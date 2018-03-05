@@ -27,6 +27,7 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             private Type _type;
             private Object _value;
+	        private string _valueName;
 
             private bool _isMosueDown;
             private Vector2 _mosueDownPos;
@@ -79,6 +80,22 @@ namespace FlaxEditor.CustomEditors.Editors
                     if (_value != value)
                     {
                         _value = value;
+
+						// Get name to display
+	                    if (_value is Script script)
+	                    {
+		                    _valueName = string.Format("{0} ({1})", script.GetType().Name, script.Actor.Name);
+	                    }
+	                    else if (_value != null)
+	                    {
+		                    _valueName = _value.ToString();
+
+	                    }
+	                    else
+	                    {
+		                    _valueName = string.Empty;
+	                    }
+
                         ValueChanged?.Invoke();
                     }
                 }
@@ -136,7 +153,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 {
                     // Draw name
                     Render2D.PushClip(nameRect);
-                    Render2D.DrawText(style.FontMedium, _value.ToString(), nameRect, style.Foreground, TextAlignment.Near, TextAlignment.Center);
+                    Render2D.DrawText(style.FontMedium, _valueName, nameRect, style.Foreground, TextAlignment.Near, TextAlignment.Center);
                     Render2D.PopClip();
 
                     // Draw button
