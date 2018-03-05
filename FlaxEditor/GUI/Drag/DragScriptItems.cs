@@ -13,7 +13,7 @@ namespace FlaxEditor.GUI.Drag
     /// Helper class for handling <see cref="ScriptItem"/> drag and drop.
     /// </summary>
     /// <seealso cref="ScriptItem" />
-    public sealed class DragScripts : DragHelper<ScriptItem>
+    public sealed class DragScriptItems : DragHelper<ScriptItem>
     {
         /// <summary>
         /// The default prefix for drag data used for <see cref="ContentItem"/>.

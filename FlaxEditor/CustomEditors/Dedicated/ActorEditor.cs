@@ -27,7 +27,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
         /// <seealso cref="FlaxEngine.GUI.Control" />
         public class DragAreaControl : Control
         {
-            private DragScripts _dragScripts;
+            private DragScriptItems _dragScriptItems;
 
             /// <summary>
             /// The parent scripts editor.
@@ -55,7 +55,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 Render2D.DrawText(style.FontSmall, "Drag scripts here", new Rectangle(2, 2, size.X - 4, size.Y - 4), style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center, TextWrapping.WrapWords);
 
                 // Check if drag is over
-                if (IsDragOver && _dragScripts != null && _dragScripts.HasValidDrag)
+                if (IsDragOver && _dragScriptItems != null && _dragScriptItems.HasValidDrag)
                 {
                     var area = new Rectangle(Vector2.Zero, size);
                     Render2D.FillRectangle(area, Color.Orange * 0.5f, true);
@@ -75,10 +75,10 @@ namespace FlaxEditor.CustomEditors.Dedicated
             {
                 var result = base.OnDragEnter(ref location, data);
 
-                if (_dragScripts == null)
-                    _dragScripts = new DragScripts();
-                if (_dragScripts.OnDragEnter(data, ValidateScript))
-                    result = _dragScripts.Effect;
+                if (_dragScriptItems == null)
+                    _dragScriptItems = new DragScriptItems();
+                if (_dragScriptItems.OnDragEnter(data, ValidateScript))
+                    result = _dragScriptItems.Effect;
 
                 return result;
             }
@@ -88,8 +88,8 @@ namespace FlaxEditor.CustomEditors.Dedicated
             {
                 var result = base.OnDragMove(ref location, data);
 
-                if (_dragScripts.HasValidDrag)
-                    result = _dragScripts.Effect;
+                if (_dragScriptItems.HasValidDrag)
+                    result = _dragScriptItems.Effect;
 
                 return result;
             }
@@ -97,7 +97,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             /// <inheritdoc />
             public override void OnDragLeave()
             {
-                _dragScripts.OnDragLeave();
+                _dragScriptItems.OnDragLeave();
 
                 base.OnDragLeave();
             }
@@ -107,15 +107,15 @@ namespace FlaxEditor.CustomEditors.Dedicated
             {
                 var result = base.OnDragDrop(ref location, data);
 
-                if (_dragScripts.HasValidDrag)
+                if (_dragScriptItems.HasValidDrag)
                 {
-                    result = _dragScripts.Effect;
+                    result = _dragScriptItems.Effect;
 
                     var actions = new List<IUndoAction>(4);
 
-                    for (int i = 0; i < _dragScripts.Objects.Count; i++)
+                    for (int i = 0; i < _dragScriptItems.Objects.Count; i++)
                     {
-                        var item = _dragScripts.Objects[i];
+                        var item = _dragScriptItems.Objects[i];
                         var scriptName = item.ScriptName;
                         var scriptType = ScriptsBuilder.FindScript(scriptName);
 
@@ -132,7 +132,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     Editor.Instance.Undo.AddAction(multiAction);
                 }
 
-                _dragScripts.OnDragDrop();
+                _dragScriptItems.OnDragDrop();
 
                 return result;
             }
