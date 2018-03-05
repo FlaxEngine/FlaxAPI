@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.Content.Import;
 using FlaxEditor.CustomEditors;
@@ -208,7 +209,8 @@ namespace FlaxEditor.Windows.Assets
             }
         }
 
-        private readonly AtlasView _preview;
+	    private readonly SplitPanel _split;
+		private readonly AtlasView _preview;
         private readonly CustomEditorPresenter _propertiesEditor;
 	    private readonly ToolStripButton _saveButton;
 
@@ -220,7 +222,7 @@ namespace FlaxEditor.Windows.Assets
             : base(editor, item)
         {
             // Split Panel
-            var splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
+            _split = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
             {
                 DockStyle = DockStyle.Fill,
                 SplitterValue = 0.7f,
@@ -230,12 +232,12 @@ namespace FlaxEditor.Windows.Assets
             // Sprite atlas preview
             _preview = new AtlasView(true)
             {
-                Parent = splitPanel.Panel1
+                Parent = _split.Panel1
             };
 
             // Sprite atlas properties editor
             _propertiesEditor = new CustomEditorPresenter(null);
-            _propertiesEditor.Panel.Parent = splitPanel.Panel2;
+            _propertiesEditor.Panel.Parent = _split.Panel2;
             _properties = new PropertiesProxy();
             _propertiesEditor.Select(_properties);
             _propertiesEditor.Modified += MarkAsEdited;
@@ -337,5 +339,29 @@ namespace FlaxEditor.Windows.Assets
                 ClearEditedFlag();
             }
         }
-    }
+
+	    /// <inheritdoc />
+	    public override bool UseLayoutData => true;
+
+	    /// <inheritdoc />
+	    public override void OnLayoutSerialize(XmlWriter writer)
+	    {
+		    writer.WriteAttributeString("Split", _split.SplitterValue.ToString());
+	    }
+
+	    /// <inheritdoc />
+	    public override void OnLayoutDeserialize(XmlElement node)
+	    {
+		    float value1;
+
+		    if (float.TryParse(node.GetAttribute("Split"), out value1))
+			    _split.SplitterValue = value1;
+	    }
+
+	    /// <inheritdoc />
+	    public override void OnLayoutDeserialize()
+	    {
+		    _split.SplitterValue = 0.7f;
+	    }
+	}
 }

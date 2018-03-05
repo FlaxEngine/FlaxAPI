@@ -79,7 +79,24 @@ namespace FlaxEditor.Content.GUI
         /// </summary>
         public bool HasSelection => _selection.Count > 0;
 
-        /// <summary>
+		/// <summary>
+		/// Gets or sets the view scale.
+		/// </summary>
+		public float Scale
+	    {
+		    get { return _scale; }
+		    set
+		    {
+			    value = Mathf.Clamp(value, 0.3f, 3.0f);
+			    if (!Mathf.NearEqual(value, _scale))
+			    {
+				    _scale = value;
+				    PerformLayout();
+			    }
+		    }
+	    }
+
+	    /// <summary>
         /// Initializes a new instance of the <see cref="ContentView"/> class.
         /// </summary>
         public ContentView()
@@ -468,8 +485,7 @@ namespace FlaxEditor.Content.GUI
             if (ParentWindow.GetKey(Keys.Control))
             {
                 // Zoom
-                _scale = Mathf.Clamp(_scale + delta * 0.05f, 0.3f, 3.0f);
-                PerformLayout();
+	            Scale += delta * 0.05f;
 
                 // Handled
                 return true;

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.Content.GUI;
 using FlaxEditor.GUI;
@@ -658,5 +659,33 @@ namespace FlaxEditor.Windows
                 _navigationBar.Bounds = bounds;
             }
         }
+
+	    /// <inheritdoc />
+	    public override bool UseLayoutData => true;
+		
+	    /// <inheritdoc />
+	    public override void OnLayoutSerialize(XmlWriter writer)
+	    {
+		    writer.WriteAttributeString("Split", _split.SplitterValue.ToString());
+		    writer.WriteAttributeString("Scale", _view.Scale.ToString());
+	    }
+
+	    /// <inheritdoc />
+	    public override void OnLayoutDeserialize(XmlElement node)
+	    {
+		    float value1;
+
+			if (float.TryParse(node.GetAttribute("Split"), out value1))
+			    _split.SplitterValue = value1;
+		    if (float.TryParse(node.GetAttribute("Scale"), out value1))
+			    _view.Scale = value1;
+	    }
+	    
+	    /// <inheritdoc />
+	    public override void OnLayoutDeserialize()
+	    {
+		    _split.SplitterValue = 0.2f;
+		    _view.Scale = 1.0f;
+	    }
     }
 }

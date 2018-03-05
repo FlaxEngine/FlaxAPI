@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.GUI;
@@ -359,7 +360,9 @@ namespace FlaxEditor.Windows.Assets
             }
         }
 
-        private readonly MaterialPreview _preview;
+	    private readonly SplitPanel _split1;
+	    private readonly SplitPanel _split2;
+		private readonly MaterialPreview _preview;
         private readonly VisjectSurface _surface;
 
 	    private readonly ToolStripButton _saveButton;
@@ -378,7 +381,7 @@ namespace FlaxEditor.Windows.Assets
             : base(editor, item)
         {
             // Split Panel 1
-            var splitPanel1 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
+            _split1 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
             {
                 DockStyle = DockStyle.Fill,
                 SplitterValue = 0.7f,
@@ -386,22 +389,22 @@ namespace FlaxEditor.Windows.Assets
             };
 
             // Split Panel 2
-            var splitPanel2 = new SplitPanel(Orientation.Vertical, ScrollBars.None, ScrollBars.Vertical)
+            _split2 = new SplitPanel(Orientation.Vertical, ScrollBars.None, ScrollBars.Vertical)
             {
                 DockStyle = DockStyle.Fill,
                 SplitterValue = 0.4f,
-                Parent = splitPanel1.Panel2
+                Parent = _split1.Panel2
             };
 
             // Material preview
             _preview = new MaterialPreview(true)
             {
-                Parent = splitPanel2.Panel1
+                Parent = _split2.Panel1
             };
 
             // Material properties editor
             var propertiesEditor = new CustomEditorPresenter(null);
-            propertiesEditor.Panel.Parent = splitPanel2.Panel2;
+            propertiesEditor.Panel.Parent = _split2.Panel2;
             _properties = new PropertiesProxy();
             propertiesEditor.Select(_properties);
             propertiesEditor.Modified += OnMaterialPropertyEdited;
@@ -409,7 +412,7 @@ namespace FlaxEditor.Windows.Assets
             // Surface
             _surface = new VisjectSurface(this, SurfaceType.Material)
             {
-                Parent = splitPanel1.Panel1,
+                Parent = _split1.Panel1,
                 Enabled = false
             };
 
@@ -664,5 +667,33 @@ namespace FlaxEditor.Windows.Assets
                 ClearEditedFlag();
             }
         }
-    }
+
+	    /// <inheritdoc />
+	    public override bool UseLayoutData => true;
+
+	    /// <inheritdoc />
+	    public override void OnLayoutSerialize(XmlWriter writer)
+	    {
+		    writer.WriteAttributeString("Split1", _split1.SplitterValue.ToString());
+		    writer.WriteAttributeString("Split2", _split2.SplitterValue.ToString());
+	    }
+
+	    /// <inheritdoc />
+	    public override void OnLayoutDeserialize(XmlElement node)
+	    {
+		    float value1;
+
+		    if (float.TryParse(node.GetAttribute("Split1"), out value1))
+			    _split1.SplitterValue = value1;
+		    if (float.TryParse(node.GetAttribute("Split2"), out value1))
+			    _split2.SplitterValue = value1;
+	    }
+
+	    /// <inheritdoc />
+	    public override void OnLayoutDeserialize()
+	    {
+		    _split1.SplitterValue = 0.7f;
+		    _split2.SplitterValue = 0.4f;
+	    }
+	}
 }

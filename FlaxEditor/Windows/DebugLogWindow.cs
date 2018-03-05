@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
 using FlaxEditor.GUI;
 using FlaxEditor.Scripting;
 using FlaxEngine;
@@ -201,6 +202,7 @@ namespace FlaxEditor.Windows
             }
         }
 
+        private readonly SplitPanel _split;
         private readonly Label _logInfo;
         private readonly Panel _entriesPanel;
 	    private LogEntry _selected;
@@ -241,7 +243,7 @@ namespace FlaxEditor.Windows
             UpdateCount();
 
             // Split panel
-            var splitPanel = new SplitPanel(Orientation.Vertical, ScrollBars.Vertical, ScrollBars.Vertical)
+            _split = new SplitPanel(Orientation.Vertical, ScrollBars.Vertical, ScrollBars.Vertical)
             {
                 DockStyle = DockStyle.Fill,
                 SplitterValue = 0.8f,
@@ -251,14 +253,14 @@ namespace FlaxEditor.Windows
             // Log detail info
             _logInfo = new Label(0, 0, 120, 1)
             {
-                Parent = splitPanel.Panel2,
+                Parent = _split.Panel2,
                 AutoHeight = true,
                 Margin = new Margin(4),
                 HorizontalAlignment = TextAlignment.Near
             };
 
             // Entries panel
-            _entriesPanel = splitPanel.Panel1;
+            _entriesPanel = _split.Panel1;
 
             // Bind events
             Debug.Logger.LogHandler.SendLog += LogHandlerOnSendLog;
@@ -561,5 +563,29 @@ namespace FlaxEditor.Windows
 
             base.OnDestroy();
         }
-    }
+
+	    /// <inheritdoc />
+	    public override bool UseLayoutData => true;
+
+	    /// <inheritdoc />
+	    public override void OnLayoutSerialize(XmlWriter writer)
+	    {
+		    writer.WriteAttributeString("Split", _split.SplitterValue.ToString());
+	    }
+
+	    /// <inheritdoc />
+	    public override void OnLayoutDeserialize(XmlElement node)
+	    {
+		    float value1;
+
+		    if (float.TryParse(node.GetAttribute("Split"), out value1))
+			    _split.SplitterValue = value1;
+	    }
+
+	    /// <inheritdoc />
+	    public override void OnLayoutDeserialize()
+	    {
+		    _split.SplitterValue = 0.8f;
+	    }
+	}
 }
