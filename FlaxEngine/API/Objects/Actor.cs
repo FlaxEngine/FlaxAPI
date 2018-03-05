@@ -361,6 +361,50 @@ namespace FlaxEngine
             }
         }
 
+		/// <summary>
+		/// Gets the matrix that transformes a point from the world space to local space of the actor.
+		/// </summary>
+		public Matrix WorldToLocalMatrix
+	    {
+		    get
+		    {
+			    Matrix worldToLocal;
+			    Internal_WorldToLocal(unmanagedPtr, out worldToLocal);
+			    return worldToLocal;
+		    }
+	    }
+
+		/// <summary>
+		/// Gets the matrix that transformes a point from the world space to local space of the actor.
+		/// </summary>
+		/// <param name="worldToLocal">The world to local matrix.</param>
+		public void GetWorldToLocalMatrix(out Matrix worldToLocal)
+	    {
+			Internal_WorldToLocal(unmanagedPtr, out worldToLocal);
+	    }
+
+		/// <summary>
+		/// Gets the matrix that transformes a point from the local space of the actor to world space.
+		/// </summary>
+		public Matrix LocalToWorldMatrix
+	    {
+		    get
+		    {
+			    Matrix localToWorld;
+			    Internal_WorldToLocal(unmanagedPtr, out localToWorld);
+			    return localToWorld;
+		    }
+	    }
+
+		/// <summary>
+		/// Gets the matrix that transformes a point from the local space of the actor to world space.
+		/// </summary>
+		/// <param name="localToWorld">The world to local matrix.</param>
+		public void GetLocalToWorldMatrix(out Matrix localToWorld)
+	    {
+			Internal_LocalToWorld(unmanagedPtr, out localToWorld);
+	    }
+
         /// <inheritdoc />
         [UnmanagedCall]
         public override string ToString()
@@ -370,6 +414,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Script[] Internal_GetScripts(IntPtr obj);
+
+	    [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_WorldToLocal(IntPtr obj, out Matrix matrix);
+
+	    [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_LocalToWorld(IntPtr obj, out Matrix matrix);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_IntersectsItself(IntPtr obj, ref Ray ray, out float distance);
