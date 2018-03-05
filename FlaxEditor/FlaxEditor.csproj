@@ -203,6 +203,7 @@
     <Compile Include="GUI\MainMenu.cs" />
     <Compile Include="GUI\MainMenuButton.cs" />
     <Compile Include="GUI\Row.cs" />
+    <Compile Include="GUI\ItemsListContextMenu.cs" />
     <Compile Include="GUI\StatusBar.cs" />
     <Compile Include="GUI\Table.cs" />
     <Compile Include="GUI\ToolStrip.cs" />
