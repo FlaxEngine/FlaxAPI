@@ -21,21 +21,6 @@ namespace FlaxEngine
 	public abstract partial class Light : Actor
 	{
 		/// <summary>
-		/// Gets or sets value indicating if visual element affects the world.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(-50), EditorDisplay("General"), Tooltip("True if visual element affects the world")]
-		public bool AffectsWorld
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { return Internal_GetAffectsWorld(unmanagedPtr); }
-			set { Internal_SetAffectsWorld(unmanagedPtr, value); }
-#endif
-		}
-
-		/// <summary>
 		/// Gets or sets the light emission color.
 		/// </summary>
 		[UnmanagedCall]
@@ -115,10 +100,6 @@ namespace FlaxEngine
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetAffectsWorld(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetAffectsWorld(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetColor(IntPtr obj, out Color resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
