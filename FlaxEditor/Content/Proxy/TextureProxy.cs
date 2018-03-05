@@ -12,82 +12,84 @@ using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Content
 {
-    /// <summary>
-    /// A <see cref="Texture"/> asset proxy object.
-    /// </summary>
-    /// <seealso cref="FlaxEditor.Content.BinaryAssetProxy" />
-    public sealed class TextureProxy : BinaryAssetProxy
-    {
-        private SimpleTexturePreview _preview;
+	/// <summary>
+	/// A <see cref="Texture"/> asset proxy object.
+	/// </summary>
+	/// <seealso cref="FlaxEditor.Content.BinaryAssetProxy" />
+	public sealed class TextureProxy : BinaryAssetProxy
+	{
+		private SimpleTexturePreview _preview;
 
-        /// <inheritdoc />
-        public override string Name => "Texture";
+		/// <inheritdoc />
+		public override string Name => "Texture";
 
-        /// <inheritdoc />
-        public override bool CanReimport(ContentItem item)
-        {
-            return true;
-        }
+		/// <inheritdoc />
+		public override bool CanReimport(ContentItem item)
+		{
+			return true;
+		}
 
-        /// <inheritdoc />
-        public override EditorWindow Open(Editor editor, ContentItem item)
-        {
-            return new TextureWindow(editor, (AssetItem)item);
-        }
+		/// <inheritdoc />
+		public override EditorWindow Open(Editor editor, ContentItem item)
+		{
+			return new TextureWindow(editor, (AssetItem)item);
+		}
 
-        /// <inheritdoc />
-        public override Color AccentColor => Color.FromRGB(0x25B84C);
+		/// <inheritdoc />
+		public override Color AccentColor => Color.FromRGB(0x25B84C);
 
-        /// <inheritdoc />
-        public override ContentDomain Domain => Texture.Domain;
+		/// <inheritdoc />
+		public override ContentDomain Domain => Texture.Domain;
 
-        /// <inheritdoc />
-        public override string TypeName => typeof(Texture).FullName;
+		/// <inheritdoc />
+		public override string TypeName => typeof(Texture).FullName;
 
-        /// <inheritdoc />
-        public override void OnThumbnailDrawPrepare(ThumbnailRequest request)
-        {
-            if (_preview == null)
-            {
-                _preview = new SimpleTexturePreview();
-                _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
-            }
+		/// <inheritdoc />
+		public override void OnThumbnailDrawPrepare(ThumbnailRequest request)
+		{
+			if (_preview == null)
+			{
+				_preview = new SimpleTexturePreview();
+				_preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
+			}
 
-            // TODO: disable streaming for asset during thumbnail rendering (and restore it after)
-        }
+			// TODO: disable streaming for asset during thumbnail rendering (and restore it after)
+		}
 
-        /// <inheritdoc />
-        public override bool CanDrawThumbnail(ThumbnailRequest request)
-        {
-            // Check if asset is streamed enough
-            var asset = (Texture)request.Asset;
-            return asset.ResidentMipLevels >= Mathf.Max(1, (int)(asset.MipLevels * ThumbnailsModule.MinimumRequriedResourcesQuality));
-        }
+		/// <inheritdoc />
+		public override bool CanDrawThumbnail(ThumbnailRequest request)
+		{
+			// Check if asset is streamed enough
+			var asset = (Texture)request.Asset;
+			var mipLevels = asset.MipLevels;
+			var minMipLevels = Mathf.Min(mipLevels, 7);
+			return asset.ResidentMipLevels >= Mathf.Max(minMipLevels, (int)(mipLevels * ThumbnailsModule.MinimumRequriedResourcesQuality));
+		}
 
-        /// <inheritdoc />
-        public override void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
-        {
-            _preview.Asset = (Texture)request.Asset;
-            _preview.Parent = guiRoot;
-        }
+		/// <inheritdoc />
+		public override void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
+		{
+			_preview.Asset = (Texture)request.Asset;
+			_preview.Parent = guiRoot;
+		}
 
-        /// <inheritdoc />
-        public override void OnThumbnailDrawEnd(ThumbnailRequest request, ContainerControl guiRoot)
-        {
-            _preview.Asset = null;
-            _preview.Parent = null;
-        }
+		/// <inheritdoc />
+		public override void OnThumbnailDrawEnd(ThumbnailRequest request, ContainerControl guiRoot)
+		{
+			_preview.Asset = null;
+			_preview.Parent = null;
+		}
 
-        /// <inheritdoc />
-        public override void Dispose()
-        {
-            if (_preview != null)
-            {
-                _preview.Dispose();
-                _preview = null;
-            }
+		/// <inheritdoc />
+		public override void Dispose()
+		{
+			if (_preview != null)
+			{
+				_preview.Dispose();
+				_preview = null;
+			}
 
-            base.Dispose();
-        }
-    }
+			base.Dispose();
+		}
+	}
 }
