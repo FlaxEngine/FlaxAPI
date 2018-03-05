@@ -347,7 +347,14 @@ namespace FlaxEditor.Modules
 
                 writer.WriteAttributeString("Typename", win.SerializationTypename);
 
-                writer.WriteEndElement();
+	            if (win.UseLayoutData)
+	            {
+		            writer.WriteStartElement("Data");
+		            win.OnLayoutSerialize(writer);
+		            writer.WriteEndElement();
+	            }
+				
+	            writer.WriteEndElement();
             }
 
             for (int i = 0; i < panel.ChildPanelsCount; i++)
@@ -380,15 +387,27 @@ namespace FlaxEditor.Modules
             var windows = node.SelectNodes("Window");
             if (windows != null)
             {
-                foreach (XmlElement child in windows)
-                {
-                    if (child == null)
-                        continue;
+	            foreach (XmlElement child in windows)
+	            {
+		            if (child == null)
+			            continue;
 
-                    var typename = child.GetAttribute("Typename");
-                    var window = GetWindow(typename);
-                    window?.Show(DockState.DockFill, panel);
-                }
+		            var typename = child.GetAttribute("Typename");
+		            var window = GetWindow(typename);
+		            if (window != null)
+		            {
+			            if (child.SelectSingleNode("Data") is XmlElement data)
+			            {
+				            window.OnLayoutDeserialize(data);
+			            }
+			            else
+			            {
+							window.OnLayoutDeserialize();
+			            }
+
+			            window.Show(DockState.DockFill, panel);
+		            }
+	            }
             }
 
             // Load child panels

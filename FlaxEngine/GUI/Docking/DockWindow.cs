@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2018 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System.Xml;
 using FlaxEngine.Assertions;
 
 namespace FlaxEngine.GUI.Docking
@@ -335,6 +336,34 @@ namespace FlaxEngine.GUI.Docking
         {
             // Nothing to do
         }
+
+		/// <summary>
+		/// Gets a value indicating whether window uses custom layout data.
+		/// </summary>
+		public virtual bool UseLayoutData => false;
+
+		/// <summary>
+		/// Called when during windows layout serialization. Each window can use it to store custom interface data (eg. spitter position).
+		/// </summary>
+		/// <param name="writer">The Xml writer.</param>
+		public virtual void OnLayoutSerialize(XmlWriter writer)
+	    {
+	    }
+
+		/// <summary>
+		/// Called when during windows layout deserialization. Each window can use it to load custom interface data (eg. spitter position).
+		/// </summary>
+		/// <param name="node">The Xml document node.</param>
+		public virtual void OnLayoutDeserialize(XmlElement node)
+	    {
+	    }
+
+		/// <summary>
+		/// Called when during windows layout deserialization if window has no layou data to load. Can be used to restore default UI layout.
+		/// </summary>
+		public virtual void OnLayoutDeserialize()
+	    {
+	    }
 
         /// <inheritdoc />
         public override void OnDestroy()
