@@ -89,7 +89,6 @@ namespace FlaxEditor.CustomEditors.Editors
 	                    else if (_value != null)
 	                    {
 		                    _valueName = _value.ToString();
-
 	                    }
 	                    else
 	                    {

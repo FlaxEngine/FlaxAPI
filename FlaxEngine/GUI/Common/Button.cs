@@ -66,14 +66,15 @@ namespace FlaxEngine.GUI
         /// </summary>
         public Color BorderColorHighlighted { get; set; }
 
-        /// <summary>
-        /// Init
-        /// </summary>
-        /// <param name="x">Position X coordinate</param>
-        /// <param name="y">Position Y coordinate</param>
-        /// <param name="width">Width</param>
-        public Button(float x = 0, float y = 0, float width = 120)
-            : base(x, y, width, DefaultHeight)
+		/// <summary>
+		/// Init
+		/// </summary>
+		/// <param name="x">Position X coordinate</param>
+		/// <param name="y">Position Y coordinate</param>
+		/// <param name="width">Width</param>
+		/// <param name="height">Height</param>
+		public Button(float x = 0, float y = 0, float width = 120, float height = DefaultHeight)
+            : base(x, y, width, height)
         {
             var style = Style.Current;
             Font = style.FontMedium;

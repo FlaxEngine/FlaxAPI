@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using FlaxEditor.Actions;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors.Editors;
+using FlaxEditor.GUI;
 using FlaxEditor.GUI.Drag;
 using FlaxEditor.Scripting;
 using FlaxEngine;
@@ -25,7 +26,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
         /// Drag and drop scripts area control.
         /// </summary>
         /// <seealso cref="FlaxEngine.GUI.Control" />
-        public class DragAreaControl : Control
+        public class DragAreaControl : ContainerControl
         {
             private DragScriptItems _dragScriptItems;
 
@@ -38,21 +39,53 @@ namespace FlaxEditor.CustomEditors.Dedicated
             /// Initializes a new instance of the <see cref="DragAreaControl"/> class.
             /// </summary>
             public DragAreaControl()
-                : base(0, 0, 120, 32)
+                : base(0, 0, 120, 40)
             {
                 CanFocus = false;
-            }
 
-            /// <inheritdoc />
+				// Add script button
+	            float addScriptButtonWidth = 60.0f;
+				var addScriptButton = new Button((Width - addScriptButtonWidth) / 2, 1, addScriptButtonWidth, 18)
+				{
+					AnchorStyle = AnchorStyle.UpperCenter,
+					Text = "Add script",
+					Parent = this,
+				};
+	            addScriptButton.ButtonClicked += AddScriptButtonOnClicked;
+			}
+
+	        private void AddScriptButtonOnClicked(Button button)
+	        {
+		        var scripts = Editor.Instance.CodeEditing.GetScripts();
+		        if (scripts.Count == 0)
+		        {
+			        // No scripts
+			        var cm1 = new ContextMenu();
+			        cm1.AddButton("No scripts in project");
+			        cm1.Show(this, button.BottomLeft);
+			        return;
+		        }
+
+				// Show context menu with list of scripts to add
+		        var cm = new ItemsListContextMenu();
+		        for (int i = 0; i < scripts.Count; i++)
+		        {
+			        var script = scripts[i];
+			        cm.ItemsPanel.AddChild(new ItemsListContextMenu.Item(script.ScriptName, script));
+		        }
+		        cm.ItemClicked += script => AddScript((ScriptItem)script.Tag);
+				cm.SortChildren();
+		        cm.Show(this, button.BottomLeft);
+			}
+
+	        /// <inheritdoc />
             public override void Draw()
             {
-                base.Draw();
-
                 var style = FlaxEngine.GUI.Style.Current;
                 var size = Size;
 
                 // Info
-                Render2D.DrawText(style.FontSmall, "Drag scripts here", new Rectangle(2, 2, size.X - 4, size.Y - 4), style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center, TextWrapping.WrapWords);
+                Render2D.DrawText(style.FontSmall, "Drag scripts here", new Rectangle(2, 22, size.X - 4, size.Y - 4 - 20), style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center, TextWrapping.WrapWords);
 
                 // Check if drag is over
                 if (IsDragOver && _dragScriptItems != null && _dragScriptItems.HasValidDrag)
@@ -61,6 +94,8 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     Render2D.FillRectangle(area, Color.Orange * 0.5f, true);
                     Render2D.DrawRectangle(area, Color.Black);
                 }
+
+	            base.Draw();
             }
 
             private bool ValidateScript(ScriptItem scriptItem)
@@ -110,32 +145,48 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 if (_dragScriptItems.HasValidDrag)
                 {
                     result = _dragScriptItems.Effect;
-
-                    var actions = new List<IUndoAction>(4);
-
-                    for (int i = 0; i < _dragScriptItems.Objects.Count; i++)
-                    {
-                        var item = _dragScriptItems.Objects[i];
-                        var scriptName = item.ScriptName;
-                        var scriptType = ScriptsBuilder.FindScript(scriptName);
-
-                        var actors = ScriptsEditor.ParentEditor.Values;
-                        for (int j = 0; j < actors.Count; j++)
-                        {
-                            var actor = (Actor)actors[j];
-                            actions.Add(AddRemoveScript.Add(actor, scriptType));
-                        }
-                    }
-
-                    var multiAction = new MultiUndoAction(actions);
-                    multiAction.Do();
-                    Editor.Instance.Undo.AddAction(multiAction);
+	                AddScripts(_dragScriptItems.Objects);
                 }
 
                 _dragScriptItems.OnDragDrop();
 
                 return result;
             }
+
+	        private void AddScript(ScriptItem items)
+	        {
+		        var list = new List<ScriptItem>(1) { items };
+		        AddScripts(list);
+	        }
+
+	        private void AddScripts(List<ScriptItem> items)
+	        {
+		        var actions = new List<IUndoAction>(4);
+
+		        for (int i = 0; i < items.Count; i++)
+		        {
+			        var item = items[i];
+			        var scriptName = item.ScriptName;
+			        var scriptType = ScriptsBuilder.FindScript(scriptName);
+
+			        var actors = ScriptsEditor.ParentEditor.Values;
+			        for (int j = 0; j < actors.Count; j++)
+			        {
+				        var actor = (Actor)actors[j];
+				        actions.Add(AddRemoveScript.Add(actor, scriptType));
+			        }
+		        }
+
+		        if (actions.Count == 0)
+		        {
+			        Editor.LogWarning("Failed to spawn scripts");
+			        return;
+		        }
+
+		        var multiAction = new MultiUndoAction(actions);
+		        multiAction.Do();
+		        Editor.Instance.Undo.AddAction(multiAction);
+			}
         }
 
         /// <summary>
@@ -157,11 +208,12 @@ namespace FlaxEditor.CustomEditors.Dedicated
             {
                 _scripts.Clear();
 
-                // Area for drag&drop scripts
-                var dragArea = layout.Custom<DragAreaControl>();
+				// Area for drag&drop scripts
+				var dragArea = layout.CustomContainer<DragAreaControl>();
                 dragArea.CustomControl.ScriptsEditor = this;
 
                 // No support to show scripts for more than one actor selected
+				// TODO: support showing scripts from objects that has the same scripts layout
                 if (Values.Count != 1)
                     return;
 
