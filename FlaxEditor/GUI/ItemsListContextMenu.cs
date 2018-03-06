@@ -166,10 +166,12 @@ namespace FlaxEditor.GUI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ItemsListContextMenu"/> class.
 		/// </summary>
-		public ItemsListContextMenu()
+		/// <param name="width">The control width.</param>
+		/// <param name="height">The control height.</param>
+		public ItemsListContextMenu(float width = 320, float height = 220)
 		{
 			// Context menu dimensions
-			Size = new Vector2(320, 220);
+			Size = new Vector2(width, height);
 
 			// Search box
 			_searchBox = new TextBox(false, 1, 1)

@@ -22,11 +22,11 @@ namespace FlaxEditor.CustomEditors.Dedicated
     [CustomEditor(typeof(Actor)), DefaultEditor]
     public class ActorEditor : GenericEditor
     {
-        /// <summary>
-        /// Drag and drop scripts area control.
-        /// </summary>
-        /// <seealso cref="FlaxEngine.GUI.Control" />
-        public class DragAreaControl : ContainerControl
+		/// <summary>
+		/// Drag and drop scripts area control.
+		/// </summary>
+		/// <seealso cref="FlaxEngine.GUI.Control" />
+		public class DragAreaControl : ContainerControl
         {
             private DragScriptItems _dragScriptItems;
 
@@ -68,7 +68,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
 		        }
 
 				// Show context menu with list of scripts to add
-		        var cm = new ItemsListContextMenu();
+		        var cm = new ItemsListContextMenu(180);
 		        for (int i = 0; i < scripts.Count; i++)
 		        {
 			        var script = scripts[i];
@@ -194,8 +194,9 @@ namespace FlaxEditor.CustomEditors.Dedicated
 		/// Small image control added per script group that allows to drag and drop a reference to it. Also used to reorder the scripts.
 		/// </summary>
 		/// <seealso cref="FlaxEngine.GUI.Image" />
-		public class ScriptDragIcon : Image
+		private class ScriptDragIcon : Image
 		{
+			private ScriptsEditor _editor;
 			private bool _isMosueDown;
 			private Vector2 _mosueDownPos;
 			
@@ -207,14 +208,16 @@ namespace FlaxEditor.CustomEditors.Dedicated
 			/// <summary>
 			/// Initializes a new instance of the <see cref="ScriptDragIcon"/> class.
 			/// </summary>
+			/// <param name="editor">The script editor.</param>
 			/// <param name="script">The target script.</param>
 			/// <param name="x">The x position.</param>
 			/// <param name="y">The y position.</param>
 			/// <param name="size">The size (both width and height).</param>
-			public ScriptDragIcon(Script script, float x, float y, float size)
+			public ScriptDragIcon(ScriptsEditor editor, Script script, float x, float y, float size)
 			    : base(x, y, size, size)
 			{
 				Tag = script;
+				_editor = editor;
 			}
 
 			/// <inheritdoc />
@@ -278,9 +281,97 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
 			private void DoDrag()
 			{
-				DoDragDrop(DragScripts.GetDragData(Script));
+				var script = Script;
+				_editor.OnScriptDragChange(true, script);
+				DoDragDrop(DragScripts.GetDragData(script));
+				_editor.OnScriptDragChange(false, script);
 			}
 		}
+
+	    private class ScriptArrangeBar : Control
+	    {
+		    private ScriptsEditor _editor;
+		    private int _index;
+		    private Script _script;
+		    private DragDropEffect _dragEffect;
+
+		    public ScriptArrangeBar()
+			    : base(0, 0, 120, 6)
+		    {
+			    CanFocus = false;
+			    Visible = false;
+		    }
+
+		    public void Init(int index, ScriptsEditor editor)
+		    {
+			    _editor = editor;
+			    _index = index;
+			    _editor.ScriptDragChange += OnScriptDragChange;
+		    }
+
+		    private void OnScriptDragChange(bool start, Script script)
+		    {
+			    _script = start ? script : null;
+				Visible = start;
+			    OnDragLeave();
+		    }
+
+		    /// <inheritdoc />
+		    public override void Draw()
+		    {
+			    base.Draw();
+
+			    var color = FlaxEngine.GUI.Style.Current.BackgroundSelected * (IsDragOver ? 0.9f : 0.1f);
+				Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), color, true);
+			}
+
+		    /// <inheritdoc />
+		    public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
+		    {
+			    _dragEffect = DragDropEffect.None;
+
+				var result = base.OnDragEnter(ref location, data);
+			    if (result != DragDropEffect.None)
+				    return result;
+
+			    if (data is DragDataText textData && DragScripts.IsValidData(textData))
+				    return _dragEffect = DragDropEffect.Move;
+
+			    return result;
+		    }
+
+		    /// <inheritdoc />
+		    public override DragDropEffect OnDragMove(ref Vector2 location, DragData data)
+		    {
+			    return _dragEffect;
+		    }
+
+		    /// <inheritdoc />
+		    public override void OnDragLeave()
+		    {
+			    _dragEffect = DragDropEffect.None;
+
+				base.OnDragLeave();
+		    }
+
+		    /// <inheritdoc />
+		    public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
+		    {
+			    var result = base.OnDragDrop(ref location, data);
+			    if (result != DragDropEffect.None)
+				    return result;
+
+			    if (_dragEffect != DragDropEffect.None)
+			    {
+				    result = _dragEffect;
+				    _dragEffect = DragDropEffect.None;
+
+					_editor.ReorderScript(_script, _index);
+			    }
+
+			    return result;
+		    }
+	    }
 
 		/// <summary>
 		/// Custom editor for actor scripts collection.
@@ -288,10 +379,22 @@ namespace FlaxEditor.CustomEditors.Dedicated
 		/// <seealso cref="CustomEditor" />
 		public sealed class ScriptsEditor : SyncPointEditor
         {
-            /// <summary>
-            /// The scripts collection. Undo operations are recorder for scripts.
-            /// </summary>
-            private readonly List<Script> _scripts = new List<Script>();
+			/// <summary>
+			/// Delegate for script drag start and event events.
+			/// </summary>
+			/// <param name="start">Set to true if drag started, otherwise false.</param>
+			/// <param name="script">The target script to reorder.</param>
+			public delegate void ScriptDragDelegate(bool start, Script script);
+
+	        /// <summary>
+	        /// Occurs when script drag changes (starts or ends).
+	        /// </summary>
+	        public event ScriptDragDelegate ScriptDragChange;
+
+			/// <summary>
+			/// The scripts collection. Undo operations are recorder for scripts.
+			/// </summary>
+			private readonly List<Script> _scripts = new List<Script>();
 
             /// <inheritdoc />
             public override IEnumerable<object> UndoObjects => _scripts;
@@ -310,8 +413,12 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 if (Values.Count != 1)
                     return;
 
-                // Scripts
-                var scripts = (Script[])Values[0];
+	            // Scripts arrange bar
+				var dragBar = layout.Custom<ScriptArrangeBar>();
+	            dragBar.CustomControl.Init(0, this);
+
+				// Scripts
+				var scripts = (Script[])Values[0];
                 _scripts.AddRange(scripts);
                 var elementType = typeof(Script);
                 for (int i = 0; i < scripts.Length; i++)
@@ -345,7 +452,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
 					// Add drag button to the group
 	                const float dragIconSize = 14;
-					var scriptDrag = new ScriptDragIcon(script, scriptToggle.Right, 0.5f, dragIconSize)
+					var scriptDrag = new ScriptDragIcon(this, script, scriptToggle.Right, 0.5f, dragIconSize)
 					{
 						TooltipText = "Script reference",
 						CanFocus = true,
@@ -375,12 +482,37 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
 	                group.Panel.HeaderMargin = new Margin(scriptDrag.Right, 15, 2, 2);
 					group.Object(values, editor);
-                }
+
+					// Scripts arrange bar
+	                dragBar = layout.Custom<ScriptArrangeBar>();
+	                dragBar.CustomControl.Init(i + 1, this);
+				}
 
                 base.Initialize(layout);
             }
 
-	        private void ScriptToggleOnCheckChanged(CheckBox box)
+	        public void OnScriptDragChange(bool start, Script script)
+	        {
+				ScriptDragChange.Invoke(start, script);
+	        }
+
+			/// <summary>
+			/// Changes the script order (with undo).
+			/// </summary>
+			/// <param name="script">The script to reorder.</param>
+			/// <param name="targetIndex">The target index to move script.</param>
+			public void ReorderScript(Script script, int targetIndex)
+	        {
+				// Skip if no change
+		        if (script.OrderInParent == targetIndex)
+			        return;
+
+		        var action = ChangeScriptAction.ChangeOrder(script, targetIndex);
+		        action.Do();
+		        Editor.Instance.Undo.AddAction(action);
+			}
+
+			private void ScriptToggleOnCheckChanged(CheckBox box)
 	        {
 		        var script = (Script)box.Tag;
 		        script.Enabled = box.Checked;

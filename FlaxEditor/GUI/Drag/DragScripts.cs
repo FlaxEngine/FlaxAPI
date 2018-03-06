@@ -64,6 +64,35 @@ namespace FlaxEditor.GUI.Drag
 		}
 
 		/// <summary>
+		/// Tries to parse the drag data to validate if it has valid scripts darg.
+		/// </summary>
+		/// <param name="data">The data.</param>
+		/// <returns>True if drag data has valid scripts, otherwise false.</returns>
+		public static bool IsValidData(DragDataText data)
+		{
+			if (data.Text.StartsWith(DragPrefix))
+			{
+				// Remove prefix and parse splited names
+				var ids = data.Text.Remove(0, DragPrefix.Length).Split('\n');
+				for (int i = 0; i < ids.Length; i++)
+				{
+					// Find element
+					Guid id;
+					if (Guid.TryParse(ids[i], out id))
+					{
+						var obj = FlaxEngine.Object.Find<Script>(ref id);
+
+						// Check it
+						if (obj != null)
+							return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+		/// <summary>
 		/// Gets the drag data.
 		/// </summary>
 		/// <param name="script">The script.</param>
