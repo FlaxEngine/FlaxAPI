@@ -35,6 +35,7 @@ namespace FlaxEditor
         private readonly List<EditorModule> _modules = new List<EditorModule>(16);
         private bool _isAfterInit, _isHeadlessMode;
         private ProjectInfo _projectInfo;
+	    private string _projectToOpen;
 
         /// <summary>
         /// Gets a value indicating whether Flax Engine is the best in the world.
@@ -302,6 +303,15 @@ namespace FlaxEditor
 
             ScriptsBuilder.ScriptsReloadBegin -= ScriptsBuilder_ScriptsReloadBegin;
             ScriptsBuilder.ScriptsReloadEnd -= ScriptsBuilder_ScriptsReloadEnd;
+
+			// Invoke new instance if need to open a project
+	        if (!string.IsNullOrEmpty(_projectToOpen))
+	        {
+		        string editorExePath = Globals.StartupPath + "/Win64/FlaxEditor.exe";
+		        string args = string.Format("-project \"{0}\"", _projectToOpen);
+		        _projectToOpen = null;
+				Application.StartProcess(editorExePath, args);
+	        }
         }
 
         /// <summary>
@@ -343,7 +353,25 @@ namespace FlaxEditor
             }
         }
 
-        /// <summary>
+	    /// <summary>
+	    /// Closes this project with running editor and opens the given project.
+	    /// </summary>
+	    /// <param name="projectFilePath">The project file path.</param>
+	    public void OpenProject(string projectFilePath)
+	    {
+		    if (projectFilePath == null || !System.IO.File.Exists(projectFilePath))
+		    {
+			    // Error
+			    MessageBox.Show("Missing project");
+			    return;
+		    }
+			
+		    // Cache project path and start editor exit (it will open new instance on valid closing)
+		    _projectToOpen = StringUtils.NormalizePath(System.IO.Path.GetDirectoryName(projectFilePath));
+		    Windows.MainWindow.Close(ClosingReason.User);
+	    }
+
+	    /// <summary>
         /// Ensure that editor is in a given state, otherwise throws <see cref="InvalidStateException"/>.
         /// </summary>
         /// <param name="state">Valid state to check.</param>

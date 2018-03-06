@@ -397,6 +397,8 @@ namespace FlaxEditor.Modules
 			cm.AddButton("Regenerate solution file", () => ScriptsBuilder.GenerateProject(true, true));
 			cm.AddButton("Recompile scripts", ScriptsBuilder.Compile);
 			cm.AddSeparator();
+			cm.AddButton("Open project...", OpenProject);
+			cm.AddSeparator();
 			if (Editor.IsDevInstance())
 			{
 				cm.AddButton("Regenerate Engine API", () => ScriptsBuilder.Internal_GenerateApi(ScriptsBuilder.ApiEngineType.Engine));
@@ -548,6 +550,16 @@ namespace FlaxEditor.Modules
 		{
 			// Dock Panel
 			MasterPanel.Parent = mainWindow;
+		}
+
+		private void OpenProject()
+		{
+			// Ask user to select project file
+			var files = MessageBox.OpenFileDialog(Editor.Windows.MainWindow, null, "Project files (Project.xml)\0Project.xml\0All files (*.*)\0*.*\0", false, "Select project file");
+			if (files != null && files.Length > 0)
+			{
+				Editor.OpenProject(files[0]);
+			}
 		}
 		
 		private void OnMenuFileShowHide(Control control)
