@@ -197,8 +197,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
 		{
 			private bool _isMosueDown;
 			private Vector2 _mosueDownPos;
-			private Vector2 _mousePos;
-
+			
 			/// <summary>
 			/// Gets the target script.
 			/// </summary>
@@ -220,7 +219,6 @@ namespace FlaxEditor.CustomEditors.Dedicated
 			/// <inheritdoc />
 			public override void OnMouseEnter(Vector2 location)
 			{
-				_mousePos = location;
 				_mosueDownPos = Vector2.Minimum;
 
 				base.OnMouseEnter(location);
@@ -229,8 +227,6 @@ namespace FlaxEditor.CustomEditors.Dedicated
 			/// <inheritdoc />
 			public override void OnMouseLeave()
 			{
-				_mousePos = Vector2.Minimum;
-
 				// Check if start drag drop
 				if (_isMosueDown)
 				{
@@ -244,8 +240,6 @@ namespace FlaxEditor.CustomEditors.Dedicated
 			/// <inheritdoc />
 			public override void OnMouseMove(Vector2 location)
 			{
-				_mousePos = location;
-
 				// Check if start drag drop
 				if (_isMosueDown && Vector2.Distance(location, _mosueDownPos) > 10.0f)
 				{
@@ -397,15 +391,15 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
                 var cm = new ContextMenu();
                 cm.Tag = script;
-                cm.AddButton("Reset").Enabled = false;// TODO: finish this
-                cm.AddSeparator();
+                //cm.AddButton("Reset").Enabled = false;// TODO: finish this
+                //cm.AddSeparator();
                 cm.AddButton("Remove", OnClickRemove);
                 cm.AddButton("Move up", OnClickMoveUp).Enabled = script.OrderInParent > 0;
                 cm.AddButton("Move down", OnClickMoveDown).Enabled = script.OrderInParent < script.Actor.Scripts.Length - 1;
                 // TODO: copy script
                 // TODO: paste script values
                 // TODO: paste script as new
-                // TODO: copt script reference
+                // TODO: copy script reference
                 cm.AddSeparator();
 	            cm.AddButton("Copy name", OnClickCopyName);
                 cm.AddButton("Edit script", OnClickEditScript);
