@@ -189,11 +189,109 @@ namespace FlaxEditor.CustomEditors.Dedicated
 			}
         }
 
-        /// <summary>
-        /// Custom editor for actor scripts collection.
-        /// </summary>
-        /// <seealso cref="CustomEditor" />
-        public sealed class ScriptsEditor : SyncPointEditor
+		/// <summary>
+		/// Small image control added per script group that allows to drag and drop a reference to it. Also used to reorder the scripts.
+		/// </summary>
+		/// <seealso cref="FlaxEngine.GUI.Image" />
+		public class ScriptDragIcon : Image
+		{
+			private bool _isMosueDown;
+			private Vector2 _mosueDownPos;
+			private Vector2 _mousePos;
+
+			/// <summary>
+			/// Gets the target script.
+			/// </summary>
+			public Script Script => (Script)Tag;
+
+			/// <summary>
+			/// Initializes a new instance of the <see cref="ScriptDragIcon"/> class.
+			/// </summary>
+			/// <param name="script">The target script.</param>
+			/// <param name="x">The x position.</param>
+			/// <param name="y">The y position.</param>
+			/// <param name="size">The size (both width and height).</param>
+			public ScriptDragIcon(Script script, float x, float y, float size)
+			    : base(x, y, size, size)
+			{
+				Tag = script;
+			}
+
+			/// <inheritdoc />
+			public override void OnMouseEnter(Vector2 location)
+			{
+				_mousePos = location;
+				_mosueDownPos = Vector2.Minimum;
+
+				base.OnMouseEnter(location);
+			}
+
+			/// <inheritdoc />
+			public override void OnMouseLeave()
+			{
+				_mousePos = Vector2.Minimum;
+
+				// Check if start drag drop
+				if (_isMosueDown)
+				{
+					DoDrag();
+					_isMosueDown = false;
+				}
+
+				base.OnMouseLeave();
+			}
+
+			/// <inheritdoc />
+			public override void OnMouseMove(Vector2 location)
+			{
+				_mousePos = location;
+
+				// Check if start drag drop
+				if (_isMosueDown && Vector2.Distance(location, _mosueDownPos) > 10.0f)
+				{
+					DoDrag();
+					_isMosueDown = false;
+				}
+
+				base.OnMouseMove(location);
+			}
+
+			/// <inheritdoc />
+			public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+			{
+				if (buttons == MouseButton.Left)
+				{
+					// Clear flag
+					_isMosueDown = false;
+				}
+
+				return base.OnMouseUp(location, buttons);
+			}
+
+			/// <inheritdoc />
+			public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+			{
+				if (buttons == MouseButton.Left)
+				{
+					// Set flag
+					_isMosueDown = true;
+					_mosueDownPos = location;
+				}
+
+				return base.OnMouseDown(location, buttons);
+			}
+
+			private void DoDrag()
+			{
+				DoDragDrop(DragScripts.GetDragData(Script));
+			}
+		}
+
+		/// <summary>
+		/// Custom editor for actor scripts collection.
+		/// </summary>
+		/// <seealso cref="CustomEditor" />
+		public sealed class ScriptsEditor : SyncPointEditor
         {
             /// <summary>
             /// The scripts collection. Undo operations are recorder for scripts.
@@ -236,7 +334,6 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     // Create group
                     var title = CustomEditorsUtil.GetPropertyNameUI(type.Name);
                     var group = layout.Group(title);
-	                group.Panel.HeaderMargin = new Margin(15, 15, 2, 2);
 					group.Panel.Open(false);
 	                
 					// Add toggle button to the group
@@ -249,6 +346,19 @@ namespace FlaxEditor.CustomEditors.Dedicated
 						Parent = group.Panel
 					};
 	                scriptToggle.CheckChanged += ScriptToggleOnCheckChanged;
+
+					// Add drag button to the group
+	                const float dragIconSize = 14;
+					var scriptDrag = new ScriptDragIcon(script, scriptToggle.Right, 0.5f, dragIconSize)
+					{
+						CanFocus = true,
+						IsScrollable = false,
+						Color = new Color(0.7f),
+						Margin = new Margin(1),
+						ImageSource = new SpriteImageSource(Editor.Instance.UI.DragBar12),
+						Tag = script,
+						Parent = group.Panel
+					};
 
 					// Add settings button to the group
 					const float settingsButtonSize = 14;
@@ -265,7 +375,8 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     };
                     settingsButton.Clicked += SettingsButtonOnClicked;
 
-                    group.Object(values, editor);
+	                group.Panel.HeaderMargin = new Margin(scriptDrag.Right, 15, 2, 2);
+					group.Object(values, editor);
                 }
 
                 base.Initialize(layout);
@@ -296,6 +407,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 // TODO: paste script as new
                 // TODO: copt script reference
                 cm.AddSeparator();
+	            cm.AddButton("Copy name", OnClickCopyName);
                 cm.AddButton("Edit script", OnClickEditScript);
                 cm.AddButton("Show in content window", OnClickShowScript);
                 cm.Show(image, image.Size);
@@ -323,6 +435,12 @@ namespace FlaxEditor.CustomEditors.Dedicated
 				var action = ChangeScriptAction.ChangeOrder(script, script.OrderInParent + 1);
 		        action.Do();
 		        Editor.Instance.Undo.AddAction(action);
+			}
+
+			private void OnClickCopyName(ContextMenuButton button)
+	        {
+		        var script = (Script)button.ParentContextMenu.Tag;
+			    Application.ClipboardText = script.GetType().FullName;
 			}
 
 			private void OnClickEditScript(ContextMenuButton button)

@@ -217,8 +217,14 @@ namespace FlaxEditor.CustomEditors.Editors
             /// <inheritdoc />
             public override bool OnMouseUp(Vector2 location, MouseButton buttons)
             {
-                // Buttons logic
-                if (_value != null)
+	            if (buttons == MouseButton.Left)
+	            {
+		            // Clear flag
+		            _isMosueDown = false;
+	            }
+
+				// Buttons logic
+				if (_value != null)
                 {
                     // Cache data
                     var nameRect = new Rectangle(2, 1, Width - 20, 14);
@@ -277,6 +283,8 @@ namespace FlaxEditor.CustomEditors.Editors
                         DoDragDrop(DragActors.GetDragData(actor));
                     else if (_value is Asset asset)
                         DoDragDrop(DragAssets.GetDragData(asset));
+                    else if (_value is Script script)
+                        DoDragDrop(DragScripts.GetDragData(script));
                 }
             }
 

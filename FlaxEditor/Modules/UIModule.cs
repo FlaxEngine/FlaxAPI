@@ -121,6 +121,7 @@ namespace FlaxEditor.Modules
 
 		internal Sprite FolderClosed12;
 		internal Sprite FolderOpened12;
+		internal Sprite DragBar12;
 
 		internal UIModule(Editor editor)
 			: base(editor)
@@ -372,6 +373,7 @@ namespace FlaxEditor.Modules
 			// Cache icons
 			FolderClosed12 = GetIcon("FolderClosed12");
 			FolderOpened12 = GetIcon("FolderOpened12");
+			DragBar12 = GetIcon("DragBar12");
 			VisjectSurfaceBackground = FlaxEngine.Content.LoadAsyncInternal<Texture>("Editor/VisjectSurface");
 
 			// Set as default
