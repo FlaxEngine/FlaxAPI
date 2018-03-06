@@ -47,6 +47,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
 	            float addScriptButtonWidth = 60.0f;
 				var addScriptButton = new Button((Width - addScriptButtonWidth) / 2, 1, addScriptButtonWidth, 18)
 				{
+					TooltipText = "Add new scripts to the actor",
 					AnchorStyle = AnchorStyle.UpperCenter,
 					Text = "Add script",
 					Parent = this,
@@ -333,6 +334,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
 					// Add toggle button to the group
 					var scriptToggle = new CheckBox(2, 0, script.Enabled)
 					{
+						TooltipText = "If checked, script will be enabled",
 						IsScrollable = false,
 						Size = new Vector2(14, 14),
 						BoxSize = 12.0f,
@@ -345,6 +347,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
 	                const float dragIconSize = 14;
 					var scriptDrag = new ScriptDragIcon(script, scriptToggle.Right, 0.5f, dragIconSize)
 					{
+						TooltipText = "Script reference",
 						CanFocus = true,
 						IsScrollable = false,
 						Color = new Color(0.7f),
@@ -358,6 +361,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
 					const float settingsButtonSize = 14;
                     var settingsButton = new Image(group.Panel.Width - settingsButtonSize, 0, settingsButtonSize, settingsButtonSize)
                     {
+						TooltipText = "Settings",
                         CanFocus = true,
                         AnchorStyle = AnchorStyle.UpperRight,
                         IsScrollable = false,
