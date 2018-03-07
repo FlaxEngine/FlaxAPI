@@ -78,7 +78,7 @@ namespace FlaxEditor
                 {
                     Editor.Instance.Scene.MarkSceneEdited(actor.Scene);
                 }
-                else if (data.TargetInstance is Script script)
+                else if (data.TargetInstance is Script script && script.Actor != null)
                 {
                     Editor.Instance.Scene.MarkSceneEdited(script.Actor.Scene);
                 }
