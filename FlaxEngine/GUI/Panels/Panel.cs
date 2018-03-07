@@ -10,6 +10,8 @@ namespace FlaxEngine.GUI
     /// <seealso cref="FlaxEngine.GUI.ScrollableControl" />
     public class Panel : ScrollableControl
     {
+	    private bool _layoutChanged;
+
         /// <summary>
         /// The scroll right corner. Used to scroll contents of the panel control.
         /// </summary>
@@ -227,8 +229,25 @@ namespace FlaxEngine.GUI
             base.AddChildInternal(child);
             PerformLayout();
         }
+		
+	    /// <inheritdoc />
+	    public override void PerformLayout(bool force = false)
+	    {
+		    if (!IsLayoutLocked)
+		    {
+			    _layoutChanged = false;
+		    }
 
-        /// <inheritdoc />
+		    base.PerformLayout(force);
+			
+		    if (!IsLayoutLocked && _layoutChanged)
+		    {
+			    _layoutChanged = false;
+				PerformLayout(true);
+		    }
+	    }
+
+	    /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
             const float ScrollSpaceLeft = 0.1f;
@@ -246,9 +265,10 @@ namespace FlaxEngine.GUI
                 {
                     // Set scroll bar visibility 
                     VScrollBar.Visible = vScrollEnabled;
+	                _layoutChanged = true;
 
-                    // Clear scroll state
-                    VScrollBar.Reset();
+					// Clear scroll state
+					VScrollBar.Reset();
                     _viewOffset.Y = 0;
 
                     // Update
@@ -269,9 +289,10 @@ namespace FlaxEngine.GUI
                 {
                     // Set scroll bar visibility 
                     HScrollBar.Visible = hScrollEnabled;
+	                _layoutChanged = true;
 
-                    // Clear scroll state
-                    HScrollBar.Reset();
+					// Clear scroll state
+					HScrollBar.Reset();
 
                     _viewOffset.X = 0;
 

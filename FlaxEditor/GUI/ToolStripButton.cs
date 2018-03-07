@@ -120,9 +120,9 @@ namespace FlaxEditor.GUI
                     TextAlignment.Center);
             }
         }
-
-        /// <inheritdoc />
-        public override void PerformLayout()
+		
+	    /// <inheritdoc />
+	    public override void PerformLayout(bool force = false)
         {
             var style = Style.Current;
             float iconSize = Height - DefaultMargin;

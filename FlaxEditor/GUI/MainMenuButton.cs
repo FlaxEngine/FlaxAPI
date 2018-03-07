@@ -58,9 +58,9 @@ namespace FlaxEditor.GUI
             (Parent as MainMenu)?.Select(this);
             return true;
         }
-
-        /// <inheritdoc />
-        public override void PerformLayout()
+		
+	    /// <inheritdoc />
+	    public override void PerformLayout(bool force)
         {
             var style = Style.Current;
             float width = 12;

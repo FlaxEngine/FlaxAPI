@@ -698,14 +698,15 @@ namespace FlaxEngine.GUI
                 }
             }
         }
-
-        /// <inheritdoc />
-        public override void PerformLayout()
+		
+	    /// <inheritdoc />
+	    public override void PerformLayout(bool force = false)
         {
             // Check if update is locked
-            if (IsLayoutLocked)
+            if (IsLayoutLocked && !force)
                 return;
 
+	        bool wasLocked = IsLayoutLocked;
             IsLayoutLocked = true;
 
             // Switch based on current mode
@@ -713,7 +714,7 @@ namespace FlaxEngine.GUI
             {
                 // Update children
                 for (int i = 0; i < _children.Count; i++)
-                    _children[i].PerformLayout();
+                    _children[i].PerformLayout(force);
 
                 // Update itself
                 PerformLayoutSelf();
@@ -725,10 +726,10 @@ namespace FlaxEngine.GUI
 
                 // Update children
                 for (int i = 0; i < _children.Count; i++)
-                    _children[i].PerformLayout();
+                    _children[i].PerformLayout(force);
             }
 
-            IsLayoutLocked = false;
+            IsLayoutLocked = wasLocked;
         }
 
         /// <inheritdoc />

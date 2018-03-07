@@ -139,9 +139,9 @@ namespace FlaxEditor.Viewport.Widgets
 
             return base.OnMouseDown(location, buttons);
         }
-
-        /// <inheritdoc />
-        public override void PerformLayout()
+		
+	    /// <inheritdoc />
+	    public override void PerformLayout(bool force = false)
         {
             var style = Style.Current;
 

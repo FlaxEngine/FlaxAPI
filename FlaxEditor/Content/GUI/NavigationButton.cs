@@ -59,9 +59,9 @@ namespace FlaxEditor.Content.GUI
             // Draw text
             Render2D.DrawText(style.FontMedium, Text, textRect, style.Foreground, TextAlignment.Near, TextAlignment.Center);
         }
-
-        /// <inheritdoc />
-        public override void PerformLayout()
+		
+	    /// <inheritdoc />
+	    public override void PerformLayout(bool force = false)
         {
             var style = Style.Current;
 

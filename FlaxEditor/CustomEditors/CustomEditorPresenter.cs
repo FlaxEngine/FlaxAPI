@@ -247,7 +247,8 @@ namespace FlaxEditor.CustomEditors
         public virtual void BuildLayout()
         {
             // Clear layout
-            var parentScrollV = (Panel.Parent as Panel)?.VScrollBar?.Value ?? -1;
+	        var panel = Panel.Parent as Panel;
+			var parentScrollV = panel?.VScrollBar?.Value ?? -1;
             Panel.IsLayoutLocked = true;
             Panel.DisposeChildren();
             
@@ -255,11 +256,11 @@ namespace FlaxEditor.CustomEditors
             Editor.Setup(this);
 
             Panel.UnlockChildrenRecursive();
-            Panel.PerformLayout();
+	        Panel.PerformLayout();
 
             // Restore scroll value
             if (parentScrollV > -1)
-                ((Panel)Panel.Parent).VScrollBar.Value = parentScrollV;
+	            panel.VScrollBar.Value = parentScrollV;
         }
 
         /// <summary>

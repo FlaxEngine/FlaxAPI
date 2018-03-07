@@ -395,10 +395,11 @@ namespace FlaxEngine.GUI
             }
         }
 
-        /// <summary>
-        ///     Update control layout
-        /// </summary>
-        public virtual void PerformLayout()
+	    /// <summary>
+	    ///     Update control layout
+	    /// </summary>
+	    /// <param name="force">True if perform layout by force even if cached state wants to skip it due to optimalization.</param>
+	    public virtual void PerformLayout(bool force = false)
         {
         }
 
