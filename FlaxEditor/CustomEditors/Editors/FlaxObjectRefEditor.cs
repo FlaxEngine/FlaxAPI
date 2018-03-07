@@ -49,8 +49,8 @@ namespace FlaxEditor.CustomEditors.Editors
                 get => _type;
                 set
                 {
-                    if (value == null || !value.IsSubclassOf(typeof(Object)))
-                        throw new ArgumentException();
+                    if (value == null || (value != typeof(Object) && !value.IsSubclassOf(typeof(Object))))
+                        throw new ArgumentException(string.Format("Invalid type for FlaxObjectRefEditor. Input type: {0}", value != null ? value.FullName : "null"));
 
                     if (_type != value)
                     {
