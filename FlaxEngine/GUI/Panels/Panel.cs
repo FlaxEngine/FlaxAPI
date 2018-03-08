@@ -336,5 +336,62 @@ namespace FlaxEngine.GUI
         {
             base.PerformLayoutSelf();
         }
+
+	    /// <inheritdoc />
+	    public override DragDropEffect OnDragMove(ref Vector2 location, DragData data)
+	    {
+		    var result = base.OnDragMove(ref location, data);
+
+		    // Auto scroll when using drag and drop
+			//if (result == DragDropEffect.None)
+		    {
+			    float width = Width;
+			    float height = Height;
+			    float MinSize = 70;
+			    float AreaSize = 25;
+			    float MoveScale = 4.0f;
+			    Vector2 viewOffset = -_viewOffset;
+
+			    if (VScrollBar != null && VScrollBar.Visible && height > MinSize)
+			    {
+				    if (new Rectangle(0, 0, width, AreaSize).Contains(ref location))
+				    {
+					    viewOffset.Y -= MoveScale;
+				    }
+				    else if (new Rectangle(0, height - AreaSize, width, AreaSize).Contains(ref location))
+				    {
+					    viewOffset.Y += MoveScale;
+				    }
+
+				    viewOffset.Y = Mathf.Clamp(viewOffset.Y, VScrollBar.Minimum, VScrollBar.Maximum);
+				    VScrollBar.Value = viewOffset.Y;
+				}
+
+			    if (HScrollBar != null && HScrollBar.Visible && width > MinSize)
+			    {
+				    if (new Rectangle(0, 0, AreaSize, height).Contains(ref location))
+				    {
+					    viewOffset.X -= MoveScale;
+				    }
+				    else if (new Rectangle(width - AreaSize, 0, AreaSize, height).Contains(ref location))
+				    {
+					    viewOffset.X += MoveScale;
+				    }
+
+				    viewOffset.X = Mathf.Clamp(viewOffset.X, HScrollBar.Minimum, HScrollBar.Maximum);
+				    HScrollBar.Value = viewOffset.X;
+			    }
+
+			    viewOffset *= -1;
+
+				if (viewOffset != _viewOffset)
+			    {
+				    _viewOffset = viewOffset;
+				    PerformLayout();
+			    }
+		    }
+
+		    return result;
+	    }
     }
 }
