@@ -72,6 +72,26 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets the origin position and size of the monitor at the given screen-space location.
+		/// </summary>
+		/// <param name="screenPos">The screen position (in pixels).</param>
+		/// <returns>The monitor bounds.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public static Rectangle GetMonitorBounds(Vector2 screenPos) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Rectangle resultAsRef;
+			Internal_GetMonitorBounds(ref screenPos, out resultAsRef);
+			return resultAsRef;
+#endif
+		}
+
+		/// <summary>
 		/// Gets size of the virtual desktop made of all the monitors attached.
 		/// </summary>
 		[UnmanagedCall]
@@ -203,6 +223,8 @@ namespace FlaxEngine
 		internal static extern string Internal_GetUserLocaleName();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetDesktopSize(out Vector2 resultAsRef);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetMonitorBounds(ref Vector2 screenPos, out Rectangle resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetVirtualDesktopSize(out Vector2 resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
