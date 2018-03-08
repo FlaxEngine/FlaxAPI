@@ -57,7 +57,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The items area margin.
         /// </summary>
-        protected Margin _itemsAreaMargin = new Margin(0, 0, 2, 2);
+        protected Margin _itemsAreaMargin = new Margin(0, 0, 3, 3);
 
         /// <summary>
         /// The items margin.

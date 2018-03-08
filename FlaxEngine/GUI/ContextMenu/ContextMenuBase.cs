@@ -92,28 +92,37 @@ namespace FlaxEngine.GUI
             UnlockChildrenRecursive();
             PerformLayout();
 
-            // Calculate popup directinon and initial location
+            // Calculate popup directinon and initial location (fit on a single monitor)
             var parentWin = parent.ParentWindow;
             if (parentWin == null)
                 return;
             Vector2 locationWS = parent.PointToWindow(location);
             Vector2 locationSS = parentWin.ClientToScreen(locationWS);
             Location = Vector2.Zero;
-            Vector2 screenSize = Application.VirtualDesktopSize;
+	        Rectangle monitorBounds = Application.GetMonitorBounds(locationSS);
             Vector2 rightBottomLocationSS = locationSS + Size;
-            if (screenSize.Y < rightBottomLocationSS.Y)
+	        bool isUp = false, isLeft = false;
+            if (monitorBounds.Bottom < rightBottomLocationSS.Y)
             {
-                // Direction: up
-                locationSS.Y -= Height;
+				// Direction: up
+	            isUp = true;
+				locationSS.Y -= Height;
             }
-            if (screenSize.X < rightBottomLocationSS.X)
+            if (monitorBounds.Right < rightBottomLocationSS.X)
             {
                 // Direction: left
+	            isLeft = true;
                 locationSS.X -= Width;
             }
 
-            // Create window
-            var desc = CreateWindowSettings.Default;
+			// Update direction flag
+	        if (isUp)
+		        _direction = isLeft ? ContextMenuDirection.LeftUp : ContextMenuDirection.RightUp;
+	        else
+		        _direction = isLeft ? ContextMenuDirection.LeftDown : ContextMenuDirection.RightDown;
+
+			// Create window
+			var desc = CreateWindowSettings.Default;
             desc.Position = locationSS;
             desc.StartPosition = WindowStartPosition.Manual;
             desc.Size = Size;
@@ -275,7 +284,7 @@ namespace FlaxEngine.GUI
             // Draw background
             var style = Style.Current;
             Render2D.FillRectangle(new Rectangle(0, 0, Width, Height), style.Background);
-            Render2D.DrawRectangle(new Rectangle(0, 0, Width - 1.5f, Height - 1.5f), Color.LerpUnclamped(style.BackgroundSelected, style.Background, 0.6f));
+            Render2D.DrawRectangle(new Rectangle(0, 0, Width - 1f, Height - 1f), Color.LerpUnclamped(style.BackgroundSelected, style.Background, 0.6f));
 
             base.Draw();
         }
