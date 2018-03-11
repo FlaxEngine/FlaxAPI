@@ -38,7 +38,7 @@ namespace FlaxEditor.Surface.Elements
             var rect = new Rectangle(Width + 4, 0, 1410, Height);
             Render2D.DrawText(style.FontSmall, Archetype.Text, rect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
         }
-		/*
+
 	    /// <inheritdoc />
 	    protected override void OnCurrentTypeChanged()
 	    {
@@ -63,14 +63,14 @@ namespace FlaxEditor.Surface.Elements
 				    _defaultValueEditor.Dispose();
 				    _defaultValueEditor = null;
 			    }
-
-			    if (Connections.Count == 0)
-			    {
-				    CreateDefaultEditor();
-			    }
 		    }
-	    }
-		*/
+
+		    if (Connections.Count == 0)
+		    {
+			    CreateDefaultEditor();
+		    }
+		}
+
 	    /// <inheritdoc />
 	    public override void OnConnectionsChanged()
 	    {
