@@ -26,14 +26,17 @@ namespace FlaxEditor.Progress.Handlers
             ScriptsBuilder.ScriptsReloadCalled += () => OnUpdate(0.8f, "Reloading scripts...");
             ScriptsBuilder.ScriptsReloadBegin += OnScriptsReloadBegin;
         }
+		
+	    private void OnScriptsReloadBegin()
+	    {
+		    // Clear references to the user scripts (we gonna reload an assembly)
+		    Editor.Instance.Scene.ClearRefsToSceneObjects();
 
-        private void OnScriptsReloadBegin()
-        {
-            // Clear references to the user scripts (we gonna reload an assembly)
-            Editor.Instance.Scene.ClearRefsToSceneObjects();
-        }
+		    // Clear types cache
+		    Newtonsoft.Json.JsonSerializer.ClearCache();
+	    }
 
-        /// <inheritdoc />
+	    /// <inheritdoc />
         protected override void OnStart()
         {
             base.OnStart();

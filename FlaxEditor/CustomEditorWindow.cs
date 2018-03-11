@@ -73,6 +73,14 @@ namespace FlaxEditor
 			ScriptsBuilder.ScriptsReloadBegin += OnScriptsReloadBegin;
 		}
 
+		/// <summary>
+		/// Finalizes an instance of the <see cref="CustomEditorWindow"/> class.
+		/// </summary>
+		~CustomEditorWindow()
+		{
+			ScriptsBuilder.ScriptsReloadBegin -= OnScriptsReloadBegin;
+		}
+
 		private void OnScriptsReloadBegin()
 		{
 			// TODO: support restoring custom editor windows on code reload (deselect obj and restore it later)

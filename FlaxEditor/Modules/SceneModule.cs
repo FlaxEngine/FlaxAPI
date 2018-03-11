@@ -361,6 +361,7 @@ namespace FlaxEditor.Modules
         {
             // Clear Editor's data
             Editor.SceneEditing.Deselect();
+			// TODO: test using editor (scripts reload, play enter/leave) without clearing the undo - current design is good and should handle this
             Undo.Clear(); // note: undo actions serialize ids to the objects (not direct refs) but cache reflection meta so we need to clean it
         }
 

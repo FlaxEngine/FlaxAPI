@@ -2683,6 +2683,11 @@
             Initializes a new instance of the <see cref="T:Newtonsoft.Json.JsonSerializer"/> class.
             </summary>
         </member>
+        <member name="M:Newtonsoft.Json.JsonSerializer.ClearCache">
+            <summary>
+            Clears all the cached types, attributes and methods to release references to any types of the other assemblies.
+            </summary>
+        </member>
         <member name="M:Newtonsoft.Json.JsonSerializer.Create">
             <summary>
             Creates a new <see cref="T:Newtonsoft.Json.JsonSerializer"/> instance.
