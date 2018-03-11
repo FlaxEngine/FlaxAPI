@@ -250,7 +250,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Camera Depth Fade",
                 Description = "Creates a gradient of 0 near the camera to white at fade length. Useful for preventing particles from camera clipping.",
                 Flags = NodeFlags.MaterialOnly,
-                Size = new Vector2(170, 60),
+                Size = new Vector2(200, 60),
                 DefaultValues = new object[]
                 {
                     500.0f,
@@ -260,7 +260,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     NodeElementArchetype.Factory.Input(0, "Fade Length", true, ConnectionType.Float, 0, 0),
                     NodeElementArchetype.Factory.Input(1, "Fade Offset", true, ConnectionType.Float, 1, 1),
-                    NodeElementArchetype.Factory.Output(2, "Result", ConnectionType.Float, 2),
+                    NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Float, 2),
                 }
             },
 	        new NodeArchetype

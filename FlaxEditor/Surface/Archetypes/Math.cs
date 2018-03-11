@@ -41,10 +41,15 @@ namespace FlaxEditor.Surface.Archetypes
                 DefaultType = inputType,
                 IndependentBoxes = new[] { 0, 1 },
                 DependentBoxes = isOutputDependant ? new[] { 2 } : null,
-                Elements = new[]
+	            DefaultValues = new object[]
+	            {
+		            0.0f,
+		            0.0f,
+	            },
+				Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Input(0, "A", true, inputType, 0),
-                    NodeElementArchetype.Factory.Input(1, "B", true, inputType, 1),
+                    NodeElementArchetype.Factory.Input(0, "A", true, inputType, 0, 0),
+                    NodeElementArchetype.Factory.Input(1, "B", true, inputType, 1, 1),
                     NodeElementArchetype.Factory.Output(0, "Result", outputType, 2)
                 }
             };
@@ -107,11 +112,16 @@ namespace FlaxEditor.Surface.Archetypes
                 DefaultType = ConnectionType.Variable,
                 IndependentBoxes = new[] { 0 },
                 DependentBoxes = new[] { 1, 2, 3 },
-                Elements = new[]
+	            DefaultValues = new object[]
+	            {
+		            0.0f,
+		            0.0f,
+	            },
+				Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "Input", true, ConnectionType.Variable, 0),
-                    NodeElementArchetype.Factory.Input(1, "Min", true, ConnectionType.Variable, 1),
-                    NodeElementArchetype.Factory.Input(2, "Max", true, ConnectionType.Variable, 2),
+                    NodeElementArchetype.Factory.Input(1, "Min", true, ConnectionType.Variable, 1, 0),
+                    NodeElementArchetype.Factory.Input(2, "Max", true, ConnectionType.Variable, 2, 1),
                     NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Variable, 3)
                 }
             },
@@ -124,11 +134,17 @@ namespace FlaxEditor.Surface.Archetypes
                 DefaultType = ConnectionType.Variable,
                 IndependentBoxes = new[] { 0, 1 },
                 DependentBoxes = new[] { 3 },
-                Elements = new[]
+	            DefaultValues = new object[]
+	            {
+		            0.0f,
+		            1.0f,
+		            0.5f,
+	            },
+				Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Input(0, "A", true, ConnectionType.Variable, 0),
-                    NodeElementArchetype.Factory.Input(1, "B", true, ConnectionType.Variable, 1),
-                    NodeElementArchetype.Factory.Input(2, "Alpha", true, ConnectionType.Float, 2),
+                    NodeElementArchetype.Factory.Input(0, "A", true, ConnectionType.Variable, 0, 0),
+                    NodeElementArchetype.Factory.Input(1, "B", true, ConnectionType.Variable, 1, 1),
+                    NodeElementArchetype.Factory.Input(2, "Alpha", true, ConnectionType.Float, 2, 2),
                     NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Variable, 3)
                 }
             },
@@ -194,11 +210,16 @@ namespace FlaxEditor.Surface.Archetypes
                 DefaultType = ConnectionType.Variable,
                 IndependentBoxes = new[] { 0, 1, 2 },
                 DependentBoxes = new[] { 3 },
-                Elements = new[]
+	            DefaultValues = new object[]
+	            {
+		            1.0f,
+		            0.0f,
+	            },
+				Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "Value", true, ConnectionType.Variable, 0),
-                    NodeElementArchetype.Factory.Input(1, "Multiply", true, ConnectionType.Variable, 1),
-                    NodeElementArchetype.Factory.Input(2, "Add", true, ConnectionType.Variable, 2),
+                    NodeElementArchetype.Factory.Input(1, "Multiply", true, ConnectionType.Variable, 1, 0),
+                    NodeElementArchetype.Factory.Input(2, "Add", true, ConnectionType.Variable, 2, 1),
                     NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Variable, 3)
                 }
             },
