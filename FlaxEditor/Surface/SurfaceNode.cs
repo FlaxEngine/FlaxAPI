@@ -242,7 +242,13 @@ namespace FlaxEditor.Surface
         {
             UpdateRectangles();
             UpdateBoxesTypes();
-        }
+
+	        for (int i = 0; i < Elements.Count; i++)
+	        {
+		        if (Elements[i] is Box box)
+			        box.OnConnectionsChanged();
+	        }
+		}
 
         /// <summary>
         /// Updates the given box connection.

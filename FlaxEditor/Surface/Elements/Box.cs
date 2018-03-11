@@ -171,8 +171,10 @@ namespace FlaxEditor.Surface.Elements
                     var targetBox = Connections[i];
                     targetBox.Connections.Remove(this);
                     toUpdate.Add(targetBox);
+					targetBox.OnConnectionsChanged();
                 }
                 Connections.Clear();
+				OnConnectionsChanged();
 
                 // Update
                 for (int i = 0; i < toUpdate.Count; i++)
@@ -218,6 +220,8 @@ namespace FlaxEditor.Surface.Elements
             // Update
             ConnectionTick();
             box.ConnectionTick();
+	        OnConnectionsChanged();
+	        box.OnConnectionsChanged();
         }
 
         /// <summary>
@@ -236,12 +240,14 @@ namespace FlaxEditor.Surface.Elements
             box.Connections.Add(this);
             Connections.Add(box);
 
-            // Ensure data is fine and connection is valid
-            Assert.IsTrue(AreConnected(box));
+			// Ensure data is fine and connection is valid
+			Assert.IsTrue(AreConnected(box));
 
             // Update
             ConnectionTick();
             box.ConnectionTick();
+	        OnConnectionsChanged();
+			box.OnConnectionsChanged();
         }
 
         /// <summary>
@@ -306,6 +312,13 @@ namespace FlaxEditor.Surface.Elements
         protected virtual void OnCurrentTypeChanged()
         {
         }
+
+		/// <summary>
+		/// Called when connections array gets changed (also called after surface deserialization)
+		/// </summary>
+		public virtual void OnConnectionsChanged()
+	    {
+	    }
 
         /// <summary>
         /// Draws the box GUI using <see cref="Render2D"/>.
