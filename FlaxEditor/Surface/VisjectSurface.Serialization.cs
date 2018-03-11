@@ -360,27 +360,20 @@ namespace FlaxEditor.Surface
 
                     // Values
                     int valuesCnt = stream.ReadInt32();
-                    if (valuesCnt == 0)
-                    {
-                        if (node.Values != null && node.Values.Length > 0)
-                        {
-                            // Error
-                            Debug.LogWarning("Invalid node values.");
-                            return true;
-                        }
-                    }
-                    else
-                    {
-                        if (node.Values == null || node.Values.Length != valuesCnt)
-                        {
-                            // Error
-                            Debug.LogWarning("Invalid node values.");
-                            return true;
-                        }
+	                int nodeValuesCnt = node.Values?.Length ?? 0;
+	                if (valuesCnt == nodeValuesCnt)
+	                {
+		                for (int j = 0; j < valuesCnt; j++)
+			                ReadCommonValue(stream, ref node.Values[j]);
+	                }
+	                else
+	                {
+		                Debug.LogWarning(string.Format("Invalid node values. Loaded: {0}, expected: {1}. Type: {2}, {3}", valuesCnt, nodeValuesCnt, node.Archetype.Title, node.Archetype.TypeID));
 
-                        for (int j = 0; j < valuesCnt; j++)
-                            ReadCommonValue(stream, ref node.Values[j]);
-                    }
+		                object dummy = null;
+		                for (int j = 0; j < valuesCnt; j++)
+			                ReadCommonValue(stream, ref dummy);
+					}
 
                     // Boxes
                     ushort boxesCount = stream.ReadUInt16();
