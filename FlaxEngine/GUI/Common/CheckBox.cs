@@ -88,14 +88,15 @@ namespace FlaxEngine.GUI
         /// </summary>
         public event Action<CheckBox> CheckChanged;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CheckBox"/> class.
-        /// </summary>
-        /// <param name="x">The x.</param>
-        /// <param name="y">The y.</param>
-        /// <param name="isChecked">if set to <c>true</c> set checked on start.</param>
-        public CheckBox(float x, float y, bool isChecked = false)
-            : base(x, y, 18, 18)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CheckBox"/> class.
+		/// </summary>
+		/// <param name="x">The x.</param>
+		/// <param name="y">The y.</param>
+		/// <param name="isChecked">if set to <c>true</c> set checked on start.</param>
+		/// <param name="size">The checkbox size.</param>
+		public CheckBox(float x, float y, bool isChecked = false, float size = 18)
+            : base(x, y, size, size)
         {
             _checked = isChecked;
             _boxSize = 16.0f;

@@ -30,7 +30,7 @@ namespace FlaxEditor.Surface.Elements
 
         /// <inheritdoc />
         public InteagerValue(SurfaceNode parentNode, NodeElementArchetype archetype)
-            : base(Get(parentNode, archetype), archetype.Position.X, archetype.Position.Y, 50)
+            : base(Get(parentNode, archetype), archetype.Position.X, archetype.Position.Y, 50, -1000000, 1000000, 0.05f)
         {
             ParentNode = parentNode;
             Archetype = archetype;
@@ -54,7 +54,7 @@ namespace FlaxEditor.Surface.Elements
             ParentNode.Surface.MarkAsEdited();
         }
 
-        private static int Get(SurfaceNode parentNode, NodeElementArchetype arch)
+        public static int Get(SurfaceNode parentNode, NodeElementArchetype arch)
         {
             if (arch.ValueIndex < 0)
                 return 0;
@@ -92,7 +92,7 @@ namespace FlaxEditor.Surface.Elements
             return result;
         }
 
-        private static void Set(SurfaceNode parentNode, NodeElementArchetype arch, int toSet)
+	    public static void Set(SurfaceNode parentNode, NodeElementArchetype arch, int toSet)
         {
             if (arch.ValueIndex < 0)
                 return;
