@@ -13,14 +13,9 @@ namespace FlaxEngine
     /// </summary>
     public sealed class MaterialSlot
     {
-        internal Model _model;
+        internal BinaryAsset _model;
         internal readonly int _index;
-
-        /// <summary>
-        /// Gets the parent model asset.
-        /// </summary>
-        public Model ParentModel => _model;
-
+		
         /// <summary>
         /// Gets the index of the slot (in the parnet model).
         /// </summary>
@@ -56,7 +51,7 @@ namespace FlaxEngine
             set => Internal_SetName(_model.unmanagedPtr, _index, value);
         }
 
-        internal MaterialSlot(Model model, int index)
+        internal MaterialSlot(BinaryAsset model, int index)
         {
             _model = model;
             _index = index;

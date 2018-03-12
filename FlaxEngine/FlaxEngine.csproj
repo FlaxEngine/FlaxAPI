@@ -105,6 +105,8 @@
     <Compile Include="API\BinaryAssets\Model.Gen.cs" />
     <Compile Include="API\BinaryAssets\RawDataAsset.cs" />
     <Compile Include="API\BinaryAssets\RawDataAsset.Gen.cs" />
+    <Compile Include="API\BinaryAssets\SkinnedModel.cs" />
+    <Compile Include="API\BinaryAssets\SkinnedModel.Gen.cs" />
     <Compile Include="API\Colliders\BoxCollider.cs" />
     <Compile Include="API\Colliders\BoxCollider.Gen.cs" />
     <Compile Include="API\Colliders\CapsuleCollider.cs" />

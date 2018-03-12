@@ -38,7 +38,7 @@ namespace FlaxEngine
         /// Gets the material slot by the name.
         /// </summary>
         /// <param name="name">The slot name.</param>
-        /// <returns>The material slot with the given name or null if cannot find it (asset may be not loaed yet).</returns>
+        /// <returns>The material slot with the given name or null if cannot find it (asset may be not loaded yet).</returns>
         public MaterialSlot GetSlot(string name)
         {
             MaterialSlot result = null;
