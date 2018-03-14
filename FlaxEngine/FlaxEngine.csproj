@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Actors\AnimatedModel.cs" />
+    <Compile Include="API\Actors\AnimatedModel.Gen.cs" />
     <Compile Include="API\Actors\AudioListener.cs" />
     <Compile Include="API\Actors\AudioListener.Gen.cs" />
     <Compile Include="API\Actors\AudioSource.cs" />
