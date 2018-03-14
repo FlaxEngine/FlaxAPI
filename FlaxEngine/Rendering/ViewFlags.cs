@@ -141,18 +141,11 @@ namespace FlaxEngine.Rendering
         DefaultEditor = DynamicActors | Reflections | CSG | Fog
                         | SSR | AO | GI | DirectionalLights | PointLights | SpotLights | SkyLights | Shadows | SpecularLight
                         | AntiAliasing | CustomPostProcess | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares | EditorSprites,
-
+		
         /// <summary>
-        /// Default flags for Material Previews generating
+        /// Default flags for materials/models previews generating
         /// </summary>
-        DefaultMaterialPreview = DynamicActors | Reflections
-                                 | GI | DirectionalLights | PointLights | SpotLights | SkyLights | SpecularLight
-                                 | AntiAliasing | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares,
-
-        /// <summary>
-        /// Default flags for Material Previews generating
-        /// </summary>
-        DefaultModelPreview = DynamicActors | Reflections
+        DefaulAssetPreview = DynamicActors | Reflections
                               | GI | DirectionalLights | PointLights | SpotLights | SkyLights | SpecularLight
                               | AntiAliasing | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares,
     }
