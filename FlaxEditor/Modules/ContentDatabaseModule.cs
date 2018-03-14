@@ -48,7 +48,7 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// The list with all content items proxy objects.
         /// </summary>
-        public readonly List<ContentProxy> Proxy = new List<ContentProxy>(32);
+        public readonly List<ContentProxy> Proxy = new List<ContentProxy>(64);
 
         /// <summary>
         /// Occurs when new items is added to the workspace content database.
@@ -807,6 +807,7 @@ namespace FlaxEditor.Modules
             // Setup content proxies
             Proxy.Add(new TextureProxy());
             Proxy.Add(new ModelProxy());
+            Proxy.Add(new SkinnedModelProxy());
             Proxy.Add(new MaterialProxy());
             Proxy.Add(new MaterialInstanceProxy());
             Proxy.Add(new SpriteAtlasProxy());
