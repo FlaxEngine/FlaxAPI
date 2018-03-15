@@ -238,6 +238,7 @@
     <Compile Include="SceneGraph\ActorChildNode.cs" />
     <Compile Include="SceneGraph\ActorNode.cs" />
     <Compile Include="SceneGraph\ActorNodeWithIcon.cs" />
+    <Compile Include="SceneGraph\Actors\AnimatedModelNode.cs" />
     <Compile Include="SceneGraph\Actors\AudioListenerNode.cs" />
     <Compile Include="SceneGraph\Actors\AudioSourceNode.cs" />
     <Compile Include="SceneGraph\Actors\BoxBrushNode.cs" />
@@ -340,6 +341,7 @@
     <Compile Include="Viewport\EditorViewportArcBallCam.cs" />
     <Compile Include="Viewport\EditorViewportFPSCam.cs" />
     <Compile Include="Viewport\MainEditorGizmoViewport.cs" />
+    <Compile Include="Viewport\Previews\AnimatedModelPreview.cs" />
     <Compile Include="Viewport\Previews\AssetPreview.cs" />
     <Compile Include="Viewport\Previews\AudioClipPreview.cs" />
     <Compile Include="Viewport\Previews\CubeTexturePreview.cs" />

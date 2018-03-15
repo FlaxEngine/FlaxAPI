@@ -18,7 +18,7 @@ namespace FlaxEditor.Content
 	/// <seealso cref="FlaxEditor.Content.BinaryAssetProxy" />
 	public class SkinnedModelProxy : BinaryAssetProxy
 	{
-		private ModelPreview _preview;
+		private AnimatedModelPreview _preview;
 
 		/// <inheritdoc />
 		public override string Name => "Skinned Model";
@@ -50,7 +50,7 @@ namespace FlaxEditor.Content
 		{
 			if (_preview == null)
 			{
-				_preview = new ModelPreview(false);
+				_preview = new AnimatedModelPreview(false);
 				_preview.RenderOnlyWithWindow = false;
 				_preview.Task.Enabled = false;
 				_preview.PostFxVolume.Settings.Eye_Technique = EyeAdaptationTechnique.None;
@@ -77,7 +77,7 @@ namespace FlaxEditor.Content
 		/// <inheritdoc />
 		public override void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
 		{
-			//_preview.Model = (SkinnedModel)request.Asset; // TODO: use skinned model preview
+			_preview.SkinnedModel = (SkinnedModel)request.Asset;
 			_preview.Parent = guiRoot;
 
 			_preview.Task.Internal_Render(context);
@@ -86,7 +86,7 @@ namespace FlaxEditor.Content
 		/// <inheritdoc />
 		public override void OnThumbnailDrawEnd(ThumbnailRequest request, ContainerControl guiRoot)
 		{
-			_preview.Model = null;
+			_preview.SkinnedModel = null;
 			_preview.Parent = null;
 		}
 
