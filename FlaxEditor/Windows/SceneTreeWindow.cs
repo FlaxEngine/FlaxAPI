@@ -114,7 +114,8 @@ namespace FlaxEditor.Windows
                     Name = "Other",
                     Types = new[]
                     {
-                        new KeyValuePair<string, Type>("CSG Box Brush", typeof(BoxBrush)),
+	                    new KeyValuePair<string, Type>("Animated Model", typeof(AnimatedModel)),
+						new KeyValuePair<string, Type>("CSG Box Brush", typeof(BoxBrush)),
                         new KeyValuePair<string, Type>("Audio Source", typeof(AudioSource)),
                         new KeyValuePair<string, Type>("Audio Listener", typeof(AudioListener)),
                     }
@@ -128,7 +129,7 @@ namespace FlaxEditor.Windows
                     }
                 },
             };
-
+			
             // Create context menu
             _contextMenu = new ContextMenu();
             _contextMenu.MinimumWidth = 120;
