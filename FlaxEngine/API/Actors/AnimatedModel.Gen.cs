@@ -64,7 +64,7 @@ namespace FlaxEngine
 		/// </summary>
 		[UnmanagedCall]
 		[EditorOrder(20), EditorDisplay("Skinned Model"), Tooltip("If true, use per-bone motion blur on this skeletal model. It requires additional rendering, can be disabled to save performance.")]
-		public float PerBoneMotionBlur
+		public bool PerBoneMotionBlur
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
@@ -190,9 +190,9 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetSkinnedModel(IntPtr obj, IntPtr val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetPerBoneMotionBlur(IntPtr obj);
+		internal static extern bool Internal_GetPerBoneMotionBlur(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetPerBoneMotionBlur(IntPtr obj, float val);
+		internal static extern void Internal_SetPerBoneMotionBlur(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetUseTimeScale(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]

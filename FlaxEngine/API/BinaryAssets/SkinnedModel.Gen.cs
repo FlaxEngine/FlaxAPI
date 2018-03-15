@@ -54,6 +54,19 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets the amount of the skinned meshes contained in a model. Valid only if asset is loaded.
+		/// </summary>
+		[UnmanagedCall]
+		public int MeshesCount
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetMeshesCount(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
 		/// Saves asset to the file. Saved are model and mesh properties but not a vertex data. Supported only in Editor.
 		/// </summary>
 		/// <returns>True if cannot save data, otherwise false.</returns>
@@ -78,6 +91,8 @@ namespace FlaxEngine
 		internal static extern float Internal_GetMinScreenSize(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetMinScreenSize(IntPtr obj, float val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern int Internal_GetMeshesCount(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_Save(IntPtr obj);
 #endif
