@@ -11,71 +11,71 @@ namespace FlaxEngine.Rendering
     /// </summary>
     public enum MaterialParameterType : byte
     {
-        /// <summary>
-        /// The invalid type.
-        /// </summary>
-        Invalid = 0,
+		/// <summary>
+	    /// The invalid type.
+	    /// </summary>
+	    Invalid = 0,
 
-        /// <summary>
-        /// The bool.
-        /// </summary>
-        Bool,
+	    /// <summary>
+	    /// The bool.
+	    /// </summary>
+	    Bool = 1,
 
-        /// <summary>
-        /// The inteager.
-        /// </summary>
-        Inteager,
+	    /// <summary>
+	    /// The inteager.
+	    /// </summary>
+	    Inteager = 2,
 
-        /// <summary>
-        /// The float.
-        /// </summary>
-        Float,
+	    /// <summary>
+	    /// The float.
+	    /// </summary>
+	    Float = 3,
 
-        /// <summary>
-        /// The vector2
-        /// </summary>
-        Vector2,
+	    /// <summary>
+	    /// The vector2
+	    /// </summary>
+	    Vector2 = 4,
 
-        /// <summary>
-        /// The vector3.
-        /// </summary>
-        Vector3,
+	    /// <summary>
+	    /// The vector3.
+	    /// </summary>
+	    Vector3 = 5,
 
-        /// <summary>
-        /// The vector4.
-        /// </summary>
-        Vector4,
+	    /// <summary>
+	    /// The vector4.
+	    /// </summary>
+	    Vector4 = 6,
 
-        /// <summary>
-        /// The color.
-        /// </summary>
-        Color,
+	    /// <summary>
+	    /// The color.
+	    /// </summary>
+	    Color = 7,
 
-        /// <summary>
-        /// The texture.
-        /// </summary>
-        Texture,
+	    /// <summary>
+	    /// The texture.
+	    /// </summary>
+	    Texture = 8,
 
-        /// <summary>
-        /// The cube texture.
-        /// </summary>
-        CubeTexture,
+	    /// <summary>
+	    /// The cube texture.
+	    /// </summary>
+	    CubeTexture = 9,
 
-        /// <summary>
-        /// The normal map texture.
-        /// </summary>
-        NormalMap,
+	    /// <summary>
+	    /// The normal map texture.
+	    /// </summary>
+	    NormalMap = 10,
 
-        /// <summary>
-        /// The scene texture.
-        /// </summary>
-        SceneTexture,
+	    /// <summary>
+	    /// The scene texture.
+	    /// </summary>
+	    SceneTexture = 11,
 
-        /// <summary>
-        /// The render target (created from code).
-        /// </summary>
-        RenderTarget,
-    }
+	    /// <summary>
+	    /// The render target (created from code).
+	    /// </summary>
+	    RenderTarget = 12,
+	}
 
     /// <summary>
     /// Material variable object. Allows to modify material parameter at runtime.
