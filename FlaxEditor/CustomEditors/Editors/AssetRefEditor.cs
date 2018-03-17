@@ -32,7 +32,7 @@ namespace FlaxEditor.CustomEditors.Editors
 
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.Inline;
-
+		
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
@@ -47,7 +47,7 @@ namespace FlaxEditor.CustomEditors.Editors
                     domain = ContentDomain.CubeTexture;
                 else if (type == typeof(Material) || type == typeof(MaterialInstance) || type == typeof(MaterialBase))
                     domain = ContentDomain.Material;
-                else if (type == typeof(Model))
+                else if (type == typeof(Model) || type == typeof(SkinnedModel))
                     domain = ContentDomain.Model;
                 //else if (type == typeof(PrefabAsset))
                 //    domain = ContentDomain.Prefab;

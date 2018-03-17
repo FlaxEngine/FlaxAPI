@@ -17,46 +17,31 @@ namespace FlaxEngine
 			/// The automatic updates will be used (based on platform capabilities, distance to the player, etc.).
 			/// </summary>
 			Auto = 0,
-
-			/// <summary>
-			/// Animation will be updated every physics update (fixed update).
-			/// </summary>
-			EveryFixedUpdate = 1,
-
-			/// <summary>
-			/// Animation will be updated every second physics update (fixed update).
-			/// </summary>
-			EverySecondFixedUpdate = 2,
-
-			/// <summary>
-			/// Animation will be updated every fourth physics update (fixed update).
-			/// </summary>
-			EveryThirdFixedUpdate = 3,
-
+			
 			/// <summary>
 			/// Animation will be updated every game update.
 			/// </summary>
-			EveryUpdate = 4,
+			EveryUpdate = 1,
 
 			/// <summary>
 			/// Animation will be updated every second game update.
 			/// </summary>
-			EverySecondUpdate = 5,
+			EverySecondUpdate = 2,
 
 			/// <summary>
 			/// Animation will be updated every fourth game update.
 			/// </summary>
-			EveryFourthUpdate = 6,
+			EveryFourthUpdate = 3,
 
 			/// <summary>
 			/// Animation can be updated manually by the user scripts. Use <see cref="AnimatedModel.UpdateAnimation"/> method.
 			/// </summary>
-			Manual = 7,
+			Manual = 4,
 
 			/// <summary>
 			/// Animation won't be updated at all.
 			/// </summary>
-			Never = 8,
+			Never = 5,
 		}
 
 		private ModelEntryInfo[] _entries;
@@ -82,7 +67,7 @@ namespace FlaxEngine
 				var model = SkinnedModel;
 				if (model && model.IsLoaded)
 				{
-					var meshesCount = model.MeshesCount;
+					var meshesCount = model.MaterialSlots.Length;
 					_entries = new ModelEntryInfo[meshesCount];
 					for (int i = 0; i < meshesCount; i++)
 					{

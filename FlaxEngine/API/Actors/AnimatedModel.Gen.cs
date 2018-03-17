@@ -60,21 +60,6 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// If true, use per-bone motion blur on this skeletal model. It requires additional rendering, can be disabled to save performance.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(20), EditorDisplay("Skinned Model"), Tooltip("If true, use per-bone motion blur on this skeletal model. It requires additional rendering, can be disabled to save performance.")]
-		public bool PerBoneMotionBlur
-		{
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-			get { return Internal_GetPerBoneMotionBlur(unmanagedPtr); }
-			set { Internal_SetPerBoneMotionBlur(unmanagedPtr, value); }
-#endif
-		}
-
-		/// <summary>
 		/// If true, animation speed will be affected by the global time scale parameter.
 		/// </summary>
 		[UnmanagedCall]
@@ -189,10 +174,6 @@ namespace FlaxEngine
 		internal static extern SkinnedModel Internal_GetSkinnedModel(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetSkinnedModel(IntPtr obj, IntPtr val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetPerBoneMotionBlur(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetPerBoneMotionBlur(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetUseTimeScale(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
