@@ -75,17 +75,17 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets the shadows casting mode.
+		/// If true, the animation will be updated even when an actor cannot be seen by any camera. Otherwise, the animations themselves will also stop running when the actor is off - screen.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(40), EditorDisplay("Skinned Model"), Tooltip("The shadows casting mode.")]
-		public ShadowsCastingMode ShadowsMode
+		[EditorOrder(40), EditorDisplay("Skinned Model"), Tooltip(" If true, the animation will be updated even when an actor cannot be seen by any camera. Otherwise, the animations themselves will also stop running when the actor is off-screen.")]
+		public bool UpdateWhenOffscreen
 		{
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-			get { return Internal_GetShadowsMode(unmanagedPtr); }
-			set { Internal_SetShadowsMode(unmanagedPtr, value); }
+			get { return Internal_GetUpdateWhenOffscreen(unmanagedPtr); }
+			set { Internal_SetUpdateWhenOffscreen(unmanagedPtr, value); }
 #endif
 		}
 
@@ -135,6 +135,21 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets or sets the shadows casting mode.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(80), EditorDisplay("Skinned Model"), Tooltip("The shadows casting mode.")]
+		public ShadowsCastingMode ShadowsMode
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetShadowsMode(unmanagedPtr); }
+			set { Internal_SetShadowsMode(unmanagedPtr, value); }
+#endif
+		}
+
+		/// <summary>
 		/// Performs the full animation update.
 		/// </summary>
 #if UNIT_TEST_COMPILANT
@@ -179,9 +194,9 @@ namespace FlaxEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetUseTimeScale(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern ShadowsCastingMode Internal_GetShadowsMode(IntPtr obj);
+		internal static extern bool Internal_GetUpdateWhenOffscreen(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetShadowsMode(IntPtr obj, ShadowsCastingMode val);
+		internal static extern void Internal_SetUpdateWhenOffscreen(IntPtr obj, bool val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern AnimationUpdateMode Internal_GetUpdateMode(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -194,6 +209,10 @@ namespace FlaxEngine
 		internal static extern void Internal_GetCustomBounds(IntPtr obj, out BoundingBox resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetCustomBounds(IntPtr obj, ref BoundingBox val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern ShadowsCastingMode Internal_GetShadowsMode(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetShadowsMode(IntPtr obj, ShadowsCastingMode val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_UpdateAnimation(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
