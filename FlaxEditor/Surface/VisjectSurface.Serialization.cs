@@ -39,7 +39,7 @@ namespace FlaxEditor.Surface
 
         private static T ByteArrayToStructure<T>(byte[] bytes) where T : struct
         {
-            // #stuid c#
+            // #stupid c#
             GCHandle handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
             T stuff = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T));
             handle.Free();
@@ -48,7 +48,7 @@ namespace FlaxEditor.Surface
 
         private static byte[] StructureToByteArray<T>(ref T stuff) where T : struct
         {
-            // #stuid c#
+            // #stupid c#
             int size = Marshal.SizeOf(typeof(T));
             byte[] arr = new byte[size];
             IntPtr ptr = Marshal.AllocHGlobal(size);
