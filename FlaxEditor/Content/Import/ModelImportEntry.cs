@@ -44,68 +44,96 @@ namespace FlaxEditor.Content.Import
         Channel3 = 5
     }
 
-    /// <summary>
-    /// Proxy object to present model import settings in <see cref="ImportFilesDialog"/>.
-    /// </summary>
-    public class ModelImportSettings
-    {
+	/// <summary>
+	/// Declares the imported data type.
+	/// </summary>
+	public enum ModelType
+	{
+		/// <summary>
+		/// The model asset.
+		/// </summary>
+		Model = 0,
+
+		/// <summary>
+		/// The skinned model asset.
+		/// </summary>
+		SkinnedModel = 1,
+
+		/// <summary>
+		/// The animation asset.
+		/// </summary>
+		Animation = 2,
+	}
+
+	/// <summary>
+	/// Proxy object to present model import settings in <see cref="ImportFilesDialog"/>.
+	/// </summary>
+	public class ModelImportSettings
+	{
+		/// <summary>
+		/// Gets or sets the type of the imported asset.
+		/// </summary>
+		[EditorOrder(0), Tooltip("Type of the imorted asset")]
+		public ModelType Type { get; set; } = ModelType.Model;
+
         /// <summary>
         /// Custom import scale.
         /// </summary>
-        [EditorOrder(10), Tooltip("Custom import scale")]
+        [EditorOrder(10), EditorDisplay("Geometry"), Tooltip("Custom import scale")]
         public float Scale { get; set; } = 1.0f;
 
         /// <summary>
         /// True if calculate model normals, otherwise will import them.
         /// </summary>
-        [EditorOrder(20), Tooltip("Enable model normal vectors recalculating")]
+        [EditorOrder(20), EditorDisplay("Geometry"), Tooltip("Enable model normal vectors recalculating")]
         public bool CalculateNormals { get; set; } = true;
 
         /// <summary>
         /// Calculated normals smoothing angle.
         /// </summary>
-        [EditorOrder(30), Tooltip("Generated normal vector smoothing angle")]
+        [EditorOrder(30), EditorDisplay("Geometry"), Tooltip("Generated normal vector smoothing angle")]
         public float SmoothigNormalsAngle { get; set; } = 60.0f;
 
         /// <summary>
         /// True if calculate model tangents, otherwise will import them.
         /// </summary>
-        [EditorOrder(40), Tooltip("Enable model tangent vectors recalculating")]
+        [EditorOrder(40), EditorDisplay("Geometry"), Tooltip("Enable model tangent vectors recalculating")]
         public bool CalculateTangents { get; set; } = true;
         
         /// <summary>
         /// Enable/disable meshes geometry optimization.
         /// </summary>
-        [EditorOrder(50), Tooltip("Enable/disable meshes geometry optimization")]
+        [EditorOrder(50), EditorDisplay("Geometry"), Tooltip("Enable/disable meshes geometry optimization")]
         public bool OptimizeMeshes { get; set; } = true;
 
         /// <summary>
         /// Enable/disable geometry merge for meshes with the same materials.
         /// </summary>
-        [EditorOrder(60), Tooltip("Enable/disable geometry merge for meshes with the same materials")]
+        [EditorOrder(60), EditorDisplay("Geometry"), Tooltip("Enable/disable geometry merge for meshes with the same materials")]
         public bool MergeMeshes { get; set; } = true;
         
         /// <summary>
         /// Enable/disable importing meshes Level of Details.
         /// </summary>
-        [EditorOrder(70), EditorDisplay(null, "Import LODs"), Tooltip("Enable/disable importing meshes Level of Details")]
+        [EditorOrder(70), EditorDisplay("Geometry", "Import LODs"), Tooltip("Enable/disable importing meshes Level of Details")]
         public bool ImportLODs { get; set; } = true;
 
         /// <summary>
         /// Enable/disable importing vertex colors (channel 0 only).
         /// </summary>
-        [EditorOrder(80), Tooltip("Enable/disable importing vertex colors (channel 0 only)")]
+        [EditorOrder(80), EditorDisplay("Geometry"), Tooltip("Enable/disable importing vertex colors (channel 0 only)")]
         public bool ImportVertexColors { get; set; } = true;
 
         /// <summary>
         /// The lighmap UVs source.
         /// </summary>
-        [EditorOrder(90), EditorDisplay(null, "Lighmap UVs Source"), Tooltip("Model lightmap UVs source")]
+        [EditorOrder(90), EditorDisplay("Geometry", "Lighmap UVs Source"), Tooltip("Model lightmap UVs source")]
         public ModelLightmapUVsSource LighmapUVsSource { get; set; } = ModelLightmapUVsSource.Disable;
 
         [StructLayout(LayoutKind.Sequential)]
         internal struct InternalOptions
         {
+            public ModelType Type;
             public float Scale;
             public bool CalculateNormals;
             public float SmoothigNormalsAngle;
@@ -121,6 +149,7 @@ namespace FlaxEditor.Content.Import
         {
             options = new InternalOptions
             {
+	            Type = Type,
                 Scale = Scale,
                 CalculateNormals = CalculateNormals,
                 SmoothigNormalsAngle = SmoothigNormalsAngle,
@@ -135,6 +164,7 @@ namespace FlaxEditor.Content.Import
         
         internal void FromInternal(ref InternalOptions options)
         {
+	        Type = options.Type;
             Scale = options.Scale;
             CalculateNormals = options.CalculateNormals;
             SmoothigNormalsAngle = options.SmoothigNormalsAngle;
