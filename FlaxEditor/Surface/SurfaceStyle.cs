@@ -165,6 +165,7 @@ namespace FlaxEditor.Surface
         {
             switch (surfaceType)
             {
+				case SurfaceType.AnimationGraph:
                 case SurfaceType.Material: return CreateDefaultMaterial(editor);
                 default: throw new NotSupportedException();
             }

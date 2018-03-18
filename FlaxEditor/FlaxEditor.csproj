@@ -69,6 +69,7 @@
     <Compile Include="Content\Import\ImportFilesDialog.cs" />
     <Compile Include="Content\Import\ModelImportEntry.cs" />
     <Compile Include="Content\Import\TextureImportEntry.cs" />
+    <Compile Include="Content\Proxy\AnimationGraphProxy.cs" />
     <Compile Include="Content\Proxy\AudioClipProxy.cs" />
     <Compile Include="Content\Proxy\CollisionDataProxy.cs" />
     <Compile Include="Content\Proxy\SettingsProxy.cs" />
@@ -271,6 +272,7 @@
     <Compile Include="States\LoadingState.cs" />
     <Compile Include="States\PlayingState.cs" />
     <Compile Include="States\ReloadingScriptsState.cs" />
+    <Compile Include="Surface\Archetypes\Animation.cs" />
     <Compile Include="Surface\Archetypes\Constants.cs" />
     <Compile Include="Surface\Archetypes\Layers.cs" />
     <Compile Include="Surface\Archetypes\Material.cs" />
@@ -353,6 +355,7 @@
     <Compile Include="Viewport\Widgets\ViewportWidgetButton.cs" />
     <Compile Include="Viewport\Widgets\ViewportWidgetsContainer.cs" />
     <Compile Include="Windows\AboutDialog.cs" />
+    <Compile Include="Windows\Assets\AnimationGraphWindow.cs" />
     <Compile Include="Windows\Assets\AssetEditorWindow.cs" />
     <Compile Include="Windows\Assets\AudioClipWindow.cs" />
     <Compile Include="Windows\Assets\CollisionDataWindow.cs" />

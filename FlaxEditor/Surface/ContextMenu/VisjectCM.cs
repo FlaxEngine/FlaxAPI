@@ -80,6 +80,11 @@ namespace FlaxEditor.Surface.ContextMenu
                         if ((nodeArchetype.Flags & NodeFlags.VisjectOnly) != 0)
                             continue;
                     }
+					else if (type == SurfaceType.AnimationGraph)
+                    {
+	                    if ((nodeArchetype.Flags & NodeFlags.AnimGraphOnly) != 0)
+		                    continue;
+                    }
                     else
                     {
                         if ((nodeArchetype.Flags & NodeFlags.MaterialOnly) != 0)
