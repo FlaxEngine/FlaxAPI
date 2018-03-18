@@ -8,6 +8,7 @@ using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.Content.Import;
 using FlaxEditor.CustomEditors;
+using FlaxEditor.CustomEditors.Elements;
 using FlaxEditor.GUI;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
@@ -198,6 +199,7 @@ namespace FlaxEditor.Windows.Assets
 					if (proxy.Asset == null)
 						return;
 					var meshes = proxy.Asset.Meshes;
+					var skeleton = proxy.Asset.Skeleton;
 
 					// General properties
 					{
@@ -222,6 +224,7 @@ namespace FlaxEditor.Windows.Assets
 						}
 
 						group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", triangleCount, vertexCount));
+						group.Label("Bones: " + skeleton.Length);
 					}
 
 					// Group per mesh
@@ -253,7 +256,24 @@ namespace FlaxEditor.Windows.Assets
 						proxy._highlightCheckBoxes.Add(highlight.CheckBox);
 					}
 
-					// TODO: skeleton
+					// Skeleton
+					{
+						var group = layout.Group("Skeleton");
+						group.Panel.Close(false);
+
+						var tree = group.Tree();
+						var root = tree.Node("Root");
+						for (int i = 0; i < skeleton.Length; i++)
+						{
+							if (skeleton[i].ParentIndex == -1)
+							{
+								var node = root.Node(skeleton[i].Name);
+								BuildSkeletonNodeTree(skeleton, node, i);
+							}
+						}
+
+						root.TreeNode.ExpandAll();
+					}
 
 					// Import Settings
 					{
@@ -270,6 +290,18 @@ namespace FlaxEditor.Windows.Assets
 
 					// Refresh UI
 					proxy.UpdateMaterialSlotsUI();
+				}
+
+				private void BuildSkeletonNodeTree(SkeletonBone[] skeleton, TreeNodeElement layout, int boneIndex)
+				{
+					for (int i = 0; i < skeleton.Length; i++)
+					{
+						if (skeleton[i].ParentIndex == boneIndex)
+						{
+							var node = layout.Node(skeleton[i].Name);
+							BuildSkeletonNodeTree(skeleton, node, i);
+						}
+					}
 				}
 			}
 		}
