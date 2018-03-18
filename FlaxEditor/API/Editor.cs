@@ -448,6 +448,11 @@ namespace FlaxEditor
             /// The collision data. See <see cref="FlaxEngine.CollisionData"/>.
             /// </summary>
             CollisionData = 2,
+
+			/// <summary>
+			/// The animation graph. See <see cref="FlaxEngine.AnimationGraph"/>.
+			/// </summary>
+			AnimationGraph = 3,
         }
 
         /// <summary>
