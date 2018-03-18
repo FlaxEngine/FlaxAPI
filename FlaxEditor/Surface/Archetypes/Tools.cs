@@ -37,6 +37,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 2,
                 Title = "Desaturation",
                 Description = "Desaturates input, or converts the colors of its input into shades of gray, based a certain percentage",
+				Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(140, 130),
                 DefaultValues = new object[]
                 {

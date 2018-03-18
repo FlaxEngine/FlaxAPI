@@ -2,7 +2,9 @@
 // Copyright (c) 2012-2018 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.Surface.Archetypes
 {
@@ -12,18 +14,54 @@ namespace FlaxEditor.Surface.Archetypes
 	public static class Animation
 	{
 		/// <summary>
-		/// Customized <see cref="SurfaceNode"/> for main animation graph node.
+		/// Customized <see cref="SurfaceNode"/> for the main animation graph node.
 		/// </summary>
 		/// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
-		public class SurfaceNodeAnimOutput : SurfaceNode
+		public class Output : SurfaceNode
 		{
 			/// <inheritdoc />
-			public SurfaceNodeAnimOutput(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
+			public Output(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
 				: base(id, surface, nodeArch, groupArch)
 			{
 			}
 		}
 
+		/// <summary>
+		/// Customized <see cref="SurfaceNode"/> for the animation sampling nodes
+		/// </summary>
+		/// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
+		public class Sample : SurfaceNode
+		{
+			/// <inheritdoc />
+			public Sample(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
+				: base(id, surface, nodeArch, groupArch)
+			{
+			}
+
+			/// <inheritdoc />
+			public override void SetValue(int index, object value)
+			{
+				base.SetValue(index, value);
+				UpdateTitle();
+			}
+
+			/// <inheritdoc />
+			public override void OnSurfaceLoaded()
+			{
+				base.OnSurfaceLoaded();
+
+				UpdateTitle();
+			}
+
+			private void UpdateTitle()
+			{
+				var asset = Editor.Instance.ContentDatabase.Find((Guid)Values[0]);
+				Name = asset?.ShortName ?? "Animation";
+				var style = Style.Current;
+				Resize(Mathf.Max(230, style.FontLarge.MeasureText(Name).X + 20), 160);
+			}
+		}
+		
 		/// <summary>
 		/// The nodes for that group.
 		/// </summary>
@@ -32,7 +70,7 @@ namespace FlaxEditor.Surface.Archetypes
 			new NodeArchetype
 			{
 				TypeID = 1,
-				Create = (id, surface, arch, groupArch) => new SurfaceNodeAnimOutput(id, surface, arch, groupArch),
+				Create = (id, surface, arch, groupArch) => new Output(id, surface, arch, groupArch),
 				Title = "Animation Output",
 				Description = "Main animation graph output node",
 				Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI,
@@ -40,6 +78,34 @@ namespace FlaxEditor.Surface.Archetypes
 				Elements = new[]
 				{
 					NodeElementArchetype.Factory.Input(2, "Animation", true, ConnectionType.Impulse, 0),
+				}
+			},
+			new NodeArchetype
+			{
+				TypeID = 2,
+				Create = (id, surface, arch, groupArch) => new Sample(id, surface, arch, groupArch),
+				Title = "Animation",
+				Description = "Animation sampling",
+				Flags = NodeFlags.AnimGraphOnly,
+				Size = new Vector2(230, 160),
+				DefaultValues = new object[]
+				{
+					Guid.Empty,
+					1.0f,
+					true,
+					0.0f,
+				},
+				Elements = new[]
+				{
+					NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 0),
+					NodeElementArchetype.Factory.Output(1, "Normalized Time", ConnectionType.Float, 1),
+					NodeElementArchetype.Factory.Output(2, "Time", ConnectionType.Float, 1),
+					NodeElementArchetype.Factory.Output(3, "Length", ConnectionType.Float, 3),
+					NodeElementArchetype.Factory.Output(4, "Is Playing", ConnectionType.Bool, 4),
+					NodeElementArchetype.Factory.Input(0, "Speed", true, ConnectionType.Float, 5, 1),
+					NodeElementArchetype.Factory.Input(1, "Loop", true, ConnectionType.Bool, 6, 2),
+					NodeElementArchetype.Factory.Input(2, "Start Position", true, ConnectionType.Float, 7, 3),
+					NodeElementArchetype.Factory.Asset(0, Surface.Constants.LayoutOffsetY * 3, 0, ContentDomain.Other),
 				}
 			},
 		};

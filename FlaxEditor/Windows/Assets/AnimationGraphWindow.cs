@@ -27,6 +27,33 @@ namespace FlaxEditor.Windows.Assets
 	{
 		internal static Guid BaseModelId = new Guid(1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
+		private sealed class Preview : AnimatedModelPreview
+		{
+			private AnimationGraphWindow _window;
+
+			public Preview(AnimationGraphWindow window)
+				: base(true)
+			{
+				_window = window;
+			}
+
+			/// <inheritdoc />
+			public override void Draw()
+			{
+				base.Draw();
+
+				var style = FlaxEngine.GUI.Style.Current;
+				if (_window.Asset == null || !_window.Asset.IsLoaded)
+				{
+					Render2D.DrawText(style.FontLarge, "Loading...", new Rectangle(Vector2.Zero, Size), Color.White, TextAlignment.Center, TextAlignment.Center);
+				}
+				if (_window._properties.BaseModel == null)
+				{
+					Render2D.DrawText(style.FontLarge, "Missing Base Model", new Rectangle(Vector2.Zero, Size), Color.Red, TextAlignment.Center, TextAlignment.Center, TextWrapping.WrapWords);
+				}
+			}
+		}
+
 		/// <summary>
 		/// The graph properties proxy object.
 		/// </summary>
@@ -281,7 +308,7 @@ namespace FlaxEditor.Windows.Assets
 
 		private readonly SplitPanel _split1;
 		private readonly SplitPanel _split2;
-		private readonly AnimatedModelPreview _preview;
+		private readonly Preview _preview;
 		private readonly VisjectSurface _surface;
 
 		private readonly ToolStripButton _saveButton;
@@ -321,7 +348,7 @@ namespace FlaxEditor.Windows.Assets
 			};
 
 			// Animation preview
-			_preview = new AnimatedModelPreview(true)
+			_preview = new Preview(this)
 			{
 				Parent = _split2.Panel1
 			};
@@ -398,11 +425,11 @@ namespace FlaxEditor.Windows.Assets
 		/// <summary>
 		/// Gets or sets the main graph node.
 		/// </summary>
-		private Surface.Archetypes.Animation.SurfaceNodeAnimOutput MainNode
+		private Surface.Archetypes.Animation.Output MainNode
 		{
 			get
 			{
-				var mainNode = _surface.FindNode(1, 1) as Surface.Archetypes.Animation.SurfaceNodeAnimOutput;
+				var mainNode = _surface.FindNode(8, 1) as Surface.Archetypes.Animation.Output;
 				if (mainNode == null)
 				{
 					// Error
