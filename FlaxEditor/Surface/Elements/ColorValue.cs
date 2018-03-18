@@ -41,7 +41,6 @@ namespace FlaxEditor.Surface.Elements
         {
             base.OnValueChanged();
             Set(ParentNode, Archetype, ref _value);
-            ParentNode.Surface.MarkAsEdited();
         }
 
         private static Color Get(SurfaceNode parentNode, NodeElementArchetype arch)
@@ -92,7 +91,7 @@ namespace FlaxEditor.Surface.Elements
                 value = (Vector4)toSet;
             }
 
-            parentNode.Values[arch.ValueIndex] = value;
+            parentNode.SetValue(arch.ValueIndex, value);
         }
     }
 }

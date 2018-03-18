@@ -36,11 +36,7 @@ namespace FlaxEditor.Surface.Elements
             if (archetype.ValueIndex >= 0)
             {
                 Text = (string)parentNode.Values[archetype.ValueIndex];
-                EditEnd += () =>
-                           {
-                               ParentNode.Values[Archetype.ValueIndex] = Text;
-                               Surface.MarkAsEdited();
-                           };
+                EditEnd += () => ParentNode.SetValue(Archetype.ValueIndex, Text);
             }
         }
 

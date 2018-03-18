@@ -212,9 +212,8 @@ namespace FlaxEditor.Surface.Archetypes
                 Guid selectedID = selected != null ? selected.ID : Guid.Empty;
                 if (selectedID != (Guid)Values[0])
                 {
-                    Values[0] = selectedID;
+					SetValue(0, selectedID);
                     UpdateElements();
-                    Surface.MarkAsEdited();
                 }
             }
 

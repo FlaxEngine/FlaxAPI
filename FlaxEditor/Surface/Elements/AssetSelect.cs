@@ -40,8 +40,7 @@ namespace FlaxEditor.Surface.Elements
         {
             if (ParentNode != null)
             {
-                ParentNode.Values[Archetype.ValueIndex] = SelectedID;
-                ParentNode.Surface.MarkAsEdited();
+				ParentNode.SetValue(Archetype.ValueIndex, SelectedID);
             }
 
             base.OnSelectedItemChanged();

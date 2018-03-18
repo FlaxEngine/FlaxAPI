@@ -142,20 +142,17 @@ namespace FlaxEditor.Surface.Elements
 
 	    private void OnCheckBoxChanged(CheckBox checkBox)
 	    {
-		    ParentNode.Values[Archetype.ValueIndex] = checkBox.Checked;
-			Surface.MarkAsEdited();
+		    ParentNode.SetValue(Archetype.ValueIndex, checkBox.Checked);
 	    }
 
 	    private void OnFloatValueBoxChanged()
 	    {
 		    FloatValue.Set(ParentNode, Archetype, ((FloatValueBox)_defaultValueEditor).Value);
-		    Surface.MarkAsEdited();
 	    }
 
 	    private void OnIntValueBoxChanged()
 	    {
 		    InteagerValue.Set(ParentNode, Archetype, ((IntValueBox)_defaultValueEditor).Value);
-		    Surface.MarkAsEdited();
 	    }
     }
 }

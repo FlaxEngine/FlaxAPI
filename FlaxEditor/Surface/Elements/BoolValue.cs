@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2018 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -23,8 +23,7 @@ namespace FlaxEditor.Surface.Elements
             get => (bool)ParentNode.Values[Archetype.ValueIndex];
             set
             {
-                ParentNode.Values[Archetype.ValueIndex] = value;
-                ParentNode.Surface.MarkAsEdited();
+                ParentNode.SetValue(Archetype.ValueIndex, value);
             }
         }
 

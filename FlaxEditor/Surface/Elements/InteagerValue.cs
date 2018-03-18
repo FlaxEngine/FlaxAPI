@@ -51,7 +51,6 @@ namespace FlaxEditor.Surface.Elements
         {
             base.OnValueChanged();
             Set(ParentNode, Archetype, Value);
-            ParentNode.Surface.MarkAsEdited();
         }
 
         public static int Get(SurfaceNode parentNode, NodeElementArchetype arch)
@@ -143,7 +142,7 @@ namespace FlaxEditor.Surface.Elements
                 value = 0;
             }
             
-            parentNode.Values[arch.ValueIndex] = value;
+            parentNode.SetValue(arch.ValueIndex, value);
         }
     }
 }
