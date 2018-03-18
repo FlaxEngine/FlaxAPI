@@ -44,24 +44,6 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Reloads the animation graph surface (does not save data to the asset file).
-		/// </summary>
-		/// <param name="data">Surface data.</param>
-		/// <returns>True if cannot reload it, oherwise false.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-		[UnmanagedCall]
-		public bool ReloadSurface(byte[] data) 
-		{
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-			return Internal_ReloadSurface(unmanagedPtr, data);
-#endif
-		}
-
-		/// <summary>
 		/// Updates the animation graph surface (save new one, discard cached data, reload asset).
 		/// </summary>
 		/// <param name="data">Surface data.</param>
@@ -83,8 +65,6 @@ namespace FlaxEngine
 #if !UNIT_TEST_COMPILANT
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern byte[] Internal_LoadSurface(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_ReloadSurface(IntPtr obj, byte[] data);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_SaveSurface(IntPtr obj, byte[] data);
 #endif

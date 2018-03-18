@@ -67,6 +67,19 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Determines whether this skinned has all the meshes loaded (vertex/index buffers data is on a GPU).
+		/// </summary>
+		[UnmanagedCall]
+		public bool HasMeshesLoaded
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_HasMeshesLoaded(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
 		/// Saves asset to the file. Saved are model and mesh properties but not a vertex data. Supported only in Editor.
 		/// </summary>
 		/// <returns>True if cannot save data, otherwise false.</returns>
@@ -93,6 +106,8 @@ namespace FlaxEngine
 		internal static extern void Internal_SetMinScreenSize(IntPtr obj, float val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern int Internal_GetMeshesCount(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_HasMeshesLoaded(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_Save(IntPtr obj);
 #endif
