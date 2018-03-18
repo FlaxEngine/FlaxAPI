@@ -369,6 +369,26 @@ namespace FlaxEditor.Surface
             return result;
         }
 
+		/// <summary>
+		/// Gets the parameter by the given ID.
+		/// </summary>
+		/// <param name="id">The identifier.</param>
+		/// <returns>Found parameter instance or null if missing.</returns>
+		public SurfaceParameter GetParameter(Guid id)
+	    {
+		    SurfaceParameter result = null;
+		    for (int i = 0; i < Parameters.Count; i++)
+		    {
+			    var parameter = Parameters[i];
+			    if (parameter.ID == id)
+			    {
+				    result = parameter;
+				    break;
+			    }
+		    }
+		    return result;
+		}
+
         /// <summary>
         /// Spawns the node.
         /// </summary>

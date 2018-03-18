@@ -266,6 +266,7 @@ namespace FlaxEditor.Windows.Assets
 			{
 				var model = window.PreviewModelActor;
 				model.GetParam(BaseModelId).Value = BaseModel;
+				window.Surface.GetParameter(BaseModelId).Value = BaseModel?.ID ?? Guid.Empty;
 			}
 
 			/// <summary>
@@ -369,6 +370,9 @@ namespace FlaxEditor.Windows.Assets
 			// Check if surface has been edited
 			if (_surface.IsEdited)
 			{
+				// Sync edited parameters
+				_properties.OnSave(this);
+
 				// Save surface
 				var data = _surface.Save();
 				if (data == null)
@@ -377,9 +381,6 @@ namespace FlaxEditor.Windows.Assets
 					Editor.LogError("Failed to save animation graph surface");
 					return true;
 				}
-
-				// Sync edited parameters
-				_properties.OnSave(this);
 
 				// Save data to the temporary asset
 				if (_asset.SaveSurface(data))
