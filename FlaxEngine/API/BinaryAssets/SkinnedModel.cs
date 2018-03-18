@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
@@ -15,6 +16,7 @@ namespace FlaxEngine
 
 		private MaterialSlot[] _slots;
 		private SkinnedMesh[] _meshes;
+		private SkeletonBone[] _bones;
 
 		/// <summary>
 		/// Gets the material slots colelction. Each slot contains information how to render mesh or meshes using it.
@@ -90,11 +92,37 @@ namespace FlaxEngine
 			}
 		}
 
+		/// <summary>
+		/// Gets the skeleton bones hierarchy.
+		/// </summary>
+		public SkeletonBone[] Skeleton
+		{
+			get
+			{
+				if (_bones == null)
+				{
+					_bones = Internal_SetupBones(unmanagedPtr, typeof(SkeletonBone));
+				}
+
+				return _bones;
+			}
+		}
+
 		internal void Internal_OnUnload()
 		{
 			// Clear cached data
 			_slots = null;
 			_meshes = null;
+			_bones = null;
 		}
+
+		#region Internal Calls
+
+#if !UNIT_TEST_COMPILANT
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern SkeletonBone[] Internal_SetupBones(IntPtr obj, Type type);
+#endif
+
+		#endregion
 	}
 }
