@@ -367,6 +367,7 @@
     <Compile Include="Windows\Assets\MaterialWindow.cs" />
     <Compile Include="Windows\Assets\ModelWindow.cs" />
     <Compile Include="Windows\Assets\PreviewsCacheWindow.cs" />
+    <Compile Include="Windows\Assets\SkinnedModelWindow.cs" />
     <Compile Include="Windows\Assets\SpriteAtlasWindow.cs" />
     <Compile Include="Windows\Assets\TextureWindow.cs" />
     <Compile Include="Windows\ContentWindow.ContextMenu.cs" />

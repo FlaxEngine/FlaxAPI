@@ -2,10 +2,10 @@
 // Copyright (c) 2012-2018 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Viewport.Previews;
 using FlaxEditor.Windows;
+using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
@@ -32,8 +32,7 @@ namespace FlaxEditor.Content
 		/// <inheritdoc />
 		public override EditorWindow Open(Editor editor, ContentItem item)
 		{
-			throw new NotImplementedException("TODO: skinned model editor window");
-			//return new SkinnedModelWindow(editor, item as AssetItem);
+			return new SkinnedModelWindow(editor, item as AssetItem);
 		}
 
 		/// <inheritdoc />
