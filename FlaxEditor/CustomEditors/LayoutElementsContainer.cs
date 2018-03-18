@@ -239,13 +239,24 @@ namespace FlaxEditor.CustomEditors
             return property.Checkbox();
         }
 
-        /// <summary>
-        /// Adds new label element.
-        /// </summary>
-        /// <param name="text">The label text.</param>
-        /// <param name="horizontalAlignment">The label text horizontal alignment.</param>
-        /// <returns>The created element.</returns>
-        public LabelElement Label(string text, TextAlignment horizontalAlignment = TextAlignment.Near)
+	    /// <summary>
+	    /// Adds new tree element.
+	    /// </summary>
+	    /// <returns>The created element.</returns>
+	    public TreeElement Tree()
+	    {
+		    TreeElement element = new TreeElement();
+		    OnAddElement(element);
+		    return element;
+	    }
+
+		/// <summary>
+		/// Adds new label element.
+		/// </summary>
+		/// <param name="text">The label text.</param>
+		/// <param name="horizontalAlignment">The label text horizontal alignment.</param>
+		/// <returns>The created element.</returns>
+		public LabelElement Label(string text, TextAlignment horizontalAlignment = TextAlignment.Near)
         {
             LabelElement element = new LabelElement();
             element.Label.Text = text;

@@ -15,7 +15,6 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Initializes a new instance of the <see cref="RootContentTreeNode"/> class.
         /// </summary>
-        /// <inheritdoc />
         public RootContentTreeNode()
             : base(null, string.Empty)
         {

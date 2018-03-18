@@ -131,6 +131,8 @@
     <Compile Include="CustomEditors\Elements\LabelElement.cs" />
     <Compile Include="CustomEditors\Elements\PropertiesListElement.cs" />
     <Compile Include="CustomEditors\Elements\SliderElement.cs" />
+    <Compile Include="CustomEditors\Elements\TreeElement.cs" />
+    <Compile Include="CustomEditors\Elements\TreeNodeElement.cs" />
     <Compile Include="CustomEditors\GUI\CheckablePropertyNameLabel.cs" />
     <Compile Include="CustomEditors\GUI\ClickablePropertyNameLabel.cs" />
     <Compile Include="CustomEditors\GUI\PropertiesList.cs" />
