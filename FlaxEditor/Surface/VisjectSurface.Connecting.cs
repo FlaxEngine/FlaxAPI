@@ -101,7 +101,8 @@ namespace FlaxEditor.Surface
                 }
                 else
                 {
-                    throw new NotImplementedException();
+					// Scripts need casting node usage
+	                return false;
                 }
             }
             return result;
