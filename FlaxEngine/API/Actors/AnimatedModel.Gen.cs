@@ -60,6 +60,21 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets or sets the animation graph used for the skinned mesh skeleton bones evaluation.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(15), EditorDisplay("Skinned Model"), Tooltip("Animation graph used for the skinned mesh skeleton bones evaluation")]
+		public AnimationGraph AnimationGraph
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetAnimationGraph(unmanagedPtr); }
+			set { Internal_SetAnimationGraph(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+#endif
+		}
+
+		/// <summary>
 		/// If true, animation speed will be affected by the global time scale parameter.
 		/// </summary>
 		[UnmanagedCall]
@@ -189,6 +204,10 @@ namespace FlaxEngine
 		internal static extern SkinnedModel Internal_GetSkinnedModel(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetSkinnedModel(IntPtr obj, IntPtr val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern AnimationGraph Internal_GetAnimationGraph(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetAnimationGraph(IntPtr obj, IntPtr val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetUseTimeScale(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]

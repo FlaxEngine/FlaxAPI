@@ -165,6 +165,18 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets the parameter by ID.
+		/// </summary>
+		/// <param name="paramId">The id.</param>
+		/// <returns>The animation graph parameter.</returns>
+		public AnimationGraphParameter GetParam(Guid paramId)
+		{
+			var parameters = Parameters;
+			var index = Internal_GetParamIndexById(unmanagedPtr, ref paramId);
+			return index >= 0 && index < parameters.Length ? parameters[index] : null;
+		}
+
+		/// <summary>
 		/// Occurs when entries collection gets changed.
 		/// It's called on <see cref="AnimatedModel"/> skinned model changed or when model asset gets reloaded, etc.
 		/// </summary>
@@ -212,6 +224,9 @@ namespace FlaxEngine
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern int Internal_GetParamIndexByName(IntPtr obj, string name);
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern int Internal_GetParamIndexById(IntPtr obj, ref Guid id);
 #endif
 
 		#endregion
