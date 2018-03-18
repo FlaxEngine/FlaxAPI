@@ -14,6 +14,7 @@ namespace FlaxEngine
 		public const ContentDomain Domain = ContentDomain.Model;
 
 		private MaterialSlot[] _slots;
+		private SkinnedMesh[] _meshes;
 
 		/// <summary>
 		/// Gets the material slots colelction. Each slot contains information how to render mesh or meshes using it.
@@ -23,7 +24,17 @@ namespace FlaxEngine
 			get
 			{
 				if (_slots == null)
-					CacheData();
+				{
+					// Ask unmanaged world for amount of material slots
+					int count = Model.Internal_GetSlots(unmanagedPtr);
+					if (count > 0)
+					{
+						_slots = new MaterialSlot[count];
+						for (int i = 0; i < count; i++)
+							_slots[i] = new MaterialSlot(this, i);
+					}
+				}
+
 				return _slots;
 			}
 			internal set
@@ -56,15 +67,26 @@ namespace FlaxEngine
 			return result;
 		}
 
-		private void CacheData()
+		/// <summary>
+		/// Gets the skinned meshes collection.
+		/// </summary>
+		public SkinnedMesh[] Meshes
 		{
-			// Ask unmanaged world for amount of material slots
-			int slotsCount = Model.Internal_GetSlots(unmanagedPtr);
-			if (slotsCount > 0)
+			get
 			{
-				_slots = new MaterialSlot[slotsCount];
-				for (int i = 0; i < slotsCount; i++)
-					_slots[i] = new MaterialSlot(this, i);
+				if (_meshes == null)
+				{
+					// Ask unmanaged world for amount of meshes
+					int count = MeshesCount;
+					if (count > 0)
+					{
+						_meshes = new SkinnedMesh[count];
+						for (int i = 0; i < count; i++)
+							_meshes[i] = new SkinnedMesh(this, i);
+					}
+				}
+
+				return _meshes;
 			}
 		}
 
@@ -72,6 +94,7 @@ namespace FlaxEngine
 		{
 			// Clear cached data
 			_slots = null;
+			_meshes = null;
 		}
 	}
 }

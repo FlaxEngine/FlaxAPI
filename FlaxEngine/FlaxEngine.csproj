@@ -260,6 +260,7 @@
     <Compile Include="Engine\ModelLOD.cs" />
     <Compile Include="Engine\PhysicalMaterial.cs" />
     <Compile Include="Engine\RayCastHit.cs" />
+    <Compile Include="Engine\SkinnedMesh.cs" />
     <Compile Include="Engine\SpringParameters.cs" />
     <Compile Include="Enums\ForceMode.cs" />
     <Compile Include="Enums\Keys.cs" />
