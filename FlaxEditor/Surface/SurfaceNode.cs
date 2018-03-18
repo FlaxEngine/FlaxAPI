@@ -21,7 +21,7 @@ namespace FlaxEditor.Surface
         private Rectangle _footerRect;
         private Vector2 _mousePosition;
         private bool _isSelected;
-
+		
         /// <summary>
         /// The surface.
         /// </summary>
@@ -88,6 +88,7 @@ namespace FlaxEditor.Surface
             : base(0, 0, nodeArch.Size.X + Constants.NodeMarginX * 2, nodeArch.Size.Y + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize)
         {
             ClipChildren = false;
+	        Name = nodeArch.Title;
 
             ID = id;
             Surface = surface;
@@ -101,17 +102,30 @@ namespace FlaxEditor.Surface
             }
         }
 
-        /// <summary>
-        /// Resizes the node area.
-        /// </summary>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        protected void Resize(float width, float height)
-        {
-            Size = new Vector2(width + Constants.NodeMarginX * 2, height + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize);
-        }
+	    /// <summary>
+	    /// Resizes the node area.
+	    /// </summary>
+	    /// <param name="width">The width.</param>
+	    /// <param name="height">The height.</param>
+	    protected void Resize(float width, float height)
+	    {
+		    var prevSize = Size;
+		    Size = new Vector2(width + Constants.NodeMarginX * 2, height + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize);
 
-        internal void AddElement(ISurfaceNodeElement element)
+		    // Update boxes on width change
+		    if (!Mathf.NearEqual(prevSize.X, Size.X))
+		    {
+			    for (int i = 0; i < Elements.Count; i++)
+			    {
+				    if (Elements[i] is OutputBox box)
+				    {
+					    box.Location = box.Archetype.Position + new Vector2(width, 0);
+				    }
+			    }
+		    }
+	    }
+
+	    internal void AddElement(ISurfaceNodeElement element)
         {
             Elements.Add(element);
             if (element is Control control)
@@ -250,7 +264,18 @@ namespace FlaxEditor.Surface
 	        }
 		}
 
-        /// <summary>
+	    /// <summary>
+	    /// Sets the value of the node parameter.
+	    /// </summary>
+	    /// <param name="index">The value index.</param>
+	    /// <param name="value">The value.</param>
+	    public virtual void SetValue(int index, object value)
+	    {
+		    Values[index] = value;
+		    Surface.MarkAsEdited();
+	    }
+		
+	    /// <summary>
         /// Updates the given box connection.
         /// </summary>
         /// <param name="box">The box.</param>
@@ -292,7 +317,7 @@ namespace FlaxEditor.Surface
 
             // Header
             Render2D.FillRectangle(_headerRect, style.BackgroundHighlighted);
-            Render2D.DrawText(style.FontLarge, Archetype.Title, _headerRect, style.Foreground, TextAlignment.Center, TextAlignment.Center, TextWrapping.NoWrap, 1.0f);
+            Render2D.DrawText(style.FontLarge, Name, _headerRect, style.Foreground, TextAlignment.Center, TextAlignment.Center, TextWrapping.NoWrap, 1.0f);
 
             // Close button
             if ((Archetype.Flags & NodeFlags.NoCloseButton) == 0)
