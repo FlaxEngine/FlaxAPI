@@ -11,8 +11,8 @@ namespace FlaxEditor.Content.Import
     /// <summary>
     /// Importing model lightmap UVs source
     /// </summary>
-    public enum ModelLightmapUVsSource
-    {
+    public enum ModelLightmapUVsSource : int
+	{
         /// <summary>
         /// No lightmap UVs.
         /// </summary>
@@ -47,7 +47,7 @@ namespace FlaxEditor.Content.Import
 	/// <summary>
 	/// Declares the imported data type.
 	/// </summary>
-	public enum ModelType
+	public enum ModelType : int
 	{
 		/// <summary>
 		/// The model asset.
@@ -63,6 +63,22 @@ namespace FlaxEditor.Content.Import
 		/// The animation asset.
 		/// </summary>
 		Animation = 2,
+	}
+
+	/// <summary>
+	/// Declares the imported animation clip duration.
+	/// </summary>
+	public enum AnimationDuration : int
+	{
+		/// <summary>
+		/// The imported duration.
+		/// </summary>
+		Imported = 0,
+
+		/// <summary>
+		/// The custom duration specified via keyframes range.
+		/// </summary>
+		Custom = 1,
 	}
 
 	/// <summary>
@@ -130,11 +146,43 @@ namespace FlaxEditor.Content.Import
         [EditorOrder(90), EditorDisplay("Geometry", "Lighmap UVs Source"), Tooltip("Model lightmap UVs source")]
         public ModelLightmapUVsSource LighmapUVsSource { get; set; } = ModelLightmapUVsSource.Disable;
 
-        [StructLayout(LayoutKind.Sequential)]
+		/// <summary>
+		/// The imported animation duration mode.
+		/// </summary>
+		[EditorOrder(1000), EditorDisplay("Animation"), Tooltip("Imported animation duration mode. Can use the original value or overriden by settings.")]
+		public AnimationDuration Duration { get; set; } = AnimationDuration.Imported;
+
+		/// <summary>
+		/// The imported animation first frame index. Used only if Duration mode is set to Custom.
+		/// </summary>
+		[EditorOrder(1010), Limit(0), EditorDisplay("Animation"), Tooltip("Imported animation first frame index. Used only if Duration mode is set to Custom.")]
+		public int FramesRangeStart { get; set; } = 0;
+
+		/// <summary>
+		/// The imported animation end frame index. Used only if Duration mode is set to Custom.
+		/// </summary>
+		[EditorOrder(1020), Limit(0), EditorDisplay("Animation"), Tooltip("Imported animation last frame index. Used only if Duration mode is set to Custom.")]
+		public int FramesRangeEnd { get; set; } = 0;
+
+		/// <summary>
+		/// The imported animation sampling rate. If value is 0 then the original animation speed will be used.
+		/// </summary>
+		[EditorOrder(1030), Limit(0, 1000, 0.01f), EditorDisplay("Animation"), Tooltip("The imported animation sampling rate. If value is 0 then the original animation speed will be used.")]
+		public float SamplingRate { get; set; } = 0.0f;
+
+		/// <summary>
+		/// The imported animation will have removed tracks with no keyframes or unspeficied data.
+		/// </summary>
+		[EditorOrder(1040), EditorDisplay("Animation"), Tooltip("The imported animation will have removed tracks with no keyframes or unspeficied data.")]
+		public bool SkipEmptyCurves { get; set; } = true;
+
+		[StructLayout(LayoutKind.Sequential)]
         internal struct InternalOptions
         {
             public ModelType Type;
-            public float Scale;
+
+	        // Geometry
+			public float Scale;
             public bool CalculateNormals;
             public float SmoothigNormalsAngle;
             public bool CalculateTangents;
@@ -143,9 +191,16 @@ namespace FlaxEditor.Content.Import
             public bool ImportLODs;
             public bool ImportVertexColors;
             public ModelLightmapUVsSource LighmapUVsSource;
-        }
 
-        internal void ToInternal(out InternalOptions options)
+			// Animation
+	        public AnimationDuration Duration;
+	        public int FramesRangeStart;
+	        public int FramesRangeEnd;
+	        public float SamplingRate;
+	        public bool SkipEmptyCurves;
+		}
+
+		internal void ToInternal(out InternalOptions options)
         {
             options = new InternalOptions
             {
@@ -158,7 +213,12 @@ namespace FlaxEditor.Content.Import
                 MergeMeshes = MergeMeshes,
                 ImportLODs = ImportLODs,
 	            ImportVertexColors = ImportVertexColors,
-                LighmapUVsSource = LighmapUVsSource
+                LighmapUVsSource = LighmapUVsSource,
+	            Duration = Duration,
+	            FramesRangeStart = FramesRangeStart,
+	            FramesRangeEnd = FramesRangeEnd,
+	            SamplingRate = SamplingRate,
+	            SkipEmptyCurves = SkipEmptyCurves,
             };
         }
         
@@ -174,6 +234,10 @@ namespace FlaxEditor.Content.Import
             ImportLODs = options.ImportLODs;
 	        ImportVertexColors = options.ImportVertexColors;
             LighmapUVsSource = options.LighmapUVsSource;
+	        FramesRangeStart = options.FramesRangeStart;
+	        FramesRangeEnd = options.FramesRangeEnd;
+	        SamplingRate = options.SamplingRate;
+	        SkipEmptyCurves = options.SkipEmptyCurves;
         }
         
         /// <summary>
