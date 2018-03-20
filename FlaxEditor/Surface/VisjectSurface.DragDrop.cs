@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2018 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -105,7 +105,31 @@ namespace FlaxEditor.Surface
 
                         break;
                     }
-                }
+	                case SurfaceType.AnimationGraph:
+	                {
+		                for (int i = 0; i < _dragOverItems.Objects.Count; i++)
+		                {
+			                var item = _dragOverItems.Objects[i];
+
+			                switch (item.ItemDomain)
+			                {
+				                case ContentDomain.Animation:
+				                {
+					                SpawnNode(9, 2, surfaceLocation, new object[]
+					                {
+						                item.ID,
+						                1.0f,
+						                true,
+						                0.0f,
+					                });
+					                break;
+				                }
+			                }
+		                }
+
+						break;
+	                }
+				}
             }
 
             return result;
@@ -125,6 +149,14 @@ namespace FlaxEditor.Surface
                     }
                     break;
                 }
+	            case SurfaceType.AnimationGraph:
+	            {
+		            switch (assetItem.ItemDomain)
+		            {
+			            case ContentDomain.Animation: return true;
+		            }
+		            break;
+	            }
             }
             return false;
         }

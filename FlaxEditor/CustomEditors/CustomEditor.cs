@@ -184,6 +184,9 @@ namespace FlaxEditor.CustomEditors
 
 		internal virtual void RefreshInternal()
 		{
+			if (_values == null)
+				return;
+
 			// Check if need to update value
 			if (_hasValueDirty)
 			{

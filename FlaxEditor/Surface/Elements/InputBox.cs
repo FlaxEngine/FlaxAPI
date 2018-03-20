@@ -116,7 +116,7 @@ namespace FlaxEditor.Surface.Elements
 			    case ConnectionType.Integer:
 			    {
 				    int value = InteagerValue.Get(ParentNode, Archetype);
-				    var control = new IntValueBox(value, x, y, 40, int.MinValue, int.MaxValue, 0.05f)
+				    var control = new IntValueBox(value, x, y, 40, int.MinValue, int.MaxValue, 0.01f)
 				    {
 					    Height = height,
 						Parent = Parent
@@ -128,7 +128,7 @@ namespace FlaxEditor.Surface.Elements
 			    case ConnectionType.Float:
 			    {
 				    float value = FloatValue.Get(ParentNode, Archetype);
-				    var control = new FloatValueBox(value, x, y, 40, float.MinValue, float.MaxValue, 0.05f)
+				    var control = new FloatValueBox(value, x, y, 40, float.MinValue, float.MaxValue, 0.01f)
 				    {
 						Height = height,
 					    Parent = Parent

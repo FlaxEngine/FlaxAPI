@@ -105,7 +105,7 @@ namespace FlaxEditor.Surface.Archetypes
 					NodeElementArchetype.Factory.Input(0, "Speed", true, ConnectionType.Float, 5, 1),
 					NodeElementArchetype.Factory.Input(1, "Loop", true, ConnectionType.Bool, 6, 2),
 					NodeElementArchetype.Factory.Input(2, "Start Position", true, ConnectionType.Float, 7, 3),
-					NodeElementArchetype.Factory.Asset(0, Surface.Constants.LayoutOffsetY * 3, 0, ContentDomain.Other),
+					NodeElementArchetype.Factory.Asset(0, Surface.Constants.LayoutOffsetY * 3, 0, ContentDomain.Animation),
 				}
 			},
 		};

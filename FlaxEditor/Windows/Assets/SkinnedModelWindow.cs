@@ -196,8 +196,11 @@ namespace FlaxEditor.Windows.Assets
 					proxy._isolateCheckBoxes.Clear();
 					proxy._highlightCheckBoxes.Clear();
 
-					if (proxy.Asset == null)
+					if (proxy.Asset == null || !proxy.Asset.IsLoaded)
+					{
+						layout.Label("Loading...");
 						return;
+					}
 					var meshes = proxy.Asset.Meshes;
 					var skeleton = proxy.Asset.Skeleton;
 

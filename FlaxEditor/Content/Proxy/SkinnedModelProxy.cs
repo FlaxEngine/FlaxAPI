@@ -70,7 +70,7 @@ namespace FlaxEditor.Content
 
 			// Check if asset is streamed enough
 			var asset = (SkinnedModel)request.Asset;
-			return asset.IsLoaded;
+			return asset.IsLoaded && asset.HasMeshesLoaded;
 		}
 
 		/// <inheritdoc />
