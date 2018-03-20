@@ -70,6 +70,7 @@
     <Compile Include="Content\Import\ModelImportEntry.cs" />
     <Compile Include="Content\Import\TextureImportEntry.cs" />
     <Compile Include="Content\Proxy\AnimationGraphProxy.cs" />
+    <Compile Include="Content\Proxy\AnimationProxy.cs" />
     <Compile Include="Content\Proxy\AudioClipProxy.cs" />
     <Compile Include="Content\Proxy\CollisionDataProxy.cs" />
     <Compile Include="Content\Proxy\SettingsProxy.cs" />

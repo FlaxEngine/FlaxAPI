@@ -73,6 +73,11 @@ namespace FlaxEngine
 		/// The audio.
 		/// </summary>
 		Audio,
+
+		/// <summary>
+		/// The animation.
+		/// </summary>
+	    Animation,
     }
 
     /// <summary>
