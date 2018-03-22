@@ -31,6 +31,11 @@ namespace FlaxEditor.Viewport.Previews
 		public AnimatedModel PreviewModelActor => _previewModel;
 
 		/// <summary>
+		/// Gets or sets a value indicating whether play the animation in editor.
+		/// </summary>
+		public bool PlayAnimation { get; set; } = false;
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="AnimatedModelPreview"/> class.
 		/// </summary>
 		/// <param name="useWidgets">if set to <c>true</c> use widgets.</param>
@@ -43,6 +48,9 @@ namespace FlaxEditor.Viewport.Previews
 
 			// Setup preview scene
 			_previewModel = AnimatedModel.New();
+			_previewModel.UseTimeScale = false;
+			_previewModel.UpdateWhenOffscreen = true;
+			_previewModel.UpdateMode = AnimatedModel.AnimationUpdateMode.Manual;
 
 			// Link actors for rendering
 			Task.CustomActors.Add(_previewModel);
@@ -57,6 +65,17 @@ namespace FlaxEditor.Viewport.Previews
 				float targetSize = 30.0f;
 				float maxSize = Mathf.Max(0.001f, skinnedModel.Box.Size.MaxValue);
 				_previewModel.Scale = new Vector3(targetSize / maxSize);
+			}
+		}
+
+		/// <inheritdoc />
+		public override void Update(float deltaTime)
+		{
+			base.Update(deltaTime);
+
+			if (PlayAnimation)
+			{
+				_previewModel.UpdateAnimation();
 			}
 		}
 

@@ -59,9 +59,23 @@ namespace FlaxEditor.Windows.Assets
 		/// </summary>
 		private sealed class PropertiesProxy
 		{
+			private SkinnedModel _baseModel;
+
 			[EditorOrder(10), EditorDisplay("General"), Tooltip("The base model used to preview the animation and prepare the graph (skeleton bones sstructure must match in instanced AnimationModel actors)")]
-			public SkinnedModel BaseModel { get; set; }
-			
+			public SkinnedModel BaseModel
+			{
+				get => _baseModel;
+				set
+				{
+					if (_baseModel != value)
+					{
+						_baseModel = value;
+						if (WindowReference != null)
+							WindowReference.PreviewModelActor.SkinnedModel = _baseModel;
+					}
+				}
+			}
+
 			[EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor))]
 			// ReSharper disable once UnusedAutoPropertyAccessor.Local
 			public AnimationGraphWindow WindowReference { get; set; }
@@ -279,12 +293,13 @@ namespace FlaxEditor.Windows.Assets
 			/// <param name="window">The graph window.</param>
 			public void OnLoad(AnimationGraphWindow window)
 			{
-				var model = window.PreviewModelActor;
-				BaseModel = model.GetParam(BaseModelId).Value as SkinnedModel;
-				
 				WindowReference = window;
-			}
 
+				var model = window.PreviewModelActor;
+				var param = model.GetParam(BaseModelId);
+				BaseModel = param?.Value as SkinnedModel;
+			}
+			
 			/// <summary>
 			/// Saves the properties to the graph.
 			/// </summary>
@@ -292,8 +307,12 @@ namespace FlaxEditor.Windows.Assets
 			public void OnSave(AnimationGraphWindow window)
 			{
 				var model = window.PreviewModelActor;
-				model.GetParam(BaseModelId).Value = BaseModel;
-				window.Surface.GetParameter(BaseModelId).Value = BaseModel?.ID ?? Guid.Empty;
+				var param = model.GetParam(BaseModelId);
+				if (param != null)
+					param.Value = BaseModel;
+				var surfaceParam = window.Surface.GetParameter(BaseModelId);
+				if (surfaceParam != null)
+					surfaceParam.Value = BaseModel?.ID ?? Guid.Empty;
 			}
 
 			/// <summary>
@@ -350,6 +369,7 @@ namespace FlaxEditor.Windows.Assets
 			// Animation preview
 			_preview = new Preview(this)
 			{
+				PlayAnimation = true,
 				Parent = _split2.Panel1
 			};
 
@@ -556,7 +576,7 @@ namespace FlaxEditor.Windows.Assets
 			{
 				// Clear flag
 				_isWaitingForSurfaceLoad = false;
-
+				
 				// Init properties and parameters proxy
 				_properties.OnLoad(this);
 

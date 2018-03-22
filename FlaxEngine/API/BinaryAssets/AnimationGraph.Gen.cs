@@ -27,6 +27,22 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets the base model asset used for the animation preview and the skeleton layout source.
+		/// </summary>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public SkinnedModel BaseModel() 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			return Internal_GetBaseModel(unmanagedPtr);
+#endif
+		}
+
+		/// <summary>
 		/// Tries to load the animation graph surface from the asset.
 		/// </summary>
 		/// <returns>Loaded surface bytes or null if cannot load it or it's missing.</returns>
@@ -63,6 +79,8 @@ namespace FlaxEngine
 
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern SkinnedModel Internal_GetBaseModel(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern byte[] Internal_LoadSurface(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
