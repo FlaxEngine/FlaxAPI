@@ -2,6 +2,7 @@
 // Copyright (c) 2012-2018 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using FlaxEditor.Viewport.Cameras;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
@@ -12,8 +13,8 @@ namespace FlaxEditor.Viewport.Previews
 	/// <summary>
 	/// Generic asset preview editor viewport base class.
 	/// </summary>
-	/// <seealso cref="FlaxEditor.Viewport.EditorViewportArcBallCam" />
-	public abstract class AssetPreview : EditorViewportArcBallCam
+	/// <seealso cref="FlaxEditor.Viewport.EditorViewport" />
+	public abstract class AssetPreview : EditorViewport
 	{
 		protected DirectionalLight _previewLight;
 		protected EnvironmentProbe _envProbe;
@@ -31,13 +32,13 @@ namespace FlaxEditor.Viewport.Previews
 		/// </summary>
 		/// <param name="useWidgets">if set to <c>true</c> use widgets.</param>
 		public AssetPreview(bool useWidgets)
-			: base(RenderTask.Create<SceneRenderTask>(), useWidgets, 50, Vector3.Zero)
+			: base(RenderTask.Create<SceneRenderTask>(), new ArcBallCamera(Vector3.Zero, 50), useWidgets)
 		{
 			DockStyle = DockStyle.Fill;
 
 			Task.Flags = ViewFlags.DefaulAssetPreview;
 
-			SetView(new Quaternion(0.424461186f, -0.0940724313f, 0.0443938486f, 0.899451137f));
+			((ArcBallCamera)ViewportCamera).SetView(new Quaternion(0.424461186f, -0.0940724313f, 0.0443938486f, 0.899451137f));
 
 			// Setup preview scene
 			_previewLight = DirectionalLight.New();

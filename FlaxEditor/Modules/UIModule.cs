@@ -9,6 +9,7 @@ using FlaxEditor.GUI.Dialogs;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.Scripting;
+using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Windows;
 using FlaxEngine;
 using FlaxEngine.Assertions;
@@ -655,7 +656,7 @@ namespace FlaxEditor.Modules
 			{
 				var actor = node.Actor;
 				var viewport = Editor.Windows.EditWin.Viewport;
-				viewport.MoveViewport(actor.Transform);
+				((FPSCamera)viewport.ViewportCamera).MoveViewport(actor.Transform);
 			}
 		}
 

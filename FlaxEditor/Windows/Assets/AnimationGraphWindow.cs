@@ -9,6 +9,7 @@ using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI;
 using FlaxEditor.Surface;
+using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -369,6 +370,7 @@ namespace FlaxEditor.Windows.Assets
 			// Animation preview
 			_preview = new Preview(this)
 			{
+				ViewportCamera = new FPSCamera(),
 				PlayAnimation = true,
 				Parent = _split2.Panel1
 			};

@@ -9,6 +9,7 @@ using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.States;
 using FlaxEditor.Viewport;
+using FlaxEditor.Viewport.Cameras;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
@@ -184,13 +185,15 @@ namespace FlaxEditor.Windows
 
         private void ShowSphere(ref BoundingSphere sphere)
         {
+	        var camera = (FPSCamera)Viewport.ViewportCamera;
+
             // Calculate view transform
             Quaternion orientation = new Quaternion(0.424461186f, -0.0940724313f, 0.0443938486f, 0.899451137f);
             Vector3 position = sphere.Center - Vector3.ForwardLH * orientation * (sphere.Radius * 2.5f);
 
             // Move vieport
-            Viewport.TargetPoint = sphere.Center;
-            Viewport.MoveViewport(position, orientation);
+            camera.TargetPoint = sphere.Center;
+            camera.MoveViewport(position, orientation);
         }
 
         /// <summary>

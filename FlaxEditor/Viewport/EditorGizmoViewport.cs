@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using FlaxEditor.Gizmo;
+using FlaxEditor.Viewport.Cameras;
 using FlaxEngine;
 using FlaxEngine.Rendering;
 
@@ -11,9 +12,9 @@ namespace FlaxEditor.Viewport
 	/// <summary>
 	/// Viewport with free camera and gizmo tools.
 	/// </summary>
-	/// <seealso cref="FlaxEditor.Viewport.EditorViewportFPSCam" />
+	/// <seealso cref="FlaxEditor.Viewport.EditorViewport" />
 	/// <seealso cref="IGizmoOwner" />
-	public class EditorGizmoViewport : EditorViewportFPSCam, IGizmoOwner
+	public class EditorGizmoViewport : EditorViewport, IGizmoOwner
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EditorGizmoViewport"/> class.
@@ -21,7 +22,7 @@ namespace FlaxEditor.Viewport
         /// <param name="task">The task.</param>
         /// <param name="undo">The undo.</param>
         public EditorGizmoViewport(SceneRenderTask task, Undo undo)
-            : base(task, true)
+            : base(task, new FPSCamera(), true)
         {
             Undo = undo;
         }

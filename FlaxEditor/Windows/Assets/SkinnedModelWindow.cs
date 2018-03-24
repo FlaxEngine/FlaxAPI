@@ -10,6 +10,7 @@ using FlaxEditor.Content.Import;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEditor.GUI;
+using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -335,6 +336,7 @@ namespace FlaxEditor.Windows.Assets
 			// Model preview
 			_preview = new AnimatedModelPreview(true)
 			{
+				ViewportCamera = new FPSCamera(),
 				Parent = _split.Panel1
 			};
 

@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Viewport.Widgets;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -22,7 +23,7 @@ namespace FlaxEditor.Viewport
         /// <summary>
         /// Gathered input data.
         /// </summary>
-        protected struct Input
+        public struct Input
         {
             /// <summary>
             /// The is panning state.
@@ -128,6 +129,7 @@ namespace FlaxEditor.Viewport
         /// The speed widget button.
         /// </summary>
         protected ViewportWidgetButton _speedWidget;
+		
 
         private float _movementSpeed;
         private float _mouseAccelerationScale;
@@ -150,6 +152,7 @@ namespace FlaxEditor.Viewport
 
         // Camera
 
+	    private ViewportCamera _camera;
         protected float _yaw;
         protected float _pitch;
         protected float _fieldOfView = 60.0f;
@@ -187,10 +190,20 @@ namespace FlaxEditor.Viewport
             }
         }
 
-        /// <summary>
-        /// Camera's pitch angle clamp range (in degrees).
-        /// </summary>
-        public Vector2 CamPitchAngles = new Vector2(-88, 88);
+	    /// <summary>
+	    /// Gets the mouse movement delta for the right button (user press and move).
+	    /// </summary>
+		public Vector2 MouseDeltaRight => _mouseDeltaRight;
+
+		/// <summary>
+		/// Gets the mouse movement delta for the left button (user press and move).
+		/// </summary>
+		public Vector2 MouseDeltaLeft => _mouseDeltaLeft;
+
+		/// <summary>
+		/// Camera's pitch angle clamp range (in degrees).
+		/// </summary>
+		public Vector2 CamPitchAngles = new Vector2(-88, 88);
 
         /// <summary>
         /// Gets the view transform.
@@ -202,16 +215,16 @@ namespace FlaxEditor.Viewport
         /// </summary>
         public Vector3 ViewPosition { get; set; }
 
-        /// <summary>
-        /// Gets or sets the view orientation.
-        /// </summary>
-        public Quaternion ViewOrientation
-        {
-            get => Quaternion.RotationYawPitchRoll(_yaw * Mathf.DegreesToRadians, _pitch * Mathf.DegreesToRadians, 0);
-            protected set => EulerAngles = value.EulerAngles;
-        }
+	    /// <summary>
+	    /// Gets or sets the view orientation.
+	    /// </summary>
+	    public Quaternion ViewOrientation
+	    {
+		    get => Quaternion.RotationYawPitchRoll(_yaw * Mathf.DegreesToRadians, _pitch * Mathf.DegreesToRadians, 0);
+		    set => EulerAngles = value.EulerAngles;
+	    }
 
-        /// <summary>
+	    /// <summary>
         /// Gets or sets the view direction vector.
         /// </summary>
         public Vector3 ViewDirection
@@ -225,19 +238,19 @@ namespace FlaxEditor.Viewport
             }
         }
 
-        /// <summary>
-        /// Gets or sets the yaw angle (in degrees).
-        /// </summary>
-        protected float Yaw
+		/// <summary>
+		/// Gets or sets the yaw angle (in degrees).
+		/// </summary>
+		public float Yaw
         {
             get => _yaw;
             set => _yaw = value;
         }
 
-        /// <summary>
-        /// Gets or sets the pitch angle (in degrees).
-        /// </summary>
-        protected float Pitch
+		/// <summary>
+		/// Gets or sets the pitch angle (in degrees).
+		/// </summary>
+		public float Pitch
         {
             get => _pitch;
             set => _pitch = Mathf.Clamp(value, CamPitchAngles.X, CamPitchAngles.Y);
@@ -246,7 +259,7 @@ namespace FlaxEditor.Viewport
         /// <summary>
         /// Gets or sets the absolute mouse position (normalized, not in pixels). Yaw is X, Pitch is Y.
         /// </summary>
-        protected Vector2 YawPitch
+        public Vector2 YawPitch
         {
             get => new Vector2(_yaw, _pitch);
             set
@@ -256,10 +269,10 @@ namespace FlaxEditor.Viewport
             }
         }
 
-        /// <summary>
-        /// Gets or sets the euler angles (pitch, yaw, roll).
-        /// </summary>
-        protected Vector3 EulerAngles
+		/// <summary>
+		/// Gets or sets the euler angles (pitch, yaw, roll).
+		/// </summary>
+		public Vector3 EulerAngles
         {
             get => new Vector3(_pitch, _yaw, 0);
             set
@@ -279,18 +292,40 @@ namespace FlaxEditor.Viewport
         /// </summary>
         public ContextMenu ViewWidgetButtonMenu;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EditorViewport"/> class.
-        /// </summary>
-        /// <param name="task">The task.</param>
-        /// <param name="useWidgets">Enable/disable viewport widgets.</param>
-        public EditorViewport(SceneRenderTask task, bool useWidgets)
+	    /// <summary>
+	    /// Gets or sets the viewport camera controller.
+	    /// </summary>
+	    public ViewportCamera ViewportCamera
+	    {
+		    get => _camera;
+		    set
+		    {
+			    if (_camera != null)
+				    _camera.Viewport = null;
+
+			    _camera = value;
+
+			    if (_camera != null)
+				    _camera.Viewport = this;
+		    }
+	    }
+
+	    /// <summary>
+	    /// Initializes a new instance of the <see cref="EditorViewport"/> class.
+	    /// </summary>
+	    /// <param name="task">The task.</param>
+	    /// <param name="camera">The camera controller.</param>
+	    /// <param name="useWidgets">Enable/disable viewport widgets.</param>
+	    public EditorViewport(SceneRenderTask task, ViewportCamera camera, bool useWidgets)
             : base(task)
         {
             _movementSpeed = 1;
             _mouseAccelerationScale = 0.1f;
             _useMouseFiltering = false;
             _useMouseAcceleration = false;
+	        _camera = camera;
+	        if (_camera != null)
+		        _camera.Viewport = this;
 
             DockStyle = DockStyle.Fill;
 
@@ -454,6 +489,15 @@ namespace FlaxEditor.Viewport
             view.Far = _farPlane;
         }
 
+		/// <summary>
+		/// Gets the input state data.
+		/// </summary>
+		/// <param name="input">The input.</param>
+		public void GetInput(out Input input)
+	    {
+		    input = _input;
+	    }
+
         /// <summary>
         /// Creates the projection matrix.
         /// </summary>
@@ -574,17 +618,18 @@ namespace FlaxEditor.Viewport
         {
         }
 
-        /// <summary>
-        /// Updates the view.
-        /// </summary>
-        /// <param name="dt">The delta time (in seconds).</param>
-        /// <param name="moveDelta">The move delta (scaled).</param>
-        /// <param name="mouseDelta">The mouse delta (scaled).</param>
-        protected virtual void UpdateView(float dt, ref Vector3 moveDelta, ref Vector2 mouseDelta)
-        {
-        }
+	    /// <summary>
+	    /// Updates the view.
+	    /// </summary>
+	    /// <param name="dt">The delta time (in seconds).</param>
+	    /// <param name="moveDelta">The move delta (scaled).</param>
+	    /// <param name="mouseDelta">The mouse delta (scaled).</param>
+	    protected virtual void UpdateView(float dt, ref Vector3 moveDelta, ref Vector2 mouseDelta)
+	    {
+		    _camera?.UpdateView(dt, ref moveDelta, ref mouseDelta);
+	    }
 
-        /// <inheritdoc />
+	    /// <inheritdoc />
         public override void Update(float deltaTime)
         {
             base.Update(deltaTime);
