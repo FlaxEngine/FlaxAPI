@@ -667,7 +667,7 @@ namespace FlaxEditor.Windows
 	    public override void OnLayoutSerialize(XmlWriter writer)
 	    {
 		    writer.WriteAttributeString("Split", _split.SplitterValue.ToString());
-		    writer.WriteAttributeString("Scale", _view.Scale.ToString());
+		    writer.WriteAttributeString("Scale", _view.ViewScale.ToString());
 	    }
 
 	    /// <inheritdoc />
@@ -678,14 +678,14 @@ namespace FlaxEditor.Windows
 			if (float.TryParse(node.GetAttribute("Split"), out value1))
 			    _split.SplitterValue = value1;
 		    if (float.TryParse(node.GetAttribute("Scale"), out value1))
-			    _view.Scale = value1;
+			    _view.ViewScale = value1;
 	    }
 	    
 	    /// <inheritdoc />
 	    public override void OnLayoutDeserialize()
 	    {
 		    _split.SplitterValue = 0.2f;
-		    _view.Scale = 1.0f;
+		    _view.ViewScale = 1.0f;
 	    }
     }
 }

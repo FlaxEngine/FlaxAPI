@@ -21,7 +21,7 @@ namespace FlaxEditor.Content.GUI
         private readonly List<ContentItem> _items = new List<ContentItem>(256);
         private readonly List<ContentItem> _selection = new List<ContentItem>(16);
 
-        private float _scale = 1.0f;
+        private float _viewScale = 1.0f;
         private bool _validDragOver;
 
         #region External Events
@@ -79,18 +79,18 @@ namespace FlaxEditor.Content.GUI
         /// </summary>
         public bool HasSelection => _selection.Count > 0;
 
-		/// <summary>
-		/// Gets or sets the view scale.
-		/// </summary>
-		public float Scale
+	    /// <summary>
+	    /// Gets or sets the view scale.
+	    /// </summary>
+	    public float ViewScale
 	    {
-		    get { return _scale; }
+		    get => _viewScale;
 		    set
 		    {
 			    value = Mathf.Clamp(value, 0.3f, 3.0f);
-			    if (!Mathf.NearEqual(value, _scale))
+			    if (!Mathf.NearEqual(value, _viewScale))
 			    {
-				    _scale = value;
+				    _viewScale = value;
 				    PerformLayout();
 			    }
 		    }
@@ -485,7 +485,7 @@ namespace FlaxEditor.Content.GUI
             if (ParentWindow.GetKey(Keys.Control))
             {
                 // Zoom
-	            Scale += delta * 0.05f;
+	            ViewScale += delta * 0.05f;
 
                 // Handled
                 return true;
@@ -577,10 +577,10 @@ namespace FlaxEditor.Content.GUI
         {
             // Calculate items size
             float width = Width;
-            float defaultItemsWidth = ContentItem.DefaultWidth * _scale;
+            float defaultItemsWidth = ContentItem.DefaultWidth * _viewScale;
             int itemsToFit = Mathf.FloorToInt(width / defaultItemsWidth);
             float itemsWidth = width / Mathf.Max(itemsToFit, 1);
-            float itemsHeight = itemsWidth / defaultItemsWidth * (ContentItem.DefaultHeight * _scale);
+            float itemsHeight = itemsWidth / defaultItemsWidth * (ContentItem.DefaultHeight * _viewScale);
 
             // Arrange controls
             float x = 0, y = 0;
