@@ -10,6 +10,17 @@ namespace FlaxEngine
 	public sealed partial class AnimatedModel
 	{
 		/// <summary>
+		/// Contains the snapshot of the animated model pose.
+		/// </summary>
+		public struct Pose
+		{
+			/// <summary>
+			/// The per-bone final transformations in actor world-space.
+			/// </summary>
+			public Matrix[] Bones;
+		}
+
+		/// <summary>
 		/// Describes the animation graph updates frequency for the animated model.
 		/// </summary>
 		public enum AnimationUpdateMode
@@ -205,11 +216,21 @@ namespace FlaxEngine
 			ParametersChanged?.Invoke(this);
 		}
 
-
+		/// <summary>
+		/// Gets the current animated skeleton pose. Will allocate the bone transformation array memory or reuse the cached one.
+		/// </summary>
+		/// <param name="pose">The output pose.</param>
+		public void GetCurrentPose(ref Pose pose)
+		{
+			Internal_GetCurrentPose(unmanagedPtr, ref pose);
+		}
 
 		#region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_GetCurrentPose(IntPtr obj, ref Pose pose);
+
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern ulong[] Internal_CacheParameters(IntPtr obj);
 
