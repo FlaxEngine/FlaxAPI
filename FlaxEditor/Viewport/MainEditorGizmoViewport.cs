@@ -672,23 +672,41 @@ namespace FlaxEditor.Viewport
 
                             break;
                         }
-                        case ContentDomain.Model:
-                        {
-                            // Create actor
-                            var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
-                            var actor = ModelActor.New();
-                            actor.Name = item.ShortName;
-                            actor.Model = model;
+	                    case ContentDomain.Model:
+	                    {
+		                    if (item.TypeName == typeof(SkinnedModel).FullName)
+		                    {
+			                    // Create actor
+			                    var model = FlaxEngine.Content.LoadAsync<SkinnedModel>(item.ID);
+			                    var actor = AnimatedModel.New();
+			                    actor.Name = item.ShortName;
+			                    actor.SkinnedModel = model;
 
-                            // Place it
-                            var box = actor.Box;
-                            actor.Position = hitLocation - (box.Size.Length * 0.5f) * ViewDirection;
+			                    // Place it
+			                    var box = actor.Box;
+			                    actor.Position = hitLocation - (box.Size.Length * 0.5f) * ViewDirection;
+									
+			                    // Spawn
+			                    Editor.Instance.SceneEditing.Spawn(actor);
+		                    }
+		                    else
+		                    {
+			                    // Create actor
+			                    var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
+			                    var actor = ModelActor.New();
+			                    actor.Name = item.ShortName;
+			                    actor.Model = model;
 
-                            // Spawn
-                            Editor.Instance.SceneEditing.Spawn(actor);
+			                    // Place it
+			                    var box = actor.Box;
+			                    actor.Position = hitLocation - (box.Size.Length * 0.5f) * ViewDirection;
 
-                            break;
-                        }
+			                    // Spawn
+			                    Editor.Instance.SceneEditing.Spawn(actor);
+		                    }
+
+		                    break;
+	                    }
 	                    case ContentDomain.Audio:
 	                    {
 		                    var clip = FlaxEngine.Content.LoadAsync<AudioClip>(item.ID);

@@ -298,18 +298,34 @@ namespace FlaxEditor.SceneGraph.GUI
                     {
                         case ContentDomain.Model:
                         {
-                            // Create actor
-                            var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
-                            var actor = ModelActor.New();
-                            actor.StaticFlags = Actor.StaticFlags;
-                            actor.Name = item.ShortName;
-                            actor.Model = model;
-                            actor.Transform = Actor.Transform;
+	                        if (item.TypeName == typeof(SkinnedModel).FullName)
+	                        {
+		                        // Create actor
+		                        var model = FlaxEngine.Content.LoadAsync<SkinnedModel>(item.ID);
+		                        var actor = AnimatedModel.New();
+		                        actor.StaticFlags = Actor.StaticFlags;
+		                        actor.Name = item.ShortName;
+		                        actor.SkinnedModel = model;
+		                        actor.Transform = Actor.Transform;
 
-                            // Spawn
-                            Editor.Instance.SceneEditing.Spawn(actor, Actor);
-                            
-                            break;
+		                        // Spawn
+		                        Editor.Instance.SceneEditing.Spawn(actor, Actor);
+	                        }
+	                        else
+	                        {
+		                        // Create actor
+		                        var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
+		                        var actor = ModelActor.New();
+		                        actor.StaticFlags = Actor.StaticFlags;
+		                        actor.Name = item.ShortName;
+		                        actor.Model = model;
+		                        actor.Transform = Actor.Transform;
+
+		                        // Spawn
+		                        Editor.Instance.SceneEditing.Spawn(actor, Actor);
+	                        }
+
+	                        break;
                         }
                         case ContentDomain.Other:
                         {
