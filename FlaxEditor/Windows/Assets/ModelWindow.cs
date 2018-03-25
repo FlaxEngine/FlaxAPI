@@ -9,6 +9,7 @@ using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.Content.Import;
 using FlaxEditor.CustomEditors;
+using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI;
 using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Viewport.Previews;
@@ -24,16 +25,17 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public sealed class ModelWindow : AssetEditorWindowBase<Model>
     {
-        // TODO: debug model UVs channels
-        // TODO: adding/removing material slots
-        // TODO: refresh material slots comboboxes on material slot rename
-        // TODO: add button to draw model bounds
-        // TODO: add small panel in `General` group with lods switches visualization
+		// TODO: debug model UVs channels
+		// TODO: adding/removing material slots
+		// TODO: refresh material slots comboboxes on material slot rename
+		// TODO: add button to draw model bounds
+		// TODO: add small panel in `General` group with lods switches visualization
 
-        /// <summary>
-        /// The model properties proxy object.
-        /// </summary>
-        private sealed class PropertiesProxy
+		/// <summary>
+		/// The model properties proxy object.
+		/// </summary>
+		[CustomEditor(typeof(ProxyEditor))]
+		private sealed class PropertiesProxy
         {
             [EditorOrder(10), EditorDisplay("Materials", EditorDisplayAttribute.InlineStyle), MemberCollection(CanReorderItems = true, NotNullItems = true, ReadOnly = true)]
             public MaterialSlot[] MaterialSlots
@@ -187,7 +189,24 @@ namespace FlaxEditor.Windows.Assets
                 UpdateEffectsOnUI();
             }
 
-            private class LodsEditor : CustomEditor
+	        private class ProxyEditor : GenericEditor
+	        {
+		        /// <inheritdoc />
+		        public override void Initialize(LayoutElementsContainer layout)
+		        {
+			        var proxy = (PropertiesProxy)Values[0];
+
+			        if (proxy.Asset == null || !proxy.Asset.IsLoaded)
+			        {
+				        layout.Label("Loading...");
+				        return;
+			        }
+
+			        base.Initialize(layout);
+		        }
+	        }
+
+			private class LodsEditor : CustomEditor
             {
                 public override DisplayStyle Style => DisplayStyle.InlineIntoParent;
 
@@ -197,9 +216,6 @@ namespace FlaxEditor.Windows.Assets
                     proxy._materialSlotComboBoxes.Clear();
                     proxy._isolateCheckBoxes.Clear();
                     proxy._highlightCheckBoxes.Clear();
-
-                    if (proxy.Asset == null)
-                        return;
                     var lods = proxy.Asset.LODs;
 
                     // General properties

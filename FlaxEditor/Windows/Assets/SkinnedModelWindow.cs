@@ -2,12 +2,14 @@
 // Copyright (c) 2012-2018 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.Content.Import;
 using FlaxEditor.CustomEditors;
+using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEditor.GUI;
 using FlaxEditor.Viewport.Cameras;
@@ -32,6 +34,7 @@ namespace FlaxEditor.Windows.Assets
 		/// <summary>
 		/// The model properties proxy object.
 		/// </summary>
+		[CustomEditor(typeof(ProxyEditor))]
 		private sealed class PropertiesProxy
 		{
 			[EditorOrder(10), EditorDisplay("Materials", EditorDisplayAttribute.InlineStyle), MemberCollection(CanReorderItems = true, NotNullItems = true, ReadOnly = true)]
@@ -186,6 +189,23 @@ namespace FlaxEditor.Windows.Assets
 				UpdateEffectsOnUI();
 			}
 
+			private class ProxyEditor : GenericEditor
+			{
+				/// <inheritdoc />
+				public override void Initialize(LayoutElementsContainer layout)
+				{
+					var proxy = (PropertiesProxy)Values[0];
+
+					if (proxy.Asset == null || !proxy.Asset.IsLoaded)
+					{
+						layout.Label("Loading...");
+						return;
+					}
+
+					base.Initialize(layout);
+				}
+			}
+
 			private class MeshessEditor : CustomEditor
 			{
 				public override DisplayStyle Style => DisplayStyle.InlineIntoParent;
@@ -196,12 +216,6 @@ namespace FlaxEditor.Windows.Assets
 					proxy._materialSlotComboBoxes.Clear();
 					proxy._isolateCheckBoxes.Clear();
 					proxy._highlightCheckBoxes.Clear();
-
-					if (proxy.Asset == null || !proxy.Asset.IsLoaded)
-					{
-						layout.Label("Loading...");
-						return;
-					}
 					var meshes = proxy.Asset.Meshes;
 					var skeleton = proxy.Asset.Skeleton;
 
