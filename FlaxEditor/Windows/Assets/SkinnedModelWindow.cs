@@ -323,7 +323,9 @@ namespace FlaxEditor.Windows.Assets
 			: base(editor, item)
 		{
 			// Toolstrip
-			_saveButton = (ToolStripButton)_toolstrip.AddButton(editor.UI.GetIcon("Save32"), Save).LinkTooltip("Save");
+			_saveButton = (ToolStripButton)_toolstrip.AddButton(editor.UI.GetIcon("Save32"), Save).LinkTooltip("Save asset to the file");
+			_toolstrip.AddSeparator();
+			_toolstrip.AddButton(editor.UI.GetIcon("Bone32"), () => _preview.ShowBones = !_preview.ShowBones).SetAutoCheck(true).LinkTooltip("Show animated model bones debug view");
 
 			// Split Panel
 			_split = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)

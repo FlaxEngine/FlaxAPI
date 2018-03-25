@@ -390,9 +390,10 @@ namespace FlaxEditor.Windows.Assets
 			};
 
 			// Toolstrip
-			_saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Save32"), Save).LinkTooltip("Save");
+			_saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Save32"), Save).LinkTooltip("Save asset to the file");
 			_toolstrip.AddSeparator();
-			_toolstrip.AddButton(editor.UI.GetIcon("PageScale32"), _surface.ShowWholeGraph).LinkTooltip("Show whole graph");
+			_toolstrip.AddButton(editor.UI.GetIcon("PageScale32"), _surface.ShowWholeGraph).LinkTooltip("Show the whole graph");
+			_toolstrip.AddButton(editor.UI.GetIcon("Bone32"), () => _preview.ShowBones = !_preview.ShowBones).SetAutoCheck(true).LinkTooltip("Show animated model bones debug view");
 		}
 
 		private void OnGraphPropertyEdited()
