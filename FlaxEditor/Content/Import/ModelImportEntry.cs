@@ -93,12 +93,6 @@ namespace FlaxEditor.Content.Import
 		public ModelType Type { get; set; } = ModelType.Model;
 
         /// <summary>
-        /// Custom import scale.
-        /// </summary>
-        [EditorOrder(10), EditorDisplay("Geometry"), Tooltip("Custom import scale")]
-        public float Scale { get; set; } = 1.0f;
-
-        /// <summary>
         /// True if calculate model normals, otherwise will import them.
         /// </summary>
         [EditorOrder(20), EditorDisplay("Geometry"), Tooltip("Enable model normal vectors recalculating")]
@@ -147,6 +141,24 @@ namespace FlaxEditor.Content.Import
         public ModelLightmapUVsSource LighmapUVsSource { get; set; } = ModelLightmapUVsSource.Disable;
 
 		/// <summary>
+		/// Custom uniform import scale.
+		/// </summary>
+		[EditorOrder(500), EditorDisplay("Transform"), Tooltip("Custom uniform import scale")]
+		public float Scale { get; set; } = 1.0f;
+
+		/// <summary>
+		/// Custom import geometry rotation.
+		/// </summary>
+		[EditorOrder(510), EditorDisplay("Transform"), Tooltip("Custom import geometry rotation")]
+		public Quaternion Rotation { get; set; } = Quaternion.Identity;
+
+		/// <summary>
+		/// Custom import geometry offset.
+		/// </summary>
+		[EditorOrder(520), EditorDisplay("Transform"), Tooltip("Custom import geometry offse")]
+		public Vector3 Translation { get; set; } = Vector3.Zero;
+
+		/// <summary>
 		/// The imported animation duration mode.
 		/// </summary>
 		[EditorOrder(1000), EditorDisplay("Animation"), Tooltip("Imported animation duration mode. Can use the original value or overriden by settings.")]
@@ -182,7 +194,6 @@ namespace FlaxEditor.Content.Import
             public ModelType Type;
 
 	        // Geometry
-			public float Scale;
             public bool CalculateNormals;
             public float SmoothigNormalsAngle;
             public bool CalculateTangents;
@@ -192,8 +203,13 @@ namespace FlaxEditor.Content.Import
             public bool ImportVertexColors;
             public ModelLightmapUVsSource LighmapUVsSource;
 
+			// Transform
+	        public float Scale;
+	        public Quaternion Rotation;
+	        public Vector3 Translation;
+
 			// Animation
-	        public AnimationDuration Duration;
+			public AnimationDuration Duration;
 	        public int FramesRangeStart;
 	        public int FramesRangeEnd;
 	        public float SamplingRate;
@@ -205,7 +221,6 @@ namespace FlaxEditor.Content.Import
             options = new InternalOptions
             {
 	            Type = Type,
-                Scale = Scale,
                 CalculateNormals = CalculateNormals,
                 SmoothigNormalsAngle = SmoothigNormalsAngle,
                 CalculateTangents = CalculateTangents,
@@ -214,7 +229,10 @@ namespace FlaxEditor.Content.Import
                 ImportLODs = ImportLODs,
 	            ImportVertexColors = ImportVertexColors,
                 LighmapUVsSource = LighmapUVsSource,
-	            Duration = Duration,
+	            Scale = Scale,
+				Rotation = Rotation,
+	            Translation = Translation,
+				Duration = Duration,
 	            FramesRangeStart = FramesRangeStart,
 	            FramesRangeEnd = FramesRangeEnd,
 	            SamplingRate = SamplingRate,
@@ -225,7 +243,6 @@ namespace FlaxEditor.Content.Import
         internal void FromInternal(ref InternalOptions options)
         {
 	        Type = options.Type;
-            Scale = options.Scale;
             CalculateNormals = options.CalculateNormals;
             SmoothigNormalsAngle = options.SmoothigNormalsAngle;
             CalculateTangents = options.CalculateTangents;
@@ -234,6 +251,9 @@ namespace FlaxEditor.Content.Import
             ImportLODs = options.ImportLODs;
 	        ImportVertexColors = options.ImportVertexColors;
             LighmapUVsSource = options.LighmapUVsSource;
+	        Scale = options.Scale;
+	        Rotation = options.Rotation;
+	        Translation = options.Translation;
 	        FramesRangeStart = options.FramesRangeStart;
 	        FramesRangeEnd = options.FramesRangeEnd;
 	        SamplingRate = options.SamplingRate;
