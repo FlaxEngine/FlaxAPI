@@ -60,6 +60,7 @@ namespace FlaxEditor.Viewport.Previews
 			_previewModel = AnimatedModel.New();
 			_previewModel.UseTimeScale = false;
 			_previewModel.UpdateWhenOffscreen = true;
+			_previewModel.BoundsScale = 1000.0f;
 			_previewModel.UpdateMode = AnimatedModel.AnimationUpdateMode.Manual;
 			_previewBonesModel = FlaxEngine.Content.CreateVirtualAsset<Model>();
 			_previewBonesActor = ModelActor.New();
@@ -95,7 +96,7 @@ namespace FlaxEditor.Viewport.Previews
 			}
 
 			// Update the bones debug (once every few frames)
-			_previewBonesActor.LocalScale = _previewModel.LocalScale;
+			_previewBonesActor.Transform = _previewModel.Transform;
 			var updateBonesCount = PlayAnimation ? 2 : 30;
 			if (_previewBonesCounter++ % updateBonesCount == 0)
 			{
