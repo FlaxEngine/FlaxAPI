@@ -551,14 +551,14 @@ namespace FlaxEditor.Modules
         public override void OnInit()
         {
             // Bind events
-            SceneManager.OnSceneLoaded += OnSceneLoaded;
-            SceneManager.OnSceneUnloading += OnSceneUnloading;
-            SceneManager.OnActorSpawned += OnActorSpawned;
-            SceneManager.OnActorDeleted += OnActorDeleted;
-            SceneManager.OnActorParentChanged += OnActorParentChanged;
-            SceneManager.OnActorOrderInParentChanged += OnActorOrderInParentChanged;
-            SceneManager.OnActorNameChanged += OnActorNameChanged;
-            SceneManager.OnActorActiveChanged += OnActorActiveChanged;
+            SceneManager.SceneLoaded += OnSceneLoaded;
+            SceneManager.SceneUnloading += OnSceneUnloading;
+            SceneManager.ActorSpawned += OnActorSpawned;
+            SceneManager.ActorDeleted += OnActorDeleted;
+            SceneManager.ActorParentChanged += OnActorParentChanged;
+            SceneManager.ActorOrderInParentChanged += OnActorOrderInParentChanged;
+            SceneManager.ActorNameChanged += OnActorNameChanged;
+            SceneManager.ActorActiveChanged += OnActorActiveChanged;
         }
 
         /// <inheritdoc />
@@ -594,14 +594,14 @@ namespace FlaxEditor.Modules
         public override void OnExit()
         {
             // Unbind events
-            SceneManager.OnSceneLoaded -= OnSceneLoaded;
-            SceneManager.OnSceneUnloading -= OnSceneUnloading;
-            SceneManager.OnActorSpawned -= OnActorSpawned;
-            SceneManager.OnActorDeleted -= OnActorDeleted;
-            SceneManager.OnActorParentChanged -= OnActorParentChanged;
-            SceneManager.OnActorOrderInParentChanged -= OnActorOrderInParentChanged;
-            SceneManager.OnActorNameChanged -= OnActorNameChanged;
-            SceneManager.OnActorActiveChanged -= OnActorActiveChanged;
+            SceneManager.SceneLoaded -= OnSceneLoaded;
+            SceneManager.SceneUnloading -= OnSceneUnloading;
+            SceneManager.ActorSpawned -= OnActorSpawned;
+            SceneManager.ActorDeleted -= OnActorDeleted;
+            SceneManager.ActorParentChanged -= OnActorParentChanged;
+            SceneManager.ActorOrderInParentChanged -= OnActorOrderInParentChanged;
+            SceneManager.ActorNameChanged -= OnActorNameChanged;
+            SceneManager.ActorActiveChanged -= OnActorActiveChanged;
             
             // Cleanup graph
             Root.Dispose();

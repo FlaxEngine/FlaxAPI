@@ -148,9 +148,9 @@ namespace FlaxEditor.States
             Assert.AreEqual(Guid.Empty, _lastSceneFromRequest, "Invalid state.");
 
             // Bind events
-            SceneManager.OnSceneLoaded += onSceneEvent;
-            SceneManager.OnSceneLoadError += onSceneEvent;
-            SceneManager.OnSceneUnloaded += onSceneEvent;
+            SceneManager.SceneLoaded += OnSceneEvent;
+            SceneManager.SceneLoadError += OnSceneEvent;
+            SceneManager.SceneUnloaded += OnSceneEvent;
             
             // Push scenes changing requests
             for (int i = 0; i < _scenesToUnload.Count; i++)
@@ -170,7 +170,7 @@ namespace FlaxEditor.States
             _scenesToLoad.Clear();
             _scenesToUnload.Clear();
 
-            // Spacial case when all scenes are unloaded and no scene loaded we won't be able too handle onSceneEvent so just leave state now
+            // Spacial case when all scenes are unloaded and no scene loaded we won't be able too handle OnSceneEvent so just leave state now
             // It may be caused when scripts are not laoded due to ocmpilation errors or cannot find scene asset or other internal engine.
             if (_lastSceneFromRequest == Guid.Empty)
             {
@@ -193,12 +193,12 @@ namespace FlaxEditor.States
             }
 
             // Unbind events
-            SceneManager.OnSceneLoaded -= onSceneEvent;
-            SceneManager.OnSceneLoadError -= onSceneEvent;
-            SceneManager.OnSceneUnloaded -= onSceneEvent;
+            SceneManager.SceneLoaded -= OnSceneEvent;
+            SceneManager.SceneLoadError -= OnSceneEvent;
+            SceneManager.SceneUnloaded -= OnSceneEvent;
         }
 
-        private void onSceneEvent(Scene scene, Guid sceneId)
+        private void OnSceneEvent(Scene scene, Guid sceneId)
         {
             // Check if it's scene from the last request
             if (sceneId == _lastSceneFromRequest)

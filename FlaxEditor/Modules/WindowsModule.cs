@@ -600,14 +600,14 @@ namespace FlaxEditor.Modules
             ProfilerWin = new ProfilerWindow(Editor);
 
             // Bind events
-            SceneManager.OnSceneSaveError += OnSceneSaveError;
-            SceneManager.OnSceneLoaded += OnSceneLoaded;
-            SceneManager.OnSceneLoadError += OnSceneLoadError;
-            SceneManager.OnSceneLoading += OnSceneLoading;
-            SceneManager.OnSceneSaved += OnSceneSaved;
-            SceneManager.OnSceneSaving += OnSceneSaving;
-            SceneManager.OnSceneUnloaded += OnSceneUnloaded;
-            SceneManager.OnSceneUnloading += OnSceneUnloading;
+            SceneManager.SceneSaveError += OnSceneSaveError;
+            SceneManager.SceneLoaded += OnSceneLoaded;
+            SceneManager.SceneLoadError += OnSceneLoadError;
+            SceneManager.SceneLoading += OnSceneLoading;
+            SceneManager.SceneSaved += OnSceneSaved;
+            SceneManager.SceneSaving += OnSceneSaving;
+            SceneManager.SceneUnloaded += OnSceneUnloaded;
+            SceneManager.SceneUnloading += OnSceneUnloading;
         }
 
         private void MainWindow_OnClosing(ClosingReason reason, ref bool cancel)
@@ -727,14 +727,14 @@ namespace FlaxEditor.Modules
                 Windows[i].OnExit();
 
             // Unbind events
-            SceneManager.OnSceneSaveError -= OnSceneSaveError;
-            SceneManager.OnSceneLoaded -= OnSceneLoaded;
-            SceneManager.OnSceneLoadError -= OnSceneLoadError;
-            SceneManager.OnSceneLoading -= OnSceneLoading;
-            SceneManager.OnSceneSaved -= OnSceneSaved;
-            SceneManager.OnSceneSaving -= OnSceneSaving;
-            SceneManager.OnSceneUnloaded -= OnSceneUnloaded;
-            SceneManager.OnSceneUnloading -= OnSceneUnloading;
+            SceneManager.SceneSaveError -= OnSceneSaveError;
+            SceneManager.SceneLoaded -= OnSceneLoaded;
+            SceneManager.SceneLoadError -= OnSceneLoadError;
+            SceneManager.SceneLoading -= OnSceneLoading;
+            SceneManager.SceneSaved -= OnSceneSaved;
+            SceneManager.SceneSaving -= OnSceneSaving;
+            SceneManager.SceneUnloaded -= OnSceneUnloaded;
+            SceneManager.SceneUnloading -= OnSceneUnloading;
 
             // Close main window
             MainWindow?.Close(ClosingReason.EngineExit);
