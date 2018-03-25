@@ -491,7 +491,12 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 base.Initialize(layout);
             }
 
-	        public void OnScriptDragChange(bool start, Script script)
+			/// <summary>
+			/// Called when script drag changes.
+			/// </summary>
+			/// <param name="start">if set to <c>true</c> drag just started, otherwise ended.</param>
+			/// <param name="script">The target script.</param>
+			public void OnScriptDragChange(bool start, Script script)
 	        {
 				ScriptDragChange.Invoke(start, script);
 	        }

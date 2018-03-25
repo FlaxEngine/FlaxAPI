@@ -29,16 +29,13 @@ namespace FlaxEngine
 		/// <summary>
 		/// Gets the base model asset used for the animation preview and the skeleton layout source.
 		/// </summary>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
 		[UnmanagedCall]
-		public SkinnedModel BaseModel() 
+		public SkinnedModel BaseModel
 		{
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+			get; set;
 #else
-			return Internal_GetBaseModel(unmanagedPtr);
+			get { return Internal_GetBaseModel(unmanagedPtr); }
 #endif
 		}
 

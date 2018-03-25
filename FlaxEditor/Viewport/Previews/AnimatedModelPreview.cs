@@ -96,7 +96,8 @@ namespace FlaxEditor.Viewport.Previews
 
 			// Update the bones debug (once every few frames)
 			_previewBonesActor.LocalScale = _previewModel.LocalScale;
-			if (_previewBonesCounter++ % 4 == 0)
+			var updateBonesCount = PlayAnimation ? 2 : 4;
+			if (_previewBonesCounter++ % updateBonesCount == 0)
 			{
 				_previewBonesActor.IsActive = ShowBones;
 				if (ShowBones)
@@ -117,7 +118,7 @@ namespace FlaxEditor.Viewport.Previews
 						else
 							_previewBonesIndex.Clear();
 
-						var boxSizeHalf = new Vector3(5.0f);
+						var boxSizeHalf = new Vector3(1.0f);
 						for (int i = 0; i < _previewModelPose.Bones.Length; i++)
 						{
 							var bonePos = _previewModelPose.Bones[i].TranslationVector;

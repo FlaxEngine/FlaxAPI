@@ -87,7 +87,7 @@ namespace FlaxEditor.Viewport.Previews
 			var entries = _previewModel.Entries;
 			if (entries.Length == 1)
 				entries[0].Material = surfaceMaterial;
-			_postFxVolume.Settings.PostFxMaterials = new[] { postFxMaterial };
+			PostFxVolume.Settings.PostFxMaterials = new[] { postFxMaterial };
 		}
 
 		/// <inheritdoc />

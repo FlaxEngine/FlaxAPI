@@ -40,6 +40,11 @@ namespace FlaxEditor.Viewport.Cameras
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ArcBallCamera"/> class.
+		/// </summary>
+		/// <param name="orbitCenter">The orbit center.</param>
+		/// <param name="radius">The orbit radius.</param>
 		public ArcBallCamera(Vector3 orbitCenter, float radius)
 		{
 			_orbitCenter = orbitCenter;

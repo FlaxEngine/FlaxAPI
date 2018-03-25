@@ -208,7 +208,7 @@ namespace FlaxEditor.Windows.Assets
             {
                 _collisionWiresShowActor = ModelActor.New();
                 _preview.Task.CustomActors.Add(_collisionWiresShowActor);
-            }
+			}
             _collisionWiresShowActor.Model = _collisionWiresModel;
             _collisionWiresShowActor.Entries[0].Material = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.WiresDebugMaterial);
             _preview.Model = _asset.Model;

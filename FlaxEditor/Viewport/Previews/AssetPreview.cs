@@ -16,16 +16,30 @@ namespace FlaxEditor.Viewport.Previews
 	/// <seealso cref="FlaxEditor.Viewport.EditorViewport" />
 	public abstract class AssetPreview : EditorViewport
 	{
-		protected DirectionalLight _previewLight;
-		protected EnvironmentProbe _envProbe;
-		protected Sky _sky;
-		protected SkyLight _skyLight;
-		protected PostFxVolume _postFxVolume;
+		/// <summary>
+		/// The preview light. Allows to modify rendering settings.
+		/// </summary>
+		public DirectionalLight PreviewLight;
 
+		/// <summary>
+		/// The env probe. Allows to modify rendering settings.
+		/// </summary>
+		public EnvironmentProbe EnvProbe;
+
+		/// <summary>
+		/// The sky. Allows to modify rendering settings.
+		/// </summary>
+		public Sky Sky;
+
+		/// <summary>
+		/// The sky light. Allows to modify rendering settings.
+		/// </summary>
+		public SkyLight SkyLight;
+		
 		/// <summary>
 		/// Gets the post fx volume. Allows to modify rendering settings.
 		/// </summary>
-		public PostFxVolume PostFxVolume => _postFxVolume;
+		public PostFxVolume PostFxVolume;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AssetPreview"/> class.
@@ -41,48 +55,48 @@ namespace FlaxEditor.Viewport.Previews
 			((ArcBallCamera)ViewportCamera).SetView(new Quaternion(0.424461186f, -0.0940724313f, 0.0443938486f, 0.899451137f));
 
 			// Setup preview scene
-			_previewLight = DirectionalLight.New();
-			_previewLight.Brightness = 3.0f;
-			_previewLight.ShadowsMode = ShadowsCastingMode.None;
-			_previewLight.Orientation = Quaternion.Euler(new Vector3(52.1477f, -109.109f, -111.739f));
+			PreviewLight = DirectionalLight.New();
+			PreviewLight.Brightness = 3.0f;
+			PreviewLight.ShadowsMode = ShadowsCastingMode.None;
+			PreviewLight.Orientation = Quaternion.Euler(new Vector3(52.1477f, -109.109f, -111.739f));
 			//
-			_envProbe = EnvironmentProbe.New();
-			_envProbe.AutoUpdate = false;
-			_envProbe.CustomProbe = FlaxEngine.Content.LoadAsyncInternal<CubeTexture>(EditorAssets.DefaultSkyCubeTexture);
+			EnvProbe = EnvironmentProbe.New();
+			EnvProbe.AutoUpdate = false;
+			EnvProbe.CustomProbe = FlaxEngine.Content.LoadAsyncInternal<CubeTexture>(EditorAssets.DefaultSkyCubeTexture);
 			//
-			_sky = Sky.New();
-			_sky.SunLight = _previewLight;
+			Sky = Sky.New();
+			Sky.SunLight = PreviewLight;
 			//
-			_skyLight = SkyLight.New();
-			_skyLight.Mode = SkyLight.Modes.CustomTexture;
-			_skyLight.Brightness = 1.1f;
-			_skyLight.CustomTexture = _envProbe.CustomProbe;
+			SkyLight = SkyLight.New();
+			SkyLight.Mode = SkyLight.Modes.CustomTexture;
+			SkyLight.Brightness = 1.1f;
+			SkyLight.CustomTexture = EnvProbe.CustomProbe;
 			//
-			_postFxVolume = PostFxVolume.New();
-			_postFxVolume.IsBounded = false;
-			_postFxVolume.Settings.Eye_MinLuminance = 0.1f;
+			PostFxVolume = PostFxVolume.New();
+			PostFxVolume.IsBounded = false;
+			PostFxVolume.Settings.Eye_MinLuminance = 0.1f;
 
 			// Link actors for rendering
 			Task.ActorsSource = ActorsSources.CustomActors;
-			Task.CustomActors.Add(_previewLight);
-			Task.CustomActors.Add(_envProbe);
-			Task.CustomActors.Add(_sky);
-			Task.CustomActors.Add(_skyLight);
-			Task.CustomActors.Add(_postFxVolume);
+			Task.CustomActors.Add(PreviewLight);
+			Task.CustomActors.Add(EnvProbe);
+			Task.CustomActors.Add(Sky);
+			Task.CustomActors.Add(SkyLight);
+			Task.CustomActors.Add(PostFxVolume);
 		}
 
 		/// <inheritdoc />
-		public override bool HasLoadedAssets => base.HasLoadedAssets && _sky.HasContentLoaded && _envProbe.Probe.IsLoaded && _postFxVolume.HasContentLoaded;
+		public override bool HasLoadedAssets => base.HasLoadedAssets && Sky.HasContentLoaded && EnvProbe.Probe.IsLoaded && PostFxVolume.HasContentLoaded;
 
 		/// <inheritdoc />
 		public override void OnDestroy()
 		{
 			// Ensure to cleanup created actor objects
-			Object.Destroy(ref _previewLight);
-			Object.Destroy(ref _envProbe);
-			Object.Destroy(ref _sky);
-			Object.Destroy(ref _skyLight);
-			Object.Destroy(ref _postFxVolume);
+			Object.Destroy(ref PreviewLight);
+			Object.Destroy(ref EnvProbe);
+			Object.Destroy(ref Sky);
+			Object.Destroy(ref SkyLight);
+			Object.Destroy(ref PostFxVolume);
 
 			base.OnDestroy();
 		}

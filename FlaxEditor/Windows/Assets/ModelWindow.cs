@@ -295,9 +295,7 @@ namespace FlaxEditor.Windows.Assets
 	    private readonly ToolStripButton _saveButton;
         private ModelActor _highlightActor;
         private bool _refreshOnLodsLoaded;
-
-        private int _uvDebugIndex = -1;
-
+		
         /// <inheritdoc />
         public ModelWindow(Editor editor, AssetItem item)
             : base(editor, item)
@@ -333,7 +331,7 @@ namespace FlaxEditor.Windows.Assets
             _highlightActor = ModelActor.New();
             _highlightActor.IsActive = false;
             _preview.Task.CustomActors.Add(_highlightActor);
-        }
+		}
 
         private void CacheMeshData()
         {
