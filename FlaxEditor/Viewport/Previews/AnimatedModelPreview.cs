@@ -96,14 +96,15 @@ namespace FlaxEditor.Viewport.Previews
 
 			// Update the bones debug (once every few frames)
 			_previewBonesActor.LocalScale = _previewModel.LocalScale;
-			var updateBonesCount = PlayAnimation ? 2 : 4;
+			var updateBonesCount = PlayAnimation ? 2 : 30;
 			if (_previewBonesCounter++ % updateBonesCount == 0)
 			{
 				_previewBonesActor.IsActive = ShowBones;
 				if (ShowBones)
 				{
 					_previewModel.GetCurrentPose(ref _previewModelPose);
-					if (_previewModelPose.Bones == null || _previewModelPose.Bones.Length == 0)
+					var skeleton = _previewModel.SkinnedModel?.Skeleton;
+					if (_previewModelPose.Bones == null || _previewModelPose.Bones.Length == 0 || skeleton == null)
 					{
 						_previewBonesActor.IsActive = false;
 					}
@@ -118,12 +119,12 @@ namespace FlaxEditor.Viewport.Previews
 						else
 							_previewBonesIndex.Clear();
 
+						// Draw bounding box at the bone locations
 						var boxSizeHalf = new Vector3(1.0f);
 						for (int i = 0; i < _previewModelPose.Bones.Length; i++)
 						{
 							var bonePos = _previewModelPose.Bones[i].TranslationVector;
-							
-							// Draw bounding box at the bone location
+
 							// Some inlined code to improve peformance
 							var box = new BoundingBox(bonePos - boxSizeHalf, bonePos + boxSizeHalf);
 							//
@@ -183,6 +184,25 @@ namespace FlaxEditor.Viewport.Previews
 							//
 						}
 						
+						// Bone bone connections
+						for (int i = 0; i < skeleton.Length; i++)
+						{
+							int parentIndex = skeleton[i].ParentIndex;
+
+							if (parentIndex != -1)
+							{
+								var parentPos = _previewModelPose.GetBonePosition(parentIndex);
+								var bonePos = _previewModelPose.GetBonePosition(i);
+
+								var iStart = _previewBonesVertex.Count;
+								_previewBonesVertex.Add(parentPos);
+								_previewBonesVertex.Add(bonePos);
+								_previewBonesIndex.Add(iStart + 0);
+								_previewBonesIndex.Add(iStart + 1);
+								_previewBonesIndex.Add(iStart + 0);
+							}
+						}
+
 						_previewBonesModel.UpdateMesh(_previewBonesVertex.ToArray(), _previewBonesIndex.ToArray());
 					}
 				}

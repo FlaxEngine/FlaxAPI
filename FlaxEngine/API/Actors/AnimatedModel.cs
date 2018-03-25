@@ -18,6 +18,16 @@ namespace FlaxEngine
 			/// The per-bone final transformations in actor world-space.
 			/// </summary>
 			public Matrix[] Bones;
+
+			/// <summary>
+			/// Gets the position of the bone in the actor local space.
+			/// </summary>
+			/// <param name="index">The bone index.</param>
+			/// <returns>The bone position.</returns>
+			public Vector3 GetBonePosition(int index)
+			{
+				return Bones[index].TranslationVector;
+			}
 		}
 
 		/// <summary>
