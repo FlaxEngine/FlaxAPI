@@ -97,7 +97,7 @@ namespace FlaxEditor.Viewport.Previews
 
 			// Update the bones debug (once every few frames)
 			_previewBonesActor.Transform = _previewModel.Transform;
-			var updateBonesCount = PlayAnimation ? 2 : 30;
+			var updateBonesCount = PlayAnimation ? 1 : 30;
 			if (_previewBonesCounter++ % updateBonesCount == 0)
 			{
 				_previewBonesActor.IsActive = ShowBones;

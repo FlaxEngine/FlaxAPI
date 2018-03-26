@@ -59,6 +59,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 3,
                 Title = "Time",
                 Description = "Game time constant",
+				Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(110, 20),
                 Elements = new[]
                 {
@@ -83,6 +84,19 @@ namespace FlaxEditor.Surface.Archetypes
 			        NodeElementArchetype.Factory.Input(1, "Base Reflect Fraction", true, ConnectionType.Float, 1, 1),
 			        NodeElementArchetype.Factory.Input(2, "Normal", true, ConnectionType.Vector3, 2),
 			        NodeElementArchetype.Factory.Output(0, "", ConnectionType.Float, 3)
+		        }
+	        },
+	        new NodeArchetype
+	        {
+		        TypeID = 5,
+		        Title = "Time",
+		        Description = "Game time constant",
+		        Flags = NodeFlags.AnimGraphOnly,
+		        Size = new Vector2(140, 40),
+		        Elements = new[]
+		        {
+			        NodeElementArchetype.Factory.Output(0, "Animation Time", ConnectionType.Float, 0),
+			        NodeElementArchetype.Factory.Output(1, "Delta Seconds", ConnectionType.Float, 1),
 		        }
 	        },
 		};
