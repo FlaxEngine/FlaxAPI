@@ -377,6 +377,28 @@ namespace FlaxEditor.Surface
                     ConnectionsType = ConnectionType.Invalid
                 };
             }
-        }
-    }
+			
+	        /// <summary>
+	        /// Creates new Skeleton Node Select element description for enum editing.
+	        /// </summary>
+	        /// <param name="x">The x location (in node area space).</param>
+	        /// <param name="y">The y location (in node area space).</param>
+	        /// <param name="width">The width of the element.</param>
+	        /// <param name="valueIndex">The index of the node variable linked as the input. Usefull to make a physical connection between input box and default value for it.</param>
+	        /// <returns>The archetype.</returns>
+	        public static NodeElementArchetype SkeletonNodeSelect(float x, float y, int width, int valueIndex)
+	        {
+		        return new NodeElementArchetype
+		        {
+			        Type = NodeElementType.SkeletonNodeSelect,
+			        Position = new Vector2(x, y),
+			        Size = new Vector2(width, 0),
+			        Text = null,
+			        Single = false,
+			        ValueIndex = valueIndex,
+			        ConnectionsType = ConnectionType.Invalid
+		        };
+			}
+		}
+	}
 }

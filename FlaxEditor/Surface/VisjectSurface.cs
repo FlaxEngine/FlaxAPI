@@ -515,7 +515,10 @@ namespace FlaxEditor.Surface
                     case NodeElementType.TextBox:
                         element = new TextBoxView(node, arch);
                         break;
-                }
+					case NodeElementType.SkeletonNodeSelect:
+						element = new SkeletonNodeSelectElement(node, arch);
+						break;
+				}
                 if (element != null)
                 {
                     // Link element

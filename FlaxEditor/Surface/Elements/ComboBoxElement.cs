@@ -11,7 +11,7 @@ namespace FlaxEditor.Surface.Elements
     /// </summary>
     /// <seealso cref="ComboBox" />
     /// <seealso cref="ISurfaceNodeElement" />
-    public sealed class ComboBoxElement : ComboBox, ISurfaceNodeElement
+    public class ComboBoxElement : ComboBox, ISurfaceNodeElement
     {
         private bool _isAutoSelect;
 
@@ -24,9 +24,6 @@ namespace FlaxEditor.Surface.Elements
         /// <summary>
         /// Gets the surface.
         /// </summary>
-        /// <value>
-        /// The surface.
-        /// </value>
         public VisjectSurface Surface => ParentNode.Surface;
 
         /// <inheritdoc />

@@ -298,6 +298,7 @@
     <Compile Include="Surface\Elements\InputBox.cs" />
     <Compile Include="Surface\Elements\InteagerValue.cs" />
     <Compile Include="Surface\Elements\OutputBox.cs" />
+    <Compile Include="Surface\Elements\SkeletonNodeSelectElement.cs" />
     <Compile Include="Surface\Elements\TextBoxView.cs" />
     <Compile Include="Surface\Elements\TextView.cs" />
     <Compile Include="Surface\GroupArchetype.cs" />
