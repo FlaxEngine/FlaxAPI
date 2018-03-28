@@ -168,13 +168,13 @@ namespace FlaxEditor.Content.Import
 		/// The imported animation first frame index. Used only if Duration mode is set to Custom.
 		/// </summary>
 		[EditorOrder(1010), Limit(0), EditorDisplay("Animation"), Tooltip("Imported animation first frame index. Used only if Duration mode is set to Custom.")]
-		public int FramesRangeStart { get; set; } = 0;
+		public float FramesRangeStart { get; set; } = 0;
 
 		/// <summary>
 		/// The imported animation end frame index. Used only if Duration mode is set to Custom.
 		/// </summary>
 		[EditorOrder(1020), Limit(0), EditorDisplay("Animation"), Tooltip("Imported animation last frame index. Used only if Duration mode is set to Custom.")]
-		public int FramesRangeEnd { get; set; } = 0;
+		public float FramesRangeEnd { get; set; } = 0;
 
 		/// <summary>
 		/// The imported animation sampling rate. If value is 0 then the original animation speed will be used.
@@ -210,8 +210,8 @@ namespace FlaxEditor.Content.Import
 
 			// Animation
 			public AnimationDuration Duration;
-	        public int FramesRangeStart;
-	        public int FramesRangeEnd;
+	        public float FramesRangeStart;
+	        public float FramesRangeEnd;
 	        public float SamplingRate;
 	        public bool SkipEmptyCurves;
 		}
