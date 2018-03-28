@@ -20,6 +20,11 @@ namespace FlaxEditor.Surface.Elements
 			_isAutoSelect = true;
 
 			UpdateComboBox();
+
+			// Select saved value
+			_selectedIndicies.Clear();
+			if (Archetype.ValueIndex != -1)
+				_selectedIndicies.Add((int)ParentNode.Values[Archetype.ValueIndex]);
 		}
 
 		/// <summary>

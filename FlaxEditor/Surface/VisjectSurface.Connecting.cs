@@ -64,51 +64,47 @@ namespace FlaxEditor.Surface
             return true;
         }
 
-        /// <summary>
-        /// Checks if can use direct conversion from one type to another.
-        /// </summary>
-        /// <param name="from">Source type.</param>
-        /// <param name="to">Target type.</param>
-        /// <returns>True if can use direct conversion, otherwise false.</returns>
-        public bool CanUseDirectCast(ConnectionType from, ConnectionType to)
-        {
-            bool result = (from & to) != 0;
-            if (!result)
-            {
-                if (Type == SurfaceType.Material)
-                {
-                    switch (from)
-                    {
-                        case ConnectionType.Bool:
-                        case ConnectionType.Integer:
-                        case ConnectionType.Float:
-                        case ConnectionType.Vector2:
-                        case ConnectionType.Vector3:
-                        case ConnectionType.Vector4:
-                            switch (to)
-                            {
-                                case ConnectionType.Bool:
-                                case ConnectionType.Integer:
-                                case ConnectionType.Float:
-                                case ConnectionType.Vector2:
-                                case ConnectionType.Vector3:
-                                case ConnectionType.Vector4:
-                                    result = true;
-                                    break;
-                            }
-                            break;
-                    }
-                }
-                else
-                {
-					// Scripts need casting node usage
-	                return false;
-                }
-            }
-            return result;
-        }
+	    /// <summary>
+	    /// Checks if can use direct conversion from one type to another.
+	    /// </summary>
+	    /// <param name="from">Source type.</param>
+	    /// <param name="to">Target type.</param>
+	    /// <returns>True if can use direct conversion, otherwise false.</returns>
+	    public bool CanUseDirectCast(ConnectionType from, ConnectionType to)
+	    {
+		    bool result = (from & to) != 0;
+		    if (!result)
+		    {
+			    // Implicit casting is supported for primitive types
+			    switch (from)
+			    {
+				    case ConnectionType.Bool:
+				    case ConnectionType.Integer:
+				    case ConnectionType.Float:
+				    case ConnectionType.Vector2:
+				    case ConnectionType.Vector3:
+				    case ConnectionType.Vector4:
+				    case ConnectionType.Rotation:
+					    switch (to)
+					    {
+						    case ConnectionType.Bool:
+						    case ConnectionType.Integer:
+						    case ConnectionType.Float:
+						    case ConnectionType.Vector2:
+						    case ConnectionType.Vector3:
+						    case ConnectionType.Vector4:
+						    case ConnectionType.Rotation:
+							    result = true;
+							    break;
+					    }
+					    break;
+			    }
+		    }
 
-        internal void OnMosueOverBox(Box box)
+		    return result;
+	    }
+
+	    internal void OnMosueOverBox(Box box)
         {
             _lastBoxUnderMouse = box;
         }
