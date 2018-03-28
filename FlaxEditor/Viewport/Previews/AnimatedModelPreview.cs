@@ -121,23 +121,18 @@ namespace FlaxEditor.Viewport.Previews
 							_previewBonesIndex.Clear();
 
 						// Draw bounding box at the bone locations
-						var boxSizeHalf = new Vector3(1.0f);
+						var boneBox = new OrientedBoundingBox(new Vector3(-1.0f), new Vector3(1.0f));
 						for (int i = 0; i < _previewModelPose.Bones.Length; i++)
 						{
-							var bonePos = _previewModelPose.Bones[i].TranslationVector;
+							var boneTransform = _previewModelPose.Bones[i];
+							boneTransform.Decompose(out var scale, out var _, out var _);
+							boneTransform = Matrix.Invert(Matrix.Scaling(scale)) * boneTransform;
 
 							// Some inlined code to improve peformance
-							var box = new BoundingBox(bonePos - boxSizeHalf, bonePos + boxSizeHalf);
+							var box = boneBox * boneTransform;
 							//
 							var iStart = _previewBonesVertex.Count;
-							_previewBonesVertex.Add(new Vector3(box.Minimum.X, box.Maximum.Y, box.Maximum.Z));
-							_previewBonesVertex.Add(new Vector3(box.Maximum.X, box.Maximum.Y, box.Maximum.Z));
-							_previewBonesVertex.Add(new Vector3(box.Maximum.X, box.Minimum.Y, box.Maximum.Z));
-							_previewBonesVertex.Add(new Vector3(box.Minimum.X, box.Minimum.Y, box.Maximum.Z));
-							_previewBonesVertex.Add(new Vector3(box.Minimum.X, box.Maximum.Y, box.Minimum.Z));
-							_previewBonesVertex.Add(new Vector3(box.Maximum.X, box.Maximum.Y, box.Minimum.Z));
-							_previewBonesVertex.Add(new Vector3(box.Maximum.X, box.Minimum.Y, box.Minimum.Z));
-							_previewBonesVertex.Add(new Vector3(box.Minimum.X, box.Minimum.Y, box.Minimum.Z));
+							box.GetCorners(_previewBonesVertex);
 							//
 							_previewBonesIndex.Add(iStart + 0);
 							_previewBonesIndex.Add(iStart + 1);

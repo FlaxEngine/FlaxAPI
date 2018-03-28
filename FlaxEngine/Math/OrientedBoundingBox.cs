@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -132,16 +133,72 @@ namespace FlaxEngine
             return corners;
         }
 
-        /// <summary>
-        /// Transforms this box using a transformation matrix.
-        /// </summary>
-        /// <param name="mat">The transformation matrix.</param>
-        /// <remarks>
-        /// While any kind of transformation can be applied, it is recommended to apply scaling using scale method instead, which
-        /// scales the Extents and keeps the Transformation matrix for rotation only, and that preserves collision detection
-        /// accuracy.
-        /// </remarks>
-        public void Transform(ref Matrix mat)
+		/// <summary>
+		/// Retrieves the eight corners of the bounding box.
+		/// </summary>
+		/// <param name="corners">An array of points representing the eight corners of the bounding box.</param>
+		public void GetCorners(Vector3[] corners)
+	    {
+			if(corners == null || corners.Length != 8)
+				throw new ArgumentException();
+
+		    var xv = new Vector3(Extents.X, 0, 0);
+		    var yv = new Vector3(0, Extents.Y, 0);
+		    var zv = new Vector3(0, 0, Extents.Z);
+		    Vector3.TransformNormal(ref xv, ref Transformation, out xv);
+		    Vector3.TransformNormal(ref yv, ref Transformation, out yv);
+		    Vector3.TransformNormal(ref zv, ref Transformation, out zv);
+
+		    Vector3 center = Transformation.TranslationVector;
+			
+		    corners[0] = center + xv + yv + zv;
+		    corners[1] = center + xv + yv - zv;
+		    corners[2] = center - xv + yv - zv;
+		    corners[3] = center - xv + yv + zv;
+		    corners[4] = center + xv - yv + zv;
+		    corners[5] = center + xv - yv - zv;
+		    corners[6] = center - xv - yv - zv;
+		    corners[7] = center - xv - yv + zv;
+	    }
+
+	    /// <summary>
+	    /// Retrieves the eight corners of the bounding box.
+	    /// </summary>
+	    /// <param name="corners">An collection to add the corners of the bounding box.</param>
+	    public void GetCorners(List<Vector3> corners)
+	    {
+		    if (corners == null)
+			    throw new ArgumentNullException();
+
+		    var xv = new Vector3(Extents.X, 0, 0);
+		    var yv = new Vector3(0, Extents.Y, 0);
+		    var zv = new Vector3(0, 0, Extents.Z);
+		    Vector3.TransformNormal(ref xv, ref Transformation, out xv);
+		    Vector3.TransformNormal(ref yv, ref Transformation, out yv);
+		    Vector3.TransformNormal(ref zv, ref Transformation, out zv);
+
+		    Vector3 center = Transformation.TranslationVector;
+
+		    corners.Add(center + xv + yv + zv);
+		    corners.Add(center + xv + yv - zv);
+		    corners.Add(center - xv + yv - zv);
+		    corners.Add(center - xv + yv + zv);
+		    corners.Add(center + xv - yv + zv);
+		    corners.Add(center + xv - yv - zv);
+		    corners.Add(center - xv - yv - zv);
+		    corners.Add(center - xv - yv + zv);
+	    }
+
+	    /// <summary>
+		/// Transforms this box using a transformation matrix.
+		/// </summary>
+		/// <param name="mat">The transformation matrix.</param>
+		/// <remarks>
+		/// While any kind of transformation can be applied, it is recommended to apply scaling using scale method instead, which
+		/// scales the Extents and keeps the Transformation matrix for rotation only, and that preserves collision detection
+		/// accuracy.
+		/// </remarks>
+		public void Transform(ref Matrix mat)
         {
             Transformation *= mat;
         }
