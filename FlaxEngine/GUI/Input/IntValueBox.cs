@@ -87,8 +87,8 @@ namespace FlaxEngine.GUI
 	    /// <param name="limits">The limits.</param>
 	    public void SetLimits(RangeAttribute limits)
 	    {
-		    _min = (int)limits.Min;
-		    _max = Math.Max(_min, (int)limits.Max);
+		    _min = limits.Min == float.MinValue ? int.MinValue : (int)limits.Min;
+			_max = Math.Max(_min, limits.Max == float.MaxValue ? int.MaxValue : (int)limits.Max);
 		    Value = Value;
 	    }
 
@@ -98,8 +98,8 @@ namespace FlaxEngine.GUI
 	    /// <param name="limits">The limits.</param>
 	    public void SetLimits(LimitAttribute limits)
 	    {
-		    _min = (int)limits.Min;
-		    _max = Math.Max(_min, (int)limits.Max);
+		    _min = limits.Min == float.MinValue ? int.MinValue : (int)limits.Min;
+		    _max = Math.Max(_min, limits.Max == float.MaxValue ? int.MaxValue : (int)limits.Max);
 		    _slideSpeed = limits.SliderSpeed;
 		    Value = Value;
 	    }
