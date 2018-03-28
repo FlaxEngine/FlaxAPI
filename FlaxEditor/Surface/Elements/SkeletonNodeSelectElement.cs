@@ -2,7 +2,9 @@
 // Copyright (c) 2012-2018 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using FlaxEngine.GUI;
+using System;
+using System.Text;
+using FlaxEngine;
 
 namespace FlaxEditor.Surface.Elements
 {
@@ -15,6 +17,51 @@ namespace FlaxEditor.Surface.Elements
 		public SkeletonNodeSelectElement(SurfaceNode parentNode, NodeElementArchetype archetype)
 			: base(parentNode, archetype)
 		{
+			_isAutoSelect = true;
+
+			UpdateComboBox();
+		}
+
+		/// <summary>
+		/// Updates the Combo Box items list from the current skeleton nodes hierarchy.
+		/// </summary>
+		protected void UpdateComboBox()
+		{
+			// Prepare
+			var selectedBone = SelectedItem;
+			_items.Clear();
+
+			// Get the skeleton
+			var surfaceParam = Surface.GetParameter(Windows.Assets.AnimationGraphWindow.BaseModelId);
+			var skeleton = surfaceParam != null ? FlaxEngine.Content.Load<SkinnedModel>((Guid)surfaceParam.Value) : null;
+			if (skeleton == null || !skeleton.IsLoaded)
+			{
+				SelectedIndex = -1;
+				return;
+			}
+
+			// Update the items
+			var bones = skeleton.Skeleton;
+			_items.Capacity = Mathf.Max(_items.Capacity, bones.Length);
+			StringBuilder sb = new StringBuilder(64);
+			for (int i = 0; i < bones.Length; i++)
+			{
+				sb.Clear();
+				int parent = bones[i].ParentIndex;
+				while (parent != -1)
+				{
+					sb.Append(" ");
+					parent = bones[parent].ParentIndex;
+				}
+
+				sb.Append("> ");
+				sb.Append(bones[i].Name);
+
+				_items.Add(sb.ToString());
+			}
+
+			// Restore the selected bone
+			SelectedItem = selectedBone;
 		}
 	}
 }

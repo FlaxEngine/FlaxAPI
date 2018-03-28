@@ -84,7 +84,7 @@ namespace FlaxEngine.GUI
             set
             {
                 // Clamp index
-                value = Mathf.Clamp(value, value, _items.Count - 1);
+                value = Mathf.Min(value, _items.Count - 1);
 
                 // Check if index will change
                 if (value != SelectedIndex)

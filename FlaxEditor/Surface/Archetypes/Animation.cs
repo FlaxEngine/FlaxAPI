@@ -148,8 +148,10 @@ namespace FlaxEditor.Surface.Archetypes
 					NodeElementArchetype.Factory.Input(1, "Translation", true, ConnectionType.Vector3, 2),
 					NodeElementArchetype.Factory.Input(2, "Rotation", true, ConnectionType.Rotation, 3),
 					NodeElementArchetype.Factory.Input(3, "Scale", true, ConnectionType.Vector3, 4),
-					NodeElementArchetype.Factory.SkeletonNodeSelect(0, Surface.Constants.LayoutOffsetY * 4, 120, 0),
-					NodeElementArchetype.Factory.ComboBox(0, Surface.Constants.LayoutOffsetY * 5, 120, 1, typeof(BoneTransformMode)),
+					NodeElementArchetype.Factory.SkeletonNodeSelect(40, Surface.Constants.LayoutOffsetY * 4, 120, 0),
+					NodeElementArchetype.Factory.ComboBox(40, Surface.Constants.LayoutOffsetY * 5, 120, 1, typeof(BoneTransformMode)),
+					NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 4, "Bone:"),
+					NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 5, "Mode:"),
 				}
 			},
 		};

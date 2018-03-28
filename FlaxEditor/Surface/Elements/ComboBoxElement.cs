@@ -13,7 +13,10 @@ namespace FlaxEditor.Surface.Elements
     /// <seealso cref="ISurfaceNodeElement" />
     public class ComboBoxElement : ComboBox, ISurfaceNodeElement
     {
-        private bool _isAutoSelect;
+		/// <summary>
+		/// True if automatic value selecting is active.
+		/// </summary>
+		protected bool _isAutoSelect;
 
         /// <inheritdoc />
         public SurfaceNode ParentNode { get; }
