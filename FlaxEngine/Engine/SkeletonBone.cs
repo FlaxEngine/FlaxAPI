@@ -15,7 +15,7 @@ namespace FlaxEngine
 		public int ParentIndex;
 
 		/// <summary>
-		/// The local transformation of the bone, relative to the parent bone.
+		/// The local transformation of the bone, relative to the parent bone (in bind pose).
 		/// </summary>
 		public Transform LocalTransform;
 

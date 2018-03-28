@@ -97,110 +97,107 @@ namespace FlaxEditor.Viewport.Previews
 
 			// Update the bones debug (once every few frames)
 			_previewBonesActor.Transform = _previewModel.Transform;
-			var updateBonesCount = PlayAnimation ? 1 : 30;
-			if (_previewBonesCounter++ % updateBonesCount == 0)
+			var updateBonesCount = PlayAnimation || _previewBonesVertex?.Count == 0 ? 1 : 30;
+			_previewBonesActor.IsActive = ShowBones;
+			if (_previewBonesCounter++ % updateBonesCount == 0 && ShowBones)
 			{
-				_previewBonesActor.IsActive = ShowBones;
-				if (ShowBones)
+				_previewModel.GetCurrentPose(ref _previewModelPose);
+				var skeleton = _previewModel.SkinnedModel?.Skeleton;
+				if (_previewModelPose.Bones == null || _previewModelPose.Bones.Length == 0 || skeleton == null)
 				{
-					_previewModel.GetCurrentPose(ref _previewModelPose);
-					var skeleton = _previewModel.SkinnedModel?.Skeleton;
-					if (_previewModelPose.Bones == null || _previewModelPose.Bones.Length == 0 || skeleton == null)
-					{
-						_previewBonesActor.IsActive = false;
-					}
+					_previewBonesActor.IsActive = false;
+				}
+				else
+				{
+					if (_previewBonesVertex == null)
+						_previewBonesVertex = new List<Vector3>(1024 * 2);
 					else
+						_previewBonesVertex.Clear();
+					if (_previewBonesIndex == null)
+						_previewBonesIndex = new List<int>(1024 * 3);
+					else
+						_previewBonesIndex.Clear();
+
+					// Draw bounding box at the bone locations
+					var boneBox = new OrientedBoundingBox(new Vector3(-1.0f), new Vector3(1.0f));
+					for (int i = 0; i < _previewModelPose.Bones.Length; i++)
 					{
-						if (_previewBonesVertex == null)
-							_previewBonesVertex = new List<Vector3>(1024 * 2);
-						else
-							_previewBonesVertex.Clear();
-						if (_previewBonesIndex == null)
-							_previewBonesIndex = new List<int>(1024 * 3);
-						else
-							_previewBonesIndex.Clear();
+						var boneTransform = _previewModelPose.Bones[i];
+						boneTransform.Decompose(out var scale, out var _, out var _);
+						boneTransform = Matrix.Invert(Matrix.Scaling(scale)) * boneTransform;
 
-						// Draw bounding box at the bone locations
-						var boneBox = new OrientedBoundingBox(new Vector3(-1.0f), new Vector3(1.0f));
-						for (int i = 0; i < _previewModelPose.Bones.Length; i++)
-						{
-							var boneTransform = _previewModelPose.Bones[i];
-							boneTransform.Decompose(out var scale, out var _, out var _);
-							boneTransform = Matrix.Invert(Matrix.Scaling(scale)) * boneTransform;
-
-							// Some inlined code to improve peformance
-							var box = boneBox * boneTransform;
-							//
-							var iStart = _previewBonesVertex.Count;
-							box.GetCorners(_previewBonesVertex);
-							//
-							_previewBonesIndex.Add(iStart + 0);
-							_previewBonesIndex.Add(iStart + 1);
-							_previewBonesIndex.Add(iStart + 0);
-							//
-							_previewBonesIndex.Add(iStart + 0);
-							_previewBonesIndex.Add(iStart + 4);
-							_previewBonesIndex.Add(iStart + 0);
-							//
-							_previewBonesIndex.Add(iStart + 1);
-							_previewBonesIndex.Add(iStart + 2);
-							_previewBonesIndex.Add(iStart + 1);
-							//
-							_previewBonesIndex.Add(iStart + 1);
-							_previewBonesIndex.Add(iStart + 5);
-							_previewBonesIndex.Add(iStart + 1);
-							//
-							_previewBonesIndex.Add(iStart + 2);
-							_previewBonesIndex.Add(iStart + 3);
-							_previewBonesIndex.Add(iStart + 2);
-							//
-							_previewBonesIndex.Add(iStart + 2);
-							_previewBonesIndex.Add(iStart + 6);
-							_previewBonesIndex.Add(iStart + 2);
-							//
-							_previewBonesIndex.Add(iStart + 3);
-							_previewBonesIndex.Add(iStart + 7);
-							_previewBonesIndex.Add(iStart + 3);
-							//
-							_previewBonesIndex.Add(iStart + 4);
-							_previewBonesIndex.Add(iStart + 5);
-							_previewBonesIndex.Add(iStart + 4);
-							//
-							_previewBonesIndex.Add(iStart + 4);
-							_previewBonesIndex.Add(iStart + 7);
-							_previewBonesIndex.Add(iStart + 4);
-							//
-							_previewBonesIndex.Add(iStart + 5);
-							_previewBonesIndex.Add(iStart + 6);
-							_previewBonesIndex.Add(iStart + 5);
-							//
-							_previewBonesIndex.Add(iStart + 6);
-							_previewBonesIndex.Add(iStart + 7);
-							_previewBonesIndex.Add(iStart + 6);
-							//
-						}
-						
-						// Bone bone connections
-						for (int i = 0; i < skeleton.Length; i++)
-						{
-							int parentIndex = skeleton[i].ParentIndex;
-
-							if (parentIndex != -1)
-							{
-								var parentPos = _previewModelPose.GetBonePosition(parentIndex);
-								var bonePos = _previewModelPose.GetBonePosition(i);
-
-								var iStart = _previewBonesVertex.Count;
-								_previewBonesVertex.Add(parentPos);
-								_previewBonesVertex.Add(bonePos);
-								_previewBonesIndex.Add(iStart + 0);
-								_previewBonesIndex.Add(iStart + 1);
-								_previewBonesIndex.Add(iStart + 0);
-							}
-						}
-
-						_previewBonesModel.UpdateMesh(_previewBonesVertex.ToArray(), _previewBonesIndex.ToArray());
+						// Some inlined code to improve peformance
+						var box = boneBox * boneTransform;
+						//
+						var iStart = _previewBonesVertex.Count;
+						box.GetCorners(_previewBonesVertex);
+						//
+						_previewBonesIndex.Add(iStart + 0);
+						_previewBonesIndex.Add(iStart + 1);
+						_previewBonesIndex.Add(iStart + 0);
+						//
+						_previewBonesIndex.Add(iStart + 0);
+						_previewBonesIndex.Add(iStart + 4);
+						_previewBonesIndex.Add(iStart + 0);
+						//
+						_previewBonesIndex.Add(iStart + 1);
+						_previewBonesIndex.Add(iStart + 2);
+						_previewBonesIndex.Add(iStart + 1);
+						//
+						_previewBonesIndex.Add(iStart + 1);
+						_previewBonesIndex.Add(iStart + 5);
+						_previewBonesIndex.Add(iStart + 1);
+						//
+						_previewBonesIndex.Add(iStart + 2);
+						_previewBonesIndex.Add(iStart + 3);
+						_previewBonesIndex.Add(iStart + 2);
+						//
+						_previewBonesIndex.Add(iStart + 2);
+						_previewBonesIndex.Add(iStart + 6);
+						_previewBonesIndex.Add(iStart + 2);
+						//
+						_previewBonesIndex.Add(iStart + 3);
+						_previewBonesIndex.Add(iStart + 7);
+						_previewBonesIndex.Add(iStart + 3);
+						//
+						_previewBonesIndex.Add(iStart + 4);
+						_previewBonesIndex.Add(iStart + 5);
+						_previewBonesIndex.Add(iStart + 4);
+						//
+						_previewBonesIndex.Add(iStart + 4);
+						_previewBonesIndex.Add(iStart + 7);
+						_previewBonesIndex.Add(iStart + 4);
+						//
+						_previewBonesIndex.Add(iStart + 5);
+						_previewBonesIndex.Add(iStart + 6);
+						_previewBonesIndex.Add(iStart + 5);
+						//
+						_previewBonesIndex.Add(iStart + 6);
+						_previewBonesIndex.Add(iStart + 7);
+						_previewBonesIndex.Add(iStart + 6);
+						//
 					}
+
+					// Bone bone connections
+					for (int i = 0; i < skeleton.Length; i++)
+					{
+						int parentIndex = skeleton[i].ParentIndex;
+
+						if (parentIndex != -1)
+						{
+							var parentPos = _previewModelPose.GetBonePosition(parentIndex);
+							var bonePos = _previewModelPose.GetBonePosition(i);
+
+							var iStart = _previewBonesVertex.Count;
+							_previewBonesVertex.Add(parentPos);
+							_previewBonesVertex.Add(bonePos);
+							_previewBonesIndex.Add(iStart + 0);
+							_previewBonesIndex.Add(iStart + 1);
+							_previewBonesIndex.Add(iStart + 0);
+						}
+					}
+
+					_previewBonesModel.UpdateMesh(_previewBonesVertex.ToArray(), _previewBonesIndex.ToArray());
 				}
 			}
 		}
