@@ -116,6 +116,7 @@ namespace FlaxEditor.Windows
                     Types = new[]
                     {
 	                    new KeyValuePair<string, Type>("Animated Model", typeof(AnimatedModel)),
+	                    new KeyValuePair<string, Type>("Bone Socket", typeof(BoneSocket)),
 						new KeyValuePair<string, Type>("CSG Box Brush", typeof(BoxBrush)),
                         new KeyValuePair<string, Type>("Audio Source", typeof(AudioSource)),
                         new KeyValuePair<string, Type>("Audio Listener", typeof(AudioListener)),

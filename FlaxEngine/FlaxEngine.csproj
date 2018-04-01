@@ -52,6 +52,8 @@
     <Compile Include="API\Actors\AudioListener.Gen.cs" />
     <Compile Include="API\Actors\AudioSource.cs" />
     <Compile Include="API\Actors\AudioSource.Gen.cs" />
+    <Compile Include="API\Actors\BoneSocket.cs" />
+    <Compile Include="API\Actors\BoneSocket.Gen.cs" />
     <Compile Include="API\Actors\BoxBrush.cs" />
     <Compile Include="API\Actors\BoxBrush.Gen.cs">
       <DependentUpon>BoxBrush.cs</DependentUpon>

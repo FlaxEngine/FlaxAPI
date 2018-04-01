@@ -101,6 +101,8 @@ namespace FlaxEditor.Windows
             groupPhysics.AddChild(CreateActorItem("D6 Joint", typeof(D6Joint)));
 
             var groupOther = createGroupWithList(actorGroups, "Other");
+            groupOther.AddChild(CreateActorItem("Animated Model", typeof(AnimatedModel)));
+            groupOther.AddChild(CreateActorItem("Bone Socket", typeof(BoneSocket)));
             groupOther.AddChild(CreateActorItem("CSG Box Brush", typeof(BoxBrush)));
             groupOther.AddChild(CreateActorItem("Audio Source", typeof(AudioSource)));
             groupOther.AddChild(CreateActorItem("Audio Listner", typeof(AudioListener)));

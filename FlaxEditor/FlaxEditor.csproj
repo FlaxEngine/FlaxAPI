@@ -116,6 +116,7 @@
     <Compile Include="CustomEditors\Editors\IntegerEditor.cs" />
     <Compile Include="CustomEditors\Editors\ListEditor.cs" />
     <Compile Include="CustomEditors\Editors\QuaternionEditor.cs" />
+    <Compile Include="CustomEditors\Editors\SkeletonBoneEditor.cs" />
     <Compile Include="CustomEditors\Editors\StringEditor.cs" />
     <Compile Include="CustomEditors\Editors\Vector2Editor.cs" />
     <Compile Include="CustomEditors\Editors\Vector3Editor.cs" />
@@ -245,6 +246,7 @@
     <Compile Include="SceneGraph\Actors\AnimatedModelNode.cs" />
     <Compile Include="SceneGraph\Actors\AudioListenerNode.cs" />
     <Compile Include="SceneGraph\Actors\AudioSourceNode.cs" />
+    <Compile Include="SceneGraph\Actors\BoneSocketNode.cs" />
     <Compile Include="SceneGraph\Actors\BoxBrushNode.cs" />
     <Compile Include="SceneGraph\Actors\CameraNode.cs" />
     <Compile Include="SceneGraph\Actors\DirectionalLightNode.cs" />
