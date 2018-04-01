@@ -275,6 +275,30 @@ namespace FlaxEditor.Surface.Archetypes
 			        NodeElementArchetype.Factory.Output(0, "Color", ConnectionType.Vector4, 0),
 		        }
 	        },
+	        new NodeArchetype
+	        {
+		        TypeID = 13,
+		        Title = "Pre-skinned Local Position",
+		        Description = "Per vertex local position (before skinning)",
+		        Flags = NodeFlags.MaterialOnly,
+		        Size = new Vector2(230, 40),
+		        Elements = new[]
+		        {
+			        NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
+		        }
+	        },
+	        new NodeArchetype
+	        {
+		        TypeID = 14,
+		        Title = "Pre-skinned Local Normal",
+		        Description = "Per vertex local normal (before skinning)",
+		        Flags = NodeFlags.MaterialOnly,
+		        Size = new Vector2(230, 40),
+		        Elements = new[]
+		        {
+			        NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
+		        }
+	        },
 		};
     }
 }
