@@ -152,12 +152,20 @@ namespace FlaxEditor.SceneGraph.GUI
         /// <inheritdoc />
         protected override void OnLongPress()
         {
-            Select();
-
-            // Start renaming the actor
-            var dialog = RenamePopup.Show(this, _headerRect, _actorNode.Name, false);
-            dialog.Renamed += OnRenamed;
+			StartRenaming();
         }
+
+		/// <summary>
+		/// Starts the actor renaming action.
+		/// </summary>
+	    public void StartRenaming()
+	    {
+		    Select();
+
+			// Start renaming the actor
+			var dialog = RenamePopup.Show(this, _headerRect, _actorNode.Name, false);
+		    dialog.Renamed += OnRenamed;
+		}
 
         private void OnRenamed(RenamePopup renamePopup)
         {
