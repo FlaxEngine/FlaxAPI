@@ -133,9 +133,9 @@ namespace FlaxEditor.Surface.Archetypes
 			{
 				TypeID = 3,
 				Title = "Transform Bone (local space)",
-				Description = "Trnsforms the skeleton root bone",
+				Description = "Trnsforms the skeleton bone",
 				Flags = NodeFlags.AnimGraphOnly,
-				Size = new Vector2(260, 130),
+				Size = new Vector2(270, 130),
 				DefaultValues = new object[]
 				{
 					0,
@@ -152,6 +152,57 @@ namespace FlaxEditor.Surface.Archetypes
 					NodeElementArchetype.Factory.ComboBox(40, Surface.Constants.LayoutOffsetY * 5, 120, 1, typeof(BoneTransformMode)),
 					NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 4, "Bone:"),
 					NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 5, "Mode:"),
+				}
+			},
+			new NodeArchetype
+			{
+				TypeID = 4,
+				Title = "Transform Bone (global space)",
+				Description = "Trnsforms the skeleton bone",
+				Flags = NodeFlags.AnimGraphOnly,
+				Size = new Vector2(270, 130),
+				DefaultValues = new object[]
+				{
+					0,
+					(int)BoneTransformMode.Add,
+				},
+				Elements = new[]
+				{
+					NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.ImpulseSecondary, 0),
+					NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.ImpulseSecondary, 1),
+					NodeElementArchetype.Factory.Input(1, "Translation", true, ConnectionType.Vector3, 2),
+					NodeElementArchetype.Factory.Input(2, "Rotation", true, ConnectionType.Rotation, 3),
+					NodeElementArchetype.Factory.Input(3, "Scale", true, ConnectionType.Vector3, 4),
+					NodeElementArchetype.Factory.SkeletonNodeSelect(40, Surface.Constants.LayoutOffsetY * 4, 120, 0),
+					NodeElementArchetype.Factory.ComboBox(40, Surface.Constants.LayoutOffsetY * 5, 120, 1, typeof(BoneTransformMode)),
+					NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 4, "Bone:"),
+					NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 5, "Mode:"),
+				}
+			},
+			new NodeArchetype
+			{
+				TypeID = 5,
+				Title = "Local To Global",
+				Description = "Trnsforms the skeleton bones from local into global space",
+				Flags = NodeFlags.AnimGraphOnly,
+				Size = new Vector2(150, 40),
+				Elements = new[]
+				{
+					NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.ImpulseSecondary, 0),
+					NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.Impulse, 1),
+				}
+			},
+			new NodeArchetype
+			{
+				TypeID = 6,
+				Title = "Global To Local",
+				Description = "Trnsforms the skeleton bones from global into local space",
+				Flags = NodeFlags.AnimGraphOnly,
+				Size = new Vector2(150, 40),
+				Elements = new[]
+				{
+					NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Impulse, 0),
+					NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.ImpulseSecondary, 1),
 				}
 			},
 		};
