@@ -341,7 +341,7 @@ namespace FlaxEditor.Surface.Elements
             Color color = _currentTypeColor * alpha;
             var style = Surface.Style;
             Sprite icon;
-            if (_currentType == ConnectionType.Impulse)
+            if (_currentType == ConnectionType.Impulse || _currentType == ConnectionType.ImpulseSecondary)
                 icon = hasConnections ? style.Icons.ArowClose : style.Icons.ArowOpen;
             else
                 icon = hasConnections ? style.Icons.BoxClose : style.Icons.BoxOpen;

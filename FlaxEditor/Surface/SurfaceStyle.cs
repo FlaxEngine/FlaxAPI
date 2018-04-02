@@ -82,10 +82,15 @@ namespace FlaxEditor.Surface
             /// </summary>
             public Color Box;
 
-            /// <summary>
-            /// The default boxes color.
-            /// </summary>
-            public Color Default;
+	        /// <summary>
+	        /// The impulse (secondary) boxes color.
+	        /// </summary>
+	        public Color ImpulseSecondary;
+
+			/// <summary>
+			/// The default boxes color.
+			/// </summary>
+			public Color Default;
         }
 
         /// <summary>
@@ -146,6 +151,7 @@ namespace FlaxEditor.Surface
                 case ConnectionType.Rotation: color = Colors.Rotation; break;
                 case ConnectionType.Transform: color = Colors.Transform; break;
                 case ConnectionType.Box: color = Colors.Box; break;
+                case ConnectionType.ImpulseSecondary: color = Colors.ImpulseSecondary; break;
                 default: color = Colors.Default; break;
             }
         }
@@ -199,7 +205,8 @@ namespace FlaxEditor.Surface
                     Transform = new Color(255, 127, 39),
                     Box = new Color(34, 117, 76),
                     Default = new Color(200, 200, 200),
-                },
+	                ImpulseSecondary = new Color(40, 130, 50),
+				},
                 Icons =
                 {
                     BoxOpen = editor.UI.GetIcon("VisjectBoxOpen"),
