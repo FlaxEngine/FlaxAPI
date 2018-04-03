@@ -205,6 +205,37 @@ namespace FlaxEditor.Surface.Archetypes
 					NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.ImpulseSecondary, 1),
 				}
 			},
+			new NodeArchetype
+			{
+				TypeID = 7,
+				Title = "Copy Bone",
+				Description = "Copies the skeleton bone transformation data (in local space)",
+				Flags = NodeFlags.AnimGraphOnly,
+				Size = new Vector2(260, 140),
+				DefaultValues = new object[]
+				{
+					0,
+					1,
+					true,
+					true,
+					true,
+				},
+				Elements = new[]
+				{
+					NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Impulse, 0),
+					NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.Impulse, 1),
+					NodeElementArchetype.Factory.SkeletonNodeSelect(100, Surface.Constants.LayoutOffsetY * 1, 120, 0),
+					NodeElementArchetype.Factory.SkeletonNodeSelect(100, Surface.Constants.LayoutOffsetY * 2, 120, 1),
+					NodeElementArchetype.Factory.Bool(100, Surface.Constants.LayoutOffsetY * 3, 2),
+					NodeElementArchetype.Factory.Bool(100, Surface.Constants.LayoutOffsetY * 4, 3),
+					NodeElementArchetype.Factory.Bool(100, Surface.Constants.LayoutOffsetY * 5, 4),
+					NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 1, "Source Bone:"),
+					NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 2, "Destination Bone:"),
+					NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 3, "Copy Translation:"),
+					NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 4, "Copy Rotation:"),
+					NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 5, "Copy Scale:"),
+				}
+			},
 		};
 	}
 }
