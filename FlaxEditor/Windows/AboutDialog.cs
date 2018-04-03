@@ -1,3 +1,4 @@
+//#define USE_AUTODESK_FBX_SDK
 ////////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2012-2018 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
@@ -123,20 +124,40 @@ namespace FlaxEditor.Windows
 				"OpenAL Soft - www.github.com/kcat/openal-soft",
 				"pugixml - www.pugixml.org",
                 "rapidjson - www.rapidjson.org",
-                "Editor icons - www.icons8.com, www.iconfinder.com",
-            };
+#if USE_AUTODESK_FBX_SDK
+				"Autodesk FBX - Copyright (c) Autodesk",
+#endif
+				"Editor icons - www.icons8.com, www.iconfinder.com",
+				"",
+#if USE_AUTODESK_FBX_SDK
+				"This software contains Autodesk® FBX® code developed by Autodesk, Inc.",
+				"Copyright 2017 Autodesk, Inc. All rights, reserved.",
+				"Such code is provided “as is” and Autodesk, Inc. disclaims any and all",
+				"warranties, whether express or implied, including without limitation",
+				"the implied warranties of merchantability, fitness for a particular",
+				"purpose or non - infringement of third party rights.In no event shall",
+				"Autodesk, Inc.be liable for any direct, indirect, incidental, special,",
+				"exemplary, or consequential damages(including, but not limited to," ,
+				"procurement of substitute goods or services; loss of use, data, or",
+				"profits; or business interruption) however caused and on any theory" ,
+				"of liability, whether in contract, strict liability, or tort" ,
+				"(including negligence or otherwise)",
+				"arising in any way out of such code.",
+#endif
+			};
             float y = 0;
+	        float width = Width;
             for (var i = 0; i < thirdPartyEntries.Length; i++)
             {
                 var entry = thirdPartyEntries[i];
-                var entryLabel = new Label(0, y, Width, 14)
+                var entryLabel = new Label(0, y, width, 14)
                 {
                     Text = entry,
                     HorizontalAlignment = TextAlignment.Near,
                     VerticalAlignment = TextAlignment.Center,
                     Parent = thirdPartyPanel
                 };
-                y += entryLabel.Height + 2;
+	            y += entryLabel.Height + 2;
             }
 
             return thirdPartyPanel;
