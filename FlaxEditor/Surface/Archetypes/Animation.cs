@@ -236,6 +236,25 @@ namespace FlaxEditor.Surface.Archetypes
 					NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 5, "Copy Scale:"),
 				}
 			},
+			new NodeArchetype
+			{
+				TypeID = 8,
+				Title = "Get Bone Transform",
+				Description = "Samples the skeleton bone transformation (in global space)",
+				Flags = NodeFlags.AnimGraphOnly,
+				Size = new Vector2(250, 40),
+				DefaultValues = new object[]
+				{
+					0,
+				},
+				Elements = new[]
+				{
+					NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.ImpulseSecondary, 0),
+					NodeElementArchetype.Factory.SkeletonNodeSelect(40, Surface.Constants.LayoutOffsetY * 1, 120, 0),
+					NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 1, "Bone:"),
+					NodeElementArchetype.Factory.Output(0, "Transform", ConnectionType.Transform, 1),
+				}
+			},
 		};
 	}
 }
