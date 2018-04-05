@@ -60,7 +60,7 @@ namespace FlaxEngine
 		/// Updates the animation graph surface (save new one, discard cached data, reload asset).
 		/// </summary>
 		/// <param name="data">Surface data.</param>
-		/// <returns>True if cannot save it, oherwise false.</returns>
+		/// <returns>True if cannot save it, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif

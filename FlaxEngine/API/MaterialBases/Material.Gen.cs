@@ -50,7 +50,7 @@ namespace FlaxEngine
 		/// </summary>
 		/// <param name="data">Surface data.</param>
 		/// <param name="info">Material info structure.</param>
-		/// <returns>True if cannot save it, oherwise false.</returns>
+		/// <returns>True if cannot save it, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif

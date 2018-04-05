@@ -134,7 +134,12 @@ namespace FlaxEngine.GUI
                 return minWidth;
             }
         }
-        
+
+	    /// <summary>
+	    /// The indent applied to the child nodes.
+	    /// </summary>
+	    public float ChildrenIndent { get; set; } = 12.0f;
+
         /// <summary>
         /// Gets the arrow rectangle.
         /// </summary>
@@ -841,7 +846,7 @@ namespace FlaxEngine.GUI
 			// Prepare
 			float y = DefaultHeaderHeight;
             float height = DefaultHeaderHeight;
-            float xOffset = _xOffset + 12;
+            float xOffset = _xOffset + ChildrenIndent;
             if (Parent is Tree tree)
             {
                 y = 4;
