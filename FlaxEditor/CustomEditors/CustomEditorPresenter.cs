@@ -180,6 +180,8 @@ namespace FlaxEditor.CustomEditors
 		    set => Editor.OverrideEditor = value;
 	    }
 
+	    private bool _buildOnUpdate;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CustomEditorPresenter"/> class.
 		/// </summary>
@@ -263,7 +265,15 @@ namespace FlaxEditor.CustomEditors
 	            panel.VScrollBar.Value = parentScrollV;
         }
 
-        /// <summary>
+	    /// <summary>
+	    /// Sets the request to build the editor layout on the next update.
+	    /// </summary>
+	    public void BuildLayoutOnUpdate()
+	    {
+		    _buildOnUpdate = true;
+	    }
+
+	    /// <summary>
         /// Called when selection gets changed.
         /// </summary>
         protected virtual void OnSelectionChanged()
@@ -272,15 +282,21 @@ namespace FlaxEditor.CustomEditors
             SelectionChanged?.Invoke();
         }
 
-        /// <summary>
-        /// Updates custom editors. Refreshes UI values and applies changes to the selected objects.
-        /// </summary>
-        internal void Update()
-        {
-            Editor?.RefreshInternal();
-        }
+		/// <summary>
+		/// Updates custom editors. Refreshes UI values and applies changes to the selected objects.
+		/// </summary>
+		internal void Update()
+		{
+			if (_buildOnUpdate)
+			{
+				_buildOnUpdate = false;
+				BuildLayout();
+			}
 
-        /// <inheritdoc />
+			Editor?.RefreshInternal();
+		}
+
+	    /// <inheritdoc />
         public override ContainerControl ContainerControl => Panel;
     }
 }

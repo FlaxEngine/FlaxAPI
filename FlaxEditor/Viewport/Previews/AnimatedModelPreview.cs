@@ -48,6 +48,11 @@ namespace FlaxEditor.Viewport.Previews
 		public bool ShowBones { get; set; } = false;
 
 		/// <summary>
+		/// Gets or sets the custom mask for the skeleton bones. Bones with false values will be skipped during rendering. Works only if <see cref="ShowBones"/> is set to true and the array matches the attached <see cref="SkinnedModel"/> bones hierarchy.
+		/// </summary>
+		public bool[] BonesMask { get; set; }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="AnimatedModelPreview"/> class.
 		/// </summary>
 		/// <param name="useWidgets">if set to <c>true</c> use widgets.</param>
@@ -97,7 +102,7 @@ namespace FlaxEditor.Viewport.Previews
 
 			// Update the bones debug (once every few frames)
 			_previewBonesActor.Transform = _previewModel.Transform;
-			var updateBonesCount = PlayAnimation || _previewBonesVertex?.Count == 0 ? 1 : 30;
+			var updateBonesCount = PlayAnimation || _previewBonesVertex?.Count == 0 ? 1 : 10;
 			_previewBonesActor.IsActive = ShowBones;
 			if (_previewBonesCounter++ % updateBonesCount == 0 && ShowBones)
 			{
@@ -119,9 +124,13 @@ namespace FlaxEditor.Viewport.Previews
 						_previewBonesIndex.Clear();
 
 					// Draw bounding box at the bone locations
+					var bonesMask = BonesMask != null && BonesMask.Length == skeleton.Length ? BonesMask : null;
 					var boneBox = new OrientedBoundingBox(new Vector3(-1.0f), new Vector3(1.0f));
 					for (int i = 0; i < _previewModelPose.Bones.Length; i++)
 					{
+						if (bonesMask != null && !bonesMask[i])
+							continue;
+
 						var boneTransform = _previewModelPose.Bones[i];
 						boneTransform.Decompose(out var scale, out var _, out var _);
 						boneTransform = Matrix.Invert(Matrix.Scaling(scale)) * boneTransform;
@@ -185,6 +194,9 @@ namespace FlaxEditor.Viewport.Previews
 
 						if (parentIndex != -1)
 						{
+							if (bonesMask != null && (!bonesMask[i] || !bonesMask[parentIndex]))
+								continue;
+
 							var parentPos = _previewModelPose.GetBonePosition(parentIndex);
 							var bonePos = _previewModelPose.GetBonePosition(i);
 
@@ -210,6 +222,7 @@ namespace FlaxEditor.Viewport.Previews
 			Object.Destroy(ref _previewModel);
 			Object.Destroy(ref _previewBonesActor);
 			Object.Destroy(ref _previewBonesModel);
+			BonesMask = null;
 
 			base.OnDestroy();
 		}

@@ -453,6 +453,11 @@ namespace FlaxEditor
 			/// The animation graph. See <see cref="FlaxEngine.AnimationGraph"/>.
 			/// </summary>
 			AnimationGraph = 3,
+
+			/// <summary>
+			/// The skeleton mask. See <see cref="FlaxEngine.SkeletonMask"/>.
+			/// </summary>
+			SkeletonMask = 4,
         }
 
         /// <summary>

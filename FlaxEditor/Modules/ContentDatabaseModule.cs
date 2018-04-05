@@ -821,6 +821,7 @@ namespace FlaxEditor.Modules
             Proxy.Add(new AudioClipProxy());
             Proxy.Add(new AnimationGraphProxy());
             Proxy.Add(new AnimationProxy());
+            Proxy.Add(new SkeletonMaskProxy());
             Proxy.Add(new SpawnableJsonAssetProxy<PhysicalMaterial>());
             
             // Settings

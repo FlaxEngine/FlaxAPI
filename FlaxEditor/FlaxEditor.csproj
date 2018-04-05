@@ -74,6 +74,7 @@
     <Compile Include="Content\Proxy\AudioClipProxy.cs" />
     <Compile Include="Content\Proxy\CollisionDataProxy.cs" />
     <Compile Include="Content\Proxy\SettingsProxy.cs" />
+    <Compile Include="Content\Proxy\SkeletonMaskProxy.cs" />
     <Compile Include="Content\Proxy\SkinnedModelProxy.cs" />
     <Compile Include="Content\Settings\AudioSettings.cs" />
     <Compile Include="Content\Settings\BuildPreset.cs" />
@@ -375,6 +376,7 @@
     <Compile Include="Windows\Assets\MaterialWindow.cs" />
     <Compile Include="Windows\Assets\ModelWindow.cs" />
     <Compile Include="Windows\Assets\PreviewsCacheWindow.cs" />
+    <Compile Include="Windows\Assets\SkeletonMaskWindow.cs" />
     <Compile Include="Windows\Assets\SkinnedModelWindow.cs" />
     <Compile Include="Windows\Assets\SpriteAtlasWindow.cs" />
     <Compile Include="Windows\Assets\TextureWindow.cs" />

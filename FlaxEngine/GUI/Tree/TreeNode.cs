@@ -496,11 +496,13 @@ namespace FlaxEngine.GUI
                     Render2D.FillRectangle(rect, dragOverColor, true);
                 }
 
-                // Base
-                Render2D.PushClip(new Rectangle(0, DefaultHeaderHeight, Width, Height - DefaultHeaderHeight));
+				// Base
+				if (ClipChildren)
+					Render2D.PushClip(new Rectangle(0, DefaultHeaderHeight, Width, Height - DefaultHeaderHeight));
                 if (_opened)
                     base.Draw();
-                Render2D.PopClip();
+				if (ClipChildren)
+					Render2D.PopClip();
             }
         }
 
@@ -626,9 +628,22 @@ namespace FlaxEngine.GUI
             // Cache flags
             _mouseOverArrow = _children.Count > 0 && ArrowRect.Contains(location);
             _mouseOverHeader = new Rectangle(0, 0, Width, DefaultHeaderHeight - 1).Contains(location);
+	        if (_mouseOverHeader)
+	        {
+		        // Allow non-scrollable controls to stay on top of the header and override the mouse behaviour
+		        for (int i = 0; i < Children.Count; i++)
+		        {
+			        Vector2 childLocation;
+			        if (!Children[i].IsScrollable && IntersectsChildContent(Children[i], location, out childLocation))
+			        {
+				        _mouseOverHeader = false;
+				        break;
+			        }
+		        }
+	        }
 
-            // Check if start drag and drop
-            if (_isMouseDown && Vector2.Distance(_mouseDownPos, location) > 10.0f)
+	        // Check if start drag and drop
+			if (_isMouseDown && Vector2.Distance(_mouseDownPos, location) > 10.0f)
             {
                 // Clear flag
                 _isMouseDown = false;
