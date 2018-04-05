@@ -255,6 +255,25 @@ namespace FlaxEditor.Surface.Archetypes
 					NodeElementArchetype.Factory.Output(0, "Transform", ConnectionType.Transform, 1),
 				}
 			},
+			new NodeArchetype
+			{
+				TypeID = 9,
+				Title = "Blend",
+				Description = "Blend animation poses",
+				Flags = NodeFlags.AnimGraphOnly,
+				Size = new Vector2(170, 80),
+				DefaultValues = new object[]
+				{
+					0.0f,
+				},
+				Elements = new[]
+				{
+					NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Impulse, 0),
+					NodeElementArchetype.Factory.Input(0, "Pose A", true, ConnectionType.Impulse, 1),
+					NodeElementArchetype.Factory.Input(1, "Pose B", true, ConnectionType.Impulse, 2),
+					NodeElementArchetype.Factory.Input(2, "Alpha", true, ConnectionType.Float, 3, 0),
+				}
+			},
 		};
 	}
 }
