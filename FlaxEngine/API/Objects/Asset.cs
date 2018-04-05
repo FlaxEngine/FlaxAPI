@@ -78,6 +78,11 @@ namespace FlaxEngine
 		/// The animation.
 		/// </summary>
 	    Animation,
+
+		/// <summary>
+		/// The skeleton bones masking.
+		/// </summary>
+		SkeletonMask,
     }
 
     /// <summary>
