@@ -122,6 +122,8 @@ namespace FlaxEditor.Content.Import
             FileTypes["fbx"] = ImportModel;
             FileTypes["x"] = ImportModel;
             FileTypes["dae"] = ImportModel;
+            FileTypes["gltf"] = ImportModel;
+            FileTypes["glb"] = ImportModel;
             //
             FileTypes["blend"] = ImportModel;
             FileTypes["bvh"] = ImportModel;
