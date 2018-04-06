@@ -293,6 +293,27 @@ namespace FlaxEditor.Surface.Archetypes
 					NodeElementArchetype.Factory.Input(2, "Blend Alpha", true, ConnectionType.Float, 3, 0),
 				}
 			},
+			new NodeArchetype
+			{
+				TypeID = 11,
+				Title = "Blend with Mask",
+				Description = "Blend animation poses using skeleton mask",
+				Flags = NodeFlags.AnimGraphOnly,
+				Size = new Vector2(170, 100),
+				DefaultValues = new object[]
+				{
+					0.0f,
+					Guid.Empty,
+				},
+				Elements = new[]
+				{
+					NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Impulse, 0),
+					NodeElementArchetype.Factory.Input(0, "Pose A", true, ConnectionType.Impulse, 1),
+					NodeElementArchetype.Factory.Input(1, "Pose B", true, ConnectionType.Impulse, 2),
+					NodeElementArchetype.Factory.Input(2, "Alpha", true, ConnectionType.Float, 3, 0),
+					NodeElementArchetype.Factory.Asset(110, 20, 1, ContentDomain.SkeletonMask),
+				}
+			},
 		};
 	}
 }
