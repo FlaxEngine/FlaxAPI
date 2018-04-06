@@ -178,7 +178,8 @@ namespace FlaxEditor.Windows.Assets
 						);
 
 						var propertyLabel = new ClickablePropertyNameLabel(p.Name);
-						propertyLabel.MouseRightClick += (label, location) => ShowParameterMenu(pIndex, label, ref location);
+						propertyLabel.Tag = pIndex;
+						propertyLabel.MouseRightClick += (label, location) => ShowParameterMenu(label, ref location);
 						var property = layout.AddPropertyItem(propertyLabel);
 						property.Object(propertyValue);
 					}
@@ -196,14 +197,13 @@ namespace FlaxEditor.Windows.Assets
 				/// <summary>
 				/// Shows the parameter context menu.
 				/// </summary>
-				/// <param name="index">The index.</param>
 				/// <param name="label">The label control.</param>
 				/// <param name="targetLocation">The target location.</param>
-				private void ShowParameterMenu(int index, Control label, ref Vector2 targetLocation)
+				private void ShowParameterMenu(ClickablePropertyNameLabel label, ref Vector2 targetLocation)
 				{
 					var contextMenu = new ContextMenu();
-					contextMenu.AddButton("Rename", () => StartParameterRenaming(index, label));
-					contextMenu.AddButton("Delete", () => DeleteParameter(index));
+					contextMenu.AddButton("Rename", () => StartParameterRenaming(label));
+					contextMenu.AddButton("Delete", () => DeleteParameter((int)label.Tag));
 					contextMenu.Show(label, targetLocation);
 				}
 
@@ -226,26 +226,27 @@ namespace FlaxEditor.Windows.Assets
 				/// <summary>
 				/// Starts renaming parameter.
 				/// </summary>
-				/// <param name="index">The index.</param>
 				/// <param name="label">The label control.</param>
-				private void StartParameterRenaming(int index, Control label)
+				private void StartParameterRenaming(ClickablePropertyNameLabel label)
 				{
 					var win = (AnimationGraphWindow)Values[0];
 					var animatedModel = win.PreviewModelActor;
-					var parameter = animatedModel.Parameters[index];
+					var parameter = animatedModel.Parameters[(int)label.Tag];
 					var dialog = RenamePopup.Show(label, new Rectangle(0, 0, label.Width - 2, label.Height), parameter.Name, false);
-					dialog.Tag = index;
+					dialog.Tag = label;
 					dialog.Renamed += OnParameterRenamed;
 				}
 
 				private void OnParameterRenamed(RenamePopup renamePopup)
 				{
-					var index = (int)renamePopup.Tag;
+					var label = (ClickablePropertyNameLabel)renamePopup.Tag;
+					var index = (int)label.Tag;
 					var newName = renamePopup.Text;
 
 					var win = (AnimationGraphWindow)Values[0];
 					var param = win.Surface.Parameters[index];
 					param.Name = newName;
+					label.Text = newName;
 					win.Surface.OnParamRenamed(param);
 				}
 
@@ -416,7 +417,7 @@ namespace FlaxEditor.Windows.Assets
 			}
 			if (_isWaitingForSurfaceLoad)
 				return true;
-
+			
 			// Check if surface has been edited
 			if (_surface.IsEdited)
 			{
@@ -579,9 +580,6 @@ namespace FlaxEditor.Windows.Assets
 			{
 				// Clear flag
 				_isWaitingForSurfaceLoad = false;
-				
-				// Init properties and parameters proxy
-				_properties.OnLoad(this);
 
 				// Load surface data from the asset
 				byte[] data = _asset.LoadSurface();
@@ -601,6 +599,9 @@ namespace FlaxEditor.Windows.Assets
 					Close();
 					return;
 				}
+
+				// Init properties and parameters proxy
+				_properties.OnLoad(this);
 
 				// Setup
 				_surface.Enabled = true;
