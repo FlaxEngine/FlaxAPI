@@ -26,8 +26,53 @@ namespace FlaxEngine
 		{
 		}
 
+		/// <summary>
+		/// Gets the length of the animation (in seconds).
+		/// </summary>
+		[UnmanagedCall]
+		public float Length
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetLength(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets the duration of the animation (in frames).
+		/// </summary>
+		[UnmanagedCall]
+		public float Duration
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetDuration(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
+		/// Gets the amount of the animation frames per second.
+		/// </summary>
+		[UnmanagedCall]
+		public float FramesPerSecond
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetFramesPerSecond(unmanagedPtr); }
+#endif
+		}
+
 #region Internal Calls
 #if !UNIT_TEST_COMPILANT
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetLength(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetDuration(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern float Internal_GetFramesPerSecond(IntPtr obj);
 #endif
 #endregion
 	}

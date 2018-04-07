@@ -311,7 +311,7 @@ namespace FlaxEditor.Surface.Archetypes
 					NodeElementArchetype.Factory.Input(0, "Pose A", true, ConnectionType.Impulse, 1),
 					NodeElementArchetype.Factory.Input(1, "Pose B", true, ConnectionType.Impulse, 2),
 					NodeElementArchetype.Factory.Input(2, "Alpha", true, ConnectionType.Float, 3, 0),
-					NodeElementArchetype.Factory.Asset(110, 20, 1, ContentDomain.SkeletonMask),
+					NodeElementArchetype.Factory.Asset(100, 20, 1, ContentDomain.SkeletonMask),
 				}
 			},
 		};
