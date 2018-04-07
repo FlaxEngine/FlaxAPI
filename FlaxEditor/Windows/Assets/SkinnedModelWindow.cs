@@ -48,7 +48,7 @@ namespace FlaxEditor.Windows.Assets
 				}
 			}
 
-			[EditorOrder(20), CustomEditor(typeof(MeshessEditor))]
+			[EditorOrder(20), CustomEditor(typeof(MeshesEditor))]
 			public PropertiesProxy Meshes
 			{
 				get => this;
@@ -206,7 +206,7 @@ namespace FlaxEditor.Windows.Assets
 				}
 			}
 
-			private class MeshessEditor : CustomEditor
+			private class MeshesEditor : CustomEditor
 			{
 				public override DisplayStyle Style => DisplayStyle.InlineIntoParent;
 

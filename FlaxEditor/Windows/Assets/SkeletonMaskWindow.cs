@@ -2,7 +2,6 @@
 // Copyright (c) 2012-2018 Flax Engine. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
