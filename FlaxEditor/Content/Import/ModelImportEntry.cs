@@ -188,6 +188,12 @@ namespace FlaxEditor.Content.Import
 		[EditorOrder(1040), EditorDisplay("Animation"), Tooltip("The imported animation will have removed tracks with no keyframes or unspeficied data.")]
 		public bool SkipEmptyCurves { get; set; } = true;
 
+		/// <summary>
+		/// The imported animation channels will be optimized to remove redundant keyframes.
+		/// </summary>
+		[EditorOrder(1050), EditorDisplay("Animation"), Tooltip("The imported animation channels will be optimized to remove redundant keyframes.")]
+		public bool OptimizeKeyframes { get; set; } = true;
+		
 		[StructLayout(LayoutKind.Sequential)]
         internal struct InternalOptions
         {
@@ -214,6 +220,7 @@ namespace FlaxEditor.Content.Import
 	        public float FramesRangeEnd;
 	        public float SamplingRate;
 	        public bool SkipEmptyCurves;
+	        public bool OptimizeKeyframes;
 		}
 
 		internal void ToInternal(out InternalOptions options)
@@ -237,6 +244,7 @@ namespace FlaxEditor.Content.Import
 	            FramesRangeEnd = FramesRangeEnd,
 	            SamplingRate = SamplingRate,
 	            SkipEmptyCurves = SkipEmptyCurves,
+	            OptimizeKeyframes = OptimizeKeyframes,
             };
         }
         
@@ -258,6 +266,7 @@ namespace FlaxEditor.Content.Import
 	        FramesRangeEnd = options.FramesRangeEnd;
 	        SamplingRate = options.SamplingRate;
 	        SkipEmptyCurves = options.SkipEmptyCurves;
+	        OptimizeKeyframes = options.OptimizeKeyframes;
         }
         
         /// <summary>
