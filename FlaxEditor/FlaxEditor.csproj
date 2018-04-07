@@ -365,6 +365,7 @@
     <Compile Include="Viewport\Widgets\ViewportWidgetsContainer.cs" />
     <Compile Include="Windows\AboutDialog.cs" />
     <Compile Include="Windows\Assets\AnimationGraphWindow.cs" />
+    <Compile Include="Windows\Assets\AnimationWindow.cs" />
     <Compile Include="Windows\Assets\AssetEditorWindow.cs" />
     <Compile Include="Windows\Assets\AudioClipWindow.cs" />
     <Compile Include="Windows\Assets\CollisionDataWindow.cs" />
