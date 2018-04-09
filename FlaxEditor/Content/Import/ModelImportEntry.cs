@@ -101,19 +101,25 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Calculated normals smoothing angle.
         /// </summary>
-        [EditorOrder(30), EditorDisplay("Geometry"), Tooltip("Generated normal vector smoothing angle")]
-        public float SmoothigNormalsAngle { get; set; } = 60.0f;
+        [EditorOrder(30), Limit(0, 175, 0.1f), EditorDisplay("Geometry"), Tooltip("Specifies the maximum angle (in degrees) that may be between two face normals at the same vertex position that their are smoothed together.")]
+        public float SmoothigNormalsAngle { get; set; } = 175.0f;
 
         /// <summary>
         /// True if calculate model tangents, otherwise will import them.
         /// </summary>
         [EditorOrder(40), EditorDisplay("Geometry"), Tooltip("Enable model tangent vectors recalculating")]
         public bool CalculateTangents { get; set; } = true;
-        
-        /// <summary>
-        /// Enable/disable meshes geometry optimization.
-        /// </summary>
-        [EditorOrder(50), EditorDisplay("Geometry"), Tooltip("Enable/disable meshes geometry optimization")]
+
+		/// <summary>
+		/// Calculated normals smoothing angle.
+		/// </summary>
+		[EditorOrder(45), Limit(0, 45, 0.1f), EditorDisplay("Geometry"), Tooltip("Specifies the maximum angle (in degrees) that may be between two vertex tangents that their tangents and bi-tangents are smoothed.")]
+		public float SmoothigTangentsAngle { get; set; } = 45.0f;
+
+		/// <summary>
+		/// Enable/disable meshes geometry optimization.
+		/// </summary>
+		[EditorOrder(50), EditorDisplay("Geometry"), Tooltip("Enable/disable meshes geometry optimization")]
         public bool OptimizeMeshes { get; set; } = true;
 
         /// <summary>
@@ -202,6 +208,7 @@ namespace FlaxEditor.Content.Import
 	        // Geometry
             public bool CalculateNormals;
             public float SmoothigNormalsAngle;
+            public float SmoothigTangentsAngle;
             public bool CalculateTangents;
             public bool OptimizeMeshes;
             public bool MergeMeshes;
@@ -230,6 +237,7 @@ namespace FlaxEditor.Content.Import
 	            Type = Type,
                 CalculateNormals = CalculateNormals,
                 SmoothigNormalsAngle = SmoothigNormalsAngle,
+	            SmoothigTangentsAngle = SmoothigTangentsAngle,
                 CalculateTangents = CalculateTangents,
                 OptimizeMeshes = OptimizeMeshes,
                 MergeMeshes = MergeMeshes,
@@ -253,6 +261,7 @@ namespace FlaxEditor.Content.Import
 	        Type = options.Type;
             CalculateNormals = options.CalculateNormals;
             SmoothigNormalsAngle = options.SmoothigNormalsAngle;
+	        SmoothigTangentsAngle = options.SmoothigTangentsAngle;
             CalculateTangents = options.CalculateTangents;
             OptimizeMeshes = options.OptimizeMeshes;
             MergeMeshes = options.MergeMeshes;
