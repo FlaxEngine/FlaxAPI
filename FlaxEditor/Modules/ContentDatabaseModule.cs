@@ -884,10 +884,18 @@ namespace FlaxEditor.Modules
                         Editor.LogWarning(string.Format("Asset \'{0}\' changed type from {1} to {2}", item.Path, binaryAssetItem.TypeName, typeName));
                         Editor.Windows.CloseAllEditors(item);
 
-                        // Remove this item from the database and call refresh
+                        // Remove this item from the database and some related data
                         var toRefresh = binaryAssetItem.ParentFolder;
                         binaryAssetItem.Dispose();
-                        RefreshFolder(toRefresh, false);
+	                    toRefresh.Children.Remove(binaryAssetItem);
+	                    if (!binaryAssetItem.HasDefaultThumbnail)
+	                    {
+		                    // Delete old thumbnail and remove it from the cache
+		                    Editor.Instance.Thumbnails.DeletePreview(binaryAssetItem);
+	                    }
+
+						// Refresh the parent folder to find the new asset (it should have different type or some other format)
+	                    RefreshFolder(toRefresh, false);
                     }
                     else
                     {
@@ -895,6 +903,9 @@ namespace FlaxEditor.Modules
                         binaryAssetItem.OnReimport(ref id);
                     }
                 }
+
+				// Refresh content view (not the best design because window could also track this event but it gives better performance)
+				Editor.Windows.ContentWin?.RefreshView();
             }
         }
 

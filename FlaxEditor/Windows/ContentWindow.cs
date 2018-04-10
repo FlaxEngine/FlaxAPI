@@ -494,7 +494,10 @@ namespace FlaxEditor.Windows
             _view.Focus();
         }
 		
-        private void RefreshView()
+		/// <summary>
+		/// Refreshes the current view items colelction.
+		/// </summary>
+        public void RefreshView()
         {
             RefreshView(SelectedNode);
         }
