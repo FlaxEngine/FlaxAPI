@@ -209,7 +209,10 @@ namespace FlaxEditor.Viewport.Previews
 						}
 					}
 
-					_previewBonesModel.UpdateMesh(_previewBonesVertex.ToArray(), _previewBonesIndex.ToArray());
+					if (_previewBonesIndex.Count > 0)
+						_previewBonesModel.UpdateMesh(_previewBonesVertex.ToArray(), _previewBonesIndex.ToArray());
+					else
+						_previewBonesActor.IsActive = false;
 				}
 			}
 		}

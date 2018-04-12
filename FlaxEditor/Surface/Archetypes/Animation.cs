@@ -299,7 +299,7 @@ namespace FlaxEditor.Surface.Archetypes
 				Title = "Blend with Mask",
 				Description = "Blend animation poses using skeleton mask",
 				Flags = NodeFlags.AnimGraphOnly,
-				Size = new Vector2(170, 100),
+				Size = new Vector2(180, 100),
 				DefaultValues = new object[]
 				{
 					0.0f,

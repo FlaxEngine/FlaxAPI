@@ -124,6 +124,15 @@ namespace FlaxEditor.Surface
 					                });
 					                break;
 				                }
+				                case ContentDomain.SkeletonMask:
+				                {
+					                SpawnNode(9, 11, surfaceLocation, new object[]
+					                {
+										0.0f,
+						                item.ID,
+					                });
+									break;
+				                }
 			                }
 		                }
 
@@ -153,6 +162,7 @@ namespace FlaxEditor.Surface
 	            {
 		            switch (assetItem.ItemDomain)
 		            {
+			            case ContentDomain.SkeletonMask:
 			            case ContentDomain.Animation: return true;
 		            }
 		            break;
