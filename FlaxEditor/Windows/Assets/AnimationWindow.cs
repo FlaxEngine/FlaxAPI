@@ -71,6 +71,8 @@ namespace FlaxEditor.Windows.Assets
 
 						Animation.Info info;
 						proxy.Asset.GetInfo(out info);
+						group.Label("Length: " + info.Length + "s");
+						group.Label("Frames: " + info.FramesCount);
 						group.Label("Chanels: " + info.ChannelsCount);
 						group.Label("Keyframes: " + info.KeyframesCount);
 					}

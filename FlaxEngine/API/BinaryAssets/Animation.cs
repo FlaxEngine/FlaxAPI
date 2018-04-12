@@ -15,6 +15,16 @@ namespace FlaxEngine
 		public struct Info
 		{
 			/// <summary>
+			/// Length of the animation in seconds.
+			/// </summary>
+			public float Length;
+
+			/// <summary>
+			/// Amount of animation frames (some curve tracks may use less keyframes).
+			/// </summary>
+			public int FramesCount;
+
+			/// <summary>
 			/// Amount of animation channel tracks.
 			/// </summary>
 			public int ChannelsCount;
