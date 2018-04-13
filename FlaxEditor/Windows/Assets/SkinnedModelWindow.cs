@@ -353,6 +353,7 @@ namespace FlaxEditor.Windows.Assets
 			_preview = new AnimatedModelPreview(true)
 			{
 				ViewportCamera = new FPSCamera(),
+				ScaleToFit = false,
 				Parent = _split.Panel1
 			};
 
@@ -482,6 +483,9 @@ namespace FlaxEditor.Windows.Assets
 			_properties.OnLoad(this);
 			_propertiesPresenter.BuildLayout();
 			ClearEditedFlag();
+
+			// Reset any root motion
+			_preview.PreviewModelActor.ResetLocalTransform();
 
 			base.OnAssetLoaded();
 		}

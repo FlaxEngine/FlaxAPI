@@ -372,6 +372,7 @@ namespace FlaxEditor.Windows.Assets
 			_preview = new Preview(this)
 			{
 				ViewportCamera = new FPSCamera(),
+				ScaleToFit = false,
 				PlayAnimation = true,
 				Parent = _split2.Panel1
 			};
@@ -441,6 +442,9 @@ namespace FlaxEditor.Windows.Assets
 					Editor.LogError("Failed to save animation graph surface data");
 					return true;
 				}
+
+				// Reset any root motion
+				_preview.PreviewModelActor.ResetLocalTransform();
 			}
 
 			return false;

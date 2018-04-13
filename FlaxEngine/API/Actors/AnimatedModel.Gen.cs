@@ -165,6 +165,21 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets or sets the animation root motion apply target. If not specified the animated model will apply it itself.
+		/// </summary>
+		[UnmanagedCall]
+		[EditorOrder(100), EditorDisplay("Skinned Model"), Tooltip("The animation root motion apply target. If not specified the animated model will apply it itself.")]
+		public Actor RootMotionTarget
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetRootMotionTarget(unmanagedPtr); }
+			set { Internal_SetRootMotionTarget(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+#endif
+		}
+
+		/// <summary>
 		/// Performs the full animation update.
 		/// </summary>
 #if UNIT_TEST_COMPILANT
@@ -232,6 +247,10 @@ namespace FlaxEngine
 		internal static extern ShadowsCastingMode Internal_GetShadowsMode(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetShadowsMode(IntPtr obj, ShadowsCastingMode val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern Actor Internal_GetRootMotionTarget(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetRootMotionTarget(IntPtr obj, IntPtr val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_UpdateAnimation(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]

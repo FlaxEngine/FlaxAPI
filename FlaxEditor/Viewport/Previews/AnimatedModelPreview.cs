@@ -48,6 +48,11 @@ namespace FlaxEditor.Viewport.Previews
 		public bool ShowBones { get; set; } = false;
 
 		/// <summary>
+		/// Gets or sets a value indicating whether scale the model to the normalized bounds.
+		/// </summary>
+		public bool ScaleToFit { get; set; } = true;
+
+		/// <summary>
 		/// Gets or sets the custom mask for the skeleton bones. Bones with false values will be skipped during rendering. Works only if <see cref="ShowBones"/> is set to true and the array matches the attached <see cref="SkinnedModel"/> bones hierarchy.
 		/// </summary>
 		public bool[] BonesMask { get; set; }
