@@ -8,6 +8,7 @@ using FlaxEditor.Content.Import;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.Windows.Assets
 {
@@ -95,14 +96,21 @@ namespace FlaxEditor.Windows.Assets
 
 		private readonly CustomEditorPresenter _propertiesPresenter;
 		private readonly PropertiesProxy _properties;
+		private readonly Panel _panel;
 
 		/// <inheritdoc />
 		public AnimationWindow(Editor editor, AssetItem item)
 			: base(editor, item)
 		{
+			_panel = new Panel(ScrollBars.Vertical)
+			{
+				DockStyle = DockStyle.Fill,
+				Parent = this
+			};
+
 			// Asset properties
 			_propertiesPresenter = new CustomEditorPresenter(null);
-			_propertiesPresenter.Panel.Parent = this;
+			_propertiesPresenter.Panel.Parent = _panel;
 			_properties = new PropertiesProxy();
 			_propertiesPresenter.Select(_properties);
 			_propertiesPresenter.Modified += MarkAsEdited;
