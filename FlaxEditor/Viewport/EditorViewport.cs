@@ -634,6 +634,8 @@ namespace FlaxEditor.Viewport
         {
             base.Update(deltaTime);
 
+			_camera?.Update(deltaTime);
+
             // Get parent window
             var win = ParentWindow;
 
