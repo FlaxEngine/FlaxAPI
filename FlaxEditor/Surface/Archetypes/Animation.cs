@@ -84,6 +84,27 @@ namespace FlaxEditor.Surface.Archetypes
 		}
 
 		/// <summary>
+		/// The animated model root motion mode.
+		/// </summary>
+		public enum RootMotionMode
+		{
+			/// <summary>
+			/// Don't extract nor apply the root motion.
+			/// </summary>
+			NoExtraction = 0,
+
+			/// <summary>
+			/// Ignore root motion (remove from root node transform).
+			/// </summary>
+			Ignore = 1,
+
+			/// <summary>
+			/// Enable root motion (remove from root node transform and apply to the target).
+			/// </summary>
+			Enable = 2,
+		}
+
+		/// <summary>
 		/// The nodes for that group.
 		/// </summary>
 		public static NodeArchetype[] Nodes =
@@ -96,9 +117,15 @@ namespace FlaxEditor.Surface.Archetypes
 				Description = "Main animation graph output node",
 				Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI,
 				Size = new Vector2(200, 100),
+				DefaultValues = new object[]
+				{
+					(int)RootMotionMode.NoExtraction,
+				},
 				Elements = new[]
 				{
-					NodeElementArchetype.Factory.Input(2, "Animation", true, ConnectionType.Impulse, 0),
+					NodeElementArchetype.Factory.Input(0, "Animation", true, ConnectionType.Impulse, 0),
+					NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY, "Root Motion:"),
+					NodeElementArchetype.Factory.ComboBox(80, Surface.Constants.LayoutOffsetY, 100, 0, typeof(RootMotionMode))
 				}
 			},
 			new NodeArchetype

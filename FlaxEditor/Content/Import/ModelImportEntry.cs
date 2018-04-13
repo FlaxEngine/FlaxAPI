@@ -200,6 +200,18 @@ namespace FlaxEditor.Content.Import
 		[EditorOrder(1050), EditorDisplay("Animation"), Tooltip("The imported animation channels will be optimized to remove redundant keyframes.")]
 		public bool OptimizeKeyframes { get; set; } = true;
 		
+		/// <summary>
+		/// Enables root motion extraction support from this animation.
+		/// </summary>
+		[EditorOrder(1060), EditorDisplay("Animation"), Tooltip("Enables root motion extraction support from this animation.")]
+		public bool EnableRootMotion { get; set; } = false;
+
+		/// <summary>
+		/// The custom node name to be used as a root motion source. If not specified the actual root node will be used.
+		/// </summary>
+		[EditorOrder(1070), EditorDisplay("Animation"), Tooltip("The custom node name to be used as a root motion source. If not specified the actual root node will be used.")]
+		public string RootNodeName { get; set; }
+
 		[StructLayout(LayoutKind.Sequential)]
         internal struct InternalOptions
         {
@@ -228,6 +240,8 @@ namespace FlaxEditor.Content.Import
 	        public float SamplingRate;
 	        public bool SkipEmptyCurves;
 	        public bool OptimizeKeyframes;
+	        public bool EnableRootMotion;
+	        public string RootNodeName;
 		}
 
 		internal void ToInternal(out InternalOptions options)
@@ -253,6 +267,8 @@ namespace FlaxEditor.Content.Import
 	            SamplingRate = SamplingRate,
 	            SkipEmptyCurves = SkipEmptyCurves,
 	            OptimizeKeyframes = OptimizeKeyframes,
+	            EnableRootMotion = EnableRootMotion,
+	            RootNodeName = RootNodeName,
             };
         }
         
@@ -276,6 +292,8 @@ namespace FlaxEditor.Content.Import
 	        SamplingRate = options.SamplingRate;
 	        SkipEmptyCurves = options.SkipEmptyCurves;
 	        OptimizeKeyframes = options.OptimizeKeyframes;
+	        EnableRootMotion = options.EnableRootMotion;
+	        RootNodeName = options.RootNodeName;
         }
         
         /// <summary>
