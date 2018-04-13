@@ -302,7 +302,7 @@ namespace FlaxEngine
         /// <returns>The transformed position.</returns>
         public Vector3 TransformPoint(Vector3 position)
         {
-            return WorldToLocal(position);
+            return LocalToWorld(position);
         }
 
         /// <summary>
@@ -320,7 +320,7 @@ namespace FlaxEngine
         {
             Transform result;
             Vector3.Lerp(ref start.Translation, ref end.Translation, amount, out result.Translation);
-            Quaternion.Lerp(ref start.Orientation, ref end.Orientation, amount, out result.Orientation);
+            Quaternion.Slerp(ref start.Orientation, ref end.Orientation, amount, out result.Orientation);
             Vector3.Lerp(ref start.Scale, ref end.Scale, amount, out result.Scale);
             return result;
         }
@@ -339,7 +339,7 @@ namespace FlaxEngine
         public static void Lerp(ref Transform start, ref Transform end, float amount, out Transform result)
         {
             Vector3.Lerp(ref start.Translation, ref end.Translation, amount, out result.Translation);
-            Quaternion.Lerp(ref start.Orientation, ref end.Orientation, amount, out result.Orientation);
+            Quaternion.Slerp(ref start.Orientation, ref end.Orientation, amount, out result.Orientation);
             Vector3.Lerp(ref start.Scale, ref end.Scale, amount, out result.Scale);
         }
 
