@@ -101,7 +101,7 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Calculated normals smoothing angle.
         /// </summary>
-        [EditorOrder(30), Limit(0, 175, 0.1f), EditorDisplay("Geometry"), Tooltip("Specifies the maximum angle (in degrees) that may be between two face normals at the same vertex position that their are smoothed together.")]
+        [EditorOrder(30), Limit(0, 175, 0.1f), EditorDisplay("Geometry"), Tooltip("Specifies the maximum angle (in degrees) that may be between two face normals at the same vertex position that their are smoothed together. The default value is 175.")]
         public float SmoothigNormalsAngle { get; set; } = 175.0f;
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace FlaxEditor.Content.Import
 		/// <summary>
 		/// Calculated normals smoothing angle.
 		/// </summary>
-		[EditorOrder(45), Limit(0, 45, 0.1f), EditorDisplay("Geometry"), Tooltip("Specifies the maximum angle (in degrees) that may be between two vertex tangents that their tangents and bi-tangents are smoothed.")]
+		[EditorOrder(45), Limit(0, 45, 0.1f), EditorDisplay("Geometry"), Tooltip("Specifies the maximum angle (in degrees) that may be between two vertex tangents that their tangents and bi-tangents are smoothed. The default value is 45.")]
 		public float SmoothigTangentsAngle { get; set; } = 45.0f;
 
 		/// <summary>
@@ -161,7 +161,7 @@ namespace FlaxEditor.Content.Import
 		/// <summary>
 		/// Custom import geometry offset.
 		/// </summary>
-		[EditorOrder(520), EditorDisplay("Transform"), Tooltip("Custom import geometry offse")]
+		[EditorOrder(520), EditorDisplay("Transform"), Tooltip("Custom import geometry offset")]
 		public Vector3 Translation { get; set; } = Vector3.Zero;
 
 		/// <summary>
