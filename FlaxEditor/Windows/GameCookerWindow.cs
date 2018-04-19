@@ -46,15 +46,17 @@ namespace FlaxEditor.Windows
                 GameCookerWin = win;
                 Selector = platformSelector;
 
-                // TODO: restore build settings from the Editor cache!
-                PerPlatformOptions[PlatformType.Windows].Output = "Output/Windows";
-                PerPlatformOptions[PlatformType.XboxOne].Output = "Output/XboxOne";
-                PerPlatformOptions[PlatformType.WindowsStore].Output = "Output/WindowsStore";
-            }
+                PerPlatformOptions[PlatformType.Windows].Init("Output/Windows", "Win");
+                PerPlatformOptions[PlatformType.XboxOne].Init("Output/XboxOne", "XboxOne");
+				PerPlatformOptions[PlatformType.WindowsStore].Init("Output/WindowsStore", "UWP");
+			}
 
             public abstract class Platform
             {
-                [EditorOrder(10), Tooltip("Output folder path")]
+				[HideInEditor]
+	            public bool IsAvailable;
+
+				[EditorOrder(10), Tooltip("Output folder path")]
                 public string Output;
 
                 [EditorOrder(11), Tooltip("Show output folder in Explorer after build")]
@@ -81,7 +83,23 @@ namespace FlaxEditor.Windows
                     }
                 }
 
-                public virtual void Build()
+	            public virtual void Init(string output, string platformDataSubDir)
+	            {
+		            Output = output;
+
+		            // TODO: restore build settings from the Editor cache!
+
+					// Check if can find installed tools for this platform
+					IsAvailable = Directory.Exists(Path.Combine(Globals.EditorFolder, "PlatformData", platformDataSubDir));
+	            }
+
+	            public virtual void OnNotAvailableLayout(LayoutElementsContainer layout)
+	            {
+		            layout.Label("Missing platform data tools for the target platform.", TextAlignment.Center);
+		            layout.Label("Use Flax Launcher and download the requried package.", TextAlignment.Center);
+	            }
+
+	            public virtual void Build()
                 {
                     GameCooker.Build(BuildPlatform, Options, Output, Defines);
                 }
@@ -153,12 +171,19 @@ namespace FlaxEditor.Windows
                     _platform = proxy.Selector.Selected;
                     var platformObj = proxy.PerPlatformOptions[_platform];
 
-                    var group = layout.Group(CustomEditorsUtil.GetPropertyNameUI(_platform.ToString()));
+	                if (platformObj.IsAvailable)
+	                {
+		                var group = layout.Group(CustomEditorsUtil.GetPropertyNameUI(_platform.ToString()));
 
-                    group.Object(new ReadOnlyValueContainer(platformObj));
+		                group.Object(new ReadOnlyValueContainer(platformObj));
 
-                    _buildButton = layout.Button("Build").Button;
-                    _buildButton.Clicked += OnBuildClicked;
+		                _buildButton = layout.Button("Build").Button;
+		                _buildButton.Clicked += OnBuildClicked;
+	                }
+	                else
+	                {
+		                platformObj.OnNotAvailableLayout(layout);
+	                }
                 }
 
                 private void OnBuildClicked()
