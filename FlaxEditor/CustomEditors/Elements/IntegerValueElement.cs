@@ -8,13 +8,13 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.CustomEditors.Elements
 {
     /// <summary>
-    /// The inteager value element.
+    /// The integer value element.
     /// </summary>
     /// <seealso cref="FlaxEditor.CustomEditors.LayoutElement" />
     public class IntegerValueElement : LayoutElement, IIntegerValueEditor
 	{
         /// <summary>
-        /// The inteager value box.
+        /// The integer value box.
         /// </summary>
         public readonly IntValueBox IntValue;
 

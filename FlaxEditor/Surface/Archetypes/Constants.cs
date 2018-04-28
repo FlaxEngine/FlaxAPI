@@ -33,8 +33,8 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 2,
-                Title = "Inteager",
-                Description = "Constant inteager value",
+                Title = "Integer",
+                Description = "Constant integer value",
                 Size = new Vector2(110, 20),
                 DefaultValues = new object[]
                 {
@@ -43,7 +43,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, "Value", ConnectionType.Integer, 0),
-                    NodeElementArchetype.Factory.Inteager(0, 0, 0)
+                    NodeElementArchetype.Factory.Integer(0, 0, 0)
                 }
             },
             new NodeArchetype

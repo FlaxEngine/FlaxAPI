@@ -33,9 +33,9 @@ namespace FlaxEditor.Surface
         BoolValue = 4,
 
         /// <summary>
-        /// The inteager value.
+        /// The integer value.
         /// </summary>
-        InteagerValue = 5,
+        IntegerValue = 5,
 
         /// <summary>
         /// The float value.

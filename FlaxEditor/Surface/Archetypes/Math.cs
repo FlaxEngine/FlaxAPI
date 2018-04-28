@@ -66,7 +66,7 @@ namespace FlaxEditor.Surface.Archetypes
         public static NodeArchetype[] Nodes =
         {
             Op2(1, "Add", "Result is sum A and B"),
-            Op2(2, "Substract", "Result is difference A and B"),
+            Op2(2, "Subtract", "Result is difference A and B"),
             Op2(3, "Multiply", "Result is A times B"),
             Op2(4, "Modulo", "Result is remainder A from A divided by B B"),
             Op2(5, "Divide", "Result is A divided by B"),

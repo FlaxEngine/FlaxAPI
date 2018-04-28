@@ -156,7 +156,7 @@ namespace FlaxEngine.Utilities
 	    }
 
 	    /// <summary>
-        /// Gets a random 64-bit signed inteager value.
+        /// Gets a random 64-bit signed integer value.
         /// </summary>
         /// <param name="random">The random.</param>
         /// <returns></returns>

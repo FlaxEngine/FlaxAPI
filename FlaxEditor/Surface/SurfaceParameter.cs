@@ -86,7 +86,7 @@ namespace FlaxEditor.Surface
                 case ParameterType.Bool:
                     param.Value = false;
                     break;
-                case ParameterType.Inteager:
+                case ParameterType.Integer:
                     param.Value = 0;
                     break;
                 case ParameterType.Float:

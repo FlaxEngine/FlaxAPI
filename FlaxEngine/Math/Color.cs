@@ -664,13 +664,13 @@ namespace FlaxEngine
             return new Color(a.R * b, a.G * b, a.B * b, a.A * b);
         }
 
-        /// <summary>
-        /// Substracts one color from the another.
-        /// </summary>
-        /// <param name="a">The first color.</param>
-        /// <param name="b">The second color.</param>
-        /// <returns>The result of the operator.</returns>
-        public static Color operator -(Color a, Color b)
+		/// <summary>
+		/// Subtracts one color from the another.
+		/// </summary>
+		/// <param name="a">The first color.</param>
+		/// <param name="b">The second color.</param>
+		/// <returns>The result of the operator.</returns>
+		public static Color operator -(Color a, Color b)
         {
             return new Color(a.R - b.R, a.G - b.G, a.B - b.B, a.A - b.A);
         }

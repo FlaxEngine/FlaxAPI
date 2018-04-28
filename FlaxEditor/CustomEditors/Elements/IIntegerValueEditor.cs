@@ -3,7 +3,7 @@
 namespace FlaxEditor.CustomEditors.Elements
 {
 	/// <summary>
-	/// The inteager value editor element.
+	/// The integer value editor element.
 	/// </summary>
 	public interface IIntegerValueEditor
 	{

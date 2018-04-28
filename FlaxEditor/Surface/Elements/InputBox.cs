@@ -113,7 +113,7 @@ namespace FlaxEditor.Surface.Elements
 			    }
 			    case ConnectionType.Integer:
 			    {
-				    int value = InteagerValue.Get(ParentNode, Archetype);
+				    int value = IntegerValue.Get(ParentNode, Archetype);
 				    var control = new IntValueBox(value, x, y, 40, int.MinValue, int.MaxValue, 0.01f)
 				    {
 					    Height = height,
@@ -150,7 +150,7 @@ namespace FlaxEditor.Surface.Elements
 
 	    private void OnIntValueBoxChanged()
 	    {
-		    InteagerValue.Set(ParentNode, Archetype, ((IntValueBox)_defaultValueEditor).Value);
+		    IntegerValue.Set(ParentNode, Archetype, ((IntValueBox)_defaultValueEditor).Value);
 	    }
     }
 }

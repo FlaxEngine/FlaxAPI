@@ -12,9 +12,9 @@ namespace FlaxEngine
         /// </summary>
         Additive = 0,
 
-        /// <summary>
-        /// Brush substracts
-        /// </summary>
-        Substractive = 1,
+		/// <summary>
+		/// Brush subtracts
+		/// </summary>
+		Subtractive = 1,
     }
 }

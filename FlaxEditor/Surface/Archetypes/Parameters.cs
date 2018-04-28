@@ -27,7 +27,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 // 0: Bool
                 NodeElementArchetype.Factory.Output(1, "Value", ConnectionType.Bool, 0),
-                // 1: Inteager
+                // 1: Integer
                 NodeElementArchetype.Factory.Output(1, "Value", ConnectionType.Integer, 0),
                 // 2: Float
                 NodeElementArchetype.Factory.Output(1, "Value", ConnectionType.Float, 0),
@@ -90,7 +90,7 @@ namespace FlaxEditor.Surface.Archetypes
                         case ParameterType.Bool:
                             AddOutput(Prototypes[0]);
                             break;
-                        case ParameterType.Inteager:
+                        case ParameterType.Integer:
                             AddOutput(Prototypes[1]);
                             break;
                         case ParameterType.Float:

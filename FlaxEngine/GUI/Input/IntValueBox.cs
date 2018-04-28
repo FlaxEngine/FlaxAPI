@@ -5,7 +5,7 @@ using System;
 namespace FlaxEngine.GUI
 {
     /// <summary>
-    /// Inteager value editor.
+    /// Integer value editor.
     /// </summary>
     /// <seealso cref="int" />
     public class IntValueBox : ValueBox<int>

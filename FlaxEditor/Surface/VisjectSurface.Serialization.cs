@@ -99,7 +99,7 @@ namespace FlaxEditor.Surface
                 case 0:// CommonType::Bool:
                     value = stream.ReadByte() != 0;
                     break;
-                case 1:// CommonType::Inteager:
+                case 1:// CommonType::Integer:
                 {
                     value = stream.ReadInt32();
                 }

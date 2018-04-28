@@ -20,9 +20,9 @@ namespace FlaxEngine.Rendering
 	    Bool = 1,
 
 	    /// <summary>
-	    /// The inteager.
+	    /// The integer.
 	    /// </summary>
-	    Inteager = 2,
+	    Integer = 2,
 
 	    /// <summary>
 	    /// The float.
@@ -158,7 +158,7 @@ namespace FlaxEngine.Rendering
                     case MaterialParameterType.Bool:
                         ptr = new IntPtr(&vBool);
                         break;
-                    case MaterialParameterType.Inteager:
+                    case MaterialParameterType.Integer:
                         ptr = new IntPtr(&vInt);
                         break;
                     case MaterialParameterType.Float:
@@ -192,7 +192,7 @@ namespace FlaxEngine.Rendering
                 switch (_type)
                 {
                     case MaterialParameterType.Bool: return vBool;
-                    case MaterialParameterType.Inteager: return vInt;
+                    case MaterialParameterType.Integer: return vInt;
                     case MaterialParameterType.Float: return vFloat;
                     case MaterialParameterType.Vector2: return vVector2;
                     case MaterialParameterType.Vector3: return vVector3;
@@ -230,7 +230,7 @@ namespace FlaxEngine.Rendering
                         vBool = (bool)value;
                         ptr = new IntPtr(&vBool);
                         break;
-                    case MaterialParameterType.Inteager:
+                    case MaterialParameterType.Integer:
                     {
                         if (value is int)
                             vInt = (int)value;

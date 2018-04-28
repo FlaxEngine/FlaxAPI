@@ -7,7 +7,7 @@ using FlaxEngine;
 namespace FlaxEditor.CustomEditors.Editors
 {
     /// <summary>
-    /// Default implementation of the inspector used to edit inteager value type properties.
+    /// Default implementation of the inspector used to edit integer value type properties.
     /// </summary>
     [CustomEditor(typeof(int)), DefaultEditor]
     public sealed class IntegerEditor : CustomEditor

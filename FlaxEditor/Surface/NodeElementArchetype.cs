@@ -145,18 +145,18 @@ namespace FlaxEditor.Surface
             }
 
             /// <summary>
-            /// Creates new Inteager value element description.
+            /// Creates new Integer value element description.
             /// </summary>
             /// <param name="x">The x location (in node area space).</param>
             /// <param name="y">The y location (in node area space).</param>
             /// <param name="valueIndex">The index of the node variable linked as the input. Usefull to make a physical connection between input box and default value for it.</param>
             /// <param name="component">The index of the component to edit. For vectors this can be set to modify only single component of it. Eg. for vec2 value component set to 1 will edit only Y component. Default value -1 will be used to edit whole value.</param>
             /// <returns>The archetype.</returns>
-            public static NodeElementArchetype Inteager(float x, float y, int valueIndex = -1, int component = -1)
+            public static NodeElementArchetype Integer(float x, float y, int valueIndex = -1, int component = -1)
             {
                 return new NodeElementArchetype
                 {
-                    Type = NodeElementType.InteagerValue,
+                    Type = NodeElementType.IntegerValue,
                     Position = new Vector2(Constants.NodeMarginX + x, Constants.NodeMarginY + Constants.NodeHeaderSize + y),
                     Text = null,
                     Single = false,

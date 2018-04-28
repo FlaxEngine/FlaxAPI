@@ -15,9 +15,9 @@ namespace FlaxEngine
 		Bool = 0,
 
 		/// <summary>
-		/// The inteager value.
+		/// The integer value.
 		/// </summary>
-		Inteager = 1,
+		Integer = 1,
 
 		/// <summary>
 		/// The floating point value (single precision).
@@ -125,7 +125,7 @@ namespace FlaxEngine
 					case AnimationGraphParameterType.Bool:
 						ptr = new IntPtr(&vBool);
 						break;
-					case AnimationGraphParameterType.Inteager:
+					case AnimationGraphParameterType.Integer:
 						ptr = new IntPtr(&vInt);
 						break;
 					case AnimationGraphParameterType.Float:
@@ -162,7 +162,7 @@ namespace FlaxEngine
 				switch (_type)
 				{
 					case AnimationGraphParameterType.Bool: return vBool;
-					case AnimationGraphParameterType.Inteager: return vInt;
+					case AnimationGraphParameterType.Integer: return vInt;
 					case AnimationGraphParameterType.Float: return vFloat;
 					case AnimationGraphParameterType.Vector2: return vVector2;
 					case AnimationGraphParameterType.Vector3: return vVector3;
@@ -199,7 +199,7 @@ namespace FlaxEngine
 						vBool = (bool)value;
 						ptr = new IntPtr(&vBool);
 						break;
-					case AnimationGraphParameterType.Inteager:
+					case AnimationGraphParameterType.Integer:
 					{
 						if (value is int)
 							vInt = (int)value;

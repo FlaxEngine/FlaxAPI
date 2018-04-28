@@ -6,11 +6,11 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.Surface.Elements
 {
     /// <summary>
-    /// Inteager value editing element.
+    /// Integer value editing element.
     /// </summary>
     /// <seealso cref="IntValueBox" />
     /// <seealso cref="ISurfaceNodeElement" />
-    public sealed class InteagerValue : IntValueBox, ISurfaceNodeElement
+    public sealed class IntegerValue : IntValueBox, ISurfaceNodeElement
     {
         /// <inheritdoc />
         public SurfaceNode ParentNode { get; }
@@ -27,7 +27,7 @@ namespace FlaxEditor.Surface.Elements
         public VisjectSurface Surface => ParentNode.Surface;
 
         /// <inheritdoc />
-        public InteagerValue(SurfaceNode parentNode, NodeElementArchetype archetype)
+        public IntegerValue(SurfaceNode parentNode, NodeElementArchetype archetype)
             : base(Get(parentNode, archetype), archetype.Position.X, archetype.Position.Y, 50, -1000000, 1000000, 0.05f)
         {
             ParentNode = parentNode;

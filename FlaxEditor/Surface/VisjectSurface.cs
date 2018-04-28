@@ -495,8 +495,8 @@ namespace FlaxEditor.Surface
                     case NodeElementType.FloatValue:
                         element = new FloatValue(node, arch);
                         break;
-                    case NodeElementType.InteagerValue:
-                        element = new InteagerValue(node, arch);
+                    case NodeElementType.IntegerValue:
+                        element = new IntegerValue(node, arch);
                         break;
                     case NodeElementType.ColorValue:
                         element = new ColorValue(node, arch);
