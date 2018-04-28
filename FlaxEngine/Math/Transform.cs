@@ -222,11 +222,15 @@ namespace FlaxEngine
 	    public Transform WorldToLocal(Transform other)
 	    {
 		    Transform result = new Transform(Vector3.Zero);
+		    Vector3 invScale = Scale;
+		    if (invScale.X != 0.0f) invScale.X = 1.0f / invScale.X;
+		    if (invScale.Y != 0.0f) invScale.Y = 1.0f / invScale.Y;
+		    if (invScale.Z != 0.0f) invScale.Z = 1.0f / invScale.Z;
 
-		    result.Orientation = Orientation;
+			result.Orientation = Orientation;
 		    result.Orientation.Invert();
 		    Quaternion.Multiply(ref result.Orientation, ref other.Orientation, out result.Orientation);
-		    Vector3.Divide(ref other.Scale, ref Scale, out result.Scale);
+		    Vector3.Multiply(ref other.Scale, ref invScale, out result.Scale);
 		    result.Translation = WorldToLocal(other.Translation);
 
 		    return result;
