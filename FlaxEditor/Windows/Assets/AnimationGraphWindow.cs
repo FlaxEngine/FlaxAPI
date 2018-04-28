@@ -90,7 +90,7 @@ namespace FlaxEditor.Windows.Assets
 				private enum NewParameterType
 				{
 					Bool = (int)ParameterType.Bool,
-					Inteager = (int)ParameterType.Inteager,
+					Integer = (int)ParameterType.Integer,
 					Float = (int)ParameterType.Float,
 					Vector2 = (int)ParameterType.Vector2,
 					Vector3 = (int)ParameterType.Vector3,
