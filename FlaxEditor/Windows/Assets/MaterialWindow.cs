@@ -83,7 +83,7 @@ namespace FlaxEditor.Windows.Assets
                 private enum NewParameterType
                 {
                     Bool = (int)ParameterType.Bool,
-                    Inteager = (int)ParameterType.Inteager,
+	                Integer = (int)ParameterType.Integer,
                     Float = (int)ParameterType.Float,
                     Vector2 = (int)ParameterType.Vector2,
                     Vector3 = (int)ParameterType.Vector3,
@@ -544,18 +544,18 @@ namespace FlaxEditor.Windows.Assets
                 return;
             }
 
-            // Update original material so user can see changes in the scene
-            if (SaveToOriginal())
+			// Copy shader cache from the temporary material (will skip compilation on Reload - faster)
+			Guid dstId = _item.ID;
+			Guid srcId = _asset.ID;
+			Editor.Internal_CopyCache(ref dstId, ref srcId);
+
+			// Update original material so user can see changes in the scene
+			if (SaveToOriginal())
             {
                 // Error
                 return;
             }
 
-            // Copy shader cache from the temporary material (will skip compilation on Reload - faster)
-            Guid dstId = _item.ID;
-            Guid srcId = _asset.ID;
-            Editor.Internal_CopyCache(ref dstId, ref srcId);
-            
             // Clear flag
             ClearEditedFlag();
 
