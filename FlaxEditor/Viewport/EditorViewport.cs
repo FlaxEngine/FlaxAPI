@@ -569,11 +569,13 @@ namespace FlaxEditor.Viewport
         /// <param name="win">The parent window.</param>
         protected virtual void OnControlMouseBegin(FlaxEngine.Window win)
         {
+			// Hide cursor and start tracking mouse movement
             win.StartTrackingMouse(false);
             win.Cursor = CursorType.Hidden;
 
-            _viewMousePos = Center;
-            win.MousePosition = PointToWindow(_viewMousePos);
+			// Center mouse position
+            //_viewMousePos = Center;
+            //win.MousePosition = PointToWindow(_viewMousePos);
         }
 
         /// <summary>
@@ -582,6 +584,7 @@ namespace FlaxEditor.Viewport
         /// <param name="win">The parent window.</param>
         protected virtual void OnControlMouseEnd(FlaxEngine.Window win)
         {
+			// Restore cursor and stop tracking mouse movement
             win.Cursor = CursorType.Default;
             win.EndTrackingMouse();
         }
