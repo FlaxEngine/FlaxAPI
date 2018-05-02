@@ -1,7 +1,5 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
-using System.Collections.Generic;
-
 namespace FlaxEngine.GUI
 {
     public partial class TextBox
@@ -55,7 +53,25 @@ namespace FlaxEngine.GUI
             {
                 // Delete
                 case Keys.Backspace:
-                case Keys.Delete:
+                {
+	                int left = SelectionLeft;
+	                if (HasSelection)
+	                {
+		                _text = _text.Remove(left, SelectionLength);
+		                setSelection(left);
+		                OnTextChanged();
+	                }
+	                else if (CaretPosition > 0)
+	                {
+		                left -= 1;
+		                _text = _text.Remove(left, 1);
+		                setSelection(left);
+		                OnTextChanged();
+	                }
+
+	                return true;
+                }
+				case Keys.Delete:
                 {
                     int left = SelectionLeft;
                     if (HasSelection)
@@ -63,10 +79,9 @@ namespace FlaxEngine.GUI
                         _text = _text.Remove(left, SelectionLength);
                         setSelection(left);
                         OnTextChanged();
-                        }
-                    else if (CaretPosition > 0)
+                    }
+                    else if (TextLength > 0 && left < TextLength)
                     {
-                        left -= 1;
                         _text = _text.Remove(left, 1);
                         setSelection(left);
                         OnTextChanged();
@@ -139,11 +154,6 @@ namespace FlaxEngine.GUI
             }
 
             return true;
-        }
-
-        private void WriteText()
-        {
-            
         }
     }
 }
