@@ -119,7 +119,7 @@ namespace FlaxEditor.Viewport.Cameras
 			var rotation = Viewport.ViewOrientation;
 
 			// Compute base vectors for camera movement
-			var forward = Vector3.ForwardLH * rotation;
+			var forward = Vector3.Forward * rotation;
 			var up = Vector3.Up * rotation;
 			var right = Vector3.Cross(forward, up);
 

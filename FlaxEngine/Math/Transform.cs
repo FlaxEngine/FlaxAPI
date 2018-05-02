@@ -88,12 +88,12 @@ namespace FlaxEngine
         /// <summary>
         /// Gets the forward vector.
         /// </summary>
-        public Vector3 Forward => Vector3.Transform(Vector3.ForwardLH, Orientation);
+        public Vector3 Forward => Vector3.Transform(Vector3.Forward, Orientation);
 
         /// <summary>
         /// Gets the backward vector.
         /// </summary>
-        public Vector3 Backward => Vector3.Transform(Vector3.BackwardLH, Orientation);
+        public Vector3 Backward => Vector3.Transform(Vector3.Backward, Orientation);
 
         /// <summary>
         /// Gets the up vector.

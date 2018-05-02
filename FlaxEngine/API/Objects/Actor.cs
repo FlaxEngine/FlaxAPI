@@ -97,7 +97,7 @@ namespace FlaxEngine
         [NoSerialize]
         public Vector3 Direction
         {
-            get => Vector3.ForwardLH * Orientation;
+            get => Vector3.Forward * Orientation;
             set
             {
                 Vector3 right = Vector3.Cross(value, Vector3.Up);

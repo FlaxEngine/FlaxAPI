@@ -227,7 +227,7 @@ namespace FlaxEditor.Viewport
         /// </summary>
         public Vector3 ViewDirection
         {
-            get => Vector3.ForwardLH * ViewOrientation;
+            get => Vector3.Forward * ViewOrientation;
 	        set
             {
                 Vector3 right = Vector3.Cross(value, Vector3.Up);
@@ -696,11 +696,11 @@ namespace FlaxEditor.Viewport
                 Vector3 moveDelta = Vector3.Zero;
                 if (win.GetKey(Keys.W))
                 {
-                    moveDelta += Vector3.ForwardLH;
+                    moveDelta += Vector3.Forward;
                 }
                 if (win.GetKey(Keys.S))
                 {
-                    moveDelta += Vector3.BackwardLH;
+                    moveDelta += Vector3.Backward;
                 }
                 if (win.GetKey(Keys.D))
                 {

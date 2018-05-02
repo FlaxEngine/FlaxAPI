@@ -29,7 +29,7 @@ namespace FlaxEditor.Gizmo
         private bool _isTransforming;
         private Vector3 _lastIntersectionPosition;
 
-        private Vector3 _localForward = Vector3.ForwardLH;
+        private Vector3 _localForward = Vector3.Forward;
         private Vector3 _localRight = Vector3.Right;
         private Vector3 _localUp = Vector3.Up;
 
@@ -167,7 +167,7 @@ namespace FlaxEditor.Gizmo
 
             // Create both world matrices
             _objectOrientedWorld = _screenScaleMatrix * Matrix.CreateWorld(Position, _localForward, _localUp);
-            _axisAlignedWorld = _screenScaleMatrix * Matrix.CreateWorld(Position, Vector3.ForwardRH, Vector3.Up);
+            _axisAlignedWorld = _screenScaleMatrix * Matrix.CreateWorld(Position, Vector3.Forward, Vector3.Up);
 
             // Assign world
             if (_activeTransformSpace == TransformSpace.World)
@@ -226,7 +226,7 @@ namespace FlaxEditor.Gizmo
                                 case Axis.XY:
                                 case Axis.X:
                                 {
-                                    var plane = new Plane(Vector3.BackwardLH, Vector3.Transform(Position, invRotationMatrix).Z);
+                                    var plane = new Plane(Vector3.Backward, Vector3.Transform(Position, invRotationMatrix).Z);
 
                                     float intersection;
                                     if (ray.Intersects(ref plane, out intersection))
