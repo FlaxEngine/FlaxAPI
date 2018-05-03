@@ -102,6 +102,19 @@ namespace FlaxEngine.Rendering
 		}
 
 		/// <summary>
+		/// Gets the native pointer to the underlying resource. It's a low-level platform-specific handle.
+		/// </summary>
+		[UnmanagedCall]
+		public IntPtr NativePtr
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetNativePtr(unmanagedPtr); }
+#endif
+		}
+
+		/// <summary>
 		/// Gets or sets texture surface width (in pixels).
 		/// </summary>
 		[UnmanagedCall]
@@ -193,6 +206,8 @@ namespace FlaxEngine.Rendering
 		internal static extern TextureFlags Internal_GetFlags(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool Internal_GetIsAllocated(IntPtr obj);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern IntPtr Internal_GetNativePtr(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern int Internal_GetWidth(IntPtr obj);
 		[MethodImpl(MethodImplOptions.InternalCall)]
