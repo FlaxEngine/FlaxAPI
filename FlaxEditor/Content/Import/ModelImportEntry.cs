@@ -94,7 +94,7 @@ namespace FlaxEditor.Content.Import
         /// True if calculate model normals, otherwise will import them.
         /// </summary>
         [EditorOrder(20), EditorDisplay("Geometry"), Tooltip("Enable model normal vectors recalculating")]
-        public bool CalculateNormals { get; set; } = true;
+        public bool CalculateNormals { get; set; } = false;
 
         /// <summary>
         /// Calculated normals smoothing angle.
