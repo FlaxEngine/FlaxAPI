@@ -449,12 +449,26 @@ namespace FlaxEditor.Modules
             var node = GetActorNode(actor);
             if (node != null)
             {
-                ActorRemoved?.Invoke(node);
-
-                // Cleanup part of the graph
-                node.Dispose();
+	            OnActorDeleted(node);
             }
         }
+
+	    private void OnActorDeleted(ActorNode node)
+	    {
+		    for (int i = 0; i < node.ChildNodes.Count; i++)
+		    {
+			    if (node.ChildNodes[i] is ActorNode child)
+			    {
+				    i--;
+				    OnActorDeleted(child);
+			    }
+		    }
+			
+		    ActorRemoved?.Invoke(node);
+
+		    // Cleanup part of the graph
+		    node.Dispose();
+		}
 
         private void OnActorParentChanged(Actor actor, Actor prevParent)
         {
