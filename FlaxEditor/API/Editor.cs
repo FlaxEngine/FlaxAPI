@@ -900,8 +900,11 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetCollisionWires(IntPtr collisionData, out Vector3[] triangles, out int[] indices);
+
+	    [MethodImpl(MethodImplOptions.InternalCall)]
+	    internal static extern void Internal_GetEditorBoxWithChildren(IntPtr obj, out BoundingBox resultAsRef);
 #endif
 
-        #endregion
-    }
+		#endregion
+	}
 }

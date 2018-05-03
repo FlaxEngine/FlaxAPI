@@ -176,7 +176,8 @@ namespace FlaxEditor.Windows
 
         private void GetActorSphere(Actor actor, out BoundingSphere sphere)
         {
-            BoundingBox box = actor.BoxWithChildren;
+            BoundingBox box;
+			Editor.Internal_GetEditorBoxWithChildren(actor.unmanagedPtr, out box);
             BoundingSphere.FromBox(ref box, out sphere);
             sphere.Radius = Math.Max(sphere.Radius, 15.0f);
         }
