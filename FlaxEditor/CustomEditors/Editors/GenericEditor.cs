@@ -280,7 +280,7 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             // Collect items to edit
             List<ItemInfo> items;
-            if (!HasDiffrentTypes)
+            if (!HasDifferentTypes)
             {
                 var value = Values[0];
                 if (value == null)

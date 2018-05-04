@@ -398,7 +398,7 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
-            if (!HasDiffrentTypes)
+            if (!HasDifferentTypes)
             {
                 element = layout.Custom<ReferencePickerControl>();
                 element.CustomControl.Type = Values.Type != typeof(object) || Values[0] == null ? Values.Type : Values[0].GetType();
@@ -409,7 +409,7 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Refresh()
         {
-            if (!HasDiffrentValues)
+            if (!HasDifferentValues)
             {
                 element.CustomControl.Value = Values[0] as Object;
             }

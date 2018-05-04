@@ -15,7 +15,7 @@ namespace FlaxEditor.Utilities
         /// <typeparam name="T">Type of object to compare.</typeparam>
         /// <param name="first">First object to compare.</param>
         /// <param name="second">Second object to compare.</param>
-        /// <returns>Returns list of <see cref="MemberComparison" /> structs with all diffrent fields and properties.</returns>
+        /// <returns>Returns list of <see cref="MemberComparison" /> structs with all different fields and properties.</returns>
         public static List<MemberComparison> ReflectiveCompare<T>(this T first, T second)
         {
             if (first.GetType() != second.GetType())

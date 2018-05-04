@@ -80,7 +80,7 @@ namespace FlaxEditor.CustomEditors.Editors
 	    /// <inheritdoc />
         public override void Refresh()
         {
-            if (HasDiffrentValues)
+            if (HasDifferentValues)
             {
                 // TODO: support different values on many actor selected
             }

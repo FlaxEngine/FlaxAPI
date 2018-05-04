@@ -141,7 +141,7 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// Adds new space.
         /// </summary>
-        /// <param name="height">The height.</param>
+        /// <param name="height">The space height.</param>
         /// <returns>The created element.</returns>
         public SpaceElement Space(float height)
         {
@@ -372,7 +372,7 @@ namespace FlaxEditor.CustomEditors
         /// Adds new enum value element.
         /// </summary>
         /// <param name="type">The enum type.</param>
-        /// <param name="cusstomBuildEntriesDelegate">The custom entries layout builder. Allows to hide existing or add diffrent enum values to editor.</param>
+        /// <param name="cusstomBuildEntriesDelegate">The custom entries layout builder. Allows to hide existing or add different enum values to editor.</param>
         /// <returns>The created element.</returns>
         public EnumElement Enum(Type type, EnumElement.BuildEntriesDelegate cusstomBuildEntriesDelegate = null)
         {
@@ -386,7 +386,7 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         /// <param name="name">The property name.</param>
         /// <param name="type">The enum type.</param>
-        /// <param name="cusstomBuildEntriesDelegate">The custom entries layout builder. Allows to hide existing or add diffrent enum values to editor.</param>
+        /// <param name="cusstomBuildEntriesDelegate">The custom entries layout builder. Allows to hide existing or add different enum values to editor.</param>
         /// <param name="tooltip">The property label tooltip text.</param>
         /// <returns>The created element.</returns>
         public EnumElement Enum(string name, Type type, EnumElement.BuildEntriesDelegate cusstomBuildEntriesDelegate = null, string tooltip = null)
@@ -502,26 +502,26 @@ namespace FlaxEditor.CustomEditors
             return element;
         }
 
-        /// <summary>
-        /// Adds the <see cref="PropertiesListElement"/> to the current layou or reuses the previous one. Used to inject properties.
-        /// </summary>
-        /// <param name="name">The property label name.</param>
-        /// <param name="tooltip">The property label tooltip text.</param>
-        /// <returns>The element.</returns>
-        public PropertiesListElement AddPropertyItem(string name, string tooltip = null)
+		/// <summary>
+		/// Adds the <see cref="PropertiesListElement"/> to the current layout or reuses the previous one. Used to inject properties.
+		/// </summary>
+		/// <param name="name">The property label name.</param>
+		/// <param name="tooltip">The property label tooltip text.</param>
+		/// <returns>The element.</returns>
+		public PropertiesListElement AddPropertyItem(string name, string tooltip = null)
         {
             PropertiesListElement element = AddPropertyItem();
             element.OnAddProperty(name, tooltip);
             return element;
         }
 
-        /// <summary>
-        /// Adds the <see cref="PropertiesListElement"/> to the current layou or reuses the previous one. Used to inject properties.
-        /// </summary>
-        /// <param name="label">The property label.</param>
-        /// <param name="tooltip">The property label tooltip text.</param>
-        /// <returns>The element.</returns>
-        public PropertiesListElement AddPropertyItem(PropertyNameLabel label, string tooltip = null)
+		/// <summary>
+		/// Adds the <see cref="PropertiesListElement"/> to the current layout or reuses the previous one. Used to inject properties.
+		/// </summary>
+		/// <param name="label">The property label.</param>
+		/// <param name="tooltip">The property label tooltip text.</param>
+		/// <returns>The element.</returns>
+		public PropertiesListElement AddPropertyItem(PropertyNameLabel label, string tooltip = null)
         {
             if(label == null)
                 throw new ArgumentNullException();

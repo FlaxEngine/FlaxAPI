@@ -52,14 +52,14 @@ namespace FlaxEditor.CustomEditors
 		public bool IsSingleObject => _values.IsSingleObject;
 
 		/// <summary>
-		/// Gets a value indicating whether selected objects are diffrent values.
+		/// Gets a value indicating whether selected objects are different values.
 		/// </summary>
-		public bool HasDiffrentValues => _values.HasDiffrentValues;
+		public bool HasDifferentValues => _values.HasDifferentValues;
 
 		/// <summary>
-		/// Gets a value indicating whether selected objects are diffrent types.
+		/// Gets a value indicating whether selected objects are different types.
 		/// </summary>
-		public bool HasDiffrentTypes => _values.HasDiffrentTypes;
+		public bool HasDifferentTypes => _values.HasDifferentTypes;
 
 		/// <summary>
 		/// Gets the values types array (without duplicates).

@@ -40,7 +40,7 @@ namespace FlaxEditor.CustomEditors.Editors
 	    /// <inheritdoc />
         public override void Refresh()
         {
-            if (HasDiffrentValues)
+            if (HasDifferentValues)
             {
                 element.TextBox.Text = string.Empty;
                 element.TextBox.WatermarkText = "Different Values";

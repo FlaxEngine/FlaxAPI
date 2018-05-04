@@ -51,7 +51,7 @@ namespace FlaxEditor.CustomEditors
                 return overrideEditor;
 
             // Special case if property is a pure object type and all values are the same type
-            if (values.Type == typeof(object) && values.Count > 0 && values[0] != null && !values.HasDiffrentTypes)
+            if (values.Type == typeof(object) && values.Count > 0 && values[0] != null && !values.HasDifferentTypes)
                 return CreateEditor(values[0].GetType(), canUseRefPicker);
 
             // Use editor for the property type

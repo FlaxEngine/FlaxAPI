@@ -93,7 +93,7 @@ namespace FlaxEditor.Modules
             // Check if name is the same except has some chars in upper case and some in lower case
             if (shortName.Equals(item.ShortName, StringComparison.OrdinalIgnoreCase))
             {
-                // The same file names but some chars have diffrent case
+                // The same file names but some chars have different case
             }
             else
             {

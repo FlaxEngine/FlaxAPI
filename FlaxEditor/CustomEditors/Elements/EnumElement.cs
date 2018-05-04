@@ -251,7 +251,7 @@ namespace FlaxEditor.CustomEditors.Elements
         /// Initializes a new instance of the <see cref="EnumElement"/> class.
         /// </summary>
         /// <param name="type">The enum type.</param>
-        /// <param name="cusstomBuildEntriesDelegate">The custom entries layout builder. Allows to hide existing or add diffrent enum values to editor.</param>
+        /// <param name="cusstomBuildEntriesDelegate">The custom entries layout builder. Allows to hide existing or add different enum values to editor.</param>
         public EnumElement(Type type, BuildEntriesDelegate cusstomBuildEntriesDelegate = null)
         {
             if (type == null || !type.IsEnum)

@@ -16,7 +16,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
         {
             base.Initialize(layout);
 
-            if (Values.HasDiffrentTypes == false)
+            if (Values.HasDifferentTypes == false)
             {
                 // Add 'Bake' button
                 layout.Space(10);

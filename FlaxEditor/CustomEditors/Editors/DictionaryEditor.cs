@@ -59,7 +59,7 @@ namespace FlaxEditor.CustomEditors.Editors
             _notNullItems = false;
 
             // No support for different collections for now
-            if (HasDiffrentValues || HasDiffrentTypes)
+            if (HasDifferentValues || HasDifferentTypes)
                 return;
 
             var type = Values.Type;
@@ -220,7 +220,7 @@ namespace FlaxEditor.CustomEditors.Editors
         public override void Refresh()
         {
             // No support for different collections for now
-            if (HasDiffrentValues || HasDiffrentTypes)
+            if (HasDifferentValues || HasDifferentTypes)
                 return;
 
             // Check if collection has been resized (by UI or from external source)

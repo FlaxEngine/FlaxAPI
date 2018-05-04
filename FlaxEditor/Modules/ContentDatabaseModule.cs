@@ -117,7 +117,7 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
-        /// Gets the proxy object for the given file extension. Warning! Diffrent asset types may share the same file extension.
+        /// Gets the proxy object for the given file extension. Warning! Different asset types may share the same file extension.
         /// </summary>
         /// <param name="extension">The file extension.</param>
         /// <returns>Content proxy for that item or null if cannot find.</returns>
@@ -357,7 +357,7 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
-        /// Moves the specified items to the diffrent location. Handles moving whole directories and single assets.
+        /// Moves the specified items to the different location. Handles moving whole directories and single assets.
         /// </summary>
         /// <param name="items">The items.</param>
         /// <param name="newParent">The new parent.</param>
@@ -369,7 +369,7 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
-        /// Moves the specified item to the diffrent location. Handles moving whole directories and single assets.
+        /// Moves the specified item to the different location. Handles moving whole directories and single assets.
         /// </summary>
         /// <param name="item">The item.</param>
         /// <param name="newParent">The new parent.</param>
@@ -388,7 +388,7 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
-        /// Moves the specified item to the diffrent location. Handles moving whole directories and single assets.
+        /// Moves the specified item to the different location. Handles moving whole directories and single assets.
         /// </summary>
         /// <param name="item">The item.</param>
         /// <param name="newPath">The new path.</param>

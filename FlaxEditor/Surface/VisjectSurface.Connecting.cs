@@ -27,14 +27,14 @@ namespace FlaxEditor.Surface
             // Check if boxes are connected
             bool areConnected = start.AreConnected(end);
 
-            // Check if boxes are diffrent or (one of them is disabled and both are disconnected)
+            // Check if boxes are different or (one of them is disabled and both are disconnected)
             if (end.IsOutput == start.IsOutput || !((end.Enabled && start.Enabled) || areConnected))
             {
                 // Cannot
                 return false;
             }
 
-            // Cache Input and Output box (since connection may be made in a diffrent way)
+            // Cache Input and Output box (since connection may be made in a different way)
             InputBox iB;
             OutputBox oB;
             if (start.IsOutput)
@@ -133,14 +133,14 @@ namespace FlaxEditor.Surface
             Box start = _startBox;
             _startBox = null;
 
-            // Check if boxes are diffrent and end box is specified
+            // Check if boxes are different and end box is specified
             if (start == end || end == null)
                 return;
             
             // Check if boxes are connected
             bool areConnected = start.AreConnected(end);
 
-            // Check if boxes are diffrent or (one of them is disabled and both are disconnected)
+            // Check if boxes are different or (one of them is disabled and both are disconnected)
             if (end.IsOutput == start.IsOutput || !((end.Enabled && start.Enabled) || areConnected))
             {
                 // Back
@@ -160,7 +160,7 @@ namespace FlaxEditor.Surface
                 return;
             }
 
-            // Cache Input and Output box (since connection may be made in a diffrent way)
+            // Cache Input and Output box (since connection may be made in a different way)
             InputBox iB;
             OutputBox oB;
             if (start.IsOutput)

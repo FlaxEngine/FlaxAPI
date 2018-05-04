@@ -97,7 +97,7 @@ namespace FlaxEditor.CustomEditors
 		            else
 		            {
 			            Type type = typeof(object);
-			            if (selection.HasDiffrentTypes == false)
+			            if (selection.HasDifferentTypes == false)
 				            type = selection[0].GetType();
 			            Editor = CustomEditorsUtil.CreateEditor(type, false);
 		            }

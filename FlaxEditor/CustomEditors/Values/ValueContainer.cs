@@ -28,9 +28,9 @@ namespace FlaxEditor.CustomEditors
         public bool IsSingleObject => Count == 1;
 
         /// <summary>
-        /// Gets a value indicating whether selected objects are diffrent values.
+        /// Gets a value indicating whether selected objects are different values.
         /// </summary>
-        public bool HasDiffrentValues
+        public bool HasDifferentValues
         {
             get
             {
@@ -44,9 +44,9 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
-        /// Gets a value indicating whether selected objects are diffrent types.
+        /// Gets a value indicating whether selected objects are different types.
         /// </summary>
-        public bool HasDiffrentTypes
+        public bool HasDifferentTypes
         {
             get
             {

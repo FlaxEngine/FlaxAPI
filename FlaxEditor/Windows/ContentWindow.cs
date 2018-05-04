@@ -220,7 +220,7 @@ namespace FlaxEditor.Windows
 
         private void Delete(List<ContentItem> items)
         {
-            // TODO: remove items that depend on diffrent items in the list: use wants to remove `folderA` and `folderA/asset.x`, we should just remove `folderA`
+            // TODO: remove items that depend on different items in the list: use wants to remove `folderA` and `folderA/asset.x`, we should just remove `folderA`
             var toDelete = new List<ContentItem>(items);
 
             // Ask user
@@ -336,7 +336,7 @@ namespace FlaxEditor.Windows
             }
             else
             {
-                // TODO: remove items that depend on diffrent items in the list: use wants to remove `folderA` and `folderA/asset.x`, we should just remove `folderA`
+                // TODO: remove items that depend on different items in the list: use wants to remove `folderA` and `folderA/asset.x`, we should just remove `folderA`
                 var toDuplicate = new List<ContentItem>(items);
 
                 // Duplicate every item

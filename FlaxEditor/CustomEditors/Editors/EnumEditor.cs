@@ -23,9 +23,9 @@ namespace FlaxEditor.CustomEditors.Editors
 		/// <inheritdoc />
 		public override void Initialize(LayoutElementsContainer layout)
 		{
-			if (HasDiffrentTypes)
+			if (HasDifferentTypes)
 			{
-				// No support for diffrent enum types
+				// No support for different enum types
 			}
 			else
 			{
@@ -45,9 +45,9 @@ namespace FlaxEditor.CustomEditors.Editors
 		/// <inheritdoc />
 		public override void Refresh()
 		{
-			if (HasDiffrentValues)
+			if (HasDifferentValues)
 			{
-				// No support for diffrent enum values
+				// No support for different enum values
 			}
 			else
 			{

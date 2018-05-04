@@ -34,7 +34,7 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
-            if (!HasDiffrentTypes)
+            if (!HasDifferentTypes)
             {
                 // TODO: find better way to get content domain from the asset type (mayb util function?)
                 var domain = ContentDomain.Other;
@@ -112,7 +112,7 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Refresh()
         {
-            if (!HasDiffrentValues)
+            if (!HasDifferentValues)
             {
                 if (Values[0] is AssetItem assetItem)
                     element.CustomControl.SelectedItem = assetItem;

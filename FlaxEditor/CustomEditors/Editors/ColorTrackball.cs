@@ -99,7 +99,7 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Refresh()
         {
-            if (!HasDiffrentValues)
+            if (!HasDifferentValues)
             {
                 var value = (Vector4)Values[0];
                 var color = new Vector3(value);

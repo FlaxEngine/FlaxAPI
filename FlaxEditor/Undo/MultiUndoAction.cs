@@ -7,7 +7,7 @@ using System.Linq;
 namespace FlaxEditor
 {
     /// <summary>
-    /// Implementation of <see cref="IUndoAction"/> that contains one or more child actions performed at once. Allows to merge diffrent actions.
+    /// Implementation of <see cref="IUndoAction"/> that contains one or more child actions performed at once. Allows to merge different actions.
     /// </summary>
     /// <seealso cref="FlaxEditor.IUndoAction" />
     public class MultiUndoAction : IUndoAction

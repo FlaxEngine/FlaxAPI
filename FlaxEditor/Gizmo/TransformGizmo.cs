@@ -423,7 +423,7 @@ namespace FlaxEditor.Gizmo
                         translationDelta = _translationDelta;
                         _translationDelta = Vector3.Zero;
 
-                        // Prevent from moving objects too far away, like to diffrent galaxy or sth
+                        // Prevent from moving objects too far away, like to different galaxy or sth
                         Vector3 prevMoveDelta = _accMoveDelta;
                         _accMoveDelta += _translationDelta;
                         if (_accMoveDelta.Length > Owner.ViewFarPlane * 0.7f)
