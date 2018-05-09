@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Linq;
 using FlaxEditor.Gizmo;
 using FlaxEditor.GUI;
@@ -46,6 +47,7 @@ namespace FlaxEditor.Modules
 		private ContextMenuButton _menuToolsBakeAllEnvProbes;
 		private ContextMenuButton _menuToolsBuildCSGMesh;
 		private ContextMenuButton _menuToolsCancelBuilding;
+		private ContextMenuButton _menuToolsSetTheCurrentSceneViewAsDefault;
 
 		private ToolStripButton _toolStripUndo;
 		private ToolStripButton _toolStripRedo;
@@ -452,6 +454,7 @@ namespace FlaxEditor.Modules
 			cm.AddSeparator();
 			cm.AddButton("Profiler", Editor.Windows.ProfilerWin.FocusOrShow);
 			cm.AddSeparator();
+			_menuToolsSetTheCurrentSceneViewAsDefault = cm.AddButton("Set current scene view as project default", SetTheCurrentSceneViewAsDefualt);
 			cm.AddButton("Take screenshot!", "F12", Editor.Windows.TakeScreenshot);
 
 			// Window
@@ -643,6 +646,7 @@ namespace FlaxEditor.Modules
 			_menuToolsBakeAllEnvProbes.Enabled = canEdit;
 			_menuToolsBuildCSGMesh.Enabled = canEdit;
 			_menuToolsCancelBuilding.Enabled = GameCooker.IsRunning;
+			_menuToolsSetTheCurrentSceneViewAsDefault.Enabled = SceneManager.LoadedScenesCount > 0;
 
 			c.PerformLayout();
 		}
@@ -706,6 +710,14 @@ namespace FlaxEditor.Modules
 			var scenes = SceneManager.Scenes;
 			scenes.ToList().ForEach(x => x.BuildCSG());
 			Editor.Scene.MarkSceneEdited(scenes);
+		}
+
+		private void SetTheCurrentSceneViewAsDefualt()
+		{
+			var projectInfo = Editor.ProjectInfo;
+			projectInfo.DefaultSceneId = SceneManager.Scenes[0].ID;
+			projectInfo.DefaultSceneSpawn = Editor.Windows.EditWin.Viewport.ViewRay;
+			projectInfo.Save();
 		}
 
 		private void OnOnMainWindowClosing()

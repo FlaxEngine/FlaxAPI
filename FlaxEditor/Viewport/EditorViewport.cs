@@ -236,7 +236,20 @@ namespace FlaxEditor.Viewport
             }
         }
 
-		/// <summary>
+	    /// <summary>
+	    /// Gets or sets the view ray (position and direction).
+	    /// </summary>
+	    public Ray ViewRay
+	    {
+		    get => new Ray(ViewPosition, ViewDirection);
+		    set
+		    {
+			    ViewPosition = value.Position;
+			    ViewDirection = value.Direction;
+		    }
+	    }
+
+	    /// <summary>
 		/// Gets or sets the yaw angle (in degrees).
 		/// </summary>
 		public float Yaw

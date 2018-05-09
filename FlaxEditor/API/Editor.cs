@@ -234,8 +234,7 @@ namespace FlaxEditor
 		            Scene.OpenScene(_projectInfo.DefaultSceneId);
 
 		            // Use spawn point
-		            Windows.EditWin.Viewport.ViewPosition = _projectInfo.DefaultSceneSpawn.Position;
-		            Windows.EditWin.Viewport.ViewDirection = _projectInfo.DefaultSceneSpawn.Direction;
+		            Windows.EditWin.Viewport.ViewRay = _projectInfo.DefaultSceneSpawn;
 	            }
             }
         }
