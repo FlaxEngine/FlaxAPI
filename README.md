@@ -5,26 +5,33 @@
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/flaxengine/lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![VS Extension](https://img.shields.io/badge/vs-extension-green.svg)](https://marketplace.visualstudio.com/items?itemName=Flax.FlaxVS)
 
-Flax Engine is a high quality modern game engine written in C++.
-This repository contains open source public C# API as well as full source code of the Editor.
-The engine offers a wide variety of high level systems needed for game development.
+Flax Engine is a high quality modern 3D game engine written in C++.
+From stunning graphics to powerful scripts - Flax can give everything for your games. Designed for fast workflow with many ready to use features waiting for you right now. To learn more see the website ([www.flaxengine.com](https://flaxengine.com)).
+
+This repository contains an open source public C# API as well as full source code of the Flax Editor. Anyone is welcome to contribute or use the modified source in Flax-based games.
 
 # Features
 * PBR Rendering (DirectX 10, 11, 12)
 * C# Scripting (C# 6.0)
 * Physics (NVIDIA PhysX)
 * Top Performance
+* Xbox One, Windows and UWP support
 * Global Illumination (lightmaps baking on GPU)
 * Model LODs and content streaming
 * Rich & Extensible editor
 * In-Editor Playmode
 * Node-based Materials Editor
+* Skeletal animations and skinning
+* Audio streaming
+* Advanced game deployment infrastructure
+* Virtual input with gamepads support
 * CSG Editor
 * and many more...
 
 # Development
 * [Homepage](http://flaxengine.com)
 * [Dev Blog](http://flaxengine.com/blog)
+* [Documentation](https://docs.flaxengine.com)
 * [Roadmap](https://trello.com/b/NQjLXRCP/flax-roadmap)
 
 # Flax plugin for Visual Studio
