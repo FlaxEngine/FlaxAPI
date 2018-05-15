@@ -397,8 +397,56 @@ namespace FlaxEditor.CustomEditors.Dedicated
             /// <inheritdoc />
             public override IEnumerable<object> UndoObjects => _scripts;
 
-            /// <inheritdoc />
-            public override void Initialize(LayoutElementsContainer layout)
+	        private void AddMissingScript(int index, LayoutElementsContainer layout)
+	        {
+		        var group = layout.Group("Missing script");
+				
+		        // Add settings button to the group
+		        const float settingsButtonSize = 14;
+		        var settingsButton = new Image(group.Panel.Width - settingsButtonSize, 0, settingsButtonSize, settingsButtonSize)
+		        {
+			        TooltipText = "Settings",
+			        CanFocus = true,
+			        AnchorStyle = AnchorStyle.UpperRight,
+			        IsScrollable = false,
+			        Color = new Color(0.7f),
+			        Margin = new Margin(1),
+			        ImageSource = new SpriteImageSource(FlaxEngine.GUI.Style.Current.Settings),
+			        Tag = index,
+			        Parent = group.Panel
+		        };
+		        settingsButton.Clicked += MissingSettingsButtonOnClicked;
+
+			}
+
+	        private void MissingSettingsButtonOnClicked(Image image, MouseButton mouseButton)
+	        {
+		        if (mouseButton != MouseButton.Left)
+			        return;
+
+		        var index = (int)image.Tag;
+
+		        var cm = new ContextMenu();
+		        cm.Tag = index;
+		        cm.AddButton("Remove", OnClickMissingRemove);
+		        cm.Show(image, image.Size);
+	        }
+
+	        private void OnClickMissingRemove(ContextMenuButton button)
+	        {
+		        var index = (int)button.ParentContextMenu.Tag;
+		        // TODO: support undo
+		        var actors = ParentEditor.Values;
+		        for (int i = 0; i < actors.Count; i++)
+		        {
+			        var actor = (Actor)actors[i];
+			        actor.DeleteScript(index);
+			        Editor.Instance.Scene.MarkSceneEdited(actor.Scene);
+		        }
+	        }
+
+	        /// <inheritdoc />
+			public override void Initialize(LayoutElementsContainer layout)
             {
                 _scripts.Clear();
 
@@ -424,8 +472,8 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     var script = scripts[i];
                     if (script == null)
                     {
-                        layout.Group("Missing script");
-                        continue;
+						AddMissingScript(i, layout);
+						continue;
                     }
                     var values = new ListValueContainer(elementType, i, Values);
                     var type = script.GetType();

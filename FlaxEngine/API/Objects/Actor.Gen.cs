@@ -516,6 +516,23 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Detaches script from the actor and deletes the object.
+		/// </summary>
+		/// <param name="index">The index of the script to remove.</param>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+		[UnmanagedCall]
+		public void DeleteScript(int index) 
+		{
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+			Internal_DeleteScript(unmanagedPtr, index);
+#endif
+		}
+
+		/// <summary>
 		/// Gets bounding box that contains actor object (single actor, no children included)
 		/// </summary>
 		[UnmanagedCall]
@@ -705,6 +722,8 @@ namespace FlaxEngine
 		internal static extern void Internal_AddScript(IntPtr obj, IntPtr script);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_RemoveScript(IntPtr obj, IntPtr script);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_DeleteScript(IntPtr obj, int index);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_GetBox(IntPtr obj, out BoundingBox resultAsRef);
 		[MethodImpl(MethodImplOptions.InternalCall)]
