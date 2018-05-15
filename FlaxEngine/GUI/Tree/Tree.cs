@@ -343,8 +343,8 @@ namespace FlaxEngine.GUI
                 // Check if can perform update
                 if (_keyUpdateTime >= KeyUpdateTimeout)
                 {
-                    bool keyUpArrow = window.GetKeyUp(Keys.ArrowUp);
-                    bool keyDownArrow = window.GetKeyUp(Keys.ArrowDown);
+                    bool keyUpArrow = window.GetKeyDown(Keys.ArrowUp);
+                    bool keyDownArrow = window.GetKeyDown(Keys.ArrowDown);
 
                     // Check if arrow flags are dffrent
                     if (keyDownArrow != keyUpArrow)
