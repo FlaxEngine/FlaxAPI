@@ -171,9 +171,25 @@ namespace FlaxEditor.Windows
 
 	                if (platformObj.IsAvailable)
 	                {
-		                var group = layout.Group(CustomEditorsUtil.GetPropertyNameUI(_platform.ToString()));
-
-		                group.Object(new ReadOnlyValueContainer(platformObj));
+		                string name;
+		                switch (_platform)
+		                {
+			                case PlatformType.Windows:
+				                name = "Windows";
+				                break;
+			                case PlatformType.XboxOne:
+				                name = "Xbox One";
+				                break;
+			                case PlatformType.WindowsStore:
+				                name = "Windows Store";
+				                break;
+			                default:
+				                name = CustomEditorsUtil.GetPropertyNameUI(_platform.ToString());
+				                break;
+		                }
+		                var group = layout.Group(name);
+						
+						group.Object(new ReadOnlyValueContainer(platformObj));
 
 		                _buildButton = layout.Button("Build").Button;
 		                _buildButton.Clicked += OnBuildClicked;
