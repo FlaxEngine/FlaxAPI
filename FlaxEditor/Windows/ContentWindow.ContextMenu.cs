@@ -30,6 +30,7 @@ namespace FlaxEditor.Windows
                 folder = CurrentViewFolder;
             }
             Assert.IsNotNull(folder);
+	        bool isRootFolder = CurrentViewFolder == _root.Folder;
 
             // Create context menu
             ContextMenuButton b;
@@ -95,21 +96,27 @@ namespace FlaxEditor.Windows
 
 	        cm.AddSeparator();
 
-            cm.AddButton("New folder", NewFolder);
+	        if (!isRootFolder)
+	        {
+		        cm.AddButton("New folder", NewFolder);
+	        }
 
-            c = cm.AddChildMenu("New");
-            c.ContextMenu.Tag = item;
-            for (int i = 0; i < Editor.ContentDatabase.Proxy.Count; i++)
-            {
-                var p = Editor.ContentDatabase.Proxy[i];
-                if (p.CanCreate(folder))
-                {
-	                c.ContextMenu.AddButton(p.Name, () => NewItem(p));
-                }
-            }
-            c.Enabled = c.ContextMenu.HasChildren;
+	        c = cm.AddChildMenu("New");
+	        c.ContextMenu.Tag = item;
+	        int newItems = 0;
+	        for (int i = 0; i < Editor.ContentDatabase.Proxy.Count; i++)
+	        {
+		        var p = Editor.ContentDatabase.Proxy[i];
+		        if (p.CanCreate(folder))
+		        {
+			        c.ContextMenu.AddButton(p.Name, () => NewItem(p));
+			        newItems++;
 
-            if (folder.CanHaveAssets)
+		        }
+	        }
+	        c.Enabled = newItems > 0;
+
+	        if (folder.CanHaveAssets)
             {
                 cm.AddButton("Import file", () =>
                 {
