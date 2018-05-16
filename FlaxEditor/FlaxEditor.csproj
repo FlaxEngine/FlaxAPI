@@ -65,6 +65,7 @@
     <Compile Include="Content\IFileEntryAction.cs" />
     <Compile Include="Content\Import\AssetImportEntry.cs" />
     <Compile Include="Content\Import\AudioImportSettings.cs" />
+    <Compile Include="Content\Import\FolderImportEntry.cs" />
     <Compile Include="Content\Import\ImportFileEntry.cs" />
     <Compile Include="Content\Import\ImportFilesDialog.cs" />
     <Compile Include="Content\Import\ModelImportEntry.cs" />

@@ -90,8 +90,8 @@ namespace FlaxEditor.Content.Import
             // Get extension (without a dot)
             var extension = Path.GetExtension(url);
             if (string.IsNullOrEmpty(extension))
-                throw new ArgumentException();
-            if (extension[0] == '.')
+				return new FolderImportEntry(url, resultUrl);
+			if (extension[0] == '.')
                 extension = extension.Remove(0, 1);
             extension = extension.ToLower();
 

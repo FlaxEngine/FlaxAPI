@@ -170,6 +170,8 @@ namespace FlaxEditor.Modules
         {
             if (targetLocation == null)
                 throw new ArgumentNullException();
+	        if (files == null)
+		        return;
 
             lock (_requests)
             {
