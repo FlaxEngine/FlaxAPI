@@ -6,6 +6,7 @@ using FlaxEditor.Content.Create;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -152,6 +153,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly PropertiesProxy _properties;
         private Model _collisionWiresModel;
         private ModelActor _collisionWiresShowActor;
+	    private bool _updateWireMesh;
 
         /// <inheritdoc />
         public CollisionDataWindow(Editor editor, AssetItem item)
@@ -168,7 +170,8 @@ namespace FlaxEditor.Windows.Assets
             // Model preview
             _preview = new ModelPreview(true)
             {
-                Parent = _split.Panel1
+	            ViewportCamera = new FPSCamera(),
+				Parent = _split.Panel1
             };
 
             // Asset properties
@@ -195,7 +198,14 @@ namespace FlaxEditor.Windows.Assets
         /// </summary>
         private void UpdateWiresModel()
         {
-            if (_collisionWiresModel == null)
+			// Don't update on a importer/worker thread
+	        if (!Application.IsInMainThread)
+	        {
+		        _updateWireMesh = true;
+		        return;
+	        }
+
+	        if (_collisionWiresModel == null)
             {
                 _collisionWiresModel = FlaxEngine.Content.CreateVirtualAsset<Model>();
             }
@@ -251,7 +261,19 @@ namespace FlaxEditor.Windows.Assets
             base.OnItemReimported(item);
         }
 
-        /// <inheritdoc />
+	    /// <inheritdoc />
+	    public override void OnUpdate()
+	    {
+		    if (_updateWireMesh)
+		    {
+			    _updateWireMesh = false;
+			    UpdateWiresModel();
+		    }
+
+		    base.OnUpdate();
+	    }
+
+	    /// <inheritdoc />
         public override void OnDestroy()
         {
             base.OnDestroy();
