@@ -163,6 +163,12 @@ namespace FlaxEditor.Content.Import
 		public Vector3 Translation { get; set; } = Vector3.Zero;
 
 		/// <summary>
+		/// If checked, the imported geometry will be shifted to the center of mass.
+		/// </summary>
+		[EditorOrder(530), EditorDisplay("Transform"), Tooltip("If checked, the imported geometry will be shifted to the center of mass.")]
+		public bool CenterGeometry { get; set; } = false;
+
+		/// <summary>
 		/// The imported animation duration mode.
 		/// </summary>
 		[EditorOrder(1000), EditorDisplay("Animation"), Tooltip("Imported animation duration mode. Can use the original value or overriden by settings.")]
@@ -230,6 +236,7 @@ namespace FlaxEditor.Content.Import
 	        public float Scale;
 	        public Quaternion Rotation;
 	        public Vector3 Translation;
+	        public bool CenterGeometry;
 
 			// Animation
 			public AnimationDuration Duration;
@@ -259,6 +266,7 @@ namespace FlaxEditor.Content.Import
 	            Scale = Scale,
 				Rotation = Rotation,
 	            Translation = Translation,
+	            CenterGeometry = CenterGeometry,
 				Duration = Duration,
 	            FramesRangeStart = FramesRangeStart,
 	            FramesRangeEnd = FramesRangeEnd,
@@ -285,6 +293,7 @@ namespace FlaxEditor.Content.Import
 	        Scale = options.Scale;
 	        Rotation = options.Rotation;
 	        Translation = options.Translation;
+	        CenterGeometry = options.CenterGeometry;
 	        FramesRangeStart = options.FramesRangeStart;
 	        FramesRangeEnd = options.FramesRangeEnd;
 	        SamplingRate = options.SamplingRate;
