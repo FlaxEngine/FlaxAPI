@@ -65,6 +65,7 @@ namespace FlaxEditor.Surface
                         for (int i = 0; i < _dragOverItems.Objects.Count; i++)
                         {
                             var item = _dragOverItems.Objects[i];
+	                        SurfaceNode node = null;
 
                             switch (item.ItemDomain)
                             {
@@ -83,22 +84,27 @@ namespace FlaxEditor.Surface
                                         }
                                     }
 
-                                    SpawnNode(5, (ushort)(isNormalMap ? 4 : 1), surfaceLocation, new object[] { item.ID });
+                                    node = SpawnNode(5, (ushort)(isNormalMap ? 4 : 1), surfaceLocation, new object[] { item.ID });
                                     break;
                                 }
 
                                 case ContentDomain.CubeTexture:
                                 {
-                                    SpawnNode(5, 3, surfaceLocation, new object[] { item.ID });
+	                                node = SpawnNode(5, 3, surfaceLocation, new object[] { item.ID });
                                     break;
                                 }
 
                                 case ContentDomain.Material:
                                 {
-                                    SpawnNode(8, 1, surfaceLocation, new object[] { item.ID });
+	                                node = SpawnNode(8, 1, surfaceLocation, new object[] { item.ID });
                                     break;
                                 }
                             }
+
+	                        if (node != null)
+	                        {
+		                        surfaceLocation.X += node.Width + 10;
+	                        }
                         }
 
                         break;
@@ -108,12 +114,13 @@ namespace FlaxEditor.Surface
 		                for (int i = 0; i < _dragOverItems.Objects.Count; i++)
 		                {
 			                var item = _dragOverItems.Objects[i];
+			                SurfaceNode node = null;
 
-			                switch (item.ItemDomain)
+							switch (item.ItemDomain)
 			                {
 				                case ContentDomain.Animation:
 				                {
-					                SpawnNode(9, 2, surfaceLocation, new object[]
+					                node = SpawnNode(9, 2, surfaceLocation, new object[]
 					                {
 						                item.ID,
 						                1.0f,
@@ -124,7 +131,7 @@ namespace FlaxEditor.Surface
 				                }
 				                case ContentDomain.SkeletonMask:
 				                {
-					                SpawnNode(9, 11, surfaceLocation, new object[]
+					                node = SpawnNode(9, 11, surfaceLocation, new object[]
 					                {
 										0.0f,
 						                item.ID,
@@ -132,7 +139,12 @@ namespace FlaxEditor.Surface
 									break;
 				                }
 			                }
-		                }
+
+			                if (node != null)
+			                {
+				                surfaceLocation.X += node.Width + 10;
+			                }
+						}
 
 						break;
 	                }
