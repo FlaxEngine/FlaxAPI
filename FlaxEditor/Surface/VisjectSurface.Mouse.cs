@@ -272,8 +272,11 @@ namespace FlaxEditor.Surface
                     _cmStartPos = location;
                     if (nodeAtMouse != null)
                     {
+						if(!HasSelection)
+							Select(nodeAtMouse);
+
                         // Show secondary context menu
-                        ShowSecondaryCM(nodeAtMouse, _cmStartPos);
+                        ShowSecondaryCM(_cmStartPos);
                     }
                     else
                     {
@@ -305,20 +308,34 @@ namespace FlaxEditor.Surface
 
             if (key == Keys.Delete)
             {
-                DeleteSelection();
+                Delete();
                 return true;
             }
-            if (ParentWindow.GetKey(Keys.Control))
-            {
-                switch (key)
-                {
-                    case Keys.A:
-                        SelectAll();
-                        return true;
-                }
-            }
 
-            return false;
+	        if (ParentWindow.GetKey(Keys.Control))
+	        {
+		        switch (key)
+		        {
+			        case Keys.A:
+				        SelectAll();
+				        return true;
+			        case Keys.C:
+				        Copy();
+				        return true;
+			        case Keys.V:
+				        Paste();
+				        return true;
+			        case Keys.X:
+				        Cut();
+				        return true;
+			        case Keys.D:
+				        Duplicate();
+				        return true;
+
+		        }
+	        }
+
+	        return false;
         }
     }
 }

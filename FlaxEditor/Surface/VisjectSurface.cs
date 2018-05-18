@@ -135,10 +135,44 @@ namespace FlaxEditor.Surface
         /// </summary>
         public bool IsConnecting => _startBox != null;
 
-        /// <summary>
-        /// The metadata.
-        /// </summary>
-        public readonly SurfaceMeta Meta = new SurfaceMeta();
+		/// <summary>
+		/// Returns true if any node is selected by the user (one or more).
+		/// </summary>
+	    public bool HasSelection
+	    {
+		    get
+		    {
+			    for (int i = 0; i < _nodes.Count; i++)
+			    {
+				    if (_nodes[i].IsSelected)
+					    return true;
+			    }
+
+				return false;
+		    }
+	    }
+
+	    /// <summary>
+	    /// Gets the list of the selected nodes.
+	    /// </summary>
+	    public List<SurfaceNode> Selection
+	    {
+		    get
+		    {
+			    List<SurfaceNode> selection = new List<SurfaceNode>();
+			    for (int i = 0; i < _nodes.Count; i++)
+			    {
+				    if (_nodes[i].IsSelected)
+					    selection.Add(_nodes[i]);
+			    }
+			    return selection;
+		    }
+	    }
+
+		/// <summary>
+		/// The metadata.
+		/// </summary>
+		public readonly SurfaceMeta Meta = new SurfaceMeta();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VisjectSurface"/> class.
@@ -167,17 +201,20 @@ namespace FlaxEditor.Surface
             _cmSecondaryMenu = new FlaxEngine.GUI.ContextMenu();
             _cmSecondaryMenu.AddButton("Save", Owner.OnSurfaceSave);
             _cmSecondaryMenu.AddSeparator();
-	        _cmDeleteNodeButton = _cmSecondaryMenu.AddButton("Delete node", () =>
+	        _cmCopyButton = _cmSecondaryMenu.AddButton("Copy", Copy);
+	        _cmPasteButton = _cmSecondaryMenu.AddButton("Paste", Paste);
+			_cmDuplicateButton = _cmSecondaryMenu.AddButton("Duplicate", Duplicate);
+	        _cmCutButton = _cmSecondaryMenu.AddButton("Cut", Cut);
+	        _cmDeleteButton = _cmSecondaryMenu.AddButton("Delete", Delete);
+	        _cmSecondaryMenu.AddSeparator();
+	        _cmRemoveNodeConnectionsButton = _cmSecondaryMenu.AddButton("Remove all connections to that node(s)", () =>
 	        {
-		        var nodeUnderMouse = (SurfaceNode)_cmSecondaryMenu.Tag;
-				Delete(nodeUnderMouse);
-	        });
-            _cmSecondaryMenu.AddButton("Remove all connections to that node", () =>
-            {
-	            var nodeUnderMouse = (SurfaceNode)_cmSecondaryMenu.Tag;
-				nodeUnderMouse.RemoveConnections();
+		        var nodes = ((List<SurfaceNode>)_cmSecondaryMenu.Tag);
+		        foreach (var node in nodes)
+				{
+					node.RemoveConnections();
+				}
 	            MarkAsEdited();
-
             });
 	        _cmRemoveBoxConnectionsButton = _cmSecondaryMenu.AddButton("Remove all connections to that box", () =>
 	        {
@@ -273,6 +310,20 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Selects the specified nodes collection.
+        /// </summary>
+        /// <param name="nodes">The nodes.</param>
+        public void Select(IEnumerable<SurfaceNode> nodes)
+        {
+            ClearSelection();
+
+	        foreach (var node in nodes)
+	        {
+				node.IsSelected = true;
+			}
+        }
+
+        /// <summary>
         /// Deselects the specified node.
         /// </summary>
         /// <param name="node">The node.</param>
@@ -281,7 +332,19 @@ namespace FlaxEditor.Surface
             node.IsSelected = false;
         }
 
-        /// <summary>
+	    /// <summary>
+	    /// Deletes the specified collection of the nodes.
+	    /// </summary>
+	    /// <param name="nodes">The nodes.</param>
+	    public void Delete(IEnumerable<SurfaceNode> nodes)
+	    {
+		    foreach (var node in nodes)
+		    {
+			    Delete(node);
+		    }
+	    }
+
+	    /// <summary>
         /// Deletes the specified node.
         /// </summary>
         /// <param name="node">The node.</param>
@@ -301,7 +364,7 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Deletes the selected nodes.
         /// </summary>
-        public void DeleteSelection()
+        public void Delete()
         {
             bool edited = false;
 
@@ -324,7 +387,7 @@ namespace FlaxEditor.Surface
             if (edited)
                 MarkAsEdited();
         }
-
+		
         /// <summary>
         /// Finds the node of the given type.
         /// </summary>
@@ -407,7 +470,7 @@ namespace FlaxEditor.Surface
             return null;
         }
 
-        private uint GetFreeNodeID()
+	    private uint GetFreeNodeID()
         {
             uint result = 1;
             while (true)
@@ -427,7 +490,7 @@ namespace FlaxEditor.Surface
             }
             return result;
         }
-
+		
         /// <summary>
         /// Spawns the node.
         /// </summary>

@@ -229,6 +229,28 @@ namespace FlaxEditor.Surface
             return null;
         }
 
+		/// <summary>
+		/// Tries to get box with given ID.
+		/// </summary>
+		/// <param name="id">The box id.</param>
+		/// <param name="result">Box or null if cannot find.</param>
+		/// <returns>True fi box has been found, otherwise false.</returns>
+		public bool TryGetBox(int id, out Box result)
+        {
+            // TODO: maybe create local cache for boxes? but not a dictionary, use lookup table because ids are usally small (less than 20)
+            for (int i = 0; i < Elements.Count; i++)
+            {
+                if (Elements[i] is Box box && box.ID == id)
+                {
+	                result =  box;
+	                return true;
+                }
+            }
+
+	        result = null;
+			return false;
+        }
+
         internal List<Box> GetBoxes()
         {
             var result = new List<Box>();
@@ -370,7 +392,9 @@ namespace FlaxEditor.Surface
             // Secondary Context Menu
             if (buttons == MouseButton.Right)
             {
-                Surface.ShowSecondaryCM(this, Parent.PointToParent(PointToParent(location)));
+	            if (!IsSelected)
+		            Surface.Select(this);
+                Surface.ShowSecondaryCM(Parent.PointToParent(PointToParent(location)));
                 return true;
             }
 

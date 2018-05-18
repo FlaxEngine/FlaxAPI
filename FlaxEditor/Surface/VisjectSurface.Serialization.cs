@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using FlaxEngine;
+using Newtonsoft.Json;
 
 namespace FlaxEditor.Surface
 {
@@ -209,7 +210,12 @@ namespace FlaxEditor.Surface
                 stream.Write((byte)2);
                 stream.Write(asFloat);
             }
-            else if (value is Vector2 asVector2)
+            else if (value is double asDouble)
+            {
+	            stream.Write((byte)2);
+	            stream.Write((float)asDouble);
+            }
+			else if (value is Vector2 asVector2)
             {
                 stream.Write((byte)3);
                 stream.Write(asVector2.X);
@@ -256,7 +262,81 @@ namespace FlaxEditor.Surface
             }
         }
 
-        private unsafe bool loadGraph(BinaryReader stream)
+		private static void WriteCommonValue(JsonWriter stream, object value)
+		{
+			if (value is bool asBool)
+			{
+				stream.WriteValue(asBool);
+			}
+			else if (value is int asInt)
+			{
+				stream.WriteValue(asInt);
+			}
+			else if (value is float asFloat)
+			{
+				stream.WriteValue(asFloat);
+			}
+			else if (value is Vector2 asVector2)
+			{
+				stream.WriteStartObject();
+				stream.WritePropertyName("X");
+				stream.WriteValue(asVector2.X);
+				stream.WritePropertyName("Y");
+				stream.WriteValue(asVector2.Y);
+				stream.WriteEndObject();
+			}
+			else if (value is Vector3 asVector3)
+			{
+				stream.WriteStartObject();
+				stream.WritePropertyName("X");
+				stream.WriteValue(asVector3.X);
+				stream.WritePropertyName("Y");
+				stream.WriteValue(asVector3.Y);
+				stream.WritePropertyName("Z");
+				stream.WriteValue(asVector3.Z);
+				stream.WriteEndObject();
+			}
+			else if (value is Vector4 asVector4)
+			{
+				stream.WriteStartObject();
+				stream.WritePropertyName("X");
+				stream.WriteValue(asVector4.X);
+				stream.WritePropertyName("Y");
+				stream.WriteValue(asVector4.Y);
+				stream.WritePropertyName("Z");
+				stream.WriteValue(asVector4.Z);
+				stream.WritePropertyName("W");
+				stream.WriteValue(asVector4.W);
+				stream.WriteEndObject();
+			}
+			else if (value is Color asColor)
+			{
+				stream.WriteStartObject();
+				stream.WritePropertyName("R");
+				stream.WriteValue(asColor.R);
+				stream.WritePropertyName("G");
+				stream.WriteValue(asColor.G);
+				stream.WritePropertyName("B");
+				stream.WriteValue(asColor.B);
+				stream.WritePropertyName("A");
+				stream.WriteValue(asColor.A);
+				stream.WriteEndObject();
+			}
+			else if (value is Guid asGuid)
+			{
+				stream.WriteValue(asGuid);
+			}
+			else if (value is string asString)
+			{
+				stream.WriteValue(asString);
+			}
+			else
+			{
+				throw new NotSupportedException();
+			}
+		}
+
+		private unsafe bool loadGraph(BinaryReader stream)
         {
             // IMPORTANT! This must match C++ Graph format
 

@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System.Linq;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEditor.Surface.Elements;
 using FlaxEngine;
@@ -9,7 +10,12 @@ namespace FlaxEditor.Surface
 {
     public partial class VisjectSurface
     {
-	    private ContextMenuButton _cmDeleteNodeButton;
+	    private ContextMenuButton _cmCopyButton;
+	    private ContextMenuButton _cmPasteButton;
+	    private ContextMenuButton _cmDuplicateButton;
+	    private ContextMenuButton _cmCutButton;
+	    private ContextMenuButton _cmDeleteButton;
+	    private ContextMenuButton _cmRemoveNodeConnectionsButton;
 	    private ContextMenuButton _cmRemoveBoxConnectionsButton;
 
 		/// <summary>
@@ -22,25 +28,24 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
-        /// Shows the secondary context menu for the given node.
+        /// Shows the secondary context menu.
         /// </summary>
-        /// <param name="node">The node.</param>
         /// <param name="location">The location in the Surface Space.</param>
-        public void ShowSecondaryCM(SurfaceNode node, Vector2 location)
+        public void ShowSecondaryCM(Vector2 location)
         {
-            // Select that node
-            Select(node);
+	        var selection = Selection;
 
-            // Update context menu buttons
-	        _cmDeleteNodeButton.Enabled = (node.Archetype.Flags & NodeFlags.NoRemove) == 0;
-            //
-            var boxUnderMouse = GetChildAtRecursive(location) as Box;
+			// Update context menu buttons
+	        _cmPasteButton.Enabled = CanPaste();
+	        _cmCutButton.Enabled = selection.All(node => (node.Archetype.Flags & NodeFlags.NoRemove) == 0);
+	        _cmDeleteButton.Enabled = _cmCutButton.Enabled;
+			var boxUnderMouse = GetChildAtRecursive(location) as Box;
 	        _cmRemoveBoxConnectionsButton.Enabled = boxUnderMouse != null && boxUnderMouse.HasAnyConnection;
 	        _cmRemoveBoxConnectionsButton.Tag = boxUnderMouse;
 
             // Show secondary context menu
             _cmStartPos = location;
-            _cmSecondaryMenu.Tag = node;
+            _cmSecondaryMenu.Tag = selection;
             _cmSecondaryMenu.Show(this, location);
         }
 
