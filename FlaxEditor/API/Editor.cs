@@ -861,7 +861,10 @@ namespace FlaxEditor
         }
 
 #if !UNIT_TEST_COMPILANT
-        [MethodImpl(MethodImplOptions.InternalCall)]
+	    [MethodImpl(MethodImplOptions.InternalCall)]
+	    internal static extern void Internal_SetPlayMode(bool value);
+
+	    [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetProjectInfo(out ProjectInfo info);
 
         [MethodImpl(MethodImplOptions.InternalCall)]

@@ -82,6 +82,7 @@ namespace FlaxEditor.States
 			// Duplicate editor scene for simulation
 			SceneDuplicating?.Invoke();
 			_duplicateScenes.GatherSceneData();
+			Editor.Internal_SetPlayMode(true);
 			IsPaused = false;
 			_duplicateScenes.CreateScenes();
 			SceneDuplicated?.Invoke();
@@ -111,6 +112,8 @@ namespace FlaxEditor.States
 
 			// Restore editor scene
 			SceneRestoring?.Invoke();
+			_duplicateScenes.DeletedScenes();
+			Editor.Internal_SetPlayMode(false);
 			_duplicateScenes.RestoreSceneData();
 			SceneRestored?.Invoke();
 

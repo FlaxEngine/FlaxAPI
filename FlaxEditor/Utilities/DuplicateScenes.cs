@@ -98,14 +98,11 @@ namespace FlaxEditor.Utilities
 		}
 
 		/// <summary>
-		/// Restore captured scene data.
+		/// Deletes the creates scenes for the simulation.
 		/// </summary>
-		public void RestoreSceneData()
-        {
-            if (!HasData)
-                throw new InvalidOperationException("DuplicateScenes has not gathered scene data yet.");
-
-            Editor.Log("Restoring scene data");
+	    public void DeletedScenes()
+	    {
+		    Editor.Log("Restoring scene data");
 
             // TODO: here we can keep changes for actors marked to keep their state after simulation
 
@@ -113,8 +110,17 @@ namespace FlaxEditor.Utilities
             if (SceneManager.UnloadAllScenes())
                 throw new FlaxException("Failed to unload scenes.");
             FlaxEngine.Scripting.FlushRemovedObjects();
+	    }
 
-            // Deserialize oldd scenes
+		/// <summary>
+		/// Restore captured scene data.
+		/// </summary>
+		public void RestoreSceneData()
+        {
+	        if (!HasData)
+                throw new InvalidOperationException("DuplicateScenes has not gathered scene data yet.");
+
+            // Deserialize old scenes
             for (int i = 0; i < _scenesData.Count; i++)
             {
                 var data = _scenesData[i];
