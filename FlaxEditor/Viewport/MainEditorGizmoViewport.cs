@@ -628,13 +628,19 @@ namespace FlaxEditor.Viewport
                 // Get mouse ray and try to hit any object
                 var ray = ConvertMouseToRay(ref location);
                 float closest = float.MaxValue;
+	            var gridPlane = new Plane(Vector3.Zero, Vector3.Up);
                 hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest);
                 if (hit != null)
                 {
                     // Use hit location
                     hitLocation = ray.Position + ray.Direction * closest;
                 }
-                else
+                else if (Grid.Enabled && CollisionsHelper.RayIntersectsPlane(ref ray, ref gridPlane, out closest) && closest < 4000.0f)
+                {
+					// Use grid location
+	                hitLocation = ray.Position + ray.Direction * closest;
+				}
+				else
                 {
                     // Use area in front of the viewport
                     hitLocation = ViewPosition + ViewDirection * 10;
