@@ -34,6 +34,7 @@ namespace FlaxEditor.Modules
 		{
 			Editor.ContentDatabase.ItemAdded += ContentDatabaseOnItemAdded;
 			Editor.ContentDatabase.ItemRemoved += ContentDatabaseOnItemRemoved;
+			ScriptsBuilder.ScriptsReload += OnScriptsReload;
 		}
 
 		/// <inheritdoc />
@@ -41,11 +42,19 @@ namespace FlaxEditor.Modules
 		{
 			Editor.ContentDatabase.ItemAdded -= ContentDatabaseOnItemAdded;
 			Editor.ContentDatabase.ItemRemoved -= ContentDatabaseOnItemRemoved;
+			ScriptsBuilder.ScriptsReload -= OnScriptsReload;
+		}
+
+		private void OnScriptsReload()
+		{
+			// Invalidate cached script items
+			_hasValidScripts = false;
+			_scripts.Clear();
 		}
 
 		private void ContentDatabaseOnItemAdded(ContentItem contentItem)
 		{
-			if (_hasValidScripts && contentItem is ScriptItem script)
+			if (_hasValidScripts && contentItem is ScriptItem script && script.IsValid)
 				_scripts.Add(script);
 		}
 
@@ -61,13 +70,13 @@ namespace FlaxEditor.Modules
 			{
 				if (folder.Children[i] is ContentFolder subFolder)
 					FindScripts(subFolder);
-				else if (folder.Children[i] is ScriptItem script)
+				else if (folder.Children[i] is ScriptItem script && script.IsValid)
 					_scripts.Add(script);
 			}
 		}
 
 		/// <summary>
-		/// Gets the scripts from the project.
+		/// Gets the scripts from the project (valid ones).
 		/// </summary>
 		/// <returns>The scripts collection (readonly).</returns>
 		public List<ScriptItem> GetScripts()

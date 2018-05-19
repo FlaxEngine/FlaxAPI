@@ -159,6 +159,11 @@ namespace FlaxEditor.CustomEditors.Dedicated
 				var item = items[i];
 				var scriptName = item.ScriptName;
 				var scriptType = ScriptsBuilder.FindScript(scriptName);
+				if (scriptType == null)
+				{
+					Editor.LogError("Invalid script type " + scriptName);
+					return;
+				}
 
 				var actors = ScriptsEditor.ParentEditor.Values;
 				for (int j = 0; j < actors.Count; j++)
