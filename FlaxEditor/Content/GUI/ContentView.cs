@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEditor.Windows;
 using FlaxEngine;
 using FlaxEngine.Assertions;
@@ -339,8 +340,8 @@ namespace FlaxEditor.Content.GUI
         public void OnItemClick(ContentItem item)
         {
             bool isSelected = _selection.Contains(item);
-
-            // Switch based on input (control, alt and shift keys)
+			
+			// Add/remove from selection
             if (ParentWindow.GetKey(Keys.Control))
             {
                 if (isSelected)
@@ -348,6 +349,21 @@ namespace FlaxEditor.Content.GUI
                 else
                     Select(item, true);
             }
+			// Range select
+			else if (ParentWindow.GetKey(Keys.Shift))
+            {
+	            int min = _selection.Min(x => x.IndexInParent);
+	            int max = _selection.Max(x => x.IndexInParent);
+	            min = Mathf.Min(min, item.IndexInParent);
+	            max = Mathf.Max(max, item.IndexInParent);
+	            var selection = new List<ContentItem>(_selection);
+	            for (int i = min; i <= max; i++)
+	            {
+					selection.Add((ContentItem)_children[i]);
+	            }
+	            Select(selection);
+            }
+            // Select
             else
             {
                 Select(item);
@@ -526,14 +542,20 @@ namespace FlaxEditor.Content.GUI
                     return true;
                 }
 
-                // Duplicate
-                if (key == Keys.D && ParentWindow.GetKey(Keys.Control))
-                {
-                    DuplicateSelection();
-                    return true;
-                }
+	            if (ParentWindow.GetKey(Keys.Control))
+	            {
+		            switch (key)
+		            {
+			            // Duplicate
+						case Keys.D:
+			            {
+				            DuplicateSelection();
+				            return true;
+			            }
+		            }
+	            }
 
-                // Movement with arrows
+	            // Movement with arrows
                 {
                     var root = _selection[0];
                     Vector2 size = root.Size;
