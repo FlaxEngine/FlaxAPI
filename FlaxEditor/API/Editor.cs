@@ -807,7 +807,7 @@ namespace FlaxEditor
 
         internal void Internal_GetMousePosition(out Vector2 resultAsRef)
         {
-            resultAsRef = Vector2.Minimum;
+            resultAsRef = Vector2.Zero;
             if (Windows.GameWin != null && Windows.GameWin.ContainsFocus)
             {
                 var win = Windows.GameWin.ParentWindow;
