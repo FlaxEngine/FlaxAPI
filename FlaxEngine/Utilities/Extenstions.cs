@@ -1,15 +1,19 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace FlaxEngine.Utilities
 {
     public static partial class Extenstions
     {
         /// <summary>
-        /// Creates deep clone for a class if all members of this class are marked as serializable
+        /// Creates deep clone for a class if all members of this class are marked as serializable (uses Json serialization).
         /// </summary>
         /// <param name="instance">Current instance of an object</param>
         /// <typeparam name="T">Instance type of an object</typeparam>
@@ -17,17 +21,35 @@ namespace FlaxEngine.Utilities
         public static T DeepClone<T>(this T instance)
             where T : new()
         {
-            using (var ms = new MemoryStream())
-            {
-                var formatter = new BinaryFormatter();
-                formatter.Serialize(ms, instance);
-                ms.Position = 0;
+		    Type type = typeof(T);
 
-                return (T)formatter.Deserialize(ms);
-            }
-        }
+		    JsonSerializer jsonSerializer = JsonSerializer.CreateDefault(Json.JsonSerializer.Settings);
+		    jsonSerializer.Formatting = Formatting.Indented;
 
-        /// <summary>
+		    StringBuilder sb = new StringBuilder(256);
+		    StringWriter sw = new StringWriter(sb, CultureInfo.InvariantCulture);
+		    using (JsonTextWriter jsonWriter = new JsonTextWriter(sw))
+		    {
+			    // Prepare writer settings
+			    jsonWriter.IndentChar = '\t';
+			    jsonWriter.Indentation = 1;
+			    jsonWriter.Formatting = jsonSerializer.Formatting;
+			    jsonWriter.DateFormatHandling = jsonSerializer.DateFormatHandling;
+			    jsonWriter.DateTimeZoneHandling = jsonSerializer.DateTimeZoneHandling;
+			    jsonWriter.FloatFormatHandling = jsonSerializer.FloatFormatHandling;
+			    jsonWriter.StringEscapeHandling = jsonSerializer.StringEscapeHandling;
+			    jsonWriter.Culture = jsonSerializer.Culture;
+			    jsonWriter.DateFormatString = jsonSerializer.DateFormatString;
+
+			    JsonSerializerInternalWriter serializerWriter = new JsonSerializerInternalWriter(jsonSerializer);
+
+			    serializerWriter.Serialize(jsonWriter, instance, type);
+		    }
+
+		    return JsonConvert.DeserializeObject<T>(sb.ToString());
+	    }
+
+	    /// <summary>
         /// Splits string into lines
         /// </summary>
         /// <param name="str">Text to split</param>
