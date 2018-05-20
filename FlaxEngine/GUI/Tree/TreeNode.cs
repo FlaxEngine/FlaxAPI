@@ -649,6 +649,7 @@ namespace FlaxEngine.GUI
 
                 // Start
                 DoDragDrop();
+	            return;
             }
 
             // Check if animation has been finished
