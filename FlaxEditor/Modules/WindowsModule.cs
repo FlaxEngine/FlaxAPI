@@ -683,10 +683,20 @@ namespace FlaxEditor.Modules
             UpdateWindowTitle();
 
             // Initialize windows
-            for (int i = 0; i < Windows.Count; i++)
-                Windows[i].OnInit();
+	        for (int i = 0; i < Windows.Count; i++)
+	        {
+		        try
+		        {
+			        Windows[i].OnInit();
+		        }
+		        catch (Exception ex)
+		        {
+			        Editor.LogWarning(ex);
+			        Editor.LogError("Failed to init window " + Windows[i]);
+		        }
+	        }
 
-            // Load current workspace layout
+	        // Load current workspace layout
             if (!LoadLayout(_windowsLayoutPath))
                 LoadDefaultLayout();
 

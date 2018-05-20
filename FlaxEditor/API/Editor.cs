@@ -210,12 +210,20 @@ namespace FlaxEditor
             StateMachine.GoToState<EditingSceneState>();
 
             // Initialize modules (from front to back)
-            for (int i = 0; i < _modules.Count; i++)
-            {
-                _modules[i].OnEndInit();
-            }
+	        for (int i = 0; i < _modules.Count; i++)
+	        {
+		        try
+		        {
+			        _modules[i].OnEndInit();
+		        }
+		        catch (Exception ex)
+		        {
+			        LogWarning(ex);
+			        LogError("Failed to initialize editor module " + _modules[i]);
+		        }
+	        }
 
-            // Close splash and show main window
+	        // Close splash and show main window
             CloseSplashScreen();
             Assert.IsNotNull(Windows.MainWindow);
             if (!IsHeadlessMode)
@@ -776,7 +784,7 @@ namespace FlaxEditor
             }
             else
             {
-                var target = preset.GeTarget(targetName);
+                var target = preset.GetTarget(targetName);
                 if (target == null)
                 {
                     Editor.LogWarning("Missing target.");

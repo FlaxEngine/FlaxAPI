@@ -28,7 +28,7 @@ namespace FlaxEditor.Content.Settings
         /// </summary>
         /// <param name="name">The target name.</param>
         /// <returns>Found target or null if is missing.</returns>
-        public BuildTarget GeTarget(string name)
+        public BuildTarget GetTarget(string name)
         {
             if (Targets != null)
             {
