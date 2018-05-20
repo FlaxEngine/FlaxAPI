@@ -45,7 +45,7 @@ namespace FlaxEngine
 			get; set;
 #else
 			get { return Internal_GetParent(unmanagedPtr); }
-			set { Internal_SetParent(unmanagedPtr, Object.GetUnmanagedPtr(value), true); }
+			set { Internal_SetParent(unmanagedPtr, Object.GetUnmanagedPtr(value), false); }
 #endif
 		}
 

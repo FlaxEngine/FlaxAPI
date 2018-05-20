@@ -68,7 +68,7 @@ namespace FlaxEngine
 		/// Gets or sets the physical material used by this collider.
 		/// </summary>
 		[UnmanagedCall]
-		[EditorOrder(2), AssetReference(typeof(PhysicalMaterial), true), EditorDisplay("Collider"), Tooltip("The phuysical material used by this collider.")]
+		[EditorOrder(2), AssetReference(typeof(PhysicalMaterial), true), EditorDisplay("Collider"), Tooltip("The physical material used by this collider.")]
 		public JsonAsset Material
 		{
 #if UNIT_TEST_COMPILANT
