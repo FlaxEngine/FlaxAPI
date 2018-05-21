@@ -55,7 +55,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Pack Material Layer",
                 Description = "Pack material properties",
                 Flags = NodeFlags.MaterialOnly,
-                Size = new Vector2(180, 240),
+                Size = new Vector2(200, 240),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 0),
@@ -78,7 +78,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Unpack Material Layer",
                 Description = "Unpack material properties",
                 Flags = NodeFlags.MaterialOnly,
-                Size = new Vector2(180, 240),
+                Size = new Vector2(210, 240),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "", true, ConnectionType.Impulse, 0),

@@ -40,6 +40,8 @@ namespace FlaxEditor.Surface.Elements
 	    /// <inheritdoc />
 	    protected override void OnCurrentTypeChanged()
 	    {
+			base.OnCurrentTypeChanged();
+
 		    if (_defaultValueEditor != null)
 		    {
 			    bool isValid = false;

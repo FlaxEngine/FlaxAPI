@@ -83,11 +83,8 @@ namespace FlaxEditor.Surface.Elements
                     // Set new value
                     _currentType = value;
 
-                    // Cache color
-                    Surface.Style.GetConnectionColor(_currentType, out _currentTypeColor);
-
-                    // Fire event
-                    OnCurrentTypeChanged();
+					// Fire event
+					OnCurrentTypeChanged();
                 }
             }
         }
@@ -102,8 +99,10 @@ namespace FlaxEditor.Surface.Elements
             : base(parentNode, archetype, location, new Vector2(Constants.BoxSize), false)
         {
             _currentType = DefaultType;
+
             Surface.Style.GetConnectionColor(_currentType, out _currentTypeColor);
-        }
+	        TooltipText = CurrentType.ToString();
+		}
 
         /// <summary>
         /// Determines whether this box can use the specified type as a conection.
@@ -309,6 +308,8 @@ namespace FlaxEditor.Surface.Elements
         /// </summary>
         protected virtual void OnCurrentTypeChanged()
         {
+	        Surface.Style.GetConnectionColor(_currentType, out _currentTypeColor);
+	        TooltipText = CurrentType.ToString();
         }
 
 		/// <summary>
