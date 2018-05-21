@@ -390,7 +390,7 @@
     <Compile Include="Windows\EditGameWindow.cs" />
     <Compile Include="Windows\EditorWindow.cs" />
     <Compile Include="Undo\Undo.cs" />
-    <Compile Include="Utilities\Extenstions.cs" />
+    <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\MemberComparison.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <Compile Include="Windows\GameCookerWindow.cs" />

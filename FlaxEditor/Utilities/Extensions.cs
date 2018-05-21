@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,10 @@ using System.Reflection;
 
 namespace FlaxEditor.Utilities
 {
-    public static partial class Extenstions
+	/// <summary>
+	/// Helper methods used by the editor.
+	/// </summary>
+    public static partial class Extensions
     {
         /// <summary>
         ///     Gets a list of MemberComparison values that represent the fields and/or properties that differ between the two
