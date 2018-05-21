@@ -76,10 +76,15 @@ namespace FlaxEditor.Windows
                 //b = cm.AddButton(4, "Export");
                 //b.Enabled = proxy != null && proxy.CanExport;
 
-                b = cm.AddButton("Clone", _view.DuplicateSelection);
+                b = cm.AddButton("Clone", _view.Duplicate);
                 b.Enabled = !isFolder;
 
-	            cm.AddButton("Rename", () => Rename(item));
+	            cm.AddButton("Copy", _view.Copy);
+
+	            cm.AddButton("Paste", _view.Paste);
+	            b.Enabled = _view.CanPaste();
+
+				cm.AddButton("Rename", () => Rename(item));
 
                 cm.AddButton("Copy name to Clipboard", () => Application.ClipboardText = item.NamePath);
 
@@ -89,7 +94,10 @@ namespace FlaxEditor.Windows
 	        {
 		        cm.AddButton("Show in explorer", () => Application.StartProcess(CurrentViewFolder.Path));
 
-		        cm.AddButton("Refresh", () => Editor.ContentDatabase.RefreshFolder(CurrentViewFolder, true));
+		        b = cm.AddButton("Paste", _view.Paste);
+		        b.Enabled = _view.CanPaste();
+
+				cm.AddButton("Refresh", () => Editor.ContentDatabase.RefreshFolder(CurrentViewFolder, true));
 
 		        cm.AddButton("Refresh all thumbnails", RefreshViewItemsThumbnails);
 	        }

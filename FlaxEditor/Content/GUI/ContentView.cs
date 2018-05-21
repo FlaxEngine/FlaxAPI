@@ -41,7 +41,12 @@ namespace FlaxEditor.Content.GUI
         public event Action<List<ContentItem>> OnDelete;
         
         /// <summary>
-        /// Called when user wants to duplicate the item.
+        /// Called when user wants to paste the files/folders.
+        /// </summary>
+        public event Action<string[]> OnPaste;
+		
+        /// <summary>
+        /// Called when user wants to duplicate the item(s).
         /// </summary>
         public event Action<List<ContentItem>> OnDuplicate;
         
@@ -301,12 +306,46 @@ namespace FlaxEditor.Content.GUI
         /// <summary>
         /// Duplicates the selected items.
         /// </summary>
-        public void DuplicateSelection()
+        public void Duplicate()
         {
             OnDuplicate?.Invoke(_selection);
         }
 
         /// <summary>
+        /// Copies the selected items (to the system clipboard).
+        /// </summary>
+        public void Copy()
+        {
+	        if (_selection.Count == 0)
+		        return;
+
+	        var files = _selection.ConvertAll(x => x.Path).ToArray();
+	        Application.ClipboardFiles = files;
+        }
+
+	    /// <summary>
+	    /// Returns true if user can paste data to the view (copied any files before).
+	    /// </summary>
+	    /// <returns>True if can paste files.</returns>
+	    public bool CanPaste()
+	    {
+		    var files = Application.ClipboardFiles;
+		    return files != null && files.Length > 0;
+	    }
+
+	    /// <summary>
+	    /// Pastes the copied items (from the system clipboard).
+	    /// </summary>
+	    public void Paste()
+	    {
+		    var files = Application.ClipboardFiles;
+		    if (files == null || files.Length == 0)
+			    return;
+
+		    OnPaste?.Invoke(files);
+	    }
+
+	    /// <summary>
         /// Gives focus and selects the first item in the view.
         /// </summary>
         public void SelectFirstItem()
@@ -549,10 +588,24 @@ namespace FlaxEditor.Content.GUI
 			            // Duplicate
 						case Keys.D:
 			            {
-				            DuplicateSelection();
+				            Duplicate();
 				            return true;
 			            }
-		            }
+
+						// Copy
+			            case Keys.C:
+			            {
+				            Copy();
+				            return true;
+			            }
+
+						// Paste
+			            case Keys.V:
+			            {
+				            Paste();
+				            return true;
+			            }
+					}
 	            }
 
 	            // Movement with arrows

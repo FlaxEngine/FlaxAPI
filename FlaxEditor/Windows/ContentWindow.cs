@@ -100,6 +100,7 @@ namespace FlaxEditor.Windows
             _view.OnRename += Rename;
             _view.OnDelete += Delete;
             _view.OnDuplicate += Clone;
+            _view.OnPaste += Paste;
             _view.Parent = _split.Panel2;
         }
 
@@ -348,10 +349,15 @@ namespace FlaxEditor.Windows
             }
         }
 
-        /// <summary>
-        /// Stars creating the folder.
-        /// </summary>
-        private void NewFolder()
+	    private void Paste(string[] files)
+	    {
+		    Editor.ContentImporting.Import(files, CurrentViewFolder);
+	    }
+
+	    /// <summary>
+		/// Stars creating the folder.
+		/// </summary>
+		private void NewFolder()
         {
             // Construct path
             var parentFolder = SelectedNode.Folder;
