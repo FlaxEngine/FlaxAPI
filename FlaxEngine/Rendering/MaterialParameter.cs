@@ -73,6 +73,11 @@ namespace FlaxEngine.Rendering
 	    /// The render target (created from code).
 	    /// </summary>
 	    RenderTarget = 12,
+
+	    /// <summary>
+	    /// The matrix.
+	    /// </summary>
+	    Matrix = 13,
 	}
 
     /// <summary>
@@ -152,6 +157,7 @@ namespace FlaxEngine.Rendering
                 Vector4 vVector4 = new Vector4();
                 Color vColor = new Color();
                 Guid vGuid = new Guid();
+	            Matrix vMatrix = new Matrix();
 
                 switch (_type)
                 {
@@ -175,6 +181,9 @@ namespace FlaxEngine.Rendering
                         break;
                     case MaterialParameterType.Color:
                         ptr = new IntPtr(&vColor);
+                        break;
+	                case MaterialParameterType.Matrix:
+                        ptr = new IntPtr(&vMatrix);
                         break;
 
                     case MaterialParameterType.CubeTexture:
@@ -223,6 +232,7 @@ namespace FlaxEngine.Rendering
                 Vector3 vVector3;
                 Vector4 vVector4;
                 Color vColor;
+	            Matrix vMatrix;
 
                 switch (_type)
                 {
@@ -267,6 +277,10 @@ namespace FlaxEngine.Rendering
                     case MaterialParameterType.Color:
                         vColor = (Color)value;
                         ptr = new IntPtr(&vColor);
+                        break;
+	                case MaterialParameterType.Matrix:
+						vMatrix = (Matrix)value;
+                        ptr = new IntPtr(&vMatrix);
                         break;
 
                     case MaterialParameterType.CubeTexture:
