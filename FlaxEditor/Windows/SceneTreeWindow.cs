@@ -87,6 +87,7 @@ namespace FlaxEditor.Windows
                         new KeyValuePair<string, Type>("Skybox", typeof(Skybox)),
                         new KeyValuePair<string, Type>("Exponential Height Fog", typeof(ExponentialHeightFog)),
 	                    new KeyValuePair<string, Type>("PostFx Volume", typeof(PostFxVolume)),
+	                    new KeyValuePair<string, Type>("Decal", typeof(Decal)),
 					}
                 },
                 new ActorsGroup

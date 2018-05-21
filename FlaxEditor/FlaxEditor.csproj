@@ -252,6 +252,7 @@
     <Compile Include="SceneGraph\Actors\BoneSocketNode.cs" />
     <Compile Include="SceneGraph\Actors\BoxBrushNode.cs" />
     <Compile Include="SceneGraph\Actors\CameraNode.cs" />
+    <Compile Include="SceneGraph\Actors\DecalNode.cs" />
     <Compile Include="SceneGraph\Actors\DirectionalLightNode.cs" />
     <Compile Include="SceneGraph\Actors\EnvironmentProbeNode.cs" />
     <Compile Include="SceneGraph\Actors\ExponentialHeightFogNode.cs" />

@@ -59,6 +59,7 @@ namespace FlaxEditor.SceneGraph
             CustomNodesTypes.Add(typeof(AudioListener), typeof(AudioListenerNode));
             CustomNodesTypes.Add(typeof(AudioSource), typeof(AudioSourceNode));
             CustomNodesTypes.Add(typeof(BoneSocket), typeof(BoneSocketNode));
+            CustomNodesTypes.Add(typeof(Decal), typeof(DecalNode));
         }
 
         /// <summary>
