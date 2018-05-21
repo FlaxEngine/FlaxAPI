@@ -186,6 +186,20 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets or sets the system clipboard copied files/folders.
+		/// </summary>
+		[UnmanagedCall]
+		public static string[] ClipboardFiles
+		{
+#if UNIT_TEST_COMPILANT
+			get; set;
+#else
+			get { return Internal_GetClipboardFiles(); }
+			set { Internal_SetClipboardFiles(value); }
+#endif
+		}
+
+		/// <summary>
 		/// Starts a new native process.
 		/// </summary>
 		/// <param name="path">Target file path.</param>
@@ -238,6 +252,10 @@ namespace FlaxEngine
 		internal static extern byte[] Internal_GetClipboardDataRaw();
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetClipboardDataRaw(byte[] val);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern string[] Internal_GetClipboardFiles();
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetClipboardFiles(string[] val);
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern int Internal_StartProcess(string path, string args, bool hiddenWindow, bool waitForEnd);
 #endif
