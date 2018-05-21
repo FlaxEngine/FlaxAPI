@@ -1097,19 +1097,58 @@ namespace FlaxEngine
             return new Vector3(Math.Abs(v.X), Math.Abs(v.Y), Math.Abs(v.Z));
         }
 
-        /// <summary>
-        /// Projects a 3D vector from object space into screen space.
-        /// </summary>
-        /// <param name="vector">The vector to project.</param>
-        /// <param name="x">The X position of the viewport.</param>
-        /// <param name="y">The Y position of the viewport.</param>
-        /// <param name="width">The width of the viewport.</param>
-        /// <param name="height">The height of the viewport.</param>
-        /// <param name="minZ">The minimum depth of the viewport.</param>
-        /// <param name="maxZ">The maximum depth of the viewport.</param>
-        /// <param name="worldViewProjection">The combined world-view-projection matrix.</param>
-        /// <param name="result">When the method completes, contains the vector in screen space.</param>
-        public static void Project(ref Vector3 vector, float x, float y, float width, float height, float minZ, float maxZ, ref Matrix worldViewProjection, out Vector3 result)
+		/// <summary>
+		/// Projects a vector onto another vector.
+		/// </summary>
+		/// <param name="vector">The vector to project.</param>
+		/// <param name="onNormal">The projection normal vector.</param>
+		/// <returns>The projected vector.</returns>
+		public static Vector3 Project(Vector3 vector, Vector3 onNormal)
+	    {
+		    float sqrMag = Dot(onNormal, onNormal);
+		    if (sqrMag < Mathf.Epsilon)
+			    return Zero;
+			return onNormal * Dot(vector, onNormal) / sqrMag;
+	    }
+
+		/// <summary>
+		/// Projects a vector onto a plane defined by a normal orthogonal to the plane.
+		/// </summary>
+		/// <param name="vector">The vector to project.</param>
+		/// <param name="planeNormal">The plane normal vector.</param>
+		/// <returns>The projected vector.</returns>
+		public static Vector3 ProjectOnPlane(Vector3 vector, Vector3 planeNormal)
+	    {
+		    return vector - Project(vector, planeNormal);
+	    }
+
+	    /// <summary>
+	    /// Calculates the angle (in degrees) between <paramref name="from"/> and <paramref name="to"/>. This is always the smallest value.
+	    /// </summary>
+	    /// <param name="from">The first vector.</param>
+	    /// <param name="to">The second vector.</param>
+	    /// <returns>The angle (in degrees).</returns>
+	    public static float Angle(Vector3 from, Vector3 to)
+	    {
+		    float dot = Mathf.Clamp(Dot(from.Normalized, to.Normalized), -1F, 1F);
+		    if (Mathf.Abs(dot) > (1F - Mathf.Epsilon))
+			    return dot > 0F ? 0F : 180F;
+		    return Mathf.Acos(dot) * Mathf.Rad2Deg;
+	    }
+
+	    /// <summary>
+		/// Projects a 3D vector from object space into screen space.
+		/// </summary>
+		/// <param name="vector">The vector to project.</param>
+		/// <param name="x">The X position of the viewport.</param>
+		/// <param name="y">The Y position of the viewport.</param>
+		/// <param name="width">The width of the viewport.</param>
+		/// <param name="height">The height of the viewport.</param>
+		/// <param name="minZ">The minimum depth of the viewport.</param>
+		/// <param name="maxZ">The maximum depth of the viewport.</param>
+		/// <param name="worldViewProjection">The combined world-view-projection matrix.</param>
+		/// <param name="result">When the method completes, contains the vector in screen space.</param>
+		public static void Project(ref Vector3 vector, float x, float y, float width, float height, float minZ, float maxZ, ref Matrix worldViewProjection, out Vector3 result)
         {
             Vector3 v;
             TransformCoordinate(ref vector, ref worldViewProjection, out v);
