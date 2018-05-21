@@ -24,7 +24,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// The deferred decal material.
         /// </summary>
-        Decal = 1,
+        Decal = 2,
     }
 
     /// <summary>

@@ -38,12 +38,28 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets a value indicating whether this material is a surface shader (can be used with a normal meshes).
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this material is a surface shader; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsSurface => Info.Domain == MaterialDomain.Surface;
+
+        /// <summary>
         /// Gets a value indicating whether this material is post fx (cannot be used with a normal meshes).
         /// </summary>
         /// <value>
         ///   <c>true</c> if this material is post fx; otherwise, <c>false</c>.
         /// </value>
         public bool IsPostFx => Info.Domain == MaterialDomain.PostProcess;
+
+		/// <summary>
+		/// Gets a value indicating whether this material is decal (cannot be used with a normal meshes).
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this material is decal; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsDecal => Info.Domain == MaterialDomain.Decal;
 
         /// <summary>
         /// Gets or sets the material parameters collection.
