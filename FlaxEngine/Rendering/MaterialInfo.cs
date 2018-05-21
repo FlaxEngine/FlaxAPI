@@ -19,7 +19,12 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// The post process material.
         /// </summary>
-        PostProcess = 1
+        PostProcess = 1,
+
+        /// <summary>
+        /// The deferred decal material.
+        /// </summary>
+        Decal = 1,
     }
 
     /// <summary>

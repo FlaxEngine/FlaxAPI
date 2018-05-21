@@ -64,6 +64,8 @@
     </Compile>
     <Compile Include="API\Actors\Collider.cs" />
     <Compile Include="API\Actors\Collider.Gen.cs" />
+    <Compile Include="API\Actors\Decal.cs" />
+    <Compile Include="API\Actors\Decal.Gen.cs" />
     <Compile Include="API\Actors\EmptyActor.Gen.cs" />
     <Compile Include="API\Actors\EnvironmentProbe.cs" />
     <Compile Include="API\Actors\EnvironmentProbe.Gen.cs">

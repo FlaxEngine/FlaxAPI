@@ -125,26 +125,30 @@ namespace FlaxEngine.Rendering
         /// </summary>
         Fog = 1 << 22,
 
+	    /// <summary>
+	    /// Shows/hides deferred decals.
+	    /// </summary>
+	    Decals = 1 << 23,
 
-        /// <summary>
-        /// Default flags for Game
-        /// </summary>
-        DefaultGame = DynamicActors | Reflections | CSG | DepthOfField | Fog
-                      | SSR | AO | GI | DirectionalLights | PointLights | SpotLights | SkyLights | Shadows | SpecularLight
+		/// <summary>
+		/// Default flags for Game
+		/// </summary>
+		DefaultGame = DynamicActors | Reflections | CSG | DepthOfField | Fog | Decals
+					  | SSR | AO | GI | DirectionalLights | PointLights | SpotLights | SkyLights | Shadows | SpecularLight
                       | AntiAliasing | CustomPostProcess | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares,
 
         /// <summary>
         /// Default flags for Editor
         /// </summary>
-        DefaultEditor = DynamicActors | Reflections | CSG | Fog
-                        | SSR | AO | GI | DirectionalLights | PointLights | SpotLights | SkyLights | Shadows | SpecularLight
+        DefaultEditor = DynamicActors | Reflections | CSG | Fog | Decals
+						| SSR | AO | GI | DirectionalLights | PointLights | SpotLights | SkyLights | Shadows | SpecularLight
                         | AntiAliasing | CustomPostProcess | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares | EditorSprites,
 		
         /// <summary>
         /// Default flags for materials/models previews generating
         /// </summary>
-        DefaulAssetPreview = DynamicActors | Reflections
-                              | GI | DirectionalLights | PointLights | SpotLights | SkyLights | SpecularLight
+        DefaulAssetPreview = DynamicActors | Reflections | Decals
+							  | GI | DirectionalLights | PointLights | SpotLights | SkyLights | SpecularLight
                               | AntiAliasing | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares,
     }
 }
