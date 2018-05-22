@@ -38,23 +38,42 @@ namespace FlaxEditor.Surface.Archetypes
                 MaterialInfo info;
                 materialWindow.FillMaterialInfo(out info);
                 bool isPostFx = info.Domain == MaterialDomain.PostProcess;
+                bool isDecal = info.Domain == MaterialDomain.Decal;
                 bool isntLayered = !GetBox(0).HasAnyConnection;
                 bool isSurface = info.Domain == MaterialDomain.Surface && isntLayered;
                 bool isLitSurface = isSurface && info.BlendMode != MaterialBlendMode.Unlit;
                 bool isTransparent = isSurface && info.BlendMode == MaterialBlendMode.Transparent;
 
                 // Update boxes
-                GetBox(1).Enabled = isLitSurface;// Color
-                GetBox(2).Enabled = isSurface;// Mask
-                GetBox(3).Enabled = isSurface || isPostFx;// Emissive
-                GetBox(4).Enabled = isLitSurface;// Metalness
-                GetBox(5).Enabled = isLitSurface;// Specular
-                GetBox(6).Enabled = isLitSurface;// Roughness
-                GetBox(7).Enabled = isLitSurface;// Ambient Occlusion
-                GetBox(8).Enabled = isLitSurface;// Normal
-                GetBox(9).Enabled = isTransparent || isPostFx;// Opacity
-                GetBox(10).Enabled = isTransparent;// Refraction
-                GetBox(11).Enabled = isSurface;// Position Offset
+	            if (isDecal)
+	            {
+		            var mode = info.DecalBlendingMode;
+		            GetBox(1).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Stain; // Color
+		            GetBox(2).Enabled = true; // Mask
+		            GetBox(3).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Emissive; // Emissive
+		            GetBox(4).Enabled = mode == MaterialDecalBlendingMode.Translucent; // Metalness
+		            GetBox(5).Enabled = mode == MaterialDecalBlendingMode.Translucent; // Specular
+		            GetBox(6).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Stain; // Roughness
+		            GetBox(7).Enabled = mode == MaterialDecalBlendingMode.Translucent; // Ambient Occlusion
+		            GetBox(8).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Normal; // Normal
+		            GetBox(9).Enabled = true; // Opacity
+		            GetBox(10).Enabled = false; // Refraction
+		            GetBox(11).Enabled = false; // Position Offset
+	            }
+	            else
+	            {
+		            GetBox(1).Enabled = isLitSurface; // Color
+		            GetBox(2).Enabled = isSurface; // Mask
+		            GetBox(3).Enabled = isSurface || isPostFx; // Emissive
+		            GetBox(4).Enabled = isLitSurface; // Metalness
+		            GetBox(5).Enabled = isLitSurface; // Specular
+		            GetBox(6).Enabled = isLitSurface; // Roughness
+		            GetBox(7).Enabled = isLitSurface; // Ambient Occlusion
+		            GetBox(8).Enabled = isLitSurface; // Normal
+		            GetBox(9).Enabled = isTransparent || isPostFx; // Opacity
+		            GetBox(10).Enabled = isTransparent; // Refraction
+		            GetBox(11).Enabled = isSurface; // Position Offset
+	            }
             }
 
             /// <inheritdoc />

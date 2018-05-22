@@ -5,7 +5,6 @@ using System.Runtime.InteropServices;
 
 namespace FlaxEngine.Rendering
 {
-
     /// <summary>
     /// Material Domain Type
     /// </summary>
@@ -130,6 +129,11 @@ namespace FlaxEngine.Rendering
 		/// The material is using vertex colors. The render will try to feed the pipeline with a proper buffer so material can gather valid data.
 		/// </summary>
 		UseVertexColor = 1 << 10,
+
+		/// <summary>
+		/// The material is using per-pixel normal mapping.
+		/// </summary>
+		UseNormal = 1 << 11,
 	}
 
     /// <summary>
@@ -158,7 +162,33 @@ namespace FlaxEngine.Rendering
         AfterCustomPostEffects = 3,
     }
 
-    /// <summary>
+	/// <summary>
+	/// Decal material blending modes.
+	/// </summary>
+	public enum MaterialDecalBlendingMode : byte
+	{
+		/// <summary>
+		/// Decal will be fully blended with the material surface.
+		/// </summary>
+		Translucent = 0,
+
+		/// <summary>
+		/// Decal color and roughness will be blended with the material surface color (using multiplication).
+		/// </summary>
+		Stain = 1,
+
+		/// <summary>
+		/// Decal will blend the normal vector only.
+		/// </summary>
+		Normal = 2,
+
+		/// <summary>
+		/// Decal will apply the emissive light only.
+		/// </summary>
+		Emissive = 3,
+	}
+
+	/// <summary>
     /// Material input scene textures. Special inputs from the graphics pipeline.
     /// </summary>
     public enum MaterialSceneTextures
@@ -246,10 +276,15 @@ namespace FlaxEngine.Rendering
         /// </summary>
         public MaterialTransparentLighting TransparentLighting;
 
-        /// <summary>
-        /// The post fx material rendering location.
-        /// </summary>
-        public MaterialPostFxLocation PostFxLocation;
+		/// <summary>
+		/// The decal material blending mode.
+		/// </summary>
+	    public MaterialDecalBlendingMode DecalBlendingMode;
+
+		/// <summary>
+		/// The post fx material rendering location.
+		/// </summary>
+		public MaterialPostFxLocation PostFxLocation;
 
         /// <summary>
         /// The mask threshold.
@@ -273,6 +308,7 @@ namespace FlaxEngine.Rendering
                 BlendMode = MaterialBlendMode.Opaque,
                 Domain = MaterialDomain.Surface,
                 TransparentLighting = MaterialTransparentLighting.None,
+	            DecalBlendingMode = MaterialDecalBlendingMode.Translucent,
                 PostFxLocation = MaterialPostFxLocation.AfterPostProcessingPass,
                 MaskThreshold = 0.3f,
                 OpacityThreshold = 0.004f,
@@ -312,7 +348,8 @@ namespace FlaxEngine.Rendering
                    && BlendMode == other.BlendMode
                    && Flags == other.Flags
                    && TransparentLighting == other.TransparentLighting
-                   && PostFxLocation == other.PostFxLocation;
+                   && DecalBlendingMode == other.DecalBlendingMode
+				   && PostFxLocation == other.PostFxLocation;
         }
 
         /// <inheritdoc />
@@ -331,6 +368,7 @@ namespace FlaxEngine.Rendering
                 hashCode = (hashCode * 397) ^ (int)Flags;
                 hashCode = (hashCode * 397) ^ (int)TransparentLighting;
                 hashCode = (hashCode * 397) ^ (int)PostFxLocation;
+                hashCode = (hashCode * 397) ^ (int)DecalBlendingMode;
                 hashCode = (hashCode * 397) ^ (int)MaskThreshold;
                 hashCode = (hashCode * 397) ^ (int)OpacityThreshold;
                 return hashCode;

@@ -65,6 +65,9 @@ namespace FlaxEditor.Windows.Assets
             [EditorOrder(210), EditorDisplay("Misc"), Tooltip("Controls mask values clipping point"), Limit(0.0f, 1.0f, 0.01f)]
             public float MaskThreshold { get; set; }
 
+            [EditorOrder(215), EditorDisplay("Misc"), Tooltip("The decal material blending mode")]
+            public MaterialDecalBlendingMode DecalBlendingMode { get; set; }
+
             [EditorOrder(220), EditorDisplay("Misc"), Tooltip("The post fx material rendering location")]
             public MaterialPostFxLocation PostFxLocation { get; set; }
 
@@ -310,6 +313,7 @@ namespace FlaxEditor.Windows.Assets
                 DisableDistortion = (info.Flags & MaterialFlags.TransparentDisableDistortion) != 0;
                 OpacityThreshold = info.OpacityThreshold;
                 MaskThreshold = info.MaskThreshold;
+	            DecalBlendingMode = info.DecalBlendingMode;
                 PostFxLocation = info.PostFxLocation;
                 BlendMode = info.BlendMode;
                 Lighting = info.TransparentLighting;
@@ -342,6 +346,7 @@ namespace FlaxEditor.Windows.Assets
                     info.Flags |= MaterialFlags.TransparentDisableDistortion;
                 info.OpacityThreshold = OpacityThreshold;
                 info.MaskThreshold = MaskThreshold;
+                info.DecalBlendingMode = DecalBlendingMode;
                 info.PostFxLocation = PostFxLocation;
                 info.BlendMode = BlendMode;
                 info.TransparentLighting = Lighting;
