@@ -173,7 +173,7 @@ namespace FlaxEngine.Rendering
 		Translucent = 0,
 
 		/// <summary>
-		/// Decal color and roughness will be blended with the material surface color (using multiplication).
+		/// Decal color will be blended with the material surface color (using multiplication).
 		/// </summary>
 		Stain = 1,
 

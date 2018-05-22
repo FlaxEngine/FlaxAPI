@@ -53,8 +53,8 @@ namespace FlaxEditor.Surface.Archetypes
 		            GetBox(3).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Emissive; // Emissive
 		            GetBox(4).Enabled = mode == MaterialDecalBlendingMode.Translucent; // Metalness
 		            GetBox(5).Enabled = mode == MaterialDecalBlendingMode.Translucent; // Specular
-		            GetBox(6).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Stain; // Roughness
-		            GetBox(7).Enabled = mode == MaterialDecalBlendingMode.Translucent; // Ambient Occlusion
+		            GetBox(6).Enabled = mode == MaterialDecalBlendingMode.Translucent; // Roughness
+		            GetBox(7).Enabled = false; // Ambient Occlusion
 		            GetBox(8).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Normal; // Normal
 		            GetBox(9).Enabled = true; // Opacity
 		            GetBox(10).Enabled = false; // Refraction
