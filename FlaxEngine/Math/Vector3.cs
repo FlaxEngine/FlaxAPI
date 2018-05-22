@@ -96,6 +96,11 @@ namespace FlaxEngine
         public static readonly Vector3 One = new Vector3(1.0f, 1.0f, 1.0f);
 
         /// <summary>
+        /// A <see cref="Vector3" /> with all of its components set to half.
+        /// </summary>
+        public static readonly Vector3 Half = new Vector3(0.5f, 0.5f, 0.5f);
+
+        /// <summary>
         /// A unit <see cref="Vector3" /> designating up (0, 1, 0).
         /// </summary>
         public static readonly Vector3 Up = new Vector3(0.0f, 1.0f, 0.0f);
