@@ -12,6 +12,7 @@ namespace FlaxEditor.Viewport.Previews
 	public class MaterialPreview : AssetPreview
 	{
 		private ModelActor _previewModel;
+		private Decal _decal;
 		private MaterialBase _material;
 
 		/// <summary>
@@ -67,6 +68,7 @@ namespace FlaxEditor.Viewport.Previews
 			// Otherwise use postFx volume to render custom postFx material.
 			MaterialBase surfaceMaterial = null;
 			MaterialBase postFxMaterial = null;
+			MaterialBase decalMaterial = null;
 			if (_material != null)
 			{
 				if (_material is MaterialInstance materialInstance && materialInstance.BaseMaterial == null)
@@ -77,6 +79,8 @@ namespace FlaxEditor.Viewport.Previews
 				{
 					if (_material.IsPostFx)
 						postFxMaterial = _material;
+					else if (_material.IsDecal)
+						decalMaterial = _material;
 					else
 						surfaceMaterial = _material;
 				}
@@ -86,6 +90,14 @@ namespace FlaxEditor.Viewport.Previews
 			if (entries.Length == 1)
 				entries[0].Material = surfaceMaterial;
 			PostFxVolume.Settings.PostFxMaterials = new[] { postFxMaterial };
+			if (decalMaterial && _decal == null)
+			{
+				_decal = Decal.New();
+				_decal.Size = new Vector3(120.0f);
+				Task.CustomActors.Add(_decal);
+			}
+			if (_decal)
+				_decal.Material = decalMaterial;
 		}
 
 		/// <inheritdoc />
@@ -95,6 +107,7 @@ namespace FlaxEditor.Viewport.Previews
 
 			// Ensure to cleanup created actor objects
 			Object.Destroy(ref _previewModel);
+			Object.Destroy(ref _decal);
 
 			base.OnDestroy();
 		}
