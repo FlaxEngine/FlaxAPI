@@ -22,16 +22,17 @@ namespace FlaxEngine.Rendering
             _drawCalls.Clear();
         }
 
-        /// <summary>
-        /// Adds the draw call. Calculates target mesh level of detail and picks a proper meshes to draw (based on a material slot index).
-        /// </summary>
-        /// <param name="model">The model mesh to render. Cannot be null.</param>
-        /// <param name="materialSlotIndex">The material slot index to draw.</param>
-        /// <param name="material">The material to apply during rendering. Cannot be null.</param>
-        /// <param name="bounds">The bounds of the model instance that is being drawn (model instance bounds).</param>
-        /// <param name="world">The world matrix used to transform mesh geometry during rendering. Use <see cref="Matrix.Identity"/> to render mesh 'as is'.</param>
-        /// <param name="flags">The static flags. Used to describe type of the geometry.</param>
-        public void AddDrawCall(Model model, int materialSlotIndex, MaterialBase material, ref BoundingSphere bounds, ref Matrix world, StaticFlags flags = StaticFlags.None)
+		/// <summary>
+		/// Adds the draw call. Calculates target mesh level of detail and picks a proper meshes to draw (based on a material slot index).
+		/// </summary>
+		/// <param name="model">The model mesh to render. Cannot be null.</param>
+		/// <param name="materialSlotIndex">The material slot index to draw.</param>
+		/// <param name="material">The material to apply during rendering. Cannot be null.</param>
+		/// <param name="bounds">The bounds of the model instance that is being drawn (model instance bounds).</param>
+		/// <param name="world">The world matrix used to transform mesh geometry during rendering. Use <see cref="Matrix.Identity"/> to render mesh 'as is'.</param>
+		/// <param name="flags">The static flags. Used to describe type of the geometry.</param>
+		/// <param name="receiveDecals">True if rendered geometry can receive decals, otherwise false.</param>
+		public void AddDrawCall(Model model, int materialSlotIndex, MaterialBase material, ref BoundingSphere bounds, ref Matrix world, StaticFlags flags = StaticFlags.None, bool receiveDecals = true)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -53,14 +54,15 @@ namespace FlaxEngine.Rendering
             }
         }
 
-        /// <summary>
-        /// Adds the draw call.
-        /// </summary>
-        /// <param name="mesh">The mesh to render. Cannot be null.</param>
-        /// <param name="material">The material to apply during rendering. Cannot be null.</param>
-        /// <param name="world">The world matrix used to transform mesh geometry during rendering. Use <see cref="Matrix.Identity"/> to render mesh 'as is'.</param>
-        /// <param name="flags">The static flags. Used to describe type of the geometry.</param>
-        public void AddDrawCall(Mesh mesh, MaterialBase material, ref Matrix world, StaticFlags flags = StaticFlags.None)
+	    /// <summary>
+	    /// Adds the draw call.
+	    /// </summary>
+	    /// <param name="mesh">The mesh to render. Cannot be null.</param>
+	    /// <param name="material">The material to apply during rendering. Cannot be null.</param>
+	    /// <param name="world">The world matrix used to transform mesh geometry during rendering. Use <see cref="Matrix.Identity"/> to render mesh 'as is'.</param>
+	    /// <param name="flags">The static flags. Used to describe type of the geometry.</param>
+	    /// <param name="receiveDecals">True if rendered geometry can receive decals, otherwise false.</param>
+	    public void AddDrawCall(Mesh mesh, MaterialBase material, ref Matrix world, StaticFlags flags = StaticFlags.None, bool receiveDecals = true)
         {
             if (mesh == null)
                 throw new ArgumentNullException(nameof(mesh));
@@ -72,7 +74,8 @@ namespace FlaxEngine.Rendering
                 Flags = flags,
                 LodIndex = mesh._lodIndex,
                 MeshIndex = mesh._meshIndex,
-                AssetModel = Object.GetUnmanagedPtr(mesh.ParentModel),
+				ReceiveDecals = receiveDecals,
+				AssetModel = Object.GetUnmanagedPtr(mesh.ParentModel),
                 AssetMaterialBase = Object.GetUnmanagedPtr(material),
                 World = world
             };
