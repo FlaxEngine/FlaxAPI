@@ -19,7 +19,7 @@ namespace FlaxEngine
 		/// <summary>
 		/// Gets or sets the mesh local transform.
 		/// </summary>
-		[EditorOrder(40), EditorDisplay("Mesh")]
+		[EditorOrder(40), EditorDisplay("Mesh"), Tooltip("Custom mesh local transformation applied during rendering.")]
 		public Transform Transform
 		{
 			get
@@ -35,7 +35,7 @@ namespace FlaxEngine
 		/// Gets or sets the material used to render the mesh.
 		/// If value if null then model asset mesh default material will be used as a fallback.
 		/// </summary>
-		[EditorOrder(10), EditorDisplay("Mesh")]
+		[EditorOrder(10), EditorDisplay("Mesh"), Tooltip("The mesh material used for the rendering. If not assigned the default value will be used from the model asset.")]
 		public MaterialBase Material
 		{
 			get => Internal_GetMeshMaterial(_actor.unmanagedPtr, _index);
@@ -46,7 +46,7 @@ namespace FlaxEngine
 		/// Gets or sets the scale in lightmap (per mesh).
 		/// Final mesh scale in lightmap is alsow multiplied by <see cref="ModelActor.ScaleInLightmap"/> and global scene scale parameter.
 		/// </summary>
-		[EditorOrder(20), EditorDisplay("Mesh", "Scale In Lightmap"), Limit(0, 10000, 0.1f)]
+		[EditorOrder(20), EditorDisplay("Mesh", "Scale In Lightmap"), Limit(0, 10000, 0.1f), Tooltip("Per mesh scale factor in lightmap charts. Higher value increases the quality but reduces baking performance.")]
 		public float ScaleInLightmap
 		{
 			get => Internal_GetMeshScaleInLightmap(_actor.unmanagedPtr, _index);
@@ -56,7 +56,7 @@ namespace FlaxEngine
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="ModelEntryInfo"/> is visible.
 		/// </summary>
-		[EditorOrder(30), EditorDisplay("Mesh")]
+		[EditorOrder(30), EditorDisplay("Mesh"), Tooltip("Determines whenever this mesh is visible.")]
 		public bool Visible
 		{
 			get => Internal_GetMeshVisible(_actor.unmanagedPtr, _index);
@@ -64,9 +64,19 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="ModelEntryInfo"/> can receive decals.
+		/// </summary>
+		[EditorOrder(40), EditorDisplay("Mesh"), Tooltip("Determines whenever this mesh can receive decals.")]
+		public bool ReceiveDecals
+		{
+			get => Internal_GetMeshReceiveDecals(_actor.unmanagedPtr, _index);
+			set => Internal_SetMeshReceiveDecals(_actor.unmanagedPtr, _index, value);
+		}
+
+		/// <summary>
 		/// Gets or sets the shadows casting mode.
 		/// </summary>
-		[EditorOrder(31), EditorDisplay("Mesh")]
+		[EditorOrder(50), EditorDisplay("Mesh"), Tooltip("Shadows casting mode by this mesh.")]
 		public ShadowsCastingMode ShadowsMode
 		{
 			get => Internal_GetMeshShadowsMode(_actor.unmanagedPtr, _index);
@@ -128,6 +138,12 @@ namespace FlaxEngine
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern void Internal_SetMeshVisible(IntPtr obj, int index, bool value);
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern bool Internal_GetMeshReceiveDecals(IntPtr obj, int index);
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern void Internal_SetMeshReceiveDecals(IntPtr obj, int index, bool value);
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern ShadowsCastingMode Internal_GetMeshShadowsMode(IntPtr obj, int index);
