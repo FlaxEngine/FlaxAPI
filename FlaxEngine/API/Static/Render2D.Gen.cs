@@ -269,9 +269,9 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Draws the postFx material in the 2D.
+		/// Draws the GUI material in the 2D.
 		/// </summary>
-		/// <param name="material">Material to render. Must be a PostFx material type.</param>
+		/// <param name="material">Material to render. Must be a GUI material type.</param>
 		/// <param name="rect">The target rectangle to draw.</param>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
