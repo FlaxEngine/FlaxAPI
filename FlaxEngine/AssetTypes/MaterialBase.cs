@@ -61,6 +61,14 @@ namespace FlaxEngine
 		/// </value>
 		public bool IsDecal => Info.Domain == MaterialDomain.Decal;
 
+		/// <summary>
+		/// Gets a value indicating whether this material is a GUI shader (cannot be used with a normal meshes).
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this material is a GUI shader; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsGUI => Info.Domain == MaterialDomain.GUI;
+
         /// <summary>
         /// Gets or sets the material parameters collection.
         /// </summary>

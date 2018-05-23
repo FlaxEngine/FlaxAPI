@@ -39,6 +39,7 @@ namespace FlaxEditor.Surface.Archetypes
                 materialWindow.FillMaterialInfo(out info);
                 bool isPostFx = info.Domain == MaterialDomain.PostProcess;
                 bool isDecal = info.Domain == MaterialDomain.Decal;
+                bool isGUI = info.Domain == MaterialDomain.GUI;
                 bool isntLayered = !GetBox(0).HasAnyConnection;
                 bool isSurface = info.Domain == MaterialDomain.Surface && isntLayered;
                 bool isLitSurface = isSurface && info.BlendMode != MaterialBlendMode.Unlit;
@@ -64,13 +65,13 @@ namespace FlaxEditor.Surface.Archetypes
 	            {
 		            GetBox(1).Enabled = isLitSurface; // Color
 		            GetBox(2).Enabled = isSurface; // Mask
-		            GetBox(3).Enabled = isSurface || isPostFx; // Emissive
+		            GetBox(3).Enabled = isSurface || isPostFx || isGUI; // Emissive
 		            GetBox(4).Enabled = isLitSurface; // Metalness
 		            GetBox(5).Enabled = isLitSurface; // Specular
 		            GetBox(6).Enabled = isLitSurface; // Roughness
 		            GetBox(7).Enabled = isLitSurface; // Ambient Occlusion
 		            GetBox(8).Enabled = isLitSurface; // Normal
-		            GetBox(9).Enabled = isTransparent || isPostFx; // Opacity
+		            GetBox(9).Enabled = isTransparent || isPostFx || isGUI; // Opacity
 		            GetBox(10).Enabled = isTransparent; // Refraction
 		            GetBox(11).Enabled = isSurface; // Position Offset
 	            }

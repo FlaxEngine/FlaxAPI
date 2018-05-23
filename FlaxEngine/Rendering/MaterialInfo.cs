@@ -24,6 +24,11 @@ namespace FlaxEngine.Rendering
         /// The deferred decal material.
         /// </summary>
         Decal = 2,
+
+		/// <summary>
+		/// The GUI shader.
+		/// </summary>
+		GUI = 3,
     }
 
     /// <summary>
