@@ -68,7 +68,7 @@ namespace FlaxEngine
 		}
 
 		/// <summary>
-		/// Gets or sets he decal bounds size (in local space).
+		/// Gets or sets the decal bounds size (in local space).
 		/// </summary>
 		[UnmanagedCall]
 		[EditorOrder(30), Limit(0), EditorDisplay("Decal"), Tooltip("The decal bounds size (in local space).")]
