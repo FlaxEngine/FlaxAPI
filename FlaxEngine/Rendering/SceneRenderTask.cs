@@ -101,8 +101,9 @@ namespace FlaxEngine.Rendering
         public event DrawDelegate Draw;
 
         private readonly DrawCallsCollector _collector = new DrawCallsCollector();
+		private readonly HashSet<PostProcessEffect> _postFx = new HashSet<PostProcessEffect>();
 
-        internal SceneRenderTask()
+		internal SceneRenderTask()
         {
             View.MaxShadowsQuality = Quality.Ultra;
         }
@@ -148,19 +149,21 @@ namespace FlaxEngine.Rendering
             }
 
             // Get custom post effects to render (registered ones and from the current camera)
-            var postFx = new HashSet<PostProcessEffect>(CustomPostFx);
-            if (Camera != null)
+	        _postFx.Clear();
+	        foreach (var e in CustomPostFx)
+		        _postFx.Add(e);
+			if (Camera != null)
             {
                 var perCameraPostFx = Camera.GetScripts<PostProcessEffect>();
                 for (int i = 0; i < perCameraPostFx.Length; i++)
                 {
-                    postFx.Add(perCameraPostFx[i]);
+	                _postFx.Add(perCameraPostFx[i]);
                 }
             }
 
             // Call scene rendering
             var customActors = CustomActors.Count > 0 ? CustomActors.ToArray() : null;
-            context.DrawScene(this, Output, Buffers, View, Flags, Mode, customActors, ActorsSource, postFx);
+            context.DrawScene(this, Output, Buffers, View, Flags, Mode, customActors, ActorsSource, _postFx);
 
             // Finish
             OnEnd();
