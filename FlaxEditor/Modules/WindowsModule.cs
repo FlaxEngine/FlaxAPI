@@ -476,6 +476,8 @@ namespace FlaxEditor.Modules
             };
 
             var masterPanel = Editor.UI.MasterPanel;
+	        if (masterPanel == null)
+		        return;
 
             using (XmlWriter writer = XmlWriter.Create(path, settings))
             {
