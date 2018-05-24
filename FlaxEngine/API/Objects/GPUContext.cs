@@ -81,7 +81,7 @@ namespace FlaxEngine.Rendering
 
             // Get unmanaged postFx
             IntPtr[] postFx = null;
-            if (customPostFx != null)
+            if (customPostFx != null && customPostFx.Count > 0)
             {
                 var postFxList = new List<IntPtr>(customPostFx.Count);
                 foreach (var e in customPostFx)
