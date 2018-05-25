@@ -60,8 +60,11 @@ namespace FlaxEditor.Viewport.Previews
             // do it like in c++ editor
             _previewModel.Model?.WaitForLoaded();
 
+            // Create context menu for primitive switching
             {
                 var modelSelect = ViewWidgetButtonMenu.AddChildMenu("Model").ContextMenu;
+
+                // Fill out all models 
                 for (int i = 0; i < Models.Length; i++)
                 {
                     var v = Models[i];
@@ -69,6 +72,7 @@ namespace FlaxEditor.Viewport.Previews
                     button.Tag = v;
                 }
 
+                // Link the action
                 modelSelect.ButtonClicked += (button) => _previewModel.Model = FlaxEngine.Content.LoadAsyncInternal<Model>("Editor/Primitives/" + button.Tag);
             }
         }
