@@ -60,19 +60,21 @@ namespace FlaxEditor.Modules
             {
                 // Check if there is a floating window that has the same size
                 Vector2 defaultSize = window.DefaultSize;
-                foreach (var win in Editor.UI.MasterPanel.FloatingPanels)
-                {
-                    // Check if size is similar
-                    if (Vector2.Abs(win.Size - defaultSize).LengthSquared < 100)
-                    {
-                        // Dock
-                        window.Show(DockState.DockFill, win);
-                        window.Focus();
-                        return window;
-                    }
-                }
+	            for (var i = 0; i < Editor.UI.MasterPanel.FloatingPanels.Count; i++)
+	            {
+		            var win = Editor.UI.MasterPanel.FloatingPanels[i];
 
-                // Show floating
+		            // Check if size is similar
+		            if (Vector2.Abs(win.Size - defaultSize).LengthSquared < 100)
+		            {
+			            // Dock
+			            window.Show(DockState.DockFill, win);
+			            window.Focus();
+			            return window;
+		            }
+	            }
+
+	            // Show floating
                 window.ShowFloating(defaultSize);
             }
 
