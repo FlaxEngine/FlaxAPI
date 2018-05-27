@@ -1,6 +1,8 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEngine;
+using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Viewport.Previews
@@ -19,11 +21,12 @@ namespace FlaxEditor.Viewport.Previews
             "Cylinder",
             "Cone"
         };
-
-
+        
         private ModelActor _previewModel;
         private Decal _decal;
         private MaterialBase _material;
+        private int _selectedModelIndex;
+        private readonly MaterialBase[] _postFxMaterialsCache = new MaterialBase[1];
 
         /// <summary>
         /// Gets or sets the material asset to preview. It can be <see cref="FlaxEngine.Material"/> or <see cref="FlaxEngine.MaterialInstance"/>.
@@ -42,6 +45,22 @@ namespace FlaxEditor.Viewport.Previews
         }
 
         /// <summary>
+        /// Gets or sets the selected preview model index.
+        /// </summary>
+        public int SelectedModelIndex
+        {
+            get => _selectedModelIndex;
+            set
+            {
+                if(value < 0 || value > Models.Length)
+                    throw new ArgumentOutOfRangeException();
+
+                _selectedModelIndex = value;
+                _previewModel.Model = FlaxEngine.Content.LoadAsyncInternal<Model>("Editor/Primitives/" + Models[value]);
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MaterialPreview"/> class.
         /// </summary>
         /// <param name="useWidgets">if set to <c>true</c> use widgets.</param>
@@ -51,7 +70,7 @@ namespace FlaxEditor.Viewport.Previews
             // Setup preview scene
             _previewModel = ModelActor.New();
             _previewModel.Transform = new Transform(Vector3.Zero, Quaternion.RotationY(Mathf.Pi), new Vector3(0.45f));
-            _previewModel.Model = FlaxEngine.Content.LoadAsyncInternal<Model>("Editor/Primitives/Sphere");
+            SelectedModelIndex = 0;
 
             // Link actors for rendering
             Task.CustomActors.Add(_previewModel);
@@ -69,13 +88,12 @@ namespace FlaxEditor.Viewport.Previews
                 // Fill out all models 
                 for (int i = 0; i < Models.Length; i++)
                 {
-                    var v = Models[i];
-                    var button = modelSelect.AddButton(v);
-                    button.Tag = v;
+                    var button = modelSelect.AddButton(Models[i]);
+                    button.Tag = i;
                 }
 
                 // Link the action
-                modelSelect.ButtonClicked += (button) => _previewModel.Model = FlaxEngine.Content.LoadAsyncInternal<Model>("Editor/Primitives/" + button.Tag);
+                modelSelect.ButtonClicked += (button) => SelectedModelIndex = (int)button.Tag;
             }
         }
 
@@ -117,7 +135,8 @@ namespace FlaxEditor.Viewport.Previews
             var entries = _previewModel.Entries;
             if (entries.Length == 1)
                 entries[0].Material = surfaceMaterial;
-            PostFxVolume.Settings.PostFxMaterials = new[] { postFxMaterial };
+            _postFxMaterialsCache[0] = postFxMaterial;
+            PostFxVolume.Settings.PostFxMaterials = _postFxMaterialsCache;
             if (decalMaterial && _decal == null)
             {
                 _decal = Decal.New();
