@@ -37,7 +37,7 @@ namespace FlaxEditor.CustomEditors
                 base.Update(deltaTime);
             }
         }
-        
+
         /// <summary>
         /// The root editor. Mocks some custom editors events. Created a child editor for the selected objects.
         /// </summary>
@@ -45,25 +45,25 @@ namespace FlaxEditor.CustomEditors
         protected class RootEditor : SyncPointEditor
         {
             private readonly string _noSelectionText;
-	        private CustomEditor _overrideEditor;
+            private CustomEditor _overrideEditor;
 
             /// <summary>
             /// The selected objects editor.
             /// </summary>
             public CustomEditor Editor;
 
-	        /// <summary>
-	        /// Gets or sets the override custom editor used to edit selected objects.
-	        /// </summary>
-	        public CustomEditor OverrideEditor
-	        {
-		        get => _overrideEditor;
-		        set
-		        {
-			        _overrideEditor = value;
-					RebuildLayout();
-		        }
-	        }
+            /// <summary>
+            /// Gets or sets the override custom editor used to edit selected objects.
+            /// </summary>
+            public CustomEditor OverrideEditor
+            {
+                get => _overrideEditor;
+                set
+                {
+                    _overrideEditor = value;
+                    RebuildLayout();
+                }
+            }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="RootEditor"/> class.
@@ -88,29 +88,29 @@ namespace FlaxEditor.CustomEditors
             public override void Initialize(LayoutElementsContainer layout)
             {
                 var selection = Presenter.Selection;
-	            if (selection.Count > 0)
-	            {
-		            if (_overrideEditor != null)
-		            {
-			            Editor = _overrideEditor;
-		            }
-		            else
-		            {
-			            Type type = typeof(object);
-			            if (selection.HasDifferentTypes == false)
-				            type = selection[0].GetType();
-			            Editor = CustomEditorsUtil.CreateEditor(type, false);
-		            }
+                if (selection.Count > 0)
+                {
+                    if (_overrideEditor != null)
+                    {
+                        Editor = _overrideEditor;
+                    }
+                    else
+                    {
+                        Type type = typeof(object);
+                        if (selection.HasDifferentTypes == false)
+                            type = selection[0].GetType();
+                        Editor = CustomEditorsUtil.CreateEditor(type, false);
+                    }
 
-		            Editor.Initialize(Presenter, Presenter, selection);
-		            OnChildCreated(Editor);
-	            }
-	            else
+                    Editor.Initialize(Presenter, Presenter, selection);
+                    OnChildCreated(Editor);
+                }
+                else
                 {
                     var label = layout.Label(_noSelectionText, TextAlignment.Center);
                     label.Label.Height = 20.0f;
                 }
-                
+
                 base.Initialize(layout);
             }
 
@@ -128,7 +128,7 @@ namespace FlaxEditor.CustomEditors
                 // Skip
             }
         }
-        
+
         /// <summary>
         /// The panel.
         /// </summary>
@@ -169,23 +169,23 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         public int SelectionCount => Selection.Count;
 
-	    /// <summary>
-	    /// Gets or sets the override custom editor used to edit selected objects.
-	    /// </summary>
-	    public CustomEditor OverrideEditor
-	    {
-		    get => Editor.OverrideEditor;
-		    set => Editor.OverrideEditor = value;
-	    }
+        /// <summary>
+        /// Gets or sets the override custom editor used to edit selected objects.
+        /// </summary>
+        public CustomEditor OverrideEditor
+        {
+            get => Editor.OverrideEditor;
+            set => Editor.OverrideEditor = value;
+        }
 
-	    private bool _buildOnUpdate;
+        private bool _buildOnUpdate;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CustomEditorPresenter"/> class.
-		/// </summary>
-		/// <param name="undo">The undo. It's optional.</param>
-		/// <param name="noSelectionText">The custom text to disaply when no object is selected. Default is No selection.</param>
-		public CustomEditorPresenter(Undo undo, string noSelectionText = null)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CustomEditorPresenter"/> class.
+        /// </summary>
+        /// <param name="undo">The undo. It's optional.</param>
+        /// <param name="noSelectionText">The custom text to disaply when no object is selected. Default is No selection.</param>
+        public CustomEditorPresenter(Undo undo, string noSelectionText = null)
         {
             Undo = undo;
             Panel = new PresenterPanel(this);
@@ -247,31 +247,31 @@ namespace FlaxEditor.CustomEditors
         public virtual void BuildLayout()
         {
             // Clear layout
-	        var panel = Panel.Parent as Panel;
-			var parentScrollV = panel?.VScrollBar?.Value ?? -1;
+            var panel = Panel.Parent as Panel;
+            var parentScrollV = panel?.VScrollBar?.Value ?? -1;
             Panel.IsLayoutLocked = true;
             Panel.DisposeChildren();
-            
+
             ClearLayout();
             Editor.Setup(this);
 
             Panel.UnlockChildrenRecursive();
-	        Panel.PerformLayout();
+            Panel.PerformLayout();
 
             // Restore scroll value
             if (parentScrollV > -1)
-	            panel.VScrollBar.Value = parentScrollV;
+                panel.VScrollBar.Value = parentScrollV;
         }
 
-	    /// <summary>
-	    /// Sets the request to build the editor layout on the next update.
-	    /// </summary>
-	    public void BuildLayoutOnUpdate()
-	    {
-		    _buildOnUpdate = true;
-	    }
+        /// <summary>
+        /// Sets the request to build the editor layout on the next update.
+        /// </summary>
+        public void BuildLayoutOnUpdate()
+        {
+            _buildOnUpdate = true;
+        }
 
-	    /// <summary>
+        /// <summary>
         /// Called when selection gets changed.
         /// </summary>
         protected virtual void OnSelectionChanged()
@@ -280,21 +280,21 @@ namespace FlaxEditor.CustomEditors
             SelectionChanged?.Invoke();
         }
 
-		/// <summary>
-		/// Updates custom editors. Refreshes UI values and applies changes to the selected objects.
-		/// </summary>
-		internal void Update()
-		{
-			if (_buildOnUpdate)
-			{
-				_buildOnUpdate = false;
-				BuildLayout();
-			}
+        /// <summary>
+        /// Updates custom editors. Refreshes UI values and applies changes to the selected objects.
+        /// </summary>
+        internal void Update()
+        {
+            if (_buildOnUpdate)
+            {
+                _buildOnUpdate = false;
+                BuildLayout();
+            }
 
-			Editor?.RefreshInternal();
-		}
+            Editor?.RefreshInternal();
+        }
 
-	    /// <inheritdoc />
+        /// <inheritdoc />
         public override ContainerControl ContainerControl => Panel;
     }
 }

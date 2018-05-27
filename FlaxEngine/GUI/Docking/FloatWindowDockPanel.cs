@@ -27,7 +27,7 @@ namespace FlaxEngine.GUI.Docking
         /// <param name="masterPanel">The master panel.</param>
         /// <param name="window">The window.</param>
         public FloatWindowDockPanel(MasterDockPanel masterPanel, Window window)
-            : base(null)
+        : base(null)
         {
             _masterPanel = masterPanel;
             _window = window;

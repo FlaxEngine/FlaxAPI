@@ -11,7 +11,7 @@ namespace FlaxEditor.Content
         /// The source file path (may be empty or null).
         /// </summary>
         string SourceUrl { get; }
-        
+
         /// <summary>
         /// The result file path.
         /// </summary>

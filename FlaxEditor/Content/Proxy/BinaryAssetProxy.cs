@@ -14,7 +14,7 @@ namespace FlaxEditor.Content
         /// The binary asset files extension.
         /// </summary>
         public static readonly string Extension = "flax";
-        
+
         /// <inheritdoc />
         public override bool IsProxyFor(ContentItem item)
         {

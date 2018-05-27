@@ -22,7 +22,7 @@ namespace FlaxEditor.Utilities
             Range[] matches;
             return Match(filter, text, out matches);
         }
-        
+
         /// <summary>
         /// Matches the specified text with the filter.
         /// </summary>
@@ -61,7 +61,7 @@ namespace FlaxEditor.Utilities
                 {
                     var filterChar = char.ToLower(filter[filterPos]);
                     var textChar = char.ToLower(text[i]);
-                    
+
                     if (filterChar == textChar)
                     {
                         // Check if start the matching sequence
@@ -137,7 +137,7 @@ namespace FlaxEditor.Utilities
                 StartIndex = start;
                 Length = length;
             }
-            
+
             /// <summary>
             /// Tests for equality between two objects.
             /// </summary>
@@ -148,7 +148,7 @@ namespace FlaxEditor.Utilities
             {
                 return left.Equals(right);
             }
-            
+
             /// <summary>
             /// Tests for equality between two objects.
             /// </summary>

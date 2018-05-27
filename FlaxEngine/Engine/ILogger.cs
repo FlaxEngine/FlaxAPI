@@ -145,7 +145,7 @@ namespace FlaxEngine
         /// <param name="message"></param>
         /// <param name="context"></param>
         void LogWarning(string tag, object message, Object context);
-        
+
         /// <summary>
         /// <para>A variant of ILogHandler.LogFormat that logs an exception message.</para>
         /// </summary>

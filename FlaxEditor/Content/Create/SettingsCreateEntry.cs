@@ -22,15 +22,15 @@ namespace FlaxEditor.Content.Create
             /// </summary>
             GameSettings,
 
-			/// <summary>
-			/// The audio settings.
-			/// </summary>
-			AudioSettings,
+            /// <summary>
+            /// The audio settings.
+            /// </summary>
+            AudioSettings,
 
-			/// <summary>
-			/// The time settings.
-			/// </summary>
-			TimeSettings,
+            /// <summary>
+            /// The time settings.
+            /// </summary>
+            TimeSettings,
 
             /// <summary>
             /// The layers and tags settings.
@@ -104,7 +104,7 @@ namespace FlaxEditor.Content.Create
         /// </summary>
         /// <param name="resultUrl">The result file url.</param>
         public SettingsCreateEntry(string resultUrl)
-            : base("Settings", resultUrl)
+        : base("Settings", resultUrl)
         {
         }
 

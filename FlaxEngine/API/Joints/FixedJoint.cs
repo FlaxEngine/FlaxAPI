@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-	public sealed partial class FixedJoint
-	{
-	}
+    public sealed partial class FixedJoint
+    {
+    }
 }

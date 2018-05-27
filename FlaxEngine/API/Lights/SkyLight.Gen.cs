@@ -7,153 +7,164 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Sky light captures the distant parts of the scene and applies it as a light. Allows to add ambient light.
-	/// </summary>
-	[Serializable]
-	public sealed partial class SkyLight : Light
-	{
-		/// <summary>
-		/// Creates new <see cref="SkyLight"/> object.
-		/// </summary>
-		private SkyLight() : base()
-		{
-		}
+    /// <summary>
+    /// Sky light captures the distant parts of the scene and applies it as a light. Allows to add ambient light.
+    /// </summary>
+    [Serializable]
+    public sealed partial class SkyLight : Light
+    {
+        /// <summary>
+        /// Creates new <see cref="SkyLight"/> object.
+        /// </summary>
+        private SkyLight() : base()
+        {
+        }
 
-		/// <summary>
-		/// Creates new instance of <see cref="SkyLight"/> object.
-		/// </summary>
-		/// <returns>Created object.</returns>
+        /// <summary>
+        /// Creates new instance of <see cref="SkyLight"/> object.
+        /// </summary>
+        /// <returns>Created object.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static SkyLight New() 
-		{
+        [UnmanagedCall]
+        public static SkyLight New()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Create(typeof(SkyLight)) as SkyLight;
+            return Internal_Create(typeof(SkyLight)) as SkyLight;
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the additional color to add. Source texture colors are sumed with it. Can be used to apply custom ambient color.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(21), EditorDisplay("Light"), Tooltip("Additional color to add. Source texture colors are sumed with it. Can be used to apply custom ambient color.")]
-		public Color AdditiveColor
-		{
+        /// <summary>
+        /// Gets or sets the additional color to add. Source texture colors are sumed with it. Can be used to apply custom ambient color.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(21), EditorDisplay("Light"), Tooltip("Additional color to add. Source texture colors are sumed with it. Can be used to apply custom ambient color.")]
+        public Color AdditiveColor
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { Color resultAsRef; Internal_GetAdditiveColor(unmanagedPtr, out resultAsRef); return resultAsRef; }
-			set { Internal_SetAdditiveColor(unmanagedPtr, ref value); }
+            get { Color resultAsRef; Internal_GetAdditiveColor(unmanagedPtr, out resultAsRef); return resultAsRef; }
+            set { Internal_SetAdditiveColor(unmanagedPtr, ref value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets light radius.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(29), Limit(0), EditorDisplay("Light"), Tooltip("Light range (in world units). Use very high value to apply light globally.")]
-		public float Radius
-		{
+        /// <summary>
+        /// Gets or sets light radius.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(29), Limit(0), EditorDisplay("Light"), Tooltip("Light range (in world units). Use very high value to apply light globally.")]
+        public float Radius
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetRadius(unmanagedPtr); }
-			set { Internal_SetRadius(unmanagedPtr, value); }
+            get { return Internal_GetRadius(unmanagedPtr); }
+            set { Internal_SetRadius(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the sky light source mode.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(40), EditorDisplay("Probe"), Tooltip("Sky light source mode")]
-		public Modes Mode
-		{
+        /// <summary>
+        /// Gets or sets the sky light source mode.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(40), EditorDisplay("Probe"), Tooltip("Sky light source mode")]
+        public Modes Mode
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetMode(unmanagedPtr); }
-			set { Internal_SetMode(unmanagedPtr, value); }
+            get { return Internal_GetMode(unmanagedPtr); }
+            set { Internal_SetMode(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the distance from the light at which any geometry should be treated as part of the sky.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(45), Limit(0), EditorDisplay("Probe"), Tooltip("Distance from the light at which any geometry should be treated as part of the sky.")]
-		public float SkyDistanceThreshold
-		{
+        /// <summary>
+        /// Gets or sets the distance from the light at which any geometry should be treated as part of the sky.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(45), Limit(0), EditorDisplay("Probe"), Tooltip("Distance from the light at which any geometry should be treated as part of the sky.")]
+        public float SkyDistanceThreshold
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetSkyDistanceThreshold(unmanagedPtr); }
-			set { Internal_SetSkyDistanceThreshold(unmanagedPtr, value); }
+            get { return Internal_GetSkyDistanceThreshold(unmanagedPtr); }
+            set { Internal_SetSkyDistanceThreshold(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the custom cube texture to be used during sky light rendering. Used only if Mode is set to CustomTexture.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(50), EditorDisplay("Probe"), Tooltip("Custom light texture. Used only if Mode is set to CustomTexture")]
-		public CubeTexture CustomTexture
-		{
+        /// <summary>
+        /// Gets or sets the custom cube texture to be used during sky light rendering. Used only if Mode is set to CustomTexture.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(50), EditorDisplay("Probe"), Tooltip("Custom light texture. Used only if Mode is set to CustomTexture")]
+        public CubeTexture CustomTexture
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetCustomTexture(unmanagedPtr); }
-			set { Internal_SetCustomTexture(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            get { return Internal_GetCustomTexture(unmanagedPtr); }
+            set { Internal_SetCustomTexture(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Requests probe texture baking. It won't be performed now but on async graphics rendering task.
-		/// </summary>
+        /// <summary>
+        /// Requests probe texture baking. It won't be performed now but on async graphics rendering task.
+        /// </summary>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public void Bake() 
-		{
+        [UnmanagedCall]
+        public void Bake()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_Bake(unmanagedPtr);
+            Internal_Bake(unmanagedPtr);
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetAdditiveColor(IntPtr obj, out Color resultAsRef);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetAdditiveColor(IntPtr obj, ref Color val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetRadius(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetRadius(IntPtr obj, float val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Modes Internal_GetMode(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetMode(IntPtr obj, Modes val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetSkyDistanceThreshold(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetSkyDistanceThreshold(IntPtr obj, float val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern CubeTexture Internal_GetCustomTexture(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetCustomTexture(IntPtr obj, IntPtr val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_Bake(IntPtr obj);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetAdditiveColor(IntPtr obj, out Color resultAsRef);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetAdditiveColor(IntPtr obj, ref Color val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetRadius(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetRadius(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Modes Internal_GetMode(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetMode(IntPtr obj, Modes val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetSkyDistanceThreshold(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetSkyDistanceThreshold(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern CubeTexture Internal_GetCustomTexture(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetCustomTexture(IntPtr obj, IntPtr val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Bake(IntPtr obj);
+#endif
+
+        #endregion
+    }
+}

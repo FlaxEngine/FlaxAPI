@@ -12,7 +12,7 @@ namespace FlaxEditor.SceneGraph.Actors
     {
         /// <inheritdoc />
         public EnvironmentProbeNode(Actor actor)
-            : base(actor)
+        : base(actor)
         {
         }
     }

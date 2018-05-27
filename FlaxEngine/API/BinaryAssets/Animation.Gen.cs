@@ -7,67 +7,70 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Asset that contains an animation spline represented by a set of keyframes, each representing an endpoint of a linear curve.
-	/// </summary>
-	public sealed partial class Animation : BinaryAsset
-	{
-		/// <summary>
-		/// Creates new <see cref="Animation"/> object.
-		/// </summary>
-		private Animation() : base()
-		{
-		}
+    /// <summary>
+    /// Asset that contains an animation spline represented by a set of keyframes, each representing an endpoint of a linear curve.
+    /// </summary>
+    public sealed partial class Animation : BinaryAsset
+    {
+        /// <summary>
+        /// Creates new <see cref="Animation"/> object.
+        /// </summary>
+        private Animation() : base()
+        {
+        }
 
-		/// <summary>
-		/// Gets the length of the animation (in seconds).
-		/// </summary>
-		[UnmanagedCall]
-		public float Length
-		{
+        /// <summary>
+        /// Gets the length of the animation (in seconds).
+        /// </summary>
+        [UnmanagedCall]
+        public float Length
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetLength(unmanagedPtr); }
+            get { return Internal_GetLength(unmanagedPtr); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets the duration of the animation (in frames).
-		/// </summary>
-		[UnmanagedCall]
-		public float Duration
-		{
+        /// <summary>
+        /// Gets the duration of the animation (in frames).
+        /// </summary>
+        [UnmanagedCall]
+        public float Duration
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetDuration(unmanagedPtr); }
+            get { return Internal_GetDuration(unmanagedPtr); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets the amount of the animation frames per second.
-		/// </summary>
-		[UnmanagedCall]
-		public float FramesPerSecond
-		{
+        /// <summary>
+        /// Gets the amount of the animation frames per second.
+        /// </summary>
+        [UnmanagedCall]
+        public float FramesPerSecond
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetFramesPerSecond(unmanagedPtr); }
+            get { return Internal_GetFramesPerSecond(unmanagedPtr); }
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetLength(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetDuration(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetFramesPerSecond(IntPtr obj);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetLength(IntPtr obj);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetDuration(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetFramesPerSecond(IntPtr obj);
+#endif
+
+        #endregion
+    }
+}

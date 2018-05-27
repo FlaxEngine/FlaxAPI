@@ -13,17 +13,17 @@ namespace FlaxEditor.Windows
     /// <seealso cref="FlaxEditor.Windows.EditorWindow" />
     public class ToolboxWindow : EditorWindow
     {
-		/// <summary>
-		/// Gets the tabs control used by this window. Can be used to add custom toolbox modes.
-		/// </summary>
-		public Tabs TabsControl { get; private set; }
+        /// <summary>
+        /// Gets the tabs control used by this window. Can be used to add custom toolbox modes.
+        /// </summary>
+        public Tabs TabsControl { get; private set; }
 
-	    /// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="ToolboxWindow"/> class.
         /// </summary>
         /// <param name="editor">The editor.</param>
         public ToolboxWindow(Editor editor)
-            : base(editor, true, ScrollBars.None)
+        : base(editor, true, ScrollBars.None)
         {
             Title = "Toolbox";
         }
@@ -31,7 +31,7 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void OnInit()
         {
-	        TabsControl = new Tabs
+            TabsControl = new Tabs
             {
                 DockStyle = DockStyle.Fill,
                 TabsSize = new Vector2(48, 48),
@@ -43,16 +43,16 @@ namespace FlaxEditor.Windows
             InitFoliageTab(TabsControl);
             InitCarveTab(TabsControl);
 
-	        TabsControl.SelectedTabIndex = 0;
-	        TabsControl.SelectedTabChanged += OnSelectedTabChanged;
-		}
+            TabsControl.SelectedTabIndex = 0;
+            TabsControl.SelectedTabChanged += OnSelectedTabChanged;
+        }
 
-	    private void OnSelectedTabChanged(Tabs tabs)
-	    {
-		    // TODO: send proper event and adapt the editor to the current mode (hide gizmos, etc.)
-	    }
+        private void OnSelectedTabChanged(Tabs tabs)
+        {
+            // TODO: send proper event and adapt the editor to the current mode (hide gizmos, etc.)
+        }
 
-	    private void InitSpawnTab(Tabs tabs)
+        private void InitSpawnTab(Tabs tabs)
         {
             var spawnTab = tabs.AddTab(new Tab(string.Empty, Editor.UI.GetIcon("Add48")));
             var actorGroups = new Tabs
@@ -105,9 +105,9 @@ namespace FlaxEditor.Windows
             groupOther.AddChild(CreateActorItem("CSG Box Brush", typeof(BoxBrush)));
             groupOther.AddChild(CreateActorItem("Audio Source", typeof(AudioSource)));
             groupOther.AddChild(CreateActorItem("Audio Listner", typeof(AudioListener)));
-            
+
             var groupGui = createGroupWithList(actorGroups, "GUI");
-	        groupGui.AddChild(CreateActorItem("Text Render", typeof(TextRender)));
+            groupGui.AddChild(CreateActorItem("Text Render", typeof(TextRender)));
 
             actorGroups.SelectedTabIndex = 0;
         }
@@ -146,12 +146,12 @@ namespace FlaxEditor.Windows
             private DragData _dragData;
 
             public Item(string text, DragData dragData = null)
-                : this(text, dragData, Sprite.Invalid)
+            : this(text, dragData, Sprite.Invalid)
             {
             }
 
             public Item(string text, DragData dragData, Sprite icon)
-                : base(false, icon, icon)
+            : base(false, icon, icon)
             {
                 Text = text;
                 _dragData = dragData;

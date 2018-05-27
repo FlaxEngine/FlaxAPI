@@ -25,7 +25,7 @@ namespace FlaxEngine.Assertions
         /// Initializes a new instance of the <see cref="AssertionException"/> class.
         /// </summary>
         public AssertionException()
-            : this(string.Empty, string.Empty)
+        : this(string.Empty, string.Empty)
         {
         }
 
@@ -34,7 +34,7 @@ namespace FlaxEngine.Assertions
         /// </summary>
         /// <param name="userMessage">The user message.</param>
         public AssertionException(string userMessage)
-            : this("Assertion failed!", userMessage)
+        : this("Assertion failed!", userMessage)
         {
         }
 
@@ -44,7 +44,7 @@ namespace FlaxEngine.Assertions
         /// <param name="message">The message.</param>
         /// <param name="userMessage">The user message.</param>
         public AssertionException(string message, string userMessage)
-            : base(message)
+        : base(message)
         {
             _userMessage = userMessage;
         }

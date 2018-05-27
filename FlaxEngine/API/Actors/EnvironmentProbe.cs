@@ -2,8 +2,8 @@
 
 namespace FlaxEngine
 {
-	public sealed partial class EnvironmentProbe
-	{
+    public sealed partial class EnvironmentProbe
+    {
         /// <summary>
         /// Gets a value indicating whether this instance has probe texture assigned.
         /// </summary>
@@ -12,14 +12,14 @@ namespace FlaxEngine
         /// </value>
         public bool HasProbe => Probe != null;
 
-	    /// <summary>
-	    /// Returns true if probe is using custom cube texture (not baked one).
-	    /// </summary>
-	    public bool IsUsingCustomProbe => CustomProbe != null;
+        /// <summary>
+        /// Returns true if probe is using custom cube texture (not baked one).
+        /// </summary>
+        public bool IsUsingCustomProbe => CustomProbe != null;
 
-	    /// <summary>
-	    /// Gets the probe scaled radius parameter.
-	    /// </summary>
-	    public float ScaledRadius => Scale.MaxValue * Radius;
+        /// <summary>
+        /// Gets the probe scaled radius parameter.
+        /// </summary>
+        public float ScaledRadius => Scale.MaxValue * Radius;
     }
 }

@@ -9,7 +9,7 @@ namespace FlaxEditor.States
     public sealed class ReloadingScriptsState : EditorState
     {
         internal ReloadingScriptsState(Editor editor)
-            : base(editor)
+        : base(editor)
         {
         }
     }

@@ -19,7 +19,7 @@ namespace FlaxEditor.Windows.Profiler
         private readonly SamplesBuffer<EventGPU[]> _events = new SamplesBuffer<EventGPU[]>();
 
         public GPU()
-            : base("GPU")
+        : base("GPU")
         {
             // Layout
             var panel = new Panel(ScrollBars.Vertical)
@@ -202,7 +202,7 @@ namespace FlaxEditor.Windows.Profiler
             container.DisposeChildren();
 
             container.LockChildrenRecursive();
-            
+
             _timeline.Height = UpdateTimelineInner();
 
             container.UnlockChildrenRecursive();

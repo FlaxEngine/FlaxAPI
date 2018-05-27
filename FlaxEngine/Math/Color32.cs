@@ -10,7 +10,7 @@ namespace FlaxEngine
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-	public struct Color32
+    public struct Color32
     {
         /// <summary>
         /// Red component of the color.
@@ -32,14 +32,14 @@ namespace FlaxEngine
         /// </summary>
         public byte A;
 
-		/// <summary>
-		/// Constructs a new Color32 with given r, g, b, a components.
-		/// </summary>
-		/// <param name="r">The red component value.</param>
-		/// <param name="g">The green component value.</param>
-		/// <param name="b">The blue component value.</param>
-		/// <param name="a">The alpha component value.</param>
-		public Color32(byte r, byte g, byte b, byte a)
+        /// <summary>
+        /// Constructs a new Color32 with given r, g, b, a components.
+        /// </summary>
+        /// <param name="r">The red component value.</param>
+        /// <param name="g">The green component value.</param>
+        /// <param name="b">The blue component value.</param>
+        /// <param name="a">The alpha component value.</param>
+        public Color32(byte r, byte g, byte b, byte a)
         {
             R = r;
             G = g;

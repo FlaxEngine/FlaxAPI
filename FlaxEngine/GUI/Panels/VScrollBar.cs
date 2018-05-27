@@ -14,7 +14,7 @@ namespace FlaxEngine.GUI
         /// <param name="x">The x position.</param>
         /// <param name="height">The height.</param>
         public VScrollBar(float x, float height)
-            : base(Orientation.Vertical, x, 0, DefaultSize, height)
+        : base(Orientation.Vertical, x, 0, DefaultSize, height)
         {
             DockStyle = DockStyle.Right;
         }

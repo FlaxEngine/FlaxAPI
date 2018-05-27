@@ -7,62 +7,64 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Directional light emmits light from direction in space.
-	/// </summary>
-	[Serializable]
-	public sealed partial class DirectionalLight : LightWithShadow
-	{
-		/// <summary>
-		/// Creates new <see cref="DirectionalLight"/> object.
-		/// </summary>
-		private DirectionalLight() : base()
-		{
-		}
+    /// <summary>
+    /// Directional light emmits light from direction in space.
+    /// </summary>
+    [Serializable]
+    public sealed partial class DirectionalLight : LightWithShadow
+    {
+        /// <summary>
+        /// Creates new <see cref="DirectionalLight"/> object.
+        /// </summary>
+        private DirectionalLight() : base()
+        {
+        }
 
-		/// <summary>
-		/// Creates new instance of <see cref="DirectionalLight"/> object.
-		/// </summary>
-		/// <returns>Created object.</returns>
+        /// <summary>
+        /// Creates new instance of <see cref="DirectionalLight"/> object.
+        /// </summary>
+        /// <returns>Created object.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static DirectionalLight New() 
-		{
+        [UnmanagedCall]
+        public static DirectionalLight New()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Create(typeof(DirectionalLight)) as DirectionalLight;
+            return Internal_Create(typeof(DirectionalLight)) as DirectionalLight;
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the number of cascades used for slicing the range of depth covered by the light during rendering shadows.
-		/// </summary>
-		/// <remarks>
-		/// Values are 1, 2 or 4 cascades; a typical scene uses 4 cascades.
-		/// </remarks>
-		[UnmanagedCall]
-		[EditorOrder(65), Limit(1, 4), EditorDisplay("Shadow"), Tooltip("The number of cascades used for slicing the range of depth covered by the light during rendering shadows. Values are 1, 2 or 4 cascades; a typical scene uses 4 cascades.")]
-		public int CascadeCount
-		{
+        /// <summary>
+        /// Gets or sets the number of cascades used for slicing the range of depth covered by the light during rendering shadows.
+        /// </summary>
+        /// <remarks>
+        /// Values are 1, 2 or 4 cascades; a typical scene uses 4 cascades.
+        /// </remarks>
+        [UnmanagedCall]
+        [EditorOrder(65), Limit(1, 4), EditorDisplay("Shadow"), Tooltip("The number of cascades used for slicing the range of depth covered by the light during rendering shadows. Values are 1, 2 or 4 cascades; a typical scene uses 4 cascades.")]
+        public int CascadeCount
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetCascadeCount(unmanagedPtr); }
-			set { Internal_SetCascadeCount(unmanagedPtr, value); }
+            get { return Internal_GetCascadeCount(unmanagedPtr); }
+            set { Internal_SetCascadeCount(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern int Internal_GetCascadeCount(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetCascadeCount(IntPtr obj, int val);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetCascadeCount(IntPtr obj);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetCascadeCount(IntPtr obj, int val);
+#endif
+
+        #endregion
+    }
+}

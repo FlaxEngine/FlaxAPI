@@ -30,7 +30,7 @@ namespace FlaxEngine.Assertions
         /// Creates an instance of the comparer.
         /// </summary>
         public FloatComparer()
-            : this(Epsilon, false)
+        : this(Epsilon, false)
         {
         }
 
@@ -42,7 +42,7 @@ namespace FlaxEngine.Assertions
         /// used.
         /// </param>
         public FloatComparer(bool relative)
-            : this(Epsilon, relative)
+        : this(Epsilon, relative)
         {
         }
 
@@ -51,7 +51,7 @@ namespace FlaxEngine.Assertions
         /// </summary>
         /// <param name="error">Allowed comparison error. By default, the FloatComparer.Epsilon is used.</param>
         public FloatComparer(float error)
-            : this(error, false)
+        : this(error, false)
         {
         }
 

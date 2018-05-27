@@ -19,7 +19,7 @@ namespace FlaxEditor.Content
         /// <param name="path">The path for the new item.</param>
         /// <param name="proxy">The content proxy object.</param>
         public NewItem(string path, ContentProxy proxy)
-            : base(path)
+        : base(path)
         {
             Proxy = proxy;
         }

@@ -122,7 +122,7 @@ namespace FlaxEngine
                     if (version != 1)
                         return null;
                     int collisionsCount = stream.ReadInt32();
-                    
+
                     int index = 0;
                     _data = new Collision[collisionsCount * 2];
                     for (int i = 0; i < collisionsCount; i++)

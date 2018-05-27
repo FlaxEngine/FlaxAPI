@@ -94,7 +94,7 @@ namespace FlaxEditor.Modules
 
         /// <inheritdoc />
         internal ContentImportingModule(Editor editor)
-            : base(editor)
+        : base(editor)
         {
         }
 
@@ -170,8 +170,8 @@ namespace FlaxEditor.Modules
         {
             if (targetLocation == null)
                 throw new ArgumentNullException();
-	        if (files == null)
-		        return;
+            if (files == null)
+                return;
 
             lock (_requests)
             {
@@ -357,7 +357,7 @@ namespace FlaxEditor.Modules
         {
             if (_workerThread != null)
                 return;
-            
+
             _workerEndFlag = 0;
             _workerThread = new Thread(WorkerMain)
             {
@@ -371,7 +371,7 @@ namespace FlaxEditor.Modules
         {
             if (_workerThread == null)
                 return;
-            
+
             Interlocked.Increment(ref _workerEndFlag);
             Thread.Sleep(0);
 
@@ -379,7 +379,7 @@ namespace FlaxEditor.Modules
             _workerThread.Abort();
             _workerThread = null;
         }
-        
+
         /// <inheritdoc />
         public override void OnInit()
         {
@@ -414,7 +414,7 @@ namespace FlaxEditor.Modules
                             {
                                 needSettingsDialog |= entry.HasSettings;
                             }
-                            
+
                             entries.Add(entry);
                         }
                     }

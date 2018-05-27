@@ -104,7 +104,7 @@ namespace FlaxEngine.Rendering
 
         private static void Update()
         {
-	        Profiler.BeginEvent("RenderTarget.Update");
+            Profiler.BeginEvent("RenderTarget.Update");
 
             // Flush old unused render targets
             var time = Time.UnscaledGameTime;
@@ -118,20 +118,20 @@ namespace FlaxEngine.Rendering
                 }
             }
 
-			Profiler.EndEvent();
+            Profiler.EndEvent();
         }
 
-	    /// <summary>
-	    /// Initializes render target texture.
-	    /// </summary>
-	    /// <param name="format">The surface pixels format.</param>
-	    /// <param name="size">The surface size in pixels (width, height).</param>
-	    /// <param name="flags">The surface usage flags.</param>
-	    /// <param name="mipMaps">Number of mipmaps for the texture. Default is 1. Use 0 to allocate full mip chain.</param>
-	    /// <param name="multiSampleLevel">The surface multisampling level.</param>
-	    public void Init(PixelFormat format, Vector2 size, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget, int mipMaps = 1, MSAALevel multiSampleLevel = MSAALevel.None)
-	    {
-		    Init(format, (int)size.X, (int)size.Y, flags, mipMaps, multiSampleLevel);
-	    }
+        /// <summary>
+        /// Initializes render target texture.
+        /// </summary>
+        /// <param name="format">The surface pixels format.</param>
+        /// <param name="size">The surface size in pixels (width, height).</param>
+        /// <param name="flags">The surface usage flags.</param>
+        /// <param name="mipMaps">Number of mipmaps for the texture. Default is 1. Use 0 to allocate full mip chain.</param>
+        /// <param name="multiSampleLevel">The surface multisampling level.</param>
+        public void Init(PixelFormat format, Vector2 size, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget, int mipMaps = 1, MSAALevel multiSampleLevel = MSAALevel.None)
+        {
+            Init(format, (int)size.X, (int)size.Y, flags, mipMaps, multiSampleLevel);
+        }
     }
 }

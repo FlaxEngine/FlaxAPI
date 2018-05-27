@@ -7,205 +7,216 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEditor.Scripting
 {
-	/// <summary>
-	/// Game scrips building service. Compiles user C# scripts into binary assemblies.
-	/// </summary>
-	public static partial class ScriptsBuilder
-	{
-		/// <summary>
-		/// Gets amount of source code compile actions since Editor startup.
-		/// </summary>
-		[UnmanagedCall]
-		public static int CompilationsCount
-		{
+    /// <summary>
+    /// Game scrips building service. Compiles user C# scripts into binary assemblies.
+    /// </summary>
+    public static partial class ScriptsBuilder
+    {
+        /// <summary>
+        /// Gets amount of source code compile actions since Editor startup.
+        /// </summary>
+        [UnmanagedCall]
+        public static int CompilationsCount
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetCompilationsCount(); }
+            get { return Internal_GetCompilationsCount(); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets the solution file path.
-		/// </summary>
-		[UnmanagedCall]
-		public static string SolutionPath
-		{
+        /// <summary>
+        /// Gets the solution file path.
+        /// </summary>
+        [UnmanagedCall]
+        public static string SolutionPath
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetSolutionPath(); }
+            get { return Internal_GetSolutionPath(); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Returns true if source code has been edited since last compilation.
-		/// </summary>
-		[UnmanagedCall]
-		public static bool IsSourceDirty
-		{
+        /// <summary>
+        /// Returns true if source code has been edited since last compilation.
+        /// </summary>
+        [UnmanagedCall]
+        public static bool IsSourceDirty
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_IsSourceDirty(); }
+            get { return Internal_IsSourceDirty(); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Returns true if source code has been compilled and assembies are ready to load.
-		/// </summary>
-		[UnmanagedCall]
-		public static bool IsReady
-		{
+        /// <summary>
+        /// Returns true if source code has been compilled and assembies are ready to load.
+        /// </summary>
+        [UnmanagedCall]
+        public static bool IsReady
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_IsReady(); }
+            get { return Internal_IsReady(); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Checks if last scripting building failed due to errors.
-		/// </summary>
-		[UnmanagedCall]
-		public static bool LastCompilationFailed
-		{
+        /// <summary>
+        /// Checks if last scripting building failed due to errors.
+        /// </summary>
+        [UnmanagedCall]
+        public static bool LastCompilationFailed
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_LastCompilationFailed(); }
+            get { return Internal_LastCompilationFailed(); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Indicates that scripting directory has been modified so scripts need to be rebuilded.
-		/// </summary>
+        /// <summary>
+        /// Indicates that scripting directory has been modified so scripts need to be rebuilded.
+        /// </summary>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static void MarkWorkspaceDirty() 
-		{
+        [UnmanagedCall]
+        public static void MarkWorkspaceDirty()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_MarkWorkspaceDirty();
+            Internal_MarkWorkspaceDirty();
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Requests project source code compilation.
-		/// </summary>
+        /// <summary>
+        /// Requests project source code compilation.
+        /// </summary>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static void Compile() 
-		{
+        [UnmanagedCall]
+        public static void Compile()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_Compile();
+            Internal_Compile();
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Generates solution and project files.
-		/// </summary>
-		/// <param name="forceGenerateSolution">True if generate solution file by force even if there is no need to.</param>
-		/// <param name="forceGenerateProject">True if generate project files by force even if there is no need to.</param>
-		/// <returns>True if cannot perform that action, otherwise false.</returns>
+        /// <summary>
+        /// Generates solution and project files.
+        /// </summary>
+        /// <param name="forceGenerateSolution">True if generate solution file by force even if there is no need to.</param>
+        /// <param name="forceGenerateProject">True if generate project files by force even if there is no need to.</param>
+        /// <returns>True if cannot perform that action, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static bool GenerateProject(bool forceGenerateSolution, bool forceGenerateProject) 
-		{
+        [UnmanagedCall]
+        public static bool GenerateProject(bool forceGenerateSolution, bool forceGenerateProject)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_GenerateProject(forceGenerateSolution, forceGenerateProject);
+            return Internal_GenerateProject(forceGenerateSolution, forceGenerateProject);
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Opens the solution file using dedicated code editor.
-		/// </summary>
+        /// <summary>
+        /// Opens the solution file using dedicated code editor.
+        /// </summary>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static void OpenSolution() 
-		{
+        [UnmanagedCall]
+        public static void OpenSolution()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_OpenSolution();
+            Internal_OpenSolution();
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Opens the file using dedicated code editor.
-		/// </summary>
-		/// <param name="path">The file path to open.</param>
-		/// <param name="line">The line number to navigate to. Use 0 to not use it.</param>
+        /// <summary>
+        /// Opens the file using dedicated code editor.
+        /// </summary>
+        /// <param name="path">The file path to open.</param>
+        /// <param name="line">The line number to navigate to. Use 0 to not use it.</param>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static void OpenFile(string path, int line = 0) 
-		{
+        [UnmanagedCall]
+        public static void OpenFile(string path, int line = 0)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_OpenFile(path, line);
+            Internal_OpenFile(path, line);
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Tries to find a script type with the given name.
-		/// </summary>
-		/// <param name="name">The script full name.</param>
-		/// <returns>Found script type or null if missing or invalid name.</returns>
+        /// <summary>
+        /// Tries to find a script type with the given name.
+        /// </summary>
+        /// <param name="name">The script full name.</param>
+        /// <returns>Found script type or null if missing or invalid name.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static Type FindScript(string name) 
-		{
+        [UnmanagedCall]
+        public static Type FindScript(string name)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_FindScript(name);
+            return Internal_FindScript(name);
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern int Internal_GetCompilationsCount();
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern string Internal_GetSolutionPath();
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_IsSourceDirty();
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_IsReady();
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_LastCompilationFailed();
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_MarkWorkspaceDirty();
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_Compile();
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GenerateProject(bool forceGenerateSolution, bool forceGenerateProject);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_OpenSolution();
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_OpenFile(string path, int line);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Type Internal_FindScript(string name);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetCompilationsCount();
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern string Internal_GetSolutionPath();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_IsSourceDirty();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_IsReady();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_LastCompilationFailed();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_MarkWorkspaceDirty();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Compile();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GenerateProject(bool forceGenerateSolution, bool forceGenerateProject);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_OpenSolution();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_OpenFile(string path, int line);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Type Internal_FindScript(string name);
+#endif
+
+        #endregion
+    }
+}

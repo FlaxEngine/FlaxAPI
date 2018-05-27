@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Represents font object that can be using durng text rendering (it uses Font Asset but with precached data for chosen font properties).
-	/// </summary>
-	public partial class Font
-	{
+    /// <summary>
+    /// Represents font object that can be using durng text rendering (it uses Font Asset but with precached data for chosen font properties).
+    /// </summary>
+    public partial class Font
+    {
         // TODO: provide ProcessText APIs
         // TODO: provide GetCharacter APIs
         // TODO: expose CharacterEntry and ability to get per font character info

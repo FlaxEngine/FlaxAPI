@@ -30,7 +30,7 @@ namespace FlaxEditor.CustomEditors.Editors
 
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.Inline;
-		
+
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {

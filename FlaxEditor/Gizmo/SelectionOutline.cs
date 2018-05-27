@@ -46,7 +46,7 @@ namespace FlaxEditor.Gizmo
         /// <inheritdoc />
         public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
         {
-			Profiler.BeginEventGPU("Selection Outline");
+            Profiler.BeginEventGPU("Selection Outline");
 
             // Pick a temporary depth buffer
             var customDepth = RenderTarget.GetTemporary(PixelFormat.R32_Typeless, input.Width, input.Height, TextureFlags.DepthStencil | TextureFlags.ShaderResource);
@@ -70,7 +70,7 @@ namespace FlaxEditor.Gizmo
             // Cleanup
             RenderTarget.ReleaseTemporary(customDepth);
 
-			Profiler.EndEventGPU();
+            Profiler.EndEventGPU();
         }
     }
 }

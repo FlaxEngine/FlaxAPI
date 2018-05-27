@@ -68,33 +68,33 @@ namespace FlaxEngine.GUI
         /// </summary>
         public abstract T MaxValue { get; set; }
 
-		/// <summary>
-		/// Gets a value indicating whether user is using a slider.
-		/// </summary>
-		public bool IsSliding => _isSliding;
+        /// <summary>
+        /// Gets a value indicating whether user is using a slider.
+        /// </summary>
+        public bool IsSliding => _isSliding;
 
-	    /// <summary>
-	    /// Occurs when sliding starts.
-	    /// </summary>
-	    public event Action SlidingStart;
+        /// <summary>
+        /// Occurs when sliding starts.
+        /// </summary>
+        public event Action SlidingStart;
 
-	    /// <summary>
-	    /// Occurs when sliding ends.
-	    /// </summary>
-	    public event Action SlidingEnd;
+        /// <summary>
+        /// Occurs when sliding ends.
+        /// </summary>
+        public event Action SlidingEnd;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ValueBox{T}"/> class.
-		/// </summary>
-		/// <param name="value">The value.</param>
-		/// <param name="x">The x.</param>
-		/// <param name="y">The y.</param>
-		/// <param name="width">The width.</param>
-		/// <param name="min">The minimum.</param>
-		/// <param name="max">The maximum.</param>
-		/// <param name="sliderSpeed">The slider speed.</param>
-		protected ValueBox(T value, float x, float y, float width, T min, T max, float sliderSpeed)
-            : base(false, x, y, width)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValueBox{T}"/> class.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="min">The minimum.</param>
+        /// <param name="max">The maximum.</param>
+        /// <param name="sliderSpeed">The slider speed.</param>
+        protected ValueBox(T value, float x, float y, float width, T min, T max, float sliderSpeed)
+        : base(false, x, y, width)
         {
             _value = value;
             _min = min;
@@ -144,18 +144,18 @@ namespace FlaxEngine.GUI
             }
         }
 
-	    private void EndSliding()
-	    {
-		    // Clear state
-		    _isSliding = false;
+        private void EndSliding()
+        {
+            // Clear state
+            _isSliding = false;
 
-		    // End capturing mouse
-		    EndMouseCapture();
+            // End capturing mouse
+            EndMouseCapture();
 
-			SlidingEnd?.Invoke();
-	    }
+            SlidingEnd?.Invoke();
+        }
 
-	    /// <inheritdoc />
+        /// <inheritdoc />
         public override void Draw()
         {
             // Base
@@ -214,7 +214,7 @@ namespace FlaxEngine.GUI
                 _startSlideLocation = location;
                 _startSlideValue = _value;
                 StartMouseCapture(true);
-				SlidingStart?.Invoke();
+                SlidingStart?.Invoke();
 
                 return true;
             }
@@ -260,7 +260,7 @@ namespace FlaxEngine.GUI
 
             base.OnEditEnd();
         }
-        
+
         /// <inheritdoc />
         public override void OnEndMouseCapture()
         {

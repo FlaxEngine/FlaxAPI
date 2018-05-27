@@ -84,7 +84,7 @@ namespace FlaxEditor.Windows.Profiler
         /// </summary>
         /// <param name="editor">The editor.</param>
         public ProfilerWindow(Editor editor)
-            : base(editor, true, ScrollBars.None)
+        : base(editor, true, ScrollBars.None)
         {
             Title = "Profiler";
 
@@ -127,7 +127,7 @@ namespace FlaxEditor.Windows.Profiler
         /// <param name="mode">The mode.</param>
         public void AddMode(ProfilerMode mode)
         {
-            if(mode == null)
+            if (mode == null)
                 throw new ArgumentNullException();
             mode.Init();
             _tabs.AddTab(mode);
@@ -157,7 +157,7 @@ namespace FlaxEditor.Windows.Profiler
 
             UpdateButtons();
         }
-		
+
         private void OnSelectedTabChanged(Tabs tabs)
         {
             if (tabs.SelectedTab is ProfilerMode mode)

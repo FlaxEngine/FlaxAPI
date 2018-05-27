@@ -39,7 +39,7 @@ namespace FlaxEditor.CustomEditors.GUI
 
         /// <inheritdoc />
         public ClickablePropertyNameLabel(string name)
-            : base(name)
+        : base(name)
         {
         }
 

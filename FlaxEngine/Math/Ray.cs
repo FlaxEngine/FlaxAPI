@@ -352,7 +352,7 @@ namespace FlaxEngine
         public string ToString(string format)
         {
             return string.Format(CultureInfo.CurrentCulture, "Position:{0} Direction:{1}", Position.ToString(format, CultureInfo.CurrentCulture),
-                Direction.ToString(format, CultureInfo.CurrentCulture));
+                                 Direction.ToString(format, CultureInfo.CurrentCulture));
         }
 
         /// <summary>
@@ -378,7 +378,7 @@ namespace FlaxEngine
         public string ToString(string format, IFormatProvider formatProvider)
         {
             return string.Format(formatProvider, "Position:{0} Direction:{1}", Position.ToString(format, formatProvider),
-                Direction.ToString(format, formatProvider));
+                                 Direction.ToString(format, formatProvider));
         }
 
         /// <summary>

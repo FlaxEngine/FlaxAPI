@@ -16,7 +16,7 @@ namespace FlaxEditor.Windows
     {
         /// <inheritdoc />
         public AboutDialog()
-            : base("About Flax")
+        : base("About Flax")
         {
             Size = new Vector2(400, 260);
 
@@ -117,16 +117,16 @@ namespace FlaxEditor.Windows
                 "UVAtlas - Copyright (c) Microsoft Corporation. All rights reserved.",
                 "LZ4 Library - Copyright (c) Yann Collet. All rights reserved.",
                 "fmt - www.fmtlib.net",
-				"minimp3 - www.github.com/lieff/minimp3",
-				"Ogg and Vorbis - Xiph.org Foundation",
-				"OpenAL Soft - www.github.com/kcat/openal-soft",
-				"pugixml - www.pugixml.org",
+                "minimp3 - www.github.com/lieff/minimp3",
+                "Ogg and Vorbis - Xiph.org Foundation",
+                "OpenAL Soft - www.github.com/kcat/openal-soft",
+                "pugixml - www.pugixml.org",
                 "rapidjson - www.rapidjson.org",
 #if USE_AUTODESK_FBX_SDK
 				"Autodesk FBX - Copyright (c) Autodesk",
 #endif
-				"Editor icons - www.icons8.com, www.iconfinder.com",
-				"",
+                "Editor icons - www.icons8.com, www.iconfinder.com",
+                "",
 #if USE_AUTODESK_FBX_SDK
 				"This software contains Autodesk® FBX® code developed by Autodesk, Inc.",
 				"Copyright 2017 Autodesk, Inc. All rights, reserved.",
@@ -142,9 +142,9 @@ namespace FlaxEditor.Windows
 				"(including negligence or otherwise)",
 				"arising in any way out of such code.",
 #endif
-			};
+            };
             float y = 0;
-	        float width = Width;
+            float width = Width;
             for (var i = 0; i < thirdPartyEntries.Length; i++)
             {
                 var entry = thirdPartyEntries[i];
@@ -155,7 +155,7 @@ namespace FlaxEditor.Windows
                     VerticalAlignment = TextAlignment.Center,
                     Parent = thirdPartyPanel
                 };
-	            y += entryLabel.Height + 2;
+                y += entryLabel.Height + 2;
             }
 
             return thirdPartyPanel;

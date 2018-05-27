@@ -2,7 +2,7 @@
 
 namespace FlaxEngine
 {
-	public sealed partial class DirectionalLight
-	{
-	}
+    public sealed partial class DirectionalLight
+    {
+    }
 }

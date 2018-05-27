@@ -23,7 +23,7 @@ namespace FlaxEditor.SceneGraph
         /// <param name="id">The child id.</param>
         /// <param name="index">The child index.</param>
         protected ActorChildNode(Guid id, int index)
-            : base(id)
+        : base(id)
         {
             Index = index;
         }
@@ -86,7 +86,7 @@ namespace FlaxEditor.SceneGraph
         /// <param name="id">The child id.</param>
         /// <param name="index">The child index.</param>
         protected ActorChildNode(T actor, Guid id, int index)
-            : base(id, index)
+        : base(id, index)
         {
             _actor = actor;
         }

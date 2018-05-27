@@ -13,7 +13,7 @@ namespace FlaxEditor.Surface.Elements
     {
         /// <inheritdoc />
         public OutputBox(SurfaceNode parentNode, NodeElementArchetype archetype)
-            : base(parentNode, archetype, archetype.Position + new Vector2(parentNode.Archetype.Size.X, 0))
+        : base(parentNode, archetype, archetype.Position + new Vector2(parentNode.Archetype.Size.X, 0))
         {
         }
 
@@ -70,7 +70,7 @@ namespace FlaxEditor.Surface.Elements
 
             // Draw text
             var style = Style.Current;
-            var rect = new Rectangle(-100, 0, 100 -2, Height);
+            var rect = new Rectangle(-100, 0, 100 - 2, Height);
             Render2D.DrawText(style.FontSmall, Archetype.Text, rect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Far, TextAlignment.Center);
         }
     }

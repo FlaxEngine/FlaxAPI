@@ -22,7 +22,7 @@ namespace FlaxEditor.Content
         /// <param name="path">The asset path.</param>
         /// <param name="id">The asset identifier.</param>
         public SceneItem(string path, Guid id)
-            : base(path, id, SceneAssetTypename)
+        : base(path, id, SceneAssetTypename)
         {
         }
 

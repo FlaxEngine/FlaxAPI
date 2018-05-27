@@ -14,7 +14,7 @@ namespace FlaxEditor.Content
         /// Initializes a new instance of the <see cref="RootContentTreeNode"/> class.
         /// </summary>
         public RootContentTreeNode()
-            : base(null, string.Empty)
+        : base(null, string.Empty)
         {
             _name = Editor.Instance.ProjectInfo.Name;
         }

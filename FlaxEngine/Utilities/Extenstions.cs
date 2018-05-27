@@ -3,7 +3,6 @@
 using System;
 using System.Globalization;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -19,37 +18,37 @@ namespace FlaxEngine.Utilities
         /// <typeparam name="T">Instance type of an object</typeparam>
         /// <returns>Returns new object of provided class</returns>
         public static T DeepClone<T>(this T instance)
-            where T : new()
+        where T : new()
         {
-		    Type type = typeof(T);
+            Type type = typeof(T);
 
-		    JsonSerializer jsonSerializer = JsonSerializer.CreateDefault(Json.JsonSerializer.Settings);
-		    jsonSerializer.Formatting = Formatting.Indented;
+            JsonSerializer jsonSerializer = JsonSerializer.CreateDefault(Json.JsonSerializer.Settings);
+            jsonSerializer.Formatting = Formatting.Indented;
 
-		    StringBuilder sb = new StringBuilder(256);
-		    StringWriter sw = new StringWriter(sb, CultureInfo.InvariantCulture);
-		    using (JsonTextWriter jsonWriter = new JsonTextWriter(sw))
-		    {
-			    // Prepare writer settings
-			    jsonWriter.IndentChar = '\t';
-			    jsonWriter.Indentation = 1;
-			    jsonWriter.Formatting = jsonSerializer.Formatting;
-			    jsonWriter.DateFormatHandling = jsonSerializer.DateFormatHandling;
-			    jsonWriter.DateTimeZoneHandling = jsonSerializer.DateTimeZoneHandling;
-			    jsonWriter.FloatFormatHandling = jsonSerializer.FloatFormatHandling;
-			    jsonWriter.StringEscapeHandling = jsonSerializer.StringEscapeHandling;
-			    jsonWriter.Culture = jsonSerializer.Culture;
-			    jsonWriter.DateFormatString = jsonSerializer.DateFormatString;
+            StringBuilder sb = new StringBuilder(256);
+            StringWriter sw = new StringWriter(sb, CultureInfo.InvariantCulture);
+            using (JsonTextWriter jsonWriter = new JsonTextWriter(sw))
+            {
+                // Prepare writer settings
+                jsonWriter.IndentChar = '\t';
+                jsonWriter.Indentation = 1;
+                jsonWriter.Formatting = jsonSerializer.Formatting;
+                jsonWriter.DateFormatHandling = jsonSerializer.DateFormatHandling;
+                jsonWriter.DateTimeZoneHandling = jsonSerializer.DateTimeZoneHandling;
+                jsonWriter.FloatFormatHandling = jsonSerializer.FloatFormatHandling;
+                jsonWriter.StringEscapeHandling = jsonSerializer.StringEscapeHandling;
+                jsonWriter.Culture = jsonSerializer.Culture;
+                jsonWriter.DateFormatString = jsonSerializer.DateFormatString;
 
-			    JsonSerializerInternalWriter serializerWriter = new JsonSerializerInternalWriter(jsonSerializer);
+                JsonSerializerInternalWriter serializerWriter = new JsonSerializerInternalWriter(jsonSerializer);
 
-			    serializerWriter.Serialize(jsonWriter, instance, type);
-		    }
+                serializerWriter.Serialize(jsonWriter, instance, type);
+            }
 
-		    return JsonConvert.DeserializeObject<T>(sb.ToString());
-	    }
+            return JsonConvert.DeserializeObject<T>(sb.ToString());
+        }
 
-	    /// <summary>
+        /// <summary>
         /// Splits string into lines
         /// </summary>
         /// <param name="str">Text to split</param>
@@ -57,7 +56,12 @@ namespace FlaxEngine.Utilities
         /// <returns>Array with all lines</returns>
         public static string[] GetLines(this string str, bool removeEmptyLines = false)
         {
-            return str.Split(new[] { "\r\n", "\r", "\n" }, removeEmptyLines ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None);
+            return str.Split(new[]
+            {
+                "\r\n",
+                "\r",
+                "\n"
+            }, removeEmptyLines ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None);
         }
 
         /// <summary>
@@ -129,55 +133,55 @@ namespace FlaxEngine.Utilities
                              NextFloat(random, 1.0f));
         }
 
-	    /// <summary>
-	    /// Gets a random Vector2 with components in range [0;1].
-	    /// </summary>
-	    /// <param name="random">The random.</param>
-	    /// <returns></returns>
-	    public static Vector2 NextVector2(this Random random)
-	    {
-		    return new Vector2(NextFloat(random, 1.0f),
-		                       NextFloat(random, 1.0f));
-	    }
+        /// <summary>
+        /// Gets a random Vector2 with components in range [0;1].
+        /// </summary>
+        /// <param name="random">The random.</param>
+        /// <returns></returns>
+        public static Vector2 NextVector2(this Random random)
+        {
+            return new Vector2(NextFloat(random, 1.0f),
+                               NextFloat(random, 1.0f));
+        }
 
-		/// <summary>
-		/// Gets a random Vector3 with components in range [0;1].
-		/// </summary>
-		/// <param name="random">The random.</param>
-		/// <returns></returns>
-		public static Vector3 NextVector3(this Random random)
-	    {
-		    return new Vector3(NextFloat(random, 1.0f),
-		                       NextFloat(random, 1.0f),
-		                       NextFloat(random, 1.0f));
-	    }
+        /// <summary>
+        /// Gets a random Vector3 with components in range [0;1].
+        /// </summary>
+        /// <param name="random">The random.</param>
+        /// <returns></returns>
+        public static Vector3 NextVector3(this Random random)
+        {
+            return new Vector3(NextFloat(random, 1.0f),
+                               NextFloat(random, 1.0f),
+                               NextFloat(random, 1.0f));
+        }
 
-	    /// <summary>
-	    /// Gets a random Vector4 with components in range [0;1].
-	    /// </summary>
-	    /// <param name="random">The random.</param>
-	    /// <returns></returns>
-	    public static Vector4 NextVector4(this Random random)
-	    {
-		    return new Vector4(NextFloat(random, 1.0f),
-		                       NextFloat(random, 1.0f),
-		                       NextFloat(random, 1.0f),
-		                       NextFloat(random, 1.0f));
-	    }
+        /// <summary>
+        /// Gets a random Vector4 with components in range [0;1].
+        /// </summary>
+        /// <param name="random">The random.</param>
+        /// <returns></returns>
+        public static Vector4 NextVector4(this Random random)
+        {
+            return new Vector4(NextFloat(random, 1.0f),
+                               NextFloat(random, 1.0f),
+                               NextFloat(random, 1.0f),
+                               NextFloat(random, 1.0f));
+        }
 
-		/// <summary>
-		/// Gets a random Quaternion.
-		/// </summary>
-		/// <param name="random">The random.</param>
-		/// <returns></returns>
-		public static Quaternion NextQuaternion(this Random random)
-	    {
-		    return Quaternion.Euler(NextFloat(random, -180, 180),
-		                            NextFloat(random, -180, 180),
-		                            NextFloat(random, -180, 180));
-	    }
+        /// <summary>
+        /// Gets a random Quaternion.
+        /// </summary>
+        /// <param name="random">The random.</param>
+        /// <returns></returns>
+        public static Quaternion NextQuaternion(this Random random)
+        {
+            return Quaternion.Euler(NextFloat(random, -180, 180),
+                                    NextFloat(random, -180, 180),
+                                    NextFloat(random, -180, 180));
+        }
 
-	    /// <summary>
+        /// <summary>
         /// Gets a random 64-bit signed integer value.
         /// </summary>
         /// <param name="random">The random.</param>

@@ -7,175 +7,183 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Loads and manages asset objects.
-	/// </summary>
-	public static partial class Content
-	{
-		/// <summary>
-		/// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not created (see log for error info).
-		/// </summary>
-		/// <param name="id">Asset unique ID.</param>
-		/// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
-		/// <returns>Asset instance if loaded, null otherwise.</returns>
+    /// <summary>
+    /// Loads and manages asset objects.
+    /// </summary>
+    public static partial class Content
+    {
+        /// <summary>
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not created (see log for error info).
+        /// </summary>
+        /// <param name="id">Asset unique ID.</param>
+        /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
+        /// <returns>Asset instance if loaded, null otherwise.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static T LoadAsync<T>(Guid id) where T : Asset
-		{
+        [UnmanagedCall]
+        public static T LoadAsync<T>(Guid id)where T : Asset
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return (T)Internal_LoadAsync1(ref id, typeof(T));
+            return (T)Internal_LoadAsync1(ref id, typeof(T));
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not created (see log for error info).
-		/// </summary>
-		/// <param name="path">Path to the asset.</param>
-		/// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
-		/// <returns>Asset instance if loaded, null otherwise.</returns>
+        /// <summary>
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not created (see log for error info).
+        /// </summary>
+        /// <param name="path">Path to the asset.</param>
+        /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
+        /// <returns>Asset instance if loaded, null otherwise.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static T LoadAsync<T>(string path) where T : Asset
-		{
+        [UnmanagedCall]
+        public static T LoadAsync<T>(string path)where T : Asset
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return (T)Internal_LoadAsync2(path, typeof(T));
+            return (T)Internal_LoadAsync2(path, typeof(T));
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not created (see log for error info).
-		/// </summary>
-		/// <param name="internalPath">Intenral path to the asset. Relative to the Engine startup folder and without an asset file extension.</param>
-		/// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
-		/// <returns>Asset instance if loaded, null otherwise.</returns>
+        /// <summary>
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not created (see log for error info).
+        /// </summary>
+        /// <param name="internalPath">Intenral path to the asset. Relative to the Engine startup folder and without an asset file extension.</param>
+        /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
+        /// <returns>Asset instance if loaded, null otherwise.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static T LoadAsyncInternal<T>(string internalPath) where T : Asset
-		{
+        [UnmanagedCall]
+        public static T LoadAsyncInternal<T>(string internalPath)where T : Asset
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return (T)Internal_LoadAsync3(internalPath, typeof(T));
+            return (T)Internal_LoadAsync3(internalPath, typeof(T));
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Renames the asset. Handles situation when asset is being loaded or storage file locked. Available only in editor.
-		/// </summary>
-		/// <param name="oldPath">The asset path to rename.</param>
-		/// <param name="newPath">The new asset path to set.</param>
-		/// <returns>True if failed, otherwise false.</returns>
+        /// <summary>
+        /// Renames the asset. Handles situation when asset is being loaded or storage file locked. Available only in editor.
+        /// </summary>
+        /// <param name="oldPath">The asset path to rename.</param>
+        /// <param name="newPath">The new asset path to set.</param>
+        /// <returns>True if failed, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static bool RenameAsset(string oldPath, string newPath) 
-		{
+        [UnmanagedCall]
+        public static bool RenameAsset(string oldPath, string newPath)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_RenameAsset(oldPath, newPath);
+            return Internal_RenameAsset(oldPath, newPath);
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Removes asset in a safe way. Available only in editor.
-		/// </summary>
-		/// <param name="path">The asset path.</param>
+        /// <summary>
+        /// Removes asset in a safe way. Available only in editor.
+        /// </summary>
+        /// <param name="path">The asset path.</param>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static void DeleteAsset(string path) 
-		{
+        [UnmanagedCall]
+        public static void DeleteAsset(string path)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_DeleteAsset(path);
+            Internal_DeleteAsset(path);
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets the asset from the Content Pool if it has been loaded.
-		/// </summary>
-		/// <param name="id">Asset unique ID.</param>
-		/// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
-		/// <returns>Asset instance if loaded, null otherwise.</returns>
+        /// <summary>
+        /// Gets the asset from the Content Pool if it has been loaded.
+        /// </summary>
+        /// <param name="id">Asset unique ID.</param>
+        /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
+        /// <returns>Asset instance if loaded, null otherwise.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static T GetAsset<T>(Guid id) where T : Asset
-		{
+        [UnmanagedCall]
+        public static T GetAsset<T>(Guid id)where T : Asset
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return (T)Internal_GetAsset1(ref id, typeof(T));
+            return (T)Internal_GetAsset1(ref id, typeof(T));
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets the asset from the Content Pool if it has been loaded.
-		/// </summary>
-		/// <param name="path">Path to the asset.</param>
-		/// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
-		/// <returns>Asset instance if loaded, null otherwise.</returns>
+        /// <summary>
+        /// Gets the asset from the Content Pool if it has been loaded.
+        /// </summary>
+        /// <param name="path">Path to the asset.</param>
+        /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
+        /// <returns>Asset instance if loaded, null otherwise.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static T GetAsset<T>(string path) where T : Asset
-		{
+        [UnmanagedCall]
+        public static T GetAsset<T>(string path)where T : Asset
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return (T)Internal_GetAsset2(path, typeof(T));
+            return (T)Internal_GetAsset2(path, typeof(T));
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets the amount of created asset objects.
-		/// </summary>
-		[UnmanagedCall]
-		public static int AssetsCount
-		{
+        /// <summary>
+        /// Gets the amount of created asset objects.
+        /// </summary>
+        [UnmanagedCall]
+        public static int AssetsCount
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetAssetsCount(); }
+            get { return Internal_GetAssetsCount(); }
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Asset Internal_LoadAsync1(ref Guid id, Type type);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Asset Internal_LoadAsync2(string path, Type type);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Asset Internal_LoadAsync3(string internalPath, Type type);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_RenameAsset(string oldPath, string newPath);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_DeleteAsset(string path);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Asset Internal_GetAsset1(ref Guid id, Type type);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern Asset Internal_GetAsset2(string path, Type type);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern int Internal_GetAssetsCount();
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Asset Internal_LoadAsync1(ref Guid id, Type type);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Asset Internal_LoadAsync2(string path, Type type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Asset Internal_LoadAsync3(string internalPath, Type type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_RenameAsset(string oldPath, string newPath);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DeleteAsset(string path);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Asset Internal_GetAsset1(ref Guid id, Type type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Asset Internal_GetAsset2(string path, Type type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetAssetsCount();
+#endif
+
+        #endregion
+    }
+}

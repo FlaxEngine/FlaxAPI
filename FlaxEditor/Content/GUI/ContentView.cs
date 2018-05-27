@@ -29,27 +29,27 @@ namespace FlaxEditor.Content.GUI
         /// Called when user wants to open the item.
         /// </summary>
         public event Action<ContentItem> OnOpen;
-        
+
         /// <summary>
         /// Called when user wants to rename the item.
         /// </summary>
         public event Action<ContentItem> OnRename;
-        
+
         /// <summary>
         /// Called when user wants to delete the item.
         /// </summary>
         public event Action<List<ContentItem>> OnDelete;
-        
+
         /// <summary>
         /// Called when user wants to paste the files/folders.
         /// </summary>
         public event Action<string[]> OnPaste;
-		
+
         /// <summary>
         /// Called when user wants to duplicate the item(s).
         /// </summary>
         public event Action<List<ContentItem>> OnDuplicate;
-        
+
         /// <summary>
         /// Called when user wants to navigate backward.
         /// </summary>
@@ -83,24 +83,24 @@ namespace FlaxEditor.Content.GUI
         /// </summary>
         public bool HasSelection => _selection.Count > 0;
 
-	    /// <summary>
-	    /// Gets or sets the view scale.
-	    /// </summary>
-	    public float ViewScale
-	    {
-		    get => _viewScale;
-		    set
-		    {
-			    value = Mathf.Clamp(value, 0.3f, 3.0f);
-			    if (!Mathf.NearEqual(value, _viewScale))
-			    {
-				    _viewScale = value;
-				    PerformLayout();
-			    }
-		    }
-	    }
+        /// <summary>
+        /// Gets or sets the view scale.
+        /// </summary>
+        public float ViewScale
+        {
+            get => _viewScale;
+            set
+            {
+                value = Mathf.Clamp(value, 0.3f, 3.0f);
+                if (!Mathf.NearEqual(value, _viewScale))
+                {
+                    _viewScale = value;
+                    PerformLayout();
+                }
+            }
+        }
 
-	    /// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="ContentView"/> class.
         /// </summary>
         public ContentView()
@@ -141,7 +141,7 @@ namespace FlaxEditor.Content.GUI
         /// <param name="additive">If set to <c>true</c> items will be added to the current selection. Otherwise selection will be cleared before.</param>
         public void ShowItems(List<ContentItem> items, bool additive = false)
         {
-            if(items == null)
+            if (items == null)
                 throw new ArgumentNullException();
 
             // Check if show nothing or not change view
@@ -224,7 +224,7 @@ namespace FlaxEditor.Content.GUI
             IsLayoutLocked = true;
 
             // Deselect items if need to
-            if(!additive)
+            if (!additive)
                 _selection.Clear();
 
             // Select items
@@ -262,7 +262,7 @@ namespace FlaxEditor.Content.GUI
             IsLayoutLocked = wasLayoutLocked;
             PerformLayout();
         }
-        
+
         /// <summary>
         /// Selects all the items.
         /// </summary>
@@ -275,12 +275,12 @@ namespace FlaxEditor.Content.GUI
             // Select items
             _selection.Clear();
             _selection.AddRange(_items);
-            
+
             // Unload and perform UI layout
             IsLayoutLocked = wasLayoutLocked;
             PerformLayout();
         }
-        
+
         /// <summary>
         /// Deselects the specified item.
         /// </summary>
@@ -316,36 +316,36 @@ namespace FlaxEditor.Content.GUI
         /// </summary>
         public void Copy()
         {
-	        if (_selection.Count == 0)
-		        return;
+            if (_selection.Count == 0)
+                return;
 
-	        var files = _selection.ConvertAll(x => x.Path).ToArray();
-	        Application.ClipboardFiles = files;
+            var files = _selection.ConvertAll(x => x.Path).ToArray();
+            Application.ClipboardFiles = files;
         }
 
-	    /// <summary>
-	    /// Returns true if user can paste data to the view (copied any files before).
-	    /// </summary>
-	    /// <returns>True if can paste files.</returns>
-	    public bool CanPaste()
-	    {
-		    var files = Application.ClipboardFiles;
-		    return files != null && files.Length > 0;
-	    }
+        /// <summary>
+        /// Returns true if user can paste data to the view (copied any files before).
+        /// </summary>
+        /// <returns>True if can paste files.</returns>
+        public bool CanPaste()
+        {
+            var files = Application.ClipboardFiles;
+            return files != null && files.Length > 0;
+        }
 
-	    /// <summary>
-	    /// Pastes the copied items (from the system clipboard).
-	    /// </summary>
-	    public void Paste()
-	    {
-		    var files = Application.ClipboardFiles;
-		    if (files == null || files.Length == 0)
-			    return;
+        /// <summary>
+        /// Pastes the copied items (from the system clipboard).
+        /// </summary>
+        public void Paste()
+        {
+            var files = Application.ClipboardFiles;
+            if (files == null || files.Length == 0)
+                return;
 
-		    OnPaste?.Invoke(files);
-	    }
+            OnPaste?.Invoke(files);
+        }
 
-	    /// <summary>
+        /// <summary>
         /// Gives focus and selects the first item in the view.
         /// </summary>
         public void SelectFirstItem()
@@ -379,8 +379,8 @@ namespace FlaxEditor.Content.GUI
         public void OnItemClick(ContentItem item)
         {
             bool isSelected = _selection.Contains(item);
-			
-			// Add/remove from selection
+
+            // Add/remove from selection
             if (ParentWindow.GetKey(Keys.Control))
             {
                 if (isSelected)
@@ -388,19 +388,19 @@ namespace FlaxEditor.Content.GUI
                 else
                     Select(item, true);
             }
-			// Range select
-			else if (ParentWindow.GetKey(Keys.Shift))
+            // Range select
+            else if (ParentWindow.GetKey(Keys.Shift))
             {
-	            int min = _selection.Min(x => x.IndexInParent);
-	            int max = _selection.Max(x => x.IndexInParent);
-	            min = Mathf.Min(min, item.IndexInParent);
-	            max = Mathf.Max(max, item.IndexInParent);
-	            var selection = new List<ContentItem>(_selection);
-	            for (int i = min; i <= max; i++)
-	            {
-					selection.Add((ContentItem)_children[i]);
-	            }
-	            Select(selection);
+                int min = _selection.Min(x => x.IndexInParent);
+                int max = _selection.Max(x => x.IndexInParent);
+                min = Mathf.Min(min, item.IndexInParent);
+                max = Mathf.Max(max, item.IndexInParent);
+                var selection = new List<ContentItem>(_selection);
+                for (int i = min; i <= max; i++)
+                {
+                    selection.Add((ContentItem)_children[i]);
+                }
+                Select(selection);
             }
             // Select
             else
@@ -466,6 +466,7 @@ namespace FlaxEditor.Content.GUI
             if (IsDragOver && _validDragOver)
                 Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), Style.Current.BackgroundSelected * 0.4f, true);
         }
+
         /// <inheritdoc />
         public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
         {
@@ -479,7 +480,7 @@ namespace FlaxEditor.Content.GUI
                 _validDragOver = true;
                 result = DragDropEffect.Copy;
             }
-            
+
             return result;
         }
 
@@ -538,7 +539,7 @@ namespace FlaxEditor.Content.GUI
             if (ParentWindow.GetKey(Keys.Control))
             {
                 // Zoom
-	            ViewScale += delta * 0.05f;
+                ViewScale += delta * 0.05f;
 
                 // Handled
                 return true;
@@ -581,34 +582,34 @@ namespace FlaxEditor.Content.GUI
                     return true;
                 }
 
-	            if (ParentWindow.GetKey(Keys.Control))
-	            {
-		            switch (key)
-		            {
-			            // Duplicate
-						case Keys.D:
-			            {
-				            Duplicate();
-				            return true;
-			            }
+                if (ParentWindow.GetKey(Keys.Control))
+                {
+                    switch (key)
+                    {
+                    // Duplicate
+                    case Keys.D:
+                    {
+                        Duplicate();
+                        return true;
+                    }
 
-						// Copy
-			            case Keys.C:
-			            {
-				            Copy();
-				            return true;
-			            }
+                    // Copy
+                    case Keys.C:
+                    {
+                        Copy();
+                        return true;
+                    }
 
-						// Paste
-			            case Keys.V:
-			            {
-				            Paste();
-				            return true;
-			            }
-					}
-	            }
+                    // Paste
+                    case Keys.V:
+                    {
+                        Paste();
+                        return true;
+                    }
+                    }
+                }
 
-	            // Movement with arrows
+                // Movement with arrows
                 {
                     var root = _selection[0];
                     Vector2 size = root.Size;
@@ -641,7 +642,7 @@ namespace FlaxEditor.Content.GUI
                     }
                 }
             }
-            
+
             return base.OnKeyDown(key);
         }
 

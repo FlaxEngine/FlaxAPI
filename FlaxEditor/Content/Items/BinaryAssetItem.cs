@@ -19,7 +19,7 @@ namespace FlaxEditor.Content
         /// <param name="typeName">The asset type name identifier.</param>
         /// <param name="domain">The asset domain.</param>
         public BinaryAssetItem(string path, Guid id, string typeName, ContentDomain domain)
-            : base(path, typeName, ref id)
+        : base(path, typeName, ref id)
         {
             ItemDomain = domain;
         }

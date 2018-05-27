@@ -120,7 +120,7 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="PanelWithMargins"/> class.
         /// </summary>
         protected PanelWithMargins()
-            : base(0, 0, 64, 64)
+        : base(0, 0, 64, 64)
         {
             CanFocus = false;
             _performChildrenLayoutFirst = true;

@@ -16,7 +16,7 @@ namespace FlaxEditor.GUI
         /// The default margin for button parts (icon, text, etc.).
         /// </summary>
         public const int DefaultMargin = 2;
-		
+
         private Sprite _icon;
         private bool _mouseDown;
 
@@ -34,7 +34,7 @@ namespace FlaxEditor.GUI
         /// The automatic check mode.
         /// </summary>
         public bool AutoCheck;
-		
+
         /// <summary>
         /// The icon.
         /// </summary>
@@ -54,11 +54,11 @@ namespace FlaxEditor.GUI
         /// <param name="height">The height.</param>
         /// <param name="icon">The icon.</param>
         public ToolStripButton(float height, ref Sprite icon)
-            : base(0, 0, height, height)
+        : base(0, 0, height, height)
         {
             _icon = icon;
         }
-		
+
         /// <summary>
         /// Sets the automatic check mode.
         /// </summary>
@@ -118,9 +118,9 @@ namespace FlaxEditor.GUI
                     TextAlignment.Center);
             }
         }
-		
-	    /// <inheritdoc />
-	    public override void PerformLayout(bool force = false)
+
+        /// <inheritdoc />
+        public override void PerformLayout(bool force = false)
         {
             var style = Style.Current;
             float iconSize = Height - DefaultMargin;

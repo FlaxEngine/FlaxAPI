@@ -21,7 +21,7 @@ namespace FlaxEngine.GUI
             get => _tileSize;
             set
             {
-                if(value.MinValue <= 0.0f)
+                if (value.MinValue <= 0.0f)
                     throw new ArgumentException("Tiles cannot have negative size.");
 
                 if (!Vector2.Equals(ref _tileSize, ref value))

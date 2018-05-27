@@ -7,169 +7,182 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// A special type of volume that blends custom set of post process settings into the rendering pipeline.
-	/// </summary>
-	[Serializable]
-	public sealed partial class PostFxVolume : Actor
-	{
-		/// <summary>
-		/// Creates new <see cref="PostFxVolume"/> object.
-		/// </summary>
-		private PostFxVolume() : base()
-		{
-		}
+    /// <summary>
+    /// A special type of volume that blends custom set of post process settings into the rendering pipeline.
+    /// </summary>
+    [Serializable]
+    public sealed partial class PostFxVolume : Actor
+    {
+        /// <summary>
+        /// Creates new <see cref="PostFxVolume"/> object.
+        /// </summary>
+        private PostFxVolume() : base()
+        {
+        }
 
-		/// <summary>
-		/// Creates new instance of <see cref="PostFxVolume"/> object.
-		/// </summary>
-		/// <returns>Created object.</returns>
+        /// <summary>
+        /// Creates new instance of <see cref="PostFxVolume"/> object.
+        /// </summary>
+        /// <returns>Created object.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static PostFxVolume New() 
-		{
+        [UnmanagedCall]
+        public static PostFxVolume New()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Create(typeof(PostFxVolume)) as PostFxVolume;
+            return Internal_Create(typeof(PostFxVolume)) as PostFxVolume;
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets center of the volume in the local space.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorDisplay("PostFx Volume"), EditorOrder(40), Tooltip("Volume center (local space of the actor)")]
-		public Vector3 Center
-		{
+        /// <summary>
+        /// Gets or sets center of the volume in the local space.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorDisplay("PostFx Volume"), EditorOrder(40), Tooltip("Volume center (local space of the actor)")]
+        public Vector3 Center
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { Vector3 resultAsRef; Internal_GetCenter(unmanagedPtr, out resultAsRef); return resultAsRef; }
-			set { Internal_SetCenter(unmanagedPtr, ref value); }
+            get { Vector3 resultAsRef; Internal_GetCenter(unmanagedPtr, out resultAsRef); return resultAsRef; }
+            set { Internal_SetCenter(unmanagedPtr, ref value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets size of the volume in the local space.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorDisplay("PostFx Volume"), EditorOrder(50), Tooltip("Volume size")]
-		public Vector3 Size
-		{
+        /// <summary>
+        /// Gets or sets size of the volume in the local space.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorDisplay("PostFx Volume"), EditorOrder(50), Tooltip("Volume size")]
+        public Vector3 Size
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { Vector3 resultAsRef; Internal_GetSize(unmanagedPtr, out resultAsRef); return resultAsRef; }
-			set { Internal_SetSize(unmanagedPtr, ref value); }
+            get { Vector3 resultAsRef; Internal_GetSize(unmanagedPtr, out resultAsRef); return resultAsRef; }
+            set { Internal_SetSize(unmanagedPtr, ref value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the order in which multiple volumes are blended together. The volume with the highest priority takes precedence over all other overlapping volumes.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorDisplay("PostFx Volume"), EditorOrder(60), Tooltip("Volume blending priority. Highest priority takes precedence over all other overlapping volumes.")]
-		public int Priority
-		{
+        /// <summary>
+        /// Gets or sets the order in which multiple volumes are blended together. The volume with the highest priority takes precedence over all other overlapping volumes.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorDisplay("PostFx Volume"), EditorOrder(60), Tooltip("Volume blending priority. Highest priority takes precedence over all other overlapping volumes.")]
+        public int Priority
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetPriority(unmanagedPtr); }
-			set { Internal_SetPriority(unmanagedPtr, value); }
+            get { return Internal_GetPriority(unmanagedPtr); }
+            set { Internal_SetPriority(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the distance inside the volume at which blending with the volume's settings occurs.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorDisplay("PostFx Volume"), EditorOrder(70), Tooltip("Settings blending fade out radius (inner distance)")]
-		public float BlendRadius
-		{
+        /// <summary>
+        /// Gets or sets the distance inside the volume at which blending with the volume's settings occurs.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorDisplay("PostFx Volume"), EditorOrder(70), Tooltip("Settings blending fade out radius (inner distance)")]
+        public float BlendRadius
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetBlendRadius(unmanagedPtr); }
-			set { Internal_SetBlendRadius(unmanagedPtr, value); }
+            get { return Internal_GetBlendRadius(unmanagedPtr); }
+            set { Internal_SetBlendRadius(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the amount of influence the volume's properties have. 0 is no effect; 1 is full effect.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorDisplay("PostFx Volume"), EditorOrder(80), Tooltip("Settings blending weight")]
-		public float BlendWeight
-		{
+        /// <summary>
+        /// Gets or sets the amount of influence the volume's properties have. 0 is no effect; 1 is full effect.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorDisplay("PostFx Volume"), EditorOrder(80), Tooltip("Settings blending weight")]
+        public float BlendWeight
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetBlendWeight(unmanagedPtr); }
-			set { Internal_SetBlendWeight(unmanagedPtr, value); }
+            get { return Internal_GetBlendWeight(unmanagedPtr); }
+            set { Internal_SetBlendWeight(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the value indicating whether the bounds of the volume are taken into account. If false, the volume affects the entire world, regardless of its bounds. If true, the volume only has an effect within its bounds.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorDisplay("PostFx Volume"), EditorOrder(90), Tooltip("Determinates whether the bounds of the volume are used when blending")]
-		public bool IsBounded
-		{
+        /// <summary>
+        /// Gets or sets the value indicating whether the bounds of the volume are taken into account. If false, the volume affects the entire world, regardless of its bounds. If true, the volume only has an effect within its bounds.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorDisplay("PostFx Volume"), EditorOrder(90), Tooltip("Determinates whether the bounds of the volume are used when blending")]
+        public bool IsBounded
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetIsBounded(unmanagedPtr); }
-			set { Internal_SetIsBounded(unmanagedPtr, value); }
+            get { return Internal_GetIsBounded(unmanagedPtr); }
+            set { Internal_SetIsBounded(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets the volume bounding box (oriented).
-		/// </summary>
-		[UnmanagedCall]
-		public OrientedBoundingBox OrientedBox
-		{
+        /// <summary>
+        /// Gets the volume bounding box (oriented).
+        /// </summary>
+        [UnmanagedCall]
+        public OrientedBoundingBox OrientedBox
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { OrientedBoundingBox resultAsRef; Internal_GetOrientedBox(unmanagedPtr, out resultAsRef); return resultAsRef; }
+            get { OrientedBoundingBox resultAsRef; Internal_GetOrientedBox(unmanagedPtr, out resultAsRef); return resultAsRef; }
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetCenter(IntPtr obj, out Vector3 resultAsRef);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetCenter(IntPtr obj, ref Vector3 val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetSize(IntPtr obj, out Vector3 resultAsRef);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetSize(IntPtr obj, ref Vector3 val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern int Internal_GetPriority(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetPriority(IntPtr obj, int val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetBlendRadius(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetBlendRadius(IntPtr obj, float val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetBlendWeight(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetBlendWeight(IntPtr obj, float val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetIsBounded(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetIsBounded(IntPtr obj, bool val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetOrientedBox(IntPtr obj, out OrientedBoundingBox resultAsRef);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetCenter(IntPtr obj, out Vector3 resultAsRef);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetCenter(IntPtr obj, ref Vector3 val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetSize(IntPtr obj, out Vector3 resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetSize(IntPtr obj, ref Vector3 val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetPriority(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetPriority(IntPtr obj, int val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetBlendRadius(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetBlendRadius(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetBlendWeight(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetBlendWeight(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetIsBounded(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetIsBounded(IntPtr obj, bool val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetOrientedBox(IntPtr obj, out OrientedBoundingBox resultAsRef);
+#endif
+
+        #endregion
+    }
+}

@@ -164,6 +164,5 @@ namespace FlaxEngine.Rendering
 #endif
 
         #endregion
-
     }
 }

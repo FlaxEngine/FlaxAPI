@@ -45,9 +45,9 @@ namespace FlaxEditor.Surface
         /// </summary>
         NoRemove = 32,
 
-		/// <summary>
-		/// Node only for the animation graphs.
-		/// </summary>
-		AnimGraphOnly = 64,
+        /// <summary>
+        /// Node only for the animation graphs.
+        /// </summary>
+        AnimGraphOnly = 64,
     }
 }

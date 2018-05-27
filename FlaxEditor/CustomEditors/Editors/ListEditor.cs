@@ -52,7 +52,7 @@ namespace FlaxEditor.CustomEditors.Editors
                         newValues.Add(defaultValue);
                     }
                 }
-                
+
                 SetValue(newValues);
             }
         }

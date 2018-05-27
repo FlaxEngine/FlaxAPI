@@ -61,7 +61,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 IsScrollable = true,
                 Parent = panel1
             };
-            
+
             // Init groups
             var groups = NodeFactory.Groups;
             var nodes = new List<NodeArchetype>();
@@ -69,24 +69,24 @@ namespace FlaxEditor.Surface.ContextMenu
             {
                 // Get valid nodes
                 nodes.Clear();
-	            foreach (var nodeArchetype in groupArchetype.Archetypes)
-	            {
-		            if ((nodeArchetype.Flags & NodeFlags.NoSpawnViaGUI) != 0)
-			            continue;
+                foreach (var nodeArchetype in groupArchetype.Archetypes)
+                {
+                    if ((nodeArchetype.Flags & NodeFlags.NoSpawnViaGUI) != 0)
+                        continue;
 
-		            if (type != SurfaceType.Material && (nodeArchetype.Flags & NodeFlags.MaterialOnly) != 0)
-			            continue;
+                    if (type != SurfaceType.Material && (nodeArchetype.Flags & NodeFlags.MaterialOnly) != 0)
+                        continue;
 
-		            if (type != SurfaceType.AnimationGraph && (nodeArchetype.Flags & NodeFlags.AnimGraphOnly) != 0)
-			            continue;
+                    if (type != SurfaceType.AnimationGraph && (nodeArchetype.Flags & NodeFlags.AnimGraphOnly) != 0)
+                        continue;
 
-		            if (type != SurfaceType.Visject && (nodeArchetype.Flags & NodeFlags.VisjectOnly) != 0)
-			            continue;
+                    if (type != SurfaceType.Visject && (nodeArchetype.Flags & NodeFlags.VisjectOnly) != 0)
+                        continue;
 
-		            nodes.Add(nodeArchetype);
-	            }
+                    nodes.Add(nodeArchetype);
+                }
 
-	            // Check if can create group for them
+                // Check if can create group for them
                 if (nodes.Count > 0)
                 {
                     var group = new VisjectCMGroup(this, groupArchetype);
@@ -150,7 +150,7 @@ namespace FlaxEditor.Surface.ContextMenu
             ResetView();
             Focus();
             _waitingForInput = true;
-            
+
             base.OnShow();
         }
 

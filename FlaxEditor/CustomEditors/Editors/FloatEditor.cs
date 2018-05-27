@@ -33,8 +33,8 @@ namespace FlaxEditor.CustomEditors.Editors
                     var slider = layout.Slider();
                     slider.SetLimits((RangeAttribute)range);
                     slider.Slider.ValueChanged += OnValueChanged;
-	                slider.Slider.SlidingEnd += ClearToken;
-					element = slider;
+                    slider.Slider.SlidingEnd += ClearToken;
+                    element = slider;
                 }
                 var limit = attributes.FirstOrDefault(x => x is LimitAttribute);
                 if (limit != null)
@@ -43,8 +43,8 @@ namespace FlaxEditor.CustomEditors.Editors
                     var floatValue = layout.FloatValue();
                     floatValue.SetLimits((LimitAttribute)limit);
                     floatValue.FloatValue.ValueChanged += OnValueChanged;
-	                floatValue.FloatValue.SlidingEnd += ClearToken;
-					element = floatValue;
+                    floatValue.FloatValue.SlidingEnd += ClearToken;
+                    element = floatValue;
                 }
             }
             if (element == null)
@@ -57,15 +57,15 @@ namespace FlaxEditor.CustomEditors.Editors
             }
         }
 
-	    private void OnValueChanged()
-	    {
-		    var isSliding = element.IsSliding;
-		    var token = isSliding ? this : null;
-		    SetValue(element.Value, token);
-	    }
+        private void OnValueChanged()
+        {
+            var isSliding = element.IsSliding;
+            var token = isSliding ? this : null;
+            SetValue(element.Value, token);
+        }
 
-	    /// <inheritdoc />
-		public override void Refresh()
+        /// <inheritdoc />
+        public override void Refresh()
         {
             if (HasDifferentValues)
             {

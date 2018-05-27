@@ -7,64 +7,67 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Interop class used to access Flax global variables via C# API.
-	/// </summary>
-	public static partial class Globals
-	{
-		/// <summary>
-		/// Gets Flax global paths.
-		/// </summary>
-		/// <returns>Array with Flax global paths.</returns>
+    /// <summary>
+    /// Interop class used to access Flax global variables via C# API.
+    /// </summary>
+    public static partial class Globals
+    {
+        /// <summary>
+        /// Gets Flax global paths.
+        /// </summary>
+        /// <returns>Array with Flax global paths.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static string[] GetPaths() 
-		{
+        [UnmanagedCall]
+        public static string[] GetPaths()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_GetPaths();
+            return Internal_GetPaths();
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets the Flax version text.
-		/// </summary>
-		[UnmanagedCall]
-		public static string Version
-		{
+        /// <summary>
+        /// Gets the Flax version text.
+        /// </summary>
+        [UnmanagedCall]
+        public static string Version
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetVersion(); }
+            get { return Internal_GetVersion(); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets the Flax build number.
-		/// </summary>
-		[UnmanagedCall]
-		public static int BuildNumber
-		{
+        /// <summary>
+        /// Gets the Flax build number.
+        /// </summary>
+        [UnmanagedCall]
+        public static int BuildNumber
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetBuildNumber(); }
+            get { return Internal_GetBuildNumber(); }
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern string[] Internal_GetPaths();
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern string Internal_GetVersion();
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern int Internal_GetBuildNumber();
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern string[] Internal_GetPaths();
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern string Internal_GetVersion();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetBuildNumber();
+#endif
+
+        #endregion
+    }
+}

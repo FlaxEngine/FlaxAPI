@@ -89,7 +89,7 @@ namespace FlaxEditor.Content
         /// <param name="path">The path to the item.</param>
         /// <param name="node">The folder parent node.</param>
         internal ContentFolder(ContentFolderType type, string path, ContentTreeNode node)
-            : base(path)
+        : base(path)
         {
             FolderType = type;
             Node = node;
@@ -125,10 +125,10 @@ namespace FlaxEditor.Content
         public override ContentItemType ItemType => ContentItemType.Folder;
 
         /// <inheritdoc />
-        public override bool CanRename => ParentFolder != null;// Deny rename action for root folders
+        public override bool CanRename => ParentFolder != null; // Deny rename action for root folders
 
         /// <inheritdoc />
-        public override bool CanDrag => ParentFolder != null;// Deny rename action for root folders
+        public override bool CanDrag => ParentFolder != null; // Deny rename action for root folders
 
         /// <inheritdoc />
         public override bool Exists => System.IO.Directory.Exists(Path);

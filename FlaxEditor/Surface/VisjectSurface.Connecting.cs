@@ -62,47 +62,47 @@ namespace FlaxEditor.Surface
             return true;
         }
 
-	    /// <summary>
-	    /// Checks if can use direct conversion from one type to another.
-	    /// </summary>
-	    /// <param name="from">Source type.</param>
-	    /// <param name="to">Target type.</param>
-	    /// <returns>True if can use direct conversion, otherwise false.</returns>
-	    public bool CanUseDirectCast(ConnectionType from, ConnectionType to)
-	    {
-		    bool result = (from & to) != 0;
-		    if (!result)
-		    {
-			    // Implicit casting is supported for primitive types
-			    switch (from)
-			    {
-				    case ConnectionType.Bool:
-				    case ConnectionType.Integer:
-				    case ConnectionType.Float:
-				    case ConnectionType.Vector2:
-				    case ConnectionType.Vector3:
-				    case ConnectionType.Vector4:
-				    case ConnectionType.Rotation:
-					    switch (to)
-					    {
-						    case ConnectionType.Bool:
-						    case ConnectionType.Integer:
-						    case ConnectionType.Float:
-						    case ConnectionType.Vector2:
-						    case ConnectionType.Vector3:
-						    case ConnectionType.Vector4:
-						    case ConnectionType.Rotation:
-							    result = true;
-							    break;
-					    }
-					    break;
-			    }
-		    }
+        /// <summary>
+        /// Checks if can use direct conversion from one type to another.
+        /// </summary>
+        /// <param name="from">Source type.</param>
+        /// <param name="to">Target type.</param>
+        /// <returns>True if can use direct conversion, otherwise false.</returns>
+        public bool CanUseDirectCast(ConnectionType from, ConnectionType to)
+        {
+            bool result = (from & to) != 0;
+            if (!result)
+            {
+                // Implicit casting is supported for primitive types
+                switch (from)
+                {
+                case ConnectionType.Bool:
+                case ConnectionType.Integer:
+                case ConnectionType.Float:
+                case ConnectionType.Vector2:
+                case ConnectionType.Vector3:
+                case ConnectionType.Vector4:
+                case ConnectionType.Rotation:
+                    switch (to)
+                    {
+                    case ConnectionType.Bool:
+                    case ConnectionType.Integer:
+                    case ConnectionType.Float:
+                    case ConnectionType.Vector2:
+                    case ConnectionType.Vector3:
+                    case ConnectionType.Vector4:
+                    case ConnectionType.Rotation:
+                        result = true;
+                        break;
+                    }
+                    break;
+                }
+            }
 
-		    return result;
-	    }
+            return result;
+        }
 
-	    internal void OnMosueOverBox(Box box)
+        internal void OnMosueOverBox(Box box)
         {
             _lastBoxUnderMouse = box;
         }
@@ -129,14 +129,14 @@ namespace FlaxEditor.Surface
             // Ensure that there was a proper start box
             if (_startBox == null)
                 return;
-            
+
             Box start = _startBox;
             _startBox = null;
 
             // Check if boxes are different and end box is specified
             if (start == end || end == null)
                 return;
-            
+
             // Check if boxes are connected
             bool areConnected = start.AreConnected(end);
 

@@ -20,7 +20,6 @@ namespace FlaxEngine.Utilities
         /// <summary>
         /// Gets a value indicating whether this state is active.
         /// </summary>
-        /// <value><c>true</c> if this state is active; otherwise, <c>false</c>.</value>
         public bool IsActive => owner != null && owner.CurrentState == this;
 
         /// <summary>

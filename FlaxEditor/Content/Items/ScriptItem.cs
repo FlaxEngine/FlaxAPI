@@ -16,20 +16,20 @@ namespace FlaxEditor.Content
         /// </summary>
         public string ScriptName => FilterScriptName(ShortName);
 
-	    /// <summary>
-	    /// Checks if the script item references the valid use script type that can be used in a gameplay.
-	    /// </summary>
-	    public bool IsValid
-	    {
-		    get { return ScriptsBuilder.FindScript(ScriptName) != null; }
-	    }
+        /// <summary>
+        /// Checks if the script item references the valid use script type that can be used in a gameplay.
+        /// </summary>
+        public bool IsValid
+        {
+            get { return ScriptsBuilder.FindScript(ScriptName) != null; }
+        }
 
-	    /// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="ScriptItem"/> class.
         /// </summary>
         /// <param name="path">The path to the item.</param>
         public ScriptItem(string path)
-            : base(path)
+        : base(path)
         {
         }
 

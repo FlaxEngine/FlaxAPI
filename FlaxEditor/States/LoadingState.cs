@@ -24,7 +24,7 @@ namespace FlaxEditor.States
         public override bool CanReloadScripts => true;
 
         internal LoadingState(Editor editor)
-            : base(editor)
+        : base(editor)
         {
         }
 

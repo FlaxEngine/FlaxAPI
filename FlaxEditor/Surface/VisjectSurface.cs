@@ -129,50 +129,50 @@ namespace FlaxEditor.Surface
         /// Gets a value indicating whether user is moving selected nodes.
         /// </summary>
         public bool IsMovignSelection => _leftMouseDown && _isMovingSelection && _startBox == null;
-        
+
         /// <summary>
         /// Gets a value indicating whether user is connecting nodes.
         /// </summary>
         public bool IsConnecting => _startBox != null;
 
-		/// <summary>
-		/// Returns true if any node is selected by the user (one or more).
-		/// </summary>
-	    public bool HasSelection
-	    {
-		    get
-		    {
-			    for (int i = 0; i < _nodes.Count; i++)
-			    {
-				    if (_nodes[i].IsSelected)
-					    return true;
-			    }
+        /// <summary>
+        /// Returns true if any node is selected by the user (one or more).
+        /// </summary>
+        public bool HasSelection
+        {
+            get
+            {
+                for (int i = 0; i < _nodes.Count; i++)
+                {
+                    if (_nodes[i].IsSelected)
+                        return true;
+                }
 
-				return false;
-		    }
-	    }
+                return false;
+            }
+        }
 
-	    /// <summary>
-	    /// Gets the list of the selected nodes.
-	    /// </summary>
-	    public List<SurfaceNode> Selection
-	    {
-		    get
-		    {
-			    List<SurfaceNode> selection = new List<SurfaceNode>();
-			    for (int i = 0; i < _nodes.Count; i++)
-			    {
-				    if (_nodes[i].IsSelected)
-					    selection.Add(_nodes[i]);
-			    }
-			    return selection;
-		    }
-	    }
+        /// <summary>
+        /// Gets the list of the selected nodes.
+        /// </summary>
+        public List<SurfaceNode> Selection
+        {
+            get
+            {
+                List<SurfaceNode> selection = new List<SurfaceNode>();
+                for (int i = 0; i < _nodes.Count; i++)
+                {
+                    if (_nodes[i].IsSelected)
+                        selection.Add(_nodes[i]);
+                }
+                return selection;
+            }
+        }
 
-		/// <summary>
-		/// The metadata.
-		/// </summary>
-		public readonly SurfaceMeta Meta = new SurfaceMeta();
+        /// <summary>
+        /// The metadata.
+        /// </summary>
+        public readonly SurfaceMeta Meta = new SurfaceMeta();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VisjectSurface"/> class.
@@ -201,28 +201,28 @@ namespace FlaxEditor.Surface
             _cmSecondaryMenu = new FlaxEngine.GUI.ContextMenu();
             _cmSecondaryMenu.AddButton("Save", Owner.OnSurfaceSave);
             _cmSecondaryMenu.AddSeparator();
-	        _cmCopyButton = _cmSecondaryMenu.AddButton("Copy", Copy);
-	        _cmPasteButton = _cmSecondaryMenu.AddButton("Paste", Paste);
-			_cmDuplicateButton = _cmSecondaryMenu.AddButton("Duplicate", Duplicate);
-	        _cmCutButton = _cmSecondaryMenu.AddButton("Cut", Cut);
-	        _cmDeleteButton = _cmSecondaryMenu.AddButton("Delete", Delete);
-	        _cmSecondaryMenu.AddSeparator();
-	        _cmRemoveNodeConnectionsButton = _cmSecondaryMenu.AddButton("Remove all connections to that node(s)", () =>
-	        {
-		        var nodes = ((List<SurfaceNode>)_cmSecondaryMenu.Tag);
-		        foreach (var node in nodes)
-				{
-					node.RemoveConnections();
-				}
-	            MarkAsEdited();
+            _cmCopyButton = _cmSecondaryMenu.AddButton("Copy", Copy);
+            _cmPasteButton = _cmSecondaryMenu.AddButton("Paste", Paste);
+            _cmDuplicateButton = _cmSecondaryMenu.AddButton("Duplicate", Duplicate);
+            _cmCutButton = _cmSecondaryMenu.AddButton("Cut", Cut);
+            _cmDeleteButton = _cmSecondaryMenu.AddButton("Delete", Delete);
+            _cmSecondaryMenu.AddSeparator();
+            _cmRemoveNodeConnectionsButton = _cmSecondaryMenu.AddButton("Remove all connections to that node(s)", () =>
+            {
+                var nodes = ((List<SurfaceNode>)_cmSecondaryMenu.Tag);
+                foreach (var node in nodes)
+                {
+                    node.RemoveConnections();
+                }
+                MarkAsEdited();
             });
-	        _cmRemoveBoxConnectionsButton = _cmSecondaryMenu.AddButton("Remove all connections to that box", () =>
-	        {
-		        var boxUnderMouse = (Box)_cmRemoveBoxConnectionsButton.Tag;
-		        boxUnderMouse.RemoveConnections();
-		        MarkAsEdited();
-			});
-            
+            _cmRemoveBoxConnectionsButton = _cmSecondaryMenu.AddButton("Remove all connections to that box", () =>
+            {
+                var boxUnderMouse = (Box)_cmRemoveBoxConnectionsButton.Tag;
+                boxUnderMouse.RemoveConnections();
+                MarkAsEdited();
+            });
+
             // Set initial scale to provide nice zoom in effect on startup
             _surface.Scale = new Vector2(0.5f);
         }
@@ -317,10 +317,10 @@ namespace FlaxEditor.Surface
         {
             ClearSelection();
 
-	        foreach (var node in nodes)
-	        {
-				node.IsSelected = true;
-			}
+            foreach (var node in nodes)
+            {
+                node.IsSelected = true;
+            }
         }
 
         /// <summary>
@@ -332,19 +332,19 @@ namespace FlaxEditor.Surface
             node.IsSelected = false;
         }
 
-	    /// <summary>
-	    /// Deletes the specified collection of the nodes.
-	    /// </summary>
-	    /// <param name="nodes">The nodes.</param>
-	    public void Delete(IEnumerable<SurfaceNode> nodes)
-	    {
-		    foreach (var node in nodes)
-		    {
-			    Delete(node);
-		    }
-	    }
+        /// <summary>
+        /// Deletes the specified collection of the nodes.
+        /// </summary>
+        /// <param name="nodes">The nodes.</param>
+        public void Delete(IEnumerable<SurfaceNode> nodes)
+        {
+            foreach (var node in nodes)
+            {
+                Delete(node);
+            }
+        }
 
-	    /// <summary>
+        /// <summary>
         /// Deletes the specified node.
         /// </summary>
         /// <param name="node">The node.</param>
@@ -387,7 +387,7 @@ namespace FlaxEditor.Surface
             if (edited)
                 MarkAsEdited();
         }
-		
+
         /// <summary>
         /// Finds the node of the given type.
         /// </summary>
@@ -430,25 +430,25 @@ namespace FlaxEditor.Surface
             return result;
         }
 
-		/// <summary>
-		/// Gets the parameter by the given ID.
-		/// </summary>
-		/// <param name="id">The identifier.</param>
-		/// <returns>Found parameter instance or null if missing.</returns>
-		public SurfaceParameter GetParameter(Guid id)
-	    {
-		    SurfaceParameter result = null;
-		    for (int i = 0; i < Parameters.Count; i++)
-		    {
-			    var parameter = Parameters[i];
-			    if (parameter.ID == id)
-			    {
-				    result = parameter;
-				    break;
-			    }
-		    }
-		    return result;
-		}
+        /// <summary>
+        /// Gets the parameter by the given ID.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Found parameter instance or null if missing.</returns>
+        public SurfaceParameter GetParameter(Guid id)
+        {
+            SurfaceParameter result = null;
+            for (int i = 0; i < Parameters.Count; i++)
+            {
+                var parameter = Parameters[i];
+                if (parameter.ID == id)
+                {
+                    result = parameter;
+                    break;
+                }
+            }
+            return result;
+        }
 
         /// <summary>
         /// Spawns the node.
@@ -470,7 +470,7 @@ namespace FlaxEditor.Surface
             return null;
         }
 
-	    private uint GetFreeNodeID()
+        private uint GetFreeNodeID()
         {
             uint result = 1;
             while (true)
@@ -490,7 +490,7 @@ namespace FlaxEditor.Surface
             }
             return result;
         }
-		
+
         /// <summary>
         /// Spawns the node.
         /// </summary>
@@ -546,40 +546,40 @@ namespace FlaxEditor.Surface
                 ISurfaceNodeElement element = null;
                 switch (arch.Type)
                 {
-                    case NodeElementType.Input:
-                        element = new InputBox(node, arch);
-                        break;
-                    case NodeElementType.Output:
-                        element = new OutputBox(node, arch);
-                        break;
-                    case NodeElementType.BoolValue:
-                        element = new BoolValue(node, arch);
-                        break;
-                    case NodeElementType.FloatValue:
-                        element = new FloatValue(node, arch);
-                        break;
-                    case NodeElementType.IntegerValue:
-                        element = new IntegerValue(node, arch);
-                        break;
-                    case NodeElementType.ColorValue:
-                        element = new ColorValue(node, arch);
-                        break;
-                    case NodeElementType.ComboBox:
-                        element = new ComboBoxElement(node, arch);
-                        break;
-                    case NodeElementType.Asset:
-                        element = new AssetSelect(node, arch);
-                        break;
-                    case NodeElementType.Text:
-                        element = new TextView(node, arch);
-                        break;
-                    case NodeElementType.TextBox:
-                        element = new TextBoxView(node, arch);
-                        break;
-					case NodeElementType.SkeletonNodeSelect:
-						element = new SkeletonNodeSelectElement(node, arch);
-						break;
-				}
+                case NodeElementType.Input:
+                    element = new InputBox(node, arch);
+                    break;
+                case NodeElementType.Output:
+                    element = new OutputBox(node, arch);
+                    break;
+                case NodeElementType.BoolValue:
+                    element = new BoolValue(node, arch);
+                    break;
+                case NodeElementType.FloatValue:
+                    element = new FloatValue(node, arch);
+                    break;
+                case NodeElementType.IntegerValue:
+                    element = new IntegerValue(node, arch);
+                    break;
+                case NodeElementType.ColorValue:
+                    element = new ColorValue(node, arch);
+                    break;
+                case NodeElementType.ComboBox:
+                    element = new ComboBoxElement(node, arch);
+                    break;
+                case NodeElementType.Asset:
+                    element = new AssetSelect(node, arch);
+                    break;
+                case NodeElementType.Text:
+                    element = new TextView(node, arch);
+                    break;
+                case NodeElementType.TextBox:
+                    element = new TextBoxView(node, arch);
+                    break;
+                case NodeElementType.SkeletonNodeSelect:
+                    element = new SkeletonNodeSelectElement(node, arch);
+                    break;
+                }
                 if (element != null)
                 {
                     // Link element

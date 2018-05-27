@@ -229,7 +229,7 @@ namespace FlaxEditor.Content
         /// </summary>
         /// <param name="path">The path to the item.</param>
         protected ContentItem(string path)
-            : base(0, 0, DefaultWidth, DefaultHeight)
+        : base(0, 0, DefaultWidth, DefaultHeight)
         {
             // Set path
             Path = path;
@@ -243,7 +243,7 @@ namespace FlaxEditor.Content
         internal virtual void UpdatePath(string value)
         {
             Assert.AreNotEqual(Path, value);
-            
+
             // Set path
             Path = StringUtils.NormalizePath(value);
             ShortName = System.IO.Path.GetFileNameWithoutExtension(value);
@@ -587,7 +587,7 @@ namespace FlaxEditor.Content
                 // Start drag drop
                 DoDrag();
             }
-            
+
             base.OnMouseLeave();
         }
 

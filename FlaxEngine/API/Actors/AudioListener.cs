@@ -2,7 +2,7 @@
 
 namespace FlaxEngine
 {
-	public sealed partial class AudioListener
-	{
-	}
+    public sealed partial class AudioListener
+    {
+    }
 }

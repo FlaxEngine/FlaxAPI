@@ -18,14 +18,10 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets the main game rendering task. Use it to plug custom rendering logic for your game.
         /// </summary>
-        public static MainRenderTask Instance
-        {
-            get;
-            internal set;
-        }
+        public static MainRenderTask Instance { get; internal set; }
 
         // TODO: add API to override main camera
-        
+
         internal MainRenderTask()
         {
         }

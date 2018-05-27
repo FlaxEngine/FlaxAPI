@@ -48,7 +48,6 @@ namespace FlaxEngine
                 for (int i = 0; i < selectedActors.Length; i++)
                 {
                     actors[i] = Object.GetUnmanagedPtr(selectedActors[i]);
-
                 }
             }
 

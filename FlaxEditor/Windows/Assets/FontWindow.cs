@@ -19,7 +19,7 @@ namespace FlaxEditor.Windows.Assets
 
         /// <inheritdoc />
         public FontAssetWindow(Editor editor, AssetItem item)
-            : base(editor, item)
+        : base(editor, item)
         {
             var panel = new SplitPanel(Orientation.Vertical, ScrollBars.Vertical)
             {

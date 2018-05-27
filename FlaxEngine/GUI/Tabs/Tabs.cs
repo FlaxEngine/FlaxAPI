@@ -109,7 +109,7 @@ namespace FlaxEngine.GUI.Tabs
         public Tabs()
         {
             CanFocus = false;
-            
+
             _selectedIndex = -1;
             _tabsSize = new Vector2(70, 16);
             _orientation = Orientation.Horizontal;
@@ -263,7 +263,7 @@ namespace FlaxEngine.GUI.Tabs
                     return true;
                 }
             }
-            
+
             return base.OnMouseUp(location, buttons);
         }
 
@@ -272,8 +272,8 @@ namespace FlaxEngine.GUI.Tabs
         {
             // Hide all pages except selected one
             var clientArea = _orientation == Orientation.Horizontal
-                ? new Rectangle(0, _tabsSize.Y, Width, Height - _tabsSize.Y)
-                : new Rectangle(_tabsSize.X, 0, Width - _tabsSize.X, Height);
+                             ? new Rectangle(0, _tabsSize.Y, Width, Height - _tabsSize.Y)
+                             : new Rectangle(_tabsSize.X, 0, Width - _tabsSize.X, Height);
             for (int i = 0; i < Children.Count; i++)
             {
                 if (Children[i] is Tab tab)

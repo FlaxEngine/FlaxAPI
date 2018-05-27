@@ -40,7 +40,7 @@ namespace FlaxEditor.Gizmo
         /// </summary>
         /// <param name="owner">The gizmos owner.</param>
         public GridGizmo(IGizmoOwner owner)
-            : base(owner)
+        : base(owner)
         {
         }
 

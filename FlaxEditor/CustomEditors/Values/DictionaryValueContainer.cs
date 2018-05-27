@@ -22,7 +22,7 @@ namespace FlaxEditor.CustomEditors
         /// <param name="elementType">Type of the collection elements.</param>
         /// <param name="key">The key.</param>
         public DictionaryValueContainer(Type elementType, object key)
-            : base(null, elementType)
+        : base(null, elementType)
         {
             Key = key;
         }
@@ -34,7 +34,7 @@ namespace FlaxEditor.CustomEditors
         /// <param name="key">The key.</param>
         /// <param name="values">The collection values.</param>
         public DictionaryValueContainer(Type elementType, object key, ValueContainer values)
-            : this(elementType, key)
+        : this(elementType, key)
         {
             Capacity = values.Count;
             for (int i = 0; i < values.Count; i++)

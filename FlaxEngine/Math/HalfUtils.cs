@@ -40,6 +40,7 @@ namespace FlaxEngine
         {
             [FieldOffset(0)]
             public uint uintValue;
+
             [FieldOffset(0)]
             public float floatValue;
         }
@@ -132,40 +133,45 @@ namespace FlaxEngine
             // -------------------------------------------------------------------
             // Float to Half tables
             // -------------------------------------------------------------------
-       
+
             for (i = 0; i < 256; i++)
             {
                 int e = i - 127;
                 if (e < -24)
-                { // Very small numbers map to zero
+                {
+                    // Very small numbers map to zero
                     FloatToHalfBaseTable[i | 0x000] = 0x0000;
                     FloatToHalfBaseTable[i | 0x100] = 0x8000;
                     FloatToHalfShiftTable[i | 0x000] = 24;
                     FloatToHalfShiftTable[i | 0x100] = 24;
                 }
                 else if (e < -14)
-                { // Small numbers map to denorms
+                {
+                    // Small numbers map to denorms
                     FloatToHalfBaseTable[i | 0x000] = (ushort)((0x0400 >> (-e - 14)));
                     FloatToHalfBaseTable[i | 0x100] = (ushort)((0x0400 >> (-e - 14)) | 0x8000);
                     FloatToHalfShiftTable[i | 0x000] = (byte)(-e - 1);
                     FloatToHalfShiftTable[i | 0x100] = (byte)(-e - 1);
                 }
                 else if (e <= 15)
-                { // Normal numbers just lose precision
+                {
+                    // Normal numbers just lose precision
                     FloatToHalfBaseTable[i | 0x000] = (ushort)(((e + 15) << 10));
                     FloatToHalfBaseTable[i | 0x100] = (ushort)(((e + 15) << 10) | 0x8000);
                     FloatToHalfShiftTable[i | 0x000] = 13;
                     FloatToHalfShiftTable[i | 0x100] = 13;
                 }
                 else if (e < 128)
-                { // Large numbers map to Infinity
+                {
+                    // Large numbers map to Infinity
                     FloatToHalfBaseTable[i | 0x000] = 0x7C00;
                     FloatToHalfBaseTable[i | 0x100] = 0xFC00;
                     FloatToHalfShiftTable[i | 0x000] = 24;
                     FloatToHalfShiftTable[i | 0x100] = 24;
                 }
                 else
-                { // Infinity and NaN's stay Infinity and NaN's
+                {
+                    // Infinity and NaN's stay Infinity and NaN's
                     FloatToHalfBaseTable[i | 0x000] = 0x7C00;
                     FloatToHalfBaseTable[i | 0x100] = 0xFC00;
                     FloatToHalfShiftTable[i | 0x000] = 13;

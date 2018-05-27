@@ -42,10 +42,10 @@ namespace FlaxEngine
             [EditorOrder(20), Tooltip("The mouse button to map for this action. Use None to ignore it.")]
             public MouseButton MouseButton;
 
-			/// <summary>
-			/// The gamepad button to map for this action. Use <see cref="GamePadButton.None"/> to ignore it.
-			/// </summary>
-			[EditorOrder(30), Tooltip("The gamepad button to map for this action. Use None to ignore it.")]
+            /// <summary>
+            /// The gamepad button to map for this action. Use <see cref="GamePadButton.None"/> to ignore it.
+            /// </summary>
+            [EditorOrder(30), Tooltip("The gamepad button to map for this action. Use None to ignore it.")]
             public GamePadButton GampadButton;
 
             /// <summary>

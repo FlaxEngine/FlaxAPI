@@ -164,10 +164,10 @@ namespace FlaxEditor.CustomEditors.Dedicated
         private void SetBit(int column, int row, bool flag)
         {
             var values = (int[])((int[])Values[0]).Clone();
-            
+
             values[row] = SetMaskBit(values[row], 1 << column, flag);
             values[column] = SetMaskBit(values[column], 1 << row, flag);
-            
+
             SetValue(values);
         }
 

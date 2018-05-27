@@ -7,200 +7,208 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// The debug shapes rendering service. Not available in builded game. For use only in the editor.
-	/// </summary>
-	public static partial class DebugDraw
-	{
-		/// <summary>
-		/// Draws the line.
-		/// </summary>
-		/// <param name="start">The start point.</param>
-		/// <param name="end">The end point.</param>
-		/// <param name="color">The color.</param>
-		/// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
-		/// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
+    /// <summary>
+    /// The debug shapes rendering service. Not available in builded game. For use only in the editor.
+    /// </summary>
+    public static partial class DebugDraw
+    {
+        /// <summary>
+        /// Draws the line.
+        /// </summary>
+        /// <param name="start">The start point.</param>
+        /// <param name="end">The end point.</param>
+        /// <param name="color">The color.</param>
+        /// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
+        /// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static void DrawLine(Vector3 start, Vector3 end, Color color, float duration = 0.0f, bool depthTest = true) 
-		{
+        [UnmanagedCall]
+        public static void DrawLine(Vector3 start, Vector3 end, Color color, float duration = 0.0f, bool depthTest = true)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_DrawLine(ref start, ref end, ref color, duration, depthTest);
+            Internal_DrawLine(ref start, ref end, ref color, duration, depthTest);
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Draws the box.
-		/// </summary>
-		/// <param name="box">The box.</param>
-		/// <param name="color">The color.</param>
-		/// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
-		/// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
+        /// <summary>
+        /// Draws the box.
+        /// </summary>
+        /// <param name="box">The box.</param>
+        /// <param name="color">The color.</param>
+        /// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
+        /// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static void DrawBox(BoundingBox box, Color color, float duration = 0.0f, bool depthTest = true) 
-		{
+        [UnmanagedCall]
+        public static void DrawBox(BoundingBox box, Color color, float duration = 0.0f, bool depthTest = true)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_DrawBoundingBox(ref box, ref color, duration, depthTest);
+            Internal_DrawBoundingBox(ref box, ref color, duration, depthTest);
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Draws the frustum.
-		/// </summary>
-		/// <param name="frustum">The frustum.</param>
-		/// <param name="color">The color.</param>
-		/// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
-		/// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
+        /// <summary>
+        /// Draws the frustum.
+        /// </summary>
+        /// <param name="frustum">The frustum.</param>
+        /// <param name="color">The color.</param>
+        /// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
+        /// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static void DrawFrustum(BoundingFrustum frustum, Color color, float duration = 0.0f, bool depthTest = true) 
-		{
+        [UnmanagedCall]
+        public static void DrawFrustum(BoundingFrustum frustum, Color color, float duration = 0.0f, bool depthTest = true)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_DrawFrustum(ref frustum, ref color, duration, depthTest);
+            Internal_DrawFrustum(ref frustum, ref color, duration, depthTest);
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Draws the box.
-		/// </summary>
-		/// <param name="box">The box.</param>
-		/// <param name="color">The color.</param>
-		/// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
-		/// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
+        /// <summary>
+        /// Draws the box.
+        /// </summary>
+        /// <param name="box">The box.</param>
+        /// <param name="color">The color.</param>
+        /// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
+        /// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static void DrawBox(OrientedBoundingBox box, Color color, float duration = 0.0f, bool depthTest = true) 
-		{
+        [UnmanagedCall]
+        public static void DrawBox(OrientedBoundingBox box, Color color, float duration = 0.0f, bool depthTest = true)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_DrawOrientedBoundingBox(ref box, ref color, duration, depthTest);
+            Internal_DrawOrientedBoundingBox(ref box, ref color, duration, depthTest);
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Draws the sphere.
-		/// </summary>
-		/// <param name="position">The center position.</param>
-		/// <param name="radius">The radius.</param>
-		/// <param name="color">The color.</param>
-		/// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
-		/// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
+        /// <summary>
+        /// Draws the sphere.
+        /// </summary>
+        /// <param name="position">The center position.</param>
+        /// <param name="radius">The radius.</param>
+        /// <param name="color">The color.</param>
+        /// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
+        /// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static void DrawSphere(Vector3 position, float radius, Color color, float duration = 0.0f, bool depthTest = true) 
-		{
+        [UnmanagedCall]
+        public static void DrawSphere(Vector3 position, float radius, Color color, float duration = 0.0f, bool depthTest = true)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_DrawSphere(ref position, radius, ref color, duration, depthTest);
+            Internal_DrawSphere(ref position, radius, ref color, duration, depthTest);
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Draws the circle.
-		/// </summary>
-		/// <param name="position">The center position.</param>
-		/// <param name="normal">The normal vector direction.</param>
-		/// <param name="radius">The radius.</param>
-		/// <param name="color">The color.</param>
-		/// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
-		/// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
+        /// <summary>
+        /// Draws the circle.
+        /// </summary>
+        /// <param name="position">The center position.</param>
+        /// <param name="normal">The normal vector direction.</param>
+        /// <param name="radius">The radius.</param>
+        /// <param name="color">The color.</param>
+        /// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
+        /// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static void DrawCircle(Vector3 position, Vector3 normal, float radius, Color color, float duration = 0.0f, bool depthTest = true) 
-		{
+        [UnmanagedCall]
+        public static void DrawCircle(Vector3 position, Vector3 normal, float radius, Color color, float duration = 0.0f, bool depthTest = true)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_DrawCircle(ref position, ref normal, radius, ref color, duration, depthTest);
+            Internal_DrawCircle(ref position, ref normal, radius, ref color, duration, depthTest);
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Draws the tube.
-		/// </summary>
-		/// <param name="position">The center position.</param>
-		/// <param name="orientation">The orientation.</param>
-		/// <param name="radius">The radius.</param>
-		/// <param name="length">The length.</param>
-		/// <param name="color">The color.</param>
-		/// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
-		/// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
+        /// <summary>
+        /// Draws the tube.
+        /// </summary>
+        /// <param name="position">The center position.</param>
+        /// <param name="orientation">The orientation.</param>
+        /// <param name="radius">The radius.</param>
+        /// <param name="length">The length.</param>
+        /// <param name="color">The color.</param>
+        /// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
+        /// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static void DrawTube(Vector3 position, Quaternion orientation, float radius, float length, Color color, float duration = 0.0f, bool depthTest = true) 
-		{
+        [UnmanagedCall]
+        public static void DrawTube(Vector3 position, Quaternion orientation, float radius, float length, Color color, float duration = 0.0f, bool depthTest = true)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_DrawTube(ref position, ref orientation, radius, length, ref color, duration, depthTest);
+            Internal_DrawTube(ref position, ref orientation, radius, length, ref color, duration, depthTest);
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Draws the debug shapes to the custom texture using given GPU command context.
-		/// </summary>
-		/// <param name="task">The calling rendering task.</param>
-		/// <param name="selectedActors">The selected actors.</param>
-		/// <param name="target">The rendering output surface.</param>
-		/// <param name="context">The GPU commands context.</param>
-		/// <param name="depthBuffer">The custom depth texture used for depth test. Can be MSAA. Must match target surface size.</param>
-		/// <param name="enableDepthTest">True if perform manual depth test with scene depth buffer when rendering the primitives. Uses custom shader and the scene depth buffer.</param>
+        /// <summary>
+        /// Draws the debug shapes to the custom texture using given GPU command context.
+        /// </summary>
+        /// <param name="task">The calling rendering task.</param>
+        /// <param name="selectedActors">The selected actors.</param>
+        /// <param name="target">The rendering output surface.</param>
+        /// <param name="context">The GPU commands context.</param>
+        /// <param name="depthBuffer">The custom depth texture used for depth test. Can be MSAA. Must match target surface size.</param>
+        /// <param name="enableDepthTest">True if perform manual depth test with scene depth buffer when rendering the primitives. Uses custom shader and the scene depth buffer.</param>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static void Draw(FlaxEngine.Rendering.RenderTask task, IntPtr[] selectedActors, FlaxEngine.Rendering.RenderTarget target = null, FlaxEngine.Rendering.GPUContext context = null, FlaxEngine.Rendering.RenderTarget depthBuffer = null, bool enableDepthTest = false) 
-		{
+        [UnmanagedCall]
+        public static void Draw(FlaxEngine.Rendering.RenderTask task, IntPtr[] selectedActors, FlaxEngine.Rendering.RenderTarget target = null, FlaxEngine.Rendering.GPUContext context = null, FlaxEngine.Rendering.RenderTarget depthBuffer = null, bool enableDepthTest = false)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_Draw(Object.GetUnmanagedPtr(task), selectedActors, Object.GetUnmanagedPtr(target), Object.GetUnmanagedPtr(context), Object.GetUnmanagedPtr(depthBuffer), enableDepthTest);
+            Internal_Draw(Object.GetUnmanagedPtr(task), selectedActors, Object.GetUnmanagedPtr(target), Object.GetUnmanagedPtr(context), Object.GetUnmanagedPtr(depthBuffer), enableDepthTest);
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_DrawLine(ref Vector3 start, ref Vector3 end, ref Color color, float duration, bool depthTest);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_DrawBoundingBox(ref BoundingBox box, ref Color color, float duration, bool depthTest);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_DrawFrustum(ref BoundingFrustum frustum, ref Color color, float duration, bool depthTest);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_DrawOrientedBoundingBox(ref OrientedBoundingBox box, ref Color color, float duration, bool depthTest);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_DrawSphere(ref Vector3 position, float radius, ref Color color, float duration, bool depthTest);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_DrawCircle(ref Vector3 position, ref Vector3 normal, float radius, ref Color color, float duration, bool depthTest);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_DrawTube(ref Vector3 position, ref Quaternion orientation, float radius, float length, ref Color color, float duration, bool depthTest);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_Draw(IntPtr task, IntPtr[] selectedActors, IntPtr target, IntPtr context, IntPtr depthBuffer, bool enableDepthTest);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawLine(ref Vector3 start, ref Vector3 end, ref Color color, float duration, bool depthTest);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawBoundingBox(ref BoundingBox box, ref Color color, float duration, bool depthTest);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawFrustum(ref BoundingFrustum frustum, ref Color color, float duration, bool depthTest);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawOrientedBoundingBox(ref OrientedBoundingBox box, ref Color color, float duration, bool depthTest);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawSphere(ref Vector3 position, float radius, ref Color color, float duration, bool depthTest);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawCircle(ref Vector3 position, ref Vector3 normal, float radius, ref Color color, float duration, bool depthTest);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawTube(ref Vector3 position, ref Quaternion orientation, float radius, float length, ref Color color, float duration, bool depthTest);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Draw(IntPtr task, IntPtr[] selectedActors, IntPtr target, IntPtr context, IntPtr depthBuffer, bool enableDepthTest);
+#endif
+
+        #endregion
+    }
+}

@@ -119,7 +119,7 @@ namespace FlaxEditor.Gizmo
         /// Gets the current axis type.
         /// </summary>
         public Axis ActiveAxis => _activeAxis;
-        
+
         /// <summary>
         /// Gets or sts the current gizmo mode.
         /// </summary>
@@ -140,7 +140,7 @@ namespace FlaxEditor.Gizmo
         /// Event fired when active gizmo mode gets changed.
         /// </summary>
         public Action OnModeChanged;
-        
+
         /// <summary>
         /// Gets or sets the current gizmo transform space.
         /// </summary>
@@ -156,7 +156,7 @@ namespace FlaxEditor.Gizmo
                 }
             }
         }
-        
+
         /// <summary>
         /// Event fired when active transform space gets changed.
         /// </summary>

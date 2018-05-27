@@ -106,7 +106,7 @@ namespace FlaxEngine
         /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
         /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
         /// <returns>Asset instance if loaded, null otherwise</returns>
-        public static T Load <T>(Guid id, double timeoutInMiliseconds = 10000.0) where T : Asset
+        public static T Load<T>(Guid id, double timeoutInMiliseconds = 10000.0) where T : Asset
         {
             var asset = LoadAsync<T>(id);
             if (asset && asset.WaitForLoaded(timeoutInMiliseconds) == false)
@@ -122,7 +122,7 @@ namespace FlaxEngine
         /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
         /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
         /// <returns>Asset instance if loaded, null otherwise</returns>
-        public static T Load <T>(string path, double timeoutInMiliseconds = 10000.0) where T : Asset
+        public static T Load<T>(string path, double timeoutInMiliseconds = 10000.0) where T : Asset
         {
             var asset = LoadAsync<T>(path);
             if (asset && asset.WaitForLoaded(timeoutInMiliseconds) == false)
@@ -138,7 +138,7 @@ namespace FlaxEngine
         /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
         /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
         /// <returns>Asset instance if loaded, null otherwise</returns>
-        public static T LoadInternal <T>(string internalPath, double timeoutInMiliseconds = 10000.0) where T : Asset
+        public static T LoadInternal<T>(string internalPath, double timeoutInMiliseconds = 10000.0) where T : Asset
         {
             var asset = LoadAsyncInternal<T>(internalPath);
             if (asset && asset.WaitForLoaded(timeoutInMiliseconds) == false)
@@ -212,15 +212,18 @@ namespace FlaxEngine
         }
 
         #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetAssetInfo1(ref Guid id, out string typeName, out string path);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetAssetInfo2(string path, out string typeName, out Guid id);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Asset Internal_CreateVirtualAsset(Type type, string typeName);
 #endif
+
         #endregion
     }
 }

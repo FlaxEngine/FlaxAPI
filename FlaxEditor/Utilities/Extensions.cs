@@ -6,9 +6,9 @@ using System.Reflection;
 
 namespace FlaxEditor.Utilities
 {
-	/// <summary>
-	/// Helper methods used by the editor.
-	/// </summary>
+    /// <summary>
+    /// Helper methods used by the editor.
+    /// </summary>
     public static partial class Extensions
     {
         /// <summary>
@@ -26,7 +26,7 @@ namespace FlaxEditor.Utilities
                 throw new ArgumentException("both first and second parameters has to be of the same type");
             }
 
-            var list = new List<MemberComparison>();//The list to be returned
+            var list = new List<MemberComparison>(); //The list to be returned
 
             var members = first.GetType().GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             for (int i = 0; i < members.Length; i++)

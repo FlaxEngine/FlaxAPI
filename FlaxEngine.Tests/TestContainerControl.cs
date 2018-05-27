@@ -15,7 +15,7 @@ namespace FlaxEngine.Tests
         public class MyControl : Control
         {
             public MyControl(float x, float y, float width, float height)
-                : base(x, y, width, height)
+            : base(x, y, width, height)
             {
             }
         }
@@ -23,7 +23,7 @@ namespace FlaxEngine.Tests
         public class MyContainerControl : ContainerControl
         {
             public MyContainerControl(float x, float y, float width, float height)
-                : base(x, y, width, height)
+            : base(x, y, width, height)
             {
             }
         }

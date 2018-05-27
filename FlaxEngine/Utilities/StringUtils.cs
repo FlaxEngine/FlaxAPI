@@ -118,12 +118,11 @@ namespace FlaxEngine
         /// </returns>
         public static bool IsRelative(string path)
         {
-            bool isRooted =
-                (path.Length >= 2 && char.IsLetterOrDigit(path[0]) && path[1] == ':') ||
-                path.StartsWith("\\\\") ||
-                path.StartsWith("/") ||
-                path.StartsWith("\\") ||
-                path.StartsWith("/");
+            bool isRooted = (path.Length >= 2 && char.IsLetterOrDigit(path[0]) && path[1] == ':') ||
+                            path.StartsWith("\\\\") ||
+                            path.StartsWith("/") ||
+                            path.StartsWith("\\") ||
+                            path.StartsWith("/");
             return !isRooted;
         }
 
@@ -153,7 +152,6 @@ namespace FlaxEngine
             else
             {
                 fullyPathed = path;
-
             }
 
             NormalizePath(fullyPathed);
@@ -214,7 +212,6 @@ namespace FlaxEngine
 
                         if (MaxChecks-- < 0)
                             return name + Guid.NewGuid();
-
                     } while (!isValid(result));
 
                     if (result.Length > 0)
@@ -243,7 +240,6 @@ namespace FlaxEngine
 
                         if (MaxChecks-- < 0)
                             return name + Guid.NewGuid();
-
                     } while (!isValid(result));
 
                     if (result.Length > 0)
@@ -259,7 +255,6 @@ namespace FlaxEngine
 
                 if (MaxChecks-- < 0)
                     return name + Guid.NewGuid();
-
             } while (!isValid(result));
 
             return result;

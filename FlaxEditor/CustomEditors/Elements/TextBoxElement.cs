@@ -30,9 +30,9 @@ namespace FlaxEditor.CustomEditors.Elements
         /// <param name="isMultiline">Enable/disable multiline text input support</param>
         public TextBoxElement(bool isMultiline = false)
         {
-			TextBox = new TextBox(isMultiline, 0, 0);
-	        if (isMultiline)
-		        TextBox.Height = TextBox.DefaultHeight * 4;
+            TextBox = new TextBox(isMultiline, 0, 0);
+            if (isMultiline)
+                TextBox.Height = TextBox.DefaultHeight * 4;
         }
 
         /// <inheritdoc />

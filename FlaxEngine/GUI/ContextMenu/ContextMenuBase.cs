@@ -66,7 +66,7 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="ContextMenuBase"/> class.
         /// </summary>
         public ContextMenuBase()
-            : base(0, 0, 120, 32)
+        : base(0, 0, 120, 32)
         {
             _direction = ContextMenuDirection.RightDown;
             Visible = false;
@@ -97,30 +97,30 @@ namespace FlaxEngine.GUI
             Vector2 locationWS = parent.PointToWindow(location);
             Vector2 locationSS = parentWin.ClientToScreen(locationWS);
             Location = Vector2.Zero;
-	        Rectangle monitorBounds = Application.GetMonitorBounds(locationSS);
+            Rectangle monitorBounds = Application.GetMonitorBounds(locationSS);
             Vector2 rightBottomLocationSS = locationSS + Size;
-	        bool isUp = false, isLeft = false;
+            bool isUp = false, isLeft = false;
             if (monitorBounds.Bottom < rightBottomLocationSS.Y)
             {
-				// Direction: up
-	            isUp = true;
-				locationSS.Y -= Height;
+                // Direction: up
+                isUp = true;
+                locationSS.Y -= Height;
             }
             if (monitorBounds.Right < rightBottomLocationSS.X)
             {
                 // Direction: left
-	            isLeft = true;
+                isLeft = true;
                 locationSS.X -= Width;
             }
 
-			// Update direction flag
-	        if (isUp)
-		        _direction = isLeft ? ContextMenuDirection.LeftUp : ContextMenuDirection.RightUp;
-	        else
-		        _direction = isLeft ? ContextMenuDirection.LeftDown : ContextMenuDirection.RightDown;
+            // Update direction flag
+            if (isUp)
+                _direction = isLeft ? ContextMenuDirection.LeftUp : ContextMenuDirection.RightUp;
+            else
+                _direction = isLeft ? ContextMenuDirection.LeftDown : ContextMenuDirection.RightDown;
 
-			// Create window
-			var desc = CreateWindowSettings.Default;
+            // Create window
+            var desc = CreateWindowSettings.Default;
             desc.Position = locationSS;
             desc.StartPosition = WindowStartPosition.Manual;
             desc.Size = Size;

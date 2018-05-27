@@ -47,7 +47,7 @@ namespace FlaxEditor.SceneGraph
         /// </summary>
         /// <param name="actor">The actor.</param>
         public ActorNode(Actor actor)
-            : base(actor.ID)
+        : base(actor.ID)
         {
             _actor = actor;
             _treeNode = new ActorTreeNode();
@@ -60,7 +60,7 @@ namespace FlaxEditor.SceneGraph
         /// <param name="actor">The actor.</param>
         /// <param name="treeNode">The custom tree node.</param>
         protected ActorNode(Actor actor, ActorTreeNode treeNode)
-            : base(actor.ID)
+        : base(actor.ID)
         {
             _actor = actor;
             _treeNode = treeNode;
@@ -68,7 +68,7 @@ namespace FlaxEditor.SceneGraph
         }
 
         internal ActorNode(Actor actor, Guid id)
-            : base(id)
+        : base(id)
         {
             _actor = actor;
             _treeNode = new ActorTreeNode();
@@ -158,7 +158,7 @@ namespace FlaxEditor.SceneGraph
 
         /// <inheritdoc />
         public override bool CanCopyPaste => (_actor.HideFlags & HideFlags.HideInHierarchy) == 0;
-        
+
         /// <inheritdoc />
         public override bool IsActive => _actor.IsActive;
 
@@ -222,13 +222,13 @@ namespace FlaxEditor.SceneGraph
             FlaxEngine.Object.Destroy(_actor);
         }
 
-		/// <summary>
-		/// Action called after spawning actor in editor (via drag to viewport, with toolbox, etc.).
-		/// Can be used to tweak default values of the actor.
-		/// </summary>
-		public virtual void PostSpawn()
-	    {
-	    }
+        /// <summary>
+        /// Action called after spawning actor in editor (via drag to viewport, with toolbox, etc.).
+        /// Can be used to tweak default values of the actor.
+        /// </summary>
+        public virtual void PostSpawn()
+        {
+        }
 
         /// <inheritdoc />
         protected override void OnParentChanged()

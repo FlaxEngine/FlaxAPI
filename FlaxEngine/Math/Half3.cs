@@ -54,7 +54,7 @@ namespace FlaxEngine
         /// </summary>
         /// <value>The Z component of the vector.</value>
         public Half Z;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FlaxEngine.Half3" /> structure.
         /// </summary>

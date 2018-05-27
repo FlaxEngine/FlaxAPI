@@ -67,9 +67,9 @@ namespace FlaxEditor.Surface
         /// </summary>
         TextBox = 14,
 
-		/// <summary>
-		/// The skeleton node selection.
-		/// </summary>
-		SkeletonNodeSelect = 15,
+        /// <summary>
+        /// The skeleton node selection.
+        /// </summary>
+        SkeletonNodeSelect = 15,
     }
 }

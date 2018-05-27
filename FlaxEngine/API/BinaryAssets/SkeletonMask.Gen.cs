@@ -7,77 +7,80 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// The skinned model skeleton bones boolean masking data.
-	/// </summary>
-	public sealed partial class SkeletonMask : BinaryAsset
-	{
-		/// <summary>
-		/// Creates new <see cref="SkeletonMask"/> object.
-		/// </summary>
-		private SkeletonMask() : base()
-		{
-		}
+    /// <summary>
+    /// The skinned model skeleton bones boolean masking data.
+    /// </summary>
+    public sealed partial class SkeletonMask : BinaryAsset
+    {
+        /// <summary>
+        /// Creates new <see cref="SkeletonMask"/> object.
+        /// </summary>
+        private SkeletonMask() : base()
+        {
+        }
 
-		/// <summary>
-		/// Gets the skinned model asset used for the skeleton mask reference.
-		/// </summary>
-		[UnmanagedCall]
-		public SkinnedModel Skeleton
-		{
+        /// <summary>
+        /// Gets the skinned model asset used for the skeleton mask reference.
+        /// </summary>
+        [UnmanagedCall]
+        public SkinnedModel Skeleton
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetSkeleton(unmanagedPtr); }
+            get { return Internal_GetSkeleton(unmanagedPtr); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets the skeleton bones masking array (matches the reference skeleton bones hierarchy).
-		/// </summary>
-		/// <param name="buffer">The mask buffer that can be used to reuse the allocation. Method will allocate a new one if the provided is invalid or null.</param>
+        /// <summary>
+        /// Gets the skeleton bones masking array (matches the reference skeleton bones hierarchy).
+        /// </summary>
+        /// <param name="buffer">The mask buffer that can be used to reuse the allocation. Method will allocate a new one if the provided is invalid or null.</param>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public bool[] GetMask(bool[] buffer = null) 
-		{
+        [UnmanagedCall]
+        public bool[] GetMask(bool[] buffer = null)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_GetMask(unmanagedPtr, buffer);
+            return Internal_GetMask(unmanagedPtr, buffer);
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Updates the asset data and saves it to the file. (saves new one, discards cached data, reloads asset).
-		/// </summary>
-		/// <param name="skeleton">The reference skeleton.</param>
-		/// <param name="mask">The skeleton nodes masking data.</param>
-		/// <returns>True if cannot save it, otherwise false.</returns>
+        /// <summary>
+        /// Updates the asset data and saves it to the file. (saves new one, discards cached data, reloads asset).
+        /// </summary>
+        /// <param name="skeleton">The reference skeleton.</param>
+        /// <param name="mask">The skeleton nodes masking data.</param>
+        /// <returns>True if cannot save it, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public bool Save(SkinnedModel skeleton, bool[] mask) 
-		{
+        [UnmanagedCall]
+        public bool Save(SkinnedModel skeleton, bool[] mask)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Save(unmanagedPtr, Object.GetUnmanagedPtr(skeleton), mask);
+            return Internal_Save(unmanagedPtr, Object.GetUnmanagedPtr(skeleton), mask);
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern SkinnedModel Internal_GetSkeleton(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool[] Internal_GetMask(IntPtr obj, bool[] buffer);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_Save(IntPtr obj, IntPtr skeleton, bool[] mask);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern SkinnedModel Internal_GetSkeleton(IntPtr obj);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool[] Internal_GetMask(IntPtr obj, bool[] buffer);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_Save(IntPtr obj, IntPtr skeleton, bool[] mask);
+#endif
+
+        #endregion
+    }
+}

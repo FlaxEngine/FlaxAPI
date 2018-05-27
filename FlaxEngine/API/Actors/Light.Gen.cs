@@ -7,114 +7,124 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Base class for all light types.
-	/// </summary>
-	[Serializable]
-	public abstract partial class Light : Actor
-	{
-		/// <summary>
-		/// Gets or sets the light emission color.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(20), EditorDisplay("Light"), Tooltip("Light emission color")]
-		public Color Color
-		{
+    /// <summary>
+    /// Base class for all light types.
+    /// </summary>
+    [Serializable]
+    public abstract partial class Light : Actor
+    {
+        /// <summary>
+        /// Gets or sets the light emission color.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(20), EditorDisplay("Light"), Tooltip("Light emission color")]
+        public Color Color
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { Color resultAsRef; Internal_GetColor(unmanagedPtr, out resultAsRef); return resultAsRef; }
-			set { Internal_SetColor(unmanagedPtr, ref value); }
+            get { Color resultAsRef; Internal_GetColor(unmanagedPtr, out resultAsRef); return resultAsRef; }
+            set { Internal_SetColor(unmanagedPtr, ref value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets light brightness parameter.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(30), EditorDisplay("Light"), Tooltip("Light brighness value"), Limit(0.0f, 100000000.0f, 0.1f)]
-		public float Brightness
-		{
+        /// <summary>
+        /// Gets or sets light brightness parameter.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(30), EditorDisplay("Light"), Tooltip("Light brighness value"), Limit(0.0f, 100000000.0f, 0.1f)]
+        public float Brightness
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetBrightness(unmanagedPtr); }
-			set { Internal_SetBrightness(unmanagedPtr, value); }
+            get { return Internal_GetBrightness(unmanagedPtr); }
+            set { Internal_SetBrightness(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the light view distance. Controls light visibility range. The distance at which the light be completely faded. Use value 0 to always draw a light.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(35), Limit(0, float.MaxValue, 10.0f), EditorDisplay("Light"), Tooltip("Controls light visibility range. The distance at which the light be completely faded. Use value 0 to always draw a light.")]
-		public float ViewDistance
-		{
+        /// <summary>
+        /// Gets or sets the light view distance. Controls light visibility range. The distance at which the light be completely faded. Use value 0 to always draw a light.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(35), Limit(0, float.MaxValue, 10.0f), EditorDisplay("Light"), Tooltip("Controls light visibility range. The distance at which the light be completely faded. Use value 0 to always draw a light.")]
+        public float ViewDistance
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetViewDistance(unmanagedPtr); }
-			set { Internal_SetViewDistance(unmanagedPtr, value); }
+            get { return Internal_GetViewDistance(unmanagedPtr); }
+            set { Internal_SetViewDistance(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the factor that controls how much this light will contribute to the Volumetric Fog. When set to 0, there is no contribution.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(110), Limit(0, 100, 0.01f), EditorDisplay("Volumetric Fog", "Scattering Intensity"), Tooltip("Controls how much this light will contribute to the Volumetric Fog. When set to 0, there is no contribution.")]
-		public float VolumetricScatteringIntensity
-		{
+        /// <summary>
+        /// Gets or sets the factor that controls how much this light will contribute to the Volumetric Fog. When set to 0, there is no contribution.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(110), Limit(0, 100, 0.01f), EditorDisplay("Volumetric Fog", "Scattering Intensity"), Tooltip("Controls how much this light will contribute to the Volumetric Fog. When set to 0, there is no contribution.")]
+        public float VolumetricScatteringIntensity
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetVolumetricScatteringIntensity(unmanagedPtr); }
-			set { Internal_SetVolumetricScatteringIntensity(unmanagedPtr, value); }
+            get { return Internal_GetVolumetricScatteringIntensity(unmanagedPtr); }
+            set { Internal_SetVolumetricScatteringIntensity(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Toggles whether or not to cast a volumetric shadow for lights contributing to Volumetric Fog
-		/// </summary>
-		/// <remarks>
-		/// Also shadows casting by this light should be enabled in order to make it cast volumetric fog shadow.
-		/// </remarks>
-		[UnmanagedCall]
-		[EditorOrder(120), EditorDisplay("Volumetric Fog", "Cast Shadow"), Tooltip("Toggles whether or not to cast a volumetric shadow for lights contributing to Volumetric Fog. Also shadows casting by this light should be enabled in order to make it cast volumetric fog shadow.")]
-		public bool CastVolumetricShadow
-		{
+        /// <summary>
+        /// Toggles whether or not to cast a volumetric shadow for lights contributing to Volumetric Fog
+        /// </summary>
+        /// <remarks>
+        /// Also shadows casting by this light should be enabled in order to make it cast volumetric fog shadow.
+        /// </remarks>
+        [UnmanagedCall]
+        [EditorOrder(120), EditorDisplay("Volumetric Fog", "Cast Shadow"), Tooltip("Toggles whether or not to cast a volumetric shadow for lights contributing to Volumetric Fog. Also shadows casting by this light should be enabled in order to make it cast volumetric fog shadow.")]
+        public bool CastVolumetricShadow
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetCastVolumetricShadow(unmanagedPtr); }
-			set { Internal_SetCastVolumetricShadow(unmanagedPtr, value); }
+            get { return Internal_GetCastVolumetricShadow(unmanagedPtr); }
+            set { Internal_SetCastVolumetricShadow(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetColor(IntPtr obj, out Color resultAsRef);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetColor(IntPtr obj, ref Color val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetBrightness(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetBrightness(IntPtr obj, float val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetViewDistance(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetViewDistance(IntPtr obj, float val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetVolumetricScatteringIntensity(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetVolumetricScatteringIntensity(IntPtr obj, float val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetCastVolumetricShadow(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetCastVolumetricShadow(IntPtr obj, bool val);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetColor(IntPtr obj, out Color resultAsRef);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetColor(IntPtr obj, ref Color val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetBrightness(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetBrightness(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetViewDistance(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetViewDistance(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetVolumetricScatteringIntensity(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetVolumetricScatteringIntensity(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetCastVolumetricShadow(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetCastVolumetricShadow(IntPtr obj, bool val);
+#endif
+
+        #endregion
+    }
+}

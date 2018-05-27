@@ -31,7 +31,7 @@ namespace FlaxEditor
             /// The 'before' state.
             /// </summary>
             public Transform[] Before;
-            
+
             /// <summary>
             /// The 'after' state.
             /// </summary>

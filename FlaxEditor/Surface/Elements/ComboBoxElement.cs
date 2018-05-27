@@ -11,10 +11,10 @@ namespace FlaxEditor.Surface.Elements
     /// <seealso cref="ISurfaceNodeElement" />
     public class ComboBoxElement : ComboBox, ISurfaceNodeElement
     {
-		/// <summary>
-		/// True if automatic value selecting is active.
-		/// </summary>
-		protected bool _isAutoSelect;
+        /// <summary>
+        /// True if automatic value selecting is active.
+        /// </summary>
+        protected bool _isAutoSelect;
 
         /// <inheritdoc />
         public SurfaceNode ParentNode { get; }
@@ -29,7 +29,7 @@ namespace FlaxEditor.Surface.Elements
 
         /// <inheritdoc />
         public ComboBoxElement(SurfaceNode parentNode, NodeElementArchetype archetype)
-            : base(archetype.ActualPositionX, archetype.ActualPositionY, archetype.Size.X)
+        : base(archetype.ActualPositionX, archetype.ActualPositionY, archetype.Size.X)
         {
             ParentNode = parentNode;
             Archetype = archetype;

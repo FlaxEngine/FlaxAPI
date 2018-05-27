@@ -33,7 +33,7 @@ namespace FlaxEditor.Windows
         {
             if (target == null)
                 target = _root;
-            
+
             // Check if can do this action
             if (_navigationUnlocked && source != target)
             {

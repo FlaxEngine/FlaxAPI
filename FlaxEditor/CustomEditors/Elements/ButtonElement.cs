@@ -15,7 +15,7 @@ namespace FlaxEditor.CustomEditors.Elements
         /// The button.
         /// </summary>
         public readonly Button Button = new Button();
-        
+
         /// <summary>
         /// Initializes the element.
         /// </summary>

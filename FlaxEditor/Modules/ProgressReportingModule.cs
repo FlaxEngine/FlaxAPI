@@ -57,7 +57,7 @@ namespace FlaxEditor.Modules
         public bool IsAnyActive => FirstActiveHandler != null;
 
         internal ProgressReportingModule(Editor editor)
-            : base(editor)
+        : base(editor)
         {
             InitOrder = 1000;
 
@@ -102,7 +102,7 @@ namespace FlaxEditor.Modules
             handler.ProgressChanged -= HandlerOnProgressChanged;
             handler.ProgressEnd -= HandlerOnProgressEnd;
         }
-        
+
         private void UpdateProgress()
         {
             var activeHandler = FirstActiveHandler;
@@ -117,7 +117,7 @@ namespace FlaxEditor.Modules
                 Editor.UI.UpdateProgress(string.Empty, 0);
             }
         }
-        
+
         private void HandlerOnProgressStart(ProgressHandler handler)
         {
             UpdateProgress();

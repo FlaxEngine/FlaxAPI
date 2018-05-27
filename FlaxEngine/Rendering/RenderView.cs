@@ -66,12 +66,12 @@ namespace FlaxEngine.Rendering
         /// <param name="view">The view.</param>
         /// <param name="projection">The projection.</param>
         public void SetUp(Matrix view, Matrix projection)
-	    {
-		    // Copy data
-	        Position = view.TranslationVector;
-		    Projection = projection;
-		    View = view;
-	    }
+        {
+            // Copy data
+            Position = view.TranslationVector;
+            Projection = projection;
+            View = view;
+        }
 
         /// <summary>
         /// Set up view for projector rendering.
@@ -91,7 +91,7 @@ namespace FlaxEngine.Rendering
 
             // Create projection matrix
             Matrix.PerspectiveFovLH(angle * Mathf.DegreesToRadians, 1.0f, nearPlane, farPlane, out Projection);
-            
+
             // Create view matrix
             Direction = direction;
             Vector3 target = Position + Direction;

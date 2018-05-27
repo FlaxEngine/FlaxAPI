@@ -343,7 +343,7 @@ namespace FlaxEngine
         /// <returns>
         /// The result of the operator.
         /// </returns>
-        public static Rectangle operator+(Rectangle rectangle, Vector2 offset)
+        public static Rectangle operator +(Rectangle rectangle, Vector2 offset)
         {
             return new Rectangle(rectangle.Location + offset, rectangle.Size);
         }
@@ -356,7 +356,7 @@ namespace FlaxEngine
         /// <returns>
         /// The result of the operator.
         /// </returns>
-        public static Rectangle operator-(Rectangle rectangle, Vector2 offset)
+        public static Rectangle operator -(Rectangle rectangle, Vector2 offset)
         {
             return new Rectangle(rectangle.Location - offset, rectangle.Size);
         }

@@ -2,7 +2,7 @@
 
 namespace FlaxEngine
 {
-	public static partial class Screen
-	{
-	}
+    public static partial class Screen
+    {
+    }
 }

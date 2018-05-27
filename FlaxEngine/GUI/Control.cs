@@ -31,13 +31,13 @@ namespace FlaxEngine.GUI
         private float _rotation;
         internal Matrix3x3 _cachedTransform;
         internal Matrix3x3 _cachedTransformInv;
-        
+
         // Style
 
         private DockStyle _dockStyle;
         private AnchorStyle _anchorStyle;
         private Color _backgroundColor = Color.Transparent;
-        
+
         // Tooltip
 
         private string _tooltipText;
@@ -328,7 +328,7 @@ namespace FlaxEngine.GUI
         /// <param name="width">Width</param>
         /// <param name="height">Height</param>
         protected Control(float x, float y, float width, float height)
-            : this(new Rectangle(x, y, width, height))
+        : this(new Rectangle(x, y, width, height))
         {
         }
 
@@ -338,7 +338,7 @@ namespace FlaxEngine.GUI
         /// <param name="location">Upper left corner location.</param>
         /// <param name="size">Bounds size.</param>
         protected Control(Vector2 location, Vector2 size)
-            : this(new Rectangle(location, size))
+        : this(new Rectangle(location, size))
         {
         }
 
@@ -360,7 +360,7 @@ namespace FlaxEngine.GUI
         {
             if (_isDisposing)
                 return;
-            
+
             // Call event
             OnDestroy();
 
@@ -393,11 +393,11 @@ namespace FlaxEngine.GUI
             }
         }
 
-	    /// <summary>
-	    ///     Update control layout
-	    /// </summary>
-	    /// <param name="force">True if perform layout by force even if cached state wants to skip it due to optimalization.</param>
-	    public virtual void PerformLayout(bool force = false)
+        /// <summary>
+        ///     Update control layout
+        /// </summary>
+        /// <param name="force">True if perform layout by force even if cached state wants to skip it due to optimalization.</param>
+        public virtual void PerformLayout(bool force = false)
         {
         }
 
@@ -762,7 +762,7 @@ namespace FlaxEngine.GUI
         {
             _tooltipText = text;
             _tooltip = customTooltip;
-	        return this;
+            return this;
         }
 
         /// <summary>
@@ -895,7 +895,7 @@ namespace FlaxEngine.GUI
             }
             return location;
         }
-        
+
         /// <summary>
         ///     Converts point in the local control's space into screen coordinates
         /// </summary>
@@ -1029,63 +1029,63 @@ namespace FlaxEngine.GUI
                 return;
 
             var bounds = Bounds;
-            
+
             // TODO: finish all anchor styles logic
 
             switch (_anchorStyle)
             {
-                case AnchorStyle.UpperCenter:
-                {
-                    bounds.X = (_parent.Width - bounds.Width) * 0.5f;
-                    break;
-                }
-                case AnchorStyle.UpperRight:
-                {
-                    float distance = oldSize.X - bounds.Left;
-                    bounds.X = _parent.Width - distance;
-                    break;
-                }
-                case AnchorStyle.Upper:
-                {
-                    float distance = oldSize.X - bounds.Right;
-                    bounds.Width = _parent.Width - bounds.X - distance;
-                    break;
-                }
+            case AnchorStyle.UpperCenter:
+            {
+                bounds.X = (_parent.Width - bounds.Width) * 0.5f;
+                break;
+            }
+            case AnchorStyle.UpperRight:
+            {
+                float distance = oldSize.X - bounds.Left;
+                bounds.X = _parent.Width - distance;
+                break;
+            }
+            case AnchorStyle.Upper:
+            {
+                float distance = oldSize.X - bounds.Right;
+                bounds.Width = _parent.Width - bounds.X - distance;
+                break;
+            }
 
-                case AnchorStyle.CenterLeft:
-                {
-                    bounds.Y = (_parent.Height - bounds.Height) * 0.5f;
-                    break;
-                }
-                case AnchorStyle.Center:
-                {
-                    bounds.Location = (_parent.Size - bounds.Size) * 0.5f;
-                    break;
-                }
-                case AnchorStyle.CenterRight:
-                {
-                    float distance = oldSize.X - bounds.Left;
-                    bounds.X = _parent.Width - distance;
-                    bounds.Y = (_parent.Height - bounds.Height) * 0.5f;
-                    break;
-                }
+            case AnchorStyle.CenterLeft:
+            {
+                bounds.Y = (_parent.Height - bounds.Height) * 0.5f;
+                break;
+            }
+            case AnchorStyle.Center:
+            {
+                bounds.Location = (_parent.Size - bounds.Size) * 0.5f;
+                break;
+            }
+            case AnchorStyle.CenterRight:
+            {
+                float distance = oldSize.X - bounds.Left;
+                bounds.X = _parent.Width - distance;
+                bounds.Y = (_parent.Height - bounds.Height) * 0.5f;
+                break;
+            }
 
-                case AnchorStyle.BottomLeft:
-                {
-                    float distance = oldSize.Y - bounds.Y;
-                    bounds.Y = _parent.Height - distance;
-                    break;
-                }
-                //case AnchorStyle.BottomCenter: break;
-                //case AnchorStyle.BottomRight: break;
-                //case AnchorStyle.Bottom: break;
+            case AnchorStyle.BottomLeft:
+            {
+                float distance = oldSize.Y - bounds.Y;
+                bounds.Y = _parent.Height - distance;
+                break;
+            }
+            //case AnchorStyle.BottomCenter: break;
+            //case AnchorStyle.BottomRight: break;
+            //case AnchorStyle.Bottom: break;
 
-                //case AnchorStyle.Left: break;
-                //case AnchorStyle.Right: break;
+            //case AnchorStyle.Left: break;
+            //case AnchorStyle.Right: break;
 
-                default:
-                    throw new NotImplementedException("finish anchor styles");
-                    break;
+            default:
+                throw new NotImplementedException("finish anchor styles");
+                break;
             }
 
             Bounds = bounds;

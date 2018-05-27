@@ -11,7 +11,7 @@ namespace FlaxEditor.GUI.Dialogs
         private const float BUTTONS_WIDTH = 60.0f;
         private const float PICKER_MARGIN = 6.0f;
         private const float RGBA_MARGIN = 12.0f;
-        private const float HSV_MARGIN =  0.0f;
+        private const float HSV_MARGIN = 0.0f;
         private const float CHANNELS_MARGIN = 4.0f;
         private const float CHANNEL_TEXT_WIDTH = 12.0f;
 
@@ -77,7 +77,7 @@ namespace FlaxEditor.GUI.Dialogs
         /// <param name="startColor">The start color.</param>
         /// <param name="onChangedOk">The on changed ok.</param>
         public ColorPickerDialog(Color startColor, Action<Color> onChangedOk)
-            : base("Pick a color!")
+        : base("Pick a color!")
         {
             _oldColor = startColor;
             _newColor = Color.Transparent;
@@ -185,12 +185,12 @@ namespace FlaxEditor.GUI.Dialogs
         {
             if (_disableEvents)
                 return;
-            
+
             Color color;
             if (Color.TryParseHex(_cHex.Text, out color))
                 SelectedColor = color;
         }
-        
+
         /// <inheritdoc />
         public override void Draw()
         {
@@ -198,9 +198,9 @@ namespace FlaxEditor.GUI.Dialogs
             var textColor = Color.White;
 
             base.Draw();
-            
+
             // RGBA
-            var rgbaR = new Rectangle(_cRed.Left -CHANNEL_TEXT_WIDTH, _cRed.Y, 10000, _cRed.Height);
+            var rgbaR = new Rectangle(_cRed.Left - CHANNEL_TEXT_WIDTH, _cRed.Y, 10000, _cRed.Height);
             Render2D.DrawText(style.FontMedium, "R", rgbaR, textColor, TextAlignment.Near, TextAlignment.Center);
             rgbaR.Location.Y = _cGreen.Y;
             Render2D.DrawText(style.FontMedium, "G", rgbaR, textColor, TextAlignment.Near, TextAlignment.Center);
@@ -210,7 +210,7 @@ namespace FlaxEditor.GUI.Dialogs
             Render2D.DrawText(style.FontMedium, "A", rgbaR, textColor, TextAlignment.Near, TextAlignment.Center);
 
             // HSV left
-            var hsvHl = new Rectangle(_cHue.Left -CHANNEL_TEXT_WIDTH, _cHue.Y, 10000, _cHue.Height);
+            var hsvHl = new Rectangle(_cHue.Left - CHANNEL_TEXT_WIDTH, _cHue.Y, 10000, _cHue.Height);
             Render2D.DrawText(style.FontMedium, "H", hsvHl, textColor, TextAlignment.Near, TextAlignment.Center);
             hsvHl.Location.Y = _cSaturation.Y;
             Render2D.DrawText(style.FontMedium, "S", hsvHl, textColor, TextAlignment.Near, TextAlignment.Center);
@@ -218,7 +218,7 @@ namespace FlaxEditor.GUI.Dialogs
             Render2D.DrawText(style.FontMedium, "V", hsvHl, textColor, TextAlignment.Near, TextAlignment.Center);
 
             // HSV right
-            var hsvHr = new Rectangle(_cHue.Right +2, _cHue.Y, 10000, _cHue.Height);
+            var hsvHr = new Rectangle(_cHue.Right + 2, _cHue.Y, 10000, _cHue.Height);
             Render2D.DrawText(style.FontMedium, "°", hsvHr, textColor, TextAlignment.Near, TextAlignment.Center);
             hsvHr.Location.Y = _cSaturation.Y;
             Render2D.DrawText(style.FontMedium, "%", hsvHr, textColor, TextAlignment.Near, TextAlignment.Center);
@@ -226,11 +226,11 @@ namespace FlaxEditor.GUI.Dialogs
             Render2D.DrawText(style.FontMedium, "%", hsvHr, textColor, TextAlignment.Near, TextAlignment.Center);
 
             // Hex
-            var hex = new Rectangle(_cHex.Left -26, _cHex.Y, 10000, _cHex.Height);
+            var hex = new Rectangle(_cHex.Left - 26, _cHex.Y, 10000, _cHex.Height);
             Render2D.DrawText(style.FontMedium, "Hex", hex, textColor, TextAlignment.Near, TextAlignment.Center);
 
             // Color diffrence
-            var newRect = new Rectangle(_cOK.X, _cHex.Bottom +PICKER_MARGIN, _cCancel.Right - _cOK.Left, 0);
+            var newRect = new Rectangle(_cOK.X, _cHex.Bottom + PICKER_MARGIN, _cCancel.Right - _cOK.Left, 0);
             newRect.Size.Y = _cValue.Bottom - newRect.Y;
             Render2D.FillRectangle(newRect, _newColor * _newColor.A);
         }

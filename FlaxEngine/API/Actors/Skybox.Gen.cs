@@ -7,97 +7,103 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Skybox actor renders sky using custom cube texture or material
-	/// </summary>
-	[Serializable]
-	public sealed partial class Skybox : Actor
-	{
-		/// <summary>
-		/// Creates new <see cref="Skybox"/> object.
-		/// </summary>
-		private Skybox() : base()
-		{
-		}
+    /// <summary>
+    /// Skybox actor renders sky using custom cube texture or material
+    /// </summary>
+    [Serializable]
+    public sealed partial class Skybox : Actor
+    {
+        /// <summary>
+        /// Creates new <see cref="Skybox"/> object.
+        /// </summary>
+        private Skybox() : base()
+        {
+        }
 
-		/// <summary>
-		/// Creates new instance of <see cref="Skybox"/> object.
-		/// </summary>
-		/// <returns>Created object.</returns>
+        /// <summary>
+        /// Creates new instance of <see cref="Skybox"/> object.
+        /// </summary>
+        /// <returns>Created object.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static Skybox New() 
-		{
+        [UnmanagedCall]
+        public static Skybox New()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Create(typeof(Skybox)) as Skybox;
+            return Internal_Create(typeof(Skybox)) as Skybox;
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets skybox cube texture.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(10), EditorDisplay("Skybox"), Tooltip("Skybox cube texture")]
-		public CubeTexture CubeTexture
-		{
+        /// <summary>
+        /// Gets or sets skybox cube texture.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(10), EditorDisplay("Skybox"), Tooltip("Skybox cube texture")]
+        public CubeTexture CubeTexture
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetCubeTexture(unmanagedPtr); }
-			set { Internal_SetCubeTexture(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            get { return Internal_GetCubeTexture(unmanagedPtr); }
+            set { Internal_SetCubeTexture(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets skybox custom material used to override default.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(20), EditorDisplay("Skybox"), Tooltip("Skybox custom material used to override default")]
-		public MaterialBase CustomMatrial
-		{
+        /// <summary>
+        /// Gets or sets skybox custom material used to override default.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(20), EditorDisplay("Skybox"), Tooltip("Skybox custom material used to override default")]
+        public MaterialBase CustomMatrial
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetCustomMatrial(unmanagedPtr); }
-			set { Internal_SetCustomMatrial(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            get { return Internal_GetCustomMatrial(unmanagedPtr); }
+            set { Internal_SetCustomMatrial(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets skybox color.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(30), EditorDisplay("Skybox"), Tooltip("Skybox color")]
-		public Color Color
-		{
+        /// <summary>
+        /// Gets or sets skybox color.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(30), EditorDisplay("Skybox"), Tooltip("Skybox color")]
+        public Color Color
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { Color resultAsRef; Internal_GetColor(unmanagedPtr, out resultAsRef); return resultAsRef; }
-			set { Internal_SetColor(unmanagedPtr, ref value); }
+            get { Color resultAsRef; Internal_GetColor(unmanagedPtr, out resultAsRef); return resultAsRef; }
+            set { Internal_SetColor(unmanagedPtr, ref value); }
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern CubeTexture Internal_GetCubeTexture(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetCubeTexture(IntPtr obj, IntPtr val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern MaterialBase Internal_GetCustomMatrial(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetCustomMatrial(IntPtr obj, IntPtr val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetColor(IntPtr obj, out Color resultAsRef);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetColor(IntPtr obj, ref Color val);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern CubeTexture Internal_GetCubeTexture(IntPtr obj);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetCubeTexture(IntPtr obj, IntPtr val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern MaterialBase Internal_GetCustomMatrial(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetCustomMatrial(IntPtr obj, IntPtr val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetColor(IntPtr obj, out Color resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetColor(IntPtr obj, ref Color val);
+#endif
+
+        #endregion
+    }
+}

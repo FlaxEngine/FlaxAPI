@@ -229,7 +229,7 @@ namespace FlaxEngine.Collections
         {
             if (index < 0 || index >= _keyedCollection.Count)
                 throw new ArgumentException(String.Format("The index was outside the bounds of the dictionary: {0}",
-                    index));
+                                                          index));
             return _keyedCollection[index];
         }
 
@@ -470,7 +470,7 @@ namespace FlaxEngine.Collections
 
         void IOrderedDictionary.Insert(int index, object key, object value)
         {
-            Insert(index, (TKey) key, (TValue) value);
+            Insert(index, (TKey)key, (TValue)value);
         }
 
         void IOrderedDictionary.RemoveAt(int index)
@@ -481,7 +481,7 @@ namespace FlaxEngine.Collections
         object IOrderedDictionary.this[int index]
         {
             get { return this[index]; }
-            set { this[index] = (TValue) value; }
+            set { this[index] = (TValue)value; }
         }
 
         #endregion
@@ -490,7 +490,7 @@ namespace FlaxEngine.Collections
 
         void IDictionary.Add(object key, object value)
         {
-            Add((TKey) key, (TValue) value);
+            Add((TKey)key, (TValue)value);
         }
 
         void IDictionary.Clear()
@@ -500,7 +500,7 @@ namespace FlaxEngine.Collections
 
         bool IDictionary.Contains(object key)
         {
-            return _keyedCollection.Contains((TKey) key);
+            return _keyedCollection.Contains((TKey)key);
         }
 
         IDictionaryEnumerator IDictionary.GetEnumerator()
@@ -520,23 +520,23 @@ namespace FlaxEngine.Collections
 
         ICollection IDictionary.Keys
         {
-            get { return (ICollection) this.Keys; }
+            get { return (ICollection)this.Keys; }
         }
 
         void IDictionary.Remove(object key)
         {
-            Remove((TKey) key);
+            Remove((TKey)key);
         }
 
         ICollection IDictionary.Values
         {
-            get { return (ICollection) this.Values; }
+            get { return (ICollection)this.Values; }
         }
 
         object IDictionary.this[object key]
         {
-            get { return this[(TKey) key]; }
-            set { this[(TKey) key] = (TValue) value; }
+            get { return this[(TKey)key]; }
+            set { this[(TKey)key] = (TValue)value; }
         }
 
         #endregion
@@ -545,22 +545,22 @@ namespace FlaxEngine.Collections
 
         void ICollection.CopyTo(Array array, int index)
         {
-            ((ICollection) _keyedCollection).CopyTo(array, index);
+            ((ICollection)_keyedCollection).CopyTo(array, index);
         }
 
         int ICollection.Count
         {
-            get { return ((ICollection) _keyedCollection).Count; }
+            get { return ((ICollection)_keyedCollection).Count; }
         }
 
         bool ICollection.IsSynchronized
         {
-            get { return ((ICollection) _keyedCollection).IsSynchronized; }
+            get { return ((ICollection)_keyedCollection).IsSynchronized; }
         }
 
         object ICollection.SyncRoot
         {
-            get { return ((ICollection) _keyedCollection).SyncRoot; }
+            get { return ((ICollection)_keyedCollection).SyncRoot; }
         }
 
         #endregion
@@ -573,7 +573,7 @@ namespace FlaxEngine.Collections
         private Func<TItem, TKey> _getKeyForItemDelegate;
 
         public KeyedCollectionInternal(Func<TItem, TKey> getKeyForItemDelegate)
-            : base()
+        : base()
         {
             if (getKeyForItemDelegate == null)
                 throw new ArgumentNullException(DelegateNullExceptionMessage);
@@ -581,7 +581,7 @@ namespace FlaxEngine.Collections
         }
 
         public KeyedCollectionInternal(Func<TItem, TKey> getKeyForItemDelegate, IEqualityComparer<TKey> comparer)
-            : base(comparer)
+        : base(comparer)
         {
             if (getKeyForItemDelegate == null)
                 throw new ArgumentNullException(DelegateNullExceptionMessage);

@@ -35,7 +35,7 @@ namespace FlaxEditor.Content.Thumbnails
         private RenderTarget _output;
 
         internal ThumbnailsModule(Editor editor)
-            : base(editor)
+        : base(editor)
         {
             _cacheFolder = StringUtils.CombinePaths(Globals.ProjectCacheFolder, "Thumbnails");
             _lastFlushTime = DateTime.UtcNow;
@@ -209,7 +209,7 @@ namespace FlaxEditor.Content.Thumbnails
             _output = RenderTarget.New();
             _output.Init(PreviewsCache.AssetIconsAtlasFormat, PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
             _task = RenderTask.Create<CustomRenderTask>();
-            _task.Order = 50;// Render this task later
+            _task.Order = 50; // Render this task later
             _task.Enabled = false;
             _task.OnRender += OnRender;
         }
@@ -505,7 +505,7 @@ namespace FlaxEditor.Content.Thumbnails
 
             /// <inheritdoc />
             public PreviewRoot()
-                : base(0, 0, PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize)
+            : base(0, 0, PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize)
             {
                 CanFocus = false;
                 AccentColor = Color.Pink;

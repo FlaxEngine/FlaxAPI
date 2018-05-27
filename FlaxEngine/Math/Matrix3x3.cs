@@ -77,7 +77,12 @@ namespace FlaxEngine
         /// <summary>
         /// The identity <see cref="Matrix3x3"/>.
         /// </summary>
-        public static readonly Matrix3x3 Identity = new Matrix3x3() {M11 = 1.0f, M22 = 1.0f, M33 = 1.0f};
+        public static readonly Matrix3x3 Identity = new Matrix3x3()
+        {
+            M11 = 1.0f,
+            M22 = 1.0f,
+            M33 = 1.0f
+        };
 
         /// <summary>
         /// Value at row 1 column 1 of the Matrix3x3.
@@ -131,8 +136,8 @@ namespace FlaxEngine
         public Matrix3x3(float value)
         {
             M11 = M12 = M13 =
-                M21 = M22 = M23 =
-                    M31 = M32 = M33 = value;
+                        M21 = M22 = M23 =
+                                    M31 = M32 = M33 = value;
         }
 
         /// <summary>
@@ -307,24 +312,24 @@ namespace FlaxEngine
             {
                 switch (index)
                 {
-                    case 0:
-                        return M11;
-                    case 1:
-                        return M12;
-                    case 2:
-                        return M13;
-                    case 3:
-                        return M21;
-                    case 4:
-                        return M22;
-                    case 5:
-                        return M23;
-                    case 6:
-                        return M31;
-                    case 7:
-                        return M32;
-                    case 8:
-                        return M33;
+                case 0:
+                    return M11;
+                case 1:
+                    return M12;
+                case 2:
+                    return M13;
+                case 3:
+                    return M21;
+                case 4:
+                    return M22;
+                case 5:
+                    return M23;
+                case 6:
+                    return M31;
+                case 7:
+                    return M32;
+                case 8:
+                    return M33;
                 }
 
                 throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix3x3 run from 0 to 8, inclusive.");
@@ -333,35 +338,35 @@ namespace FlaxEngine
             {
                 switch (index)
                 {
-                    case 0:
-                        M11 = value;
-                        break;
-                    case 1:
-                        M12 = value;
-                        break;
-                    case 2:
-                        M13 = value;
-                        break;
-                    case 3:
-                        M21 = value;
-                        break;
-                    case 4:
-                        M22 = value;
-                        break;
-                    case 5:
-                        M23 = value;
-                        break;
-                    case 6:
-                        M31 = value;
-                        break;
-                    case 7:
-                        M32 = value;
-                        break;
-                    case 8:
-                        M33 = value;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix3x3 run from 0 to 8, inclusive.");
+                case 0:
+                    M11 = value;
+                    break;
+                case 1:
+                    M12 = value;
+                    break;
+                case 2:
+                    M13 = value;
+                    break;
+                case 3:
+                    M21 = value;
+                    break;
+                case 4:
+                    M22 = value;
+                    break;
+                case 5:
+                    M23 = value;
+                    break;
+                case 6:
+                    M31 = value;
+                    break;
+                case 7:
+                    M32 = value;
+                    break;
+                case 8:
+                    M33 = value;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix3x3 run from 0 to 8, inclusive.");
                 }
             }
         }
@@ -546,7 +551,7 @@ namespace FlaxEngine
                 M32 = M32 / scale.Z,
                 M33 = M33 / scale.Z
             };
-            
+
             Quaternion.RotationMatrix(ref rotationMatrix, out rotation);
             return true;
         }
@@ -586,7 +591,7 @@ namespace FlaxEngine
                 M32 = M32 * invScale,
                 M33 = M33 * invScale
             };
-            
+
             Quaternion.RotationMatrix(ref rotationmatrix, out rotation);
             return true;
         }
@@ -661,7 +666,18 @@ namespace FlaxEngine
         /// <returns>A 9-element array containing the components of the Matrix3x3.</returns>
         public float[] ToArray()
         {
-            return new[] {M11, M12, M13, M21, M22, M23, M31, M32, M33};
+            return new[]
+            {
+                M11,
+                M12,
+                M13,
+                M21,
+                M22,
+                M23,
+                M31,
+                M32,
+                M33
+            };
         }
 
         /// <summary>
@@ -1525,7 +1541,7 @@ namespace FlaxEngine
             BillboardLH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
             return result;
         }
-        
+
         /// <summary>
         /// Creates a left-handed, look-at Matrix3x3.
         /// </summary>
@@ -1567,7 +1583,7 @@ namespace FlaxEngine
             LookAtLH(ref eye, ref target, ref up, out result);
             return result;
         }
-        
+
         /// <summary>
         /// Creates a Matrix3x3 that scales along the x-axis, y-axis, and y-axis.
         /// </summary>
@@ -1867,13 +1883,13 @@ namespace FlaxEngine
         /// <param name="translation">The translation vector.</param>
         /// <param name="result">The result.</param>
         public static void Translation2D(ref Vector2 translation, out Matrix3x3 result)
-	    {
-		    result = new Matrix3x3(
-			    1, 0, 0,
-			    0, 1, 0,
-			    translation.X, translation.Y, 1
-		    );
-	    }
+        {
+            result = new Matrix3x3(
+                1, 0, 0,
+                0, 1, 0,
+                translation.X, translation.Y, 1
+            );
+        }
 
         /// <summary>
         /// Creates 2D translation matrix.
@@ -1886,19 +1902,19 @@ namespace FlaxEngine
             Translation2D(ref translation, out result);
             return result;
         }
-        
-	    /// <summary>
-	    /// Transforms given vector by the matrix (in 2D).
-	    /// </summary>
-	    /// <param name="vector">The vector.</param>
-	    /// <param name="transform">The transform.</param>
-	    /// <param name="result">The result.</param>
-	    public static void Transform2D(ref Vector2 vector, ref Matrix3x3 transform, out Vector2 result)
-	    {
-		    result = new Vector2(
-			    (vector.X * transform.M11) + (vector.Y * transform.M21) + transform.M31,
-			    (vector.X * transform.M12) + (vector.Y * transform.M22) + transform.M32);
-	    }
+
+        /// <summary>
+        /// Transforms given vector by the matrix (in 2D).
+        /// </summary>
+        /// <param name="vector">The vector.</param>
+        /// <param name="transform">The transform.</param>
+        /// <param name="result">The result.</param>
+        public static void Transform2D(ref Vector2 vector, ref Matrix3x3 transform, out Vector2 result)
+        {
+            result = new Vector2(
+                (vector.X * transform.M11) + (vector.Y * transform.M21) + transform.M31,
+                (vector.X * transform.M12) + (vector.Y * transform.M22) + transform.M32);
+        }
 
         /// <summary>
         /// Transforms given vector by the matrix (in 2D).
@@ -2086,7 +2102,7 @@ namespace FlaxEngine
         public override string ToString()
         {
             return string.Format(CultureInfo.CurrentCulture, "[M11:{0} M12:{1} M13:{2}] [M21:{3} M22:{4} M23:{5}] [M31:{6} M32:{7} M33:{8}]",
-                M11, M12, M13, M21, M22, M23, M31, M32, M33);
+                                 M11, M12, M13, M21, M22, M23, M31, M32, M33);
         }
 
         /// <summary>
@@ -2102,9 +2118,9 @@ namespace FlaxEngine
                 return ToString();
 
             return string.Format(format, CultureInfo.CurrentCulture, "[M11:{0} M12:{1} M13:{2}] [M21:{3} M22:{4} M23:{5}] [M31:{6} M32:{7} M33:{8}]",
-                M11.ToString(format, CultureInfo.CurrentCulture), M12.ToString(format, CultureInfo.CurrentCulture), M13.ToString(format, CultureInfo.CurrentCulture),
-                M21.ToString(format, CultureInfo.CurrentCulture), M22.ToString(format, CultureInfo.CurrentCulture), M23.ToString(format, CultureInfo.CurrentCulture),
-                M31.ToString(format, CultureInfo.CurrentCulture), M32.ToString(format, CultureInfo.CurrentCulture), M33.ToString(format, CultureInfo.CurrentCulture));
+                                 M11.ToString(format, CultureInfo.CurrentCulture), M12.ToString(format, CultureInfo.CurrentCulture), M13.ToString(format, CultureInfo.CurrentCulture),
+                                 M21.ToString(format, CultureInfo.CurrentCulture), M22.ToString(format, CultureInfo.CurrentCulture), M23.ToString(format, CultureInfo.CurrentCulture),
+                                 M31.ToString(format, CultureInfo.CurrentCulture), M32.ToString(format, CultureInfo.CurrentCulture), M33.ToString(format, CultureInfo.CurrentCulture));
         }
 
         /// <summary>
@@ -2117,9 +2133,9 @@ namespace FlaxEngine
         public string ToString(IFormatProvider formatProvider)
         {
             return string.Format(formatProvider, "[M11:{0} M12:{1} M13:{2}] [M21:{3} M22:{4} M23:{5}] [M31:{6} M32:{7} M33:{8}]",
-                M11.ToString(formatProvider), M12.ToString(formatProvider), M13.ToString(formatProvider),
-                M21.ToString(formatProvider), M22.ToString(formatProvider), M23.ToString(formatProvider),
-                M31.ToString(formatProvider), M32.ToString(formatProvider), M33.ToString(formatProvider));
+                                 M11.ToString(formatProvider), M12.ToString(formatProvider), M13.ToString(formatProvider),
+                                 M21.ToString(formatProvider), M22.ToString(formatProvider), M23.ToString(formatProvider),
+                                 M31.ToString(formatProvider), M32.ToString(formatProvider), M33.ToString(formatProvider));
         }
 
         /// <summary>
@@ -2136,9 +2152,9 @@ namespace FlaxEngine
                 return ToString(formatProvider);
 
             return string.Format(format, formatProvider, "[M11:{0} M12:{1} M13:{2}] [M21:{3} M22:{4} M23:{5}] [M31:{6} M32:{7} M33:{8}]",
-                M11.ToString(format, formatProvider), M12.ToString(format, formatProvider), M13.ToString(format, formatProvider),
-                M21.ToString(format, formatProvider), M22.ToString(format, formatProvider), M23.ToString(format, formatProvider),
-                M31.ToString(format, formatProvider), M32.ToString(format, formatProvider), M33.ToString(format, formatProvider));
+                                 M11.ToString(format, formatProvider), M12.ToString(format, formatProvider), M13.ToString(format, formatProvider),
+                                 M21.ToString(format, formatProvider), M22.ToString(format, formatProvider), M23.ToString(format, formatProvider),
+                                 M31.ToString(format, formatProvider), M32.ToString(format, formatProvider), M33.ToString(format, formatProvider));
         }
 
         /// <summary>
@@ -2203,16 +2219,16 @@ namespace FlaxEngine
         public static bool Equals(ref Matrix3x3 a, ref Matrix3x3 b)
         {
             return
-                Mathf.NearEqual(a.M11, b.M11) &&
-                Mathf.NearEqual(a.M12, b.M12) &&
-                Mathf.NearEqual(a.M13, b.M13) &&
-                Mathf.NearEqual(a.M21, b.M21) &&
-                Mathf.NearEqual(a.M22, b.M22) &&
-                Mathf.NearEqual(a.M23, b.M23) &&
-                Mathf.NearEqual(a.M31, b.M31) &&
-                Mathf.NearEqual(a.M32, b.M32) &&
-                Mathf.NearEqual(a.M33, b.M33)
-                ;
+            Mathf.NearEqual(a.M11, b.M11) &&
+            Mathf.NearEqual(a.M12, b.M12) &&
+            Mathf.NearEqual(a.M13, b.M13) &&
+            Mathf.NearEqual(a.M21, b.M21) &&
+            Mathf.NearEqual(a.M22, b.M22) &&
+            Mathf.NearEqual(a.M23, b.M23) &&
+            Mathf.NearEqual(a.M31, b.M31) &&
+            Mathf.NearEqual(a.M32, b.M32) &&
+            Mathf.NearEqual(a.M33, b.M33)
+            ;
         }
 
         /// <summary>

@@ -7,55 +7,57 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Base class for all binary assets.
-	/// </summary>
-	public abstract partial class BinaryAsset : Asset
-	{
-		/// <summary>
-		/// Creates new <see cref="BinaryAsset"/> object.
-		/// </summary>
-		protected BinaryAsset() : base()
-		{
-		}
+    /// <summary>
+    /// Base class for all binary assets.
+    /// </summary>
+    public abstract partial class BinaryAsset : Asset
+    {
+        /// <summary>
+        /// Creates new <see cref="BinaryAsset"/> object.
+        /// </summary>
+        protected BinaryAsset() : base()
+        {
+        }
 
-		/// <summary>
-		/// Reimports asset from the source file.
-		/// </summary>
+        /// <summary>
+        /// Reimports asset from the source file.
+        /// </summary>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public void Reimport() 
-		{
+        [UnmanagedCall]
+        public void Reimport()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_Reimport(unmanagedPtr);
+            Internal_Reimport(unmanagedPtr);
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets imported file path from the asset metadata (may be null or empty if not available).
-		/// </summary>
-		[UnmanagedCall]
-		public string ImportPath
-		{
+        /// <summary>
+        /// Gets imported file path from the asset metadata (may be null or empty if not available).
+        /// </summary>
+        [UnmanagedCall]
+        public string ImportPath
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetImportPath(unmanagedPtr); }
+            get { return Internal_GetImportPath(unmanagedPtr); }
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_Reimport(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern string Internal_GetImportPath(IntPtr obj);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Reimport(IntPtr obj);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern string Internal_GetImportPath(IntPtr obj);
+#endif
+
+        #endregion
+    }
+}

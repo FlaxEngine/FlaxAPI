@@ -19,7 +19,7 @@ namespace FlaxEditor.Surface
         private Rectangle _footerRect;
         private Vector2 _mousePosition;
         private bool _isSelected;
-		
+
         /// <summary>
         /// The surface.
         /// </summary>
@@ -69,7 +69,7 @@ namespace FlaxEditor.Surface
         /// The type.
         /// </value>
         public uint Type => ((uint)GroupArchetype.GroupID << 16) | Archetype.TypeID;
-        
+
         /// <summary>
         /// The metadata.
         /// </summary>
@@ -83,10 +83,10 @@ namespace FlaxEditor.Surface
         /// <param name="nodeArch">The node archetype.</param>
         /// <param name="groupArch">The group archetype.</param>
         public SurfaceNode(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
-            : base(0, 0, nodeArch.Size.X + Constants.NodeMarginX * 2, nodeArch.Size.Y + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize)
+        : base(0, 0, nodeArch.Size.X + Constants.NodeMarginX * 2, nodeArch.Size.Y + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize)
         {
             ClipChildren = false;
-	        Name = nodeArch.Title;
+            Name = nodeArch.Title;
 
             ID = id;
             Surface = surface;
@@ -100,30 +100,30 @@ namespace FlaxEditor.Surface
             }
         }
 
-	    /// <summary>
-	    /// Resizes the node area.
-	    /// </summary>
-	    /// <param name="width">The width.</param>
-	    /// <param name="height">The height.</param>
-	    protected void Resize(float width, float height)
-	    {
-		    var prevSize = Size;
-		    Size = new Vector2(width + Constants.NodeMarginX * 2, height + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize);
+        /// <summary>
+        /// Resizes the node area.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        protected void Resize(float width, float height)
+        {
+            var prevSize = Size;
+            Size = new Vector2(width + Constants.NodeMarginX * 2, height + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize);
 
-		    // Update boxes on width change
-		    if (!Mathf.NearEqual(prevSize.X, Size.X))
-		    {
-			    for (int i = 0; i < Elements.Count; i++)
-			    {
-				    if (Elements[i] is OutputBox box)
-				    {
-					    box.Location = box.Archetype.Position + new Vector2(width, 0);
-				    }
-			    }
-		    }
-	    }
+            // Update boxes on width change
+            if (!Mathf.NearEqual(prevSize.X, Size.X))
+            {
+                for (int i = 0; i < Elements.Count; i++)
+                {
+                    if (Elements[i] is OutputBox box)
+                    {
+                        box.Location = box.Archetype.Position + new Vector2(width, 0);
+                    }
+                }
+            }
+        }
 
-	    internal void AddElement(ISurfaceNodeElement element)
+        internal void AddElement(ISurfaceNodeElement element)
         {
             Elements.Add(element);
             if (element is Control control)
@@ -132,13 +132,13 @@ namespace FlaxEditor.Surface
 
         internal void RemoveElement(ISurfaceNodeElement element, bool dispose = true)
         {
-            if(element is Box box)
+            if (element is Box box)
                 box.RemoveConnections();
             Elements.Remove(element);
             if (element is Control control)
             {
                 RemoveChild(control);
-                if(dispose)
+                if (dispose)
                     control.Dispose();
             }
         }
@@ -147,7 +147,7 @@ namespace FlaxEditor.Surface
         {
             return _headerRect.MakeOffseted(Location).Contains(ref location);
         }
-        
+
         /// <summary>
         /// Remeove all connections from and to that node.
         /// </summary>
@@ -155,7 +155,7 @@ namespace FlaxEditor.Surface
         {
             for (int i = 0; i < Elements.Count; i++)
             {
-                if(Elements[i] is Box box)
+                if (Elements[i] is Box box)
                     box.RemoveConnections();
             }
 
@@ -173,7 +173,7 @@ namespace FlaxEditor.Surface
                 // Back
                 return;
             }
-            
+
             // Get type to assign to all dependent boxes
             ConnectionType type = Archetype.DefaultType;
             for (int i = 0; i < Archetype.IndependentBoxes.Length; i++)
@@ -229,26 +229,26 @@ namespace FlaxEditor.Surface
             return null;
         }
 
-		/// <summary>
-		/// Tries to get box with given ID.
-		/// </summary>
-		/// <param name="id">The box id.</param>
-		/// <param name="result">Box or null if cannot find.</param>
-		/// <returns>True fi box has been found, otherwise false.</returns>
-		public bool TryGetBox(int id, out Box result)
+        /// <summary>
+        /// Tries to get box with given ID.
+        /// </summary>
+        /// <param name="id">The box id.</param>
+        /// <param name="result">Box or null if cannot find.</param>
+        /// <returns>True fi box has been found, otherwise false.</returns>
+        public bool TryGetBox(int id, out Box result)
         {
             // TODO: maybe create local cache for boxes? but not a dictionary, use lookup table because ids are usally small (less than 20)
             for (int i = 0; i < Elements.Count; i++)
             {
                 if (Elements[i] is Box box && box.ID == id)
                 {
-	                result =  box;
-	                return true;
+                    result = box;
+                    return true;
                 }
             }
 
-	        result = null;
-			return false;
+            result = null;
+            return false;
         }
 
         internal List<Box> GetBoxes()
@@ -277,25 +277,25 @@ namespace FlaxEditor.Surface
             UpdateRectangles();
             UpdateBoxesTypes();
 
-	        for (int i = 0; i < Elements.Count; i++)
-	        {
-		        if (Elements[i] is Box box)
-			        box.OnConnectionsChanged();
-	        }
-		}
+            for (int i = 0; i < Elements.Count; i++)
+            {
+                if (Elements[i] is Box box)
+                    box.OnConnectionsChanged();
+            }
+        }
 
-	    /// <summary>
-	    /// Sets the value of the node parameter.
-	    /// </summary>
-	    /// <param name="index">The value index.</param>
-	    /// <param name="value">The value.</param>
-	    public virtual void SetValue(int index, object value)
-	    {
-		    Values[index] = value;
-		    Surface.MarkAsEdited();
-	    }
-		
-	    /// <summary>
+        /// <summary>
+        /// Sets the value of the node parameter.
+        /// </summary>
+        /// <param name="index">The value index.</param>
+        /// <param name="value">The value.</param>
+        public virtual void SetValue(int index, object value)
+        {
+            Values[index] = value;
+            Surface.MarkAsEdited();
+        }
+
+        /// <summary>
         /// Updates the given box connection.
         /// </summary>
         /// <param name="box">The box.</param>
@@ -392,8 +392,8 @@ namespace FlaxEditor.Surface
             // Secondary Context Menu
             if (buttons == MouseButton.Right)
             {
-	            if (!IsSelected)
-		            Surface.Select(this);
+                if (!IsSelected)
+                    Surface.Select(this);
                 Surface.ShowSecondaryCM(Parent.PointToParent(PointToParent(location)));
                 return true;
             }

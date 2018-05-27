@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections;
@@ -100,8 +100,10 @@ namespace FlaxEngine.Collections
 
         [JsonProperty("buffer")]
         private T[] _buffer;
+
         [JsonProperty("frontItem")]
         private int _frontItem;
+
         [JsonProperty("backItem")]
         private int _backItem;
 
@@ -152,7 +154,7 @@ namespace FlaxEngine.Collections
         /// <summary>
         ///     Creates new instance of object with given capacity, copies given array as a framework
         /// </summary>
-        /// <param name="items">Items inside an buffer to insert into</param>
+        /// <param name="buffer">Buffer to insert into</param>
         /// <param name="frontItem">First index of an item in provided buffer</param>
         /// <param name="backItem">Last index on an item in provided buffer</param>
         [JsonConstructor]
@@ -182,7 +184,7 @@ namespace FlaxEngine.Collections
         /// </summary>
         /// <param name="capacity">Capacity of internal structure</param>
         public CircularBuffer(int capacity)
-            : this(capacity, new T[] { })
+        : this(capacity, new T[] { })
         {
         }
 
@@ -198,7 +200,7 @@ namespace FlaxEngine.Collections
                 throw new ArgumentOutOfRangeException(nameof(capacity), "argument cannot be lower or equal zero");
             if (items.Length + arrayIndex > capacity)
                 throw new ArgumentOutOfRangeException(nameof(items),
-                    "argument cannot be larger then requested capaclity with moved arrayIndex");
+                                                      "argument cannot be larger then requested capaclity with moved arrayIndex");
             _buffer = new T[capacity];
             items.CopyTo(_buffer, arrayIndex);
             _backItem = arrayIndex;

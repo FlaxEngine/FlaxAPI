@@ -42,7 +42,7 @@ namespace FlaxEngine.GUI
         /// <param name="width">The initial width.</param>
         /// <param name="height">The initial height.</param>
         protected ContextMenuItem(ContextMenu parent, float width, float height)
-            : base(0, 0, width, height)
+        : base(0, 0, width, height)
         {
             CanFocus = false;
             ParentContextMenu = parent;

@@ -116,7 +116,7 @@ namespace FlaxEngine
             MinDepth = 0f;
             MaxDepth = 1f;
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Viewport"/> struct.
         /// </summary>
@@ -158,11 +158,11 @@ namespace FlaxEngine
         public bool Equals(ref Viewport other)
         {
             return Mathf.NearEqual(X, other.X) &&
-                Mathf.NearEqual(Y, other.Y) &&
-                Mathf.NearEqual(Width, other.Width) &&
-                Mathf.NearEqual(Height, other.Height) &&
-                Mathf.NearEqual(MinDepth, other.MinDepth) &&
-                Mathf.NearEqual(MaxDepth, other.MaxDepth);
+                   Mathf.NearEqual(Y, other.Y) &&
+                   Mathf.NearEqual(Width, other.Width) &&
+                   Mathf.NearEqual(Height, other.Height) &&
+                   Mathf.NearEqual(MinDepth, other.MinDepth) &&
+                   Mathf.NearEqual(MaxDepth, other.MaxDepth);
         }
 
         /// <summary>

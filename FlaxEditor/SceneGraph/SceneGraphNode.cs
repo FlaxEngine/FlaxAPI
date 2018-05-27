@@ -53,12 +53,12 @@ namespace FlaxEditor.SceneGraph
 
         /// <inheritdoc />
         public abstract Transform Transform { get; set; }
-        
+
         /// <summary>
         /// Gets a value indicating whether this instance can be copied or/and pasted.
         /// </summary>
         public virtual bool CanCopyPaste => true;
-        
+
         /// <summary>
         /// Gets a value indicating whether this node can be deleted by the user.
         /// </summary>
@@ -68,12 +68,12 @@ namespace FlaxEditor.SceneGraph
         /// Gets a value indicating whether this node can be dragged by the user.
         /// </summary>
         public virtual bool CanDrag => true;
-        
+
         /// <summary>
         /// Gets a value indicating whether this node can be transformed by the user.
         /// </summary>
         public virtual bool CanTransform => true;
-        
+
         /// <summary>
         /// Gets a value indicating whether this <see cref="SceneGraphNode"/> is active.
         /// </summary>
@@ -88,7 +88,7 @@ namespace FlaxEditor.SceneGraph
         /// Gets or sets order of the node in the parent container.
         /// </summary>
         public abstract int OrderInParent { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the parent node.
         /// </summary>
@@ -170,7 +170,7 @@ namespace FlaxEditor.SceneGraph
                 return null;
 
             // TODO: early out with boxWithChildren test
-            
+
             // Check itself
             SceneGraphNode minTarget = null;
             float minDistance = float.MaxValue;

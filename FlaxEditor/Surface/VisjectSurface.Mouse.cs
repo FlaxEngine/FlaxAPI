@@ -71,10 +71,10 @@ namespace FlaxEditor.Surface
             // Check if user is selecting or moving node(s)
             if (_leftMouseDown)
             {
-                if (_startBox != null)// Connecting
+                if (_startBox != null) // Connecting
                 {
                 }
-                else if (_isMovingSelection)// Moving
+                else if (_isMovingSelection) // Moving
                 {
                     // Calculate delta (apply view offset)
                     Vector2 viewDelta = _surface.Location - _movingSelectionViewPos;
@@ -99,7 +99,7 @@ namespace FlaxEditor.Surface
                     // Handled
                     return;
                 }
-                else// Selecting
+                else // Selecting
                 {
                     UpdateSelectionRectangle();
 
@@ -272,8 +272,8 @@ namespace FlaxEditor.Surface
                     _cmStartPos = location;
                     if (nodeAtMouse != null)
                     {
-						if(!HasSelection)
-							Select(nodeAtMouse);
+                        if (!HasSelection)
+                            Select(nodeAtMouse);
 
                         // Show secondary context menu
                         ShowSecondaryCM(_cmStartPos);
@@ -312,30 +312,29 @@ namespace FlaxEditor.Surface
                 return true;
             }
 
-	        if (ParentWindow.GetKey(Keys.Control))
-	        {
-		        switch (key)
-		        {
-			        case Keys.A:
-				        SelectAll();
-				        return true;
-			        case Keys.C:
-				        Copy();
-				        return true;
-			        case Keys.V:
-				        Paste();
-				        return true;
-			        case Keys.X:
-				        Cut();
-				        return true;
-			        case Keys.D:
-				        Duplicate();
-				        return true;
+            if (ParentWindow.GetKey(Keys.Control))
+            {
+                switch (key)
+                {
+                case Keys.A:
+                    SelectAll();
+                    return true;
+                case Keys.C:
+                    Copy();
+                    return true;
+                case Keys.V:
+                    Paste();
+                    return true;
+                case Keys.X:
+                    Cut();
+                    return true;
+                case Keys.D:
+                    Duplicate();
+                    return true;
+                }
+            }
 
-		        }
-	        }
-
-	        return false;
+            return false;
         }
     }
 }

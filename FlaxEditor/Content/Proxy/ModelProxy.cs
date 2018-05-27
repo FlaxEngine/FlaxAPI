@@ -20,7 +20,7 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override string Name => "Model";
-        
+
         /// <inheritdoc />
         public override bool CanReimport(ContentItem item)
         {
@@ -45,19 +45,19 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override void OnThumbnailDrawPrepare(ThumbnailRequest request)
         {
-	        if (_preview == null)
-	        {
-		        _preview = new ModelPreview(false);
-		        _preview.RenderOnlyWithWindow = false;
-		        _preview.Task.Enabled = false;
-		        _preview.PostFxVolume.Settings.Eye_Technique = EyeAdaptationTechnique.None;
-		        _preview.PostFxVolume.Settings.Eye_Exposure = 0.1f;
-		        _preview.PostFxVolume.Settings.data.Flags4 |= 0b1001;
-				_preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
-		        _preview.SyncBackbufferSize();
-	        }
+            if (_preview == null)
+            {
+                _preview = new ModelPreview(false);
+                _preview.RenderOnlyWithWindow = false;
+                _preview.Task.Enabled = false;
+                _preview.PostFxVolume.Settings.Eye_Technique = EyeAdaptationTechnique.None;
+                _preview.PostFxVolume.Settings.Eye_Exposure = 0.1f;
+                _preview.PostFxVolume.Settings.data.Flags4 |= 0b1001;
+                _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
+                _preview.SyncBackbufferSize();
+            }
 
-	        // TODO: disable streaming for asset during thumbnail rendering (and restore it after)
+            // TODO: disable streaming for asset during thumbnail rendering (and restore it after)
         }
 
         /// <inheritdoc />

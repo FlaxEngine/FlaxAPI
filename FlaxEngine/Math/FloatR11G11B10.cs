@@ -267,12 +267,12 @@ namespace FlaxEngine
         {
             public uint v;
 
-            public uint xm;// x-mantissa
-            public uint xe;// x-exponent
-            public uint ym;// y-mantissa
-            public uint ye;// y-exponent
-            public uint zm;// z-mantissa
-            public uint ze;// z-exponent
+            public uint xm; // x-mantissa
+            public uint xe; // x-exponent
+            public uint ym; // y-mantissa
+            public uint ye; // y-exponent
+            public uint zm; // z-mantissa
+            public uint ze; // z-exponent
 
             public Packed(uint value)
             {
@@ -392,7 +392,7 @@ namespace FlaxEngine
                     // The value is normalized
                     exponent = packed.ze;
                 }
-                else if (mantissa != 0)// The value is denormalized
+                else if (mantissa != 0) // The value is denormalized
                 {
                     // Normalize the value in the resulting float
                     exponent = 1;

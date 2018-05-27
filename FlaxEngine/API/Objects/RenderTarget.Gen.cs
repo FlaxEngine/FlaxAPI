@@ -7,225 +7,239 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine.Rendering
 {
-	/// <summary>
-	/// Allows to perform custom rendering to texture.
-	/// </summary>
-	public sealed partial class RenderTarget : Object
-	{
-		/// <summary>
-		/// Creates new <see cref="RenderTarget"/> object.
-		/// </summary>
-		private RenderTarget() : base()
-		{
-		}
+    /// <summary>
+    /// Allows to perform custom rendering to texture.
+    /// </summary>
+    public sealed partial class RenderTarget : Object
+    {
+        /// <summary>
+        /// Creates new <see cref="RenderTarget"/> object.
+        /// </summary>
+        private RenderTarget() : base()
+        {
+        }
 
-		/// <summary>
-		/// Creates new instance of <see cref="RenderTarget"/> object.
-		/// </summary>
-		/// <returns>Created object.</returns>
+        /// <summary>
+        /// Creates new instance of <see cref="RenderTarget"/> object.
+        /// </summary>
+        /// <returns>Created object.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static RenderTarget New() 
-		{
+        [UnmanagedCall]
+        public static RenderTarget New()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Create(typeof(RenderTarget)) as RenderTarget;
+            return Internal_Create(typeof(RenderTarget)) as RenderTarget;
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets texture surface format.
-		/// </summary>
-		[UnmanagedCall]
-		public PixelFormat Format
-		{
+        /// <summary>
+        /// Gets texture surface format.
+        /// </summary>
+        [UnmanagedCall]
+        public PixelFormat Format
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetFormat(unmanagedPtr); }
+            get { return Internal_GetFormat(unmanagedPtr); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets texture surface multisample level.
-		/// </summary>
-		[UnmanagedCall]
-		public MSAALevel MultiSampleLevel
-		{
+        /// <summary>
+        /// Gets texture surface multisample level.
+        /// </summary>
+        [UnmanagedCall]
+        public MSAALevel MultiSampleLevel
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetMultiSampleLevel(unmanagedPtr); }
+            get { return Internal_GetMultiSampleLevel(unmanagedPtr); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets number of mipmap levels in the texture.
-		/// </summary>
-		[UnmanagedCall]
-		public int MipLevels
-		{
+        /// <summary>
+        /// Gets number of mipmap levels in the texture.
+        /// </summary>
+        [UnmanagedCall]
+        public int MipLevels
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetMipLevels(unmanagedPtr); }
+            get { return Internal_GetMipLevels(unmanagedPtr); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets the texture surface flags.
-		/// </summary>
-		[UnmanagedCall]
-		public TextureFlags Flags
-		{
+        /// <summary>
+        /// Gets the texture surface flags.
+        /// </summary>
+        [UnmanagedCall]
+        public TextureFlags Flags
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetFlags(unmanagedPtr); }
+            get { return Internal_GetFlags(unmanagedPtr); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets a value indicating whether this texture has been allocated.
-		/// </summary>
-		[UnmanagedCall]
-		public bool IsAllocated
-		{
+        /// <summary>
+        /// Gets a value indicating whether this texture has been allocated.
+        /// </summary>
+        [UnmanagedCall]
+        public bool IsAllocated
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetIsAllocated(unmanagedPtr); }
+            get { return Internal_GetIsAllocated(unmanagedPtr); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets the native pointer to the underlying resource. It's a low-level platform-specific handle.
-		/// </summary>
-		[UnmanagedCall]
-		public IntPtr NativePtr
-		{
+        /// <summary>
+        /// Gets the native pointer to the underlying resource. It's a low-level platform-specific handle.
+        /// </summary>
+        [UnmanagedCall]
+        public IntPtr NativePtr
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetNativePtr(unmanagedPtr); }
+            get { return Internal_GetNativePtr(unmanagedPtr); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets texture surface width (in pixels).
-		/// </summary>
-		[UnmanagedCall]
-		public int Width
-		{
+        /// <summary>
+        /// Gets or sets texture surface width (in pixels).
+        /// </summary>
+        [UnmanagedCall]
+        public int Width
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetWidth(unmanagedPtr); }
-			set { Internal_SetWidth(unmanagedPtr, value); }
+            get { return Internal_GetWidth(unmanagedPtr); }
+            set { Internal_SetWidth(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets texture surface height (in pixels).
-		/// </summary>
-		[UnmanagedCall]
-		public int Height
-		{
+        /// <summary>
+        /// Gets or sets texture surface height (in pixels).
+        /// </summary>
+        [UnmanagedCall]
+        public int Height
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetHeight(unmanagedPtr); }
-			set { Internal_SetHeight(unmanagedPtr, value); }
+            get { return Internal_GetHeight(unmanagedPtr); }
+            set { Internal_SetHeight(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets texture surface size (in pixels).
-		/// </summary>
-		[UnmanagedCall]
-		public Vector2 Size
-		{
+        /// <summary>
+        /// Gets or sets texture surface size (in pixels).
+        /// </summary>
+        [UnmanagedCall]
+        public Vector2 Size
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { Vector2 resultAsRef; Internal_GetSize(unmanagedPtr, out resultAsRef); return resultAsRef; }
-			set { Internal_SetSize(unmanagedPtr, ref value); }
+            get { Vector2 resultAsRef; Internal_GetSize(unmanagedPtr, out resultAsRef); return resultAsRef; }
+            set { Internal_SetSize(unmanagedPtr, ref value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Initializes render target texture.
-		/// </summary>
-		/// <param name="format">The surface pixels format.</param>
-		/// <param name="width">The surface width in pixels.</param>
-		/// <param name="height">The surface height in pixels.</param>
-		/// <param name="flags">The surface usage flags.</param>
-		/// <param name="mipMaps">Number of mipmaps for the texture. Default is 1. Use 0 to allocate full mip chain.</param>
-		/// <param name="multiSampleLevel">The surface multisampling level.</param>
+        /// <summary>
+        /// Initializes render target texture.
+        /// </summary>
+        /// <param name="format">The surface pixels format.</param>
+        /// <param name="width">The surface width in pixels.</param>
+        /// <param name="height">The surface height in pixels.</param>
+        /// <param name="flags">The surface usage flags.</param>
+        /// <param name="mipMaps">Number of mipmaps for the texture. Default is 1. Use 0 to allocate full mip chain.</param>
+        /// <param name="multiSampleLevel">The surface multisampling level.</param>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public void Init(PixelFormat format, int width, int height, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget, int mipMaps = 1, MSAALevel multiSampleLevel = MSAALevel.None) 
-		{
+        [UnmanagedCall]
+        public void Init(PixelFormat format, int width, int height, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget, int mipMaps = 1, MSAALevel multiSampleLevel = MSAALevel.None)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_Init(unmanagedPtr, format, width, height, flags, mipMaps, multiSampleLevel);
+            Internal_Init(unmanagedPtr, format, width, height, flags, mipMaps, multiSampleLevel);
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Disposes render target surface data.
-		/// </summary>
+        /// <summary>
+        /// Disposes render target surface data.
+        /// </summary>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public void Dispose() 
-		{
+        [UnmanagedCall]
+        public void Dispose()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_Dispose(unmanagedPtr);
+            Internal_Dispose(unmanagedPtr);
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern PixelFormat Internal_GetFormat(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern MSAALevel Internal_GetMultiSampleLevel(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern int Internal_GetMipLevels(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern TextureFlags Internal_GetFlags(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetIsAllocated(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern IntPtr Internal_GetNativePtr(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern int Internal_GetWidth(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetWidth(IntPtr obj, int val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern int Internal_GetHeight(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetHeight(IntPtr obj, int val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetSize(IntPtr obj, out Vector2 resultAsRef);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetSize(IntPtr obj, ref Vector2 val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_Init(IntPtr obj, PixelFormat format, int width, int height, TextureFlags flags, int mipMaps, MSAALevel multiSampleLevel);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_Dispose(IntPtr obj);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern PixelFormat Internal_GetFormat(IntPtr obj);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern MSAALevel Internal_GetMultiSampleLevel(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetMipLevels(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern TextureFlags Internal_GetFlags(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetIsAllocated(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern IntPtr Internal_GetNativePtr(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetWidth(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetWidth(IntPtr obj, int val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetHeight(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetHeight(IntPtr obj, int val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetSize(IntPtr obj, out Vector2 resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetSize(IntPtr obj, ref Vector2 val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Init(IntPtr obj, PixelFormat format, int width, int height, TextureFlags flags, int mipMaps, MSAALevel multiSampleLevel);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Dispose(IntPtr obj);
+#endif
+
+        #endregion
+    }
+}

@@ -25,7 +25,7 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             private Type _type;
             private Object _value;
-	        private string _valueName;
+            private string _valueName;
 
             private bool _isMosueDown;
             private Vector2 _mosueDownPos;
@@ -79,19 +79,19 @@ namespace FlaxEditor.CustomEditors.Editors
                     {
                         _value = value;
 
-						// Get name to display
-	                    if (_value is Script script)
-	                    {
-		                    _valueName = string.Format("{0} ({1})", script.GetType().Name, script.Actor.Name);
-	                    }
-	                    else if (_value != null)
-	                    {
-		                    _valueName = _value.ToString();
-	                    }
-	                    else
-	                    {
-		                    _valueName = string.Empty;
-	                    }
+                        // Get name to display
+                        if (_value is Script script)
+                        {
+                            _valueName = string.Format("{0} ({1})", script.GetType().Name, script.Actor.Name);
+                        }
+                        else if (_value != null)
+                        {
+                            _valueName = _value.ToString();
+                        }
+                        else
+                        {
+                            _valueName = string.Empty;
+                        }
 
                         ValueChanged?.Invoke();
                     }
@@ -119,7 +119,7 @@ namespace FlaxEditor.CustomEditors.Editors
             /// Initializes a new instance of the <see cref="ReferencePickerControl"/> class.
             /// </summary>
             public ReferencePickerControl()
-                : base(0, 0, 50, 16)
+            : base(0, 0, 50, 16)
             {
                 _type = typeof(Object);
             }
@@ -215,14 +215,14 @@ namespace FlaxEditor.CustomEditors.Editors
             /// <inheritdoc />
             public override bool OnMouseUp(Vector2 location, MouseButton buttons)
             {
-	            if (buttons == MouseButton.Left)
-	            {
-		            // Clear flag
-		            _isMosueDown = false;
-	            }
+                if (buttons == MouseButton.Left)
+                {
+                    // Clear flag
+                    _isMosueDown = false;
+                }
 
-				// Buttons logic
-				if (_value != null)
+                // Buttons logic
+                if (_value != null)
                 {
                     // Cache data
                     var nameRect = new Rectangle(2, 1, Width - 20, 14);
@@ -298,8 +298,8 @@ namespace FlaxEditor.CustomEditors.Editors
                     _dragActors = new DragActors();
                 if (_dragAssets == null)
                     _dragAssets = new DragAssets();
-	            if (_dragScripts == null)
-		            _dragScripts = new DragScripts();
+                if (_dragScripts == null)
+                    _dragScripts = new DragScripts();
 
                 _hasValidDragOver = false;
                 if (_dragActors.OnDragEnter(data, x => IsValid(x.Actor)))
@@ -314,14 +314,14 @@ namespace FlaxEditor.CustomEditors.Editors
                 {
                     _hasValidDragOver = true;
                 }
-				else if(_dragActors.OnDragEnter(data, ValidateDragActorWithScript))
-	            {
-		            // Special case when dragging the actor with script to link script reference
-		            var script = _dragActors.Objects[0].Actor.GetScript(_type);
-					_dragActors.Objects.Clear();
-					_dragScripts.Objects.Add(script);
-		            _hasValidDragOver = true;
-				}
+                else if (_dragActors.OnDragEnter(data, ValidateDragActorWithScript))
+                {
+                    // Special case when dragging the actor with script to link script reference
+                    var script = _dragActors.Objects[0].Actor.GetScript(_type);
+                    _dragActors.Objects.Clear();
+                    _dragScripts.Objects.Add(script);
+                    _hasValidDragOver = true;
+                }
 
                 return DragEffect;
             }
@@ -342,10 +342,10 @@ namespace FlaxEditor.CustomEditors.Editors
                 return IsValid(obj);
             }
 
-	        private bool ValidateDragActorWithScript(ActorNode node)
-	        {
-		        return node.Actor.GetScript(_type) != null;
-	        }
+            private bool ValidateDragActorWithScript(ActorNode node)
+            {
+                return node.Actor.GetScript(_type) != null;
+            }
 
             /// <inheritdoc />
             public override DragDropEffect OnDragMove(ref Vector2 location, DragData data)
@@ -361,7 +361,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 _hasValidDragOver = false;
                 _dragActors.OnDragLeave();
                 _dragAssets.OnDragLeave();
-	            _dragScripts.OnDragLeave();
+                _dragScripts.OnDragLeave();
 
                 base.OnDragLeave();
             }
@@ -380,11 +380,11 @@ namespace FlaxEditor.CustomEditors.Editors
                 else if (_dragAssets.HasValidDrag)
                 {
                     ValueID = _dragAssets.Objects[0].ID;
-				}
-				else if (_dragScripts.HasValidDrag)
-				{
-					ValueID = _dragScripts.Objects[0].ID;
-				}
+                }
+                else if (_dragScripts.HasValidDrag)
+                {
+                    ValueID = _dragScripts.Objects[0].ID;
+                }
 
                 return result;
             }

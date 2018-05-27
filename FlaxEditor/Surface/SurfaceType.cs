@@ -17,9 +17,9 @@ namespace FlaxEditor.Surface
         /// </summary>
         Material,
 
-		/// <summary>
-		/// The animation graph surface.
-		/// </summary>
-		AnimationGraph,
+        /// <summary>
+        /// The animation graph surface.
+        /// </summary>
+        AnimationGraph,
     }
 }

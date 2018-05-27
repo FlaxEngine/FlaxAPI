@@ -26,7 +26,7 @@ namespace FlaxEditor.GUI
         /// </summary>
         /// <param name="text">The text.</param>
         public MainMenuButton(string text)
-            : base(0, 0, 32, 16)
+        : base(0, 0, 32, 16)
         {
             Text = text;
         }
@@ -56,9 +56,9 @@ namespace FlaxEditor.GUI
             (Parent as MainMenu)?.Select(this);
             return true;
         }
-		
-	    /// <inheritdoc />
-	    public override void PerformLayout(bool force)
+
+        /// <inheritdoc />
+        public override void PerformLayout(bool force)
         {
             var style = Style.Current;
             float width = 12;

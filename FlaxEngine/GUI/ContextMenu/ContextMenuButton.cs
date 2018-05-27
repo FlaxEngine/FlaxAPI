@@ -11,7 +11,7 @@ namespace FlaxEngine.GUI
     public class ContextMenuButton : ContextMenuItem
     {
         private bool _isMouseDown;
-		
+
         /// <summary>
         /// Event fired when user clicks on the button.
         /// </summary>
@@ -22,14 +22,14 @@ namespace FlaxEngine.GUI
         /// </summary>
         public event Action<ContextMenuButton> ButtonClicked;
 
-	    /// <summary>
-	    /// The button text.
-	    /// </summary>
-	    public string Text
-	    {
-		    get => Name;
-		    set => Name = value;
-	    }
+        /// <summary>
+        /// The button text.
+        /// </summary>
+        public string Text
+        {
+            get => Name;
+            set => Name = value;
+        }
 
         /// <summary>
         /// The button short keys information (eg. 'Ctrl+C').
@@ -40,7 +40,7 @@ namespace FlaxEngine.GUI
         /// Item icon (best is 16x16).
         /// </summary>
         public Sprite Icon;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ContextMenuButton"/> class.
         /// </summary>
@@ -48,7 +48,7 @@ namespace FlaxEngine.GUI
         /// <param name="text">The text.</param>
         /// <param name="shortKeys">The short keys tip.</param>
         public ContextMenuButton(ContextMenu parent, string text, string shortKeys = "")
-            : base(parent, 8, 22)
+        : base(parent, 8, 22)
         {
             Name = text;
             Shortkeys = shortKeys;
@@ -119,8 +119,8 @@ namespace FlaxEngine.GUI
 
                 // Fire event
                 Clicked?.Invoke();
-				ButtonClicked?.Invoke(this);
-	            ParentContextMenu?.OnButtonClicked(this);
+                ButtonClicked?.Invoke(this);
+                ParentContextMenu?.OnButtonClicked(this);
 
                 // Event handled
                 return true;
@@ -137,7 +137,7 @@ namespace FlaxEngine.GUI
 
             base.OnLostFocus();
         }
-        
+
         /// <inheritdoc />
         public override float MinimumWidth
         {
@@ -155,7 +155,7 @@ namespace FlaxEngine.GUI
                         width += 40 + style.FontMedium.MeasureText(Shortkeys).X;
                     }
                 }
-                
+
                 return Mathf.Max(width, base.MinimumWidth);
             }
         }

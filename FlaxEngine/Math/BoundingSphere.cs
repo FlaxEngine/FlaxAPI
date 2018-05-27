@@ -445,7 +445,10 @@ namespace FlaxEngine
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.CurrentCulture, "Center:{0} Radius:{1}", Center.ToString(), Radius.ToString());
+            return string.Format(CultureInfo.CurrentCulture,
+                                 "Center:{0} Radius:{1}",
+                                 Center.ToString(),
+                                 Radius.ToString());
         }
 
         /// <summary>
@@ -460,8 +463,10 @@ namespace FlaxEngine
             if (format == null)
                 return ToString();
 
-            return string.Format(CultureInfo.CurrentCulture, "Center:{0} Radius:{1}", Center.ToString(format, CultureInfo.CurrentCulture),
-                Radius.ToString(format, CultureInfo.CurrentCulture));
+            return string.Format(CultureInfo.CurrentCulture,
+                                 "Center:{0} Radius:{1}",
+                                 Center.ToString(format, CultureInfo.CurrentCulture),
+                                 Radius.ToString(format, CultureInfo.CurrentCulture));
         }
 
         /// <summary>
@@ -473,7 +478,10 @@ namespace FlaxEngine
         /// </returns>
         public string ToString(IFormatProvider formatProvider)
         {
-            return string.Format(formatProvider, "Center:{0} Radius:{1}", Center.ToString(), Radius.ToString());
+            return string.Format(formatProvider,
+                                 "Center:{0} Radius:{1}",
+                                 Center.ToString(),
+                                 Radius.ToString());
         }
 
         /// <summary>
@@ -489,8 +497,10 @@ namespace FlaxEngine
             if (format == null)
                 return ToString(formatProvider);
 
-            return string.Format(formatProvider, "Center:{0} Radius:{1}", Center.ToString(format, formatProvider),
-                Radius.ToString(format, formatProvider));
+            return string.Format(formatProvider,
+                                 "Center:{0} Radius:{1}",
+                                 Center.ToString(format, formatProvider),
+                                 Radius.ToString(format, formatProvider));
         }
 
         /// <summary>

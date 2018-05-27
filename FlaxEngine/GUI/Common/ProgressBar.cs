@@ -111,21 +111,21 @@ namespace FlaxEngine.GUI
 
         /// <inheritdoc />
         public ProgressBar(float x, float y, float width, float height = 28)
-            : base(x, y, width, height)
+        : base(x, y, width, height)
         {
             CanFocus = false;
         }
 
         /// <inheritdoc />
         public ProgressBar(Vector2 location, Vector2 size)
-            : base(location, size)
+        : base(location, size)
         {
             CanFocus = false;
         }
 
         /// <inheritdoc />
         public ProgressBar(Rectangle bounds)
-            : base(bounds)
+        : base(bounds)
         {
             CanFocus = false;
         }
@@ -158,7 +158,7 @@ namespace FlaxEngine.GUI
         public override void Draw()
         {
             base.Draw();
-            
+
             var style = Style.Current;
             Render2D.FillRectangle(new Rectangle(0, 0, Width, Height), style.Background);
             Render2D.FillRectangle(new Rectangle(1, 1, (Width - 2) * _current, Height - 2), style.ProgressNormal);

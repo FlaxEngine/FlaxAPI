@@ -30,6 +30,7 @@ namespace FlaxEngine.GUI
         /// The back buffer.
         /// </summary>
         protected RenderTarget _backBuffer;
+
         private RenderTarget _backBufferOld;
         private int _oldBackbufferLiveTimeLeft;
         private float _resizeTime;
@@ -146,7 +147,7 @@ namespace FlaxEngine.GUI
                 _resizeTime = 0;
                 SyncBackbufferSize();
             }
-            
+
             base.Update(deltaTime);
         }
 
@@ -159,7 +160,7 @@ namespace FlaxEngine.GUI
 
             base.Draw();
         }
-        
+
         /// <summary>
         /// Synchronizes size of the back buffer with the size of the control.
         /// </summary>
@@ -198,7 +199,7 @@ namespace FlaxEngine.GUI
             _task?.Dispose();
             Object.Destroy(ref _backBuffer);
             Object.Destroy(ref _backBufferOld);
-            
+
             base.OnDestroy();
         }
     }

@@ -39,7 +39,7 @@ namespace FlaxEditor.Modules
         public event Action OnSelectionChanged;
 
         internal SceneEditingModule(Editor editor)
-            : base(editor)
+        : base(editor)
         {
         }
 
@@ -174,7 +174,7 @@ namespace FlaxEditor.Modules
                         Editor.LogWarning("Null scene graph node to select");
                 }
             }
-            
+
             OnSelectionChanged?.Invoke();
         }
 
@@ -191,16 +191,16 @@ namespace FlaxEditor.Modules
             // Add it
             SceneManager.SpawnActor(actor, parent);
 
-			// Peek spawned node
-	        var actorNode = Editor.Instance.Scene.GetActorNode(actor);
-			if(actorNode == null)
-				throw new InvalidOperationException("Failed to create scene node for the spawned actor.");
+            // Peek spawned node
+            var actorNode = Editor.Instance.Scene.GetActorNode(actor);
+            if (actorNode == null)
+                throw new InvalidOperationException("Failed to create scene node for the spawned actor.");
 
-			// Call post spawn action (can possibly setup custom default values)
-	        actorNode.PostSpawn();
+            // Call post spawn action (can possibly setup custom default values)
+            actorNode.PostSpawn();
 
-			// Create undo action
-			var action = new DeleteActorsAction(new List<SceneGraphNode>(1) { actorNode }, true);
+            // Create undo action
+            var action = new DeleteActorsAction(new List<SceneGraphNode>(1) { actorNode }, true);
             Undo.AddAction(action);
 
             // Auto CSG mesh rebuild
@@ -225,7 +225,11 @@ namespace FlaxEditor.Modules
             var action2 = new DeleteActorsAction(objects);
 
             // Merge two actions and perform them
-            var action = new MultiUndoAction(new IUndoAction[] { action1, action2 }, action2.ActionString);
+            var action = new MultiUndoAction(new IUndoAction[]
+            {
+                action1,
+                action2
+            }, action2.ActionString);
             action.Do();
             Undo.AddAction(action);
 
@@ -255,35 +259,35 @@ namespace FlaxEditor.Modules
                 Editor.LogError("Failed to copy actors data.");
                 return;
             }
-            
+
             // Copy data
             Application.ClipboardRawData = data;
         }
 
 
-	    /// <summary>
-	    /// Pastes the copied objects. Supports undo/redo.
-	    /// </summary>
-	    public void Paste()
-	    {
-		    Paste(null);
-	    }
+        /// <summary>
+        /// Pastes the copied objects. Supports undo/redo.
+        /// </summary>
+        public void Paste()
+        {
+            Paste(null);
+        }
 
-	    /// <summary>
-		/// Pastes the copied objects. Supports undo/redo.
-		/// </summary>
-		/// <param name="pasteTargetActor">The target actor to paste copied data.</param>
-		public void Paste(Actor pasteTargetActor)
-		{
+        /// <summary>
+        /// Pastes the copied objects. Supports undo/redo.
+        /// </summary>
+        /// <param name="pasteTargetActor">The target actor to paste copied data.</param>
+        public void Paste(Actor pasteTargetActor)
+        {
             // Get clipboard data
             var data = Application.ClipboardRawData;
-            
+
             // Ser aste target if only one actor is selected and no target provided
             if (pasteTargetActor == null && SelectionCount == 1 && Selection[0] is ActorNode actorNode)
             {
                 pasteTargetActor = actorNode.Actor;
             }
-            
+
             // Create paste action
             var pasteAction = PasteActorsAction.Paste(data, pasteTargetActor?.ID ?? Guid.Empty);
             if (pasteAction != null)
@@ -335,7 +339,7 @@ namespace FlaxEditor.Modules
             // Select spawned objects
             var selectAction = new SelectionChangeAction(Selection.ToArray(), nodeParents.Cast<SceneGraphNode>().ToArray());
             selectAction.Do();
-            
+
             Undo.AddAction(new MultiUndoAction(pasteAction, selectAction));
             OnSelectionChanged?.Invoke();
         }

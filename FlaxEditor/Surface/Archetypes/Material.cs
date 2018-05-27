@@ -20,7 +20,7 @@ namespace FlaxEditor.Surface.Archetypes
         {
             /// <inheritdoc />
             public SurfaceNodeMaterial(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
-                : base(id, surface, nodeArch, groupArch)
+            : base(id, surface, nodeArch, groupArch)
             {
             }
 
@@ -46,35 +46,35 @@ namespace FlaxEditor.Surface.Archetypes
                 bool isTransparent = isSurface && info.BlendMode == MaterialBlendMode.Transparent;
 
                 // Update boxes
-	            if (isDecal)
-	            {
-		            var mode = info.DecalBlendingMode;
-		            GetBox(1).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Stain; // Color
-		            GetBox(2).Enabled = true; // Mask
-		            GetBox(3).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Emissive; // Emissive
-		            GetBox(4).Enabled = mode == MaterialDecalBlendingMode.Translucent; // Metalness
-		            GetBox(5).Enabled = mode == MaterialDecalBlendingMode.Translucent; // Specular
-		            GetBox(6).Enabled = mode == MaterialDecalBlendingMode.Translucent; // Roughness
-		            GetBox(7).Enabled = false; // Ambient Occlusion
-		            GetBox(8).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Normal; // Normal
-		            GetBox(9).Enabled = true; // Opacity
-		            GetBox(10).Enabled = false; // Refraction
-		            GetBox(11).Enabled = false; // Position Offset
-	            }
-	            else
-	            {
-		            GetBox(1).Enabled = isLitSurface; // Color
-		            GetBox(2).Enabled = isSurface; // Mask
-		            GetBox(3).Enabled = isSurface || isPostFx || isGUI; // Emissive
-		            GetBox(4).Enabled = isLitSurface; // Metalness
-		            GetBox(5).Enabled = isLitSurface; // Specular
-		            GetBox(6).Enabled = isLitSurface; // Roughness
-		            GetBox(7).Enabled = isLitSurface; // Ambient Occlusion
-		            GetBox(8).Enabled = isLitSurface; // Normal
-		            GetBox(9).Enabled = isTransparent || isPostFx || isGUI; // Opacity
-		            GetBox(10).Enabled = isTransparent; // Refraction
-		            GetBox(11).Enabled = isSurface; // Position Offset
-	            }
+                if (isDecal)
+                {
+                    var mode = info.DecalBlendingMode;
+                    GetBox(1).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Stain; // Color
+                    GetBox(2).Enabled = true; // Mask
+                    GetBox(3).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Emissive; // Emissive
+                    GetBox(4).Enabled = mode == MaterialDecalBlendingMode.Translucent; // Metalness
+                    GetBox(5).Enabled = mode == MaterialDecalBlendingMode.Translucent; // Specular
+                    GetBox(6).Enabled = mode == MaterialDecalBlendingMode.Translucent; // Roughness
+                    GetBox(7).Enabled = false; // Ambient Occlusion
+                    GetBox(8).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Normal; // Normal
+                    GetBox(9).Enabled = true; // Opacity
+                    GetBox(10).Enabled = false; // Refraction
+                    GetBox(11).Enabled = false; // Position Offset
+                }
+                else
+                {
+                    GetBox(1).Enabled = isLitSurface; // Color
+                    GetBox(2).Enabled = isSurface; // Mask
+                    GetBox(3).Enabled = isSurface || isPostFx || isGUI; // Emissive
+                    GetBox(4).Enabled = isLitSurface; // Metalness
+                    GetBox(5).Enabled = isLitSurface; // Specular
+                    GetBox(6).Enabled = isLitSurface; // Roughness
+                    GetBox(7).Enabled = isLitSurface; // Ambient Occlusion
+                    GetBox(8).Enabled = isLitSurface; // Normal
+                    GetBox(9).Enabled = isTransparent || isPostFx || isGUI; // Opacity
+                    GetBox(10).Enabled = isTransparent; // Refraction
+                    GetBox(11).Enabled = isSurface; // Position Offset
+                }
             }
 
             /// <inheritdoc />
@@ -114,7 +114,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = (id, surface, arch, groupArch) => new SurfaceNodeMaterial(id, surface, arch, groupArch),
                 Title = "Material",
                 Description = "Main material node",
-                Flags = NodeFlags.MaterialOnly | NodeFlags.NoRemove| NodeFlags.NoSpawnViaGUI,
+                Flags = NodeFlags.MaterialOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(150, 240),
                 Elements = new[]
                 {
@@ -281,42 +281,42 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Float, 2),
                 }
             },
-	        new NodeArchetype
-	        {
-		        TypeID = 12,
-		        Title = "Vertex Color",
-		        Description = "Per vertex color",
-		        Flags = NodeFlags.MaterialOnly,
-		        Size = new Vector2(150, 40),
-		        Elements = new[]
-		        {
-			        NodeElementArchetype.Factory.Output(0, "Color", ConnectionType.Vector4, 0),
-		        }
-	        },
-	        new NodeArchetype
-	        {
-		        TypeID = 13,
-		        Title = "Pre-skinned Local Position",
-		        Description = "Per vertex local position (before skinning)",
-		        Flags = NodeFlags.MaterialOnly,
-		        Size = new Vector2(230, 40),
-		        Elements = new[]
-		        {
-			        NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
-		        }
-	        },
-	        new NodeArchetype
-	        {
-		        TypeID = 14,
-		        Title = "Pre-skinned Local Normal",
-		        Description = "Per vertex local normal (before skinning)",
-		        Flags = NodeFlags.MaterialOnly,
-		        Size = new Vector2(230, 40),
-		        Elements = new[]
-		        {
-			        NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
-		        }
-	        },
-		};
+            new NodeArchetype
+            {
+                TypeID = 12,
+                Title = "Vertex Color",
+                Description = "Per vertex color",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(150, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "Color", ConnectionType.Vector4, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 13,
+                Title = "Pre-skinned Local Position",
+                Description = "Per vertex local position (before skinning)",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(230, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 14,
+                Title = "Pre-skinned Local Normal",
+                Description = "Per vertex local normal (before skinning)",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(230, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
+                }
+            },
+        };
     }
 }

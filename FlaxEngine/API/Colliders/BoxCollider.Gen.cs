@@ -7,62 +7,64 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// A box-shaped primitive collider.
-	/// </summary>
-	[Serializable]
-	public sealed partial class BoxCollider : Collider
-	{
-		/// <summary>
-		/// Creates new <see cref="BoxCollider"/> object.
-		/// </summary>
-		private BoxCollider() : base()
-		{
-		}
+    /// <summary>
+    /// A box-shaped primitive collider.
+    /// </summary>
+    [Serializable]
+    public sealed partial class BoxCollider : Collider
+    {
+        /// <summary>
+        /// Creates new <see cref="BoxCollider"/> object.
+        /// </summary>
+        private BoxCollider() : base()
+        {
+        }
 
-		/// <summary>
-		/// Creates new instance of <see cref="BoxCollider"/> object.
-		/// </summary>
-		/// <returns>Created object.</returns>
+        /// <summary>
+        /// Creates new instance of <see cref="BoxCollider"/> object.
+        /// </summary>
+        /// <returns>Created object.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static BoxCollider New() 
-		{
+        [UnmanagedCall]
+        public static BoxCollider New()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Create(typeof(BoxCollider)) as BoxCollider;
+            return Internal_Create(typeof(BoxCollider)) as BoxCollider;
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the size of the box, measured in the object's local space.
-		/// </summary>
-		/// <remarks>
-		/// The box size will be scaled by the actor's world scale.
-		/// </remarks>
-		[UnmanagedCall]
-		[EditorOrder(100), EditorDisplay("Collider"), Tooltip("Size of the box, measured in the object's local space")]
-		public Vector3 Size
-		{
+        /// <summary>
+        /// Gets or sets the size of the box, measured in the object's local space.
+        /// </summary>
+        /// <remarks>
+        /// The box size will be scaled by the actor's world scale.
+        /// </remarks>
+        [UnmanagedCall]
+        [EditorOrder(100), EditorDisplay("Collider"), Tooltip("Size of the box, measured in the object's local space")]
+        public Vector3 Size
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { Vector3 resultAsRef; Internal_GetSize(unmanagedPtr, out resultAsRef); return resultAsRef; }
-			set { Internal_SetSize(unmanagedPtr, ref value); }
+            get { Vector3 resultAsRef; Internal_GetSize(unmanagedPtr, out resultAsRef); return resultAsRef; }
+            set { Internal_SetSize(unmanagedPtr, ref value); }
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetSize(IntPtr obj, out Vector3 resultAsRef);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetSize(IntPtr obj, ref Vector3 val);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetSize(IntPtr obj, out Vector3 resultAsRef);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetSize(IntPtr obj, ref Vector3 val);
+#endif
+
+        #endregion
+    }
+}

@@ -77,7 +77,7 @@ namespace FlaxEditor.Utilities
                     value = (float)(double)value;
                 }
             }
-            
+
             finalMember.SetValue(instance, value);
         }
 

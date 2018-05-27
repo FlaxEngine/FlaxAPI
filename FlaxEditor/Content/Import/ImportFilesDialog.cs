@@ -24,7 +24,7 @@ namespace FlaxEditor.Content.Import
         /// </summary>
         /// <param name="entries">The entries to edit settings.</param>
         public ImportFilesDialog(List<ImportFileEntry> entries)
-            : base("Import files settings")
+        : base("Import files settings")
         {
             if (entries == null || entries.Count < 1)
                 throw new ArgumentNullException();

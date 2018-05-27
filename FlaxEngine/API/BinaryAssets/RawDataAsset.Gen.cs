@@ -7,41 +7,42 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Raw bytes container asset.
-	/// </summary>
-	public sealed partial class RawDataAsset : BinaryAsset
-	{
-		/// <summary>
-		/// Creates new <see cref="RawDataAsset"/> object.
-		/// </summary>
-		private RawDataAsset() : base()
-		{
-		}
+    /// <summary>
+    /// Raw bytes container asset.
+    /// </summary>
+    public sealed partial class RawDataAsset : BinaryAsset
+    {
+        /// <summary>
+        /// Creates new <see cref="RawDataAsset"/> object.
+        /// </summary>
+        private RawDataAsset() : base()
+        {
+        }
 
-		/// <summary>
-		/// Gets the bytes array stored by this data container asset.
-		/// </summary>
-		/// <returns>The loaded bytes.</returns>
+        /// <summary>
+        /// Gets the bytes array stored by this data container asset.
+        /// </summary>
+        /// <returns>The loaded bytes.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public byte[] GetData() 
-		{
+        [UnmanagedCall]
+        public byte[] GetData()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_GetData(unmanagedPtr);
+            return Internal_GetData(unmanagedPtr);
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern byte[] Internal_GetData(IntPtr obj);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern byte[] Internal_GetData(IntPtr obj);
 #endif
-#endregion
-	}
-}
 
+        #endregion
+    }
+}

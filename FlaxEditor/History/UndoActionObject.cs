@@ -89,20 +89,20 @@ namespace FlaxEditor.History
             public DataValue Instance;
         }
 
-		/// <summary>
-		/// Prepared undo data container object.
-		/// </summary>
-		public struct DataPrepared
+        /// <summary>
+        /// Prepared undo data container object.
+        /// </summary>
+        public struct DataPrepared
         {
-			/// <summary>
-			/// The difference data.
-			/// </summary>
-			public MemberComparison[] Diff;
+            /// <summary>
+            /// The difference data.
+            /// </summary>
+            public MemberComparison[] Diff;
 
-			/// <summary>
-			/// The target object instance.
-			/// </summary>
-			public object TargetInstance;
+            /// <summary>
+            /// The target object instance.
+            /// </summary>
+            public object TargetInstance;
         }
 
         // For objects that cannot be referenced in undo action like: FlaxEngine.Object or SceneGraphNode we store them in DataStorage,

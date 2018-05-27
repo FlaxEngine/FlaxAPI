@@ -67,38 +67,38 @@ namespace FlaxEditor.Tests
 
             instance = new UndoObject(true);
             undo.RecordAction(instance, "Basic", () =>
-                                                 {
-                                                     instance.FieldFloat = 0;
-                                                     instance.FieldInteger = 0;
-                                                     instance.FieldObject = null;
-                                                     instance.PropertyFloat = 0;
-                                                     instance.PropertyInteger = 0;
-                                                     instance.PropertyObject = null;
-                                                 });
+            {
+                instance.FieldFloat = 0;
+                instance.FieldInteger = 0;
+                instance.FieldObject = null;
+                instance.PropertyFloat = 0;
+                instance.PropertyInteger = 0;
+                instance.PropertyObject = null;
+            });
             BasicUndoRedo(undo, instance);
 
             object generic = new UndoObject(true);
             undo.RecordAction(generic, "Basic", (i) =>
-                                                {
-                                                    ((UndoObject)i).FieldFloat = 0;
-                                                    ((UndoObject)i).FieldInteger = 0;
-                                                    ((UndoObject)i).FieldObject = null;
-                                                    ((UndoObject)i).PropertyFloat = 0;
-                                                    ((UndoObject)i).PropertyInteger = 0;
-                                                    ((UndoObject)i).PropertyObject = null;
-                                                });
+            {
+                ((UndoObject)i).FieldFloat = 0;
+                ((UndoObject)i).FieldInteger = 0;
+                ((UndoObject)i).FieldObject = null;
+                ((UndoObject)i).PropertyFloat = 0;
+                ((UndoObject)i).PropertyInteger = 0;
+                ((UndoObject)i).PropertyObject = null;
+            });
             BasicUndoRedo(undo, (UndoObject)generic);
 
             instance = new UndoObject(true);
             undo.RecordAction(instance, "Basic", (i) =>
-                                                 {
-                                                     i.FieldFloat = 0;
-                                                     i.FieldInteger = 0;
-                                                     i.FieldObject = null;
-                                                     i.PropertyFloat = 0;
-                                                     i.PropertyInteger = 0;
-                                                     i.PropertyObject = null;
-                                                 });
+            {
+                i.FieldFloat = 0;
+                i.FieldInteger = 0;
+                i.FieldObject = null;
+                i.PropertyFloat = 0;
+                i.PropertyInteger = 0;
+                i.PropertyObject = null;
+            });
             BasicUndoRedo(undo, instance);
 
             instance = new UndoObject(true);
@@ -140,18 +140,18 @@ namespace FlaxEditor.Tests
             var undo = new Undo();
             var instance = new UndoObject(true);
             undo.RecordAction(instance, "Basic", (i) =>
-                                                 {
-                                                     i.FieldObject = new UndoObject();
-                                                     i.FieldObject.FieldObject = new UndoObject();
-                                                     i.FieldObject.FieldObject.FieldObject = new UndoObject();
-                                                     i.FieldObject.FieldObject.PropertyObject = new UndoObject();
-                                                     i.FieldObject.FieldObject.PropertyObject.FieldInteger = 99;
-                                                     i.PropertyObject = new UndoObject();
-                                                     i.PropertyObject.PropertyObject = new UndoObject();
-                                                     i.PropertyObject.PropertyObject.PropertyObject = new UndoObject();
-                                                     i.PropertyObject.PropertyObject.FieldObject = new UndoObject();
-                                                     i.PropertyObject.PropertyObject.FieldObject.FieldInteger = 99;
-                                                 });
+            {
+                i.FieldObject = new UndoObject();
+                i.FieldObject.FieldObject = new UndoObject();
+                i.FieldObject.FieldObject.FieldObject = new UndoObject();
+                i.FieldObject.FieldObject.PropertyObject = new UndoObject();
+                i.FieldObject.FieldObject.PropertyObject.FieldInteger = 99;
+                i.PropertyObject = new UndoObject();
+                i.PropertyObject.PropertyObject = new UndoObject();
+                i.PropertyObject.PropertyObject.PropertyObject = new UndoObject();
+                i.PropertyObject.PropertyObject.FieldObject = new UndoObject();
+                i.PropertyObject.PropertyObject.FieldObject.FieldInteger = 99;
+            });
             undo.PerformUndo();
             Assert.AreNotEqual(null, instance.FieldObject);
             Assert.AreNotEqual(null, instance.FieldObject.FieldObject);
@@ -347,8 +347,22 @@ namespace FlaxEditor.Tests
             var undo = new Undo();
             var instance = new UndoObjectArray
             {
-                MyInts = new[] { 1, 2, 3, 4, 5 },
-                MyIntsProp = new[] { 1, 2, 3, 4, 5 },
+                MyInts = new[]
+                {
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                },
+                MyIntsProp = new[]
+                {
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                },
             };
             using (new UndoBlock(undo, instance, "Edit"))
             {

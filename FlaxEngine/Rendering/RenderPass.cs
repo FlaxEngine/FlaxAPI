@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 namespace FlaxEngine.Rendering
 {
@@ -21,7 +21,7 @@ namespace FlaxEngine.Rendering
         /// Render hardware depth (raw depth buffer).
         /// </summary>
         DepthHW,
-        
+
         /// <summary>
         /// Output transparent materials distortion vectors (with blending).
         /// </summary>

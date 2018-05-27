@@ -37,14 +37,18 @@ namespace FlaxEditor.Surface.Archetypes
                 Description = desc,
                 Size = new Vector2(110, 40),
                 DefaultType = inputType,
-                IndependentBoxes = new[] { 0, 1 },
+                IndependentBoxes = new[]
+                {
+                    0,
+                    1
+                },
                 DependentBoxes = isOutputDependant ? new[] { 2 } : null,
-	            DefaultValues = new object[]
-	            {
-		            0.0f,
-		            0.0f,
-	            },
-				Elements = new[]
+                DefaultValues = new object[]
+                {
+                    0.0f,
+                    0.0f,
+                },
+                Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "A", true, inputType, 0, 0),
                     NodeElementArchetype.Factory.Input(1, "B", true, inputType, 1, 1),
@@ -109,13 +113,18 @@ namespace FlaxEditor.Surface.Archetypes
                 Size = new Vector2(110, 60),
                 DefaultType = ConnectionType.Variable,
                 IndependentBoxes = new[] { 0 },
-                DependentBoxes = new[] { 1, 2, 3 },
-	            DefaultValues = new object[]
-	            {
-		            0.0f,
-		            0.0f,
-	            },
-				Elements = new[]
+                DependentBoxes = new[]
+                {
+                    1,
+                    2,
+                    3
+                },
+                DefaultValues = new object[]
+                {
+                    0.0f,
+                    0.0f,
+                },
+                Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "Input", true, ConnectionType.Variable, 0),
                     NodeElementArchetype.Factory.Input(1, "Min", true, ConnectionType.Variable, 1, 0),
@@ -130,15 +139,19 @@ namespace FlaxEditor.Surface.Archetypes
                 Description = "Performs a linear interpolation",
                 Size = new Vector2(110, 60),
                 DefaultType = ConnectionType.Variable,
-                IndependentBoxes = new[] { 0, 1 },
+                IndependentBoxes = new[]
+                {
+                    0,
+                    1
+                },
                 DependentBoxes = new[] { 3 },
-	            DefaultValues = new object[]
-	            {
-		            0.0f,
-		            1.0f,
-		            0.5f,
-	            },
-				Elements = new[]
+                DefaultValues = new object[]
+                {
+                    0.0f,
+                    1.0f,
+                    0.5f,
+                },
+                Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "A", true, ConnectionType.Variable, 0, 0),
                     NodeElementArchetype.Factory.Input(1, "B", true, ConnectionType.Variable, 1, 1),
@@ -153,7 +166,11 @@ namespace FlaxEditor.Surface.Archetypes
                 Description = "Returns reflected vector over the normal",
                 Size = new Vector2(110, 40),
                 DefaultType = ConnectionType.Variable,
-                IndependentBoxes = new[] { 0, 1 },
+                IndependentBoxes = new[]
+                {
+                    0,
+                    1
+                },
                 DependentBoxes = new[] { 2 },
                 Elements = new[]
                 {
@@ -206,14 +223,19 @@ namespace FlaxEditor.Surface.Archetypes
                 Description = "Performs value multiplication and addition at once",
                 Size = new Vector2(110, 60),
                 DefaultType = ConnectionType.Variable,
-                IndependentBoxes = new[] { 0, 1, 2 },
+                IndependentBoxes = new[]
+                {
+                    0,
+                    1,
+                    2
+                },
                 DependentBoxes = new[] { 3 },
-	            DefaultValues = new object[]
-	            {
-		            1.0f,
-		            0.0f,
-	            },
-				Elements = new[]
+                DefaultValues = new object[]
+                {
+                    1.0f,
+                    0.0f,
+                },
+                Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "Value", true, ConnectionType.Variable, 0),
                     NodeElementArchetype.Factory.Input(1, "Multiply", true, ConnectionType.Variable, 1, 0),

@@ -7,120 +7,126 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Asset objects base class.
-	/// </summary>
-	public abstract partial class Asset : Object
-	{
-		/// <summary>
-		/// Creates new <see cref="Asset"/> object.
-		/// </summary>
-		protected Asset() : base()
-		{
-		}
+    /// <summary>
+    /// Asset objects base class.
+    /// </summary>
+    public abstract partial class Asset : Object
+    {
+        /// <summary>
+        /// Creates new <see cref="Asset"/> object.
+        /// </summary>
+        protected Asset() : base()
+        {
+        }
 
-		/// <summary>
-		/// Gets the asset path.
-		/// </summary>
-		[UnmanagedCall]
-		public string Path
-		{
+        /// <summary>
+        /// Gets the asset path.
+        /// </summary>
+        [UnmanagedCall]
+        public string Path
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetPath(unmanagedPtr); }
+            get { return Internal_GetPath(unmanagedPtr); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Returns true if asset is loaded, otherwise false.
-		/// </summary>
-		[UnmanagedCall]
-		public bool IsLoaded
-		{
+        /// <summary>
+        /// Returns true if asset is loaded, otherwise false.
+        /// </summary>
+        [UnmanagedCall]
+        public bool IsLoaded
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetIsLoaded(unmanagedPtr); }
+            get { return Internal_GetIsLoaded(unmanagedPtr); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Determines whether this asset is virtual (generated or temporary, has no storage so it won't be saved).
-		/// </summary>
-		[UnmanagedCall]
-		public bool IsVirtual
-		{
+        /// <summary>
+        /// Determines whether this asset is virtual (generated or temporary, has no storage so it won't be saved).
+        /// </summary>
+        [UnmanagedCall]
+        public bool IsVirtual
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetIsVirtual(unmanagedPtr); }
+            get { return Internal_GetIsVirtual(unmanagedPtr); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets amount of references to that asset.
-		/// </summary>
-		[UnmanagedCall]
-		public int RefCount
-		{
+        /// <summary>
+        /// Gets amount of references to that asset.
+        /// </summary>
+        [UnmanagedCall]
+        public int RefCount
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetRefCount(unmanagedPtr); }
+            get { return Internal_GetRefCount(unmanagedPtr); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Stops the current thread execution and waits until asset will be loaded (loading will fail, success or be cancelled).
-		/// </summary>
-		/// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
-		/// <returns>True if cannot load that asset (failed or has been cancelled), otherwise false.</returns>
+        /// <summary>
+        /// Stops the current thread execution and waits until asset will be loaded (loading will fail, success or be cancelled).
+        /// </summary>
+        /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
+        /// <returns>True if cannot load that asset (failed or has been cancelled), otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public bool WaitForLoaded(double timeoutInMiliseconds = 10000.0) 
-		{
+        [UnmanagedCall]
+        public bool WaitForLoaded(double timeoutInMiliseconds = 10000.0)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_WaitForLoaded(unmanagedPtr, timeoutInMiliseconds);
+            return Internal_WaitForLoaded(unmanagedPtr, timeoutInMiliseconds);
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Reloads the asset.
-		/// </summary>
+        /// <summary>
+        /// Reloads the asset.
+        /// </summary>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public bool Reload() 
-		{
+        [UnmanagedCall]
+        public bool Reload()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Reload(unmanagedPtr);
+            return Internal_Reload(unmanagedPtr);
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern string Internal_GetPath(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetIsLoaded(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_GetIsVirtual(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern int Internal_GetRefCount(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_WaitForLoaded(IntPtr obj, double timeoutInMiliseconds);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_Reload(IntPtr obj);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern string Internal_GetPath(IntPtr obj);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetIsLoaded(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetIsVirtual(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetRefCount(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_WaitForLoaded(IntPtr obj, double timeoutInMiliseconds);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_Reload(IntPtr obj);
+#endif
+
+        #endregion
+    }
+}

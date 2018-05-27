@@ -30,7 +30,7 @@ namespace FlaxEditor.GUI.Drag
                     Objects.Add(items[i]);
             }
         }
-        
+
         /// <summary>
         /// Tries to parse the drag data to extract <see cref="Type"/> collection.
         /// </summary>

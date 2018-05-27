@@ -11,7 +11,15 @@ namespace FlaxEngine.GUI
     /// </summary>
     public partial class TextBox : Control
     {
-        private static readonly char[] Separators = { ' ', '.', ',', '\t', '\r', '\n' };
+        private static readonly char[] Separators =
+        {
+            ' ',
+            '.',
+            ',',
+            '\t',
+            '\r',
+            '\n'
+        };
 
         /// <summary>
         /// Default height of the text box
@@ -57,7 +65,7 @@ namespace FlaxEngine.GUI
         #endregion
 
         #region Public Properties
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether this is a multiline text box control.
         /// </summary>
@@ -134,13 +142,13 @@ namespace FlaxEngine.GUI
             get => _text;
             set
             {
-                if(IsReadOnly)
+                if (IsReadOnly)
                     throw new AccessViolationException("Text Box is readonly.");
 
                 // Skip set if user is editing value
                 if (_isEditing)
                     return;
-                
+
                 SetText(value);
             }
         }
@@ -288,7 +296,7 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="TextBox"/> class.
         /// </summary>
         public TextBox()
-            : this(true, 0, 0)
+        : this(true, 0, 0)
         {
         }
 
@@ -300,7 +308,7 @@ namespace FlaxEngine.GUI
         /// <param name="y">Position Y coordinate</param>
         /// <param name="width">Width</param>
         public TextBox(bool isMultiline, float x, float y, float width = 120)
-            : base(x, y, width, DefaultHeight)
+        : base(x, y, width, DefaultHeight)
         {
             _isMultiline = isMultiline;
             _maxLength = 32000;
@@ -484,7 +492,7 @@ namespace FlaxEngine.GUI
                     _text = _text.Remove(left, selectionLength);
 
                 _text = _text.Insert(left, str);
-                
+
                 setSelection(left + 1);
             }
 
@@ -497,7 +505,7 @@ namespace FlaxEngine.GUI
             {
                 setSelection(SelectionRight);
             }
-            else if(SelectionRight < TextLength)
+            else if (SelectionRight < TextLength)
             {
                 int position;
                 if (ctrl)
@@ -522,7 +530,7 @@ namespace FlaxEngine.GUI
             {
                 setSelection(SelectionLeft);
             }
-            else if(SelectionLeft > 0)
+            else if (SelectionLeft > 0)
             {
                 int position;
                 if (ctrl)
@@ -723,11 +731,11 @@ namespace FlaxEngine.GUI
                 EditEnd?.Invoke();
             }
             _onStartEditValue = string.Empty;
-            
+
             ClearSelection();
             ResetViewOffset();
         }
-        
+
         /// <summary>
         /// Action called when text gets modified.
         /// </summary>
@@ -770,9 +778,9 @@ namespace FlaxEngine.GUI
             if (BackgroundColor.A > 0)
                 backColor = BackgroundColor;
             Render2D.FillRectangle(rect, backColor);
-            if(IsFocused && BorderSelectedColor.HasValue)
+            if (IsFocused && BorderSelectedColor.HasValue)
                 Render2D.DrawRectangle(rect, BorderSelectedColor.Value);
-            else if(BorderColor.HasValue)
+            else if (BorderColor.HasValue)
                 Render2D.DrawRectangle(rect, BorderColor.Value);
 
             // Apply view offset and clip mask
@@ -861,7 +869,7 @@ namespace FlaxEngine.GUI
             base.OnLostFocus();
             OnEditEnd();
         }
-        
+
         /// <inheritdoc />
         public override void OnEndMouseCapture()
         {
@@ -875,7 +883,7 @@ namespace FlaxEngine.GUI
             SelectAll();
             return base.OnMouseDoubleClick(location, buttons);
         }
-        
+
         /// <inheritdoc />
         public override void OnMouseMove(Vector2 location)
         {
@@ -905,7 +913,7 @@ namespace FlaxEngine.GUI
             base.OnMouseDown(location, buttons);
             return true;
         }
-        
+
         /// <inheritdoc />
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {

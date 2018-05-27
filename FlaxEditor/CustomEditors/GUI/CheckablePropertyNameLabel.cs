@@ -17,7 +17,7 @@ namespace FlaxEditor.CustomEditors.GUI
         /// The check box.
         /// </summary>
         public readonly CheckBox CheckBox;
-        
+
         /// <summary>
         /// Event fired when 'checked' state gets changed.
         /// </summary>
@@ -25,7 +25,7 @@ namespace FlaxEditor.CustomEditors.GUI
 
         /// <inheritdoc />
         public CheckablePropertyNameLabel(string name)
-            : base(name)
+        : base(name)
         {
             CheckBox = new CheckBox(2, 2)
             {
@@ -77,7 +77,7 @@ namespace FlaxEditor.CustomEditors.GUI
         protected override void PerformLayoutSelf()
         {
             base.PerformLayoutSelf();
-            
+
             // Center checkbox
             CheckBox.Y = (Height - CheckBox.Height) / 2;
         }

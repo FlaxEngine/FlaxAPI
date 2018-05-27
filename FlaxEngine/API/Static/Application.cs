@@ -4,20 +4,20 @@ using System.Threading;
 
 namespace FlaxEngine
 {
-	public static partial class Application
+    public static partial class Application
     {
         internal static bool _is64Bit;
         internal static bool _isEditor;
         internal static int _mainThreadId;
         internal static PlatformType _platform;
 
-		/// <summary>
-		/// Returns true if the current code is executed on a main application thread.
-		/// </summary>
-	    public static bool IsInMainThread
-	    {
-		    get { return Thread.CurrentThread.ManagedThreadId == _mainThreadId; }
-	    }
+        /// <summary>
+        /// Returns true if the current code is executed on a main application thread.
+        /// </summary>
+        public static bool IsInMainThread
+        {
+            get { return Thread.CurrentThread.ManagedThreadId == _mainThreadId; }
+        }
 
         /// <summary>
         /// Returns true if is running 64 bit application (otherwise 32 bit).

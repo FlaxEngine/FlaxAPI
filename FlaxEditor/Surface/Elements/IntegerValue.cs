@@ -28,7 +28,7 @@ namespace FlaxEditor.Surface.Elements
 
         /// <inheritdoc />
         public IntegerValue(SurfaceNode parentNode, NodeElementArchetype archetype)
-            : base(Get(parentNode, archetype), archetype.Position.X, archetype.Position.Y, 50, -1000000, 1000000, 0.05f)
+        : base(Get(parentNode, archetype), archetype.Position.X, archetype.Position.Y, 50, -1000000, 1000000, 0.05f)
         {
             ParentNode = parentNode;
             Archetype = archetype;
@@ -60,7 +60,7 @@ namespace FlaxEditor.Surface.Elements
             var value = parentNode.Values[arch.ValueIndex];
 
             // Note: this value box may edit on component of the vector like Vector3.Y, BoxID from Archetype tells which component pick
-            
+
             if (value is int valueInt)
             {
                 result = valueInt;
@@ -85,11 +85,11 @@ namespace FlaxEditor.Surface.Elements
             {
                 result = 0;
             }
-            
+
             return result;
         }
 
-	    public static void Set(SurfaceNode parentNode, NodeElementArchetype arch, int toSet)
+        public static void Set(SurfaceNode parentNode, NodeElementArchetype arch, int toSet)
         {
             if (arch.ValueIndex < 0)
                 return;
@@ -139,7 +139,7 @@ namespace FlaxEditor.Surface.Elements
             {
                 value = 0;
             }
-            
+
             parentNode.SetValue(arch.ValueIndex, value);
         }
     }

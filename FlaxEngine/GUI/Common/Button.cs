@@ -38,7 +38,7 @@ namespace FlaxEngine.GUI
         /// Event fired when user clicks on the button
         /// </summary>
         public event Action<Button> ButtonClicked;
-        
+
         /// <summary>
         /// Gets or sets the color of the border.
         /// </summary>
@@ -64,15 +64,15 @@ namespace FlaxEngine.GUI
         /// </summary>
         public Color BorderColorHighlighted { get; set; }
 
-		/// <summary>
-		/// Init
-		/// </summary>
-		/// <param name="x">Position X coordinate</param>
-		/// <param name="y">Position Y coordinate</param>
-		/// <param name="width">Width</param>
-		/// <param name="height">Height</param>
-		public Button(float x = 0, float y = 0, float width = 120, float height = DefaultHeight)
-            : base(x, y, width, height)
+        /// <summary>
+        /// Init
+        /// </summary>
+        /// <param name="x">Position X coordinate</param>
+        /// <param name="y">Position Y coordinate</param>
+        /// <param name="width">Width</param>
+        /// <param name="height">Height</param>
+        public Button(float x = 0, float y = 0, float width = 120, float height = DefaultHeight)
+        : base(x, y, width, height)
         {
             var style = Style.Current;
             Font = style.FontMedium;
@@ -137,7 +137,7 @@ namespace FlaxEngine.GUI
             }
             Render2D.FillRectangle(clientRect, backgroundColor);
             Render2D.DrawRectangle(clientRect, borderColor);
-            
+
             // Draw text
             Render2D.DrawText(Font, Text, clientRect, enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
         }

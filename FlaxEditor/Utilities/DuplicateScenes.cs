@@ -18,8 +18,9 @@ namespace FlaxEditor.Utilities
             public bool IsDirty;
             public byte[] Bytes;
         }
+
         private readonly List<SceneData> _scenesData = new List<SceneData>(16);
-        
+
         /// <summary>
         /// Checks if scene data has been gathered.
         /// </summary>
@@ -75,34 +76,34 @@ namespace FlaxEditor.Utilities
             Editor.Log(string.Format("Gathered {0} scene(s)!", scenesCount));
         }
 
-		/// <summary>
-		/// Deserialize captured scenes.
-		/// </summary>
-		public void CreateScenes()
-		{
-			if (!HasData)
-				throw new InvalidOperationException("DuplicateScenes has not gathered scene data yet.");
+        /// <summary>
+        /// Deserialize captured scenes.
+        /// </summary>
+        public void CreateScenes()
+        {
+            if (!HasData)
+                throw new InvalidOperationException("DuplicateScenes has not gathered scene data yet.");
 
-			Editor.Log("Creating scenes");
-			
-			// Deserialize new scenes
-			int scenesCount = _scenesData.Count;
-			var duplicatedScenes = new Scene[scenesCount];
-			for (int i = 0; i < scenesCount; i++)
-			{
-				var data = _scenesData[i];
-				duplicatedScenes[i] = SceneManager.LoadSceneFromBytes(data.Bytes);
-				if (duplicatedScenes[i] == null)
-					throw new FlaxException("Failed to deserialize scene");
-			}
-		}
+            Editor.Log("Creating scenes");
 
-		/// <summary>
-		/// Deletes the creates scenes for the simulation.
-		/// </summary>
-	    public void DeletedScenes()
-	    {
-		    Editor.Log("Restoring scene data");
+            // Deserialize new scenes
+            int scenesCount = _scenesData.Count;
+            var duplicatedScenes = new Scene[scenesCount];
+            for (int i = 0; i < scenesCount; i++)
+            {
+                var data = _scenesData[i];
+                duplicatedScenes[i] = SceneManager.LoadSceneFromBytes(data.Bytes);
+                if (duplicatedScenes[i] == null)
+                    throw new FlaxException("Failed to deserialize scene");
+            }
+        }
+
+        /// <summary>
+        /// Deletes the creates scenes for the simulation.
+        /// </summary>
+        public void DeletedScenes()
+        {
+            Editor.Log("Restoring scene data");
 
             // TODO: here we can keep changes for actors marked to keep their state after simulation
 
@@ -110,14 +111,14 @@ namespace FlaxEditor.Utilities
             if (SceneManager.UnloadAllScenes())
                 throw new FlaxException("Failed to unload scenes.");
             FlaxEngine.Scripting.FlushRemovedObjects();
-	    }
+        }
 
-		/// <summary>
-		/// Restore captured scene data.
-		/// </summary>
-		public void RestoreSceneData()
+        /// <summary>
+        /// Restore captured scene data.
+        /// </summary>
+        public void RestoreSceneData()
         {
-	        if (!HasData)
+            if (!HasData)
                 throw new InvalidOperationException("DuplicateScenes has not gathered scene data yet.");
 
             // Deserialize old scenes

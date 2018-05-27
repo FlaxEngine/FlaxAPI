@@ -8,63 +8,65 @@ using FlaxEngine.Rendering;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Material asset that contains shader for rendering models on the GPU.
-	/// </summary>
-	public sealed partial class Material : MaterialBase
-	{
-		/// <summary>
-		/// Creates new <see cref="Material"/> object.
-		/// </summary>
-		private Material() : base()
-		{
-		}
+    /// <summary>
+    /// Material asset that contains shader for rendering models on the GPU.
+    /// </summary>
+    public sealed partial class Material : MaterialBase
+    {
+        /// <summary>
+        /// Creates new <see cref="Material"/> object.
+        /// </summary>
+        private Material() : base()
+        {
+        }
 
-		/// <summary>
-		/// Tries to load surface graph from the asset.
-		/// </summary>
-		/// <param name="createDefaultIfMissing">True if create default surface if missing, otherwise won't load anything.</param>
-		/// <returns>Loaded surface bytes or null if cannot load it or it's missing.</returns>
+        /// <summary>
+        /// Tries to load surface graph from the asset.
+        /// </summary>
+        /// <param name="createDefaultIfMissing">True if create default surface if missing, otherwise won't load anything.</param>
+        /// <returns>Loaded surface bytes or null if cannot load it or it's missing.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public byte[] LoadSurface(bool createDefaultIfMissing) 
-		{
+        [UnmanagedCall]
+        public byte[] LoadSurface(bool createDefaultIfMissing)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_LoadSurface(unmanagedPtr, createDefaultIfMissing);
+            return Internal_LoadSurface(unmanagedPtr, createDefaultIfMissing);
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Update material surface (save new one, discard cached data, reload asset).
-		/// </summary>
-		/// <param name="data">Surface data.</param>
-		/// <param name="info">Material info structure.</param>
-		/// <returns>True if cannot save it, otherwise false.</returns>
+        /// <summary>
+        /// Update material surface (save new one, discard cached data, reload asset).
+        /// </summary>
+        /// <param name="data">Surface data.</param>
+        /// <param name="info">Material info structure.</param>
+        /// <returns>True if cannot save it, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public bool SaveSurface(byte[] data, MaterialInfo info) 
-		{
+        [UnmanagedCall]
+        public bool SaveSurface(byte[] data, MaterialInfo info)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_SaveSurface(unmanagedPtr, data, ref info);
+            return Internal_SaveSurface(unmanagedPtr, data, ref info);
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern byte[] Internal_LoadSurface(IntPtr obj, bool createDefaultIfMissing);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_SaveSurface(IntPtr obj, byte[] data, ref MaterialInfo info);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern byte[] Internal_LoadSurface(IntPtr obj, bool createDefaultIfMissing);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_SaveSurface(IntPtr obj, byte[] data, ref MaterialInfo info);
+#endif
+
+        #endregion
+    }
+}

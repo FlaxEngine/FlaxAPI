@@ -20,7 +20,7 @@ namespace FlaxEditor.Content.GUI
         /// Initializes a new instance of the <see cref="NavigationBar"/> class.
         /// </summary>
         public NavigationBar()
-            : base(ScrollBars.Horizontal)
+        : base(ScrollBars.Horizontal)
         {
         }
 

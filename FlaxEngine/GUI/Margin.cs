@@ -41,7 +41,7 @@ namespace FlaxEngine.GUI
         /// Gets the height (top + bottom).
         /// </summary>
         public float Height => Top + Bottom;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Margin"/> struct.
         /// </summary>

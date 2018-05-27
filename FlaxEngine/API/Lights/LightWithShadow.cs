@@ -2,7 +2,7 @@
 
 namespace FlaxEngine
 {
-	public abstract partial class LightWithShadow
-	{
-	}
+    public abstract partial class LightWithShadow
+    {
+    }
 }

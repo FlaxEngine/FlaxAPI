@@ -16,7 +16,7 @@ namespace FlaxEngine
         /// Initializes a new instance of the <see cref="FlaxException"/> class.
         /// </summary>
         public FlaxException()
-            : base("A Flax Runtime error occurred!")
+        : base("A Flax Runtime error occurred!")
         {
         }
 
@@ -25,7 +25,7 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
         public FlaxException(string message)
-            : base(message)
+        : base(message)
         {
         }
 
@@ -35,7 +35,7 @@ namespace FlaxEngine
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="innerException">The exception that is the cause of the current exception. If the <paramref name="innerException" /> parameter is not a null reference (Nothing in Visual Basic), the current exception is raised in a catch block that handles the inner exception.</param>
         public FlaxException(string message, Exception innerException)
-            : base(message, innerException)
+        : base(message, innerException)
         {
         }
 
@@ -45,7 +45,7 @@ namespace FlaxEngine
         /// <param name="info">The object that holds the serialized object data.</param>
         /// <param name="context">The contextual information about the source or destination.</param>
         protected FlaxException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
+        : base(info, context)
         {
         }
     }

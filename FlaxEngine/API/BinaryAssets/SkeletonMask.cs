@@ -2,7 +2,7 @@
 
 namespace FlaxEngine
 {
-	public sealed partial class SkeletonMask
-	{
-	}
+    public sealed partial class SkeletonMask
+    {
+    }
 }

@@ -74,7 +74,7 @@ namespace FlaxEditor.Modules
         public int ItemsDeleted => _itemsDeleted;
 
         internal ContentDatabaseModule(Editor editor)
-            : base(editor)
+        : base(editor)
         {
             // Init content database after UI module
             InitOrder = -80;
@@ -185,7 +185,7 @@ namespace FlaxEditor.Modules
 
             // Ensure path is normalized to the Flax format
             path = StringUtils.NormalizePath(path);
-            
+
             // TODO: if it's a bottleneck try to optimize searching by spliting path
 
             var result = ProjectContent.Folder.Find(path);
@@ -361,7 +361,6 @@ namespace FlaxEditor.Modules
         /// </summary>
         /// <param name="items">The items.</param>
         /// <param name="newParent">The new parent.</param>
-
         public void Move(List<ContentItem> items, ContentFolder newParent)
         {
             for (int i = 0; i < items.Count; i++)
@@ -377,7 +376,7 @@ namespace FlaxEditor.Modules
         {
             if (newParent == null || item == null)
                 throw new ArgumentNullException();
-            
+
             // Skip nothing to change
             if (item.ParentFolder == newParent)
                 return;
@@ -584,16 +583,16 @@ namespace FlaxEditor.Modules
                 // TODO: maybe dont' remove folders reqursive but at once?
 
                 // Delete all children
-	            if (folder.Children.Count > 0)
-	            {
-		            var children = folder.Children.ToArray();
-		            for (int i = 0; i < children.Length; i++)
-		            {
-			            Delete(children[0]);
-		            }
-	            }
+                if (folder.Children.Count > 0)
+                {
+                    var children = folder.Children.ToArray();
+                    for (int i = 0; i < children.Length; i++)
+                    {
+                        Delete(children[0]);
+                    }
+                }
 
-	            // Remove directory
+                // Remove directory
                 if (Directory.Exists(path))
                 {
                     try
@@ -821,7 +820,7 @@ namespace FlaxEditor.Modules
             Proxy.Add(new AnimationProxy());
             Proxy.Add(new SkeletonMaskProxy());
             Proxy.Add(new SpawnableJsonAssetProxy<PhysicalMaterial>());
-            
+
             // Settings
             Proxy.Add(new SettingsProxy<GameSettings>());
             Proxy.Add(new SettingsProxy<TimeSettings>());
@@ -833,7 +832,7 @@ namespace FlaxEditor.Modules
             Proxy.Add(new SettingsProxy<WindowsPlatformSettings>());
             Proxy.Add(new SettingsProxy<UWPPlatformSettings>());
             Proxy.Add(new SettingsProxy<AudioSettings>());
-            
+
             // Last add generic json (won't override other json proxies)
             Proxy.Add(new GenericJsonAssetProxy());
 
@@ -885,15 +884,15 @@ namespace FlaxEditor.Modules
                         // Remove this item from the database and some related data
                         var toRefresh = binaryAssetItem.ParentFolder;
                         binaryAssetItem.Dispose();
-	                    toRefresh.Children.Remove(binaryAssetItem);
-	                    if (!binaryAssetItem.HasDefaultThumbnail)
-	                    {
-		                    // Delete old thumbnail and remove it from the cache
-		                    Editor.Instance.Thumbnails.DeletePreview(binaryAssetItem);
-	                    }
+                        toRefresh.Children.Remove(binaryAssetItem);
+                        if (!binaryAssetItem.HasDefaultThumbnail)
+                        {
+                            // Delete old thumbnail and remove it from the cache
+                            Editor.Instance.Thumbnails.DeletePreview(binaryAssetItem);
+                        }
 
-						// Refresh the parent folder to find the new asset (it should have different type or some other format)
-	                    RefreshFolder(toRefresh, false);
+                        // Refresh the parent folder to find the new asset (it should have different type or some other format)
+                        RefreshFolder(toRefresh, false);
                     }
                     else
                     {
@@ -902,8 +901,8 @@ namespace FlaxEditor.Modules
                     }
                 }
 
-				// Refresh content view (not the best design because window could also track this event but it gives better performance)
-				Editor.Windows.ContentWin?.RefreshView();
+                // Refresh content view (not the best design because window could also track this event but it gives better performance)
+                Editor.Windows.ContentWin?.RefreshView();
             }
         }
 
@@ -919,17 +918,17 @@ namespace FlaxEditor.Modules
             // Switch type
             switch (e.ChangeType)
             {
-                case WatcherChangeTypes.Created:
-                case WatcherChangeTypes.Deleted:
-                {
-                    // We want to enqueue dir modification events for better stability
-                    if (!_dirtyNodes.Contains(node))
-                        _dirtyNodes.Enqueue(node);
+            case WatcherChangeTypes.Created:
+            case WatcherChangeTypes.Deleted:
+            {
+                // We want to enqueue dir modification events for better stability
+                if (!_dirtyNodes.Contains(node))
+                    _dirtyNodes.Enqueue(node);
 
-                    break;
-                }
+                break;
+            }
 
-                default: break;
+            default: break;
             }
         }
 

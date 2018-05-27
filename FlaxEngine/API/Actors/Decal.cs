@@ -2,7 +2,7 @@
 
 namespace FlaxEngine
 {
-	public sealed partial class Decal
-	{
-	}
+    public sealed partial class Decal
+    {
+    }
 }

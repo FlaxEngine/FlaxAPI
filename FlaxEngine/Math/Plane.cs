@@ -188,14 +188,14 @@ namespace FlaxEngine
             {
                 switch (index)
                 {
-                    case 0:
-                        return Normal.X;
-                    case 1:
-                        return Normal.Y;
-                    case 2:
-                        return Normal.Z;
-                    case 3:
-                        return D;
+                case 0:
+                    return Normal.X;
+                case 1:
+                    return Normal.Y;
+                case 2:
+                    return Normal.Z;
+                case 3:
+                    return D;
                 }
 
                 throw new ArgumentOutOfRangeException(nameof(index), "Indices for Plane run from 0 to 3, inclusive.");
@@ -205,20 +205,20 @@ namespace FlaxEngine
             {
                 switch (index)
                 {
-                    case 0:
-                        Normal.X = value;
-                        break;
-                    case 1:
-                        Normal.Y = value;
-                        break;
-                    case 2:
-                        Normal.Z = value;
-                        break;
-                    case 3:
-                        D = value;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index), "Indices for Plane run from 0 to 3, inclusive.");
+                case 0:
+                    Normal.X = value;
+                    break;
+                case 1:
+                    Normal.Y = value;
+                    break;
+                case 2:
+                    Normal.Z = value;
+                    break;
+                case 3:
+                    D = value;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(index), "Indices for Plane run from 0 to 3, inclusive.");
                 }
             }
         }
@@ -242,7 +242,13 @@ namespace FlaxEngine
         /// <returns>A four-element array containing the components of the plane.</returns>
         public float[] ToArray()
         {
-            return new[] {Normal.X, Normal.Y, Normal.Z, D};
+            return new[]
+            {
+                Normal.X,
+                Normal.Y,
+                Normal.Z,
+                D
+            };
         }
 
         /// <summary>
@@ -896,7 +902,7 @@ namespace FlaxEngine
         public string ToString(string format)
         {
             return string.Format(CultureInfo.CurrentCulture, "A:{0} B:{1} C:{2} D:{3}", Normal.X.ToString(format, CultureInfo.CurrentCulture),
-                Normal.Y.ToString(format, CultureInfo.CurrentCulture), Normal.Z.ToString(format, CultureInfo.CurrentCulture), D.ToString(format, CultureInfo.CurrentCulture));
+                                 Normal.Y.ToString(format, CultureInfo.CurrentCulture), Normal.Z.ToString(format, CultureInfo.CurrentCulture), D.ToString(format, CultureInfo.CurrentCulture));
         }
 
         /// <summary>
@@ -922,7 +928,7 @@ namespace FlaxEngine
         public string ToString(string format, IFormatProvider formatProvider)
         {
             return string.Format(formatProvider, "A:{0} B:{1} C:{2} D:{3}", Normal.X.ToString(format, formatProvider),
-                Normal.Y.ToString(format, formatProvider), Normal.Z.ToString(format, formatProvider), D.ToString(format, formatProvider));
+                                 Normal.Y.ToString(format, formatProvider), Normal.Z.ToString(format, formatProvider), D.ToString(format, formatProvider));
         }
 
         /// <summary>

@@ -9,87 +9,87 @@ namespace FlaxEngine
         /// </summary>
         public enum Icon
         {
-			/// <summary>
-			/// The asterisk icon.
-			/// </summary>
-			Asterisk = 0,
+            /// <summary>
+            /// The asterisk icon.
+            /// </summary>
+            Asterisk = 0,
 
-			/// <summary>
-			/// The error icon.
-			/// </summary>
-			Error,
+            /// <summary>
+            /// The error icon.
+            /// </summary>
+            Error,
 
-			/// <summary>
-			/// The exclamation icon.
-			/// </summary>
-			Exclamation,
+            /// <summary>
+            /// The exclamation icon.
+            /// </summary>
+            Exclamation,
 
-			/// <summary>
-			/// The hand icon.
-			/// </summary>
-			Hand,
+            /// <summary>
+            /// The hand icon.
+            /// </summary>
+            Hand,
 
-			/// <summary>
-			/// The information icon.
-			/// </summary>
-			Information,
+            /// <summary>
+            /// The information icon.
+            /// </summary>
+            Information,
 
-			/// <summary>
-			/// No icon.
-			/// </summary>
-			None,
+            /// <summary>
+            /// No icon.
+            /// </summary>
+            None,
 
-			/// <summary>
-			/// The question icon.
-			/// </summary>
-			Question,
+            /// <summary>
+            /// The question icon.
+            /// </summary>
+            Question,
 
-			/// <summary>
-			/// The stop sign icon.
-			/// </summary>
-			Stop,
+            /// <summary>
+            /// The stop sign icon.
+            /// </summary>
+            Stop,
 
-			/// <summary>
-			/// The warning icon.
-			/// </summary>
-			Warning
-		};
+            /// <summary>
+            /// The warning icon.
+            /// </summary>
+            Warning
+        };
 
         /// <summary>
         /// Specifies constants defining which buttons to display on a Message Box.
         /// </summary>
         public enum Buttons
         {
-			/// <summary>
-			/// Abort, Retry and Ignore buttons
-			/// </summary>
-			AbortRetryIgnore = 0,
+            /// <summary>
+            /// Abort, Retry and Ignore buttons
+            /// </summary>
+            AbortRetryIgnore = 0,
 
-			/// <summary>
-			/// OK button
-			/// </summary>
-			OK,
+            /// <summary>
+            /// OK button
+            /// </summary>
+            OK,
 
-			/// <summary>
-			/// OK and Cancel buttons
-			/// </summary>
-			OKCancel,
+            /// <summary>
+            /// OK and Cancel buttons
+            /// </summary>
+            OKCancel,
 
-			/// <summary>
-			/// Retry and Cancel buttons
-			/// </summary>
-			RetryCancel,
+            /// <summary>
+            /// Retry and Cancel buttons
+            /// </summary>
+            RetryCancel,
 
-			/// <summary>
-			/// Yes and No buttons
-			/// </summary>
-			YesNo,
+            /// <summary>
+            /// Yes and No buttons
+            /// </summary>
+            YesNo,
 
-			/// <summary>
-			/// Yes, No and Cancel buttons
-			/// </summary>
-			YesNoCancel
-		};
+            /// <summary>
+            /// Yes, No and Cancel buttons
+            /// </summary>
+            YesNoCancel
+        };
 
         /// <summary>
         /// Displays a message box with specified text

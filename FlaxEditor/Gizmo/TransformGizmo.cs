@@ -25,7 +25,7 @@ namespace FlaxEditor.Gizmo
         private Vector3 _intersectPosition;
         private bool _isActive;
         private bool _isDuplicating;
-        
+
         private bool _isTransforming;
         private Vector3 _lastIntersectionPosition;
 
@@ -48,7 +48,7 @@ namespace FlaxEditor.Gizmo
         private Vector3 _translationDelta;
 
         private Vector3 _translationScaleSnapDelta;
-		
+
         /// <summary>
         /// The event to apply objects transformation.
         /// </summary>
@@ -76,7 +76,7 @@ namespace FlaxEditor.Gizmo
         /// </summary>
         /// <param name="owner">The gizmos owner.</param>
         public TransformGizmo(IGizmoOwner owner)
-            : base(owner)
+        : base(owner)
         {
             InitDrawing();
         }
@@ -88,19 +88,19 @@ namespace FlaxEditor.Gizmo
             if (count <= 0 || _isTransforming)
                 return;
 
-			// Check if duplicate objects
-	        if (Owner.UseDuplicate && !_isDuplicating)
-	        {
-		        _isDuplicating = true;
-				Editor.Instance.SceneEditing.Duplicate();
-		        return;
-	        }
-			
-			// Start
-	        _isTransforming = true;
-			
-			// Cache 'before' state
-			_startTransforms.Clear();
+            // Check if duplicate objects
+            if (Owner.UseDuplicate && !_isDuplicating)
+            {
+                _isDuplicating = true;
+                Editor.Instance.SceneEditing.Duplicate();
+                return;
+            }
+
+            // Start
+            _isTransforming = true;
+
+            // Cache 'before' state
+            _startTransforms.Clear();
             if (_startTransforms.Capacity < count)
                 _startTransforms.Capacity = Mathf.NextPowerOfTwo(count);
             for (var i = 0; i < count; i++)
@@ -117,23 +117,23 @@ namespace FlaxEditor.Gizmo
             Owner.Undo.AddAction(new TransformObjectsAction(SelectedParents, _startTransforms));
             _startTransforms.Clear();
             _isTransforming = false;
-	        _isDuplicating = false;
+            _isDuplicating = false;
         }
 
         private void UpdateGizmoPosition()
         {
             switch (_activePivotType)
             {
-                case PivotType.ObjectCenter:
-                    if (_selection.Count > 0)
-                        Position = _selection[0].Transform.Translation;
-                    break;
-                case PivotType.SelectionCenter:
-                    Position = GetSelectionCenter();
-                    break;
-                case PivotType.WorldOrigin:
-                    Position = Vector3.Zero;
-                    break;
+            case PivotType.ObjectCenter:
+                if (_selection.Count > 0)
+                    Position = _selection[0].Transform.Translation;
+                break;
+            case PivotType.SelectionCenter:
+                Position = GetSelectionCenter();
+                break;
+            case PivotType.WorldOrigin:
+                Position = Vector3.Zero;
+                break;
             }
             Position += _translationDelta;
         }
@@ -193,7 +193,7 @@ namespace FlaxEditor.Gizmo
         {
             if (!IsActive)
                 return;
-            
+
             bool isLeftBtnDown = Owner.IsLeftMouseButtonDown;
 
             // Only when is active
@@ -208,196 +208,196 @@ namespace FlaxEditor.Gizmo
                 {
                     switch (_activeMode)
                     {
-                        case Mode.Scale:
-                        case Mode.Translate:
+                    case Mode.Scale:
+                    case Mode.Translate:
+                    {
+                        bool isScalling = _activeMode == Mode.Scale;
+
+                        Vector3 delta = Vector3.Zero;
+                        Ray ray = Owner.MouseRay;
+
+                        Matrix invRotationMatrix;
+                        Matrix.Invert(ref _rotationMatrix, out invRotationMatrix);
+                        ray.Position = Vector3.Transform(ray.Position, invRotationMatrix);
+                        Vector3.TransformNormal(ref ray.Direction, ref invRotationMatrix, out ray.Direction);
+
+                        switch (_activeAxis)
                         {
-                            bool isScalling = _activeMode == Mode.Scale;
+                        case Axis.XY:
+                        case Axis.X:
+                        {
+                            var plane = new Plane(Vector3.Backward, Vector3.Transform(Position, invRotationMatrix).Z);
 
-                            Vector3 delta = Vector3.Zero;
-                            Ray ray = Owner.MouseRay;
-
-                            Matrix invRotationMatrix;
-                            Matrix.Invert(ref _rotationMatrix, out invRotationMatrix);
-                            ray.Position = Vector3.Transform(ray.Position, invRotationMatrix);
-                            Vector3.TransformNormal(ref ray.Direction, ref invRotationMatrix, out ray.Direction);
-
-                            switch (_activeAxis)
+                            float intersection;
+                            if (ray.Intersects(ref plane, out intersection))
                             {
-                                case Axis.XY:
-                                case Axis.X:
-                                {
-                                    var plane = new Plane(Vector3.Backward, Vector3.Transform(Position, invRotationMatrix).Z);
-
-                                    float intersection;
-                                    if (ray.Intersects(ref plane, out intersection))
-                                    {
-                                        _intersectPosition = ray.Position + ray.Direction * intersection;
-                                        if (_lastIntersectionPosition != Vector3.Zero)
-                                            _tDelta = _intersectPosition - _lastIntersectionPosition;
-                                        delta = _activeAxis == Axis.X
-                                            ? new Vector3(_tDelta.X, 0, 0)
-                                            : new Vector3(_tDelta.X, _tDelta.Y, 0);
-                                    }
-
-                                    break;
-                                }
-
-                                case Axis.Z:
-                                case Axis.YZ:
-                                case Axis.Y:
-                                {
-                                    var plane = new Plane(Vector3.Left, Vector3.Transform(Position, invRotationMatrix).X);
-
-                                    float intersection;
-                                    if (ray.Intersects(ref plane, out intersection))
-                                    {
-                                        _intersectPosition = ray.Position + ray.Direction * intersection;
-                                        if (_lastIntersectionPosition != Vector3.Zero)
-                                            _tDelta = _intersectPosition - _lastIntersectionPosition;
-                                        switch (_activeAxis)
-                                        {
-                                            case Axis.Y:
-                                                delta = new Vector3(0, _tDelta.Y, 0);
-                                                break;
-                                            case Axis.Z:
-                                                delta = new Vector3(0, 0, _tDelta.Z);
-                                                break;
-                                            default:
-                                                delta = new Vector3(0, _tDelta.Y, _tDelta.Z);
-                                                break;
-                                        }
-                                    }
-
-                                    break;
-                                }
-
-                                case Axis.ZX:
-                                {
-                                    var plane = new Plane(Vector3.Down, Vector3.Transform(Position, invRotationMatrix).Y);
-
-                                    float intersection;
-                                    if (ray.Intersects(ref plane, out intersection))
-                                    {
-                                        _intersectPosition = ray.Position + ray.Direction * intersection;
-                                        if (_lastIntersectionPosition != Vector3.Zero)
-                                            _tDelta = _intersectPosition - _lastIntersectionPosition;
-                                        delta = new Vector3(_tDelta.X, 0, _tDelta.Z);
-                                    }
-
-                                    break;
-                                }
-
-                                case Axis.Center:
-                                {
-                                    Vector3 gizmoToView = Position - Owner.ViewPosition;
-                                    var plane = new Plane(-Vector3.Normalize(gizmoToView), gizmoToView.Length);
-
-                                    float intersection;
-                                    if (ray.Intersects(ref plane, out intersection))
-                                    {
-                                        _intersectPosition = ray.Position + ray.Direction * intersection;
-                                        if (_lastIntersectionPosition != Vector3.Zero)
-                                            _tDelta = _intersectPosition - _lastIntersectionPosition;
-                                    }
-
-                                    delta = _tDelta;
-
-                                    break;
-                                }
+                                _intersectPosition = ray.Position + ray.Direction * intersection;
+                                if (_lastIntersectionPosition != Vector3.Zero)
+                                    _tDelta = _intersectPosition - _lastIntersectionPosition;
+                                delta = _activeAxis == Axis.X
+                                        ? new Vector3(_tDelta.X, 0, 0)
+                                        : new Vector3(_tDelta.X, _tDelta.Y, 0);
                             }
 
-                            if ((isScalling ? ScaleSnapEnabled : TranslationSnapEnable) || Owner.UseSnapping)
-                            {
-                                float snapValue = isScalling ? ScaleSnapValue : TranslationSnapValue;
-                                if (_precisionModeEnabled)
-                                {
-                                    delta *= PrecisionModeScale;
-                                    snapValue *= PrecisionModeScale;
-                                }
-
-                                _translationScaleSnapDelta += delta;
-
-                                delta = new Vector3(
-                                    (int)(_translationScaleSnapDelta.X / snapValue) * snapValue,
-                                    (int)(_translationScaleSnapDelta.Y / snapValue) * snapValue,
-                                    (int)(_translationScaleSnapDelta.Z / snapValue) * snapValue);
-
-                                _translationScaleSnapDelta -= delta;
-                            }
-                            else if (_precisionModeEnabled)
-                            {
-                                delta *= PrecisionModeScale;
-                            }
-
-                            if (_activeMode == Mode.Translate)
-                            {
-                                // Transform (local or world)
-                                delta = Vector3.Transform(delta, _rotationMatrix);
-                                _translationDelta = delta;
-                            }
-                            else if (_activeMode == Mode.Scale)
-                            {
-                                // Apply Scale
-                                _scaleDelta += delta * ScaleFactor;
-                            }
-                        }
                             break;
+                        }
 
-                        case Mode.Rotate:
+                        case Axis.Z:
+                        case Axis.YZ:
+                        case Axis.Y:
                         {
-                            float delta = Owner.MouseDelta.X * dt;
+                            var plane = new Plane(Vector3.Left, Vector3.Transform(Position, invRotationMatrix).X);
 
-                            if (RotationSnapEnabled || Owner.UseSnapping)
+                            float intersection;
+                            if (ray.Intersects(ref plane, out intersection))
                             {
-                                float snapValue = RotationSnapValue * Mathf.DegreesToRadians;
-                                if (_precisionModeEnabled)
+                                _intersectPosition = ray.Position + ray.Direction * intersection;
+                                if (_lastIntersectionPosition != Vector3.Zero)
+                                    _tDelta = _intersectPosition - _lastIntersectionPosition;
+                                switch (_activeAxis)
                                 {
-                                    delta *= PrecisionModeScale;
-                                    snapValue *= PrecisionModeScale;
-                                }
-
-                                _rotationSnapDelta += delta;
-
-                                float snapped = Mathf.Round(_rotationSnapDelta / snapValue) * snapValue;
-                                _rotationSnapDelta -= snapped;
-
-                                delta = snapped;
-                            }
-                            else if (_precisionModeEnabled)
-                            {
-                                delta *= PrecisionModeScale;
-                            }
-
-                            switch (_activeAxis)
-                            {
-                                case Axis.X:
                                 case Axis.Y:
-                                case Axis.Z:
-                                {
-                                    Vector3 dir;
-                                    if (_activeAxis == Axis.X)
-                                        dir = _rotationMatrix.Right;
-                                    else if (_activeAxis == Axis.Y)
-                                        dir = _rotationMatrix.Up;
-                                    else
-                                        dir = _rotationMatrix.Forward;
-
-                                    Vector3 viewDir = Owner.ViewPosition - Position;
-                                    Vector3.Dot(ref viewDir, ref dir, out float dot);
-                                    if (dot < 0.0f)
-                                        delta *= -1;
-
-                                    Quaternion.RotationAxis(ref dir, delta, out _rotationDelta);
+                                    delta = new Vector3(0, _tDelta.Y, 0);
                                     break;
-                                }
-
+                                case Axis.Z:
+                                    delta = new Vector3(0, 0, _tDelta.Z);
+                                    break;
                                 default:
-                                    _rotationDelta = Quaternion.Identity;
+                                    delta = new Vector3(0, _tDelta.Y, _tDelta.Z);
                                     break;
+                                }
                             }
 
                             break;
                         }
+
+                        case Axis.ZX:
+                        {
+                            var plane = new Plane(Vector3.Down, Vector3.Transform(Position, invRotationMatrix).Y);
+
+                            float intersection;
+                            if (ray.Intersects(ref plane, out intersection))
+                            {
+                                _intersectPosition = ray.Position + ray.Direction * intersection;
+                                if (_lastIntersectionPosition != Vector3.Zero)
+                                    _tDelta = _intersectPosition - _lastIntersectionPosition;
+                                delta = new Vector3(_tDelta.X, 0, _tDelta.Z);
+                            }
+
+                            break;
+                        }
+
+                        case Axis.Center:
+                        {
+                            Vector3 gizmoToView = Position - Owner.ViewPosition;
+                            var plane = new Plane(-Vector3.Normalize(gizmoToView), gizmoToView.Length);
+
+                            float intersection;
+                            if (ray.Intersects(ref plane, out intersection))
+                            {
+                                _intersectPosition = ray.Position + ray.Direction * intersection;
+                                if (_lastIntersectionPosition != Vector3.Zero)
+                                    _tDelta = _intersectPosition - _lastIntersectionPosition;
+                            }
+
+                            delta = _tDelta;
+
+                            break;
+                        }
+                        }
+
+                        if ((isScalling ? ScaleSnapEnabled : TranslationSnapEnable) || Owner.UseSnapping)
+                        {
+                            float snapValue = isScalling ? ScaleSnapValue : TranslationSnapValue;
+                            if (_precisionModeEnabled)
+                            {
+                                delta *= PrecisionModeScale;
+                                snapValue *= PrecisionModeScale;
+                            }
+
+                            _translationScaleSnapDelta += delta;
+
+                            delta = new Vector3(
+                                (int)(_translationScaleSnapDelta.X / snapValue) * snapValue,
+                                (int)(_translationScaleSnapDelta.Y / snapValue) * snapValue,
+                                (int)(_translationScaleSnapDelta.Z / snapValue) * snapValue);
+
+                            _translationScaleSnapDelta -= delta;
+                        }
+                        else if (_precisionModeEnabled)
+                        {
+                            delta *= PrecisionModeScale;
+                        }
+
+                        if (_activeMode == Mode.Translate)
+                        {
+                            // Transform (local or world)
+                            delta = Vector3.Transform(delta, _rotationMatrix);
+                            _translationDelta = delta;
+                        }
+                        else if (_activeMode == Mode.Scale)
+                        {
+                            // Apply Scale
+                            _scaleDelta += delta * ScaleFactor;
+                        }
+                    }
+                        break;
+
+                    case Mode.Rotate:
+                    {
+                        float delta = Owner.MouseDelta.X * dt;
+
+                        if (RotationSnapEnabled || Owner.UseSnapping)
+                        {
+                            float snapValue = RotationSnapValue * Mathf.DegreesToRadians;
+                            if (_precisionModeEnabled)
+                            {
+                                delta *= PrecisionModeScale;
+                                snapValue *= PrecisionModeScale;
+                            }
+
+                            _rotationSnapDelta += delta;
+
+                            float snapped = Mathf.Round(_rotationSnapDelta / snapValue) * snapValue;
+                            _rotationSnapDelta -= snapped;
+
+                            delta = snapped;
+                        }
+                        else if (_precisionModeEnabled)
+                        {
+                            delta *= PrecisionModeScale;
+                        }
+
+                        switch (_activeAxis)
+                        {
+                        case Axis.X:
+                        case Axis.Y:
+                        case Axis.Z:
+                        {
+                            Vector3 dir;
+                            if (_activeAxis == Axis.X)
+                                dir = _rotationMatrix.Right;
+                            else if (_activeAxis == Axis.Y)
+                                dir = _rotationMatrix.Up;
+                            else
+                                dir = _rotationMatrix.Forward;
+
+                            Vector3 viewDir = Owner.ViewPosition - Position;
+                            Vector3.Dot(ref viewDir, ref dir, out float dot);
+                            if (dot < 0.0f)
+                                delta *= -1;
+
+                            Quaternion.RotationAxis(ref dir, delta, out _rotationDelta);
+                            break;
+                        }
+
+                        default:
+                            _rotationDelta = Quaternion.Identity;
+                            break;
+                        }
+
+                        break;
+                    }
                     }
                 }
                 else
@@ -429,7 +429,7 @@ namespace FlaxEditor.Gizmo
                         if (_accMoveDelta.Length > Owner.ViewFarPlane * 0.7f)
                             _accMoveDelta = prevMoveDelta;
                     }
-                    
+
                     // Rotation
                     Quaternion rotationDelta = Quaternion.Identity;
                     if (!_rotationDelta.IsIdentity)
@@ -438,7 +438,7 @@ namespace FlaxEditor.Gizmo
                         rotationDelta = _rotationDelta;
                         _rotationDelta = Quaternion.Identity;
                     }
-                    
+
                     // Scale
                     Vector3 scaleDelta = Vector3.Zero;
                     if (_scaleDelta.LengthSquared > 0.000001f)
@@ -450,7 +450,7 @@ namespace FlaxEditor.Gizmo
                         if (ActiveAxis == Axis.Center)
                             scaleDelta = new Vector3(scaleDelta.AvgValue);
                     }
-                    
+
                     // Apply transformation (but to the parents, not whole selection pool)
                     if (anyValid)
                     {
@@ -489,26 +489,26 @@ namespace FlaxEditor.Gizmo
             // Draw gizmo parts
             switch (_activeMode)
             {
-                case Mode.Translate:
-                {
-                    DebugDraw.DrawBox(new OrientedBoundingBox(XYBox) * _gizmoWorld, _activeAxis == Axis.XY ? AxisColorFocus : Color.Gray, 0, false);
-                    DebugDraw.DrawBox(new OrientedBoundingBox(XZBox) * _gizmoWorld, _activeAxis == Axis.ZX ? AxisColorFocus : Color.Gray, 0, false);
-                    DebugDraw.DrawBox(new OrientedBoundingBox(YZBox) * _gizmoWorld, _activeAxis == Axis.YZ ? AxisColorFocus : Color.Gray, 0, false);
-                    break;
-                }
-                case Mode.Rotate:
-                {
-                    DebugDraw.DrawCircle(Position, _gizmoWorld.Right, RotateRadius, _activeAxis == Axis.X ? AxisColorFocus : AxisColorX, 0, false);
-                    DebugDraw.DrawCircle(Position, _gizmoWorld.Up, RotateRadius, _activeAxis == Axis.Y ? AxisColorFocus : AxisColorY, 0, false);
-                    DebugDraw.DrawCircle(Position, _gizmoWorld.Backward, RotateRadius, _activeAxis == Axis.Z ? AxisColorFocus : AxisColorZ, 0, false);
-                    DebugDraw.DrawSphere(CenterSphere, _activeAxis == Axis.Center ? AxisColorFocus : Color.Gray, 0, false);
-                    break;
-                }
-                case Mode.Scale:
-                {
-                    DebugDraw.DrawBox(CenterBox, _activeAxis == Axis.Center ? AxisColorFocus : Color.Gray, 0, false);
-                    break;
-                }
+            case Mode.Translate:
+            {
+                DebugDraw.DrawBox(new OrientedBoundingBox(XYBox) * _gizmoWorld, _activeAxis == Axis.XY ? AxisColorFocus : Color.Gray, 0, false);
+                DebugDraw.DrawBox(new OrientedBoundingBox(XZBox) * _gizmoWorld, _activeAxis == Axis.ZX ? AxisColorFocus : Color.Gray, 0, false);
+                DebugDraw.DrawBox(new OrientedBoundingBox(YZBox) * _gizmoWorld, _activeAxis == Axis.YZ ? AxisColorFocus : Color.Gray, 0, false);
+                break;
+            }
+            case Mode.Rotate:
+            {
+                DebugDraw.DrawCircle(Position, _gizmoWorld.Right, RotateRadius, _activeAxis == Axis.X ? AxisColorFocus : AxisColorX, 0, false);
+                DebugDraw.DrawCircle(Position, _gizmoWorld.Up, RotateRadius, _activeAxis == Axis.Y ? AxisColorFocus : AxisColorY, 0, false);
+                DebugDraw.DrawCircle(Position, _gizmoWorld.Backward, RotateRadius, _activeAxis == Axis.Z ? AxisColorFocus : AxisColorZ, 0, false);
+                DebugDraw.DrawSphere(CenterSphere, _activeAxis == Axis.Center ? AxisColorFocus : Color.Gray, 0, false);
+                break;
+            }
+            case Mode.Scale:
+            {
+                DebugDraw.DrawBox(CenterBox, _activeAxis == Axis.Center ? AxisColorFocus : Color.Gray, 0, false);
+                break;
+            }
             }
         }
     }

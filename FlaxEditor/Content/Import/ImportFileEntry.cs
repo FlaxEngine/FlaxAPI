@@ -90,8 +90,8 @@ namespace FlaxEditor.Content.Import
             // Get extension (without a dot)
             var extension = Path.GetExtension(url);
             if (string.IsNullOrEmpty(extension))
-				return new FolderImportEntry(url, resultUrl);
-			if (extension[0] == '.')
+                return new FolderImportEntry(url, resultUrl);
+            if (extension[0] == '.')
                 extension = extension.Remove(0, 1);
             extension = extension.ToLower();
 
@@ -144,23 +144,23 @@ namespace FlaxEditor.Content.Import
             FileTypes["lws"] = ImportModel;
             FileTypes["lxo"] = ImportModel;
 
-			// Audio
-	        FileTypes["wav"] = ImportAudio;
-	        FileTypes["mp3"] = ImportAudio;
-	        FileTypes["ogg"] = ImportAudio;
-		}
+            // Audio
+            FileTypes["wav"] = ImportAudio;
+            FileTypes["mp3"] = ImportAudio;
+            FileTypes["ogg"] = ImportAudio;
+        }
 
         private static ImportFileEntry ImportModel(string url, string resultUrl)
         {
             return new ModelImportEntry(url, resultUrl);
         }
 
-	    private static ImportFileEntry ImportAudio(string url, string resultUrl)
-	    {
-		    return new AudioImportEntry(url, resultUrl);
-	    }
+        private static ImportFileEntry ImportAudio(string url, string resultUrl)
+        {
+            return new AudioImportEntry(url, resultUrl);
+        }
 
-		private static ImportFileEntry ImportTexture(string url, string resultUrl)
+        private static ImportFileEntry ImportTexture(string url, string resultUrl)
         {
             return new TextureImportEntry(url, resultUrl);
         }

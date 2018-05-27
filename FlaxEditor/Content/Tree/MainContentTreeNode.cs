@@ -19,7 +19,7 @@ namespace FlaxEditor.Content
         /// <param name="type">The folder type.</param>
         /// <param name="path">The folder path.</param>
         public MainContentTreeNode(ContentFolderType type, string path)
-            : base(type, path)
+        : base(type, path)
         {
             _watcher = new FileSystemWatcher(path)
             {

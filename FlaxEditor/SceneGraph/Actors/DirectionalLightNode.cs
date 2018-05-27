@@ -12,7 +12,7 @@ namespace FlaxEditor.SceneGraph.Actors
     {
         /// <inheritdoc />
         public DirectionalLightNode(Actor actor)
-            : base(actor)
+        : base(actor)
         {
         }
     }

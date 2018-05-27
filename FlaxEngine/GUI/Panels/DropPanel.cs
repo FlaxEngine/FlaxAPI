@@ -10,9 +10,9 @@ namespace FlaxEngine.GUI
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class DropPanel : ContainerControl
     {
-	    protected float _headerHeight = 14.0f;
-	    protected Margin _headerMargin = new Margin(2.0f);
-		protected bool _isClosed;
+        protected float _headerHeight = 14.0f;
+        protected Margin _headerMargin = new Margin(2.0f);
+        protected bool _isClosed;
         protected bool _mouseOverHeader;
         protected bool _mouseDown;
         protected float _animationProgress = 1.0f;
@@ -81,7 +81,7 @@ namespace FlaxEngine.GUI
         ///   <c>true</c> if enable drop down icon drawing; otherwise, <c>false</c>.
         /// </value>
         public bool EnableDropDownIcon { get; set; }
-        
+
         /// <summary>
         /// Occurs when drop panel is opened or closed.
         /// </summary>
@@ -94,7 +94,7 @@ namespace FlaxEngine.GUI
         ///   <c>true</c> if this panel is closed; otherwise, <c>false</c>.
         /// </value>
         public bool IsClosed => _isClosed;
-		
+
         /// <summary>
         /// Gets the header rectangle.
         /// </summary>
@@ -105,7 +105,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="text">The header text.</param>
         public DropPanel(string text)
-            : base(0, 0, 64, 16.0f)
+        : base(0, 0, 64, 16.0f)
         {
             _performChildrenLayoutFirst = true;
             CanFocus = false;
@@ -175,7 +175,7 @@ namespace FlaxEngine.GUI
             else
                 Close();
         }
-        
+
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
@@ -215,7 +215,7 @@ namespace FlaxEngine.GUI
             var color = _mouseOverHeader ? HeaderColorMouseOver : HeaderColor;
             if (color.A > 0)
                 Render2D.FillRectangle(new Rectangle(0, 0, Width, HeaderHeight), color);
-            
+
             // Drop down icon
             float textLeft = 0;
             if (EnableDropDownIcon)
@@ -226,9 +226,9 @@ namespace FlaxEngine.GUI
             }
 
             // Text
-	        var textRect = new Rectangle(textLeft, 0, Width - textLeft, HeaderHeight);
-	        _headerMargin.ShrinkRectangle(ref textRect);
-			Render2D.DrawText(style.FontMedium, HeaderText, textRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
+            var textRect = new Rectangle(textLeft, 0, Width - textLeft, HeaderHeight);
+            _headerMargin.ShrinkRectangle(ref textRect);
+            Render2D.DrawText(style.FontMedium, HeaderText, textRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
 
             // Draw child controls that are not arranged (pined to the header, etc.)
             for (int i = 0; i < _children.Count; i++)
@@ -292,7 +292,7 @@ namespace FlaxEngine.GUI
         {
             if (base.OnMouseUp(location, buttons))
                 return true;
-            
+
             _mouseOverHeader = HeaderRectangle.Contains(location);
 
             if (buttons == MouseButton.Left && _mouseDown)

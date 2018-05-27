@@ -39,17 +39,17 @@ namespace FlaxEngine
         [Limit(0)]
         public float Velocity;
 
-		/// <summary>
-		/// Maximum torque the drive is allowed to apply.
-		/// </summary>
-		[Limit(0)]
-		public float ForceLimit;
+        /// <summary>
+        /// Maximum torque the drive is allowed to apply.
+        /// </summary>
+        [Limit(0)]
+        public float ForceLimit;
 
-		/// <summary>
-		/// Scales the velocity of the first body, and its response to drive torque is scaled down.
-		/// </summary>
-		[Limit(0)]
-		public float GearRatio;
+        /// <summary>
+        /// Scales the velocity of the first body, and its response to drive torque is scaled down.
+        /// </summary>
+        [Limit(0)]
+        public float GearRatio;
 
         /// <summary>
         /// If the joint is moving faster than the drive's target speed, the drive will try to break.

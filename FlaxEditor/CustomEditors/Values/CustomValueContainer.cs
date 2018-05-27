@@ -36,9 +36,9 @@ namespace FlaxEditor.CustomEditors
         /// <param name="getter">The value getter.</param>
         /// <param name="setter">The value setter.</param>
         public CustomValueContainer(Type valueType, GetDelegate getter, SetDelegate setter)
-            : base(null, valueType)
+        : base(null, valueType)
         {
-            if(getter == null || setter == null)
+            if (getter == null || setter == null)
                 throw new ArgumentNullException();
 
             _getter = getter;
@@ -53,7 +53,7 @@ namespace FlaxEditor.CustomEditors
         /// <param name="getter">The value getter.</param>
         /// <param name="setter">The value setter.</param>
         public CustomValueContainer(Type valueType, object initialValue, GetDelegate getter, SetDelegate setter)
-            : this(valueType, getter, setter)
+        : this(valueType, getter, setter)
         {
             Add(initialValue);
         }
@@ -76,7 +76,7 @@ namespace FlaxEditor.CustomEditors
         {
             if (instanceValues == null || instanceValues.Count != Count)
                 throw new ArgumentException();
-            
+
             for (int i = 0; i < Count; i++)
             {
                 var v = instanceValues[i];
@@ -90,7 +90,7 @@ namespace FlaxEditor.CustomEditors
         {
             if (instanceValues == null || instanceValues.Count != Count)
                 throw new ArgumentException();
-            
+
             for (int i = 0; i < Count; i++)
             {
                 var v = instanceValues[i];

@@ -33,7 +33,7 @@ namespace FlaxEngine.GUI
         /// The right edge
         /// </summary>
         Right = 4,
-        
+
         /// <summary>
         /// The whole area.
         /// </summary>
@@ -110,7 +110,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         Right,
     }
-    
+
     /// <summary>
     /// Specifies which scroll bars will be visible on a control
     /// </summary>

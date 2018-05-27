@@ -46,10 +46,10 @@ namespace FlaxEngine.Rendering
             public StaticFlags Flags;
             public int LodIndex;
             public int MeshIndex;
-			public bool ReceiveDecals;
-	        public byte Padding0;
-	        public short Padding1;
-			public IntPtr AssetModel;
+            public bool ReceiveDecals;
+            public byte Padding0;
+            public short Padding1;
+            public IntPtr AssetModel;
             public IntPtr AssetMaterialBase;
             public Matrix World;
         }

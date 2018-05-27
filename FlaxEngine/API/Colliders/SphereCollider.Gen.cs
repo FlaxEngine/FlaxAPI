@@ -7,62 +7,64 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// A sphere-shaped primitive collider.
-	/// </summary>
-	[Serializable]
-	public sealed partial class SphereCollider : Collider
-	{
-		/// <summary>
-		/// Creates new <see cref="SphereCollider"/> object.
-		/// </summary>
-		private SphereCollider() : base()
-		{
-		}
+    /// <summary>
+    /// A sphere-shaped primitive collider.
+    /// </summary>
+    [Serializable]
+    public sealed partial class SphereCollider : Collider
+    {
+        /// <summary>
+        /// Creates new <see cref="SphereCollider"/> object.
+        /// </summary>
+        private SphereCollider() : base()
+        {
+        }
 
-		/// <summary>
-		/// Creates new instance of <see cref="SphereCollider"/> object.
-		/// </summary>
-		/// <returns>Created object.</returns>
+        /// <summary>
+        /// Creates new instance of <see cref="SphereCollider"/> object.
+        /// </summary>
+        /// <returns>Created object.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static SphereCollider New() 
-		{
+        [UnmanagedCall]
+        public static SphereCollider New()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Create(typeof(SphereCollider)) as SphereCollider;
+            return Internal_Create(typeof(SphereCollider)) as SphereCollider;
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the radius of the sphere, measured in the object's local space.
-		/// </summary>
-		/// <remarks>
-		/// The sphere radius will be scaled by the actor's world scale.
-		/// </remarks>
-		[UnmanagedCall]
-		[EditorOrder(100), EditorDisplay("Collider"), Tooltip("Radius of the sphere, measured in the object's local space")]
-		public float Radius
-		{
+        /// <summary>
+        /// Gets or sets the radius of the sphere, measured in the object's local space.
+        /// </summary>
+        /// <remarks>
+        /// The sphere radius will be scaled by the actor's world scale.
+        /// </remarks>
+        [UnmanagedCall]
+        [EditorOrder(100), EditorDisplay("Collider"), Tooltip("Radius of the sphere, measured in the object's local space")]
+        public float Radius
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetRadius(unmanagedPtr); }
-			set { Internal_SetRadius(unmanagedPtr, value); }
+            get { return Internal_GetRadius(unmanagedPtr); }
+            set { Internal_SetRadius(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetRadius(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetRadius(IntPtr obj, float val);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetRadius(IntPtr obj);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetRadius(IntPtr obj, float val);
+#endif
+
+        #endregion
+    }
+}

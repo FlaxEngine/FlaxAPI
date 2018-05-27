@@ -17,7 +17,7 @@ namespace FlaxEditor.States
         public override bool IsEditorReady => false;
 
         internal ClosingState(Editor editor)
-            : base(editor)
+        : base(editor)
         {
         }
 

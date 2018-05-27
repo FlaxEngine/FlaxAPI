@@ -67,7 +67,6 @@ namespace FlaxEngine.GUI
                 value = Mathf.Clamp01(value);
                 if (!Mathf.NearEqual(_splitterValue, value))
                 {
-
                     // Set new value
                     _splitterValue = value;
 
@@ -132,7 +131,7 @@ namespace FlaxEngine.GUI
                 EndMouseCapture();
             }
         }
-        
+
         /// <inheritdoc />
         public override void Draw()
         {

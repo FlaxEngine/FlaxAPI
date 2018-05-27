@@ -183,7 +183,7 @@ namespace FlaxEditor.CustomEditors.GUI
             UpdateSplitRect();
             PerformLayout();
         }
-        
+
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {

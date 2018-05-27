@@ -18,7 +18,7 @@ namespace FlaxEditor.Content
         /// <param name="id">The identifier.</param>
         /// <param name="typeName">Name of the resource type.</param>
         public JsonAssetItem(string path, Guid id, string typeName)
-            : base(path, typeName, ref id)
+        : base(path, typeName, ref id)
         {
         }
 

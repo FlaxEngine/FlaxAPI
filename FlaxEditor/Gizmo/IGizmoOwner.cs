@@ -59,7 +59,7 @@ namespace FlaxEditor.Gizmo
         /// Gets a value indicating whether duplicate objects during gizmo operation (eg. when tranforming).
         /// </summary>
         bool UseDuplicate { get; }
-		
+
         /// <summary>
         /// Gets a <see cref="FlaxEditor.Undo"/> object used by the gizmo owner.
         /// </summary>

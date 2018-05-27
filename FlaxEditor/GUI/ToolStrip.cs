@@ -12,20 +12,20 @@ namespace FlaxEditor.GUI
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class ToolStrip : ContainerControl
     {
-		/// <summary>
-		/// The default margin vertically.
-		/// </summary>
-		public const int DefaultMarginV = 1;
+        /// <summary>
+        /// The default margin vertically.
+        /// </summary>
+        public const int DefaultMarginV = 1;
 
-		/// <summary>
-		/// The default margin horizontally.
-		/// </summary>
-		public const int DefaultMarginH = 2;
+        /// <summary>
+        /// The default margin horizontally.
+        /// </summary>
+        public const int DefaultMarginH = 2;
 
-		/// <summary>
-		/// The default height.
-		/// </summary>
-		public const int DefaultHeight = 34;
+        /// <summary>
+        /// The default height.
+        /// </summary>
+        public const int DefaultHeight = 34;
 
         /// <summary>
         /// Event fired when button gets clicked.
@@ -65,75 +65,75 @@ namespace FlaxEditor.GUI
             }
         }
 
-	    /// <summary>
-	    /// Gets the height for the items.
-	    /// </summary>
-	    public float ItemsHeight => Height - 2 * DefaultMarginV;
+        /// <summary>
+        /// Gets the height for the items.
+        /// </summary>
+        public float ItemsHeight => Height - 2 * DefaultMarginV;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ToolStrip"/> class.
         /// </summary>
         /// <param name="height">The height.</param>
         public ToolStrip(float height = DefaultHeight)
-            : base(0, 0, 100, height)
+        : base(0, 0, 100, height)
         {
             CanFocus = false;
             DockStyle = DockStyle.Top;
         }
 
-		/// <summary>
-		/// Adds the button.
-		/// </summary>
-		/// <param name="sprite">The icon sprite.</param>
-		/// <param name="onClick">The custom action to call on button clicked.</param>
-		/// <returns>The button.</returns>
-		public ToolStripButton AddButton(Sprite sprite, Action onClick = null)
+        /// <summary>
+        /// Adds the button.
+        /// </summary>
+        /// <param name="sprite">The icon sprite.</param>
+        /// <param name="onClick">The custom action to call on button clicked.</param>
+        /// <returns>The button.</returns>
+        public ToolStripButton AddButton(Sprite sprite, Action onClick = null)
         {
-	        var button = new ToolStripButton(ItemsHeight, ref sprite)
-	        {
-		        Parent = this,
-	        };
-	        if (onClick != null)
-		        button.Clicked += onClick;
-	        return button;
-		}
+            var button = new ToolStripButton(ItemsHeight, ref sprite)
+            {
+                Parent = this,
+            };
+            if (onClick != null)
+                button.Clicked += onClick;
+            return button;
+        }
 
-	    /// <summary>
-	    /// Adds the button.
-	    /// </summary>
-	    /// <param name="sprite">The icon sprite.</param>
-	    /// <param name="text">The text.</param>
-	    /// <param name="onClick">The custom action to call on button clicked.</param>
-	    /// <returns>The button.</returns>
-	    public ToolStripButton AddButton(Sprite sprite, string text, Action onClick = null)
-	    {
-		    var button = new ToolStripButton(ItemsHeight, ref sprite)
-		    {
-				Name = text,
-			    Parent = this,
-		    };
-		    if (onClick != null)
-			    button.Clicked += onClick;
-		    return button;
-	    }
-
-		/// <summary>
-		/// Adds the button.
-		/// </summary>
-		/// <param name="text">The text.</param>
-		/// <param name="onClick">The custom action to call on button clicked.</param>
-		/// <returns>The button.</returns>
-		public ToolStripButton AddButton(string text, Action onClick = null)
+        /// <summary>
+        /// Adds the button.
+        /// </summary>
+        /// <param name="sprite">The icon sprite.</param>
+        /// <param name="text">The text.</param>
+        /// <param name="onClick">The custom action to call on button clicked.</param>
+        /// <returns>The button.</returns>
+        public ToolStripButton AddButton(Sprite sprite, string text, Action onClick = null)
         {
-	        var button = new ToolStripButton(ItemsHeight, ref Sprite.Invalid)
-	        {
-		        Name = text,
-		        Parent = this,
-	        };
-	        if (onClick != null)
-		        button.Clicked += onClick;
-	        return button;
-		}
+            var button = new ToolStripButton(ItemsHeight, ref sprite)
+            {
+                Name = text,
+                Parent = this,
+            };
+            if (onClick != null)
+                button.Clicked += onClick;
+            return button;
+        }
+
+        /// <summary>
+        /// Adds the button.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="onClick">The custom action to call on button clicked.</param>
+        /// <returns>The button.</returns>
+        public ToolStripButton AddButton(string text, Action onClick = null)
+        {
+            var button = new ToolStripButton(ItemsHeight, ref Sprite.Invalid)
+            {
+                Name = text,
+                Parent = this,
+            };
+            if (onClick != null)
+                button.Clicked += onClick;
+            return button;
+        }
 
         /// <summary>
         /// Adds the separator.

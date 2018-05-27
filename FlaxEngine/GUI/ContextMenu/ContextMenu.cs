@@ -25,7 +25,7 @@ namespace FlaxEngine.GUI
             /// </summary>
             /// <param name="menu">The menu.</param>
             public ItemsPanel(ContextMenu menu)
-                : base(ScrollBars.Vertical)
+            : base(ScrollBars.Vertical)
             {
                 _menu = menu;
             }
@@ -66,7 +66,7 @@ namespace FlaxEngine.GUI
         /// The items panel.
         /// </summary>
         protected ItemsPanel _panel;
-		
+
         /// <summary>
         /// Gets or sets the items area margin (items container area margin).
         /// </summary>
@@ -108,20 +108,20 @@ namespace FlaxEngine.GUI
         /// </summary>
         public IEnumerable<ContextMenuItem> Items => _panel.Children.OfType<ContextMenuItem>();
 
-	    /// <summary>
-	    /// Event fired when user clicks on the button.
-	    /// </summary>
-	    public event Action<ContextMenuButton> ButtonClicked;
+        /// <summary>
+        /// Event fired when user clicks on the button.
+        /// </summary>
+        public event Action<ContextMenuButton> ButtonClicked;
 
-		/// <summary>
-		/// Gets the context menu items container control.
-		/// </summary>
-		public ContainerControl ItemsContainer => _panel;
+        /// <summary>
+        /// Gets the context menu items container control.
+        /// </summary>
+        public ContainerControl ItemsContainer => _panel;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ContextMenu"/> class.
-		/// </summary>
-		public ContextMenu()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContextMenu"/> class.
+        /// </summary>
+        public ContextMenu()
         {
             MinimumWidth = 10;
             MaximumItemsInViewCount = 20;
@@ -198,45 +198,45 @@ namespace FlaxEngine.GUI
             return item;
         }
 
-		/// <summary>
-		/// Gets the child menu (with that name).
-		/// </summary>
-		/// <param name="text">The text.</param>
-		/// <returns>Created context menu item control or null if missing.</returns>
-		public ContextMenuChildMenu GettChildMenu(string text)
-		{
-			for (int i = 0; i < _panel.ChildrenCount; i++)
-			{
-				if (_panel.Children[i] is ContextMenuChildMenu menu && menu.Text == text)
-					return menu;
-			}
+        /// <summary>
+        /// Gets the child menu (with that name).
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns>Created context menu item control or null if missing.</returns>
+        public ContextMenuChildMenu GettChildMenu(string text)
+        {
+            for (int i = 0; i < _panel.ChildrenCount; i++)
+            {
+                if (_panel.Children[i] is ContextMenuChildMenu menu && menu.Text == text)
+                    return menu;
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-	    /// <summary>
-	    /// Adds the child menu or gets it if already created (with that name).
-	    /// </summary>
-	    /// <param name="text">The text.</param>
-	    /// <returns>Created context menu item control.</returns>
-	    public ContextMenuChildMenu GetOrAddChildMenu(string text)
-	    {
-		    var item = GettChildMenu(text);
-		    if (item == null)
-		    {
-			    item = new ContextMenuChildMenu(this, text);
-			    item.Parent = _panel;
-		    }
+        /// <summary>
+        /// Adds the child menu or gets it if already created (with that name).
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns>Created context menu item control.</returns>
+        public ContextMenuChildMenu GetOrAddChildMenu(string text)
+        {
+            var item = GettChildMenu(text);
+            if (item == null)
+            {
+                item = new ContextMenuChildMenu(this, text);
+                item.Parent = _panel;
+            }
 
-		    return item;
-	    }
+            return item;
+        }
 
-	    /// <summary>
-		/// Adds the child menu.
-		/// </summary>
-		/// <param name="text">The text.</param>
-		/// <returns>Created context menu item control.</returns>
-		public ContextMenuChildMenu AddChildMenu(string text)
+        /// <summary>
+        /// Adds the child menu.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns>Created context menu item control.</returns>
+        public ContextMenuChildMenu AddChildMenu(string text)
         {
             var item = new ContextMenuChildMenu(this, text);
             item.Parent = _panel;
@@ -254,17 +254,17 @@ namespace FlaxEngine.GUI
             return item;
         }
 
-		/// <summary>
-		/// Called when button get clicked.
-		/// </summary>
-		/// <param name="button">The button.</param>
-		public virtual void OnButtonClicked(ContextMenuButton button)
-	    {
-			ButtonClicked?.Invoke(button);
-	    }
+        /// <summary>
+        /// Called when button get clicked.
+        /// </summary>
+        /// <param name="button">The button.</param>
+        public virtual void OnButtonClicked(ContextMenuButton button)
+        {
+            ButtonClicked?.Invoke(button);
+        }
 
-		/// <inheritdoc />
-		public override bool ContainsPoint(ref Vector2 location)
+        /// <inheritdoc />
+        public override bool ContainsPoint(ref Vector2 location)
         {
             if (base.ContainsPoint(ref location))
                 return true;
@@ -283,7 +283,7 @@ namespace FlaxEngine.GUI
         protected override void PerformLayoutSelf()
         {
             var prevSize = Size;
-            
+
             // Calculate size of the context menu (items only)
             float maxWidth = 0;
             float height = _itemsAreaMargin.Height;

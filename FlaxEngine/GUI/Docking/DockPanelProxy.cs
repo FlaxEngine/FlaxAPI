@@ -24,7 +24,7 @@ namespace FlaxEngine.GUI.Docking
         /// </summary>
         /// <param name="panel">The panel.</param>
         internal DockPanelProxy(DockPanel panel)
-            : base(0, 0, 64, 64)
+        : base(0, 0, 64, 64)
         {
             CanFocus = false;
 
@@ -287,7 +287,7 @@ namespace FlaxEngine.GUI.Docking
                     tab.Close(ClosingReason.User);
                 MouseDownWindow = null;
             }
-            
+
             return base.OnMouseUp(location, buttons);
         }
 

@@ -15,7 +15,7 @@ namespace FlaxEditor.Modules
     public sealed class ContentEditingModule : EditorModule
     {
         internal ContentEditingModule(Editor editor)
-            : base(editor)
+        : base(editor)
         {
         }
 
@@ -60,21 +60,21 @@ namespace FlaxEditor.Modules
             {
                 // Check if there is a floating window that has the same size
                 Vector2 defaultSize = window.DefaultSize;
-	            for (var i = 0; i < Editor.UI.MasterPanel.FloatingPanels.Count; i++)
-	            {
-		            var win = Editor.UI.MasterPanel.FloatingPanels[i];
+                for (var i = 0; i < Editor.UI.MasterPanel.FloatingPanels.Count; i++)
+                {
+                    var win = Editor.UI.MasterPanel.FloatingPanels[i];
 
-		            // Check if size is similar
-		            if (Vector2.Abs(win.Size - defaultSize).LengthSquared < 100)
-		            {
-			            // Dock
-			            window.Show(DockState.DockFill, win);
-			            window.Focus();
-			            return window;
-		            }
-	            }
+                    // Check if size is similar
+                    if (Vector2.Abs(win.Size - defaultSize).LengthSquared < 100)
+                    {
+                        // Dock
+                        window.Show(DockState.DockFill, win);
+                        window.Focus();
+                        return window;
+                    }
+                }
 
-	            // Show floating
+                // Show floating
                 window.ShowFloating(defaultSize);
             }
 
@@ -112,7 +112,47 @@ namespace FlaxEditor.Modules
                 }
 
                 // Find invalid characters
-                char[] illegalChars = { '?', '\\', '/', '\"', '<', '>', '|', '\u0001', '\u0002', '\u0003', '\u0004', '\u0005', '\u0006', '\a', '\b', '\t', '\n', '\v', '\f', '\r', '\u000E', '\u000F', '\u0010', '\u0011', '\u0012', '\u0013', '\u0014', '\u0015', '\u0016', '\u0017', '\u0018', '\u0019', '\u001A', '\u001B', '\u001C', '\u001D', '\u001E', '\u001F' };
+                char[] illegalChars =
+                {
+                    '?',
+                    '\\',
+                    '/',
+                    '\"',
+                    '<',
+                    '>',
+                    '|',
+                    '\u0001',
+                    '\u0002',
+                    '\u0003',
+                    '\u0004',
+                    '\u0005',
+                    '\u0006',
+                    '\a',
+                    '\b',
+                    '\t',
+                    '\n',
+                    '\v',
+                    '\f',
+                    '\r',
+                    '\u000E',
+                    '\u000F',
+                    '\u0010',
+                    '\u0011',
+                    '\u0012',
+                    '\u0013',
+                    '\u0014',
+                    '\u0015',
+                    '\u0016',
+                    '\u0017',
+                    '\u0018',
+                    '\u0019',
+                    '\u001A',
+                    '\u001B',
+                    '\u001C',
+                    '\u001D',
+                    '\u001E',
+                    '\u001F'
+                };
                 if (shortName.IndexOfAny(illegalChars) != -1)
                 {
                     hint = "Name contains invalid character.";
@@ -148,7 +188,7 @@ namespace FlaxEditor.Modules
             hint = string.Empty;
             return true;
         }
-        
+
         /// <summary>
         /// Clones the asset to the temporary folder.
         /// </summary>
@@ -160,7 +200,7 @@ namespace FlaxEditor.Modules
             var extension = System.IO.Path.GetExtension(item.Path);
             var id = Guid.NewGuid();
             resultPath = StringUtils.CombinePaths(Globals.TemporaryFolder, id.ToString("N")) + extension;
-            
+
             if (CloneAssetFile(resultPath, item.Path, id))
                 return true;
 

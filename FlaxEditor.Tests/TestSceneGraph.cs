@@ -16,7 +16,7 @@ namespace FlaxEditor.Tests
             private string _name;
 
             public MyNode(string name)
-                : base(Guid.NewGuid())
+            : base(Guid.NewGuid())
             {
                 _name = name;
             }
@@ -39,21 +39,21 @@ namespace FlaxEditor.Tests
             public override bool IsActiveInHierarchy => true;
             public override int OrderInParent { get; set; }
         }
-        
+
         private MyNode GetTestTree()
         {
             var root = new MyNode("Root")
             {
-                LinkChildren = new []
+                LinkChildren = new[]
                 {
                     new MyNode("Level1_0")
                     {
-                        LinkChildren = new []
+                        LinkChildren = new[]
                         {
                             new MyNode("Level2_0"),
                             new MyNode("Level2_1")
                             {
-                                LinkChildren = new []
+                                LinkChildren = new[]
                                 {
                                     new MyNode("Level3_0"),
                                     new MyNode("Level3_1"),

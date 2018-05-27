@@ -7,37 +7,38 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Contains IES profile texture used by the lights to simulate real life bulb light emission.
-	/// </summary>
-	public partial class IESProfile : TextureBase
-	{
-		/// <summary>
-		/// Creates new <see cref="IESProfile"/> object.
-		/// </summary>
-		private IESProfile() : base()
-		{
-		}
+    /// <summary>
+    /// Contains IES profile texture used by the lights to simulate real life bulb light emission.
+    /// </summary>
+    public partial class IESProfile : TextureBase
+    {
+        /// <summary>
+        /// Creates new <see cref="IESProfile"/> object.
+        /// </summary>
+        private IESProfile() : base()
+        {
+        }
 
-		/// <summary>
-		/// Gets the light brightness in Lumens, imported from the IES profile source file.
-		/// </summary>
-		[UnmanagedCall]
-		public float Brightness
-		{
+        /// <summary>
+        /// Gets the light brightness in Lumens, imported from the IES profile source file.
+        /// </summary>
+        [UnmanagedCall]
+        public float Brightness
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetBrightness(unmanagedPtr); }
+            get { return Internal_GetBrightness(unmanagedPtr); }
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetBrightness(IntPtr obj);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetBrightness(IntPtr obj);
 #endif
-#endregion
-	}
-}
 
+        #endregion
+    }
+}

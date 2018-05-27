@@ -82,7 +82,7 @@ namespace FlaxEditor.Windows
             public Sprite Icon;
 
             public LogEntry(DebugLogWindow window, ref LogEntryDescription desc)
-                : base(0, 0, 120, DefaultHeight)
+            : base(0, 0, 120, DefaultHeight)
             {
                 DockStyle = DockStyle.Top;
                 IsScrollable = true;
@@ -91,18 +91,18 @@ namespace FlaxEditor.Windows
                 Desc = desc;
                 switch (desc.Level)
                 {
-                    case LogType.Warning:
-                        Group = LogGroup.Warning;
-                        Icon = _window.IconWarning;
-                        break;
-                    case LogType.Log:
-                        Group = LogGroup.Info;
-                        Icon = _window.IconInfo;
-                        break;
-                    default:
-                        Group = LogGroup.Error;
-                        Icon = _window.IconError;
-                        break;
+                case LogType.Warning:
+                    Group = LogGroup.Warning;
+                    Icon = _window.IconWarning;
+                    break;
+                case LogType.Log:
+                    Group = LogGroup.Info;
+                    Icon = _window.IconInfo;
+                    break;
+                default:
+                    Group = LogGroup.Error;
+                    Icon = _window.IconError;
+                    break;
                 }
             }
 
@@ -161,7 +161,7 @@ namespace FlaxEditor.Windows
                 if (key == Keys.ArrowUp)
                 {
                     int index = IndexInParent - 1;
-                    if (index >= 1)// at 0 is scroll bar
+                    if (index >= 1) // at 0 is scroll bar
                     {
                         var target = Parent.GetChild(index);
                         target.Focus();
@@ -203,7 +203,7 @@ namespace FlaxEditor.Windows
         private readonly SplitPanel _split;
         private readonly Label _logInfo;
         private readonly Panel _entriesPanel;
-	    private LogEntry _selected;
+        private LogEntry _selected;
         private readonly int[] _logCountPerGroup = new int[(int)LogGroup.Max];
         private readonly Regex _logRegex = new Regex("at(.*) in (.*):(\\d*)");
 
@@ -211,9 +211,9 @@ namespace FlaxEditor.Windows
         private bool _hasCompilationStarted;
         private readonly List<LogEntry> _pendingEntries = new List<LogEntry>(32);
 
-	    private readonly ToolStripButton _clearOnPlayButton;
-	    private readonly ToolStripButton _pauseOnErrorButton;
-		private readonly ToolStripButton[] _groupButtons = new ToolStripButton[3];
+        private readonly ToolStripButton _clearOnPlayButton;
+        private readonly ToolStripButton _pauseOnErrorButton;
+        private readonly ToolStripButton[] _groupButtons = new ToolStripButton[3];
 
         internal Sprite IconInfo;
         internal Sprite IconWarning;
@@ -224,19 +224,19 @@ namespace FlaxEditor.Windows
         /// </summary>
         /// <param name="editor">The editor.</param>
         public DebugLogWindow(Editor editor)
-            : base(editor, true, ScrollBars.None)
+        : base(editor, true, ScrollBars.None)
         {
-	        Title = "Debug";
+            Title = "Debug";
 
             // Toolstrip
             var toolstrip = new ToolStrip(22);
             toolstrip.AddButton("Clear", Clear).LinkTooltip("Clears all log entries");
-	        _clearOnPlayButton = (ToolStripButton)toolstrip.AddButton("Clear on Play").SetAutoCheck(true).SetChecked(true).LinkTooltip("Clears all log entries on enter playmode");
-	        _pauseOnErrorButton = (ToolStripButton)toolstrip.AddButton("Pause on Error").SetAutoCheck(true).LinkTooltip("Performs auto pause on error");
+            _clearOnPlayButton = (ToolStripButton)toolstrip.AddButton("Clear on Play").SetAutoCheck(true).SetChecked(true).LinkTooltip("Clears all log entries on enter playmode");
+            _pauseOnErrorButton = (ToolStripButton)toolstrip.AddButton("Pause on Error").SetAutoCheck(true).LinkTooltip("Performs auto pause on error");
             toolstrip.AddSeparator();
-	        _groupButtons[0] = (ToolStripButton)toolstrip.AddButton(editor.UI.GetIcon("Error32"), () => UpdateLogTypeVisibility(LogGroup.Error, _groupButtons[0].Checked)).SetAutoCheck(true).SetChecked(true).LinkTooltip("Shows/hides error messages");
-	        _groupButtons[1] = (ToolStripButton)toolstrip.AddButton(editor.UI.GetIcon("Warning32"), () => UpdateLogTypeVisibility(LogGroup.Warning, _groupButtons[1].Checked)).SetAutoCheck(true).SetChecked(true).LinkTooltip("Shows/hides warning messages");
-	        _groupButtons[2] = (ToolStripButton)toolstrip.AddButton(editor.UI.GetIcon("Info32"), () => UpdateLogTypeVisibility(LogGroup.Info, _groupButtons[2].Checked)).SetAutoCheck(true).SetChecked(true).LinkTooltip("Shows/hides info messages");
+            _groupButtons[0] = (ToolStripButton)toolstrip.AddButton(editor.UI.GetIcon("Error32"), () => UpdateLogTypeVisibility(LogGroup.Error, _groupButtons[0].Checked)).SetAutoCheck(true).SetChecked(true).LinkTooltip("Shows/hides error messages");
+            _groupButtons[1] = (ToolStripButton)toolstrip.AddButton(editor.UI.GetIcon("Warning32"), () => UpdateLogTypeVisibility(LogGroup.Warning, _groupButtons[1].Checked)).SetAutoCheck(true).SetChecked(true).LinkTooltip("Shows/hides warning messages");
+            _groupButtons[2] = (ToolStripButton)toolstrip.AddButton(editor.UI.GetIcon("Info32"), () => UpdateLogTypeVisibility(LogGroup.Info, _groupButtons[2].Checked)).SetAutoCheck(true).SetChecked(true).LinkTooltip("Shows/hides info messages");
             toolstrip.Parent = this;
             UpdateCount();
 
@@ -356,7 +356,7 @@ namespace FlaxEditor.Windows
         {
             _groupButtons[group].Name = _logCountPerGroup[@group] + msg;
         }
-		
+
         private void LogHandlerOnSendLog(LogType level, string msg, Object o, string stackTrace)
         {
             LogEntryDescription desc = new LogEntryDescription
@@ -562,28 +562,28 @@ namespace FlaxEditor.Windows
             base.OnDestroy();
         }
 
-	    /// <inheritdoc />
-	    public override bool UseLayoutData => true;
+        /// <inheritdoc />
+        public override bool UseLayoutData => true;
 
-	    /// <inheritdoc />
-	    public override void OnLayoutSerialize(XmlWriter writer)
-	    {
-		    writer.WriteAttributeString("Split", _split.SplitterValue.ToString());
-	    }
+        /// <inheritdoc />
+        public override void OnLayoutSerialize(XmlWriter writer)
+        {
+            writer.WriteAttributeString("Split", _split.SplitterValue.ToString());
+        }
 
-	    /// <inheritdoc />
-	    public override void OnLayoutDeserialize(XmlElement node)
-	    {
-		    float value1;
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize(XmlElement node)
+        {
+            float value1;
 
-		    if (float.TryParse(node.GetAttribute("Split"), out value1))
-			    _split.SplitterValue = value1;
-	    }
+            if (float.TryParse(node.GetAttribute("Split"), out value1))
+                _split.SplitterValue = value1;
+        }
 
-	    /// <inheritdoc />
-	    public override void OnLayoutDeserialize()
-	    {
-		    _split.SplitterValue = 0.8f;
-	    }
-	}
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize()
+        {
+            _split.SplitterValue = 0.8f;
+        }
+    }
 }

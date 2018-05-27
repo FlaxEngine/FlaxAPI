@@ -149,7 +149,7 @@ namespace FlaxEngine
 #endif
         }
 
-#region Internal Calls
+        #region Internal Calls
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Object Internal_Create(Type type);
@@ -166,6 +166,6 @@ namespace FlaxEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ChangeID(IntPtr obj, ref Guid id);
 
-#endregion
+        #endregion
     }
 }

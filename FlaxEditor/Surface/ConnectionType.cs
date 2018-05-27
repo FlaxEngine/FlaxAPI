@@ -76,16 +76,16 @@ namespace FlaxEditor.Surface
         /// Axis aligned bounding box(two Vector3s)
         /// </summary>
         Box = 1 << 11,
-		
-	    /// <summary>
-	    /// Digital signal (secondary)
-	    /// </summary>
-	    ImpulseSecondary = 1 << 12,
 
-		/// <summary>
-		/// Bool, Int, Float
-		/// </summary>
-		Scalar = Bool | Integer | Float,
+        /// <summary>
+        /// Digital signal (secondary)
+        /// </summary>
+        ImpulseSecondary = 1 << 12,
+
+        /// <summary>
+        /// Bool, Int, Float
+        /// </summary>
+        Scalar = Bool | Integer | Float,
 
         /// <summary>
         /// Vector2, Vector3, Vector4

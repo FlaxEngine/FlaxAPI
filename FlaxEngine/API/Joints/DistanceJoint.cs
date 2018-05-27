@@ -4,7 +4,6 @@ using System;
 
 namespace FlaxEngine
 {
-
     /// <summary>
     /// Controls distance joint options.
     /// </summary>

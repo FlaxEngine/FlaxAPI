@@ -83,34 +83,34 @@ namespace FlaxEditor.Surface
             // Initialize default value in a proper way
             switch (type)
             {
-                case ParameterType.Bool:
-                    param.Value = false;
-                    break;
-                case ParameterType.Integer:
-                    param.Value = 0;
-                    break;
-                case ParameterType.Float:
-                    param.Value = 0.0f;
-                    break;
-                case ParameterType.Vector2:
-                    param.Value = Vector2.Zero;
-                    break;
-                case ParameterType.Vector3:
-                    param.Value = Vector3.Zero;
-                    break;
-                case ParameterType.Vector4:
-                    param.Value = Vector4.Zero;
-                    break;
-                case ParameterType.Color:
-                    param.Value = Color.White;
-                    break;
-                case ParameterType.CubeTexture:
-                case ParameterType.Texture:
-                case ParameterType.NormalMap:
-                case ParameterType.RenderTarget:
-                    param.Value = Guid.Empty;
-                    break;
-                default: throw new IndexOutOfRangeException();
+            case ParameterType.Bool:
+                param.Value = false;
+                break;
+            case ParameterType.Integer:
+                param.Value = 0;
+                break;
+            case ParameterType.Float:
+                param.Value = 0.0f;
+                break;
+            case ParameterType.Vector2:
+                param.Value = Vector2.Zero;
+                break;
+            case ParameterType.Vector3:
+                param.Value = Vector3.Zero;
+                break;
+            case ParameterType.Vector4:
+                param.Value = Vector4.Zero;
+                break;
+            case ParameterType.Color:
+                param.Value = Color.White;
+                break;
+            case ParameterType.CubeTexture:
+            case ParameterType.Texture:
+            case ParameterType.NormalMap:
+            case ParameterType.RenderTarget:
+                param.Value = Guid.Empty;
+                break;
+            default: throw new IndexOutOfRangeException();
             }
 
             return param;

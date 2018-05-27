@@ -30,7 +30,7 @@ namespace FlaxEditor.SceneGraph.Actors
 
             /// <inheritdoc />
             public EntryNode(ModelActorNode actor, Guid id, int index)
-                : base(actor, id, index)
+            : base(actor, id, index)
             {
             }
 
@@ -59,7 +59,7 @@ namespace FlaxEditor.SceneGraph.Actors
 
         /// <inheritdoc />
         public ModelActorNode(Actor actor)
-            : base(actor)
+        : base(actor)
         {
             var modelActor = (ModelActor)actor;
             modelActor.EntriesChanged += BuildNodes;
@@ -76,7 +76,7 @@ namespace FlaxEditor.SceneGraph.Actors
             if (entries != null)
             {
                 ChildNodes.Capacity = Mathf.Max(ChildNodes.Capacity, entries.Length);
-                
+
                 var id = ID;
                 var idBytes = id.ToByteArray();
                 for (int i = 0; i < entries.Length; i++)

@@ -2,7 +2,7 @@
 
 namespace FlaxEngine
 {
-	public sealed partial class MeshCollider
-	{
-	}
+    public sealed partial class MeshCollider
+    {
+    }
 }

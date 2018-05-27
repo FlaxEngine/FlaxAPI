@@ -19,6 +19,7 @@ namespace FlaxEngine
         /// Logs an error if tried to write to ReadOnly file
         /// </summary>
         public bool ReadOnly { get; set; }
+
         /// <summary>
         /// Preloades persistetnt data settings
         /// </summary>
@@ -27,6 +28,7 @@ namespace FlaxEngine
         /// Defines encrypting and decrypting options
         /// </summary>
         public CypherSettings CypherOptions { get; set; }
+
         /// <summary>
         /// Defines if multiple settings should be stored inside one global file
         /// </summary>
@@ -34,18 +36,22 @@ namespace FlaxEngine
         /// Requires <see cref="PersistentDataConfig"/> with below provided file name, or first used <see cref="PersistentDataConfig"/> will be used
         /// </remarks>
         public string StoreAsOneFile { get; set; }
+
         /// <summary>
         /// Defines if when loading data should be downloaded from provided address
         /// </summary>
         public string DownloadFromNetworkResource { get; set; }
+
         /// <summary>
         /// Defines automatic flush options
         /// </summary>
         public FlushSettings FlushOptions { get; set; }
+
         /// <summary>
         /// Defines commpressions options
         /// </summary>
         public CompressionSettings CompressionOptions { get; set; }
+
         /// <summary>
         /// Defines if persistatnt data file should have checksum
         /// </summary>
@@ -73,6 +79,7 @@ namespace FlaxEngine
             /// <para>Load has to be performed manualy, or data will be set to default until overwritten</para>
             /// </summary>
             Never = 0,
+
             /// <summary>
             /// PersistentData will be loaded automaticaly before scene loading is performed
             /// </summary>
@@ -80,12 +87,14 @@ namespace FlaxEngine
             /// Most usefull when scene requires some data from file. Same effect will be achieved when used <see cref="OnFirstUse"/>
             /// </remarks>
             BeforeSceneLoad = 10,
+
             /// <summary>
             /// PersistentData will be loaded automaticaly before scene loading is performed. 
             /// </summary>
             /// <remarks>Most of the scene initalization is performed, but object creation is waiting for data to be loaded</remarks>
             /// <seealso cref="BeforeSceneLoad"/>
             BeforeSceneLoadAsynchronus = 11,
+
             /// <summary>
             /// PersistentData will be loaded after scene is loaded and all objects on the scene are created and before Awake is executed
             /// <para>
@@ -96,18 +105,19 @@ namespace FlaxEngine
             /// </para>
             /// </summary>
             BeforeObjectInitialization = 20,
+
             /// <summary>
             /// PersistentData will be loaded after scene is loaded and all objects on the scene are created and before Awake is executed
             /// </summary>
             /// <remarks>Most usefull when object are initialized with persistant data but we want to include settings on first loading screen.</remarks>
             /// <seealso cref="BeforeObjectInitialization"/>
             BeforeObjectInitializationAsynchronus = 21,
+
             /// <summary>
             /// Persistent data is loaded before first Get or Save is used
             /// </summary>
             OnFirstUse = 50,
         }
-
     }
 
     /// <summary>

@@ -77,7 +77,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="supportMultiSelect">True if support multi selection for tree nodes, otherwise false.</param>
         public Tree(bool supportMultiSelect)
-            : base(0, 0, 100, 100)
+        : base(0, 0, 100, 100)
         {
             _performChildrenLayoutFirst = true;
             IsScrollable = true;
@@ -98,7 +98,7 @@ namespace FlaxEngine.GUI
         /// <param name="node">Node to select.</param>
         public void Select(TreeNode node)
         {
-            if(node == null)
+            if (node == null)
                 throw new ArgumentNullException();
 
             // Check if won't change
@@ -150,7 +150,7 @@ namespace FlaxEngine.GUI
             {
                 Selection[i].ExpandAllParents();
             }
-			
+
             // Fire event
             SelectedChanged?.Invoke(prev, Selection);
         }
@@ -169,7 +169,7 @@ namespace FlaxEngine.GUI
 
             // Update selection
             Selection.Clear();
-            
+
             // Fire event
             SelectedChanged?.Invoke(prev, Selection);
         }
@@ -198,7 +198,7 @@ namespace FlaxEngine.GUI
                 // Add
                 Selection.Add(node);
             }
-			
+
             // Fire event
             SelectedChanged?.Invoke(prev, Selection);
         }
@@ -214,7 +214,7 @@ namespace FlaxEngine.GUI
                     {
                         selection.Add(child);
                     }
-                    
+
                     var nodeArea = new Rectangle(pos, child.Size);
                     if (child.IsExpanded && range.Intersects(ref nodeArea))
                         walkSelectRangeExpandedTree(selection, child, ref range);
@@ -238,7 +238,7 @@ namespace FlaxEngine.GUI
             {
                 // Cache previous state
                 var prev = new List<TreeNode>(Selection);
-                
+
                 // Update selection
                 var selectionRect = calcNodeRangeRect(Selection[0]);
                 for (int i = 1; i < Selection.Count; i++)
@@ -259,7 +259,7 @@ namespace FlaxEngine.GUI
                 }
                 Selection.Clear();
                 walkSelectRangeExpandedTree(Selection, _children[0] as TreeNode, ref selectionRect);
-				
+
                 // Check if changed
                 if (Selection.Count != prev.Count || !Selection.SequenceEqual(prev))
                 {
@@ -368,7 +368,7 @@ namespace FlaxEngine.GUI
                             {
                                 // Select previous parent child
                                 toSelect = nodeParent.GetChild(myIndex - 1) as TreeNode;
-                                
+
                                 // Check if is valid and expanded and has any children
                                 if (toSelect != null && toSelect.IsExpanded && toSelect.HasChildren)
                                 {
@@ -463,7 +463,7 @@ namespace FlaxEngine.GUI
                     }
                 }
             }
-            
+
             base.Update(deltaTime);
         }
 
@@ -474,7 +474,7 @@ namespace FlaxEngine.GUI
             if (_supportMultiSelect)
             {
                 bool isCtrlDown = ParentWindow.GetKey(Keys.Control);
-                
+
                 // Select all expanded nodes
                 if (key == Keys.A && isCtrlDown)
                 {
@@ -494,7 +494,7 @@ namespace FlaxEngine.GUI
 
             base.OnGotFocus();
         }
-        
+
         /// <inheritdoc />
         public override void OnChildResized(Control control)
         {
@@ -502,7 +502,7 @@ namespace FlaxEngine.GUI
 
             base.OnChildResized(control);
         }
-        
+
         /// <inheritdoc />
         public override void OnParentResized(ref Vector2 oldSize)
         {

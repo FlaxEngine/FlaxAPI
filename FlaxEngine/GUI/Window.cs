@@ -132,7 +132,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="window">Native window object.</param>
         internal Window(FlaxEngine.Window window)
-            : base(0, 0, 100, 60)
+        : base(0, 0, 100, 60)
         {
             _window = window ?? throw new ArgumentNullException(nameof(window));
 
@@ -419,7 +419,7 @@ namespace FlaxEngine.GUI
                 _trackingControl.OnMouseMove(_trackingControl.PointFromWindow(location));
                 return;
             }
-            
+
             base.OnMouseMove(location);
         }
 

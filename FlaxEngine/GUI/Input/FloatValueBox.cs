@@ -75,17 +75,17 @@ namespace FlaxEngine.GUI
         /// <param name="max">The maximum value.</param>
         /// <param name="slideSpeed">The slide speed.</param>
         public FloatValueBox(float value, float x = 0, float y = 0, float width = 120, float min = float.MinValue, float max = float.MaxValue, float slideSpeed = 1)
-            : base(Mathf.Clamp(value, min, max), x, y, width, min, max, slideSpeed)
+        : base(Mathf.Clamp(value, min, max), x, y, width, min, max, slideSpeed)
         {
             UpdateText();
         }
 
-		/// <summary>
-		/// Sets the value limits.
-		/// </summary>
-		/// <param name="min">The minimum value (bottom range).</param>
-		/// <param name="max">The maximum value (upper range).</param>
-		public void SetLimits(float min, float max)
+        /// <summary>
+        /// Sets the value limits.
+        /// </summary>
+        /// <param name="min">The minimum value (bottom range).</param>
+        /// <param name="max">The maximum value (upper range).</param>
+        public void SetLimits(float min, float max)
         {
             _min = min;
             _max = Mathf.Max(_min, max);

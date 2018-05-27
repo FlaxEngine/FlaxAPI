@@ -14,7 +14,7 @@ namespace FlaxEditor.GUI.Dialogs
     public abstract class Dialog : ContainerControl
     {
         private string _title;
-        
+
         protected long _isWaitingForDialog;
         protected FlaxEngine.Window _window;
         protected DialogResult _result;
@@ -32,7 +32,7 @@ namespace FlaxEditor.GUI.Dialogs
         /// </summary>
         /// <param name="title">The title.</param>
         protected Dialog(string title)
-            : base(new Rectangle(0, 0, 300, 100))
+        : base(new Rectangle(0, 0, 300, 100))
         {
             BackgroundColor = Style.Current.Background;
             DockStyle = DockStyle.Fill;
@@ -231,7 +231,7 @@ namespace FlaxEditor.GUI.Dialogs
         protected virtual void OnShow()
         {
         }
-        
+
         /// <summary>
         /// Determines whether this dialog can be closed.
         /// </summary>

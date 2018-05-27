@@ -12,11 +12,12 @@ namespace FlaxEditor.Tests
         public class HistoryTestObject : IHistoryAction
         {
             public int Item;
+
             public HistoryTestObject(int item)
             {
                 Item = item;
             }
-            
+
             public override bool Equals(object obj)
             {
                 var historyTestObject = (HistoryTestObject)obj;

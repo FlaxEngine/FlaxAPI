@@ -8,60 +8,63 @@ using FlaxEngine.Rendering;
 
 namespace FlaxEngine.Rendering
 {
-	/// <summary>
-	/// Graphics Device is a basic GPU work manager that is responsible to manage graphics resources as well as perform scene rendering and submit frames to the user.
-	/// </summary>
-	public static partial class GraphicsDevice
-	{
-		/// <summary>
-		/// Gets the graphics device limits description.
-		/// </summary>
-		[UnmanagedCall]
-		public static DeviceLimits Limits
-		{
+    /// <summary>
+    /// Graphics Device is a basic GPU work manager that is responsible to manage graphics resources as well as perform scene rendering and submit frames to the user.
+    /// </summary>
+    public static partial class GraphicsDevice
+    {
+        /// <summary>
+        /// Gets the graphics device limits description.
+        /// </summary>
+        [UnmanagedCall]
+        public static DeviceLimits Limits
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { DeviceLimits resultAsRef; Internal_GetLimits(out resultAsRef); return resultAsRef; }
+            get { DeviceLimits resultAsRef; Internal_GetLimits(out resultAsRef); return resultAsRef; }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets the graphics device rendering backend type.
-		/// </summary>
-		[UnmanagedCall]
-		public static RendererType RendererType
-		{
+        /// <summary>
+        /// Gets the graphics device rendering backend type.
+        /// </summary>
+        [UnmanagedCall]
+        public static RendererType RendererType
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetRendererType(); }
+            get { return Internal_GetRendererType(); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets the graphics device shaders profile type.
-		/// </summary>
-		[UnmanagedCall]
-		public static ShaderProfile ShaderProfile
-		{
+        /// <summary>
+        /// Gets the graphics device shaders profile type.
+        /// </summary>
+        [UnmanagedCall]
+        public static ShaderProfile ShaderProfile
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetShaderProfile(); }
+            get { return Internal_GetShaderProfile(); }
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetLimits(out DeviceLimits resultAsRef);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern RendererType Internal_GetRendererType();
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern ShaderProfile Internal_GetShaderProfile();
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetLimits(out DeviceLimits resultAsRef);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern RendererType Internal_GetRendererType();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ShaderProfile Internal_GetShaderProfile();
+#endif
+
+        #endregion
+    }
+}

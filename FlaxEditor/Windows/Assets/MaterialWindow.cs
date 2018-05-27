@@ -11,6 +11,7 @@ using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
+
 // ReSharper disable MemberCanBePrivate.Local
 
 namespace FlaxEditor.Windows.Assets
@@ -86,7 +87,7 @@ namespace FlaxEditor.Windows.Assets
                 private enum NewParameterType
                 {
                     Bool = (int)ParameterType.Bool,
-	                Integer = (int)ParameterType.Integer,
+                    Integer = (int)ParameterType.Integer,
                     Float = (int)ParameterType.Float,
                     Vector2 = (int)ParameterType.Vector2,
                     Vector3 = (int)ParameterType.Vector3,
@@ -120,7 +121,7 @@ namespace FlaxEditor.Windows.Assets
                     }
                     _parametersHash = material._parametersHash;
                     var parameters = material.Parameters;
-                    
+
                     for (int i = 0; i < parameters.Length; i++)
                     {
                         var p = parameters[i];
@@ -133,22 +134,22 @@ namespace FlaxEditor.Windows.Assets
                         Type pType;
                         switch (p.Type)
                         {
-                            case MaterialParameterType.CubeTexture:
-                                pType = typeof(CubeTexture);
-                                pGuidType = true;
-                                break;
-                            case MaterialParameterType.Texture:
-                            case MaterialParameterType.NormalMap:
-                                pType = typeof(Texture);
-                                pGuidType = true;
-                                break;
-                            case MaterialParameterType.RenderTarget:
-                                pType = typeof(RenderTarget);
-                                pGuidType = true;
-                                break;
-                            default:
-                                pType = p.Value.GetType();
-                                break;
+                        case MaterialParameterType.CubeTexture:
+                            pType = typeof(CubeTexture);
+                            pGuidType = true;
+                            break;
+                        case MaterialParameterType.Texture:
+                        case MaterialParameterType.NormalMap:
+                            pType = typeof(Texture);
+                            pGuidType = true;
+                            break;
+                        case MaterialParameterType.RenderTarget:
+                            pType = typeof(RenderTarget);
+                            pGuidType = true;
+                            break;
+                        default:
+                            pType = p.Value.GetType();
+                            break;
                         }
 
                         var propertyValue = new CustomValueContainer(
@@ -278,7 +279,7 @@ namespace FlaxEditor.Windows.Assets
                     {
                         if (material.IsLoaded)
                         {
-                            var parameters = material.Parameters;// need to ask for params here to sync valid hash   
+                            var parameters = material.Parameters; // need to ask for params here to sync valid hash   
                             parametersHash = material._parametersHash;
                         }
                         else
@@ -313,7 +314,7 @@ namespace FlaxEditor.Windows.Assets
                 DisableDistortion = (info.Flags & MaterialFlags.TransparentDisableDistortion) != 0;
                 OpacityThreshold = info.OpacityThreshold;
                 MaskThreshold = info.MaskThreshold;
-	            DecalBlendingMode = info.DecalBlendingMode;
+                DecalBlendingMode = info.DecalBlendingMode;
                 PostFxLocation = info.PostFxLocation;
                 BlendMode = info.BlendMode;
                 Lighting = info.TransparentLighting;
@@ -363,12 +364,12 @@ namespace FlaxEditor.Windows.Assets
             }
         }
 
-	    private readonly SplitPanel _split1;
-	    private readonly SplitPanel _split2;
-		private readonly MaterialPreview _preview;
+        private readonly SplitPanel _split1;
+        private readonly SplitPanel _split2;
+        private readonly MaterialPreview _preview;
         private readonly VisjectSurface _surface;
 
-	    private readonly ToolStripButton _saveButton;
+        private readonly ToolStripButton _saveButton;
         private readonly PropertiesProxy _properties;
         private bool _isWaitingForSurfaceLoad;
         private bool _tmpMaterialIsDirty;
@@ -381,7 +382,7 @@ namespace FlaxEditor.Windows.Assets
 
         /// <inheritdoc />
         public MaterialWindow(Editor editor, AssetItem item)
-            : base(editor, item)
+        : base(editor, item)
         {
             // Split Panel 1
             _split1 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
@@ -419,13 +420,13 @@ namespace FlaxEditor.Windows.Assets
                 Enabled = false
             };
 
-	        // Toolstrip
-	        _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Save32"), Save).LinkTooltip("Save");
-	        _toolstrip.AddSeparator();
-	        _toolstrip.AddButton(editor.UI.GetIcon("PageScale32"), _surface.ShowWholeGraph).LinkTooltip("Show whole graph");
-		}
+            // Toolstrip
+            _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Save32"), Save).LinkTooltip("Save");
+            _toolstrip.AddSeparator();
+            _toolstrip.AddButton(editor.UI.GetIcon("PageScale32"), _surface.ShowWholeGraph).LinkTooltip("Show whole graph");
+        }
 
-		private void OnMaterialPropertyEdited()
+        private void OnMaterialPropertyEdited()
         {
             _surface.MarkAsEdited(!_paramValueChange);
             _paramValueChange = false;
@@ -549,13 +550,13 @@ namespace FlaxEditor.Windows.Assets
                 return;
             }
 
-			// Copy shader cache from the temporary material (will skip compilation on Reload - faster)
-			Guid dstId = _item.ID;
-			Guid srcId = _asset.ID;
-			Editor.Internal_CopyCache(ref dstId, ref srcId);
+            // Copy shader cache from the temporary material (will skip compilation on Reload - faster)
+            Guid dstId = _item.ID;
+            Guid srcId = _asset.ID;
+            Editor.Internal_CopyCache(ref dstId, ref srcId);
 
-			// Update original material so user can see changes in the scene
-			if (SaveToOriginal())
+            // Update original material so user can see changes in the scene
+            if (SaveToOriginal())
             {
                 // Error
                 return;
@@ -569,15 +570,15 @@ namespace FlaxEditor.Windows.Assets
             _item.RefreshThumbnail();
         }
 
-		/// <inheritdoc />
-		protected override void UpdateToolstrip()
-		{
-			_saveButton.Enabled = IsEdited;
+        /// <inheritdoc />
+        protected override void UpdateToolstrip()
+        {
+            _saveButton.Enabled = IsEdited;
 
-			base.UpdateToolstrip();
-		}
+            base.UpdateToolstrip();
+        }
 
-	    /// <inheritdoc />
+        /// <inheritdoc />
         protected override void UnlinkItem()
         {
             _properties.OnClean();
@@ -642,10 +643,10 @@ namespace FlaxEditor.Windows.Assets
             {
                 // Clear flag
                 _isWaitingForSurfaceLoad = false;
-                
+
                 // Init material properties and parameters proxy
                 _properties.OnLoad(this);
-                
+
                 // Load surface data from the asset
                 byte[] data = _asset.LoadSurface(true);
                 if (data == null)
@@ -655,7 +656,7 @@ namespace FlaxEditor.Windows.Assets
                     Close();
                     return;
                 }
-                
+
                 // Load surface graph
                 if (_surface.Load(data))
                 {
@@ -671,32 +672,32 @@ namespace FlaxEditor.Windows.Assets
             }
         }
 
-	    /// <inheritdoc />
-	    public override bool UseLayoutData => true;
+        /// <inheritdoc />
+        public override bool UseLayoutData => true;
 
-	    /// <inheritdoc />
-	    public override void OnLayoutSerialize(XmlWriter writer)
-	    {
-		    writer.WriteAttributeString("Split1", _split1.SplitterValue.ToString());
-		    writer.WriteAttributeString("Split2", _split2.SplitterValue.ToString());
-	    }
+        /// <inheritdoc />
+        public override void OnLayoutSerialize(XmlWriter writer)
+        {
+            writer.WriteAttributeString("Split1", _split1.SplitterValue.ToString());
+            writer.WriteAttributeString("Split2", _split2.SplitterValue.ToString());
+        }
 
-	    /// <inheritdoc />
-	    public override void OnLayoutDeserialize(XmlElement node)
-	    {
-		    float value1;
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize(XmlElement node)
+        {
+            float value1;
 
-		    if (float.TryParse(node.GetAttribute("Split1"), out value1))
-			    _split1.SplitterValue = value1;
-		    if (float.TryParse(node.GetAttribute("Split2"), out value1))
-			    _split2.SplitterValue = value1;
-	    }
+            if (float.TryParse(node.GetAttribute("Split1"), out value1))
+                _split1.SplitterValue = value1;
+            if (float.TryParse(node.GetAttribute("Split2"), out value1))
+                _split2.SplitterValue = value1;
+        }
 
-	    /// <inheritdoc />
-	    public override void OnLayoutDeserialize()
-	    {
-		    _split1.SplitterValue = 0.7f;
-		    _split2.SplitterValue = 0.4f;
-	    }
-	}
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize()
+        {
+            _split1.SplitterValue = 0.7f;
+            _split2.SplitterValue = 0.4f;
+        }
+    }
 }

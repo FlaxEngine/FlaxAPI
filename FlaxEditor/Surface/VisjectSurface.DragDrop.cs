@@ -60,95 +60,95 @@ namespace FlaxEditor.Surface
 
                 switch (Type)
                 {
-                    case SurfaceType.Material:
+                case SurfaceType.Material:
+                {
+                    for (int i = 0; i < _dragOverItems.Objects.Count; i++)
                     {
-                        for (int i = 0; i < _dragOverItems.Objects.Count; i++)
+                        var item = _dragOverItems.Objects[i];
+                        SurfaceNode node = null;
+
+                        switch (item.ItemDomain)
                         {
-                            var item = _dragOverItems.Objects[i];
-	                        SurfaceNode node = null;
-
-                            switch (item.ItemDomain)
+                        case ContentDomain.Texture:
+                        {
+                            // Check if it's a normal map
+                            bool isNormalMap = false;
+                            var obj = FlaxEngine.Content.LoadAsync<Texture>(item.ID);
+                            if (obj)
                             {
-                                case ContentDomain.Texture:
+                                Thread.Sleep(50);
+
+                                if (!obj.WaitForLoaded())
                                 {
-                                    // Check if it's a normal map
-                                    bool isNormalMap = false;
-                                    var obj = FlaxEngine.Content.LoadAsync<Texture>(item.ID);
-                                    if (obj)
-                                    {
-                                        Thread.Sleep(50);
-
-                                        if (!obj.WaitForLoaded())
-                                        {
-                                            isNormalMap = obj.IsNormalMap;
-                                        }
-                                    }
-
-                                    node = SpawnNode(5, (ushort)(isNormalMap ? 4 : 1), surfaceLocation, new object[] { item.ID });
-                                    break;
-                                }
-
-                                case ContentDomain.CubeTexture:
-                                {
-	                                node = SpawnNode(5, 3, surfaceLocation, new object[] { item.ID });
-                                    break;
-                                }
-
-                                case ContentDomain.Material:
-                                {
-	                                node = SpawnNode(8, 1, surfaceLocation, new object[] { item.ID });
-                                    break;
+                                    isNormalMap = obj.IsNormalMap;
                                 }
                             }
 
-	                        if (node != null)
-	                        {
-		                        surfaceLocation.X += node.Width + 10;
-	                        }
+                            node = SpawnNode(5, (ushort)(isNormalMap ? 4 : 1), surfaceLocation, new object[] { item.ID });
+                            break;
                         }
 
-                        break;
+                        case ContentDomain.CubeTexture:
+                        {
+                            node = SpawnNode(5, 3, surfaceLocation, new object[] { item.ID });
+                            break;
+                        }
+
+                        case ContentDomain.Material:
+                        {
+                            node = SpawnNode(8, 1, surfaceLocation, new object[] { item.ID });
+                            break;
+                        }
+                        }
+
+                        if (node != null)
+                        {
+                            surfaceLocation.X += node.Width + 10;
+                        }
                     }
-	                case SurfaceType.AnimationGraph:
-	                {
-		                for (int i = 0; i < _dragOverItems.Objects.Count; i++)
-		                {
-			                var item = _dragOverItems.Objects[i];
-			                SurfaceNode node = null;
 
-							switch (item.ItemDomain)
-			                {
-				                case ContentDomain.Animation:
-				                {
-					                node = SpawnNode(9, 2, surfaceLocation, new object[]
-					                {
-						                item.ID,
-						                1.0f,
-						                true,
-						                0.0f,
-					                });
-					                break;
-				                }
-				                case ContentDomain.SkeletonMask:
-				                {
-					                node = SpawnNode(9, 11, surfaceLocation, new object[]
-					                {
-										0.0f,
-						                item.ID,
-					                });
-									break;
-				                }
-			                }
+                    break;
+                }
+                case SurfaceType.AnimationGraph:
+                {
+                    for (int i = 0; i < _dragOverItems.Objects.Count; i++)
+                    {
+                        var item = _dragOverItems.Objects[i];
+                        SurfaceNode node = null;
 
-			                if (node != null)
-			                {
-				                surfaceLocation.X += node.Width + 10;
-			                }
-						}
+                        switch (item.ItemDomain)
+                        {
+                        case ContentDomain.Animation:
+                        {
+                            node = SpawnNode(9, 2, surfaceLocation, new object[]
+                            {
+                                item.ID,
+                                1.0f,
+                                true,
+                                0.0f,
+                            });
+                            break;
+                        }
+                        case ContentDomain.SkeletonMask:
+                        {
+                            node = SpawnNode(9, 11, surfaceLocation, new object[]
+                            {
+                                0.0f,
+                                item.ID,
+                            });
+                            break;
+                        }
+                        }
 
-						break;
-	                }
-				}
+                        if (node != null)
+                        {
+                            surfaceLocation.X += node.Width + 10;
+                        }
+                    }
+
+                    break;
+                }
+                }
             }
 
             return result;
@@ -158,25 +158,25 @@ namespace FlaxEditor.Surface
         {
             switch (Type)
             {
-                case SurfaceType.Material:
+            case SurfaceType.Material:
+            {
+                switch (assetItem.ItemDomain)
                 {
-                    switch (assetItem.ItemDomain)
-                    {
-                        case ContentDomain.Texture:
-                        case ContentDomain.CubeTexture:
-                        case ContentDomain.Material: return true;
-                    }
-                    break;
+                case ContentDomain.Texture:
+                case ContentDomain.CubeTexture:
+                case ContentDomain.Material: return true;
                 }
-	            case SurfaceType.AnimationGraph:
-	            {
-		            switch (assetItem.ItemDomain)
-		            {
-			            case ContentDomain.SkeletonMask:
-			            case ContentDomain.Animation: return true;
-		            }
-		            break;
-	            }
+                break;
+            }
+            case SurfaceType.AnimationGraph:
+            {
+                switch (assetItem.ItemDomain)
+                {
+                case ContentDomain.SkeletonMask:
+                case ContentDomain.Animation: return true;
+                }
+                break;
+            }
             }
             return false;
         }

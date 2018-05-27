@@ -45,7 +45,7 @@ namespace FlaxEngine
         {
             this.value = Pack(value.X, value.Y, value.Z, value.W);
         }
-        
+
         /// <summary>
         /// Gets or sets the raw 32 bit value used to back this vector.
         /// </summary>

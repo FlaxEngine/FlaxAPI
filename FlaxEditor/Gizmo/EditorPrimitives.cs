@@ -15,7 +15,7 @@ namespace FlaxEditor.Gizmo
         /// <inheritdoc />
         public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
         {
-			Profiler.BeginEventGPU("Editor Primitives");
+            Profiler.BeginEventGPU("Editor Primitives");
 
             // Check if use MSAA
             // TODO: add edito option to switch between msaa and non-msaa
@@ -58,7 +58,7 @@ namespace FlaxEditor.Gizmo
             RenderTarget.ReleaseTemporary(targetDepth);
             RenderTarget.ReleaseTemporary(target);
 
-	        Profiler.EndEventGPU();
-		}
+            Profiler.EndEventGPU();
+        }
     }
 }

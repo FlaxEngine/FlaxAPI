@@ -46,7 +46,7 @@ namespace FlaxEditor.Actions
         /// <inheritdoc />
         public void Do()
         {
-            if(_isInverted)
+            if (_isInverted)
                 Create();
             else
                 Delete();

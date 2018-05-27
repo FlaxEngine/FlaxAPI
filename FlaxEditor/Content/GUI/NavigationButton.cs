@@ -29,7 +29,7 @@ namespace FlaxEditor.Content.GUI
         /// <param name="y">The y position.</param>
         /// <param name="height">The height.</param>
         public NavigationButton(ContentTreeNode targetNode, float x, float y, float height)
-            : base(x, y, 2 * DefaultMargin)
+        : base(x, y, 2 * DefaultMargin)
         {
             TargetNode = targetNode;
             Height = height;
@@ -57,9 +57,9 @@ namespace FlaxEditor.Content.GUI
             // Draw text
             Render2D.DrawText(style.FontMedium, Text, textRect, style.Foreground, TextAlignment.Near, TextAlignment.Center);
         }
-		
-	    /// <inheritdoc />
-	    public override void PerformLayout(bool force = false)
+
+        /// <inheritdoc />
+        public override void PerformLayout(bool force = false)
         {
             var style = Style.Current;
 

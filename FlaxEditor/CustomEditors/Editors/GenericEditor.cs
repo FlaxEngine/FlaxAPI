@@ -96,7 +96,7 @@ namespace FlaxEditor.CustomEditors.Editors
             /// </summary>
             /// <param name="info">The reflection information.</param>
             public ItemInfo(MemberInfo info)
-                : this(info, info.GetCustomAttributes(true))
+            : this(info, info.GetCustomAttributes(true))
             {
             }
 
@@ -115,7 +115,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 CustomEditorAlias = (CustomEditorAliasAttribute)attributes.FirstOrDefault(x => x is CustomEditorAliasAttribute);
                 Space = (SpaceAttribute)attributes.FirstOrDefault(x => x is SpaceAttribute);
                 Header = (HeaderAttribute)attributes.FirstOrDefault(x => x is HeaderAttribute);
-                
+
                 if (Display?.Name != null)
                 {
                     // Use name provided by the attribute
@@ -308,7 +308,7 @@ namespace FlaxEditor.CustomEditors.Editors
                             var a = items[j];
                             var b = otherItems[k];
 
-                            if(ItemInfo.CanMerge(a, b))
+                            if (ItemInfo.CanMerge(a, b))
                             {
                                 isInvalid = false;
                                 break;

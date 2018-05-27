@@ -7,133 +7,141 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Physics joint that removes all but a single rotation degree of freedom from its two attached bodies (for example a door hinge).
-	/// </summary>
-	[Serializable]
-	public sealed partial class HingeJoint : Joint
-	{
-		/// <summary>
-		/// Creates new <see cref="HingeJoint"/> object.
-		/// </summary>
-		private HingeJoint() : base()
-		{
-		}
+    /// <summary>
+    /// Physics joint that removes all but a single rotation degree of freedom from its two attached bodies (for example a door hinge).
+    /// </summary>
+    [Serializable]
+    public sealed partial class HingeJoint : Joint
+    {
+        /// <summary>
+        /// Creates new <see cref="HingeJoint"/> object.
+        /// </summary>
+        private HingeJoint() : base()
+        {
+        }
 
-		/// <summary>
-		/// Creates new instance of <see cref="HingeJoint"/> object.
-		/// </summary>
-		/// <returns>Created object.</returns>
+        /// <summary>
+        /// Creates new instance of <see cref="HingeJoint"/> object.
+        /// </summary>
+        /// <returns>Created object.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static HingeJoint New() 
-		{
+        [UnmanagedCall]
+        public static HingeJoint New()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Create(typeof(HingeJoint)) as HingeJoint;
+            return Internal_Create(typeof(HingeJoint)) as HingeJoint;
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the joint mode flags. Controls joint behaviour.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(100), EditorDisplay("Joint"), Tooltip("The joint mode flags. Controls joint behaviour.")]
-		public HingeJointFlag Flags
-		{
+        /// <summary>
+        /// Gets or sets the joint mode flags. Controls joint behaviour.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(100), EditorDisplay("Joint"), Tooltip("The joint mode flags. Controls joint behaviour.")]
+        public HingeJointFlag Flags
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetFlags(unmanagedPtr); }
-			set { Internal_SetFlags(unmanagedPtr, value); }
+            get { return Internal_GetFlags(unmanagedPtr); }
+            set { Internal_SetFlags(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the joint limit properties.
-		/// </summary>
-		/// <remarks>
-		/// Determines the limit of the joint. Limit constrains the motion to the specified angle range. You must enable the limit flag on the joint in order for this to be recognized.
-		/// </remarks>
-		[UnmanagedCall]
-		[EditorOrder(110), EditorDisplay("Joint"), Tooltip("The joint limit properties.")]
-		public LimitAngularRange Limit
-		{
+        /// <summary>
+        /// Gets or sets the joint limit properties.
+        /// </summary>
+        /// <remarks>
+        /// Determines the limit of the joint. Limit constrains the motion to the specified angle range. You must enable the limit flag on the joint in order for this to be recognized.
+        /// </remarks>
+        [UnmanagedCall]
+        [EditorOrder(110), EditorDisplay("Joint"), Tooltip("The joint limit properties.")]
+        public LimitAngularRange Limit
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { LimitAngularRange resultAsRef; Internal_GetLimit(unmanagedPtr, out resultAsRef); return resultAsRef; }
-			set { Internal_SetLimit(unmanagedPtr, ref value); }
+            get { LimitAngularRange resultAsRef; Internal_GetLimit(unmanagedPtr, out resultAsRef); return resultAsRef; }
+            set { Internal_SetLimit(unmanagedPtr, ref value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the joint drive properties.
-		/// </summary>
-		/// <remarks>
-		/// Determines the drive properties of the joint. It drives the joint's angular velocity towards a particular value. You must enable the drive flag on the joint in order for the drive to be active.
-		/// </remarks>
-		[UnmanagedCall]
-		[EditorOrder(120), EditorDisplay("Joint"), Tooltip("The joint drive properties.")]
-		public HingeJointDrive Drive
-		{
+        /// <summary>
+        /// Gets or sets the joint drive properties.
+        /// </summary>
+        /// <remarks>
+        /// Determines the drive properties of the joint. It drives the joint's angular velocity towards a particular value. You must enable the drive flag on the joint in order for the drive to be active.
+        /// </remarks>
+        [UnmanagedCall]
+        [EditorOrder(120), EditorDisplay("Joint"), Tooltip("The joint drive properties.")]
+        public HingeJointDrive Drive
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { HingeJointDrive resultAsRef; Internal_GetDrive(unmanagedPtr, out resultAsRef); return resultAsRef; }
-			set { Internal_SetDrive(unmanagedPtr, ref value); }
+            get { HingeJointDrive resultAsRef; Internal_GetDrive(unmanagedPtr, out resultAsRef); return resultAsRef; }
+            set { Internal_SetDrive(unmanagedPtr, ref value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets the current angle of the joint (in radians, in the range (-Pi, Pi]).
-		/// </summary>
-		[UnmanagedCall]
-		public float CurrentAngle
-		{
+        /// <summary>
+        /// Gets the current angle of the joint (in radians, in the range (-Pi, Pi]).
+        /// </summary>
+        [UnmanagedCall]
+        public float CurrentAngle
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetCurrentAngle(unmanagedPtr); }
+            get { return Internal_GetCurrentAngle(unmanagedPtr); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets the current velocity of the joint.
-		/// </summary>
-		[UnmanagedCall]
-		public float CurrentVelocity
-		{
+        /// <summary>
+        /// Gets the current velocity of the joint.
+        /// </summary>
+        [UnmanagedCall]
+        public float CurrentVelocity
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetCurrentVelocity(unmanagedPtr); }
+            get { return Internal_GetCurrentVelocity(unmanagedPtr); }
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern HingeJointFlag Internal_GetFlags(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetFlags(IntPtr obj, HingeJointFlag val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetLimit(IntPtr obj, out LimitAngularRange resultAsRef);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetLimit(IntPtr obj, ref LimitAngularRange val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetDrive(IntPtr obj, out HingeJointDrive resultAsRef);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetDrive(IntPtr obj, ref HingeJointDrive val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetCurrentAngle(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetCurrentVelocity(IntPtr obj);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern HingeJointFlag Internal_GetFlags(IntPtr obj);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetFlags(IntPtr obj, HingeJointFlag val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetLimit(IntPtr obj, out LimitAngularRange resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetLimit(IntPtr obj, ref LimitAngularRange val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetDrive(IntPtr obj, out HingeJointDrive resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetDrive(IntPtr obj, ref HingeJointDrive val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetCurrentAngle(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetCurrentVelocity(IntPtr obj);
+#endif
+
+        #endregion
+    }
+}

@@ -40,7 +40,7 @@ namespace FlaxEditor.Windows.Assets
                         asset.BaseMaterial = value;
                 }
             }
-            
+
             [EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor))]
             // ReSharper disable once UnusedAutoPropertyAccessor.Local
             public MaterialInstanceWindow MaterialWinRef { get; set; }
@@ -52,10 +52,10 @@ namespace FlaxEditor.Windows.Assets
             public class ParametersEditor : CustomEditor
             {
                 private int _parametersHash;
-                
+
                 /// <inheritdoc />
                 public override DisplayStyle Style => DisplayStyle.InlineIntoParent;
-                
+
                 /// <inheritdoc />
                 public override void Initialize(LayoutElementsContainer layout)
                 {
@@ -87,19 +87,19 @@ namespace FlaxEditor.Windows.Assets
                         Type pType;
                         switch (p.Type)
                         {
-                            case MaterialParameterType.CubeTexture:
-                                pType = typeof(CubeTexture);
-                                break;
-                            case MaterialParameterType.Texture:
-                            case MaterialParameterType.NormalMap:
-                                pType = typeof(Texture);
-                                break;
-                            case MaterialParameterType.RenderTarget:
-                                pType = typeof(RenderTarget);
-                                break;
-                            default:
-                                pType = p.Value.GetType();
-                                break;
+                        case MaterialParameterType.CubeTexture:
+                            pType = typeof(CubeTexture);
+                            break;
+                        case MaterialParameterType.Texture:
+                        case MaterialParameterType.NormalMap:
+                            pType = typeof(Texture);
+                            break;
+                        case MaterialParameterType.RenderTarget:
+                            pType = typeof(RenderTarget);
+                            break;
+                        default:
+                            pType = p.Value.GetType();
+                            break;
                         }
 
                         var propertyValue = new CustomValueContainer(
@@ -123,7 +123,7 @@ namespace FlaxEditor.Windows.Assets
                         layout.Property(p.Name, propertyValue);
                     }
                 }
-                
+
                 /// <inheritdoc />
                 public override void Refresh()
                 {
@@ -134,7 +134,7 @@ namespace FlaxEditor.Windows.Assets
                     {
                         if (material.IsLoaded)
                         {
-                            var parameters = material.Parameters;// need to ask for params here to sync valid hash   
+                            var parameters = material.Parameters; // need to ask for params here to sync valid hash   
                             parametersHash = material._parametersHash;
                         }
                         else
@@ -211,9 +211,9 @@ namespace FlaxEditor.Windows.Assets
             }
         }
 
-	    private readonly SplitPanel _split;
-		private readonly MaterialPreview _preview;
-	    private readonly ToolStripButton _saveButton;
+        private readonly SplitPanel _split;
+        private readonly MaterialPreview _preview;
+        private readonly ToolStripButton _saveButton;
 
         private readonly PropertiesProxy _properties;
         private bool _isWaitingForLoad;
@@ -221,10 +221,10 @@ namespace FlaxEditor.Windows.Assets
 
         /// <inheritdoc />
         public MaterialInstanceWindow(Editor editor, AssetItem item)
-            : base(editor, item)
+        : base(editor, item)
         {
-			// Toolstrip
-	        _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Save32"), Save).LinkTooltip("Save");
+            // Toolstrip
+            _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Save32"), Save).LinkTooltip("Save");
 
             // Split Panel
             _split = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
@@ -239,7 +239,7 @@ namespace FlaxEditor.Windows.Assets
             {
                 Parent = _split.Panel1
             };
-            
+
             // Material properties editor
             var propertiesEditor = new CustomEditorPresenter(null);
             propertiesEditor.Panel.Parent = _split.Panel2;
@@ -274,7 +274,7 @@ namespace FlaxEditor.Windows.Assets
             ClearEditedFlag();
             _item.RefreshThumbnail();
         }
-		
+
         /// <inheritdoc />
         protected override void UpdateToolstrip()
         {
@@ -315,7 +315,7 @@ namespace FlaxEditor.Windows.Assets
         public override void Update(float deltaTime)
         {
             base.Update(deltaTime);
-            
+
             // Check if need to load
             if (_isWaitingForLoad && _asset.IsLoaded && (_asset.BaseMaterial == null || _asset.BaseMaterial.IsLoaded))
             {
@@ -330,28 +330,28 @@ namespace FlaxEditor.Windows.Assets
             }
         }
 
-	    /// <inheritdoc />
-	    public override bool UseLayoutData => true;
+        /// <inheritdoc />
+        public override bool UseLayoutData => true;
 
-	    /// <inheritdoc />
-	    public override void OnLayoutSerialize(XmlWriter writer)
-	    {
-		    writer.WriteAttributeString("Split", _split.SplitterValue.ToString());
-	    }
+        /// <inheritdoc />
+        public override void OnLayoutSerialize(XmlWriter writer)
+        {
+            writer.WriteAttributeString("Split", _split.SplitterValue.ToString());
+        }
 
-	    /// <inheritdoc />
-	    public override void OnLayoutDeserialize(XmlElement node)
-	    {
-		    float value1;
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize(XmlElement node)
+        {
+            float value1;
 
-		    if (float.TryParse(node.GetAttribute("Split"), out value1))
-			    _split.SplitterValue = value1;
-	    }
+            if (float.TryParse(node.GetAttribute("Split"), out value1))
+                _split.SplitterValue = value1;
+        }
 
-	    /// <inheritdoc />
-	    public override void OnLayoutDeserialize()
-	    {
-		    _split.SplitterValue = 0.7f;
-	    }
-	}
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize()
+        {
+            _split.SplitterValue = 0.7f;
+        }
+    }
 }

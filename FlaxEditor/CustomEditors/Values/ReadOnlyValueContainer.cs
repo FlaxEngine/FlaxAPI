@@ -13,7 +13,7 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         /// <param name="value">The initial value.</param>
         public ReadOnlyValueContainer(object value)
-            : base(null, typeof(object))
+        : base(null, typeof(object))
         {
             Add(value);
         }

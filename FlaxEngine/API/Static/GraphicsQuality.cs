@@ -23,7 +23,7 @@ namespace FlaxEngine.Rendering
             get { return (Quality)Internal_GetValue(6); }
             set { Internal_SetValue(6, (int)value); }
         }
-        
+
         /// <summary>
         /// Screen Space Reflections quality.
         /// </summary>
@@ -42,19 +42,19 @@ namespace FlaxEngine.Rendering
             set { Internal_SetValue(2, (int)value); }
         }
 
-	    /// <summary>
-	    /// Volumetric Fog quality setting.
-	    /// </summary>
-	    public static Quality VolumetricFogQuality
-	    {
-		    get { return (Quality)Internal_GetValue(7); }
-		    set { Internal_SetValue(7, (int)value); }
-	    }
+        /// <summary>
+        /// Volumetric Fog quality setting.
+        /// </summary>
+        public static Quality VolumetricFogQuality
+        {
+            get { return (Quality)Internal_GetValue(7); }
+            set { Internal_SetValue(7, (int)value); }
+        }
 
-	    /// <summary>
-		/// The shadows quality.
-		/// </summary>
-		public static Quality ShadowsQuality
+        /// <summary>
+        /// The shadows quality.
+        /// </summary>
+        public static Quality ShadowsQuality
         {
             get { return (Quality)Internal_GetValue(3); }
             set { Internal_SetValue(3, (int)value); }
@@ -83,6 +83,7 @@ namespace FlaxEngine.Rendering
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetValue(int index);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetValue(int index, int value);
 #endif

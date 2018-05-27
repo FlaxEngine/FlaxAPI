@@ -20,7 +20,7 @@ namespace FlaxEditor.States
         private Guid _lastSceneFromRequest;
 
         internal ChangingScenesState(Editor editor)
-            : base(editor)
+        : base(editor)
         {
         }
 
@@ -74,7 +74,7 @@ namespace FlaxEditor.States
                 throw new ArgumentNullException();
             if (!scenes.Any())
                 return;
-            
+
             // Clear request
             _scenesToLoad.Clear();
             _scenesToUnload.Clear();
@@ -151,7 +151,7 @@ namespace FlaxEditor.States
             SceneManager.SceneLoaded += OnSceneEvent;
             SceneManager.SceneLoadError += OnSceneEvent;
             SceneManager.SceneUnloaded += OnSceneEvent;
-            
+
             // Push scenes changing requests
             for (int i = 0; i < _scenesToUnload.Count; i++)
             {
@@ -165,7 +165,7 @@ namespace FlaxEditor.States
                 if (!failed)
                     _lastSceneFromRequest = id;
             }
-            
+
             // Clear request
             _scenesToLoad.Clear();
             _scenesToUnload.Clear();

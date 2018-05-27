@@ -7,102 +7,111 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// The interface to get time information from Flax.
-	/// </summary>
-	public static partial class Time
-	{
-		/// <summary>
-		/// Gets or sets the target amount of the game logic updates per second (script updates frequency).
-		/// </summary>
-		[UnmanagedCall]
-		public static float UpdateFPS
-		{
+    /// <summary>
+    /// The interface to get time information from Flax.
+    /// </summary>
+    public static partial class Time
+    {
+        /// <summary>
+        /// Gets or sets the target amount of the game logic updates per second (script updates frequency).
+        /// </summary>
+        [UnmanagedCall]
+        public static float UpdateFPS
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetUpdateFPS(); }
-			set { Internal_SetUpdateFPS(value); }
+            get { return Internal_GetUpdateFPS(); }
+            set { Internal_SetUpdateFPS(value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the target amount of the physics simulation updates per second (also fixed updates frequency).
-		/// </summary>
-		[UnmanagedCall]
-		public static float PhysicsFPS
-		{
+        /// <summary>
+        /// Gets or sets the target amount of the physics simulation updates per second (also fixed updates frequency).
+        /// </summary>
+        [UnmanagedCall]
+        public static float PhysicsFPS
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetPhysicsFPS(); }
-			set { Internal_SetPhysicsFPS(value); }
+            get { return Internal_GetPhysicsFPS(); }
+            set { Internal_SetPhysicsFPS(value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the target amount of the frames rendered per second (actual game FPS).
-		/// </summary>
-		[UnmanagedCall]
-		public static float DrawFPS
-		{
+        /// <summary>
+        /// Gets or sets the target amount of the frames rendered per second (actual game FPS).
+        /// </summary>
+        [UnmanagedCall]
+        public static float DrawFPS
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetDrawFPS(); }
-			set { Internal_SetDrawFPS(value); }
+            get { return Internal_GetDrawFPS(); }
+            set { Internal_SetDrawFPS(value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets scale at which the time is passing. This can be used for slow motion effects.
-		/// </summary>
-		[UnmanagedCall]
-		public static float TimeScale
-		{
+        /// <summary>
+        /// Gets or sets scale at which the time is passing. This can be used for slow motion effects.
+        /// </summary>
+        [UnmanagedCall]
+        public static float TimeScale
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetTimeScale(); }
-			set { Internal_SetTimeScale(value); }
+            get { return Internal_GetTimeScale(); }
+            set { Internal_SetTimeScale(value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets the current Frames Per Second amount. User scripts updates or fixed updates for physics may run at a different frequency than scene rendering. Use this property to get an accurate amount of frames rendered during the last second.
-		/// </summary>
-		[UnmanagedCall]
-		public static int FramesPerSecond
-		{
+        /// <summary>
+        /// Gets the current Frames Per Second amount. User scripts updates or fixed updates for physics may run at a different frequency than scene rendering. Use this property to get an accurate amount of frames rendered during the last second.
+        /// </summary>
+        [UnmanagedCall]
+        public static int FramesPerSecond
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetFPS(); }
+            get { return Internal_GetFPS(); }
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetUpdateFPS();
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetUpdateFPS(float val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetPhysicsFPS();
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetPhysicsFPS(float val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetDrawFPS();
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetDrawFPS(float val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetTimeScale();
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetTimeScale(float val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern int Internal_GetFPS();
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetUpdateFPS();
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetUpdateFPS(float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetPhysicsFPS();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetPhysicsFPS(float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetDrawFPS();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetDrawFPS(float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetTimeScale();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetTimeScale(float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetFPS();
+#endif
+
+        #endregion
+    }
+}

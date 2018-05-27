@@ -188,6 +188,7 @@ namespace FlaxEngine
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetTrackingMouseOffset(IntPtr obj, out Vector2 result);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DoDragDropText(IntPtr obj, string text);
 #endif

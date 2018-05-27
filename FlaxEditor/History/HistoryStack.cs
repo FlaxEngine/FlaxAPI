@@ -130,7 +130,7 @@ namespace FlaxEditor.History
                 _historyActions.Clear();
                 return result;
             }
-            
+
             // iterate all but one elements to skip. Last element is handled exclusivly
             for (int i = 0; i < skipElements - 1; i++)
             {
@@ -162,7 +162,7 @@ namespace FlaxEditor.History
                 _reverseActions.Clear();
                 return PeekHistory();
             }
-            
+
             // iterate all but one elements to skip. Last element is handled exclusivly
             for (int i = 0; i < skipElements - 1; i++)
             {

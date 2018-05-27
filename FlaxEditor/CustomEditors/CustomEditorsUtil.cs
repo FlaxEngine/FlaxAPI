@@ -87,11 +87,10 @@ namespace FlaxEditor.CustomEditors
                         return (CustomEditor)Activator.CreateInstance(type);
                     }
                     checkType = checkType.BaseType;
-                    
+
                     // Skip if cannot use ref editors
                     if (!canUseRefPicker && checkType == typeof(FlaxEngine.Object))
                         break;
-
                 } while (checkType != null);
             }
 
@@ -117,7 +116,7 @@ namespace FlaxEditor.CustomEditors
                     return new DictionaryEditor();
                 }
             }
-            
+
             // The most generic editor
             return new GenericEditor();
         }

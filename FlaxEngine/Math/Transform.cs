@@ -143,7 +143,7 @@ namespace FlaxEngine
         {
             Quaternion.RotationMatrix(ref value, out Orientation);
         }
-        
+
         /// <summary>
         /// Sets rotation matrix (from Orientation).
         /// </summary>
@@ -160,8 +160,8 @@ namespace FlaxEngine
         public Matrix GetWorld()
         {
             Matrix result;
-			Matrix.Transformation(ref Scale, ref Orientation, ref Translation, out result);
-			return result;
+            Matrix.Transformation(ref Scale, ref Orientation, ref Translation, out result);
+            return result;
         }
 
         /// <summary>
@@ -170,9 +170,9 @@ namespace FlaxEngine
         /// <param name="result">World matrix</param>
         public void GetWorld(out Matrix result)
         {
-	        Matrix.Transformation(ref Scale, ref Orientation, ref Translation, out result);
-		}
-        
+            Matrix.Transformation(ref Scale, ref Orientation, ref Translation, out result);
+        }
+
         /// <summary>
         /// Perform tranformation of the given transform in local space
         /// </summary>
@@ -182,105 +182,105 @@ namespace FlaxEngine
         {
             Transform result = new Transform(Vector3.Zero);
 
-	        Quaternion.Multiply(ref Orientation, ref other.Orientation, out result.Orientation);
-	        Vector3.Multiply(ref Scale, ref other.Scale, out result.Scale);
-	        result.Translation = LocalToWorld(other.Translation);
+            Quaternion.Multiply(ref Orientation, ref other.Orientation, out result.Orientation);
+            Vector3.Multiply(ref Scale, ref other.Scale, out result.Scale);
+            result.Translation = LocalToWorld(other.Translation);
 
-			return result;
+            return result;
         }
 
-	    /// <summary>
-	    /// Perform tranformation of the given point in local space
-	    /// </summary>
-	    /// <param name="point">Local space point</param>
-	    /// <returns>World space point</returns>
-	    public Vector3 LocalToWorld(Vector3 point)
-	    {
-		    point *= Scale;
-		    Vector3.Transform(ref point, ref Orientation, out point);
-		    return point + Translation;
-	    }
+        /// <summary>
+        /// Perform tranformation of the given point in local space
+        /// </summary>
+        /// <param name="point">Local space point</param>
+        /// <returns>World space point</returns>
+        public Vector3 LocalToWorld(Vector3 point)
+        {
+            point *= Scale;
+            Vector3.Transform(ref point, ref Orientation, out point);
+            return point + Translation;
+        }
 
-	    /// <summary>
-	    /// Perform tranformation of the given points in local space
-	    /// </summary>
-	    /// <param name="points">Local space points</param>
-	    /// <param name="result">World space points</param>
-	    public void LocalToWorld(Vector3[] points, Vector3[] result)
-	    {
-		    for (int i = 0; i < points.Length; i++)
-		    {
-			    result[i] = Vector3.Transform(points[i] * Scale, Orientation) + Translation;
-		    }
-	    }
+        /// <summary>
+        /// Perform tranformation of the given points in local space
+        /// </summary>
+        /// <param name="points">Local space points</param>
+        /// <param name="result">World space points</param>
+        public void LocalToWorld(Vector3[] points, Vector3[] result)
+        {
+            for (int i = 0; i < points.Length; i++)
+            {
+                result[i] = Vector3.Transform(points[i] * Scale, Orientation) + Translation;
+            }
+        }
 
-	    /// <summary>
-	    /// Perform tranformation of the given transform in world space
-	    /// </summary>
-	    /// <param name="other">World space transform</param>
-	    /// <returns>Local space transform</returns>
-	    public Transform WorldToLocal(Transform other)
-	    {
-		    Transform result = new Transform(Vector3.Zero);
-		    Vector3 invScale = Scale;
-		    if (invScale.X != 0.0f) invScale.X = 1.0f / invScale.X;
-		    if (invScale.Y != 0.0f) invScale.Y = 1.0f / invScale.Y;
-		    if (invScale.Z != 0.0f) invScale.Z = 1.0f / invScale.Z;
+        /// <summary>
+        /// Perform tranformation of the given transform in world space
+        /// </summary>
+        /// <param name="other">World space transform</param>
+        /// <returns>Local space transform</returns>
+        public Transform WorldToLocal(Transform other)
+        {
+            Transform result = new Transform(Vector3.Zero);
+            Vector3 invScale = Scale;
+            if (invScale.X != 0.0f) invScale.X = 1.0f / invScale.X;
+            if (invScale.Y != 0.0f) invScale.Y = 1.0f / invScale.Y;
+            if (invScale.Z != 0.0f) invScale.Z = 1.0f / invScale.Z;
 
-			result.Orientation = Orientation;
-		    result.Orientation.Invert();
-		    Quaternion.Multiply(ref result.Orientation, ref other.Orientation, out result.Orientation);
-		    Vector3.Multiply(ref other.Scale, ref invScale, out result.Scale);
-		    result.Translation = WorldToLocal(other.Translation);
+            result.Orientation = Orientation;
+            result.Orientation.Invert();
+            Quaternion.Multiply(ref result.Orientation, ref other.Orientation, out result.Orientation);
+            Vector3.Multiply(ref other.Scale, ref invScale, out result.Scale);
+            result.Translation = WorldToLocal(other.Translation);
 
-		    return result;
-	    }
+            return result;
+        }
 
-	    /// <summary>
-	    /// Perform tranformation of the given point in world space
-	    /// </summary>
-	    /// <param name="point">World space point</param>
-	    /// <returns>Local space point</returns>
-	    public Vector3 WorldToLocal(Vector3 point)
-	    {
-		    Vector3 invScale = Scale;
-		    if (invScale.X != 0.0f) invScale.X = 1.0f / invScale.X;
-		    if (invScale.Y != 0.0f) invScale.Y = 1.0f / invScale.Y;
-		    if (invScale.Z != 0.0f) invScale.Z = 1.0f / invScale.Z;
+        /// <summary>
+        /// Perform tranformation of the given point in world space
+        /// </summary>
+        /// <param name="point">World space point</param>
+        /// <returns>Local space point</returns>
+        public Vector3 WorldToLocal(Vector3 point)
+        {
+            Vector3 invScale = Scale;
+            if (invScale.X != 0.0f) invScale.X = 1.0f / invScale.X;
+            if (invScale.Y != 0.0f) invScale.Y = 1.0f / invScale.Y;
+            if (invScale.Z != 0.0f) invScale.Z = 1.0f / invScale.Z;
 
-		    Quaternion invRotation = Orientation;
-		    invRotation.Invert();
-			
-		    Vector3 result = point - Translation;
-		    Vector3.Transform(ref result, ref invRotation, out result);
+            Quaternion invRotation = Orientation;
+            invRotation.Invert();
 
-		    return result * invScale;
-	    }
+            Vector3 result = point - Translation;
+            Vector3.Transform(ref result, ref invRotation, out result);
 
-	    /// <summary>
-	    /// Perform tranformation of the given points in world space
-	    /// </summary>
-	    /// <param name="points">World space points</param>
-	    /// <param name="result">Local space points</param>
-	    public void WorldToLocal(Vector3[] points, Vector3[] result)
-	    {
-		    Vector3 invScale = Scale;
-		    if (invScale.X != 0.0f) invScale.X = 1.0f / invScale.X;
-		    if (invScale.Y != 0.0f) invScale.Y = 1.0f / invScale.Y;
-		    if (invScale.Z != 0.0f) invScale.Z = 1.0f / invScale.Z;
+            return result * invScale;
+        }
 
-		    Quaternion invRotation = Orientation;
-		    invRotation.Invert();
-			
-		    for (int i = 0; i < points.Length; i++)
-		    {
-			    result[i] = points[i] - Translation;
-			    Vector3.Transform(ref result[i], ref invRotation, out result[i]);
-			    result[i] *= invScale;
-		    }
-	    }
+        /// <summary>
+        /// Perform tranformation of the given points in world space
+        /// </summary>
+        /// <param name="points">World space points</param>
+        /// <param name="result">Local space points</param>
+        public void WorldToLocal(Vector3[] points, Vector3[] result)
+        {
+            Vector3 invScale = Scale;
+            if (invScale.X != 0.0f) invScale.X = 1.0f / invScale.X;
+            if (invScale.Y != 0.0f) invScale.Y = 1.0f / invScale.Y;
+            if (invScale.Z != 0.0f) invScale.Z = 1.0f / invScale.Z;
 
-	    /// <summary>
+            Quaternion invRotation = Orientation;
+            invRotation.Invert();
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                result[i] = points[i] - Translation;
+                Vector3.Transform(ref result[i], ref invRotation, out result[i]);
+                result[i] *= invScale;
+            }
+        }
+
+        /// <summary>
         /// Transforms the direction vector from the local space to the world space.
         /// </summary>
         /// <remarks>
@@ -401,9 +401,9 @@ namespace FlaxEngine
                 return ToString();
 
             return string.Format(CultureInfo.CurrentCulture, _formatString,
-                Translation.ToString(format, CultureInfo.CurrentCulture),
-                Orientation.ToString(format, CultureInfo.CurrentCulture),
-                Scale.ToString(format, CultureInfo.CurrentCulture));
+                                 Translation.ToString(format, CultureInfo.CurrentCulture),
+                                 Orientation.ToString(format, CultureInfo.CurrentCulture),
+                                 Scale.ToString(format, CultureInfo.CurrentCulture));
         }
 
         /// <summary>
@@ -432,9 +432,9 @@ namespace FlaxEngine
                 return ToString(formatProvider);
 
             return string.Format(formatProvider, _formatString,
-                Translation.ToString(format, formatProvider),
-                Orientation.ToString(format, formatProvider),
-                Scale.ToString(format, formatProvider));
+                                 Translation.ToString(format, formatProvider),
+                                 Orientation.ToString(format, formatProvider),
+                                 Scale.ToString(format, formatProvider));
         }
 
         /// <summary>

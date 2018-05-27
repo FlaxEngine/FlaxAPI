@@ -23,7 +23,7 @@ namespace FlaxEngine.GUI.Tabs
         /// </summary>
         /// <param name="icon">The icon.</param>
         public Tab(Sprite icon)
-            : this(string.Empty, icon)
+        : this(string.Empty, icon)
         {
         }
 
@@ -32,7 +32,7 @@ namespace FlaxEngine.GUI.Tabs
         /// </summary>
         /// <param name="text">The text.</param>
         public Tab(string text)
-            : this(text, Sprite.Invalid)
+        : this(text, Sprite.Invalid)
         {
         }
 

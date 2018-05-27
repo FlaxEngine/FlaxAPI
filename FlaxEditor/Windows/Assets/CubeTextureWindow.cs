@@ -17,7 +17,7 @@ namespace FlaxEditor.Windows.Assets
 
         /// <inheritdoc />
         public CubeTextureWindow(Editor editor, AssetItem item)
-            : base(editor, item)
+        : base(editor, item)
         {
             // Material preview
             _preview = new CubeTexturePreview(true);

@@ -24,7 +24,7 @@ namespace FlaxEngine.GUI
         /// <param name="parent">The parent cotext menu.</param>
         /// <param name="text">The text.</param>
         public ContextMenuChildMenu(ContextMenu parent, string text)
-            : base(parent, 8, 22)
+        : base(parent, 8, 22)
         {
             Text = text;
         }
@@ -37,7 +37,7 @@ namespace FlaxEngine.GUI
             var backgroundRect = new Rectangle(-X + 3, 0, Parent.Width - 6, Height);
             var clientRect = new Rectangle(Vector2.Zero, Size);
             bool isCMopened = ContextMenu.IsOpened;
-            
+
             // Draw background
             if (isCMopened || (IsMouseOver && Enabled))
                 Render2D.FillRectangle(backgroundRect, style.LightBackground);

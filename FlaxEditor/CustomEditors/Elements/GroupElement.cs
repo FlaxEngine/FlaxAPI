@@ -14,7 +14,7 @@ namespace FlaxEditor.CustomEditors.Elements
         /// The drop panel.
         /// </summary>
         public readonly DropPanel Panel = new DropPanel(string.Empty);
-        
+
         /// <summary>
         /// Initializes the element.
         /// </summary>

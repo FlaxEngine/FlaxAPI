@@ -21,7 +21,7 @@ namespace FlaxEngine
         /// The maximum range value.
         /// </summary>
         public readonly float Max;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RangeAttribute"/> class.
         /// </summary>

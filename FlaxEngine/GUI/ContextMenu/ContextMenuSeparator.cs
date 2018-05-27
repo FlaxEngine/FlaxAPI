@@ -13,7 +13,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="parent">The parent context menu.</param>
         public ContextMenuSeparator(ContextMenu parent)
-            : base(parent, 8, 4)
+        : base(parent, 8, 4)
         {
         }
 

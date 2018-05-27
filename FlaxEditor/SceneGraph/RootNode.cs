@@ -16,7 +16,7 @@ namespace FlaxEditor.SceneGraph
         /// Initializes a new instance of the <see cref="RootNode"/> class.
         /// </summary>
         public RootNode()
-            : base(null, new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1))
+        : base(null, new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1))
         {
         }
 
@@ -31,13 +31,13 @@ namespace FlaxEditor.SceneGraph
 
         /// <inheritdoc />
         public override bool CanDelete => false;
-        
+
         /// <inheritdoc />
         public override bool CanDrag => false;
 
         /// <inheritdoc />
         public override bool IsActive => true;
-        
+
         /// <inheritdoc />
         public override bool IsActiveInHierarchy => true;
 
@@ -47,7 +47,7 @@ namespace FlaxEditor.SceneGraph
             get => Transform.Identity;
             set { }
         }
-        
+
         /// <inheritdoc />
         public override bool RayCastSelf(ref Ray ray, out float distance)
         {

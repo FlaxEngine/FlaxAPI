@@ -51,32 +51,32 @@ namespace FlaxEditor.CustomEditors.Editors
             XElement = grid.FloatValue();
             XElement.SetLimits(limit);
             XElement.FloatValue.ValueChanged += OnValueChanged;
-	        XElement.FloatValue.SlidingEnd += ClearToken;
+            XElement.FloatValue.SlidingEnd += ClearToken;
 
-			YElement = grid.FloatValue();
+            YElement = grid.FloatValue();
             YElement.SetLimits(limit);
             YElement.FloatValue.ValueChanged += OnValueChanged;
-	        YElement.FloatValue.SlidingEnd += ClearToken;
+            YElement.FloatValue.SlidingEnd += ClearToken;
 
-			ZElement = grid.FloatValue();
+            ZElement = grid.FloatValue();
             ZElement.SetLimits(limit);
             ZElement.FloatValue.ValueChanged += OnValueChanged;
-	        ZElement.FloatValue.SlidingEnd += ClearToken;
-		}
+            ZElement.FloatValue.SlidingEnd += ClearToken;
+        }
 
         private void OnValueChanged()
         {
             if (IsSetBlocked)
                 return;
 
-	        var isSliding = XElement.IsSliding || YElement.IsSliding || ZElement.IsSliding;
-	        var token = isSliding ? this : null;
-	        var value = new Vector3(
-		        XElement.FloatValue.Value,
-		        YElement.FloatValue.Value,
-		        ZElement.FloatValue.Value);
-	        SetValue(value, token);
-		}
+            var isSliding = XElement.IsSliding || YElement.IsSliding || ZElement.IsSliding;
+            var token = isSliding ? this : null;
+            var value = new Vector3(
+                XElement.FloatValue.Value,
+                YElement.FloatValue.Value,
+                ZElement.FloatValue.Value);
+            SetValue(value, token);
+        }
 
         /// <inheritdoc />
         public override void Refresh()

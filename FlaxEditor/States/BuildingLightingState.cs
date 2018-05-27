@@ -14,7 +14,7 @@ namespace FlaxEditor.States
         private bool _wasBuildFinished;
 
         internal BuildingLightingState(Editor editor)
-            : base(editor)
+        : base(editor)
         {
         }
 

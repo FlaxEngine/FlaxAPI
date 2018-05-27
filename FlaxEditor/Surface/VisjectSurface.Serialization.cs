@@ -23,14 +23,14 @@ namespace FlaxEditor.Surface
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        struct VisjectSurfaceMeta10// TypeID: 10, for surface
+        struct VisjectSurfaceMeta10 // TypeID: 10, for surface
         {
             public Vector2 ViewCenterPosition;
             public float Scale;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        struct VisjectSurfaceMeta11// TypeID: 11, for nodes
+        struct VisjectSurfaceMeta11 // TypeID: 11, for nodes
         {
             public Vector2 Position;
             public bool Selected;
@@ -97,99 +97,99 @@ namespace FlaxEditor.Surface
 
             switch (type)
             {
-                case 0:// CommonType::Bool:
-                    value = stream.ReadByte() != 0;
-                    break;
-                case 1:// CommonType::Integer:
+            case 0: // CommonType::Bool:
+                value = stream.ReadByte() != 0;
+                break;
+            case 1: // CommonType::Integer:
+            {
+                value = stream.ReadInt32();
+            }
+                break;
+            case 2: // CommonType::Float:
+            {
+                value = stream.ReadSingle();
+            }
+                break;
+            case 3: // CommonType::Vector2:
+            {
+                value = new Vector2(stream.ReadSingle(), stream.ReadSingle());
+            }
+                break;
+            case 4: // CommonType::Vector3:
+            {
+                value = new Vector3(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+            }
+                break;
+            case 5: // CommonType::Vector4:
+            {
+                value = new Vector4(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+            }
+                break;
+            case 6: // CommonType::Color:
+            {
+                value = new Color(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+            }
+                break;
+            case 7: // CommonType::Guid:
+            {
+                value = new Guid(stream.ReadBytes(16));
+            }
+                break;
+            case 8: // CommonType::String:
+            {
+                int length = stream.ReadInt32();
+                if (length <= 0)
                 {
-                    value = stream.ReadInt32();
+                    value = string.Empty;
                 }
-                    break;
-                case 2:// CommonType::Float:
+                else
                 {
-                    value = stream.ReadSingle();
-                }
-                    break;
-                case 3:// CommonType::Vector2:
-                {
-                    value = new Vector2(stream.ReadSingle(), stream.ReadSingle());
-                }
-                    break;
-                case 4:// CommonType::Vector3:
-                {
-                    value = new Vector3(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
-                }
-                    break;
-                case 5:// CommonType::Vector4:
-                {
-                    value = new Vector4(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
-                }
-                    break;
-                case 6:// CommonType::Color:
-                {
-                    value = new Color(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
-                }
-                    break;
-                case 7:// CommonType::Guid:
-                {
-                    value = new Guid(stream.ReadBytes(16));
-                }
-                    break;
-                case 8:// CommonType::String:
-                {
-                    int length = stream.ReadInt32();
-                    if (length <= 0)
+                    var data = new char[length];
+                    for (int i = 0; i < length; i++)
                     {
-                        value = string.Empty;
+                        var c = stream.ReadUInt16();
+                        data[i] = (char)(c ^ 953);
                     }
-                    else
-                    {
-                        var data = new char[length];
-                        for (int i = 0; i < length; i++)
-                        {
-                            var c = stream.ReadUInt16();
-                            data[i] = (char)(c ^ 953);
-                        }
-                        value = new string(data);
-                    }
-                    break;
+                    value = new string(data);
                 }
-                /*case 9:// CommonType::Box:
-                {
-                    BoundingBox v;
-                    ReadBox(&v);
-                    data.Set(v);
-                }
-                    break;
-                case 10:// CommonType::Rotation:
-                {
-                    Quaternion v;
-                    ReadQuaternion(&v);
-                    data.Set(v);
-                }
-                    break;
-                case 11:// CommonType::Transform:
-                {
-                    Transform v;
-                    ReadTransform(&v);
-                    data.Set(v);
-                }
-                    break;
-                case 12:// CommonType::Sphere:
-                {
-                    BoundingSphere v;
-                    ReadSphere(&v);
-                    data.Set(v);
-                }
-                    break;
-                case 13:// CommonType::Rect:
-                {
-                    Rect v;
-                    ReadRect(&v);
-                    data.Set(v);
-                }
-                    break;*/
-                default: throw new SystemException();
+                break;
+            }
+            /*case 9:// CommonType::Box:
+            {
+                BoundingBox v;
+                ReadBox(&v);
+                data.Set(v);
+            }
+                break;
+            case 10:// CommonType::Rotation:
+            {
+                Quaternion v;
+                ReadQuaternion(&v);
+                data.Set(v);
+            }
+                break;
+            case 11:// CommonType::Transform:
+            {
+                Transform v;
+                ReadTransform(&v);
+                data.Set(v);
+            }
+                break;
+            case 12:// CommonType::Sphere:
+            {
+                BoundingSphere v;
+                ReadSphere(&v);
+                data.Set(v);
+            }
+                break;
+            case 13:// CommonType::Rect:
+            {
+                Rect v;
+                ReadRect(&v);
+                data.Set(v);
+            }
+                break;*/
+            default: throw new SystemException();
             }
         }
 
@@ -212,10 +212,10 @@ namespace FlaxEditor.Surface
             }
             else if (value is double asDouble)
             {
-	            stream.Write((byte)2);
-	            stream.Write((float)asDouble);
+                stream.Write((byte)2);
+                stream.Write((float)asDouble);
             }
-			else if (value is Vector2 asVector2)
+            else if (value is Vector2 asVector2)
             {
                 stream.Write((byte)3);
                 stream.Write(asVector2.X);
@@ -262,81 +262,81 @@ namespace FlaxEditor.Surface
             }
         }
 
-		private static void WriteCommonValue(JsonWriter stream, object value)
-		{
-			if (value is bool asBool)
-			{
-				stream.WriteValue(asBool);
-			}
-			else if (value is int asInt)
-			{
-				stream.WriteValue(asInt);
-			}
-			else if (value is float asFloat)
-			{
-				stream.WriteValue(asFloat);
-			}
-			else if (value is Vector2 asVector2)
-			{
-				stream.WriteStartObject();
-				stream.WritePropertyName("X");
-				stream.WriteValue(asVector2.X);
-				stream.WritePropertyName("Y");
-				stream.WriteValue(asVector2.Y);
-				stream.WriteEndObject();
-			}
-			else if (value is Vector3 asVector3)
-			{
-				stream.WriteStartObject();
-				stream.WritePropertyName("X");
-				stream.WriteValue(asVector3.X);
-				stream.WritePropertyName("Y");
-				stream.WriteValue(asVector3.Y);
-				stream.WritePropertyName("Z");
-				stream.WriteValue(asVector3.Z);
-				stream.WriteEndObject();
-			}
-			else if (value is Vector4 asVector4)
-			{
-				stream.WriteStartObject();
-				stream.WritePropertyName("X");
-				stream.WriteValue(asVector4.X);
-				stream.WritePropertyName("Y");
-				stream.WriteValue(asVector4.Y);
-				stream.WritePropertyName("Z");
-				stream.WriteValue(asVector4.Z);
-				stream.WritePropertyName("W");
-				stream.WriteValue(asVector4.W);
-				stream.WriteEndObject();
-			}
-			else if (value is Color asColor)
-			{
-				stream.WriteStartObject();
-				stream.WritePropertyName("R");
-				stream.WriteValue(asColor.R);
-				stream.WritePropertyName("G");
-				stream.WriteValue(asColor.G);
-				stream.WritePropertyName("B");
-				stream.WriteValue(asColor.B);
-				stream.WritePropertyName("A");
-				stream.WriteValue(asColor.A);
-				stream.WriteEndObject();
-			}
-			else if (value is Guid asGuid)
-			{
-				stream.WriteValue(asGuid);
-			}
-			else if (value is string asString)
-			{
-				stream.WriteValue(asString);
-			}
-			else
-			{
-				throw new NotSupportedException();
-			}
-		}
+        private static void WriteCommonValue(JsonWriter stream, object value)
+        {
+            if (value is bool asBool)
+            {
+                stream.WriteValue(asBool);
+            }
+            else if (value is int asInt)
+            {
+                stream.WriteValue(asInt);
+            }
+            else if (value is float asFloat)
+            {
+                stream.WriteValue(asFloat);
+            }
+            else if (value is Vector2 asVector2)
+            {
+                stream.WriteStartObject();
+                stream.WritePropertyName("X");
+                stream.WriteValue(asVector2.X);
+                stream.WritePropertyName("Y");
+                stream.WriteValue(asVector2.Y);
+                stream.WriteEndObject();
+            }
+            else if (value is Vector3 asVector3)
+            {
+                stream.WriteStartObject();
+                stream.WritePropertyName("X");
+                stream.WriteValue(asVector3.X);
+                stream.WritePropertyName("Y");
+                stream.WriteValue(asVector3.Y);
+                stream.WritePropertyName("Z");
+                stream.WriteValue(asVector3.Z);
+                stream.WriteEndObject();
+            }
+            else if (value is Vector4 asVector4)
+            {
+                stream.WriteStartObject();
+                stream.WritePropertyName("X");
+                stream.WriteValue(asVector4.X);
+                stream.WritePropertyName("Y");
+                stream.WriteValue(asVector4.Y);
+                stream.WritePropertyName("Z");
+                stream.WriteValue(asVector4.Z);
+                stream.WritePropertyName("W");
+                stream.WriteValue(asVector4.W);
+                stream.WriteEndObject();
+            }
+            else if (value is Color asColor)
+            {
+                stream.WriteStartObject();
+                stream.WritePropertyName("R");
+                stream.WriteValue(asColor.R);
+                stream.WritePropertyName("G");
+                stream.WriteValue(asColor.G);
+                stream.WritePropertyName("B");
+                stream.WriteValue(asColor.B);
+                stream.WritePropertyName("A");
+                stream.WriteValue(asColor.A);
+                stream.WriteEndObject();
+            }
+            else if (value is Guid asGuid)
+            {
+                stream.WriteValue(asGuid);
+            }
+            else if (value is string asString)
+            {
+                stream.WriteValue(asString);
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
+        }
 
-		private unsafe bool loadGraph(BinaryReader stream)
+        private unsafe bool loadGraph(BinaryReader stream)
         {
             // IMPORTANT! This must match C++ Graph format
 
@@ -438,20 +438,20 @@ namespace FlaxEditor.Surface
 
                     // Values
                     int valuesCnt = stream.ReadInt32();
-	                int nodeValuesCnt = node.Values?.Length ?? 0;
-	                if (valuesCnt == nodeValuesCnt)
-	                {
-		                for (int j = 0; j < valuesCnt; j++)
-			                ReadCommonValue(stream, ref node.Values[j]);
-	                }
-	                else
-	                {
-		                Debug.LogWarning(string.Format("Invalid node values. Loaded: {0}, expected: {1}. Type: {2}, {3}", valuesCnt, nodeValuesCnt, node.Archetype.Title, node.Archetype.TypeID));
+                    int nodeValuesCnt = node.Values?.Length ?? 0;
+                    if (valuesCnt == nodeValuesCnt)
+                    {
+                        for (int j = 0; j < valuesCnt; j++)
+                            ReadCommonValue(stream, ref node.Values[j]);
+                    }
+                    else
+                    {
+                        Debug.LogWarning(string.Format("Invalid node values. Loaded: {0}, expected: {1}. Type: {2}, {3}", valuesCnt, nodeValuesCnt, node.Archetype.Title, node.Archetype.TypeID));
 
-		                object dummy = null;
-		                for (int j = 0; j < valuesCnt; j++)
-			                ReadCommonValue(stream, ref dummy);
-					}
+                        object dummy = null;
+                        for (int j = 0; j < valuesCnt; j++)
+                            ReadCommonValue(stream, ref dummy);
+                    }
 
                     // Boxes
                     ushort boxesCount = stream.ReadUInt16();

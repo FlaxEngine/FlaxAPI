@@ -14,7 +14,7 @@ namespace FlaxEngine
         /// The maximum order supported.
         /// </summary>
         public const int MaximumOrder = 5;
-        
+
         private int order;
 
         /// <summary>
@@ -25,9 +25,9 @@ namespace FlaxEngine
             get => order;
             internal set
             {
-                if(order > 5)
+                if (order > 5)
                     throw new NotSupportedException("Only orders inferior or equal to 5 are supported");
-                
+
                 order = Math.Max(1, value);
             }
         }
@@ -76,7 +76,7 @@ namespace FlaxEngine
             }
             set
             {
-                CheckIndicesValidity(l, m, order); 
+                CheckIndicesValidity(l, m, order);
                 Coefficients[LmToCoefficientIndex(l, m)] = value;
             }
         }
@@ -115,35 +115,35 @@ namespace FlaxEngine
         /// </summary>
         public static readonly float[] BaseCoefficients =
         {
-            (float)(1.0/(2.0*SqrtPi)),
+            (float)(1.0 / (2.0 * SqrtPi)),
 
-            (float)(-Math.Sqrt(3.0/Pi4)),
-            (float)(Math.Sqrt(3.0/Pi4)),
-            (float)(-Math.Sqrt(3.0/Pi4)),
+            (float)(-Math.Sqrt(3.0 / Pi4)),
+            (float)(Math.Sqrt(3.0 / Pi4)),
+            (float)(-Math.Sqrt(3.0 / Pi4)),
 
-            (float)(Math.Sqrt(15.0/Pi4)),
-            (float)(-Math.Sqrt(15.0/Pi4)),
-            (float)(Math.Sqrt(5.0/Pi16)),
-            (float)(-Math.Sqrt(15.0/Pi4)),
-            (float)(Math.Sqrt(15.0/Pi16)),
+            (float)(Math.Sqrt(15.0 / Pi4)),
+            (float)(-Math.Sqrt(15.0 / Pi4)),
+            (float)(Math.Sqrt(5.0 / Pi16)),
+            (float)(-Math.Sqrt(15.0 / Pi4)),
+            (float)(Math.Sqrt(15.0 / Pi16)),
 
-            -(float)Math.Sqrt(70/Pi64),
-            (float)Math.Sqrt(105/Pi4),
-            -(float)Math.Sqrt(42/Pi64),
-            (float)Math.Sqrt(7/Pi16),
-            -(float)Math.Sqrt(42/Pi64),
-            (float)Math.Sqrt(105/Pi16),
-            -(float)Math.Sqrt(70/Pi64),
+            -(float)Math.Sqrt(70 / Pi64),
+            (float)Math.Sqrt(105 / Pi4),
+            -(float)Math.Sqrt(42 / Pi64),
+            (float)Math.Sqrt(7 / Pi16),
+            -(float)Math.Sqrt(42 / Pi64),
+            (float)Math.Sqrt(105 / Pi16),
+            -(float)Math.Sqrt(70 / Pi64),
 
-            3*(float)Math.Sqrt(35/Pi16),
-            -3*(float)Math.Sqrt(70/Pi64),
-            3*(float)Math.Sqrt(5/Pi16),
-            -3*(float)Math.Sqrt(10/Pi64),
-            (float)(1.0/(16.0*SqrtPi)),
-            -3*(float)Math.Sqrt(10/Pi64),
-            3*(float)Math.Sqrt(5/Pi64),
-            -3*(float)Math.Sqrt(70/Pi64),
-            3*(float)Math.Sqrt(35/(4*Pi64)),
+            3 * (float)Math.Sqrt(35 / Pi16),
+            -3 * (float)Math.Sqrt(70 / Pi64),
+            3 * (float)Math.Sqrt(5 / Pi16),
+            -3 * (float)Math.Sqrt(10 / Pi64),
+            (float)(1.0 / (16.0 * SqrtPi)),
+            -3 * (float)Math.Sqrt(10 / Pi64),
+            3 * (float)Math.Sqrt(5 / Pi64),
+            -3 * (float)Math.Sqrt(70 / Pi64),
+            3 * (float)Math.Sqrt(35 / (4 * Pi64)),
         };
 
         internal SphericalHarmonics()
@@ -155,7 +155,7 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="order">The order of the harmonics</param>
         public SphericalHarmonics(int order)
-            : base(order)
+        : base(order)
         {
             baseValues = new float[order * order];
         }
@@ -171,9 +171,9 @@ namespace FlaxEngine
             var y = direction.Y;
             var z = direction.Z;
 
-            var x2 = x*x;
-            var y2 = y*y;
-            var z2 = z*z;
+            var x2 = x * x;
+            var y2 = y * y;
+            var z2 = z * z;
 
             var z3 = (float)Math.Pow(z, 3.0);
 
@@ -182,44 +182,47 @@ namespace FlaxEngine
             var z4 = (float)Math.Pow(z, 4.0);
 
             //Equations based on data from: http://ppsloan.org/publications/StupidSH36.pdf
-            baseValues[ 0] =  1/(2*SqrtPi);
+            baseValues[0] = 1 / (2 * SqrtPi);
 
             if (Order > 1)
             {
-                baseValues[ 1] = -(float)Math.Sqrt(3/Pi4)*y;
-                baseValues[ 2] =  (float)Math.Sqrt(3/Pi4)*z;
-                baseValues[ 3] = -(float)Math.Sqrt(3/Pi4)*x;
-                
-            if (Order > 2)
-            {
-                baseValues[ 4] =  (float)Math.Sqrt(15/Pi4)*y*x;
-                baseValues[ 5] = -(float)Math.Sqrt(15/Pi4)*y*z;
-                baseValues[ 6] =  (float)Math.Sqrt(5/Pi16)*(3*z2-1);
-                baseValues[ 7] = -(float)Math.Sqrt(15/Pi4)*x*z;
-                baseValues[ 8] =  (float)Math.Sqrt(15/Pi16)*(x2-y2);
-                
-            if (Order > 3)
-            {
-                baseValues[ 9] = -(float)Math.Sqrt( 70/Pi64)*y*(3*x2-y2);
-                baseValues[10] =  (float)Math.Sqrt(105/ Pi4)*y*x*z;
-                baseValues[11] = -(float)Math.Sqrt( 42/Pi64)*y*(-1+5*z2);
-                baseValues[12] =  (float)Math.Sqrt(  7/Pi16)*(5*z3-3*z);
-                baseValues[13] = -(float)Math.Sqrt( 42/Pi64)*x*(-1+5*z2);
-                baseValues[14] =  (float)Math.Sqrt(105/Pi16)*(x2-y2)*z;
-                baseValues[15] = -(float)Math.Sqrt( 70/Pi64)*x*(x2-3*y2);
-                
-            if (Order > 4)
-            {
-                baseValues[16] =  3*(float)Math.Sqrt(35/Pi16)*x*y*(x2-y2);
-                baseValues[17] = -3*(float)Math.Sqrt(70/Pi64)*y*z*(3*x2-y2);
-                baseValues[18] =  3*(float)Math.Sqrt( 5/Pi16)*y*x*(-1+7*z2);
-                baseValues[19] = -3*(float)Math.Sqrt(10/Pi64)*y*z*(-3+7*z2);
-                baseValues[20] =  (105*z4-90*z2+9)/(16*SqrtPi);
-                baseValues[21] = -3*(float)Math.Sqrt(10/Pi64)*x*z*(-3+7*z2);
-                baseValues[22] =  3*(float)Math.Sqrt( 5/Pi64)*(x2-y2)*(-1+7*z2);
-                baseValues[23] = -3*(float)Math.Sqrt(70/Pi64)*x*z*(x2-3*y2);
-                baseValues[24] =  3*(float)Math.Sqrt(35/(4*Pi64))*(x4-6*y2*x2+y4);
-            }}}}
+                baseValues[1] = -(float)Math.Sqrt(3 / Pi4) * y;
+                baseValues[2] = (float)Math.Sqrt(3 / Pi4) * z;
+                baseValues[3] = -(float)Math.Sqrt(3 / Pi4) * x;
+
+                if (Order > 2)
+                {
+                    baseValues[4] = (float)Math.Sqrt(15 / Pi4) * y * x;
+                    baseValues[5] = -(float)Math.Sqrt(15 / Pi4) * y * z;
+                    baseValues[6] = (float)Math.Sqrt(5 / Pi16) * (3 * z2 - 1);
+                    baseValues[7] = -(float)Math.Sqrt(15 / Pi4) * x * z;
+                    baseValues[8] = (float)Math.Sqrt(15 / Pi16) * (x2 - y2);
+
+                    if (Order > 3)
+                    {
+                        baseValues[9] = -(float)Math.Sqrt(70 / Pi64) * y * (3 * x2 - y2);
+                        baseValues[10] = (float)Math.Sqrt(105 / Pi4) * y * x * z;
+                        baseValues[11] = -(float)Math.Sqrt(42 / Pi64) * y * (-1 + 5 * z2);
+                        baseValues[12] = (float)Math.Sqrt(7 / Pi16) * (5 * z3 - 3 * z);
+                        baseValues[13] = -(float)Math.Sqrt(42 / Pi64) * x * (-1 + 5 * z2);
+                        baseValues[14] = (float)Math.Sqrt(105 / Pi16) * (x2 - y2) * z;
+                        baseValues[15] = -(float)Math.Sqrt(70 / Pi64) * x * (x2 - 3 * y2);
+
+                        if (Order > 4)
+                        {
+                            baseValues[16] = 3 * (float)Math.Sqrt(35 / Pi16) * x * y * (x2 - y2);
+                            baseValues[17] = -3 * (float)Math.Sqrt(70 / Pi64) * y * z * (3 * x2 - y2);
+                            baseValues[18] = 3 * (float)Math.Sqrt(5 / Pi16) * y * x * (-1 + 7 * z2);
+                            baseValues[19] = -3 * (float)Math.Sqrt(10 / Pi64) * y * z * (-3 + 7 * z2);
+                            baseValues[20] = (105 * z4 - 90 * z2 + 9) / (16 * SqrtPi);
+                            baseValues[21] = -3 * (float)Math.Sqrt(10 / Pi64) * x * z * (-3 + 7 * z2);
+                            baseValues[22] = 3 * (float)Math.Sqrt(5 / Pi64) * (x2 - y2) * (-1 + 7 * z2);
+                            baseValues[23] = -3 * (float)Math.Sqrt(70 / Pi64) * x * z * (x2 - 3 * y2);
+                            baseValues[24] = 3 * (float)Math.Sqrt(35 / (4 * Pi64)) * (x4 - 6 * y2 * x2 + y4);
+                        }
+                    }
+                }
+            }
 
             var data = new Color();
 

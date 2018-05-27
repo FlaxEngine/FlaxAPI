@@ -25,10 +25,10 @@ namespace FlaxEditor.Windows
         private ContentView _view;
 
         private readonly ToolStrip _toolStrip;
-	    private readonly ToolStripButton _importButton;
-	    private readonly ToolStripButton _navigateBackwardButton;
-	    private readonly ToolStripButton _navigateForwardButton;
-	    private readonly ToolStripButton _nnavigateUpButton;
+        private readonly ToolStripButton _importButton;
+        private readonly ToolStripButton _navigateBackwardButton;
+        private readonly ToolStripButton _navigateForwardButton;
+        private readonly ToolStripButton _nnavigateUpButton;
 
         private NavigationBar _navigationBar;
         private Tree _tree;
@@ -41,22 +41,22 @@ namespace FlaxEditor.Windows
 
         private NewItem _newElement;
 
-		/// <summary>
-		/// Gets the toolstrip.
-		/// </summary>
-		public ToolStrip Toolstrip => _toolStrip;
+        /// <summary>
+        /// Gets the toolstrip.
+        /// </summary>
+        public ToolStrip Toolstrip => _toolStrip;
 
-		/// <summary>
-		/// Gets the assets view.
-		/// </summary>
-		public ContentView View => _view;
+        /// <summary>
+        /// Gets the assets view.
+        /// </summary>
+        public ContentView View => _view;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ContentWindow"/> class.
-		/// </summary>
-		/// <param name="editor">The editor.</param>
-		public ContentWindow(Editor editor)
-            : base(editor, true, ScrollBars.None)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContentWindow"/> class.
+        /// </summary>
+        /// <param name="editor">The editor.</param>
+        public ContentWindow(Editor editor)
+        : base(editor, true, ScrollBars.None)
         {
             Title = "Content";
 
@@ -66,11 +66,11 @@ namespace FlaxEditor.Windows
 
             // Tool strip
             _toolStrip = new ToolStrip();
-	        _importButton = (ToolStripButton)_toolStrip.AddButton(Editor.UI.GetIcon("Import32"), () => Editor.ContentImporting.ShowImportFileDialog(CurrentViewFolder)).LinkTooltip("Import content");
+            _importButton = (ToolStripButton)_toolStrip.AddButton(Editor.UI.GetIcon("Import32"), () => Editor.ContentImporting.ShowImportFileDialog(CurrentViewFolder)).LinkTooltip("Import content");
             _toolStrip.AddSeparator();
-	        _navigateBackwardButton = (ToolStripButton)_toolStrip.AddButton(Editor.UI.GetIcon("ArrowLeft32"), NavigateBackward).LinkTooltip("Navigate backward");
-	        _navigateForwardButton = (ToolStripButton)_toolStrip.AddButton(Editor.UI.GetIcon("ArrowRight32"), NavigateForward).LinkTooltip("Navigate forward");
-	        _nnavigateUpButton = (ToolStripButton)_toolStrip.AddButton(Editor.UI.GetIcon("ArrowUp32"), NavigateUp).LinkTooltip("Navigate up");
+            _navigateBackwardButton = (ToolStripButton)_toolStrip.AddButton(Editor.UI.GetIcon("ArrowLeft32"), NavigateBackward).LinkTooltip("Navigate backward");
+            _navigateForwardButton = (ToolStripButton)_toolStrip.AddButton(Editor.UI.GetIcon("ArrowRight32"), NavigateForward).LinkTooltip("Navigate forward");
+            _nnavigateUpButton = (ToolStripButton)_toolStrip.AddButton(Editor.UI.GetIcon("ArrowUp32"), NavigateUp).LinkTooltip("Navigate up");
             _toolStrip.Parent = this;
 
             // Navigation bar
@@ -118,16 +118,16 @@ namespace FlaxEditor.Windows
             popup.Tag = item;
             popup.Renamed += renamePopup => Rename((ContentItem)renamePopup.Tag, renamePopup.Text);
             popup.Closed += renamePopup =>
-                            {
-                                // Check if was creating new element
-                                if (_newElement != null)
-                                {
-                                    // Destroy mock control
-                                    _newElement.ParentFolder = null;
-                                    _newElement.Dispose();
-                                    _newElement = null;
-                                }
-                            };
+            {
+                // Check if was creating new element
+                if (_newElement != null)
+                {
+                    // Destroy mock control
+                    _newElement.ParentFolder = null;
+                    _newElement.Dispose();
+                    _newElement = null;
+                }
+            };
 
             // For new asset we want to mock the initial value so user can press just Enter to use default name
             if (_newElement != null)
@@ -155,9 +155,9 @@ namespace FlaxEditor.Windows
             {
                 // Invalid name
                 MessageBox.Show("Given asset name is invalid. " + hint,
-                    "Invalid name",
-                    MessageBox.Buttons.OK,
-                    MessageBox.Icon.Error);
+                                "Invalid name",
+                                MessageBox.Buttons.OK,
+                                MessageBox.Icon.Error);
                 return;
             }
 
@@ -229,9 +229,9 @@ namespace FlaxEditor.Windows
             {
                 // Single item
                 if (MessageBox.Show(string.Format("Are you sure to delete \'{0}\'?\nThis action cannot be undone. Files will be deleted permanently.", items[0].Path),
-                        "Delete asset(s)",
-                        MessageBox.Buttons.OKCancel,
-                        MessageBox.Icon.Question)
+                                    "Delete asset(s)",
+                                    MessageBox.Buttons.OKCancel,
+                                    MessageBox.Icon.Question)
                     != DialogResult.OK)
                 {
                     // Break
@@ -242,9 +242,9 @@ namespace FlaxEditor.Windows
             {
                 // Many items
                 if (MessageBox.Show(string.Format("Are you sure to delete {0} selected items?\nThis action cannot be undone. Files will be deleted permanently.", items.Count),
-                        "Delete asset(s)",
-                        MessageBox.Buttons.OKCancel,
-                        MessageBox.Icon.Question)
+                                    "Delete asset(s)",
+                                    MessageBox.Buttons.OKCancel,
+                                    MessageBox.Icon.Question)
                     != DialogResult.OK)
                 {
                     // Break
@@ -291,7 +291,6 @@ namespace FlaxEditor.Windows
                     _tmpList = nullptr;*/
 
                     destinationPath = StringUtils.CombinePaths(sourceFolder, string.Format("{0} Copy ({1}){2}", item.ShortName, i++, extension));
-
                 } while (File.Exists(destinationPath));
             }
 
@@ -349,15 +348,15 @@ namespace FlaxEditor.Windows
             }
         }
 
-	    private void Paste(string[] files)
-	    {
-		    Editor.ContentImporting.Import(files, CurrentViewFolder);
-	    }
+        private void Paste(string[] files)
+        {
+            Editor.ContentImporting.Import(files, CurrentViewFolder);
+        }
 
-	    /// <summary>
-		/// Stars creating the folder.
-		/// </summary>
-		private void NewFolder()
+        /// <summary>
+        /// Stars creating the folder.
+        /// </summary>
+        private void NewFolder()
         {
             // Construct path
             var parentFolder = SelectedNode.Folder;
@@ -497,10 +496,10 @@ namespace FlaxEditor.Windows
             // Focus
             _view.Focus();
         }
-		
-		/// <summary>
-		/// Refreshes the current view items colelction.
-		/// </summary>
+
+        /// <summary>
+        /// Refreshes the current view items colelction.
+        /// </summary>
         public void RefreshView()
         {
             RefreshView(SelectedNode);
@@ -534,20 +533,20 @@ namespace FlaxEditor.Windows
             UpdateNavigationBar();
         }
 
-	    private void UpdateToolstrip()
-	    {
-		    if (_toolStrip == null)
-			    return;
+        private void UpdateToolstrip()
+        {
+            if (_toolStrip == null)
+                return;
 
-		    // Update buttons
-		    var folder = CurrentViewFolder;
-		    _importButton.Enabled = folder != null && folder.CanHaveAssets;
-		    _navigateBackwardButton.Enabled = _navigationUndo.Count > 0;
-		    _navigateForwardButton.Enabled = _navigationRedo.Count > 0;
-		    _nnavigateUpButton.Enabled = folder != null && _tree.SelectedNode != _root;
-	    }
+            // Update buttons
+            var folder = CurrentViewFolder;
+            _importButton.Enabled = folder != null && folder.CanHaveAssets;
+            _navigateBackwardButton.Enabled = _navigationUndo.Count > 0;
+            _navigateForwardButton.Enabled = _navigationRedo.Count > 0;
+            _nnavigateUpButton.Enabled = folder != null && _tree.SelectedNode != _root;
+        }
 
-	    private void addFolder2Root(MainContentTreeNode node)
+        private void addFolder2Root(MainContentTreeNode node)
         {
             // Add to the root
             _root.AddChild(node);
@@ -584,7 +583,7 @@ namespace FlaxEditor.Windows
             // Update UI layout
             UnlockChildrenRecursive();
             PerformLayout();
-            
+
             // TODO: load last viewed folder
         }
 
@@ -627,7 +626,7 @@ namespace FlaxEditor.Windows
             {
                 // Find control that is under the mouse
                 var c = GetChildAtRecursive(location);
-                
+
                 if (c is ContentItem item)
                 {
                     if (_view.IsSelected(item) == false)
@@ -667,32 +666,32 @@ namespace FlaxEditor.Windows
             }
         }
 
-	    /// <inheritdoc />
-	    public override bool UseLayoutData => true;
-		
-	    /// <inheritdoc />
-	    public override void OnLayoutSerialize(XmlWriter writer)
-	    {
-		    writer.WriteAttributeString("Split", _split.SplitterValue.ToString());
-		    writer.WriteAttributeString("Scale", _view.ViewScale.ToString());
-	    }
+        /// <inheritdoc />
+        public override bool UseLayoutData => true;
 
-	    /// <inheritdoc />
-	    public override void OnLayoutDeserialize(XmlElement node)
-	    {
-		    float value1;
+        /// <inheritdoc />
+        public override void OnLayoutSerialize(XmlWriter writer)
+        {
+            writer.WriteAttributeString("Split", _split.SplitterValue.ToString());
+            writer.WriteAttributeString("Scale", _view.ViewScale.ToString());
+        }
 
-			if (float.TryParse(node.GetAttribute("Split"), out value1))
-			    _split.SplitterValue = value1;
-		    if (float.TryParse(node.GetAttribute("Scale"), out value1))
-			    _view.ViewScale = value1;
-	    }
-	    
-	    /// <inheritdoc />
-	    public override void OnLayoutDeserialize()
-	    {
-		    _split.SplitterValue = 0.2f;
-		    _view.ViewScale = 1.0f;
-	    }
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize(XmlElement node)
+        {
+            float value1;
+
+            if (float.TryParse(node.GetAttribute("Split"), out value1))
+                _split.SplitterValue = value1;
+            if (float.TryParse(node.GetAttribute("Scale"), out value1))
+                _view.ViewScale = value1;
+        }
+
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize()
+        {
+            _split.SplitterValue = 0.2f;
+            _view.ViewScale = 1.0f;
+        }
     }
 }

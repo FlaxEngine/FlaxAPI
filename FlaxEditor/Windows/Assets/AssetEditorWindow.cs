@@ -38,7 +38,7 @@ namespace FlaxEditor.Windows.Assets
         /// <param name="editor">The editor.</param>
         /// <param name="item">The item.</param>
         protected AssetEditorWindow(Editor editor, AssetItem item)
-            : base(editor, false, ScrollBars.None)
+        : base(editor, false, ScrollBars.None)
         {
             _item = item ?? throw new ArgumentNullException(nameof(item));
             _item.AddReference(this);
@@ -109,9 +109,9 @@ namespace FlaxEditor.Windows.Assets
                 {
                     switch (key)
                     {
-                        case Keys.S:
-                            Save();
-                            return true;
+                    case Keys.S:
+                        Save();
+                        return true;
                     }
                 }
             }
@@ -298,7 +298,7 @@ namespace FlaxEditor.Windows.Assets
 
         /// <inheritdoc />
         protected AssetEditorWindowBase(Editor editor, AssetItem item)
-            : base(editor, item)
+        : base(editor, item)
         {
         }
 
@@ -325,7 +325,7 @@ namespace FlaxEditor.Windows.Assets
         protected virtual void OnAssetLoaded()
         {
         }
-        
+
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
@@ -370,7 +370,7 @@ namespace FlaxEditor.Windows.Assets
 
             // Base
             base.OnShow();
-            
+
             // Update
             UpdateTitle();
             UpdateToolstrip();
@@ -390,7 +390,7 @@ namespace FlaxEditor.Windows.Assets
         {
             // Wait for loaded after reimport
             _isWaitingForLoaded = true;
-            
+
             base.OnItemReimported(item);
         }
     }
@@ -406,7 +406,7 @@ namespace FlaxEditor.Windows.Assets
 
         /// <inheritdoc />
         protected ClonedAssetEditorWindowBase(Editor editor, AssetItem item)
-            : base(editor, item)
+        : base(editor, item)
         {
         }
 
@@ -423,7 +423,7 @@ namespace FlaxEditor.Windows.Assets
                 Editor.LogError(string.Format("Cannot save asset {0}. Wait for temporary asset loaded failed.", _item.Path));
                 return true;
             }
-            
+
             // Cache data
             var id = _item.ID;
             var sourcePath = _asset.Path;
@@ -441,7 +441,7 @@ namespace FlaxEditor.Windows.Assets
                     return true;
                 }
             }
-            
+
             // Copy temporary material to the final destination (and restore ID)
             if (Editor.ContentEditing.CloneAssetFile(destinationPath, sourcePath, id))
             {
@@ -469,7 +469,7 @@ namespace FlaxEditor.Windows.Assets
             string clonePath;
             if (Editor.ContentEditing.FastTempAssetClone(_item, out clonePath))
                 return null;
-            
+
             // Load cloned asset
             var asset = FlaxEngine.Content.LoadAsync<T>(clonePath);
             if (asset == null)
@@ -478,7 +478,7 @@ namespace FlaxEditor.Windows.Assets
             // Validate data
             if (asset.ID == _item.ID)
                 throw new InvalidOperationException("Cloned asset has the same IDs.");
-            
+
             return asset;
         }
     }

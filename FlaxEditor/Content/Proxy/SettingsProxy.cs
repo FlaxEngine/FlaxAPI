@@ -14,7 +14,7 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override string Name => "Settings";
         //public override string Name { get; } = CustomEditors.CustomEditorsUtil.GetPropertyNameUI(typeof(T).Name);
-        
+
         /// <inheritdoc />
         public override bool CanCreate(ContentFolder targetLocation)
         {

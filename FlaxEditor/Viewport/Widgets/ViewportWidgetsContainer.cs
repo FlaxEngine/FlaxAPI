@@ -42,7 +42,7 @@ namespace FlaxEditor.Viewport.Widgets
         /// </summary>
         /// <param name="location">The location.</param>
         public ViewportWidgetsContainer(ViewportWidgetLocation location)
-            : base(0, WidgetsMargin, 64, WidgetsHeight + 2)
+        : base(0, WidgetsMargin, 64, WidgetsHeight + 2)
         {
             CanFocus = false;
             WidgetLocation = location;
@@ -106,17 +106,17 @@ namespace FlaxEditor.Viewport.Widgets
                     float x;
                     switch (widget.WidgetLocation)
                     {
-                        case ViewportWidgetLocation.UpperLeft:
-                            x = left;
-                            left += widget.Width + margin;
-                            break;
-                        case ViewportWidgetLocation.UpperRight:
-                            x = right - widget.Width;
-                            right = x - margin;
-                            break;
-                        default:
-                            x = 0;
-                            break;
+                    case ViewportWidgetLocation.UpperLeft:
+                        x = left;
+                        left += widget.Width + margin;
+                        break;
+                    case ViewportWidgetLocation.UpperRight:
+                        x = right - widget.Width;
+                        right = x - margin;
+                        break;
+                    default:
+                        x = 0;
+                        break;
                     }
                     widget.Location = new Vector2(x, margin);
                 }

@@ -2,6 +2,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+
 // ReSharper disable ConvertToAutoProperty
 
 namespace FlaxEngine

@@ -87,7 +87,7 @@ namespace FlaxEngine.GUI.Docking
         /// The default tabs header buttons margin.
         /// </summary>
         public const float DefaultButtonsMargin = 2;
-        
+
         /// <summary>
         /// The default splitters value.
         /// </summary>
@@ -372,44 +372,41 @@ namespace FlaxEngine.GUI.Docking
             Orientation o;
             switch (state)
             {
-                case DockState.DockTop:
-                {
-                    o = Orientation.Vertical;
-                    c1 = dockPanel;
-                    c2 = _tabsProxy;
-                    break;
-                }
+            case DockState.DockTop:
+            {
+                o = Orientation.Vertical;
+                c1 = dockPanel;
+                c2 = _tabsProxy;
+                break;
+            }
 
+            case DockState.DockBottom:
+            {
+                splitterValue = 1 - splitterValue;
+                o = Orientation.Vertical;
+                c1 = _tabsProxy;
+                c2 = dockPanel;
+                break;
+            }
 
-                case DockState.DockBottom:
-                {
-                    splitterValue = 1 - splitterValue;
-                    o = Orientation.Vertical;
-                    c1 = _tabsProxy;
-                    c2 = dockPanel;
-                    break;
-                }
+            case DockState.DockLeft:
+            {
+                o = Orientation.Horizontal;
+                c1 = dockPanel;
+                c2 = _tabsProxy;
+                break;
+            }
 
+            case DockState.DockRight:
+            {
+                splitterValue = 1 - splitterValue;
+                o = Orientation.Horizontal;
+                c1 = _tabsProxy;
+                c2 = dockPanel;
+                break;
+            }
 
-                case DockState.DockLeft:
-                {
-                    o = Orientation.Horizontal;
-                    c1 = dockPanel;
-                    c2 = _tabsProxy;
-                    break;
-                }
-
-
-                case DockState.DockRight:
-                {
-                    splitterValue = 1 - splitterValue;
-                    o = Orientation.Horizontal;
-                    c1 = _tabsProxy;
-                    c2 = dockPanel;
-                    break;
-                }
-
-                default: throw new ArgumentOutOfRangeException();
+            default: throw new ArgumentOutOfRangeException();
             }
 
             // Create splitter and link controls

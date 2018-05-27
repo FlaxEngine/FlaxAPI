@@ -57,7 +57,7 @@ namespace FlaxEditor.Windows
             /// Initializes a new instance of the <see cref="CameraPreview"/> class.
             /// </summary>
             public CameraPreview()
-                : base(RenderTask.Create<SceneRenderTask>())
+            : base(RenderTask.Create<SceneRenderTask>())
             {
                 // Don't steal focus
                 CanFocus = false;
@@ -120,7 +120,7 @@ namespace FlaxEditor.Windows
         /// </summary>
         /// <param name="editor">The editor.</param>
         public EditGameWindow(Editor editor)
-            : base(editor, true, ScrollBars.None)
+        : base(editor, true, ScrollBars.None)
         {
             Title = "Editor";
 
@@ -177,14 +177,14 @@ namespace FlaxEditor.Windows
         private void GetActorSphere(Actor actor, out BoundingSphere sphere)
         {
             BoundingBox box;
-			Editor.Internal_GetEditorBoxWithChildren(actor.unmanagedPtr, out box);
+            Editor.Internal_GetEditorBoxWithChildren(actor.unmanagedPtr, out box);
             BoundingSphere.FromBox(ref box, out sphere);
             sphere.Radius = Math.Max(sphere.Radius, 15.0f);
         }
 
         private void ShowSphere(ref BoundingSphere sphere)
         {
-	        var camera = (FPSCamera)Viewport.ViewportCamera;
+            var camera = (FPSCamera)Viewport.ViewportCamera;
 
             // Calculate view transform
             Quaternion orientation = new Quaternion(0.424461186f, -0.0940724313f, 0.0443938486f, 0.899451137f);
@@ -319,8 +319,6 @@ namespace FlaxEditor.Windows
         {
             if (SceneManager.LoadedScenesCount == 1)
             {
-
-
                 // TODO: load cached viewport for that scene
             }
         }

@@ -96,7 +96,7 @@ namespace FlaxEditor.Windows.Assets
                 private int ConvexVertexLimit;
 
                 public CookData(PropertiesProxy proxy, string resultUrl, CollisionDataType type, Model model, int modelLodIndex, ConvexMeshGenerationFlags convexFlags, int convexVertexLimit)
-                    : base("Collision Data", resultUrl)
+                : base("Collision Data", resultUrl)
                 {
                     Proxy = proxy;
                     Type = type;
@@ -153,11 +153,11 @@ namespace FlaxEditor.Windows.Assets
         private readonly PropertiesProxy _properties;
         private Model _collisionWiresModel;
         private ModelActor _collisionWiresShowActor;
-	    private bool _updateWireMesh;
+        private bool _updateWireMesh;
 
         /// <inheritdoc />
         public CollisionDataWindow(Editor editor, AssetItem item)
-            : base(editor, item)
+        : base(editor, item)
         {
             // Split Panel
             _split = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
@@ -170,8 +170,8 @@ namespace FlaxEditor.Windows.Assets
             // Model preview
             _preview = new ModelPreview(true)
             {
-	            ViewportCamera = new FPSCamera(),
-				Parent = _split.Panel1
+                ViewportCamera = new FPSCamera(),
+                Parent = _split.Panel1
             };
 
             // Asset properties
@@ -198,14 +198,14 @@ namespace FlaxEditor.Windows.Assets
         /// </summary>
         private void UpdateWiresModel()
         {
-			// Don't update on a importer/worker thread
-	        if (!Application.IsInMainThread)
-	        {
-		        _updateWireMesh = true;
-		        return;
-	        }
+            // Don't update on a importer/worker thread
+            if (!Application.IsInMainThread)
+            {
+                _updateWireMesh = true;
+                return;
+            }
 
-	        if (_collisionWiresModel == null)
+            if (_collisionWiresModel == null)
             {
                 _collisionWiresModel = FlaxEngine.Content.CreateVirtualAsset<Model>();
             }
@@ -216,7 +216,7 @@ namespace FlaxEditor.Windows.Assets
             {
                 _collisionWiresShowActor = ModelActor.New();
                 _preview.Task.CustomActors.Add(_collisionWiresShowActor);
-			}
+            }
             _collisionWiresShowActor.Model = _collisionWiresModel;
             _collisionWiresShowActor.Entries[0].Material = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.WiresDebugMaterial);
             _preview.Model = _asset.Model;
@@ -261,19 +261,19 @@ namespace FlaxEditor.Windows.Assets
             base.OnItemReimported(item);
         }
 
-	    /// <inheritdoc />
-	    public override void OnUpdate()
-	    {
-		    if (_updateWireMesh)
-		    {
-			    _updateWireMesh = false;
-			    UpdateWiresModel();
-		    }
+        /// <inheritdoc />
+        public override void OnUpdate()
+        {
+            if (_updateWireMesh)
+            {
+                _updateWireMesh = false;
+                UpdateWiresModel();
+            }
 
-		    base.OnUpdate();
-	    }
+            base.OnUpdate();
+        }
 
-	    /// <inheritdoc />
+        /// <inheritdoc />
         public override void OnDestroy()
         {
             base.OnDestroy();
@@ -282,28 +282,28 @@ namespace FlaxEditor.Windows.Assets
             Object.Destroy(ref _collisionWiresModel);
         }
 
-	    /// <inheritdoc />
-	    public override bool UseLayoutData => true;
+        /// <inheritdoc />
+        public override bool UseLayoutData => true;
 
-	    /// <inheritdoc />
-	    public override void OnLayoutSerialize(XmlWriter writer)
-	    {
-		    writer.WriteAttributeString("Split", _split.SplitterValue.ToString());
-	    }
+        /// <inheritdoc />
+        public override void OnLayoutSerialize(XmlWriter writer)
+        {
+            writer.WriteAttributeString("Split", _split.SplitterValue.ToString());
+        }
 
-	    /// <inheritdoc />
-	    public override void OnLayoutDeserialize(XmlElement node)
-	    {
-		    float value1;
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize(XmlElement node)
+        {
+            float value1;
 
-		    if (float.TryParse(node.GetAttribute("Split"), out value1))
-			    _split.SplitterValue = value1;
-	    }
+            if (float.TryParse(node.GetAttribute("Split"), out value1))
+                _split.SplitterValue = value1;
+        }
 
-	    /// <inheritdoc />
-	    public override void OnLayoutDeserialize()
-	    {
-		    _split.SplitterValue = 0.7f;
-	    }
-	}
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize()
+        {
+            _split.SplitterValue = 0.7f;
+        }
+    }
 }

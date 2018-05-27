@@ -145,29 +145,29 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Color(0, 0, 0)
                 }
             },
-	        new NodeArchetype
-	        {
-		        TypeID = 8,
-		        Title = "Rotation",
-		        Description = "Euler angle rotation",
-		        Size = new Vector2(110, 60),
-		        DefaultValues = new object[]
-		        {
-					0.0f,
-					0.0f,
-					0.0f,
-		        },
-		        Elements = new[]
-		        {
-			        NodeElementArchetype.Factory.Output(0, "", ConnectionType.Rotation, 0),
-			        NodeElementArchetype.Factory.Float(32, 0, 0),
-			        NodeElementArchetype.Factory.Float(32, Surface.Constants.LayoutOffsetY, 1),
-			        NodeElementArchetype.Factory.Float(32, Surface.Constants.LayoutOffsetY * 2, 2),
-			        NodeElementArchetype.Factory.Text(0, 0, "Pitch:"),
-			        NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY, "Yaw:"),
-			        NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 2, "Roll:"),
-				}
-	        },
+            new NodeArchetype
+            {
+                TypeID = 8,
+                Title = "Rotation",
+                Description = "Euler angle rotation",
+                Size = new Vector2(110, 60),
+                DefaultValues = new object[]
+                {
+                    0.0f,
+                    0.0f,
+                    0.0f,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Rotation, 0),
+                    NodeElementArchetype.Factory.Float(32, 0, 0),
+                    NodeElementArchetype.Factory.Float(32, Surface.Constants.LayoutOffsetY, 1),
+                    NodeElementArchetype.Factory.Float(32, Surface.Constants.LayoutOffsetY * 2, 2),
+                    NodeElementArchetype.Factory.Text(0, 0, "Pitch:"),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY, "Yaw:"),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 2, "Roll:"),
+                }
+            },
             // TODO: 9 - String
         };
     }

@@ -20,12 +20,12 @@ namespace FlaxEditor.Windows
         private bool _isUpdatingSelection;
         private bool _isMouseDown;
         private readonly ContextMenu _contextMenu;
-	    private readonly ContextMenuButton _cmRename;
-	    private readonly ContextMenuButton _cmDuplicate;
-	    private readonly ContextMenuButton _cmDelete;
-	    private readonly ContextMenuButton _cmCopy;
-	    private readonly ContextMenuButton _cmCut;
-	    private readonly ContextMenuChildMenu _spawnMenu;
+        private readonly ContextMenuButton _cmRename;
+        private readonly ContextMenuButton _cmDuplicate;
+        private readonly ContextMenuButton _cmDelete;
+        private readonly ContextMenuButton _cmCopy;
+        private readonly ContextMenuButton _cmCut;
+        private readonly ContextMenuChildMenu _spawnMenu;
 
         private struct ActorsGroup
         {
@@ -38,7 +38,7 @@ namespace FlaxEditor.Windows
         /// </summary>
         /// <param name="editor">The editor.</param>
         public SceneTreeWindow(Editor editor)
-            : base(editor, true, ScrollBars.Both)
+        : base(editor, true, ScrollBars.Both)
         {
             Title = "Scene";
 
@@ -86,9 +86,9 @@ namespace FlaxEditor.Windows
                         new KeyValuePair<string, Type>("Sky", typeof(Sky)),
                         new KeyValuePair<string, Type>("Skybox", typeof(Skybox)),
                         new KeyValuePair<string, Type>("Exponential Height Fog", typeof(ExponentialHeightFog)),
-	                    new KeyValuePair<string, Type>("PostFx Volume", typeof(PostFxVolume)),
-	                    new KeyValuePair<string, Type>("Decal", typeof(Decal)),
-					}
+                        new KeyValuePair<string, Type>("PostFx Volume", typeof(PostFxVolume)),
+                        new KeyValuePair<string, Type>("Decal", typeof(Decal)),
+                    }
                 },
                 new ActorsGroup
                 {
@@ -114,9 +114,9 @@ namespace FlaxEditor.Windows
                     Name = "Other",
                     Types = new[]
                     {
-	                    new KeyValuePair<string, Type>("Animated Model", typeof(AnimatedModel)),
-	                    new KeyValuePair<string, Type>("Bone Socket", typeof(BoneSocket)),
-						new KeyValuePair<string, Type>("CSG Box Brush", typeof(BoxBrush)),
+                        new KeyValuePair<string, Type>("Animated Model", typeof(AnimatedModel)),
+                        new KeyValuePair<string, Type>("Bone Socket", typeof(BoneSocket)),
+                        new KeyValuePair<string, Type>("CSG Box Brush", typeof(BoxBrush)),
                         new KeyValuePair<string, Type>("Audio Source", typeof(AudioSource)),
                         new KeyValuePair<string, Type>("Audio Listener", typeof(AudioListener)),
                     }
@@ -130,12 +130,12 @@ namespace FlaxEditor.Windows
                     }
                 },
             };
-			
+
             // Create context menu
             _contextMenu = new ContextMenu();
             _contextMenu.MinimumWidth = 120;
-	        _cmRename = _contextMenu.AddButton("Rename", Rename);
-	        _cmDuplicate = _contextMenu.AddButton("Duplicate", Editor.SceneEditing.Duplicate);
+            _cmRename = _contextMenu.AddButton("Rename", Rename);
+            _cmDuplicate = _contextMenu.AddButton("Duplicate", Editor.SceneEditing.Duplicate);
             _cmDelete = _contextMenu.AddButton("Delete", Editor.SceneEditing.Delete);
             _contextMenu.AddSeparator();
             _cmCopy = _contextMenu.AddButton("Copy", Editor.SceneEditing.Copy);
@@ -159,30 +159,30 @@ namespace FlaxEditor.Windows
                     for (int j = 0; j < group.Types.Length; j++)
                     {
                         var type = group.Types[j].Value;
-	                    groupCm.AddButton(group.Types[j].Key, () => Spawn(type));
+                        groupCm.AddButton(group.Types[j].Key, () => Spawn(type));
                     }
                 }
             }
 
-	        _contextMenu.VisibleChanged += ContextMenuOnVisibleChanged;
+            _contextMenu.VisibleChanged += ContextMenuOnVisibleChanged;
         }
 
         private void ContextMenuOnVisibleChanged(Control control)
-	    {
-		    bool hasSthSelected = Editor.SceneEditing.HasSthSelected;
+        {
+            bool hasSthSelected = Editor.SceneEditing.HasSthSelected;
 
-		    _cmRename.Enabled = Editor.SceneEditing.SelectionCount == 1 && Editor.SceneEditing.Selection[0] is ActorNode;
-			_cmDuplicate.Enabled = hasSthSelected;
-		    _cmDelete.Enabled = hasSthSelected;
-		    _cmCopy.Enabled = hasSthSelected;
-		    _cmCut.Enabled = hasSthSelected;
-		    _spawnMenu.Enabled = Editor.StateMachine.CurrentState.CanEditScene && SceneManager.IsAnySceneLoaded;
-	    }
+            _cmRename.Enabled = Editor.SceneEditing.SelectionCount == 1 && Editor.SceneEditing.Selection[0] is ActorNode;
+            _cmDuplicate.Enabled = hasSthSelected;
+            _cmDelete.Enabled = hasSthSelected;
+            _cmCopy.Enabled = hasSthSelected;
+            _cmCut.Enabled = hasSthSelected;
+            _spawnMenu.Enabled = Editor.StateMachine.CurrentState.CanEditScene && SceneManager.IsAnySceneLoaded;
+        }
 
-	    private void Rename()
-	    {
-			(Editor.SceneEditing.Selection[0] as ActorNode).TreeNode.StartRenaming();
-	    }
+        private void Rename()
+        {
+            (Editor.SceneEditing.Selection[0] as ActorNode).TreeNode.StartRenaming();
+        }
 
         private void Spawn(Type type)
         {
@@ -251,7 +251,7 @@ namespace FlaxEditor.Windows
         {
             if (!Editor.StateMachine.CurrentState.CanEditScene)
                 return;
-            
+
             // Show context menu
             _contextMenu.Show(node, location);
         }

@@ -99,7 +99,7 @@ namespace FlaxEditor.CustomEditors
         /// <param name="info">The member info.</param>
         /// <param name="instanceValues">The parent values.</param>
         public ValueContainer(MemberInfo info, ValueContainer instanceValues)
-            : this(info)
+        : this(info)
         {
             Capacity = instanceValues.Count;
 
@@ -133,7 +133,7 @@ namespace FlaxEditor.CustomEditors
         /// <param name="instanceValues">The parent values.</param>
         public virtual void Refresh(ValueContainer instanceValues)
         {
-            if(instanceValues == null)
+            if (instanceValues == null)
                 throw new ArgumentNullException();
             if (instanceValues.Count != Count)
                 throw new ArgumentException();

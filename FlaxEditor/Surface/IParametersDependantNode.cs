@@ -18,7 +18,7 @@ namespace FlaxEditor.Surface
         /// </summary>
         /// <param name="param">The paramater.</param>
         void OnParamRenamed(SurfaceParameter param);
-	
+
         /// <summary>
         /// On new parameter deleted
         /// </summary>

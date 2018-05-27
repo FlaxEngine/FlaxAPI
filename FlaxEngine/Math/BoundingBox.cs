@@ -531,7 +531,10 @@ namespace FlaxEngine
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.CurrentCulture, "Minimum:{0} Maximum:{1}", Minimum.ToString(), Maximum.ToString());
+            return string.Format(CultureInfo.CurrentCulture,
+                                 "Minimum:{0} Maximum:{1}",
+                                 Minimum.ToString(),
+                                 Maximum.ToString());
         }
 
         /// <summary>
@@ -546,8 +549,10 @@ namespace FlaxEngine
             if (format == null)
                 return ToString();
 
-            return string.Format(CultureInfo.CurrentCulture, "Minimum:{0} Maximum:{1}", Minimum.ToString(format, CultureInfo.CurrentCulture),
-                Maximum.ToString(format, CultureInfo.CurrentCulture));
+            return string.Format(CultureInfo.CurrentCulture,
+                                 "Minimum:{0} Maximum:{1}",
+                                 Minimum.ToString(format, CultureInfo.CurrentCulture),
+                                 Maximum.ToString(format, CultureInfo.CurrentCulture));
         }
 
         /// <summary>
@@ -559,7 +564,10 @@ namespace FlaxEngine
         /// </returns>
         public string ToString(IFormatProvider formatProvider)
         {
-            return string.Format(formatProvider, "Minimum:{0} Maximum:{1}", Minimum.ToString(), Maximum.ToString());
+            return string.Format(formatProvider,
+                                 "Minimum:{0} Maximum:{1}",
+                                 Minimum.ToString(),
+                                 Maximum.ToString());
         }
 
         /// <summary>
@@ -575,8 +583,10 @@ namespace FlaxEngine
             if (format == null)
                 return ToString(formatProvider);
 
-            return string.Format(formatProvider, "Minimum:{0} Maximum:{1}", Minimum.ToString(format, formatProvider),
-                Maximum.ToString(format, formatProvider));
+            return string.Format(formatProvider,
+                                 "Minimum:{0} Maximum:{1}",
+                                 Minimum.ToString(format, formatProvider),
+                                 Maximum.ToString(format, formatProvider));
         }
 
         /// <summary>

@@ -23,10 +23,10 @@ namespace FlaxEditor.Content.Create
         /// </summary>
         /// <param name="entry">The entry to edit it's settings.</param>
         public CreateFilesDialog(CreateFileEntry entry)
-            : base("Create file settings")
+        : base("Create file settings")
         {
             _entry = entry ?? throw new ArgumentNullException();
-            
+
             const float TotalWidth = 520;
             const float EditorHeight = 250;
             Width = TotalWidth;

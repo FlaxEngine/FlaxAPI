@@ -76,7 +76,13 @@ namespace FlaxEngine
         /// <summary>
         /// The identity <see cref="Matrix" />.
         /// </summary>
-        public static readonly Matrix Identity = new Matrix {M11 = 1.0f, M22 = 1.0f, M33 = 1.0f, M44 = 1.0f};
+        public static readonly Matrix Identity = new Matrix
+        {
+            M11 = 1.0f,
+            M22 = 1.0f,
+            M33 = 1.0f,
+            M44 = 1.0f
+        };
 
         /// <summary>
         /// Value at row 1 column 1 of the matrix.
@@ -291,9 +297,9 @@ namespace FlaxEngine
         public Matrix(float value)
         {
             M11 = M12 = M13 = M14 =
-                M21 = M22 = M23 = M24 =
-                    M31 = M32 = M33 = M34 =
-                        M41 = M42 = M43 = M44 = value;
+                              M21 = M22 = M23 = M24 =
+                                                M31 = M32 = M33 = M34 =
+                                                                  M41 = M42 = M43 = M44 = value;
         }
 
         /// <summary>
@@ -547,38 +553,38 @@ namespace FlaxEngine
             {
                 switch (index)
                 {
-                    case 0:
-                        return M11;
-                    case 1:
-                        return M12;
-                    case 2:
-                        return M13;
-                    case 3:
-                        return M14;
-                    case 4:
-                        return M21;
-                    case 5:
-                        return M22;
-                    case 6:
-                        return M23;
-                    case 7:
-                        return M24;
-                    case 8:
-                        return M31;
-                    case 9:
-                        return M32;
-                    case 10:
-                        return M33;
-                    case 11:
-                        return M34;
-                    case 12:
-                        return M41;
-                    case 13:
-                        return M42;
-                    case 14:
-                        return M43;
-                    case 15:
-                        return M44;
+                case 0:
+                    return M11;
+                case 1:
+                    return M12;
+                case 2:
+                    return M13;
+                case 3:
+                    return M14;
+                case 4:
+                    return M21;
+                case 5:
+                    return M22;
+                case 6:
+                    return M23;
+                case 7:
+                    return M24;
+                case 8:
+                    return M31;
+                case 9:
+                    return M32;
+                case 10:
+                    return M33;
+                case 11:
+                    return M34;
+                case 12:
+                    return M41;
+                case 13:
+                    return M42;
+                case 14:
+                    return M43;
+                case 15:
+                    return M44;
                 }
 
                 throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix run from 0 to 15, inclusive.");
@@ -588,56 +594,56 @@ namespace FlaxEngine
             {
                 switch (index)
                 {
-                    case 0:
-                        M11 = value;
-                        break;
-                    case 1:
-                        M12 = value;
-                        break;
-                    case 2:
-                        M13 = value;
-                        break;
-                    case 3:
-                        M14 = value;
-                        break;
-                    case 4:
-                        M21 = value;
-                        break;
-                    case 5:
-                        M22 = value;
-                        break;
-                    case 6:
-                        M23 = value;
-                        break;
-                    case 7:
-                        M24 = value;
-                        break;
-                    case 8:
-                        M31 = value;
-                        break;
-                    case 9:
-                        M32 = value;
-                        break;
-                    case 10:
-                        M33 = value;
-                        break;
-                    case 11:
-                        M34 = value;
-                        break;
-                    case 12:
-                        M41 = value;
-                        break;
-                    case 13:
-                        M42 = value;
-                        break;
-                    case 14:
-                        M43 = value;
-                        break;
-                    case 15:
-                        M44 = value;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix run from 0 to 15, inclusive.");
+                case 0:
+                    M11 = value;
+                    break;
+                case 1:
+                    M12 = value;
+                    break;
+                case 2:
+                    M13 = value;
+                    break;
+                case 3:
+                    M14 = value;
+                    break;
+                case 4:
+                    M21 = value;
+                    break;
+                case 5:
+                    M22 = value;
+                    break;
+                case 6:
+                    M23 = value;
+                    break;
+                case 7:
+                    M24 = value;
+                    break;
+                case 8:
+                    M31 = value;
+                    break;
+                case 9:
+                    M32 = value;
+                    break;
+                case 10:
+                    M33 = value;
+                    break;
+                case 11:
+                    M34 = value;
+                    break;
+                case 12:
+                    M41 = value;
+                    break;
+                case 13:
+                    M42 = value;
+                    break;
+                case 14:
+                    M43 = value;
+                    break;
+                case 15:
+                    M44 = value;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix run from 0 to 15, inclusive.");
                 }
             }
         }
@@ -992,7 +998,25 @@ namespace FlaxEngine
         /// <returns>A sixteen-element array containing the components of the matrix.</returns>
         public float[] ToArray()
         {
-            return new[] {M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44};
+            return new[]
+            {
+                M11,
+                M12,
+                M13,
+                M14,
+                M21,
+                M22,
+                M23,
+                M24,
+                M31,
+                M32,
+                M33,
+                M34,
+                M41,
+                M42,
+                M43,
+                M44
+            };
         }
 
         /// <summary>
@@ -2115,7 +2139,7 @@ namespace FlaxEngine
             BillboardLH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
             return result;
         }
-        
+
         /// <summary>
         /// Creates a left-handed, look-at matrix.
         /// </summary>
@@ -2165,7 +2189,7 @@ namespace FlaxEngine
             LookAtLH(ref eye, ref target, ref up, out result);
             return result;
         }
-        
+
         /// <summary>
         /// Creates a left-handed, orthographic projection matrix.
         /// </summary>
@@ -2196,7 +2220,7 @@ namespace FlaxEngine
             OrthoLH(width, height, znear, zfar, out result);
             return result;
         }
-        
+
         /// <summary>
         /// Creates a left-handed, customized orthographic projection matrix.
         /// </summary>
@@ -2236,7 +2260,7 @@ namespace FlaxEngine
             OrthoOffCenterLH(left, right, bottom, top, znear, zfar, out result);
             return result;
         }
-        
+
         /// <summary>
         /// Creates a left-handed, perspective projection matrix.
         /// </summary>
@@ -2267,7 +2291,7 @@ namespace FlaxEngine
             PerspectiveLH(width, height, znear, zfar, out result);
             return result;
         }
-        
+
         /// <summary>
         /// Creates a left-handed, perspective projection matrix based on a field of view.
         /// </summary>
@@ -2303,7 +2327,7 @@ namespace FlaxEngine
             PerspectiveFovLH(fov, aspect, znear, zfar, out result);
             return result;
         }
-        
+
         /// <summary>
         /// Creates a left-handed, customized perspective projection matrix.
         /// </summary>
@@ -2344,7 +2368,7 @@ namespace FlaxEngine
             PerspectiveOffCenterLH(left, right, bottom, top, znear, zfar, out result);
             return result;
         }
-        
+
         /// <summary>
         /// Creates a matrix that scales along the x-axis, y-axis, and y-axis.
         /// </summary>
@@ -2850,84 +2874,84 @@ namespace FlaxEngine
             return result;
         }
 
-	    /// <summary>
-	    /// Creates a matrix that contains both the X, Y and Z rotation, as well as scaling and translation.
-	    /// </summary>
-	    /// <param name="translation">The translation.</param>
-	    /// <param name="rotation">Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis toward the origin.</param>
-	    /// <param name="scaling">The scaling.</param>
-	    /// <param name="result">When the method completes, contains the created rotation matrix.</param>
-	    public static void Transformation(ref Vector3 scaling, ref Quaternion rotation, ref Vector3 translation, out Matrix result)
-	    {
-		    // Equivalent to:
-		    //result =
-		    //    Matrix.Scaling(scaling)
-		    //    *Matrix.RotationX(rotation.X)
-		    //    *Matrix.RotationY(rotation.Y)
-		    //    *Matrix.RotationZ(rotation.Z)
-		    //    *Matrix.Position(translation);
+        /// <summary>
+        /// Creates a matrix that contains both the X, Y and Z rotation, as well as scaling and translation.
+        /// </summary>
+        /// <param name="translation">The translation.</param>
+        /// <param name="rotation">Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis toward the origin.</param>
+        /// <param name="scaling">The scaling.</param>
+        /// <param name="result">When the method completes, contains the created rotation matrix.</param>
+        public static void Transformation(ref Vector3 scaling, ref Quaternion rotation, ref Vector3 translation, out Matrix result)
+        {
+            // Equivalent to:
+            //result =
+            //    Matrix.Scaling(scaling)
+            //    *Matrix.RotationX(rotation.X)
+            //    *Matrix.RotationY(rotation.Y)
+            //    *Matrix.RotationZ(rotation.Z)
+            //    *Matrix.Position(translation);
 
-		    // Rotation
-		    float xx = rotation.X * rotation.X;
-		    float yy = rotation.Y * rotation.Y;
-		    float zz = rotation.Z * rotation.Z;
-		    float xy = rotation.X * rotation.Y;
-		    float zw = rotation.Z * rotation.W;
-		    float zx = rotation.Z * rotation.X;
-		    float yw = rotation.Y * rotation.W;
-		    float yz = rotation.Y * rotation.Z;
-		    float xw = rotation.X * rotation.W;
-		    result.M11 = 1.0f - (2.0f * (yy + zz));
-		    result.M12 = 2.0f * (xy + zw);
-		    result.M13 = 2.0f * (zx - yw);
-		    result.M21 = 2.0f * (xy - zw);
-		    result.M22 = 1.0f - (2.0f * (zz + xx));
-		    result.M23 = 2.0f * (yz + xw);
-		    result.M31 = 2.0f * (zx + yw);
-		    result.M32 = 2.0f * (yz - xw);
-		    result.M33 = 1.0f - (2.0f * (yy + xx));
+            // Rotation
+            float xx = rotation.X * rotation.X;
+            float yy = rotation.Y * rotation.Y;
+            float zz = rotation.Z * rotation.Z;
+            float xy = rotation.X * rotation.Y;
+            float zw = rotation.Z * rotation.W;
+            float zx = rotation.Z * rotation.X;
+            float yw = rotation.Y * rotation.W;
+            float yz = rotation.Y * rotation.Z;
+            float xw = rotation.X * rotation.W;
+            result.M11 = 1.0f - (2.0f * (yy + zz));
+            result.M12 = 2.0f * (xy + zw);
+            result.M13 = 2.0f * (zx - yw);
+            result.M21 = 2.0f * (xy - zw);
+            result.M22 = 1.0f - (2.0f * (zz + xx));
+            result.M23 = 2.0f * (yz + xw);
+            result.M31 = 2.0f * (zx + yw);
+            result.M32 = 2.0f * (yz - xw);
+            result.M33 = 1.0f - (2.0f * (yy + xx));
 
-		    // Position
-		    result.M41 = translation.X;
-		    result.M42 = translation.Y;
-		    result.M43 = translation.Z;
+            // Position
+            result.M41 = translation.X;
+            result.M42 = translation.Y;
+            result.M43 = translation.Z;
 
-		    // Scale
-		    result.M11 *= scaling.X;
-		    result.M12 *= scaling.X;
-		    result.M13 *= scaling.X;
-		    result.M21 *= scaling.Y;
-		    result.M22 *= scaling.Y;
-		    result.M23 *= scaling.Y;
-		    result.M31 *= scaling.Z;
-		    result.M32 *= scaling.Z;
-		    result.M33 *= scaling.Z;
+            // Scale
+            result.M11 *= scaling.X;
+            result.M12 *= scaling.X;
+            result.M13 *= scaling.X;
+            result.M21 *= scaling.Y;
+            result.M22 *= scaling.Y;
+            result.M23 *= scaling.Y;
+            result.M31 *= scaling.Z;
+            result.M32 *= scaling.Z;
+            result.M33 *= scaling.Z;
 
-		    result.M14 = 0.0f;
-		    result.M24 = 0.0f;
-		    result.M34 = 0.0f;
-		    result.M44 = 1.0f;
-	    }
+            result.M14 = 0.0f;
+            result.M24 = 0.0f;
+            result.M34 = 0.0f;
+            result.M44 = 1.0f;
+        }
 
-	    /// <summary>
-	    /// Creates a transformation matrix.
-	    /// </summary>
-	    /// <param name="scalingCenter">Center point of the scaling operation.</param>
-	    /// <param name="scalingRotation">Scaling rotation amount.</param>
-	    /// <param name="scaling">Scaling factor.</param>
-	    /// <param name="rotationCenter">The center of the rotation.</param>
-	    /// <param name="rotation">The rotation of the transformation.</param>
-	    /// <param name="translation">The translation factor of the transformation.</param>
-	    /// <param name="result">When the method completes, contains the created transformation matrix.</param>
-	    public static void Transformation(ref Vector3 scalingCenter, ref Quaternion scalingRotation, ref Vector3 scaling, ref Vector3 rotationCenter, ref Quaternion rotation, ref Vector3 translation, out Matrix result)
-	    {
-		    Matrix sr = RotationQuaternion(scalingRotation);
+        /// <summary>
+        /// Creates a transformation matrix.
+        /// </summary>
+        /// <param name="scalingCenter">Center point of the scaling operation.</param>
+        /// <param name="scalingRotation">Scaling rotation amount.</param>
+        /// <param name="scaling">Scaling factor.</param>
+        /// <param name="rotationCenter">The center of the rotation.</param>
+        /// <param name="rotation">The rotation of the transformation.</param>
+        /// <param name="translation">The translation factor of the transformation.</param>
+        /// <param name="result">When the method completes, contains the created transformation matrix.</param>
+        public static void Transformation(ref Vector3 scalingCenter, ref Quaternion scalingRotation, ref Vector3 scaling, ref Vector3 rotationCenter, ref Quaternion rotation, ref Vector3 translation, out Matrix result)
+        {
+            Matrix sr = RotationQuaternion(scalingRotation);
 
-		    result = Translation(-scalingCenter) * Transpose(sr) * Scaling(scaling) * sr * Translation(scalingCenter) * Translation(-rotationCenter) *
-		             RotationQuaternion(rotation) * Translation(rotationCenter) * Translation(translation);
-	    }
+            result = Translation(-scalingCenter) * Transpose(sr) * Scaling(scaling) * sr * Translation(scalingCenter) * Translation(-rotationCenter) *
+                     RotationQuaternion(rotation) * Translation(rotationCenter) * Translation(translation);
+        }
 
-	    /// <summary>
+        /// <summary>
         /// Creates a transformation matrix.
         /// </summary>
         /// <param name="scalingCenter">Center point of the scaling operation.</param>
@@ -3012,7 +3036,6 @@ namespace FlaxEngine
             Vector3.Cross(ref vector3, ref vector31, out vector32);
 
             result = new Matrix(
-
                 // M11-M14
                 vector31.X,
                 vector31.Y,
@@ -3072,7 +3095,6 @@ namespace FlaxEngine
             float single7 = y * z;
 
             result = new Matrix(
-
                 // M11-M14
                 single2 + single1 * (1.0f - single2),
                 single5 - single1 * single5 + single * z,
@@ -3250,7 +3272,7 @@ namespace FlaxEngine
         public override string ToString()
         {
             return string.Format(CultureInfo.CurrentCulture, "[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M23:{6} M24:{7}] [M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}]",
-                M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44);
+                                 M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44);
         }
 
         /// <summary>
@@ -3266,10 +3288,10 @@ namespace FlaxEngine
                 return ToString();
 
             return string.Format(format, CultureInfo.CurrentCulture, "[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M23:{6} M24:{7}] [M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}]",
-                M11.ToString(format, CultureInfo.CurrentCulture), M12.ToString(format, CultureInfo.CurrentCulture), M13.ToString(format, CultureInfo.CurrentCulture), M14.ToString(format, CultureInfo.CurrentCulture),
-                M21.ToString(format, CultureInfo.CurrentCulture), M22.ToString(format, CultureInfo.CurrentCulture), M23.ToString(format, CultureInfo.CurrentCulture), M24.ToString(format, CultureInfo.CurrentCulture),
-                M31.ToString(format, CultureInfo.CurrentCulture), M32.ToString(format, CultureInfo.CurrentCulture), M33.ToString(format, CultureInfo.CurrentCulture), M34.ToString(format, CultureInfo.CurrentCulture),
-                M41.ToString(format, CultureInfo.CurrentCulture), M42.ToString(format, CultureInfo.CurrentCulture), M43.ToString(format, CultureInfo.CurrentCulture), M44.ToString(format, CultureInfo.CurrentCulture));
+                                 M11.ToString(format, CultureInfo.CurrentCulture), M12.ToString(format, CultureInfo.CurrentCulture), M13.ToString(format, CultureInfo.CurrentCulture), M14.ToString(format, CultureInfo.CurrentCulture),
+                                 M21.ToString(format, CultureInfo.CurrentCulture), M22.ToString(format, CultureInfo.CurrentCulture), M23.ToString(format, CultureInfo.CurrentCulture), M24.ToString(format, CultureInfo.CurrentCulture),
+                                 M31.ToString(format, CultureInfo.CurrentCulture), M32.ToString(format, CultureInfo.CurrentCulture), M33.ToString(format, CultureInfo.CurrentCulture), M34.ToString(format, CultureInfo.CurrentCulture),
+                                 M41.ToString(format, CultureInfo.CurrentCulture), M42.ToString(format, CultureInfo.CurrentCulture), M43.ToString(format, CultureInfo.CurrentCulture), M44.ToString(format, CultureInfo.CurrentCulture));
         }
 
         /// <summary>
@@ -3282,10 +3304,10 @@ namespace FlaxEngine
         public string ToString(IFormatProvider formatProvider)
         {
             return string.Format(formatProvider, "[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M23:{6} M24:{7}] [M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}]",
-                M11.ToString(formatProvider), M12.ToString(formatProvider), M13.ToString(formatProvider), M14.ToString(formatProvider),
-                M21.ToString(formatProvider), M22.ToString(formatProvider), M23.ToString(formatProvider), M24.ToString(formatProvider),
-                M31.ToString(formatProvider), M32.ToString(formatProvider), M33.ToString(formatProvider), M34.ToString(formatProvider),
-                M41.ToString(formatProvider), M42.ToString(formatProvider), M43.ToString(formatProvider), M44.ToString(formatProvider));
+                                 M11.ToString(formatProvider), M12.ToString(formatProvider), M13.ToString(formatProvider), M14.ToString(formatProvider),
+                                 M21.ToString(formatProvider), M22.ToString(formatProvider), M23.ToString(formatProvider), M24.ToString(formatProvider),
+                                 M31.ToString(formatProvider), M32.ToString(formatProvider), M33.ToString(formatProvider), M34.ToString(formatProvider),
+                                 M41.ToString(formatProvider), M42.ToString(formatProvider), M43.ToString(formatProvider), M44.ToString(formatProvider));
         }
 
         /// <summary>
@@ -3302,10 +3324,10 @@ namespace FlaxEngine
                 return ToString(formatProvider);
 
             return string.Format(format, formatProvider, "[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M23:{6} M24:{7}] [M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}]",
-                M11.ToString(format, formatProvider), M12.ToString(format, formatProvider), M13.ToString(format, formatProvider), M14.ToString(format, formatProvider),
-                M21.ToString(format, formatProvider), M22.ToString(format, formatProvider), M23.ToString(format, formatProvider), M24.ToString(format, formatProvider),
-                M31.ToString(format, formatProvider), M32.ToString(format, formatProvider), M33.ToString(format, formatProvider), M34.ToString(format, formatProvider),
-                M41.ToString(format, formatProvider), M42.ToString(format, formatProvider), M43.ToString(format, formatProvider), M44.ToString(format, formatProvider));
+                                 M11.ToString(format, formatProvider), M12.ToString(format, formatProvider), M13.ToString(format, formatProvider), M14.ToString(format, formatProvider),
+                                 M21.ToString(format, formatProvider), M22.ToString(format, formatProvider), M23.ToString(format, formatProvider), M24.ToString(format, formatProvider),
+                                 M31.ToString(format, formatProvider), M32.ToString(format, formatProvider), M33.ToString(format, formatProvider), M34.ToString(format, formatProvider),
+                                 M41.ToString(format, formatProvider), M42.ToString(format, formatProvider), M43.ToString(format, formatProvider), M44.ToString(format, formatProvider));
         }
 
         /// <summary>

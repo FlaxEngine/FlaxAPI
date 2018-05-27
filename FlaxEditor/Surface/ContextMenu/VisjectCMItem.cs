@@ -41,7 +41,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <param name="group">The group.</param>
         /// <param name="archetype">The archetype.</param>
         public VisjectCMItem(VisjectCMGroup group, NodeArchetype archetype)
-            : base(0, 0, 120, 12)
+        : base(0, 0, 120, 12)
         {
             _group = group;
             _archetype = archetype;
@@ -65,7 +65,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 if (QueryFilterHelper.Match(filterText, _archetype.Title, out ranges))
                 {
                     // Update highlights
-                    if(_highlights == null)
+                    if (_highlights == null)
                         _highlights = new List<Rectangle>(ranges.Length);
                     else
                         _highlights.Clear();

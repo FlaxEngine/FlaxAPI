@@ -35,7 +35,7 @@ namespace FlaxEngine
             get => Internal_GetScreenSize(_model.unmanagedPtr, _lodIndex);
             set => Internal_SetScreenSize(_model.unmanagedPtr, _lodIndex, value);
         }
-        
+
         /// <summary>
         /// Gets the bounding box combined for all mshes in this model LOD.
         /// </summary>

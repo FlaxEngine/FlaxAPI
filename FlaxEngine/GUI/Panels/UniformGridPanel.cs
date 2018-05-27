@@ -62,7 +62,7 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="UniformGridPanel"/> class.
         /// </summary>
         public UniformGridPanel()
-            : this(2)
+        : this(2)
         {
         }
 

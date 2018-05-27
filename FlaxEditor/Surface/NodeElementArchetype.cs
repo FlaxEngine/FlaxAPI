@@ -274,7 +274,7 @@ namespace FlaxEditor.Surface
                     Text = null,
                     Single = false,
                     ValueIndex = valueIndex,
-                    BoxID = (int)domain,// Pack it to int
+                    BoxID = (int)domain, // Pack it to int
                     ConnectionsType = ConnectionType.Invalid
                 };
             }
@@ -295,7 +295,7 @@ namespace FlaxEditor.Surface
                     Type = NodeElementType.ComboBox,
                     Position = new Vector2(x, y),
                     Size = new Vector2(width, 0),
-                    Text = values != null ? string.Join("\n", values) : null,// Pack all values to string separated with new line characters
+                    Text = values != null ? string.Join("\n", values) : null, // Pack all values to string separated with new line characters
                     Single = false,
                     ValueIndex = valueIndex,
                     ConnectionsType = ConnectionType.Invalid
@@ -375,28 +375,28 @@ namespace FlaxEditor.Surface
                     ConnectionsType = ConnectionType.Invalid
                 };
             }
-			
-	        /// <summary>
-	        /// Creates new Skeleton Node Select element description for enum editing.
-	        /// </summary>
-	        /// <param name="x">The x location (in node area space).</param>
-	        /// <param name="y">The y location (in node area space).</param>
-	        /// <param name="width">The width of the element.</param>
-	        /// <param name="valueIndex">The index of the node variable linked as the input. Usefull to make a physical connection between input box and default value for it.</param>
-	        /// <returns>The archetype.</returns>
-	        public static NodeElementArchetype SkeletonNodeSelect(float x, float y, int width, int valueIndex)
-	        {
-		        return new NodeElementArchetype
-		        {
-			        Type = NodeElementType.SkeletonNodeSelect,
-			        Position = new Vector2(x, y),
-			        Size = new Vector2(width, 0),
-			        Text = null,
-			        Single = false,
-			        ValueIndex = valueIndex,
-			        ConnectionsType = ConnectionType.Invalid
-		        };
-			}
-		}
-	}
+
+            /// <summary>
+            /// Creates new Skeleton Node Select element description for enum editing.
+            /// </summary>
+            /// <param name="x">The x location (in node area space).</param>
+            /// <param name="y">The y location (in node area space).</param>
+            /// <param name="width">The width of the element.</param>
+            /// <param name="valueIndex">The index of the node variable linked as the input. Usefull to make a physical connection between input box and default value for it.</param>
+            /// <returns>The archetype.</returns>
+            public static NodeElementArchetype SkeletonNodeSelect(float x, float y, int width, int valueIndex)
+            {
+                return new NodeElementArchetype
+                {
+                    Type = NodeElementType.SkeletonNodeSelect,
+                    Position = new Vector2(x, y),
+                    Size = new Vector2(width, 0),
+                    Text = null,
+                    Single = false,
+                    ValueIndex = valueIndex,
+                    ConnectionsType = ConnectionType.Invalid
+                };
+            }
+        }
+    }
 }

@@ -33,7 +33,7 @@ namespace FlaxEditor.GUI
         /// </summary>
         /// <param name="height">The height.</param>
         public Row(float height = 16)
-            : base(0, 0, 100, height)
+        : base(0, 0, 100, height)
         {
             Depth = -1;
         }
@@ -76,7 +76,7 @@ namespace FlaxEditor.GUI
                     {
                         float arrowSize = 12.0f;
                         leftDepthMargin = arrowSize * (Depth + 1);
-                        
+
                         // Check if has any child events (next row should be it)
                         int nextIndex = IndexInParent + 1;
                         if (nextIndex < _table.ChildrenCount)
@@ -186,7 +186,7 @@ namespace FlaxEditor.GUI
                 {
                     if (child.Depth == Depth + 1)
                         child.Visible = visible;
-                    else if(child.Depth <= Depth)
+                    else if (child.Depth <= Depth)
                         break;
                 }
             }

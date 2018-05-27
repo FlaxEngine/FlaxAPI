@@ -35,28 +35,28 @@ namespace FlaxEngine.GUI
 
         ///<inheritdoc />
         public ContainerControl()
-            : base(0, 0, 64, 64)
+        : base(0, 0, 64, 64)
         {
             IsLayoutLocked = true;
         }
 
         /// <inheritdoc />
         public ContainerControl(float x, float y, float width, float height)
-            : base(x, y, width, height)
+        : base(x, y, width, height)
         {
             IsLayoutLocked = true;
         }
 
         /// <inheritdoc />
         public ContainerControl(Vector2 location, Vector2 size)
-            : base(location, size)
+        : base(location, size)
         {
             IsLayoutLocked = true;
         }
 
         /// <inheritdoc />
         public ContainerControl(Rectangle bounds)
-            : base(bounds)
+        : base(bounds)
         {
             IsLayoutLocked = true;
         }
@@ -292,39 +292,39 @@ namespace FlaxEngine.GUI
 
                 switch (child.DockStyle)
                 {
-                    case DockStyle.None: break;
-                    case DockStyle.Top:
-                    {
-                        float height = Mathf.Min(child.Height, clientArea.Height);
-                        clientArea.Location.Y += height;
-                        clientArea.Size.Y -= height;
-                        break;
-                    }
-                    case DockStyle.Bottom:
-                    {
-                        float height = Mathf.Min(child.Height, clientArea.Height);
-                        clientArea.Size.Y -= height;
-                        break;
-                    }
-                    case DockStyle.Fill:
-                    {
-                        GetDesireClientArea(out clientArea);
-                        break;
-                    }
-                    case DockStyle.Left:
-                    {
-                        float width = Mathf.Min(child.Width, clientArea.Width);
-                        clientArea.Location.X += width;
-                        clientArea.Size.X -= width;
-                        break;
-                    }
-                    case DockStyle.Right:
-                    {
-                        float width = Mathf.Min(child.Width, clientArea.Width);
-                        clientArea.Size.X -= width;
-                        break;
-                    }
-                    default: throw new ArgumentOutOfRangeException();
+                case DockStyle.None: break;
+                case DockStyle.Top:
+                {
+                    float height = Mathf.Min(child.Height, clientArea.Height);
+                    clientArea.Location.Y += height;
+                    clientArea.Size.Y -= height;
+                    break;
+                }
+                case DockStyle.Bottom:
+                {
+                    float height = Mathf.Min(child.Height, clientArea.Height);
+                    clientArea.Size.Y -= height;
+                    break;
+                }
+                case DockStyle.Fill:
+                {
+                    GetDesireClientArea(out clientArea);
+                    break;
+                }
+                case DockStyle.Left:
+                {
+                    float width = Mathf.Min(child.Width, clientArea.Width);
+                    clientArea.Location.X += width;
+                    clientArea.Size.X -= width;
+                    break;
+                }
+                case DockStyle.Right:
+                {
+                    float width = Mathf.Min(child.Width, clientArea.Width);
+                    clientArea.Size.X -= width;
+                    break;
+                }
+                default: throw new ArgumentOutOfRangeException();
                 }
             }
 
@@ -478,54 +478,54 @@ namespace FlaxEngine.GUI
 
                 switch (child.DockStyle)
                 {
-                    case DockStyle.None: break;
+                case DockStyle.None: break;
 
-                    case DockStyle.Bottom:
-                    {
-                        float height = child.Height;
-                        float width = clientArea.Width;
-                        child.SetSize(width, height);
-                        child.SetLocation(clientArea.Left, clientArea.Bottom - height);
-                        clientArea.Size.Y -= height;
-                        break;
-                    }
-                    case DockStyle.Fill:
-                    {
-                        child.Size = clientArea.Size;
-                        child.Location = clientArea.Location;
-                        GetDesireClientArea(out clientArea);
-                        break;
-                    }
-                    case DockStyle.Left:
-                    {
-                        float width = child.Width;
-                        float height = clientArea.Height;
-                        child.SetSize(width, height);
-                        child.SetLocation(clientArea.Left, clientArea.Top);
-                        clientArea.Location.X += width;
-                        clientArea.Size.X -= width;
-                        break;
-                    }
-                    case DockStyle.Right:
-                    {
-                        float width = child.Width;
-                        float height = clientArea.Height;
-                        child.SetSize(width, height);
-                        child.SetLocation(clientArea.Right - width, clientArea.Top);
-                        clientArea.Size.X -= width;
-                        break;
-                    }
-                    case DockStyle.Top:
-                    {
-                        float height = child.Height;
-                        float width = clientArea.Width;
-                        child.SetSize(width, height);
-                        child.SetLocation(clientArea.Left, clientArea.Top);
-                        clientArea.Location.Y += height;
-                        clientArea.Size.Y -= height;
-                        break;
-                    }
-                    default: throw new ArgumentOutOfRangeException();
+                case DockStyle.Bottom:
+                {
+                    float height = child.Height;
+                    float width = clientArea.Width;
+                    child.SetSize(width, height);
+                    child.SetLocation(clientArea.Left, clientArea.Bottom - height);
+                    clientArea.Size.Y -= height;
+                    break;
+                }
+                case DockStyle.Fill:
+                {
+                    child.Size = clientArea.Size;
+                    child.Location = clientArea.Location;
+                    GetDesireClientArea(out clientArea);
+                    break;
+                }
+                case DockStyle.Left:
+                {
+                    float width = child.Width;
+                    float height = clientArea.Height;
+                    child.SetSize(width, height);
+                    child.SetLocation(clientArea.Left, clientArea.Top);
+                    clientArea.Location.X += width;
+                    clientArea.Size.X -= width;
+                    break;
+                }
+                case DockStyle.Right:
+                {
+                    float width = child.Width;
+                    float height = clientArea.Height;
+                    child.SetSize(width, height);
+                    child.SetLocation(clientArea.Right - width, clientArea.Top);
+                    clientArea.Size.X -= width;
+                    break;
+                }
+                case DockStyle.Top:
+                {
+                    float height = child.Height;
+                    float width = clientArea.Width;
+                    child.SetSize(width, height);
+                    child.SetLocation(clientArea.Left, clientArea.Top);
+                    clientArea.Location.Y += height;
+                    clientArea.Size.Y -= height;
+                    break;
+                }
+                default: throw new ArgumentOutOfRangeException();
                 }
             }
         }
@@ -547,37 +547,37 @@ namespace FlaxEngine.GUI
 
                 switch (child.DockStyle)
                 {
-                    case DockStyle.None: break;
-                    case DockStyle.Top:
-                    {
-                        float height = child.Height;
-                        clientArea.Location.Y += height;
-                        clientArea.Size.Y -= height;
-                        break;
-                    }
-                    case DockStyle.Bottom:
-                    {
-                        clientArea.Size.Y -= child.Height;
-                        break;
-                    }
-                    case DockStyle.Fill:
-                    {
-                        GetDesireClientArea(out clientArea);
-                        break;
-                    }
-                    case DockStyle.Left:
-                    {
-                        float width = child.Width;
-                        clientArea.Location.X += width;
-                        clientArea.Size.X -= width;
-                        break;
-                    }
-                    case DockStyle.Right:
-                    {
-                        clientArea.Size.X -= child.Width;
-                        break;
-                    }
-                    default: throw new ArgumentOutOfRangeException();
+                case DockStyle.None: break;
+                case DockStyle.Top:
+                {
+                    float height = child.Height;
+                    clientArea.Location.Y += height;
+                    clientArea.Size.Y -= height;
+                    break;
+                }
+                case DockStyle.Bottom:
+                {
+                    clientArea.Size.Y -= child.Height;
+                    break;
+                }
+                case DockStyle.Fill:
+                {
+                    GetDesireClientArea(out clientArea);
+                    break;
+                }
+                case DockStyle.Left:
+                {
+                    float width = child.Width;
+                    clientArea.Location.X += width;
+                    clientArea.Size.X -= width;
+                    break;
+                }
+                case DockStyle.Right:
+                {
+                    clientArea.Size.X -= child.Width;
+                    break;
+                }
+                default: throw new ArgumentOutOfRangeException();
                 }
             }
         }
@@ -696,15 +696,15 @@ namespace FlaxEngine.GUI
                 }
             }
         }
-		
-	    /// <inheritdoc />
-	    public override void PerformLayout(bool force = false)
+
+        /// <inheritdoc />
+        public override void PerformLayout(bool force = false)
         {
             // Check if update is locked
             if (IsLayoutLocked && !force)
                 return;
 
-	        bool wasLocked = IsLayoutLocked;
+            bool wasLocked = IsLayoutLocked;
             IsLayoutLocked = true;
 
             // Switch based on current mode

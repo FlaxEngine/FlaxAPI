@@ -40,7 +40,7 @@ namespace FlaxEditor.SceneGraph.GUI
         /// Initializes a new instance of the <see cref="ActorTreeNode"/> class.
         /// </summary>
         public ActorTreeNode()
-            : base(true)
+        : base(true)
         {
         }
 
@@ -57,7 +57,7 @@ namespace FlaxEditor.SceneGraph.GUI
             }
             UpdateText();
         }
-		
+
         internal void OnOrderInParentChanged()
         {
             if (Parent is ActorTreeNode parent)
@@ -150,20 +150,20 @@ namespace FlaxEditor.SceneGraph.GUI
         /// <inheritdoc />
         protected override void OnLongPress()
         {
-			StartRenaming();
+            StartRenaming();
         }
 
-		/// <summary>
-		/// Starts the actor renaming action.
-		/// </summary>
-	    public void StartRenaming()
-	    {
-		    Select();
+        /// <summary>
+        /// Starts the actor renaming action.
+        /// </summary>
+        public void StartRenaming()
+        {
+            Select();
 
-			// Start renaming the actor
-			var dialog = RenamePopup.Show(this, _headerRect, _actorNode.Name, false);
-		    dialog.Renamed += OnRenamed;
-		}
+            // Start renaming the actor
+            var dialog = RenamePopup.Show(this, _headerRect, _actorNode.Name, false);
+            dialog.Renamed += OnRenamed;
+        }
 
         private void OnRenamed(RenamePopup renamePopup)
         {
@@ -185,13 +185,13 @@ namespace FlaxEditor.SceneGraph.GUI
                 return _dragActors.Effect;
 
             // Check if drag assets
-            if(_dragAssets == null)
+            if (_dragAssets == null)
                 _dragAssets = new DragAssets();
             if (_dragAssets.OnDragEnter(data, ValidateDragAsset))
                 return _dragAssets.Effect;
-            
+
             // Check if drag actor type
-            if(_dragActorType == null)
+            if (_dragActorType == null)
                 _dragActorType = new DragActorType();
             if (_dragActorType.OnDragEnter(data, ValidateDragActorType))
                 return _dragActorType.Effect;
@@ -302,69 +302,69 @@ namespace FlaxEditor.SceneGraph.GUI
 
                     switch (item.ItemDomain)
                     {
-                        case ContentDomain.Model:
+                    case ContentDomain.Model:
+                    {
+                        if (item.TypeName == typeof(SkinnedModel).FullName)
                         {
-	                        if (item.TypeName == typeof(SkinnedModel).FullName)
-	                        {
-		                        // Create actor
-		                        var model = FlaxEngine.Content.LoadAsync<SkinnedModel>(item.ID);
-		                        var actor = AnimatedModel.New();
-		                        actor.StaticFlags = Actor.StaticFlags;
-		                        actor.Name = item.ShortName;
-		                        actor.SkinnedModel = model;
-		                        actor.Transform = Actor.Transform;
+                            // Create actor
+                            var model = FlaxEngine.Content.LoadAsync<SkinnedModel>(item.ID);
+                            var actor = AnimatedModel.New();
+                            actor.StaticFlags = Actor.StaticFlags;
+                            actor.Name = item.ShortName;
+                            actor.SkinnedModel = model;
+                            actor.Transform = Actor.Transform;
 
-		                        // Spawn
-		                        Editor.Instance.SceneEditing.Spawn(actor, Actor);
-	                        }
-	                        else
-	                        {
-		                        // Create actor
-		                        var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
-		                        var actor = ModelActor.New();
-		                        actor.StaticFlags = Actor.StaticFlags;
-		                        actor.Name = item.ShortName;
-		                        actor.Model = model;
-		                        actor.Transform = Actor.Transform;
-
-		                        // Spawn
-		                        Editor.Instance.SceneEditing.Spawn(actor, Actor);
-	                        }
-
-	                        break;
+                            // Spawn
+                            Editor.Instance.SceneEditing.Spawn(actor, Actor);
                         }
-                        case ContentDomain.Other:
+                        else
                         {
-                            if (item.TypeName == typeof(CollisionData).FullName)
-                            {
-                                // Create actor
-                                var actor = MeshCollider.New();
-                                actor.StaticFlags = Actor.StaticFlags;
-                                actor.Name = item.ShortName;
-                                actor.CollisionData = FlaxEngine.Content.LoadAsync<CollisionData>(item.ID);
-                                actor.Transform = Actor.Transform;
+                            // Create actor
+                            var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
+                            var actor = ModelActor.New();
+                            actor.StaticFlags = Actor.StaticFlags;
+                            actor.Name = item.ShortName;
+                            actor.Model = model;
+                            actor.Transform = Actor.Transform;
 
-                                // Spawn
-                                Editor.Instance.SceneEditing.Spawn(actor, Actor);
-                            }
-
-                            break;
+                            // Spawn
+                            Editor.Instance.SceneEditing.Spawn(actor, Actor);
                         }
-	                    case ContentDomain.Audio:
-	                    {
-			                var actor = AudioSource.New();
-			                actor.StaticFlags = Actor.StaticFlags;
-			                actor.Name = item.ShortName;
-			                actor.Clip = FlaxEngine.Content.LoadAsync<AudioClip>(item.ID);
-			                actor.Transform = Actor.Transform;
-			                Editor.Instance.SceneEditing.Spawn(actor, Actor);
-							
-		                    break;
-	                    }
-						case ContentDomain.Prefab:
+
+                        break;
+                    }
+                    case ContentDomain.Other:
+                    {
+                        if (item.TypeName == typeof(CollisionData).FullName)
                         {
-                            throw new NotImplementedException("Spawning prefabs");
+                            // Create actor
+                            var actor = MeshCollider.New();
+                            actor.StaticFlags = Actor.StaticFlags;
+                            actor.Name = item.ShortName;
+                            actor.CollisionData = FlaxEngine.Content.LoadAsync<CollisionData>(item.ID);
+                            actor.Transform = Actor.Transform;
+
+                            // Spawn
+                            Editor.Instance.SceneEditing.Spawn(actor, Actor);
                         }
+
+                        break;
+                    }
+                    case ContentDomain.Audio:
+                    {
+                        var actor = AudioSource.New();
+                        actor.StaticFlags = Actor.StaticFlags;
+                        actor.Name = item.ShortName;
+                        actor.Clip = FlaxEngine.Content.LoadAsync<AudioClip>(item.ID);
+                        actor.Transform = Actor.Transform;
+                        Editor.Instance.SceneEditing.Spawn(actor, Actor);
+
+                        break;
+                    }
+                    case ContentDomain.Prefab:
+                    {
+                        throw new NotImplementedException("Spawning prefabs");
+                    }
                     }
                 }
 
@@ -420,16 +420,16 @@ namespace FlaxEditor.SceneGraph.GUI
         {
             switch (item.ItemDomain)
             {
-                case ContentDomain.Model:
-                case ContentDomain.Audio:
-                case ContentDomain.Prefab: return true;
-                case ContentDomain.Other:
-                {
-                    if (item.TypeName == typeof(CollisionData).FullName)
-                        return true;
-                    return false;
-                }
-                default: return false;
+            case ContentDomain.Model:
+            case ContentDomain.Audio:
+            case ContentDomain.Prefab: return true;
+            case ContentDomain.Other:
+            {
+                if (item.TypeName == typeof(CollisionData).FullName)
+                    return true;
+                return false;
+            }
+            default: return false;
             }
         }
 

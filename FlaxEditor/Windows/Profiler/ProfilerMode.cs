@@ -27,7 +27,7 @@ namespace FlaxEditor.Windows.Profiler
 
         /// <inheritdoc />
         public ProfilerMode(string text)
-            : base(text)
+        : base(text)
         {
         }
 

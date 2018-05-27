@@ -18,7 +18,7 @@ namespace FlaxEditor.Windows.Profiler
         private readonly SingleChart _gpuMemChart;
 
         public Overall()
-            : base("Overall")
+        : base("Overall")
         {
             // Layout
             var panel = new Panel(ScrollBars.Vertical)

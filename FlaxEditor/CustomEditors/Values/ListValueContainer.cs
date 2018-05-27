@@ -22,7 +22,7 @@ namespace FlaxEditor.CustomEditors
         /// <param name="elementType">Type of the collection elements.</param>
         /// <param name="index">The index.</param>
         public ListValueContainer(Type elementType, int index)
-            : base(null, elementType)
+        : base(null, elementType)
         {
             Index = index;
         }
@@ -34,7 +34,7 @@ namespace FlaxEditor.CustomEditors
         /// <param name="index">The index.</param>
         /// <param name="values">The collection values.</param>
         public ListValueContainer(Type elementType, int index, ValueContainer values)
-            : this(elementType, index)
+        : this(elementType, index)
         {
             Capacity = values.Count;
             for (int i = 0; i < values.Count; i++)

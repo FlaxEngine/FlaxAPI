@@ -33,7 +33,7 @@ namespace FlaxEditor.Tests
 
             editor.Init(true);
             editor.EnsureState<LoadingState>();
-            
+
             // Mock scripts compilation finish
             editor.Update();
             Scripting.ScriptsBuilder.Internal_OnEvent(ScriptsBuilder.EventType.CompileEndGood);

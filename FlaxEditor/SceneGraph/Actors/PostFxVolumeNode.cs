@@ -27,28 +27,28 @@ namespace FlaxEditor.SceneGraph.Actors
             /// <param name="id">The identifier.</param>
             /// <param name="index">The index.</param>
             public SideLinkNode(PostFxVolumeNode actor, Guid id, int index)
-                : base(actor, id, index)
+            : base(actor, id, index)
             {
                 switch (index)
                 {
-                    case 0:
-                        _offset = new Vector3(0.5f, 0, 0);
-                        break;
-                    case 1:
-                        _offset = new Vector3(-0.5f, 0, 0);
-                        break;
-                    case 2:
-                        _offset = new Vector3(0, 0.5f, 0);
-                        break;
-                    case 3:
-                        _offset = new Vector3(0, -0.5f, 0);
-                        break;
-                    case 4:
-                        _offset = new Vector3(0, 0, 0.5f);
-                        break;
-                    case 5:
-                        _offset = new Vector3(0, 0, -0.5f);
-                        break;
+                case 0:
+                    _offset = new Vector3(0.5f, 0, 0);
+                    break;
+                case 1:
+                    _offset = new Vector3(-0.5f, 0, 0);
+                    break;
+                case 2:
+                    _offset = new Vector3(0, 0.5f, 0);
+                    break;
+                case 3:
+                    _offset = new Vector3(0, -0.5f, 0);
+                    break;
+                case 4:
+                    _offset = new Vector3(0, 0, 0.5f);
+                    break;
+                case 5:
+                    _offset = new Vector3(0, 0, -0.5f);
+                    break;
                 }
             }
 
@@ -91,7 +91,7 @@ namespace FlaxEditor.SceneGraph.Actors
 
         /// <inheritdoc />
         public PostFxVolumeNode(Actor actor)
-            : base(actor)
+        : base(actor)
         {
             var id = ID;
             var bytes = id.ToByteArray();

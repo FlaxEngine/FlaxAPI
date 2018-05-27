@@ -17,11 +17,10 @@ namespace FlaxEngine
         {
             Application._is64Bit = (flags & 0x01) != 0;
             Application._isEditor = (flags & 0x02) != 0;
-	        Application._mainThreadId = Thread.CurrentThread.ManagedThreadId;
+            Application._mainThreadId = Thread.CurrentThread.ManagedThreadId;
             Application._platform = platform;
 
             UnhandledExceptionHandler.RegisterCatcher();
-            FlaxLogWriter.Init();
             Globals.Init();
             Input.Init();
 

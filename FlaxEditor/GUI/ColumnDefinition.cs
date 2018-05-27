@@ -45,7 +45,7 @@ namespace FlaxEditor.GUI
         /// The column title bakground background.
         /// </summary>
         public Color TitleBackgroundColor = Color.Brown;
-        
+
         /// <summary>
         /// The minimum size (in pixels) of the column.
         /// </summary>

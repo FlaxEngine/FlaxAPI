@@ -18,26 +18,26 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.Inline;
 
-	    /// <inheritdoc />
-	    public override void Initialize(LayoutElementsContainer layout)
-	    {
-		    bool isMultiLine = false;
+        /// <inheritdoc />
+        public override void Initialize(LayoutElementsContainer layout)
+        {
+            bool isMultiLine = false;
 
-		    if (Values.Info != null)
-		    {
-			    var attributes = Values.Info.GetCustomAttributes(true);
-			    var multiLine = attributes.FirstOrDefault(x => x is MultilineTextAttribute);
-			    if (multiLine != null)
-			    {
-				    isMultiLine = true;
-			    }
-		    }
+            if (Values.Info != null)
+            {
+                var attributes = Values.Info.GetCustomAttributes(true);
+                var multiLine = attributes.FirstOrDefault(x => x is MultilineTextAttribute);
+                if (multiLine != null)
+                {
+                    isMultiLine = true;
+                }
+            }
 
-		    element = layout.TextBox(isMultiLine);
-		    element.TextBox.EditEnd += () => SetValue(element.Text);
-	    }
+            element = layout.TextBox(isMultiLine);
+            element.TextBox.EditEnd += () => SetValue(element.Text);
+        }
 
-	    /// <inheritdoc />
+        /// <inheritdoc />
         public override void Refresh()
         {
             if (HasDifferentValues)
@@ -53,4 +53,3 @@ namespace FlaxEditor.CustomEditors.Editors
         }
     }
 }
-

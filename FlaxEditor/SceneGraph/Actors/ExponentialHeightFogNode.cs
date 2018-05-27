@@ -12,7 +12,7 @@ namespace FlaxEditor.SceneGraph.Actors
     {
         /// <inheritdoc />
         public ExponentialHeightFogNode(Actor actor)
-            : base(actor)
+        : base(actor)
         {
         }
     }

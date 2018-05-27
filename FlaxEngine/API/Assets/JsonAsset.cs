@@ -5,8 +5,8 @@ using FlaxEngine.Json;
 
 namespace FlaxEngine
 {
-	public partial class JsonAsset
-	{
+    public partial class JsonAsset
+    {
         /// <summary>
         /// The asset type content domain.
         /// </summary>
@@ -18,7 +18,7 @@ namespace FlaxEngine
         /// <returns>The created object or null.</returns>
         public object CreateInstance()
         {
-            if(!IsLoaded)
+            if (!IsLoaded)
                 throw new InvalidOperationException("Cannot use unloaded asset.");
 
             var allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -31,7 +31,7 @@ namespace FlaxEngine
             };
 
             var dataTypeName = DataTypeName;
-            
+
             for (int i = 0; i < assemblies.Length; i++)
             {
                 var assembly = assemblies[i];

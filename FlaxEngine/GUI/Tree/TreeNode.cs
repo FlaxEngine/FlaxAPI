@@ -133,10 +133,10 @@ namespace FlaxEngine.GUI
             }
         }
 
-	    /// <summary>
-	    /// The indent applied to the child nodes.
-	    /// </summary>
-	    public float ChildrenIndent { get; set; } = 12.0f;
+        /// <summary>
+        /// The indent applied to the child nodes.
+        /// </summary>
+        public float ChildrenIndent { get; set; } = 12.0f;
 
         /// <summary>
         /// Gets the arrow rectangle.
@@ -148,7 +148,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="canChangeOrder">Enable/disable changing node order in parent tree node.</param>
         public TreeNode(bool canChangeOrder)
-            : this(canChangeOrder, Sprite.Invalid, Sprite.Invalid)
+        : this(canChangeOrder, Sprite.Invalid, Sprite.Invalid)
         {
         }
 
@@ -159,7 +159,7 @@ namespace FlaxEngine.GUI
         /// <param name="iconCollapsed">The icon for node collapsed.</param>
         /// <param name="iconOpened">The icon for node opened.</param>
         public TreeNode(bool canChangeOrder, Sprite iconCollapsed, Sprite iconOpened)
-            : base(0, 0, 64, 16)
+        : base(0, 0, 64, 16)
         {
             _canChangeOrder = canChangeOrder;
             _animationProgress = 1.0f;
@@ -170,7 +170,7 @@ namespace FlaxEngine.GUI
 
             _performChildrenLayoutFirst = true;
         }
-        
+
         /// <summary>
         /// Expand node.
         /// </summary>
@@ -188,8 +188,8 @@ namespace FlaxEngine.GUI
             // Check if drag is over
             if (IsDragOver)
             {
-				// Speed up an animation
-				_animationProgress = 1.0f;
+                // Speed up an animation
+                _animationProgress = 1.0f;
             }
 
             // Update
@@ -478,29 +478,29 @@ namespace FlaxEngine.GUI
                     Rectangle rect;
                     switch (_dragOverMode)
                     {
-                        case DragItemPositioning.At:
-                            rect = textRect;
-                            break;
-                        case DragItemPositioning.Above:
-                            rect = new Rectangle(textRect.X, textRect.Y - DefaultDragInsertPositionMargin - DefaultNodeOffsetY, textRect.Width, DefaultDragInsertPositionMargin * 2.0f);
-                            break;
-                        case DragItemPositioning.Below:
-                            rect = new Rectangle(textRect.X, textRect.Bottom - DefaultDragInsertPositionMargin, textRect.Width, DefaultDragInsertPositionMargin * 2.0f);
-                            break;
-                        default:
-                            rect = Rectangle.Empty;
-                            break;
+                    case DragItemPositioning.At:
+                        rect = textRect;
+                        break;
+                    case DragItemPositioning.Above:
+                        rect = new Rectangle(textRect.X, textRect.Y - DefaultDragInsertPositionMargin - DefaultNodeOffsetY, textRect.Width, DefaultDragInsertPositionMargin * 2.0f);
+                        break;
+                    case DragItemPositioning.Below:
+                        rect = new Rectangle(textRect.X, textRect.Bottom - DefaultDragInsertPositionMargin, textRect.Width, DefaultDragInsertPositionMargin * 2.0f);
+                        break;
+                    default:
+                        rect = Rectangle.Empty;
+                        break;
                     }
                     Render2D.FillRectangle(rect, dragOverColor, true);
                 }
 
-				// Base
-				if (ClipChildren)
-					Render2D.PushClip(new Rectangle(0, DefaultHeaderHeight, Width, Height - DefaultHeaderHeight));
+                // Base
+                if (ClipChildren)
+                    Render2D.PushClip(new Rectangle(0, DefaultHeaderHeight, Width, Height - DefaultHeaderHeight));
                 if (_opened)
                     base.Draw();
-				if (ClipChildren)
-					Render2D.PopClip();
+                if (ClipChildren)
+                    Render2D.PopClip();
             }
         }
 
@@ -626,22 +626,22 @@ namespace FlaxEngine.GUI
             // Cache flags
             _mouseOverArrow = _children.Count > 0 && ArrowRect.Contains(location);
             _mouseOverHeader = new Rectangle(0, 0, Width, DefaultHeaderHeight - 1).Contains(location);
-	        if (_mouseOverHeader)
-	        {
-		        // Allow non-scrollable controls to stay on top of the header and override the mouse behaviour
-		        for (int i = 0; i < Children.Count; i++)
-		        {
-			        Vector2 childLocation;
-			        if (!Children[i].IsScrollable && IntersectsChildContent(Children[i], location, out childLocation))
-			        {
-				        _mouseOverHeader = false;
-				        break;
-			        }
-		        }
-	        }
+            if (_mouseOverHeader)
+            {
+                // Allow non-scrollable controls to stay on top of the header and override the mouse behaviour
+                for (int i = 0; i < Children.Count; i++)
+                {
+                    Vector2 childLocation;
+                    if (!Children[i].IsScrollable && IntersectsChildContent(Children[i], location, out childLocation))
+                    {
+                        _mouseOverHeader = false;
+                        break;
+                    }
+                }
+            }
 
-	        // Check if start drag and drop
-			if (_isMouseDown && Vector2.Distance(_mouseDownPos, location) > 10.0f)
+            // Check if start drag and drop
+            if (_isMouseDown && Vector2.Distance(_mouseDownPos, location) > 10.0f)
             {
                 // Clear flag
                 _isMouseDown = false;
@@ -649,7 +649,7 @@ namespace FlaxEngine.GUI
 
                 // Start
                 DoDragDrop();
-	            return;
+                return;
             }
 
             // Check if animation has been finished
@@ -777,7 +777,7 @@ namespace FlaxEngine.GUI
                     {
                         // Expand node
                         Expand();
-					}
+                    }
 
                     if (!_isDragOverHeader)
                         result = OnDragEnterHeader(data);
@@ -855,10 +855,10 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
-	        _cachedTextColor = CacheTextColor();
+            _cachedTextColor = CacheTextColor();
 
-			// Prepare
-			float y = DefaultHeaderHeight;
+            // Prepare
+            float y = DefaultHeaderHeight;
             float height = DefaultHeaderHeight;
             float xOffset = _xOffset + ChildrenIndent;
             if (Parent is Tree tree)
@@ -897,7 +897,7 @@ namespace FlaxEngine.GUI
             // Set height
             Height = Mathf.Max(DefaultHeaderHeight, y);
         }
-        
+
         /// <inheritdoc />
         protected override void OnParentChangedInternal()
         {
@@ -908,7 +908,7 @@ namespace FlaxEngine.GUI
 
             base.OnParentChangedInternal();
         }
-        
+
         /// <inheritdoc />
         public override void OnChildrenChanged()
         {

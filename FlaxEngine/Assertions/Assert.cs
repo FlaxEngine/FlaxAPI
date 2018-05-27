@@ -80,19 +80,19 @@ namespace FlaxEngine.Assertions
         }
 
         [Conditional("FLAX_ASSERTIONS")]
-        public static void AreEqual <T>(T expected, T actual)
+        public static void AreEqual<T>(T expected, T actual)
         {
             AreEqual(expected, actual, null);
         }
 
         [Conditional("FLAX_ASSERTIONS")]
-        public static void AreEqual <T>(T expected, T actual, string message)
+        public static void AreEqual<T>(T expected, T actual, string message)
         {
             AreEqual(expected, actual, message, EqualityComparer<T>.Default);
         }
 
         [Conditional("FLAX_ASSERTIONS")]
-        public static void AreEqual <T>(T expected, T actual, string message, IEqualityComparer<T> comparer)
+        public static void AreEqual<T>(T expected, T actual, string message, IEqualityComparer<T> comparer)
         {
             if (typeof(Object).IsAssignableFrom(typeof(T)))
             {
@@ -163,19 +163,19 @@ namespace FlaxEngine.Assertions
         }
 
         [Conditional("FLAX_ASSERTIONS")]
-        public static void AreNotEqual <T>(T expected, T actual)
+        public static void AreNotEqual<T>(T expected, T actual)
         {
             AreNotEqual(expected, actual, null);
         }
 
         [Conditional("FLAX_ASSERTIONS")]
-        public static void AreNotEqual <T>(T expected, T actual, string message)
+        public static void AreNotEqual<T>(T expected, T actual, string message)
         {
             AreNotEqual(expected, actual, message, EqualityComparer<T>.Default);
         }
 
         [Conditional("FLAX_ASSERTIONS")]
-        public static void AreNotEqual <T>(T expected, T actual, string message, IEqualityComparer<T> comparer)
+        public static void AreNotEqual<T>(T expected, T actual, string message, IEqualityComparer<T> comparer)
         {
             if (typeof(Object).IsAssignableFrom(typeof(T)))
             {
@@ -229,15 +229,15 @@ namespace FlaxEngine.Assertions
         }
 
         [Conditional("FLAX_ASSERTIONS")]
-        public static void IsNotNull <T>(T value)
-            where T : class
+        public static void IsNotNull<T>(T value)
+        where T : class
         {
             IsNotNull(value, null);
         }
 
         [Conditional("FLAX_ASSERTIONS")]
-        public static void IsNotNull <T>(T value, string message)
-            where T : class
+        public static void IsNotNull<T>(T value, string message)
+        where T : class
         {
             if (typeof(Object).IsAssignableFrom(typeof(T)))
                 IsNotNull((object)value as Object, message);
@@ -253,15 +253,15 @@ namespace FlaxEngine.Assertions
         }
 
         [Conditional("FLAX_ASSERTIONS")]
-        public static void IsNull <T>(T value)
-            where T : class
+        public static void IsNull<T>(T value)
+        where T : class
         {
             IsNull(value, null);
         }
 
         [Conditional("FLAX_ASSERTIONS")]
-        public static void IsNull <T>(T value, string message)
-            where T : class
+        public static void IsNull<T>(T value, string message)
+        where T : class
         {
             if (typeof(Object).IsAssignableFrom(typeof(T)))
                 IsNull((object)value as Object, message);
@@ -313,7 +313,7 @@ namespace FlaxEngine.Assertions
             }
             catch (Exception e)
             {
-                if(exceptionType != e.GetType())
+                if (exceptionType != e.GetType())
                 {
                     Fail(AssertionMessageUtil.GetMessage("Expected exception of type " + exceptionType.FullName + " got " + e.GetType().FullName), message);
                 }

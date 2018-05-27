@@ -20,12 +20,12 @@ namespace FlaxEditor.Modules
         private EditorWindow _enterPlayFocusedWindow;
 
         internal SimulationModule(Editor editor)
-            : base(editor)
+        : base(editor)
         {
-			FlaxEngine.Scripting.FixedUpdate += OnFixedUpdate;
+            FlaxEngine.Scripting.FixedUpdate += OnFixedUpdate;
         }
 
-	    /// <summary>
+        /// <summary>
         /// Checks if play mode should start only with single frame update and then enter step mode.
         /// </summary>
         public bool ShouldPlayModeStartWithStep => Editor.UI.IsPauseButtonChecked;
@@ -86,23 +86,23 @@ namespace FlaxEditor.Modules
                 RequestStartPlay();
         }
 
-		/// <summary>
-		/// Requests the playing mode resume or pause if already running.
-		/// </summary>
-		public void RequestResumeOrPause()
-	    {
-		    // Check if is in pause state
-		    if (Editor.StateMachine.PlayingState.IsPaused)
-			    Editor.Simulation.RequestResumePlay();
+        /// <summary>
+        /// Requests the playing mode resume or pause if already running.
+        /// </summary>
+        public void RequestResumeOrPause()
+        {
+            // Check if is in pause state
+            if (Editor.StateMachine.PlayingState.IsPaused)
+                Editor.Simulation.RequestResumePlay();
 
-		    else
-			    Editor.Simulation.RequestPausePlay();
-	    }
+            else
+                Editor.Simulation.RequestPausePlay();
+        }
 
-	    /// <summary>
-		/// Requests pause in playing.
-		/// </summary>
-		public void RequestPausePlay()
+        /// <summary>
+        /// Requests pause in playing.
+        /// </summary>
+        public void RequestPausePlay()
         {
             // Check if is in play mode and isn't paused
             if (Editor.StateMachine.IsPlayMode && !Editor.StateMachine.PlayingState.IsPaused)
@@ -147,8 +147,8 @@ namespace FlaxEditor.Modules
 
                 // Set flag
                 _stepFrame = true;
-	            _updateOrFixedUpdateWasCalled = false;
-				Editor.StateMachine.PlayingState.IsPaused = false;
+                _updateOrFixedUpdateWasCalled = false;
+                Editor.StateMachine.PlayingState.IsPaused = false;
 
                 // Update
                 Editor.UI.UpdateToolstrip();
@@ -235,20 +235,20 @@ namespace FlaxEditor.Modules
                 }
                 // Check if step one frame
                 else if (_stepFrame)
-	            {
-		            if (_updateOrFixedUpdateWasCalled)
-		            {
-			            // Clear flag and pause
-			            _stepFrame = false;
-			            Editor.StateMachine.PlayingState.IsPaused = true;
-			            Editor.UI.UpdateToolstrip();
-		            }
-		            else
-		            {
-						// Fixed update may not be called but don't allow to call pdate for more than 2 times during single step
-			            _updateOrFixedUpdateWasCalled = true;
-		            }
-	            }
+                {
+                    if (_updateOrFixedUpdateWasCalled)
+                    {
+                        // Clear flag and pause
+                        _stepFrame = false;
+                        Editor.StateMachine.PlayingState.IsPaused = true;
+                        Editor.UI.UpdateToolstrip();
+                    }
+                    else
+                    {
+                        // Fixed update may not be called but don't allow to call pdate for more than 2 times during single step
+                        _updateOrFixedUpdateWasCalled = true;
+                    }
+                }
             }
             else
             {
@@ -256,14 +256,14 @@ namespace FlaxEditor.Modules
                 _isPlayModeRequested = false;
                 _isPlayModeStopRequested = false;
                 _stepFrame = false;
-	            _updateOrFixedUpdateWasCalled = false;
+                _updateOrFixedUpdateWasCalled = false;
             }
         }
 
-	    private void OnFixedUpdate()
-	    {
-			// Rise the flag so play mode step end will be called after physics update (user see objects movement)
-		    _updateOrFixedUpdateWasCalled = true;
-	    }
-	}
+        private void OnFixedUpdate()
+        {
+            // Rise the flag so play mode step end will be called after physics update (user see objects movement)
+            _updateOrFixedUpdateWasCalled = true;
+        }
+    }
 }

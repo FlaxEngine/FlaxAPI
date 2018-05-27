@@ -103,25 +103,25 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="Label"/> class.
         /// </summary>
         public Label()
-            : base(0, 0, 100, 20)
+        : base(0, 0, 100, 20)
         {
             CanFocus = false;
         }
 
         /// <inheritdoc />
         public Label(float x, float y, float width, float height)
-            : base(x, y, width, height)
+        : base(x, y, width, height)
         {
             CanFocus = false;
         }
 
         /// <inheritdoc />
         public Label(Vector2 location, Vector2 size)
-            : base(location, size)
+        : base(location, size)
         {
             CanFocus = false;
         }
-        
+
         /// <inheritdoc />
         public override void Draw()
         {

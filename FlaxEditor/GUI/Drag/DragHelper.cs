@@ -50,14 +50,14 @@ namespace FlaxEditor.GUI.Drag
         /// <returns>True if drag event is valid and can be performed, otherwise false.</returns>
         public bool OnDragEnter(DragData data, Func<T, bool> validateFunc)
         {
-            if(data == null || validateFunc == null)
+            if (data == null || validateFunc == null)
                 throw new ArgumentNullException();
 
             Objects.Clear();
 
-            if(data is DragDataText text)
+            if (data is DragDataText text)
                 GetherObjects(text, validateFunc);
-            else if(data is DragDataFiles files)
+            else if (data is DragDataFiles files)
                 GetherObjects(files, validateFunc);
 
             return HasValidDrag;

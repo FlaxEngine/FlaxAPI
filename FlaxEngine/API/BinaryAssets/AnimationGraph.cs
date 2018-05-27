@@ -2,7 +2,7 @@
 
 namespace FlaxEngine
 {
-	public sealed partial class AnimationGraph
-	{
-	}
+    public sealed partial class AnimationGraph
+    {
+    }
 }

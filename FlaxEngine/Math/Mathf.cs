@@ -258,7 +258,7 @@ namespace FlaxEngine
         {
             return a + (b - a) * t;
         }
-        
+
         /// <summary>
         /// Returns the logarithm of a specified number in a specified base.
         /// </summary>
@@ -506,7 +506,8 @@ namespace FlaxEngine
             return SmoothDamp(current, target, ref currentVelocity, smoothTime, float.PositiveInfinity, single);
         }
 
-        public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, [DefaultValue("float.PositiveInfinity")] float maxSpeed, [DefaultValue("Time.DeltaTime")] float deltaTime)
+        public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, [DefaultValue("float.PositiveInfinity")]
+                                       float maxSpeed, [DefaultValue("Time.DeltaTime")] float deltaTime)
         {
             smoothTime = Max(0.0001f, smoothTime);
             float single = 2f / smoothTime;
@@ -538,7 +539,8 @@ namespace FlaxEngine
             return SmoothDampAngle(current, target, ref currentVelocity, smoothTime, float.PositiveInfinity, Time.DeltaTime);
         }
 
-        public static float SmoothDampAngle(float current, float target, ref float currentVelocity, float smoothTime, [DefaultValue("float.PositiveInfinity")] float maxSpeed, [DefaultValue("Time.DeltaTime")] float deltaTime)
+        public static float SmoothDampAngle(float current, float target, ref float currentVelocity, float smoothTime, [DefaultValue("float.PositiveInfinity")]
+                                            float maxSpeed, [DefaultValue("Time.DeltaTime")] float deltaTime)
         {
             target = current + DeltaAngle(current, target);
             return SmoothDamp(current, target, ref currentVelocity, smoothTime, maxSpeed, deltaTime);
@@ -958,8 +960,8 @@ namespace FlaxEngine
         public static float SmoothStep(float amount)
         {
             return amount <= 0 ? 0
-                : amount >= 1 ? 1
-                    : amount * amount * (3 - 2 * amount);
+                   : amount >= 1 ? 1
+                   : amount * amount * (3 - 2 * amount);
         }
 
         /// <summary>
@@ -972,8 +974,8 @@ namespace FlaxEngine
         public static float SmootherStep(float amount)
         {
             return amount <= 0 ? 0
-                : amount >= 1 ? 1
-                    : amount * amount * amount * (amount * (amount * 6 - 15) + 10);
+                   : amount >= 1 ? 1
+                   : amount * amount * amount * (amount * (amount * 6 - 15) + 10);
         }
 
         /// <summary>

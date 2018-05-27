@@ -45,10 +45,10 @@ namespace FlaxEditor.GUI
                 _selected?.RemoveReference(this);
                 _selected = value;
                 _selected?.AddReference(this);
-                
+
                 // Update tooltip
                 TooltipText = _selected?.NamePath;
-                
+
                 OnSelectedItemChanged();
             }
         }
@@ -131,7 +131,7 @@ namespace FlaxEditor.GUI
         /// Initializes a new instance of the <see cref="AssetPicker"/> class.
         /// </summary>
         public AssetPicker()
-            : this(ContentDomain.Invalid, Vector2.Zero)
+        : this(ContentDomain.Invalid, Vector2.Zero)
         {
         }
 
@@ -140,7 +140,7 @@ namespace FlaxEditor.GUI
         /// </summary>
         /// <param name="contentDomain">The assets content domain.</param>
         public AssetPicker(ContentDomain contentDomain)
-            : this(contentDomain, Vector2.Zero)
+        : this(contentDomain, Vector2.Zero)
         {
         }
 
@@ -150,12 +150,12 @@ namespace FlaxEditor.GUI
         /// <param name="contentDomain">The assets content domain.</param>
         /// <param name="location">The control location.</param>
         public AssetPicker(ContentDomain contentDomain, Vector2 location)
-            : base(location, new Vector2(DefaultIconSize + ButtonsOffset + ButtonsSize, DefaultIconSize))
+        : base(location, new Vector2(DefaultIconSize + ButtonsOffset + ButtonsSize, DefaultIconSize))
         {
             _domain = contentDomain;
             _mousePos = Vector2.Minimum;
         }
-        
+
         /// <summary>
         /// Called when selected item gets changed.
         /// </summary>
@@ -360,7 +360,7 @@ namespace FlaxEditor.GUI
             // Handled
             return true;
         }
-        
+
         /// <inheritdoc />
         public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
         {

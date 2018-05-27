@@ -56,7 +56,7 @@ namespace FlaxEditor.Viewport.Widgets
         /// <param name="contextMenu">The context menu.</param>
         /// <param name="autoCheck">if set to <c>true</c> will be automatic checked on mouse click.</param>
         public ViewportWidgetButton(string text, Sprite icon, ContextMenu contextMenu = null, bool autoCheck = false)
-            : base(0, 0, calculateButtonWidth(0, icon.IsValid), ViewportWidgetsContainer.WidgetsHeight)
+        : base(0, 0, calculateButtonWidth(0, icon.IsValid), ViewportWidgetsContainer.WidgetsHeight)
         {
             _text = text;
             _icon = icon;
@@ -134,12 +134,11 @@ namespace FlaxEditor.Viewport.Widgets
                 _cm.Show(this, new Vector2(-1, Height + 2));
             }
 
-
             return base.OnMouseDown(location, buttons);
         }
-		
-	    /// <inheritdoc />
-	    public override void PerformLayout(bool force = false)
+
+        /// <inheritdoc />
+        public override void PerformLayout(bool force = false)
         {
             var style = Style.Current;
 

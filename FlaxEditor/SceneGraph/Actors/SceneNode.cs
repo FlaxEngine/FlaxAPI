@@ -46,7 +46,7 @@ namespace FlaxEditor.SceneGraph.Actors
         /// </summary>
         /// <param name="scene">The scene.</param>
         public SceneNode(Scene scene)
-            : base(scene, new SceneTreeNode())
+        : base(scene, new SceneTreeNode())
         {
         }
 

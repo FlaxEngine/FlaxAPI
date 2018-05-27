@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FlaxEngine;
+
 // ReSharper disable InconsistentNaming
 
 namespace FlaxEditor.Content.Import
@@ -357,7 +358,7 @@ namespace FlaxEditor.Content.Import
         /// <param name="url">The source file url.</param>
         /// <param name="resultUrl">The result file url.</param>
         public TextureImportEntry(string url, string resultUrl)
-            : base(url, resultUrl)
+        : base(url, resultUrl)
         {
             // Try to restore target asset texture import options (usefull for fast reimport)
             TextureImportSettings.TryRestore(ref _settings, resultUrl);
@@ -410,7 +411,7 @@ namespace FlaxEditor.Content.Import
                 _settings.Type = TextureImportSettings.CustomTextureFormatType.GrayScale;
             }
         }
-        
+
         /// <inheritdoc />
         public override object Settings => _settings;
 

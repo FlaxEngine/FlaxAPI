@@ -35,11 +35,11 @@ namespace FlaxEditor.Surface.Archetypes
             },
             new NodeArchetype
             {
-	            // [Deprecated]
+                // [Deprecated]
                 TypeID = 2,
                 Title = "Linear Layer Blend",
                 Description = "Create blended layer using linear math",
-                Flags = NodeFlags.MaterialOnly| NodeFlags.NoSpawnViaGUI,
+                Flags = NodeFlags.MaterialOnly | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(170, 80),
                 Elements = new[]
                 {
@@ -95,25 +95,25 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(10, "Position Offset", ConnectionType.Vector3, 11),
                 }
             },
-	        new NodeArchetype
-	        {
-		        TypeID = 5,
-		        Title = "Linear Layer Blend",
-		        Description = "Create blended layer using linear math",
-		        Flags = NodeFlags.MaterialOnly,
-		        Size = new Vector2(170, 80),
-		        DefaultValues = new object[]
-		        {
-			        0.0f,
-		        },
-		        Elements = new[]
-		        {
-			        NodeElementArchetype.Factory.Input(0, "Bottom", true, ConnectionType.Impulse, 0),
-			        NodeElementArchetype.Factory.Input(1, "Top", true, ConnectionType.Impulse, 1),
-			        NodeElementArchetype.Factory.Input(2, "Alpha", true, ConnectionType.Float, 2, 0),
-			        NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 3)
-		        }
-	        },
-		};
+            new NodeArchetype
+            {
+                TypeID = 5,
+                Title = "Linear Layer Blend",
+                Description = "Create blended layer using linear math",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(170, 80),
+                DefaultValues = new object[]
+                {
+                    0.0f,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Bottom", true, ConnectionType.Impulse, 0),
+                    NodeElementArchetype.Factory.Input(1, "Top", true, ConnectionType.Impulse, 1),
+                    NodeElementArchetype.Factory.Input(2, "Alpha", true, ConnectionType.Float, 2, 0),
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 3)
+                }
+            },
+        };
     }
 }

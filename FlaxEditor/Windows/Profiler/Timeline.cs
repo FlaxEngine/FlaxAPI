@@ -54,7 +54,7 @@ namespace FlaxEditor.Windows.Profiler
             /// <param name="depth">The timeline row index (event depth).</param>
             /// <param name="width">The width.</param>
             public Event(float x, int depth, float width)
-                : base(x, depth * DefaultHeight, width, DefaultHeight - 1)
+            : base(x, depth * DefaultHeight, width, DefaultHeight - 1)
             {
                 _nameLength = -1;
             }
@@ -122,7 +122,7 @@ namespace FlaxEditor.Windows.Profiler
         /// Initializes a new instance of the <see cref="Timeline"/> class.
         /// </summary>
         public Timeline()
-            : base(ScrollBars.Both)
+        : base(ScrollBars.Both)
         {
         }
     }

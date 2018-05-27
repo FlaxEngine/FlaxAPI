@@ -71,14 +71,14 @@ namespace FlaxEditor.Content
         /// Gets the navigation button label.
         /// </summary>
         public virtual string NavButtonLabel => _folder.ShortName;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ContentTreeNode"/> class.
         /// </summary>
         /// <param name="parent">The parent node.</param>
         /// <param name="path">The folder path.</param>
         public ContentTreeNode(ContentTreeNode parent, string path)
-            : this(parent?.FolderType ?? ContentFolderType.Other, path)
+        : this(parent?.FolderType ?? ContentFolderType.Other, path)
         {
             if (parent != null)
             {
@@ -94,7 +94,7 @@ namespace FlaxEditor.Content
         /// <param name="type">The folder type.</param>
         /// <param name="path">The folder path.</param>
         protected ContentTreeNode(ContentFolderType type, string path)
-            : base(false, Editor.Instance.UI.FolderClosed12, Editor.Instance.UI.FolderOpened12)
+        : base(false, Editor.Instance.UI.FolderClosed12, Editor.Instance.UI.FolderOpened12)
         {
             _folder = new ContentFolder(type, path, this);
             Text = _folder.ShortName;

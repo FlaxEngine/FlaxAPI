@@ -2,7 +2,7 @@
 
 namespace FlaxEngine
 {
-	public sealed partial class RigidBody
-	{
-	}
+    public sealed partial class RigidBody
+    {
+    }
 }

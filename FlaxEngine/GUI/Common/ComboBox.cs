@@ -117,12 +117,12 @@ namespace FlaxEngine.GUI
                 }
             }
         }
-        
+
         /// <summary>
         /// Gets or sets the maximum amount of items in the view. If popup has more items to show it uses a additional scroll panel.
         /// </summary>
         public int MaximumItemsInViewCount { get; set; }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ComboBox"/> class.
         /// </summary>
@@ -130,7 +130,7 @@ namespace FlaxEngine.GUI
         /// <param name="y">The y.</param>
         /// <param name="width">The width.</param>
         public ComboBox(float x = 0, float y = 0, float width = 120.0f)
-            : base(x, y, width, DefaultHeight)
+        : base(x, y, width, DefaultHeight)
         {
             MaximumItemsInViewCount = 20;
         }
@@ -208,7 +208,7 @@ namespace FlaxEngine.GUI
         {
             return new ContextMenu();
         }
-        
+
         /// <inheritdoc />
         public override void OnDestroy()
         {
@@ -347,13 +347,13 @@ namespace FlaxEngine.GUI
                     var style = Style.Current;
                     for (int i = 0; i < _items.Count; i++)
                     {
-                        var button = _popupMenu.AddButton( _items[i]);
+                        var button = _popupMenu.AddButton(_items[i]);
                         if (_selectedIndicies.Contains(i))
                         {
                             button.Icon = style.CheckBoxTick;
                         }
 
-	                    button.Tag = i;
+                        button.Tag = i;
                     }
 
                     // Show dropdown list

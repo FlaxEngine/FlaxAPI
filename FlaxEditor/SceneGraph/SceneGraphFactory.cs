@@ -30,7 +30,7 @@ namespace FlaxEditor.SceneGraph
         public static SceneGraphNode FindNode(Guid id)
         {
             if (id == Guid.Empty)
-                return null; 
+                return null;
 
             SceneGraphNode result;
             Nodes.TryGetValue(id, out result);

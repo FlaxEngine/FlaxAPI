@@ -2,26 +2,26 @@
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Hardware mouse cursor behaviour.
-	/// </summary>
-	public enum CursorLockMode
-	{
-		/// <summary>
-		/// The default mode.
-		/// </summary>
-		None = 0,
+    /// <summary>
+    /// Hardware mouse cursor behaviour.
+    /// </summary>
+    public enum CursorLockMode
+    {
+        /// <summary>
+        /// The default mode.
+        /// </summary>
+        None = 0,
 
-		/// <summary>
-		/// Cursor position is locked to the center of the game window.
-		/// </summary>
-		Locked = 1,
-	}
+        /// <summary>
+        /// Cursor position is locked to the center of the game window.
+        /// </summary>
+        Locked = 1,
+    }
 
-	/// <summary>
-	/// Mouse buttons types.
-	/// </summary>
-	public enum MouseButton
+    /// <summary>
+    /// Mouse buttons types.
+    /// </summary>
+    public enum MouseButton
     {
         /// <summary>
         /// No button.

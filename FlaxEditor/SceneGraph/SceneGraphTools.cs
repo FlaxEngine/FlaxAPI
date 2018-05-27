@@ -40,7 +40,7 @@ namespace FlaxEditor.SceneGraph
         /// <param name="nodes">The nodes.</param>
         /// <returns>The result.</returns>
         public static List<T> BuildNodesParents<T>(this List<T> nodes)
-            where T : SceneGraphNode
+        where T : SceneGraphNode
         {
             var list = new List<T>();
             BuildNodesParents(nodes, list);
@@ -54,7 +54,7 @@ namespace FlaxEditor.SceneGraph
         /// <param name="nodes">The nodes.</param>
         /// <param name="result">The result.</param>
         public static void BuildNodesParents<T>(this List<T> nodes, List<T> result)
-            where T : SceneGraphNode
+        where T : SceneGraphNode
         {
             if (nodes == null || result == null)
                 throw new ArgumentNullException();
@@ -81,7 +81,7 @@ namespace FlaxEditor.SceneGraph
         /// <param name="nodes">The nodes.</param>
         /// <returns>The result.</returns>
         public static List<SceneGraphNode> BuildAllNodes<T>(this List<T> nodes)
-            where T : SceneGraphNode
+        where T : SceneGraphNode
         {
             var list = new List<SceneGraphNode>();
             BuildAllNodes(nodes, list);
@@ -103,7 +103,7 @@ namespace FlaxEditor.SceneGraph
         /// <param name="nodes">The nodes.</param>
         /// <param name="result">The result.</param>
         public static void BuildAllNodes<T>(this List<T> nodes, List<SceneGraphNode> result)
-            where T : SceneGraphNode
+        where T : SceneGraphNode
         {
             if (nodes == null || result == null)
                 throw new ArgumentNullException();

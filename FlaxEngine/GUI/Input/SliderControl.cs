@@ -75,28 +75,28 @@ namespace FlaxEngine.GUI
             /// </summary>
             public Action ValueChanged;
 
-	        /// <summary>
-	        /// Gets a value indicating whether user is using a slider.
-	        /// </summary>
-	        public bool IsSliding => _thumbClicked;
+            /// <summary>
+            /// Gets a value indicating whether user is using a slider.
+            /// </summary>
+            public bool IsSliding => _thumbClicked;
 
-	        /// <summary>
-	        /// Occurs when sliding starts.
-	        /// </summary>
-	        public Action SlidingStart;
+            /// <summary>
+            /// Occurs when sliding starts.
+            /// </summary>
+            public Action SlidingStart;
 
-	        /// <summary>
-	        /// Occurs when sliding ends.
-	        /// </summary>
-	        public Action SlidingEnd;
+            /// <summary>
+            /// Occurs when sliding ends.
+            /// </summary>
+            public Action SlidingEnd;
 
-			/// <summary>
-			/// Initializes a new instance of the <see cref="Slider"/> class.
-			/// </summary>
-			/// <param name="width">The width.</param>
-			/// <param name="height">The height.</param>
-			public Slider(float width, float height)
-                : base(0, 0, width, height)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Slider"/> class.
+            /// </summary>
+            /// <param name="width">The width.</param>
+            /// <param name="height">The height.</param>
+            public Slider(float width, float height)
+            : base(0, 0, width, height)
             {
                 CanFocus = false;
             }
@@ -125,7 +125,7 @@ namespace FlaxEngine.GUI
                     // End capturing mouse
                     EndMouseCapture();
 
-					SlidingEnd?.Invoke();
+                    SlidingEnd?.Invoke();
                 }
             }
 
@@ -133,7 +133,7 @@ namespace FlaxEngine.GUI
             /// Gets the size of the track.
             /// </summary>
             private float TrackSize => Width;
-            
+
             /// <inheritdoc />
             public override void Draw()
             {
@@ -190,7 +190,7 @@ namespace FlaxEngine.GUI
                         // Start capturing mouse
                         StartMouseCapture();
 
-						SlidingStart?.Invoke();
+                        SlidingStart?.Invoke();
                     }
                     else
                     {
@@ -305,32 +305,32 @@ namespace FlaxEngine.GUI
             }
         }
 
-	    /// <summary>
-	    /// Gets a value indicating whether user is using a slider.
-	    /// </summary>
-	    public bool IsSliding => _slider.IsSliding;
+        /// <summary>
+        /// Gets a value indicating whether user is using a slider.
+        /// </summary>
+        public bool IsSliding => _slider.IsSliding;
 
-	    /// <summary>
-	    /// Occurs when sliding starts.
-	    /// </summary>
-	    public event Action SlidingStart;
+        /// <summary>
+        /// Occurs when sliding starts.
+        /// </summary>
+        public event Action SlidingStart;
 
-	    /// <summary>
-	    /// Occurs when sliding ends.
-	    /// </summary>
-	    public event Action SlidingEnd;
+        /// <summary>
+        /// Occurs when sliding ends.
+        /// </summary>
+        public event Action SlidingEnd;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SliderControl"/> class.
-		/// </summary>
-		/// <param name="value">The value.</param>
-		/// <param name="x">The position x.</param>
-		/// <param name="y">The position y.</param>
-		/// <param name="width">The width.</param>
-		/// <param name="min">The minimum value.</param>
-		/// <param name="max">The maximum value.</param>
-		public SliderControl(float value, float x = 0, float y = 0, float width = 120, float min = Single.MinValue, float max = Single.MaxValue)
-            : base(x, y, width, TextBox.DefaultHeight)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SliderControl"/> class.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="x">The position x.</param>
+        /// <param name="y">The position y.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="min">The minimum value.</param>
+        /// <param name="max">The maximum value.</param>
+        public SliderControl(float value, float x = 0, float y = 0, float width = 120, float min = Single.MinValue, float max = Single.MaxValue)
+        : base(x, y, width, TextBox.DefaultHeight)
         {
             _min = min;
             _max = max;

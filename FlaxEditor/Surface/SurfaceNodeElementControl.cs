@@ -35,7 +35,7 @@ namespace FlaxEditor.Surface
         /// <param name="height">The height.</param>
         /// <param name="canFocus">if set to <c>true</c> can focus this control.</param>
         protected SurfaceNodeElementControl(SurfaceNode parentNode, NodeElementArchetype archetype, float width, float height, bool canFocus)
-            : base(archetype.ActualPositionX, archetype.ActualPositionY, width, height)
+        : base(archetype.ActualPositionX, archetype.ActualPositionY, width, height)
         {
             ParentNode = parentNode;
             Archetype = archetype;
@@ -50,7 +50,7 @@ namespace FlaxEditor.Surface
         /// <param name="size">The size.</param>
         /// <param name="canFocus">if set to <c>true</c> can focus this control.</param>
         protected SurfaceNodeElementControl(SurfaceNode parentNode, NodeElementArchetype archetype, Vector2 location, Vector2 size, bool canFocus)
-            : base(location, size)
+        : base(location, size)
         {
             CanFocus = canFocus;
             ParentNode = parentNode;

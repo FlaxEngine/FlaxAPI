@@ -61,7 +61,7 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="GridPanel"/> class.
         /// </summary>
         public GridPanel()
-            : this(2)
+        : this(2)
         {
         }
 
@@ -72,8 +72,16 @@ namespace FlaxEngine.GUI
         public GridPanel(float slotPadding)
         {
             SlotPadding = new Margin(slotPadding);
-            _cellsH = new[] { 0.5f, 0.5f };
-            _cellsV = new[] { 0.5f, 0.5f };
+            _cellsH = new[]
+            {
+                0.5f,
+                0.5f
+            };
+            _cellsV = new[]
+            {
+                0.5f,
+                0.5f
+            };
         }
 
         /// <inheritdoc />

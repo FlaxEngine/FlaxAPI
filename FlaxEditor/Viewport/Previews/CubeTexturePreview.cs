@@ -50,7 +50,7 @@ namespace FlaxEditor.Viewport.Previews
 
         /// <inheritdoc />
         public CubeTexturePreview(bool useWidgets)
-            : base(useWidgets)
+        : base(useWidgets)
         {
             // Create virtual material material
             _material = FlaxEngine.Content.CreateVirtualAsset<MaterialInstance>();

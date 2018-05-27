@@ -21,7 +21,7 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override bool IsAsset => true;
-        
+
         /// <summary>
         /// Gets the full name of the asset type (stored data format).
         /// </summary>

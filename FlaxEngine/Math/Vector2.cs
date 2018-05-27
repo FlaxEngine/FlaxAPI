@@ -200,10 +200,10 @@ namespace FlaxEngine
             {
                 switch (index)
                 {
-                    case 0:
-                        return X;
-                    case 1:
-                        return Y;
+                case 0:
+                    return X;
+                case 1:
+                    return Y;
                 }
 
                 throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector2 run from 0 to 1, inclusive.");
@@ -213,14 +213,14 @@ namespace FlaxEngine
             {
                 switch (index)
                 {
-                    case 0:
-                        X = value;
-                        break;
-                    case 1:
-                        Y = value;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector2 run from 0 to 1, inclusive.");
+                case 0:
+                    X = value;
+                    break;
+                case 1:
+                    Y = value;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector2 run from 0 to 1, inclusive.");
                 }
             }
         }
@@ -265,7 +265,11 @@ namespace FlaxEngine
         /// <returns>A two-element array containing the components of the vector.</returns>
         public float[] ToArray()
         {
-            return new[] {X, Y};
+            return new[]
+            {
+                X,
+                Y
+            };
         }
 
         /// <summary>
@@ -505,7 +509,7 @@ namespace FlaxEngine
         public static void Barycentric(ref Vector2 value1, ref Vector2 value2, ref Vector2 value3, float amount1, float amount2, out Vector2 result)
         {
             result = new Vector2(value1.X + amount1 * (value2.X - value1.X) + amount2 * (value3.X - value1.X),
-                value1.Y + amount1 * (value2.Y - value1.Y) + amount2 * (value3.Y - value1.Y));
+                                 value1.Y + amount1 * (value2.Y - value1.Y) + amount2 * (value3.Y - value1.Y));
         }
 
         /// <summary>
@@ -705,9 +709,9 @@ namespace FlaxEngine
         /// <param name="v">The value.</param>
         /// <returns>The result.</returns>
         public static Vector2 Round(Vector2 v)
-	    {
-		    return new Vector2(Mathf.Round(v.X), Mathf.Round(v.Y));
-	    }
+        {
+            return new Vector2(Mathf.Round(v.X), Mathf.Round(v.Y));
+        }
 
         /// <summary>
         /// Returns the vector with components containing the smallest integer greater to or equal to the original value.
@@ -715,9 +719,9 @@ namespace FlaxEngine
         /// <param name="v">The value.</param>
         /// <returns>The result.</returns>
         public static Vector2 Ceil(Vector2 v)
-	    {
-		    return new Vector2(Mathf.Ceil(v.X), Mathf.Ceil(v.Y));
-	    }
+        {
+            return new Vector2(Mathf.Ceil(v.X), Mathf.Ceil(v.Y));
+        }
 
         /// <summary>
         /// Breaks the components of the vector into an integral and a fractional part. Returns vector made of fractional parts.

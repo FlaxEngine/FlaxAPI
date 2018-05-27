@@ -28,7 +28,7 @@ namespace FlaxEditor.Windows.Assets
 
             [EditorOrder(1000), EditorDisplay("Import Settings", EditorDisplayAttribute.InlineStyle)]
             public TextureImportSettings ImportSettings = new TextureImportSettings();
-			
+
             public sealed class ProxyEditor : GenericEditor
             {
                 public override void Initialize(LayoutElementsContainer layout)
@@ -43,7 +43,7 @@ namespace FlaxEditor.Windows.Assets
                     // Texture properties
                     {
                         var texture = window.Asset;
-                        
+
                         var group = layout.Group("General");
                         group.Label("Format: " + texture.Format);
                         group.Label(string.Format("Size: {0}x{1}", texture.Width, texture.Height));
@@ -107,16 +107,16 @@ namespace FlaxEditor.Windows.Assets
             }
         }
 
-	    private readonly SplitPanel _split;
-		private readonly TexturePreview _preview;
+        private readonly SplitPanel _split;
+        private readonly TexturePreview _preview;
         private readonly CustomEditorPresenter _propertiesEditor;
-	    
+
         private readonly PropertiesProxy _properties;
         private bool _isWaitingForLoad;
 
         /// <inheritdoc />
         public TextureWindow(Editor editor, AssetItem item)
-            : base(editor, item)
+        : base(editor, item)
         {
             // Split Panel
             _split = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
@@ -138,12 +138,12 @@ namespace FlaxEditor.Windows.Assets
             _properties = new PropertiesProxy();
             _propertiesEditor.Select(_properties);
 
-	        // Toolstrip
-	        _toolstrip.AddButton(Editor.UI.GetIcon("Import32"), () => Editor.ContentImporting.Reimport((BinaryAssetItem)Item)).LinkTooltip("Reimport");
-	        _toolstrip.AddSeparator();
-	        _toolstrip.AddButton(Editor.UI.GetIcon("PageScale32"), _preview.CenterView).LinkTooltip("Center view");
-		}
-		
+            // Toolstrip
+            _toolstrip.AddButton(Editor.UI.GetIcon("Import32"), () => Editor.ContentImporting.Reimport((BinaryAssetItem)Item)).LinkTooltip("Reimport");
+            _toolstrip.AddSeparator();
+            _toolstrip.AddButton(Editor.UI.GetIcon("PageScale32"), _preview.CenterView).LinkTooltip("Center view");
+        }
+
         /// <inheritdoc />
         protected override void UnlinkItem()
         {
@@ -199,28 +199,28 @@ namespace FlaxEditor.Windows.Assets
             }
         }
 
-	    /// <inheritdoc />
-	    public override bool UseLayoutData => true;
+        /// <inheritdoc />
+        public override bool UseLayoutData => true;
 
-	    /// <inheritdoc />
-	    public override void OnLayoutSerialize(XmlWriter writer)
-	    {
-		    writer.WriteAttributeString("Split", _split.SplitterValue.ToString());
-	    }
+        /// <inheritdoc />
+        public override void OnLayoutSerialize(XmlWriter writer)
+        {
+            writer.WriteAttributeString("Split", _split.SplitterValue.ToString());
+        }
 
-	    /// <inheritdoc />
-	    public override void OnLayoutDeserialize(XmlElement node)
-	    {
-		    float value1;
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize(XmlElement node)
+        {
+            float value1;
 
-		    if (float.TryParse(node.GetAttribute("Split"), out value1))
-			    _split.SplitterValue = value1;
-	    }
+            if (float.TryParse(node.GetAttribute("Split"), out value1))
+                _split.SplitterValue = value1;
+        }
 
-	    /// <inheritdoc />
-	    public override void OnLayoutDeserialize()
-	    {
-		    _split.SplitterValue = 0.7f;
-	    }
-	}
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize()
+        {
+            _split.SplitterValue = 0.7f;
+        }
+    }
 }

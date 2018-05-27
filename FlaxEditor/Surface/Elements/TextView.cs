@@ -13,7 +13,7 @@ namespace FlaxEditor.Surface.Elements
     {
         /// <inheritdoc />
         public TextView(SurfaceNode parentNode, NodeElementArchetype archetype)
-            : base(parentNode, archetype, 100, 16, false)
+        : base(parentNode, archetype, 100, 16, false)
         {
         }
 

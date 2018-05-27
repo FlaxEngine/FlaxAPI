@@ -28,12 +28,12 @@ namespace FlaxEditor.Surface.Elements
 
         /// <inheritdoc />
         public ColorValue(SurfaceNode parentNode, NodeElementArchetype archetype)
-            : base(Get(parentNode, archetype), archetype.Position.X, archetype.Position.Y)
+        : base(Get(parentNode, archetype), archetype.Position.X, archetype.Position.Y)
         {
             ParentNode = parentNode;
             Archetype = archetype;
         }
-        
+
         /// <inheritdoc />
         protected override void OnValueChanged()
         {
@@ -48,7 +48,7 @@ namespace FlaxEditor.Surface.Elements
 
             Color result;
             var value = parentNode.Values[arch.ValueIndex];
-            
+
             if (value is Color valueColor)
             {
                 result = valueColor;

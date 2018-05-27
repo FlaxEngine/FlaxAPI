@@ -7,104 +7,110 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Skinned model asset that contains model object made of meshes that can be rendered on the GPU using skeleton bones skinning.
-	/// </summary>
-	public sealed partial class SkinnedModel : BinaryAsset
-	{
-		/// <summary>
-		/// Creates new <see cref="SkinnedModel"/> object.
-		/// </summary>
-		private SkinnedModel() : base()
-		{
-		}
+    /// <summary>
+    /// Skinned model asset that contains model object made of meshes that can be rendered on the GPU using skeleton bones skinning.
+    /// </summary>
+    public sealed partial class SkinnedModel : BinaryAsset
+    {
+        /// <summary>
+        /// Creates new <see cref="SkinnedModel"/> object.
+        /// </summary>
+        private SkinnedModel() : base()
+        {
+        }
 
-		/// <summary>
-		/// Gets the model bounding box in local space (rig pose, not animated).
-		/// </summary>
-		[UnmanagedCall]
-		public BoundingBox Box
-		{
+        /// <summary>
+        /// Gets the model bounding box in local space (rig pose, not animated).
+        /// </summary>
+        [UnmanagedCall]
+        public BoundingBox Box
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { BoundingBox resultAsRef; Internal_GetBox(unmanagedPtr, out resultAsRef); return resultAsRef; }
+            get { BoundingBox resultAsRef; Internal_GetBox(unmanagedPtr, out resultAsRef); return resultAsRef; }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the minimum screen size to draw model (the bottom limit). Used to cull small models. Set to 0 to disable this feature.
-		/// </summary>
-		[UnmanagedCall]
-		public float MinScreenSize
-		{
+        /// <summary>
+        /// Gets or sets the minimum screen size to draw model (the bottom limit). Used to cull small models. Set to 0 to disable this feature.
+        /// </summary>
+        [UnmanagedCall]
+        public float MinScreenSize
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetMinScreenSize(unmanagedPtr); }
-			set { Internal_SetMinScreenSize(unmanagedPtr, value); }
+            get { return Internal_GetMinScreenSize(unmanagedPtr); }
+            set { Internal_SetMinScreenSize(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets the amount of the skinned meshes contained in a model. Valid only if asset is loaded.
-		/// </summary>
-		[UnmanagedCall]
-		public int MeshesCount
-		{
+        /// <summary>
+        /// Gets the amount of the skinned meshes contained in a model. Valid only if asset is loaded.
+        /// </summary>
+        [UnmanagedCall]
+        public int MeshesCount
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetMeshesCount(unmanagedPtr); }
+            get { return Internal_GetMeshesCount(unmanagedPtr); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Determines whether this skinned has all the meshes loaded (vertex/index buffers data is on a GPU).
-		/// </summary>
-		[UnmanagedCall]
-		public bool HasMeshesLoaded
-		{
+        /// <summary>
+        /// Determines whether this skinned has all the meshes loaded (vertex/index buffers data is on a GPU).
+        /// </summary>
+        [UnmanagedCall]
+        public bool HasMeshesLoaded
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_HasMeshesLoaded(unmanagedPtr); }
+            get { return Internal_HasMeshesLoaded(unmanagedPtr); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Saves asset to the file. Saved are model and mesh properties but not a vertex data. Supported only in Editor.
-		/// </summary>
-		/// <returns>True if cannot save data, otherwise false.</returns>
+        /// <summary>
+        /// Saves asset to the file. Saved are model and mesh properties but not a vertex data. Supported only in Editor.
+        /// </summary>
+        /// <returns>True if cannot save data, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public bool Save() 
-		{
+        [UnmanagedCall]
+        public bool Save()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Save(unmanagedPtr);
+            return Internal_Save(unmanagedPtr);
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetBox(IntPtr obj, out BoundingBox resultAsRef);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern float Internal_GetMinScreenSize(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetMinScreenSize(IntPtr obj, float val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern int Internal_GetMeshesCount(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_HasMeshesLoaded(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_Save(IntPtr obj);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetBox(IntPtr obj, out BoundingBox resultAsRef);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetMinScreenSize(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetMinScreenSize(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetMeshesCount(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_HasMeshesLoaded(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_Save(IntPtr obj);
+#endif
+
+        #endregion
+    }
+}

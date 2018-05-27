@@ -27,10 +27,10 @@ namespace FlaxEditor.Modules
         public event Action<ActorNode> ActorRemoved;
 
         internal SceneModule(Editor editor)
-            : base(editor)
+        : base(editor)
         {
         }
-        
+
         /// <summary>
         /// Marks the scene as modified.
         /// </summary>
@@ -113,71 +113,71 @@ namespace FlaxEditor.Modules
             return true;
         }
 
-	    /// <summary>
-	    /// Creates the new scene file. The default scene contains set of simple actors.
-	    /// </summary>
-	    /// <param name="path">The path.</param>
-	    public void CreateSceneFile(string path)
-	    {
-		    // Create a sample scene
-		    var scene = Scene.New();
-		    var sky = Sky.New();
-		    var sun = DirectionalLight.New();
-		    var skyLight = SkyLight.New();
-		    var floor = ModelActor.New();
-		    var cam = Camera.New();
-		    //
-		    scene.StaticFlags = StaticFlags.FullyStatic;
-		    scene.AddChild(sky);
-		    scene.AddChild(sun);
-		    scene.AddChild(skyLight);
-		    scene.AddChild(floor);
-		    scene.AddChild(cam);
-		    //
-		    sky.Name = "Sky";
-		    sky.LocalPosition = new Vector3(40, 150, 0);
-		    sky.SunLight = sun;
-		    sky.StaticFlags = StaticFlags.FullyStatic;
-		    //
-		    sun.Name = "Sun";
-		    sun.Brightness = 4.0f;
-		    sun.LocalPosition = new Vector3(40, 160, 0);
-		    sun.LocalEulerAngles = new Vector3(45, 0, 0);
-		    sun.StaticFlags = StaticFlags.FullyStatic;
-		    //
-		    skyLight.Mode = SkyLight.Modes.CustomTexture;
-		    skyLight.Brightness = 1.8f;
-		    skyLight.CustomTexture = FlaxEngine.Content.LoadAsyncInternal<CubeTexture>(EditorAssets.DefaultSkyCubeTexture);
-		    skyLight.StaticFlags = StaticFlags.FullyStatic;
-		    //
-		    floor.Name = "Floor";
-		    floor.Scale = new Vector3(4, 0.5f, 4);
-		    floor.Model = FlaxEngine.Content.LoadAsync<Model>(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Cube.flax"));
-		    if (floor.Model)
-		    {
-			    floor.Model.WaitForLoaded();
-			    floor.Entries[0].Material = FlaxEngine.Content.LoadAsync<MaterialBase>(StringUtils.CombinePaths(Globals.EngineFolder, "WhiteMaterial.flax"));
-		    }
-		    floor.StaticFlags = StaticFlags.FullyStatic;
-		    //
-		    cam.Name = "Camera";
-		    cam.Position = new Vector3(0, 150, -300);
+        /// <summary>
+        /// Creates the new scene file. The default scene contains set of simple actors.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        public void CreateSceneFile(string path)
+        {
+            // Create a sample scene
+            var scene = Scene.New();
+            var sky = Sky.New();
+            var sun = DirectionalLight.New();
+            var skyLight = SkyLight.New();
+            var floor = ModelActor.New();
+            var cam = Camera.New();
+            //
+            scene.StaticFlags = StaticFlags.FullyStatic;
+            scene.AddChild(sky);
+            scene.AddChild(sun);
+            scene.AddChild(skyLight);
+            scene.AddChild(floor);
+            scene.AddChild(cam);
+            //
+            sky.Name = "Sky";
+            sky.LocalPosition = new Vector3(40, 150, 0);
+            sky.SunLight = sun;
+            sky.StaticFlags = StaticFlags.FullyStatic;
+            //
+            sun.Name = "Sun";
+            sun.Brightness = 4.0f;
+            sun.LocalPosition = new Vector3(40, 160, 0);
+            sun.LocalEulerAngles = new Vector3(45, 0, 0);
+            sun.StaticFlags = StaticFlags.FullyStatic;
+            //
+            skyLight.Mode = SkyLight.Modes.CustomTexture;
+            skyLight.Brightness = 1.8f;
+            skyLight.CustomTexture = FlaxEngine.Content.LoadAsyncInternal<CubeTexture>(EditorAssets.DefaultSkyCubeTexture);
+            skyLight.StaticFlags = StaticFlags.FullyStatic;
+            //
+            floor.Name = "Floor";
+            floor.Scale = new Vector3(4, 0.5f, 4);
+            floor.Model = FlaxEngine.Content.LoadAsync<Model>(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Cube.flax"));
+            if (floor.Model)
+            {
+                floor.Model.WaitForLoaded();
+                floor.Entries[0].Material = FlaxEngine.Content.LoadAsync<MaterialBase>(StringUtils.CombinePaths(Globals.EngineFolder, "WhiteMaterial.flax"));
+            }
+            floor.StaticFlags = StaticFlags.FullyStatic;
+            //
+            cam.Name = "Camera";
+            cam.Position = new Vector3(0, 150, -300);
 
-		    // Serialize
-		    var bytes = SceneManager.SaveSceneToBytes(scene);
+            // Serialize
+            var bytes = SceneManager.SaveSceneToBytes(scene);
 
-		    // Cleanup
-		    Object.Destroy(scene);
+            // Cleanup
+            Object.Destroy(scene);
 
-		    if (bytes == null || bytes.Length == 0)
-			    throw new Exception("Failed to serialize scene.");
+            if (bytes == null || bytes.Length == 0)
+                throw new Exception("Failed to serialize scene.");
 
-		    // Write to file
-		    using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read))
-			    fileStream.Write(bytes, 0, bytes.Length);
-	    }
+            // Write to file
+            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read))
+                fileStream.Write(bytes, 0, bytes.Length);
+        }
 
-	    /// <summary>
+        /// <summary>
         /// Saves scene (async).
         /// </summary>
         /// <param name="scene">Scene to save.</param>
@@ -254,7 +254,7 @@ namespace FlaxEditor.Modules
             // Unload scene
             Editor.StateMachine.ChangingScenesState.UnloadScene(scene);
         }
-        
+
         /// <summary>
         /// Closes all opened scene (async).
         /// </summary>
@@ -267,7 +267,7 @@ namespace FlaxEditor.Modules
             // Ensure to save all pending changes
             if (CheckSaveBeforeClose())
                 return;
-            
+
             // Unload scenes
             Editor.StateMachine.ChangingScenesState.UnloadScene(SceneManager.Scenes);
         }
@@ -281,7 +281,7 @@ namespace FlaxEditor.Modules
         {
             // Suspend auto saves
             SuspendAutoSave();
-            
+
             // Check if scene was edited after last saving
             if (scene.IsEdited)
             {
@@ -361,7 +361,7 @@ namespace FlaxEditor.Modules
         {
             // Clear Editor's data
             Editor.SceneEditing.Deselect();
-			// TODO: test using editor (scripts reload, play enter/leave) without clearing the undo - current design is good and should handle this
+            // TODO: test using editor (scripts reload, play enter/leave) without clearing the undo - current design is good and should handle this
             Undo.Clear(); // note: undo actions serialize ids to the objects (not direct refs) but cache reflection meta so we need to clean it
         }
 
@@ -380,7 +380,7 @@ namespace FlaxEditor.Modules
         private void OnSceneLoaded(Scene scene, Guid sceneId)
         {
             var startTime = DateTime.UtcNow;
-            
+
             // Build scene tree
             var sceneNode = SceneGraphFactory.BuildSceneTree(scene);
             var treeNode = sceneNode.TreeNode;
@@ -401,7 +401,7 @@ namespace FlaxEditor.Modules
             treeNode.UnlockChildrenRecursive();
             rootNode.IsLayoutLocked = wasLayoutLocked;
             rootNode.Parent.PerformLayout();
-            
+
             var endTime = DateTime.UtcNow;
             var milliseconds = (int)(endTime - startTime).TotalMilliseconds;
             Editor.Log($"Created graph for scene \'{scene.Name}\' in {milliseconds} ms");
@@ -424,7 +424,7 @@ namespace FlaxEditor.Modules
         {
             // Skip for not loaded scenes (spawning actors during scene loading in script Start function)
             var sceneNode = GetActorNode(actor.Scene);
-            if(sceneNode == null)
+            if (sceneNode == null)
                 return;
 
             // Skip for missing parent
@@ -438,7 +438,7 @@ namespace FlaxEditor.Modules
                 // Missing parent node when adding child actor to not spawned or unlinked actor
                 return;
             }
-            
+
             var node = SceneGraphFactory.BuildActorNode(actor);
             if (node != null)
                 node.ParentNode = parentNode;
@@ -449,26 +449,26 @@ namespace FlaxEditor.Modules
             var node = GetActorNode(actor);
             if (node != null)
             {
-	            OnActorDeleted(node);
+                OnActorDeleted(node);
             }
         }
 
-	    private void OnActorDeleted(ActorNode node)
-	    {
-		    for (int i = 0; i < node.ChildNodes.Count; i++)
-		    {
-			    if (node.ChildNodes[i] is ActorNode child)
-			    {
-				    i--;
-				    OnActorDeleted(child);
-			    }
-		    }
-			
-		    ActorRemoved?.Invoke(node);
+        private void OnActorDeleted(ActorNode node)
+        {
+            for (int i = 0; i < node.ChildNodes.Count; i++)
+            {
+                if (node.ChildNodes[i] is ActorNode child)
+                {
+                    i--;
+                    OnActorDeleted(child);
+                }
+            }
 
-		    // Cleanup part of the graph
-		    node.Dispose();
-		}
+            ActorRemoved?.Invoke(node);
+
+            // Cleanup part of the graph
+            node.Dispose();
+        }
 
         private void OnActorParentChanged(Actor actor, Actor prevParent)
         {
@@ -560,7 +560,7 @@ namespace FlaxEditor.Modules
         {
             Root.ExecuteOnGraph(callback);
         }
-        
+
         /// <inheritdoc />
         public override void OnInit()
         {
@@ -616,7 +616,7 @@ namespace FlaxEditor.Modules
             SceneManager.ActorOrderInParentChanged -= OnActorOrderInParentChanged;
             SceneManager.ActorNameChanged -= OnActorNameChanged;
             SceneManager.ActorActiveChanged -= OnActorActiveChanged;
-            
+
             // Cleanup graph
             Root.Dispose();
 

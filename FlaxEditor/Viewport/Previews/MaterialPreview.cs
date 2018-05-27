@@ -46,7 +46,7 @@ namespace FlaxEditor.Viewport.Previews
         /// </summary>
         /// <param name="useWidgets">if set to <c>true</c> use widgets.</param>
         public MaterialPreview(bool useWidgets)
-            : base(useWidgets)
+        : base(useWidgets)
         {
             // Setup preview scene
             _previewModel = ModelActor.New();
@@ -61,22 +61,22 @@ namespace FlaxEditor.Viewport.Previews
             _previewModel.Model?.WaitForLoaded();
 
             // Create context menu for primitive switching
-	        if (useWidgets && ViewWidgetButtonMenu != null)
-	        {
-		        ViewWidgetButtonMenu.AddSeparator();
-		        var modelSelect = ViewWidgetButtonMenu.AddChildMenu("Model").ContextMenu;
+            if (useWidgets && ViewWidgetButtonMenu != null)
+            {
+                ViewWidgetButtonMenu.AddSeparator();
+                var modelSelect = ViewWidgetButtonMenu.AddChildMenu("Model").ContextMenu;
 
-		        // Fill out all models 
-		        for (int i = 0; i < Models.Length; i++)
-		        {
-			        var v = Models[i];
-			        var button = modelSelect.AddButton(v);
-			        button.Tag = v;
-		        }
+                // Fill out all models 
+                for (int i = 0; i < Models.Length; i++)
+                {
+                    var v = Models[i];
+                    var button = modelSelect.AddButton(v);
+                    button.Tag = v;
+                }
 
-		        // Link the action
-		        modelSelect.ButtonClicked += (button) => _previewModel.Model = FlaxEngine.Content.LoadAsyncInternal<Model>("Editor/Primitives/" + button.Tag);
-	        }
+                // Link the action
+                modelSelect.ButtonClicked += (button) => _previewModel.Model = FlaxEngine.Content.LoadAsyncInternal<Model>("Editor/Primitives/" + button.Tag);
+            }
         }
 
         /// <inheritdoc />

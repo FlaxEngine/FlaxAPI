@@ -73,12 +73,12 @@ namespace FlaxEditor.Modules
         /// The toolbox window.
         /// </summary>
         public ToolboxWindow ToolboxWin;
-        
+
         /// <summary>
         /// The graphics quality window.
         /// </summary>
         public GraphicsQualityWindow GraphicsQualityWin;
-        
+
         /// <summary>
         /// The game cooker window.
         /// </summary>
@@ -95,7 +95,7 @@ namespace FlaxEditor.Modules
         public readonly List<EditorWindow> Windows = new List<EditorWindow>(32);
 
         internal WindowsModule(Editor editor)
-            : base(editor)
+        : base(editor)
         {
             // Init windows module first
             InitOrder = -100;
@@ -239,91 +239,91 @@ namespace FlaxEditor.Modules
 
                 switch (version)
                 {
-                    case 4:
+                case 4:
+                {
+                    // Main window info
+                    if (MainWindow)
                     {
-                        // Main window info
-                        if (MainWindow)
+                        var mainWindowNode = root["MainWindow"];
+                        Rectangle bounds = LoadBounds(mainWindowNode["Bounds"]);
+                        bool isMaximized = bool.Parse(mainWindowNode.GetAttribute("IsMaximized"));
+
+                        // Clamp position to match current destop dimensions (if window was on desktop that is now inactive)
+                        if (bounds.X < 0 || bounds.Y < 0 || bounds.X > virtualDesktopSafeRightCorner.X || bounds.Y > virtualDesktopSafeRightCorner.Y)
+                            bounds.Location = virtualDesktopSafeLefttCorner;
+
+                        if (isMaximized)
                         {
-                            var mainWindowNode = root["MainWindow"];
-                            Rectangle bounds = LoadBounds(mainWindowNode["Bounds"]);
-                            bool isMaximized = bool.Parse(mainWindowNode.GetAttribute("IsMaximized"));
+                            MainWindow.Maximize();
+                        }
+                        else if (Mathf.Min(bounds.Size.X, bounds.Size.Y) >= 1)
+                        {
+                            MainWindow.ClientBounds = bounds;
+                        }
+                        else
+                        {
+                            MainWindow.ClientPosition = bounds.Location;
+                        }
+                    }
 
-                            // Clamp position to match current destop dimensions (if window was on desktop that is now inactive)
-                            if (bounds.X < 0 || bounds.Y < 0 || bounds.X > virtualDesktopSafeRightCorner.X || bounds.Y > virtualDesktopSafeRightCorner.Y)
-                                bounds.Location = virtualDesktopSafeLefttCorner;
+                    // Load master panel structure
+                    var masterPanelNode = root["MasterPanel"];
+                    if (masterPanelNode != null)
+                    {
+                        LoadPanel(masterPanelNode, masterPanel);
+                    }
 
-                            if (isMaximized)
+                    // Load all floating windows structure
+                    var floating = root.SelectNodes("Float");
+                    if (floating != null)
+                    {
+                        foreach (XmlElement child in floating)
+                        {
+                            if (child == null)
+                                continue;
+
+                            // Get window properties
+                            Rectangle bounds = LoadBounds(child["Bounds"]);
+
+                            // Create window and floating dock panel
+                            var window = FloatWindowDockPanel.CreateFloatWindow(MainWindow.GUI, bounds.Location, bounds.Size, WindowStartPosition.Manual, string.Empty);
+                            var panel = new FloatWindowDockPanel(masterPanel, window.GUI);
+
+                            // Load structure
+                            LoadPanel(child, panel);
+
+                            // Check if no child windows loaded (due to file errors or loading problems)
+                            if (panel.TabsCount == 0 && panel.ChildPanelsCount == 0)
                             {
-                                MainWindow.Maximize();
-                            }
-                            else if (Mathf.Min(bounds.Size.X, bounds.Size.Y) >= 1)
-                            {
-                                MainWindow.ClientBounds = bounds;
+                                // Close empty window
+                                Editor.LogWarning("Empty floating window inside layout.");
+                                window.Close();
                             }
                             else
                             {
-                                MainWindow.ClientPosition = bounds.Location;
+                                // Perform layout
+                                var windowGUI = window.GUI;
+                                windowGUI.UnlockChildrenRecursive();
+                                windowGUI.PerformLayout();
+
+                                // Show
+                                window.Show();
+                                window.Focus();
+
+                                // Perform layout again
+                                windowGUI.PerformLayout();
                             }
                         }
-
-                        // Load master panel structure
-                        var masterPanelNode = root["MasterPanel"];
-                        if (masterPanelNode != null)
-                        {
-                            LoadPanel(masterPanelNode, masterPanel);
-                        }
-
-                        // Load all floating windows structure
-                        var floating = root.SelectNodes("Float");
-                        if (floating != null)
-                        {
-                            foreach (XmlElement child in floating)
-                            {
-                                if (child == null)
-                                    continue;
-
-                                // Get window properties
-                                Rectangle bounds = LoadBounds(child["Bounds"]);
-
-                                // Create window and floating dock panel
-                                var window = FloatWindowDockPanel.CreateFloatWindow(MainWindow.GUI, bounds.Location, bounds.Size, WindowStartPosition.Manual, string.Empty);
-                                var panel = new FloatWindowDockPanel(masterPanel, window.GUI);
-
-                                // Load structure
-                                LoadPanel(child, panel);
-
-                                // Check if no child windows loaded (due to file errors or loading problems)
-                                if (panel.TabsCount == 0 && panel.ChildPanelsCount == 0)
-                                {
-                                    // Close empty window
-                                    Editor.LogWarning("Empty floating window inside layout.");
-                                    window.Close();
-                                }
-                                else
-                                {
-                                    // Perform layout
-                                    var windowGUI = window.GUI;
-                                    windowGUI.UnlockChildrenRecursive();
-                                    windowGUI.PerformLayout();
-
-                                    // Show
-                                    window.Show();
-                                    window.Focus();
-
-                                    // Perform layout again
-                                    windowGUI.PerformLayout();
-                                }
-                            }
-                        }
-
-                        break;
                     }
 
-                    default:
-                    {
-                        Editor.LogWarning("Unsupported windows layout version");
-                        return false;
-                    }
+                    break;
+                }
+
+                default:
+                {
+                    Editor.LogWarning("Unsupported windows layout version");
+                    return false;
+                }
                 }
             }
             catch (Exception ex)
@@ -347,14 +347,14 @@ namespace FlaxEditor.Modules
 
                 writer.WriteAttributeString("Typename", win.SerializationTypename);
 
-	            if (win.UseLayoutData)
-	            {
-		            writer.WriteStartElement("Data");
-		            win.OnLayoutSerialize(writer);
-		            writer.WriteEndElement();
-	            }
-				
-	            writer.WriteEndElement();
+                if (win.UseLayoutData)
+                {
+                    writer.WriteStartElement("Data");
+                    win.OnLayoutSerialize(writer);
+                    writer.WriteEndElement();
+                }
+
+                writer.WriteEndElement();
             }
 
             for (int i = 0; i < panel.ChildPanelsCount; i++)
@@ -387,27 +387,27 @@ namespace FlaxEditor.Modules
             var windows = node.SelectNodes("Window");
             if (windows != null)
             {
-	            foreach (XmlElement child in windows)
-	            {
-		            if (child == null)
-			            continue;
+                foreach (XmlElement child in windows)
+                {
+                    if (child == null)
+                        continue;
 
-		            var typename = child.GetAttribute("Typename");
-		            var window = GetWindow(typename);
-		            if (window != null)
-		            {
-			            if (child.SelectSingleNode("Data") is XmlElement data)
-			            {
-				            window.OnLayoutDeserialize(data);
-			            }
-			            else
-			            {
-							window.OnLayoutDeserialize();
-			            }
+                    var typename = child.GetAttribute("Typename");
+                    var window = GetWindow(typename);
+                    if (window != null)
+                    {
+                        if (child.SelectSingleNode("Data") is XmlElement data)
+                        {
+                            window.OnLayoutDeserialize(data);
+                        }
+                        else
+                        {
+                            window.OnLayoutDeserialize();
+                        }
 
-			            window.Show(DockState.DockFill, panel);
-		            }
-	            }
+                        window.Show(DockState.DockFill, panel);
+                    }
+                }
             }
 
             // Load child panels
@@ -476,8 +476,8 @@ namespace FlaxEditor.Modules
             };
 
             var masterPanel = Editor.UI.MasterPanel;
-	        if (masterPanel == null)
-		        return;
+            if (masterPanel == null)
+                return;
 
             using (XmlWriter writer = XmlWriter.Create(path, settings))
             {
@@ -486,7 +486,7 @@ namespace FlaxEditor.Modules
 
                 // Metadata
                 writer.WriteAttributeString("Version", "4");
-                
+
                 // Main window info
                 if (MainWindow)
                 {
@@ -626,7 +626,7 @@ namespace FlaxEditor.Modules
             }
 
             SaveCurrentLayout();
-            
+
             // Block closing only on user events
             if (reason == ClosingReason.User)
             {
@@ -685,20 +685,20 @@ namespace FlaxEditor.Modules
             UpdateWindowTitle();
 
             // Initialize windows
-	        for (int i = 0; i < Windows.Count; i++)
-	        {
-		        try
-		        {
-			        Windows[i].OnInit();
-		        }
-		        catch (Exception ex)
-		        {
-			        Editor.LogWarning(ex);
-			        Editor.LogError("Failed to init window " + Windows[i]);
-		        }
-	        }
+            for (int i = 0; i < Windows.Count; i++)
+            {
+                try
+                {
+                    Windows[i].OnInit();
+                }
+                catch (Exception ex)
+                {
+                    Editor.LogWarning(ex);
+                    Editor.LogError("Failed to init window " + Windows[i]);
+                }
+            }
 
-	        // Load current workspace layout
+            // Load current workspace layout
             if (!LoadLayout(_windowsLayoutPath))
                 LoadDefaultLayout();
 

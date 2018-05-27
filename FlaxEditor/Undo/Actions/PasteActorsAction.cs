@@ -101,7 +101,7 @@ namespace FlaxEditor.Actions
             {
                 _nodeParents.Add(nodeParents[i].ID);
             }
-            
+
             var pasteParentNode = Editor.Instance.Scene.GetActorNode(_pasteParent);
             if (pasteParentNode != null)
             {

@@ -484,7 +484,7 @@ namespace FlaxEditor.Viewport.Previews
         /// <param name="useWidgets">True if show viewport widgets.</param>
         /// <inheritdoc />
         public TexturePreview(bool useWidgets)
-            : base(useWidgets)
+        : base(useWidgets)
         {
         }
 
@@ -539,7 +539,7 @@ namespace FlaxEditor.Viewport.Previews
         /// <param name="useWidgets">True if show viewport widgets.</param>
         /// <inheritdoc />
         public SpriteAtlasPreview(bool useWidgets)
-            : base(useWidgets)
+        : base(useWidgets)
         {
         }
 

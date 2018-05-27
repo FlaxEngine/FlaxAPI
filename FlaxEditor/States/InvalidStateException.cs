@@ -15,7 +15,7 @@ namespace FlaxEditor.States
         /// </summary>
         /// <param name="msg">The message.</param>
         public InvalidStateException(string msg)
-            : base(msg)
+        : base(msg)
         {
         }
     }

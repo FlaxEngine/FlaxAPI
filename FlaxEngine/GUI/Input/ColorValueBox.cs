@@ -45,10 +45,10 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="ColorValueBox"/> class.
         /// </summary>
         public ColorValueBox()
-            : base(0, 0, 32, 18)
+        : base(0, 0, 32, 18)
         {
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ColorValueBox"/> class.
         /// </summary>
@@ -56,7 +56,7 @@ namespace FlaxEngine.GUI
         /// <param name="x">The x location</param>
         /// <param name="y">The y location</param>
         public ColorValueBox(Color value, float x, float y)
-            : base(x, y, 32, 18)
+        : base(x, y, 32, 18)
         {
             _value = value;
         }

@@ -80,15 +80,15 @@ namespace FlaxEditor.Surface
             /// </summary>
             public Color Box;
 
-	        /// <summary>
-	        /// The impulse (secondary) boxes color.
-	        /// </summary>
-	        public Color ImpulseSecondary;
+            /// <summary>
+            /// The impulse (secondary) boxes color.
+            /// </summary>
+            public Color ImpulseSecondary;
 
-			/// <summary>
-			/// The default boxes color.
-			/// </summary>
-			public Color Default;
+            /// <summary>
+            /// The default boxes color.
+            /// </summary>
+            public Color Default;
         }
 
         /// <summary>
@@ -136,21 +136,45 @@ namespace FlaxEditor.Surface
         {
             switch (type)
             {
-                case ConnectionType.Impulse: color = Colors.Impulse; break;
-                case ConnectionType.Bool: color = Colors.Box; break;
-                case ConnectionType.Integer: color = Colors.Integer; break;
-                case ConnectionType.Float: color = Colors.Float; break;
-                case ConnectionType.Vector2:
-                case ConnectionType.Vector3:
-                case ConnectionType.Vector4:
-                case ConnectionType.Vector: color = Colors.Vector; break;
-                case ConnectionType.String: color = Colors.String; break;
-                case ConnectionType.Object: color = Colors.Object; break;
-                case ConnectionType.Rotation: color = Colors.Rotation; break;
-                case ConnectionType.Transform: color = Colors.Transform; break;
-                case ConnectionType.Box: color = Colors.Box; break;
-                case ConnectionType.ImpulseSecondary: color = Colors.ImpulseSecondary; break;
-                default: color = Colors.Default; break;
+            case ConnectionType.Impulse:
+                color = Colors.Impulse;
+                break;
+            case ConnectionType.Bool:
+                color = Colors.Box;
+                break;
+            case ConnectionType.Integer:
+                color = Colors.Integer;
+                break;
+            case ConnectionType.Float:
+                color = Colors.Float;
+                break;
+            case ConnectionType.Vector2:
+            case ConnectionType.Vector3:
+            case ConnectionType.Vector4:
+            case ConnectionType.Vector:
+                color = Colors.Vector;
+                break;
+            case ConnectionType.String:
+                color = Colors.String;
+                break;
+            case ConnectionType.Object:
+                color = Colors.Object;
+                break;
+            case ConnectionType.Rotation:
+                color = Colors.Rotation;
+                break;
+            case ConnectionType.Transform:
+                color = Colors.Transform;
+                break;
+            case ConnectionType.Box:
+                color = Colors.Box;
+                break;
+            case ConnectionType.ImpulseSecondary:
+                color = Colors.ImpulseSecondary;
+                break;
+            default:
+                color = Colors.Default;
+                break;
             }
         }
 
@@ -169,9 +193,9 @@ namespace FlaxEditor.Surface
         {
             switch (surfaceType)
             {
-				case SurfaceType.AnimationGraph:
-                case SurfaceType.Material: return CreateDefaultMaterial(editor);
-                default: throw new NotSupportedException();
+            case SurfaceType.AnimationGraph:
+            case SurfaceType.Material: return CreateDefaultMaterial(editor);
+            default: throw new NotSupportedException();
             }
         }
 
@@ -203,8 +227,8 @@ namespace FlaxEditor.Surface
                     Transform = new Color(255, 127, 39),
                     Box = new Color(34, 117, 76),
                     Default = new Color(200, 200, 200),
-	                ImpulseSecondary = new Color(40, 130, 50),
-				},
+                    ImpulseSecondary = new Color(40, 130, 50),
+                },
                 Icons =
                 {
                     BoxOpen = editor.UI.GetIcon("VisjectBoxOpen"),

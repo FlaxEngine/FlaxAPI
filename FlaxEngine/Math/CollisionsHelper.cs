@@ -146,7 +146,7 @@ namespace FlaxEngine
             float d2 = Vector3.Dot(ac, ap);
             if ((d1 <= 0.0f) && (d2 <= 0.0f))
             {
-                result = vertex1;//Barycentric coordinates (1,0,0)
+                result = vertex1; //Barycentric coordinates (1,0,0)
                 return;
             }
 
@@ -156,7 +156,7 @@ namespace FlaxEngine
             float d4 = Vector3.Dot(ac, bp);
             if ((d3 >= 0.0f) && (d4 <= d3))
             {
-                result = vertex2;// Barycentric coordinates (0,1,0)
+                result = vertex2; // Barycentric coordinates (0,1,0)
                 return;
             }
 
@@ -165,7 +165,7 @@ namespace FlaxEngine
             if ((vc <= 0.0f) && (d1 >= 0.0f) && (d3 <= 0.0f))
             {
                 float v = d1 / (d1 - d3);
-                result = vertex1 + v * ab;//Barycentric coordinates (1-v,v,0)
+                result = vertex1 + v * ab; //Barycentric coordinates (1-v,v,0)
                 return;
             }
 
@@ -175,7 +175,7 @@ namespace FlaxEngine
             float d6 = Vector3.Dot(ac, cp);
             if ((d6 >= 0.0f) && (d5 <= d6))
             {
-                result = vertex3;//Barycentric coordinates (0,0,1)
+                result = vertex3; //Barycentric coordinates (0,0,1)
                 return;
             }
 
@@ -184,7 +184,7 @@ namespace FlaxEngine
             if ((vb <= 0.0f) && (d2 >= 0.0f) && (d6 <= 0.0f))
             {
                 float w = d2 / (d2 - d6);
-                result = vertex1 + w * ac;//Barycentric coordinates (1-w,0,w)
+                result = vertex1 + w * ac; //Barycentric coordinates (1-w,0,w)
                 return;
             }
 
@@ -193,7 +193,7 @@ namespace FlaxEngine
             if ((va <= 0.0f) && (d4 - d3 >= 0.0f) && (d5 - d6 >= 0.0f))
             {
                 float w = (d4 - d3) / (d4 - d3 + (d5 - d6));
-                result = vertex2 + w * (vertex3 - vertex2);//Barycentric coordinates (0,1-w,w)
+                result = vertex2 + w * (vertex3 - vertex2); //Barycentric coordinates (0,1-w,w)
                 return;
             }
 
@@ -201,7 +201,7 @@ namespace FlaxEngine
             float denom = 1.0f / (va + vb + vc);
             float v2 = vb * denom;
             float w2 = vc * denom;
-            result = vertex1 + ab * v2 + ac * w2;//= u*vertex1 + v*vertex2 + w*vertex3, u = va * denom = 1.0f - v - w
+            result = vertex1 + ab * v2 + ac * w2; //= u*vertex1 + v*vertex2 + w*vertex3, u = va * denom = 1.0f - v - w
         }
 
         /// <summary>
@@ -515,12 +515,12 @@ namespace FlaxEngine
 
             //Determinant of first matrix.
             float dets =
-                m11 * m22 * m33 +
-                m12 * m23 * m31 +
-                m13 * m21 * m32 -
-                m11 * m23 * m32 -
-                m12 * m21 * m33 -
-                m13 * m22 * m31;
+            m11 * m22 * m33 +
+            m12 * m23 * m31 +
+            m13 * m21 * m32 -
+            m11 * m23 * m32 -
+            m12 * m21 * m33 -
+            m13 * m22 * m31;
 
             //3x3 matrix for the second ray.
             m21 = ray1.Direction.X;
@@ -529,12 +529,12 @@ namespace FlaxEngine
 
             //Determinant of the second matrix.
             float dett =
-                m11 * m22 * m33 +
-                m12 * m23 * m31 +
-                m13 * m21 * m32 -
-                m11 * m23 * m32 -
-                m12 * m21 * m33 -
-                m13 * m22 * m31;
+            m11 * m22 * m33 +
+            m12 * m23 * m31 +
+            m13 * m21 * m32 -
+            m11 * m23 * m32 -
+            m12 * m21 * m33 -
+            m13 * m22 * m31;
 
             //t values of the point of intersection.
             float s = dets / denominator;

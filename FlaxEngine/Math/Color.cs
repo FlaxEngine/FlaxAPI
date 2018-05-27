@@ -46,22 +46,22 @@ namespace FlaxEngine
             {
                 switch (index)
                 {
-                    case 0:
-                    {
-                        return R;
-                    }
-                    case 1:
-                    {
-                        return G;
-                    }
-                    case 2:
-                    {
-                        return B;
-                    }
-                    case 3:
-                    {
-                        return A;
-                    }
+                case 0:
+                {
+                    return R;
+                }
+                case 1:
+                {
+                    return G;
+                }
+                case 2:
+                {
+                    return B;
+                }
+                case 3:
+                {
+                    return A;
+                }
                 }
                 throw new IndexOutOfRangeException("Invalid Color index!");
             }
@@ -69,30 +69,30 @@ namespace FlaxEngine
             {
                 switch (index)
                 {
-                    case 0:
-                    {
-                        R = value;
-                        break;
-                    }
-                    case 1:
-                    {
-                        G = value;
-                        break;
-                    }
-                    case 2:
-                    {
-                        B = value;
-                        break;
-                    }
-                    case 3:
-                    {
-                        A = value;
-                        break;
-                    }
-                    default:
-                    {
-                        throw new IndexOutOfRangeException("Invalid Color index!");
-                    }
+                case 0:
+                {
+                    R = value;
+                    break;
+                }
+                case 1:
+                {
+                    G = value;
+                    break;
+                }
+                case 2:
+                {
+                    B = value;
+                    break;
+                }
+                case 3:
+                {
+                    A = value;
+                    break;
+                }
+                default:
+                {
+                    throw new IndexOutOfRangeException("Invalid Color index!");
+                }
                 }
             }
         }
@@ -283,7 +283,7 @@ namespace FlaxEngine
 
             result[6] = digits[(a >> 4) & 0x0f];
             result[7] = digits[(a) & 0x0f];
-            
+
             return new string(result);
         }
 
@@ -445,7 +445,13 @@ namespace FlaxEngine
         /// <returns>A four-element array containing the components of the color.</returns>
         public float[] ToArray()
         {
-            return new[] { R, G, B, A };
+            return new[]
+            {
+                R,
+                G,
+                B,
+                A
+            };
         }
 
         /// <summary>
@@ -466,13 +472,44 @@ namespace FlaxEngine
             return new Color(Mathf.SRgbToLinear(R), Mathf.SRgbToLinear(G), Mathf.SRgbToLinear(B), A);
         }
 
-        static readonly int[][] RGBSwizzle = {
-            new []{ 0, 3, 1 },
-            new []{ 2, 0, 1 },
-            new []{ 1, 0, 3 },
-            new []{ 1, 2, 0 },
-            new []{ 3, 1, 0 },
-            new []{ 0, 1, 2 },
+        static readonly int[][] RGBSwizzle =
+        {
+            new[]
+            {
+                0,
+                3,
+                1
+            },
+            new[]
+            {
+                2,
+                0,
+                1
+            },
+            new[]
+            {
+                1,
+                0,
+                3
+            },
+            new[]
+            {
+                1,
+                2,
+                0
+            },
+            new[]
+            {
+                3,
+                1,
+                0
+            },
+            new[]
+            {
+                0,
+                1,
+                2
+            },
         };
 
         /// <summary>
@@ -500,9 +537,9 @@ namespace FlaxEngine
             int swizzleIndex = ((int)hDiv60Floor) % 6;
 
             return new Color(rgbValues[RGBSwizzle[swizzleIndex][0]],
-                rgbValues[RGBSwizzle[swizzleIndex][1]],
-                rgbValues[RGBSwizzle[swizzleIndex][2]],
-                alpha);
+                             rgbValues[RGBSwizzle[swizzleIndex][1]],
+                             rgbValues[RGBSwizzle[swizzleIndex][2]],
+                             alpha);
         }
 
         /// <summary>
@@ -515,7 +552,7 @@ namespace FlaxEngine
         {
             return FromHSV(hsv.X, hsv.Y, hsv.Z, alpha);
         }
-        
+
         /// <summary>
         /// Linearly interpolates between colors a and b by t.
         /// </summary>
@@ -664,13 +701,13 @@ namespace FlaxEngine
             return new Color(a.R * b, a.G * b, a.B * b, a.A * b);
         }
 
-		/// <summary>
-		/// Subtracts one color from the another.
-		/// </summary>
-		/// <param name="a">The first color.</param>
-		/// <param name="b">The second color.</param>
-		/// <returns>The result of the operator.</returns>
-		public static Color operator -(Color a, Color b)
+        /// <summary>
+        /// Subtracts one color from the another.
+        /// </summary>
+        /// <param name="a">The first color.</param>
+        /// <param name="b">The second color.</param>
+        /// <returns>The result of the operator.</returns>
+        public static Color operator -(Color a, Color b)
         {
             return new Color(a.R - b.R, a.G - b.G, a.B - b.B, a.A - b.A);
         }

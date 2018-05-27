@@ -65,6 +65,7 @@ namespace FlaxEngine
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetLightmapSettings(IntPtr obj, out LightmapSettings.Internal data);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetLightmapSettings(IntPtr obj, ref LightmapSettings.Internal data);
 #endif

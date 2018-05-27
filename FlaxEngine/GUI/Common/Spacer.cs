@@ -14,7 +14,7 @@ namespace FlaxEngine.GUI
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         public Spacer(float width, float height)
-            : base(0, 0, width, height)
+        : base(0, 0, width, height)
         {
             CanFocus = false;
         }

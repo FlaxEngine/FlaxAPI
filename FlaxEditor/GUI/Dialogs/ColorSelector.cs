@@ -50,7 +50,7 @@ namespace FlaxEditor.GUI.Dialogs
         /// Initializes a new instance of the <see cref="ColorSelector"/> class.
         /// </summary>
         public ColorSelector()
-            : this(64)
+        : this(64)
         {
         }
 
@@ -59,7 +59,7 @@ namespace FlaxEditor.GUI.Dialogs
         /// </summary>
         /// <param name="wheelSize">Size of the wheel.</param>
         public ColorSelector(float wheelSize = 64)
-            : base(0, 0, wheelSize, wheelSize)
+        : base(0, 0, wheelSize, wheelSize)
         {
             _colorWheelSprite = Editor.Instance.UI.GetIcon("ColorWheel");
             _wheelRect = new Rectangle(0, 0, wheelSize, wheelSize);
@@ -193,7 +193,7 @@ namespace FlaxEditor.GUI.Dialogs
 
             return base.OnMouseUp(location, buttons);
         }
-        
+
         /// <inheritdoc />
         public override void OnEndMouseCapture()
         {
@@ -205,7 +205,7 @@ namespace FlaxEditor.GUI.Dialogs
         protected override void SetSizeInternal(Vector2 size)
         {
             _wheelRect = new Rectangle(0, 0, size.Y, size.Y);
-            
+
             base.SetSizeInternal(size);
         }
     }
@@ -227,7 +227,7 @@ namespace FlaxEditor.GUI.Dialogs
         /// <param name="wheelSize">Size of the wheel.</param>
         /// <param name="slidersThickness">The sliders thickness.</param>
         public ColorSelectorWithSliders(float wheelSize, float slidersThickness)
-            : base(wheelSize)
+        : base(wheelSize)
         {
             // Setup dimensions
             const float slidersMargin = 8.0f;
@@ -330,7 +330,7 @@ namespace FlaxEditor.GUI.Dialogs
 
             return base.OnMouseUp(location, buttons);
         }
-        
+
         /// <inheritdoc />
         public override void OnEndMouseCapture()
         {

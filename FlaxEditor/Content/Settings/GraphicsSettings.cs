@@ -35,16 +35,16 @@ namespace FlaxEditor.Content.Settings
         [EditorOrder(1200), EditorDisplay("Quality", "SSAO Quality"), Tooltip("Screen Space Ambient Occlusion quality setting.")]
         public Quality SSAOQuality = Quality.Medium;
 
-		/// <summary>
-		/// Volumetric Fog quality setting.
-		/// </summary>
-		[EditorOrder(1250), EditorDisplay("Quality", "Volumetric Fog Quality"), Tooltip("Volumetric Fog quality setting.")]
-		public Quality VolumetricFogQuality = Quality.High;
+        /// <summary>
+        /// Volumetric Fog quality setting.
+        /// </summary>
+        [EditorOrder(1250), EditorDisplay("Quality", "Volumetric Fog Quality"), Tooltip("Volumetric Fog quality setting.")]
+        public Quality VolumetricFogQuality = Quality.High;
 
-		/// <summary>
-		/// The shadows quality.
-		/// </summary>
-		[EditorOrder(1300), EditorDisplay("Quality", "Shadows Quality"), Tooltip("The shadows quality.")]
+        /// <summary>
+        /// The shadows quality.
+        /// </summary>
+        [EditorOrder(1300), EditorDisplay("Quality", "Shadows Quality"), Tooltip("The shadows quality.")]
         public Quality ShadowsQuality = Quality.Medium;
 
         /// <summary>

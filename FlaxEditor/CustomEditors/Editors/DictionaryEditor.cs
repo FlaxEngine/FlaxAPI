@@ -107,7 +107,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 {
                     var item = layout.CustomContainer<UniformGridPanel>();
                     var itemGrid = item.CustomControl;
-                    itemGrid.Height = TextBox.DefaultHeight;// TODO: make slots auto sizable instead of fixed height
+                    itemGrid.Height = TextBox.DefaultHeight; // TODO: make slots auto sizable instead of fixed height
                     itemGrid.SlotsHorizontally = 2;
                     itemGrid.SlotsVertically = 1;
 
@@ -139,7 +139,7 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             var dictionary = Values[0] as IDictionary;
             var oldSize = dictionary?.Count ?? 0;
-            
+
             if (oldSize != newSize)
             {
                 // Allocate new collection
@@ -215,7 +215,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 SetValue(newValues);
             }
         }
-        
+
         /// <inheritdoc />
         public override void Refresh()
         {

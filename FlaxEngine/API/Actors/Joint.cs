@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-	public abstract partial class Joint
-	{
-	}
+    public abstract partial class Joint
+    {
+    }
 }

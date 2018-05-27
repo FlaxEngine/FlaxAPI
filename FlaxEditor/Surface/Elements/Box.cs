@@ -83,8 +83,8 @@ namespace FlaxEditor.Surface.Elements
                     // Set new value
                     _currentType = value;
 
-					// Fire event
-					OnCurrentTypeChanged();
+                    // Fire event
+                    OnCurrentTypeChanged();
                 }
             }
         }
@@ -96,13 +96,13 @@ namespace FlaxEditor.Surface.Elements
 
         /// <inheritdoc />
         protected Box(SurfaceNode parentNode, NodeElementArchetype archetype, Vector2 location)
-            : base(parentNode, archetype, location, new Vector2(Constants.BoxSize), false)
+        : base(parentNode, archetype, location, new Vector2(Constants.BoxSize), false)
         {
             _currentType = DefaultType;
 
             Surface.Style.GetConnectionColor(_currentType, out _currentTypeColor);
-	        TooltipText = CurrentType.ToString();
-		}
+            TooltipText = CurrentType.ToString();
+        }
 
         /// <summary>
         /// Determines whether this box can use the specified type as a conection.
@@ -168,10 +168,10 @@ namespace FlaxEditor.Surface.Elements
                     var targetBox = Connections[i];
                     targetBox.Connections.Remove(this);
                     toUpdate.Add(targetBox);
-					targetBox.OnConnectionsChanged();
+                    targetBox.OnConnectionsChanged();
                 }
                 Connections.Clear();
-				OnConnectionsChanged();
+                OnConnectionsChanged();
 
                 // Update
                 for (int i = 0; i < toUpdate.Count; i++)
@@ -217,8 +217,8 @@ namespace FlaxEditor.Surface.Elements
             // Update
             ConnectionTick();
             box.ConnectionTick();
-	        OnConnectionsChanged();
-	        box.OnConnectionsChanged();
+            OnConnectionsChanged();
+            box.OnConnectionsChanged();
         }
 
         /// <summary>
@@ -237,14 +237,14 @@ namespace FlaxEditor.Surface.Elements
             box.Connections.Add(this);
             Connections.Add(box);
 
-			// Ensure data is fine and connection is valid
-			Assert.IsTrue(AreConnected(box));
+            // Ensure data is fine and connection is valid
+            Assert.IsTrue(AreConnected(box));
 
             // Update
             ConnectionTick();
             box.ConnectionTick();
-	        OnConnectionsChanged();
-			box.OnConnectionsChanged();
+            OnConnectionsChanged();
+            box.OnConnectionsChanged();
         }
 
         /// <summary>
@@ -308,16 +308,16 @@ namespace FlaxEditor.Surface.Elements
         /// </summary>
         protected virtual void OnCurrentTypeChanged()
         {
-	        Surface.Style.GetConnectionColor(_currentType, out _currentTypeColor);
-	        TooltipText = CurrentType.ToString();
+            Surface.Style.GetConnectionColor(_currentType, out _currentTypeColor);
+            TooltipText = CurrentType.ToString();
         }
 
-		/// <summary>
-		/// Called when connections array gets changed (also called after surface deserialization)
-		/// </summary>
-		public virtual void OnConnectionsChanged()
-	    {
-	    }
+        /// <summary>
+        /// Called when connections array gets changed (also called after surface deserialization)
+        /// </summary>
+        public virtual void OnConnectionsChanged()
+        {
+        }
 
         /// <summary>
         /// Draws the box GUI using <see cref="Render2D"/>.
@@ -333,7 +333,7 @@ namespace FlaxEditor.Surface.Elements
 
             // Debuging boxes size
             //Render2D.DrawRectangle(rect, Color.Orange); return;
-            
+
             // Draw icon
             bool hasConnections = HasAnyConnection;
             float alpha = Enabled ? 1.0f : 0.6f;

@@ -18,31 +18,31 @@ namespace FlaxEngine.GUI
             var window = ParentWindow;
             bool shftDown = window.GetKey(Keys.Shift);
             bool ctrDown = window.GetKey(Keys.Control);
-            
+
             // Check if use combination with a control key
             if (ctrDown)
             {
                 switch (key)
                 {
-                    case Keys.C:
-                        Copy();
-                        break;
+                case Keys.C:
+                    Copy();
+                    break;
 
-                    case Keys.V:
-                        Paste();
-                        break;
+                case Keys.V:
+                    Paste();
+                    break;
 
-                    case Keys.D:
-                        Duplicate();
-                        break;
+                case Keys.D:
+                    Duplicate();
+                    break;
 
-                    case Keys.X:
-                        Cut();
-                        break;
+                case Keys.X:
+                    Cut();
+                    break;
 
-                    case Keys.A:
-                        SelectAll();
-                        break;
+                case Keys.A:
+                    SelectAll();
+                    break;
                 }
 
                 return true;
@@ -51,106 +51,106 @@ namespace FlaxEngine.GUI
             // Check special keys
             switch (key)
             {
-                // Delete
-                case Keys.Backspace:
+            // Delete
+            case Keys.Backspace:
+            {
+                int left = SelectionLeft;
+                if (HasSelection)
                 {
-	                int left = SelectionLeft;
-	                if (HasSelection)
-	                {
-		                _text = _text.Remove(left, SelectionLength);
-		                setSelection(left);
-		                OnTextChanged();
-	                }
-	                else if (CaretPosition > 0)
-	                {
-		                left -= 1;
-		                _text = _text.Remove(left, 1);
-		                setSelection(left);
-		                OnTextChanged();
-	                }
-
-	                return true;
-                }
-				case Keys.Delete:
-                {
-                    int left = SelectionLeft;
-                    if (HasSelection)
-                    {
-                        _text = _text.Remove(left, SelectionLength);
-                        setSelection(left);
-                        OnTextChanged();
-                    }
-                    else if (TextLength > 0 && left < TextLength)
-                    {
-                        _text = _text.Remove(left, 1);
-                        setSelection(left);
-                        OnTextChanged();
-                    }
-
-                    return true;
-                }
-
-                // Cancel
-                case Keys.Escape:
-                {
-                    // Restore text from start
-                    setSelection(-1);
-                    _text = _onStartEditValue;
-
-                    Defocus();
+                    _text = _text.Remove(left, SelectionLength);
+                    setSelection(left);
                     OnTextChanged();
-
-                    return true;
                 }
-
-                // Enter
-                case Keys.Return:
+                else if (CaretPosition > 0)
                 {
-                    if (IsMultiline)
-                    {
-                        // Insert new line
-                        Insert('\n');
-                    }
-                    else
-                    {
-                        // End editing
-                        Defocus();
-                    }
-
-                    return true;
+                    left -= 1;
+                    _text = _text.Remove(left, 1);
+                    setSelection(left);
+                    OnTextChanged();
                 }
 
-                // Scroll to begin
-                case Keys.Home:
+                return true;
+            }
+            case Keys.Delete:
+            {
+                int left = SelectionLeft;
+                if (HasSelection)
                 {
-                    // Move caret to the first character
-                    setSelection(0);
-                    return true;
+                    _text = _text.Remove(left, SelectionLength);
+                    setSelection(left);
+                    OnTextChanged();
                 }
-
-                // Scroll to end
-                case Keys.End:
+                else if (TextLength > 0 && left < TextLength)
                 {
-                    // Move caret after last character
-                    setSelection(TextLength);
-                    return true;
+                    _text = _text.Remove(left, 1);
+                    setSelection(left);
+                    OnTextChanged();
                 }
 
-                case Keys.ArrowRight:
-                    MoveRight(shftDown, ctrDown);
-                    return true;
+                return true;
+            }
 
-                case Keys.ArrowLeft:
-                    MoveLeft(shftDown, ctrDown);
-                    return true;
+            // Cancel
+            case Keys.Escape:
+            {
+                // Restore text from start
+                setSelection(-1);
+                _text = _onStartEditValue;
 
-                case Keys.ArrowUp:
-                    MoveUp(shftDown, ctrDown);
-                    return true;
+                Defocus();
+                OnTextChanged();
 
-                case Keys.ArrowDown:
-                    MoveDown(shftDown, ctrDown);
-                    return true;
+                return true;
+            }
+
+            // Enter
+            case Keys.Return:
+            {
+                if (IsMultiline)
+                {
+                    // Insert new line
+                    Insert('\n');
+                }
+                else
+                {
+                    // End editing
+                    Defocus();
+                }
+
+                return true;
+            }
+
+            // Scroll to begin
+            case Keys.Home:
+            {
+                // Move caret to the first character
+                setSelection(0);
+                return true;
+            }
+
+            // Scroll to end
+            case Keys.End:
+            {
+                // Move caret after last character
+                setSelection(TextLength);
+                return true;
+            }
+
+            case Keys.ArrowRight:
+                MoveRight(shftDown, ctrDown);
+                return true;
+
+            case Keys.ArrowLeft:
+                MoveLeft(shftDown, ctrDown);
+                return true;
+
+            case Keys.ArrowUp:
+                MoveUp(shftDown, ctrDown);
+                return true;
+
+            case Keys.ArrowDown:
+                MoveDown(shftDown, ctrDown);
+                return true;
             }
 
             return true;

@@ -7,22 +7,23 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Cube texture asset contains 6 images that is usually stored on a GPU as a cube map (one slice per each axis direction).
-	/// </summary>
-	public partial class CubeTexture : TextureBase
-	{
-		/// <summary>
-		/// Creates new <see cref="CubeTexture"/> object.
-		/// </summary>
-		private CubeTexture() : base()
-		{
-		}
+    /// <summary>
+    /// Cube texture asset contains 6 images that is usually stored on a GPU as a cube map (one slice per each axis direction).
+    /// </summary>
+    public partial class CubeTexture : TextureBase
+    {
+        /// <summary>
+        /// Creates new <see cref="CubeTexture"/> object.
+        /// </summary>
+        private CubeTexture() : base()
+        {
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
 #endif
-#endregion
-	}
-}
 
+        #endregion
+    }
+}

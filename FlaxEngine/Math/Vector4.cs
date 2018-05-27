@@ -218,7 +218,7 @@ namespace FlaxEngine
         /// Gets a value indicting whether this vector is zero
         /// </summary>
         public bool IsZero => Mathf.IsZero(X) && Mathf.IsZero(Y) && Mathf.IsZero(Z) && Mathf.IsZero(W);
-        
+
         /// <summary>
         /// Gets a value indicting whether this vector is one
         /// </summary>
@@ -233,7 +233,7 @@ namespace FlaxEngine
         /// Gets a maximum component value
         /// </summary>
         public float MaxValue => Mathf.Max(X, Mathf.Max(Y, Mathf.Max(Z, W)));
-        
+
         /// <summary>
         /// Gets an arithmetic average value of all vector components.
         /// </summary>
@@ -263,14 +263,14 @@ namespace FlaxEngine
             {
                 switch (index)
                 {
-                    case 0:
-                        return X;
-                    case 1:
-                        return Y;
-                    case 2:
-                        return Z;
-                    case 3:
-                        return W;
+                case 0:
+                    return X;
+                case 1:
+                    return Y;
+                case 2:
+                    return Z;
+                case 3:
+                    return W;
                 }
 
                 throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector4 run from 0 to 3, inclusive.");
@@ -280,20 +280,20 @@ namespace FlaxEngine
             {
                 switch (index)
                 {
-                    case 0:
-                        X = value;
-                        break;
-                    case 1:
-                        Y = value;
-                        break;
-                    case 2:
-                        Z = value;
-                        break;
-                    case 3:
-                        W = value;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector4 run from 0 to 3, inclusive.");
+                case 0:
+                    X = value;
+                    break;
+                case 1:
+                    Y = value;
+                    break;
+                case 2:
+                    Z = value;
+                    break;
+                case 3:
+                    W = value;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector4 run from 0 to 3, inclusive.");
                 }
             }
         }
@@ -340,7 +340,13 @@ namespace FlaxEngine
         /// <returns>A four-element array containing the components of the vector.</returns>
         public float[] ToArray()
         {
-            return new[] {X, Y, Z, W};
+            return new[]
+            {
+                X,
+                Y,
+                Z,
+                W
+            };
         }
 
         /// <summary>
@@ -580,9 +586,9 @@ namespace FlaxEngine
         public static void Barycentric(ref Vector4 value1, ref Vector4 value2, ref Vector4 value3, float amount1, float amount2, out Vector4 result)
         {
             result = new Vector4(value1.X + amount1 * (value2.X - value1.X) + amount2 * (value3.X - value1.X),
-                value1.Y + amount1 * (value2.Y - value1.Y) + amount2 * (value3.Y - value1.Y),
-                value1.Z + amount1 * (value2.Z - value1.Z) + amount2 * (value3.Z - value1.Z),
-                value1.W + amount1 * (value2.W - value1.W) + amount2 * (value3.W - value1.W));
+                                 value1.Y + amount1 * (value2.Y - value1.Y) + amount2 * (value3.Y - value1.Y),
+                                 value1.Z + amount1 * (value2.Z - value1.Z) + amount2 * (value3.Z - value1.Z),
+                                 value1.W + amount1 * (value2.W - value1.W) + amount2 * (value3.W - value1.W));
         }
 
         /// <summary>
@@ -867,9 +873,9 @@ namespace FlaxEngine
             float part4 = cubed - squared;
 
             result = new Vector4(value1.X * part1 + value2.X * part2 + tangent1.X * part3 + tangent2.X * part4,
-                value1.Y * part1 + value2.Y * part2 + tangent1.Y * part3 + tangent2.Y * part4,
-                value1.Z * part1 + value2.Z * part2 + tangent1.Z * part3 + tangent2.Z * part4,
-                value1.W * part1 + value2.W * part2 + tangent1.W * part3 + tangent2.W * part4);
+                                 value1.Y * part1 + value2.Y * part2 + tangent1.Y * part3 + tangent2.Y * part4,
+                                 value1.Z * part1 + value2.Z * part2 + tangent1.Z * part3 + tangent2.Z * part4,
+                                 value1.W * part1 + value2.W * part2 + tangent1.W * part3 + tangent2.W * part4);
         }
 
         /// <summary>
@@ -1486,7 +1492,7 @@ namespace FlaxEngine
                 return ToString();
 
             return string.Format(CultureInfo.CurrentCulture, _formatString, X.ToString(format, CultureInfo.CurrentCulture),
-                Y.ToString(format, CultureInfo.CurrentCulture), Z.ToString(format, CultureInfo.CurrentCulture), W.ToString(format, CultureInfo.CurrentCulture));
+                                 Y.ToString(format, CultureInfo.CurrentCulture), Z.ToString(format, CultureInfo.CurrentCulture), W.ToString(format, CultureInfo.CurrentCulture));
         }
 
         /// <summary>
@@ -1515,7 +1521,7 @@ namespace FlaxEngine
                 return ToString(formatProvider);
 
             return string.Format(formatProvider, "X:{0} Y:{1} Z:{2} W:{3}", X.ToString(format, formatProvider),
-                Y.ToString(format, formatProvider), Z.ToString(format, formatProvider), W.ToString(format, formatProvider));
+                                 Y.ToString(format, formatProvider), Z.ToString(format, formatProvider), W.ToString(format, formatProvider));
         }
 
         /// <summary>

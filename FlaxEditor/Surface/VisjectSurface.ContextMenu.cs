@@ -10,19 +10,19 @@ namespace FlaxEditor.Surface
 {
     public partial class VisjectSurface
     {
-	    private ContextMenuButton _cmCopyButton;
-	    private ContextMenuButton _cmPasteButton;
-	    private ContextMenuButton _cmDuplicateButton;
-	    private ContextMenuButton _cmCutButton;
-	    private ContextMenuButton _cmDeleteButton;
-	    private ContextMenuButton _cmRemoveNodeConnectionsButton;
-	    private ContextMenuButton _cmRemoveBoxConnectionsButton;
+        private ContextMenuButton _cmCopyButton;
+        private ContextMenuButton _cmPasteButton;
+        private ContextMenuButton _cmDuplicateButton;
+        private ContextMenuButton _cmCutButton;
+        private ContextMenuButton _cmDeleteButton;
+        private ContextMenuButton _cmRemoveNodeConnectionsButton;
+        private ContextMenuButton _cmRemoveBoxConnectionsButton;
 
-		/// <summary>
-		/// Shows the primary menu.
-		/// </summary>
-		/// <param name="location">The location in teh Surface Space.</param>
-		public void ShowPrimaryMenu(Vector2 location)
+        /// <summary>
+        /// Shows the primary menu.
+        /// </summary>
+        /// <param name="location">The location in teh Surface Space.</param>
+        public void ShowPrimaryMenu(Vector2 location)
         {
             _cmPrimaryMenu.Show(this, location);
         }
@@ -33,15 +33,15 @@ namespace FlaxEditor.Surface
         /// <param name="location">The location in the Surface Space.</param>
         public void ShowSecondaryCM(Vector2 location)
         {
-	        var selection = Selection;
+            var selection = Selection;
 
-			// Update context menu buttons
-	        _cmPasteButton.Enabled = CanPaste();
-	        _cmCutButton.Enabled = selection.All(node => (node.Archetype.Flags & NodeFlags.NoRemove) == 0);
-	        _cmDeleteButton.Enabled = _cmCutButton.Enabled;
-			var boxUnderMouse = GetChildAtRecursive(location) as Box;
-	        _cmRemoveBoxConnectionsButton.Enabled = boxUnderMouse != null && boxUnderMouse.HasAnyConnection;
-	        _cmRemoveBoxConnectionsButton.Tag = boxUnderMouse;
+            // Update context menu buttons
+            _cmPasteButton.Enabled = CanPaste();
+            _cmCutButton.Enabled = selection.All(node => (node.Archetype.Flags & NodeFlags.NoRemove) == 0);
+            _cmDeleteButton.Enabled = _cmCutButton.Enabled;
+            var boxUnderMouse = GetChildAtRecursive(location) as Box;
+            _cmRemoveBoxConnectionsButton.Enabled = boxUnderMouse != null && boxUnderMouse.HasAnyConnection;
+            _cmRemoveBoxConnectionsButton.Tag = boxUnderMouse;
 
             // Show secondary context menu
             _cmStartPos = location;

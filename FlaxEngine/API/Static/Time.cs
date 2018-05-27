@@ -21,7 +21,7 @@ namespace FlaxEngine
         public float TimeSinceLevelLoad;
         public long TimeSinceLevelLoadTicks;
     }
-    
+
     public static partial class Time
     {
         private static TimeData data;
@@ -41,26 +41,26 @@ namespace FlaxEngine
         /// </summary>
         public static long DeltaTimeTicks => data.DeltaTimeTicks;
 
-	    /// <summary>
-	    /// Gets time at the beginning of this frame. This is the time in seconds since the start of the game.
-	    /// </summary>
-	    public static float GameTime => data.Time;
+        /// <summary>
+        /// Gets time at the beginning of this frame. This is the time in seconds since the start of the game.
+        /// </summary>
+        public static float GameTime => data.Time;
 
-	    /// <summary>
-	    /// Gets time at the beginning of this frame in ticks. This is the time in seconds since the start of the game.
-	    /// </summary>
-	    public static long GameTimeTicks => data.TimeTicks;
-		
-		/// <summary>
-		/// Gets real time in seconds since the game started
-		/// </summary>
-		public static float TimeSinceStartup => data.TimeSinceStartup;
+        /// <summary>
+        /// Gets time at the beginning of this frame in ticks. This is the time in seconds since the start of the game.
+        /// </summary>
+        public static long GameTimeTicks => data.TimeTicks;
+
+        /// <summary>
+        /// Gets real time in seconds since the game started
+        /// </summary>
+        public static float TimeSinceStartup => data.TimeSinceStartup;
 
         /// <summary>
         /// Gets real time in seconds since the game started in ticks
         /// </summary>
         public static long TimeSinceStartupTicks => data.TimeSinceStartupTicks;
-        
+
         /// <summary>
         /// The time this frame has started (Read Only). This is the time in seconds since the last level has been loaded.
         /// </summary>

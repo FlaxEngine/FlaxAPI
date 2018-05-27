@@ -19,13 +19,13 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the time in seconds that mouse have to be over the target to show the tooltip.
         /// </summary>
-        public float TimeToShow { get; set; } = 0.3f;// 300ms by default
+        public float TimeToShow { get; set; } = 0.3f; // 300ms by default
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tooltip"/> class.
         /// </summary>
         public Tooltip()
-            : base(0, 0, 300, 24)
+        : base(0, 0, 300, 24)
         {
             Visible = false;
             CanFocus = false;

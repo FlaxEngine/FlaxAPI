@@ -45,7 +45,7 @@ namespace FlaxEngine.GUI.Docking
         /// Initializes a new instance of the <see cref="MasterDockPanel"/> class.
         /// </summary>
         public MasterDockPanel()
-            : base(null)
+        : base(null)
         {
         }
 
@@ -138,7 +138,7 @@ namespace FlaxEngine.GUI.Docking
             // Remove from the windows list
             Windows.Remove(window);
         }
-        
+
         /// <inheritdoc />
         public override bool IsMaster => true;
 

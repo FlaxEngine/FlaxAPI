@@ -10,155 +10,162 @@ using Object = FlaxEngine.Object;
 
 namespace FlaxEditor
 {
-	/// <summary>
-	/// Asset which contains set of asset items thumbnails (cached previews).
-	/// </summary>
-	public sealed partial class PreviewsCache : TextureBase
-	{
-		/// <summary>
-		/// Creates new <see cref="PreviewsCache"/> object.
-		/// </summary>
-		private PreviewsCache() : base()
-		{
-		}
+    /// <summary>
+    /// Asset which contains set of asset items thumbnails (cached previews).
+    /// </summary>
+    public sealed partial class PreviewsCache : TextureBase
+    {
+        /// <summary>
+        /// Creates new <see cref="PreviewsCache"/> object.
+        /// </summary>
+        private PreviewsCache() : base()
+        {
+        }
 
-		/// <summary>
-		/// Checks if previews atlas is ready to be used (is loaded and has texture streamed).
-		/// </summary>
-		[UnmanagedCall]
-		public bool IsReady
-		{
+        /// <summary>
+        /// Checks if previews atlas is ready to be used (is loaded and has texture streamed).
+        /// </summary>
+        [UnmanagedCall]
+        public bool IsReady
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_IsReady(unmanagedPtr); }
+            get { return Internal_IsReady(unmanagedPtr); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Check if there is any free slot in the atlas.
-		/// </summary>
-		[UnmanagedCall]
-		public bool HasFreeSlot
-		{
+        /// <summary>
+        /// Check if there is any free slot in the atlas.
+        /// </summary>
+        [UnmanagedCall]
+        public bool HasFreeSlot
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_HasFreeSlot(unmanagedPtr); }
+            get { return Internal_HasFreeSlot(unmanagedPtr); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Flushes atlas data.
-		/// </summary>
+        /// <summary>
+        /// Flushes atlas data.
+        /// </summary>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public void Flush() 
-		{
+        [UnmanagedCall]
+        public void Flush()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Internal_Flush(unmanagedPtr);
+            Internal_Flush(unmanagedPtr);
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Tries to find slot used by the given asset id.
-		/// </summary>
-		/// <param name="assetId">The asset identifier.</param>
-		/// <returns>Found sprite or Sprite.Invalid if cannot find it.</returns>
+        /// <summary>
+        /// Tries to find slot used by the given asset id.
+        /// </summary>
+        /// <param name="assetId">The asset identifier.</param>
+        /// <returns>Found sprite or Sprite.Invalid if cannot find it.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public Sprite FindSlot(Guid assetId) 
-		{
+        [UnmanagedCall]
+        public Sprite FindSlot(Guid assetId)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Sprite resultAsRef;
-			Internal_FindSlot(unmanagedPtr, ref assetId, out resultAsRef);
-			return resultAsRef;
+            Sprite resultAsRef;
+            Internal_FindSlot(unmanagedPtr, ref assetId, out resultAsRef);
+            return resultAsRef;
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Occupies the atlas slot.
-		/// </summary>
-		/// <param name="renderTarget">The source texture to insert.</param>
-		/// <param name="assetId">The asset identifier.</param>
-		/// <returns>Created sprite or Sprite.Invalid if failed.</returns>
+        /// <summary>
+        /// Occupies the atlas slot.
+        /// </summary>
+        /// <param name="renderTarget">The source texture to insert.</param>
+        /// <param name="assetId">The asset identifier.</param>
+        /// <returns>Created sprite or Sprite.Invalid if failed.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public Sprite OccupySlot(RenderTarget renderTarget, Guid assetId) 
-		{
+        [UnmanagedCall]
+        public Sprite OccupySlot(RenderTarget renderTarget, Guid assetId)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			Sprite resultAsRef;
-			Internal_OccupySlot(unmanagedPtr, Object.GetUnmanagedPtr(renderTarget), ref assetId, out resultAsRef);
-			return resultAsRef;
+            Sprite resultAsRef;
+            Internal_OccupySlot(unmanagedPtr, Object.GetUnmanagedPtr(renderTarget), ref assetId, out resultAsRef);
+            return resultAsRef;
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Releases atlas slot used by the given asset.
-		/// </summary>
-		/// <param name="assetId">The asset identifier.</param>
-		/// <returns>True if slot has been released, otherwise false if no slot has been used by the given asset.</returns>
+        /// <summary>
+        /// Releases atlas slot used by the given asset.
+        /// </summary>
+        /// <param name="assetId">The asset identifier.</param>
+        /// <returns>True if slot has been released, otherwise false if no slot has been used by the given asset.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public bool ReleaseSlot(Guid assetId) 
-		{
+        [UnmanagedCall]
+        public bool ReleaseSlot(Guid assetId)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_ReleaseSlot(unmanagedPtr, ref assetId);
+            return Internal_ReleaseSlot(unmanagedPtr, ref assetId);
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Creates new previews cache atlas asset.
-		/// </summary>
-		/// <param name="path">The asset path.</param>
-		/// <returns>True if failed, otherwise false.</returns>
+        /// <summary>
+        /// Creates new previews cache atlas asset.
+        /// </summary>
+        /// <param name="path">The asset path.</param>
+        /// <returns>True if failed, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static bool Create(string path) 
-		{
+        [UnmanagedCall]
+        public static bool Create(string path)
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Create(path);
+            return Internal_Create(path);
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_IsReady(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_HasFreeSlot(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_Flush(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_FindSlot(IntPtr obj, ref Guid assetId, out Sprite resultAsRef);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_OccupySlot(IntPtr obj, IntPtr renderTarget, ref Guid assetId, out Sprite resultAsRef);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_ReleaseSlot(IntPtr obj, ref Guid assetId);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool Internal_Create(string path);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_IsReady(IntPtr obj);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_HasFreeSlot(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Flush(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_FindSlot(IntPtr obj, ref Guid assetId, out Sprite resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_OccupySlot(IntPtr obj, IntPtr renderTarget, ref Guid assetId, out Sprite resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_ReleaseSlot(IntPtr obj, ref Guid assetId);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_Create(string path);
+#endif
+
+        #endregion
+    }
+}

@@ -4,7 +4,7 @@ using System;
 
 namespace FlaxEngine.Rendering
 {
-	public partial class RenderBuffers
-	{
-	}
+    public partial class RenderBuffers
+    {
+    }
 }

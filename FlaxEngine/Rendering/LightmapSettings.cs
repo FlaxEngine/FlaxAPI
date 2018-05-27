@@ -87,7 +87,7 @@ namespace FlaxEngine.Rendering
         /// </summary>
         [EditorOrder(60), Limit(0, 100, 0.1f), Tooltip("GI quality (range  [0;100])")]
         public int Quality;
-        
+
         [StructLayout(LayoutKind.Sequential)]
         internal struct Internal
         {

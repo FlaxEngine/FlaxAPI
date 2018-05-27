@@ -12,7 +12,7 @@ namespace FlaxEditor.SceneGraph
     {
         /// <inheritdoc />
         protected ActorNodeWithIcon(Actor actor)
-            : base(actor)
+        : base(actor)
         {
         }
 

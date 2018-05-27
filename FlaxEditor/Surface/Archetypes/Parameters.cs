@@ -71,7 +71,7 @@ namespace FlaxEditor.Surface.Archetypes
 
             /// <inheritdoc />
             public SurfaceNodeParamsGet(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
-                : base(id, surface, nodeArch, groupArch)
+            : base(id, surface, nodeArch, groupArch)
             {
             }
 
@@ -87,75 +87,75 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     switch (selected.Type)
                     {
-                        case ParameterType.Bool:
-                            AddOutput(Prototypes[0]);
-                            break;
-                        case ParameterType.Integer:
-                            AddOutput(Prototypes[1]);
-                            break;
-                        case ParameterType.Float:
-                            AddOutput(Prototypes[2]);
-                            break;
-                        case ParameterType.Vector2:
-                            AddOutput(Prototypes[3]);
-                            AddOutput(Prototypes[4]);
-                            AddOutput(Prototypes[5]);
-                            height = 80;
-                            break;
-                        case ParameterType.Vector3:
-                            AddOutput(Prototypes[6]);
-                            AddOutput(Prototypes[7]);
-                            AddOutput(Prototypes[8]);
-                            AddOutput(Prototypes[9]);
-                            height = 100;
-                            break;
-                        case ParameterType.Vector4:
-                            AddOutput(Prototypes[11]);
-                            AddOutput(Prototypes[12]);
-                            AddOutput(Prototypes[13]);
-                            AddOutput(Prototypes[14]);
-                            AddOutput(Prototypes[15]);
-                            height = 120;
-                            break;
-                        case ParameterType.Color:
-                            AddOutput(Prototypes[15]);
-                            AddOutput(Prototypes[16]);
-                            AddOutput(Prototypes[17]);
-                            AddOutput(Prototypes[18]);
-                            AddOutput(Prototypes[19]);
-                            height = 120;
-                            break;
-                        case ParameterType.Texture:
-                        case ParameterType.CubeTexture:
-                        case ParameterType.RenderTarget:
-                            AddInput(Prototypes[20]);
-                            AddOutput(Prototypes[21]);
-                            AddOutput(Prototypes[22]);
-                            AddOutput(Prototypes[23]);
-                            AddOutput(Prototypes[24]);
-                            AddOutput(Prototypes[25]);
-                            AddOutput(Prototypes[26]);
-                            height = 140;
-                            break;
-                        case ParameterType.NormalMap:
-                            AddInput(Prototypes[27]);
-                            AddOutput(Prototypes[28]);
-                            AddOutput(Prototypes[29]);
-                            AddOutput(Prototypes[30]);
-                            AddOutput(Prototypes[31]);
-                            AddOutput(Prototypes[32]);
-                            height = 140;
-                            break;
+                    case ParameterType.Bool:
+                        AddOutput(Prototypes[0]);
+                        break;
+                    case ParameterType.Integer:
+                        AddOutput(Prototypes[1]);
+                        break;
+                    case ParameterType.Float:
+                        AddOutput(Prototypes[2]);
+                        break;
+                    case ParameterType.Vector2:
+                        AddOutput(Prototypes[3]);
+                        AddOutput(Prototypes[4]);
+                        AddOutput(Prototypes[5]);
+                        height = 80;
+                        break;
+                    case ParameterType.Vector3:
+                        AddOutput(Prototypes[6]);
+                        AddOutput(Prototypes[7]);
+                        AddOutput(Prototypes[8]);
+                        AddOutput(Prototypes[9]);
+                        height = 100;
+                        break;
+                    case ParameterType.Vector4:
+                        AddOutput(Prototypes[11]);
+                        AddOutput(Prototypes[12]);
+                        AddOutput(Prototypes[13]);
+                        AddOutput(Prototypes[14]);
+                        AddOutput(Prototypes[15]);
+                        height = 120;
+                        break;
+                    case ParameterType.Color:
+                        AddOutput(Prototypes[15]);
+                        AddOutput(Prototypes[16]);
+                        AddOutput(Prototypes[17]);
+                        AddOutput(Prototypes[18]);
+                        AddOutput(Prototypes[19]);
+                        height = 120;
+                        break;
+                    case ParameterType.Texture:
+                    case ParameterType.CubeTexture:
+                    case ParameterType.RenderTarget:
+                        AddInput(Prototypes[20]);
+                        AddOutput(Prototypes[21]);
+                        AddOutput(Prototypes[22]);
+                        AddOutput(Prototypes[23]);
+                        AddOutput(Prototypes[24]);
+                        AddOutput(Prototypes[25]);
+                        AddOutput(Prototypes[26]);
+                        height = 140;
+                        break;
+                    case ParameterType.NormalMap:
+                        AddInput(Prototypes[27]);
+                        AddOutput(Prototypes[28]);
+                        AddOutput(Prototypes[29]);
+                        AddOutput(Prototypes[30]);
+                        AddOutput(Prototypes[31]);
+                        AddOutput(Prototypes[32]);
+                        height = 140;
+                        break;
 
-                        // TODO: finish this
-                        case ParameterType.String: break;
-                        case ParameterType.Box: break;
-                        case ParameterType.Rotation: break;
-                        case ParameterType.Transform: break;
-                        case ParameterType.Asset: break;
-                        case ParameterType.Actor: break;
-                        case ParameterType.Rectangle: break;
-                        default: break;
+                    // TODO: finish this
+                    case ParameterType.String: break;
+                    case ParameterType.Box: break;
+                    case ParameterType.Rotation: break;
+                    case ParameterType.Transform: break;
+                    case ParameterType.Asset: break;
+                    case ParameterType.Actor: break;
+                    case ParameterType.Rectangle: break;
+                    default: break;
                     }
                 }
                 Resize(140, height);
@@ -210,7 +210,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Guid selectedID = selected != null ? selected.ID : Guid.Empty;
                 if (selectedID != (Guid)Values[0])
                 {
-					SetValue(0, selectedID);
+                    SetValue(0, selectedID);
                     UpdateElements();
                 }
             }

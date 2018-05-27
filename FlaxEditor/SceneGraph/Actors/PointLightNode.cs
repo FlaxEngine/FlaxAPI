@@ -12,7 +12,7 @@ namespace FlaxEditor.SceneGraph.Actors
     {
         /// <inheritdoc />
         public PointLightNode(Actor actor)
-            : base(actor)
+        : base(actor)
         {
         }
     }

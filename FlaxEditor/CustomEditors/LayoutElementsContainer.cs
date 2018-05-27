@@ -90,7 +90,7 @@ namespace FlaxEditor.CustomEditors
         /// <typeparam name="T">The custom control.</typeparam>
         /// <returns>The created element.</returns>
         public CustomElement<T> Custom<T>()
-            where T : Control, new()
+        where T : Control, new()
         {
             var element = new CustomElement<T>();
             OnAddElement(element);
@@ -105,7 +105,7 @@ namespace FlaxEditor.CustomEditors
         /// <param name="tooltip">The property label tooltip text.</param>
         /// <returns>The created element.</returns>
         public CustomElement<T> Custom<T>(string name, string tooltip = null)
-            where T : Control, new()
+        where T : Control, new()
         {
             var property = AddPropertyItem(name, tooltip);
             return property.Custom<T>();
@@ -117,7 +117,7 @@ namespace FlaxEditor.CustomEditors
         /// <typeparam name="T">The custom control.</typeparam>
         /// <returns>The created element.</returns>
         public CustomElementsContainer<T> CustomContainer<T>()
-            where T : ContainerControl, new()
+        where T : ContainerControl, new()
         {
             var element = new CustomElementsContainer<T>();
             OnAddElement(element);
@@ -132,7 +132,7 @@ namespace FlaxEditor.CustomEditors
         /// <param name="tooltip">The property label tooltip text.</param>
         /// <returns>The created element.</returns>
         public CustomElementsContainer<T> CustomContainer<T>(string name, string tooltip = null)
-            where T : ContainerControl, new()
+        where T : ContainerControl, new()
         {
             var property = AddPropertyItem(name);
             return property.CustomContainer<T>();
@@ -237,24 +237,24 @@ namespace FlaxEditor.CustomEditors
             return property.Checkbox();
         }
 
-	    /// <summary>
-	    /// Adds new tree element.
-	    /// </summary>
-	    /// <returns>The created element.</returns>
-	    public TreeElement Tree()
-	    {
-		    TreeElement element = new TreeElement();
-		    OnAddElement(element);
-		    return element;
-	    }
+        /// <summary>
+        /// Adds new tree element.
+        /// </summary>
+        /// <returns>The created element.</returns>
+        public TreeElement Tree()
+        {
+            TreeElement element = new TreeElement();
+            OnAddElement(element);
+            return element;
+        }
 
-		/// <summary>
-		/// Adds new label element.
-		/// </summary>
-		/// <param name="text">The label text.</param>
-		/// <param name="horizontalAlignment">The label text horizontal alignment.</param>
-		/// <returns>The created element.</returns>
-		public LabelElement Label(string text, TextAlignment horizontalAlignment = TextAlignment.Near)
+        /// <summary>
+        /// Adds new label element.
+        /// </summary>
+        /// <param name="text">The label text.</param>
+        /// <param name="horizontalAlignment">The label text horizontal alignment.</param>
+        /// <returns>The created element.</returns>
+        public LabelElement Label(string text, TextAlignment horizontalAlignment = TextAlignment.Near)
         {
             LabelElement element = new LabelElement();
             element.Label.Text = text;
@@ -344,7 +344,7 @@ namespace FlaxEditor.CustomEditors
             var property = AddPropertyItem(name, tooltip);
             return property.IntegerValue();
         }
-        
+
         /// <summary>
         /// Adds new combobox element.
         /// </summary>
@@ -403,7 +403,7 @@ namespace FlaxEditor.CustomEditors
         /// <returns>The created element.</returns>
         public CustomEditor Object(ValueContainer values, CustomEditor overrideEditor = null)
         {
-            if(values == null)
+            if (values == null)
                 throw new ArgumentNullException();
 
             var editor = CustomEditorsUtil.CreateEditor(values, overrideEditor);
@@ -441,11 +441,11 @@ namespace FlaxEditor.CustomEditors
             var editor = CustomEditorsUtil.CreateEditor(values, overrideEditor);
             var style = editor.Style;
 
-            if(style == DisplayStyle.InlineIntoParent || name == EditorDisplayAttribute.InlineStyle)
+            if (style == DisplayStyle.InlineIntoParent || name == EditorDisplayAttribute.InlineStyle)
             {
                 return Object(values, editor);
             }
-            
+
             if (style == DisplayStyle.Group)
             {
                 var group = Group(name, true);
@@ -470,11 +470,11 @@ namespace FlaxEditor.CustomEditors
             var editor = CustomEditorsUtil.CreateEditor(values, overrideEditor);
             var style = editor.Style;
 
-            if(style == DisplayStyle.InlineIntoParent)
+            if (style == DisplayStyle.InlineIntoParent)
             {
                 return Object(values, editor);
             }
-            
+
             if (style == DisplayStyle.Group)
             {
                 var group = Group(label.Name, true);
@@ -502,28 +502,28 @@ namespace FlaxEditor.CustomEditors
             return element;
         }
 
-		/// <summary>
-		/// Adds the <see cref="PropertiesListElement"/> to the current layout or reuses the previous one. Used to inject properties.
-		/// </summary>
-		/// <param name="name">The property label name.</param>
-		/// <param name="tooltip">The property label tooltip text.</param>
-		/// <returns>The element.</returns>
-		public PropertiesListElement AddPropertyItem(string name, string tooltip = null)
+        /// <summary>
+        /// Adds the <see cref="PropertiesListElement"/> to the current layout or reuses the previous one. Used to inject properties.
+        /// </summary>
+        /// <param name="name">The property label name.</param>
+        /// <param name="tooltip">The property label tooltip text.</param>
+        /// <returns>The element.</returns>
+        public PropertiesListElement AddPropertyItem(string name, string tooltip = null)
         {
             PropertiesListElement element = AddPropertyItem();
             element.OnAddProperty(name, tooltip);
             return element;
         }
 
-		/// <summary>
-		/// Adds the <see cref="PropertiesListElement"/> to the current layout or reuses the previous one. Used to inject properties.
-		/// </summary>
-		/// <param name="label">The property label.</param>
-		/// <param name="tooltip">The property label tooltip text.</param>
-		/// <returns>The element.</returns>
-		public PropertiesListElement AddPropertyItem(PropertyNameLabel label, string tooltip = null)
+        /// <summary>
+        /// Adds the <see cref="PropertiesListElement"/> to the current layout or reuses the previous one. Used to inject properties.
+        /// </summary>
+        /// <param name="label">The property label.</param>
+        /// <param name="tooltip">The property label tooltip text.</param>
+        /// <returns>The element.</returns>
+        public PropertiesListElement AddPropertyItem(PropertyNameLabel label, string tooltip = null)
         {
-            if(label == null)
+            if (label == null)
                 throw new ArgumentNullException();
 
             PropertiesListElement element = AddPropertyItem();

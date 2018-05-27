@@ -2,7 +2,7 @@
 
 namespace FlaxEngine
 {
-	public sealed partial class TextRender
-	{
-	}
+    public sealed partial class TextRender
+    {
+    }
 }

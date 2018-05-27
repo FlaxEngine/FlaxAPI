@@ -37,7 +37,7 @@ namespace FlaxEditor.Windows.Profiler
                 {
                     _selectedSampleIndex = value;
                     _sample = _samples.Count == 0 ? string.Empty : FormatSample(_samples.Get(_selectedSampleIndex));
-                    
+
                     SelectedSampleChanged?.Invoke(_selectedSampleIndex);
                 }
             }
@@ -63,7 +63,7 @@ namespace FlaxEditor.Windows.Profiler
         /// </summary>
         /// <param name="maxSamples">The maximum samples to collect.</param>
         public SingleChart(int maxSamples = ProfilerMode.MaxSamples)
-            : base(0, 0, 100, 60 + TitleHeight)
+        : base(0, 0, 100, 60 + TitleHeight)
         {
             _samples = new SamplesBuffer<float>(maxSamples);
             _sample = string.Empty;
@@ -95,7 +95,7 @@ namespace FlaxEditor.Windows.Profiler
 
             var style = Style.Current;
             float chartHeight = Height - TitleHeight;
-            
+
             // Draw chart
             if (_samples.Count > 0)
             {

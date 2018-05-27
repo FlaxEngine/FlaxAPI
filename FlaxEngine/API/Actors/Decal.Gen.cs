@@ -7,97 +7,103 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Actor that draws the can be used to draw a custom decals on top of the other objects.
-	/// </summary>
-	[Serializable]
-	public sealed partial class Decal : Actor
-	{
-		/// <summary>
-		/// Creates new <see cref="Decal"/> object.
-		/// </summary>
-		private Decal() : base()
-		{
-		}
+    /// <summary>
+    /// Actor that draws the can be used to draw a custom decals on top of the other objects.
+    /// </summary>
+    [Serializable]
+    public sealed partial class Decal : Actor
+    {
+        /// <summary>
+        /// Creates new <see cref="Decal"/> object.
+        /// </summary>
+        private Decal() : base()
+        {
+        }
 
-		/// <summary>
-		/// Creates new instance of <see cref="Decal"/> object.
-		/// </summary>
-		/// <returns>Created object.</returns>
+        /// <summary>
+        /// Creates new instance of <see cref="Decal"/> object.
+        /// </summary>
+        /// <returns>Created object.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static Decal New() 
-		{
+        [UnmanagedCall]
+        public static Decal New()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Create(typeof(Decal)) as Decal;
+            return Internal_Create(typeof(Decal)) as Decal;
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the decal material.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(10), EditorDisplay("Decal"), Tooltip("The decal material. Must have domain mode to Decal type.")]
-		public MaterialBase Material
-		{
+        /// <summary>
+        /// Gets or sets the decal material.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(10), EditorDisplay("Decal"), Tooltip("The decal material. Must have domain mode to Decal type.")]
+        public MaterialBase Material
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetMaterial(unmanagedPtr); }
-			set { Internal_SetMaterial(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            get { return Internal_GetMaterial(unmanagedPtr); }
+            set { Internal_SetMaterial(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the decal rendering order. The higher values are render later (on top).
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(20), EditorDisplay("Decal"), Tooltip("The decal rendering order. The higher values are render later (on top).")]
-		public int SortOrder
-		{
+        /// <summary>
+        /// Gets or sets the decal rendering order. The higher values are render later (on top).
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(20), EditorDisplay("Decal"), Tooltip("The decal rendering order. The higher values are render later (on top).")]
+        public int SortOrder
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetSortOrder(unmanagedPtr); }
-			set { Internal_SetSortOrder(unmanagedPtr, value); }
+            get { return Internal_GetSortOrder(unmanagedPtr); }
+            set { Internal_SetSortOrder(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the decal bounds size (in local space).
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(30), Limit(0), EditorDisplay("Decal"), Tooltip("The decal bounds size (in local space).")]
-		public Vector3 Size
-		{
+        /// <summary>
+        /// Gets or sets the decal bounds size (in local space).
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(30), Limit(0), EditorDisplay("Decal"), Tooltip("The decal bounds size (in local space).")]
+        public Vector3 Size
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { Vector3 resultAsRef; Internal_GetSize(unmanagedPtr, out resultAsRef); return resultAsRef; }
-			set { Internal_SetSize(unmanagedPtr, ref value); }
+            get { Vector3 resultAsRef; Internal_GetSize(unmanagedPtr, out resultAsRef); return resultAsRef; }
+            set { Internal_SetSize(unmanagedPtr, ref value); }
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern MaterialBase Internal_GetMaterial(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetMaterial(IntPtr obj, IntPtr val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern int Internal_GetSortOrder(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetSortOrder(IntPtr obj, int val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetSize(IntPtr obj, out Vector3 resultAsRef);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetSize(IntPtr obj, ref Vector3 val);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern MaterialBase Internal_GetMaterial(IntPtr obj);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetMaterial(IntPtr obj, IntPtr val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetSortOrder(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetSortOrder(IntPtr obj, int val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetSize(IntPtr obj, out Vector3 resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetSize(IntPtr obj, ref Vector3 val);
+#endif
+
+        #endregion
+    }
+}

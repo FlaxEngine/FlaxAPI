@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace FlaxEngine
 {
-	public abstract partial class BasePersistentData
-	{
+    public abstract partial class BasePersistentData
+    {
         /// <summary>
         /// Gets persistant data from desired file.
         /// </summary>
@@ -22,13 +22,13 @@ namespace FlaxEngine
 #endif
         [UnmanagedCall]
         public static T File<T>(string fileName, bool createNew = true) where T : BasePersistentData
-	    {
+        {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-	        return (T)Internal_File(fileName, createNew);
+            return (T)Internal_File(fileName, createNew);
 #endif
-	    }
+        }
 
         /// <summary>
         /// Gets persistant data from desired file by its config mapped name.
@@ -41,14 +41,14 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-	    public static T FileByName<T>(string fileName, bool createNew = true) where T : BasePersistentData
-	    {
+        public static T FileByName<T>(string fileName, bool createNew = true) where T : BasePersistentData
+        {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-	        return (T)Internal_FileByName(fileName, createNew);
+            return (T)Internal_FileByName(fileName, createNew);
 #endif
-	    }
+        }
 
         /// <summary>
         /// Internal counter for amount of changes insinde persistent data collection. 
@@ -61,7 +61,6 @@ namespace FlaxEngine
         /// <seealso cref="PersistentDataConfig"/>
         public void Increment(int amount = 1)
         {
-            
         }
     }
 }

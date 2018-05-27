@@ -23,17 +23,17 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public sealed class ModelWindow : AssetEditorWindowBase<Model>
     {
-		// TODO: debug model UVs channels
-		// TODO: adding/removing material slots
-		// TODO: refresh material slots comboboxes on material slot rename
-		// TODO: add button to draw model bounds
-		// TODO: add small panel in `General` group with lods switches visualization
+        // TODO: debug model UVs channels
+        // TODO: adding/removing material slots
+        // TODO: refresh material slots comboboxes on material slot rename
+        // TODO: add button to draw model bounds
+        // TODO: add small panel in `General` group with lods switches visualization
 
-		/// <summary>
-		/// The model properties proxy object.
-		/// </summary>
-		[CustomEditor(typeof(ProxyEditor))]
-		private sealed class PropertiesProxy
+        /// <summary>
+        /// The model properties proxy object.
+        /// </summary>
+        [CustomEditor(typeof(ProxyEditor))]
+        private sealed class PropertiesProxy
         {
             [EditorOrder(10), EditorDisplay("Materials", EditorDisplayAttribute.InlineStyle), MemberCollection(CanReorderItems = true, NotNullItems = true, ReadOnly = true)]
             public MaterialSlot[] MaterialSlots
@@ -131,7 +131,7 @@ namespace FlaxEditor.Windows.Assets
                 {
                     slotsLabels[i] = string.Format("[{0}] {1}", i, slots[i].Name);
                 }
-                
+
                 // Update comboboxes
                 for (int i = 0; i < _materialSlotComboBoxes.Count; i++)
                 {
@@ -187,24 +187,24 @@ namespace FlaxEditor.Windows.Assets
                 UpdateEffectsOnUI();
             }
 
-	        private class ProxyEditor : GenericEditor
-	        {
-		        /// <inheritdoc />
-		        public override void Initialize(LayoutElementsContainer layout)
-		        {
-			        var proxy = (PropertiesProxy)Values[0];
+            private class ProxyEditor : GenericEditor
+            {
+                /// <inheritdoc />
+                public override void Initialize(LayoutElementsContainer layout)
+                {
+                    var proxy = (PropertiesProxy)Values[0];
 
-			        if (proxy.Asset == null || !proxy.Asset.IsLoaded)
-			        {
-				        layout.Label("Loading...");
-				        return;
-			        }
+                    if (proxy.Asset == null || !proxy.Asset.IsLoaded)
+                    {
+                        layout.Label("Loading...");
+                        return;
+                    }
 
-			        base.Initialize(layout);
-		        }
-	        }
+                    base.Initialize(layout);
+                }
+            }
 
-			private class LodsEditor : CustomEditor
+            private class LodsEditor : CustomEditor
             {
                 public override DisplayStyle Style => DisplayStyle.InlineIntoParent;
 
@@ -225,10 +225,10 @@ namespace FlaxEditor.Windows.Assets
                         minScreenSize.FloatValue.MaxValue = 1.0f;
                         minScreenSize.FloatValue.Value = proxy.Asset.MinScreenSize;
                         minScreenSize.FloatValue.ValueChanged += () =>
-                                                                 {
-                                                                     proxy.Asset.MinScreenSize = minScreenSize.FloatValue.Value;
-                                                                     proxy.Window.MarkAsEdited();
-                                                                 };
+                        {
+                            proxy.Asset.MinScreenSize = minScreenSize.FloatValue.Value;
+                            proxy.Window.MarkAsEdited();
+                        };
                     }
 
                     // Group per LOD
@@ -252,10 +252,10 @@ namespace FlaxEditor.Windows.Assets
                         screenSize.FloatValue.MaxValue = 1.0f;
                         screenSize.FloatValue.Value = lod.ScreenSize;
                         screenSize.FloatValue.ValueChanged += () =>
-                                                              {
-                                                                  lod.ScreenSize = screenSize.FloatValue.Value;
-                                                                  proxy.Window.MarkAsEdited();
-                                                              };
+                        {
+                            lod.ScreenSize = screenSize.FloatValue.Value;
+                            proxy.Window.MarkAsEdited();
+                        };
 
                         // Every mesh properties
                         for (int meshIndex = 0; meshIndex < lod.Meshes.Length; meshIndex++)
@@ -302,23 +302,23 @@ namespace FlaxEditor.Windows.Assets
             }
         }
 
-	    private readonly SplitPanel _split;
-		private readonly ModelPreview _preview;
+        private readonly SplitPanel _split;
+        private readonly ModelPreview _preview;
         private readonly CustomEditorPresenter _propertiesPresenter;
         private readonly PropertiesProxy _properties;
-	    private readonly ToolStripButton _saveButton;
+        private readonly ToolStripButton _saveButton;
         private ModelActor _highlightActor;
         private bool _refreshOnLodsLoaded;
-		
+
         /// <inheritdoc />
         public ModelWindow(Editor editor, AssetItem item)
-            : base(editor, item)
+        : base(editor, item)
         {
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(editor.UI.GetIcon("Save32"), Save).LinkTooltip("Save");
-			//_toolstrip.AddSeparator();
-			//_toolstrip.AddButton(editor.UI.GetIcon("UV32"), () => {CacheMeshData(); _uvDebugIndex++; if (_uvDebugIndex >= 2) _uvDebugIndex = -1; }).LinkTooltip("Show model UVs (toggles across all channels)"); // TODO: support gather mesh data
-            
+            //_toolstrip.AddSeparator();
+            //_toolstrip.AddButton(editor.UI.GetIcon("UV32"), () => {CacheMeshData(); _uvDebugIndex++; if (_uvDebugIndex >= 2) _uvDebugIndex = -1; }).LinkTooltip("Show model UVs (toggles across all channels)"); // TODO: support gather mesh data
+
             // Split Panel
             _split = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
             {
@@ -328,11 +328,11 @@ namespace FlaxEditor.Windows.Assets
             };
 
             // Model preview
-	        _preview = new ModelPreview(true)
-	        {
-		        ViewportCamera = new FPSCamera(),
-		        Parent = _split.Panel1
-	        };
+            _preview = new ModelPreview(true)
+            {
+                ViewportCamera = new FPSCamera(),
+                Parent = _split.Panel1
+            };
 
             // Model properties
             _propertiesPresenter = new CustomEditorPresenter(null);
@@ -345,7 +345,7 @@ namespace FlaxEditor.Windows.Assets
             _highlightActor = ModelActor.New();
             _highlightActor.IsActive = false;
             _preview.Task.CustomActors.Add(_highlightActor);
-		}
+        }
 
         private void CacheMeshData()
         {
@@ -395,7 +395,7 @@ namespace FlaxEditor.Windows.Assets
             {
                 _highlightActor.Transform = _preview.PreviewModelActor.Transform;
             }
-            
+
             // Model is loaded but LODs data may be during streaming so refresh proeprties on fully loaded
             if (_refreshOnLodsLoaded && _asset && _asset.LoadedLODs == _asset.LODs.Length)
             {
@@ -431,7 +431,7 @@ namespace FlaxEditor.Windows.Assets
             ClearEditedFlag();
             _item.RefreshThumbnail();
         }
-		
+
         /// <inheritdoc />
         protected override void UpdateToolstrip()
         {
@@ -479,7 +479,7 @@ namespace FlaxEditor.Windows.Assets
             _properties.OnClean();
             _propertiesPresenter.BuildLayout();
             ClearEditedFlag();
-            
+
             base.OnItemReimported(item);
         }
 
@@ -491,28 +491,28 @@ namespace FlaxEditor.Windows.Assets
             FlaxEngine.Object.Destroy(ref _highlightActor);
         }
 
-	    /// <inheritdoc />
-	    public override bool UseLayoutData => true;
+        /// <inheritdoc />
+        public override bool UseLayoutData => true;
 
-	    /// <inheritdoc />
-	    public override void OnLayoutSerialize(XmlWriter writer)
-	    {
-		    writer.WriteAttributeString("Split", _split.SplitterValue.ToString());
-	    }
+        /// <inheritdoc />
+        public override void OnLayoutSerialize(XmlWriter writer)
+        {
+            writer.WriteAttributeString("Split", _split.SplitterValue.ToString());
+        }
 
-	    /// <inheritdoc />
-	    public override void OnLayoutDeserialize(XmlElement node)
-	    {
-		    float value1;
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize(XmlElement node)
+        {
+            float value1;
 
-		    if (float.TryParse(node.GetAttribute("Split"), out value1))
-			    _split.SplitterValue = value1;
-	    }
+            if (float.TryParse(node.GetAttribute("Split"), out value1))
+                _split.SplitterValue = value1;
+        }
 
-	    /// <inheritdoc />
-	    public override void OnLayoutDeserialize()
-	    {
-		    _split.SplitterValue = 0.7f;
-	    }
-	}
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize()
+        {
+            _split.SplitterValue = 0.7f;
+        }
+    }
 }

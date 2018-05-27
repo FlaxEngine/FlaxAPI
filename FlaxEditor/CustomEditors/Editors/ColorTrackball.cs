@@ -34,7 +34,11 @@ namespace FlaxEditor.CustomEditors.Editors
             masterPanelControl.ClipChildren = false;
             masterPanelControl.SlotPadding = new Margin(0, 0, margin, margin);
             masterPanelControl.Height = trackBallSize + margin + margin;
-            masterPanelControl.ColumnFill = new[] { -trackBallSize, 1.0f };
+            masterPanelControl.ColumnFill = new[]
+            {
+                -trackBallSize,
+                1.0f
+            };
             masterPanelControl.RowFill = new[] { 1.0f };
 
             // Trackball

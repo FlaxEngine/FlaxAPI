@@ -17,7 +17,7 @@ namespace FlaxEditor.Content
         /// The script files extension.
         /// </summary>
         public static readonly string Extension = "cs";
-        
+
         /// <summary>
         /// The script files extension filter.
         /// </summary>
@@ -45,7 +45,7 @@ namespace FlaxEditor.Content
             var templatePath = StringUtils.CombinePaths(Globals.EditorFolder, "Scripting/ScriptTemplate.cs");
             var scriptTemplate = File.ReadAllText(templatePath);
             var scriptNamespace = Editor.Instance.ProjectInfo.Name.Replace(" ", "");
-            
+
             // Format
             var scriptName = ScriptItem.CreateScriptName(outputPath);
             scriptTemplate = scriptTemplate.Replace("%class%", scriptName);

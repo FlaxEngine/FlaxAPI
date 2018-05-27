@@ -2,7 +2,7 @@
 
 namespace FlaxEngine
 {
-	public sealed partial class SphereCollider
-	{
-	}
+    public sealed partial class SphereCollider
+    {
+    }
 }

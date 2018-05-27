@@ -25,7 +25,7 @@ namespace FlaxEditor.Surface.Elements
 
         /// <inheritdoc />
         public FloatValue(SurfaceNode parentNode, NodeElementArchetype archetype)
-            : base(Get(parentNode, archetype), archetype.Position.X, archetype.Position.Y, 50, -1000000, 1000000, 0.01f)
+        : base(Get(parentNode, archetype), archetype.Position.X, archetype.Position.Y, 50, -1000000, 1000000, 0.01f)
         {
             ParentNode = parentNode;
             Archetype = archetype;
@@ -86,7 +86,7 @@ namespace FlaxEditor.Surface.Elements
             return result;
         }
 
-	    public static void Set(SurfaceNode parentNode, NodeElementArchetype arch, float toSet)
+        public static void Set(SurfaceNode parentNode, NodeElementArchetype arch, float toSet)
         {
             if (arch.ValueIndex < 0)
                 return;

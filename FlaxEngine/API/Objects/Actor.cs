@@ -165,64 +165,64 @@ namespace FlaxEngine
             LocalTransform = Transform.Identity;
         }
 
-		/// <summary>
-		/// Rotates the actor so the forward vector points at target's current position.
-		/// </summary>
-		/// <param name="target">The target object to point towards.</param>
-		public void LookAt(Actor target)
-		{
-			if(target == null)
-				throw new ArgumentNullException();
-			var pos = target.Position;
-			var up = Vector3.Up;
-			LookAt(ref pos, ref up);
-		}
+        /// <summary>
+        /// Rotates the actor so the forward vector points at target's current position.
+        /// </summary>
+        /// <param name="target">The target object to point towards.</param>
+        public void LookAt(Actor target)
+        {
+            if (target == null)
+                throw new ArgumentNullException();
+            var pos = target.Position;
+            var up = Vector3.Up;
+            LookAt(ref pos, ref up);
+        }
 
-		/// <summary>
-		/// Rotates the actor so the forward vector points at target's current position.
-		/// </summary>
-		/// <param name="target">The target object to point towards.</param>
-		/// <param name="worldUp">The upward direction vector (in world space).</param>
-		public void LookAt(Actor target, Vector3 worldUp)
-		{
-			if (target == null)
-				throw new ArgumentNullException();
-			var pos = target.Position;
-			LookAt(ref pos, ref worldUp);
-		}
+        /// <summary>
+        /// Rotates the actor so the forward vector points at target's current position.
+        /// </summary>
+        /// <param name="target">The target object to point towards.</param>
+        /// <param name="worldUp">The upward direction vector (in world space).</param>
+        public void LookAt(Actor target, Vector3 worldUp)
+        {
+            if (target == null)
+                throw new ArgumentNullException();
+            var pos = target.Position;
+            LookAt(ref pos, ref worldUp);
+        }
 
-		/// <summary>
-		/// Rotates the actor so the forward vector points at target's current position.
-		/// </summary>
-		/// <param name="worldPosition">The target point to look at.</param>
-		public void LookAt(Vector3 worldPosition)
-	    {
-		    var up = Vector3.Up;
-			LookAt(ref worldPosition, ref up);
-		}
+        /// <summary>
+        /// Rotates the actor so the forward vector points at target's current position.
+        /// </summary>
+        /// <param name="worldPosition">The target point to look at.</param>
+        public void LookAt(Vector3 worldPosition)
+        {
+            var up = Vector3.Up;
+            LookAt(ref worldPosition, ref up);
+        }
 
-	    /// <summary>
-	    /// Rotates the actor so the forward vector points at target's current position.
-	    /// </summary>
-	    /// <param name="worldPosition">The target point to look at.</param>
-	    /// <param name="worldUp">The upward direction vector (in world space).</param>
-	    public void LookAt(ref Vector3 worldPosition, ref Vector3 worldUp)
-	    {
-		    var direction = worldPosition - Position;
-		    Orientation = Quaternion.LookRotation(direction, worldUp);
-	    }
+        /// <summary>
+        /// Rotates the actor so the forward vector points at target's current position.
+        /// </summary>
+        /// <param name="worldPosition">The target point to look at.</param>
+        /// <param name="worldUp">The upward direction vector (in world space).</param>
+        public void LookAt(ref Vector3 worldPosition, ref Vector3 worldUp)
+        {
+            var direction = worldPosition - Position;
+            Orientation = Quaternion.LookRotation(direction, worldUp);
+        }
 
-	    /// <summary>
-		/// Casts this actor instance to the given actor type.
-		/// </summary>
-		/// <typeparam name="T">The actor type.</typeparam>
-		/// <returns>The actor instance cast to the given actor type.</returns>
-		public T As<T>() where T : Actor
-	    {
-		    return (T)this;
-	    }
+        /// <summary>
+        /// Casts this actor instance to the given actor type.
+        /// </summary>
+        /// <typeparam name="T">The actor type.</typeparam>
+        /// <returns>The actor instance cast to the given actor type.</returns>
+        public T As<T>() where T : Actor
+        {
+            return (T)this;
+        }
 
-	    /// <summary>
+        /// <summary>
         /// Creates new instance of the script and adds it to the actor.
         /// </summary>
         /// <typeparam name="T">The script type.</typeparam>
@@ -345,47 +345,47 @@ namespace FlaxEngine
 #endif
         }
 
-		/// <summary>
-		/// Searches for a child script of a specific type. If there are multiple scripts matching the type, only the first one found is returned.
-		/// </summary>
-		/// <param name="scriptType">Type of the script to search for. Includes any scripts derived from the type.</param>
-		/// <returns>Script instance if found, null otherwise.</returns>
+        /// <summary>
+        /// Searches for a child script of a specific type. If there are multiple scripts matching the type, only the first one found is returned.
+        /// </summary>
+        /// <param name="scriptType">Type of the script to search for. Includes any scripts derived from the type.</param>
+        /// <returns>Script instance if found, null otherwise.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-	    public Script GetScript(Type scriptType)
-	    {
+        [UnmanagedCall]
+        public Script GetScript(Type scriptType)
+        {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-		    return Internal_GetScript(unmanagedPtr, scriptType);
+            return Internal_GetScript(unmanagedPtr, scriptType);
 #endif
-	    }
+        }
 
-		/// <summary>
-		/// Searches for all scripts of a specific type.
-		/// </summary>
-		/// <param name="scriptType">Type of the script to search for. Includes any scripts derived from the type.</param>
-		/// <returns>All scripts matching the specified type.</returns>
+        /// <summary>
+        /// Searches for all scripts of a specific type.
+        /// </summary>
+        /// <param name="scriptType">Type of the script to search for. Includes any scripts derived from the type.</param>
+        /// <returns>All scripts matching the specified type.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-	    public Script[] GetScripts(Type scriptType)
-	    {
+        [UnmanagedCall]
+        public Script[] GetScripts(Type scriptType)
+        {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-		    return Internal_GetScriptsPerType(unmanagedPtr, scriptType);
+            return Internal_GetScriptsPerType(unmanagedPtr, scriptType);
 #endif
-	    }
+        }
 
-		/// <summary>
-		/// Destroys the children. Calls Object.Destroy on every child actor and unlink them for the parent.
-		/// </summary>
-		/// <param name="timeLeft">The time left to destroy object (in seconds).</param>
-		public void DestroyChildren(float timeLeft = 0.0f)
+        /// <summary>
+        /// Destroys the children. Calls Object.Destroy on every child actor and unlink them for the parent.
+        /// </summary>
+        /// <param name="timeLeft">The time left to destroy object (in seconds).</param>
+        public void DestroyChildren(float timeLeft = 0.0f)
         {
             Actor[] children = GetChildren();
             for (var i = 0; i < children.Length; i++)
@@ -395,49 +395,49 @@ namespace FlaxEngine
             }
         }
 
-		/// <summary>
-		/// Gets the matrix that transformes a point from the world space to local space of the actor.
-		/// </summary>
-		public Matrix WorldToLocalMatrix
-	    {
-		    get
-		    {
-			    Matrix worldToLocal;
-			    Internal_WorldToLocal(unmanagedPtr, out worldToLocal);
-			    return worldToLocal;
-		    }
-	    }
+        /// <summary>
+        /// Gets the matrix that transformes a point from the world space to local space of the actor.
+        /// </summary>
+        public Matrix WorldToLocalMatrix
+        {
+            get
+            {
+                Matrix worldToLocal;
+                Internal_WorldToLocal(unmanagedPtr, out worldToLocal);
+                return worldToLocal;
+            }
+        }
 
-		/// <summary>
-		/// Gets the matrix that transformes a point from the world space to local space of the actor.
-		/// </summary>
-		/// <param name="worldToLocal">The world to local matrix.</param>
-		public void GetWorldToLocalMatrix(out Matrix worldToLocal)
-	    {
-			Internal_WorldToLocal(unmanagedPtr, out worldToLocal);
-	    }
+        /// <summary>
+        /// Gets the matrix that transformes a point from the world space to local space of the actor.
+        /// </summary>
+        /// <param name="worldToLocal">The world to local matrix.</param>
+        public void GetWorldToLocalMatrix(out Matrix worldToLocal)
+        {
+            Internal_WorldToLocal(unmanagedPtr, out worldToLocal);
+        }
 
-		/// <summary>
-		/// Gets the matrix that transformes a point from the local space of the actor to world space.
-		/// </summary>
-		public Matrix LocalToWorldMatrix
-	    {
-		    get
-		    {
-			    Matrix localToWorld;
-			    Internal_WorldToLocal(unmanagedPtr, out localToWorld);
-			    return localToWorld;
-		    }
-	    }
+        /// <summary>
+        /// Gets the matrix that transformes a point from the local space of the actor to world space.
+        /// </summary>
+        public Matrix LocalToWorldMatrix
+        {
+            get
+            {
+                Matrix localToWorld;
+                Internal_WorldToLocal(unmanagedPtr, out localToWorld);
+                return localToWorld;
+            }
+        }
 
-		/// <summary>
-		/// Gets the matrix that transformes a point from the local space of the actor to world space.
-		/// </summary>
-		/// <param name="localToWorld">The world to local matrix.</param>
-		public void GetLocalToWorldMatrix(out Matrix localToWorld)
-	    {
-			Internal_LocalToWorld(unmanagedPtr, out localToWorld);
-	    }
+        /// <summary>
+        /// Gets the matrix that transformes a point from the local space of the actor to world space.
+        /// </summary>
+        /// <param name="localToWorld">The world to local matrix.</param>
+        public void GetLocalToWorldMatrix(out Matrix localToWorld)
+        {
+            Internal_LocalToWorld(unmanagedPtr, out localToWorld);
+        }
 
         /// <inheritdoc />
         [UnmanagedCall]
@@ -449,10 +449,10 @@ namespace FlaxEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Script[] Internal_GetScripts(IntPtr obj);
 
-	    [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_WorldToLocal(IntPtr obj, out Matrix matrix);
 
-	    [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_LocalToWorld(IntPtr obj, out Matrix matrix);
 
         [MethodImpl(MethodImplOptions.InternalCall)]

@@ -52,7 +52,7 @@ namespace FlaxEngine.Utilities
         public void GoToState<TStateType>()
         {
             var state = states.Find(x => x.GetType().IsAssignableFrom(typeof(TStateType)));
-            if(state == null)
+            if (state == null)
                 throw new InvalidOperationException($"Cannot find state {typeof(TStateType)}.");
             GoToState(state);
         }
@@ -89,7 +89,7 @@ namespace FlaxEngine.Utilities
         /// <param name="state">The state.</param>
         public virtual void AddState(State state)
         {
-            if(state.owner == this)
+            if (state.owner == this)
                 throw new InvalidOperationException("Cannot add already registered state.");
 
             states.Add(state);

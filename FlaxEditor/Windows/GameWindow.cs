@@ -52,7 +52,7 @@ namespace FlaxEditor.Windows
         /// </summary>
         /// <param name="editor">The editor.</param>
         public GameWindow(Editor editor)
-            : base(editor, true, ScrollBars.None)
+        : base(editor, true, ScrollBars.None)
         {
             Title = "Game";
             CanFocus = true;
@@ -63,7 +63,7 @@ namespace FlaxEditor.Windows
             _viewport = new RenderOutputControl(task)
             {
                 DockStyle = DockStyle.Fill,
-				CanFocus = false,
+                CanFocus = false,
                 Parent = this
             };
 
@@ -73,7 +73,7 @@ namespace FlaxEditor.Windows
                 DockStyle = DockStyle.Fill,
                 Visible = false,
                 Enabled = false,
-				CanFocus = false,
+                CanFocus = false,
                 Parent = _viewport
             };
             FlaxEngine.GUI.Window.Root = _guiRoot;

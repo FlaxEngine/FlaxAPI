@@ -44,7 +44,7 @@ namespace FlaxEngine.GUI.Docking
 
             // Init proxy window
             Proxy.Init(ref _defaultWindowSize);
-            
+
             // Bind events
             Proxy.Window.OnMouseUp += onMouseUp;
             Proxy.Window.OnMouseMove += onMouseMove;
@@ -81,7 +81,7 @@ namespace FlaxEngine.GUI.Docking
             Proxy.Window.OnMouseUp -= onMouseUp;
             Proxy.Window.OnMouseMove -= onMouseMove;
             Proxy.Window.OnLostFocus -= onLostFocus;
-            
+
             // Hide the proxy
             Proxy.Hide();
 
@@ -187,24 +187,24 @@ namespace FlaxEngine.GUI.Docking
             Rectangle result = rect;
             switch (state)
             {
-                case DockState.DockFill:
-                    result.Location.Y += DockPanel.DefaultHeaderHeight;
-                    result.Size.Y -= DockPanel.DefaultHeaderHeight;
-                    break;
-                case DockState.DockTop:
-                    result.Size.Y *= DockPanel.DefaultSplitterValue;
-                    break;
-                case DockState.DockLeft:
-                    result.Size.X *= DockPanel.DefaultSplitterValue;
-                    break;
-                case DockState.DockBottom:
-                    result.Location.Y += result.Size.Y * (1 - DockPanel.DefaultSplitterValue);
-                    result.Size.Y *= DockPanel.DefaultSplitterValue;
-                    break;
-                case DockState.DockRight:
-                    result.Location.X += result.Size.X * (1 - DockPanel.DefaultSplitterValue);
-                    result.Size.X *= DockPanel.DefaultSplitterValue;
-                    break;
+            case DockState.DockFill:
+                result.Location.Y += DockPanel.DefaultHeaderHeight;
+                result.Size.Y -= DockPanel.DefaultHeaderHeight;
+                break;
+            case DockState.DockTop:
+                result.Size.Y *= DockPanel.DefaultSplitterValue;
+                break;
+            case DockState.DockLeft:
+                result.Size.X *= DockPanel.DefaultSplitterValue;
+                break;
+            case DockState.DockBottom:
+                result.Location.Y += result.Size.Y * (1 - DockPanel.DefaultSplitterValue);
+                result.Size.Y *= DockPanel.DefaultSplitterValue;
+                break;
+            case DockState.DockRight:
+                result.Location.X += result.Size.X * (1 - DockPanel.DefaultSplitterValue);
+                result.Size.X *= DockPanel.DefaultSplitterValue;
+                break;
             }
             return result;
         }
@@ -323,10 +323,9 @@ namespace FlaxEngine.GUI.Docking
 
         private void onMouseMove(Vector2 mousePos)
         {
-
             updateRects();
         }
-        
+
         private void onLostFocus()
         {
             Dispose();
@@ -464,7 +463,7 @@ namespace FlaxEngine.GUI.Docking
             {
                 if (win)
                 {
-                   win.Hide();
+                    win.Hide();
                 }
             }
 

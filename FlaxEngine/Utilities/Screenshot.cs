@@ -43,6 +43,7 @@ namespace FlaxEngine.Utilities
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Capture1(IntPtr targetObj, string pathObj);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Capture2(IntPtr targetObj, string pathObj);
 #endif

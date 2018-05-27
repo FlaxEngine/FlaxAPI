@@ -7,81 +7,85 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Physics joint that removes all translational degrees of freedom but allows all rotational degrees of freedom. Essentially this ensures that the anchor points of the two bodies are always coincident. Bodies are allowed to rotate around the anchor points, and their rotatation can be limited by an elliptical cone.
-	/// </summary>
-	[Serializable]
-	public sealed partial class SphericalJoint : Joint
-	{
-		/// <summary>
-		/// Creates new <see cref="SphericalJoint"/> object.
-		/// </summary>
-		private SphericalJoint() : base()
-		{
-		}
+    /// <summary>
+    /// Physics joint that removes all translational degrees of freedom but allows all rotational degrees of freedom. Essentially this ensures that the anchor points of the two bodies are always coincident. Bodies are allowed to rotate around the anchor points, and their rotatation can be limited by an elliptical cone.
+    /// </summary>
+    [Serializable]
+    public sealed partial class SphericalJoint : Joint
+    {
+        /// <summary>
+        /// Creates new <see cref="SphericalJoint"/> object.
+        /// </summary>
+        private SphericalJoint() : base()
+        {
+        }
 
-		/// <summary>
-		/// Creates new instance of <see cref="SphericalJoint"/> object.
-		/// </summary>
-		/// <returns>Created object.</returns>
+        /// <summary>
+        /// Creates new instance of <see cref="SphericalJoint"/> object.
+        /// </summary>
+        /// <returns>Created object.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static SphericalJoint New() 
-		{
+        [UnmanagedCall]
+        public static SphericalJoint New()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Create(typeof(SphericalJoint)) as SphericalJoint;
+            return Internal_Create(typeof(SphericalJoint)) as SphericalJoint;
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the joint mode flags. Controls joint behaviour.
-		/// </summary>
-		[UnmanagedCall]
-		[EditorOrder(100), EditorDisplay("Joint"), Tooltip("The joint mode flags. Controls joint behaviour.")]
-		public SphericalJointFlag Flags
-		{
+        /// <summary>
+        /// Gets or sets the joint mode flags. Controls joint behaviour.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(100), EditorDisplay("Joint"), Tooltip("The joint mode flags. Controls joint behaviour.")]
+        public SphericalJointFlag Flags
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetFlags(unmanagedPtr); }
-			set { Internal_SetFlags(unmanagedPtr, value); }
+            get { return Internal_GetFlags(unmanagedPtr); }
+            set { Internal_SetFlags(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the joint limit properties.
-		/// </summary>
-		/// <remarks>
-		/// Determines a limit that constrains the movement of the joint to a specific minimum and maximum distance. You must enable the limit flag on the joint in order for this to be recognized.
-		/// </remarks>
-		[UnmanagedCall]
-		[EditorOrder(110), EditorDisplay("Joint"), Tooltip("The joint limit properties.")]
-		public LimitConeRange Limit
-		{
+        /// <summary>
+        /// Gets or sets the joint limit properties.
+        /// </summary>
+        /// <remarks>
+        /// Determines a limit that constrains the movement of the joint to a specific minimum and maximum distance. You must enable the limit flag on the joint in order for this to be recognized.
+        /// </remarks>
+        [UnmanagedCall]
+        [EditorOrder(110), EditorDisplay("Joint"), Tooltip("The joint limit properties.")]
+        public LimitConeRange Limit
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { LimitConeRange resultAsRef; Internal_GetLimit(unmanagedPtr, out resultAsRef); return resultAsRef; }
-			set { Internal_SetLimit(unmanagedPtr, ref value); }
+            get { LimitConeRange resultAsRef; Internal_GetLimit(unmanagedPtr, out resultAsRef); return resultAsRef; }
+            set { Internal_SetLimit(unmanagedPtr, ref value); }
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern SphericalJointFlag Internal_GetFlags(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetFlags(IntPtr obj, SphericalJointFlag val);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_GetLimit(IntPtr obj, out LimitConeRange resultAsRef);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetLimit(IntPtr obj, ref LimitConeRange val);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern SphericalJointFlag Internal_GetFlags(IntPtr obj);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetFlags(IntPtr obj, SphericalJointFlag val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetLimit(IntPtr obj, out LimitConeRange resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetLimit(IntPtr obj, ref LimitConeRange val);
+#endif
+
+        #endregion
+    }
+}

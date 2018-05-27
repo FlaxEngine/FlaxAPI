@@ -7,59 +7,61 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-	/// <summary>
-	/// Actor that links to the animated model skeleton bone transformation.
-	/// </summary>
-	[Serializable]
-	public sealed partial class BoneSocket : Actor
-	{
-		/// <summary>
-		/// Creates new <see cref="BoneSocket"/> object.
-		/// </summary>
-		private BoneSocket() : base()
-		{
-		}
+    /// <summary>
+    /// Actor that links to the animated model skeleton bone transformation.
+    /// </summary>
+    [Serializable]
+    public sealed partial class BoneSocket : Actor
+    {
+        /// <summary>
+        /// Creates new <see cref="BoneSocket"/> object.
+        /// </summary>
+        private BoneSocket() : base()
+        {
+        }
 
-		/// <summary>
-		/// Creates new instance of <see cref="BoneSocket"/> object.
-		/// </summary>
-		/// <returns>Created object.</returns>
+        /// <summary>
+        /// Creates new instance of <see cref="BoneSocket"/> object.
+        /// </summary>
+        /// <returns>Created object.</returns>
 #if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
+        [Obsolete("Unit tests, don't support methods calls.")]
 #endif
-		[UnmanagedCall]
-		public static BoneSocket New() 
-		{
+        [UnmanagedCall]
+        public static BoneSocket New()
+        {
 #if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-			return Internal_Create(typeof(BoneSocket)) as BoneSocket;
+            return Internal_Create(typeof(BoneSocket)) as BoneSocket;
 #endif
-		}
+        }
 
-		/// <summary>
-		/// Gets or sets the target bone index to link to it.
-		/// </summary>
-		[UnmanagedCall]
-		[HideInEditor]
-		public int BoneIndex
-		{
+        /// <summary>
+        /// Gets or sets the target bone index to link to it.
+        /// </summary>
+        [UnmanagedCall]
+        [HideInEditor]
+        public int BoneIndex
+        {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get; set;
 #else
-			get { return Internal_GetBoneIndex(unmanagedPtr); }
-			set { Internal_SetBoneIndex(unmanagedPtr, value); }
+            get { return Internal_GetBoneIndex(unmanagedPtr); }
+            set { Internal_SetBoneIndex(unmanagedPtr, value); }
 #endif
-		}
+        }
 
-#region Internal Calls
+        #region Internal Calls
+
 #if !UNIT_TEST_COMPILANT
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern int Internal_GetBoneIndex(IntPtr obj);
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_SetBoneIndex(IntPtr obj, int val);
-#endif
-#endregion
-	}
-}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetBoneIndex(IntPtr obj);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetBoneIndex(IntPtr obj, int val);
+#endif
+
+        #endregion
+    }
+}

@@ -19,7 +19,7 @@ namespace FlaxEngine
             if (baseMaterial)
                 baseMaterial.WaitForLoaded();
             instance.BaseMaterial = baseMaterial;
-            
+
             // Copy parameters
             var src = Parameters;
             var dst = instance.Parameters;

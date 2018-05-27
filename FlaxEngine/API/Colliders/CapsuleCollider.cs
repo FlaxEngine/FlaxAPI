@@ -2,7 +2,7 @@
 
 namespace FlaxEngine
 {
-	public sealed partial class CapsuleCollider
-	{
-	}
+    public sealed partial class CapsuleCollider
+    {
+    }
 }

@@ -104,7 +104,7 @@ namespace FlaxEditor.CustomEditors.Editors
         /// </summary>
         /// <param name="newSize">The new size.</param>
         protected abstract void Resize(int newSize);
-        
+
         /// <inheritdoc />
         public override void Refresh()
         {

@@ -29,7 +29,7 @@ namespace FlaxEditor.States
         public override bool CanReloadScripts => true;
 
         internal EditingSceneState(Editor editor)
-            : base(editor)
+        : base(editor)
         {
         }
     }

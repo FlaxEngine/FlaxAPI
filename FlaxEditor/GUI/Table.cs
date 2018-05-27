@@ -187,7 +187,7 @@ namespace FlaxEditor.GUI
 
                 float movingLength = GetColumnWidth(_movingSplit) + GetColumnWidth(nextSplit);
                 float splitsSum = _splits[_movingSplit] + _splits[nextSplit];
-                
+
                 float leftSplit = splitsSum * Mathf.Saturate((location.X - leftPos) / movingLength);
                 _splits[_movingSplit] = _columns[_movingSplit].ClampColumnSize(leftSplit, width);
                 float rightSplit = splitsSum - _splits[_movingSplit];

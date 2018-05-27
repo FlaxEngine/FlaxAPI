@@ -16,15 +16,15 @@ namespace FlaxEditor.Windows.Assets
     public sealed class JsonAssetWindow : AssetEditorWindowBase<JsonAsset>
     {
         private readonly CustomEditorPresenter _presenter;
-	    private readonly ToolStripButton _saveButton;
+        private readonly ToolStripButton _saveButton;
         private object _object;
 
         /// <inheritdoc />
         public JsonAssetWindow(Editor editor, AssetItem item)
-            : base(editor, item)
+        : base(editor, item)
         {
-			// Toolstrip
-	        _saveButton = (ToolStripButton)_toolstrip.AddButton(editor.UI.GetIcon("Save32"), Save).LinkTooltip("Save");
+            // Toolstrip
+            _saveButton = (ToolStripButton)_toolstrip.AddButton(editor.UI.GetIcon("Save32"), Save).LinkTooltip("Save");
 
             // Panel
             var panel = new Panel(ScrollBars.Vertical)
@@ -64,7 +64,7 @@ namespace FlaxEditor.Windows.Assets
             ClearEditedFlag();
             _item.RefreshThumbnail();
         }
-		
+
         /// <inheritdoc />
         protected override void UpdateToolstrip()
         {

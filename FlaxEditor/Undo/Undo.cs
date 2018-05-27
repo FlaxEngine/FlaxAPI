@@ -252,7 +252,7 @@ namespace FlaxEditor
         /// <param name="actionString">Name of action to be displayed in undo stack.</param>
         /// <param name="actionsToSave">Action in after witch recording will be finished.</param>
         public void RecordAction<T>(T snapshotInstance, string actionString, Action<T> actionsToSave)
-            where T : new()
+        where T : new()
         {
             RecordBegin(snapshotInstance, actionString);
             actionsToSave?.Invoke(snapshotInstance);
@@ -299,7 +299,7 @@ namespace FlaxEditor
 
             var action = (IUndoAction)UndoOperationsStack.PopHistory();
             action.Undo();
-            
+
             OnUndo(action);
         }
 
@@ -325,7 +325,7 @@ namespace FlaxEditor
         {
             ActionDone?.Invoke();
         }
-        
+
         /// <summary>
         /// Called when <see cref="Undo"/> performs undo action.
         /// </summary>
@@ -334,7 +334,7 @@ namespace FlaxEditor
         {
             UndoDone?.Invoke();
         }
-        
+
         /// <summary>
         /// Called when <see cref="Undo"/> performs redo action.
         /// </summary>

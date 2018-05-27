@@ -13,7 +13,7 @@ namespace FlaxEngine
     {
         internal BinaryAsset _model;
         internal readonly int _index;
-		
+
         /// <summary>
         /// Gets the index of the slot (in the parnet model).
         /// </summary>
@@ -28,7 +28,7 @@ namespace FlaxEngine
             get => Internal_GetMaterial(_model.unmanagedPtr, _index);
             set => Internal_SetMaterial(_model.unmanagedPtr, _index, Object.GetUnmanagedPtr(value));
         }
-        
+
         /// <summary>
         /// Gets or sets the shadows casting mode by the meshes using this slot.
         /// </summary>

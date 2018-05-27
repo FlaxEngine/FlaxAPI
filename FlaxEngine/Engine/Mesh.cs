@@ -39,7 +39,7 @@ namespace FlaxEngine
             get => Internal_GetMaterialSlotIndex(_model.unmanagedPtr, _lodIndex, _meshIndex);
             set => Internal_SetMaterialSlotIndex(_model.unmanagedPtr, _lodIndex, _meshIndex, value);
         }
-        
+
         /// <summary>
         /// Gets the material slot used by this mesh during rendering.
         /// </summary>

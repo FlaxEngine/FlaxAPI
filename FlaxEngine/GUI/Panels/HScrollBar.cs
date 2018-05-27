@@ -14,7 +14,7 @@ namespace FlaxEngine.GUI
         /// <param name="y">The y position.</param>
         /// <param name="width">The width.</param>
         public HScrollBar(float y, float width)
-            : base(Orientation.Horizontal, 0, y, width, DefaultSize)
+        : base(Orientation.Horizontal, 0, y, width, DefaultSize)
         {
             DockStyle = DockStyle.Bottom;
         }

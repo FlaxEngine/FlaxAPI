@@ -14,7 +14,7 @@ namespace FlaxEditor.GUI
     {
         private string _startValue;
         private TextBox _inputField;
-        
+
         /// <summary>
         /// Occurs when renaming is done.
         /// </summary>

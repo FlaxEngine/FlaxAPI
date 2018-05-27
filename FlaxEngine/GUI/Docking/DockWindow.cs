@@ -14,15 +14,15 @@ namespace FlaxEngine.GUI.Docking
         private string _title;
         private Vector2 _titleSize;
 
-		/// <summary>
-		/// The master panel.
-		/// </summary>
-		protected MasterDockPanel _masterPanel;
+        /// <summary>
+        /// The master panel.
+        /// </summary>
+        protected MasterDockPanel _masterPanel;
 
-		/// <summary>
-		/// The parent panel.
-		/// </summary>
-		protected DockPanel _dockedTo;
+        /// <summary>
+        /// The parent panel.
+        /// </summary>
+        protected DockPanel _dockedTo;
 
         /// <summary>
         /// Gets or sets a value indicating whether hide window on close.
@@ -97,7 +97,7 @@ namespace FlaxEngine.GUI.Docking
         /// <param name="hideOnClose">True if hide window on closing, otherwise it will be destroyed.</param>
         /// <param name="scrollBars">The scroll bars.</param>
         public DockWindow(MasterDockPanel masterPanel, bool hideOnClose, ScrollBars scrollBars)
-            : base(scrollBars, true)
+        : base(scrollBars, true)
         {
             _masterPanel = masterPanel;
             HideOnClose = hideOnClose;
@@ -107,19 +107,19 @@ namespace FlaxEngine.GUI.Docking
             _masterPanel?.linkWindow(this);
         }
 
-	    /// <summary>
-	    /// Shows the window in a floating state.
-	    /// </summary>
-	    public void ShowFloating()
-	    {
-		    ShowFloating(Vector2.Zero);
-	    }
+        /// <summary>
+        /// Shows the window in a floating state.
+        /// </summary>
+        public void ShowFloating()
+        {
+            ShowFloating(Vector2.Zero);
+        }
 
-	    /// <summary>
-		/// Shows the window in a floating state.
-		/// </summary>
-		/// <param name="position">Window location.</param>
-		public void ShowFloating(WindowStartPosition position)
+        /// <summary>
+        /// Shows the window in a floating state.
+        /// </summary>
+        /// <param name="position">Window location.</param>
+        public void ShowFloating(WindowStartPosition position)
         {
             ShowFloating(Vector2.Zero, position);
         }
@@ -198,19 +198,19 @@ namespace FlaxEngine.GUI.Docking
             Show(state, toDock?.ParentDockPanel);
         }
 
-	    /// <summary>
-	    /// Focuses or shows the window.
-	    /// </summary>
-	    public void FocusOrShow()
-	    {
-		    FocusOrShow(DockState.Float);
-	    }
+        /// <summary>
+        /// Focuses or shows the window.
+        /// </summary>
+        public void FocusOrShow()
+        {
+            FocusOrShow(DockState.Float);
+        }
 
-		/// <summary>
-		/// Focuses or shows the window.
-		/// </summary>
-		/// <param name="state">The state.</param>
-		public void FocusOrShow(DockState state)
+        /// <summary>
+        /// Focuses or shows the window.
+        /// </summary>
+        /// <param name="state">The state.</param>
+        public void FocusOrShow(DockState state)
         {
             if (Visible)
             {
@@ -222,7 +222,7 @@ namespace FlaxEngine.GUI.Docking
                 Show(state);
             }
         }
-        
+
         /// <summary>
         /// Hides the window.
         /// </summary>
@@ -335,44 +335,44 @@ namespace FlaxEngine.GUI.Docking
             // Nothing to do
         }
 
-		/// <summary>
-		/// Gets a value indicating whether window uses custom layout data.
-		/// </summary>
-		public virtual bool UseLayoutData => false;
+        /// <summary>
+        /// Gets a value indicating whether window uses custom layout data.
+        /// </summary>
+        public virtual bool UseLayoutData => false;
 
-		/// <summary>
-		/// Called when during windows layout serialization. Each window can use it to store custom interface data (eg. spitter position).
-		/// </summary>
-		/// <param name="writer">The Xml writer.</param>
-		public virtual void OnLayoutSerialize(XmlWriter writer)
-	    {
-	    }
+        /// <summary>
+        /// Called when during windows layout serialization. Each window can use it to store custom interface data (eg. spitter position).
+        /// </summary>
+        /// <param name="writer">The Xml writer.</param>
+        public virtual void OnLayoutSerialize(XmlWriter writer)
+        {
+        }
 
-		/// <summary>
-		/// Called when during windows layout deserialization. Each window can use it to load custom interface data (eg. spitter position).
-		/// </summary>
-		/// <param name="node">The Xml document node.</param>
-		public virtual void OnLayoutDeserialize(XmlElement node)
-	    {
-	    }
+        /// <summary>
+        /// Called when during windows layout deserialization. Each window can use it to load custom interface data (eg. spitter position).
+        /// </summary>
+        /// <param name="node">The Xml document node.</param>
+        public virtual void OnLayoutDeserialize(XmlElement node)
+        {
+        }
 
-		/// <summary>
-		/// Called when during windows layout deserialization if window has no layou data to load. Can be used to restore default UI layout.
-		/// </summary>
-		public virtual void OnLayoutDeserialize()
-	    {
-	    }
+        /// <summary>
+        /// Called when during windows layout deserialization if window has no layou data to load. Can be used to restore default UI layout.
+        /// </summary>
+        public virtual void OnLayoutDeserialize()
+        {
+        }
 
         /// <inheritdoc />
         public override void OnDestroy()
         {
             // Auto undock from non-disposing parent (user wants to remvoe only the dock window)
-            if(HasParent && !Parent.IsDisposing)
+            if (HasParent && !Parent.IsDisposing)
                 Undock();
-            
+
             // Unlink from the master panel
             _masterPanel?.unlinkWindow(this);
-            
+
             base.OnDestroy();
         }
 

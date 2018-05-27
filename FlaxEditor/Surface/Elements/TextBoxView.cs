@@ -25,7 +25,7 @@ namespace FlaxEditor.Surface.Elements
 
         /// <inheritdoc />
         public TextBoxView(SurfaceNode parentNode, NodeElementArchetype archetype)
-            : base(archetype.BoxID == 1, archetype.Position.X, archetype.Position.Y, archetype.Size.X)
+        : base(archetype.BoxID == 1, archetype.Position.X, archetype.Position.Y, archetype.Size.X)
         {
             ParentNode = parentNode;
             Archetype = archetype;
