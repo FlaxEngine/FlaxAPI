@@ -1,10 +1,9 @@
-﻿// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections;
 using FlaxEngine.Collections;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Assert = FlaxEngine.Assertions.Assert;
 

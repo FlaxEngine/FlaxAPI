@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+
 using FlaxEngine.GUI;
 using NUnit.Framework;
 using Assert = FlaxEngine.Assertions.Assert;

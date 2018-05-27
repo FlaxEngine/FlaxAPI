@@ -1,3 +1,5 @@
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+
 using NUnit.Framework;
 
 namespace FlaxEngine.Tests

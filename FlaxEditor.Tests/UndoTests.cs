@@ -1,3 +1,5 @@
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+
 using System;
 using NUnit.Framework;
 using Assert = FlaxEngine.Assertions.Assert;
