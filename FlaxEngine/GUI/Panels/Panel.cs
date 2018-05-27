@@ -11,7 +11,7 @@ namespace FlaxEngine.GUI
     public class Panel : ScrollableControl
     {
         private bool _layoutChanged;
-        private bool _boundsGetLock;
+        private int _layoutUpdateLock;
 
         /// <summary>
         /// The scroll right corner. Used to scroll contents of the panel control.
@@ -234,6 +234,10 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void PerformLayout(bool force = false)
         {
+            if (_layoutUpdateLock > 2)
+                return;
+            _layoutUpdateLock++;
+
             if (!IsLayoutLocked)
             {
                 _layoutChanged = false;
@@ -246,6 +250,8 @@ namespace FlaxEngine.GUI
                 _layoutChanged = false;
                 PerformLayout(true);
             }
+
+            _layoutUpdateLock--;
         }
 
         /// <inheritdoc />
@@ -313,10 +319,6 @@ namespace FlaxEngine.GUI
         /// </summary>
         protected virtual void ArrageAndGetBounds()
         {
-            if (_boundsGetLock)
-                return;
-            _boundsGetLock = true;
-
             Arrage();
 
             // Calculate scroll area bounds
@@ -332,8 +334,6 @@ namespace FlaxEngine.GUI
 
             // Cache result
             _scrollRightCorner = rigthBottom;
-
-            _boundsGetLock = false;
         }
 
         /// <summary>
