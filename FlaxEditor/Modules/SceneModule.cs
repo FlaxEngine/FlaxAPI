@@ -355,14 +355,19 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
-        /// Clears references to the scene objects by the editor. Deselects objects. Clear undo history.
+        /// Clears references to the scene objects by the editor. Deselects objects.
         /// </summary>
-        public void ClearRefsToSceneObjects()
+        /// <param name="fullCleanup">True if cleanup all data (including serialized and cached data). Otherwise will just clear living references to the scene objects.</param>
+        public void ClearRefsToSceneObjects(bool fullCleanup = false)
         {
-            // Clear Editor's data
             Editor.SceneEditing.Deselect();
-            // TODO: test using editor (scripts reload, play enter/leave) without clearing the undo - current design is good and should handle this
-            Undo.Clear(); // note: undo actions serialize ids to the objects (not direct refs) but cache reflection meta so we need to clean it
+
+            // TODO: this works in most cases fine but we still need to handle the case when assembly gets reloaded and type references are invalid
+            // TODO: To solve this: serialize type reference as 'namespace.name' in undo data storage
+            //if (fullCleanup)
+            {
+                Undo.Clear();
+            }
         }
 
         /// <summary>
