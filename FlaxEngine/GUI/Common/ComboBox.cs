@@ -257,7 +257,10 @@ namespace FlaxEngine.GUI
             {
                 // Draw text of the selected item
                 float textScale = Height / DefaultHeight;
-                Render2D.DrawText(style.FontMedium, _items[selectedIndex], new Rectangle(margin, 0, clientRect.Width - boxSize, clientRect.Height), enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, textScale);
+                var textRect = new Rectangle(margin, 0, clientRect.Width - boxSize - 2.0f * margin, clientRect.Height);
+                Render2D.PushClip(textRect);
+                Render2D.DrawText(style.FontMedium, _items[selectedIndex], textRect, enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, textScale);
+                Render2D.PopClip();
             }
 
             // Arrow
