@@ -67,7 +67,7 @@ namespace FlaxEditor.Windows.Assets
                         layout.Label("No parameters");
                         return;
                     }
-                    if (!material.IsLoaded)
+                    if (!material.IsLoaded || (material.BaseMaterial && !material.BaseMaterial.IsLoaded))
                     {
                         _parametersHash = -2;
                         layout.Label("Loading...");
