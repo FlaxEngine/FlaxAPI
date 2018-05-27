@@ -80,6 +80,18 @@ namespace FlaxEngine.GUI
             UpdateText();
         }
 
+		/// <summary>
+		/// Sets the value limits.
+		/// </summary>
+		/// <param name="min">The minimum value (bottom range).</param>
+		/// <param name="max">The maximum value (upper range).</param>
+		public void SetLimits(float min, float max)
+        {
+            _min = min;
+            _max = Mathf.Max(_min, max);
+            Value = Value;
+        }
+
         /// <summary>
         /// Sets the limits from the attribute.
         /// </summary>
