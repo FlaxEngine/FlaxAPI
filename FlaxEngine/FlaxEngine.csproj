@@ -253,7 +253,6 @@
     <Compile Include="Engine\BrushSurface.cs" />
     <Compile Include="Engine\Collision.cs" />
     <Compile Include="Engine\ContactPoint.cs" />
-    <Compile Include="Engine\Exceptions\MissingActorException.cs" />
     <Compile Include="Engine\Gamepad.cs" />
     <Compile Include="Engine\GamepadLayout.cs" />
     <Compile Include="Engine\GamepadVibrationState.cs" />
@@ -393,7 +392,6 @@
     <Compile Include="Math\SphericalHarmonics.cs" />
     <Compile Include="Math\Transform.cs" />
     <Compile Include="Math\Viewport.cs" />
-    <Compile Include="Engine\Exceptions\MissingReferenceException.cs" />
     <Compile Include="Engine\Object.cs" />
     <Compile Include="Math\Plane.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -402,10 +400,8 @@
     <Compile Include="Attributes\RequireChildActorAttribute.cs" />
     <Compile Include="Enums\ShadowsCastingMode.cs" />
     <Compile Include="Enums\StaticFlags.cs" />
-    <Compile Include="Engine\Exceptions\UnassignedReferenceException.cs" />
     <Compile Include="Internals\UnhandledExceptionHandler.cs" />
     <Compile Include="Engine\Exceptions\FlaxException.cs" />
-    <Compile Include="Internals\FlaxLogWriter.cs" />
     <Compile Include="Math\Vector2.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Math\Vector4.cs" />
@@ -437,6 +433,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
