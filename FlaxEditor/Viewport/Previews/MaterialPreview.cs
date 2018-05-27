@@ -61,7 +61,8 @@ namespace FlaxEditor.Viewport.Previews
             _previewModel.Model?.WaitForLoaded();
 
             // Create context menu for primitive switching
-            {
+	        {
+		        ViewWidgetButtonMenu.AddSeparator();
                 var modelSelect = ViewWidgetButtonMenu.AddChildMenu("Model").ContextMenu;
 
                 // Fill out all models 

@@ -198,12 +198,45 @@ namespace FlaxEngine.GUI
             return item;
         }
 
-        /// <summary>
-        /// Adds the child menu.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <returns>Created context menu item control.</returns>
-        public ContextMenuChildMenu AddChildMenu(string text)
+		/// <summary>
+		/// Gets the child menu (with that name).
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>Created context menu item control or null if missing.</returns>
+		public ContextMenuChildMenu GettChildMenu(string text)
+		{
+			for (int i = 0; i < _panel.ChildrenCount; i++)
+			{
+				if (_panel.Children[i] is ContextMenuChildMenu menu && menu.Text == text)
+					return menu;
+			}
+
+			return null;
+		}
+
+	    /// <summary>
+	    /// Adds the child menu or gets it if already created (with that name).
+	    /// </summary>
+	    /// <param name="text">The text.</param>
+	    /// <returns>Created context menu item control.</returns>
+	    public ContextMenuChildMenu GetOrAddChildMenu(string text)
+	    {
+		    var item = GettChildMenu(text);
+		    if (item == null)
+		    {
+			    item = new ContextMenuChildMenu(this, text);
+			    item.Parent = _panel;
+		    }
+
+		    return item;
+	    }
+
+	    /// <summary>
+		/// Adds the child menu.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>Created context menu item control.</returns>
+		public ContextMenuChildMenu AddChildMenu(string text)
         {
             var item = new ContextMenuChildMenu(this, text);
             item.Parent = _panel;
