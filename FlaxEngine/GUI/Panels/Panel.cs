@@ -11,6 +11,7 @@ namespace FlaxEngine.GUI
     public class Panel : ScrollableControl
     {
 	    private bool _layoutChanged;
+	    private bool _boundsGetLock;
 
         /// <summary>
         /// The scroll right corner. Used to scroll contents of the panel control.
@@ -249,14 +250,14 @@ namespace FlaxEngine.GUI
 
 	    /// <inheritdoc />
         protected override void PerformLayoutSelf()
-        {
-            const float ScrollSpaceLeft = 0.1f;
+	    {
+			const float ScrollSpaceLeft = 0.1f;
 
-            // Arrange controls and get scroll bounds
-            ArrageAndGetBounds();
-
-            // Scroll bars
-            if (VScrollBar != null)
+			// Arrange controls and get scroll bounds
+	        ArrageAndGetBounds();
+	        
+			// Scroll bars
+			if (VScrollBar != null)
             {
                 float height = Height;
                 bool vScrollEnabled = _scrollRightCorner.Y > height + 0.01f && height > ScrollBar.DefaultMinimumSize;
@@ -305,14 +306,18 @@ namespace FlaxEngine.GUI
                     HScrollBar.Maximum = _scrollRightCorner.X - width * (1 - ScrollSpaceLeft);
                 }
             }
-        }
+	    }
 
         /// <summary>
         /// Arrages the child controls and gets their bounds.
         /// </summary>
         protected virtual void ArrageAndGetBounds()
         {
-            Arrage();
+	        if (_boundsGetLock)
+		        return;
+	        _boundsGetLock = true;
+
+			Arrage();
 
             // Calculate scroll area bounds
             Vector2 rigthBottom = Vector2.Zero;
@@ -327,7 +332,9 @@ namespace FlaxEngine.GUI
 
             // Cache result
             _scrollRightCorner = rigthBottom;
-        }
+
+	        _boundsGetLock = false;
+		}
 
         /// <summary>
         /// Arrages the child controls.
