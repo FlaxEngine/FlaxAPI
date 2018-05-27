@@ -54,7 +54,7 @@ namespace FlaxEditor.Viewport.Previews
 
 			// Setup preview scene
 			PreviewLight = DirectionalLight.New();
-			PreviewLight.Brightness = 3.0f;
+			PreviewLight.Brightness = 6.0f;
 			PreviewLight.ShadowsMode = ShadowsCastingMode.None;
 			PreviewLight.Orientation = Quaternion.Euler(new Vector3(52.1477f, -109.109f, -111.739f));
 			//
@@ -64,10 +64,11 @@ namespace FlaxEditor.Viewport.Previews
 			//
 			Sky = Sky.New();
 			Sky.SunLight = PreviewLight;
+			Sky.SunPower = 8.0f;
 			//
 			SkyLight = SkyLight.New();
 			SkyLight.Mode = SkyLight.Modes.CustomTexture;
-			SkyLight.Brightness = 1.1f;
+			SkyLight.Brightness = 2.0f;
 			SkyLight.CustomTexture = EnvProbe.CustomProbe;
 			//
 			PostFxVolume = PostFxVolume.New();
