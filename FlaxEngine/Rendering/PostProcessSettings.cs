@@ -109,7 +109,7 @@ namespace FlaxEngine.Rendering
 
             // Ambient Occlusion
 
-            public bool AO_Enabled;
+            public byte AO_Enabled;
             public float AO_Intensity;
             public float AO_Power;
             public float AO_Radius;
@@ -125,15 +125,15 @@ namespace FlaxEngine.Rendering
             public float SSR_WorldAntiSelfOcclusionBias;
             public ResolutionMode SSR_ResolvePassResolution;
             public int SSR_ResolveSamples;
-            public bool SSR_UseColorBufferMips;
+            public byte SSR_UseColorBufferMips;
             public float SSR_EdgeFadeFactor;
-            public bool SSR_TemporalEffect;
+            public byte SSR_TemporalEffect;
             public float SSR_TemporalScale;
             public float SSR_TemporalResponse;
 
             // Bloom
 
-            public bool Bloom_Enabled;
+            public byte Bloom_Enabled;
             public float Bloom_Intensity;
             public float Bloom_Threshold;
             public float Bloom_BlurSigma;
@@ -211,13 +211,13 @@ namespace FlaxEngine.Rendering
 
             // Depth Of Field
 
-            public bool DOF_Enabled;
+            public byte DOF_Enabled;
             public float DOF_FocalDistance;
             public float DOF_FocalRegion;
             public float DOF_NearTransitionRange;
             public float DOF_FarTransitionRange;
             public float DOF_DepthLimit;
-            public bool DOF_BokehEnabled;
+            public byte DOF_BokehEnabled;
             public float DOF_BokehSize;
             public BokehShapeType DOF_BokehShape;
             public Guid DOF_BokehShapeCustom;
@@ -339,10 +339,10 @@ namespace FlaxEngine.Rendering
         [NoSerialize, EditorOrder(100), EditorDisplay("Ambient Occlusion", "Enabled")]
         public bool AO_Enabled
         {
-            get => data.AO_Enabled;
+            get => data.AO_Enabled != 0;
             set
             {
-                data.AO_Enabled = value;
+                data.AO_Enabled = (byte)(value ? 1 : 0);
                 isDataDirty = true;
             }
         }
@@ -413,10 +413,10 @@ namespace FlaxEngine.Rendering
         [NoSerialize, EditorOrder(200), EditorDisplay("Bloom", "Enabled")]
         public bool Bloom_Enabled
         {
-            get => data.Bloom_Enabled;
+            get => data.Bloom_Enabled != 0;
             set
             {
-                data.Bloom_Enabled = value;
+                data.Bloom_Enabled = (byte)(value ? 1 : 0);
                 isDataDirty = true;
             }
         }
@@ -965,10 +965,10 @@ namespace FlaxEngine.Rendering
         [NoSerialize, EditorOrder(700), EditorDisplay("Depth of Field", "Enabled"), Tooltip("Enable depth of field effect")]
         public bool DOF_Enabled
         {
-            get => data.DOF_Enabled;
+            get => data.DOF_Enabled != 0;
             set
             {
-                data.DOF_Enabled = value;
+                data.DOF_Enabled = (byte)(value ? 1 : 0);
                 isDataDirty = true;
             }
         }
@@ -1049,10 +1049,10 @@ namespace FlaxEngine.Rendering
         [NoSerialize, EditorOrder(706), EditorDisplay("Depth of Field", "Bokeh Enable"), Tooltip("Enables/disables generating Bokeh shapes")]
         public bool DOF_BokehEnabled
         {
-            get => data.DOF_BokehEnabled;
+            get => data.DOF_BokehEnabled != 0;
             set
             {
-                data.DOF_BokehEnabled = value;
+                data.DOF_BokehEnabled = (byte)(value ? 1 : 0);
                 isDataDirty = true;
             }
         }
@@ -1302,10 +1302,10 @@ namespace FlaxEngine.Rendering
         [NoSerialize, EditorOrder(809), EditorDisplay("Screen Space Reflections", "Use Color Buffer Mips"), Tooltip("Downscales the input color buffer and uses blurred mipmaps when resolving the reflection color. Produces more realistic results by blurring distant parts of reflections in rough (low-gloss) materials. It also improves performance on most platforms but uses more memory.")]
         public bool SSR_UseColorBufferMips
         {
-            get => data.SSR_UseColorBufferMips;
+            get => data.SSR_UseColorBufferMips != 0;
             set
             {
-                data.SSR_UseColorBufferMips = value;
+                data.SSR_UseColorBufferMips = (byte)(value ? 1 : 0);
                 isDataDirty = true;
             }
         }
@@ -1316,10 +1316,10 @@ namespace FlaxEngine.Rendering
         [NoSerialize, EditorOrder(810), EditorDisplay("Screen Space Reflections", "Enable Temporal Effect"), Tooltip("Enables the temporal pass. Reduces noise, but produces an animated \"jittering\" effect that's sometimes noticeable. If disabled, the properties below have no effect.")]
         public bool SSR_TemporalEffect
         {
-            get => data.SSR_TemporalEffect;
+            get => data.SSR_TemporalEffect != 0;
             set
             {
-                data.SSR_TemporalEffect = value;
+                data.SSR_TemporalEffect = (byte)(value ? 1 : 0);
                 isDataDirty = true;
             }
         }

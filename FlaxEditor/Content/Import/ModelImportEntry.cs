@@ -222,30 +222,30 @@ namespace FlaxEditor.Content.Import
             public ModelType Type;
 
             // Geometry
-            public bool CalculateNormals;
+            public byte CalculateNormals;
             public float SmoothingNormalsAngle;
             public float SmoothingTangentsAngle;
-            public bool CalculateTangents;
-            public bool OptimizeMeshes;
-            public bool MergeMeshes;
-            public bool ImportLODs;
-            public bool ImportVertexColors;
+            public byte CalculateTangents;
+            public byte OptimizeMeshes;
+            public byte MergeMeshes;
+            public byte ImportLODs;
+            public byte ImportVertexColors;
             public ModelLightmapUVsSource LighmapUVsSource;
 
             // Transform
             public float Scale;
             public Quaternion Rotation;
             public Vector3 Translation;
-            public bool CenterGeometry;
+            public byte CenterGeometry;
 
             // Animation
             public AnimationDuration Duration;
             public float FramesRangeStart;
             public float FramesRangeEnd;
             public float SamplingRate;
-            public bool SkipEmptyCurves;
-            public bool OptimizeKeyframes;
-            public bool EnableRootMotion;
+            public byte SkipEmptyCurves;
+            public byte OptimizeKeyframes;
+            public byte EnableRootMotion;
             public string RootNodeName;
         }
 
@@ -254,26 +254,26 @@ namespace FlaxEditor.Content.Import
             options = new InternalOptions
             {
                 Type = Type,
-                CalculateNormals = CalculateNormals,
+                CalculateNormals = (byte)(CalculateNormals ? 1 : 0),
                 SmoothingNormalsAngle = SmoothingNormalsAngle,
                 SmoothingTangentsAngle = SmoothingTangentsAngle,
-                CalculateTangents = CalculateTangents,
-                OptimizeMeshes = OptimizeMeshes,
-                MergeMeshes = MergeMeshes,
-                ImportLODs = ImportLODs,
-                ImportVertexColors = ImportVertexColors,
+                CalculateTangents = (byte)(CalculateTangents ? 1 : 0),
+                OptimizeMeshes = (byte)(OptimizeMeshes ? 1 : 0),
+                MergeMeshes = (byte)(MergeMeshes ? 1 : 0),
+                ImportLODs = (byte)(ImportLODs ? 1 : 0),
+                ImportVertexColors = (byte)(ImportVertexColors ? 1 : 0),
                 LighmapUVsSource = LighmapUVsSource,
                 Scale = Scale,
                 Rotation = Rotation,
                 Translation = Translation,
-                CenterGeometry = CenterGeometry,
+                CenterGeometry = (byte)(CenterGeometry ? 1 : 0),
                 Duration = Duration,
                 FramesRangeStart = FramesRangeStart,
                 FramesRangeEnd = FramesRangeEnd,
                 SamplingRate = SamplingRate,
-                SkipEmptyCurves = SkipEmptyCurves,
-                OptimizeKeyframes = OptimizeKeyframes,
-                EnableRootMotion = EnableRootMotion,
+                SkipEmptyCurves = (byte)(SkipEmptyCurves ? 1 : 0),
+                OptimizeKeyframes = (byte)(OptimizeKeyframes ? 1 : 0),
+                EnableRootMotion = (byte)(EnableRootMotion ? 1 : 0),
                 RootNodeName = RootNodeName,
             };
         }
@@ -281,25 +281,25 @@ namespace FlaxEditor.Content.Import
         internal void FromInternal(ref InternalOptions options)
         {
             Type = options.Type;
-            CalculateNormals = options.CalculateNormals;
+            CalculateNormals = options.CalculateNormals != 0;
             SmoothingNormalsAngle = options.SmoothingNormalsAngle;
             SmoothingTangentsAngle = options.SmoothingTangentsAngle;
-            CalculateTangents = options.CalculateTangents;
-            OptimizeMeshes = options.OptimizeMeshes;
-            MergeMeshes = options.MergeMeshes;
-            ImportLODs = options.ImportLODs;
-            ImportVertexColors = options.ImportVertexColors;
+            CalculateTangents = options.CalculateTangents != 0;
+            OptimizeMeshes = options.OptimizeMeshes != 0;
+            MergeMeshes = options.MergeMeshes != 0;
+            ImportLODs = options.ImportLODs != 0;
+            ImportVertexColors = options.ImportVertexColors != 0;
             LighmapUVsSource = options.LighmapUVsSource;
             Scale = options.Scale;
             Rotation = options.Rotation;
             Translation = options.Translation;
-            CenterGeometry = options.CenterGeometry;
+            CenterGeometry = options.CenterGeometry != 0;
             FramesRangeStart = options.FramesRangeStart;
             FramesRangeEnd = options.FramesRangeEnd;
             SamplingRate = options.SamplingRate;
-            SkipEmptyCurves = options.SkipEmptyCurves;
-            OptimizeKeyframes = options.OptimizeKeyframes;
-            EnableRootMotion = options.EnableRootMotion;
+            SkipEmptyCurves = options.SkipEmptyCurves != 0;
+            OptimizeKeyframes = options.OptimizeKeyframes != 0;
+            EnableRootMotion = options.EnableRootMotion != 0;
             RootNodeName = options.RootNodeName;
         }
 

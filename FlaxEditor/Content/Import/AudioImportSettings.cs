@@ -93,8 +93,8 @@ namespace FlaxEditor.Content.Import
         internal struct InternalOptions
         {
             public AudioFormat Format;
-            public bool DisableStreaming;
-            public bool Is3D;
+            public byte DisableStreaming;
+            public byte Is3D;
             public int BitDepth;
             public float Quality;
         }
@@ -104,8 +104,8 @@ namespace FlaxEditor.Content.Import
             options = new InternalOptions
             {
                 Format = Format,
-                DisableStreaming = DisableStreaming,
-                Is3D = Is3D,
+                DisableStreaming = (byte)(DisableStreaming ? 1 : 0),
+                Is3D = (byte)(Is3D ? 1 : 0),
                 Quality = CompressionQuality,
                 BitDepth = (int)BitDepth,
             };
@@ -114,8 +114,8 @@ namespace FlaxEditor.Content.Import
         internal void FromInternal(ref InternalOptions options)
         {
             Format = options.Format;
-            DisableStreaming = options.DisableStreaming;
-            Is3D = options.Is3D;
+            DisableStreaming = options.DisableStreaming != 0;
+            Is3D = options.Is3D != 0;
             CompressionQuality = options.Quality;
             BitDepth = ConvertBitDepth(options.BitDepth);
         }
