@@ -12,7 +12,7 @@ This repository contains an open source public C# API as well as full source cod
 
 # Features
 * PBR Rendering (DirectX 10, 11, 12)
-* C# Scripting (C# 6.0)
+* C# Scripting (C# 7.2)
 * Physics (NVIDIA PhysX)
 * Top Performance
 * Xbox One, Windows and UWP support
