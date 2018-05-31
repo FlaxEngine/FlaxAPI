@@ -255,9 +255,9 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "Mask", ConnectionType.Vector3, 1)
                 }
             },
-            Op1(33, "asin", "Returns arcus sine of A"),
-            Op1(34, "acos", "Returns arcus cosinus of A"),
-            Op1(35, "atan", "Returns arcus tangent of A"),
+            Op1(33, "Asin", "Returns arcus sine of A"),
+            Op1(34, "Acos", "Returns arcus cosinus of A"),
+            Op1(35, "Atan", "Returns arcus tangent of A"),
             new NodeArchetype
             {
                 TypeID = 36,
@@ -300,6 +300,7 @@ namespace FlaxEditor.Surface.Archetypes
             Op1(38, "Trunc", "Truncates a floating-point value to the integer component"),
             Op1(39, "Frac", "Returns fractional part of the value"),
             Op2(40, "Fmod", "Returns the floating-point remainder of A/B"),
+            Op2(41, "Atan2", "Returns arctangent tangent of two values (A, B)"),
         };
     }
 }
