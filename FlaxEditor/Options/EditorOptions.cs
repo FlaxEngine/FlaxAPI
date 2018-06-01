@@ -8,9 +8,14 @@ namespace FlaxEditor.Options
     public sealed class EditorOptions
     {
         /// <summary>
-        /// The general options
+        /// The general options.
         /// </summary>
         public GeneralOptions General = new GeneralOptions();
+
+        /// <summary>
+        /// The interface options.
+        /// </summary>
+        public InterfaceOptions Interface = new InterfaceOptions();
 
         /// <summary>
         /// The visual options.
