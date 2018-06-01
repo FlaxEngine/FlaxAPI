@@ -204,8 +204,12 @@ namespace FlaxEditor.Modules
             Undo.AddAction(action);
 
             // Auto CSG mesh rebuild
-            if (actor is BoxBrush && actor.Scene)
-                actor.Scene.BuildCSG();
+            var options = Editor.Options.Options;
+            if (options.General.AutoRebuildCSG)
+            {
+                if (actor is BoxBrush && actor.Scene)
+                    actor.Scene.BuildCSG(options.General.AutoRebuildCSGTimeoutMs);
+            }
         }
 
         /// <summary>
@@ -240,7 +244,7 @@ namespace FlaxEditor.Modules
                 foreach (var obj in objects)
                 {
                     if (obj is ActorNode node && node.Actor is BoxBrush)
-                        node.Actor.Scene.BuildCSG();
+                        node.Actor.Scene.BuildCSG(options.General.AutoRebuildCSGTimeoutMs);
                 }
             }
         }

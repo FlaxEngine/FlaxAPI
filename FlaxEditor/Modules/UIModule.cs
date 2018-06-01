@@ -709,7 +709,7 @@ namespace FlaxEditor.Modules
         private void BuildCSG()
         {
             var scenes = SceneManager.Scenes;
-            scenes.ToList().ForEach(x => x.BuildCSG());
+            scenes.ToList().ForEach(x => x.BuildCSG(0));
             Editor.Scene.MarkSceneEdited(scenes);
         }
 
