@@ -95,7 +95,10 @@ namespace FlaxEditor.Windows
         private void GatherData()
         {
             // Clone options (edit cloned version, not the current ones)
-            _options = Editor.Options.Options.DeepClone();
+            _options = new EditorOptions();
+            _options.General = Editor.Options.Options.General.DeepClone();
+            _options.Interface = Editor.Options.Options.Interface.DeepClone();
+            _options.Visual = Editor.Options.Options.Visual.DeepClone();
 
             // Refresh tabs
             foreach (var tab in _tabs.Children)
