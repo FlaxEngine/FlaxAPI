@@ -88,7 +88,25 @@ namespace FlaxEditor.Options
 
         private void Save()
         {
+            // Update file
             Editor.SaveJsonAsset(_optionsFilePath, Options);
+
+            // Special case for editor analytics
+            var editorAnalyticsTrackingFile = Path.Combine(Editor.LocalCachePath, "noTracking");
+            if (Options.General.EnableEditorAnalytics)
+            {
+                if (!File.Exists(editorAnalyticsTrackingFile))
+                {
+                    File.WriteAllText(editorAnalyticsTrackingFile, "Don't track me, please.");
+                }
+            }
+            else
+            {
+                if (File.Exists(editorAnalyticsTrackingFile))
+                {
+                    File.Delete(editorAnalyticsTrackingFile);
+                }
+            }
         }
 
         private void OnOptionsChanged()
