@@ -822,6 +822,11 @@ namespace FlaxEditor
             return StateMachine.CurrentState.CanReloadScripts;
         }
 
+        internal bool Internal_CanAutoReloadScripts()
+        {
+            return Options.Options.General.AutoReloadScriptsOnMainWindowFocus;
+        }
+
         internal bool Internal_CanAutoBuildCSG()
         {
             return StateMachine.CurrentState.CanEditScene;
