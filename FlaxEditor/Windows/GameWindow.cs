@@ -89,7 +89,7 @@ namespace FlaxEditor.Windows
 
         private void OnOptionsChanged(EditorOptions options)
         {
-            CenterMouseOnFocus = options.Interface.CenterMouseOnFocus;
+            CenterMouseOnFocus = options.Interface.CenterMouseOnGameWinFocus;
         }
 
         private void PlayingStateOnSceneDuplicating()

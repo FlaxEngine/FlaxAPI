@@ -13,7 +13,7 @@ namespace FlaxEditor.Options
         /// <summary>
         /// Gets or sets a value indicating whether center mouse position on window focus in play mode. Helps when working with games that lock mouse cursor.
         /// </summary>
-        [EditorDisplay("Interface", "Center Mouse On Focus"), EditorOrder(100), Tooltip("Determines whether center mouse position on window focus in play mode. Helps when working with games that lock mouse cursor.")]
-        public bool CenterMouseOnFocus { get; set; } = false;
+        [EditorDisplay("Interface", "Center Mouse On Game Window Focus"), EditorOrder(100), Tooltip("Determines whether center mouse position on window focus in play mode. Helps when working with games that lock mouse cursor.")]
+        public bool CenterMouseOnGameWinFocus { get; set; } = false;
     }
 }
