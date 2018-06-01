@@ -1,6 +1,5 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
-using System;
 using System.Linq;
 using FlaxEditor.Gizmo;
 using FlaxEditor.GUI;
@@ -456,6 +455,8 @@ namespace FlaxEditor.Modules
             cm.AddSeparator();
             _menuToolsSetTheCurrentSceneViewAsDefault = cm.AddButton("Set current scene view as project default", SetTheCurrentSceneViewAsDefualt);
             cm.AddButton("Take screenshot!", "F12", Editor.Windows.TakeScreenshot);
+            cm.AddSeparator();
+            cm.AddButton("Options", () => Editor.Windows.EditorOptionsWin.Show());
 
             // Window
             MenuWindow = MainMenu.AddButton("Window");

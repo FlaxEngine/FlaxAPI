@@ -234,6 +234,11 @@
     <Compile Include="Content\Thumbnails\ThumbnailsModule.cs" />
     <Compile Include="Modules\UIModule.cs" />
     <Compile Include="Modules\WindowsModule.cs" />
+    <Compile Include="Options\Editor.cs" />
+    <Compile Include="Options\EditorOptions.cs" />
+    <Compile Include="Options\GeneralOptions.cs" />
+    <Compile Include="Options\OptionsModule.cs" />
+    <Compile Include="Options\VisualOptions.cs" />
     <Compile Include="Progress\Handlers\BakeEnvProbesProgress.cs" />
     <Compile Include="Progress\Handlers\BakeLightmapsProgress.cs" />
     <Compile Include="Progress\Handlers\BuildingGameProgress.cs" />
@@ -389,6 +394,7 @@
     <Compile Include="Windows\ContentWindow.Navigation.cs" />
     <Compile Include="Windows\DebugLogWindow.cs" />
     <Compile Include="Windows\EditGameWindow.cs" />
+    <Compile Include="Windows\EditorOptionsWindow.cs" />
     <Compile Include="Windows\EditorWindow.cs" />
     <Compile Include="Undo\Undo.cs" />
     <Compile Include="Utilities\Extensions.cs" />
