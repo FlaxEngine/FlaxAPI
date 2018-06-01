@@ -2,12 +2,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
 using FlaxEditor.Content;
 using FlaxEditor.Content.Import;
 using FlaxEditor.Content.Settings;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Modules;
+using FlaxEditor.Options;
 using FlaxEditor.Scripting;
 using FlaxEditor.States;
 using FlaxEditor.Windows;
@@ -24,6 +26,11 @@ namespace FlaxEditor
         /// Gets the Editor instance.
         /// </summary>
         public static Editor Instance { get; private set; }
+
+        /// <summary>
+        /// The path to the local cache folder shared by all the installed editor instance for a given user (used also by the Flax Launcher).
+        /// </summary>
+        public static readonly string LocalCachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Flax");
 
         static Editor()
         {
@@ -111,6 +118,11 @@ namespace FlaxEditor
         public readonly EditorStateMachine StateMachine;
 
         /// <summary>
+        /// The editor options manager.
+        /// </summary>
+        public readonly OptionsModule Options;
+
+        /// <summary>
         /// The undo/redo
         /// </summary>
         public readonly EditorUndo Undo;
@@ -139,6 +151,7 @@ namespace FlaxEditor
             Internal_GetProjectInfo(out _projectInfo);
 
             // Create common editor modules
+            RegisterModule(Options = new OptionsModule(this));
             RegisterModule(Windows = new WindowsModule(this));
             RegisterModule(UI = new UIModule(this));
             RegisterModule(Thumbnails = new ThumbnailsModule(this));
