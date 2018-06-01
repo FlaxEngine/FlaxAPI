@@ -18,8 +18,7 @@ namespace FlaxEditor.Gizmo
             Profiler.BeginEventGPU("Editor Primitives");
 
             // Check if use MSAA
-            // TODO: add edito option to switch between msaa and non-msaa
-            bool enableMsaa = true;
+            bool enableMsaa = Editor.Instance.Options.Options.Visual.EnableMSAAForDebugDraw;
 
             // Prepare
             var editor = Editor.Instance;
