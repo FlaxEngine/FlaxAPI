@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using FlaxEditor.Content;
 using FlaxEditor.Content.Import;
 using FlaxEditor.Content.Settings;
@@ -756,6 +757,14 @@ namespace FlaxEditor
 
         #region Internal Calls
 
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct InternalOptions
+        {
+            public byte AutoReloadScriptsOnMainWindowFocus;
+            public byte AutoRebuildCSG;
+            public float AutoRebuildCSGTimeoutMs;
+        }
+
         internal void BuildCommand(string arg)
         {
             if (TryBuildCommand(arg))
@@ -821,12 +830,7 @@ namespace FlaxEditor
         {
             return StateMachine.CurrentState.CanReloadScripts;
         }
-
-        internal bool Internal_CanAutoReloadScripts()
-        {
-            return Options.Options.General.AutoReloadScriptsOnMainWindowFocus;
-        }
-
+        
         internal bool Internal_CanAutoBuildCSG()
         {
             return StateMachine.CurrentState.CanEditScene;
@@ -932,6 +936,9 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetEditorBoxWithChildren(IntPtr obj, out BoundingBox resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetOptions(ref InternalOptions options);
 #endif
 
         #endregion

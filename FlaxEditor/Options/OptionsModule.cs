@@ -111,7 +111,16 @@ namespace FlaxEditor.Options
 
         private void OnOptionsChanged()
         {
-            Editor.Log("Ediotr options changed!");
+            Editor.Log("Editor options changed!");
+
+#if !UNIT_TEST_COMPILANT
+            // Sync C++ backend options
+            Editor.InternalOptions internalOptions;
+            internalOptions.AutoReloadScriptsOnMainWindowFocus = (byte)(Options.General.AutoReloadScriptsOnMainWindowFocus ? 1 : 0);
+            internalOptions.AutoRebuildCSG = (byte)(Options.General.AutoRebuildCSG ? 1 : 0);
+            internalOptions.AutoRebuildCSGTimeoutMs = Options.General.AutoRebuildCSGTimeoutMs;
+            Editor.Internal_SetOptions(ref internalOptions);
+#endif
 
             // Send event
             OptionsChanged?.Invoke(Options);

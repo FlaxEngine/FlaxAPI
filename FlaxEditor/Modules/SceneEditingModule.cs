@@ -234,10 +234,14 @@ namespace FlaxEditor.Modules
             Undo.AddAction(action);
 
             // Auto CSG mesh rebuild
-            foreach (var obj in objects)
+            var options = Editor.Options.Options;
+            if (options.General.AutoRebuildCSG)
             {
-                if (obj is ActorNode node && node.Actor is BoxBrush)
-                    node.Actor.Scene.BuildCSG();
+                foreach (var obj in objects)
+                {
+                    if (obj is ActorNode node && node.Actor is BoxBrush)
+                        node.Actor.Scene.BuildCSG();
+                }
             }
         }
 
