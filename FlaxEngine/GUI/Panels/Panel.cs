@@ -12,6 +12,7 @@ namespace FlaxEngine.GUI
     {
         private bool _layoutChanged;
         private int _layoutUpdateLock;
+        private ScrollBars _scrollBars;
 
         /// <summary>
         /// The scroll right corner. Used to scroll contents of the panel control.
@@ -21,12 +22,12 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The vertical scroll bar.
         /// </summary>
-        public readonly VScrollBar VScrollBar;
+        public VScrollBar VScrollBar;
 
         /// <summary>
         /// The horizontal scroll bar.
         /// </summary>
-        public readonly HScrollBar HScrollBar;
+        public HScrollBar HScrollBar;
 
         /// <summary>
         /// Gets the scrolling right corner.
@@ -43,6 +44,62 @@ namespace FlaxEngine.GUI
         public Vector2 ViewBottom => Size + _viewOffset;
 
         /// <summary>
+        /// Gets or sets the scroll bars usege by this panel.
+        /// </summary>
+        public ScrollBars ScrollBars
+        {
+            get => _scrollBars;
+            set
+            {
+                if (_scrollBars == value)
+                    return;
+
+                _scrollBars = value;
+
+                if ((value & ScrollBars.Vertical) == ScrollBars.Vertical)
+                {
+                    // Create vertical sroll bar
+                    VScrollBar = new VScrollBar(Width - ScrollBar.DefaultSize, Height)
+                    {
+                        DockStyle = DockStyle.Right,
+                        Parent = this
+                    };
+                }
+                else if (VScrollBar != null)
+                {
+                    VScrollBar.Dispose();
+                    VScrollBar = null;
+                }
+
+                if ((value & ScrollBars.Horizontal) == ScrollBars.Horizontal)
+                {
+                    // Create vertical sroll bar
+                    HScrollBar = new HScrollBar(Height - ScrollBar.DefaultSize, Width)
+                    {
+                        DockStyle = DockStyle.Bottom,
+                        Parent = this
+                    };
+                }
+                else if (HScrollBar != null)
+                {
+                    HScrollBar.Dispose();
+                    HScrollBar = null;
+                }
+
+                PerformLayout();
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Panel"/> class.
+        /// </summary>
+        /// <inheritdoc />
+        public Panel()
+        : this(ScrollBars.None)
+        {
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Panel"/> class.
         /// </summary>
         /// <param name="scrollBars">The scroll bars.</param>
@@ -51,24 +108,7 @@ namespace FlaxEngine.GUI
         {
             CanFocus = canFocus;
 
-            if ((scrollBars & ScrollBars.Vertical) == ScrollBars.Vertical)
-            {
-                // Create vertical sroll bar
-                VScrollBar = new VScrollBar(Width - ScrollBar.DefaultSize, Height)
-                {
-                    DockStyle = DockStyle.Right,
-                    Parent = this
-                };
-            }
-            if ((scrollBars & ScrollBars.Horizontal) == ScrollBars.Horizontal)
-            {
-                // Create vertical sroll bar
-                HScrollBar = new HScrollBar(Height - ScrollBar.DefaultSize, Width)
-                {
-                    DockStyle = DockStyle.Bottom,
-                    Parent = this
-                };
-            }
+            ScrollBars = scrollBars;
         }
 
         /// <summary>
@@ -169,7 +209,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void DisposeChildren()
         {
-            // Keep scroll bars alive
+            // Keep scrollbars alive
             if (VScrollBar != null)
                 _children.Remove(VScrollBar);
             if (HScrollBar != null)
