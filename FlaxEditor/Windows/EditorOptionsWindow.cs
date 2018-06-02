@@ -101,13 +101,16 @@ namespace FlaxEditor.Windows
             _options.Visual = Editor.Options.Options.Visual.DeepClone();
 
             // Refresh tabs
-            foreach (var tab in _tabs.Children)
+            foreach (var c in _tabs.Children)
             {
-                var panel = ((Tab)tab).GetChild<Panel>();
-                var settingsPanel = panel.GetChild<CustomEditorPresenter.PresenterPanel>();
-                var getValue = (Func<object>)settingsPanel.Tag;
-                var settings = settingsPanel.Presenter;
-                settings.Select(getValue());
+                if (c is Tab tab)
+                {
+                    var panel = tab.GetChild<Panel>();
+                    var settingsPanel = panel.GetChild<CustomEditorPresenter.PresenterPanel>();
+                    var getValue = (Func<object>)settingsPanel.Tag;
+                    var settings = settingsPanel.Presenter;
+                    settings.Select(getValue());
+                }
             }
 
             ClearDirtyFlag();
