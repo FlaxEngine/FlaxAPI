@@ -422,7 +422,12 @@ namespace FlaxEditor.Viewport
             }
 
             // Link for task event
-            task.Begin += x => CopyViewData(ref x.View);
+            task.Begin += OnRenderBegin;
+        }
+
+        private void OnRenderBegin(SceneRenderTask task, GPUContext context)
+        {
+            CopyViewData(ref task.View);
         }
 
         #region FPS Counter

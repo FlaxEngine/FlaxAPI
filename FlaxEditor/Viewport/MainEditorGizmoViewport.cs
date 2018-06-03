@@ -72,6 +72,7 @@ namespace FlaxEditor.Viewport
             Task.Flags = ViewFlags.DefaultEditor;
             Task.Begin += RenderTaskOnBegin;
             Task.Draw += RenderTaskOnDraw;
+            Task.End += RenderTaskOnEnd;
 
             // Create post effects
             SelectionOutline = FlaxEngine.Object.New<SelectionOutline>();
@@ -221,7 +222,7 @@ namespace FlaxEditor.Viewport
             Editor.Instance.SceneEditing.Spawn(actor);
         }
 
-        private void RenderTaskOnBegin(SceneRenderTask task)
+        private void RenderTaskOnBegin(SceneRenderTask task, GPUContext context)
         {
             _debugDrawData.Clear();
 
@@ -240,6 +241,16 @@ namespace FlaxEditor.Viewport
         private void RenderTaskOnDraw(DrawCallsCollector collector)
         {
             _debugDrawData.OnDraw(collector);
+        }
+
+        private void RenderTaskOnEnd(SceneRenderTask task, GPUContext context)
+        {
+            // Render editor primitives, gizmo and debug shapes in debug view modes
+            if (task.Mode != ViewMode.Default)
+            {
+                // Note: can use Output buffer as both input and output because EditorPrimitives is using a intermdiate buffers
+                EditorPrimitives.Render(context, task, task.Output, task.Output);
+            }
         }
 
         private void onGizmoModeToggle(ViewportWidgetButton button)

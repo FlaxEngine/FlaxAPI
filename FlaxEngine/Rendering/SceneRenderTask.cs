@@ -15,13 +15,15 @@ namespace FlaxEngine.Rendering
         /// Action delegate called before scene rendering. Should prepare <see cref="SceneRenderTask.View"/> structure for rendering.
         /// </summary>
         /// <param name="task">The task.</param>
-        public delegate void BeginDelegate(SceneRenderTask task);
+        /// <param name="context">The GPU execution context.</param>
+        public delegate void BeginDelegate(SceneRenderTask task, GPUContext context);
 
         /// <summary>
         /// Action delegate called after scene rendering.
         /// </summary>
         /// <param name="task">The task.</param>
-        public delegate void EndDelegate(SceneRenderTask task);
+        /// <param name="context">The GPU execution context.</param>
+        public delegate void EndDelegate(SceneRenderTask task, GPUContext context);
 
         /// <summary>
         /// Action delegate called during rendering scene part to the view. Should submit custom draw calls using <see cref="DrawCallsCollector"/>.
@@ -141,7 +143,7 @@ namespace FlaxEngine.Rendering
                 Buffers = RenderBuffers.New();
 
             // Prepare view
-            OnBegin();
+            OnBegin(context);
             Viewport viewport = new Viewport(Vector2.Zero, Buffers.Size);
             if (Camera != null)
             {
@@ -166,15 +168,16 @@ namespace FlaxEngine.Rendering
             context.DrawScene(this, Output, Buffers, View, Flags, Mode, customActors, ActorsSource, _postFx);
 
             // Finish
-            OnEnd();
+            OnEnd(context);
         }
 
         /// <summary>
         /// Called when on rendering begin.
         /// </summary>
-        protected virtual void OnBegin()
+        /// <param name="context">The GPU execution context.</param>
+        protected virtual void OnBegin(GPUContext context)
         {
-            Begin?.Invoke(this);
+            Begin?.Invoke(this, context);
 
             // Resize buffers
             if (Output)
@@ -184,9 +187,10 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Called when on rendering end.
         /// </summary>
-        protected virtual void OnEnd()
+        /// <param name="context">The GPU execution context.</param>
+        protected virtual void OnEnd(GPUContext context)
         {
-            End?.Invoke(this);
+            End?.Invoke(this, context);
         }
 
         internal override DrawCall[] Internal_Draw()
