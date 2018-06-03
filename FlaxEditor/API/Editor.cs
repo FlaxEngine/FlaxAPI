@@ -124,6 +124,11 @@ namespace FlaxEditor
         public readonly OptionsModule Options;
 
         /// <summary>
+        /// The editor per-project cache manager.
+        /// </summary>
+        public readonly ProjectCacheModule ProjectCache;
+
+        /// <summary>
         /// The undo/redo
         /// </summary>
         public readonly EditorUndo Undo;
@@ -153,6 +158,7 @@ namespace FlaxEditor
 
             // Create common editor modules
             RegisterModule(Options = new OptionsModule(this));
+            RegisterModule(ProjectCache = new ProjectCacheModule(this));
             RegisterModule(Windows = new WindowsModule(this));
             RegisterModule(UI = new UIModule(this));
             RegisterModule(Thumbnails = new ThumbnailsModule(this));
