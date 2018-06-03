@@ -6,6 +6,10 @@ using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Dialogs
 {
+    /// <summary>
+    /// Color picking dialog.
+    /// </summary>
+    /// <seealso cref="FlaxEditor.GUI.Dialogs.Dialog" />
     public class ColorPickerDialog : Dialog
     {
         private const float BUTTONS_WIDTH = 60.0f;
@@ -18,6 +22,7 @@ namespace FlaxEditor.GUI.Dialogs
         private Color _oldColor;
         private Color _newColor;
         private bool _disableEvents;
+        private bool _useDynamicEditing;
         private Action<Color> _onChangedOk;
 
         private ColorSelectorWithSliders _cSelector;
@@ -67,6 +72,12 @@ namespace FlaxEditor.GUI.Dialogs
                 // Hex
                 _cHex.Text = _newColor.ToHexString();
 
+                // Dynamic value
+                if (_useDynamicEditing)
+                {
+                    _onChangedOk?.Invoke(_newColor);
+                }
+
                 _disableEvents = false;
             }
         }
@@ -74,14 +85,16 @@ namespace FlaxEditor.GUI.Dialogs
         /// <summary>
         /// Initializes a new instance of the <see cref="ColorPickerDialog"/> class.
         /// </summary>
-        /// <param name="startColor">The start color.</param>
-        /// <param name="onChangedOk">The on changed ok.</param>
-        public ColorPickerDialog(Color startColor, Action<Color> onChangedOk)
+        /// <param name="initialValue">The initial value.</param>
+        /// <param name="colorChanged">The color changed event.</param>
+        /// <param name="useDynamicEditing">True if allow dynamic value editing (slider-like usage), otherwise will fire color change event only on editing end.</param>
+        public ColorPickerDialog(Color initialValue, Action<Color> colorChanged, bool useDynamicEditing)
         : base("Pick a color!")
         {
-            _oldColor = startColor;
+            _oldColor = initialValue;
+            _useDynamicEditing = useDynamicEditing;
             _newColor = Color.Transparent;
-            _onChangedOk = onChangedOk;
+            _onChangedOk = colorChanged;
 
             // Selector
             _cSelector = new ColorSelectorWithSliders(180, 18);
@@ -150,18 +163,22 @@ namespace FlaxEditor.GUI.Dialogs
             _cOK.Clicked += OnOkClicked;
 
             // Set initial color
-            SelectedColor = startColor;
+            SelectedColor = initialValue;
         }
 
         private void OnOkClicked()
         {
             _result = DialogResult.OK;
-            _onChangedOk(_newColor);
+            _onChangedOk?.Invoke(_newColor);
             Close();
         }
 
         private void OnCancelClicked()
         {
+            // Restore color
+            if(_useDynamicEditing)
+                _onChangedOk?.Invoke(_oldColor);
+
             Close(DialogResult.Cancel);
         }
 

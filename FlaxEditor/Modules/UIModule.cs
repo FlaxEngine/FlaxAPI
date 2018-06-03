@@ -331,7 +331,7 @@ namespace FlaxEditor.Modules
             style.ProgressNormal = Color.FromBgra(0xFF0ad328);
 
             // Color picking
-            style.ShowPickColorDialog += (color, handler) => new ColorPickerDialog(color, handler).Show();
+            style.ShowPickColorDialog += (initialValue, colorChanged, useDynamicEditing) => new ColorPickerDialog(initialValue, colorChanged, useDynamicEditing).Show();
 
             // Font
             var primaryFont = FlaxEngine.Content.LoadInternal<FontAsset>(EditorAssets.PrimaryFont);
