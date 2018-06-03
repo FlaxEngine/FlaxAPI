@@ -22,7 +22,7 @@ namespace FlaxEditor.Modules
         /// Gets or sets the automatic data save interval.
         /// </summary>
         public TimeSpan AutoSaveInterval { get; set; }
-        
+
         /// <inheritdoc />
         internal ProjectCacheModule(Editor editor)
         : base(editor)
@@ -67,6 +67,15 @@ namespace FlaxEditor.Modules
                 {
                 case 1:
                 {
+                    int expandedActorsCount = reader.ReadInt32();
+                    _expandedActors.Clear();
+                    var bytes16 = new byte[16];
+                    for (int i = 0; i < expandedActorsCount; i++)
+                    {
+                        reader.Read(bytes16, 0, 16);
+                        _expandedActors.Add(new Guid(bytes16));
+                    }
+
                     break;
                 }
                 default:
@@ -99,7 +108,16 @@ namespace FlaxEditor.Modules
 
         private void SaveGuareded()
         {
-
+            using (var stream = new FileStream(_cachePath, FileMode.Create, FileAccess.Write, FileShare.Read))
+            using (var writer = new BinaryWriter(stream))
+            {
+                writer.Write(1);
+                writer.Write(_expandedActors.Count);
+                foreach (var e in _expandedActors)
+                {
+                    writer.Write(e.ToByteArray());
+                }
+            }
         }
 
         private void Save()
