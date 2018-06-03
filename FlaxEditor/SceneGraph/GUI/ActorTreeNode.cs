@@ -50,11 +50,18 @@ namespace FlaxEditor.SceneGraph.GUI
             if (node.Actor != null)
             {
                 _orderInParent = node.Actor.OrderInParent;
+
+                var id = node.Actor.ID;
+                if (Editor.Instance.ProjectCache.IsExpandedActor(ref id))
+                {
+                    Expand(true);
+                }
             }
             else
             {
                 _orderInParent = 0;
             }
+
             UpdateText();
         }
 
@@ -169,6 +176,18 @@ namespace FlaxEditor.SceneGraph.GUI
         {
             using (new UndoBlock(Editor.Instance.Undo, Actor, "Rename"))
                 Actor.Name = renamePopup.Text;
+        }
+
+        /// <inheritdoc />
+        protected override void OnExpandedChanged()
+        {
+            base.OnExpandedChanged();
+
+            if (!IsLayoutLocked && Actor)
+            {
+                var id = Actor.ID;
+                Editor.Instance.ProjectCache.SetExpandedActor(ref id, IsExpanded);
+            }
         }
 
         /// <inheritdoc />
