@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 namespace FlaxEditor.States
 {
@@ -8,6 +8,9 @@ namespace FlaxEditor.States
     /// <seealso cref="FlaxEditor.States.EditorState" />
     public sealed class ReloadingScriptsState : EditorState
     {
+        /// <inheritdoc />
+        public override string Status => "Reloading scripts...";
+
         internal ReloadingScriptsState(Editor editor)
         : base(editor)
         {

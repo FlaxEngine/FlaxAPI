@@ -69,6 +69,9 @@ namespace FlaxEditor.States
         }
 
         /// <inheritdoc />
+        public override string Status => "Play Mode!";
+
+        /// <inheritdoc />
         public override void OnEnter()
         {
             Input.ScanGamepads();

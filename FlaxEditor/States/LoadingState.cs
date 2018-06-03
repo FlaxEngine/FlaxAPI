@@ -23,6 +23,9 @@ namespace FlaxEditor.States
         /// <inheritdoc />
         public override bool CanReloadScripts => true;
 
+        /// <inheritdoc />
+        public override string Status => "Loading...";
+
         internal LoadingState(Editor editor)
         : base(editor)
         {

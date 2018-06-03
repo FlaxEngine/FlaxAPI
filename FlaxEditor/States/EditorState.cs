@@ -72,6 +72,11 @@ namespace FlaxEditor.States
         public virtual bool IsEditorReady => true;
 
         /// <summary>
+        /// Gets the state status message for the UI. Returns null if use the default value.
+        /// </summary>
+        public virtual string Status => null;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EditorState"/> class.
         /// </summary>
         /// <param name="editor">The editor.</param>

@@ -242,6 +242,7 @@ namespace FlaxEditor.Modules
                 color = Style.Current.BackgroundSelected;
             }
 
+            StatusBar.Text = Editor.StateMachine.CurrentState.Status ?? "Ready";
             StatusBar.StatusColor = color;
         }
 
@@ -515,7 +516,7 @@ namespace FlaxEditor.Modules
             // Status Bar
             StatusBar = new StatusBar
             {
-                Text = "Ready",
+                Text = "Loading...",
                 Parent = mainWindow
             };
 

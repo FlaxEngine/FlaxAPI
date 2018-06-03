@@ -24,6 +24,9 @@ namespace FlaxEditor.States
         {
         }
 
+        /// <inheritdoc />
+        public override string Status => "Loading scene...";
+
         /// <summary>
         /// Loads the scene.
         /// </summary>
