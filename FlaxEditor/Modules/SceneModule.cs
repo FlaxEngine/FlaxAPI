@@ -390,21 +390,17 @@ namespace FlaxEditor.Modules
             var sceneNode = SceneGraphFactory.BuildSceneTree(scene);
             var treeNode = sceneNode.TreeNode;
             treeNode.IsLayoutLocked = true;
-            treeNode.Expand();
-            treeNode.EndAnimation();
-
-            // TODO: cache expanded/colapsed nodes per scene tree
-
+            treeNode.Expand(true);
+            
             // Add to the tree
             var rootNode = Root.TreeNode;
-            bool wasLayoutLocked = rootNode.IsLayoutLocked;
             rootNode.IsLayoutLocked = true;
             //
             sceneNode.ParentNode = Root;
             rootNode.SortChildren();
             //
             treeNode.UnlockChildrenRecursive();
-            rootNode.IsLayoutLocked = wasLayoutLocked;
+            rootNode.IsLayoutLocked = false;
             rootNode.Parent.PerformLayout();
 
             var endTime = DateTime.UtcNow;
@@ -446,7 +442,10 @@ namespace FlaxEditor.Modules
 
             var node = SceneGraphFactory.BuildActorNode(actor);
             if (node != null)
+            {
+                node.TreeNode.UnlockChildrenRecursive();
                 node.ParentNode = parentNode;
+            }
         }
 
         private void OnActorDeleted(Actor actor)
@@ -505,6 +504,7 @@ namespace FlaxEditor.Modules
             if (parentNode != null)
             {
                 // Change parent
+                node.TreeNode.UnlockChildrenRecursive();
                 node.ParentNode = parentNode;
             }
             else

@@ -74,10 +74,7 @@ namespace FlaxEditor.SceneGraph
             var sceneNode = new SceneNode(scene);
 
             BuildSceneTree(sceneNode);
-
-            // Unlock tree UI
-            sceneNode.TreeNode.UnlockChildrenRecursive();
-
+            
             return sceneNode;
         }
 
@@ -114,10 +111,7 @@ namespace FlaxEditor.SceneGraph
                 Debug.LogWarning($"Failed to create scene graph node for actor {actor.Name} (type: {actor.GetType()}).");
                 Debug.LogException(ex);
             }
-
-            // Unlock tree UI
-            result?.TreeNode.UnlockChildrenRecursive();
-
+            
             return result;
         }
 
