@@ -762,7 +762,7 @@ namespace FlaxEditor.Modules
             var windows = Window.Windows.ToArray();
             for (int i = 0; i < windows.Length; i++)
             {
-                if (windows[i].IsVisible)
+                if (windows[i] && windows[i].IsVisible)
                     windows[i].Close(ClosingReason.EngineExit);
             }
         }
