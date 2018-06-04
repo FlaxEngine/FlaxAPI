@@ -20,6 +20,19 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets parent font asset that contains font family used by this font.
+        /// </summary>
+        [UnmanagedCall]
+        public FontAsset Asset
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetAsset(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
         /// Gets font size.
         /// </summary>
         [UnmanagedCall]
@@ -225,6 +238,9 @@ namespace FlaxEngine
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern FontAsset Internal_GetAsset(IntPtr obj);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetSize(IntPtr obj);
 
