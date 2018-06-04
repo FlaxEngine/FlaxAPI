@@ -479,7 +479,11 @@ namespace FlaxEditor.Viewport
             // Get mouse ray and try to hit any object
             var ray = MouseRay;
             float closest = float.MaxValue;
-            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest);
+            bool selectColliders = (Task.Flags & ViewFlags.PhysicsDebug) == ViewFlags.PhysicsDebug;
+            SceneGraphNode.RayCastData.FlagTypes rayCastFlags = SceneGraphNode.RayCastData.FlagTypes.None;
+            if (!selectColliders)
+                rayCastFlags |= SceneGraphNode.RayCastData.FlagTypes.SkipColliders;
+            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest, rayCastFlags);
 
             // Update selection
             var sceneEditing = Editor.Instance.SceneEditing;

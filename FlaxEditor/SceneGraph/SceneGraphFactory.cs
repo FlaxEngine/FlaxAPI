@@ -60,6 +60,11 @@ namespace FlaxEditor.SceneGraph
             CustomNodesTypes.Add(typeof(AudioSource), typeof(AudioSourceNode));
             CustomNodesTypes.Add(typeof(BoneSocket), typeof(BoneSocketNode));
             CustomNodesTypes.Add(typeof(Decal), typeof(DecalNode));
+            CustomNodesTypes.Add(typeof(BoxCollider), typeof(ColliderNode));
+            CustomNodesTypes.Add(typeof(SphereCollider), typeof(ColliderNode));
+            CustomNodesTypes.Add(typeof(CapsuleCollider), typeof(ColliderNode));
+            CustomNodesTypes.Add(typeof(MeshCollider), typeof(ColliderNode));
+            CustomNodesTypes.Add(typeof(CharacterController), typeof(ColliderNode));
         }
 
         /// <summary>

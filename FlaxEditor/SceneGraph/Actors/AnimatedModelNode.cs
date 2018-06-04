@@ -44,9 +44,9 @@ namespace FlaxEditor.SceneGraph.Actors
             public override object EditableObject => Entry;
 
             /// <inheritdoc />
-            public override bool RayCastSelf(ref Ray ray, out float distance)
+            public override bool RayCastSelf(ref RayCastData ray, out float distance)
             {
-                return Entry.Intersects(ray, out distance);
+                return Entry.Intersects(ray.Ray, out distance);
             }
         }
 
@@ -81,7 +81,7 @@ namespace FlaxEditor.SceneGraph.Actors
         }
 
         /// <inheritdoc />
-        public override bool RayCastSelf(ref Ray ray, out float distance)
+        public override bool RayCastSelf(ref RayCastData ray, out float distance)
         {
             // Disable this node hit - MeshNodes handles ray casting
             distance = 0;
