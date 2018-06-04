@@ -203,6 +203,9 @@ namespace FlaxEditor.Modules
             var action = new DeleteActorsAction(new List<SceneGraphNode>(1) { actorNode }, true);
             Undo.AddAction(action);
 
+            // Mark scene as dirty
+            Editor.Scene.MarkSceneEdited(actor.Scene);
+
             // Auto CSG mesh rebuild
             var options = Editor.Options.Options;
             if (options.General.AutoRebuildCSG)
