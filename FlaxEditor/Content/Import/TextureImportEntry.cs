@@ -384,6 +384,7 @@ namespace FlaxEditor.Content.Import
                      || snl.Contains("diffuse")
                      || snl.Contains("diff")
                      || snl.Contains("color")
+                     || snl.Contains("_col")
                      || snl.Contains("basecolor")
                      || snl.Contains("albedo"))
             {
@@ -395,7 +396,10 @@ namespace FlaxEditor.Content.Import
                      || snl.EndsWith("gloss")
                      || snl.EndsWith("_r")
                      || snl.EndsWith("_displ")
+                     || snl.EndsWith("_disp")
                      || snl.EndsWith("roughness")
+                     || snl.EndsWith("_rgh")
+                     || snl.EndsWith("_met")
                      || snl.EndsWith("metalness")
                      || snl.EndsWith("displacement")
                      || snl.EndsWith("spec")
