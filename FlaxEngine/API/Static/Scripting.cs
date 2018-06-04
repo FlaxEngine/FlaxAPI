@@ -5,6 +5,9 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
+    /// <summary>
+    /// C# scripting service.
+    /// </summary>
     public static class Scripting
     {
         /// <summary>
@@ -22,6 +25,11 @@ namespace FlaxEngine
         /// </summary>
         public static event Action FixedUpdate;
 
+        /// <summary>
+        /// Occurs when scripting engine is disposing. Engine is during closing and some services may be unavailable (eg. loading scenes). This may be called after the engine fatal error event.
+        /// </summary>
+        public static event Action Exit;
+
         internal static void Internal_Update()
         {
             Time.SyncData();
@@ -38,6 +46,11 @@ namespace FlaxEngine
         {
             Time.SyncData();
             FixedUpdate?.Invoke();
+        }
+
+        internal static void Internal_Exit()
+        {
+            Exit?.Invoke();
         }
 
         /// <summary>
