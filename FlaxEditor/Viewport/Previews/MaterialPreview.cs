@@ -140,7 +140,8 @@ namespace FlaxEditor.Viewport.Previews
             if (decalMaterial && _decal == null)
             {
                 _decal = Decal.New();
-                _decal.Size = new Vector3(120.0f);
+                _decal.Size = new Vector3(100.0f);
+                _decal.LocalOrientation = Quaternion.RotationZ(Mathf.PiOverTwo);
                 Task.CustomActors.Add(_decal);
             }
             if (_decal)
