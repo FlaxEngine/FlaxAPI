@@ -119,6 +119,7 @@
     <Compile Include="CustomEditors\Editors\GenericEditor.cs" />
     <Compile Include="CustomEditors\Editors\IntegerEditor.cs" />
     <Compile Include="CustomEditors\Editors\ListEditor.cs" />
+    <Compile Include="CustomEditors\Editors\MatrixEditor.cs" />
     <Compile Include="CustomEditors\Editors\QuaternionEditor.cs" />
     <Compile Include="CustomEditors\Editors\SkeletonBoneEditor.cs" />
     <Compile Include="CustomEditors\Editors\StringEditor.cs" />
