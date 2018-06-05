@@ -101,5 +101,10 @@ namespace FlaxEditor.Surface
         /// The render target (created from code).
         /// </summary>
         RenderTarget = 18,
+
+        /// <summary>
+        /// The matrix.
+        /// </summary>
+        Matrix = 19,
     }
 }

@@ -97,6 +97,7 @@ namespace FlaxEditor.Windows.Assets
                     CubeTexture = (int)ParameterType.CubeTexture,
                     NormalMap = (int)ParameterType.NormalMap,
                     RenderTarget = (int)ParameterType.RenderTarget,
+                    Matrix = (int)ParameterType.Matrix,
                 }
 
                 /// <inheritdoc />
