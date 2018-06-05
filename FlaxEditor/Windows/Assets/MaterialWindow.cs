@@ -178,6 +178,7 @@ namespace FlaxEditor.Windows.Assets
                         );
 
                         var propertyLabel = new ClickablePropertyNameLabel(p.Name);
+                        propertyLabel.MouseLeftDoubleClick += (label, location) => StartParameterRenaming(pIndex, label);
                         propertyLabel.MouseRightClick += (label, location) => ShowParameterMenu(pIndex, label, ref location);
                         var property = layout.AddPropertyItem(propertyLabel);
                         property.Object(propertyValue);
