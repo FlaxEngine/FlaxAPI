@@ -165,6 +165,7 @@
     <Compile Include="GUI\Drag\DragActorType.cs" />
     <Compile Include="GUI\Drag\DragScriptItems.cs" />
     <Compile Include="GUI\Drag\DragScripts.cs" />
+    <Compile Include="GUI\Drag\DragSurfaceParameter.cs" />
     <Compile Include="GUI\PlatformSelector.cs" />
     <Compile Include="GUI\RenamePopup.cs" />
     <Compile Include="Content\Proxy\BinaryAssetProxy.cs" />

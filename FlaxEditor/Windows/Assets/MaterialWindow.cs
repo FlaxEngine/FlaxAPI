@@ -6,6 +6,7 @@ using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Drag;
 using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
@@ -178,9 +179,11 @@ namespace FlaxEditor.Windows.Assets
                             }
                         );
 
-                        var propertyLabel = new ClickablePropertyNameLabel(p.Name);
+                        var propertyLabel = new DragablePropertyNameLabel(p.Name);
+                        propertyLabel.Tag = pIndex;
                         propertyLabel.MouseLeftDoubleClick += (label, location) => StartParameterRenaming(pIndex, label);
                         propertyLabel.MouseRightClick += (label, location) => ShowParameterMenu(pIndex, label, ref location);
+                        propertyLabel.Drag = DragParameter;
                         var property = layout.AddPropertyItem(propertyLabel);
                         property.Object(propertyValue);
                     }
@@ -195,6 +198,14 @@ namespace FlaxEditor.Windows.Assets
                     newParam.Button.Clicked += () => AddParameter((ParameterType)paramType.Value);
                 }
 
+                private DragData DragParameter(DragablePropertyNameLabel label)
+                {
+                    var win = (MaterialWindow)Values[0];
+                    var material = win.Asset;
+                    var parameter = material.Parameters[(int)label.Tag];
+                    return DragSurfaceParameter.GetDragData(parameter.Name);
+                }
+                
                 /// <summary>
                 /// Shows the parameter context menu.
                 /// </summary>

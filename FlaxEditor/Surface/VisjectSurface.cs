@@ -451,6 +451,26 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Gets the parameter by the given name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>Found parameter instance or null if missing.</returns>
+        public SurfaceParameter GetParameter(string name)
+        {
+            SurfaceParameter result = null;
+            for (int i = 0; i < Parameters.Count; i++)
+            {
+                var parameter = Parameters[i];
+                if (parameter.Name == name)
+                {
+                    result = parameter;
+                    break;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Spawns the node.
         /// </summary>
         /// <param name="groupID">The group archetype ID.</param>

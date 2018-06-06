@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System.IO;
 using System.Threading;
 using FlaxEditor.Content;
 using FlaxEditor.GUI.Drag;
@@ -11,6 +12,7 @@ namespace FlaxEditor.Surface
     public partial class VisjectSurface
     {
         private DragAssets _dragOverItems = new DragAssets();
+        private DragSurfaceParameter _dragOverParameter = new DragSurfaceParameter();
 
         /// <inheritdoc />
         public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
@@ -23,6 +25,10 @@ namespace FlaxEditor.Surface
                 {
                     result = _dragOverItems.Effect;
                 }
+                else if (_dragOverParameter.OnDragEnter(data, ValidateDragParameterFunc))
+                {
+                    result = _dragOverParameter.Effect;
+                }
             }
 
             return result;
@@ -33,9 +39,16 @@ namespace FlaxEditor.Surface
         {
             var result = base.OnDragMove(ref location, data);
 
-            if (result == DragDropEffect.None && _dragOverItems.HasValidDrag)
+            if (result == DragDropEffect.None)
             {
-                result = _dragOverItems.Effect;
+                if (_dragOverItems.HasValidDrag)
+                {
+                    result = _dragOverItems.Effect;
+                }
+                else if (_dragOverParameter.HasValidDrag)
+                {
+                    result = _dragOverParameter.Effect;
+                }
             }
 
             return result;
@@ -45,6 +58,7 @@ namespace FlaxEditor.Surface
         public override void OnDragLeave()
         {
             _dragOverItems.OnDragLeave();
+            _dragOverParameter.OnDragLeave();
 
             base.OnDragLeave();
         }
@@ -53,9 +67,12 @@ namespace FlaxEditor.Surface
         public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
         {
             var result = base.OnDragDrop(ref location, data);
+            if (result != DragDropEffect.None)
+                return result;
 
-            if (result == DragDropEffect.None && _dragOverItems.HasValidDrag)
+            if (_dragOverItems.HasValidDrag)
             {
+                result = _dragOverItems.Effect;
                 var surfaceLocation = _surface.PointFromParent(location);
 
                 switch (Type)
@@ -149,6 +166,23 @@ namespace FlaxEditor.Surface
                     break;
                 }
                 }
+
+                _dragOverItems.OnDragDrop();
+            }
+            else if (_dragOverParameter.HasValidDrag)
+            {
+                result = _dragOverParameter.Effect;
+                var surfaceLocation = _surface.PointFromParent(location);
+                var parameter = GetParameter(_dragOverParameter.Parameter);
+                if (parameter == null)
+                    throw new InvalidDataException();
+
+                var node = SpawnNode(6, 1, surfaceLocation, new object[]
+                {
+                    parameter.ID
+                });
+
+                _dragOverParameter.OnDragDrop();
             }
 
             return result;
@@ -179,6 +213,11 @@ namespace FlaxEditor.Surface
             }
             }
             return false;
+        }
+
+        private bool ValidateDragParameterFunc(string parameterName)
+        {
+            return GetParameter(parameterName) != null;
         }
     }
 }
