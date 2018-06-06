@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -164,12 +165,16 @@ namespace FlaxEditor.Surface.ContextMenu
 
             // Check if surface has any parameters
             var parameters = _parametersGetter();
-            if (parameters != null && parameters.Count > 0)
+            int count = parameters?.Count(x => x.IsPublic) ?? 0;
+            if (count > 0)
             {
                 // TODO: cache the allocated memory to reduce dynamic allocations
-                var archetypes = new NodeArchetype[parameters.Count];
-                for (int i = 0; i < parameters.Count; i++)
+                var archetypes = new NodeArchetype[count];
+                for (int i = 0; i < count; i++)
                 {
+                    if(!parameters[i].IsPublic)
+                        continue;
+
                     archetypes[i] = new NodeArchetype
                     {
                         TypeID = 1,
@@ -196,7 +201,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 };
                 var group = new VisjectCMGroup(this, groupArchetype);
                 group.Close(false);
-                for (int i = 0; i < parameters.Count; i++)
+                for (int i = 0; i < count; i++)
                 {
                     var item = new VisjectCMItem(group, archetypes[i]);
                     item.Parent = group;
