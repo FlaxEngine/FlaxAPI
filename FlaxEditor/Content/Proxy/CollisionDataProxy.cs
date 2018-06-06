@@ -33,7 +33,7 @@ namespace FlaxEditor.Content
         public override ContentDomain Domain => CollisionData.Domain;
 
         /// <inheritdoc />
-        public override string TypeName => typeof(CollisionData).FullName;
+        public override Type AssetType => typeof(CollisionData);
 
         /// <inheritdoc />
         public override bool CanCreate(ContentFolder targetLocation)

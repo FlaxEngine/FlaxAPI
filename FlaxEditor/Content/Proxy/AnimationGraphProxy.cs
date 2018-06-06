@@ -29,7 +29,7 @@ namespace FlaxEditor.Content
         public override ContentDomain Domain => ContentDomain.Other;
 
         /// <inheritdoc />
-        public override string TypeName => typeof(AnimationGraph).FullName;
+        public override Type AssetType => typeof(AnimationGraph);
 
         /// <inheritdoc />
         public override bool CanCreate(ContentFolder targetLocation)

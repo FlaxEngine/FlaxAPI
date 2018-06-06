@@ -25,6 +25,15 @@ namespace FlaxEditor.Content
         public abstract bool IsProxyFor(ContentItem item);
 
         /// <summary>
+        /// Determines whether this proxy is for the specified asset.
+        /// </summary>
+        /// <returns><c>true</c> if is proxy for asset item; otherwise, <c>false</c>.</returns>
+        public virtual bool IsProxyFor<T>() where T : Asset
+        {
+            return false;
+        }
+
+        /// <summary>
         /// Gets a value indicating whether this proxy if for assets.
         /// </summary>
         public virtual bool IsAsset => false;

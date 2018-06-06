@@ -41,7 +41,7 @@ namespace FlaxEditor.Content
         public override ContentDomain Domain => SpriteAtlas.Domain;
 
         /// <inheritdoc />
-        public override string TypeName => typeof(SpriteAtlas).FullName;
+        public override Type AssetType => typeof(SpriteAtlas);
 
         /// <inheritdoc />
         public override void OnThumbnailDrawPrepare(ThumbnailRequest request)

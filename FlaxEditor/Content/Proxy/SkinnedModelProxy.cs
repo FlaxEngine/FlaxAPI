@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Viewport.Previews;
 using FlaxEditor.Windows;
@@ -40,7 +41,7 @@ namespace FlaxEditor.Content
         public override ContentDomain Domain => SkinnedModel.Domain;
 
         /// <inheritdoc />
-        public override string TypeName => typeof(SkinnedModel).FullName;
+        public override Type AssetType => typeof(SkinnedModel);
 
         /// <inheritdoc />
         public override void OnThumbnailDrawPrepare(ThumbnailRequest request)

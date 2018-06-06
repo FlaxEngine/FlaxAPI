@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
@@ -34,6 +35,6 @@ namespace FlaxEditor.Content
         public override ContentDomain Domain => ContentDomain.Animation;
 
         /// <inheritdoc />
-        public override string TypeName => typeof(Animation).FullName;
+        public override Type AssetType => typeof(Animation);
     }
 }
