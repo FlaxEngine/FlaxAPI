@@ -16,6 +16,15 @@ namespace FlaxEditor.SceneGraph.GUI
         {
             base.UpdateText();
 
+            // Append asset name if used
+            var filename = ((Scene)Actor).Filename;
+            if (!string.IsNullOrEmpty(filename))
+            {
+                Text += " (";
+                Text += filename;
+                Text += ")";
+            }
+            
             // Append star character to modified scenes
             if (ActorNode is SceneNode node && node.IsEdited)
                 Text += "*";
