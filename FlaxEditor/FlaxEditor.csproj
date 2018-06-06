@@ -142,6 +142,7 @@
     <Compile Include="CustomEditors\Elements\TreeNodeElement.cs" />
     <Compile Include="CustomEditors\GUI\CheckablePropertyNameLabel.cs" />
     <Compile Include="CustomEditors\GUI\ClickablePropertyNameLabel.cs" />
+    <Compile Include="CustomEditors\GUI\DragablePropertyNameLabel.cs" />
     <Compile Include="CustomEditors\GUI\PropertiesList.cs" />
     <Compile Include="CustomEditors\GUI\PropertyNameLabel.cs" />
     <Compile Include="CustomEditors\Elements\SpaceElement.cs" />
