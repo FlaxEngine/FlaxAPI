@@ -194,7 +194,7 @@ namespace FlaxEditor.Surface
             _surface.Parent = this;
 
             // Create primary menu (for nodes spawning)
-            _cmPrimaryMenu = new VisjectCM(type);
+            _cmPrimaryMenu = new VisjectCM(type, () => Parameters);
             _cmPrimaryMenu.OnItemClicked += OnPrimaryMenuButtonClick;
 
             // Create secondary menu (for other actions)
