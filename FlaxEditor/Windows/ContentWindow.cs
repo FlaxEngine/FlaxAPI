@@ -176,6 +176,7 @@ namespace FlaxEditor.Windows
             // Check if was renaming mock element
             // Note: we create `_newElement` and then rename it to create new asset
             var itemFolder = item.ParentFolder;
+            Action<ContentItem> endEvent = null;
             if (_newElement == item)
             {
                 try
@@ -184,6 +185,9 @@ namespace FlaxEditor.Windows
                     var proxy = _newElement.Proxy;
                     Editor.Log(string.Format("Creating asset {0} in {1}", proxy.Name, newPath));
                     proxy.Create(newPath);
+
+                    // Fire event
+                    endEvent = (Action<ContentItem>)_newElement.Tag;
                 }
                 catch (Exception ex)
                 {
@@ -212,6 +216,19 @@ namespace FlaxEditor.Windows
             // Refresh database and view now
             Editor.ContentDatabase.RefreshFolder(itemFolder, true);
             RefreshView();
+
+            if (endEvent != null)
+            {
+                var newItem = itemFolder.FindChild(newPath);
+                if (newItem != null)
+                {
+                    endEvent(newItem);
+                }
+                else
+                {
+                    Editor.LogWarning("Failed to find the created new item.");
+                }
+            }
         }
 
         private void Delete(ContentItem item)
@@ -387,7 +404,8 @@ namespace FlaxEditor.Windows
         /// Starts creating new item.
         /// </summary>
         /// <param name="proxy">The new item proxy.</param>
-        private void NewItem(ContentProxy proxy)
+        /// <param name="created">The event called when the item is crated by the user. The argument is the new item.</param>
+        public void NewItem(ContentProxy proxy, Action<ContentItem> created = null)
         {
             Assert.IsNull(_newElement);
 
@@ -407,6 +425,7 @@ namespace FlaxEditor.Windows
             // Create new asset proxy, add to view and rename it
             _newElement = new NewItem(path, proxy);
             _newElement.ParentFolder = parentFolder;
+            _newElement.Tag = created;
             RefreshView();
             Rename(_newElement);
         }
