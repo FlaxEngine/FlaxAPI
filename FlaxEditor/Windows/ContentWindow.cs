@@ -181,13 +181,12 @@ namespace FlaxEditor.Windows
             {
                 try
                 {
+                    endEvent = (Action<ContentItem>)_newElement.Tag;
+
                     // Create new asset
                     var proxy = _newElement.Proxy;
                     Editor.Log(string.Format("Creating asset {0} in {1}", proxy.Name, newPath));
                     proxy.Create(newPath);
-
-                    // Fire event
-                    endEvent = (Action<ContentItem>)_newElement.Tag;
                 }
                 catch (Exception ex)
                 {
