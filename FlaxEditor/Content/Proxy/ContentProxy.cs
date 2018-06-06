@@ -3,6 +3,7 @@
 using System;
 using FlaxEditor.Windows;
 using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.Content
 {
@@ -84,6 +85,15 @@ namespace FlaxEditor.Content
         public virtual void Create(string outputPath)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Called when content window wants to show the context menu. Allows to add custom functions for the given asset type.
+        /// </summary>
+        /// <param name="menu">The menu.</param>
+        /// <param name="item">The item.</param>
+        public virtual void OnContentWindowContextMenu(ContextMenu menu, ContentItem item)
+        {
         }
 
         /// <summary>

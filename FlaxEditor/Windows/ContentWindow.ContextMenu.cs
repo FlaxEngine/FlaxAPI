@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEditor.Content;
 using FlaxEngine;
 using FlaxEngine.Assertions;
@@ -9,6 +10,11 @@ namespace FlaxEditor.Windows
 {
     public partial class ContentWindow
     {
+        /// <summary>
+        /// Occurs when content window wants to show the context menu for the given content item. Allows to add custom options.
+        /// </summary>
+        public event Action<ContextMenu, ContentItem> ContextMenuShow;
+
         private void ShowContextMenuForItem(ContentItem item, ref Vector2 location)
         {
             // TODO: verify this logic during elements searching
@@ -85,6 +91,10 @@ namespace FlaxEditor.Windows
                 b.Enabled = _view.CanPaste();
 
                 cm.AddButton("Rename", () => Rename(item));
+
+                // Custom options
+                ContextMenuShow?.Invoke(cm, item);
+                proxy?.OnContentWindowContextMenu(cm, item);
 
                 cm.AddButton("Copy name to Clipboard", () => Application.ClipboardText = item.NamePath);
 
