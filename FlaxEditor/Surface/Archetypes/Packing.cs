@@ -183,6 +183,108 @@ namespace FlaxEditor.Surface.Archetypes
                 }
             },
             // TODO: 35 - Unpack box
+
+            // Mask X,Y,Z,W
+            new NodeArchetype
+            {
+                TypeID = 40,
+                Title = "Mask X",
+                Description = "Unpack X component from Vector",
+                Size = new Vector2(160, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Value", true, ConnectionType.Vector, 0),
+                    NodeElementArchetype.Factory.Output(0, "X", ConnectionType.Float, 1)
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 41,
+                Title = "Mask Y",
+                Description = "Unpack Y component from Vector",
+                Size = new Vector2(160, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Value", true, ConnectionType.Vector, 0),
+                    NodeElementArchetype.Factory.Output(0, "Y", ConnectionType.Float, 1)
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 42,
+                Title = "Mask Y",
+                Description = "Unpack Z component from Vector",
+                Size = new Vector2(160, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Value", true, ConnectionType.Vector, 0),
+                    NodeElementArchetype.Factory.Output(0, "Z", ConnectionType.Float, 1)
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 43,
+                Title = "Mask W",
+                Description = "Unpack W component from Vector",
+                Size = new Vector2(160, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Value", true, ConnectionType.Vector, 0),
+                    NodeElementArchetype.Factory.Output(0, "W", ConnectionType.Float, 1)
+                }
+            },
+
+            // Mask XY, YZ, XZ,...
+            new NodeArchetype
+            {
+                TypeID = 44,
+                Title = "Mask XY",
+                Description = "Unpack XY components from Vector",
+                Size = new Vector2(160, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Value", true, ConnectionType.Vector, 0),
+                    NodeElementArchetype.Factory.Output(0, "XY", ConnectionType.Vector2, 1)
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 45,
+                Title = "Mask XZ",
+                Description = "Unpack XZ components from Vector",
+                Size = new Vector2(160, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Value", true, ConnectionType.Vector, 0),
+                    NodeElementArchetype.Factory.Output(0, "XZ", ConnectionType.Vector2, 1)
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 46,
+                Title = "Mask YZ",
+                Description = "Unpack YZ components from Vector",
+                Size = new Vector2(160, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Value", true, ConnectionType.Vector, 0),
+                    NodeElementArchetype.Factory.Output(0, "YZ", ConnectionType.Vector2, 1)
+                }
+            },
+
+            // Mask XYZ
+            new NodeArchetype
+            {
+                TypeID = 70,
+                Title = "Mask XYZ",
+                Description = "Unpack XYZ components from Vector",
+                Size = new Vector2(160, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Value", true, ConnectionType.Vector, 0),
+                    NodeElementArchetype.Factory.Output(0, "XYZ", ConnectionType.Vector3, 1)
+                }
+            },
         };
     }
 }
