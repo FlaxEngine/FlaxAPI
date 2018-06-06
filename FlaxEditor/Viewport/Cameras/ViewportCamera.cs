@@ -27,6 +27,6 @@ namespace FlaxEditor.Viewport.Cameras
         }
 
         /// <inheritdoc />
-        public abstract void UpdateView(float dt, ref Vector3 moveDelta, ref Vector2 mouseDelta);
+        public abstract void UpdateView(float dt, ref Vector3 moveDelta, ref Vector2 mouseDelta, out bool centerMouse);
     }
 }

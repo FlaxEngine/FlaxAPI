@@ -1,5 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
+using FlaxEditor.Gizmo;
 using FlaxEngine;
 
 namespace FlaxEditor.Viewport.Cameras
@@ -104,13 +106,17 @@ namespace FlaxEditor.Viewport.Cameras
         }
 
         /// <inheritdoc />
-        public override void UpdateView(float dt, ref Vector3 moveDelta, ref Vector2 mouseDelta)
+        public override void UpdateView(float dt, ref Vector3 moveDelta, ref Vector2 mouseDelta, out bool centerMouse)
         {
+            centerMouse = true;
+
             if (IsAnimatingMove)
                 return;
 
             EditorViewport.Input input;
             Viewport.GetInput(out input);
+            var mainViewport = Viewport as MainEditorGizmoViewport;
+            bool isUsingGizmo = mainViewport != null && mainViewport.TransformGizmo.ActiveAxis != TransformGizmo.Axis.None;
 
             // Get current view properties
             float yaw = Viewport.Yaw;
@@ -149,12 +155,12 @@ namespace FlaxEditor.Viewport.Cameras
             }
 
             // Rotate or orbit
-            if (input.IsRotating || input.IsOrbiting)
+            if (input.IsRotating || (input.IsOrbiting && !isUsingGizmo))
             {
                 yaw += mouseDelta.X;
                 pitch += mouseDelta.Y;
             }
-
+            
             // Zoom in/out
             if (input.IsZooming)
             {
@@ -163,6 +169,14 @@ namespace FlaxEditor.Viewport.Cameras
                 {
                     position += forward * (Viewport.MouseSpeed * 40 * Viewport.MouseDeltaRight.ValuesSum);
                 }
+            }
+
+            // Move camera with the gizmo
+            if (input.IsOrbiting && isUsingGizmo)
+            {
+                centerMouse = false;
+                Viewport.ViewPosition += mainViewport.TransformGizmo.LastDelta.Translation;
+                return;
             }
 
             // Update view

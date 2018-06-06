@@ -26,6 +26,11 @@ namespace FlaxEditor.Gizmo
         bool IsRightMouseButtonDown { get; }
 
         /// <summary>
+        /// Gets a value indicating whether Alt key is pressed down.
+        /// </summary>
+        bool IsAltKeyDown { get; }
+
+        /// <summary>
         /// Gets the view position.
         /// </summary>
         Vector3 ViewPosition { get; }

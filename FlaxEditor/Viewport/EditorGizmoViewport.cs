@@ -38,6 +38,9 @@ namespace FlaxEditor.Viewport
         public bool IsRightMouseButtonDown => _input.IsMouseRightDown;
 
         /// <inheritdoc />
+        public bool IsAltKeyDown => _input.IsAltDown;
+
+        /// <inheritdoc />
         public Vector2 MouseDelta => _mouseDeltaLeft * 1000;
 
         /// <inheritdoc />
