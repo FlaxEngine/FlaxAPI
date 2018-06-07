@@ -212,7 +212,7 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 42,
-                Title = "Mask Y",
+                Title = "Mask Z",
                 Description = "Unpack Z component from Vector",
                 Size = new Vector2(160, 30),
                 Elements = new[]
