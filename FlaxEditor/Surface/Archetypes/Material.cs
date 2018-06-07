@@ -317,6 +317,18 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 15,
+                Title = "Depth",
+                Description = "Current pixel/vertex linear distance to the camera",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(100, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Float, 0),
+                }
+            },
         };
     }
 }
