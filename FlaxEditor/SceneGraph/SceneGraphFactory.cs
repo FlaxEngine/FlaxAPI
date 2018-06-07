@@ -12,6 +12,8 @@ namespace FlaxEditor.SceneGraph
     /// </summary>
     public static class SceneGraphFactory
     {
+        private static object[] _sharedArgsContainer = new object[1];
+
         /// <summary>
         /// The custom nodes types. Key = object type, Value = custom graph node type
         /// </summary>
@@ -99,7 +101,8 @@ namespace FlaxEditor.SceneGraph
                 if (CustomNodesTypes.TryGetValue(actor.GetType(), out customType))
                 {
                     // Use custom type
-                    result = (ActorNode)Activator.CreateInstance(customType, new object[] { actor });
+                    _sharedArgsContainer[0] = actor;
+                    result = (ActorNode)Activator.CreateInstance(customType, _sharedArgsContainer);
                 }
                 else
                 {
