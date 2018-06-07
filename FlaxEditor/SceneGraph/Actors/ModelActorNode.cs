@@ -79,9 +79,14 @@ namespace FlaxEditor.SceneGraph.Actors
 
                 var id = ID;
                 var idBytes = id.ToByteArray();
+                var counter = idBytes[3] << 24 + idBytes[2] << 16 + idBytes[1] << 8 + idBytes[0];
                 for (int i = 0; i < entries.Length; i++)
                 {
-                    idBytes[0] += 1;
+                    counter++;
+                    idBytes[0] = (byte)(counter & 0xff);
+                    idBytes[1] = (byte)(counter >> 8 & 0xff);
+                    idBytes[2] = (byte)(counter >> 16 & 0xff);
+                    idBytes[3] = (byte)(counter >> 24 & 0xff);
                     AddChildNode(new EntryNode(this, new Guid(idBytes), i));
                 }
             }
