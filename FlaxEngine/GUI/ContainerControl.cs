@@ -87,6 +87,7 @@ namespace FlaxEngine.GUI
         ///     True if automatic updates for control layout are locked (usefull when createing a lot of GUI control to prevent
         ///     lags)
         /// </summary>
+        [HideInEditor]
         public bool IsLayoutLocked { get; set; }
 
         /// <summary>

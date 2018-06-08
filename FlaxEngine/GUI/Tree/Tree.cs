@@ -75,6 +75,14 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Initializes a new instance of the <see cref="Tree"/> class.
         /// </summary>
+        public Tree()
+        : this(false)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Tree"/> class.
+        /// </summary>
         /// <param name="supportMultiSelect">True if support multi selection for tree nodes, otherwise false.</param>
         public Tree(bool supportMultiSelect)
         : base(0, 0, 100, 100)

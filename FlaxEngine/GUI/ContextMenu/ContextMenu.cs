@@ -17,6 +17,7 @@ namespace FlaxEngine.GUI
         /// The items container.
         /// </summary>
         /// <seealso cref="FlaxEngine.GUI.Panel" />
+        [HideInEditor]
         protected class ItemsPanel : Panel
         {
             private readonly ContextMenu _menu;

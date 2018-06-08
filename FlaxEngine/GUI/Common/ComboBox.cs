@@ -126,10 +126,18 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Initializes a new instance of the <see cref="ComboBox"/> class.
         /// </summary>
+        public ComboBox()
+        : this(0, 0)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ComboBox"/> class.
+        /// </summary>
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <param name="width">The width.</param>
-        public ComboBox(float x = 0, float y = 0, float width = 120.0f)
+        public ComboBox(float x, float y, float width = 120.0f)
         : base(x, y, width, DefaultHeight)
         {
             MaximumItemsInViewCount = 20;

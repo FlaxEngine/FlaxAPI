@@ -6,6 +6,7 @@ namespace FlaxEngine.GUI
     /// GUI control that contains two child panels and the splitter between them.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    [HideInEditor]
     public class SplitPanel : ContainerControl
     {
         /// <summary>

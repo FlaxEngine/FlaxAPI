@@ -76,6 +76,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Parent control (the one above in the tree hierachy)
         /// </summary>
+        [HideInEditor]
         public ContainerControl Parent
         {
             get => _parent;
@@ -118,6 +119,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets zero-based index of the control inside the parent container list.
         /// </summary>
+        [HideInEditor]
         public int IndexInParent
         {
             get => HasParent ? _parent.GetChildIndex(this) : -1;
@@ -183,9 +185,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets a value indicating whether this control is scrollable (scroll bars affect it).
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this control is scrollable; otherwise, <c>false</c>.
-        /// </value>
+        [HideInEditor]
         public bool IsScrollable { get; set; } = true;
 
         /// <summary>
@@ -309,6 +309,7 @@ namespace FlaxEngine.GUI
         /// <value>
         /// The cursor.
         /// </value>
+        [HideInEditor]
         public virtual CursorType Cursor
         {
             get => _parent?.Cursor ?? CursorType.Default;
@@ -321,6 +322,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The custom tag object value linked to the control.
         /// </summary>
+        [HideInEditor]
         public object Tag;
 
         /// <summary>
@@ -429,7 +431,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Gets a value indicating whether the control can receive focus
         /// </summary>
-        /// <returns>True if the control can receive focus, otherwise false</returns>
+        [HideInEditor]
         public bool CanFocus
         {
             get => _canFocus;
@@ -439,13 +441,11 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Gets a value indicating whether the control, currently has the input focus
         /// </summary>
-        /// <returns>True if the control, currently has the input focus</returns>
         public virtual bool ContainsFocus => _isFocused;
 
         /// <summary>
         ///     Gets a value indicating whether the control has input focus
         /// </summary>
-        /// <returns>True if control has input focus, otherwise false</returns>
         public virtual bool IsFocused => _isFocused;
 
         /// <summary>
@@ -734,6 +734,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the tooltip text.
         /// </summary>
+        [HideInEditor]
         public string TooltipText
         {
             get => _tooltipText;

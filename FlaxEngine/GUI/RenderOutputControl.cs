@@ -9,6 +9,7 @@ namespace FlaxEngine.GUI
     /// A common control used to present rendered frame in the UI.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    [HideInEditor]
     public class RenderOutputControl : ContainerControl
     {
         /// <summary>

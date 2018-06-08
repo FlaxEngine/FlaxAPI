@@ -99,19 +99,16 @@ namespace FlaxEngine.GUI
         /// Gets the header rectangle.
         /// </summary>
         protected Rectangle HeaderRectangle => new Rectangle(0, 0, Width, HeaderHeight);
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="DropPanel"/> class.
         /// </summary>
-        /// <param name="text">The header text.</param>
-        public DropPanel(string text)
+        public DropPanel()
         : base(0, 0, 64, 16.0f)
         {
             _performChildrenLayoutFirst = true;
             CanFocus = false;
-
-            HeaderText = text;
-
+            
             var style = Style.Current;
             HeaderColor = style.BackgroundNormal;
             HeaderColorMouseOver = style.BackgroundHighlighted;

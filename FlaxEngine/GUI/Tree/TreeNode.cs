@@ -69,6 +69,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets a value indicating whether this node is collapsed.
         /// </summary>
+        [HideInEditor]
         public bool IsCollapsed
         {
             get => !_opened;
@@ -142,6 +143,14 @@ namespace FlaxEngine.GUI
         /// Gets the arrow rectangle.
         /// </summary>
         protected Rectangle ArrowRect => new Rectangle(_xOffset + 2, 2, 12, 12);
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TreeNode"/> class.
+        /// </summary>
+        public TreeNode()
+        : this(false)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeNode"/> class.

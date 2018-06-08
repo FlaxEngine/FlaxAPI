@@ -8,6 +8,7 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// Float value editor with fixed size text box and slider.
     /// </summary>
+    [HideInEditor]
     public class SliderControl : ContainerControl
     {
         /// <summary>

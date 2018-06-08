@@ -6,6 +6,7 @@ namespace FlaxEngine.GUI
     /// Root control implementation used by the <see cref="UICanvas"/> actor.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.RootControl" />
+    [HideInEditor]
     public sealed class CanvasRootControl : RootControl
     {
         private UICanvas _canvas;
@@ -97,6 +98,14 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void DoDragDrop(DragData data)
         {
+        }
+
+        /// <inheritdoc />
+        public override void Draw()
+        {
+            Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), Color.Red);
+
+            base.Draw();
         }
     }
 }
