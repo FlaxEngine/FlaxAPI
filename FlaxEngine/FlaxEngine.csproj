@@ -307,12 +307,6 @@
       <DependentUpon>Control.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\Control.cs" />
-    <Compile Include="GUI\Docking\DockHintWindow.cs" />
-    <Compile Include="GUI\Docking\DockPanel.cs" />
-    <Compile Include="GUI\Docking\DockPanelProxy.cs" />
-    <Compile Include="GUI\Docking\DockWindow.cs" />
-    <Compile Include="GUI\Docking\FloatWindowDockPanel.cs" />
-    <Compile Include="GUI\Docking\MasterDockPanel.cs" />
     <Compile Include="GUI\DragData.cs" />
     <Compile Include="GUI\DragDataFiles.cs" />
     <Compile Include="GUI\DragDataText.cs" />

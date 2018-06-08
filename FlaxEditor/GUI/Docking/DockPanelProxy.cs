@@ -1,8 +1,9 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
-using System;
+using FlaxEngine;
+using FlaxEngine.GUI;
 
-namespace FlaxEngine.GUI.Docking
+namespace FlaxEditor.GUI.Docking
 {
     /// <summary>
     /// Proxy control used for docking <see cref="DockWindow"/> inside <see cref="DockPanel"/>.
@@ -73,7 +74,7 @@ namespace FlaxEngine.GUI.Docking
 
         private void getTabRect(DockWindow win, out Rectangle bounds)
         {
-            Assertions.Assert.IsTrue(_panel.ContainsTab(win));
+            FlaxEngine.Assertions.Assert.IsTrue(_panel.ContainsTab(win));
 
             var tabsCount = _panel.TabsCount;
             if (tabsCount == 1)
@@ -108,12 +109,12 @@ namespace FlaxEngine.GUI.Docking
             StartDragAsyncWindow = win;
 
             // Register for late update in an async manner (to prevent from crash due to changing UI structure on window undock)
-            Scripting.LateUpdate += startDragAsync;
+            FlaxEngine.Scripting.LateUpdate += startDragAsync;
         }
 
         private void startDragAsync()
         {
-            Scripting.LateUpdate -= startDragAsync;
+            FlaxEngine.Scripting.LateUpdate -= startDragAsync;
 
             if (StartDragAsyncWindow != null)
             {

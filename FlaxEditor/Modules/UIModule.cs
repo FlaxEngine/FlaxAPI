@@ -12,8 +12,9 @@ using FlaxEditor.Windows;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
-using FlaxEngine.GUI.Docking;
 using FlaxEngine.Rendering;
+using DockHintWindow = FlaxEditor.GUI.Docking.DockHintWindow;
+using MasterDockPanel = FlaxEditor.GUI.Docking.MasterDockPanel;
 
 namespace FlaxEditor.Modules
 {

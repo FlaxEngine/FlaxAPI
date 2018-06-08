@@ -1,11 +1,14 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
-namespace FlaxEngine.GUI.Docking
+using FlaxEngine;
+using Window = FlaxEngine.GUI.Window;
+
+namespace FlaxEditor.GUI.Docking
 {
     /// <summary>
     /// Floating Window Dock Panel control.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.Docking.DockPanel" />
+    /// <seealso cref="DockPanel" />
     public class FloatWindowDockPanel : DockPanel
     {
         private MasterDockPanel _masterPanel;
@@ -123,7 +126,7 @@ namespace FlaxEngine.GUI.Docking
             _window = null;
 
             // Remove object
-            Assertions.Assert.IsTrue(TabsCount == 0 && ChildPanelsCount == 0);
+            FlaxEngine.Assertions.Assert.IsTrue(TabsCount == 0 && ChildPanelsCount == 0);
             Dispose();
         }
 

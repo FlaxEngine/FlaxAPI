@@ -2,9 +2,11 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEngine;
 using FlaxEngine.Assertions;
+using FlaxEngine.GUI;
 
-namespace FlaxEngine.GUI.Docking
+namespace FlaxEditor.GUI.Docking
 {
     /// <summary>
     /// Dockable window mode.

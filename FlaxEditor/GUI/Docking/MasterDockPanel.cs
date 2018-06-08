@@ -2,13 +2,15 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEngine;
+using Window = FlaxEngine.GUI.Window;
 
-namespace FlaxEngine.GUI.Docking
+namespace FlaxEditor.GUI.Docking
 {
     /// <summary>
     /// Master Dock Panel control used as a root control for dockable windows workspace.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.Docking.DockPanel" />
+    /// <seealso cref="DockPanel" />
     public class MasterDockPanel : DockPanel
     {
         /// <summary>

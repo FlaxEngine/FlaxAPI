@@ -1,8 +1,10 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEngine;
+using FlaxEngine.GUI;
 
-namespace FlaxEngine.GUI.Docking
+namespace FlaxEditor.GUI.Docking
 {
     /// <summary>
     /// Helper class used to handle docking windows dragging and docking.
