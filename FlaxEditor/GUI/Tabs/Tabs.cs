@@ -1,8 +1,10 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEngine;
+using FlaxEngine.GUI;
 
-namespace FlaxEngine.GUI.Tabs
+namespace FlaxEditor.GUI
 {
     /// <summary>
     /// Represents control which contains collection of <see cref="Tab"/>.
@@ -302,7 +304,7 @@ namespace FlaxEngine.GUI.Tabs
         {
             if (tab == null)
                 throw new ArgumentNullException();
-            Assertions.Assert.IsFalse(Children.Contains(tab));
+            FlaxEngine.Assertions.Assert.IsFalse(Children.Contains(tab));
 
             // Add
             tab.Parent = this;

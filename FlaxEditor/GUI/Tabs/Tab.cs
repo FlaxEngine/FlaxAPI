@@ -1,6 +1,9 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
-namespace FlaxEngine.GUI.Tabs
+using FlaxEngine;
+using FlaxEngine.GUI;
+
+namespace FlaxEditor.GUI
 {
     /// <summary>
     /// Single tab control used by <see cref="Tabs"/>.
