@@ -126,6 +126,8 @@ namespace FlaxEditor.Windows
                     Name = "GUI",
                     Types = new[]
                     {
+                        new KeyValuePair<string, Type>("UI Control", typeof(UIControl)),
+                        new KeyValuePair<string, Type>("UI Canvas", typeof(UICanvas)),
                         new KeyValuePair<string, Type>("Text Render", typeof(TextRender)),
                     }
                 },

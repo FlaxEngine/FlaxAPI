@@ -108,6 +108,8 @@ namespace FlaxEditor.Windows
             groupOther.AddChild(CreateActorItem("Audio Listner", typeof(AudioListener)));
 
             var groupGui = createGroupWithList(actorGroups, "GUI");
+            groupGui.AddChild(CreateActorItem("UI Control", typeof(UIControl)));
+            groupGui.AddChild(CreateActorItem("UI Canvas", typeof(UICanvas)));
             groupGui.AddChild(CreateActorItem("Text Render", typeof(TextRender)));
 
             actorGroups.SelectedTabIndex = 0;
