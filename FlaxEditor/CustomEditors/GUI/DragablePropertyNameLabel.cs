@@ -39,6 +39,7 @@ namespace FlaxEditor.CustomEditors.GUI
                 _isLeftMouseButtonDown = false;
             }
             
+            base.OnMouseUp(location, buttons);
             return true;
         }
 
@@ -50,6 +51,7 @@ namespace FlaxEditor.CustomEditors.GUI
                 _isLeftMouseButtonDown = true;
             }
 
+            base.OnMouseDown(location, buttons);
             return true;
         }
 
