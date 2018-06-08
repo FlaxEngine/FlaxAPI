@@ -97,6 +97,10 @@
     </Compile>
     <Compile Include="API\Actors\TextRender.cs" />
     <Compile Include="API\Actors\TextRender.Gen.cs" />
+    <Compile Include="API\Actors\UICanvas.cs" />
+    <Compile Include="API\Actors\UICanvas.Gen.cs" />
+    <Compile Include="API\Actors\UIControl.cs" />
+    <Compile Include="API\Actors\UIControl.Gen.cs" />
     <Compile Include="API\Assets\BinaryAsset.cs" />
     <Compile Include="API\Assets\BinaryAsset.Gen.cs" />
     <Compile Include="API\Assets\JsonAsset.cs" />
