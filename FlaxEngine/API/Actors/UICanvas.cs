@@ -3,6 +3,7 @@
 using System.Globalization;
 using System.IO;
 using System.Text;
+using FlaxEngine.GUI;
 using Newtonsoft.Json;
 
 namespace FlaxEngine
@@ -31,6 +32,8 @@ namespace FlaxEngine
     public sealed partial class UICanvas
     {
         private CanvasRenderMode _renderMode;
+        private bool _isLoading;
+        private CanvasRootControl _guiRoot;
 
         /// <summary>
         /// Gets or sets the canvas rendering mode.
@@ -45,8 +48,38 @@ namespace FlaxEngine
                 {
                     _renderMode = value;
 
-                    // TODO: handle change
+                    Cleanup();
+                    Setup();
                 }
+            }
+        }
+
+        private void Setup()
+        {
+            if (_isLoading)
+                return;
+
+            switch (_renderMode)
+            {
+            case CanvasRenderMode.ScreenSpace:
+            {
+                _guiRoot = new CanvasRootControl(this)
+                {
+                    DockStyle = DockStyle.Fill,
+                    IsLayoutLocked = false,
+                    Parent = RootControl.GameRoot
+                };
+                break;
+            }
+            }
+        }
+
+        private void Cleanup()
+        {
+            if (_guiRoot != null)
+            {
+                _guiRoot.Dispose();
+                _guiRoot = null;
             }
         }
 
@@ -72,7 +105,16 @@ namespace FlaxEngine
 
         internal void Deserialize(string json)
         {
+            _isLoading = true;
             Json.JsonSerializer.Deserialize(this, json);
+            _isLoading = false;
+
+            Setup();
+        }
+
+        internal void EndPlay()
+        {
+            Cleanup();
         }
     }
 }
