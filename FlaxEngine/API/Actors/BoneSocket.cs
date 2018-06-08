@@ -10,7 +10,7 @@ namespace FlaxEngine
         /// Gets or sets the name of the skeleton bone that socket is attached to.
         /// For better performance use <see cref="BoneIndex"/> as <see cref="BoneName"/> can introduce stalls and uses string for a lookup.
         /// </summary>
-        [EditorOrder(10), EditorDisplay("Bone Socket"), CustomEditorAlias("FlaxEditor.CustomEditors.Editors.SkeletonBoneEditor")]
+        [EditorOrder(10), EditorDisplay("Bone Socket"), CustomEditorAlias("FlaxEditor.CustomEditors.Editors.SkeletonBoneEditor"), Tooltip("The name of the bone to track its transfrom.")]
         public string BoneName
         {
             get
