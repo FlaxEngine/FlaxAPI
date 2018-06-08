@@ -37,7 +37,7 @@ namespace FlaxEditor.Windows
             bool result = base.OnKeyDown(key);
             if (!result)
             {
-                var parentWin = ParentWindow;
+                var parentWin = Root;
                 if (parentWin.GetKey(Keys.Control))
                 {
                     switch (key)

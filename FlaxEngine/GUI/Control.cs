@@ -281,9 +281,9 @@ namespace FlaxEngine.GUI
         public bool IsDisposing => _isDisposing;
 
         /// <summary>
-        ///     Gets window which contains that control (or null if not linked to any)
+        /// Gets the GUI tree root control which contains that control (or null if not linked to any)
         /// </summary>
-        public virtual Window ParentWindow => HasParent ? _parent.ParentWindow : null;
+        public virtual RootControl Root => HasParent ? _parent.Root : null;
 
         /// <summary>
         /// Gets screen position of the control (upper left corner).
@@ -293,7 +293,7 @@ namespace FlaxEngine.GUI
         {
             get
             {
-                var parentWin = ParentWindow;
+                var parentWin = Root;
                 if (parentWin == null)
                     throw new InvalidOperationException("Missing parent window.");
                 var clientPos = PointToWindow(Vector2.Zero);
@@ -309,10 +309,13 @@ namespace FlaxEngine.GUI
         /// <value>
         /// The cursor.
         /// </value>
-        public CursorType Cursor
+        public virtual CursorType Cursor
         {
-            get => ParentWindow.Cursor;
-            set => ParentWindow.Cursor = value;
+            get => _parent?.Cursor ?? CursorType.Default;
+            set
+            {
+                if (_parent != null) _parent.Cursor = value;
+            }
         }
 
         /// <summary>
@@ -515,7 +518,7 @@ namespace FlaxEngine.GUI
         /// <param name="useMouseScreenOffset">If set to <c>true</c> will use mouse screen offset.</param>
         public void StartMouseCapture(bool useMouseScreenOffset = false)
         {
-            var parent = ParentWindow;
+            var parent = Root;
             parent.StartTrackingMouse(this, useMouseScreenOffset);
         }
 
@@ -524,7 +527,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void EndMouseCapture()
         {
-            var parent = ParentWindow;
+            var parent = Root;
             parent.EndTrackingMouse();
         }
 
@@ -719,9 +722,9 @@ namespace FlaxEngine.GUI
         /// Starts the drag and drop operation.
         /// </summary>
         /// <param name="data">The data.</param>
-        public void DoDragDrop(DragData data)
+        public virtual void DoDragDrop(DragData data)
         {
-            ParentWindow.NativeWindow.DoDragDrop(data);
+            Root.DoDragDrop(data);
         }
 
         #endregion

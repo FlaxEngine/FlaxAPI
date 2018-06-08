@@ -141,12 +141,12 @@ namespace FlaxEngine
         /// <summary>
         /// The window GUI root object.
         /// </summary>
-        public readonly GUI.Window GUI;
+        public readonly WindowRootControl GUI;
 
         // Hidden constructor. Object created from C++ side.
         private Window()
         {
-            GUI = new GUI.Window(this);
+            GUI = new WindowRootControl(this);
         }
 
         /// <summary>

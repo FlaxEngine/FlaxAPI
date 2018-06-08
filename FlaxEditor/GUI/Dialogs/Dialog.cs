@@ -3,7 +3,6 @@
 using System.Threading;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using Window = FlaxEngine.GUI.Window;
 
 namespace FlaxEditor.GUI.Dialogs
 {
@@ -56,9 +55,9 @@ namespace FlaxEditor.GUI.Dialogs
         /// </summary>
         /// <param name="parentWindow">The parent window.</param>
         /// <returns>The dialog result.</returns>
-        public DialogResult ShowDialog(Window parentWindow)
+        public DialogResult ShowDialog(WindowRootControl parentWindow)
         {
-            return ShowDialog(parentWindow?.NativeWindow);
+            return ShowDialog(parentWindow?.Window);
         }
 
         /// <summary>
@@ -68,7 +67,7 @@ namespace FlaxEditor.GUI.Dialogs
         /// <returns>The dialog result.</returns>
         public DialogResult ShowDialog(Control control)
         {
-            return ShowDialog(control?.ParentWindow);
+            return ShowDialog(control?.Root);
         }
 
         /// <summary>
@@ -108,9 +107,9 @@ namespace FlaxEditor.GUI.Dialogs
         /// Shows the dialog.
         /// </summary>
         /// <param name="parentWindow">The parent window.</param>
-        public void Show(Window parentWindow)
+        public void Show(WindowRootControl parentWindow)
         {
-            Show(parentWindow?.NativeWindow);
+            Show(parentWindow?.Window);
         }
 
         /// <summary>
@@ -119,7 +118,7 @@ namespace FlaxEditor.GUI.Dialogs
         /// <param name="control">The control calling.</param>
         public void Show(Control control)
         {
-            Show(control?.ParentWindow);
+            Show(control?.Root);
         }
 
         /// <summary>

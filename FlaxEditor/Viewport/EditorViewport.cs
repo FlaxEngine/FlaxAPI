@@ -658,8 +658,8 @@ namespace FlaxEditor.Viewport
             _camera?.Update(deltaTime);
 
             // Get parent window
-            var win = ParentWindow;
-
+            var win = (WindowRootControl)Root;
+            
             // Get current mouse position in the view
             _viewMousePos = PointFromWindow(win.MousePosition);
 
@@ -668,7 +668,7 @@ namespace FlaxEditor.Viewport
                 // Get input buttons and keys (skip if viewort has no focus or mouse is over a child control)
                 _prevInput = _input;
                 if (ContainsFocus && GetChildAt(_viewMousePos) == null)
-                    _input.Gather(win.NativeWindow);
+                    _input.Gather(win.Window);
                 else
                     _input.Clear();
 
@@ -678,9 +678,9 @@ namespace FlaxEditor.Viewport
                 if (wasControllingMouse != _isControllingMouse)
                 {
                     if (_isControllingMouse)
-                        OnControlMouseBegin(win.NativeWindow);
+                        OnControlMouseBegin(win.Window);
                     else
-                        OnControlMouseEnd(win.NativeWindow);
+                        OnControlMouseEnd(win.Window);
                 }
 
                 // Track mouse buttons state change

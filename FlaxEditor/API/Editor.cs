@@ -17,6 +17,7 @@ using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.Assertions;
+using FlaxEngine.GUI;
 using FlaxEngine.Json;
 
 namespace FlaxEditor
@@ -847,7 +848,7 @@ namespace FlaxEditor
             resultAsRef = Vector2.Zero;
             if (Windows.GameWin != null && Windows.GameWin.ContainsFocus)
             {
-                var win = Windows.GameWin.ParentWindow;
+                var win = Windows.GameWin.Root;
                 if (win != null)
                     resultAsRef = Windows.GameWin.Viewport.PointFromWindow(win.MousePosition);
             }
@@ -857,8 +858,8 @@ namespace FlaxEditor
         {
             if (Windows.GameWin != null && Windows.GameWin.ContainsFocus)
             {
-                var win = Windows.GameWin.ParentWindow;
-                if (win != null && win.ContainsFocus && win.NativeWindow.IsFocused)
+                var win = Windows.GameWin.Root as WindowRootControl;
+                if (win != null && win.ContainsFocus && win.Window.IsFocused)
                     win.MousePosition = Windows.GameWin.Viewport.PointToWindow(val);
             }
         }
@@ -868,9 +869,9 @@ namespace FlaxEditor
             IntPtr result = IntPtr.Zero;
             if (Windows.GameWin != null && (forceGet || Windows.GameWin.ContainsFocus))
             {
-                var win = Windows.GameWin.ParentWindow;
+                var win = Windows.GameWin.Root as WindowRootControl;
                 if (win != null)
-                    result = win.NativeWindow.unmanagedPtr;
+                    result = win.Window.unmanagedPtr;
             }
 
             return result;

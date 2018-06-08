@@ -288,6 +288,7 @@
       <DependentUpon>IOrderedDictionary.cs</DependentUpon>
     </Compile>
     <Compile Include="Enums\WindowEnums.cs" />
+    <Compile Include="GUI\CanvasRootControl.cs" />
     <Compile Include="GUI\Common\Button.cs" />
     <Compile Include="GUI\Common\CheckBox.cs" />
     <Compile Include="GUI\Common\ComboBox.cs" />
@@ -341,7 +342,7 @@
     <Compile Include="GUI\Tooltip.cs" />
     <Compile Include="GUI\Tree\Tree.cs" />
     <Compile Include="GUI\Tree\TreeNode.cs" />
-    <Compile Include="GUI\Window.cs" />
+    <Compile Include="GUI\RootControl.cs" />
     <Compile Include="API\Actors\EmptyActor.cs" />
     <Compile Include="Assertions\Assert.cs" />
     <Compile Include="Assertions\AssertionException.cs" />
@@ -351,6 +352,7 @@
     <Compile Include="AssetTypes\Shader.cs" />
     <Compile Include="Enums\BrushMode.cs" />
     <Compile Include="Enums\Input.Enums.cs" />
+    <Compile Include="GUI\WindowRootControl.cs" />
     <Compile Include="Json\JsonSerializer.cs" />
     <Compile Include="Json\JsonCustomSerializers\ExtendedDefaultContractResolver.cs" />
     <Compile Include="Math\BoundingBox.cs" />

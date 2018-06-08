@@ -162,7 +162,7 @@ namespace FlaxEngine.GUI
             {
                 if (_thumbClicked)
                 {
-                    Vector2 slidePosition = location + ParentWindow.TrackingMouseOffset;
+                    Vector2 slidePosition = location + Root.TrackingMouseOffset;
                     float mousePosition = slidePosition.X;
 
                     float perc = (mousePosition - _mouseOffset - _thumbSize / 2) / (TrackSize - _thumbSize);
@@ -176,7 +176,7 @@ namespace FlaxEngine.GUI
                 if (buttons == MouseButton.Left)
                 {
                     // Remove focus
-                    var parentWin = ParentWindow;
+                    var parentWin = Root;
                     parentWin.FocusedControl?.Defocus();
 
                     float mousePosition = location.X;

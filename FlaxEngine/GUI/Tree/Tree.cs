@@ -338,7 +338,7 @@ namespace FlaxEngine.GUI
             // Check if has focus and if any node is focused and it isn't a root
             if (ContainsFocus && node != null && !node.IsRoot)
             {
-                var window = ParentWindow;
+                var window = Root;
 
                 // Check if can perform update
                 if (_keyUpdateTime >= KeyUpdateTimeout)
@@ -473,7 +473,7 @@ namespace FlaxEngine.GUI
             // Check if can use multi selection
             if (_supportMultiSelect)
             {
-                bool isCtrlDown = ParentWindow.GetKey(Keys.Control);
+                bool isCtrlDown = Root.GetKey(Keys.Control);
 
                 // Select all expanded nodes
                 if (key == Keys.A && isCtrlDown)

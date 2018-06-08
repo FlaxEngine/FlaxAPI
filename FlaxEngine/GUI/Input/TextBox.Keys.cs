@@ -15,7 +15,7 @@ namespace FlaxEngine.GUI
         public override bool OnKeyDown(Keys key)
         {
             // Check if use lowercase or uppercase
-            var window = ParentWindow;
+            var window = Root;
             bool shftDown = window.GetKey(Keys.Shift);
             bool ctrDown = window.GetKey(Keys.Control);
 

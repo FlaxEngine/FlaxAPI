@@ -122,7 +122,7 @@ namespace FlaxEditor.States
 
             // Restore game settings and state for editor environment
             SetupEditorEnvOptions();
-            var win = Editor.Windows.GameWin?.ParentWindow;
+            var win = Editor.Windows.GameWin?.Root;
             if (win != null)
                 win.Cursor = CursorType.Default;
             IsPaused = true;

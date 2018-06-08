@@ -382,7 +382,7 @@ namespace FlaxEditor.Modules
             Style.Current = style;
         }
 
-        private void InitMainMenu(FlaxEngine.GUI.Window mainWindow)
+        private void InitMainMenu(FlaxEngine.GUI.RootControl mainWindow)
         {
             MainMenu = new MainMenu();
             MainMenu.Parent = mainWindow;
@@ -491,7 +491,7 @@ namespace FlaxEditor.Modules
             cm.AddButton("Information about Flax", () => new AboutDialog().Show());
         }
 
-        private void InitToolstrip(FlaxEngine.GUI.Window mainWindow)
+        private void InitToolstrip(FlaxEngine.GUI.RootControl mainWindow)
         {
             ToolStrip = new ToolStrip();
             ToolStrip.Parent = mainWindow;
@@ -512,7 +512,7 @@ namespace FlaxEditor.Modules
             UpdateToolstrip();
         }
 
-        private void InitStatusBar(FlaxEngine.GUI.Window mainWindow)
+        private void InitStatusBar(FlaxEngine.GUI.RootControl mainWindow)
         {
             // Status Bar
             StatusBar = new StatusBar
@@ -551,7 +551,7 @@ namespace FlaxEditor.Modules
             UpdateStatusBar();
         }
 
-        private void InitDockPanel(FlaxEngine.GUI.Window mainWindow)
+        private void InitDockPanel(FlaxEngine.GUI.RootControl mainWindow)
         {
             // Dock Panel
             MasterPanel.Parent = mainWindow;

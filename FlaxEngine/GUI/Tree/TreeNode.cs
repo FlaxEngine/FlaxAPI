@@ -569,7 +569,7 @@ namespace FlaxEngine.GUI
                 {
                     // Check if user is pressing control key
                     var tree = ParentTree;
-                    var window = tree.ParentWindow;
+                    var window = tree.Root;
                     if (window.GetKey(Keys.Shift))
                     {
                         // Select range

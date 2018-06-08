@@ -27,7 +27,7 @@ namespace FlaxEditor.GUI.Docking
         {
             _toMove = toMove;
             _toSet = DockState.Float;
-            var window = toMove.Window.NativeWindow;
+            var window = ((WindowRootControl)toMove.Window).Window;
 
             // Remove focus from drag target
             _toMove.Focus();
@@ -90,7 +90,7 @@ namespace FlaxEditor.GUI.Docking
             // Check if window won't be docked
             if (_toSet == DockState.Float)
             {
-                var window = _toMove.Window.NativeWindow;
+                var window = ((WindowRootControl)_toMove.Window).Window;
                 Vector2 mouse = Application.MousePosition;
 
                 // Move base window
@@ -137,7 +137,7 @@ namespace FlaxEditor.GUI.Docking
                 }
 
                 // Focus target window
-                _toDock.ParentWindow.Focus();
+                _toDock.Root.Focus();
             }
         }
 
@@ -168,9 +168,9 @@ namespace FlaxEditor.GUI.Docking
             toMove.ShowFloating();
 
             // Move window to the mouse position (with some offset for caption bar)
-            var window = toMove.ParentWindow;
+            var window = (WindowRootControl)toMove.Root;
             Vector2 mouse = Application.MousePosition;
-            window.NativeWindow.Position = mouse - new Vector2(8, 8);
+            window.Window.Position = mouse - new Vector2(8, 8);
 
             // Get floating panel
             var floatingPanelToMove = window.GetChild(0) as FloatWindowDockPanel;

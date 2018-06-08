@@ -148,8 +148,8 @@ namespace FlaxEditor.GUI.Docking
 
             // Cache data
             var style = Style.Current;
-            var window = ParentWindow;
-            bool containsFocus = ContainsFocus && window.NativeWindow.IsFocused;
+            var window = Root;
+            bool containsFocus = ContainsFocus && ((WindowRootControl)window).Window.IsFocused;
             var headerRect = HeaderRectangle;
             var tabsCount = _panel.TabsCount;
 

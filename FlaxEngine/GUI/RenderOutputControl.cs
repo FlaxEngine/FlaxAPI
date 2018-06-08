@@ -84,7 +84,7 @@ namespace FlaxEngine.GUI
         {
             while (c != null)
             {
-                if (c is Window win)
+                if (c is RootControl win)
                 {
                     return false;
                 }

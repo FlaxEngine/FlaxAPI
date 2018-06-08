@@ -138,7 +138,7 @@ namespace FlaxEditor.GUI.Docking
 
             // Create window
             var winSize = size.LengthSquared > 4 ? size : DefaultSize;
-            var window = FloatWindowDockPanel.CreateFloatWindow(_masterPanel.ParentWindow, new Vector2(200, 200), winSize, position, _title);
+            var window = FloatWindowDockPanel.CreateFloatWindow(_masterPanel.Root, new Vector2(200, 200), winSize, position, _title);
             var windowGUI = window.GUI;
 
             // Create dock panel for the window

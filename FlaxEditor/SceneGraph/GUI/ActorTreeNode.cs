@@ -285,7 +285,7 @@ namespace FlaxEditor.SceneGraph.GUI
             // Drag actors
             if (_dragActors != null && _dragActors.HasValidDrag)
             {
-                bool worldPositionLock = ParentWindow.GetKey(Keys.Control) == false;
+                bool worldPositionLock = Root.GetKey(Keys.Control) == false;
                 var singleObject = _dragActors.Objects.Count == 1;
                 if (singleObject)
                 {

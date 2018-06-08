@@ -529,7 +529,7 @@ namespace FlaxEditor.Modules
                     SavePanel(writer, panel);
 
                     writer.WriteStartElement("Bounds");
-                    SaveBounds(writer, window.NativeWindow);
+                    SaveBounds(writer, window.Window);
                     writer.WriteEndElement();
 
                     writer.WriteEndElement();

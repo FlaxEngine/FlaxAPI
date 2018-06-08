@@ -77,7 +77,7 @@ namespace FlaxEditor.Windows
                 CanFocus = false,
                 Parent = _viewport
             };
-            FlaxEngine.GUI.Window.Root = _guiRoot;
+            RootControl.GameRoot = _guiRoot;
             Editor.StateMachine.PlayingState.SceneDuplicating += PlayingStateOnSceneDuplicating;
             Editor.StateMachine.PlayingState.SceneRestored += PlayingStateOnSceneRestored;
 
@@ -166,7 +166,7 @@ namespace FlaxEditor.Windows
             }
             else if (key == Keys.F11)
             {
-                if (ParentWindow.GetKey(Keys.Shift))
+                if (Root.GetKey(Keys.Shift))
                 {
                     // Unlock mouse in game mode
                     if (Editor.StateMachine.IsPlayMode)
@@ -192,7 +192,7 @@ namespace FlaxEditor.Windows
             if (CenterMouseOnFocus && Editor.StateMachine.IsPlayMode)
             {
                 Vector2 center = PointToWindow(Size * 0.5f);
-                ParentWindow.MousePosition = center;
+                Root.MousePosition = center;
             }
         }
 

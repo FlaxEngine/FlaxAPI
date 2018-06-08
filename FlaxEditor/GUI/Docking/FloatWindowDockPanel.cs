@@ -1,7 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using FlaxEngine;
-using Window = FlaxEngine.GUI.Window;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Docking
 {
@@ -12,7 +12,7 @@ namespace FlaxEditor.GUI.Docking
     public class FloatWindowDockPanel : DockPanel
     {
         private MasterDockPanel _masterPanel;
-        private Window _window;
+        private WindowRootControl _window;
 
         /// <summary>
         /// Gets the master panel.
@@ -22,24 +22,24 @@ namespace FlaxEditor.GUI.Docking
         /// <summary>
         /// Gets the window.
         /// </summary>
-        public Window Window => _window;
+        public WindowRootControl Window => _window;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FloatWindowDockPanel"/> class.
         /// </summary>
         /// <param name="masterPanel">The master panel.</param>
         /// <param name="window">The window.</param>
-        public FloatWindowDockPanel(MasterDockPanel masterPanel, Window window)
+        public FloatWindowDockPanel(MasterDockPanel masterPanel, RootControl window)
         : base(null)
         {
             _masterPanel = masterPanel;
-            _window = window;
+            _window = (WindowRootControl)window;
 
             // Link
             _masterPanel.FloatingPanels.Add(this);
             Parent = window;
-            window.NativeWindow.OnClosing += onClosing;
-            window.NativeWindow.OnLButtonHit += onLButtonHit;
+            _window.Window.OnClosing += onClosing;
+            _window.Window.OnLButtonHit += onLButtonHit;
         }
 
         /// <summary>
@@ -67,11 +67,11 @@ namespace FlaxEditor.GUI.Docking
         /// <param name="size">Window client area size.</param>
         /// <param name="startPosition">Window start position.</param>
         /// <param name="title">Initial window title.</param>
-        internal static FlaxEngine.Window CreateFloatWindow(Window parent, Vector2 location, Vector2 size, WindowStartPosition startPosition, string title)
+        internal static FlaxEngine.Window CreateFloatWindow(RootControl parent, Vector2 location, Vector2 size, WindowStartPosition startPosition, string title)
         {
             // Setup initial window settings
             var settings = CreateWindowSettings.Default;
-            settings.Parent = parent?.NativeWindow;
+            settings.Parent = (parent as WindowRootControl)?.Window;
             settings.Title = title;
             settings.Size = size;
             settings.Position = location;
@@ -121,8 +121,8 @@ namespace FlaxEditor.GUI.Docking
             }
 
             // Unlink
-            _window.NativeWindow.OnClosing -= onClosing;
-            _window.NativeWindow.OnLButtonHit = null;
+            _window.Window.OnClosing -= onClosing;
+            _window.Window.OnLButtonHit = null;
             _window = null;
 
             // Remove object

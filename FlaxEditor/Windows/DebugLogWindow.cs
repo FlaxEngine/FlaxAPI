@@ -182,7 +182,7 @@ namespace FlaxEditor.Windows
                     }
                 }
                 // Ctrl+C
-                else if (key == Keys.C && ParentWindow.GetKey(Keys.Control))
+                else if (key == Keys.C && Root.GetKey(Keys.Control))
                 {
                     Application.ClipboardText = Info;
                     return true;

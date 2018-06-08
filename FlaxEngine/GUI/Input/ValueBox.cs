@@ -229,7 +229,7 @@ namespace FlaxEngine.GUI
             if (_isSliding)
             {
                 // Update sliding
-                Vector2 slideLocation = location + ParentWindow.TrackingMouseOffset;
+                Vector2 slideLocation = location + Root.TrackingMouseOffset;
                 ApplySliding(Mathf.RoundToInt(slideLocation.X - _startSlideLocation.X) * _slideSpeed);
             }
             else
