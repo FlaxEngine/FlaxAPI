@@ -1,6 +1,8 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using FlaxEngine;
 using Object = System.Object;
 
@@ -60,21 +62,94 @@ namespace FlaxEditor.Utilities
         }
 
         /// <summary>
+        /// Gets all the derived types from the given base type (expluding that type) within the given assembly.
+        /// </summary>
+        /// <param name="assembly">The target assembly to check its types.</param>
+        /// <param name="baseType">The base type.</param>
+        /// <param name="result">The result collection. Elements will be added to it. Clear it before usage.</param>
+        public static void GetDerivedTypes(Assembly assembly, Type baseType, List<Type> result)
+        {
+            var types = assembly.GetTypes();
+            for (int i = 0; i < types.Length; i++)
+            {
+                var t = types[i];
+                if (t.IsAssignableFrom(t) && t != baseType)
+                    result.Add(t);
+            }
+        }
+
+        /// <summary>
+        /// Gets all the derived types from the given base type (expluding that type) within all the loaded assemblies.
+        /// </summary>
+        /// <param name="baseType">The base type.</param>
+        /// <param name="result">The result collection. Elements will be added to it. Clear it before usage.</param>
+        public static void GetDerivedTypes(Type baseType, List<Type> result)
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            for (int i = 0; i < assemblies.Length; i++)
+            {
+                GetDerivedTypes(assemblies[i], baseType, result);
+            }
+        }
+
+        /// <summary>
+        /// Gets all the derived types from the given base type (expluding that type) within the given assembly.
+        /// </summary>
+        /// <param name="assembly">The target assembly to check its types.</param>
+        /// <param name="baseType">The base type.</param>
+        /// <param name="result">The result collection. Elements will be added to it. Clear it before usage.</param>
+        /// <param name="checkFunc">Additional callback used to check if the given type is valid. Returns true if add type, otherwise false.</param>
+        public static void GetDerivedTypes(Assembly assembly, Type baseType, List<Type> result, Func<Type, bool> checkFunc)
+        {
+            var types = assembly.GetTypes();
+            for (int i = 0; i < types.Length; i++)
+            {
+                var t = types[i];
+                if (baseType.IsAssignableFrom(t) && t != baseType && checkFunc(t))
+                    result.Add(t);
+            }
+        }
+
+        /// <summary>
+        /// Gets all the derived types from the given base type (expluding that type) within all the loaded assemblies.
+        /// </summary>
+        /// <param name="baseType">The base type.</param>
+        /// <param name="result">The result collection. Elements will be added to it. Clear it before usage.</param>
+        /// <param name="checkFunc">Additional callback used to check if the given type is valid. Returns true if add type, otherwise false.</param>
+        public static void GetDerivedTypes(Type baseType, List<Type> result, Func<Type, bool> checkFunc)
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            for (int i = 0; i < assemblies.Length; i++)
+            {
+                GetDerivedTypes(assemblies[i], baseType, result, checkFunc);
+            }
+        }
+
+        /// <summary>
+        /// Gets all the derived types from the given base type (expluding that type) within all the loaded assemblies.
+        /// </summary>
+        /// <param name="baseType">The base type.</param>
+        /// <param name="result">The result collection. Elements will be added to it. Clear it before usage.</param>
+        /// <param name="checkFunc">Additional callback used to check if the given type is valid. Returns true if add type, otherwise false.</param>
+        /// <param name="checkAssembly">Additional callback used to check if the given assembly is valid. Returns true if search for types in the given assembly, otherwise false.</param>
+        public static void GetDerivedTypes(Type baseType, List<Type> result, Func<Type, bool> checkFunc, Func<Assembly, bool> checkAssembly)
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            for (int i = 0; i < assemblies.Length; i++)
+            {
+                if (checkAssembly(assemblies[i]))
+                    GetDerivedTypes(assemblies[i], baseType, result, checkFunc);
+            }
+        }
+
+        /// <summary>
         /// Tries to get the object type from the given full typename. Searches in-build Flax Engine/Editor asssemblies and game assemblies.
         /// </summary>
         /// <param name="typeName">The full name of the type.</param>
         /// <returns>The type or null if failed.</returns>
         public static Type GetType(string typeName)
         {
-            var allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
-            var assemblies = new[]
-            {
-                FlaxEngine.Utils.GetAssemblyByName("Assembly", allAssemblies),
-                FlaxEngine.Utils.GetAssemblyByName("Assembly.Editor", allAssemblies),
-                FlaxEngine.Utils.GetAssemblyByName("FlaxEditor", allAssemblies),
-                FlaxEngine.Utils.GetAssemblyByName("FlaxEngine", allAssemblies),
-            };
-
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             for (int i = 0; i < assemblies.Length; i++)
             {
                 var assembly = assemblies[i];

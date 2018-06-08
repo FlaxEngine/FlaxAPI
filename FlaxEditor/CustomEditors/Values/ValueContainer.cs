@@ -63,6 +63,22 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Gets a value indicating whether any value in the collection is null.
+        /// </summary>
+        public bool HasNull
+        {
+            get
+            {
+                for (int i = 0; i < Count; i++)
+                {
+                    if (this[i] == null)
+                        return true;
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Gets the values types array (without duplicates).
         /// </summary>
         public Type[] ValuesTypes
