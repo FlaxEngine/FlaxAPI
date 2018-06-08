@@ -14,13 +14,6 @@ namespace FlaxEngine
     public sealed partial class UICanvas : Actor
     {
         /// <summary>
-        /// Creates new <see cref="UICanvas"/> object.
-        /// </summary>
-        private UICanvas() : base()
-        {
-        }
-
-        /// <summary>
         /// Creates new instance of <see cref="UICanvas"/> object.
         /// </summary>
         /// <returns>Created object.</returns>

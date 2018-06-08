@@ -32,8 +32,8 @@ namespace FlaxEngine
     public sealed partial class UICanvas
     {
         private CanvasRenderMode _renderMode;
+        private readonly CanvasRootControl _guiRoot;
         private bool _isLoading;
-        private CanvasRootControl _guiRoot;
 
         /// <summary>
         /// Gets or sets the canvas rendering mode.
@@ -54,33 +54,41 @@ namespace FlaxEngine
             }
         }
 
+        /// <summary>
+        /// Gets the canvas GUI root control.
+        /// </summary>
+        public CanvasRootControl GUI => _guiRoot;
+
+        private UICanvas()
+        {
+            _guiRoot = new CanvasRootControl(this);
+        }
+
         private void Setup()
         {
             if (_isLoading)
                 return;
 
+            _guiRoot.IsLayoutLocked = true;
+
             switch (_renderMode)
             {
             case CanvasRenderMode.ScreenSpace:
             {
-                _guiRoot = new CanvasRootControl(this)
-                {
-                    DockStyle = DockStyle.Fill,
-                    IsLayoutLocked = false,
-                    Parent = RootControl.GameRoot
-                };
+                // Link to the game UI and fill the area
+                _guiRoot.DockStyle = DockStyle.Fill;
+                _guiRoot.Parent = RootControl.GameRoot;
                 break;
             }
             }
+
+            _guiRoot.IsLayoutLocked = false;
+            _guiRoot.PerformLayout();
         }
 
         private void Cleanup()
         {
-            if (_guiRoot != null)
-            {
-                _guiRoot.Dispose();
-                _guiRoot = null;
-            }
+            _guiRoot.Parent = null;
         }
 
         internal string Serialize()
