@@ -6,6 +6,7 @@ namespace FlaxEngine.GUI
     /// Context Menu child control.
     /// </summary>
     /// <seealso cref="ContainerControl" />
+    [HideInEditor]
     public abstract class ContextMenuItem : ContainerControl
     {
         /// <summary>

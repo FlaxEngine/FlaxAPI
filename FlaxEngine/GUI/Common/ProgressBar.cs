@@ -109,7 +109,17 @@ namespace FlaxEngine.GUI
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProgressBar"/> class.
+        /// </summary>
+        public ProgressBar()
+        : this(0, 0, 120)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProgressBar"/> class.
+        /// </summary>
         public ProgressBar(float x, float y, float width, float height = 28)
         : base(x, y, width, height)
         {

@@ -102,6 +102,7 @@
     <Compile Include="CustomEditors\Dedicated\RigidBodyEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\ScriptsEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\SkyLightEditor.cs" />
+    <Compile Include="CustomEditors\Dedicated\UIControlEditor.cs" />
     <Compile Include="CustomEditors\Editors\ActorLayerEditor.cs" />
     <Compile Include="CustomEditors\Editors\ActorStaticFlagsEditor.cs" />
     <Compile Include="CustomEditors\Editors\ActorTagEditor.cs" />
@@ -225,6 +226,8 @@
     <Compile Include="GUI\ItemsListContextMenu.cs" />
     <Compile Include="GUI\StatusBar.cs" />
     <Compile Include="GUI\Table.cs" />
+    <Compile Include="GUI\Tabs\Tab.cs" />
+    <Compile Include="GUI\Tabs\Tabs.cs" />
     <Compile Include="GUI\ToolStrip.cs" />
     <Compile Include="GUI\ToolStripButton.cs" />
     <Compile Include="GUI\ToolStripSeparator.cs" />

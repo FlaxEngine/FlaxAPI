@@ -8,6 +8,7 @@ namespace FlaxEngine.GUI
     /// Root control implementation used by the <see cref="FlaxEngine.Window"/>.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.RootControl" />
+    [HideInEditor]
     public sealed class WindowRootControl : RootControl
     {
         private Window _window;

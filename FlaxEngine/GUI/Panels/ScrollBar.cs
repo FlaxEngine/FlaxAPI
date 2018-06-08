@@ -8,6 +8,7 @@ namespace FlaxEngine.GUI
     /// Scroll Bars base class - allows to scroll contents of the GUI panel.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.Control" />
+    [HideInEditor]
     public abstract class ScrollBar : Control
     {
         /// <summary>

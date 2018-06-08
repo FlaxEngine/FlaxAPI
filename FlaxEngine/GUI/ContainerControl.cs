@@ -10,6 +10,7 @@ namespace FlaxEngine.GUI
     /// <summary>
     ///     Base interface for all GUI controls that can contain controls
     /// </summary>
+    [HideInEditor]
     public class ContainerControl : Control
     {
         /// <summary>

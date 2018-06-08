@@ -8,6 +8,7 @@ namespace FlaxEngine.GUI
     /// The tooltip popup.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    [HideInEditor]
     public class Tooltip : ContainerControl
     {
         private float _timeToPopupLeft;

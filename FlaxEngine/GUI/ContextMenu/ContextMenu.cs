@@ -10,6 +10,7 @@ namespace FlaxEngine.GUI
     /// Popup menu control.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContextMenuBase" />
+    [HideInEditor]
     public class ContextMenu : ContextMenuBase
     {
         /// <summary>

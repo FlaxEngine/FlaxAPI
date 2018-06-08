@@ -11,6 +11,14 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Initializes a new instance of the <see cref="Spacer"/> class.
         /// </summary>
+        public Spacer()
+        : this(100, 100)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Spacer"/> class.
+        /// </summary>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         public Spacer(float width, float height)

@@ -337,8 +337,6 @@
     <Compile Include="GUI\RenderOutputControl.cs" />
     <Compile Include="GUI\ScrollableControl.cs" />
     <Compile Include="GUI\Style.cs" />
-    <Compile Include="GUI\Tabs\Tab.cs" />
-    <Compile Include="GUI\Tabs\Tabs.cs" />
     <Compile Include="GUI\Tooltip.cs" />
     <Compile Include="GUI\Tree\Tree.cs" />
     <Compile Include="GUI\Tree\TreeNode.cs" />

@@ -9,7 +9,6 @@ using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.GUI.Tabs;
 using FlaxEngine.Utilities;
 
 // ReSharper disable InconsistentNaming

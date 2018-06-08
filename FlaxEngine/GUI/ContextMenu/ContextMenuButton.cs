@@ -7,7 +7,8 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// Context Menu button control.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.ContextMenuItem" />
+    /// <seealso cref="ContextMenuItem" />
+    [HideInEditor]
     public class ContextMenuButton : ContextMenuItem
     {
         private bool _isMouseDown;

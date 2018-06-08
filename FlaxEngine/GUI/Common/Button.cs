@@ -65,13 +65,21 @@ namespace FlaxEngine.GUI
         public Color BorderColorHighlighted { get; set; }
 
         /// <summary>
-        /// Init
+        /// Initializes a new instance of the <see cref="Button"/> class.
+        /// </summary>
+        public Button()
+        : this(0, 0)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Button"/> class.
         /// </summary>
         /// <param name="x">Position X coordinate</param>
         /// <param name="y">Position Y coordinate</param>
         /// <param name="width">Width</param>
         /// <param name="height">Height</param>
-        public Button(float x = 0, float y = 0, float width = 120, float height = DefaultHeight)
+        public Button(float x, float y, float width = 120, float height = DefaultHeight)
         : base(x, y, width, height)
         {
             var style = Style.Current;

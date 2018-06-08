@@ -14,6 +14,7 @@ namespace FlaxEngine.GUI
         /// The horizontal slider control.
         /// </summary>
         /// <seealso cref="FlaxEngine.GUI.Control" />
+        [HideInEditor]
         protected class Slider : Control
         {
             /// <summary>

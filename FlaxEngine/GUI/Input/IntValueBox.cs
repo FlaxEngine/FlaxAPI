@@ -8,6 +8,7 @@ namespace FlaxEngine.GUI
     /// Integer value editor.
     /// </summary>
     /// <seealso cref="int" />
+    [HideInEditor]
     public class IntValueBox : ValueBox<int>
     {
         /// <inheritdoc />

@@ -6,6 +6,7 @@ namespace FlaxEngine.GUI
     /// Base class for container controls that can offset controls in a view (eg. scroll panels).
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    [HideInEditor]
     public class ScrollableControl : ContainerControl
     {
         /// <summary>

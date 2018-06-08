@@ -6,7 +6,6 @@ using FlaxEditor.GUI;
 using FlaxEditor.Options;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.GUI.Tabs;
 using FlaxEngine.Utilities;
 
 namespace FlaxEditor.Windows

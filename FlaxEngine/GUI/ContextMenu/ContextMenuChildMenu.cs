@@ -5,7 +5,8 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// Context Menu control that cn be expanded to the child popup menu.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.ContextMenuItem" />
+    /// <seealso cref="ContextMenuItem" />
+    [HideInEditor]
     public class ContextMenuChildMenu : ContextMenuItem
     {
         /// <summary>

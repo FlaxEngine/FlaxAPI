@@ -34,6 +34,7 @@ namespace FlaxEngine.GUI
     /// Base class for all context menu controls.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    [HideInEditor]
     public class ContextMenuBase : ContainerControl
     {
         private ContextMenuDirection _direction;

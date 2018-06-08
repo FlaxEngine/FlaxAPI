@@ -6,6 +6,7 @@ namespace FlaxEngine.GUI
     /// Context Menu separator control that visually separate chunks of the popup menu items.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContextMenuItem" />
+    [HideInEditor]
     public class ContextMenuSeparator : ContextMenuItem
     {
         /// <summary>

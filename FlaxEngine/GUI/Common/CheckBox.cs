@@ -89,6 +89,14 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Initializes a new instance of the <see cref="CheckBox"/> class.
         /// </summary>
+        public CheckBox()
+        : this(0, 0)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CheckBox"/> class.
+        /// </summary>
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <param name="isChecked">if set to <c>true</c> set checked on start.</param>

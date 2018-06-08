@@ -9,6 +9,7 @@ namespace FlaxEngine.GUI
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <seealso cref="FlaxEngine.GUI.TextBox" />
+    [HideInEditor]
     public abstract class ValueBox<T> : TextBox where T : struct, IComparable<T>
     {
         /// <summary>

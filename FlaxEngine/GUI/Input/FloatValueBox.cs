@@ -9,6 +9,7 @@ namespace FlaxEngine.GUI
     /// Floating point value editor.
     /// </summary>
     /// <seealso cref="float" />
+    [HideInEditor]
     public class FloatValueBox : ValueBox<float>
     {
         /// <inheritdoc />

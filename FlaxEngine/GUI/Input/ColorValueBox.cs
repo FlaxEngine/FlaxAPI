@@ -8,6 +8,7 @@ namespace FlaxEngine.GUI
     /// Color value editor with picking support.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.Control" />
+    [HideInEditor]
     public class ColorValueBox : Control
     {
         /// <summary>
