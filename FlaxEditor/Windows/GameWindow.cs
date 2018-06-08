@@ -123,6 +123,13 @@ namespace FlaxEditor.Windows
         {
             base.Draw();
 
+            if (Camera.MainCamera == null)
+            {
+                var style = Style.Current;
+
+                Render2D.DrawText(style.FontLarge, "No camera", new Rectangle(Vector2.Zero, Size), Color.White, TextAlignment.Center, TextAlignment.Center);
+            }
+
             if (Editor.StateMachine.IsPlayMode)
             {
                 var style = Style.Current;
