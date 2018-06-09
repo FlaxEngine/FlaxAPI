@@ -15,7 +15,7 @@ namespace FlaxEditor.Windows
     public class GameWindow : EditorWindow
     {
         private readonly RenderOutputControl _viewport;
-        private readonly ContainerControl _guiRoot;
+        private readonly GameRoot _guiRoot;
         private bool _showGUI = true;
         private float _gameStartTime;
 
@@ -48,6 +48,123 @@ namespace FlaxEditor.Windows
         /// </summary>
         public bool CenterMouseOnFocus { get; set; }
 
+        private class GameRoot : ContainerControl
+        {
+            public bool EnableEvents => SceneManager.IsGameLogicRunning;
+
+            public override bool OnCharInput(char c)
+            {
+                if (!EnableEvents)
+                    return false;
+
+                return base.OnCharInput(c);
+            }
+
+            public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
+            {
+                if (!EnableEvents)
+                    return DragDropEffect.None;
+
+                return base.OnDragDrop(ref location, data);
+            }
+
+            public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
+            {
+                if (!EnableEvents)
+                    return DragDropEffect.None;
+
+                return base.OnDragEnter(ref location, data);
+            }
+
+            public override void OnDragLeave()
+            {
+                if (!EnableEvents)
+                    return;
+
+                base.OnDragLeave();
+            }
+
+            public override DragDropEffect OnDragMove(ref Vector2 location, DragData data)
+            {
+                if (!EnableEvents)
+                    return DragDropEffect.None;
+
+                return base.OnDragMove(ref location, data);
+            }
+
+            public override bool OnKeyDown(Keys key)
+            {
+                if (!EnableEvents)
+                    return false;
+
+                return base.OnKeyDown(key);
+            }
+
+            public override void OnKeyUp(Keys key)
+            {
+                if (!EnableEvents)
+                    return;
+
+                base.OnKeyUp(key);
+            }
+
+            public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+            {
+                if (!EnableEvents)
+                    return false;
+
+                return base.OnMouseDoubleClick(location, buttons);
+            }
+
+            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            {
+                if (!EnableEvents)
+                    return false;
+
+                return base.OnMouseDown(location, buttons);
+            }
+
+            public override void OnMouseEnter(Vector2 location)
+            {
+                if (!EnableEvents)
+                    return;
+
+                base.OnMouseEnter(location);
+            }
+
+            public override void OnMouseLeave()
+            {
+                if (!EnableEvents)
+                    return;
+
+                base.OnMouseLeave();
+            }
+
+            public override void OnMouseMove(Vector2 location)
+            {
+                if (!EnableEvents)
+                    return;
+
+                base.OnMouseMove(location);
+            }
+
+            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            {
+                if (!EnableEvents)
+                    return false;
+
+                return base.OnMouseUp(location, buttons);
+            }
+
+            public override bool OnMouseWheel(Vector2 location, float delta)
+            {
+                if (!EnableEvents)
+                    return false;
+
+                return base.OnMouseWheel(location, delta);
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GameWindow"/> class.
         /// </summary>
@@ -69,11 +186,10 @@ namespace FlaxEditor.Windows
             };
 
             // Override the game GUI root
-            _guiRoot = new ContainerControl
+            _guiRoot = new GameRoot
             {
                 DockStyle = DockStyle.Fill,
                 //Visible = false,
-                //Enabled = false,
                 CanFocus = false,
                 Parent = _viewport
             };
@@ -99,7 +215,6 @@ namespace FlaxEditor.Windows
 
             // Show GUI
             //_guiRoot.Visible = _showGUI;
-            //_guiRoot.Enabled = true;
         }
 
         private void PlayingStateOnSceneRestored()
@@ -109,7 +224,6 @@ namespace FlaxEditor.Windows
 
             // Hide GUI
             //_guiRoot.Visible = false;
-            //_guiRoot.Enabled = false;
         }
 
         /// <inheritdoc />
