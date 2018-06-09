@@ -36,6 +36,12 @@ namespace FlaxEngine.GUI
         public override Vector2 TrackingMouseOffset => Vector2.Zero;
 
         /// <inheritdoc />
+        public override bool ContainsFocus => false; // If canvas is linked to the Window GUI then it steals some events, disable it.
+
+        /// <inheritdoc />
+        public override bool IsFocused => false; // If canvas is linked to the Window GUI then it steals some events, disable it.
+
+        /// <inheritdoc />
         public override Vector2 MousePosition
         {
             get => Vector2.Zero;
@@ -103,7 +109,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void Draw()
         {
-            Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), Color.Red);
+            //Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), Color.Red);
 
             base.Draw();
         }
