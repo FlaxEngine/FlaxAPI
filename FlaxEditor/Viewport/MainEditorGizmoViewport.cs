@@ -628,6 +628,21 @@ namespace FlaxEditor.Viewport
             base.OnDragLeave();
         }
 
+        private Vector3 PostProcessSpawnedActorLocation(Vector3 location)
+        {
+            // Apply grid snapping if enabled
+            if (UseSnapping || TransformGizmo.TranslationSnapEnable)
+            {
+                float snapValue = TransformGizmo.TranslationSnapValue;
+                location = new Vector3(
+                    (int)(location.X / snapValue) * snapValue,
+                    (int)(location.Y / snapValue) * snapValue,
+                    (int)(location.Z / snapValue) * snapValue);
+            }
+
+            return location;
+        }
+        
         /// <inheritdoc />
         public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
         {
@@ -695,32 +710,22 @@ namespace FlaxEditor.Viewport
                     {
                         if (item.TypeName == typeof(SkinnedModel).FullName)
                         {
-                            // Create actor
                             var model = FlaxEngine.Content.LoadAsync<SkinnedModel>(item.ID);
                             var actor = AnimatedModel.New();
                             actor.Name = item.ShortName;
                             actor.SkinnedModel = model;
-
-                            // Place it
                             var box = actor.Box;
-                            actor.Position = hitLocation - (box.Size.Length * 0.5f) * ViewDirection;
-
-                            // Spawn
+                            actor.Position = PostProcessSpawnedActorLocation(hitLocation - (box.Size.Length * 0.5f) * ViewDirection);
                             Editor.Instance.SceneEditing.Spawn(actor);
                         }
                         else
                         {
-                            // Create actor
                             var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
                             var actor = ModelActor.New();
                             actor.Name = item.ShortName;
                             actor.Model = model;
-
-                            // Place it
                             var box = actor.Box;
-                            actor.Position = hitLocation - (box.Size.Length * 0.5f) * ViewDirection;
-
-                            // Spawn
+                            actor.Position = PostProcessSpawnedActorLocation(hitLocation - (box.Size.Length * 0.5f) * ViewDirection);
                             Editor.Instance.SceneEditing.Spawn(actor);
                         }
 
@@ -732,7 +737,7 @@ namespace FlaxEditor.Viewport
                         var actor = AudioSource.New();
                         actor.Name = item.ShortName;
                         actor.Clip = clip;
-                        actor.Position = hitLocation;
+                        actor.Position = PostProcessSpawnedActorLocation(hitLocation);
                         Editor.Instance.SceneEditing.Spawn(actor);
 
                         break;
@@ -760,7 +765,6 @@ namespace FlaxEditor.Viewport
                 {
                     var item = _dragActorType.Objects[i];
 
-                    // Create actor
                     var actor = FlaxEngine.Object.New(item) as Actor;
                     if (actor == null)
                     {
@@ -768,12 +772,8 @@ namespace FlaxEditor.Viewport
                         continue;
                     }
                     actor.Name = item.Name;
-
-                    // Place it
                     var box = actor.Box;
-                    actor.Position = hitLocation - (box.Size.Length * 0.5f) * ViewDirection;
-
-                    // Spawn
+                    actor.Position = PostProcessSpawnedActorLocation(hitLocation - (box.Size.Length * 0.5f) * ViewDirection);
                     Editor.Instance.SceneEditing.Spawn(actor);
                 }
             }
