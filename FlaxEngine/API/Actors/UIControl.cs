@@ -130,5 +130,14 @@ namespace FlaxEngine
         {
             // TODO: sync control order in parent with actor order in parent
         }
+
+        internal void EndPlay()
+        {
+            if (_control != null)
+            {
+                _control.Dispose();
+                _control = null;
+            }
+        }
     }
 }
