@@ -114,13 +114,8 @@ namespace FlaxEngine.GUI
         [HideInEditor, NoSerialize]
         public int IndexInParent
         {
-            get => HasParent ? _parent.GetChildIndex(this) : -1;
-            set
-            {
-                if (!HasParent)
-                    throw new InvalidOperationException("Cannot reorder control that has no parent.");
-                Parent.ChangeChildIndex(this, value);
-            }
+            get => _parent?.GetChildIndex(this) ?? -1;
+            set => _parent?.ChangeChildIndex(this, value);
         }
 
         /// <summary>

@@ -143,7 +143,8 @@ namespace FlaxEngine
 
         internal void OrderInParentChanged()
         {
-            // TODO: sync control order in parent with actor order in parent
+            if (_control != null)
+                _control.IndexInParent = OrderInParent;
         }
 
         internal void EndPlay()

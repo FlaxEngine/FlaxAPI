@@ -243,7 +243,18 @@ namespace FlaxEngine.GUI
         {
             int oldIndex = _children.IndexOf(child);
             _children.RemoveAt(oldIndex);
-            _children.Insert(newIndex, child);
+
+            // Check if index is invalid
+            if (newIndex < 0 || newIndex >= _children.Count)
+            {
+                // Append at the end
+                _children.Add(child);
+            }
+            else
+            {
+                // Change order
+                _children.Insert(newIndex, child);
+            }
         }
 
         /// <summary>
