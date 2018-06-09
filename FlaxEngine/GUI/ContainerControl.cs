@@ -99,6 +99,7 @@ namespace FlaxEngine.GUI
         /// <value>
         ///   <c>true</c> if clip children; otherwise, <c>false</c>.
         /// </value>
+        [EditorOrder(0)]
         public bool ClipChildren { get; set; } = true;
 
         /// <summary>

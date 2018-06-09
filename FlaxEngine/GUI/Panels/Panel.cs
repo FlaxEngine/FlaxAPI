@@ -17,21 +17,25 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The scroll right corner. Used to scroll contents of the panel control.
         /// </summary>
+        [NoSerialize]
         protected Vector2 _scrollRightCorner;
 
         /// <summary>
         /// The vertical scroll bar.
         /// </summary>
+        [HideInEditor, NoSerialize]
         public VScrollBar VScrollBar;
 
         /// <summary>
         /// The horizontal scroll bar.
         /// </summary>
+        [HideInEditor, NoSerialize]
         public HScrollBar HScrollBar;
 
         /// <summary>
         /// Gets the scrolling right corner.
         /// </summary>
+        [HideInEditor, NoSerialize]
         public Vector2 ScrollRightCorner
         {
             get => _scrollRightCorner;
@@ -46,6 +50,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the scroll bars usege by this panel.
         /// </summary>
+        [EditorOrder(0)]
         public ScrollBars ScrollBars
         {
             get => _scrollBars;
