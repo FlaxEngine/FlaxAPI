@@ -8,7 +8,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets X coordinate of the upper-left corner of the control relative to the upper-left corner of its container
         /// </summary>
-        [HideInEditor]
+        [HideInEditor, NoSerialize]
         public float X
         {
             get => _bounds.X;
@@ -22,7 +22,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets Y coordinate of the upper-left corner of the control relative to the upper-left corner of its container
         /// </summary>
-        [HideInEditor]
+        [HideInEditor, NoSerialize]
         public float Y
         {
             get => _bounds.Y;
@@ -36,6 +36,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets coordinates of the upper-left corner of the control relative to the upper-left corner of its container
         /// </summary>
+        [NoSerialize]
         public Vector2 Location
         {
             get => _bounds.Location;
@@ -49,7 +50,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets width of the control
         /// </summary>
-        [HideInEditor]
+        [HideInEditor, NoSerialize]
         public float Width
         {
             get => _bounds.Width;
@@ -63,7 +64,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets height of the control
         /// </summary>
-        [HideInEditor]
+        [HideInEditor, NoSerialize]
         public float Height
         {
             get => _bounds.Height;
@@ -135,7 +136,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets control's bounds retangle
         /// </summary>
-        [HideInEditor]
+        [HideInEditor, NoSerialize]
         public Rectangle Bounds
         {
             get => _bounds;

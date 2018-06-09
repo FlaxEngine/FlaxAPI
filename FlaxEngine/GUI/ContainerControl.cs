@@ -16,17 +16,20 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The children collection.
         /// </summary>
+        [NoSerialize]
         protected readonly List<Control> _children = new List<Control>();
 
         /// <summary>
         /// The contains focus cached flag.
         /// </summary>
+        [NoSerialize]
         protected bool _containsFocus;
 
         /// <summary>
         /// The option to update child controls layout first before self.
         /// Useful for controls which dimensions are based on children.
         /// </summary>
+        [NoSerialize]
         protected bool _performChildrenLayoutFirst;
 
         /// <summary>
@@ -87,7 +90,7 @@ namespace FlaxEngine.GUI
         ///     True if automatic updates for control layout are locked (usefull when createing a lot of GUI control to prevent
         ///     lags)
         /// </summary>
-        [HideInEditor]
+        [HideInEditor, NoSerialize]
         public bool IsLayoutLocked { get; set; }
 
         /// <summary>

@@ -76,7 +76,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Parent control (the one above in the tree hierachy)
         /// </summary>
-        [HideInEditor]
+        [HideInEditor, NoSerialize]
         public ContainerControl Parent
         {
             get => _parent;
@@ -119,7 +119,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets zero-based index of the control inside the parent container list.
         /// </summary>
-        [HideInEditor]
+        [HideInEditor, NoSerialize]
         public int IndexInParent
         {
             get => HasParent ? _parent.GetChildIndex(this) : -1;
@@ -185,7 +185,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets a value indicating whether this control is scrollable (scroll bars affect it).
         /// </summary>
-        [HideInEditor]
+        [HideInEditor, NoSerialize]
         public bool IsScrollable { get; set; } = true;
 
         /// <summary>
@@ -309,7 +309,7 @@ namespace FlaxEngine.GUI
         /// <value>
         /// The cursor.
         /// </value>
-        [HideInEditor]
+        [HideInEditor, NoSerialize]
         public virtual CursorType Cursor
         {
             get => _parent?.Cursor ?? CursorType.Default;
@@ -322,7 +322,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The custom tag object value linked to the control.
         /// </summary>
-        [HideInEditor]
+        [HideInEditor, NoSerialize]
         public object Tag;
 
         /// <summary>

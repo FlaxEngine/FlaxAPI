@@ -1,10 +1,12 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using FlaxEngine.GUI;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace FlaxEngine
 {
@@ -69,32 +71,47 @@ namespace FlaxEngine
             return null;
         }
 
-        internal string Serialize()
+        internal string Serialize(out string controlType)
         {
-            StringBuilder sb = new StringBuilder(256);
+            if (_control == null)
+            {
+                controlType = null;
+                return null;
+            }
+
+            var type = _control.GetType();
+
+            JsonSerializer jsonSerializer = JsonSerializer.CreateDefault(Json.JsonSerializer.Settings);
+            jsonSerializer.Formatting = Formatting.Indented;
+
+            StringBuilder sb = new StringBuilder(1024);
             StringWriter sw = new StringWriter(sb, CultureInfo.InvariantCulture);
             using (JsonTextWriter jsonWriter = new JsonTextWriter(sw))
             {
+                // Prepare writer settings
                 jsonWriter.IndentChar = '\t';
                 jsonWriter.Indentation = 1;
+                jsonWriter.Formatting = jsonSerializer.Formatting;
+                jsonWriter.DateFormatHandling = jsonSerializer.DateFormatHandling;
+                jsonWriter.DateTimeZoneHandling = jsonSerializer.DateTimeZoneHandling;
+                jsonWriter.FloatFormatHandling = jsonSerializer.FloatFormatHandling;
+                jsonWriter.StringEscapeHandling = jsonSerializer.StringEscapeHandling;
+                jsonWriter.Culture = jsonSerializer.Culture;
+                jsonWriter.DateFormatString = jsonSerializer.DateFormatString;
 
-                jsonWriter.WriteStartObject();
+                JsonSerializerInternalWriter serializerWriter = new JsonSerializerInternalWriter(jsonSerializer);
 
-                if (_control != null)
-                {
-                    jsonWriter.WritePropertyName("Control");
-                    jsonWriter.WriteValue(_control);
-                }
-
-                jsonWriter.WriteEndObject();
+                serializerWriter.Serialize(jsonWriter, _control, type);
             }
 
+            controlType = type.FullName;
             return sw.ToString();
         }
 
-        internal void Deserialize(string json)
+        internal void Deserialize(string json, Type controlType)
         {
-            Json.JsonSerializer.Deserialize(this, json);
+            Control = (Control)Activator.CreateInstance(controlType);
+            Json.JsonSerializer.Deserialize(Control, json);
         }
 
         internal void ParentChanged()
