@@ -72,8 +72,8 @@ namespace FlaxEditor.Windows
             _guiRoot = new ContainerControl
             {
                 DockStyle = DockStyle.Fill,
-                Visible = false,
-                Enabled = false,
+                //Visible = false,
+                //Enabled = false,
                 CanFocus = false,
                 Parent = _viewport
             };
@@ -98,18 +98,18 @@ namespace FlaxEditor.Windows
             _guiRoot.DisposeChildren();
 
             // Show GUI
-            _guiRoot.Visible = _showGUI;
-            _guiRoot.Enabled = true;
+            //_guiRoot.Visible = _showGUI;
+            //_guiRoot.Enabled = true;
         }
 
         private void PlayingStateOnSceneRestored()
         {
             // Remove reaming GUI controls so loaded scene can add own GUI
-            _guiRoot.DisposeChildren();
+            //_guiRoot.DisposeChildren();
 
             // Hide GUI
-            _guiRoot.Visible = false;
-            _guiRoot.Enabled = false;
+            //_guiRoot.Visible = false;
+            //_guiRoot.Enabled = false;
         }
 
         /// <inheritdoc />
