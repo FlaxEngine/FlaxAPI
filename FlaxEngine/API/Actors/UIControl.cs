@@ -60,6 +60,25 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Creates a new UIControl with the control of the given type and links it to this control as a child.
+        /// </summary>
+        /// <remarks>
+        /// The current actor has to have a valid container control.
+        /// </remarks>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>The created UIControl that contains a new control of the given type.</returns>
+        public UIControl AddChild<T>() where T : Control
+        {
+            if (!(_control is ContainerControl))
+                throw new InvalidOperationException("To add child to the control it has to be ContainerControl.");
+
+            var child = New();
+            AddChild(child);
+            child.Control = (Control)Activator.CreateInstance(typeof(T));
+            return child;
+        }
+
+        /// <summary>
         /// Unlinks the control from the actor without disposing it or modyfing.
         /// </summary>
         public void UnlinkControl()
