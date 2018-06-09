@@ -45,6 +45,21 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets a value indicating whether this actor has control.
+        /// </summary>
+        public bool HasControl => _control != null;
+
+        /// <summary>
+        /// Gets the control object cased to the given type.
+        /// </summary>
+        /// <typeparam name="T">The type of the control.</typeparam>
+        /// <returns>The control object.</returns>
+        public T Get<T>() where T : Control
+        {
+            return (T)_control;
+        }
+
+        /// <summary>
         /// Unlinks the control from the actor without disposing it or modyfing.
         /// </summary>
         public void UnlinkControl()
