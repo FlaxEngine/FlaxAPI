@@ -134,6 +134,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Gets or sets control background color (transparent color (alpha=0) means no background rendering)
         /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
         public Color BackgroundColor
         {
             get => _backgroundColor;
@@ -144,7 +145,7 @@ namespace FlaxEngine.GUI
         ///     Gets or sets the docking style of the control.
         /// If vlue set is other than <see cref="FlaxEngine.GUI.DockStyle.None"/> then <see cref="IsScrollable"/> will be disabled by auto.
         /// </summary>
-        /// <returns>Dock style of the control</returns>
+        [EditorDisplay("Transform"), EditorOrder(1060)]
         public DockStyle DockStyle
         {
             get => _dockStyle;
@@ -167,6 +168,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the anchor style of the control.
         /// </summary>
+        [EditorDisplay("Transform"), EditorOrder(1070)]
         public AnchorStyle AnchorStyle
         {
             get => _anchorStyle;
@@ -191,6 +193,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Gets or sets a value indicating whether the control can respond to user interaction
         /// </summary>
+        [EditorOrder(520)]
         public bool Enabled
         {
             get => _isEnabled;
@@ -233,6 +236,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Gets or sets a value indicating whether the control is visible
         /// </summary>
+        [EditorOrder(510)]
         public bool Visible
         {
             get => _isVisible;

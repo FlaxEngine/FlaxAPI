@@ -33,9 +33,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the value smoothing scale (0 to not use it).
         /// </summary>
-        /// <value>
-        /// The value smoothing scale.
-        /// </value>
+        [EditorOrder(40)]
         public float SmoothingScale { get; set; } = 1;
 
         /// <summary>
@@ -49,9 +47,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the minimum value.
         /// </summary>
-        /// <value>
-        /// The minimum value.
-        /// </value>
+        [EditorOrder(20)]
         public float Minimum
         {
             get => _minimum;
@@ -68,9 +64,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the maximum value.
         /// </summary>
-        /// <value>
-        /// The maximum value.
-        /// </value>
+        [EditorOrder(30)]
         public float Maximum
         {
             get => _maximum;
@@ -87,9 +81,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the value.
         /// </summary>
-        /// <value>
-        /// The value.
-        /// </value>
+        [EditorOrder(10)]
         public float Value
         {
             get => _value;

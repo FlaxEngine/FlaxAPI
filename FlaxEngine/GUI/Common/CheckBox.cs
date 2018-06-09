@@ -43,6 +43,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="CheckBox"/> is checked.
         /// </summary>
+        [EditorOrder(10)]
         public bool Checked
         {
             get => _checked;
@@ -62,6 +63,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="CheckBox"/> is in the intermediate state.
         /// </summary>
+        [EditorOrder(20)]
         public bool Intermediate
         {
             get => _intermediate;

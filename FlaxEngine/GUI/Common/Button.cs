@@ -22,11 +22,13 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Button text property.
         /// </summary>
+        [EditorOrder(10)]
         public string Text { get; set; }
 
         /// <summary>
         /// Gets or sets the font used to draw button text.
         /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
         public Font Font { get; set; }
 
         /// <summary>
@@ -42,26 +44,31 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the color of the border.
         /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
         public Color BorderColor { get; set; }
 
         /// <summary>
         /// Gets or sets the background color when button is selected.
         /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2010)]
         public Color BackgroundColorSelected { get; set; }
 
         /// <summary>
         /// Gets or sets the border color when button is selected.
         /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2020)]
         public Color BorderColorSelected { get; set; }
 
         /// <summary>
         /// Gets or sets the background color when button is highlighted.
         /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
         public Color BackgroundColorHighlighted { get; set; }
 
         /// <summary>
         /// Gets or sets the border color when button is highlighted.
         /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
         public Color BorderColorHighlighted { get; set; }
 
         /// <summary>

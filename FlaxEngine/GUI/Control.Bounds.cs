@@ -37,6 +37,7 @@ namespace FlaxEngine.GUI
         /// Gets or sets coordinates of the upper-left corner of the control relative to the upper-left corner of its container
         /// </summary>
         [NoSerialize]
+        [EditorDisplay("Transform"), EditorOrder(1000)]
         public Vector2 Location
         {
             get => _bounds.Location;
@@ -78,6 +79,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets control's size
         /// </summary>
+        [EditorDisplay("Transform"), EditorOrder(1010)]
         public Vector2 Size
         {
             get => _bounds.Size;
@@ -150,6 +152,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the scale.
         /// </summary>
+        [EditorDisplay("Transform"), EditorOrder(1020)]
         public Vector2 Scale
         {
             get => _scale;
@@ -163,6 +166,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the normalized pivot location (used to transform control around it).
         /// </summary>
+        [EditorDisplay("Transform"), EditorOrder(1030)]
         public Vector2 Pivot
         {
             get => _pivot;
@@ -176,6 +180,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the shear.
         /// </summary>
+        [EditorDisplay("Transform"), EditorOrder(1040)]
         public Vector2 Shear
         {
             get => _shear;
@@ -189,6 +194,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the rotation angle (in degrees).
         /// </summary>
+        [EditorDisplay("Transform"), EditorOrder(1050)]
         public float Rotation
         {
             get => _rotation;

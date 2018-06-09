@@ -14,9 +14,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the text.
         /// </summary>
-        /// <value>
-        /// The text.
-        /// </value>
+        [EditorOrder(10)]
         public string Text
         {
             get => _text;
@@ -30,62 +28,49 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the color of the text.
         /// </summary>
-        /// <value>
-        /// The color of the text.
-        /// </value>
+        [EditorOrder(20)]
         public Color TextColor { get; set; } = Color.White;
 
         /// <summary>
         /// Gets or sets the horizontal text alignment.
         /// </summary>
-        /// <value>
-        /// The horizontal alignment.
-        /// </value>
+        [EditorOrder(30)]
         public TextAlignment HorizontalAlignment { get; set; } = TextAlignment.Center;
 
         /// <summary>
         /// Gets or sets the vertical text alignment.
         /// </summary>
-        /// <value>
-        /// The vertical alignment.
-        /// </value>
+        [EditorOrder(40)]
         public TextAlignment VerticalAlignment { get; set; } = TextAlignment.Center;
 
         /// <summary>
         /// Gets or sets the text wrapping.
         /// </summary>
-        /// <value>
-        /// The wrapping.
-        /// </value>
+        [EditorOrder(50)]
         public TextWrapping Wrapping { get; set; } = TextWrapping.NoWrap;
 
         /// <summary>
         /// Gets or sets the font.
         /// </summary>
-        /// <value>
-        /// The font.
-        /// </value>
+        [EditorOrder(60)]
         public Font Font { get; set; }
 
         /// <summary>
         /// Gets or sets the margin for the text.
         /// </summary>
-        /// <value>
-        /// The margin.
-        /// </value>
+        [EditorOrder(70)]
         public Margin Margin { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether clip text during rendering.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if clip text; otherwise, <c>false</c>.
-        /// </value>
+        [EditorOrder(80)]
         public bool ClipText { get; set; } = false;
 
         /// <summary>
         /// Gets or sets a value indicating whether set automatic height based on text contents.
         /// </summary>
+        [EditorOrder(90)]
         public bool AutoHeight
         {
             get => _autoHeight;
