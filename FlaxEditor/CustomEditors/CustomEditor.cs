@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors
@@ -216,8 +217,20 @@ namespace FlaxEditor.CustomEditors
             _isSetBlocked = false;
 
             // Update children
-            for (int i = 0; i < _children.Count; i++)
-                _children[i].RefreshInternal();
+            try
+            {
+                for (int i = 0; i < _children.Count; i++)
+                    _children[i].RefreshInternal();
+            }
+            catch (TargetException ex)
+            {
+                // This happens when one of the edited objects changes its type.
+                // Eg. from Label to TextBox, while both types were assigned to the same field of type Control.
+                // It's valid, just rebuild the child editors and log the warning to keep it tracking.
+                Editor.LogWarning("Exception while updating the child editors");
+                Editor.LogWarning(ex);
+                RebuildLayout();
+            }
         }
 
         /// <summary>
