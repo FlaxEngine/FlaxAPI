@@ -15,15 +15,6 @@ namespace FlaxEditor.CustomEditors.Elements
         /// </summary>
         public readonly VerticalPanel Panel = new VerticalPanel();
 
-        /// <summary>
-        /// Initializes the element.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        public void Init(string text)
-        {
-            Panel.Name = text;
-        }
-
         /// <inheritdoc />
         public override ContainerControl ContainerControl => Panel;
     }

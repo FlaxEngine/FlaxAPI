@@ -21,7 +21,7 @@ namespace FlaxEditor.CustomEditors.Elements
         /// <param name="text">The text.</param>
         public void Init(string text)
         {
-            Panel.HeaderText = Panel.Name = text;
+            Panel.HeaderText = text;
         }
 
         /// <inheritdoc />

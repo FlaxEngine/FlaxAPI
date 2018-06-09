@@ -24,6 +24,11 @@ namespace FlaxEditor.GUI
             private List<Rectangle> _highlights;
 
             /// <summary>
+            /// Gets or sets the name.
+            /// </summary>
+            public string Name { get; set; }
+
+            /// <summary>
             /// Initializes a new instance of the <see cref="Item"/> class.
             /// </summary>
             public Item()

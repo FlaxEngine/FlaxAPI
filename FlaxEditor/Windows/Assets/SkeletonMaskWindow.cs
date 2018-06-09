@@ -227,7 +227,7 @@ namespace FlaxEditor.Windows.Assets
             if (_asset.Save(_properties.Skeleton, _properties.Mask))
             {
                 // Error
-                Editor.LogError("Failed to save asset " + _item.Name);
+                Editor.LogError("Failed to save asset " + _item);
                 return;
             }
 

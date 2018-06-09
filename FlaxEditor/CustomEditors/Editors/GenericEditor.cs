@@ -336,7 +336,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 LayoutElementsContainer itemLayout;
                 if (item.UseGroup)
                 {
-                    if (lastGroup == null || lastGroup.Panel.Name != item.Display.Group)
+                    if (lastGroup == null || lastGroup.Panel.HeaderText != item.Display.Group)
                         lastGroup = layout.Group(item.Display.Group);
                     itemLayout = lastGroup;
                 }

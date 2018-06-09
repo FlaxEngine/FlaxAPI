@@ -450,7 +450,7 @@ namespace FlaxEditor.Windows.Assets
             if (_asset.Save())
             {
                 // Error
-                Editor.LogError("Failed to save model " + _item.Name);
+                Editor.LogError("Failed to save model " + _item);
                 return;
             }
 

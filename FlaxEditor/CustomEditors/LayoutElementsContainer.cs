@@ -477,7 +477,7 @@ namespace FlaxEditor.CustomEditors
 
             if (style == DisplayStyle.Group)
             {
-                var group = Group(label.Name, true);
+                var group = Group(label.Text, true);
                 group.Panel.Close(false);
                 return group.Object(values, editor);
             }

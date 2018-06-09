@@ -54,9 +54,9 @@ namespace FlaxEditor.Surface.Archetypes
             private void UpdateTitle()
             {
                 var asset = Editor.Instance.ContentDatabase.Find((Guid)Values[0]);
-                Name = asset?.ShortName ?? "Animation";
+                Title = asset?.ShortName ?? "Animation";
                 var style = Style.Current;
-                Resize(Mathf.Max(230, style.FontLarge.MeasureText(Name).X + 20), 160);
+                Resize(Mathf.Max(230, style.FontLarge.MeasureText(Title).X + 20), 160);
             }
         }
 

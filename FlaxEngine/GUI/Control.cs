@@ -66,14 +66,6 @@ namespace FlaxEngine.GUI
         #region Public Properties
 
         /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        public string Name { get; set; }
-
-        /// <summary>
         ///     Parent control (the one above in the tree hierachy)
         /// </summary>
         [HideInEditor, NoSerialize]

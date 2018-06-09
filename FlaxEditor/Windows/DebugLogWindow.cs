@@ -354,7 +354,7 @@ namespace FlaxEditor.Windows
 
         private void UpdateCount(int group, string msg)
         {
-            _groupButtons[group].Name = _logCountPerGroup[@group] + msg;
+            _groupButtons[group].Text = _logCountPerGroup[@group] + msg;
         }
 
         private void LogHandlerOnSendLog(LogType level, string msg, Object o, string stackTrace)
