@@ -1030,8 +1030,6 @@ namespace FlaxEngine.GUI
 
             var bounds = Bounds;
 
-            // TODO: finish all anchor styles logic
-
             switch (_anchorStyle)
             {
             case AnchorStyle.UpperCenter:
@@ -1041,14 +1039,12 @@ namespace FlaxEngine.GUI
             }
             case AnchorStyle.UpperRight:
             {
-                float distance = oldSize.X - bounds.Left;
-                bounds.X = _parent.Width - distance;
+                bounds.X = _parent.Width - (oldSize.X - bounds.Left);
                 break;
             }
             case AnchorStyle.Upper:
             {
-                float distance = oldSize.X - bounds.Right;
-                bounds.Width = _parent.Width - bounds.X - distance;
+                bounds.Width = _parent.Width - bounds.X - (oldSize.X - bounds.Right);
                 break;
             }
 
@@ -1064,28 +1060,48 @@ namespace FlaxEngine.GUI
             }
             case AnchorStyle.CenterRight:
             {
-                float distance = oldSize.X - bounds.Left;
-                bounds.X = _parent.Width - distance;
+                bounds.X = _parent.Width - (oldSize.X - bounds.Left);
                 bounds.Y = (_parent.Height - bounds.Height) * 0.5f;
                 break;
             }
 
             case AnchorStyle.BottomLeft:
             {
-                float distance = oldSize.Y - bounds.Y;
-                bounds.Y = _parent.Height - distance;
+                bounds.Y = _parent.Height - (oldSize.Y - bounds.Y);
                 break;
             }
-            //case AnchorStyle.BottomCenter: break;
-            //case AnchorStyle.BottomRight: break;
-            //case AnchorStyle.Bottom: break;
-
-            //case AnchorStyle.Left: break;
-            //case AnchorStyle.Right: break;
-
-            default:
-                throw new NotImplementedException("finish anchor styles");
+            case AnchorStyle.BottomCenter:
+            {
+                bounds.X = (_parent.Width - bounds.Width) * 0.5f;
+                bounds.Y = _parent.Height - (oldSize.Y - bounds.Y);
                 break;
+            }
+            case AnchorStyle.BottomRight:
+            {
+                bounds.X = _parent.Width - (oldSize.X - bounds.Left);
+                bounds.Y = _parent.Height - (oldSize.Y - bounds.Y);
+                break;
+            }
+            case AnchorStyle.Bottom:
+            {
+                bounds.Width = _parent.Width - bounds.X - (oldSize.X - bounds.Right);
+                bounds.Y = _parent.Height - (oldSize.Y - bounds.Y);
+                break;
+            }
+
+            case AnchorStyle.Left:
+            {
+                bounds.Height = _parent.Height - bounds.Y - (oldSize.Y - bounds.Bottom);
+                break;
+            }
+            case AnchorStyle.Right:
+            {
+                bounds.Height = _parent.Height - bounds.Y - (oldSize.Y - bounds.Bottom);
+                bounds.X = _parent.Width - (oldSize.X - bounds.Left);
+                break;
+            }
+
+            default: throw new ArgumentOutOfRangeException();
             }
 
             Bounds = bounds;
