@@ -12,6 +12,11 @@ namespace FlaxEngine.GUI
     public class ColorValueBox : Control
     {
         /// <summary>
+        /// True if slider is in use.
+        /// </summary>
+        protected bool _isSliding;
+
+        /// <summary>
         /// The value.
         /// </summary>
         protected Color _value;
@@ -41,6 +46,11 @@ namespace FlaxEngine.GUI
                 }
             }
         }
+
+        /// <summary>
+        /// Gets a value indicating whether user is using a slider.
+        /// </summary>
+        public bool IsSliding => _isSliding;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ColorValueBox"/> class.
@@ -86,9 +96,21 @@ namespace FlaxEngine.GUI
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             // Show color picker dialog
-            Style.Current.ShowPickColorDialog?.Invoke(_value, x => Value = x);
+            Style.Current.ShowPickColorDialog?.Invoke(_value, OnColorChanged);
 
             return true;
+        }
+
+        private void OnColorChanged(Color color, bool sliding)
+        {
+            // HACK: Force send ValueChanged event is sliding state gets modified by the color picker (e.g the color picker window closing event)
+            if (_isSliding != sliding)
+            {
+                _value = _value == Color.Black ? Color.Red : Color.Black;
+            }
+
+            _isSliding = sliding;
+            Value = color;
         }
     }
 }
