@@ -26,22 +26,43 @@ namespace FlaxEngine
             get => _control;
             set
             {
+                if (_control == value)
+                    return;
+
+                // Cleanup previous
                 if (_control != null)
                 {
                     _control.OnLocationChanged -= OnControlLocationChanged;
                     _control.Dispose();
                 }
 
+                // Set value
                 _control = value;
 
+                // Link the new one (events and parent)
                 if (_control != null)
                 {
-                    if(_control is ContainerControl containerControl)
+                    var containerControl = _control as ContainerControl;
+                    if (containerControl != null)
                         containerControl.UnlockChildrenRecursive();
+
                     _control.Parent = GetParent();
                     _control.Location = new Vector2(LocalPosition);
-                    // TODO: sync control order in parent with actor order in parent
+                    // TODO: sync control order in parent with actor order in parent (think about specialcases like Panel with scroll bars used as internal controls)
                     _control.OnLocationChanged += OnControlLocationChanged;
+
+                    if (containerControl != null && IsActiveInHierarchy)
+                    {
+                        var children = ChildCount;
+                        for (int i = 0; i < children; i++)
+                        {
+                            var child = GetChild(i) as UIControl;
+                            if (child != null && child.IsActiveInHierarchy && child.HasControl)
+                            {
+                                child.Control.Parent = containerControl;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -181,8 +202,8 @@ namespace FlaxEngine
 
         internal void OrderInParentChanged()
         {
-            if (_control != null)
-                _control.IndexInParent = OrderInParent;
+            //if (_control != null)
+            //    _control.IndexInParent = OrderInParent;
         }
 
         internal void EndPlay()
