@@ -48,13 +48,14 @@ namespace FlaxEngine
 
             // TODO: support additive postFx to prevent frame copy
             context.Draw(output, input);
-
+            
             Matrix viewProjection;
             Matrix world;
-            Matrix.RotationY(Mathf.PiOverTwo, out world);
+            Canvas.GetGUIToWorldMatrix(out world);
             Matrix view;
             Matrix.Multiply(ref world, ref task.View.View, out view);
             Matrix.Multiply(ref view, ref task.View.Projection, out viewProjection);
+
             Render2D.CallDrawing(Canvas.GUI, context, output, null, ref viewProjection);
         }
     }
@@ -108,6 +109,28 @@ namespace FlaxEngine
         private UICanvas()
         {
             _guiRoot = new CanvasRootControl(this);
+        }
+
+        /// <summary>
+        /// Gets the matrix that transforms a point from the local space of the GUI root control to world space. It uses actor transformation and flips the GUI to match the actor orientation.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        public void GetGUIToWorldMatrix(out Matrix result)
+        {
+            Matrix transformation;
+            GetLocalToWorldMatrix(out transformation);
+
+            result = Matrix.RotationX(Mathf.PiOverTwo) * transformation;
+        }
+
+        /// <summary>
+        /// Gets the matrix that transforms a point from the world space to the local space of the GUI root control. It uses actor transformation and flips the GUI to match the actor orientation.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        public void GetWorldToGUIMatrix(out Matrix result)
+        {
+            GetGUIToWorldMatrix(out result);
+            result.Invert();
         }
 
         private void Setup()

@@ -396,7 +396,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets the matrix that transformes a point from the world space to local space of the actor.
+        /// Gets the matrix that transforms a point from the world space to local space of the actor.
         /// </summary>
         public Matrix WorldToLocalMatrix
         {
@@ -409,7 +409,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets the matrix that transformes a point from the world space to local space of the actor.
+        /// Gets the matrix that transforms a point from the world space to local space of the actor.
         /// </summary>
         /// <param name="worldToLocal">The world to local matrix.</param>
         public void GetWorldToLocalMatrix(out Matrix worldToLocal)
@@ -418,7 +418,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets the matrix that transformes a point from the local space of the actor to world space.
+        /// Gets the matrix that transforms a point from the local space of the actor to world space.
         /// </summary>
         public Matrix LocalToWorldMatrix
         {
@@ -431,7 +431,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets the matrix that transformes a point from the local space of the actor to world space.
+        /// Gets the matrix that transforms a point from the local space of the actor to world space.
         /// </summary>
         /// <param name="localToWorld">The world to local matrix.</param>
         public void GetLocalToWorldMatrix(out Matrix localToWorld)
