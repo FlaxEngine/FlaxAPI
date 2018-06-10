@@ -86,6 +86,12 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether canvas can receive the input events.
+        /// </summary>
+        [EditorOrder(15), EditorDisplay("Canvas"), Tooltip("If checked, canvas can receive the input events.")]
+        public bool ReceivesEvents { get; set; } = true;
+        
+        /// <summary>
         /// Gets or sets the size of the canvas. Used only in <see cref="CanvasRenderMode.CameraSpace"/> or <see cref="CanvasRenderMode.WorldSpace"/>.
         /// </summary>
         [EditorOrder(20), EditorDisplay("Canvas"), Tooltip("Canvas size.")]
@@ -174,6 +180,9 @@ namespace FlaxEngine
 
                 jsonWriter.WritePropertyName("RenderMode");
                 jsonWriter.WriteValue(_renderMode);
+
+                jsonWriter.WritePropertyName("ReceivesEvents");
+                jsonWriter.WriteValue(ReceivesEvents);
 
                 jsonWriter.WritePropertyName("Size");
                 jsonWriter.WriteStartObject();

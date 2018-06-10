@@ -97,6 +97,132 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
+        public override bool OnCharInput(char c)
+        {
+            if (!_canvas.ReceivesEvents)
+                return false;
+
+            return base.OnCharInput(c);
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
+        {
+            if (!_canvas.ReceivesEvents)
+                return DragDropEffect.None;
+
+            return base.OnDragDrop(ref location, data);
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
+        {
+            if (!_canvas.ReceivesEvents)
+                return DragDropEffect.None;
+
+            return base.OnDragEnter(ref location, data);
+        }
+
+        /// <inheritdoc />
+        public override void OnDragLeave()
+        {
+            if (!_canvas.ReceivesEvents)
+                return;
+
+            base.OnDragLeave();
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragMove(ref Vector2 location, DragData data)
+        {
+            if (!_canvas.ReceivesEvents)
+                return DragDropEffect.None;
+
+            return base.OnDragMove(ref location, data);
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            if (!_canvas.ReceivesEvents)
+                return false;
+
+            return base.OnKeyDown(key);
+        }
+
+        /// <inheritdoc />
+        public override void OnKeyUp(Keys key)
+        {
+            if (!_canvas.ReceivesEvents)
+                return;
+
+            base.OnKeyUp(key);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        {
+            if (!_canvas.ReceivesEvents)
+                return false;
+
+            return base.OnMouseDoubleClick(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        {
+            if (!_canvas.ReceivesEvents)
+                return false;
+
+            return base.OnMouseDown(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override void OnMouseEnter(Vector2 location)
+        {
+            if (!_canvas.ReceivesEvents)
+                return;
+
+            base.OnMouseEnter(location);
+        }
+
+        /// <inheritdoc />
+        public override void OnMouseLeave()
+        {
+            if (!_canvas.ReceivesEvents)
+                return;
+
+            base.OnMouseLeave();
+        }
+
+        /// <inheritdoc />
+        public override void OnMouseMove(Vector2 location)
+        {
+            if (!_canvas.ReceivesEvents)
+                return;
+
+            base.OnMouseMove(location);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        {
+            if (!_canvas.ReceivesEvents)
+                return false;
+
+            return base.OnMouseUp(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseWheel(Vector2 location, float delta)
+        {
+            if (!_canvas.ReceivesEvents)
+                return false;
+
+            return base.OnMouseWheel(location, delta);
+        }
+
+        /// <inheritdoc />
         public override void Focus()
         {
         }
@@ -104,14 +230,6 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void DoDragDrop(DragData data)
         {
-        }
-
-        /// <inheritdoc />
-        public override void Draw()
-        {
-            //Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), Color.Red);
-
-            base.Draw();
         }
     }
 }
