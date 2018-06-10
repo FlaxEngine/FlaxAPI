@@ -97,6 +97,10 @@ namespace FlaxEngine
 
         private ContainerControl GetParent()
         {
+            // Don't link disabled actors
+            if (!IsActiveInHierarchy)
+                return null;
+
             var parent = Parent;
             if (parent is UIControl uiControl && uiControl.Control is ContainerControl uiContainerControl)
                 return uiContainerControl;
@@ -158,6 +162,15 @@ namespace FlaxEngine
         {
             if (_control != null)
                 _control.Location = new Vector2(LocalPosition);
+        }
+
+        internal void ActiveInTreeChanged()
+        {
+            if (_control != null)
+            {
+                // Link or unlink control (won't modify Enable/Visible state)
+                _control.Parent = GetParent();
+            }
         }
 
         internal void OrderInParentChanged()
