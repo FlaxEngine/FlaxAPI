@@ -36,6 +36,8 @@ namespace FlaxEngine
 
                 if (_control != null)
                 {
+                    if(_control is ContainerControl containerControl)
+                        containerControl.UnlockChildrenRecursive();
                     _control.Parent = GetParent();
                     _control.Location = new Vector2(LocalPosition);
                     // TODO: sync control order in parent with actor order in parent
@@ -149,7 +151,11 @@ namespace FlaxEngine
         internal void Deserialize(string json, Type controlType)
         {
             Control = (Control)Activator.CreateInstance(controlType);
-            Json.JsonSerializer.Deserialize(Control, json);
+
+            if (_control != null)
+            {
+                Json.JsonSerializer.Deserialize(_control, json);
+            }
         }
 
         internal void ParentChanged()

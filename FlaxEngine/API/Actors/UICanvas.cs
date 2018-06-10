@@ -51,7 +51,7 @@ namespace FlaxEngine
             
             Matrix viewProjection;
             Matrix world;
-            Canvas.GetGUIToWorldMatrix(out world);
+            Canvas.GetLocalToWorldMatrix(out world);
             Matrix view;
             Matrix.Multiply(ref world, ref task.View.View, out view);
             Matrix.Multiply(ref view, ref task.View.Projection, out viewProjection);
@@ -94,7 +94,7 @@ namespace FlaxEngine
             get => _guiRoot.Size;
             set
             {
-                if (_renderMode != CanvasRenderMode.ScreenSpace)
+                if (_renderMode != CanvasRenderMode.ScreenSpace || _isLoading)
                 {
                     _guiRoot.Size = value;
                 }
@@ -109,37 +109,14 @@ namespace FlaxEngine
         private UICanvas()
         {
             _guiRoot = new CanvasRootControl(this);
+            _guiRoot.IsLayoutLocked = false;
         }
-
-        /// <summary>
-        /// Gets the matrix that transforms a point from the local space of the GUI root control to world space. It uses actor transformation and flips the GUI to match the actor orientation.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        public void GetGUIToWorldMatrix(out Matrix result)
-        {
-            Matrix transformation;
-            GetLocalToWorldMatrix(out transformation);
-
-            result = Matrix.RotationX(Mathf.PiOverTwo) * transformation;
-        }
-
-        /// <summary>
-        /// Gets the matrix that transforms a point from the world space to the local space of the GUI root control. It uses actor transformation and flips the GUI to match the actor orientation.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        public void GetWorldToGUIMatrix(out Matrix result)
-        {
-            GetGUIToWorldMatrix(out result);
-            result.Invert();
-        }
-
+        
         private void Setup()
         {
             if (_isLoading)
                 return;
-
-            _guiRoot.IsLayoutLocked = true;
-
+            
             switch (_renderMode)
             {
             case CanvasRenderMode.ScreenSpace:
@@ -170,9 +147,6 @@ namespace FlaxEngine
                 break;
             }
             }
-
-            _guiRoot.IsLayoutLocked = false;
-            _guiRoot.PerformLayout();
         }
 
         private void Cleanup()
@@ -194,22 +168,20 @@ namespace FlaxEngine
             {
                 jsonWriter.IndentChar = '\t';
                 jsonWriter.Indentation = 1;
+                jsonWriter.Formatting = Formatting.Indented;
 
                 jsonWriter.WriteStartObject();
 
                 jsonWriter.WritePropertyName("RenderMode");
                 jsonWriter.WriteValue(_renderMode);
 
-                if (_renderMode != CanvasRenderMode.ScreenSpace)
-                {
-                    jsonWriter.WritePropertyName("Size");
-                    jsonWriter.WriteStartObject();
-                    jsonWriter.WritePropertyName("X");
-                    jsonWriter.WriteValue(Size.X);
-                    jsonWriter.WritePropertyName("Y");
-                    jsonWriter.WriteValue(Size.Y);
-                    jsonWriter.WriteEndObject();
-                }
+                jsonWriter.WritePropertyName("Size");
+                jsonWriter.WriteStartObject();
+                jsonWriter.WritePropertyName("X");
+                jsonWriter.WriteValue(Size.X);
+                jsonWriter.WritePropertyName("Y");
+                jsonWriter.WriteValue(Size.Y);
+                jsonWriter.WriteEndObject();
 
                 jsonWriter.WriteEndObject();
             }
@@ -222,7 +194,10 @@ namespace FlaxEngine
             _isLoading = true;
             Json.JsonSerializer.Deserialize(this, json);
             _isLoading = false;
+        }
 
+        internal void PostDeserialize()
+        {
             Setup();
         }
 
