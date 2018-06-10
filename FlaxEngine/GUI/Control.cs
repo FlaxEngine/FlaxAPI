@@ -121,7 +121,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Gets or sets control background color (transparent color (alpha=0) means no background rendering)
         /// </summary>
-        [EditorDisplay("Style"), EditorOrder(2000)]
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The control background color. Use transparent color (alpha=0) to hide background.")]
         public Color BackgroundColor
         {
             get => _backgroundColor;
@@ -132,7 +132,7 @@ namespace FlaxEngine.GUI
         ///     Gets or sets the docking style of the control.
         /// If vlue set is other than <see cref="FlaxEngine.GUI.DockStyle.None"/> then <see cref="IsScrollable"/> will be disabled by auto.
         /// </summary>
-        [EditorDisplay("Transform"), EditorOrder(1060)]
+        [EditorDisplay("Transform"), EditorOrder(1060), Tooltip("The docking style of the control. Define how control will be doced into the parent container. use None to disable it.")]
         public DockStyle DockStyle
         {
             get => _dockStyle;
@@ -155,7 +155,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the anchor style of the control.
         /// </summary>
-        [EditorDisplay("Transform"), EditorOrder(1070)]
+        [EditorDisplay("Transform"), EditorOrder(1070), Tooltip("The anchor style of the control. Defines how control location and size will be constrained when parent container is being resized.")]
         public AnchorStyle AnchorStyle
         {
             get => _anchorStyle;
@@ -180,7 +180,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Gets or sets a value indicating whether the control can respond to user interaction
         /// </summary>
-        [EditorOrder(520)]
+        [EditorOrder(520), Tooltip("If checked, control will receive input events of the user interaction.")]
         public bool Enabled
         {
             get => _isEnabled;
@@ -223,7 +223,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Gets or sets a value indicating whether the control is visible
         /// </summary>
-        [EditorOrder(510)]
+        [EditorOrder(510), Tooltip("If checked, control will be visible.")]
         public bool Visible
         {
             get => _isVisible;
