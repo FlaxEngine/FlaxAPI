@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using FlaxEngine.GUI;
+using FlaxEngine.Rendering;
 using Newtonsoft.Json;
 
 namespace FlaxEngine
@@ -33,6 +34,7 @@ namespace FlaxEngine
     {
         private CanvasRenderMode _renderMode;
         private readonly CanvasRootControl _guiRoot;
+        private CanvasRenderer _renderer;
         private bool _isLoading;
 
         /// <summary>
@@ -48,8 +50,23 @@ namespace FlaxEngine
                 {
                     _renderMode = value;
 
-                    Cleanup();
                     Setup();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the size of the canvas. Used only in <see cref="CanvasRenderMode.CameraSpace"/> or <see cref="CanvasRenderMode.WorldSpace"/>.
+        /// </summary>
+        [EditorOrder(20), EditorDisplay("Canvas"), Tooltip("Canvas size.")]
+        public Vector2 Size
+        {
+            get => _guiRoot.Size;
+            set
+            {
+                if (_renderMode != CanvasRenderMode.ScreenSpace)
+                {
+                    _guiRoot.Size = value;
                 }
             }
         }
@@ -78,6 +95,26 @@ namespace FlaxEngine
                 // Link to the game UI and fill the area
                 _guiRoot.DockStyle = DockStyle.Fill;
                 _guiRoot.Parent = RootControl.GameRoot;
+                if (_renderer)
+                {
+                    MainRenderTask.Instance.CustomPostFx.Remove(_renderer);
+                    Destroy(_renderer);
+                    _renderer = null;
+                }
+                break;
+            }
+            case CanvasRenderMode.CameraSpace:
+            case CanvasRenderMode.WorldSpace:
+            {
+                // Render canvas manually
+                _guiRoot.DockStyle = DockStyle.None;
+                _guiRoot.Parent = null;
+                if (_renderer == null)
+                {
+                    _renderer = New<CanvasRenderer>();
+                    _renderer.Canvas = this;
+                    MainRenderTask.Instance.CustomPostFx.Add(_renderer);
+                }
                 break;
             }
             }
@@ -89,6 +126,12 @@ namespace FlaxEngine
         private void Cleanup()
         {
             _guiRoot.Parent = null;
+            if (_renderer)
+            {
+                MainRenderTask.Instance.CustomPostFx.Remove(_renderer);
+                Destroy(_renderer);
+                _renderer = null;
+            }
         }
 
         internal string Serialize()
@@ -105,6 +148,17 @@ namespace FlaxEngine
                 jsonWriter.WritePropertyName("RenderMode");
                 jsonWriter.WriteValue(_renderMode);
 
+                if (_renderMode != CanvasRenderMode.ScreenSpace)
+                {
+                    jsonWriter.WritePropertyName("Size");
+                    jsonWriter.WriteStartObject();
+                    jsonWriter.WritePropertyName("X");
+                    jsonWriter.WriteValue(Size.X);
+                    jsonWriter.WritePropertyName("Y");
+                    jsonWriter.WriteValue(Size.Y);
+                    jsonWriter.WriteEndObject();
+                }
+
                 jsonWriter.WriteEndObject();
             }
 
@@ -120,9 +174,40 @@ namespace FlaxEngine
             Setup();
         }
 
+        internal void ActiveInTreeChanged()
+        {
+            bool isActiveInHierarchy = IsActiveInHierarchy;
+            _guiRoot.Enabled = isActiveInHierarchy;
+            _guiRoot.Visible = isActiveInHierarchy;
+            if (_renderer)
+                _renderer.Enabled = isActiveInHierarchy;
+        }
+
         internal void EndPlay()
         {
             Cleanup();
+        }
+
+        /// <summary>
+        /// PostFx used to render the <see cref="UICanvas"/>. Used when render mode is <see cref="CanvasRenderMode.CameraSpace"/> or <see cref="CanvasRenderMode.WorldSpace"/>.
+        /// </summary>
+        /// <seealso cref="FlaxEngine.Rendering.PostProcessEffect" />
+        private class CanvasRenderer : PostProcessEffect
+        {
+            public UICanvas Canvas;
+
+            /// <inheritdoc />
+            public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
+            {
+                // TODO: apply frustum culling to skip rendering if canvas is not in a viewport
+
+                // TODO: support additive postFx to prevent frame copy
+                context.Draw(output, input);
+
+                Matrix viewProjection;
+                Matrix.Multiply(ref task.View.View, ref task.View.Projection, out viewProjection);
+                Render2D.CallDrawing(Canvas._guiRoot, context, output, null, ref viewProjection);
+            }
         }
     }
 }

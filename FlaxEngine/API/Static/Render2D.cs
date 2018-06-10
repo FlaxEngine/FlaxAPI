@@ -81,7 +81,7 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static void CallDrawing(Control guiRoot, GPUContext context, RenderTarget output, RenderTarget depthBuffer, Matrix viewProjection)
+        public static void CallDrawing(Control guiRoot, GPUContext context, RenderTarget output, RenderTarget depthBuffer, ref Matrix viewProjection)
         {
             if (context == null || output == null || guiRoot == null)
                 throw new ArgumentNullException();
