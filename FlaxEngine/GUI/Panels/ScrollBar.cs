@@ -338,9 +338,10 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(Vector2 size)
+        protected override void SetSizeInternal(ref Vector2 size)
         {
-            base.SetSizeInternal(size);
+            base.SetSizeInternal(ref size);
+
             updateThumb();
         }
 

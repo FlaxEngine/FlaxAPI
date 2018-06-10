@@ -15,7 +15,10 @@ namespace FlaxEngine.GUI
             set
             {
                 if (!Mathf.NearEqual(_bounds.X, value))
-                    SetLocationInternal(new Vector2(value, _bounds.Y));
+                {
+                    var location = new Vector2(value, _bounds.Y);
+                    SetLocationInternal(ref location);
+                }
             }
         }
 
@@ -29,7 +32,10 @@ namespace FlaxEngine.GUI
             set
             {
                 if (!Mathf.NearEqual(_bounds.Y, value))
-                    SetLocationInternal(new Vector2(_bounds.X, value));
+                {
+                    var location = new Vector2(_bounds.X, value);
+                    SetLocationInternal(ref location);
+                }
             }
         }
 
@@ -44,7 +50,7 @@ namespace FlaxEngine.GUI
             set
             {
                 if (!_bounds.Location.Equals(ref value))
-                    SetLocationInternal(value);
+                    SetLocationInternal(ref value);
             }
         }
 
@@ -58,7 +64,10 @@ namespace FlaxEngine.GUI
             set
             {
                 if (!Mathf.NearEqual(_bounds.Width, value))
-                    SetSizeInternal(new Vector2(value, _bounds.Height));
+                {
+                    var size = new Vector2(value, _bounds.Height);
+                    SetSizeInternal(ref size);
+                }
             }
         }
 
@@ -72,7 +81,10 @@ namespace FlaxEngine.GUI
             set
             {
                 if (!Mathf.NearEqual(_bounds.Height, value))
-                    SetSizeInternal(new Vector2(_bounds.Width, value));
+                {
+                    var size = new Vector2(_bounds.Width, value);
+                    SetSizeInternal(ref size);
+                }
             }
         }
 
@@ -86,7 +98,7 @@ namespace FlaxEngine.GUI
             set
             {
                 if (!_bounds.Size.Equals(ref value))
-                    SetSizeInternal(value);
+                    SetSizeInternal(ref value);
             }
         }
 

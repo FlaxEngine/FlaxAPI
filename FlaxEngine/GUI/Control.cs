@@ -396,27 +396,7 @@ namespace FlaxEngine.GUI
         public virtual void PerformLayout(bool force = false)
         {
         }
-
-        /// <summary>
-        ///     Sets control's location
-        /// </summary>
-        /// <param name="x">X coordinate</param>
-        /// <param name="y">Y coordinate</param>
-        public void SetLocation(float x, float y)
-        {
-            Location = new Vector2(x, y);
-        }
-
-        /// <summary>
-        ///     Sets control's size
-        /// </summary>
-        /// <param name="width">Control's width</param>
-        /// <param name="height">Control's height</param>
-        public void SetSize(float width, float height)
-        {
-            Size = new Vector2(width, height);
-        }
-
+        
         #region Focus
 
         /// <summary>
@@ -922,13 +902,13 @@ namespace FlaxEngine.GUI
         #endregion
 
         #region Control Action
-
+        
         /// <summary>
         ///     Sets location of control and calls event
         ///     <remarks>This method is called from engine when necessary</remarks>
         /// </summary>
         /// <param name="location">Location to set</param>
-        protected virtual void SetLocationInternal(Vector2 location)
+        protected virtual void SetLocationInternal(ref Vector2 location)
         {
             _bounds.Location = location;
 
@@ -941,7 +921,7 @@ namespace FlaxEngine.GUI
         ///     <remarks>This method is called form engine when necessary</remarks>
         /// </summary>
         /// <param name="size"></param>
-        protected virtual void SetSizeInternal(Vector2 size)
+        protected virtual void SetSizeInternal(ref Vector2 size)
         {
             _bounds.Size = size;
 

@@ -98,7 +98,7 @@ namespace FlaxEditor.GUI.Dialogs
 
             // Selector
             _cSelector = new ColorSelectorWithSliders(180, 18);
-            _cSelector.SetLocation(PICKER_MARGIN, PICKER_MARGIN);
+            _cSelector.Location = new Vector2(PICKER_MARGIN, PICKER_MARGIN);
             _cSelector.ColorChanged += x => SelectedColor = x;
             _cSelector.Parent = this;
 

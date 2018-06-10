@@ -217,7 +217,7 @@ namespace FlaxEngine
 
         internal void Internal_OnResize(int width, int height)
         {
-            GUI.SetSize(width, height);
+            GUI.Size = new Vector2(width, height);
         }
 
         internal void Internal_OnCharInput(char c)

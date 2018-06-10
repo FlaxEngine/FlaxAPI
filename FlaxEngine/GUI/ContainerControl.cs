@@ -518,15 +518,13 @@ namespace FlaxEngine.GUI
                 {
                     float height = child.Height;
                     float width = clientArea.Width;
-                    child.SetSize(width, height);
-                    child.SetLocation(clientArea.Left, clientArea.Bottom - height);
+                    child.Bounds = new Rectangle(clientArea.Left, clientArea.Bottom - height, width, height);
                     clientArea.Size.Y -= height;
                     break;
                 }
                 case DockStyle.Fill:
                 {
-                    child.Size = clientArea.Size;
-                    child.Location = clientArea.Location;
+                    child.Bounds = clientArea;
                     GetDesireClientArea(out clientArea);
                     break;
                 }
@@ -534,8 +532,7 @@ namespace FlaxEngine.GUI
                 {
                     float width = child.Width;
                     float height = clientArea.Height;
-                    child.SetSize(width, height);
-                    child.SetLocation(clientArea.Left, clientArea.Top);
+                    child.Bounds = new Rectangle(clientArea.Left, clientArea.Top, width, height);
                     clientArea.Location.X += width;
                     clientArea.Size.X -= width;
                     break;
@@ -544,8 +541,7 @@ namespace FlaxEngine.GUI
                 {
                     float width = child.Width;
                     float height = clientArea.Height;
-                    child.SetSize(width, height);
-                    child.SetLocation(clientArea.Right - width, clientArea.Top);
+                    child.Bounds = new Rectangle(clientArea.Right - width, clientArea.Top, width, height);
                     clientArea.Size.X -= width;
                     break;
                 }
@@ -553,8 +549,7 @@ namespace FlaxEngine.GUI
                 {
                     float height = child.Height;
                     float width = clientArea.Width;
-                    child.SetSize(width, height);
-                    child.SetLocation(clientArea.Left, clientArea.Top);
+                    child.Bounds = new Rectangle(clientArea.Left, clientArea.Top, width, height);
                     clientArea.Location.Y += height;
                     clientArea.Size.Y -= height;
                     break;
@@ -1099,7 +1094,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(Vector2 size)
+        protected override void SetSizeInternal(ref Vector2 size)
         {
             // Lock updates to prevent additional layout calculations
             bool wasLayoutLocked = IsLayoutLocked;
@@ -1109,7 +1104,7 @@ namespace FlaxEngine.GUI
             Vector2 prevSize = Size;
 
             // Base
-            base.SetSizeInternal(size);
+            base.SetSizeInternal(ref size);
 
             // Fire event
             for (int i = 0; i < _children.Count; i++)

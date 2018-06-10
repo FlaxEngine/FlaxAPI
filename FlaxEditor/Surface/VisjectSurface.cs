@@ -761,12 +761,12 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(Vector2 size)
+        protected override void SetSizeInternal(ref Vector2 size)
         {
             // Keep view stable
             var viewCenter = ViewCenterPosition;
 
-            base.SetSizeInternal(size);
+            base.SetSizeInternal(ref size);
 
             ViewCenterPosition = viewCenter;
         }
