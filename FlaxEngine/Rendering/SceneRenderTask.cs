@@ -12,6 +12,11 @@ namespace FlaxEngine.Rendering
     public class SceneRenderTask : RenderTask
     {
         /// <summary>
+        /// The global custom post processing effects applied to all <see cref="SceneRenderTask"/> (is <see cref="AllowGlobalCustomPostFx"/> is turned on).
+        /// </summary>
+        public static readonly HashSet<PostProcessEffect> GlobalCustomPostFx = new HashSet<PostProcessEffect>();
+
+        /// <summary>
         /// Action delegate called before scene rendering. Should prepare <see cref="SceneRenderTask.View"/> structure for rendering.
         /// </summary>
         /// <param name="task">The task.</param>
@@ -87,6 +92,11 @@ namespace FlaxEngine.Rendering
         public readonly HashSet<PostProcessEffect> CustomPostFx = new HashSet<PostProcessEffect>();
 
         /// <summary>
+        /// True if allow using global custom PostFx when rendering this task.
+        /// </summary>
+        public bool AllowGlobalCustomPostFx = true;
+
+        /// <summary>
         /// The action called on rendering begin.
         /// </summary>
         public event BeginDelegate Begin;
@@ -154,6 +164,11 @@ namespace FlaxEngine.Rendering
             _postFx.Clear();
             foreach (var e in CustomPostFx)
                 _postFx.Add(e);
+            if (AllowGlobalCustomPostFx)
+            {
+                foreach (var e in GlobalCustomPostFx)
+                    _postFx.Add(e);
+            }
             if (Camera != null)
             {
                 var perCameraPostFx = Camera.GetScripts<PostProcessEffect>();

@@ -30,6 +30,35 @@ namespace FlaxEngine
         WorldSpace = 2,
     }
 
+    /// <summary>
+    /// PostFx used to render the <see cref="UICanvas"/>. Used when render mode is <see cref="CanvasRenderMode.CameraSpace"/> or <see cref="CanvasRenderMode.WorldSpace"/>.
+    /// </summary>
+    /// <seealso cref="FlaxEngine.Rendering.PostProcessEffect" />
+    public sealed class CanvasRenderer : PostProcessEffect
+    {
+        /// <summary>
+        /// The canvas to render.
+        /// </summary>
+        public UICanvas Canvas;
+
+        /// <inheritdoc />
+        public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
+        {
+            // TODO: apply frustum culling to skip rendering if canvas is not in a viewport
+
+            // TODO: support additive postFx to prevent frame copy
+            context.Draw(output, input);
+
+            Matrix viewProjection;
+            Matrix world;
+            Matrix.RotationY(Mathf.PiOverTwo, out world);
+            Matrix view;
+            Matrix.Multiply(ref world, ref task.View.View, out view);
+            Matrix.Multiply(ref view, ref task.View.Projection, out viewProjection);
+            Render2D.CallDrawing(Canvas.GUI, context, output, null, ref viewProjection);
+        }
+    }
+
     public sealed partial class UICanvas
     {
         private CanvasRenderMode _renderMode;
@@ -97,7 +126,7 @@ namespace FlaxEngine
                 _guiRoot.Parent = RootControl.GameRoot;
                 if (_renderer)
                 {
-                    MainRenderTask.Instance.CustomPostFx.Remove(_renderer);
+                    SceneRenderTask.GlobalCustomPostFx.Remove(_renderer);
                     Destroy(_renderer);
                     _renderer = null;
                 }
@@ -113,7 +142,7 @@ namespace FlaxEngine
                 {
                     _renderer = New<CanvasRenderer>();
                     _renderer.Canvas = this;
-                    MainRenderTask.Instance.CustomPostFx.Add(_renderer);
+                    SceneRenderTask.GlobalCustomPostFx.Add(_renderer);
                 }
                 break;
             }
@@ -128,7 +157,7 @@ namespace FlaxEngine
             _guiRoot.Parent = null;
             if (_renderer)
             {
-                MainRenderTask.Instance.CustomPostFx.Remove(_renderer);
+                SceneRenderTask.GlobalCustomPostFx.Remove(_renderer);
                 Destroy(_renderer);
                 _renderer = null;
             }
@@ -186,28 +215,6 @@ namespace FlaxEngine
         internal void EndPlay()
         {
             Cleanup();
-        }
-
-        /// <summary>
-        /// PostFx used to render the <see cref="UICanvas"/>. Used when render mode is <see cref="CanvasRenderMode.CameraSpace"/> or <see cref="CanvasRenderMode.WorldSpace"/>.
-        /// </summary>
-        /// <seealso cref="FlaxEngine.Rendering.PostProcessEffect" />
-        private class CanvasRenderer : PostProcessEffect
-        {
-            public UICanvas Canvas;
-
-            /// <inheritdoc />
-            public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
-            {
-                // TODO: apply frustum culling to skip rendering if canvas is not in a viewport
-
-                // TODO: support additive postFx to prevent frame copy
-                context.Draw(output, input);
-
-                Matrix viewProjection;
-                Matrix.Multiply(ref task.View.View, ref task.View.Projection, out viewProjection);
-                Render2D.CallDrawing(Canvas._guiRoot, context, output, null, ref viewProjection);
-            }
         }
     }
 }
