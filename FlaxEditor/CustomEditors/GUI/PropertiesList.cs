@@ -194,11 +194,12 @@ namespace FlaxEditor.CustomEditors.GUI
             for (int i = 0; i < _children.Count; i++)
             {
                 Control c = _children[i];
-                if (c.Visible && !(c is PropertyNameLabel))
+                if (!(c is PropertyNameLabel))
                 {
                     var h = c.Height;
                     c.Bounds = new Rectangle(_leftMargin, y + _spacing, w, h);
-                    y = c.Bottom;
+                    if (c.Visible)
+                        y = c.Bottom;
                 }
             }
             y += _bottomMargin;
