@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEditor.CustomEditors.GUI;
 using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors.Editors
 {
@@ -62,6 +64,11 @@ namespace FlaxEditor.CustomEditors.Editors
             public HeaderAttribute Header;
 
             /// <summary>
+            /// The visible if attribute.
+            /// </summary>
+            public VisibleIfAttribute VisibleIf;
+
+            /// <summary>
             /// Gets the display name.
             /// </summary>
             public string DisplayName { get; }
@@ -115,6 +122,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 CustomEditorAlias = (CustomEditorAliasAttribute)attributes.FirstOrDefault(x => x is CustomEditorAliasAttribute);
                 Space = (SpaceAttribute)attributes.FirstOrDefault(x => x is SpaceAttribute);
                 Header = (HeaderAttribute)attributes.FirstOrDefault(x => x is HeaderAttribute);
+                VisibleIf = (VisibleIfAttribute)attributes.FirstOrDefault(x => x is VisibleIfAttribute);
 
                 if (Display?.Name != null)
                 {
@@ -188,6 +196,23 @@ namespace FlaxEditor.CustomEditors.Editors
                 return a.Info.Name == b.Info.Name;
             }
         }
+
+        private struct VisibleIfCache
+        {
+            public MemberInfo Target;
+            public MemberInfo Source;
+            public PropertiesListElement PropertiesList;
+            public int LabelIndex;
+
+            public bool GetValue(object instance)
+            {
+                if (Target is FieldInfo fieldInfo)
+                    return (bool)fieldInfo.GetValue(instance);
+                return (bool)((PropertyInfo)Source).GetValue(instance, null);
+            }
+        }
+
+        private VisibleIfCache[] _visibleIfCaches;
 
         /// <summary>
         /// Gets the items for the type
@@ -264,6 +289,40 @@ namespace FlaxEditor.CustomEditors.Editors
             return items;
         }
 
+        private static MemberInfo GetVisibleIfSource(Type type, VisibleIfAttribute visibleIf)
+        {
+            var property = type.GetProperty(visibleIf.MemberName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            if (property != null)
+            {
+                if (property.GetMethod == null)
+                {
+                    Debug.LogError("Invalid VisibleIf rule. Property has missing getter " + visibleIf.MemberName);
+                    return null;
+                }
+
+                if (property.GetMethod.ReturnType != typeof(bool))
+                {
+                    Debug.LogError("Invalid VisibleIf rule. Property has to return bool type " + visibleIf.MemberName);
+                    return null;
+                }
+
+                return property;
+            }
+
+            var field = type.GetField(visibleIf.MemberName);
+            if (field != null)
+            {
+                if (field.FieldType != typeof(bool))
+                {
+                    Debug.LogError("Invalid VisibleIf rule. Field has to be bool type " + visibleIf.MemberName);
+                    return null;
+                }
+            }
+
+            Debug.LogError("Invalid VisibleIf rule. Cannot find member " + visibleIf.MemberName);
+            return null;
+        }
+
         /// <summary>
         /// Spawns the property for the given item.
         /// </summary>
@@ -272,12 +331,60 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <param name="item">The item.</param>
         protected virtual void SpawnProperty(LayoutElementsContainer itemLayout, ValueContainer itemValues, ItemInfo item)
         {
+            int labelIndex = 0;
+            if (item.VisibleIf != null && itemLayout.Children.Count > 0 && itemLayout.Children[itemLayout.Children.Count - 1] is PropertiesListElement propertiesListElement)
+            {
+                labelIndex = propertiesListElement.Labels.Count;
+            }
+
             itemLayout.Property(item.DisplayName, itemValues, item.OverrideEditor, item.TooltipText);
+
+            if (item.VisibleIf != null)
+            {
+                PropertiesListElement list;
+                if (itemLayout.Children.Count > 0 && itemLayout.Children[itemLayout.Children.Count - 1] is PropertiesListElement list1)
+                {
+                    list = list1;
+                }
+                else
+                {
+                    // TODO: support inlined objects hididng?
+                    return;
+                }
+
+                // Get source member used to check rule
+                var sourceMember = GetVisibleIfSource(item.Info.DeclaringType, item.VisibleIf);
+                if (sourceMember == null)
+                    return;
+
+                // Find the target control to show/hide
+                
+
+                // Resize cache
+                if (_visibleIfCaches == null)
+                    _visibleIfCaches = new VisibleIfCache[8];
+                int count = 0;
+                while (count < _visibleIfCaches.Length && _visibleIfCaches[count].Target != null)
+                    count++;
+                if (count >= _visibleIfCaches.Length)
+                    Array.Resize(ref _visibleIfCaches, count * 2);
+
+                // Add item
+                _visibleIfCaches[count] = new VisibleIfCache
+                {
+                    Target = item.Info,
+                    Source = sourceMember,
+                    PropertiesList = list,
+                    LabelIndex = labelIndex,
+                };
+            }
         }
 
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
+            _visibleIfCaches = null;
+
             // Collect items to edit
             List<ItemInfo> items;
             if (!HasDifferentTypes)
@@ -371,6 +478,46 @@ namespace FlaxEditor.CustomEditors.Editors
                 // Spawn property editor
                 SpawnProperty(itemLayout, itemValues, item);
             }
+        }
+        
+        /// <inheritdoc />
+        public override void Refresh()
+        {
+            if (_visibleIfCaches != null)
+            {
+                for (int i = 0; i < _visibleIfCaches.Length; i++)
+                {
+                    var c = _visibleIfCaches[i];
+
+                    if (c.Target == null)
+                        break;
+
+                    // Check rule (all objects must allow to show this property)
+                    bool visible = true;
+                    for (int j = 0; j < Values.Count; j++)
+                    {
+                        if (Values[i] != null && !c.GetValue(Values[i]))
+                        {
+                            visible = false;
+                            break;
+                        }
+                    }
+
+                    // Apply the visibility
+                    var label = c.PropertiesList.Labels[c.LabelIndex];
+                    label.Visible = visible;
+                    for (int j = label.FirstChildControlIndex; j < c.PropertiesList.Properties.Children.Count; j++)
+                    {
+                        var child = c.PropertiesList.Properties.Children[j];
+                        if (child is PropertyNameLabel)
+                            break;
+
+                        child.Visible = visible;
+                    }
+                }
+            }
+
+            base.Refresh();
         }
     }
 }
