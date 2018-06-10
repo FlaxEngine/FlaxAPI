@@ -52,6 +52,35 @@ namespace FlaxEngine.Rendering
 #endif
         }
 
+        /// <summary>
+        /// Gets the total estimated graphics memory usage (in bytes).
+        /// </summary>
+        [UnmanagedCall]
+        public static ulong MemoryUsage
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetMemoryUsage(); }
+#endif
+        }
+
+        /// <summary>
+        /// Dumps all resources information to the log.
+        /// </summary>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DumpResourcesToLog()
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DumpResourcesToLog();
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -63,6 +92,12 @@ namespace FlaxEngine.Rendering
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ShaderProfile Internal_GetShaderProfile();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ulong Internal_GetMemoryUsage();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DumpResourcesToLog();
 #endif
 
         #endregion
