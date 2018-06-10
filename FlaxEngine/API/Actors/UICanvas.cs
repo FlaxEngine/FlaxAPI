@@ -48,7 +48,7 @@ namespace FlaxEngine
 
             // TODO: support additive postFx to prevent frame copy
             context.Draw(output, input);
-            
+
             Matrix viewProjection;
             Matrix world;
             Canvas.GetLocalToWorldMatrix(out world);
@@ -90,11 +90,13 @@ namespace FlaxEngine
         /// </summary>
         [EditorOrder(15), EditorDisplay("Canvas"), Tooltip("If checked, canvas can receive the input events.")]
         public bool ReceivesEvents { get; set; } = true;
-        
+
+        private bool Editor_ShowSize => _renderMode != CanvasRenderMode.ScreenSpace;
+
         /// <summary>
         /// Gets or sets the size of the canvas. Used only in <see cref="CanvasRenderMode.CameraSpace"/> or <see cref="CanvasRenderMode.WorldSpace"/>.
         /// </summary>
-        [EditorOrder(20), EditorDisplay("Canvas"), Tooltip("Canvas size.")]
+        [EditorOrder(20), EditorDisplay("Canvas"), VisibleIf("Editor_ShowSize"), Tooltip("Canvas size.")]
         public Vector2 Size
         {
             get => _guiRoot.Size;
@@ -117,12 +119,12 @@ namespace FlaxEngine
             _guiRoot = new CanvasRootControl(this);
             _guiRoot.IsLayoutLocked = false;
         }
-        
+
         private void Setup()
         {
             if (_isLoading)
                 return;
-            
+
             switch (_renderMode)
             {
             case CanvasRenderMode.ScreenSpace:
