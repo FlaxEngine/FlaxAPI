@@ -48,7 +48,8 @@ namespace FlaxEngine
 
             // TODO: support additive postFx to prevent frame copy
             context.Draw(output, input);
-
+            
+            // Calculate rendering matrix (world*view*projection)
             Matrix viewProjection;
             Matrix world;
             Canvas.GetLocalToWorldMatrix(out world);
@@ -56,7 +57,11 @@ namespace FlaxEngine
             Matrix.Multiply(ref world, ref task.View.View, out view);
             Matrix.Multiply(ref view, ref task.View.Projection, out viewProjection);
 
-            Render2D.CallDrawing(Canvas.GUI, context, output, null, ref viewProjection);
+            // Pick a depth buffer
+            RenderTarget depthBuffer = Canvas.IgnoreDepth ? null : task.Buffers.DepthBuffer;
+
+            // Render GUI in 3D
+            Render2D.CallDrawing(Canvas.GUI, context, output, depthBuffer, ref viewProjection);
         }
     }
 
@@ -91,12 +96,12 @@ namespace FlaxEngine
         [EditorOrder(15), EditorDisplay("Canvas"), Tooltip("If checked, canvas can receive the input events.")]
         public bool ReceivesEvents { get; set; } = true;
 
-        private bool Editor_ShowSize => _renderMode != CanvasRenderMode.ScreenSpace;
+        private bool Editor_Is3D => _renderMode != CanvasRenderMode.ScreenSpace;
 
         /// <summary>
         /// Gets or sets the size of the canvas. Used only in <see cref="CanvasRenderMode.CameraSpace"/> or <see cref="CanvasRenderMode.WorldSpace"/>.
         /// </summary>
-        [EditorOrder(20), EditorDisplay("Canvas"), VisibleIf(nameof(Editor_ShowSize)), Tooltip("Canvas size.")]
+        [EditorOrder(20), EditorDisplay("Canvas"), VisibleIf(nameof(Editor_Is3D)), Tooltip("Canvas size.")]
         public Vector2 Size
         {
             get => _guiRoot.Size;
@@ -108,6 +113,12 @@ namespace FlaxEngine
                 }
             }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether ignore scene depth when rendering the GUI (scene objects won't cover the interface).
+        /// </summary>
+        [EditorOrder(30), EditorDisplay("Canvas"), VisibleIf(nameof(Editor_Is3D)), Tooltip("If checked, scene depth will be ignored when rendering the GUI (scene objects won't cover the interface).")]
+        public bool IgnoreDepth { get; set; } = false;
 
         /// <summary>
         /// Gets the canvas GUI root control.
@@ -185,6 +196,9 @@ namespace FlaxEngine
 
                 jsonWriter.WritePropertyName("ReceivesEvents");
                 jsonWriter.WriteValue(ReceivesEvents);
+
+                jsonWriter.WritePropertyName("IgnoreDepth");
+                jsonWriter.WriteValue(IgnoreDepth);
 
                 jsonWriter.WritePropertyName("Size");
                 jsonWriter.WriteStartObject();
