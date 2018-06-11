@@ -485,35 +485,46 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             if (_visibleIfCaches != null)
             {
-                for (int i = 0; i < _visibleIfCaches.Length; i++)
+                try
                 {
-                    var c = _visibleIfCaches[i];
-
-                    if (c.Target == null)
-                        break;
-
-                    // Check rule (all objects must allow to show this property)
-                    bool visible = true;
-                    for (int j = 0; j < Values.Count; j++)
+                    for (int i = 0; i < _visibleIfCaches.Length; i++)
                     {
-                        if (Values[i] != null && !c.GetValue(Values[i]))
-                        {
-                            visible = false;
+                        var c = _visibleIfCaches[i];
+
+                        if (c.Target == null)
                             break;
+
+                        // Check rule (all objects must allow to show this property)
+                        bool visible = true;
+                        for (int j = 0; j < Values.Count; j++)
+                        {
+                            if (Values[j] != null && !c.GetValue(Values[j]))
+                            {
+                                visible = false;
+                                break;
+                            }
+                        }
+
+                        // Apply the visibility
+                        var label = c.PropertiesList.Labels[c.LabelIndex];
+                        label.Visible = visible;
+                        for (int j = label.FirstChildControlIndex; j < c.PropertiesList.Properties.Children.Count; j++)
+                        {
+                            var child = c.PropertiesList.Properties.Children[j];
+                            if (child is PropertyNameLabel)
+                                break;
+
+                            child.Visible = visible;
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Editor.LogWarning(ex);
+                    Editor.LogError("Failed to update VisibleIf rules. " + ex.Message);
 
-                    // Apply the visibility
-                    var label = c.PropertiesList.Labels[c.LabelIndex];
-                    label.Visible = visible;
-                    for (int j = label.FirstChildControlIndex; j < c.PropertiesList.Properties.Children.Count; j++)
-                    {
-                        var child = c.PropertiesList.Properties.Children[j];
-                        if (child is PropertyNameLabel)
-                            break;
-
-                        child.Visible = visible;
-                    }
+                    // Remove rules to prevent error in loop
+                    _visibleIfCaches = null;
                 }
             }
 
