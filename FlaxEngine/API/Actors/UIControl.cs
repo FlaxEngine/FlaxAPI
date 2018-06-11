@@ -47,6 +47,7 @@ namespace FlaxEngine
                         containerControl.UnlockChildrenRecursive();
 
                     _control.Parent = GetParent();
+                    _control.IndexInParent = OrderInParent;
                     _control.Location = new Vector2(LocalPosition);
                     // TODO: sync control order in parent with actor order in parent (think about specialcases like Panel with scroll bars used as internal controls)
                     _control.OnLocationChanged += OnControlLocationChanged;
@@ -182,7 +183,10 @@ namespace FlaxEngine
         internal void ParentChanged()
         {
             if (_control != null)
+            {
                 _control.Parent = GetParent();
+                _control.IndexInParent = OrderInParent;
+            }
         }
 
         internal void TransformChanged()
@@ -197,13 +201,14 @@ namespace FlaxEngine
             {
                 // Link or unlink control (won't modify Enable/Visible state)
                 _control.Parent = GetParent();
+                _control.IndexInParent = OrderInParent;
             }
         }
 
         internal void OrderInParentChanged()
         {
-            //if (_control != null)
-            //    _control.IndexInParent = OrderInParent;
+            if (_control != null)
+                _control.IndexInParent = OrderInParent;
         }
 
         internal void EndPlay()
