@@ -170,11 +170,13 @@ namespace FlaxEditor.Surface.ContextMenu
             {
                 // TODO: cache the allocated memory to reduce dynamic allocations
                 var archetypes = new NodeArchetype[count];
+                var actualCount = 0;
                 for (int i = 0; i < count; i++)
                 {
                     if(!parameters[i].IsPublic)
                         continue;
 
+                    actualCount++;
                     archetypes[i] = new NodeArchetype
                     {
                         TypeID = 1,
@@ -192,25 +194,31 @@ namespace FlaxEditor.Surface.ContextMenu
                         }
                     };
                 }
-                var groupArchetype = new GroupArchetype
+                if (actualCount > 0)
                 {
-                    GroupID = 10,
-                    Name = "Surface Parameters",
-                    Color = new Color(231, 76, 60),
-                    Archetypes = archetypes
-                };
-                var group = new VisjectCMGroup(this, groupArchetype);
-                group.Close(false);
-                for (int i = 0; i < count; i++)
-                {
-                    var item = new VisjectCMItem(group, archetypes[i]);
-                    item.Parent = group;
+                    var groupArchetype = new GroupArchetype
+                    {
+                        GroupID = 6,
+                        Name = "Surface Parameters",
+                        Color = new Color(52, 73, 94),
+                        Archetypes = archetypes
+                    };
+                    var group = new VisjectCMGroup(this, groupArchetype);
+                    group.Close(false);
+                    for (int i = 0; i < count; i++)
+                    {
+                        if (!parameters[i].IsPublic)
+                            continue;
+
+                        var item = new VisjectCMItem(group, archetypes[i]);
+                        item.Parent = group;
+                    }
+                    group.SortChildren();
+                    group.UnlockChildrenRecursive();
+                    group.Parent = _panel2;
+                    _groups.Add(group);
+                    _surfaceParametersGroup = group;
                 }
-                group.SortChildren();
-                group.UnlockChildrenRecursive();
-                group.Parent = _panel2;
-                _groups.Add(group);
-                _surfaceParametersGroup = group;
             }
         }
 

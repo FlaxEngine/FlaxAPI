@@ -145,7 +145,7 @@ namespace FlaxEditor.Surface.ContextMenu
         public override int Compare(Control other)
         {
             if (other is VisjectCMItem otherItem)
-                return String.Compare(NodeArchetype.Title, otherItem.NodeArchetype.Title, StringComparison.Ordinal);
+                return String.Compare(_archetype.Title, otherItem._archetype.Title, StringComparison.Ordinal);
             return base.Compare(other);
         }
     }
