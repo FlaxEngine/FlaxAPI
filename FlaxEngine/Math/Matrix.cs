@@ -893,7 +893,7 @@ namespace FlaxEngine
 
             //Scaling is the length of the rows. ( just take one row since this is a uniform matrix)
             scale = (float)Math.Sqrt(M11 * M11 + M12 * M12 + M13 * M13);
-            float inv_scale = 1f / scale;
+            float invScale = 1f / scale;
 
             //If any of the scaling factors are zero, then the rotation matrix can not exist.
             if (Math.Abs(scale) < Mathf.Epsilon)
@@ -903,18 +903,18 @@ namespace FlaxEngine
             }
 
             //The rotation is the left over matrix after dividing out the scaling.
-            var rotationmatrix = new Matrix();
-            rotationmatrix.M11 = M11 * inv_scale;
-            rotationmatrix.M12 = M12 * inv_scale;
-            rotationmatrix.M13 = M13 * inv_scale;
+            Matrix rotationmatrix = new Matrix();
+            rotationmatrix.M11 = M11 * invScale;
+            rotationmatrix.M12 = M12 * invScale;
+            rotationmatrix.M13 = M13 * invScale;
 
-            rotationmatrix.M21 = M21 * inv_scale;
-            rotationmatrix.M22 = M22 * inv_scale;
-            rotationmatrix.M23 = M23 * inv_scale;
+            rotationmatrix.M21 = M21 * invScale;
+            rotationmatrix.M22 = M22 * invScale;
+            rotationmatrix.M23 = M23 * invScale;
 
-            rotationmatrix.M31 = M31 * inv_scale;
-            rotationmatrix.M32 = M32 * inv_scale;
-            rotationmatrix.M33 = M33 * inv_scale;
+            rotationmatrix.M31 = M31 * invScale;
+            rotationmatrix.M32 = M32 * invScale;
+            rotationmatrix.M33 = M33 * invScale;
 
             rotationmatrix.M44 = 1f;
 
@@ -1515,7 +1515,7 @@ namespace FlaxEngine
             float d14 = value.M21 * b3 + value.M22 * -b1 + value.M23 * b0;
 
             float det = value.M11 * d11 - value.M12 * d12 + value.M13 * d13 - value.M14 * d14;
-            if (Math.Abs(det) == 0.0f)
+            if (Math.Abs(det) < Mathf.Epsilon)
             {
                 result = Zero;
                 return;
@@ -2020,7 +2020,7 @@ namespace FlaxEngine
 
                 int i = r;
 
-                while (matrix[i, lead] == 0)
+                while (Mathf.IsZero(matrix[i, lead]))
                 {
                     i++;
 
@@ -2649,7 +2649,7 @@ namespace FlaxEngine
         /// <param name="result">When the method completes, contains the created rotation matrix.</param>
         public static void RotationYawPitchRoll(float yaw, float pitch, float roll, out Matrix result)
         {
-            var quaternion = new Quaternion();
+            Quaternion quaternion;
             Quaternion.RotationYawPitchRoll(yaw, pitch, roll, out quaternion);
             RotationQuaternion(ref quaternion, out result);
         }
