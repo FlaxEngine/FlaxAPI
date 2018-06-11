@@ -74,7 +74,7 @@ namespace FlaxEngine
         /// Mesh data will be cached and uploaded to the GPU with a delay.
         /// </summary>
         /// <param name="vertices">The mesh verticies positions. Cannot be null.</param>
-        /// <param name="triangles">The mesh index buffer (triangles). Cannot be null.</param>
+        /// <param name="triangles">The mesh index buffer (triangles). Uses 32-bit stride buffer. Cannot be null.</param>
         /// <param name="normals">The normal vectors (per vertex).</param>
         /// <param name="uv">The texture cordinates (per vertex).</param>
         /// <param name="colors">The vertex colors (per vertex).</param>
@@ -96,7 +96,39 @@ namespace FlaxEngine
             if (colors != null && colors.Length != vertices.Length)
                 throw new ArgumentOutOfRangeException(nameof(colors));
 
-            if (Internal_UpdateMesh(unmanagedPtr, vertices, triangles, normals, uv, colors))
+            if (Internal_UpdateMeshInt(unmanagedPtr, vertices, triangles, normals, uv, colors))
+                throw new FlaxException("Failed to update mesh data.");
+        }
+
+        /// <summary>
+        /// Updates the model mesh vertex and index buffer data.
+        /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
+        /// Mesh data will be cached and uploaded to the GPU with a delay.
+        /// </summary>
+        /// <param name="vertices">The mesh verticies positions. Cannot be null.</param>
+        /// <param name="triangles">The mesh index buffer (triangles). Uses 16-bit stride buffer. Cannot be null.</param>
+        /// <param name="normals">The normal vectors (per vertex).</param>
+        /// <param name="uv">The texture cordinates (per vertex).</param>
+        /// <param name="colors">The vertex colors (per vertex).</param>
+        public void UpdateMesh(Vector3[] vertices, ushort[] triangles, Vector3[] normals = null, Vector2[] uv = null, Color32[] colors = null)
+        {
+            // Validate state and input
+            if (!IsVirtual)
+                throw new InvalidOperationException("Only virtual models can be updated at runtime.");
+            if (vertices == null)
+                throw new ArgumentNullException(nameof(vertices));
+            if (triangles == null)
+                throw new ArgumentNullException(nameof(triangles));
+            if (triangles.Length == 0 || triangles.Length % 3 != 0)
+                throw new ArgumentOutOfRangeException(nameof(triangles));
+            if (normals != null && normals.Length != vertices.Length)
+                throw new ArgumentOutOfRangeException(nameof(normals));
+            if (uv != null && uv.Length != vertices.Length)
+                throw new ArgumentOutOfRangeException(nameof(uv));
+            if (colors != null && colors.Length != vertices.Length)
+                throw new ArgumentOutOfRangeException(nameof(colors));
+
+            if (Internal_UpdateMeshUShort(unmanagedPtr, vertices, triangles, normals, uv, colors))
                 throw new FlaxException("Failed to update mesh data.");
         }
 
@@ -138,7 +170,10 @@ namespace FlaxEngine
         internal static extern int[] Internal_GetLODs(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_UpdateMesh(IntPtr obj, Vector3[] vertices, int[] triangles, Vector3[] normals, Vector2[] uv, Color32[] colors);
+        internal static extern bool Internal_UpdateMeshInt(IntPtr obj, Vector3[] vertices, int[] triangles, Vector3[] normals, Vector2[] uv, Color32[] colors);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_UpdateMeshUShort(IntPtr obj, Vector3[] vertices, ushort[] triangles, Vector3[] normals, Vector2[] uv, Color32[] colors);
 #endif
     }
 }
