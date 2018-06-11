@@ -157,6 +157,7 @@ namespace FlaxEngine
                 // Render canvas manually
                 _guiRoot.DockStyle = DockStyle.None;
                 _guiRoot.Parent = null;
+                _guiRoot.PerformLayout();
                 if (_renderer == null)
                 {
                     _renderer = New<CanvasRenderer>();
