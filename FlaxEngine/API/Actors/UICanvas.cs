@@ -164,13 +164,23 @@ namespace FlaxEngine
             }
             else if (_renderMode == CanvasRenderMode.CameraSpace && RenderCamera)
             {
+                // Center viewport (and flip)
+                Matrix tmp1, tmp2;
+                var viewport = RenderCamera.Viewport;
+                Matrix.Translation(viewport.Width / -2.0f, viewport.Height / -2.0f, 0, out world);
+                Matrix.RotationX(Mathf.Pi, out tmp2);
+                Matrix.Multiply(ref world, ref tmp2, out tmp1);
+                tmp1 = world;
+
                 // In front of the camera
                 var viewPos = RenderCamera.Position;
                 var viewRot = RenderCamera.Orientation;
                 var viewUp = Vector3.Up * viewRot;
                 var viewForward = Vector3.Forward * viewRot;
                 var pos = viewPos + viewForward * Distance;
-                Matrix.BillboardLH(ref pos, ref viewPos, ref viewUp, ref viewForward, out world);
+                Matrix.BillboardLH(ref pos, ref viewPos, ref viewUp, ref viewForward, out tmp2);
+
+                Matrix.Multiply(ref tmp1, ref tmp2, out world);
             }
             else
             {
