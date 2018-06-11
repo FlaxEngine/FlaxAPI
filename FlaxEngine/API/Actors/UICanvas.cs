@@ -52,7 +52,7 @@ namespace FlaxEngine
             // Calculate rendering matrix (world*view*projection)
             Matrix viewProjection;
             Matrix world;
-            Canvas.GetLocalToWorldMatrix(out world);
+            Canvas.GetWorldMatrix(out world);
             Matrix view;
             Matrix.Multiply(ref world, ref task.View.View, out view);
             Matrix.Multiply(ref view, ref task.View.Projection, out viewProjection);
@@ -98,6 +98,8 @@ namespace FlaxEngine
 
         private bool Editor_Is3D => _renderMode != CanvasRenderMode.ScreenSpace;
 
+        private bool Editor_IsCameraSpace => _renderMode == CanvasRenderMode.CameraSpace;
+
         /// <summary>
         /// Gets or sets the size of the canvas. Used only in <see cref="CanvasRenderMode.CameraSpace"/> or <see cref="CanvasRenderMode.WorldSpace"/>.
         /// </summary>
@@ -121,6 +123,24 @@ namespace FlaxEngine
         public bool IgnoreDepth { get; set; } = false;
 
         /// <summary>
+        /// Gets or sets the camera used as a input events source. Canvas will use handle mouse raycasting for this camera to provide GUI system with events.
+        /// </summary>
+        [EditorOrder(40), EditorDisplay("Canvas"), VisibleIf(nameof(Editor_Is3D)), Tooltip("Camera used as a input events source. Canvas will use handle mouse raycasting for this camera to provide GUI system with events.")]
+        public Camera EventCamera { get; set; }
+
+        /// <summary>
+        /// Gets or sets the camera used to place the GUI when render mode is set to <see cref="CanvasRenderMode.CameraSpace"/>.
+        /// </summary>
+        [EditorOrder(50), EditorDisplay("Canvas"), VisibleIf(nameof(Editor_IsCameraSpace)), Tooltip("Camera used to place the GUI when RenderMode is set to CameraSpace")]
+        public Camera RenderCamera { get; set; }
+
+        /// <summary>
+        /// Gets or sets the distance from the <see cref="RenderCamera"/> to place the plane with GUI. Use negative value to move UI behind the camera, positive to move it in front of it.
+        /// </summary>
+        [EditorOrder(60), EditorDisplay("Canvas"), VisibleIf(nameof(Editor_IsCameraSpace)), Tooltip("Distance from the RenderCamera to place the plane with GUI. Use negative value to move UI behind the camera, positive to move it in front of it.")]
+        public float Distance { get; set; } = 500;
+
+        /// <summary>
         /// Gets the canvas GUI root control.
         /// </summary>
         public CanvasRootControl GUI => _guiRoot;
@@ -129,6 +149,34 @@ namespace FlaxEngine
         {
             _guiRoot = new CanvasRootControl(this);
             _guiRoot.IsLayoutLocked = false;
+        }
+
+        /// <summary>
+        /// Gets the world matrix used to transform the GUI from the local space to the world space. Handles canvas rendering mode
+        /// </summary>
+        /// <param name="world">The world.</param>
+        public void GetWorldMatrix(out Matrix world)
+        {
+            if (_renderMode == CanvasRenderMode.WorldSpace)
+            {
+                // In 3D world
+                GetLocalToWorldMatrix(out world);
+            }
+            else if (_renderMode == CanvasRenderMode.CameraSpace && RenderCamera)
+            {
+                // In front of the camera
+                var viewPos = RenderCamera.Position;
+                var viewRot = RenderCamera.Orientation;
+                var viewUp = Vector3.Up * viewRot;
+                var viewForward = Vector3.Forward * viewRot;
+                var pos = viewPos + viewForward * Distance;
+                Matrix.BillboardLH(ref pos, ref viewPos, ref viewUp, ref viewForward, out world);
+            }
+            else
+            {
+                // Direct projection
+                world = Matrix.Identity;
+            }
         }
 
         private void Setup()
@@ -201,6 +249,15 @@ namespace FlaxEngine
                 jsonWriter.WritePropertyName("IgnoreDepth");
                 jsonWriter.WriteValue(IgnoreDepth);
 
+                jsonWriter.WritePropertyName("EventCamera");
+                jsonWriter.WriteValue(Json.JsonSerializer.GetStringID(EventCamera));
+
+                jsonWriter.WritePropertyName("RenderCamera");
+                jsonWriter.WriteValue(Json.JsonSerializer.GetStringID(RenderCamera));
+
+                jsonWriter.WritePropertyName("Distance");
+                jsonWriter.WriteValue(Distance);
+                
                 jsonWriter.WritePropertyName("Size");
                 jsonWriter.WriteStartObject();
                 jsonWriter.WritePropertyName("X");
