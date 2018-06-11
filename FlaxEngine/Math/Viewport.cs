@@ -133,7 +133,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets the size of this resource.
+        /// Gets the size of the viewport.
         /// </summary>
         /// <value>The bounds.</value>
         public Rectangle Bounds
@@ -145,6 +145,19 @@ namespace FlaxEngine
                 Y = value.Y;
                 Width = value.Width;
                 Height = value.Height;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the size of the viewport (width and height).
+        /// </summary>
+        public Vector2 Size
+        {
+            get => new Vector2(Width, Height);
+            set
+            {
+                Width = value.X;
+                Height = value.Y;
             }
         }
 

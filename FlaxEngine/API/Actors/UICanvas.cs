@@ -167,14 +167,21 @@ namespace FlaxEngine
             else if (_renderMode == CanvasRenderMode.CameraSpace && RenderCamera)
             {
                 Matrix tmp1, tmp2;
-                Matrix view, projection;
 
                 // Adjust GUI size to the viewport size at the given distance form the camera
                 var viewport = RenderCamera.Viewport;
-                RenderCamera.GetMatrices(out view, out projection, ref viewport);
-                Matrix.Multiply(ref view, ref projection, out tmp2);
-                var frustum = new BoundingFrustum(tmp2);
-                _guiRoot.Size = new Vector2(frustum.GetWidthAtDepth(Distance), frustum.GetHeightAtDepth(Distance));
+                if (RenderCamera.UsePerspective)
+                {
+                    Matrix tmp3;
+                    RenderCamera.GetMatrices(out tmp1, out tmp3, ref viewport);
+                    Matrix.Multiply(ref tmp1, ref tmp3, out tmp2);
+                    var frustum = new BoundingFrustum(tmp2);
+                    _guiRoot.Size = new Vector2(frustum.GetWidthAtDepth(Distance), frustum.GetHeightAtDepth(Distance));
+                }
+                else
+                {
+                    _guiRoot.Size = viewport.Size * RenderCamera.OrthographicScale;
+                }
 
                 // Center viewport (and flip)
                 Matrix.Translation(_guiRoot.Width / -2.0f, _guiRoot.Height / -2.0f, 0, out world);
