@@ -194,7 +194,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 }
                 var groupArchetype = new GroupArchetype
                 {
-                    GroupID = 100,
+                    GroupID = 10,
                     Name = "Surface Parameters",
                     Color = new Color(231, 76, 60),
                     Archetypes = archetypes
