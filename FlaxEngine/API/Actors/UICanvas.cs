@@ -98,18 +98,20 @@ namespace FlaxEngine
 
         private bool Editor_Is3D => _renderMode != CanvasRenderMode.ScreenSpace;
 
+        private bool Editor_IsWorldSpace => _renderMode == CanvasRenderMode.WorldSpace;
+
         private bool Editor_IsCameraSpace => _renderMode == CanvasRenderMode.CameraSpace;
 
         /// <summary>
         /// Gets or sets the size of the canvas. Used only in <see cref="CanvasRenderMode.CameraSpace"/> or <see cref="CanvasRenderMode.WorldSpace"/>.
         /// </summary>
-        [EditorOrder(20), EditorDisplay("Canvas"), VisibleIf(nameof(Editor_Is3D)), Tooltip("Canvas size.")]
+        [EditorOrder(20), EditorDisplay("Canvas"), VisibleIf(nameof(Editor_IsWorldSpace)), Tooltip("Canvas size.")]
         public Vector2 Size
         {
             get => _guiRoot.Size;
             set
             {
-                if (_renderMode != CanvasRenderMode.ScreenSpace || _isLoading)
+                if (_renderMode == CanvasRenderMode.WorldSpace || _isLoading)
                 {
                     _guiRoot.Size = value;
                 }
@@ -135,9 +137,9 @@ namespace FlaxEngine
         public Camera RenderCamera { get; set; }
 
         /// <summary>
-        /// Gets or sets the distance from the <see cref="RenderCamera"/> to place the plane with GUI. Use negative value to move UI behind the camera, positive to move it in front of it.
+        /// Gets or sets the distance from the <see cref="RenderCamera"/> to place the plane with GUI. If the screen is resized, changes resolution, or the camera frustum changes, the Canvas will automatically change size to match as well.
         /// </summary>
-        [EditorOrder(60), EditorDisplay("Canvas"), VisibleIf(nameof(Editor_IsCameraSpace)), Tooltip("Distance from the RenderCamera to place the plane with GUI. Use negative value to move UI behind the camera, positive to move it in front of it.")]
+        [EditorOrder(60), Limit(0.01f), EditorDisplay("Canvas"), VisibleIf(nameof(Editor_IsCameraSpace)), Tooltip("Distance from the RenderCamera to place the plane with GUI. If the screen is resized, changes resolution, or the camera frustum changes, the Canvas will automatically change size to match as well.")]
         public float Distance { get; set; } = 500;
 
         /// <summary>
@@ -164,14 +166,21 @@ namespace FlaxEngine
             }
             else if (_renderMode == CanvasRenderMode.CameraSpace && RenderCamera)
             {
-                // Center viewport (and flip)
                 Matrix tmp1, tmp2;
-                var viewport = RenderCamera.Viewport;
-                Matrix.Translation(viewport.Width / -2.0f, viewport.Height / -2.0f, 0, out world);
-                Matrix.RotationX(Mathf.Pi, out tmp2);
-                Matrix.Multiply(ref world, ref tmp2, out tmp1);
-                tmp1 = world;
+                Matrix view, projection;
 
+                // Adjust GUI size to the viewport size at the given distance form the camera
+                var viewport = RenderCamera.Viewport;
+                RenderCamera.GetMatrices(out view, out projection, ref viewport);
+                Matrix.Multiply(ref view, ref projection, out tmp2);
+                var frustum = new BoundingFrustum(tmp2);
+                _guiRoot.Size = new Vector2(frustum.GetWidthAtDepth(Distance), frustum.GetHeightAtDepth(Distance));
+
+                // Center viewport (and flip)
+                Matrix.Translation(_guiRoot.Width / -2.0f, _guiRoot.Height / -2.0f, 0, out world);
+                Matrix.RotationYawPitchRoll(Mathf.Pi, Mathf.Pi, 0, out tmp2);
+                Matrix.Multiply(ref world, ref tmp2, out tmp1);
+                
                 // In front of the camera
                 var viewPos = RenderCamera.Position;
                 var viewRot = RenderCamera.Orientation;
