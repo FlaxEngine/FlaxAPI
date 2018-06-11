@@ -3,6 +3,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using FlaxEngine.Json.JsonCustomSerializers;
@@ -17,114 +18,6 @@ namespace FlaxEngine.Json
     /// <seealso cref="Newtonsoft.Json.JsonConverter" />
     internal class FlaxObjectConverter : JsonConverter
     {
-        internal struct GuidInterop
-        {
-            public uint A;
-            public uint B;
-            public uint C;
-            public uint D;
-        }
-
-        internal static unsafe void ParseHex(char* str, int length, out uint result)
-        {
-            uint sum = 0;
-            char* p = str;
-            char* end = str + length;
-
-            if (*p == '0' && *(p + 1) == 'x')
-                p += 2;
-
-            while (p < end && *p != 0)
-            {
-                int c = *p - '0';
-
-                if (c < 0 || c > 9)
-                {
-                    c = char.ToLower(*p) - 'a' + 10;
-                    if (c < 10 || c > 15)
-                    {
-                        result = 0;
-                        return;
-                    }
-                }
-
-                sum = 16 * sum + (uint)c;
-
-                p++;
-            }
-
-            result = sum;
-        }
-
-        internal static void ParseHex(string str, int start, int length, out uint result)
-        {
-            uint sum = 0;
-            int p = start;
-            int end = start + length;
-
-            if (str.Length < end)
-            {
-                result = 0;
-                return;
-            }
-
-            if (str[p] == '0' && str[p + 1] == 'x')
-                p += 2;
-
-            while (p < end && str[p] != 0)
-            {
-                int c = str[p] - '0';
-
-                if (c < 0 || c > 9)
-                {
-                    c = char.ToLower(str[p]) - 'a' + 10;
-                    if (c < 10 || c > 15)
-                    {
-                        result = 0;
-                        return;
-                    }
-                }
-
-                sum = 16 * sum + (uint)c;
-
-                p++;
-            }
-
-            result = sum;
-        }
-
-        internal static unsafe string GetStringID(Guid id)
-        {
-            GuidInterop* g = (GuidInterop*)&id;
-            return string.Format("{0:x8}{1:x8}{2:x8}{3:x8}", g->A, g->B, g->C, g->D);
-        }
-
-        internal static unsafe void ParseID(string str, out Guid id)
-        {
-            GuidInterop g;
-
-            // Broken after VS 15.5
-            /*fixed (char* a = str)
-            {
-                char* b = a + 8;
-                char* c = b + 8;
-                char* d = c + 8;
-
-                ParseHex(a, 8, out g.A);
-                ParseHex(b, 8, out g.B);
-                ParseHex(c, 8, out g.C);
-                ParseHex(d, 8, out g.D);
-            }*/
-
-            // Temporary fix (not using raw char* pointer)
-            ParseHex(str, 0, 8, out g.A);
-            ParseHex(str, 8, 8, out g.B);
-            ParseHex(str, 16, 8, out g.C);
-            ParseHex(str, 24, 8, out g.D);
-
-            id = *(Guid*)&g;
-        }
-
         /// <inheritdoc />
         public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
         {
@@ -132,7 +25,7 @@ namespace FlaxEngine.Json
             if (value is Object obj)
                 id = obj.ID;
 
-            writer.WriteValue(GetStringID(id));
+            writer.WriteValue(JsonSerializer.GetStringID(id));
         }
 
         /// <inheritdoc />
@@ -141,7 +34,7 @@ namespace FlaxEngine.Json
             if (reader.TokenType == JsonToken.String)
             {
                 Guid id;
-                ParseID((string)reader.Value, out id);
+                JsonSerializer.ParseID((string)reader.Value, out id);
                 return Object.Find<Object>(ref id);
             }
 
@@ -264,6 +157,144 @@ namespace FlaxEngine.Json
         public static void Deserialize(object input, string json)
         {
             JsonConvert.PopulateObject(json, input, Settings);
+        }
+
+        /// <summary>
+        /// Guid type in Flax format (the same as C++ layer).
+        /// </summary>
+        internal struct GuidInterop
+        {
+            public uint A;
+            public uint B;
+            public uint C;
+            public uint D;
+        }
+
+        /// <summary>
+        /// Gets the string representation of the given object ID. It matches the internal serialization formatting rules.
+        /// </summary>
+        /// <param name="id">The object identifier.</param>
+        /// <returns>The serialized ID.</returns>
+        public static unsafe string GetStringID(Guid id)
+        {
+            // TODO: make to more efficent, don't use string format, use cached string buffer, dont allocate any byte during this conversion
+
+            GuidInterop* g = (GuidInterop*)&id;
+            return string.Format("{0:x8}{1:x8}{2:x8}{3:x8}", g->A, g->B, g->C, g->D);
+        }
+
+        /// <summary>
+        /// Gets the string representation of the given object. It matches the internal serialization formatting rules.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <returns>The serialized ID.</returns>
+        public static string GetStringID(Object obj)
+        {
+            Guid id = Guid.Empty;
+            if (obj != null)
+                id = obj.ID;
+            return GetStringID(id);
+        }
+
+        /// <summary>
+        /// Parses the given object identifier represented in the internal serialization format.
+        /// </summary>
+        /// <param name="str">The ID string.</param>
+        /// <param name="id">The identifier.</param>
+        public static unsafe void ParseID(string str, out Guid id)
+        {
+            GuidInterop g;
+
+            // Broken after VS 15.5
+            /*fixed (char* a = str)
+            {
+                char* b = a + 8;
+                char* c = b + 8;
+                char* d = c + 8;
+
+                ParseHex(a, 8, out g.A);
+                ParseHex(b, 8, out g.B);
+                ParseHex(c, 8, out g.C);
+                ParseHex(d, 8, out g.D);
+            }*/
+
+            // Temporary fix (not using raw char* pointer)
+            ParseHex(str, 0, 8, out g.A);
+            ParseHex(str, 8, 8, out g.B);
+            ParseHex(str, 16, 8, out g.C);
+            ParseHex(str, 24, 8, out g.D);
+
+            id = *(Guid*)&g;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static unsafe void ParseHex(char* str, int length, out uint result)
+        {
+            uint sum = 0;
+            char* p = str;
+            char* end = str + length;
+
+            if (*p == '0' && *(p + 1) == 'x')
+                p += 2;
+
+            while (p < end && *p != 0)
+            {
+                int c = *p - '0';
+
+                if (c < 0 || c > 9)
+                {
+                    c = char.ToLower(*p) - 'a' + 10;
+                    if (c < 10 || c > 15)
+                    {
+                        result = 0;
+                        return;
+                    }
+                }
+
+                sum = 16 * sum + (uint)c;
+
+                p++;
+            }
+
+            result = sum;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static void ParseHex(string str, int start, int length, out uint result)
+        {
+            uint sum = 0;
+            int p = start;
+            int end = start + length;
+
+            if (str.Length < end)
+            {
+                result = 0;
+                return;
+            }
+
+            if (str[p] == '0' && str[p + 1] == 'x')
+                p += 2;
+
+            while (p < end && str[p] != 0)
+            {
+                int c = str[p] - '0';
+
+                if (c < 0 || c > 9)
+                {
+                    c = char.ToLower(str[p]) - 'a' + 10;
+                    if (c < 10 || c > 15)
+                    {
+                        result = 0;
+                        return;
+                    }
+                }
+
+                sum = 16 * sum + (uint)c;
+
+                p++;
+            }
+
+            result = sum;
         }
     }
 }

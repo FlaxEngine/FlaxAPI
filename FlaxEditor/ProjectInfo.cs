@@ -55,7 +55,7 @@ namespace FlaxEditor
                 writer.WriteStartElement("Project");
 
                 writer.WriteElementString("Name", Name);
-                writer.WriteElementString("DefaultSceneId", FlaxObjectConverter.GetStringID(DefaultSceneId));
+                writer.WriteElementString("DefaultSceneId", JsonSerializer.GetStringID(DefaultSceneId));
                 writer.WriteStartElement("DefaultSceneSpawnPos");
                 writer.WriteElementString("X", DefaultSceneSpawn.Position.X.ToString());
                 writer.WriteElementString("Y", DefaultSceneSpawn.Position.Y.ToString());
