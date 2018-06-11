@@ -703,7 +703,7 @@ namespace FlaxEditor.Surface
             if (IsSelecting)
             {
                 var selectionRect = Rectangle.FromPoints(_leftMouseDownPos, _mousePos);
-                Render2D.FillRectangle(selectionRect, Color.Orange * 0.13f, true);
+                Render2D.FillRectangle(selectionRect, Color.Orange * 0.4f, true);
                 Render2D.DrawRectangle(selectionRect, Color.Orange);
             }
 

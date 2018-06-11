@@ -495,7 +495,7 @@ namespace FlaxEngine.GUI
                 // Draw drag and drop effect
                 if (IsDragOver)
                 {
-                    Color dragOverColor = style.BackgroundSelected * 0.4f;
+                    Color dragOverColor = style.BackgroundSelected * 0.6f;
                     Rectangle rect;
                     switch (_dragOverMode)
                     {

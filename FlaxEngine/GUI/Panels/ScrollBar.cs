@@ -24,7 +24,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The default minimum opacity.
         /// </summary>
-        public const float DefaultMinimumOpacity = 0.4f;
+        public const float DefaultMinimumOpacity = 0.7f;
 
         /// <summary>
         /// The default minimum size.
