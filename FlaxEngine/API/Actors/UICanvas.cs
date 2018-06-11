@@ -96,7 +96,7 @@ namespace FlaxEngine
         /// <summary>
         /// Gets or sets the size of the canvas. Used only in <see cref="CanvasRenderMode.CameraSpace"/> or <see cref="CanvasRenderMode.WorldSpace"/>.
         /// </summary>
-        [EditorOrder(20), EditorDisplay("Canvas"), VisibleIf("Editor_ShowSize"), Tooltip("Canvas size.")]
+        [EditorOrder(20), EditorDisplay("Canvas"), VisibleIf(nameof(Editor_ShowSize)), Tooltip("Canvas size.")]
         public Vector2 Size
         {
             get => _guiRoot.Size;
