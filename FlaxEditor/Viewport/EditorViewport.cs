@@ -522,7 +522,7 @@ namespace FlaxEditor.Viewport
         {
             // Create projection matrix
             float aspect = Width / Height;
-            Matrix.PerspectiveFovLH(_fieldOfView * Mathf.DegreesToRadians, aspect, _nearPlane, _farPlane, out result);
+            Matrix.PerspectiveFov(_fieldOfView * Mathf.DegreesToRadians, aspect, _nearPlane, _farPlane, out result);
         }
 
         /// <summary>
@@ -537,7 +537,7 @@ namespace FlaxEditor.Viewport
             Vector3 target = position + direction;
             Vector3 right = Vector3.Normalize(Vector3.Cross(Vector3.Up, direction));
             Vector3 up = Vector3.Normalize(Vector3.Cross(direction, right));
-            Matrix.LookAtLH(ref position, ref target, ref up, out result);
+            Matrix.LookAt(ref position, ref target, ref up, out result);
         }
 
         /// <summary>

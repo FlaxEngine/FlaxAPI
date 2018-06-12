@@ -999,10 +999,10 @@ namespace FlaxEngine
         /// <param name="target">The camera look-at target.</param>
         /// <param name="up">The camera's up vector.</param>
         /// <param name="result">When the method completes, contains the created look-at quaternion.</param>
-        public static void LookAtLH(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Quaternion result)
+        public static void LookAt(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Quaternion result)
         {
             Matrix3x3 matrix;
-            Matrix3x3.LookAtLH(ref eye, ref target, ref up, out matrix);
+            Matrix3x3.LookAt(ref eye, ref target, ref up, out matrix);
             RotationMatrix(ref matrix, out result);
         }
 
@@ -1013,10 +1013,10 @@ namespace FlaxEngine
         /// <param name="target">The camera look-at target.</param>
         /// <param name="up">The camera's up vector.</param>
         /// <returns>The created look-at quaternion.</returns>
-        public static Quaternion LookAtLH(Vector3 eye, Vector3 target, Vector3 up)
+        public static Quaternion LookAt(Vector3 eye, Vector3 target, Vector3 up)
         {
             Quaternion result;
-            LookAtLH(ref eye, ref target, ref up, out result);
+            LookAt(ref eye, ref target, ref up, out result);
             return result;
         }
 
@@ -1026,10 +1026,10 @@ namespace FlaxEngine
         /// <param name="forward">The camera's forward direction.</param>
         /// <param name="up">The camera's up vector.</param>
         /// <param name="result">When the method completes, contains the created look-at quaternion.</param>
-        public static void RotationLookAtLH(ref Vector3 forward, ref Vector3 up, out Quaternion result)
+        public static void RotationLookAt(ref Vector3 forward, ref Vector3 up, out Quaternion result)
         {
             Vector3 eye = Vector3.Zero;
-            LookAtLH(ref eye, ref forward, ref up, out result);
+            LookAt(ref eye, ref forward, ref up, out result);
         }
 
         /// <summary>
@@ -1038,10 +1038,10 @@ namespace FlaxEngine
         /// <param name="forward">The camera's forward direction.</param>
         /// <param name="up">The camera's up vector.</param>
         /// <returns>The created look-at quaternion.</returns>
-        public static Quaternion RotationLookAtLH(Vector3 forward, Vector3 up)
+        public static Quaternion RotationLookAt(Vector3 forward, Vector3 up)
         {
             Quaternion result;
-            RotationLookAtLH(ref forward, ref up, out result);
+            RotationLookAt(ref forward, ref up, out result);
             return result;
         }
 
@@ -1075,10 +1075,10 @@ namespace FlaxEngine
         /// <param name="cameraUpVector">The up vector of the camera.</param>
         /// <param name="cameraForwardVector">The forward vector of the camera.</param>
         /// <param name="result">When the method completes, contains the created billboard quaternion.</param>
-        public static void BillboardLH(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Quaternion result)
+        public static void Billboard(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Quaternion result)
         {
             Matrix3x3 matrix;
-            Matrix3x3.BillboardLH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out matrix);
+            Matrix3x3.Billboard(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out matrix);
             RotationMatrix(ref matrix, out result);
         }
 
@@ -1090,10 +1090,10 @@ namespace FlaxEngine
         /// <param name="cameraUpVector">The up vector of the camera.</param>
         /// <param name="cameraForwardVector">The forward vector of the camera.</param>
         /// <returns>The created billboard quaternion.</returns>
-        public static Quaternion BillboardLH(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector)
+        public static Quaternion Billboard(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector)
         {
             Quaternion result;
-            BillboardLH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
+            Billboard(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
             return result;
         }
 

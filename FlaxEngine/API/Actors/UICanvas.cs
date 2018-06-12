@@ -194,7 +194,7 @@ namespace FlaxEngine
                 var viewUp = Vector3.Up * viewRot;
                 var viewForward = Vector3.Forward * viewRot;
                 var pos = viewPos + viewForward * Distance;
-                Matrix.BillboardLH(ref pos, ref viewPos, ref viewUp, ref viewForward, out tmp2);
+                Matrix.Billboard(ref pos, ref viewPos, ref viewUp, ref viewForward, out tmp2);
 
                 Matrix.Multiply(ref tmp1, ref tmp2, out world);
             }

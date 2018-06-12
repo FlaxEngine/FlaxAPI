@@ -316,7 +316,7 @@ namespace FlaxEngine
             result.pTop.Normalize();
             result.pBottom.Normalize();
 
-            result.pMatrix = Matrix.LookAtLH(cameraPos, cameraPos + lookDir * 10, upDir) * Matrix.PerspectiveFovLH(fov, aspect, znear, zfar);
+            result.pMatrix = Matrix.LookAt(cameraPos, cameraPos + lookDir * 10, upDir) * Matrix.PerspectiveFov(fov, aspect, znear, zfar);
 
             return result;
         }
