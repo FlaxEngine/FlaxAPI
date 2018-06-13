@@ -101,7 +101,7 @@ namespace FlaxEditor.Surface.ContextMenu
             // Draw all highlights
             if (_highlights != null)
             {
-                var color = style.ProgressNormal * 0.3f;
+                var color = style.ProgressNormal * 0.6f;
                 for (int i = 0; i < _highlights.Count; i++)
                     Render2D.FillRectangle(_highlights[i], color, true);
             }
