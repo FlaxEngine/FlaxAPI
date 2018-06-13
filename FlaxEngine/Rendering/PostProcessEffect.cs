@@ -46,6 +46,11 @@ namespace FlaxEngine.Rendering
         public virtual bool CanRender => Enabled;
 
         /// <summary>
+        /// Gets a value indicating whether use a single render target as both input and output. Use this if your effect doesn't need to copy the input buffer to the output but can render directly to the single texture. Can be used to optimize game performance.
+        /// </summary>
+        public virtual bool UseSingleTarget => false;
+
+        /// <summary>
         /// Gets the effect rendering location within rendering pipeline.
         /// </summary>
         public virtual PostProcessEffectLocation Location => PostProcessEffectLocation.Default;
@@ -59,9 +64,10 @@ namespace FlaxEngine.Rendering
         /// <param name="output">The output texture.</param>
         public abstract void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output);
 
-        internal static void FetchInfo(PostProcessEffect obj, out PostProcessEffectLocation location)
+        internal static void FetchInfo(PostProcessEffect obj, out PostProcessEffectLocation location, out bool useSingleTarget)
         {
             location = obj.Location;
+            useSingleTarget = obj.UseSingleTarget;
         }
     }
 }
