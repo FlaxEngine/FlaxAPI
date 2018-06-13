@@ -42,6 +42,9 @@ namespace FlaxEngine
         public UICanvas Canvas;
 
         /// <inheritdoc />
+        public override bool UseSingleTarget => true;
+
+        /// <inheritdoc />
         public override PostProcessEffectLocation Location => Canvas.RenderLocation;
 
         /// <inheritdoc />
@@ -49,9 +52,6 @@ namespace FlaxEngine
         {
             // TODO: apply frustum culling to skip rendering if canvas is not in a viewport
 
-            // TODO: support additive postFx to prevent frame copy
-            context.Draw(output, input);
-            
             // Calculate rendering matrix (world*view*projection)
             Matrix viewProjection;
             Matrix world;
@@ -64,7 +64,7 @@ namespace FlaxEngine
             RenderTarget depthBuffer = Canvas.IgnoreDepth ? null : task.Buffers.DepthBuffer;
 
             // Render GUI in 3D
-            Render2D.CallDrawing(Canvas.GUI, context, output, depthBuffer, ref viewProjection);
+            Render2D.CallDrawing(Canvas.GUI, context, input, depthBuffer, ref viewProjection);
         }
     }
 
