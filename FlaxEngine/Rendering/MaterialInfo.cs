@@ -165,6 +165,11 @@ namespace FlaxEngine.Rendering
         /// The after custom post effects.
         /// </summary>
         AfterCustomPostEffects = 3,
+
+        /// <summary>
+        /// The 'before' Reflections pass. After the Light pass. Can be used to implement a custom light types that accumulate lighting to the light buffer.
+        /// </summary>
+        BeforeReflectionsPass = 4,
     }
 
     /// <summary>
