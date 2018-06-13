@@ -42,6 +42,9 @@ namespace FlaxEngine
         public UICanvas Canvas;
 
         /// <inheritdoc />
+        public override PostProcessEffectLocation Location => Canvas.RenderLocation;
+
+        /// <inheritdoc />
         public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
         {
             // TODO: apply frustum culling to skip rendering if canvas is not in a viewport
@@ -89,6 +92,12 @@ namespace FlaxEngine
                 }
             }
         }
+
+        /// <summary>
+        /// Gets or sets the canvas rendering location within rendering pipeline. Used only in <see cref="CanvasRenderMode.CameraSpace"/> or <see cref="CanvasRenderMode.WorldSpace"/>.
+        /// </summary>
+        [EditorOrder(13), EditorDisplay("Canvas"), VisibleIf(nameof(Editor_Is3D)), Tooltip("Canvas rendering location within the rendering pipeline. Change this if you want GUI to affect the lighting or post processing effects like bloom.")]
+        public PostProcessEffectLocation RenderLocation { get; set; } = PostProcessEffectLocation.Default;
 
         /// <summary>
         /// Gets or sets a value indicating whether canvas can receive the input events.
@@ -268,6 +277,9 @@ namespace FlaxEngine
 
                 jsonWriter.WritePropertyName("RenderMode");
                 jsonWriter.WriteValue(_renderMode);
+
+                jsonWriter.WritePropertyName("RenderLocation");
+                jsonWriter.WriteValue(RenderLocation);
 
                 jsonWriter.WritePropertyName("ReceivesEvents");
                 jsonWriter.WriteValue(ReceivesEvents);
