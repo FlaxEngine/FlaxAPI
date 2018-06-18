@@ -8,11 +8,6 @@ namespace FlaxEngine
     public partial class JsonAsset
     {
         /// <summary>
-        /// The asset type content domain.
-        /// </summary>
-        public const ContentDomain Domain = ContentDomain.Document;
-
-        /// <summary>
         /// Creates the serialized object instance from the json asset data. Asset must be loaded.
         /// </summary>
         /// <returns>The created object or null.</returns>

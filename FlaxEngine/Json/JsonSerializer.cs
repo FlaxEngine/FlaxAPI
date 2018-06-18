@@ -13,7 +13,7 @@ using Newtonsoft.Json.Serialization;
 namespace FlaxEngine.Json
 {
     /// <summary>
-    /// Serialize references to the FlaxEngine.Object as Guid (format N).
+    /// Serialize references to the FlaxEngine.Object as Guid.
     /// </summary>
     /// <seealso cref="Newtonsoft.Json.JsonConverter" />
     internal class FlaxObjectConverter : JsonConverter
@@ -52,6 +52,38 @@ namespace FlaxEngine.Json
             }
 
             return typeof(Object).IsAssignableFrom(objectType);
+        }
+    }
+
+    /// <summary>
+    /// Serialize SceneReference as Guid in internal format.
+    /// </summary>
+    /// <seealso cref="Newtonsoft.Json.JsonConverter" />
+    internal class SceneReferenceConverter : JsonConverter
+    {
+        /// <inheritdoc />
+        public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+        {
+            writer.WriteValue(JsonSerializer.GetStringID(((SceneReference)value).ID));
+        }
+
+        /// <inheritdoc />
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+        {
+            SceneReference result = new SceneReference();
+
+            if (reader.TokenType == JsonToken.String)
+            {
+                JsonSerializer.ParseID((string)reader.Value, out result.ID);
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(SceneReference);
         }
     }
 
@@ -107,6 +139,7 @@ namespace FlaxEngine.Json
                 NullValueHandling = NullValueHandling.Ignore,
             };
             settings.Converters.Add(ObjectConverter = new FlaxObjectConverter());
+            settings.Converters.Add(new SceneReferenceConverter());
             //settings.Converters.Add(new GuidConverter());
             return settings;
         }

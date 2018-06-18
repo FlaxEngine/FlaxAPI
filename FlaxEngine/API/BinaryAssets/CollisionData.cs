@@ -80,11 +80,6 @@ namespace FlaxEngine
     public partial class CollisionData
     {
         /// <summary>
-        /// The asset type content domain.
-        /// </summary>
-        public const ContentDomain Domain = ContentDomain.Other;
-
-        /// <summary>
         /// Gets the set of options used to generate a collision data mesh.
         /// </summary>
         /// <param name="modelLodIndex">Index of the model LOD index used to generate a collision data (value provided during data cooking, may be higher than actual source model LODs collection size).</param>

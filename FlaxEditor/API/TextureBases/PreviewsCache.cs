@@ -36,10 +36,5 @@ namespace FlaxEditor
         /// The default format of previews atlas.
         /// </summary>
         public const PixelFormat AssetIconsAtlasFormat = PixelFormat.R8G8B8A8_UNorm;
-
-        /// <summary>
-        /// The asset type content domain.
-        /// </summary>
-        public const ContentDomain Domain = ContentDomain.Texture;
     }
 }

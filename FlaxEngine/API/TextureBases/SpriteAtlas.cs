@@ -115,11 +115,6 @@ namespace FlaxEngine
     public partial class SpriteAtlas
     {
         /// <summary>
-        /// The asset type content domain.
-        /// </summary>
-        public const ContentDomain Domain = ContentDomain.Texture;
-
-        /// <summary>
         /// Gets the sprite at the given index.
         /// </summary>
         /// <param name="index">The index.</param>

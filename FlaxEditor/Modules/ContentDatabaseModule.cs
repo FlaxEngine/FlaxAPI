@@ -250,6 +250,33 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
+        /// Tries to find asset with the specified ID.
+        /// </summary>
+        /// <param name="id">The assset ID.</param>
+        /// <returns>Found asset item or null if cannot find it.</returns>
+        public AssetItem FindAsset(Guid id)
+        {
+            Assert.IsFalse(_isDuringFastSetup);
+
+            if (id == Guid.Empty)
+                return null;
+
+            // TODO: use AssetInfo via Content manager to get asset path very quickly (it's O(1))
+
+            // TODO: if it's a bottleneck try to optimize searching by caching items IDs
+
+            var result = ProjectContent.Folder.Find(id) as AssetItem;
+            if (result != null)
+                return result;
+            result = EnginePrivate.Folder.Find(id) as AssetItem;
+            if (result != null)
+                return result;
+            result = EditorPrivate.Folder.Find(id) as AssetItem;
+
+            return result;
+        }
+
+        /// <summary>
         /// Tries to find script item at the specified path.
         /// </summary>
         /// <param name="path">The path.</param>

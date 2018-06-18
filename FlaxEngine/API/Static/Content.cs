@@ -149,7 +149,7 @@ namespace FlaxEngine
         /// <summary>
         /// Find asset info by id.
         /// </summary>
-        /// <param name="id">The asset path (full path).</param>
+        /// <param name="id">The unique asset ID.</param>
         /// <param name="typeName">If method returns true, this contains found asset type name.</param>
         /// <param name="path">If method returns true, this contains found asset path.</param>
         /// <returns>True if found any asset, otherwise false.</returns>
@@ -169,7 +169,7 @@ namespace FlaxEngine
         /// <summary>
         /// Find asset info by path.
         /// </summary>
-        /// <param name="path">The asset id.</param>
+        /// <param name="path">The asset file path (full path).</param>
         /// <param name="typeName">If method returns true, this contains found asset type name.</param>
         /// <param name="id">If method returns true, this contains found asset id.</param>
         /// <returns>True if found any asset, otherwise false.</returns>

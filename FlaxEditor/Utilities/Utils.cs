@@ -167,6 +167,32 @@ namespace FlaxEditor.Utilities
         }
 
         /// <summary>
+        /// Gets the type of the base class for the given content domain. Used by the editor internal layer to convert static enum to the runtime asset type.
+        /// </summary>
+        /// <param name="domain">The domain.</param>
+        /// <returns>The asset object type.</returns>
+        public static Type GetType(ContentDomain domain)
+        {
+            switch (domain)
+            {
+            case ContentDomain.Texture: return typeof(Texture);
+            case ContentDomain.CubeTexture: return typeof(CubeTexture);
+            case ContentDomain.Material: return typeof(MaterialBase);
+            case ContentDomain.Model: return typeof(Model);
+            case ContentDomain.Shader: return typeof(Shader);
+            case ContentDomain.Font: return typeof(FontAsset);
+            case ContentDomain.IESProfile: return typeof(IESProfile);
+            case ContentDomain.Document: return typeof(JsonAsset);
+            case ContentDomain.Audio: return typeof(AudioClip);
+            case ContentDomain.Animation: return typeof(Animation);
+            case ContentDomain.SkeletonMask: return typeof(SkeletonMask);
+            }
+
+            // Anything
+            return typeof(Asset);
+        }
+
+        /// <summary>
         /// Tries to create object instance of the given full typename. Searches in-build Flax Engine/Editor asssemblies and game assemblies.
         /// </summary>
         /// <param name="typeName">The full name of the type.</param>

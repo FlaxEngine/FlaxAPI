@@ -4,9 +4,5 @@ namespace FlaxEngine
 {
     public partial class CubeTexture
     {
-        /// <summary>
-        /// The asset type content domain.
-        /// </summary>
-        public const ContentDomain Domain = ContentDomain.CubeTexture;
     }
 }

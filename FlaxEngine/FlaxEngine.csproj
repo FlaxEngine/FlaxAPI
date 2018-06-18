@@ -272,6 +272,7 @@
     <Compile Include="Engine\ModelLOD.cs" />
     <Compile Include="Engine\PhysicalMaterial.cs" />
     <Compile Include="Engine\RayCastHit.cs" />
+    <Compile Include="Engine\SceneReference.cs" />
     <Compile Include="Engine\SkeletonBone.cs" />
     <Compile Include="Engine\SkinnedMesh.cs" />
     <Compile Include="Engine\SpringParameters.cs" />

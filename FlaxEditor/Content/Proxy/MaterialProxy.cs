@@ -32,7 +32,7 @@ namespace FlaxEditor.Content
         public override Color AccentColor => Color.FromRGB(0x16a085);
 
         /// <inheritdoc />
-        public override ContentDomain Domain => Material.Domain;
+        public override ContentDomain Domain => ContentDomain.Material;
 
         /// <inheritdoc />
         public override Type AssetType => typeof(Material);

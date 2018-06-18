@@ -7,11 +7,6 @@ namespace FlaxEngine
 {
     public sealed partial class Model
     {
-        /// <summary>
-        /// The asset type content domain.
-        /// </summary>
-        public const ContentDomain Domain = ContentDomain.Model;
-
         private MaterialSlot[] _slots;
         private ModelLOD[] _lods;
 

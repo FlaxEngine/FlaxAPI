@@ -7,11 +7,6 @@ namespace FlaxEngine
 {
     public sealed partial class SkinnedModel
     {
-        /// <summary>
-        /// The asset type content domain.
-        /// </summary>
-        public const ContentDomain Domain = ContentDomain.Model;
-
         private MaterialSlot[] _slots;
         private SkinnedMesh[] _meshes;
         private SkeletonBone[] _bones;

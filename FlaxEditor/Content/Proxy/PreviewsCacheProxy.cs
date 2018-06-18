@@ -26,7 +26,7 @@ namespace FlaxEditor.Content
         public override Color AccentColor => Color.FromRGB(0x80FFAE);
 
         /// <inheritdoc />
-        public override ContentDomain Domain => PreviewsCache.Domain;
+        public override ContentDomain Domain => ContentDomain.Texture;
 
         /// <inheritdoc />
         public override Type AssetType => typeof(PreviewsCache);
