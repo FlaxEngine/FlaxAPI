@@ -313,6 +313,12 @@ namespace FlaxEditor.Gizmo
                         }
                         }
 
+                        if (isScalling)
+                            delta *= 0.01f;
+
+                        if (Owner.IsAltKeyDown)
+                            delta *= 0.5f;
+
                         if ((isScalling ? ScaleSnapEnabled : TranslationSnapEnable) || Owner.UseSnapping)
                         {
                             float snapValue = isScalling ? ScaleSnapValue : TranslationSnapValue;
@@ -339,15 +345,13 @@ namespace FlaxEditor.Gizmo
                         if (_activeMode == Mode.Translate)
                         {
                             // Transform (local or world)
-                            if (Owner.IsAltKeyDown)
-                                delta *= 0.5f;
                             delta = Vector3.Transform(delta, _rotationMatrix);
                             _translationDelta = delta;
                         }
                         else if (_activeMode == Mode.Scale)
                         {
                             // Apply Scale
-                            _scaleDelta += delta * ScaleFactor;
+                            _scaleDelta = delta;
                         }
                     }
                         break;
