@@ -26,6 +26,11 @@ namespace FlaxEngine.Rendering
         /// The 'before' Reflections pass. After the Light pass. Can be used to implement a custom light types that accumulate lighting to the light buffer.
         /// </summary>
         BeforeReflectionsPass = 3,
+
+        /// <summary>
+        /// The 'after' AA filter pass. Rendering is done to the output backbuffer.
+        /// </summary>
+        AfterAntiAliasingPass = 4,
     }
 
     /// <summary>
