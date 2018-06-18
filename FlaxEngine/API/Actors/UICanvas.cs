@@ -48,6 +48,9 @@ namespace FlaxEngine
         public override PostProcessEffectLocation Location => Canvas.RenderLocation;
 
         /// <inheritdoc />
+        public override int Order => Canvas.RenderOrder;
+
+        /// <inheritdoc />
         public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
         {
             // TODO: apply frustum culling to skip rendering if canvas is not in a viewport
@@ -100,6 +103,12 @@ namespace FlaxEngine
         public PostProcessEffectLocation RenderLocation { get; set; } = PostProcessEffectLocation.Default;
 
         /// <summary>
+        /// Gets or sets the canvas rendering order. Created GUI canvas objects are sorted before rendering (from the lowest order to the highest order).
+        /// </summary>
+        [EditorOrder(14), EditorDisplay("Canvas"), VisibleIf(nameof(Editor_Is3D)), Tooltip("The canvas rendering order. Created GUI canvas objects are sorted before rendering (from the lowest order to the highest order).")]
+        public int RenderOrder { get; set; } = 0;
+
+        /// <summary>
         /// Gets or sets a value indicating whether canvas can receive the input events.
         /// </summary>
         [EditorOrder(15), EditorDisplay("Canvas"), Tooltip("If checked, canvas can receive the input events.")]
@@ -132,13 +141,7 @@ namespace FlaxEngine
         /// </summary>
         [EditorOrder(30), EditorDisplay("Canvas"), VisibleIf(nameof(Editor_Is3D)), Tooltip("If checked, scene depth will be ignored when rendering the GUI (scene objects won't cover the interface).")]
         public bool IgnoreDepth { get; set; } = false;
-
-        /// <summary>
-        /// Gets or sets the camera used as a input events source. Canvas will use handle mouse raycasting for this camera to provide GUI system with events.
-        /// </summary>
-        [EditorOrder(40), EditorDisplay("Canvas"), VisibleIf(nameof(Editor_Is3D)), Tooltip("Camera used as a input events source. Canvas will use handle mouse raycasting for this camera to provide GUI system with events.")]
-        public Camera EventCamera { get; set; }
-
+        
         /// <summary>
         /// Gets or sets the camera used to place the GUI when render mode is set to <see cref="CanvasRenderMode.CameraSpace"/>.
         /// </summary>
@@ -281,15 +284,15 @@ namespace FlaxEngine
                 jsonWriter.WritePropertyName("RenderLocation");
                 jsonWriter.WriteValue(RenderLocation);
 
+                jsonWriter.WritePropertyName("RenderOrder");
+                jsonWriter.WriteValue(RenderOrder);
+
                 jsonWriter.WritePropertyName("ReceivesEvents");
                 jsonWriter.WriteValue(ReceivesEvents);
 
                 jsonWriter.WritePropertyName("IgnoreDepth");
                 jsonWriter.WriteValue(IgnoreDepth);
-
-                jsonWriter.WritePropertyName("EventCamera");
-                jsonWriter.WriteValue(Json.JsonSerializer.GetStringID(EventCamera));
-
+                
                 jsonWriter.WritePropertyName("RenderCamera");
                 jsonWriter.WriteValue(Json.JsonSerializer.GetStringID(RenderCamera));
 

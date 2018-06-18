@@ -61,6 +61,11 @@ namespace FlaxEngine.Rendering
         public virtual PostProcessEffectLocation Location => PostProcessEffectLocation.Default;
 
         /// <summary>
+        /// Gets the effect rendering order. Registered post effects are sorted before rendering (from the lowest order to the highest order).
+        /// </summary>
+        public virtual int Order => 0;
+
+        /// <summary>
         /// Performs custom postFx rendering.
         /// </summary>
         /// <param name="context">The GPU commands context.</param>
