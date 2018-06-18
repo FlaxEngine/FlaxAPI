@@ -55,6 +55,8 @@ namespace FlaxEngine
         {
             // TODO: apply frustum culling to skip rendering if canvas is not in a viewport
 
+            Profiler.BeginEventGPU("UI Canvas");
+
             // Calculate rendering matrix (world*view*projection)
             Matrix viewProjection;
             Matrix world;
@@ -68,6 +70,8 @@ namespace FlaxEngine
 
             // Render GUI in 3D
             Render2D.CallDrawing(Canvas.GUI, context, input, depthBuffer, ref viewProjection);
+
+            Profiler.EndEventGPU();
         }
     }
 
