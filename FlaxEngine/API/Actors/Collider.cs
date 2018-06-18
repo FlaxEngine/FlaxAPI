@@ -5,8 +5,34 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
+    /// <summary>
+    /// Function delegate used for the collision events.
+    /// </summary>
+    /// <param name="collision">The collision information.</param>
+    public delegate void CollisionDelegate(Collision collision);
+
     public abstract partial class Collider
     {
+        /// <summary>
+        /// Occurs when a collision start gets registered for this collider (it collides with something).
+        /// </summary>
+        public event CollisionDelegate CollisionEnter;
+
+        /// <summary>
+        /// Occurs when a collision end gets registered for this collider (it ends colliding with something).
+        /// </summary>
+        public event CollisionDelegate CollisionExit;
+
+        internal void OnCollisionEnter(Collision collision)
+        {
+            CollisionEnter?.Invoke(collision);
+        }
+
+        internal void OnCollisionExit(Collision collision)
+        {
+            CollisionExit?.Invoke(collision);
+        }
+
         /// <summary>
         /// Performs a raycast against this collider.
         /// </summary>
