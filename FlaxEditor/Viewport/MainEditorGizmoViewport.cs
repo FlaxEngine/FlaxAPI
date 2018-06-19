@@ -629,8 +629,11 @@ namespace FlaxEditor.Viewport
             base.OnDragLeave();
         }
 
-        private Vector3 PostProcessSpawnedActorLocation(Vector3 location)
+        private Vector3 PostProcessSpawnedActorLocation(ref Vector3 hitLocation, BoundingBox box)
         {
+            // Place the object
+            var location = hitLocation - (box.Size.Length * 0.5f) * ViewDirection;
+
             // Apply grid snapping if enabled
             if (UseSnapping || TransformGizmo.TranslationSnapEnable)
             {
@@ -673,8 +676,7 @@ namespace FlaxEditor.Viewport
                     var actor = AnimatedModel.New();
                     actor.Name = item.ShortName;
                     actor.SkinnedModel = model;
-                    var box = actor.Box;
-                    actor.Position = PostProcessSpawnedActorLocation(hitLocation - (box.Size.Length * 0.5f) * ViewDirection);
+                    actor.Position = PostProcessSpawnedActorLocation(ref hitLocation, actor.Box);
                     Editor.Instance.SceneEditing.Spawn(actor);
                 }
                 else
@@ -683,8 +685,7 @@ namespace FlaxEditor.Viewport
                     var actor = ModelActor.New();
                     actor.Name = item.ShortName;
                     actor.Model = model;
-                    var box = actor.Box;
-                    actor.Position = PostProcessSpawnedActorLocation(hitLocation - (box.Size.Length * 0.5f) * ViewDirection);
+                    actor.Position = PostProcessSpawnedActorLocation(ref hitLocation, actor.Box);
                     Editor.Instance.SceneEditing.Spawn(actor);
                 }
 
@@ -696,7 +697,7 @@ namespace FlaxEditor.Viewport
                 var actor = AudioSource.New();
                 actor.Name = item.ShortName;
                 actor.Clip = clip;
-                actor.Position = PostProcessSpawnedActorLocation(hitLocation);
+                actor.Position = PostProcessSpawnedActorLocation(ref hitLocation, BoundingBox.Empty);
                 Editor.Instance.SceneEditing.Spawn(actor);
 
                 break;
@@ -723,8 +724,7 @@ namespace FlaxEditor.Viewport
                 return;
             }
             actor.Name = item.Name;
-            var box = actor.Box;
-            actor.Position = PostProcessSpawnedActorLocation(hitLocation - (box.Size.Length * 0.5f) * ViewDirection);
+            actor.Position = PostProcessSpawnedActorLocation(ref hitLocation, actor.Box);
             Editor.Instance.SceneEditing.Spawn(actor);
         }
 
@@ -758,7 +758,7 @@ namespace FlaxEditor.Viewport
                 else
                 {
                     // Use area in front of the viewport
-                    hitLocation = ViewPosition + ViewDirection * 10;
+                    hitLocation = ViewPosition + ViewDirection * 100;
                 }
             }
 

@@ -69,6 +69,11 @@ namespace FlaxEngine
         public static readonly BoundingBox Empty = new BoundingBox(Vector3.Maximum, Vector3.Minimum);
 
         /// <summary>
+        /// A <see cref="BoundingBox"/> which is located in point (0, 0, 0) and has size equal (0, 0, 0).
+        /// </summary>
+        public static readonly BoundingBox Zero = new BoundingBox(Vector3.Zero, Vector3.Zero);
+
+        /// <summary>
         /// Gets or sets the size.
         /// </summary>
         /// <value>
