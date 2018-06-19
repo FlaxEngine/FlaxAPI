@@ -93,9 +93,15 @@ namespace FlaxEngine
             {
                 if (_renderMode != value)
                 {
+                    var previous = _renderMode;
+
                     _renderMode = value;
 
                     Setup();
+
+                    // Reset size
+                    if (previous == CanvasRenderMode.ScreenSpace && _renderMode == CanvasRenderMode.WorldSpace)
+                        Size = new Vector2(500, 500);
                 }
             }
         }
