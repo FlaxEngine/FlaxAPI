@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -182,10 +183,75 @@ namespace FlaxEngine
         /// </summary>
         public CanvasRootControl GUI => _guiRoot;
 
+        /// <summary>
+        /// Delegate schema for callback used to evaluate the world-space ray from the screen-space position (eg. project mouse position).
+        /// </summary>
+        /// <param name="location">The location in screen-space.</param>
+        /// <param name="ray">The output ray in world-space.</param>
+        public delegate void CalculateRayDelegate(ref Vector2 location, out Ray ray);
+
+        /// <summary>
+        /// The current implementation of the <see cref="CalculateRayDelegate"/> used to calculate the mouse ray in 3D from the 2D location. Cannot be null.
+        /// </summary>
+        public static CalculateRayDelegate CalculateRay = DefaultCalculateRay;
+
+        /// <summary>
+        /// The default implementation of the <see cref="CalculateRayDelegate"/> that uses the <see cref="Camera.MainCamera"/> to evaluate the 3D ray.
+        /// </summary>
+        /// <param name="location">The location in screen-space.</param>
+        /// <param name="ray">The output ray in world-space.</param>
+        public static void DefaultCalculateRay(ref Vector2 location, out Ray ray)
+        {
+            var camera = Camera.MainCamera;
+            if (camera)
+            {
+                // Gather camera properties
+                var viewport = camera.Viewport;
+                Matrix v, p, ivp;
+                camera.GetMatrices(out v, out p);
+                Matrix.Multiply(ref v, ref p, out ivp);
+                ivp.Invert();
+
+                // Create near and far points
+                Vector3 nearPoint = new Vector3(location, 0.0f);
+                Vector3 farPoint = new Vector3(location, 1.0f);
+                viewport.Unproject(ref nearPoint, ref ivp, out nearPoint);
+                viewport.Unproject(ref farPoint, ref ivp, out farPoint);
+
+                // Create direction vector
+                Vector3 direction = farPoint - nearPoint;
+                direction.Normalize();
+
+                ray = new Ray(nearPoint, direction);
+            }
+            else
+            {
+                ray = new Ray(Vector3.Zero, Vector3.Forward);
+            }
+        }
+
         private UICanvas()
         {
             _guiRoot = new CanvasRootControl(this);
             _guiRoot.IsLayoutLocked = false;
+        }
+
+        /// <summary>
+        /// Gets the world-space oriented bounding box that contains a 3D canvas.
+        /// </summary>
+        public OrientedBoundingBox Bounds
+        {
+            get
+            {
+                OrientedBoundingBox bounds = new OrientedBoundingBox();
+                bounds.Extents = new Vector3(_guiRoot.Size * 0.5f, Mathf.Epsilon);
+                Matrix world;
+                GetWorldMatrix(out world);
+                Matrix offset;
+                Matrix.Translation(bounds.Extents.X, bounds.Extents.Y, 0, out offset);
+                Matrix.Multiply(ref offset, ref world, out bounds.Transformation);
+                return bounds;
+            }
         }
 
         /// <summary>
