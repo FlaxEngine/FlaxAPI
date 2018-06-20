@@ -17,6 +17,16 @@ namespace FlaxEngine.GUI
         public UICanvas Canvas => _canvas;
 
         /// <summary>
+        /// Gets a value indicating whether canvas is 2D (screen-space).
+        /// </summary>
+        public bool Is2D => _canvas.RenderMode == CanvasRenderMode.ScreenSpace;
+
+        /// <summary>
+        /// Gets a value indicating whether canvas is 3D (world-space or camera-space).
+        /// </summary>
+        public bool Is3D => _canvas.RenderMode != CanvasRenderMode.ScreenSpace;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CanvasRootControl"/> class.
         /// </summary>
         /// <param name="canvas">The canvas.</param>
