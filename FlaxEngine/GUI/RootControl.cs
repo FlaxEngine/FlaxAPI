@@ -48,6 +48,11 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Occurs when focused control gets changed.
+        /// </summary>
+        public event Action<RootControl> FocusedControlChanged;
+
+        /// <summary>
         /// Gets the tracking mouse offset.
         /// </summary>
         public abstract Vector2 TrackingMouseOffset { get; }
@@ -166,6 +171,8 @@ namespace FlaxEngine.GUI
 
             // Update flags
             UpdateContainsFocus();
+
+            FocusedControlChanged?.Invoke(this);
 
             return true;
         }
