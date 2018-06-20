@@ -211,7 +211,7 @@ namespace FlaxEditor.Windows
         private void PlayingStateOnSceneDuplicating()
         {
             // Remove reaming GUI controls so loaded scene can add own GUI
-            _guiRoot.DisposeChildren();
+            //_guiRoot.DisposeChildren();
 
             // Show GUI
             //_guiRoot.Visible = _showGUI;

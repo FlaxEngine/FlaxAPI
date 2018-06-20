@@ -48,7 +48,7 @@ namespace FlaxEngine
         public override PostProcessEffectLocation Location => Canvas.RenderLocation;
 
         /// <inheritdoc />
-        public override int Order => Canvas.RenderOrder;
+        public override int Order => Canvas.Order;
 
         /// <inheritdoc />
         public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
@@ -112,11 +112,24 @@ namespace FlaxEngine
         [EditorOrder(13), EditorDisplay("Canvas"), VisibleIf(nameof(Editor_Is3D)), Tooltip("Canvas rendering location within the rendering pipeline. Change this if you want GUI to affect the lighting or post processing effects like bloom.")]
         public PostProcessEffectLocation RenderLocation { get; set; } = PostProcessEffectLocation.Default;
 
+        private int _order;
+
         /// <summary>
-        /// Gets or sets the canvas rendering order. Created GUI canvas objects are sorted before rendering (from the lowest order to the highest order).
+        /// Gets or sets the canvas rendering and input events gather order. Created GUI canvas objects are sorted before rendering (from the lowest order to the highest order). Canvas with the highest order can handle input event first.
         /// </summary>
-        [EditorOrder(14), EditorDisplay("Canvas"), VisibleIf(nameof(Editor_Is3D)), Tooltip("The canvas rendering order. Created GUI canvas objects are sorted before rendering (from the lowest order to the highest order).")]
-        public int RenderOrder { get; set; } = 0;
+        [EditorOrder(14), EditorDisplay("Canvas"), Tooltip("The canvas rendering and input events gather order. Created GUI canvas objects are sorted before rendering (from the lowest order to the highest order). Canvas with the highest order can handle input event first.")]
+        public int Order
+        {
+            get => _order;
+            set
+            {
+                if (_order != value)
+                {
+                    _order = value;
+                    RootControl.CanvasRoot.SortCanvases();
+                }
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether canvas can receive the input events.
@@ -232,13 +245,14 @@ namespace FlaxEngine
             if (_isLoading)
                 return;
 
+            _guiRoot.Parent = RootControl.CanvasRoot;
+
             switch (_renderMode)
             {
             case CanvasRenderMode.ScreenSpace:
             {
-                // Link to the game UI and fill the area
+                // Fill the screen area
                 _guiRoot.DockStyle = DockStyle.Fill;
-                _guiRoot.Parent = RootControl.GameRoot;
                 if (_renderer)
                 {
                     SceneRenderTask.GlobalCustomPostFx.Remove(_renderer);
@@ -252,8 +266,6 @@ namespace FlaxEngine
             {
                 // Render canvas manually
                 _guiRoot.DockStyle = DockStyle.None;
-                _guiRoot.Parent = null;
-                _guiRoot.PerformLayout();
                 if (_renderer == null)
                 {
                     _renderer = New<CanvasRenderer>();
@@ -268,6 +280,7 @@ namespace FlaxEngine
         private void Cleanup()
         {
             _guiRoot.Parent = null;
+
             if (_renderer)
             {
                 SceneRenderTask.GlobalCustomPostFx.Remove(_renderer);
@@ -294,8 +307,8 @@ namespace FlaxEngine
                 jsonWriter.WritePropertyName("RenderLocation");
                 jsonWriter.WriteValue(RenderLocation);
 
-                jsonWriter.WritePropertyName("RenderOrder");
-                jsonWriter.WriteValue(RenderOrder);
+                jsonWriter.WritePropertyName("Order");
+                jsonWriter.WriteValue(Order);
 
                 jsonWriter.WritePropertyName("ReceivesEvents");
                 jsonWriter.WriteValue(ReceivesEvents);

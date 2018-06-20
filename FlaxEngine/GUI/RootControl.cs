@@ -10,11 +10,27 @@ namespace FlaxEngine.GUI
     /// </summary>
     public abstract class RootControl : ContainerControl
     {
+        private static ContainerControl _gameRoot;
+        private static CanvasContainer _canvasContainer = new CanvasContainer();
+
         /// <summary>
         /// Gets the main GUI control (it can be window or editor overriden control). Use it to plug-in custom GUI controls.
         /// </summary>
-        public static ContainerControl GameRoot { get; internal set; }
-        
+        public static ContainerControl GameRoot
+        {
+            get => _gameRoot;
+            internal set
+            {
+                _gameRoot = value;
+                _canvasContainer.Parent = _gameRoot;
+            }
+        }
+
+        /// <summary>
+        /// Gets the canvas controls root container.
+        /// </summary>
+        internal static CanvasContainer CanvasRoot => _canvasContainer;
+
         private Control _focusedControl;
         private Control _trackingControl;
 

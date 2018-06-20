@@ -290,6 +290,7 @@
       <DependentUpon>IOrderedDictionary.cs</DependentUpon>
     </Compile>
     <Compile Include="Enums\WindowEnums.cs" />
+    <Compile Include="GUI\CanvasContainer.cs" />
     <Compile Include="GUI\CanvasRootControl.cs" />
     <Compile Include="GUI\Common\Button.cs" />
     <Compile Include="GUI\Common\CheckBox.cs" />
