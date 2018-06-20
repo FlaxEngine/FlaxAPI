@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEngine.Assertions;
 
 namespace FlaxEngine.GUI
 {
@@ -12,6 +13,8 @@ namespace FlaxEngine.GUI
     public sealed class WindowRootControl : RootControl
     {
         private Window _window;
+        private Control _focusedControl;
+        private Control _trackingControl;
 
         /// <summary>
         /// Gets the native window object.
@@ -130,6 +133,19 @@ namespace FlaxEngine.GUI
             _window.FlashWindow();
         }
 
+        /// <summary>
+        /// Gets or sets the current focused control
+        /// </summary>
+        public override Control FocusedControl
+        {
+            get => _focusedControl;
+            set
+            {
+                Assert.IsTrue(_focusedControl == null || _focusedControl.Root == this, "Invalid control to focus");
+                Focus(value);
+            }
+        }
+
         /// <inheritdoc />
         public override CursorType Cursor
         {
@@ -150,7 +166,18 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void StartTrackingMouse(Control control, bool useMouseScreenOffset)
         {
-            base.StartTrackingMouse(control, useMouseScreenOffset);
+            if (control == null)
+                throw new ArgumentNullException();
+            if (_trackingControl == control)
+                return;
+
+            if (_trackingControl != null)
+                EndTrackingMouse();
+
+            if (control.CanFocus)
+                Focus(control);
+
+            _trackingControl = control;
 
             _window.StartTrackingMouse(useMouseScreenOffset);
         }
@@ -158,9 +185,14 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void EndTrackingMouse()
         {
-            base.EndTrackingMouse();
+            if (_trackingControl != null)
+            {
+                var control = _trackingControl;
+                _trackingControl = null;
+                control.OnEndMouseCapture();
 
-            _window.EndTrackingMouse();
+                _window.EndTrackingMouse();
+            }
         }
 
         /// <inheritdoc />
@@ -221,6 +253,90 @@ namespace FlaxEngine.GUI
         public override void DoDragDrop(DragData data)
         {
             _window.DoDragDrop(data);
+        }
+
+        /// <inheritdoc />
+        protected override bool Focus(Control c)
+        {
+            if (IsDisposing || _focusedControl == c)
+                return false;
+
+            // Change focused control
+            Control prevous = _focusedControl;
+            _focusedControl = c;
+
+            // Fire events
+            if (prevous != null)
+            {
+                prevous.OnLostFocus();
+                Assert.IsFalse(prevous.IsFocused);
+            }
+            if (_focusedControl != null)
+            {
+                _focusedControl.OnGotFocus();
+                Assert.IsTrue(_focusedControl.IsFocused);
+            }
+
+            // Update flags
+            UpdateContainsFocus();
+            
+            return true;
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        {
+            if (_trackingControl != null)
+            {
+                return _trackingControl.OnMouseDown(_trackingControl.PointFromWindow(location), buttons);
+            }
+
+            return base.OnMouseDown(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        {
+            if (_trackingControl != null)
+            {
+                return _trackingControl.OnMouseUp(_trackingControl.PointFromWindow(location), buttons);
+            }
+
+            return base.OnMouseUp(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        {
+            if (_trackingControl != null)
+            {
+                return _trackingControl.OnMouseDoubleClick(_trackingControl.PointFromWindow(location), buttons);
+            }
+
+            return base.OnMouseDoubleClick(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseWheel(Vector2 location, float delta)
+        {
+            if (_trackingControl != null)
+            {
+                return _trackingControl.OnMouseWheel(_trackingControl.PointFromWindow(location), delta);
+            }
+
+            return base.OnMouseWheel(location, delta);
+        }
+
+        /// <inheritdoc />
+        public override void OnMouseMove(Vector2 location)
+        {
+            if (_trackingControl != null)
+            {
+                _trackingControl.OnMouseMove(_trackingControl.PointFromWindow(location));
+                return;
+            }
+
+            base.OnMouseMove(location);
         }
     }
 }

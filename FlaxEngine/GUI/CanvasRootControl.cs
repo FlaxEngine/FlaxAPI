@@ -10,6 +10,7 @@ namespace FlaxEngine.GUI
     public sealed class CanvasRootControl : RootControl
     {
         private UICanvas _canvas;
+        private Vector2 _mousePosition;
 
         /// <summary>
         /// Gets the owning canvas.
@@ -43,19 +44,36 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
+        public override Control FocusedControl
+        {
+            get => Parent?.Root.FocusedControl;
+            set
+            {
+                if (Parent != null)
+                    Parent.Root.FocusedControl = value;
+            }
+        }
+
+        /// <inheritdoc />
         public override Vector2 TrackingMouseOffset => Vector2.Zero;
-
-        /// <inheritdoc />
-        public override bool ContainsFocus => false; // If canvas is linked to the Window GUI then it steals some events, disable it.
-
-        /// <inheritdoc />
-        public override bool IsFocused => false; // If canvas is linked to the Window GUI then it steals some events, disable it.
-
+        
         /// <inheritdoc />
         public override Vector2 MousePosition
         {
-            get => Vector2.Zero;
+            get => _mousePosition;
             set { }
+        }
+
+        /// <inheritdoc />
+        public override void StartTrackingMouse(Control control, bool useMouseScreenOffset)
+        {
+            // Not used in games (editor-only feature)
+        }
+
+        /// <inheritdoc />
+        public override void EndTrackingMouse()
+        {
+            // Not used in games (editor-only feature)
         }
 
         /// <inheritdoc />
@@ -193,12 +211,15 @@ namespace FlaxEngine.GUI
             if (!_canvas.ReceivesEvents)
                 return;
 
+            _mousePosition = location;
             base.OnMouseEnter(location);
         }
 
         /// <inheritdoc />
         public override void OnMouseLeave()
         {
+            _mousePosition = Vector2.Zero;
+
             if (!_canvas.ReceivesEvents)
                 return;
 
@@ -211,6 +232,7 @@ namespace FlaxEngine.GUI
             if (!_canvas.ReceivesEvents)
                 return;
 
+            _mousePosition = location;
             base.OnMouseMove(location);
         }
 
