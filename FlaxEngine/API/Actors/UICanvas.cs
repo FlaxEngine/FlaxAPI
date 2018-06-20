@@ -255,6 +255,16 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets a value indicating whether canvas is 2D (screen-space).
+        /// </summary>
+        public bool Is2D => _renderMode == CanvasRenderMode.ScreenSpace;
+
+        /// <summary>
+        /// Gets a value indicating whether canvas is 3D (world-space or camera-space).
+        /// </summary>
+        public bool Is3D => _renderMode != CanvasRenderMode.ScreenSpace;
+
+        /// <summary>
         /// Gets the world matrix used to transform the GUI from the local space to the world space. Handles canvas rendering mode
         /// </summary>
         /// <param name="world">The world.</param>
