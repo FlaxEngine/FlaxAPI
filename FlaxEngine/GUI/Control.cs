@@ -48,17 +48,17 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Action is invoked, when location is changed
         /// </summary>
-        public event Action<Control> OnLocationChanged;
+        public event Action<Control> LocationChanged;
 
         /// <summary>
         ///     Action is invoked, when size is changed
         /// </summary>
-        public event Action<Control> OnSizeChanged;
+        public event Action<Control> SizeChanged;
 
         /// <summary>
         ///     Action is invoked, when parent is changed
         /// </summary>
-        public event Action<Control> OnParentChanged;
+        public event Action<Control> ParentChanged;
 
         /// <summary>
         ///     Action is invoked, when visibility is changed
@@ -915,7 +915,7 @@ namespace FlaxEngine.GUI
             _bounds.Location = location;
 
             UpdateTransform();
-            OnLocationChanged?.Invoke(this);
+            LocationChanged?.Invoke(this);
         }
 
         /// <summary>
@@ -928,7 +928,7 @@ namespace FlaxEngine.GUI
             _bounds.Size = size;
 
             UpdateTransform();
-            OnSizeChanged?.Invoke(this);
+            SizeChanged?.Invoke(this);
             _parent?.OnChildResized(this);
         }
 
@@ -993,7 +993,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         protected virtual void OnParentChangedInternal()
         {
-            OnParentChanged?.Invoke(this);
+            ParentChanged?.Invoke(this);
         }
 
         /// <summary>

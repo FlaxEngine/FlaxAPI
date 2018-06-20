@@ -32,7 +32,7 @@ namespace FlaxEngine
                 // Cleanup previous
                 if (_control != null)
                 {
-                    _control.OnLocationChanged -= OnControlLocationChanged;
+                    _control.LocationChanged -= OnControlLocationChanged;
                     _control.Dispose();
                 }
 
@@ -50,7 +50,7 @@ namespace FlaxEngine
                     _control.IndexInParent = OrderInParent;
                     _control.Location = new Vector2(LocalPosition);
                     // TODO: sync control order in parent with actor order in parent (think about specialcases like Panel with scroll bars used as internal controls)
-                    _control.OnLocationChanged += OnControlLocationChanged;
+                    _control.LocationChanged += OnControlLocationChanged;
 
                     if (containerControl != null && IsActiveInHierarchy)
                     {
@@ -109,7 +109,7 @@ namespace FlaxEngine
         {
             if (_control != null)
             {
-                _control.OnLocationChanged -= OnControlLocationChanged;
+                _control.LocationChanged -= OnControlLocationChanged;
                 _control = null;
             }
         }

@@ -324,7 +324,7 @@ namespace FlaxEngine.GUI
 
             UpdateTextRect();
 
-            OnSizeChanged += ActionOnSizeChanged;
+            SizeChanged += ActionOnSizeChanged;
         }
 
         /// <summary>
