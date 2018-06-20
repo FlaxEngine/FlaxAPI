@@ -8,6 +8,11 @@ namespace FlaxEngine.GUI
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     internal sealed class CanvasContainer : ContainerControl
     {
+        /// <summary>
+        /// The focused canvas that got focus last time.
+        /// </summary>
+        private CanvasRootControl _focused;
+
         internal CanvasContainer()
         {
             DockStyle = DockStyle.Fill;
@@ -67,6 +72,39 @@ namespace FlaxEngine.GUI
             SortCanvases();
 
             base.OnChildrenChanged();
+        }
+
+        /// <inheritdoc />
+        internal override void AddChildInternal(Control child)
+        {
+            base.AddChildInternal(child);
+
+            ((CanvasRootControl)child).FocusedControlChanged += OnFocusedControlChanged;
+        }
+
+        /// <inheritdoc />
+        internal override void RemoveChildInternal(Control child)
+        {
+            if (_focused == child)
+                _focused.FocusedControl = null;
+
+            ((CanvasRootControl)child).FocusedControlChanged -= OnFocusedControlChanged;
+
+            base.RemoveChildInternal(child);
+        }
+
+        private void OnFocusedControlChanged(RootControl obj)
+        {
+            var child = (CanvasRootControl)obj;
+            if (_focused != child)
+            {
+                var prev = _focused;
+
+                _focused = child;
+
+                if (prev != null)
+                    prev.FocusedControl = null;
+            }
         }
 
         /// <inheritdoc />
@@ -322,6 +360,29 @@ namespace FlaxEngine.GUI
         {
             // TODO: Implement drag&drop for UICanvas
             return DragDropEffect.None;
+        }
+
+        /// <inheritdoc />
+        public override bool OnCharInput(char c)
+        {
+            if (_focused != null && _focused.Enabled)
+                return _focused.OnCharInput(c);
+            return false;
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            if (_focused != null && _focused.Enabled)
+                return _focused.OnKeyDown(key);
+            return false;
+        }
+
+        /// <inheritdoc />
+        public override void OnKeyUp(Keys key)
+        {
+            if (_focused != null && _focused.Enabled)
+                _focused.OnKeyUp(key);
         }
     }
 }
