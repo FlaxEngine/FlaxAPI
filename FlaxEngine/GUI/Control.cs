@@ -14,6 +14,8 @@ namespace FlaxEngine.GUI
 
         // State
 
+        // TODO: convert to flags
+
         private bool _isMouseOver, _isDragOver;
         private bool _isVisible = true;
         private bool _isEnabled = true;
@@ -789,8 +791,8 @@ namespace FlaxEngine.GUI
         {
             return location.X >= 0 &&
                    location.Y >= 0 &&
-                   location.X <= Size.X &&
-                   location.Y <= Size.Y;
+                   location.X <= _bounds.Size.X &&
+                   location.Y <= _bounds.Size.Y;
         }
 
         /// <summary>

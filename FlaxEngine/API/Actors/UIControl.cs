@@ -18,7 +18,7 @@ namespace FlaxEngine
         /// Gets or sets the GUI control used by this actor.
         /// </summary>
         /// <remarks>
-        /// When changing the control, the previous one is disposed. Use <see cref="UnlinkControl"/> to manage it by myself.
+        /// When changing the control, the previous one is disposed. Use <see cref="UnlinkControl"/> to manage it on your own.
         /// </remarks>
         [EditorDisplay("Control", EditorDisplayAttribute.InlineStyle), CustomEditorAlias("FlaxEditor.CustomEditors.Dedicated.UIControlControlEditor"), EditorOrder(50)]
         public Control Control
