@@ -299,16 +299,14 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the cursor (per window). Control should restore cursor to the default value eg. when mouse leaves it's area.
         /// </summary>
-        /// <value>
-        /// The cursor.
-        /// </value>
         [HideInEditor, NoSerialize]
         public virtual CursorType Cursor
         {
             get => _parent?.Cursor ?? CursorType.Default;
             set
             {
-                if (_parent != null) _parent.Cursor = value;
+                if (_parent != null)
+                    _parent.Cursor = value;
             }
         }
 
@@ -643,7 +641,6 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Check if mouse dragging is over that item or its child items.
         /// </summary>
-        /// <returns>True if drag is over</returns>
         public virtual bool IsDragOver => _isDragOver;
 
         /// <summary>
@@ -651,6 +648,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="data">The data. See <see cref="DragDataText"/> and <see cref="DragDataFiles"/>.</param>
+        /// <returns>The drag event result effect.</returns>
         public virtual DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
         {
             // Set flag
@@ -664,6 +662,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="data">The data. See <see cref="DragDataText"/> and <see cref="DragDataFiles"/>.</param>
+        /// <returns>The drag event result effect.</returns>
         public virtual DragDropEffect OnDragMove(ref Vector2 location, DragData data)
         {
             return DragDropEffect.None;
@@ -674,6 +673,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="data">The data. See <see cref="DragDataText"/> and <see cref="DragDataFiles"/>.</param>
+        /// <returns>The drag event result effect.</returns>
         public virtual DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
         {
             // Clear flag
