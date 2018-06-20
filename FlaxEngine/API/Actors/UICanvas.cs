@@ -205,24 +205,7 @@ namespace FlaxEngine
             var camera = Camera.MainCamera;
             if (camera)
             {
-                // Gather camera properties
-                var viewport = camera.Viewport;
-                Matrix v, p, ivp;
-                camera.GetMatrices(out v, out p);
-                Matrix.Multiply(ref v, ref p, out ivp);
-                ivp.Invert();
-
-                // Create near and far points
-                Vector3 nearPoint = new Vector3(location, 0.0f);
-                Vector3 farPoint = new Vector3(location, 1.0f);
-                viewport.Unproject(ref nearPoint, ref ivp, out nearPoint);
-                viewport.Unproject(ref farPoint, ref ivp, out farPoint);
-
-                // Create direction vector
-                Vector3 direction = farPoint - nearPoint;
-                direction.Normalize();
-
-                ray = new Ray(nearPoint, direction);
+                camera.ConvertMouseToRay(ref location, out ray);
             }
             else
             {

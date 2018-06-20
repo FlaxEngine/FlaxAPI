@@ -7,7 +7,86 @@ namespace FlaxEngine
 {
     public sealed partial class Camera
     {
-        // TODO: ConvertMouseToRay
+        /// <summary>
+        /// Converts the mouse location (in screen-space) to 3D ray.
+        /// </summary>
+        /// <param name="location">The mouse location (screen-space).</param>
+        /// <returns>The mouse ray (world-space).</returns>
+        public Ray ConvertMouseToRay(Vector2 location)
+        {
+            // Gather camera properties
+            var viewport = Viewport;
+            Matrix v, p, ivp;
+            GetMatrices(out v, out p);
+            Matrix.Multiply(ref v, ref p, out ivp);
+            ivp.Invert();
+
+            // Create near and far points
+            Vector3 nearPoint = new Vector3(location, 0.0f);
+            Vector3 farPoint = new Vector3(location, 1.0f);
+            viewport.Unproject(ref nearPoint, ref ivp, out nearPoint);
+            viewport.Unproject(ref farPoint, ref ivp, out farPoint);
+
+            // Create direction vector
+            Vector3 direction = farPoint - nearPoint;
+            direction.Normalize();
+
+            return new Ray(nearPoint, direction);
+        }
+
+        /// <summary>
+        /// Converts the mouse location (in screen-space) to 3D ray.
+        /// </summary>
+        /// <param name="location">The mouse location (screen-space).</param>
+        /// <param name="ray">The mouse ray (world-space).</param>
+        public void ConvertMouseToRay(ref Vector2 location, out Ray ray)
+        {
+            // Gather camera properties
+            var viewport = Viewport;
+            Matrix v, p, ivp;
+            GetMatrices(out v, out p);
+            Matrix.Multiply(ref v, ref p, out ivp);
+            ivp.Invert();
+
+            // Create near and far points
+            Vector3 nearPoint = new Vector3(location, 0.0f);
+            Vector3 farPoint = new Vector3(location, 1.0f);
+            viewport.Unproject(ref nearPoint, ref ivp, out nearPoint);
+            viewport.Unproject(ref farPoint, ref ivp, out farPoint);
+
+            // Create direction vector
+            Vector3 direction = farPoint - nearPoint;
+            direction.Normalize();
+
+            ray = new Ray(nearPoint, direction);
+        }
+
+        /// <summary>
+        /// Converts the mouse location (in screen-space) to 3D ray.
+        /// </summary>
+        /// <param name="location">The mouse location (screen-space).</param>
+        /// <param name="ray">The mouse ray (world-space).</param>
+        /// <param name="viewport">The custom viewport used for the camera projection matrices calculations.</param>
+        public void ConvertMouseToRay(ref Vector2 location, out Ray ray, ref Viewport viewport)
+        {
+            // Gather camera properties
+            Matrix v, p, ivp;
+            GetMatrices(out v, out p, ref viewport);
+            Matrix.Multiply(ref v, ref p, out ivp);
+            ivp.Invert();
+
+            // Create near and far points
+            Vector3 nearPoint = new Vector3(location, 0.0f);
+            Vector3 farPoint = new Vector3(location, 1.0f);
+            viewport.Unproject(ref nearPoint, ref ivp, out nearPoint);
+            viewport.Unproject(ref farPoint, ref ivp, out farPoint);
+
+            // Create direction vector
+            Vector3 direction = farPoint - nearPoint;
+            direction.Normalize();
+
+            ray = new Ray(nearPoint, direction);
+        }
 
         /// <summary>
         /// Calculates the view and the projection matrices for the camera. Support using custom viewport.
