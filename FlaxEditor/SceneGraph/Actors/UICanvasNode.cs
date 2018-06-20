@@ -24,5 +24,13 @@ namespace FlaxEditor.SceneGraph.Actors
             // Rotate to match the space (GUI uses upper left corner as a root)
             Actor.LocalOrientation = Quaternion.Euler(0, -180, -180);
         }
+
+        /// <inheritdoc />
+        public override void OnDebugDraw(ViewportDebugDrawData data)
+        {
+            base.OnDebugDraw(data);
+
+            DebugDraw.DrawBox(((UICanvas)Actor).Bounds, Color.BlueViolet);
+        }
     }
 }
