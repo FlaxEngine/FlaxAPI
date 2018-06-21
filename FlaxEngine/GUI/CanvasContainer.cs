@@ -104,6 +104,7 @@ namespace FlaxEngine.GUI
                     if (IntersectsChildContent(child, ref ray, out childLocation))
                     {
                         child.OnMouseEnter(childLocation);
+                        return;
                     }
                 }
             }
@@ -116,6 +117,7 @@ namespace FlaxEngine.GUI
             UICanvas.CalculateRay(ref location, out Ray ray);
 
             // Check all children collisions with mouse and fire events for them
+            bool isFirst3DHandled = false;
             for (int i = _children.Count - 1; i >= 0 && _children.Count > 0; i--)
             {
                 var child = (CanvasRootControl)_children[i];
@@ -149,15 +151,19 @@ namespace FlaxEngine.GUI
                         Vector2 childLocation;
                         if (IntersectsChildContent(child, ref ray, out childLocation))
                         {
-                            if (child.IsMouseOver)
+                            if (!isFirst3DHandled)
                             {
-                                // Move
-                                child.OnMouseMove(childLocation);
-                            }
-                            else
-                            {
-                                // Enter
-                                child.OnMouseEnter(childLocation);
+                                isFirst3DHandled = true;
+                                if (child.IsMouseOver)
+                                {
+                                    // Move
+                                    child.OnMouseMove(childLocation);
+                                }
+                                else
+                                {
+                                    // Enter
+                                    child.OnMouseEnter(childLocation);
+                                }
                             }
                         }
                         else if (child.IsMouseOver)
