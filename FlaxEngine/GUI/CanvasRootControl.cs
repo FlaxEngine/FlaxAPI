@@ -125,6 +125,13 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
+        public override bool ContainsPoint(ref Vector2 location)
+        {
+            return base.ContainsPoint(ref location)
+                   && (_canvas.TestCanvasIntersection == null || _canvas.TestCanvasIntersection(ref location));
+        }
+
+        /// <inheritdoc />
         public override bool OnCharInput(char c)
         {
             if (!_canvas.ReceivesEvents)
