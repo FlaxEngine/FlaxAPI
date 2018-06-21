@@ -54,7 +54,7 @@ namespace FlaxEngine.GUI
             childSpaceLocation = Vector2.Zero;
             return false;
         }
-        
+
         /// <inheritdoc />
         public override void OnChildrenChanged()
         {
@@ -149,21 +149,19 @@ namespace FlaxEngine.GUI
                     else
                     {
                         Vector2 childLocation;
-                        if (IntersectsChildContent(child, ref ray, out childLocation))
+                        if (!isFirst3DHandled && IntersectsChildContent(child, ref ray, out childLocation))
                         {
-                            if (!isFirst3DHandled)
+                            isFirst3DHandled = true;
+
+                            if (child.IsMouseOver)
                             {
-                                isFirst3DHandled = true;
-                                if (child.IsMouseOver)
-                                {
-                                    // Move
-                                    child.OnMouseMove(childLocation);
-                                }
-                                else
-                                {
-                                    // Enter
-                                    child.OnMouseEnter(childLocation);
-                                }
+                                // Move
+                                child.OnMouseMove(childLocation);
+                            }
+                            else
+                            {
+                                // Enter
+                                child.OnMouseEnter(childLocation);
                             }
                         }
                         else if (child.IsMouseOver)
@@ -195,10 +193,8 @@ namespace FlaxEngine.GUI
                     Vector2 childLocation;
                     if (IntersectsChildContent(child, ref ray, out childLocation))
                     {
-                        if (child.OnMouseWheel(childLocation, delta))
-                        {
-                            return true;
-                        }
+                        child.OnMouseWheel(childLocation, delta);
+                        return true;
                     }
                 }
             }
@@ -225,10 +221,8 @@ namespace FlaxEngine.GUI
                     Vector2 childLocation;
                     if (IntersectsChildContent(child, ref ray, out childLocation))
                     {
-                        if (child.OnMouseDown(childLocation, buttons))
-                        {
-                            return true;
-                        }
+                        child.OnMouseDown(childLocation, buttons);
+                        return true;
                     }
                 }
             }
@@ -255,10 +249,8 @@ namespace FlaxEngine.GUI
                     Vector2 childLocation;
                     if (IntersectsChildContent(child, ref ray, out childLocation))
                     {
-                        if (child.OnMouseUp(childLocation, buttons))
-                        {
-                            return true;
-                        }
+                        child.OnMouseUp(childLocation, buttons);
+                        return true;
                     }
                 }
             }
@@ -285,10 +277,8 @@ namespace FlaxEngine.GUI
                     Vector2 childLocation;
                     if (IntersectsChildContent(child, ref ray, out childLocation))
                     {
-                        if (child.OnMouseDoubleClick(childLocation, buttons))
-                        {
-                            return true;
-                        }
+                        child.OnMouseDoubleClick(childLocation, buttons);
+                        return true;
                     }
                 }
             }
