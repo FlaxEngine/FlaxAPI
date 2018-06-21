@@ -48,7 +48,7 @@ namespace FlaxEngine.GUI
                 Vector3.Transform(ref hitPoint, ref world, out localHitPoint);
 
                 childSpaceLocation = child.PointFromParent(new Vector2(localHitPoint));
-                return ContainsPoint(ref childSpaceLocation);
+                return child.ContainsPoint(ref childSpaceLocation);
             }
 
             childSpaceLocation = Vector2.Zero;
