@@ -29,7 +29,7 @@ namespace FlaxEngine.GUI
         /// Gets or sets the font used to draw button text.
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000)]
-        public Font Font { get; set; }
+        public FontReference Font { get; set; }
 
         /// <summary>
         /// Event fired when user clicks on the button
@@ -90,7 +90,7 @@ namespace FlaxEngine.GUI
         : base(x, y, width, height)
         {
             var style = Style.Current;
-            Font = style.FontMedium;
+            Font = new FontReference(style.FontMedium);
             BackgroundColor = style.BackgroundNormal;
             BorderColor = style.BorderNormal;
             BackgroundColorSelected = style.BackgroundSelected;
@@ -154,7 +154,7 @@ namespace FlaxEngine.GUI
             Render2D.DrawRectangle(clientRect, borderColor);
 
             // Draw text
-            Render2D.DrawText(Font, Text, clientRect, enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
+            Render2D.DrawText(Font.GetFont(), Text, clientRect, enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
         }
 
         /// <inheritdoc />
