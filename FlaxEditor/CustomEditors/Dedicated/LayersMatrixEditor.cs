@@ -124,7 +124,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                         Parent = grid
                     };
                     box.Checked = GetBit(column, row);
-                    box.CheckChanged += OnCheckBoxChanged;
+                    box.StateChanged += OnCheckBoxChanged;
                     _checkBoxs.Add(box);
                 }
                 for (; column < layersCount; column++)

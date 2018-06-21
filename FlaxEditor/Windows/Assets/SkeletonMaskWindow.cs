@@ -152,7 +152,7 @@ namespace FlaxEditor.Windows.Assets
                         Tag = boneIndex,
                         Parent = node.TreeNode
                     };
-                    checkbox.CheckChanged += OnCheckChanged;
+                    checkbox.StateChanged += OnCheckChanged;
 
                     for (int i = 0; i < skeleton.Length; i++)
                     {

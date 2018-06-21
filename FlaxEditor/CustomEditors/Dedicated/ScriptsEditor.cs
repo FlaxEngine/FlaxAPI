@@ -491,7 +491,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     Tag = script,
                     Parent = group.Panel
                 };
-                scriptToggle.CheckChanged += ScriptToggleOnCheckChanged;
+                scriptToggle.StateChanged += ScriptToggleOnCheckChanged;
 
                 // Add drag button to the group
                 const float dragIconSize = 14;

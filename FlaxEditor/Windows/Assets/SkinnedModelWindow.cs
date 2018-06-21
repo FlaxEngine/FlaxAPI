@@ -273,13 +273,13 @@ namespace FlaxEditor.Windows.Assets
                         // Isolate
                         var isolate = group.Checkbox("Isolate", "Shows only this mesh (and meshes using the same material slot)");
                         isolate.CheckBox.Tag = mesh;
-                        isolate.CheckBox.CheckChanged += (box) => proxy.SetIsolate(box.Checked ? (SkinnedMesh)box.Tag : null);
+                        isolate.CheckBox.StateChanged += (box) => proxy.SetIsolate(box.Checked ? (SkinnedMesh)box.Tag : null);
                         proxy._isolateCheckBoxes.Add(isolate.CheckBox);
 
                         // Highlight
                         var highlight = group.Checkbox("Highlight", "Highlights this mesh with a tint color (and meshes using the same material slot)");
                         highlight.CheckBox.Tag = mesh;
-                        highlight.CheckBox.CheckChanged += (box) => proxy.SetHighlight(box.Checked ? (SkinnedMesh)box.Tag : null);
+                        highlight.CheckBox.StateChanged += (box) => proxy.SetHighlight(box.Checked ? (SkinnedMesh)box.Tag : null);
                         proxy._highlightCheckBoxes.Add(highlight.CheckBox);
                     }
 

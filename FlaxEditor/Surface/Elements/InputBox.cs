@@ -109,7 +109,7 @@ namespace FlaxEditor.Surface.Elements
                 {
                     Parent = Parent
                 };
-                control.CheckChanged += OnCheckBoxChanged;
+                control.StateChanged += OnCheckBoxChanged;
                 _defaultValueEditor = control;
                 break;
             }
