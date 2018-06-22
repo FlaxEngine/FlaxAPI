@@ -92,7 +92,7 @@ namespace FlaxEngine.GUI
             PerformLayout();
 
             // Calculate popup directinon and initial location (fit on a single monitor)
-            var parentWin = parent.Root;
+            var parentWin = parent.RootWindow;
             if (parentWin == null)
                 return;
             Vector2 locationWS = parent.PointToWindow(location);

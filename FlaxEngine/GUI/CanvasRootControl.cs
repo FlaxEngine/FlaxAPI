@@ -113,14 +113,22 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override Vector2 ScreenToClient(Vector2 location)
+        public override Vector2 PointToParent(Vector2 location)
         {
-            return location;
-        }
+            if (Is2D)
+                return base.PointToParent(location);
 
-        /// <inheritdoc />
-        public override Vector2 ClientToScreen(Vector2 location)
-        {
+            var camera = Camera.MainCamera;
+            if (!camera)
+                return location;
+
+            // Transform canvas local-space point to the game root location
+            Matrix world;
+            _canvas.GetWorldMatrix(out world);
+            Vector3 locationWorldSpace;
+            Vector3 locationCanvasSpace = new Vector3(location, 0.0f);
+            Vector3.Transform(ref locationCanvasSpace, ref world, out locationWorldSpace);
+            camera.ProjectPoint(ref locationWorldSpace, out location);
             return location;
         }
 

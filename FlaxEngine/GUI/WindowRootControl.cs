@@ -157,6 +157,9 @@ namespace FlaxEngine.GUI
         public override Vector2 TrackingMouseOffset => _window.TrackingMouseOffset;
 
         /// <inheritdoc />
+        public override WindowRootControl RootWindow => this;
+
+        /// <inheritdoc />
         public override Vector2 MousePosition
         {
             get => _window.MousePosition;

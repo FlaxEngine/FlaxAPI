@@ -276,7 +276,12 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets the GUI tree root control which contains that control (or null if not linked to any)
         /// </summary>
-        public virtual RootControl Root => HasParent ? _parent.Root : null;
+        public virtual RootControl Root => _parent?.Root;
+
+        /// <summary>
+        /// Gets the GUI window root control which contains that control (or null if not linked to any).
+        /// </summary>
+        public virtual WindowRootControl RootWindow => _parent?.RootWindow;
 
         /// <summary>
         /// Gets screen position of the control (upper left corner).
