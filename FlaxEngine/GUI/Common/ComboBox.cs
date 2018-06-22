@@ -20,7 +20,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The items.
         /// </summary>
-        protected readonly List<string> _items = new List<string>();
+        protected List<string> _items = new List<string>();
 
         /// <summary>
         /// The popup menu. May be null if has not been used yet.
@@ -36,34 +36,37 @@ namespace FlaxEngine.GUI
         protected readonly List<int> _selectedIndicies = new List<int>(4);
 
         /// <summary>
+        /// Gets or sets the items collection.
+        /// </summary>
+        [EditorOrder(1), Tooltip("The items collection.")]
+        public List<string> Items
+        {
+            get => _items;
+            set => _items = value;
+        }
+
+        /// <summary>
         /// True if sort items before showing the list, otherwise present them in the unchanged order.
         /// </summary>
+        [EditorOrder(40), Tooltip("If checked, items will be sorted before showing the list, otherwise present them in the unchanged order.")]
         public bool Sorted { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether support multi items selection.
         /// </summary>
+        [EditorOrder(41), Tooltip("If checked, combobox will support multi items selection. Otherwise it will be single item picking.")]
         public bool SupportMultiSelect { get; set; }
 
         /// <summary>
-        /// Event fired when selected index gets changed.
+        /// Gets or sets the maximum amount of items in the view. If popup has more items to show it uses a additional scroll panel.
         /// </summary>
-        public event Action<ComboBox> SelectedIndexChanged;
-
-        /// <summary>
-        /// Gets a value indicating whether this popup menu is opened.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if popup is opened; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsPopupOpened => _popupMenu != null && _popupMenu.IsOpened;
+        [EditorOrder(42), Limit(1, 1000), Tooltip("The maximum amount of items in the view. If popup has more items to show it uses a additional scroll panel.")]
+        public int MaximumItemsInViewCount { get; set; }
 
         /// <summary>
         /// Gets or sets the selected item (returns <see cref="string.Empty"/> if no item is being selected or more than one item is selected).
         /// </summary>
-        /// <value>
-        /// The selected item.
-        /// </value>
+        [HideInEditor, NoSerialize]
         public string SelectedItem
         {
             get => _selectedIndicies.Count == 1 ? _items[_selectedIndicies[0]] : string.Empty;
@@ -71,11 +74,9 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets the index of the selected.
+        /// Gets or sets the index of the selected. If combobox has more than 1 item selected then it returns invalid index (value -1).
         /// </summary>
-        /// <value>
-        /// The index of the selected.
-        /// </value>
+        [EditorOrder(2), Tooltip("The index of the selected item from the list.")]
         public int SelectedIndex
         {
             get => _selectedIndicies.Count == 1 ? _selectedIndicies[0] : -1;
@@ -98,6 +99,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the selection.
         /// </summary>
+        [NoSerialize, HideInEditor]
         public List<int> Selection
         {
             get => _selectedIndicies;
@@ -105,7 +107,7 @@ namespace FlaxEngine.GUI
             {
                 if (value == null)
                     throw new ArgumentNullException();
-                if (!SupportMultiSelect)
+                if (!SupportMultiSelect && value.Count > 1)
                     throw new InvalidOperationException();
 
                 if (!_selectedIndicies.SequenceEqual(value))
@@ -119,9 +121,56 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets the maximum amount of items in the view. If popup has more items to show it uses a additional scroll panel.
+        /// Event fired when selected index gets changed.
         /// </summary>
-        public int MaximumItemsInViewCount { get; set; }
+        public event Action<ComboBox> SelectedIndexChanged;
+
+        /// <summary>
+        /// Gets a value indicating whether this popup menu is opened.
+        /// </summary>
+        public bool IsPopupOpened => _popupMenu != null && _popupMenu.IsOpened;
+
+        /// <summary>
+        /// Gets or sets the font used to draw text.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
+        public FontReference Font { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color of the text.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
+        public Color TextColor { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the color of the border.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
+        public Color BorderColor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the background color when combobox popup is opened.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2010)]
+        public Color BackgroundColorSelected { get; set; }
+
+        /// <summary>
+        /// Gets or sets the border color when combobox popup is opened.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2020)]
+        public Color BorderColorSelected { get; set; }
+
+        /// <summary>
+        /// Gets or sets the background color when combobox is highlighted.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
+        public Color BackgroundColorHighlighted { get; set; }
+
+        /// <summary>
+        /// Gets or sets the border color when combobox is highlighted.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
+        public Color BorderColorHighlighted { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ComboBox"/> class.
@@ -141,6 +190,16 @@ namespace FlaxEngine.GUI
         : base(x, y, width, DefaultHeight)
         {
             MaximumItemsInViewCount = 20;
+
+            var style = Style.Current;
+            Font = new FontReference(style.FontMedium);
+            TextColor = style.Foreground;
+            BackgroundColor = style.BackgroundNormal;
+            BackgroundColorHighlighted = BackgroundColor;
+            BackgroundColorSelected = BackgroundColor;
+            BorderColor = style.BorderNormal;
+            BorderColorHighlighted = style.BorderSelected;
+            BorderColorSelected = BorderColorHighlighted;
         }
 
         /// <summary>
@@ -245,29 +304,37 @@ namespace FlaxEngine.GUI
             bool enabled = EnabledInHierarchy;
 
             // Background
-            Color backgroundColor = style.BackgroundNormal;
-            Color borderColor = style.BorderNormal;
+            Color backgroundColor = BackgroundColor;
+            Color borderColor = BorderColor;
             if (!enabled)
             {
-                backgroundColor *= 0.4f;
-                arrowOpacity = 0.4f;
+                backgroundColor *= 0.5f;
+                arrowOpacity = 0.5f;
             }
-            else if (IsMouseOver || _mouseDown || isOpened)
+            else if (isOpened || _mouseDown)
             {
-                borderColor = style.BorderSelected;
+                backgroundColor = BackgroundColorSelected;
+                borderColor = BorderColorSelected;
+            }
+            else if (IsMouseOver)
+            {
+                backgroundColor = BackgroundColorHighlighted;
+                borderColor = BorderColorHighlighted;
             }
             Render2D.FillRectangle(clientRect, backgroundColor);
             Render2D.DrawRectangle(clientRect, borderColor);
 
             // Check if has selected item
-            var selectedIndex = SelectedIndex;
-            if (selectedIndex != -1)
+            if (_selectedIndicies.Count > 0)
             {
+                string text = _selectedIndicies.Count == 1 ? _items[_selectedIndicies[0]] : "Multiple Values";
+
                 // Draw text of the selected item
                 float textScale = Height / DefaultHeight;
                 var textRect = new Rectangle(margin, 0, clientRect.Width - boxSize - 2.0f * margin, clientRect.Height);
                 Render2D.PushClip(textRect);
-                Render2D.DrawText(style.FontMedium, _items[selectedIndex], textRect, enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, textScale);
+                var textColor = TextColor;
+                Render2D.DrawText(Font.GetFont(), text, textRect, enabled ? textColor : textColor * 0.5f, TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, textScale);
                 Render2D.PopClip();
             }
 
