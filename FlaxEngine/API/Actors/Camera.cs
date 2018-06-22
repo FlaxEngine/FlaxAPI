@@ -8,6 +8,23 @@ namespace FlaxEngine
     public sealed partial class Camera
     {
         /// <summary>
+        /// Projects the point from 3D world-space to the camera screen-space (in screen pixels for default viewport calculated from <see cref="Viewport"/>).
+        /// </summary>
+        /// <param name="worldSpaceLocation">The input world-space location (XYZ in world).</param>
+        /// <param name="screenSpaceLocation">The output screen-space location (XY in screen pixels).</param>
+        public void ProjectPoint(ref Vector3 worldSpaceLocation, out Vector2 screenSpaceLocation)
+        {
+            var viewport = Viewport;
+            Matrix v, p, vp;
+            GetMatrices(out v, out p, ref viewport);
+            Matrix.Multiply(ref v, ref p, out vp);
+            Vector3 clipSpaceLocation;
+            Vector3.Transform(ref worldSpaceLocation, ref vp, out clipSpaceLocation);
+            viewport.Project(ref worldSpaceLocation, ref vp, out clipSpaceLocation);
+            screenSpaceLocation = new Vector2(clipSpaceLocation);
+        }
+
+        /// <summary>
         /// Converts the mouse location (in screen-space) to 3D ray.
         /// </summary>
         /// <param name="location">The mouse location (screen-space).</param>
@@ -17,7 +34,7 @@ namespace FlaxEngine
             // Gather camera properties
             var viewport = Viewport;
             Matrix v, p, ivp;
-            GetMatrices(out v, out p);
+            GetMatrices(out v, out p, ref viewport);
             Matrix.Multiply(ref v, ref p, out ivp);
             ivp.Invert();
 
@@ -44,7 +61,7 @@ namespace FlaxEngine
             // Gather camera properties
             var viewport = Viewport;
             Matrix v, p, ivp;
-            GetMatrices(out v, out p);
+            GetMatrices(out v, out p, ref viewport);
             Matrix.Multiply(ref v, ref p, out ivp);
             ivp.Invert();
 
