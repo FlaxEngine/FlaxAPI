@@ -192,6 +192,7 @@ namespace FlaxEngine
         /// <summary>
         /// The callback used to perform custom canvas intersection test. Can be used to implement a canvas tha has a holes or non-rectangular shape.
         /// </summary>
+        [HideInEditor]
         public TestCanvasIntersectionDelegate TestCanvasIntersection;
 
         /// <summary>

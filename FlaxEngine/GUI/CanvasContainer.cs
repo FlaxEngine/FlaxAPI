@@ -6,6 +6,7 @@ namespace FlaxEngine.GUI
     /// The root container conrol used to sort and manage child UICanvas controls. Helps with sending input events.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    [HideInEditor]
     internal sealed class CanvasContainer : ContainerControl
     {
         internal CanvasContainer()

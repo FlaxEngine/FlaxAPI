@@ -178,7 +178,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the normalized pivot location (used to transform control around it). Point (0,0) is upper left corner, (0.5,0.5) is center, (1,1) is bottom left corner.
         /// </summary>
-        [EditorDisplay("Transform"), Limit(0.1f, 1.0f, 0.1f), EditorOrder(1030), Tooltip("The control rotation pivot location in normalized control size. Point (0,0) is upper left corner, (0.5,0.5) is center, (1,1) is bottom left corner.")]
+        [EditorDisplay("Transform"), Limit(0.0f, 1.0f, 0.1f), EditorOrder(1030), Tooltip("The control rotation pivot location in normalized control size. Point (0,0) is upper left corner, (0.5,0.5) is center, (1,1) is bottom left corner.")]
         public Vector2 Pivot
         {
             get => _pivot;
