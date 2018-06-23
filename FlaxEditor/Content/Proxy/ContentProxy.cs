@@ -3,6 +3,7 @@
 using System;
 using FlaxEditor.Windows;
 using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.Content
 {
@@ -22,6 +23,15 @@ namespace FlaxEditor.Content
         /// <param name="item">The item.</param>
         /// <returns><c>true</c> if is proxy for asset item; otherwise, <c>false</c>.</returns>
         public abstract bool IsProxyFor(ContentItem item);
+
+        /// <summary>
+        /// Determines whether this proxy is for the specified asset.
+        /// </summary>
+        /// <returns><c>true</c> if is proxy for asset item; otherwise, <c>false</c>.</returns>
+        public virtual bool IsProxyFor<T>() where T : Asset
+        {
+            return false;
+        }
 
         /// <summary>
         /// Gets a value indicating whether this proxy if for assets.
@@ -84,6 +94,15 @@ namespace FlaxEditor.Content
         public virtual void Create(string outputPath)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Called when content window wants to show the context menu. Allows to add custom functions for the given asset type.
+        /// </summary>
+        /// <param name="menu">The menu.</param>
+        /// <param name="item">The item.</param>
+        public virtual void OnContentWindowContextMenu(ContextMenu menu, ContentItem item)
+        {
         }
 
         /// <summary>

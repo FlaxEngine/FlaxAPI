@@ -223,26 +223,29 @@ namespace FlaxEditor.Windows
                 }
             }
 
-            // Find any selected cameras and create pewviews for them
-            for (int i = 0; i < selection.Count; i++)
+            if (Editor.Options.Options.Interface.ShowSelectedCameraPreview)
             {
-                if (selection[i] is CameraNode cameraNode)
+                // Find any selected cameras and create pewviews for them
+                for (int i = 0; i < selection.Count; i++)
                 {
-                    // Check limit for cameras
-                    if (_previews.Count >= 8)
-                        break;
-
-                    var camera = (Camera)cameraNode.Actor;
-                    var preview = _previews.FirstOrDefault(x => x.Camera == camera);
-                    if (preview == null)
+                    if (selection[i] is CameraNode cameraNode)
                     {
-                        // Show it
-                        preview = new CameraPreview
+                        // Check limit for cameras
+                        if (_previews.Count >= 8)
+                            break;
+
+                        var camera = (Camera)cameraNode.Actor;
+                        var preview = _previews.FirstOrDefault(x => x.Camera == camera);
+                        if (preview == null)
                         {
-                            Camera = camera,
-                            Parent = this
-                        };
-                        _previews.Add(preview);
+                            // Show it
+                            preview = new CameraPreview
+                            {
+                                Camera = camera,
+                                Parent = this
+                            };
+                            _previews.Add(preview);
+                        }
                     }
                 }
             }
@@ -336,6 +339,7 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
+            // TODO: call camera preview update only on selecion change, or state change
             UpdateCameraPreview();
 
             if (ParentWindow.GetKeyDown(Keys.F12))

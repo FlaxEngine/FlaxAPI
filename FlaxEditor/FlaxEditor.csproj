@@ -16,7 +16,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;FLAX_ASSERTIONS</DefineConstants>
@@ -26,7 +26,7 @@
     <DocumentationFile>bin\Debug\FlaxEditor.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -34,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>bin\Release\FlaxEditor.xml</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -118,6 +119,7 @@
     <Compile Include="CustomEditors\Editors\GenericEditor.cs" />
     <Compile Include="CustomEditors\Editors\IntegerEditor.cs" />
     <Compile Include="CustomEditors\Editors\ListEditor.cs" />
+    <Compile Include="CustomEditors\Editors\MatrixEditor.cs" />
     <Compile Include="CustomEditors\Editors\QuaternionEditor.cs" />
     <Compile Include="CustomEditors\Editors\SkeletonBoneEditor.cs" />
     <Compile Include="CustomEditors\Editors\StringEditor.cs" />
@@ -140,6 +142,7 @@
     <Compile Include="CustomEditors\Elements\TreeNodeElement.cs" />
     <Compile Include="CustomEditors\GUI\CheckablePropertyNameLabel.cs" />
     <Compile Include="CustomEditors\GUI\ClickablePropertyNameLabel.cs" />
+    <Compile Include="CustomEditors\GUI\DragablePropertyNameLabel.cs" />
     <Compile Include="CustomEditors\GUI\PropertiesList.cs" />
     <Compile Include="CustomEditors\GUI\PropertyNameLabel.cs" />
     <Compile Include="CustomEditors\Elements\SpaceElement.cs" />
@@ -162,6 +165,7 @@
     <Compile Include="GUI\Drag\DragActorType.cs" />
     <Compile Include="GUI\Drag\DragScriptItems.cs" />
     <Compile Include="GUI\Drag\DragScripts.cs" />
+    <Compile Include="GUI\Drag\DragSurfaceParameter.cs" />
     <Compile Include="GUI\PlatformSelector.cs" />
     <Compile Include="GUI\RenamePopup.cs" />
     <Compile Include="Content\Proxy\BinaryAssetProxy.cs" />
@@ -228,12 +232,19 @@
     <Compile Include="Modules\ContentImportingModule.cs" />
     <Compile Include="Modules\EditorModule.cs" />
     <Compile Include="Modules\ProgressReportingModule.cs" />
+    <Compile Include="Modules\ProjectCacheModule.cs" />
     <Compile Include="Modules\SceneEditingModule.cs" />
     <Compile Include="Modules\SceneModule.cs" />
     <Compile Include="Modules\SimulationModule.cs" />
     <Compile Include="Content\Thumbnails\ThumbnailsModule.cs" />
     <Compile Include="Modules\UIModule.cs" />
     <Compile Include="Modules\WindowsModule.cs" />
+    <Compile Include="Options\Editor.cs" />
+    <Compile Include="Options\EditorOptions.cs" />
+    <Compile Include="Options\GeneralOptions.cs" />
+    <Compile Include="Options\InterfaceOptions.cs" />
+    <Compile Include="Options\OptionsModule.cs" />
+    <Compile Include="Options\VisualOptions.cs" />
     <Compile Include="Progress\Handlers\BakeEnvProbesProgress.cs" />
     <Compile Include="Progress\Handlers\BakeLightmapsProgress.cs" />
     <Compile Include="Progress\Handlers\BuildingGameProgress.cs" />
@@ -252,6 +263,7 @@
     <Compile Include="SceneGraph\Actors\BoneSocketNode.cs" />
     <Compile Include="SceneGraph\Actors\BoxBrushNode.cs" />
     <Compile Include="SceneGraph\Actors\CameraNode.cs" />
+    <Compile Include="SceneGraph\Actors\ColliderNode.cs" />
     <Compile Include="SceneGraph\Actors\DecalNode.cs" />
     <Compile Include="SceneGraph\Actors\DirectionalLightNode.cs" />
     <Compile Include="SceneGraph\Actors\EnvironmentProbeNode.cs" />
@@ -390,6 +402,7 @@
     <Compile Include="Windows\ContentWindow.Navigation.cs" />
     <Compile Include="Windows\DebugLogWindow.cs" />
     <Compile Include="Windows\EditGameWindow.cs" />
+    <Compile Include="Windows\EditorOptionsWindow.cs" />
     <Compile Include="Windows\EditorWindow.cs" />
     <Compile Include="Undo\Undo.cs" />
     <Compile Include="Utilities\Extensions.cs" />

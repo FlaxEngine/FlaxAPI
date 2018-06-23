@@ -58,6 +58,7 @@ namespace FlaxEditor.Windows
             var actorGroups = new Tabs
             {
                 Orientation = Orientation.Vertical,
+                UseScroll = true,
                 DockStyle = DockStyle.Fill,
                 TabsSize = new Vector2(120, 32),
                 Parent = spawnTab

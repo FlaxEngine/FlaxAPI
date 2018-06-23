@@ -12,6 +12,8 @@ namespace FlaxEditor.CustomEditors
 {
     internal static class CustomEditorsUtil
     {
+        private static readonly StringBuilder CachedSb = new StringBuilder(256);
+
         /// <summary>
         /// Gets the property name for UI. Removes unnecessary characters and filters text. Makes it more user-friendly.
         /// </summary>
@@ -20,9 +22,17 @@ namespace FlaxEditor.CustomEditors
         public static string GetPropertyNameUI(string name)
         {
             int length = name.Length;
-            StringBuilder sb = new StringBuilder(length + 4);
+            StringBuilder sb = CachedSb;
+            sb.Clear();
+            sb.EnsureCapacity(length + 8);
+            int startIndex = 0;
 
-            for (int i = 0; i < length; i++)
+            // Skip some prefixes
+            if (name.StartsWith("g_") || name.StartsWith("m_"))
+                startIndex = 2;
+
+            // Filter text
+            for (int i = startIndex; i < length; i++)
             {
                 var c = name[i];
 

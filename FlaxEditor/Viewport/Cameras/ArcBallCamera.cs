@@ -83,8 +83,10 @@ namespace FlaxEditor.Viewport.Cameras
         }
 
         /// <inheritdoc />
-        public override void UpdateView(float dt, ref Vector3 moveDelta, ref Vector2 mouseDelta)
+        public override void UpdateView(float dt, ref Vector3 moveDelta, ref Vector2 mouseDelta, out bool centerMouse)
         {
+            centerMouse = true;
+
             EditorViewport.Input input;
             Viewport.GetInput(out input);
 

@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using FlaxEditor.Options;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
 using FlaxEngine.Rendering;
@@ -13,16 +14,7 @@ namespace FlaxEditor.Gizmo
     {
         private Material _outlineMaterial;
         private MaterialInstance _material;
-
-        /// <summary>
-        /// Gets or sets the first outline color.
-        /// </summary>
-        public Color OutlineColor0 { get; set; } = new Color(0.039f, 0.827f, 0.156f);
-
-        /// <summary>
-        /// Gets or sets the second outline color.
-        /// </summary>
-        public Color OutlineColor1 { get; set; } = new Color(0.019f, 0.615f, 0.101f);
+        private Color _color0, _color1;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectionOutline"/> class.
@@ -38,6 +30,16 @@ namespace FlaxEditor.Gizmo
             {
                 Editor.LogWarning("Failed to load gizmo selection outline material");
             }
+
+            var options = Editor.Instance.Options;
+            options.OptionsChanged += OnOptionsChanged;
+            OnOptionsChanged(options.Options);
+        }
+
+        private void OnOptionsChanged(EditorOptions options)
+        {
+            _color0 = options.Visual.SelectionOutlineColor0;
+            _color1 = options.Visual.SelectionOutlineColor1;
         }
 
         /// <inheritdoc />
@@ -61,8 +63,8 @@ namespace FlaxEditor.Gizmo
             var projection = task.View.Projection;
 
             // Render outline
-            _material.GetParam("OutlineColor0").Value = OutlineColor0;
-            _material.GetParam("OutlineColor1").Value = OutlineColor1;
+            _material.GetParam("OutlineColor0").Value = _color0;
+            _material.GetParam("OutlineColor1").Value = _color1;
             _material.GetParam("CustomDepth").Value = customDepth;
             _material.GetParam("ViewInfo").Value = new Vector4(1.0f / projection.M11, 1.0f / projection.M22, far / (far - near), (-far * near) / (far - near) / far);
             context.DrawPostFxMaterial(_material, output, input, task);

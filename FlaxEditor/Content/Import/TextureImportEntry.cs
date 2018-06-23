@@ -260,12 +260,12 @@ namespace FlaxEditor.Content.Import
         internal struct InternalOptions
         {
             public TextureFormatType Type;
-            public bool IsAtlas;
-            public bool NeverStream;
-            public bool Compress;
-            public bool IndependentChannels;
-            public bool IsSRGB;
-            public bool GenerateMipMaps;
+            public byte IsAtlas;
+            public byte NeverStream;
+            public byte Compress;
+            public byte IndependentChannels;
+            public byte IsSRGB;
+            public byte GenerateMipMaps;
             public float Scale;
             public int MaxSize;
             public Rectangle[] SpriteAreas;
@@ -277,12 +277,12 @@ namespace FlaxEditor.Content.Import
             options = new InternalOptions
             {
                 Type = (TextureFormatType)(int)Type,
-                IsAtlas = IsAtlas,
-                NeverStream = NeverStream,
-                Compress = Compress,
-                IndependentChannels = IndependentChannels,
-                IsSRGB = IsSRGB,
-                GenerateMipMaps = GenerateMipMaps,
+                IsAtlas = (byte)(IsAtlas ? 1 : 0),
+                NeverStream = (byte)(NeverStream ? 1 : 0),
+                Compress = (byte)(Compress ? 1 : 0),
+                IndependentChannels = (byte)(IndependentChannels ? 1 : 0),
+                IsSRGB = (byte)(IsSRGB ? 1 : 0),
+                GenerateMipMaps = (byte)(GenerateMipMaps ? 1 : 0),
                 Scale = Scale,
                 MaxSize = (int)MaxSize
             };
@@ -307,12 +307,12 @@ namespace FlaxEditor.Content.Import
         internal void FromInternal(ref InternalOptions options)
         {
             Type = (CustomTextureFormatType)(int)options.Type;
-            IsAtlas = options.IsAtlas;
-            NeverStream = options.NeverStream;
-            Compress = options.Compress;
-            IndependentChannels = options.IndependentChannels;
-            IsSRGB = options.IsSRGB;
-            GenerateMipMaps = options.GenerateMipMaps;
+            IsAtlas = options.IsAtlas != 0;
+            NeverStream = options.NeverStream != 0;
+            Compress = options.Compress != 0;
+            IndependentChannels = options.IndependentChannels != 0;
+            IsSRGB = options.IsSRGB != 0;
+            GenerateMipMaps = options.GenerateMipMaps != 0;
             Scale = options.Scale;
             MaxSize = ConvertMaxSize(options.MaxSize);
             if (options.SpriteAreas != null)
@@ -384,6 +384,7 @@ namespace FlaxEditor.Content.Import
                      || snl.Contains("diffuse")
                      || snl.Contains("diff")
                      || snl.Contains("color")
+                     || snl.Contains("_col")
                      || snl.Contains("basecolor")
                      || snl.Contains("albedo"))
             {
@@ -395,7 +396,10 @@ namespace FlaxEditor.Content.Import
                      || snl.EndsWith("gloss")
                      || snl.EndsWith("_r")
                      || snl.EndsWith("_displ")
+                     || snl.EndsWith("_disp")
                      || snl.EndsWith("roughness")
+                     || snl.EndsWith("_rgh")
+                     || snl.EndsWith("_met")
                      || snl.EndsWith("metalness")
                      || snl.EndsWith("displacement")
                      || snl.EndsWith("spec")

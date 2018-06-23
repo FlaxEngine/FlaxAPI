@@ -98,16 +98,17 @@ namespace FlaxEngine
         /// <summary>
         /// Builds the CSG geometry for the given scene.
         /// </summary>
+        /// <param name="timeoutMs">The timeout to wait before building CSG (in milliseconds).</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void BuildCSG()
+        public void BuildCSG(float timeoutMs = 50)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_BuildCSG(unmanagedPtr);
+            Internal_BuildCSG(unmanagedPtr, timeoutMs);
 #endif
         }
 
@@ -127,7 +128,7 @@ namespace FlaxEngine
         internal static extern void Internal_ClearLightmaps(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_BuildCSG(IntPtr obj);
+        internal static extern void Internal_BuildCSG(IntPtr obj, float timeoutMs);
 #endif
 
         #endregion

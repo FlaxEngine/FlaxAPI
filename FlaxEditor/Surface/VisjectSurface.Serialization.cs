@@ -189,6 +189,15 @@ namespace FlaxEditor.Surface
                 data.Set(v);
             }
                 break;*/
+            case 15: // CommonType::Matrix
+            {
+                value = new Matrix(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(),
+                                   stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(),
+                                   stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(),
+                                   stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+                break;
+            }
+
             default: throw new SystemException();
             }
         }
@@ -255,6 +264,26 @@ namespace FlaxEditor.Surface
                 stream.Write(asString.Length);
                 for (int i = 0; i < asString.Length; i++)
                     stream.Write((ushort)(asString[i] ^ 953));
+            }
+            else if (value is Matrix asMatrix)
+            {
+                stream.Write((byte)15);
+                stream.Write(asMatrix.M11);
+                stream.Write(asMatrix.M12);
+                stream.Write(asMatrix.M13);
+                stream.Write(asMatrix.M14);
+                stream.Write(asMatrix.M21);
+                stream.Write(asMatrix.M22);
+                stream.Write(asMatrix.M23);
+                stream.Write(asMatrix.M24);
+                stream.Write(asMatrix.M31);
+                stream.Write(asMatrix.M32);
+                stream.Write(asMatrix.M33);
+                stream.Write(asMatrix.M34);
+                stream.Write(asMatrix.M41);
+                stream.Write(asMatrix.M42);
+                stream.Write(asMatrix.M43);
+                stream.Write(asMatrix.M44);
             }
             else
             {
@@ -329,6 +358,48 @@ namespace FlaxEditor.Surface
             else if (value is string asString)
             {
                 stream.WriteValue(asString);
+            }
+            else if (value is Matrix asMatrix)
+            {
+                stream.WriteStartObject();
+
+                stream.WritePropertyName("M11");
+                stream.WriteValue(asMatrix.M11);
+                stream.WritePropertyName("M12");
+                stream.WriteValue(asMatrix.M12);
+                stream.WritePropertyName("M13");
+                stream.WriteValue(asMatrix.M13);
+                stream.WritePropertyName("M14");
+                stream.WriteValue(asMatrix.M14);
+
+                stream.WritePropertyName("M21");
+                stream.WriteValue(asMatrix.M21);
+                stream.WritePropertyName("M22");
+                stream.WriteValue(asMatrix.M22);
+                stream.WritePropertyName("M23");
+                stream.WriteValue(asMatrix.M23);
+                stream.WritePropertyName("M24");
+                stream.WriteValue(asMatrix.M24);
+
+                stream.WritePropertyName("M31");
+                stream.WriteValue(asMatrix.M31);
+                stream.WritePropertyName("M32");
+                stream.WriteValue(asMatrix.M32);
+                stream.WritePropertyName("M33");
+                stream.WriteValue(asMatrix.M33);
+                stream.WritePropertyName("M34");
+                stream.WriteValue(asMatrix.M34);
+
+                stream.WritePropertyName("M41");
+                stream.WriteValue(asMatrix.M41);
+                stream.WritePropertyName("M42");
+                stream.WriteValue(asMatrix.M42);
+                stream.WritePropertyName("M43");
+                stream.WriteValue(asMatrix.M43);
+                stream.WritePropertyName("M44");
+                stream.WriteValue(asMatrix.M44);
+
+                stream.WriteEndObject();
             }
             else
             {

@@ -202,6 +202,17 @@ namespace FlaxEditor.Windows.Assets
 
                     base.Initialize(layout);
                 }
+
+                /// <inheritdoc />
+                internal override void RefreshInternal()
+                {
+                    // Skip updates when model is not loaded
+                    var proxy = (PropertiesProxy)Values[0];
+                    if (proxy.Asset == null || !proxy.Asset.IsLoaded)
+                        return;
+
+                    base.RefreshInternal();
+                }
             }
 
             private class MeshesEditor : CustomEditor

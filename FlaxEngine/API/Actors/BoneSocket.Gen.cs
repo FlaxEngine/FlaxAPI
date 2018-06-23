@@ -52,6 +52,21 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Gets or sets the value indicating whenever use the target bone scale. Otherwise won't override the actor scale.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(20), EditorDisplay("Bone Socket"), Tooltip("If checked, the actor will use the target bone scale. Otherwise it won't override the actor scale.")]
+        public bool UseScale
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetUseScale(unmanagedPtr); }
+            set { Internal_SetUseScale(unmanagedPtr, value); }
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -60,6 +75,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetBoneIndex(IntPtr obj, int val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetUseScale(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetUseScale(IntPtr obj, bool val);
 #endif
 
         #endregion

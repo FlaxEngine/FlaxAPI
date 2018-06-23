@@ -159,12 +159,45 @@ namespace FlaxEditor.SceneGraph
         }
 
         /// <summary>
+        /// The scene graph raycasting data container.
+        /// </summary>
+        public struct RayCastData
+        {
+            /// <summary>
+            /// The raycasting optional flags.
+            /// </summary>
+            [Flags]
+            public enum FlagTypes
+            {
+                /// <summary>
+                /// The none.
+                /// </summary>
+                None = 0,
+
+                /// <summary>
+                /// The skip colliders flag.
+                /// </summary>
+                SkipColliders = 1,
+            }
+
+            /// <summary>
+            /// The ray.
+            /// </summary>
+            public Ray Ray;
+
+            /// <summary>
+            /// The flags.
+            /// </summary>
+            public FlagTypes Flags;
+        }
+
+        /// <summary>
         /// Performs raycasting over nodes hierarchy trying to get the closest object hited by the given ray.
         /// </summary>
-        /// <param name="ray">The ray.</param>
+        /// <param name="ray">The ray casting data.</param>
         /// <param name="distance">The result distance.</param>
         /// <returns>Hitted object or null if there is no interseciotn at all.</returns>
-        public virtual SceneGraphNode RayCast(ref Ray ray, ref float distance)
+        public virtual SceneGraphNode RayCast(ref RayCastData ray, ref float distance)
         {
             if (!IsActive)
                 return null;
@@ -202,10 +235,10 @@ namespace FlaxEditor.SceneGraph
         /// <summary>
         /// Checks if given ray intersects with the node.
         /// </summary>
-        /// <param name="ray">The ray.</param>
+        /// <param name="ray">The ray casting data.</param>
         /// <param name="distance">The distance.</param>
         /// <returns>True ray hits this node, otherwise false.</returns>
-        public virtual bool RayCastSelf(ref Ray ray, out float distance)
+        public virtual bool RayCastSelf(ref RayCastData ray, out float distance)
         {
             distance = 0;
             return false;

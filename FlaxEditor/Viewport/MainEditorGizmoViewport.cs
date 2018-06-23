@@ -72,6 +72,7 @@ namespace FlaxEditor.Viewport
             Task.Flags = ViewFlags.DefaultEditor;
             Task.Begin += RenderTaskOnBegin;
             Task.Draw += RenderTaskOnDraw;
+            Task.End += RenderTaskOnEnd;
 
             // Create post effects
             SelectionOutline = FlaxEngine.Object.New<SelectionOutline>();
@@ -221,7 +222,7 @@ namespace FlaxEditor.Viewport
             Editor.Instance.SceneEditing.Spawn(actor);
         }
 
-        private void RenderTaskOnBegin(SceneRenderTask task)
+        private void RenderTaskOnBegin(SceneRenderTask task, GPUContext context)
         {
             _debugDrawData.Clear();
 
@@ -240,6 +241,16 @@ namespace FlaxEditor.Viewport
         private void RenderTaskOnDraw(DrawCallsCollector collector)
         {
             _debugDrawData.OnDraw(collector);
+        }
+
+        private void RenderTaskOnEnd(SceneRenderTask task, GPUContext context)
+        {
+            // Render editor primitives, gizmo and debug shapes in debug view modes
+            if (task.Mode != ViewMode.Default)
+            {
+                // Note: can use Output buffer as both input and output because EditorPrimitives is using a intermdiate buffers
+                EditorPrimitives.Render(context, task, task.Output, task.Output);
+            }
         }
 
         private void onGizmoModeToggle(ViewportWidgetButton button)
@@ -468,7 +479,11 @@ namespace FlaxEditor.Viewport
             // Get mouse ray and try to hit any object
             var ray = MouseRay;
             float closest = float.MaxValue;
-            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest);
+            bool selectColliders = (Task.Flags & ViewFlags.PhysicsDebug) == ViewFlags.PhysicsDebug;
+            SceneGraphNode.RayCastData.FlagTypes rayCastFlags = SceneGraphNode.RayCastData.FlagTypes.None;
+            if (!selectColliders)
+                rayCastFlags |= SceneGraphNode.RayCastData.FlagTypes.SkipColliders;
+            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest, rayCastFlags);
 
             // Update selection
             var sceneEditing = Editor.Instance.SceneEditing;
@@ -629,7 +644,7 @@ namespace FlaxEditor.Viewport
                 var ray = ConvertMouseToRay(ref location);
                 float closest = float.MaxValue;
                 var gridPlane = new Plane(Vector3.Zero, Vector3.Up);
-                hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest);
+                hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
                 if (hit != null)
                 {
                     // Use hit location

@@ -76,10 +76,10 @@ namespace FlaxEditor.SceneGraph.Actors
             }
 
             /// <inheritdoc />
-            public override bool RayCastSelf(ref Ray ray, out float distance)
+            public override bool RayCastSelf(ref RayCastData ray, out float distance)
             {
                 var sphere = new BoundingSphere(Transform.Translation, 1.0f);
-                return sphere.Intersects(ref ray, out distance);
+                return sphere.Intersects(ref ray.Ray, out distance);
             }
 
             /// <inheritdoc />
@@ -103,11 +103,11 @@ namespace FlaxEditor.SceneGraph.Actors
         }
 
         /// <inheritdoc />
-        public override bool RayCastSelf(ref Ray ray, out float distance)
+        public override bool RayCastSelf(ref RayCastData ray, out float distance)
         {
             var volume = (PostFxVolume)_actor;
             var box = volume.OrientedBox;
-            if (!box.Intersects(ref ray, out distance))
+            if (!box.Intersects(ref ray.Ray, out distance))
                 return false;
 
             return true;

@@ -194,7 +194,7 @@ namespace FlaxEditor.Surface
             _surface.Parent = this;
 
             // Create primary menu (for nodes spawning)
-            _cmPrimaryMenu = new VisjectCM(type);
+            _cmPrimaryMenu = new VisjectCM(type, () => Parameters);
             _cmPrimaryMenu.OnItemClicked += OnPrimaryMenuButtonClick;
 
             // Create secondary menu (for other actions)
@@ -442,6 +442,26 @@ namespace FlaxEditor.Surface
             {
                 var parameter = Parameters[i];
                 if (parameter.ID == id)
+                {
+                    result = parameter;
+                    break;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the parameter by the given name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>Found parameter instance or null if missing.</returns>
+        public SurfaceParameter GetParameter(string name)
+        {
+            SurfaceParameter result = null;
+            for (int i = 0; i < Parameters.Count; i++)
+            {
+                var parameter = Parameters[i];
+                if (parameter.Name == name)
                 {
                     result = parameter;
                     break;

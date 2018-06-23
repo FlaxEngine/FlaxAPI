@@ -63,8 +63,16 @@ namespace FlaxEngine.GUI
         public Tooltip SharedTooltip;
 
         /// <summary>
-        /// Shows picking color dialog. Arguments: start color and handler to fire color changed action.
+        /// Delegate function used to handle showing color picking dialog.
         /// </summary>
-        public Action<Color, Action<Color>> ShowPickColorDialog;
+        /// <param name="initialValue">The initial value.</param>
+        /// <param name="colorChanged">The color changed event.</param>
+        /// <param name="useDynamicEditing">True if allow dynamic value editing (slider-like usage), otherwise will fire color change event only on editing end.</param>
+        public delegate void ShowPickColorDialogDelegate(Color initialValue, Action<Color> colorChanged, bool useDynamicEditing = true);
+
+        /// <summary>
+        /// Shows picking color dialog (see <see cref="ShowPickColorDialogDelegate"/>).
+        /// </summary>
+        public ShowPickColorDialogDelegate ShowPickColorDialog;
     }
 }

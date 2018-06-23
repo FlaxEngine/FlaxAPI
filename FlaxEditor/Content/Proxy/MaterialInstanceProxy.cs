@@ -35,7 +35,7 @@ namespace FlaxEditor.Content
         public override ContentDomain Domain => MaterialInstance.Domain;
 
         /// <inheritdoc />
-        public override string TypeName => typeof(MaterialInstance).FullName;
+        public override Type AssetType => typeof(MaterialInstance);
 
         /// <inheritdoc />
         public override bool CanCreate(ContentFolder targetLocation)

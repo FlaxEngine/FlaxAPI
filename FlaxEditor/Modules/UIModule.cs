@@ -1,6 +1,5 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
-using System;
 using System.Linq;
 using FlaxEditor.Gizmo;
 using FlaxEditor.GUI;
@@ -243,6 +242,7 @@ namespace FlaxEditor.Modules
                 color = Style.Current.BackgroundSelected;
             }
 
+            StatusBar.Text = Editor.StateMachine.CurrentState.Status ?? "Ready";
             StatusBar.StatusColor = color;
         }
 
@@ -332,7 +332,7 @@ namespace FlaxEditor.Modules
             style.ProgressNormal = Color.FromBgra(0xFF0ad328);
 
             // Color picking
-            style.ShowPickColorDialog += (color, handler) => new ColorPickerDialog(color, handler).Show();
+            style.ShowPickColorDialog += (initialValue, colorChanged, useDynamicEditing) => new ColorPickerDialog(initialValue, colorChanged, useDynamicEditing).Show();
 
             // Font
             var primaryFont = FlaxEngine.Content.LoadInternal<FontAsset>(EditorAssets.PrimaryFont);
@@ -456,6 +456,8 @@ namespace FlaxEditor.Modules
             cm.AddSeparator();
             _menuToolsSetTheCurrentSceneViewAsDefault = cm.AddButton("Set current scene view as project default", SetTheCurrentSceneViewAsDefualt);
             cm.AddButton("Take screenshot!", "F12", Editor.Windows.TakeScreenshot);
+            cm.AddSeparator();
+            cm.AddButton("Options", () => Editor.Windows.EditorOptionsWin.Show());
 
             // Window
             MenuWindow = MainMenu.AddButton("Window");
@@ -514,7 +516,7 @@ namespace FlaxEditor.Modules
             // Status Bar
             StatusBar = new StatusBar
             {
-                Text = "Ready",
+                Text = "Loading...",
                 Parent = mainWindow
             };
 
@@ -708,7 +710,7 @@ namespace FlaxEditor.Modules
         private void BuildCSG()
         {
             var scenes = SceneManager.Scenes;
-            scenes.ToList().ForEach(x => x.BuildCSG());
+            scenes.ToList().ForEach(x => x.BuildCSG(0));
             Editor.Scene.MarkSceneEdited(scenes);
         }
 

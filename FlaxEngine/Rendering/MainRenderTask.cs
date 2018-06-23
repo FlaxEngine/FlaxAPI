@@ -27,7 +27,7 @@ namespace FlaxEngine.Rendering
         }
 
         /// <inheritdoc />
-        protected override void OnBegin()
+        protected override void OnBegin(GPUContext context)
         {
             // Use the main camera for the game
             Camera = Camera.MainCamera;
@@ -38,7 +38,7 @@ namespace FlaxEngine.Rendering
                 Buffers.Size = Screen.Size;
             }
 
-            base.OnBegin();
+            base.OnBegin(context);
         }
 
         internal override bool Internal_Begin(out IntPtr outputPtr)

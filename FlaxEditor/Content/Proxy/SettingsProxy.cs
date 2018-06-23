@@ -9,7 +9,7 @@ namespace FlaxEditor.Content
     /// Content proxy for json settings assets (e.g <see cref="GameSettings"/> or <see cref="TimeSettings"/>).
     /// </summary>
     /// <seealso cref="FlaxEditor.Content.JsonAssetProxy" />
-    public sealed class SettingsProxy<T> : JsonAssetProxy where T : SettingsBase
+    public sealed class SettingsProxy<TSettings> : JsonAssetProxy where TSettings : SettingsBase
     {
         /// <inheritdoc />
         public override string Name => "Settings";
@@ -19,7 +19,7 @@ namespace FlaxEditor.Content
         public override bool CanCreate(ContentFolder targetLocation)
         {
             // Use proxy only for GameSettings for creating
-            if (typeof(T) != typeof(GameSettings))
+            if (typeof(TSettings) != typeof(GameSettings))
                 return false;
 
             return targetLocation.CanHaveAssets;
@@ -32,6 +32,12 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
-        public override string TypeName { get; } = typeof(T).FullName;
+        public override bool IsProxyFor<T>()
+        {
+            return typeof(T) == typeof(TSettings);
+        }
+
+        /// <inheritdoc />
+        public override string TypeName { get; } = typeof(TSettings).FullName;
     }
 }

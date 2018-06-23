@@ -25,6 +25,20 @@ namespace FlaxEditor.Content
         public override string FileExtension => Extension;
 
         /// <inheritdoc />
+        public override string TypeName => AssetType.FullName;
+
+        /// <inheritdoc />
+        public override bool IsProxyFor<T>()
+        {
+            return typeof(T) == AssetType;
+        }
+
+        /// <summary>
+        /// Gets the type of the asset.
+        /// </summary>
+        public abstract Type AssetType { get; }
+
+        /// <inheritdoc />
         public override AssetItem ConstructItem(string path, string typeName, ref Guid id)
         {
             return new BinaryAssetItem(path, id, typeName, Domain);

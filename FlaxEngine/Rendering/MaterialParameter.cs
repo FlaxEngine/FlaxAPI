@@ -192,6 +192,7 @@ namespace FlaxEngine.Rendering
                 case MaterialParameterType.Vector3: return vVector3;
                 case MaterialParameterType.Vector4: return vVector4;
                 case MaterialParameterType.Color: return vColor;
+                case MaterialParameterType.Matrix: return vMatrix;
 
                 case MaterialParameterType.CubeTexture:
                 case MaterialParameterType.Texture:

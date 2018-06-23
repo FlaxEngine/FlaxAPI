@@ -104,6 +104,9 @@ namespace FlaxEditor.Surface
             case ParameterType.Color:
                 param.Value = Color.White;
                 break;
+            case ParameterType.Matrix:
+                param.Value = Matrix.Identity;
+                break;
             case ParameterType.CubeTexture:
             case ParameterType.Texture:
             case ParameterType.NormalMap:

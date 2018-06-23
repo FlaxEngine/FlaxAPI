@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -16,6 +17,9 @@ namespace FlaxEditor.Surface.ContextMenu
         private readonly List<VisjectCMGroup> _groups = new List<VisjectCMGroup>(16);
         private readonly TextBox _searchBox;
         private bool _waitingForInput;
+        private VisjectCMGroup _surfaceParametersGroup;
+        private VerticalPanel _panel2;
+        private Func<List<SurfaceParameter>> _parametersGetter;
 
         /// <summary>
         /// The type of the surface.
@@ -31,9 +35,11 @@ namespace FlaxEditor.Surface.ContextMenu
         /// Initializes a new instance of the <see cref="VisjectCM"/> class.
         /// </summary>
         /// <param name="type">The surface type.</param>
-        public VisjectCM(SurfaceType type)
+        /// <param name="parametersGetter">The surface parameters getter callback.</param>
+        public VisjectCM(SurfaceType type, Func<List<SurfaceParameter>> parametersGetter)
         {
             Type = type;
+            _parametersGetter = parametersGetter;
 
             // Context menu dimensions
             Size = new Vector2(320, 220);
@@ -61,6 +67,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 IsScrollable = true,
                 Parent = panel1
             };
+            _panel2 = panel2;
 
             // Init groups
             var groups = NodeFactory.Groups;
@@ -143,10 +150,75 @@ namespace FlaxEditor.Surface.ContextMenu
             PerformLayout();
         }
 
+        /// <summary>
+        /// Updates the surface parameters group.
+        /// </summary>
+        private void UpdateSurfaceParametersGroup()
+        {
+            // Remove the old one
+            if (_surfaceParametersGroup != null)
+            {
+                _groups.Remove(_surfaceParametersGroup);
+                _surfaceParametersGroup.Dispose();
+                _surfaceParametersGroup = null;
+            }
+
+            // Check if surface has any parameters
+            var parameters = _parametersGetter();
+            int count = parameters?.Count(x => x.IsPublic) ?? 0;
+            if (count > 0)
+            {
+                // TODO: cache the allocated memory to reduce dynamic allocations
+                var archetypes = new NodeArchetype[count];
+                for (int i = 0; i < count; i++)
+                {
+                    if(!parameters[i].IsPublic)
+                        continue;
+
+                    archetypes[i] = new NodeArchetype
+                    {
+                        TypeID = 1,
+                        Create = Archetypes.Parameters.CreateGetNode,
+                        Title = "Get " + parameters[i].Name,
+                        Description = "Parameter value getter",
+                        Size = new Vector2(140, 60),
+                        DefaultValues = new object[]
+                        {
+                            parameters[i].ID
+                        },
+                        Elements = new[]
+                        {
+                            NodeElementArchetype.Factory.ComboBox(2, 0, 116)
+                        }
+                    };
+                }
+                var groupArchetype = new GroupArchetype
+                {
+                    GroupID = 100,
+                    Name = "Surface Parameters",
+                    Color = new Color(231, 76, 60),
+                    Archetypes = archetypes
+                };
+                var group = new VisjectCMGroup(this, groupArchetype);
+                group.Close(false);
+                for (int i = 0; i < count; i++)
+                {
+                    var item = new VisjectCMItem(group, archetypes[i]);
+                    item.Parent = group;
+                }
+                group.SortChildren();
+                group.UnlockChildrenRecursive();
+                group.Parent = _panel2;
+                _groups.Add(group);
+                _surfaceParametersGroup = group;
+            }
+        }
+
         /// <inheritdoc />
         protected override void OnShow()
         {
             // Prepare
+            UpdateSurfaceParametersGroup();
             ResetView();
             Focus();
             _waitingForInput = true;

@@ -422,7 +422,12 @@ namespace FlaxEditor.Viewport
             }
 
             // Link for task event
-            task.Begin += x => CopyViewData(ref x.View);
+            task.Begin += OnRenderBegin;
+        }
+
+        private void OnRenderBegin(SceneRenderTask task, GPUContext context)
+        {
+            CopyViewData(ref task.View);
         }
 
         #region FPS Counter
@@ -638,9 +643,11 @@ namespace FlaxEditor.Viewport
         /// <param name="dt">The delta time (in seconds).</param>
         /// <param name="moveDelta">The move delta (scaled).</param>
         /// <param name="mouseDelta">The mouse delta (scaled).</param>
-        protected virtual void UpdateView(float dt, ref Vector3 moveDelta, ref Vector2 mouseDelta)
+        /// <param name="centerMouse">True if center mouse after the update.</param>
+        protected virtual void UpdateView(float dt, ref Vector3 moveDelta, ref Vector2 mouseDelta, out bool centerMouse)
         {
-            _camera?.UpdateView(dt, ref moveDelta, ref mouseDelta);
+            centerMouse = true;
+            _camera?.UpdateView(dt, ref moveDelta, ref mouseDelta, out centerMouse);
         }
 
         /// <inheritdoc />
@@ -784,11 +791,15 @@ namespace FlaxEditor.Viewport
                 // Update
                 moveDelta *= dt * (60.0f * 4.0f);
                 mouseDelta *= 200.0f * MouseSpeed;
-                UpdateView(dt, ref moveDelta, ref mouseDelta);
+                bool centerMouse;
+                UpdateView(dt, ref moveDelta, ref mouseDelta, out centerMouse);
 
                 // Move mouse back to the root position
-                Vector2 center = PointToWindow(_startPosRight);
-                win.MousePosition = center;
+                if (centerMouse)
+                {
+                    Vector2 center = PointToWindow(_startPosRight);
+                    win.MousePosition = center;
+                }
             }
             else
             {

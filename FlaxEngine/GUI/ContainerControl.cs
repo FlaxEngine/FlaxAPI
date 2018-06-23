@@ -208,6 +208,23 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Searches for a child control of a specific type. If there are multiple controls matching the type, only the first one found is returned.
+        /// </summary>
+        /// <typeparam name="T">Type of the control to search for. Includes any controls derived from the type.</typeparam>
+        /// <returns>Control instance if found, null otherwise</returns>
+        public T GetChild<T>() where T : Control
+        {
+            var type = typeof(T);
+            for (int i = 0; i < _children.Count; i++)
+            {
+                var ct = _children[i].GetType();
+                if (type.IsAssignableFrom(ct))
+                    return (T)_children[i];
+            }
+            return null;
+        }
+
+        /// <summary>
         ///     Gets zero-based index in the list of control children
         /// </summary>
         /// <param name="child">Child control</param>

@@ -90,6 +90,11 @@ namespace FlaxEditor.Modules
         public ProfilerWindow ProfilerWin;
 
         /// <summary>
+        /// The editor options window.
+        /// </summary>
+        public EditorOptionsWindow EditorOptionsWin;
+
+        /// <summary>
         /// List with all created editor windows.
         /// </summary>
         public readonly List<EditorWindow> Windows = new List<EditorWindow>(32);
@@ -600,6 +605,7 @@ namespace FlaxEditor.Modules
             GraphicsQualityWin = new GraphicsQualityWindow(Editor);
             GameCookerWin = new GameCookerWindow(Editor);
             ProfilerWin = new ProfilerWindow(Editor);
+            EditorOptionsWin = new EditorOptionsWindow(Editor);
 
             // Bind events
             SceneManager.SceneSaveError += OnSceneSaveError;
@@ -756,7 +762,7 @@ namespace FlaxEditor.Modules
             var windows = Window.Windows.ToArray();
             for (int i = 0; i < windows.Length; i++)
             {
-                if (windows[i].IsVisible)
+                if (windows[i] && windows[i].IsVisible)
                     windows[i].Close(ClosingReason.EngineExit);
             }
         }

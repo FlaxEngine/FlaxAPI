@@ -250,7 +250,7 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Impulse, 0),
                     NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.Impulse, 1),
                     NodeElementArchetype.Factory.SkeletonNodeSelect(100, Surface.Constants.LayoutOffsetY * 1, 120, 0),
-                    NodeElementArchetype.Factory.SkeletonNodeSelect(100, Surface.Constants.LayoutOffsetY * 2, 120, 1),
+                    NodeElementArchetype.Factory.SkeletonNodeSelect(100, Surface.Constants.LayoutOffsetY * 2, 120, 0),
                     NodeElementArchetype.Factory.Bool(100, Surface.Constants.LayoutOffsetY * 3, 2),
                     NodeElementArchetype.Factory.Bool(100, Surface.Constants.LayoutOffsetY * 4, 3),
                     NodeElementArchetype.Factory.Bool(100, Surface.Constants.LayoutOffsetY * 5, 4),

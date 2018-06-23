@@ -80,7 +80,7 @@ namespace FlaxEditor.Viewport.Previews
             Task.CustomActors.Add(_previewBonesActor);
         }
 
-        private void OnBegin(SceneRenderTask task)
+        private void OnBegin(SceneRenderTask task, GPUContext context)
         {
             // Update preview model scale to fit the preview
             var skinnedModel = SkinnedModel;

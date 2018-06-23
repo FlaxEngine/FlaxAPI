@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using FlaxEditor.Options;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
@@ -43,7 +44,7 @@ namespace FlaxEditor.Windows
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether center mouse position on focus get in play mode. Helps when working with games that lock mouse cursor.
+        /// Gets or sets a value indicating whether center mouse position on window focus in play mode. Helps when working with games that lock mouse cursor.
         /// </summary>
         public bool CenterMouseOnFocus { get; set; }
 
@@ -79,6 +80,16 @@ namespace FlaxEditor.Windows
             FlaxEngine.GUI.Window.Root = _guiRoot;
             Editor.StateMachine.PlayingState.SceneDuplicating += PlayingStateOnSceneDuplicating;
             Editor.StateMachine.PlayingState.SceneRestored += PlayingStateOnSceneRestored;
+
+            // Link editor options
+            var options = Editor.Options;
+            options.OptionsChanged += OnOptionsChanged;
+            OnOptionsChanged(options.Options);
+        }
+
+        private void OnOptionsChanged(EditorOptions options)
+        {
+            CenterMouseOnFocus = options.Interface.CenterMouseOnGameWinFocus;
         }
 
         private void PlayingStateOnSceneDuplicating()
@@ -111,6 +122,13 @@ namespace FlaxEditor.Windows
         public override void Draw()
         {
             base.Draw();
+
+            if (Camera.MainCamera == null)
+            {
+                var style = Style.Current;
+
+                Render2D.DrawText(style.FontLarge, "No camera", new Rectangle(Vector2.Zero, Size), Color.White, TextAlignment.Center, TextAlignment.Center);
+            }
 
             if (Editor.StateMachine.IsPlayMode)
             {

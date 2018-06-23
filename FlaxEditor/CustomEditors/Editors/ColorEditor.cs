@@ -21,7 +21,13 @@ namespace FlaxEditor.CustomEditors.Editors
         public override void Initialize(LayoutElementsContainer layout)
         {
             element = layout.Custom<ColorValueBox>();
-            element.CustomControl.ValueChanged += () => SetValue(element.CustomControl.Value);
+            element.CustomControl.ValueChanged += OnValueChanged;
+        }
+
+        private void OnValueChanged()
+        {
+            var token = this;
+            SetValue(element.CustomControl.Value, token);
         }
 
         /// <inheritdoc />

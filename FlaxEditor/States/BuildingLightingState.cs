@@ -22,6 +22,9 @@ namespace FlaxEditor.States
         public override bool CanEditContent => false;
 
         /// <inheritdoc />
+        public override string Status => "Baking lighting...";
+
+        /// <inheritdoc />
         public override bool CanEnter()
         {
             return StateMachine.IsEditMode;

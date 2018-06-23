@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Viewport.Previews;
 using FlaxEditor.Windows;
@@ -40,7 +41,7 @@ namespace FlaxEditor.Content
         public override ContentDomain Domain => Model.Domain;
 
         /// <inheritdoc />
-        public override string TypeName => typeof(Model).FullName;
+        public override Type AssetType => typeof(Model);
 
         /// <inheritdoc />
         public override void OnThumbnailDrawPrepare(ThumbnailRequest request)

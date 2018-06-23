@@ -17,7 +17,7 @@ namespace FlaxEditor.Surface.Archetypes
         /// Surface node type for paramaters group Get node.
         /// </summary>
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
-        private class SurfaceNodeParamsGet : SurfaceNode, IParametersDependantNode
+        public class SurfaceNodeParamsGet : SurfaceNode, IParametersDependantNode
         {
             private ComboBoxElement _combobox;
             private readonly List<ISurfaceNodeElement> _dynamicChildren = new List<ISurfaceNodeElement>();
@@ -67,6 +67,11 @@ namespace FlaxEditor.Surface.Archetypes
                 NodeElementArchetype.Factory.Output(3, "X", ConnectionType.Float, 2),
                 NodeElementArchetype.Factory.Output(4, "Y", ConnectionType.Float, 3),
                 NodeElementArchetype.Factory.Output(5, "Z", ConnectionType.Float, 4),
+                // 33: Matrix
+                NodeElementArchetype.Factory.Output(1, "Row0", ConnectionType.Vector4, 0),
+                NodeElementArchetype.Factory.Output(2, "Row1", ConnectionType.Vector4, 1),
+                NodeElementArchetype.Factory.Output(3, "Row2", ConnectionType.Vector4, 2),
+                NodeElementArchetype.Factory.Output(4, "Row3", ConnectionType.Vector4, 3),
             };
 
             /// <inheritdoc />
@@ -145,6 +150,13 @@ namespace FlaxEditor.Surface.Archetypes
                         AddOutput(Prototypes[31]);
                         AddOutput(Prototypes[32]);
                         height = 140;
+                        break;
+                    case ParameterType.Matrix:
+                        AddOutput(Prototypes[33]);
+                        AddOutput(Prototypes[34]);
+                        AddOutput(Prototypes[35]);
+                        AddOutput(Prototypes[36]);
+                        height = 100;
                         break;
 
                     // TODO: finish this
@@ -299,6 +311,19 @@ namespace FlaxEditor.Surface.Archetypes
         }
 
         /// <summary>
+        /// Creates the get node.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="surface">The surface.</param>
+        /// <param name="arch">The node archetype.</param>
+        /// <param name="groupArch">The group archetype.</param>
+        /// <returns></returns>
+        public static SurfaceNode CreateGetNode(uint id, VisjectSurface surface, NodeArchetype arch, GroupArchetype groupArch)
+        {
+            return new SurfaceNodeParamsGet(id, surface, arch, groupArch);
+        }
+
+        /// <summary>
         /// The nodes for that group.
         /// </summary>
         public static NodeArchetype[] Nodes =
@@ -306,7 +331,7 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 1,
-                Create = (id, surface, arch, groupArch) => new SurfaceNodeParamsGet(id, surface, arch, groupArch),
+                Create = CreateGetNode,
                 Title = "Get Parameter",
                 Description = "Parameter value getter",
                 Size = new Vector2(140, 60),

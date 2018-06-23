@@ -74,18 +74,18 @@ namespace FlaxEngine
         /// <summary>
         /// Stops the current thread execution and waits until asset will be loaded (loading will fail, success or be cancelled).
         /// </summary>
-        /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
+        /// <param name="timeoutInMilliseconds">Custom timeout value in milliseconds.</param>
         /// <returns>True if cannot load that asset (failed or has been cancelled), otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public bool WaitForLoaded(double timeoutInMiliseconds = 10000.0)
+        public bool WaitForLoaded(double timeoutInMilliseconds = 10000.0)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_WaitForLoaded(unmanagedPtr, timeoutInMiliseconds);
+            return Internal_WaitForLoaded(unmanagedPtr, timeoutInMilliseconds);
 #endif
         }
 
@@ -121,7 +121,7 @@ namespace FlaxEngine
         internal static extern int Internal_GetRefCount(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_WaitForLoaded(IntPtr obj, double timeoutInMiliseconds);
+        internal static extern bool Internal_WaitForLoaded(IntPtr obj, double timeoutInMilliseconds);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_Reload(IntPtr obj);

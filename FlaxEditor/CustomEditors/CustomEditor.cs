@@ -137,8 +137,8 @@ namespace FlaxEditor.CustomEditors
             control.PerformLayout();
 
             // Restore scroll value
-            if (parentScrollV > -1)
-                ((Panel)_presenter.Panel.Parent).VScrollBar.Value = parentScrollV;
+            if (parentScrollV > -1 && _presenter != null && _presenter.Panel.Parent is Panel panel && panel.VScrollBar != null)
+                panel.VScrollBar.Value = parentScrollV;
         }
 
         /// <summary>

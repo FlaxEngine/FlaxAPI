@@ -21,6 +21,11 @@ namespace FlaxEditor.CustomEditors
         {
             private CustomEditorPresenter _presenter;
 
+            /// <summary>
+            /// Gets the presenter.
+            /// </summary>
+            public CustomEditorPresenter Presenter => _presenter;
+
             internal PresenterPanel(CustomEditorPresenter presenter)
             {
                 _presenter = presenter;

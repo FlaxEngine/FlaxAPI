@@ -174,65 +174,68 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Expand node.
         /// </summary>
-        public void Expand()
+        /// <param name="noAnimation">True if skip node expanding animation.</param>
+        public void Expand(bool noAnimation = false)
         {
             // Parents first
-            ExpandAllParents();
+            ExpandAllParents(noAnimation);
 
             // Chnage state
             bool prevState = _opened;
             _opened = true;
             if (prevState != _opened)
                 _animationProgress = 1.0f - _animationProgress;
-
-            // Check if drag is over
-            if (IsDragOver)
+            
+            if (noAnimation)
             {
                 // Speed up an animation
                 _animationProgress = 1.0f;
             }
 
             // Update
+            OnExpandedChanged();
             PerformLayout();
         }
 
         /// <summary>
         /// Collapse node.
         /// </summary>
-        public void Collapse()
+        /// <param name="noAnimation">True if skip node expanding animation.</param>
+        public void Collapse(bool noAnimation = false)
         {
             // Chnage state
             bool prevState = _opened;
             _opened = false;
             if (prevState != _opened)
                 _animationProgress = 1.0f - _animationProgress;
-
-            // Check if drag is over
-            if (IsDragOver)
+            
+            if (noAnimation)
             {
                 // Speed up an animation
                 _animationProgress = 1.0f;
             }
 
             // Update
+            OnExpandedChanged();
             PerformLayout();
         }
 
         /// <summary>
         /// Expand node and all the children.
         /// </summary>
-        public void ExpandAll()
+        /// <param name="noAnimation">True if skip node expanding animation.</param>
+        public void ExpandAll(bool noAnimation = false)
         {
             bool wasLayoutLocked = IsLayoutLocked;
             IsLayoutLocked = true;
 
-            Expand();
+            Expand(noAnimation);
 
             for (int i = 0; i < _children.Count; i++)
             {
                 if (_children[i] is TreeNode node)
                 {
-                    node.ExpandAll();
+                    node.ExpandAll(noAnimation);
                 }
             }
 
@@ -243,18 +246,19 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Collapse node and all the children.
         /// </summary>
-        public void CollapseAll()
+        /// <param name="noAnimation">True if skip node expanding animation.</param>
+        public void CollapseAll(bool noAnimation = false)
         {
             bool wasLayoutLocked = IsLayoutLocked;
             IsLayoutLocked = true;
 
-            Collapse();
+            Collapse(noAnimation);
 
             for (int i = 0; i < _children.Count; i++)
             {
                 if (_children[i] is TreeNode node)
                 {
-                    node.CollapseAll();
+                    node.CollapseAll(noAnimation);
                 }
             }
 
@@ -265,9 +269,10 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Ensure that all node paents are expanded.
         /// </summary>
-        public void ExpandAllParents()
+        /// <param name="noAnimation">True if skip node expanding animation.</param>
+        public void ExpandAllParents(bool noAnimation = false)
         {
-            (Parent as TreeNode)?.Expand();
+            (Parent as TreeNode)?.Expand(noAnimation);
         }
 
         /// <summary>
@@ -338,6 +343,13 @@ namespace FlaxEngine.GUI
         /// Called when mouse is pressing node header for a long time.
         /// </summary>
         protected virtual void OnLongPress()
+        {
+        }
+
+        /// <summary>
+        /// Called when expanded/collapsed state changes.
+        /// </summary>
+        protected virtual void OnExpandedChanged()
         {
         }
 
@@ -743,8 +755,8 @@ namespace FlaxEngine.GUI
                     // Check if mouse is over arrow
                     if (_children.Count > 0 && ArrowRect.Contains(location))
                     {
-                        // Expand node
-                        Expand();
+                        // Expand node (no animation)
+                        Expand(true);
                     }
 
                     result = OnDragEnterHeader(data);
@@ -775,8 +787,8 @@ namespace FlaxEngine.GUI
                     // Check if mouse is over arrow
                     if (_children.Count > 0 && ArrowRect.Contains(location))
                     {
-                        // Expand node
-                        Expand();
+                        // Expand node (no animation)
+                        Expand(true);
                     }
 
                     if (!_isDragOverHeader)
@@ -850,6 +862,26 @@ namespace FlaxEngine.GUI
                     _visibleChildNodesCount++;
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public override void PerformLayout(bool force = false)
+        {
+            // Check if update is locked
+            if (IsLayoutLocked && !force)
+                return;
+
+            // Update the nodes nesting level before the actual positioning
+            float xOffset = _xOffset + ChildrenIndent;
+            if (Parent is Tree tree)
+                xOffset = tree.RootNodesOffset;
+            for (int i = 0; i < _children.Count; i++)
+            {
+                if (_children[i] is TreeNode node && node.Visible)
+                    node._xOffset = xOffset;
+            }
+
+            base.PerformLayout(force);
         }
 
         /// <inheritdoc />

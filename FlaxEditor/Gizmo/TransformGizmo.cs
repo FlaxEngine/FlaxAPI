@@ -63,6 +63,11 @@ namespace FlaxEditor.Gizmo
         public Vector3 Position { get; private set; }
 
         /// <summary>
+        /// Gets the last transformation delta.
+        /// </summary>
+        public Transform LastDelta { get; private set; }
+
+        /// <summary>
         /// Applies scale to the selected objects pool.
         /// </summary>
         /// <param name="selection">The selected objects pool.</param>
@@ -191,6 +196,8 @@ namespace FlaxEditor.Gizmo
         /// <inheritdoc />
         public override void Update(float dt)
         {
+            LastDelta = Transform.Identity;
+
             if (!IsActive)
                 return;
 
@@ -332,6 +339,8 @@ namespace FlaxEditor.Gizmo
                         if (_activeMode == Mode.Translate)
                         {
                             // Transform (local or world)
+                            if (Owner.IsAltKeyDown)
+                                delta *= 0.5f;
                             delta = Vector3.Transform(delta, _rotationMatrix);
                             _translationDelta = delta;
                         }
@@ -456,6 +465,7 @@ namespace FlaxEditor.Gizmo
                     {
                         StartTransforming();
 
+                        LastDelta = new Transform(translationDelta, rotationDelta, scaleDelta);
                         OnApplyTransformation(_selectionParents, ref translationDelta, ref rotationDelta, ref scaleDelta);
                     }
                 }

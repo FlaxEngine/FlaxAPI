@@ -2,12 +2,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using FlaxEditor.Content;
 using FlaxEditor.Content.Import;
 using FlaxEditor.Content.Settings;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Modules;
+using FlaxEditor.Options;
 using FlaxEditor.Scripting;
 using FlaxEditor.States;
 using FlaxEditor.Windows;
@@ -24,6 +27,11 @@ namespace FlaxEditor
         /// Gets the Editor instance.
         /// </summary>
         public static Editor Instance { get; private set; }
+
+        /// <summary>
+        /// The path to the local cache folder shared by all the installed editor instance for a given user (used also by the Flax Launcher).
+        /// </summary>
+        public static readonly string LocalCachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Flax");
 
         static Editor()
         {
@@ -111,6 +119,16 @@ namespace FlaxEditor
         public readonly EditorStateMachine StateMachine;
 
         /// <summary>
+        /// The editor options manager.
+        /// </summary>
+        public readonly OptionsModule Options;
+
+        /// <summary>
+        /// The editor per-project cache manager.
+        /// </summary>
+        public readonly ProjectCacheModule ProjectCache;
+
+        /// <summary>
         /// The undo/redo
         /// </summary>
         public readonly EditorUndo Undo;
@@ -139,6 +157,8 @@ namespace FlaxEditor
             Internal_GetProjectInfo(out _projectInfo);
 
             // Create common editor modules
+            RegisterModule(Options = new OptionsModule(this));
+            RegisterModule(ProjectCache = new ProjectCacheModule(this));
             RegisterModule(Windows = new WindowsModule(this));
             RegisterModule(UI = new UIModule(this));
             RegisterModule(Thumbnails = new ThumbnailsModule(this));
@@ -743,6 +763,14 @@ namespace FlaxEditor
 
         #region Internal Calls
 
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct InternalOptions
+        {
+            public byte AutoReloadScriptsOnMainWindowFocus;
+            public byte AutoRebuildCSG;
+            public float AutoRebuildCSGTimeoutMs;
+        }
+
         internal void BuildCommand(string arg)
         {
             if (TryBuildCommand(arg))
@@ -808,7 +836,7 @@ namespace FlaxEditor
         {
             return StateMachine.CurrentState.CanReloadScripts;
         }
-
+        
         internal bool Internal_CanAutoBuildCSG()
         {
             return StateMachine.CurrentState.CanEditScene;
@@ -914,6 +942,9 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetEditorBoxWithChildren(IntPtr obj, out BoundingBox resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetOptions(ref InternalOptions options);
 #endif
 
         #endregion

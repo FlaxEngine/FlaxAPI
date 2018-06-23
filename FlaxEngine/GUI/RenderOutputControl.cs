@@ -124,7 +124,8 @@ namespace FlaxEngine.GUI
         /// Called when ask rendering ends.
         /// </summary>
         /// <param name="task">The task.</param>
-        protected virtual void OnEnd(SceneRenderTask task)
+        /// <param name="context">The GPU execution context.</param>
+        protected virtual void OnEnd(SceneRenderTask task, GPUContext context)
         {
             // Check if was using old backuffer
             if (_backBufferOld)

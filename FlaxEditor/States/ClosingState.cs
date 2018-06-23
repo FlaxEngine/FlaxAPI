@@ -16,6 +16,9 @@ namespace FlaxEditor.States
         /// <inheritdoc />
         public override bool IsEditorReady => false;
 
+        /// <inheritdoc />
+        public override string Status => "Closing...";
+
         internal ClosingState(Editor editor)
         : base(editor)
         {

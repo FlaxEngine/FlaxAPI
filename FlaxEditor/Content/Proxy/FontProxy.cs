@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
@@ -37,7 +38,7 @@ namespace FlaxEditor.Content
         public override ContentDomain Domain => FontAsset.Domain;
 
         /// <inheritdoc />
-        public override string TypeName => typeof(FontAsset).FullName;
+        public override Type AssetType => typeof(FontAsset);
 
         /// <inheritdoc />
         public override void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)

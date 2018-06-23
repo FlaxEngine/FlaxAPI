@@ -29,7 +29,7 @@ namespace FlaxEditor.Content
         public override ContentDomain Domain => ContentDomain.SkeletonMask;
 
         /// <inheritdoc />
-        public override string TypeName => typeof(SkeletonMask).FullName;
+        public override Type AssetType => typeof(SkeletonMask);
 
         /// <inheritdoc />
         public override bool CanCreate(ContentFolder targetLocation)

@@ -112,6 +112,7 @@ namespace FlaxEditor.Content.Import
             FileTypes["bmp"] = ImportTexture;
             FileTypes["gif"] = ImportTexture;
             FileTypes["tiff"] = ImportTexture;
+            FileTypes["tif"] = ImportTexture;
             FileTypes["jpeg"] = ImportTexture;
             FileTypes["jpg"] = ImportTexture;
 

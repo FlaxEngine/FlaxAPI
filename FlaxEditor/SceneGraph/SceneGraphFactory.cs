@@ -12,6 +12,8 @@ namespace FlaxEditor.SceneGraph
     /// </summary>
     public static class SceneGraphFactory
     {
+        private static object[] _sharedArgsContainer = new object[1];
+
         /// <summary>
         /// The custom nodes types. Key = object type, Value = custom graph node type
         /// </summary>
@@ -60,6 +62,11 @@ namespace FlaxEditor.SceneGraph
             CustomNodesTypes.Add(typeof(AudioSource), typeof(AudioSourceNode));
             CustomNodesTypes.Add(typeof(BoneSocket), typeof(BoneSocketNode));
             CustomNodesTypes.Add(typeof(Decal), typeof(DecalNode));
+            CustomNodesTypes.Add(typeof(BoxCollider), typeof(ColliderNode));
+            CustomNodesTypes.Add(typeof(SphereCollider), typeof(ColliderNode));
+            CustomNodesTypes.Add(typeof(CapsuleCollider), typeof(ColliderNode));
+            CustomNodesTypes.Add(typeof(MeshCollider), typeof(ColliderNode));
+            CustomNodesTypes.Add(typeof(CharacterController), typeof(ColliderNode));
         }
 
         /// <summary>
@@ -74,10 +81,7 @@ namespace FlaxEditor.SceneGraph
             var sceneNode = new SceneNode(scene);
 
             BuildSceneTree(sceneNode);
-
-            // Unlock tree UI
-            sceneNode.TreeNode.UnlockChildrenRecursive();
-
+            
             return sceneNode;
         }
 
@@ -97,7 +101,8 @@ namespace FlaxEditor.SceneGraph
                 if (CustomNodesTypes.TryGetValue(actor.GetType(), out customType))
                 {
                     // Use custom type
-                    result = (ActorNode)Activator.CreateInstance(customType, new object[] { actor });
+                    _sharedArgsContainer[0] = actor;
+                    result = (ActorNode)Activator.CreateInstance(customType, _sharedArgsContainer);
                 }
                 else
                 {
@@ -114,10 +119,7 @@ namespace FlaxEditor.SceneGraph
                 Debug.LogWarning($"Failed to create scene graph node for actor {actor.Name} (type: {actor.GetType()}).");
                 Debug.LogException(ex);
             }
-
-            // Unlock tree UI
-            result?.TreeNode.UnlockChildrenRecursive();
-
+            
             return result;
         }
 

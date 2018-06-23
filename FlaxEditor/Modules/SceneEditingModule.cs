@@ -203,9 +203,16 @@ namespace FlaxEditor.Modules
             var action = new DeleteActorsAction(new List<SceneGraphNode>(1) { actorNode }, true);
             Undo.AddAction(action);
 
+            // Mark scene as dirty
+            Editor.Scene.MarkSceneEdited(actor.Scene);
+
             // Auto CSG mesh rebuild
-            if (actor is BoxBrush && actor.Scene)
-                actor.Scene.BuildCSG();
+            var options = Editor.Options.Options;
+            if (options.General.AutoRebuildCSG)
+            {
+                if (actor is BoxBrush && actor.Scene)
+                    actor.Scene.BuildCSG(options.General.AutoRebuildCSGTimeoutMs);
+            }
         }
 
         /// <summary>
@@ -234,10 +241,14 @@ namespace FlaxEditor.Modules
             Undo.AddAction(action);
 
             // Auto CSG mesh rebuild
-            foreach (var obj in objects)
+            var options = Editor.Options.Options;
+            if (options.General.AutoRebuildCSG)
             {
-                if (obj is ActorNode node && node.Actor is BoxBrush)
-                    node.Actor.Scene.BuildCSG();
+                foreach (var obj in objects)
+                {
+                    if (obj is ActorNode node && node.Actor is BoxBrush)
+                        node.Actor.Scene.BuildCSG(options.General.AutoRebuildCSGTimeoutMs);
+                }
             }
         }
 
