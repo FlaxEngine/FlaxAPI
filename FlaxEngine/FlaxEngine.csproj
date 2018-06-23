@@ -440,4 +440,8 @@
   <Target Name="AfterBuild">
     <Exec Command="call &quot;$(SolutionDir)onbuild.bat&quot;" Condition=" '$(OS)' == 'Windows_NT' " />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>

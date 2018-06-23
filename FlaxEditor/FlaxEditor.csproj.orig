@@ -345,7 +345,6 @@
     <Compile Include="Undo\UndoBlock.cs" />
     <Compile Include="Undo\UndoMultiBlock.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
-    <Compile Include="Utilities\GuidExtensions.cs" />
     <Compile Include="Utilities\MemberInfoPath.cs" />
     <Compile Include="Utilities\ObjectSnapshot.cs" />
     <Compile Include="Utilities\QueryFilterHelper.cs" />
@@ -410,29 +409,6 @@
     <Compile Include="Windows\SceneEditorWindow.cs" />
     <Compile Include="Windows\SceneTreeWindow.cs" />
     <Compile Include="Windows\ToolboxWindow.cs" />
-    <Compile Include="Workspace\Generation\GenerationOptions.cs" />
-    <Compile Include="Workspace\Generation\Generators\ProjectGenerator.cs" />
-    <Compile Include="Workspace\Generation\Generators\SolutionGenerator.cs" />
-    <Compile Include="Workspace\Generation\IGenerator.cs" />
-    <Compile Include="Workspace\Items\CompositeDefinitionItem.cs" />
-    <Compile Include="Workspace\Items\DefinitionItem.cs" />
-    <Compile Include="Workspace\Items\DefinitionItemVisitor.cs" />
-    <Compile Include="Workspace\Items\FormatVersionDefinition.cs" />
-    <Compile Include="Workspace\Items\GlobalDefinition.cs" />
-    <Compile Include="Workspace\Items\IProjectConfigurationAndPlatform.cs" />
-    <Compile Include="Workspace\Items\ISolutionConfigurationAndPlatform.cs" />
-    <Compile Include="Workspace\Items\LineDefinition.cs" />
-    <Compile Include="Workspace\Items\ProjectConfigurationAndPlatform.cs" />
-    <Compile Include="Workspace\Items\ProjectDefinition.cs" />
-    <Compile Include="Workspace\Items\ProjectDefinitionDescriptor.cs" />
-    <Compile Include="Workspace\Items\PropertyDefinition.cs" />
-    <Compile Include="Workspace\Items\SectionDefinition.cs" />
-    <Compile Include="Workspace\Items\SectionDefinitionType.cs" />
-    <Compile Include="Workspace\Items\SolutionConfigurationAndPlatform.cs" />
-    <Compile Include="Workspace\Items\SolutionDefinition.cs" />
-    <Compile Include="Workspace\Items\SolutionFormatVersion.cs" />
-    <Compile Include="Workspace\Parsers\GenerationOptions.cs" />
-    <Compile Include="Workspace\Parsers\SolutionDefinitionConstants.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlaxEngine\FlaxEngine.csproj">
@@ -444,10 +420,11 @@
     <Compile Include="Surface\VisjectSurface.CopPaste.cs" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< Updated upstream
     <None Include=".editorconfig" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Workspace\Items\Configuration\" />
+=======
+    <Folder Include="Workspace\Generation\" />
+>>>>>>> Stashed changes
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
