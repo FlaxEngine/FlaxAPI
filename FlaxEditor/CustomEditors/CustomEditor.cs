@@ -40,6 +40,7 @@ namespace FlaxEditor.CustomEditors
         private ValueContainer _values;
         private bool _isSetBlocked;
         private bool _hasValueDirty;
+        private bool _rebuildOnRefresh;
         private object _valueToSet;
 
         /// <summary>
@@ -143,6 +144,14 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Rebuilds the editor layout on editor refresh. Postponed after dirty value gets synced. Call it after <see cref="SetValue"/> to update editor after actual value assign.
+        /// </summary>
+        public void RebuildLayoutOnRefresh()
+        {
+            _rebuildOnRefresh = true;
+        }
+
+        /// <summary>
         /// Initializes this editor.
         /// </summary>
         /// <param name="layout">The layout builder.</param>
@@ -165,6 +174,7 @@ namespace FlaxEditor.CustomEditors
             _valueToSet = null;
             _values = null;
             _isSetBlocked = false;
+            _rebuildOnRefresh = false;
         }
 
         internal void RefreshRoot()
@@ -209,6 +219,13 @@ namespace FlaxEditor.CustomEditors
             {
                 // Update values
                 _values.Refresh(_parent.Values);
+            }
+
+            // Rebuild if flag is set
+            if (_rebuildOnRefresh)
+            {
+                _rebuildOnRefresh = false;
+                RebuildLayout();
             }
 
             // Update itself
