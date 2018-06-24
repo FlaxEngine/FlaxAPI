@@ -201,7 +201,6 @@ namespace FlaxEditor.GUI.Docking
                     {
                         tabColor = containsFocus ? style.BackgroundSelected : style.BackgroundNormal;
                         Render2D.FillRectangle(tabRect, tabColor);
-                        Render2D.FillRectangle(new Rectangle(0, DockPanel.DefaultHeaderHeight - 2, Width, 2), tabColor);
                     }
                     // Check if mosue is over
                     else if (isMouseOver)
@@ -232,6 +231,9 @@ namespace FlaxEditor.GUI.Docking
                     // Move
                     x += width;
                 }
+
+                // Draw selected tab strip
+                Render2D.FillRectangle(new Rectangle(0, DockPanel.DefaultHeaderHeight - 2, Width, 2), containsFocus ? style.BackgroundSelected : style.BackgroundNormal);
             }
         }
 
