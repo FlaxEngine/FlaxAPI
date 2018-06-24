@@ -13,37 +13,37 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the image source.
         /// </summary>
-        [EditorOrder(10)]
+        [EditorOrder(10), Tooltip("The image to draw.")]
         public IImageSource ImageSource { get; set; }
 
         /// <summary>
         /// Gets or sets the margin for the image.
         /// </summary>
-        [EditorOrder(20)]
+        [EditorOrder(20), Tooltip("Margins of the image area.")]
         public Margin Margin { get; set; }
 
         /// <summary>
         /// Gets or sets the color used to multiply the image pixels.
         /// </summary>
-        [EditorOrder(30)]
+        [EditorDisplay("Style"), EditorOrder(2000)]
         public Color Color { get; set; } = Color.White;
 
         /// <summary>
         /// Gets or sets the color used to multiply the image pixels when mouse is over the image.
         /// </summary>
-        [EditorOrder(40)]
+        [EditorDisplay("Style"), EditorOrder(2000)]
         public Color MouseOverColor { get; set; } = Color.White;
 
         /// <summary>
         /// Gets or sets a value indicating whether render image with alpha blending.
         /// </summary>
-        [EditorOrder(50)]
+        [EditorOrder(50), Tooltip("If checked, image will be rendered with alpha blending, otherwise it will be opaque.")]
         public bool WithAlpha { get; set; } = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether keep aspect ratio whend rawing the image.
         /// </summary>
-        [EditorOrder(60)]
+        [EditorOrder(60), Tooltip("If checked, control will keep aspect ratio of the image.")]
         public bool KeepAspectRatio { get; set; } = true;
 
         /// <summary>

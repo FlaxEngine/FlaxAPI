@@ -23,6 +23,7 @@ if exist %outputDir% (
 	REM TODO: Warn the user if he passed an invalid argument
 	echo Done!
 )
+
 REM Remove "REM" from lines below to enable automatic flax update with your custom DLLs, and change name of your current project
 REM if [%~1]==[-Editor] (
 REM start /wait taskkill /f /im FlaxEditor.exe /t

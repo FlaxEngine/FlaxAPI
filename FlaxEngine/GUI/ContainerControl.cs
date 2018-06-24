@@ -96,10 +96,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets a value indicating whether apply clipping mask on children during rendering.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if clip children; otherwise, <c>false</c>.
-        /// </value>
-        [EditorOrder(0)]
+        [EditorOrder(530), Tooltip("If checked, control will apply clipping mask on children during rendering..")]
         public bool ClipChildren { get; set; } = true;
 
         /// <summary>
