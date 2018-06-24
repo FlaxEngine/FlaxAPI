@@ -135,6 +135,19 @@ namespace FlaxEditor.CustomEditors
         /// <summary>
         /// Initializes a new instance of the <see cref="ValueContainer"/> class.
         /// </summary>
+        /// <param name="customType">The target custom type of the container values. Used to override the data.</param>
+        /// <param name="other">The other values container to clone.</param>
+        public ValueContainer(Type customType, ValueContainer other)
+        {
+            Capacity = other.Capacity;
+            AddRange(other);
+            Info = other.Info;
+            Type = customType;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValueContainer"/> class.
+        /// </summary>
         /// <param name="info">The member info.</param>
         /// <param name="type">The type.</param>
         protected ValueContainer(MemberInfo info, Type type)

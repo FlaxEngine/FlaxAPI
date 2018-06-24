@@ -35,7 +35,15 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The texture.
         /// </summary>
+        [Tooltip("The texture asset.")]
         public Texture Texture;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextureImageSource"/> class.
+        /// </summary>
+        public TextureImageSource()
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextureImageSource"/> struct.
@@ -65,7 +73,15 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The render target.
         /// </summary>
+        [HideInEditor]
         public RenderTarget RenderTarget;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RenderTargetImageSource"/> class.
+        /// </summary>
+        public RenderTargetImageSource()
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RenderTargetImageSource"/> struct.
@@ -96,6 +112,13 @@ namespace FlaxEngine.GUI
         /// The sprite.
         /// </summary>
         public Sprite Sprite;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SpriteImageSource"/> class.
+        /// </summary>
+        public SpriteImageSource()
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpriteImageSource"/> struct.

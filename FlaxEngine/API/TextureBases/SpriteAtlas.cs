@@ -18,7 +18,6 @@ namespace FlaxEngine
         /// <summary>
         /// The parent sprite atlas.
         /// </summary>
-        [HideInEditor]
         public SpriteAtlas Atlas;
 
         /// <summary>
@@ -46,6 +45,7 @@ namespace FlaxEngine
         /// <summary>
         /// Gets or sets the sprite name.
         /// </summary>
+        [NoSerialize]
         public string Name
         {
             get
@@ -65,6 +65,7 @@ namespace FlaxEngine
         /// <summary>
         /// Gets or sets the sprite location (in pixels).
         /// </summary>
+        [NoSerialize]
         public Vector2 Location
         {
             get => Area.Location * Atlas.Size;
@@ -79,6 +80,7 @@ namespace FlaxEngine
         /// <summary>
         /// Gets or sets the sprite size (in pixels).
         /// </summary>
+        [NoSerialize]
         public Vector2 Size
         {
             get => Area.Size * Atlas.Size;
@@ -93,6 +95,7 @@ namespace FlaxEngine
         /// <summary>
         /// Gets or sets the sprite area in atlas (in normalized atlas coordinaes [0;1]).
         /// </summary>
+        [NoSerialize]
         public Rectangle Area
         {
             get

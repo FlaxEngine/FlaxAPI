@@ -401,7 +401,7 @@ namespace FlaxEngine.GUI
                     _popupMenu.ButtonClicked += (button) =>
                     {
                         OnItemClicked((int)button.Tag);
-                        _popupMenu.Hide();
+                        _popupMenu?.Hide();
                     };
                 }
 
