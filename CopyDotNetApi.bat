@@ -24,5 +24,7 @@ if exist %outputDir% (
 	echo Done!
 )
 REM Remove "REM" from lines below to enable automatic flax update with your custom DLLs, and change name of your current project
+REM if [%~1]==[-Editor] (
 REM start /wait taskkill /f /im FlaxEditor.exe /t
 REM start "Flax Editor - Development Mode" "%outputDir%\..\Win64\FlaxEditor.exe" -project "%userprofile%\Documents\Flax Projects\MyProject"
+REM )
