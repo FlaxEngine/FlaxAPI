@@ -221,13 +221,6 @@ namespace FlaxEditor.CustomEditors
                 _values.Refresh(_parent.Values);
             }
 
-            // Rebuild if flag is set
-            if (_rebuildOnRefresh)
-            {
-                _rebuildOnRefresh = false;
-                RebuildLayout();
-            }
-
             // Update itself
             _isSetBlocked = true;
             Refresh();
@@ -246,6 +239,13 @@ namespace FlaxEditor.CustomEditors
                 // It's valid, just rebuild the child editors and log the warning to keep it tracking.
                 Editor.LogWarning("Exception while updating the child editors");
                 Editor.LogWarning(ex);
+                RebuildLayout();
+            }
+
+            // Rebuild if flag is set
+            if (_rebuildOnRefresh)
+            {
+                _rebuildOnRefresh = false;
                 RebuildLayout();
             }
         }
