@@ -37,6 +37,13 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 return;
             }
 
+            // Add control type helper label
+            {
+                var type = Values[0].GetType();
+                var label = layout.AddPropertyItem("Type", "The type of the created control.");
+                label.Label(type.FullName);
+            }
+
             // Show control properties
             base.Initialize(layout);
         }
