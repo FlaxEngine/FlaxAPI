@@ -198,7 +198,7 @@ namespace FlaxEditor.CustomEditors
         public LabelElement Header(string text)
         {
             var element = Label(text);
-            element.Label.Font = Style.Current.FontLarge;
+            element.Label.Font = new FontReference(Style.Current.FontLarge);
             return element;
         }
 
