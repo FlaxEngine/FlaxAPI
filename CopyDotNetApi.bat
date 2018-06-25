@@ -9,10 +9,23 @@ if exist %outputDir% (
 	if not exist "%outputAssembliesDir%" (
 		mkdir "%outputAssembliesDir%"
 	)
-	xcopy /i /s /y "FlaxEngine\bin" "%outputAssembliesDir%" /exclude:excludedFileList.txt
-	xcopy /i /s /y "FlaxEditor\bin" "%outputAssembliesDir%" /exclude:excludedFileList.txt
+	
+	if [%~1]==[] (
+		xcopy /i /s /y "FlaxEngine\bin" "%outputAssembliesDir%" /exclude:excludedFileList.txt
+		xcopy /i /s /y "FlaxEditor\bin" "%outputAssembliesDir%" /exclude:excludedFileList.txt
+	)
+	if [%~1]==[-Engine] (
+		xcopy /i /s /y "FlaxEngine\bin" "%outputAssembliesDir%" /exclude:excludedFileList.txt
+	)
+	if [%~1]==[-Editor] (
+		xcopy /i /s /y "FlaxEditor\bin" "%outputAssembliesDir%" /exclude:excludedFileList.txt
+	)
+	REM TODO: Warn the user if he passed an invalid argument
 	echo Done!
 )
-REM Remove "#REM" from lines below to enable automatic flax update with your custom DLLs, and change name of your current project
-REM taskkill /f /im FlaxEditor.exe /t
-REM "%outputDir%\..\Win64\FlaxEditor.exe" -project "%userprofile%\Documents\Flax Projects\MyProject"
+
+REM Remove "REM" from lines below to enable automatic flax update with your custom DLLs, and change name of your current project
+REM if [%~1]==[-Editor] (
+REM start /wait taskkill /f /im FlaxEditor.exe /t
+REM start "Flax Editor - Development Mode" "%outputDir%\..\Win64\FlaxEditor.exe" -project "%userprofile%\Documents\Flax Projects\MyProject"
+REM )
