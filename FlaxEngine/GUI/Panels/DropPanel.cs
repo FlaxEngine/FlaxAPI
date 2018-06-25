@@ -11,27 +11,24 @@ namespace FlaxEngine.GUI
     public class DropPanel : ContainerControl
     {
         protected float _headerHeight = 14.0f;
-        protected Margin _headerMargin = new Margin(2.0f);
+        protected Margin _headerTextMargin = new Margin(2.0f);
         protected bool _isClosed;
         protected bool _mouseOverHeader;
         protected bool _mouseDown;
         protected float _animationProgress = 1.0f;
         protected float _cachedHeight = 16.0f;
+        protected Margin _itemsMargin = new Margin(2.0f, 2.0f, 2.0f, 2.0f);
 
         /// <summary>
         /// Gets or sets the header text.
         /// </summary>
-        /// <value>
-        /// The header text.
-        /// </value>
+        [EditorOrder(10), Tooltip("The text to show on a panel header.")]
         public string HeaderText { get; set; }
 
         /// <summary>
         /// Gets or sets the height of the header.
         /// </summary>
-        /// <value>
-        /// The height of the header.
-        /// </value>
+        [EditorOrder(20), Limit(1, 10000, 0.1f), Tooltip("The height of the panel header.")]
         public float HeaderHeight
         {
             get => _headerHeight;
@@ -45,15 +42,13 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the header margin.
         /// </summary>
-        /// <value>
-        /// The header margin.
-        /// </value>
-        public Margin HeaderMargin
+        [EditorOrder(30), Tooltip("The margin of the header text area.")]
+        public Margin HeaderTextMargin
         {
-            get => _headerMargin;
+            get => _headerTextMargin;
             set
             {
-                _headerMargin = value;
+                _headerTextMargin = value;
                 PerformLayout();
             }
         }
@@ -61,25 +56,25 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the color of the header.
         /// </summary>
-        /// <value>
-        /// The color of the header.
-        /// </value>
+        [EditorDisplay("Style"), EditorOrder(2000)]
         public Color HeaderColor { get; set; }
 
         /// <summary>
         /// Gets or sets the color of the header when mouse is over.
         /// </summary>
-        /// <value>
-        /// The color of the header when mouse is over.
-        /// </value>
+        [EditorDisplay("Style"), EditorOrder(2000)]
         public Color HeaderColorMouseOver { get; set; }
+
+        /// <summary>
+        /// Gets or sets the font used to render panel header text.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
+        public FontReference HeaderTextFont { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether enable drop down icon drawing.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if enable drop down icon drawing; otherwise, <c>false</c>.
-        /// </value>
+        [EditorDisplay("Style"), EditorOrder(2000)]
         public bool EnableDropDownIcon { get; set; }
 
         /// <summary>
@@ -88,18 +83,49 @@ namespace FlaxEngine.GUI
         public event Action<DropPanel> ClosedChanged;
 
         /// <summary>
-        /// Gets a value indicating whether this panel is closed.
+        /// Gets or sets a value indicating whether this panel is closed.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this panel is closed; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsClosed => _isClosed;
+        [EditorOrder(0), Tooltip("If checked, the panel is closed, otherwise is open.")]
+        public bool IsClosed
+        {
+            get => _isClosed;
+            set
+            {
+                if (_isClosed != value)
+                {
+                    if (value)
+                        Close(false);
+                    else
+                        Open(false);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the item slots margin (the space between items).
+        /// </summary>
+        [EditorOrder(10), Tooltip("The item slots margin (the space between items).")]
+        public Margin ItemsMargin
+        {
+            get => _itemsMargin;
+            set
+            {
+                _itemsMargin = value;
+                PerformLayout();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the panel close/open animation duration (in seconds).
+        /// </summary>
+        [EditorOrder(10), Limit(0, 100, 0.01f), Tooltip("The panel close/open animation duration (in seconds).")]
+        public float CloseAnimationTime { get; set; } = 0.2f;
 
         /// <summary>
         /// Gets the header rectangle.
         /// </summary>
         protected Rectangle HeaderRectangle => new Rectangle(0, 0, Width, HeaderHeight);
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DropPanel"/> class.
         /// </summary>
@@ -108,10 +134,11 @@ namespace FlaxEngine.GUI
         {
             _performChildrenLayoutFirst = true;
             CanFocus = false;
-            
+
             var style = Style.Current;
             HeaderColor = style.BackgroundNormal;
             HeaderColorMouseOver = style.BackgroundHighlighted;
+            HeaderTextFont = new FontReference(style.FontMedium);
         }
 
         /// <summary>
@@ -179,16 +206,16 @@ namespace FlaxEngine.GUI
             // Drop/down animation
             if (_animationProgress < 1.0f)
             {
+                float openCloseAniamtionTime = CloseAnimationTime;
                 bool isDeltaSlow = deltaTime > (1 / 20.0f);
 
                 // Update progress
-                if (isDeltaSlow)
+                if (isDeltaSlow || openCloseAniamtionTime < Mathf.Epsilon)
                 {
                     _animationProgress = 1.0f;
                 }
                 else
                 {
-                    const float openCloseAniamtionTime = 0.2f;
                     _animationProgress += deltaTime / openCloseAniamtionTime;
                     if (_animationProgress > 1.0f)
                         _animationProgress = 1.0f;
@@ -208,10 +235,19 @@ namespace FlaxEngine.GUI
         {
             var style = Style.Current;
 
+            // Paint Background
+            var backgroundColor = BackgroundColor;
+            if (backgroundColor.A > 0.0f)
+            {
+                Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), backgroundColor, !Mathf.IsOne(backgroundColor.A));
+            }
+
             // Header
             var color = _mouseOverHeader ? HeaderColorMouseOver : HeaderColor;
-            if (color.A > 0)
-                Render2D.FillRectangle(new Rectangle(0, 0, Width, HeaderHeight), color);
+            if (color.A > 0.0f)
+            {
+                Render2D.FillRectangle(new Rectangle(0, 0, Width, HeaderHeight), color, !Mathf.IsOne(color.A));
+            }
 
             // Drop down icon
             float textLeft = 0;
@@ -224,8 +260,8 @@ namespace FlaxEngine.GUI
 
             // Text
             var textRect = new Rectangle(textLeft, 0, Width - textLeft, HeaderHeight);
-            _headerMargin.ShrinkRectangle(ref textRect);
-            Render2D.DrawText(style.FontMedium, HeaderText, textRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
+            _headerTextMargin.ShrinkRectangle(ref textRect);
+            Render2D.DrawText(HeaderTextFont.GetFont(), HeaderText, textRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
 
             // Draw child controls that are not arranged (pined to the header, etc.)
             for (int i = 0; i < _children.Count; i++)
@@ -327,7 +363,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void GetDesireClientArea(out Rectangle rect)
         {
-            var topMargin = HeaderHeight + _headerMargin.Height;
+            var topMargin = HeaderHeight;
             rect = new Rectangle(0, topMargin, Width, Height - topMargin);
         }
 
@@ -342,22 +378,25 @@ namespace FlaxEngine.GUI
             ArrangeDockedControls(ref clientArea);
 
             // Arrange undocked controls
-            float minHeight = HeaderHeight + _headerMargin.Height;
-            float leftMargin = clientArea.Left + 2.0f;
-            float spacing = 2.0f;
-            float topMargin = clientArea.Top;
-            float y = topMargin;
+            var slotsMargin = _itemsMargin;
+            var slotsLeft = clientArea.Left + slotsMargin.Left;
+            var slotsWidth = clientArea.Width - slotsMargin.Width;
+            float minHeight = HeaderHeight;
+            float y = clientArea.Top;
             float height = clientArea.Top + dropOffset;
-            float itemsWidth = clientArea.Width - leftMargin;
             for (int i = 0; i < _children.Count; i++)
             {
                 Control c = _children[i];
                 if (c.IsScrollable && c.Visible)
                 {
                     var h = c.Height;
-                    c.Bounds = new Rectangle(leftMargin, y, itemsWidth, h);
-                    y += h + spacing;
-                    height += h + spacing;
+                    y += slotsMargin.Top;
+
+                    c.Bounds = new Rectangle(slotsLeft, y, slotsWidth, h);
+
+                    h += slotsMargin.Bottom;
+                    y += h;
+                    height += h + slotsMargin.Top;
                 }
             }
 

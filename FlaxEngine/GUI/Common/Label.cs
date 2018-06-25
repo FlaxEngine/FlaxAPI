@@ -14,7 +14,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the text.
         /// </summary>
-        [EditorOrder(10), Tooltip("The label text.")]
+        [EditorOrder(10), MultilineText, Tooltip("The label text.")]
         public string Text
         {
             get => _text;

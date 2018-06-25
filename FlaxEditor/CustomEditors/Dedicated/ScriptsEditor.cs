@@ -523,7 +523,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 };
                 settingsButton.Clicked += SettingsButtonOnClicked;
 
-                group.Panel.HeaderMargin = new Margin(scriptDrag.Right, 15, 2, 2);
+                group.Panel.HeaderTextMargin = new Margin(scriptDrag.Right, 15, 2, 2);
                 group.Object(values, editor);
 
                 // Scripts arrange bar
