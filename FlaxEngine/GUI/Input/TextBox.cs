@@ -69,24 +69,33 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets a value indicating whether this is a multiline text box control.
         /// </summary>
+        [EditorOrder(40), Tooltip("If checked, the textbox will support multiline text input.")]
         public bool IsMultiline
         {
-            get { return _isMultiline; }
-            /*set
+            get => _isMultiline;
+            set
             {
                 if (_isMultiline != value)
                 {
                     _isMultiline = value;
-                    
-            Deselect();
-            update _layout settings
+
+                    _layout.VerticalAlignment = IsMultiline ? TextAlignment.Near : TextAlignment.Center;
+
+                    Deselect();
+
+                    if (!_isMultiline)
+                    {
+                        var lines = _text.Split('\n');
+                        _text = lines[0];
+                    }
                 }
-            }*/
+            }
         }
 
         /// <summary>
         /// Gets or sets the maximum number of characters the user can type into the text box control.
         /// </summary>
+        [EditorOrder(50), Tooltip("The maximum number of characters the user can type into the text box control.")]
         public int MaxLength
         {
             get => _maxLength;
@@ -121,30 +130,30 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets a value indicating whether text in the text box is read-only. 
         /// </summary>
+        [EditorOrder(60), Tooltip("If checked, text in the text box is read-only.")]
         public bool IsReadOnly
         {
             get { return _isReadOnly; }
-            // TOOD: finish change to read only mode, should we do sth else than just change a flag?
-            /*set
+            set
             {
                 if (_isReadOnly != value)
                 {
                     _isReadOnly = value;
+
+                    // TODO: change sth more except the flag?
                 }
-            }*/
+            }
         }
 
         /// <summary>
-        /// Gets or sets text property
+        /// Gets or sets text property.
         /// </summary>
+        [EditorOrder(0), MultilineText, Tooltip("The entered text.")]
         public string Text
         {
             get => _text;
             set
             {
-                if (IsReadOnly)
-                    throw new AccessViolationException("Text Box is readonly.");
-
                 // Skip set if user is editing value
                 if (_isEditing)
                     return;
@@ -215,9 +224,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the watermark text to show grayed when textbox is empty.
         /// </summary>
-        /// <value>
-        /// The watermark text.
-        /// </value>
+        [EditorOrder(20), Tooltip("The watermark text to show grayed when textbox is empty.")]
         public string WatermarkText { get; set; }
 
         #endregion
@@ -246,30 +253,34 @@ namespace FlaxEngine.GUI
             {
                 const float caretWidth = 1.2f;
 
-                Vector2 caretPos = Font.GetCharPosition(_text, CaretPosition, _layout);
+                var font = Font.GetFont();
+                Vector2 caretPos = font.GetCharPosition(_text, CaretPosition, _layout);
 
                 return new Rectangle(
                     caretPos.X - (caretWidth * 0.5f),
                     caretPos.Y,
                     caretWidth,
-                    Font.Height);
+                    font.Height);
             }
         }
 
         /// <summary>
-        /// Gets text font
+        /// Gets or sets the font.
         /// </summary>
-        public Font Font { get; set; }
+        [EditorDisplay("Style"), EditorOrder(2000)]
+        public FontReference Font { get; set; }
 
         /// <summary>
-        /// Gets or sets the color of the border (null if not used).
+        /// Gets or sets the color of the border (Transparent if not used).
         /// </summary>
-        public Color? BorderColor { get; set; }
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the border (Transparent if not used).")]
+        public Color BorderColor { get; set; }
 
         /// <summary>
-        /// Gets or sets the color of the border when control is focused (null if not used).
+        /// Gets or sets the color of the border when control is focused (Transparent if not used).
         /// </summary>
-        public Color? BorderSelectedColor { get; set; }
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the border when control is focused (Transparent if not used)")]
+        public Color BorderSelectedColor { get; set; }
 
         /// <summary>
         /// Gets rectangle with area for text
@@ -296,7 +307,7 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="TextBox"/> class.
         /// </summary>
         public TextBox()
-        : this(true, 0, 0)
+        : this(false, 0, 0)
         {
         }
 
@@ -317,14 +328,12 @@ namespace FlaxEngine.GUI
             _layout = TextLayoutOptions.Default;
             _layout.VerticalAlignment = IsMultiline ? TextAlignment.Near : TextAlignment.Center;
             _layout.TextWrapping = TextWrapping.NoWrap;
+            _layout.Bounds = new Rectangle(DefaultMargin, 1, Width - 2 * DefaultMargin, Height - 2);
 
             var style = Style.Current;
-            Font = style.FontMedium;
+            Font = new FontReference(style.FontMedium);
+            BorderColor = Color.Transparent;
             BorderSelectedColor = style.BackgroundSelected;
-
-            UpdateTextRect();
-
-            SizeChanged += ActionOnSizeChanged;
         }
 
         /// <summary>
@@ -376,6 +385,9 @@ namespace FlaxEngine.GUI
                 // Copy selected text
                 Application.ClipboardText = selectedText;
 
+                if (IsReadOnly)
+                    return;
+
                 // Remove selection
                 int left = SelectionLeft;
                 _text = _text.Remove(left, SelectionLength);
@@ -389,6 +401,9 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void Paste()
         {
+            if (IsReadOnly)
+                return;
+
             // Get clipboard data
             var clipboardText = Application.ClipboardText;
             if (string.IsNullOrEmpty(clipboardText))
@@ -404,6 +419,9 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void Duplicate()
         {
+            if (IsReadOnly)
+                return;
+
             var selectedText = SelectedText;
             if (selectedText.Length > 0)
             {
@@ -448,18 +466,14 @@ namespace FlaxEngine.GUI
         }
 
         #region Logic
-
-        private void UpdateTextRect()
-        {
-            _layout.Bounds = TextRectangle;
-        }
-
+        
         private int CharIndexAtPoint(ref Vector2 location)
         {
             Assert.IsNotNull(Font, "Missing font.");
 
             // Perform test using Font API
-            return Font.HitTestText(_text, location + _viewOffset, _layout);
+            var font = Font.GetFont();
+            return font.HitTestText(_text, location + _viewOffset, _layout);
         }
 
         private void Insert(char c)
@@ -470,7 +484,7 @@ namespace FlaxEngine.GUI
         private void Insert(string str)
         {
             if (IsReadOnly)
-                throw new AccessViolationException("Text Box is readonly.");
+                return;
 
             int selectionLength = SelectionLength;
             int charactersLeft = MaxLength - _text.Length + selectionLength;
@@ -650,10 +664,11 @@ namespace FlaxEngine.GUI
             if (!IsMultiline)
                 return 0;
 
-            Vector2 location = Font.GetCharPosition(_text, index, _layout);
-            location.Y += Font.Height;
+            var font = Font.GetFont();
+            Vector2 location = font.GetCharPosition(_text, index, _layout);
+            location.Y += font.Height;
 
-            return Font.HitTestText(_text, location, _layout);
+            return font.HitTestText(_text, location, _layout);
         }
 
         private int FindLineUpChar(int index)
@@ -661,10 +676,11 @@ namespace FlaxEngine.GUI
             if (!IsMultiline)
                 return _text.Length;
 
-            Vector2 location = Font.GetCharPosition(_text, index, _layout);
-            location.Y -= Font.Height;
+            var font = Font.GetFont();
+            Vector2 location = font.GetCharPosition(_text, index, _layout);
+            location.Y -= font.Height;
 
-            return Font.HitTestText(_text, location, _layout);
+            return font.HitTestText(_text, location, _layout);
         }
 
         /// <summary>
@@ -767,9 +783,9 @@ namespace FlaxEngine.GUI
             // Cache data
             var style = Style.Current;
             var rect = new Rectangle(Vector2.Zero, Size);
-            var font = Font;
-            Assert.IsNotNull(font, "Missing font.");
             bool enabled = EnabledInHierarchy;
+            var font = Font.GetFont();
+            Assert.IsNotNull(font, "Missing font.");
 
             // Background
             Color backColor = style.TextBoxBackground;
@@ -778,10 +794,10 @@ namespace FlaxEngine.GUI
             if (BackgroundColor.A > 0)
                 backColor = BackgroundColor;
             Render2D.FillRectangle(rect, backColor);
-            if (IsFocused && BorderSelectedColor.HasValue)
-                Render2D.DrawRectangle(rect, BorderSelectedColor.Value);
-            else if (BorderColor.HasValue)
-                Render2D.DrawRectangle(rect, BorderColor.Value);
+            if (IsFocused && BorderSelectedColor.A > 0.0f)
+                Render2D.DrawRectangle(rect, BorderSelectedColor);
+            else if (BorderColor.A > 0.0f)
+                Render2D.DrawRectangle(rect, BorderColor);
 
             // Apply view offset and clip mask
             Render2D.PushClip(TextClipRectangle);
@@ -794,8 +810,8 @@ namespace FlaxEngine.GUI
             {
                 // TODO: maybe we could use ProcessText Font API to render selection faster?
 
-                Vector2 leftEdge = Font.GetCharPosition(_text, SelectionLeft, _layout);
-                Vector2 rightEdge = Font.GetCharPosition(_text, SelectionRight, _layout);
+                Vector2 leftEdge = font.GetCharPosition(_text, SelectionLeft, _layout);
+                Vector2 rightEdge = font.GetCharPosition(_text, SelectionRight, _layout);
                 float fontHeight = font.Height;
 
                 // Draw selection background
@@ -927,9 +943,12 @@ namespace FlaxEngine.GUI
             return true;
         }
 
-        private void ActionOnSizeChanged(Control control)
+        /// <inheritdoc />
+        protected override void SetSizeInternal(ref Vector2 size)
         {
-            UpdateTextRect();
+            base.SetSizeInternal(ref size);
+
+            _layout.Bounds = TextRectangle;
         }
 
         #endregion

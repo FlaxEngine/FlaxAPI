@@ -54,6 +54,9 @@ namespace FlaxEngine.GUI
             // Delete
             case Keys.Backspace:
             {
+                if (IsReadOnly)
+                    return true;
+
                 int left = SelectionLeft;
                 if (HasSelection)
                 {
@@ -73,6 +76,9 @@ namespace FlaxEngine.GUI
             }
             case Keys.Delete:
             {
+                if (IsReadOnly)
+                    return true;
+
                 int left = SelectionLeft;
                 if (HasSelection)
                 {
