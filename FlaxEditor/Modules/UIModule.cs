@@ -262,7 +262,7 @@ namespace FlaxEditor.Modules
             if (_progressLabel != null)
                 _progressLabel.Text = text;
             if (_progressBar != null)
-                _progressBar.Value = progress;
+                _progressBar.Value = progress * 100.0f;
         }
 
         /// <inheritdoc />
