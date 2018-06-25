@@ -136,8 +136,7 @@ namespace FlaxEditor.SceneGraph.GUI
             var actor = Actor;
             if (actor && testHeaderHit(ref location))
             {
-                Select();
-                Editor.Instance.Windows.EditWin.ShowActor(actor);
+                StartRenaming();
                 return true;
             }
 
@@ -152,12 +151,6 @@ namespace FlaxEditor.SceneGraph.GUI
                 return _orderInParent - node._orderInParent;
             }
             return base.Compare(other);
-        }
-
-        /// <inheritdoc />
-        protected override void OnLongPress()
-        {
-            StartRenaming();
         }
 
         /// <summary>
