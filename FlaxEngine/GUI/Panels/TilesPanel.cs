@@ -16,6 +16,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the size of the tile.
         /// </summary>
+        [EditorOrder(0), Limit(0.01f), Tooltip("The size of the single tile.")]
         public Vector2 TileSize
         {
             get => _tileSize;
@@ -35,6 +36,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets a value indicating whether perform automatic resize after tiles arrange.
         /// </summary>
+        [EditorOrder(10), Tooltip("If checked, the automatic control resize will be performed after tiles arrange,")]
         public bool AutoResize
         {
             get => _autoResize;

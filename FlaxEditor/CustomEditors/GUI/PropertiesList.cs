@@ -189,20 +189,20 @@ namespace FlaxEditor.CustomEditors.GUI
         {
             // Sort controls from up to down into two columns: one for labels and one for the rest of the stuff
 
-            float y = _topMargin;
-            float w = Width - _leftMargin - _rightMargin;
+            float y = _margin.Top;
+            float w = Width - _margin.Width;
             for (int i = 0; i < _children.Count; i++)
             {
                 Control c = _children[i];
                 if (!(c is PropertyNameLabel))
                 {
                     var h = c.Height;
-                    c.Bounds = new Rectangle(_leftMargin, y + _spacing, w, h);
+                    c.Bounds = new Rectangle(_margin.Left, y + _spacing, w, h);
                     if (c.Visible)
                         y = c.Bottom;
                 }
             }
-            y += _bottomMargin;
+            y += _margin.Bottom;
 
             float namesWidth = _splitterValue * Width;
             int count = _element.Labels.Count;
@@ -228,7 +228,8 @@ namespace FlaxEditor.CustomEditors.GUI
                 label.Bounds = rect;
             }
 
-            Height = y;
+            if (_autoSize)
+                Height = y;
         }
     }
 }
