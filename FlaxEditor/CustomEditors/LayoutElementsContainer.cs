@@ -300,6 +300,29 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Adds new double value element.
+        /// </summary>
+        /// <returns>The created element.</returns>
+        public DoubleValueElement DoubleValue()
+        {
+            DoubleValueElement element = new DoubleValueElement();
+            OnAddElement(element);
+            return element;
+        }
+
+        /// <summary>
+        /// Adds new double value element with name label.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="tooltip">The property label tooltip text.</param>
+        /// <returns>The created element.</returns>
+        public DoubleValueElement DoubleValue(string name, string tooltip = null)
+        {
+            var property = AddPropertyItem(name, tooltip);
+            return property.DoubleValue();
+        }
+
+        /// <summary>
         /// Adds new slider element.
         /// </summary>
         /// <returns>The created element.</returns>

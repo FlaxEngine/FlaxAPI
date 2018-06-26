@@ -115,6 +115,7 @@
     <Compile Include="CustomEditors\Editors\ColorEditor.cs" />
     <Compile Include="CustomEditors\Editors\ColorTrackball.cs" />
     <Compile Include="CustomEditors\Editors\DictionaryEditor.cs" />
+    <Compile Include="CustomEditors\Editors\DoubleEditor.cs" />
     <Compile Include="CustomEditors\Editors\EnumEditor.cs" />
     <Compile Include="CustomEditors\Editors\FlaxObjectRefEditor.cs" />
     <Compile Include="CustomEditors\Editors\FloatEditor.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="CustomEditors\Elements\CheckBoxElement.cs" />
     <Compile Include="CustomEditors\Elements\ComboBoxElement.cs" />
     <Compile Include="CustomEditors\Elements\CustomElement.cs" />
+    <Compile Include="CustomEditors\Elements\DoubleValueElement.cs" />
     <Compile Include="CustomEditors\Elements\EnumElement.cs" />
     <Compile Include="CustomEditors\Elements\FloatValueElement.cs" />
     <Compile Include="CustomEditors\Elements\IFloatValueEditor.cs" />

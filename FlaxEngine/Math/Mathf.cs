@@ -687,6 +687,18 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Checks if a and b are almost equals, taking into account the magnitude of floating point numbers .
+        /// See remarks.
+        /// </summary>
+        /// <param name="a">The left value to compare.</param>
+        /// <param name="b">The right value to compare.</param>
+        /// <returns><c>true</c> if a almost equal to b, <c>false</c> otherwise</returns>
+        public static bool NearEqual(double a, double b)
+        {
+            return Math.Abs(a - b) < double.Epsilon * 10;
+        }
+
+        /// <summary>
         /// Determines whether the specified value is close to zero (0.0f).
         /// </summary>
         /// <param name="a">The floating value.</param>
@@ -886,6 +898,18 @@ namespace FlaxEngine
         /// <param name="max">The max.</param>
         /// <returns>The result of clamping a value between min and max</returns>
         public static float Clamp(float value, float min, float max)
+        {
+            return value < min ? min : value > max ? max : value;
+        }
+
+        /// <summary>
+        /// Clamps the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="min">The min.</param>
+        /// <param name="max">The max.</param>
+        /// <returns>The result of clamping a value between min and max</returns>
+        public static double Clamp(double value, double min, double max)
         {
             return value < min ? min : value > max ? max : value;
         }
