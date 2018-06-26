@@ -128,8 +128,11 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets the linear velocity of the Character Controller.
+        /// Gets the current linear velocity of the Character Controller.
         /// </summary>
+        /// <remarks>
+        /// This allows tracking how fast the character is actually moving, for instance when it is stuck at a wall this value will be the near zero vector.
+        /// </remarks>
         [UnmanagedCall]
         [HideInEditor]
         public Vector3 Velocity
@@ -138,7 +141,6 @@ namespace FlaxEngine
             get; set;
 #else
             get { Vector3 resultAsRef; Internal_GetVelocity(unmanagedPtr, out resultAsRef); return resultAsRef; }
-            set { Internal_SetVelocity(unmanagedPtr, ref value); }
 #endif
         }
 
@@ -236,9 +238,6 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetVelocity(IntPtr obj, out Vector3 resultAsRef);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetVelocity(IntPtr obj, ref Vector3 val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern CollisionFlags Internal_GetFlags(IntPtr obj);
