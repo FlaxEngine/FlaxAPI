@@ -289,17 +289,15 @@ namespace FlaxEditor.Windows.Assets
                         group.Panel.Close(false);
 
                         var tree = group.Tree();
-                        var root = tree.Node("Root");
                         for (int i = 0; i < skeleton.Length; i++)
                         {
                             if (skeleton[i].ParentIndex == -1)
                             {
-                                var node = root.Node(skeleton[i].Name);
+                                var node = tree.Node(skeleton[i].Name);
                                 BuildSkeletonNodeTree(skeleton, node, i);
+                                node.TreeNode.ExpandAll(true);
                             }
                         }
-
-                        root.TreeNode.ExpandAll();
                     }
 
                     // Import Settings

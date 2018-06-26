@@ -197,7 +197,7 @@ namespace FlaxEditor.Content
             if (_folder.CanRename)
             {
                 // Start renaming the folder
-                var dialog = RenamePopup.Show(this, _headerRect, _folder.ShortName, false);
+                var dialog = RenamePopup.Show(this, HeaderRect, _folder.ShortName, false);
                 dialog.Tag = _folder;
                 dialog.Renamed += popup => Editor.Instance.Windows.ContentWin.Rename((ContentFolder)popup.Tag, popup.Text);
             }

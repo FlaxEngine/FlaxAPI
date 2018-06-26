@@ -159,6 +159,7 @@ namespace FlaxEditor.Windows
                 Text = text;
                 _dragData = dragData;
                 Height = 20;
+                TextMargin = new Margin(-5.0f, 2.0f, 2.0f, 2.0f);
             }
 
             /// <inheritdoc />
@@ -181,15 +182,9 @@ namespace FlaxEditor.Windows
             {
                 DockStyle = DockStyle.Top,
                 IsScrollable = true,
-                RootNodesOffset = -8,
                 Parent = panel
             };
-            var root = new TreeNode(false)
-            {
-                Parent = tree
-            };
-            root.Expand();
-            return root;
+            return tree;
         }
     }
 }

@@ -44,8 +44,10 @@ namespace FlaxEditor.Windows
 
             // Create scene structure tree
             var root = editor.Scene.Root;
+            root.TreeNode.ChildrenIndent = 0;
             root.TreeNode.Expand();
             _tree = new Tree(true);
+            _tree.Margin = new Margin(0.0f, 0.0f, -16.0f, 0.0f); // Hide root node
             _tree.AddChild(root.TreeNode);
             _tree.SelectedChanged += Tree_OnSelectedChanged;
             _tree.RightClick += Tree_OnRightClick;

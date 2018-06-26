@@ -134,7 +134,7 @@ namespace FlaxEditor.SceneGraph.GUI
         public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
         {
             var actor = Actor;
-            if (actor && testHeaderHit(ref location))
+            if (actor && TestHeaderHit(ref location))
             {
                 StartRenaming();
                 return true;
@@ -161,7 +161,7 @@ namespace FlaxEditor.SceneGraph.GUI
             Select();
 
             // Start renaming the actor
-            var dialog = RenamePopup.Show(this, _headerRect, _actorNode.Name, false);
+            var dialog = RenamePopup.Show(this, HeaderRect, _actorNode.Name, false);
             dialog.Renamed += OnRenamed;
         }
 
@@ -255,7 +255,7 @@ namespace FlaxEditor.SceneGraph.GUI
                 newParent = myActor;
 
                 // Use drag positioning to change target parent and index
-                if (_dragOverMode == DragItemPositioning.Above)
+                if (DragOverMode == DragItemPositioning.Above)
                 {
                     if (myActor.HasParent)
                     {
@@ -263,7 +263,7 @@ namespace FlaxEditor.SceneGraph.GUI
                         newOrder = myActor.OrderInParent;
                     }
                 }
-                else if (_dragOverMode == DragItemPositioning.Below)
+                else if (DragOverMode == DragItemPositioning.Below)
                 {
                     if (myActor.HasParent)
                     {

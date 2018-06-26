@@ -113,19 +113,14 @@ namespace FlaxEditor.Windows.Assets
                     // Skeleton Mask
                     var group = layout.Group("Mask");
                     var tree = group.Tree();
-                    var root = tree.Node("Root");
-                    root.TreeNode.ClipChildren = false;
-
+                    
                     for (int i = 0; i < bones.Length; i++)
                     {
                         if (bones[i].ParentIndex == -1)
                         {
-                            BuildSkeletonNodeTree(mask, bones, root, i);
+                            BuildSkeletonNodeTree(mask, bones, tree, i);
                         }
                     }
-
-                    tree.TreeControl.RootNodesOffset = 20;
-                    root.TreeNode.ExpandAll();
                 }
 
                 /// <inheritdoc />
@@ -141,13 +136,15 @@ namespace FlaxEditor.Windows.Assets
                     base.Refresh();
                 }
 
-                private void BuildSkeletonNodeTree(bool[] mask, SkeletonBone[] skeleton, TreeNodeElement layout, int boneIndex)
+                private void BuildSkeletonNodeTree(bool[] mask, SkeletonBone[] skeleton, ITreeElement layout, int boneIndex)
                 {
                     var node = layout.Node(skeleton[boneIndex].Name);
                     node.TreeNode.ClipChildren = false;
+                    node.TreeNode.TextMargin = new Margin(20.0f, 2.0f, 2.0f, 2.0f);
+                    node.TreeNode.Expand(true);
                     var checkbox = new CheckBox(0, 0, mask[boneIndex])
                     {
-                        Height = TreeNode.DefaultHeaderHeight,
+                        Height = 16.0f,
                         IsScrollable = false,
                         Tag = boneIndex,
                         Parent = node.TreeNode

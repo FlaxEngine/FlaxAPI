@@ -5,10 +5,23 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.CustomEditors.Elements
 {
     /// <summary>
+    /// Tree nodes elements.
+    /// </summary>
+    public interface ITreeElement
+    {
+        /// <summary>
+        /// Adds new tree node element.
+        /// </summary>
+        /// <param name="text">The node name (title text).</param>
+        /// <returns>The created element.</returns>
+        TreeNodeElement Node(string text);
+    }
+
+    /// <summary>
     /// The tree structure node element.
     /// </summary>
     /// <seealso cref="FlaxEditor.CustomEditors.LayoutElementsContainer" />
-    public class TreeNodeElement : LayoutElementsContainer
+    public class TreeNodeElement : LayoutElementsContainer, ITreeElement
     {
         /// <summary>
         /// The tree node control.
@@ -17,12 +30,8 @@ namespace FlaxEditor.CustomEditors.Elements
 
         /// <inheritdoc />
         public override ContainerControl ContainerControl => TreeNode;
-
-        /// <summary>
-        /// Adds new tree node element.
-        /// </summary>
-        /// <param name="text">The node name (title text).</param>
-        /// <returns>The created element.</returns>
+        
+        /// <inheritdoc />
         public TreeNodeElement Node(string text)
         {
             TreeNodeElement element = new TreeNodeElement();
