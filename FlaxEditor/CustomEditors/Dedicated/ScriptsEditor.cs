@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEditor.Actions;
 using FlaxEditor.Content;
 using FlaxEditor.GUI;
@@ -480,6 +481,12 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 var title = CustomEditorsUtil.GetPropertyNameUI(type.Name);
                 var group = layout.Group(title);
                 group.Panel.Open(false);
+
+                // Customize
+                var typeAttributes = type.GetCustomAttributes(true);
+                var tooltip = (TooltipAttribute)typeAttributes.FirstOrDefault(x => x is TooltipAttribute);
+                if (tooltip != null)
+                    group.Panel.TooltipText = tooltip.Text;
 
                 // Add toggle button to the group
                 var scriptToggle = new CheckBox(2, 0, script.Enabled)
