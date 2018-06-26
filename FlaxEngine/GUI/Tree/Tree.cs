@@ -34,7 +34,8 @@ namespace FlaxEngine.GUI
 
         private float _keyUpdateTime;
         private readonly bool _supportMultiSelect;
-        private float _rootNodesOffset;
+        private Margin _margin;
+        private bool _autoSize = true;
 
         /// <summary>
         /// Action fired when tree nodes selection gets changed.
@@ -49,6 +50,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// List with all selected nodes
         /// </summary>
+        [HideInEditor, NoSerialize]
         public readonly List<TreeNode> Selection = new List<TreeNode>();
 
         /// <summary>
@@ -57,18 +59,30 @@ namespace FlaxEngine.GUI
         public TreeNode SelectedNode => Selection.Count > 0 ? Selection[0] : null;
 
         /// <summary>
-        /// Gets or sets the root nodes offset (in x axis).
+        /// Gets or sets the margin for the child tree nodes.
         /// </summary>
-        public float RootNodesOffset
+        [EditorOrder(0), Tooltip("The margin applied to the child tree nodes.")]
+        public Margin Margin
         {
-            get => _rootNodesOffset;
+            get => _margin;
             set
             {
-                if (!Mathf.NearEqual(_rootNodesOffset, value))
-                {
-                    _rootNodesOffset = value;
-                    PerformLayout();
-                }
+                _margin = value;
+                PerformLayout();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the value indicating whenever the tree will auto-size to the tree nodes dimensions.
+        /// </summary>
+        [EditorOrder(10), Tooltip("If checked, the tree will auto-size to the tree nodes dimensions.")]
+        public bool AutoSize
+        {
+            get => _autoSize;
+            set
+            {
+                _autoSize = value;
+                PerformLayout();
             }
         }
 
@@ -322,8 +336,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void UpdateSize()
         {
+            if (!_autoSize)
+                return;
+
             // Use max of parent clint area width and root node width
-            float width = 1;
+            float width = 0;
             if (HasParent)
                 width = Parent.GetClientArea().Width;
             var rightBottom = Vector2.Zero;
@@ -335,7 +352,7 @@ namespace FlaxEngine.GUI
                     rightBottom = Vector2.Max(rightBottom, node.BottomRight);
                 }
             }
-            Size = new Vector2(width, rightBottom.Y);
+            Size = new Vector2(width + _margin.Width, rightBottom.Y + _margin.Bottom);
         }
 
         /// <inheritdoc />
@@ -522,6 +539,17 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
+            // Arrange children
+            float y = _margin.Top;
+            for (int i = 0; i < _children.Count; i++)
+            {
+                if (_children[i] is TreeNode node && node.Visible)
+                {
+                    node.Location = new Vector2(_margin.Left, y);
+                    y += node.Height + TreeNode.DefaultNodeOffsetY;
+                }
+            }
+
             UpdateSize();
         }
     }
