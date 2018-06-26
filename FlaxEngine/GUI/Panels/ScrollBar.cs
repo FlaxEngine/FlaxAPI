@@ -165,10 +165,10 @@ namespace FlaxEngine.GUI
             {
                 Value = min;
             }
-            else if (Mathf.IsNotInRange(max, viewMin, viewMax))
+            /*else if (Mathf.IsNotInRange(max, viewMin, viewMax))
             {
                 Value = max - viewSize;
-            }
+            }*/
         }
 
         private void updateThumb()
