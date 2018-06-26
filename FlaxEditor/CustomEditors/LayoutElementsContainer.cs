@@ -495,6 +495,7 @@ namespace FlaxEditor.CustomEditors
             {
                 var group = Group(name, true);
                 group.Panel.Close(false);
+                group.Panel.TooltipText = tooltip;
                 return group.Object(values, editor);
             }
 
