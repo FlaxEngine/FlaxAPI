@@ -43,7 +43,7 @@ namespace FlaxEngine.GUI
         /// Gets or sets coordinates of the upper-left corner of the control relative to the upper-left corner of its container
         /// </summary>
         [NoSerialize]
-        [EditorDisplay("Transform"), EditorOrder(1000), Tooltip("The location of the upper-left corner of the control relative to he upper-left corner of its container.")]
+        [ExpandGroups, EditorDisplay("Transform"), EditorOrder(1000), Tooltip("The location of the upper-left corner of the control relative to he upper-left corner of its container.")]
         public Vector2 Location
         {
             get => _bounds.Location;

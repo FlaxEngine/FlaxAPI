@@ -69,6 +69,11 @@ namespace FlaxEditor.CustomEditors.Editors
             public VisibleIfAttribute VisibleIf;
 
             /// <summary>
+            /// The expand groups flag.
+            /// </summary>
+            public bool ExpandGroups;
+
+            /// <summary>
             /// Gets the display name.
             /// </summary>
             public string DisplayName { get; }
@@ -123,6 +128,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 Space = (SpaceAttribute)attributes.FirstOrDefault(x => x is SpaceAttribute);
                 Header = (HeaderAttribute)attributes.FirstOrDefault(x => x is HeaderAttribute);
                 VisibleIf = (VisibleIfAttribute)attributes.FirstOrDefault(x => x is VisibleIfAttribute);
+                ExpandGroups = attributes.FirstOrDefault(x => x is ExpandGroupsAttribute) != null;
 
                 if (Display?.Name != null)
                 {
@@ -477,6 +483,20 @@ namespace FlaxEditor.CustomEditors.Editors
 
                 // Spawn property editor
                 SpawnProperty(itemLayout, itemValues, item);
+
+                // Expand all parent groups if need to
+                if (item.ExpandGroups)
+                {
+                    var c = itemLayout.ContainerControl;
+                    do
+                    {
+                        if (c is DropPanel dropPanel)
+                            dropPanel.Open(false);
+                        else if (c is CustomEditorPresenter.PresenterPanel)
+                            break;
+                        c = c.Parent;
+                    } while (c != null);
+                }
             }
         }
         
