@@ -591,7 +591,7 @@ namespace FlaxEditor.Windows
                 addFolder2Root(Editor.ContentDatabase.EnginePrivate);
                 addFolder2Root(Editor.ContentDatabase.EditorPrivate);
             }
-            _tree.Margin = new Margin(0.0f, 0.0f, -16.0f, 2.0f); // Hide root node
+            _tree.Margin = new Margin(0.0f, 0.0f, -14.0f, 2.0f); // Hide root node
             _tree.AddChild(_root);
             _root.SortChildrenRecursive();
 
