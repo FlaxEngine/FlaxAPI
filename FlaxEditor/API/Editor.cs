@@ -56,7 +56,10 @@ namespace FlaxEditor
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool IsDevInstance();
 #else
-	    internal bool IsDevInstance => true;
+        internal static bool IsDevInstance()
+        {
+            return false;
+        }
 #endif
 
         /// <summary>
