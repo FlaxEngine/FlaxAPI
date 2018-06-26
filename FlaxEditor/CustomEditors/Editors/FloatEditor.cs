@@ -12,7 +12,7 @@ namespace FlaxEditor.CustomEditors.Editors
     [CustomEditor(typeof(float)), DefaultEditor]
     public sealed class FloatEditor : CustomEditor
     {
-        private IFloatValueEditor element;
+        private IFloatValueEditor _element;
 
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.Inline;
@@ -20,7 +20,7 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
-            element = null;
+            _element = null;
 
             // Try get limit attribute for value min/max range setting and slider speed
             if (Values.Info != null)
@@ -34,7 +34,8 @@ namespace FlaxEditor.CustomEditors.Editors
                     slider.SetLimits((RangeAttribute)range);
                     slider.Slider.ValueChanged += OnValueChanged;
                     slider.Slider.SlidingEnd += ClearToken;
-                    element = slider;
+                    _element = slider;
+                    return;
                 }
                 var limit = attributes.FirstOrDefault(x => x is LimitAttribute);
                 if (limit != null)
@@ -44,24 +45,25 @@ namespace FlaxEditor.CustomEditors.Editors
                     floatValue.SetLimits((LimitAttribute)limit);
                     floatValue.FloatValue.ValueChanged += OnValueChanged;
                     floatValue.FloatValue.SlidingEnd += ClearToken;
-                    element = floatValue;
+                    _element = floatValue;
+                    return;
                 }
             }
-            if (element == null)
+            if (_element == null)
             {
                 // Use float value editor
                 var floatValue = layout.FloatValue();
                 floatValue.FloatValue.ValueChanged += OnValueChanged;
                 floatValue.FloatValue.SlidingEnd += ClearToken;
-                element = floatValue;
+                _element = floatValue;
             }
         }
 
         private void OnValueChanged()
         {
-            var isSliding = element.IsSliding;
+            var isSliding = _element.IsSliding;
             var token = isSliding ? this : null;
-            SetValue(element.Value, token);
+            SetValue(_element.Value, token);
         }
 
         /// <inheritdoc />
@@ -73,7 +75,7 @@ namespace FlaxEditor.CustomEditors.Editors
             }
             else
             {
-                element.Value = (float)Values[0];
+                _element.Value = (float)Values[0];
             }
         }
     }

@@ -320,11 +320,13 @@
     <Compile Include="GUI\Input\DoubleValueBox.cs" />
     <Compile Include="GUI\Input\FloatValueBox.cs" />
     <Compile Include="GUI\Input\IntValueBox.cs" />
+    <Compile Include="GUI\Input\LongValueBox.cs" />
     <Compile Include="GUI\Input\SliderControl.cs" />
     <Compile Include="GUI\Input\TextBox.cs" />
     <Compile Include="GUI\Input\TextBox.Keys.cs">
       <DependentUpon>TextBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Input\ULongValueBox.cs" />
     <Compile Include="GUI\Input\ValueBox.cs" />
     <Compile Include="GUI\Margin.cs" />
     <Compile Include="GUI\Panels\DropPanel.cs" />

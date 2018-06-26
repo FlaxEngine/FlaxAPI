@@ -346,6 +346,28 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Adds new signed integer (up to long range) value element.
+        /// </summary>
+        /// <returns>The created element.</returns>
+        public SignedIntegerValueElement SignedIntegerValue()
+        {
+            SignedIntegerValueElement element = new SignedIntegerValueElement();
+            OnAddElement(element);
+            return element;
+        }
+
+        /// <summary>
+        /// Adds new unsigned signed integer (up to ulong range) value element.
+        /// </summary>
+        /// <returns>The created element.</returns>
+        public UnsignedIntegerValueElement UnsignedIntegerValue()
+        {
+            UnsignedIntegerValueElement element = new UnsignedIntegerValueElement();
+            OnAddElement(element);
+            return element;
+        }
+
+        /// <summary>
         /// Adds new integer value element.
         /// </summary>
         /// <returns>The created element.</returns>

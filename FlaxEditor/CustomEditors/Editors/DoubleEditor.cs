@@ -12,7 +12,7 @@ namespace FlaxEditor.CustomEditors.Editors
     [CustomEditor(typeof(double)), DefaultEditor]
     public sealed class DoubleEditor : CustomEditor
     {
-        private DoubleValueElement element;
+        private DoubleValueElement _element;
 
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.Inline;
@@ -20,7 +20,7 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
-            element = null;
+            _element = null;
 
             // Try get limit attribute for value min/max range setting and slider speed
             if (Values.Info != null)
@@ -34,24 +34,25 @@ namespace FlaxEditor.CustomEditors.Editors
                     doubleValue.SetLimits((LimitAttribute)limit);
                     doubleValue.DoubleValue.ValueChanged += OnValueChanged;
                     doubleValue.DoubleValue.SlidingEnd += ClearToken;
-                    element = doubleValue;
+                    _element = doubleValue;
+                    return;
                 }
             }
-            if (element == null)
+            if (_element == null)
             {
                 // Use double value editor
                 var doubleValue = layout.DoubleValue();
                 doubleValue.DoubleValue.ValueChanged += OnValueChanged;
                 doubleValue.DoubleValue.SlidingEnd += ClearToken;
-                element = doubleValue;
+                _element = doubleValue;
             }
         }
 
         private void OnValueChanged()
         {
-            var isSliding = element.IsSliding;
+            var isSliding = _element.IsSliding;
             var token = isSliding ? this : null;
-            SetValue(element.Value, token);
+            SetValue(_element.Value, token);
         }
 
         /// <inheritdoc />
@@ -63,7 +64,7 @@ namespace FlaxEditor.CustomEditors.Editors
             }
             else
             {
-                element.Value = (double)Values[0];
+                _element.Value = (double)Values[0];
             }
         }
     }

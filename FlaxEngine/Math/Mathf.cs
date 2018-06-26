@@ -300,6 +300,36 @@ namespace FlaxEngine
         /// <summary>
         /// Returns largest of two or more values.
         /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        public static double Max(double a, double b)
+        {
+            return a <= b ? b : a;
+        }
+
+        /// <summary>
+        /// Returns largest of two or more values.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        public static long Max(long a, long b)
+        {
+            return a <= b ? b : a;
+        }
+
+        /// <summary>
+        /// Returns largest of two or more values.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        public static ulong Max(ulong a, ulong b)
+        {
+            return a <= b ? b : a;
+        }
+
+        /// <summary>
+        /// Returns largest of two or more values.
+        /// </summary>
         /// <param name="values"></param>
         public static float Max(params float[] values)
         {
@@ -349,6 +379,36 @@ namespace FlaxEngine
         /// <param name="a"></param>
         /// <param name="b"></param>
         public static float Min(float a, float b)
+        {
+            return a >= b ? b : a;
+        }
+
+        /// <summary>
+        /// Returns the smallest of two or more values.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        public static double Min(double a, double b)
+        {
+            return a >= b ? b : a;
+        }
+
+        /// <summary>
+        /// Returns the smallest of two or more values.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        public static long Min(long a, long b)
+        {
+            return a >= b ? b : a;
+        }
+
+        /// <summary>
+        /// Returns the smallest of two or more values.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        public static ulong Min(ulong a, ulong b)
         {
             return a >= b ? b : a;
         }
@@ -888,6 +948,30 @@ namespace FlaxEngine
             }
 
             return angle;
+        }
+
+        /// <summary>
+        /// Clamps the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="min">The min.</param>
+        /// <param name="max">The max.</param>
+        /// <returns>The result of clamping a value between min and max</returns>
+        public static long Clamp(long value, long min, long max)
+        {
+            return value < min ? min : value > max ? max : value;
+        }
+
+        /// <summary>
+        /// Clamps the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="min">The min.</param>
+        /// <param name="max">The max.</param>
+        /// <returns>The result of clamping a value between min and max</returns>
+        public static ulong Clamp(ulong value, ulong min, ulong max)
+        {
+            return value < min ? min : value > max ? max : value;
         }
 
         /// <summary>
