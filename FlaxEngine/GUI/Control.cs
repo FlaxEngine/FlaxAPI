@@ -785,7 +785,8 @@ namespace FlaxEngine.GUI
         /// <param name="location">The location.</param>
         /// <returns>True if tooltip can be still visible, otherwise false.</returns>
         public virtual bool OnTestTooltipOverControl(ref Vector2 location)
-        {t(ref location);
+        {
+            return ContainsPoint(ref location);
         }
 
         #endregion

@@ -166,7 +166,7 @@ namespace FlaxEngine.GUI
             var result = base.OnShowTooltip(out text, out location, out area);
 
             // Change the position
-            location = new Vector2(0, HeaderHeight);
+            location = new Vector2(Width * 0.5f, HeaderHeight);
 
             return result;
         }
