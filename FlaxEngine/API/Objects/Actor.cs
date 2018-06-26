@@ -223,18 +223,6 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Creates new instance of the script and adds it to the actor.
-        /// </summary>
-        /// <typeparam name="T">The script type.</typeparam>
-        /// <returns>Created script object.</returns>
-        public T AddScript<T>() where T : Script
-        {
-            var script = New<T>();
-            AddScript(script);
-            return script;
-        }
-
-        /// <summary>
         /// Returns true if actor object has child actor with given name
         /// </summary>
         /// <param name="name">Actor name</param>
@@ -271,6 +259,18 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Creates a new child actor of the given type.
+        /// </summary>
+        /// <typeparam name="T">Type of the actor.</typeparam>
+        /// <returns>The child actor.</returns>
+        public T AddChild<T>() where T : Actor
+        {
+            var result = New<T>();
+            result.SetParent(this, false);
+            return result;
+        }
+
+        /// <summary>
         /// Finds the child actor of the given type or creates a new one.
         /// </summary>
         /// <typeparam name="T">Type of the actor.</typeparam>
@@ -284,6 +284,18 @@ namespace FlaxEngine
                 result.SetParent(this, false);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Creats a new script of a specific type and adds it to the actor.
+        /// </summary>
+        /// <typeparam name="T">Type of the script to create.</typeparam>
+        /// <returns>The created script instance, null otherwise.</returns>
+        public T AddScript<T>() where T : Script
+        {
+            var script = New<T>();
+            AddScript(script);
+            return script;
         }
 
         /// <summary>

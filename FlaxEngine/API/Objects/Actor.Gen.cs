@@ -401,7 +401,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public T GetChild<T>()where T : Actor
+        public T GetChild<T>() where T : Actor
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -419,7 +419,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public T[] GetChildren<T>()where T : Actor
+        public T[] GetChildren<T>() where T : Actor
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -448,13 +448,13 @@ namespace FlaxEngine
         /// <summary>
         /// Searches for a child script of a specific type. If there are multiple scripts matching the type, only the first one found is returned.
         /// </summary>
-        /// <typeparam name="T">Type of the actor to search for. Includes any scripts derived from the type.</typeparam>
+        /// <typeparam name="T">Type of the script to search for. Includes any scripts derived from the type.</typeparam>
         /// <returns>Script instance if found, null otherwise.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public T GetScript<T>()where T : Script
+        public T GetScript<T>() where T : Script
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -466,13 +466,13 @@ namespace FlaxEngine
         /// <summary>
         /// Searches for all scripts of a specific type.
         /// </summary>
-        /// <typeparam name="T">Type of the script to search for. Includes any scripts derived from the type.</typeparam>
+        /// <typeparam name="T">Type of the scripts to search for. Includes any scripts derived from the type.</typeparam>
         /// <returns>All scripts matching the specified type.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public T[] GetScripts<T>()where T : Script
+        public T[] GetScripts<T>() where T : Script
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
