@@ -13,9 +13,9 @@ namespace FlaxEngine.GUI
     {
         private float _timeToPopupLeft;
         private Control _lastTarget;
+        private Control _showTarget;
         private string _currentText;
-        private FlaxEngine.Window _window;
-        private Rectangle _mouseMovementRange;
+        private Window _window;
 
         /// <summary>
         /// Gets or sets the time in seconds that mouse have to be over the target to show the tooltip.
@@ -68,6 +68,7 @@ namespace FlaxEngine.GUI
                 // Direction: left
                 locationSS.X -= Width;
             }
+            _showTarget = target;
 
             // Create window
             var desc = CreateWindowSettings.Default;
@@ -94,9 +95,6 @@ namespace FlaxEngine.GUI
             Parent = _window.GUI;
             Visible = true;
             _window.Show();
-
-            // Cache mouse safe movement area
-            _mouseMovementRange = new Rectangle(target.ClientToScreen(targetArea.Location), targetArea.Size);
         }
 
         /// <summary>
@@ -179,9 +177,10 @@ namespace FlaxEngine.GUI
         {
             // Auto hide if mouse leaves control area
             Vector2 mousePos = Application.MousePosition;
-            if (!_mouseMovementRange.Contains(mousePos))
+            Vector2 location = _showTarget.ScreenToClient(mousePos);
+            if (!_showTarget.OnTestTooltipOverControl(ref location))
             {
-                // Mouse left
+                // Mouse left or sth
                 Hide();
             }
 

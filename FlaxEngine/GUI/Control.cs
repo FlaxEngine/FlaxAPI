@@ -376,7 +376,7 @@ namespace FlaxEngine.GUI
         public virtual void Update(float deltaTime)
         {
             // Update tooltip
-            if (_tooltipText != null && IsMouseOver)
+            if (IsMouseOver && ShowTooltip)
             {
                 Tooltip.OnMouseOverControl(this, deltaTime);
             }
@@ -535,7 +535,7 @@ namespace FlaxEngine.GUI
             _isMouseOver = true;
 
             // Update tooltip
-            if (_tooltipText != null)
+            if (ShowTooltip)
                 Tooltip.OnMouseEnterControl(this);
         }
 
@@ -556,7 +556,7 @@ namespace FlaxEngine.GUI
             _isMouseOver = false;
 
             // Update tooltip
-            if (_tooltipText != null)
+            if (ShowTooltip)
                 Tooltip.OnMouseLeaveControl(this);
         }
 
@@ -735,6 +735,14 @@ namespace FlaxEngine.GUI
         public Tooltip Tooltip => _tooltip ?? Style.Current.SharedTooltip;
 
         /// <summary>
+        /// Gets a value indicating whether show control tooltip (control is in a proper state, tooltip text is valid, etc.). Can be used to implement custom conditions for showing tooltips (eg. based on current mouse location within the control bounds).
+        /// </summary>
+        /// <remarks>
+        /// Tooltip ccan be only visible if mouse is over the control area (see <see cref="IsMouseOver"/>).
+        /// </remarks>
+        protected virtual bool ShowTooltip => _tooltipText != null;
+        
+        /// <summary>
         /// Links the tooltip.
         /// </summary>
         /// <param name="text">The text.</param>
@@ -769,6 +777,15 @@ namespace FlaxEngine.GUI
             location = Size * new Vector2(0.5f, 1.0f);
             area = new Rectangle(Vector2.Zero, Size);
             return true;
+        }
+
+        /// <summary>
+        /// Called when tooltip is visible and tests if the given mouse location (in control space) is valid (is over the content).
+        /// </summary>
+        /// <param name="location">The location.</param>
+        /// <returns>True if tooltip can be still visible, otherwise false.</returns>
+        public virtual bool OnTestTooltipOverControl(ref Vector2 location)
+        {t(ref location);
         }
 
         #endregion
