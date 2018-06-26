@@ -398,6 +398,31 @@ namespace FlaxEditor.CustomEditors.Editors
                 var value = Values[0];
                 if (value == null)
                 {
+                    // Check if it's an object type that can be created in editor
+                    var type = Values.Type;
+                    if (type != null && type.GetConstructor(Type.EmptyTypes) != null)
+                    {
+                        layout = layout.Space(20);
+
+                        const float ButtonSize = 14.0f;
+                        var button = new Button
+                        {
+                            Text = "+",
+                            TooltipText = "Create a new instance of the object",
+                            Height = ButtonSize,
+                            Width = ButtonSize,
+                            X = layout.ContainerControl.Width - ButtonSize - 4,
+                            AnchorStyle = AnchorStyle.CenterRight,
+                            Parent = layout.ContainerControl
+                        };
+                        button.Clicked += () =>
+                        {
+                            var newType = Values.Type;
+                            SetValue(Activator.CreateInstance(newType));
+                            RebuildLayoutOnRefresh();
+                        };
+                    }
+
                     layout.Label("<null>");
                     return;
                 }
