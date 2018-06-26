@@ -10,13 +10,44 @@ namespace FlaxEngine.GUI
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class DropPanel : ContainerControl
     {
+        /// <summary>
+        /// The header height.
+        /// </summary>
         protected float _headerHeight = 14.0f;
+
+        /// <summary>
+        /// The header text margin.
+        /// </summary>
         protected Margin _headerTextMargin = new Margin(2.0f);
+
+        /// <summary>
+        /// The 'is closed' flag.
+        /// </summary>
         protected bool _isClosed;
+
+        /// <summary>
+        /// The 'mouse over header' flag (over header).
+        /// </summary>
         protected bool _mouseOverHeader;
+
+        /// <summary>
+        /// The 'mouse down' flag (over header).
+        /// </summary>
         protected bool _mouseDown;
+
+        /// <summary>
+        /// The animation progress (normalized).
+        /// </summary>
         protected float _animationProgress = 1.0f;
+
+        /// <summary>
+        /// The cached height of the control.
+        /// </summary>
         protected float _cachedHeight = 16.0f;
+
+        /// <summary>
+        /// The items margin.
+        /// </summary>
         protected Margin _itemsMargin = new Margin(2.0f, 2.0f, 2.0f, 2.0f);
 
         /// <summary>
@@ -125,6 +156,26 @@ namespace FlaxEngine.GUI
         /// Gets the header rectangle.
         /// </summary>
         protected Rectangle HeaderRectangle => new Rectangle(0, 0, Width, HeaderHeight);
+
+        /// <inheritdoc />
+        protected override bool ShowTooltip => base.ShowTooltip && _mouseOverHeader;
+
+        /// <inheritdoc />
+        public override bool OnShowTooltip(out string text, out Vector2 location, out Rectangle area)
+        {
+            var result = base.OnShowTooltip(out text, out location, out area);
+
+            // Change the position
+            location = new Vector2(0, HeaderHeight);
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override bool OnTestTooltipOverControl(ref Vector2 location)
+        {
+            return base.OnTestTooltipOverControl(ref location) && HeaderRectangle.Contains(ref location);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DropPanel"/> class.
