@@ -68,6 +68,7 @@ namespace FlaxEditor.SceneGraph
             CustomNodesTypes.Add(typeof(MeshCollider), typeof(ColliderNode));
             CustomNodesTypes.Add(typeof(CharacterController), typeof(ColliderNode));
             CustomNodesTypes.Add(typeof(UICanvas), typeof(UICanvasNode));
+            CustomNodesTypes.Add(typeof(UIControl), typeof(UIControlNode));
         }
 
         /// <summary>

@@ -294,6 +294,7 @@
     <Compile Include="SceneGraph\Actors\SpotLightNode.cs" />
     <Compile Include="SceneGraph\Actors\TextRenderNode.cs" />
     <Compile Include="SceneGraph\Actors\UICanvasNode.cs" />
+    <Compile Include="SceneGraph\Actors\UIControlNode.cs" />
     <Compile Include="SceneGraph\GUI\ActorTreeNode.cs" />
     <Compile Include="SceneGraph\GUI\SceneTreeNode.cs" />
     <Compile Include="SceneGraph\RootNode.cs" />

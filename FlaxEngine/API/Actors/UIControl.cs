@@ -74,6 +74,49 @@ namespace FlaxEngine
         public bool HasControl => _control != null;
 
         /// <summary>
+        /// Gets the world-space oriented bounding box that contains a 3D control.
+        /// </summary>
+        public OrientedBoundingBox Bounds
+        {
+            get
+            {
+                // Pick a parent canvas
+                var canvasRoot = Control?.Root as CanvasRootControl;
+                if (canvasRoot == null || canvasRoot.Canvas.Is2D)
+                    return new OrientedBoundingBox();
+
+                // Find control bounds limit points in canvas-space
+                var p1 = Vector2.Zero;
+                var p2 = new Vector2(0, Control.Height);
+                var p3 = new Vector2(Control.Width, 0);
+                var p4 = Control.Size;
+                var c = Control;
+                while (c != canvasRoot)
+                {
+                    p1 = c.PointToParent(p1);
+                    p2 = c.PointToParent(p2);
+                    p3 = c.PointToParent(p3);
+                    p4 = c.PointToParent(p4);
+
+                    c = c.Parent;
+                }
+                var min = Vector2.Min(Vector2.Min(p1, p2), Vector2.Min(p3, p4));
+                var max = Vector2.Max(Vector2.Max(p1, p2), Vector2.Max(p3, p4));
+                var size = max - min;
+
+                // Calculate bounds
+                OrientedBoundingBox bounds = new OrientedBoundingBox();
+                bounds.Extents = new Vector3(size * 0.5f, Mathf.Epsilon);
+                Matrix world;
+                canvasRoot.Canvas.GetWorldMatrix(out world);
+                Matrix offset;
+                Matrix.Translation(min.X + size.X * 0.5f, min.Y + size.Y * 0.5f, 0, out offset);
+                Matrix.Multiply(ref offset, ref world, out bounds.Transformation);
+                return bounds;
+            }
+        }
+
+        /// <summary>
         /// Gets the control object cased to the given type.
         /// </summary>
         /// <typeparam name="T">The type of the control.</typeparam>
