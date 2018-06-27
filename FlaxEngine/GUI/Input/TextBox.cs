@@ -253,7 +253,10 @@ namespace FlaxEngine.GUI
             {
                 const float caretWidth = 1.2f;
 
-                var font = Font.GetFont();
+                var font = Font?.GetFont();
+                if (font == null)
+                    return new Rectangle(0, 0, caretWidth, Height);
+
                 Vector2 caretPos = font.GetCharPosition(_text, CaretPosition, _layout);
 
                 return new Rectangle(
@@ -437,6 +440,13 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void ScrollToCaret()
         {
+            // If it's empty
+            if (_text.Length == 0)
+            {
+                _targetViewOffset = Vector2.Zero;
+                return;
+            }
+
             Rectangle caretBounds = CaretBounds;
             Rectangle textArea = TextRectangle;
 
