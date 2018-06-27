@@ -167,8 +167,19 @@ namespace FlaxEngine.GUI
                 {
                     _anchorStyle = value;
 
-                    // Update parent's container
-                    _parent?.PerformLayout();
+                    // Update layout
+                    if (_parent != null)
+                    {
+                        if (_anchorStyle == AnchorStyle.Center)
+                        {
+                            var size = _parent.Size;
+                            OnParentResized(ref size);
+                        }
+                        else
+                        {
+                            _parent.PerformLayout();
+                        }
+                    }
                 }
             }
         }
