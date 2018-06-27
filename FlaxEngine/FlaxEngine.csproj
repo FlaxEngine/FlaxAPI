@@ -389,6 +389,7 @@
     <Compile Include="Math\Half3.cs" />
     <Compile Include="Math\Half4.cs" />
     <Compile Include="Math\HalfUtils.cs" />
+    <Compile Include="Math\Int4.cs" />
     <Compile Include="Math\Mathf.cs" />
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="Math\Matrix2x2.cs" />
