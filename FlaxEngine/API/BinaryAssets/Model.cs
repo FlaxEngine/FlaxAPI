@@ -11,6 +11,16 @@ namespace FlaxEngine
         private ModelLOD[] _lods;
 
         /// <summary>
+        /// The maximum amount of levels of detail for the model.
+        /// </summary>
+        public const int MaxLODs = 6;
+
+        /// <summary>
+        /// The maximum amount of meshes per model LOD.
+        /// </summary>
+        public const int MaxMeshes = 4096;
+
+        /// <summary>
         /// Gets the material slots colelction. Each slot contains information how to render mesh or meshes using it. See <see cref="Mesh.MaterialSlotIndex"/>.
         /// </summary>
         public MaterialSlot[] MaterialSlots
@@ -64,67 +74,31 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Updates the model mesh vertex and index buffer data.
-        /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
-        /// Mesh data will be cached and uploaded to the GPU with a delay.
+        /// Setups the model LODs collection including meshes creation.
         /// </summary>
-        /// <param name="vertices">The mesh verticies positions. Cannot be null.</param>
-        /// <param name="triangles">The mesh index buffer (triangles). Uses 32-bit stride buffer. Cannot be null.</param>
-        /// <param name="normals">The normal vectors (per vertex).</param>
-        /// <param name="uv">The texture cordinates (per vertex).</param>
-        /// <param name="colors">The vertex colors (per vertex).</param>
-        public void UpdateMesh(Vector3[] vertices, int[] triangles, Vector3[] normals = null, Vector2[] uv = null, Color32[] colors = null)
+        /// <remarks>
+        /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
+        /// </remarks>
+        /// <param name="meshesCountPerLod">The meshes count per LOD. Each model LOD contains a collection of meshes which has to be specified.</param>
+        public void SetupLODs(params int[] meshesCountPerLod)
         {
             // Validate state and input
             if (!IsVirtual)
-                throw new InvalidOperationException("Only virtual models can be updated at runtime.");
-            if (vertices == null)
-                throw new ArgumentNullException(nameof(vertices));
-            if (triangles == null)
-                throw new ArgumentNullException(nameof(triangles));
-            if (triangles.Length == 0 || triangles.Length % 3 != 0)
-                throw new ArgumentOutOfRangeException(nameof(triangles));
-            if (normals != null && normals.Length != vertices.Length)
-                throw new ArgumentOutOfRangeException(nameof(normals));
-            if (uv != null && uv.Length != vertices.Length)
-                throw new ArgumentOutOfRangeException(nameof(uv));
-            if (colors != null && colors.Length != vertices.Length)
-                throw new ArgumentOutOfRangeException(nameof(colors));
+                throw new InvalidOperationException("Only virtual models can be modified at runtime.");
+            if (meshesCountPerLod == null || meshesCountPerLod.Length == 0 || meshesCountPerLod.Length > MaxLODs)
+                throw new ArgumentOutOfRangeException(nameof(meshesCountPerLod));
+            for (int lodIndex = 0; lodIndex < meshesCountPerLod.Length; lodIndex++)
+            {
+                if (meshesCountPerLod[lodIndex] <= 0 || meshesCountPerLod[lodIndex] > MaxMeshes)
+                    throw new ArgumentException("Too many meshes per LOD.");
+            }
 
-            if (Internal_UpdateMeshInt(unmanagedPtr, vertices, triangles, normals, uv, colors))
-                throw new FlaxException("Failed to update mesh data.");
-        }
+            // Cleanup data
+            _lods = null;
 
-        /// <summary>
-        /// Updates the model mesh vertex and index buffer data.
-        /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
-        /// Mesh data will be cached and uploaded to the GPU with a delay.
-        /// </summary>
-        /// <param name="vertices">The mesh verticies positions. Cannot be null.</param>
-        /// <param name="triangles">The mesh index buffer (triangles). Uses 16-bit stride buffer. Cannot be null.</param>
-        /// <param name="normals">The normal vectors (per vertex).</param>
-        /// <param name="uv">The texture cordinates (per vertex).</param>
-        /// <param name="colors">The vertex colors (per vertex).</param>
-        public void UpdateMesh(Vector3[] vertices, ushort[] triangles, Vector3[] normals = null, Vector2[] uv = null, Color32[] colors = null)
-        {
-            // Validate state and input
-            if (!IsVirtual)
-                throw new InvalidOperationException("Only virtual models can be updated at runtime.");
-            if (vertices == null)
-                throw new ArgumentNullException(nameof(vertices));
-            if (triangles == null)
-                throw new ArgumentNullException(nameof(triangles));
-            if (triangles.Length == 0 || triangles.Length % 3 != 0)
-                throw new ArgumentOutOfRangeException(nameof(triangles));
-            if (normals != null && normals.Length != vertices.Length)
-                throw new ArgumentOutOfRangeException(nameof(normals));
-            if (uv != null && uv.Length != vertices.Length)
-                throw new ArgumentOutOfRangeException(nameof(uv));
-            if (colors != null && colors.Length != vertices.Length)
-                throw new ArgumentOutOfRangeException(nameof(colors));
-
-            if (Internal_UpdateMeshUShort(unmanagedPtr, vertices, triangles, normals, uv, colors))
-                throw new FlaxException("Failed to update mesh data.");
+            // Call backend
+            if (Internal_SetupLODs(unmanagedPtr, meshesCountPerLod))
+                throw new FlaxException("Failed to update model LODs collection.");
         }
 
         private void CacheData()
@@ -165,10 +139,7 @@ namespace FlaxEngine
         internal static extern int[] Internal_GetLODs(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_UpdateMeshInt(IntPtr obj, Vector3[] vertices, int[] triangles, Vector3[] normals, Vector2[] uv, Color32[] colors);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_UpdateMeshUShort(IntPtr obj, Vector3[] vertices, ushort[] triangles, Vector3[] normals, Vector2[] uv, Color32[] colors);
+        internal static extern bool Internal_SetupLODs(IntPtr obj, int[] meshesCountPerLod);
 #endif
     }
 }

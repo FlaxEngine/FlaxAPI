@@ -71,6 +71,7 @@ namespace FlaxEditor.Viewport.Previews
             _previewModel.BoundsScale = 1000.0f;
             _previewModel.UpdateMode = AnimatedModel.AnimationUpdateMode.Manual;
             _previewBonesModel = FlaxEngine.Content.CreateVirtualAsset<Model>();
+            _previewBonesModel.SetupLODs(1);
             _previewBonesActor = ModelActor.New();
             _previewBonesActor.Model = _previewBonesModel;
             _previewBonesActor.Entries[0].Material = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.WiresDebugMaterial);
@@ -213,7 +214,7 @@ namespace FlaxEditor.Viewport.Previews
                     }
 
                     if (_previewBonesIndex.Count > 0)
-                        _previewBonesModel.UpdateMesh(_previewBonesVertex.ToArray(), _previewBonesIndex.ToArray());
+                        _previewBonesModel.LODs[0].Meshes[0].UpdateMesh(_previewBonesVertex.ToArray(), _previewBonesIndex.ToArray());
                     else
                         _previewBonesActor.IsActive = false;
                 }
