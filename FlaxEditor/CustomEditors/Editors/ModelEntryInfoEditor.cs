@@ -37,7 +37,7 @@ namespace FlaxEditor.CustomEditors.Editors
 
         private void TryToGetName()
         {
-            if (_group == null &&
+            if (_group != null &&
                 Values.Count > 0 &&
                 Values[0] is ModelEntryInfo entry
                 && ParentEditor?.ParentEditor != null
