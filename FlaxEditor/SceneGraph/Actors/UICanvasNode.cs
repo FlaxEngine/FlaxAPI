@@ -26,6 +26,16 @@ namespace FlaxEditor.SceneGraph.Actors
         }
 
         /// <inheritdoc />
+        public override bool RayCastSelf(ref RayCastData ray, out float distance)
+        {
+            if (Actor is UICanvas uiCanvas && uiCanvas.Is3D)
+                return uiCanvas.Bounds.Intersects(ref ray.Ray, out distance);
+
+            distance = 0;
+            return false;
+        }
+
+        /// <inheritdoc />
         public override void OnDebugDraw(ViewportDebugDrawData data)
         {
             base.OnDebugDraw(data);
