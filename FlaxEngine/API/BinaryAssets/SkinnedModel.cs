@@ -10,6 +10,11 @@ namespace FlaxEngine
         private MaterialSlot[] _slots;
         private SkinnedMesh[] _meshes;
         private SkeletonBone[] _bones;
+        
+        /// <summary>
+        /// The maximum allowed amount of skeleton bones to be used with skinned model.
+        /// </summary>
+        public const int MaxBones = 256;
 
         /// <summary>
         /// Gets the material slots colelction. Each slot contains information how to render mesh or meshes using it.
@@ -101,6 +106,29 @@ namespace FlaxEngine
             }
         }
 
+        /// <summary>
+        /// Setups the skinned model including meshes creation and skeleton definition setup. Ensure to init SkeletonData manually after the call.
+        /// </summary>
+        /// <remarks>
+        /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
+        /// </remarks>
+        /// <param name="meshesCount">The meshes count.</param>
+        public void SetupMeshes(int meshesCount)
+        {
+            // Validate state and input
+            if (!IsVirtual)
+                throw new InvalidOperationException("Only virtual models can be modified at runtime.");
+            if (meshesCount <= 0 || meshesCount > Model.MaxLODs)
+                throw new ArgumentOutOfRangeException(nameof(meshesCount));
+
+            // Cleanup data
+            _meshes = null;
+
+            // Call backend
+            if (Internal_SetupMeshes(unmanagedPtr, meshesCount))
+                throw new FlaxException("Failed to update skinned model meshes collection.");
+        }
+
         internal void Internal_OnUnload()
         {
             // Clear cached data
@@ -114,6 +142,9 @@ namespace FlaxEngine
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern SkeletonBone[] Internal_SetupBones(IntPtr obj, Type type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_SetupMeshes(IntPtr obj, int meshesCount);
 #endif
 
         #endregion
