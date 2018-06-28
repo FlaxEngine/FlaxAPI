@@ -2,6 +2,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using FlaxEngine.Rendering;
 
 namespace FlaxEngine
 {
@@ -10,6 +11,83 @@ namespace FlaxEngine
     /// </summary>
     public sealed class SkinnedMesh
     {
+        /// <summary>
+        /// The Vertex Buffer 0 structure format.
+        /// </summary>
+        public struct Vertex0
+        {
+            /// <summary>
+            /// The vertex position.
+            /// </summary>
+            public Vector3 Position;
+
+            /// <summary>
+            /// The texture coordinates (packed).
+            /// </summary>
+            public Half2 TexCoord;
+
+            /// <summary>
+            /// The normal vector (packed).
+            /// </summary>
+            public FloatR10G10B10A2 Normal;
+
+            /// <summary>
+            /// The tangent vector (packed). Bitangent sign in component A.
+            /// </summary>
+            public FloatR10G10B10A2 Tangent;
+
+            /// <summary>
+            /// The blend indices (packed). Up to 4 bones.
+            /// </summary>
+            public Color32 BlendIndices;
+
+            /// <summary>
+            /// The blend weights (normalized, packed). Up to 4 bones.
+            /// </summary>
+            public Color32 BlendWeights;
+        }
+
+        /// <summary>
+        /// The raw Vertex Buffer structure format.
+        /// </summary>
+        public struct Vertex
+        {
+            /// <summary>
+            /// The vertex position.
+            /// </summary>
+            public Vector3 Position;
+
+            /// <summary>
+            /// The texture coordinates.
+            /// </summary>
+            public Vector2 TexCoord;
+
+            /// <summary>
+            /// The normal vector.
+            /// </summary>
+            public Vector3 Normal;
+
+            /// <summary>
+            /// The tangent vector.
+            /// </summary>
+            public Vector3 Tangent;
+
+            /// <summary>
+            /// The tangent vector.
+            /// </summary>
+            public Vector3 Bitangent;
+
+            /// <summary>
+            /// The blend indices. Up to 4 bones.
+            /// </summary>
+            public Int4 BlendIndices;
+
+            /// <summary>
+            /// The blend weights (normalized). Up to 4 bones.
+            /// </summary>
+            public Vector4 BlendWeights;
+        }
+
         internal SkinnedModel _skinnedModel;
         internal readonly int _index;
 
@@ -36,6 +114,12 @@ namespace FlaxEngine
         /// Gets the material slot used by this mesh during rendering.
         /// </summary>
         public MaterialSlot MaterialSlot => _skinnedModel.MaterialSlots[MaterialSlotIndex];
+
+        /// <summary>
+        /// Gets a format of the mesh index buffer.
+        /// </summary>
+        /// <remarks>Valid only if model and mesh are loaded.</remarks>
+        public PixelFormat IndexBufferFormat => Internal_GetIndexFormat(_skinnedModel.unmanagedPtr, _index);
 
         /// <summary>
         /// Gets the triangle count.
@@ -125,7 +209,91 @@ namespace FlaxEngine
                 throw new FlaxException("Failed to update mesh data.");
         }
 
+        internal enum InternalBufferType
+        {
+            VB0 = 0,
+            IB16 = 3,
+            IB32 = 4,
+        }
+
+        /// <summary>
+        /// Downloads the first vertex buffer that contains mesh vertices data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Application.IsInMainThread"/>).
+        /// </summary>
+        /// <param name="forceGpu">If set to <c>true</c> the data will be downloaded from the GPU, otherwise it can be loaded from the drive (source asset file) or from memory (if cached). Downloading mesh from GPU requries this call to be made fro mthe other thread than main thread. Virtual assets are always downloaded from GPU memory due to lack of dedicated storage container for the asset data.</param>
+        /// <returns>The gathered data.</returns>
+        public Vertex0[] DownloadVertexBuffer0(bool forceGpu = false)
+        {
+            var vertices = Vertices;
+            var result = new Vertex0[vertices];
+            if (Internal_DownloadBuffer(_skinnedModel.unmanagedPtr, _index, forceGpu, result, InternalBufferType.VB0))
+                throw new FlaxException("Failed to download mesh data.");
+            return result;
+        }
+
+        /// <summary>
+        /// Downloads the raw vertex buffer that contains mesh vertices data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Application.IsInMainThread"/>).
+        /// </summary>
+        /// <param name="forceGpu">If set to <c>true</c> the data will be downloaded from the GPU, otherwise it can be loaded from the drive (source asset file) or from memory (if cached). Downloading mesh from GPU requries this call to be made fro mthe other thread than main thread. Virtual assets are always downloaded from GPU memory due to lack of dedicated storage container for the asset data.</param>
+        /// <returns>The gathered data.</returns>
+        public Vertex[] DownloadVertexBuffer(bool forceGpu = false)
+        {
+            // TODO: perform data conversion on C++ side to make it faster
+
+            var vb0 = DownloadVertexBuffer0(forceGpu);
+
+            var vertices = Vertices;
+            var result = new Vertex[vertices];
+            for (int i = 0; i < vertices; i++)
+            {
+                var v = vb0[i];
+                float bitangentSign = v.Tangent.A > Mathf.Epsilon ? -1.0f : +1.0f;
+
+                result[i].Position = vb0[i].Position;
+                result[i].TexCoord = (Vector2)v.TexCoord;
+                result[i].Normal = v.Normal.ToVector3() * 2.0f - 1.0f;
+                result[i].Tangent = v.Tangent.ToVector3() * 2.0f - 1.0f;
+                result[i].Bitangent = Vector3.Cross(result[i].Normal, result[i].Tangent) * bitangentSign;
+                result[i].BlendIndices = new Int4(v.BlendIndices.R, v.BlendIndices.G, v.BlendIndices.B, v.BlendIndices.A);
+                result[i].BlendWeights = (Vector4)v.BlendWeights;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Downloads the index buffer that contains mesh triangles data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Application.IsInMainThread"/>).
+        /// </summary>
+        /// <remarks>If mesh index buffer format (see <see cref="IndexBufferFormat"/>) is <see cref="PixelFormat.R16_UInt"/> then it's faster to call .</remarks>
+        /// <param name="forceGpu">If set to <c>true</c> the data will be downloaded from the GPU, otherwise it can be loaded from the drive (source asset file) or from memory (if cached). Downloading mesh from GPU requries this call to be made fro mthe other thread than main thread. Virtual assets are always downloaded from GPU memory due to lack of dedicated storage container for the asset data.</param>
+        /// <returns>The gathered data.</returns>
+        public int[] DownloadIndexBuffer(bool forceGpu = false)
+        {
+            var triangles = Triangles;
+            var result = new int[triangles * 3];
+            if (Internal_DownloadBuffer(_skinnedModel.unmanagedPtr, _index, forceGpu, result, InternalBufferType.IB32))
+                throw new FlaxException("Failed to download mesh data.");
+            return result;
+        }
+
+        /// <summary>
+        /// Downloads the index buffer that contains mesh triangles data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Application.IsInMainThread"/>).
+        /// </summary>
+        /// <remarks>If mesh index buffer format (see <see cref="IndexBufferFormat"/>) is <see cref="PixelFormat.R32_UInt"/> then data won't be downloaded.</remarks>
+        /// <param name="forceGpu">If set to <c>true</c> the data will be downloaded from the GPU, otherwise it can be loaded from the drive (source asset file) or from memory (if cached). Downloading mesh from GPU requries this call to be made fro mthe other thread than main thread. Virtual assets are always downloaded from GPU memory due to lack of dedicated storage container for the asset data.</param>
+        /// <returns>The gathered data.</returns>
+        public ushort[] DownloadIndexBufferUShort(bool forceGpu = false)
+        {
+            var triangles = Triangles;
+            var result = new ushort[triangles * 3];
+            if (Internal_DownloadBuffer(_skinnedModel.unmanagedPtr, _index, forceGpu, result, InternalBufferType.IB16))
+                throw new FlaxException("Failed to download mesh data.");
+            return result;
+        }
+
 #if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern PixelFormat Internal_GetIndexFormat(IntPtr obj, int index);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetMaterialSlotIndex(IntPtr obj, int index);
 
@@ -143,6 +311,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_UpdateMeshUShort(IntPtr obj, int meshIndex, Vector3[] vertices, ushort[] triangles, Int4[] blendIndices, Vector4[] blendWeights, Vector3[] normals, Vector3[] tangents, Vector2[] uv);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_DownloadBuffer(IntPtr obj, int index, bool forceGpu, Array result, InternalBufferType type);
 #endif
     }
 }
