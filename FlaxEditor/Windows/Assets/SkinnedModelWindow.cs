@@ -1,6 +1,5 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Xml;
@@ -25,7 +24,6 @@ namespace FlaxEditor.Windows.Assets
     public sealed class SkinnedModelWindow : AssetEditorWindowBase<SkinnedModel>
     {
         // TODO: debug model UVs channel
-        // TODO: adding/removing material slots
         // TODO: refresh material slots comboboxes on material slot rename
         // TODO: add button to draw model/bone bounds
 
@@ -35,14 +33,36 @@ namespace FlaxEditor.Windows.Assets
         [CustomEditor(typeof(ProxyEditor))]
         private sealed class PropertiesProxy
         {
-            [EditorOrder(10), EditorDisplay("Materials", EditorDisplayAttribute.InlineStyle), MemberCollection(CanReorderItems = true, NotNullItems = true, ReadOnly = true)]
+            [EditorOrder(10), EditorDisplay("Materials", EditorDisplayAttribute.InlineStyle), MemberCollection(CanReorderItems = true, NotNullItems = true)]
             public MaterialSlot[] MaterialSlots
             {
                 get => Asset?.MaterialSlots;
                 set
                 {
-                    if (Asset != null)
-                        Asset.MaterialSlots = value;
+                    if (Asset.MaterialSlots.Length != value.Length)
+                    {
+                        MaterialBase[] materials = new MaterialBase[value.Length];
+                        string[] names = new string[value.Length];
+                        ShadowsCastingMode[] shadowsModes = new ShadowsCastingMode[value.Length];
+                        for (int i = 0; i < value.Length; i++)
+                        {
+                            materials[i] = value[i].Material;
+                            names[i] = value[i].Name;
+                            shadowsModes[i] = value[i].ShadowsMode;
+                        }
+
+                        Asset.SetupMaterialSlots(value.Length);
+
+                        var slots = Asset.MaterialSlots;
+                        for (int i = 0; i < slots.Length; i++)
+                        {
+                            slots[i].Material = materials[i];
+                            slots[i].Name = names[i];
+                            slots[i].ShadowsMode = shadowsModes[i];
+                        }
+
+                        UpdateMaterialSlotsUI();
+                    }
                 }
             }
 
