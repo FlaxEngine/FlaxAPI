@@ -10,7 +10,7 @@ namespace FlaxEngine
         private MaterialSlot[] _slots;
         private SkinnedMesh[] _meshes;
         private SkeletonBone[] _bones;
-        
+
         /// <summary>
         /// The maximum allowed amount of skeleton bones to be used with skinned model.
         /// </summary>
@@ -91,18 +91,38 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets the skeleton bones hierarchy.
+        /// Gets or sets the skeleton bones hierarchy.
         /// </summary>
+        /// <remarks>
+        /// Editing skeleton is only supported for the virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
+        /// </remarks>
         public SkeletonBone[] Skeleton
         {
             get
             {
                 if (_bones == null)
                 {
-                    _bones = Internal_SetupBones(unmanagedPtr, typeof(SkeletonBone));
+                    _bones = Internal_GetBones(unmanagedPtr, typeof(SkeletonBone));
                 }
 
                 return _bones;
+            }
+            set
+            {
+                // Validate state and input
+                if (!IsVirtual)
+                    throw new InvalidOperationException("Only virtual models can be modified at runtime.");
+                if (value == null)
+                    throw new ArgumentNullException();
+                if (value == null || value.Length <= 0 || value.Length > MaxBones)
+                    throw new ArgumentOutOfRangeException();
+
+                // Cleanup data
+                _bones = null;
+
+                // Call backend
+                if (Internal_SetupBones(unmanagedPtr, value))
+                    throw new FlaxException("Failed to update skinned model skeleton.");
             }
         }
 
@@ -141,10 +161,13 @@ namespace FlaxEngine
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern SkeletonBone[] Internal_SetupBones(IntPtr obj, Type type);
+        internal static extern SkeletonBone[] Internal_GetBones(IntPtr obj, Type type);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_SetupMeshes(IntPtr obj, int meshesCount);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_SetupBones(IntPtr obj, SkeletonBone[] bones);
 #endif
 
         #endregion
