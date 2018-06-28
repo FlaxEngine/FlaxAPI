@@ -21,6 +21,11 @@ namespace FlaxEngine
         public const int MaxMeshes = 4096;
 
         /// <summary>
+        /// The maximum allowed amount of material slots per model resource
+        /// </summary>
+        public const int MaxMaterialSlots = 4096;
+
+        /// <summary>
         /// Gets the material slots colelction. Each slot contains information how to render mesh or meshes using it. See <see cref="Mesh.MaterialSlotIndex"/>.
         /// </summary>
         public MaterialSlot[] MaterialSlots
@@ -28,12 +33,22 @@ namespace FlaxEngine
             get
             {
                 if (_slots == null)
-                    CacheData();
+                {
+                    // Ask unmanaged world for amount of material slots
+                    int slotsCount = Internal_GetSlots(unmanagedPtr);
+                    if (slotsCount > 0)
+                    {
+                        _slots = new MaterialSlot[slotsCount];
+                        for (int i = 0; i < slotsCount; i++)
+                            _slots[i] = new MaterialSlot(this, i);
+                    }
+                }
+
                 return _slots;
             }
             internal set
             {
-                // TODO: implement setter and allow to modify the colelction
+                // Hidden by default
             }
         }
 
@@ -68,7 +83,19 @@ namespace FlaxEngine
             get
             {
                 if (_lods == null)
-                    CacheData();
+                {
+                    // Ask unmanaged world for array with mesh count per lod
+                    var lodsSizes = Internal_GetLODs(unmanagedPtr);
+                    if (lodsSizes != null)
+                    {
+                        _lods = new ModelLOD[lodsSizes.Length];
+                        for (int i = 0; i < lodsSizes.Length; i++)
+                        {
+                            _lods[i] = new ModelLOD(this, i, lodsSizes[i]);
+                        }
+                    }
+                }
+
                 return _lods;
             }
         }
@@ -101,27 +128,24 @@ namespace FlaxEngine
                 throw new FlaxException("Failed to update model LODs collection.");
         }
 
-        private void CacheData()
+        /// <summary>
+        /// Setups the material slots collection.
+        /// </summary>
+        /// <param name="slotsCount">The slots count.</param>
+        public void SetupMaterialSlots(int slotsCount)
         {
-            // Ask unmanaged world for amount of material slots
-            int slotsCount = Internal_GetSlots(unmanagedPtr);
-            if (slotsCount > 0)
-            {
-                _slots = new MaterialSlot[slotsCount];
-                for (int i = 0; i < slotsCount; i++)
-                    _slots[i] = new MaterialSlot(this, i);
-            }
+            // Validate state and input
+            if (!IsVirtual && WaitForLoaded())
+                throw new FlaxException("Failed to update model if asset is not virtual and loading failed.");
+            if (slotsCount <= 0 || slotsCount > MaxMaterialSlots)
+                throw new ArgumentOutOfRangeException(nameof(slotsCount));
 
-            // Ask unmanaged world for array with mesh count per lod
-            var lodsSizes = Internal_GetLODs(unmanagedPtr);
-            if (lodsSizes != null)
-            {
-                _lods = new ModelLOD[lodsSizes.Length];
-                for (int i = 0; i < lodsSizes.Length; i++)
-                {
-                    _lods[i] = new ModelLOD(this, i, lodsSizes[i]);
-                }
-            }
+            // Cleanup data
+            _slots = null;
+
+            // Call backend
+            if (Internal_SetupSlots(unmanagedPtr, slotsCount))
+                throw new FlaxException("Failed to update model material slots collection.");
         }
 
         internal void Internal_OnUnload()
@@ -140,6 +164,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_SetupLODs(IntPtr obj, int[] meshesCountPerLod);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_SetupSlots(IntPtr obj, int slotsCount);
 #endif
     }
 }

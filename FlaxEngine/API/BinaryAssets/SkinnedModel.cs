@@ -39,7 +39,7 @@ namespace FlaxEngine
             }
             internal set
             {
-                // TODO: implement setter and allow to modify the collection
+                // Hidden by default
             }
         }
 
@@ -109,6 +109,10 @@ namespace FlaxEngine
             }
             set
             {
+                // Skip if no change
+                if (value == _bones)
+                    return;
+
                 // Validate state and input
                 if (!IsVirtual)
                     throw new InvalidOperationException("Only virtual models can be modified at runtime.");
@@ -149,6 +153,26 @@ namespace FlaxEngine
                 throw new FlaxException("Failed to update skinned model meshes collection.");
         }
 
+        /// <summary>
+        /// Setups the material slots collection.
+        /// </summary>
+        /// <param name="slotsCount">The slots count.</param>
+        public void SetupMaterialSlots(int slotsCount)
+        {
+            // Validate state and input
+            if (!IsVirtual && WaitForLoaded())
+                throw new FlaxException("Failed to update skinned model if asset is not virtual and loading failed.");
+            if (slotsCount <= 0 || slotsCount > Model.MaxMaterialSlots)
+                throw new ArgumentOutOfRangeException(nameof(slotsCount));
+
+            // Cleanup data
+            _slots = null;
+
+            // Call backend
+            if (Internal_SetupSlots(unmanagedPtr, slotsCount))
+                throw new FlaxException("Failed to update skinned model material slots collection.");
+        }
+
         internal void Internal_OnUnload()
         {
             // Clear cached data
@@ -168,6 +192,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_SetupBones(IntPtr obj, SkeletonBone[] bones);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_SetupSlots(IntPtr obj, int slotsCount);
 #endif
 
         #endregion
