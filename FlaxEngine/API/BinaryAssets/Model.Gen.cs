@@ -66,7 +66,7 @@ namespace FlaxEngine
         /// Supported only in Editor. If you use saving with the GPU mesh data then the call has to be provided from the therad other than the main game thread.
         /// </remarks>
         /// <param name="withMeshData">True if save also GPU mesh buffers, otherwise will keep data in storage unmodified. Valid only if saving the same asset to the same lcoation and it's loaded. If you use saving with the GPU mesh data then the call has to be provided from the therad other than the main game thread.</param>
-        /// <param name="path">The custom asset path to use for the saving. Use empty value to save this asset to its own storage location. Can be used to dduplicate model asset.</param>
+        /// <param name="path">The custom asset path to use for the saving. Use empty value to save this asset to its own storage location. Can be used to duplicate model asset.</param>
         /// <returns>True if cannot save data, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
