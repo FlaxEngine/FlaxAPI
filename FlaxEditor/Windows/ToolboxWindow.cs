@@ -106,6 +106,7 @@ namespace FlaxEditor.Windows
             groupOther.AddChild(CreateActorItem("CSG Box Brush", typeof(BoxBrush)));
             groupOther.AddChild(CreateActorItem("Audio Source", typeof(AudioSource)));
             groupOther.AddChild(CreateActorItem("Audio Listner", typeof(AudioListener)));
+            groupOther.AddChild(CreateActorItem("Empty Actor", typeof(EmptyActor)));
 
             var groupGui = createGroupWithList(actorGroups, "GUI");
             groupGui.AddChild(CreateActorItem("UI Control", typeof(UIControl)));
