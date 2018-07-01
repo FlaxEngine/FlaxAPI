@@ -14,6 +14,11 @@ namespace FlaxEngine
     public partial struct Color
     {
         /// <summary>
+        /// The size of the <see cref="Color" /> type, in bytes.
+        /// </summary>
+        public static readonly int SizeInBytes = Marshal.SizeOf(typeof(Color));
+
+        /// <summary>
         /// Red component of the color.
         /// </summary>
         public float R;
