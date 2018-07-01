@@ -166,6 +166,25 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets the texture mip level data (raw bytes).
+        /// </summary>
+        /// <param name="rowPitch">The data row pitch (in bytes).</param>
+        /// <param name="slicePitch">The data slice pitch (in bytes).</param>
+        /// <returns>The mip map raw bytes data or null if loading failed.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public byte[] GetMipData(out int rowPitch, out int slicePitch)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_GetMipData(unmanagedPtr, out rowPitch, out slicePitch);
+#endif
+        }
+
+        /// <summary>
         /// The texture data initialization container.
         /// </summary>
         public struct InitData
@@ -387,6 +406,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ulong Internal_GetTotalMemoryUsage(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern byte[] Internal_GetMipData(IntPtr obj, out int rowPitch, out int slicePitch);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_Init(IntPtr obj, ref InternalInitData intiData);
