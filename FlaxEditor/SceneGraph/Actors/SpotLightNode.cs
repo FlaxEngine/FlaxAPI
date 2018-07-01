@@ -15,5 +15,14 @@ namespace FlaxEditor.SceneGraph.Actors
         : base(actor)
         {
         }
+
+        /// <inheritdoc />
+        public override void OnDebugDraw(ViewportDebugDrawData data)
+        {
+            base.OnDebugDraw(data);
+
+            var transform = Actor.Transform;
+            DebugDraw.DrawArrow(transform.Translation, transform.Orientation, Color.Red, 0.3f, 0.0f, false);
+        }
     }
 }
