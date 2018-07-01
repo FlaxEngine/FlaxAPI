@@ -204,6 +204,10 @@ namespace FlaxEngine
 #else
             string typeName = typeof(T).FullName;
             if (typeof(T) != typeof(MaterialInstance) &&
+                typeof(T) != typeof(Texture) &&
+                typeof(T) != typeof(CubeTexture) &&
+                typeof(T) != typeof(SpriteAtlas) &&
+                typeof(T) != typeof(IESProfile) &&
                 typeof(T) != typeof(SkinnedModel) &&
                 typeof(T) != typeof(Model))
                 throw new InvalidOperationException("Asset type " + typeName + " does not support virtual assets.");
