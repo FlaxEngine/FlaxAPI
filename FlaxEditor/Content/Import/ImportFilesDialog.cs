@@ -99,7 +99,9 @@ namespace FlaxEditor.Content.Import
                 node.LinkTooltip(entry.SourceUrl);
             }
             _rootNode.Expand();
+            _rootNode.ChildrenIndent = 0;
             _rootNode.Parent = tree;
+            tree.Margin = new Margin(0.0f, 0.0f, -14.0f, 2.0f); // Hide root node
             tree.SelectedChanged += OnSelectedChanged;
 
             // Select the first item
