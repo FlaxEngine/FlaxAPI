@@ -297,6 +297,7 @@
     <Compile Include="GUI\Common\Button.cs" />
     <Compile Include="GUI\Common\CheckBox.cs" />
     <Compile Include="GUI\Common\ComboBox.cs" />
+    <Compile Include="GUI\Common\GUIMaterialControl.cs" />
     <Compile Include="GUI\Common\IImageSource.cs" />
     <Compile Include="GUI\Common\Image.cs" />
     <Compile Include="GUI\Common\Label.cs" />
