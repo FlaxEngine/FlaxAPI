@@ -27,11 +27,6 @@ namespace FlaxEditor.Surface.ContextMenu
         public readonly SurfaceType Type;
 
         /// <summary>
-        /// The currently selected group
-        /// </summary>
-        public VisjectCMGroup SelectedGroup;
-
-        /// <summary>
         /// Event fired when any item in this popup menu gets clicked.
         /// </summary>
         public event Action<VisjectCMItem> OnItemClicked;
@@ -124,7 +119,6 @@ namespace FlaxEditor.Surface.ContextMenu
             // Update groups
             for (int i = 0; i < _groups.Count; i++)
                 _groups[i].UpdateFilter(_searchBox.Text);
-            SelectedGroup = _groups.Find(group => group.Visible);
             PerformLayout();
             _searchBox.Focus();
         }
@@ -151,7 +145,6 @@ namespace FlaxEditor.Surface.ContextMenu
                 _groups[i].ResetView();
 
             _searchBox.Clear();
-            SelectedGroup = _groups.Find(group => group.Visible);
 
             IsLayoutLocked = wasLayoutLocked;
             PerformLayout();
@@ -180,9 +173,9 @@ namespace FlaxEditor.Surface.ContextMenu
                 int archetypeIndex = 0;
                 for (int i = 0; i < parameters.Count; i++)
                 {
-                    if (!parameters[i].IsPublic)
+                    if(!parameters[i].IsPublic)
                         continue;
-
+                    
                     archetypes[archetypeIndex++] = new NodeArchetype
                     {
                         TypeID = 1,
@@ -254,16 +247,6 @@ namespace FlaxEditor.Surface.ContextMenu
                 Hide();
                 return true;
             }
-            else if (key == Keys.Return)
-            {
-                if (SelectedGroup?.SelectedItem != null) OnClickItem(SelectedGroup?.SelectedItem);
-                return true;
-            }
-            else if (key == Keys.ArrowUp || key == Keys.ArrowDown)
-            {
-                return SelectedGroup.OnKeyDown(key);
-            }
-
             if (_waitingForInput)
             {
                 _waitingForInput = false;
