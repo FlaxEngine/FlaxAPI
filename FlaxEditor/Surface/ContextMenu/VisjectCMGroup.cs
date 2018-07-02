@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Surface.ContextMenu
@@ -31,6 +32,8 @@ namespace FlaxEditor.Surface.ContextMenu
             ContextMenu = cm;
             Archetype = archetype;
         }
+
+        public VisjectCMItem SelectedItem { get; internal set; }
 
         /// <summary>
         /// Resets the view.
@@ -70,12 +73,32 @@ namespace FlaxEditor.Surface.ContextMenu
             {
                 Open(false);
                 Visible = true;
+                if (!string.IsNullOrEmpty(filterText) && ContextMenu.SelectedGroup == this)
+                {
+                    if (SelectedItem.Visible)
+                    {
+
+                    }
+                    else
+                        _children[]
+                }
             }
             else
             {
                 // Hide group if none of the items matched the filter
                 Visible = false;
             }
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            if (key == Keys.ArrowUp || key == Keys.ArrowDown)
+            {
+
+                return true;
+            }
+            return base.OnKeyDown(key);
         }
     }
 }

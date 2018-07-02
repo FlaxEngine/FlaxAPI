@@ -98,6 +98,9 @@ namespace FlaxEditor.Surface.ContextMenu
             if (IsMouseOver)
                 Render2D.FillRectangle(rect, style.BackgroundHighlighted);
 
+            if (_group.SelectedItem == this)
+                Render2D.FillRectangle(rect, style.BackgroundSelected);
+
             // Draw all highlights
             if (_highlights != null)
             {
