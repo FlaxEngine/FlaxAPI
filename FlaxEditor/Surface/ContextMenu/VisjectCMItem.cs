@@ -16,8 +16,16 @@ namespace FlaxEditor.Surface.ContextMenu
     {
         private bool _isMouseDown;
         private List<Rectangle> _highlights;
-        private VisjectCMGroup _group;
         private NodeArchetype _archetype;
+
+
+        /// <summary>
+        /// Gets the item's group
+        /// </summary>
+        /// <value>
+        /// The group of the item
+        /// </value>
+        public VisjectCMGroup Group { get; }
 
         /// <summary>
         /// Gets the group archetype.
@@ -25,7 +33,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <value>
         /// The group archetype.
         /// </value>
-        public GroupArchetype GroupArchetype => _group.Archetype;
+        public GroupArchetype GroupArchetype => Group.Archetype;
 
         /// <summary>
         /// Gets the node archetype.
@@ -43,7 +51,7 @@ namespace FlaxEditor.Surface.ContextMenu
         public VisjectCMItem(VisjectCMGroup group, NodeArchetype archetype)
         : base(0, 0, 120, 12)
         {
-            _group = group;
+            Group = group;
             _archetype = archetype;
         }
 
@@ -98,6 +106,9 @@ namespace FlaxEditor.Surface.ContextMenu
             if (IsMouseOver)
                 Render2D.FillRectangle(rect, style.BackgroundHighlighted);
 
+            if (Group.ContextMenu.SelectedItem == this)
+                Render2D.FillRectangle(rect, style.BackgroundSelected);
+
             // Draw all highlights
             if (_highlights != null)
             {
@@ -127,7 +138,7 @@ namespace FlaxEditor.Surface.ContextMenu
             if (buttons == MouseButton.Left && _isMouseDown)
             {
                 _isMouseDown = false;
-                _group.ContextMenu.OnClickItem(this);
+                Group.ContextMenu.OnClickItem(this);
             }
 
             return base.OnMouseUp(location, buttons);

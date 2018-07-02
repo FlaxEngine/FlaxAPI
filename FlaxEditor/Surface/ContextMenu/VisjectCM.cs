@@ -18,8 +18,14 @@ namespace FlaxEditor.Surface.ContextMenu
         private readonly TextBox _searchBox;
         private bool _waitingForInput;
         private VisjectCMGroup _surfaceParametersGroup;
+        private Panel _panel1;
         private VerticalPanel _panel2;
         private Func<List<SurfaceParameter>> _parametersGetter;
+
+        /// <summary>
+        /// The selected item
+        /// </summary>
+        public VisjectCMItem SelectedItem;
 
         /// <summary>
         /// The type of the surface.
@@ -59,6 +65,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 Bounds = new Rectangle(0, _searchBox.Bottom + 1, Width, Height - _searchBox.Bottom - 2),
                 Parent = this
             };
+            _panel1 = panel1;
 
             // Create second panel (for groups arrangement)
             var panel2 = new VerticalPanel
@@ -119,6 +126,15 @@ namespace FlaxEditor.Surface.ContextMenu
             // Update groups
             for (int i = 0; i < _groups.Count; i++)
                 _groups[i].UpdateFilter(_searchBox.Text);
+            if (SelectedItem == null || !SelectedItem.VisibleInHierarchy)
+            {
+                var group = _groups.Find(g => g.Visible);
+                if (group != null)
+                {
+                    SelectedItem = group.Children.Find(c => c.Visible && c is VisjectCMItem item) as VisjectCMItem;
+                }
+            }
+            if (SelectedItem != null) _panel1.ScrollViewTo(SelectedItem);
             PerformLayout();
             _searchBox.Focus();
         }
@@ -173,9 +189,9 @@ namespace FlaxEditor.Surface.ContextMenu
                 int archetypeIndex = 0;
                 for (int i = 0; i < parameters.Count; i++)
                 {
-                    if(!parameters[i].IsPublic)
+                    if (!parameters[i].IsPublic)
                         continue;
-                    
+
                     archetypes[archetypeIndex++] = new NodeArchetype
                     {
                         TypeID = 1,
@@ -247,6 +263,51 @@ namespace FlaxEditor.Surface.ContextMenu
                 Hide();
                 return true;
             }
+            else if (key == Keys.Return)
+            {
+                if (SelectedItem != null) OnClickItem(SelectedItem);
+                return true;
+            }
+            else if (key == Keys.ArrowUp)
+            {
+
+                var nextSelectedItem = GetPrevious(SelectedItem);
+
+                if (nextSelectedItem == null && SelectedItem != null)
+                {
+                    var group = GetPrevious(SelectedItem.Group);
+                    if (group != null)
+                    {
+                        nextSelectedItem = group.Children.FindLast(c => c.Visible && c is VisjectCMItem item) as VisjectCMItem;
+                    }
+                }
+                if (nextSelectedItem != null)
+                {
+                    SelectedItem = nextSelectedItem;
+                    _panel1.ScrollViewTo(SelectedItem);
+                }
+                return true;
+            }
+            else if (key == Keys.ArrowDown)
+            {
+
+                var nextSelectedItem = GetNext(SelectedItem);
+                if (nextSelectedItem == null && SelectedItem != null)
+                {
+                    var group = GetNext(SelectedItem.Group);
+                    if (group != null)
+                    {
+                        nextSelectedItem = group.Children.Find(c => c.Visible && c is VisjectCMItem item) as VisjectCMItem;
+                    }
+                }
+                if (nextSelectedItem != null)
+                {
+                    SelectedItem = nextSelectedItem;
+                    _panel1.ScrollViewTo(SelectedItem);
+                }
+                return true;
+            }
+
             if (_waitingForInput)
             {
                 _waitingForInput = false;
@@ -255,6 +316,36 @@ namespace FlaxEditor.Surface.ContextMenu
             }
 
             return base.OnKeyDown(key);
+        }
+
+        private T GetNext<T>(T item) where T : Control
+        {
+            if (item == null) return null;
+            var parent = item.Parent;
+            for (int i = item.IndexInParent + 1; i < parent.ChildrenCount; i++)
+            {
+                var child = parent.GetChild(i);
+                if (child.Visible && child is T nextItem)
+                {
+                    return nextItem;
+                }
+            }
+            return null;
+        }
+
+        private T GetPrevious<T>(T item) where T : Control
+        {
+            if (item == null) return null;
+            var parent = item.Parent;
+            for (int i = item.IndexInParent - 1; i >= 0; i--)
+            {
+                var child = parent.GetChild(i);
+                if (child.Visible && child is T prevItem)
+                {
+                    return prevItem;
+                }
+            }
+            return null;
         }
     }
 }
