@@ -172,8 +172,7 @@ namespace FlaxEngine.GUI
                     {
                         if (_anchorStyle == AnchorStyle.Center)
                         {
-                            var size = _parent.Size;
-                            OnParentResized(ref size);
+                            UpdateCenterAnchor();
                         }
                         else
                         {
@@ -964,6 +963,12 @@ namespace FlaxEngine.GUI
             UpdateTransform();
             SizeChanged?.Invoke(this);
             _parent?.OnChildResized(this);
+
+            // Auto-center
+            if (_anchorStyle == AnchorStyle.Center)
+            {
+                UpdateCenterAnchor();
+            }
         }
 
         /// <summary>
@@ -1028,6 +1033,11 @@ namespace FlaxEngine.GUI
         protected virtual void OnParentChangedInternal()
         {
             ParentChanged?.Invoke(this);
+        }
+
+        private void UpdateCenterAnchor()
+        {
+            Location = (_parent.Size - Size) * 0.5f;
         }
 
         /// <summary>
