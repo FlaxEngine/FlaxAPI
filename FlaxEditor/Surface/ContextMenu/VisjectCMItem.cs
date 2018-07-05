@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEditor.Utilities;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -42,14 +43,6 @@ namespace FlaxEditor.Surface.ContextMenu
         /// The node archetype.
         /// </value>
         public NodeArchetype NodeArchetype => _archetype;
-
-        /// <summary>
-        /// Gets and sets the data of the node.
-        /// </summary>
-        /// <value>
-        /// The data of the node.
-        /// </value>
-        public object[] Data { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VisjectCMItem"/> class.
@@ -93,6 +86,20 @@ namespace FlaxEditor.Surface.ContextMenu
                         var end = font.GetCharPosition(_archetype.Title, ranges[i].EndIndex);
                         _highlights.Add(new Rectangle(start.X + 2, 0, end.X - start.X, Height));
                     }
+                    Visible = true;
+                }
+                else if (_archetype.AlternativeTitles.Any(filterText.Equals))
+                {
+                    // Update highlights
+                    if (_highlights == null)
+                        _highlights = new List<Rectangle>(1);
+                    else
+                        _highlights.Clear();
+                    var style = Style.Current;
+                    var font = style.FontSmall;
+                    var start = font.GetCharPosition(_archetype.Title, 0);
+                    var end = font.GetCharPosition(_archetype.Title, _archetype.Title.Length - 1);
+                    _highlights.Add(new Rectangle(start.X + 2, 0, end.X - start.X, Height));
                     Visible = true;
                 }
                 else

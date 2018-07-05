@@ -126,77 +126,15 @@ namespace FlaxEditor.Surface.ContextMenu
 
             // Update groups
             for (int i = 0; i < _groups.Count; i++)
-                _groups[i].UpdateFilter(ReplaceNodeAlts(_searchBox.Text));
+                _groups[i].UpdateFilter(_searchBox.Text);
+            //If no item is selected (or it's not visible anymore), select the top one
             if (SelectedItem == null || !SelectedItem.VisibleInHierarchy)
             {
-                var group = _groups.Find(g => g.Visible);
-                if (group != null)
-                {
-                    SelectedItem = group.Children.Find(c => c.Visible && c is VisjectCMItem item) as VisjectCMItem;
-                }
+                SelectedItem = _groups.Find(g => g.Visible)?.Children.Find(c => c.Visible && c is VisjectCMItem) as VisjectCMItem;
             }
             if (SelectedItem != null) _panel1.ScrollViewTo(SelectedItem);
             PerformLayout();
             _searchBox.Focus();
-        }
-
-        //TODO: Ewww, refactor me
-        private static readonly Dictionary<string, string> _nodeAlts = new Dictionary<string, string>()
-        {
-            {"*", "multiply" },
-            {"/", "divide" },
-            {"+", "add"},
-            {"-", "subtract" },
-            {"^", "power" },
-            {"**", "power" },
-            {"%", "modulo" }
-        };
-
-        //TODO: You're going to remove this and patiently wait for the shunting yard thing
-        private class DataNodeAlt
-        {
-            public readonly Regex Regex;
-            public readonly string Text;
-            public readonly Func<string, object> ToData;
-
-            public DataNodeAlt(Regex regex, string text, Func<string, object> toData)
-            {
-                Regex = regex;
-                Text = text;
-                ToData = toData;
-            }
-        }
-
-        private static readonly List<DataNodeAlt> _dataNodeAlts = new List<DataNodeAlt>()
-        {
-            new DataNodeAlt(new Regex(@"[+-]?\d+(\.\d*)?"), "float", txt => float.Parse(txt)) //TODO: Multiple choices
-
-        };
-        // TODO: Refactor this to be somewhat decent
-        private string ReplaceNodeAlts(string text)
-        {
-            foreach (var dNodeAlt in _dataNodeAlts)
-            {
-                text = dNodeAlt.Regex.Replace(text, dNodeAlt.Text);
-            }
-            foreach (var pair in _nodeAlts)
-            {
-                text = text.Replace(pair.Key, pair.Value);
-            }
-            return text;
-        }
-
-        private object[] GetData(string text)
-        {
-            //TODO: Use the shunting yard algorithm
-            foreach (var dNodeAlt in _dataNodeAlts)
-            {
-                if (dNodeAlt.Regex.IsMatch(text))
-                {
-                    return new object[] { dNodeAlt.ToData(text) };
-                }
-            }
-            return null;
         }
 
         /// <summary>
@@ -205,7 +143,6 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <param name="item">The item.</param>
         public void OnClickItem(VisjectCMItem item)
         {
-            item.Data = GetData(_searchBox.Text);
             Hide();
             OnItemClicked?.Invoke(item);
         }
@@ -222,7 +159,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 _groups[i].ResetView();
 
             _searchBox.Clear();
-
+            SelectedItem = null;
             IsLayoutLocked = wasLayoutLocked;
             PerformLayout();
         }
@@ -332,16 +269,11 @@ namespace FlaxEditor.Surface.ContextMenu
             }
             else if (key == Keys.ArrowUp)
             {
-
-                var nextSelectedItem = GetPrevious(SelectedItem);
+                var nextSelectedItem = GetPreviousVisible(SelectedItem);
 
                 if (nextSelectedItem == null && SelectedItem != null)
                 {
-                    var group = GetPrevious(SelectedItem.Group);
-                    if (group != null)
-                    {
-                        nextSelectedItem = group.Children.FindLast(c => c.Visible && c is VisjectCMItem item) as VisjectCMItem;
-                    }
+                    nextSelectedItem = GetPreviousVisible(SelectedItem.Group)?.Children.FindLast(c => c.Visible && c is VisjectCMItem) as VisjectCMItem;
                 }
                 if (nextSelectedItem != null)
                 {
@@ -353,14 +285,10 @@ namespace FlaxEditor.Surface.ContextMenu
             else if (key == Keys.ArrowDown)
             {
 
-                var nextSelectedItem = GetNext(SelectedItem);
+                var nextSelectedItem = GetNextVisible(SelectedItem);
                 if (nextSelectedItem == null && SelectedItem != null)
                 {
-                    var group = GetNext(SelectedItem.Group);
-                    if (group != null)
-                    {
-                        nextSelectedItem = group.Children.Find(c => c.Visible && c is VisjectCMItem item) as VisjectCMItem;
-                    }
+                    nextSelectedItem = GetNextVisible(SelectedItem.Group)?.Children.Find(c => c.Visible && c is VisjectCMItem) as VisjectCMItem;
                 }
                 if (nextSelectedItem != null)
                 {
@@ -380,7 +308,10 @@ namespace FlaxEditor.Surface.ContextMenu
             return base.OnKeyDown(key);
         }
 
-        private T GetNext<T>(T item) where T : Control
+        /// <summary>
+        /// Gets the next visible sibling of a node
+        /// </summary>
+        private T GetNextVisible<T>(T item) where T : Control
         {
             if (item == null) return null;
             var parent = item.Parent;
@@ -395,7 +326,10 @@ namespace FlaxEditor.Surface.ContextMenu
             return null;
         }
 
-        private T GetPrevious<T>(T item) where T : Control
+        /// <summary>
+        /// Gets the previous visible sibling of a node
+        /// </summary>
+        private T GetPreviousVisible<T>(T item) where T : Control
         {
             if (item == null) return null;
             var parent = item.Parent;
