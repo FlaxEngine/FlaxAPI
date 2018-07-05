@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -125,7 +126,7 @@ namespace FlaxEditor.Surface.ContextMenu
 
             // Update groups
             for (int i = 0; i < _groups.Count; i++)
-                _groups[i].UpdateFilter(_searchBox.Text);
+                _groups[i].UpdateFilter(ReplaceNodeAlts(_searchBox.Text));
             if (SelectedItem == null || !SelectedItem.VisibleInHierarchy)
             {
                 var group = _groups.Find(g => g.Visible);
@@ -139,12 +140,72 @@ namespace FlaxEditor.Surface.ContextMenu
             _searchBox.Focus();
         }
 
+        //TODO: Ewww, refactor me
+        private static readonly Dictionary<string, string> _nodeAlts = new Dictionary<string, string>()
+        {
+            {"*", "multiply" },
+            {"/", "divide" },
+            {"+", "add"},
+            {"-", "subtract" },
+            {"^", "power" },
+            {"**", "power" },
+            {"%", "modulo" }
+        };
+
+        //TODO: You're going to remove this and patiently wait for the shunting yard thing
+        private class DataNodeAlt
+        {
+            public readonly Regex Regex;
+            public readonly string Text;
+            public readonly Func<string, object> ToData;
+
+            public DataNodeAlt(Regex regex, string text, Func<string, object> toData)
+            {
+                Regex = regex;
+                Text = text;
+                ToData = toData;
+            }
+        }
+
+        private static readonly List<DataNodeAlt> _dataNodeAlts = new List<DataNodeAlt>()
+        {
+            new DataNodeAlt(new Regex(@"[+-]?\d+(\.\d*)?"), "float", txt => float.Parse(txt)) //TODO: Multiple choices
+
+        };
+        // TODO: Refactor this to be somewhat decent
+        private string ReplaceNodeAlts(string text)
+        {
+            foreach (var dNodeAlt in _dataNodeAlts)
+            {
+                text = dNodeAlt.Regex.Replace(text, dNodeAlt.Text);
+            }
+            foreach (var pair in _nodeAlts)
+            {
+                text = text.Replace(pair.Key, pair.Value);
+            }
+            return text;
+        }
+
+        private object[] GetData(string text)
+        {
+            //TODO: Use the shunting yard algorithm
+            foreach (var dNodeAlt in _dataNodeAlts)
+            {
+                if (dNodeAlt.Regex.IsMatch(text))
+                {
+                    return new object[] { dNodeAlt.ToData(text) };
+                }
+            }
+            return null;
+        }
+
         /// <summary>
         /// Called when user clicks on an item.
         /// </summary>
         /// <param name="item">The item.</param>
         public void OnClickItem(VisjectCMItem item)
         {
+            item.Data = GetData(_searchBox.Text);
             Hide();
             OnItemClicked?.Invoke(item);
         }

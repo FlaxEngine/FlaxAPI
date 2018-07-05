@@ -44,6 +44,14 @@ namespace FlaxEditor.Surface.ContextMenu
         public NodeArchetype NodeArchetype => _archetype;
 
         /// <summary>
+        /// Gets and sets the data of the node.
+        /// </summary>
+        /// <value>
+        /// The data of the node.
+        /// </value>
+        public object[] Data { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="VisjectCMItem"/> class.
         /// </summary>
         /// <param name="group">The group.</param>

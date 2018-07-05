@@ -337,24 +337,29 @@ namespace FlaxEditor.Surface
             {
                 var baseNode = Selection
                                     .OrderBy(s => s.Top)
+                                    .ThenBy(s => -s.Left) //TODO: That has to be improved as well
                                     .First();
-                const float DistanceBetweenNodes = 40;
-                _cmStartPos = baseNode.Location - ViewPosition + new Vector2(baseNode.Width + DistanceBetweenNodes, 0);
 
-                var zeroVector = Vector2.Zero;
-                Vector2.Max(ref _cmStartPos, ref zeroVector, out _cmStartPos);
-                //TODO: Beautify this code ^^ vv
-                //The visject surface has an annoying tendency to lose focus.
+                const float DistanceBetweenNodes = 40; //TODO: Don't just hard code it right here!
+                _cmStartPos = _surface.PointToParent(_surface.Parent, baseNode.Location + new Vector2(baseNode.Width + DistanceBetweenNodes, 0));
+                _cmStartPos = Vector2.Max(_cmStartPos, Vector2.Zero);
 
+                //If the menu is not fully visible, move the surface a bit
+                Vector2 overflow = (_cmStartPos + _cmPrimaryMenu.Size) - _surface.Parent.Size;
+                overflow = Vector2.Max(overflow, Vector2.Zero);
 
+                ViewPosition += overflow;
+                _cmStartPos -= overflow;
+
+                // Show it
                 ShowPrimaryMenu(_cmStartPos);
 
+                // OnKeyDown --> VisjectCM focuses on the text-thingy
                 _cmPrimaryMenu.OnKeyDown(Keys.None);
                 var retVal = _cmPrimaryMenu.OnCharInput(c);
                 _cmPrimaryMenu.OnKeyUp(Keys.None);
 
                 return retVal;
-
             } //TODO: Else?
 
             return base.OnCharInput(c);

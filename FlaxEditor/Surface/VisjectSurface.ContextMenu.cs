@@ -51,8 +51,11 @@ namespace FlaxEditor.Surface
 
         private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem)
         {
-            var node = SpawnNode(visjectCmItem.GroupArchetype, visjectCmItem.NodeArchetype, _surface.PointFromParent(_cmStartPos));
-
+            var node = SpawnNode(visjectCmItem.GroupArchetype, visjectCmItem.NodeArchetype, _surface.PointFromParent(_cmStartPos), visjectCmItem.Data);
+            if (node.GetBoxes().ConvertAll(b => b.IsOutput).Aggregate((a, b) => a && b) && HasSelection) //TODO: No way! You're not getting away with this ***
+            {
+                node.Location += new Vector2(-node.Width - 40, 90 * Selection.Count);
+            }
             //Smart(tm) connecting
             var bothBoxes = Selection
                 .OrderBy(s => s.Top)
