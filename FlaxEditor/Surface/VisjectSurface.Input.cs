@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using FlaxEngine;
+using System.Linq;
 
 namespace FlaxEditor.Surface
 {
@@ -238,14 +239,6 @@ namespace FlaxEditor.Surface
 
             // Check if any node is under the mouse
             SurfaceNode nodeAtMouse = GetNodeUnderMouse();
-            if (nodeAtMouse == null)
-            {
-                // Check if no move has been made at all
-                if (_mouseMoveAmount < 5.0f)
-                {
-                    ClearSelection();
-                }
-            }
 
             // Cache flags and state
             if (_leftMouseDown && buttons == MouseButton.Left)
@@ -316,25 +309,55 @@ namespace FlaxEditor.Surface
             {
                 switch (key)
                 {
-                case Keys.A:
-                    SelectAll();
-                    return true;
-                case Keys.C:
-                    Copy();
-                    return true;
-                case Keys.V:
-                    Paste();
-                    return true;
-                case Keys.X:
-                    Cut();
-                    return true;
-                case Keys.D:
-                    Duplicate();
-                    return true;
+                    case Keys.A:
+                        SelectAll();
+                        return true;
+                    case Keys.C:
+                        Copy();
+                        return true;
+                    case Keys.V:
+                        Paste();
+                        return true;
+                    case Keys.X:
+                        Cut();
+                        return true;
+                    case Keys.D:
+                        Duplicate();
+                        return true;
                 }
             }
 
             return false;
+        }
+
+        /// <inheritdoc />
+        public override bool OnCharInput(char c)
+        {
+            if (HasSelection)
+            {
+                var baseNode = Selection
+                                    .OrderBy(s => s.Top)
+                                    .First();
+                const float DistanceBetweenNodes = 40;
+                _cmStartPos = baseNode.Location - ViewPosition + new Vector2(baseNode.Width + DistanceBetweenNodes, 0);
+
+                var zeroVector = Vector2.Zero;
+                Vector2.Max(ref _cmStartPos, ref zeroVector, out _cmStartPos);
+                //TODO: Beautify this code ^^ vv
+                //The visject surface has an annoying tendency to lose focus.
+
+
+                ShowPrimaryMenu(_cmStartPos);
+
+                _cmPrimaryMenu.OnKeyDown(Keys.None);
+                var retVal = _cmPrimaryMenu.OnCharInput(c);
+                _cmPrimaryMenu.OnKeyUp(Keys.None);
+
+                return retVal;
+
+            } //TODO: Else?
+
+            return base.OnCharInput(c);
         }
     }
 }

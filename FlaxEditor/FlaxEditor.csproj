@@ -359,7 +359,7 @@
     <Compile Include="Surface\VisjectSurface.ContextMenu.cs" />
     <Compile Include="Surface\VisjectSurface.cs" />
     <Compile Include="Surface\VisjectSurface.DragDrop.cs" />
-    <Compile Include="Surface\VisjectSurface.Mouse.cs" />
+    <Compile Include="Surface\VisjectSurface.Input.cs" />
     <Compile Include="Surface\VisjectSurface.Paramaters.cs" />
     <Compile Include="Surface\VisjectSurface.Serialization.cs" />
     <Compile Include="Undo\Actions\AddRemoveScriptAction.cs" />

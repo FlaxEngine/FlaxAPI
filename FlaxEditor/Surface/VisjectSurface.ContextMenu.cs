@@ -21,7 +21,7 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Shows the primary menu.
         /// </summary>
-        /// <param name="location">The location in teh Surface Space.</param>
+        /// <param name="location">The location in the Surface Space.</param>
         public void ShowPrimaryMenu(Vector2 location)
         {
             _cmPrimaryMenu.Show(this, location);
@@ -51,7 +51,25 @@ namespace FlaxEditor.Surface
 
         private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem)
         {
-            SpawnNode(visjectCmItem.GroupArchetype, visjectCmItem.NodeArchetype, _surface.PointFromParent(_cmStartPos));
+            var node = SpawnNode(visjectCmItem.GroupArchetype, visjectCmItem.NodeArchetype, _surface.PointFromParent(_cmStartPos));
+
+            //Smart(tm) connecting
+            var bothBoxes = Selection
+                .OrderBy(s => s.Top)
+                .SelectMany(s => s.GetBoxes())
+                .Where(box => box.IsOutput)
+                .Zip(
+                    node.GetBoxes()
+                    .Where(box => !box.IsOutput),
+                    (a, b) => new { a, b }); //TODO: refactor to use tuples
+
+            foreach (var dualBox in bothBoxes)
+            {
+                dualBox.a.CreateConnection(dualBox.b);
+                Deselect(dualBox.a.ParentNode);
+            }
+
+            AddToSelection(node);
         }
     }
 }

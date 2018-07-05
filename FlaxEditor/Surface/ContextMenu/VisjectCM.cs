@@ -266,6 +266,7 @@ namespace FlaxEditor.Surface.ContextMenu
             else if (key == Keys.Return)
             {
                 if (SelectedItem != null) OnClickItem(SelectedItem);
+                else Hide();
                 return true;
             }
             else if (key == Keys.ArrowUp)
