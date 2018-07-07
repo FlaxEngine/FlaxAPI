@@ -76,10 +76,10 @@ namespace FlaxEditor.Surface
                         bool connectAnyways = true;
 
                         // Can I rely on the box indices?
-                        // If it's a constant node, it needs some special handling
+                        // If it's a constant node, it needs some special handling (either connect the first box or the other ones, never both)
                         if (outputBox.ParentNode.GroupArchetype.Name == "Constants")
                         {
-                            // Don't always connect this sort of box!
+                            // Don't always connect this sort of box
                             connectAnyways = false;
 
                             // If it's the first box, everything is fine?
