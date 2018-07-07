@@ -51,25 +51,93 @@ namespace FlaxEditor.Surface
 
         private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem)
         {
-            var node = SpawnNode(visjectCmItem.GroupArchetype, visjectCmItem.NodeArchetype, _surface.PointFromParent(_cmStartPos), visjectCmItem.Data);
-            if (node.GetBoxes().ConvertAll(b => b.IsOutput).Aggregate((a, b) => a && b) && HasSelection) //TODO: No way! You're not getting away with this ***
-            {
-                node.Location += new Vector2(-node.Width - 40, 90 * Selection.Count);
-            }
-            //Smart(tm) connecting
-            var bothBoxes = Selection
-                .OrderBy(s => s.Top)
-                .SelectMany(s => s.GetBoxes())
-                .Where(box => box.IsOutput)
-                .Zip(
-                    node.GetBoxes()
-                    .Where(box => !box.IsOutput),
-                    (a, b) => new { a, b }); //TODO: refactor to use tuples
+            var node = SpawnNode(visjectCmItem.GroupArchetype, visjectCmItem.NodeArchetype, _surface.PointFromParent(_cmStartPos));
+            //if (node.GetBoxes().ConvertAll(b => b.IsOutput).Aggregate((a, b) => a && b) && HasSelection) //TODO: No way! You're not getting away with this ***
+            // {
+            //    node.Location += new Vector2(-node.Width - 40, 90 * Selection.Count);
+            //}
 
-            foreach (var dualBox in bothBoxes)
+            //TODO: Refactor this 
+
+            var toBeDeselected = new System.Collections.Generic.List<SurfaceNode>();
+
+            var outputBoxes = Selection
+                                    .OrderBy(n => n.Top)
+                                    .SelectMany(n =>
+                                    {
+                                        if (n.GroupArchetype.Name == "Constants") //TODO: No to hardcoding!
+                                        {
+                                            return Enumerable.Repeat(n.GetBoxes().First(), 1);
+                                        }
+                                        else
+                                        {
+                                            return n.GetBoxes();
+                                        }
+                                    })
+                                    .Where(b => b.IsOutput && !b.HasAnyConnection);
+
+
+            //I'm assuming that they are sorted properly
+            using (var inputBoxes = node
+                                    .GetBoxes()
+                                    .Where(box => !box.IsOutput)
+                                    .GetEnumerator())
             {
-                dualBox.a.CreateConnection(dualBox.b);
-                Deselect(dualBox.a.ParentNode);
+                inputBoxes.MoveNext();
+                foreach (var outputBox in outputBoxes)
+                {
+                    if (inputBoxes.Current == null) break;
+
+                    //If the type matches
+                    if ((inputBoxes.Current.CurrentType & outputBox.CurrentType) != 0)
+                    {
+                        //Connect them
+                        inputBoxes.Current.CreateConnection(outputBox);
+                        toBeDeselected.Add(outputBox.ParentNode);
+                        if (!inputBoxes.MoveNext()) break;
+                    }
+
+                    else
+                    {
+                        bool hasAlternatives = outputBox
+                                                              .ParentNode
+                                                              .GetBoxes()
+                                                              .Where(b => b.IsOutput && !b.HasAnyConnection)
+                                                              .Skip(1).Count() > 0;
+                        //If the box has some alternatives
+                        if (outputBox.ParentNode.GroupArchetype.Name == "Constants" && hasAlternatives)
+                        {
+                            foreach (var alternativeBox in outputBox
+                                                              .ParentNode
+                                                              .GetBoxes()
+                                                              .Where(b => b.IsOutput && !b.HasAnyConnection)
+                                                              .Skip(1))
+                            {
+                                if ((inputBoxes.Current.CurrentType & alternativeBox.CurrentType) != 0)
+                                {
+                                    inputBoxes.Current.CreateConnection(alternativeBox);
+                                    toBeDeselected.Add(alternativeBox.ParentNode);
+                                    if (!inputBoxes.MoveNext()) break;
+                                }
+                            }
+                        }
+                        //Whatever
+                        else if (outputBox.CanUseType(inputBoxes.Current.CurrentType))
+                        {
+                            inputBoxes.Current.CreateConnection(outputBox);
+                            toBeDeselected.Add(outputBox.ParentNode);
+                            if (!inputBoxes.MoveNext()) break;
+                        }
+                        else
+                        {
+                            //Do nothing
+                        }
+                    }
+                }
+            }
+            foreach (var toDeselect in toBeDeselected)
+            {
+                Deselect(toDeselect);
             }
 
             AddToSelection(node);
