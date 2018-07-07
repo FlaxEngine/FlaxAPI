@@ -57,84 +57,75 @@ namespace FlaxEditor.Surface
             //    node.Location += new Vector2(-node.Width - 40, 90 * Selection.Count);
             //}
 
-            //TODO: Refactor this 
-
             var toBeDeselected = new System.Collections.Generic.List<SurfaceNode>();
 
-            var outputBoxes = Selection
+            using (var outputBoxes = Selection
                                     .OrderBy(n => n.Top)
-                                    .SelectMany(n =>
-                                    {
-                                        if (n.GroupArchetype.Name == "Constants") //TODO: No to hardcoding!
-                                        {
-                                            return Enumerable.Repeat(n.GetBoxes().First(), 1);
-                                        }
-                                        else
-                                        {
-                                            return n.GetBoxes();
-                                        }
-                                    })
-                                    .Where(b => b.IsOutput && !b.HasAnyConnection);
-
-
-            //I'm assuming that they are sorted properly
-            using (var inputBoxes = node
-                                    .GetBoxes()
-                                    .Where(box => !box.IsOutput)
+                                    .SelectMany(n => n.GetBoxes())
+                                    .Where(b => b.IsOutput && !b.HasAnyConnection)
                                     .GetEnumerator())
             {
-                inputBoxes.MoveNext();
-                foreach (var outputBox in outputBoxes)
+                // For each input box (I'm assuming that they are sorted properly)
+                foreach (var inputBox in node.GetBoxes().Where(box => !box.IsOutput))
                 {
-                    if (inputBoxes.Current == null) break;
-
-                    //If the type matches
-                    if ((inputBoxes.Current.CurrentType & outputBox.CurrentType) != 0)
+                    Box connectWith = null;
+                    // Find the next decent output box and connect them
+                    while (connectWith == null && outputBoxes.MoveNext())
                     {
-                        //Connect them
-                        inputBoxes.Current.CreateConnection(outputBox);
-                        toBeDeselected.Add(outputBox.ParentNode);
-                        if (!inputBoxes.MoveNext()) break;
-                    }
+                        var outputBox = outputBoxes.Current;
+                        bool connectAnyways = true;
 
-                    else
-                    {
-                        bool hasAlternatives = outputBox
-                                                              .ParentNode
-                                                              .GetBoxes()
-                                                              .Where(b => b.IsOutput && !b.HasAnyConnection)
-                                                              .Skip(1).Count() > 0;
-                        //If the box has some alternatives
-                        if (outputBox.ParentNode.GroupArchetype.Name == "Constants" && hasAlternatives)
+                        // Can I rely on the box indices?
+                        // If it's a constant node, it needs some special handling
+                        if (outputBox.ParentNode.GroupArchetype.Name == "Constants")
                         {
-                            foreach (var alternativeBox in outputBox
-                                                              .ParentNode
-                                                              .GetBoxes()
-                                                              .Where(b => b.IsOutput && !b.HasAnyConnection)
-                                                              .Skip(1))
+                            // Don't always connect this sort of box!
+                            connectAnyways = false;
+
+                            // If it's the first box, everything is fine?
+                            if (outputBox.ID == 0)
                             {
-                                if ((inputBoxes.Current.CurrentType & alternativeBox.CurrentType) != 0)
+                                // Everything is fine
+                                // If this one doesn't have any alternatives, I can just connect it regardless of the consequences
+                                if (outputBox.ParentNode.Elements.Where(e => e is Box).Count() <= 1)
                                 {
-                                    inputBoxes.Current.CreateConnection(alternativeBox);
-                                    toBeDeselected.Add(alternativeBox.ParentNode);
-                                    if (!inputBoxes.MoveNext()) break;
+                                    connectAnyways = true;
+                                }
+                            }
+                            // It's an alternative box
+                            else
+                            {
+                                // The first one is already connected => skip this one!
+                                if (outputBox.ParentNode.GetBox(0).HasAnyConnection)
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    // It's an actual alternative
                                 }
                             }
                         }
-                        //Whatever
-                        else if (outputBox.CanUseType(inputBoxes.Current.CurrentType))
+
+                        //If they can easily be connected, just do it ✔
+                        if ((inputBox.CurrentType & outputBox.CurrentType) != 0)
                         {
-                            inputBoxes.Current.CreateConnection(outputBox);
-                            toBeDeselected.Add(outputBox.ParentNode);
-                            if (!inputBoxes.MoveNext()) break;
+                            connectWith = outputBox;
                         }
-                        else
+                        else if (connectAnyways && inputBox.CanUseType(outputBox.CurrentType))
                         {
-                            //Do nothing
+                            connectWith = outputBox;
                         }
+                    }
+                    if (connectWith != null)
+                    {
+                        //Connect them
+                        connectWith.CreateConnection(inputBox);
+                        toBeDeselected.Add(connectWith.ParentNode);
                     }
                 }
             }
+
             foreach (var toDeselect in toBeDeselected)
             {
                 Deselect(toDeselect);
