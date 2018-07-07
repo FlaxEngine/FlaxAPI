@@ -108,7 +108,7 @@ namespace FlaxEditor.Surface.Archetypes
             Op2(20, "Dot", "Returns the dot product of A and B", ConnectionType.Vector, ConnectionType.Float, false),
             Op2(21, "Max", "Selects the greater of A and B"),
             Op2(22, "Min", "Selects the lesser of A and B"),
-            Op2(23, "Power", "Returns A raised to the specified at B power", new []{ "**" }),
+            Op2(23, "Power", "Returns A raised to the specified at B power", new []{ "^", "**" }), //TODO: Fight a religious war over which operator is better
             //
             new NodeArchetype
             {

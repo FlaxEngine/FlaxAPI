@@ -88,7 +88,7 @@ namespace FlaxEditor.Surface.ContextMenu
                     }
                     Visible = true;
                 }
-                else if (_archetype.AlternativeTitles.Any(filterText.Equals))
+                else if (_archetype.AlternativeTitles?.Any(filterText.Equals) == true)
                 {
                     // Update highlights
                     if (_highlights == null)

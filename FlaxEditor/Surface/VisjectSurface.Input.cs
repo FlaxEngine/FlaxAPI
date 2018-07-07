@@ -333,7 +333,8 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public override bool OnCharInput(char c)
         {
-            if (HasSelection)
+            var isChildCharInput = base.OnCharInput(c);
+            if (!isChildCharInput && HasSelection)
             {
                 var baseNode = Selection
                                     .OrderBy(s => s.Top)
@@ -362,7 +363,7 @@ namespace FlaxEditor.Surface
                 return retVal;
             } //TODO: Else?
 
-            return base.OnCharInput(c);
+            return isChildCharInput;
         }
     }
 }

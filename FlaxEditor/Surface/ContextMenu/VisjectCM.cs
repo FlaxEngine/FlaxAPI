@@ -66,6 +66,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 Bounds = new Rectangle(0, _searchBox.Bottom + 1, Width, Height - _searchBox.Bottom - 2),
                 Parent = this
             };
+
             _panel1 = panel1;
 
             // Create second panel (for groups arrangement)
@@ -278,7 +279,11 @@ namespace FlaxEditor.Surface.ContextMenu
                 if (nextSelectedItem != null)
                 {
                     SelectedItem = nextSelectedItem;
+
+                    // Scroll into view (without smoothing)
+                    _panel1.VScrollBar.SmoothingScale = 0;
                     _panel1.ScrollViewTo(SelectedItem);
+                    _panel1.VScrollBar.SmoothingScale = 1;
                 }
                 return true;
             }
