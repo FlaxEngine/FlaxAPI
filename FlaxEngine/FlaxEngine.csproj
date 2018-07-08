@@ -331,6 +331,7 @@
     <Compile Include="GUI\Input\ULongValueBox.cs" />
     <Compile Include="GUI\Input\ValueBox.cs" />
     <Compile Include="GUI\Margin.cs" />
+    <Compile Include="GUI\Panels\BlurPanel.cs" />
     <Compile Include="GUI\Panels\DropPanel.cs" />
     <Compile Include="GUI\Panels\GridPanel.cs" />
     <Compile Include="GUI\Panels\HorizontalPanel.cs" />

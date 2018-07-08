@@ -286,6 +286,24 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Draws the Gaussian-blur rectangle in the 2D that blurs the background.
+        /// </summary>
+        /// <param name="rect">The target rectangle to draw (blurs its background).</param>
+        /// <param name="blurStrength">The blur strength defines how blurry the background is. Larger numbers increase blur, resulting in a larger runtime cost on the GPU.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DrawBlur(Rectangle rect, float blurStrength)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawBlur(ref rect, blurStrength);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -330,6 +348,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawMaterial(IntPtr material, ref Rectangle rect);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawBlur(ref Rectangle rect, float blurStrength);
 #endif
 
         #endregion
