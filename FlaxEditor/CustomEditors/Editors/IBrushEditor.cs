@@ -11,7 +11,7 @@ namespace FlaxEditor.CustomEditors.Editors
     /// <seealso cref="IBrush"/>
     /// <seealso cref="ObjectSwitcherEditor"/>
     [CustomEditor(typeof(IBrush)), DefaultEditor]
-    public sealed class IImageSourceEditor : ObjectSwitcherEditor
+    public sealed class IBrushEditor : ObjectSwitcherEditor
     {
         /// <inheritdoc />
         protected override OptionType[] Options => new[]
@@ -19,6 +19,7 @@ namespace FlaxEditor.CustomEditors.Editors
             new OptionType("Texture", typeof(TextureBrush)),
             new OptionType("Sprite", typeof(SpriteBrush)),
             new OptionType("Render Target", typeof(RenderTargetBrush)),
+            new OptionType("Solid Color", typeof(SolidColorBrush)),
         };
     }
 }
