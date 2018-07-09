@@ -7,9 +7,10 @@ using System.Linq;
 namespace FlaxEngine.GUI
 {
     /// <summary>
-    /// Combo box control allows to choose one item from the provided collection of options.
+    /// Combo box control allows to choose one item or set of items from the provided collection of options.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.Control" />
+    [HideInEditor]
     public class ComboBox : Control
     {
         /// <summary>

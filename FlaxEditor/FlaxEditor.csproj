@@ -165,6 +165,13 @@
     <Compile Include="CustomEditors\Values\ValueContainer.cs" />
     <Compile Include="CustomEditorWindow.cs" />
     <Compile Include="EditorAssets.cs" />
+    <Compile Include="GUI\ComboBox.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenu.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuBase.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuButton.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuChildMenu.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuItem.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuSeparator.cs" />
     <Compile Include="GUI\Docking\DockHintWindow.cs" />
     <Compile Include="GUI\Docking\DockPanel.cs" />
     <Compile Include="GUI\Docking\DockPanelProxy.cs" />
