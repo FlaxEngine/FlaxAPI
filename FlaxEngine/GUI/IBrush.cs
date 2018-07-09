@@ -63,6 +63,56 @@ namespace FlaxEngine.GUI
     }
 
     /// <summary>
+    /// Implementation of <see cref="IBrush"/> for linear color gradient (made of 2 color).
+    /// </summary>
+    /// <seealso cref="IBrush" />
+    public sealed class LinearGradientBrush : IBrush
+    {
+        /// <summary>
+        /// The brush start color.
+        /// </summary>
+        [ExpandGroups, Tooltip("The brush start color.")]
+        public Color StartColor;
+
+        /// <summary>
+        /// The brush end color.
+        /// </summary>
+        [Tooltip("The brush end color.")]
+        public Color EndColor;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LinearGradientBrush"/> class.
+        /// </summary>
+        public LinearGradientBrush()
+        {
+            StartColor = Color.White;
+            EndColor = Color.Black;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LinearGradientBrush"/> struct.
+        /// </summary>
+        /// <param name="startColor">The start color.</param>
+        /// <param name="endColor">The end color.</param>
+        public LinearGradientBrush(Color startColor, Color endColor)
+        {
+            StartColor = startColor;
+            EndColor = endColor;
+        }
+
+        /// <inheritdoc />
+        public Vector2 Size => Vector2.One;
+
+        /// <inheritdoc />
+        public void Draw(Rectangle rect, Color color, bool withAlpha = false)
+        {
+            var startColor = StartColor * color;
+            var endColor = EndColor * color;
+            Render2D.FillRectangle(rect, startColor, startColor, endColor, endColor, withAlpha);
+        }
+    }
+
+    /// <summary>
     /// Implementation of <see cref="IBrush"/> for <see cref="FlaxEngine.Texture"/>.
     /// </summary>
     /// <seealso cref="IBrush" />
