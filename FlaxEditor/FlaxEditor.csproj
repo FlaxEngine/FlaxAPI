@@ -188,6 +188,14 @@
     <Compile Include="GUI\Drag\DragScriptItems.cs" />
     <Compile Include="GUI\Drag\DragScripts.cs" />
     <Compile Include="GUI\Drag\DragSurfaceParameter.cs" />
+    <Compile Include="GUI\Input\ColorValueBox.cs" />
+    <Compile Include="GUI\Input\DoubleValueBox.cs" />
+    <Compile Include="GUI\Input\FloatValueBox.cs" />
+    <Compile Include="GUI\Input\IntValueBox.cs" />
+    <Compile Include="GUI\Input\LongValueBox.cs" />
+    <Compile Include="GUI\Input\SliderControl.cs" />
+    <Compile Include="GUI\Input\ULongValueBox.cs" />
+    <Compile Include="GUI\Input\ValueBox.cs" />
     <Compile Include="GUI\PlatformSelector.cs" />
     <Compile Include="GUI\RenamePopup.cs" />
     <Compile Include="Content\Proxy\BinaryAssetProxy.cs" />
