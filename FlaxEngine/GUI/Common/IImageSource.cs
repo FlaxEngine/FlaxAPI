@@ -35,7 +35,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The texture.
         /// </summary>
-        [Tooltip("The texture asset.")]
+        [ExpandGroups, Tooltip("The texture asset.")]
         public Texture Texture;
 
         /// <summary>
@@ -111,6 +111,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The sprite.
         /// </summary>
+        [ExpandGroups]
         public Sprite Sprite;
 
         /// <summary>
