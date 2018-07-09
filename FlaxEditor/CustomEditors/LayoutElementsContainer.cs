@@ -159,7 +159,7 @@ namespace FlaxEditor.CustomEditors
         public ImageElement Image(Sprite sprite)
         {
             ImageElement element = new ImageElement();
-            element.Image.ImageSource = new SpriteImageSource(sprite);
+            element.Image.Brush = new SpriteBrush(sprite);
             OnAddElement(element);
             return element;
         }
@@ -172,7 +172,7 @@ namespace FlaxEditor.CustomEditors
         public ImageElement Image(Texture texture)
         {
             ImageElement element = new ImageElement();
-            element.Image.ImageSource = new TextureImageSource(texture);
+            element.Image.Brush = new TextureBrush(texture);
             OnAddElement(element);
             return element;
         }
@@ -185,7 +185,7 @@ namespace FlaxEditor.CustomEditors
         public ImageElement Image(RenderTarget renderTarget)
         {
             ImageElement element = new ImageElement();
-            element.Image.ImageSource = new RenderTargetImageSource(renderTarget);
+            element.Image.Brush = new RenderTargetBrush(renderTarget);
             OnAddElement(element);
             return element;
         }

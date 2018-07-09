@@ -129,13 +129,13 @@ namespace FlaxEngine.GUI
         /// Gets or sets the image used to render checkbox checked state.
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The image used to render checkbox checked state.")]
-        public IImageSource CheckedImage { get; set; }
+        public IBrush CheckedImage { get; set; }
 
         /// <summary>
         /// Gets or sets the image used to render checkbox intermediate state.
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The image used to render checkbox intermediate state.")]
-        public IImageSource IntermediateImage { get; set; }
+        public IBrush IntermediateImage { get; set; }
 
         /// <summary>
         /// Event fired when 'checked' state gets changed.
@@ -167,8 +167,8 @@ namespace FlaxEngine.GUI
             ImageColor = style.BorderSelected * 1.2f;
             BorderColor = style.BorderNormal;
             BorderColorHighlighted = style.BorderSelected;
-            CheckedImage = new SpriteImageSource(style.CheckBoxTick);
-            IntermediateImage = new SpriteImageSource(style.CheckBoxIntermediate);
+            CheckedImage = new SpriteBrush(style.CheckBoxTick);
+            IntermediateImage = new SpriteBrush(style.CheckBoxIntermediate);
 
             CacheBox();
         }

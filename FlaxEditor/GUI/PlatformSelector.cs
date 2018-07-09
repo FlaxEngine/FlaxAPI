@@ -96,7 +96,7 @@ namespace FlaxEditor.GUI
             {
                 var tile = new Image
                 {
-                    ImageSource = new SpriteImageSource(platforms[i].Icon),
+                    Brush = new SpriteBrush(platforms[i].Icon),
                     MouseOverColor = _mouseOverColor,
                     Color = _defaultColor,
                     Tag = platforms[i].PlatformType,

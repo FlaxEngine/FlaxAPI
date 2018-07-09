@@ -176,7 +176,7 @@ namespace FlaxEngine.GUI
         /// Gets or sets the image used to render combobox drop arrow icon.
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The image used to render combobox drop arrow icon.")]
-        public IImageSource ArrowImage { get; set; }
+        public IBrush ArrowImage { get; set; }
 
         /// <summary>
         /// Gets or sets the color used to render combobox drop arrow icon.
@@ -224,7 +224,7 @@ namespace FlaxEngine.GUI
             BorderColor = style.BorderNormal;
             BorderColorHighlighted = style.BorderSelected;
             BorderColorSelected = BorderColorHighlighted;
-            ArrowImage = new SpriteImageSource(style.ArrowDown);
+            ArrowImage = new SpriteBrush(style.ArrowDown);
             ArrowColor = Color.White * 0.6f;
             ArrowColorSelected = style.BackgroundSelected;
             ArrowColorHighlighted = Color.White;

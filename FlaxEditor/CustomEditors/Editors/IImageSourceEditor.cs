@@ -6,19 +6,19 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.CustomEditors.Editors
 {
     /// <summary>
-    /// Default implementation of the inspector used to edit <see cref="IImageSource"/> type properties.
+    /// Default implementation of the inspector used to edit <see cref="IBrush"/> type properties.
     /// </summary>
-    /// <seealso cref="IImageSource"/>
+    /// <seealso cref="IBrush"/>
     /// <seealso cref="ObjectSwitcherEditor"/>
-    [CustomEditor(typeof(IImageSource)), DefaultEditor]
+    [CustomEditor(typeof(IBrush)), DefaultEditor]
     public sealed class IImageSourceEditor : ObjectSwitcherEditor
     {
         /// <inheritdoc />
         protected override OptionType[] Options => new[]
         {
-            new OptionType("Texture", typeof(TextureImageSource)),
-            new OptionType("Sprite", typeof(SpriteImageSource)),
-            new OptionType("Render Target", typeof(RenderTargetImageSource)),
+            new OptionType("Texture", typeof(TextureBrush)),
+            new OptionType("Sprite", typeof(SpriteBrush)),
+            new OptionType("Render Target", typeof(RenderTargetBrush)),
         };
     }
 }

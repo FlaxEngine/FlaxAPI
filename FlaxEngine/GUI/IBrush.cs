@@ -5,16 +5,13 @@ using FlaxEngine.Rendering;
 namespace FlaxEngine.GUI
 {
     /// <summary>
-    /// Interface that unifies input source textures, sprites and render targets to be used in a more generic way.
+    /// Interface that unifies input source textures, sprites, render targets, and any other brushes to be used in a more generic way.
     /// </summary>
-    public interface IImageSource
+    public interface IBrush
     {
         /// <summary>
-        /// Gets the size of the image in pixels.
+        /// Gets the size of the image brush in pixels (if relevant).
         /// </summary>
-        /// <value>
-        /// The size.
-        /// </value>
         Vector2 Size { get; }
 
         /// <summary>
@@ -27,10 +24,10 @@ namespace FlaxEngine.GUI
     }
 
     /// <summary>
-    /// Implementation of <see cref="IImageSource"/> for <see cref="FlaxEngine.Texture"/>.
+    /// Implementation of <see cref="IBrush"/> for <see cref="FlaxEngine.Texture"/>.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.IImageSource" />
-    public sealed class TextureImageSource : IImageSource
+    /// <seealso cref="IBrush" />
+    public sealed class TextureBrush : IBrush
     {
         /// <summary>
         /// The texture.
@@ -39,23 +36,23 @@ namespace FlaxEngine.GUI
         public Texture Texture;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextureImageSource"/> class.
+        /// Initializes a new instance of the <see cref="TextureBrush"/> class.
         /// </summary>
-        public TextureImageSource()
+        public TextureBrush()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextureImageSource"/> struct.
+        /// Initializes a new instance of the <see cref="TextureBrush"/> struct.
         /// </summary>
         /// <param name="texture">The texture.</param>
-        public TextureImageSource(Texture texture)
+        public TextureBrush(Texture texture)
         {
             Texture = texture;
         }
 
         /// <inheritdoc />
-        public Vector2 Size => Texture ? Texture.Size : Vector2.Zero;
+        public Vector2 Size => Texture?.Size ?? Vector2.Zero;
 
         /// <inheritdoc />
         public void Draw(Rectangle rect, Color color, bool withAlpha = false)
@@ -65,10 +62,10 @@ namespace FlaxEngine.GUI
     }
 
     /// <summary>
-    /// Implementation of <see cref="IImageSource"/> for <see cref="FlaxEngine.Rendering.RenderTarget"/>.
+    /// Implementation of <see cref="IBrush"/> for <see cref="FlaxEngine.Rendering.RenderTarget"/>.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.IImageSource" />
-    public sealed class RenderTargetImageSource : IImageSource
+    /// <seealso cref="IBrush" />
+    public sealed class RenderTargetBrush : IBrush
     {
         /// <summary>
         /// The render target.
@@ -77,23 +74,23 @@ namespace FlaxEngine.GUI
         public RenderTarget RenderTarget;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RenderTargetImageSource"/> class.
+        /// Initializes a new instance of the <see cref="RenderTargetBrush"/> class.
         /// </summary>
-        public RenderTargetImageSource()
+        public RenderTargetBrush()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RenderTargetImageSource"/> struct.
+        /// Initializes a new instance of the <see cref="RenderTargetBrush"/> struct.
         /// </summary>
         /// <param name="renderTarget">The render Target.</param>
-        public RenderTargetImageSource(RenderTarget renderTarget)
+        public RenderTargetBrush(RenderTarget renderTarget)
         {
             RenderTarget = renderTarget;
         }
 
         /// <inheritdoc />
-        public Vector2 Size => RenderTarget ? RenderTarget.Size : Vector2.Zero;
+        public Vector2 Size => RenderTarget?.Size ?? Vector2.Zero;
 
         /// <inheritdoc />
         public void Draw(Rectangle rect, Color color, bool withAlpha = false)
@@ -103,10 +100,10 @@ namespace FlaxEngine.GUI
     }
 
     /// <summary>
-    /// Implementation of <see cref="IImageSource"/> for <see cref="FlaxEngine.Sprite"/>.
+    /// Implementation of <see cref="IBrush"/> for <see cref="FlaxEngine.Sprite"/>.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.IImageSource" />
-    public sealed class SpriteImageSource : IImageSource
+    /// <seealso cref="IBrush" />
+    public sealed class SpriteBrush : IBrush
     {
         /// <summary>
         /// The sprite.
@@ -115,17 +112,17 @@ namespace FlaxEngine.GUI
         public Sprite Sprite;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SpriteImageSource"/> class.
+        /// Initializes a new instance of the <see cref="SpriteBrush"/> class.
         /// </summary>
-        public SpriteImageSource()
+        public SpriteBrush()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SpriteImageSource"/> struct.
+        /// Initializes a new instance of the <see cref="SpriteBrush"/> struct.
         /// </summary>
         /// <param name="sprite">The sprite.</param>
-        public SpriteImageSource(Sprite sprite)
+        public SpriteBrush(Sprite sprite)
         {
             Sprite = sprite;
         }

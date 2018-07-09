@@ -14,7 +14,7 @@ namespace FlaxEngine.GUI
         /// Gets or sets the image source.
         /// </summary>
         [EditorOrder(10), Tooltip("The image to draw.")]
-        public IImageSource ImageSource { get; set; }
+        public IBrush Brush { get; set; }
 
         /// <summary>
         /// Gets or sets the margin for the image.
@@ -84,7 +84,7 @@ namespace FlaxEngine.GUI
         {
             base.Draw();
 
-            if (ImageSource == null)
+            if (Brush == null)
                 return;
 
             Rectangle rect;
@@ -92,7 +92,7 @@ namespace FlaxEngine.GUI
             {
                 // Figure out the ratio
                 var size = Size;
-                var imageSize = ImageSource.Size;
+                var imageSize = Brush.Size;
                 if (imageSize.LengthSquared < 1)
                     return;
                 var ratio = size / imageSize;
@@ -114,7 +114,7 @@ namespace FlaxEngine.GUI
 
             Margin.ShrinkRectangle(ref rect);
 
-            ImageSource.Draw(rect, IsMouseOver ? MouseOverColor : Color, WithAlpha);
+            Brush.Draw(rect, IsMouseOver ? MouseOverColor : Color, WithAlpha);
         }
 
         /// <inheritdoc />
