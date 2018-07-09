@@ -292,13 +292,18 @@
       <DependentUpon>IOrderedDictionary.cs</DependentUpon>
     </Compile>
     <Compile Include="Enums\WindowEnums.cs" />
+    <Compile Include="GUI\Brushes\LinearGradientBrush.cs" />
+    <Compile Include="GUI\Brushes\RenderTargetBrush.cs" />
+    <Compile Include="GUI\Brushes\SolidColorBrush.cs" />
+    <Compile Include="GUI\Brushes\SpriteBrush.cs" />
+    <Compile Include="GUI\Brushes\TextureBrush.cs" />
     <Compile Include="GUI\CanvasContainer.cs" />
     <Compile Include="GUI\CanvasRootControl.cs" />
     <Compile Include="GUI\Common\Button.cs" />
     <Compile Include="GUI\Common\CheckBox.cs" />
     <Compile Include="GUI\Common\ComboBox.cs" />
     <Compile Include="GUI\Common\GUIMaterialControl.cs" />
-    <Compile Include="GUI\IBrush.cs" />
+    <Compile Include="GUI\Brushes\IBrush.cs" />
     <Compile Include="GUI\Common\Image.cs" />
     <Compile Include="GUI\Common\Label.cs" />
     <Compile Include="GUI\Common\ProgressBar.cs" />
