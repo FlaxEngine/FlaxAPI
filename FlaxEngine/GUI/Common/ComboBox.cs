@@ -173,6 +173,30 @@ namespace FlaxEngine.GUI
         public Color BorderColorHighlighted { get; set; }
 
         /// <summary>
+        /// Gets or sets the image used to render combobox drop arrow icon.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The image used to render combobox drop arrow icon.")]
+        public IImageSource ArrowImage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color used to render combobox drop arrow icon.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color used to render combobox drop arrow icon.")]
+        public Color ArrowColor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color used to render combobox drop arrow icon (menu is opened).
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color used to render combobox drop arrow icon (menu is opened).")]
+        public Color ArrowColorSelected { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color used to render combobox drop arrow icon (menu is highlighted).
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color used to render combobox drop arrow icon (menu is highlighted).")]
+        public Color ArrowColorHighlighted { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ComboBox"/> class.
         /// </summary>
         public ComboBox()
@@ -200,6 +224,10 @@ namespace FlaxEngine.GUI
             BorderColor = style.BorderNormal;
             BorderColorHighlighted = style.BorderSelected;
             BorderColorSelected = BorderColorHighlighted;
+            ArrowImage = new SpriteImageSource(style.ArrowDown);
+            ArrowColor = Color.White * 0.6f;
+            ArrowColorSelected = style.BackgroundSelected;
+            ArrowColorHighlighted = Color.White;
         }
 
         /// <summary>
@@ -292,35 +320,34 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void Draw()
         {
-            base.Draw();
-
             // Cache data
-            var style = Style.Current;
             var clientRect = new Rectangle(Vector2.Zero, Size);
             float margin = clientRect.Height * 0.2f;
             float boxSize = clientRect.Height - margin * 2;
-            float arrowOpacity = IsMouseOver ? 1.0f : 0.6f;
             bool isOpened = IsPopupOpened;
             bool enabled = EnabledInHierarchy;
-
-            // Background
             Color backgroundColor = BackgroundColor;
             Color borderColor = BorderColor;
+            Color arrowColor = ArrowColor;
             if (!enabled)
             {
                 backgroundColor *= 0.5f;
-                arrowOpacity = 0.5f;
+                arrowColor *= 0.7f;
             }
             else if (isOpened || _mouseDown)
             {
                 backgroundColor = BackgroundColorSelected;
                 borderColor = BorderColorSelected;
+                arrowColor = ArrowColorSelected;
             }
             else if (IsMouseOver)
             {
                 backgroundColor = BackgroundColorHighlighted;
                 borderColor = BorderColorHighlighted;
+                arrowColor = ArrowColorHighlighted;
             }
+
+            // Background
             Render2D.FillRectangle(clientRect, backgroundColor);
             Render2D.DrawRectangle(clientRect, borderColor);
 
@@ -339,7 +366,7 @@ namespace FlaxEngine.GUI
             }
 
             // Arrow
-            Render2D.DrawSprite(style.ArrowDown, new Rectangle(clientRect.Width - margin - boxSize, margin, boxSize, boxSize), isOpened ? style.BackgroundSelected : (Color.White * arrowOpacity));
+            ArrowImage?.Draw(new Rectangle(clientRect.Width - margin - boxSize, margin, boxSize, boxSize), arrowColor, true);
         }
 
         /// <inheritdoc />

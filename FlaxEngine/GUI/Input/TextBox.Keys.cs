@@ -61,14 +61,14 @@ namespace FlaxEngine.GUI
                 if (HasSelection)
                 {
                     _text = _text.Remove(left, SelectionLength);
-                    setSelection(left);
+                    SetSelection(left);
                     OnTextChanged();
                 }
                 else if (CaretPosition > 0)
                 {
                     left -= 1;
                     _text = _text.Remove(left, 1);
-                    setSelection(left);
+                    SetSelection(left);
                     OnTextChanged();
                 }
 
@@ -83,13 +83,13 @@ namespace FlaxEngine.GUI
                 if (HasSelection)
                 {
                     _text = _text.Remove(left, SelectionLength);
-                    setSelection(left);
+                    SetSelection(left);
                     OnTextChanged();
                 }
                 else if (TextLength > 0 && left < TextLength)
                 {
                     _text = _text.Remove(left, 1);
-                    setSelection(left);
+                    SetSelection(left);
                     OnTextChanged();
                 }
 
@@ -100,7 +100,7 @@ namespace FlaxEngine.GUI
             case Keys.Escape:
             {
                 // Restore text from start
-                setSelection(-1);
+                SetSelection(-1);
                 _text = _onStartEditValue;
 
                 Defocus();
@@ -130,7 +130,7 @@ namespace FlaxEngine.GUI
             case Keys.Home:
             {
                 // Move caret to the first character
-                setSelection(0);
+                SetSelection(0);
                 return true;
             }
 
@@ -138,7 +138,7 @@ namespace FlaxEngine.GUI
             case Keys.End:
             {
                 // Move caret after last character
-                setSelection(TextLength);
+                SetSelection(TextLength);
                 return true;
             }
 

@@ -105,19 +105,10 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public Label(Vector2 location, Vector2 size)
-        : base(location, size)
-        {
-            CanFocus = false;
-            var style = Style.Current;
-            Font = new FontReference(style.FontMedium);
-        }
-
-        /// <inheritdoc />
         public override void Draw()
         {
             base.Draw();
-            
+
             var rect = new Rectangle(new Vector2(Margin.Left, Margin.Top), Size - Margin.Size);
 
             if (ClipText)

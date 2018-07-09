@@ -85,6 +85,12 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Gets or sets the color used to draw header text.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
+        public Color HeaderTextColor;
+
+        /// <summary>
         /// Gets or sets the color of the header.
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000)]
@@ -190,6 +196,7 @@ namespace FlaxEngine.GUI
             HeaderColor = style.BackgroundNormal;
             HeaderColorMouseOver = style.BackgroundHighlighted;
             HeaderTextFont = new FontReference(style.FontMedium);
+            HeaderTextColor = style.Foreground;
         }
 
         /// <summary>
@@ -285,6 +292,7 @@ namespace FlaxEngine.GUI
         public override void Draw()
         {
             var style = Style.Current;
+            var enabled = EnabledInHierarchy;
 
             // Paint Background
             var backgroundColor = BackgroundColor;
@@ -312,7 +320,12 @@ namespace FlaxEngine.GUI
             // Text
             var textRect = new Rectangle(textLeft, 0, Width - textLeft, HeaderHeight);
             _headerTextMargin.ShrinkRectangle(ref textRect);
-            Render2D.DrawText(HeaderTextFont.GetFont(), HeaderText, textRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
+            var textColor = HeaderTextColor;
+            if (!enabled)
+            {
+                textColor *= 0.6f;
+            }
+            Render2D.DrawText(HeaderTextFont.GetFont(), HeaderText, textRect, textColor, TextAlignment.Near, TextAlignment.Center);
 
             // Draw child controls that are not arranged (pined to the header, etc.)
             for (int i = 0; i < _children.Count; i++)

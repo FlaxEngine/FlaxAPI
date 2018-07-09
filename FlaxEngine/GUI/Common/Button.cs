@@ -32,6 +32,12 @@ namespace FlaxEngine.GUI
         public FontReference Font { get; set; }
 
         /// <summary>
+        /// Gets or sets the color used to draw button text.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
+        public Color TextColor;
+        
+        /// <summary>
         /// Event fired when user clicks on the button
         /// </summary>
         public event Action Clicked;
@@ -91,6 +97,7 @@ namespace FlaxEngine.GUI
         {
             var style = Style.Current;
             Font = new FontReference(style.FontMedium);
+            TextColor = style.Foreground;
             BackgroundColor = style.BackgroundNormal;
             BorderColor = style.BorderNormal;
             BackgroundColorSelected = style.BackgroundSelected;
@@ -128,17 +135,16 @@ namespace FlaxEngine.GUI
         public override void Draw()
         {
             // Cache data
-            var style = Style.Current;
             Rectangle clientRect = new Rectangle(Vector2.Zero, Size);
             bool enabled = EnabledInHierarchy;
-
-            // Draw background
             Color backgroundColor = BackgroundColor;
             Color borderColor = BorderColor;
+            Color textColor = TextColor;
             if (!enabled)
             {
                 backgroundColor *= 0.5f;
                 borderColor *= 0.5f;
+                textColor *= 0.6f;
             }
             else if (_mouseDown)
             {
@@ -150,11 +156,13 @@ namespace FlaxEngine.GUI
                 backgroundColor = BackgroundColorHighlighted;
                 borderColor = BorderColorHighlighted;
             }
+
+            // Draw background
             Render2D.FillRectangle(clientRect, backgroundColor);
             Render2D.DrawRectangle(clientRect, borderColor);
 
             // Draw text
-            Render2D.DrawText(Font.GetFont(), Text, clientRect, enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
+            Render2D.DrawText(Font.GetFont(), Text, clientRect, textColor, TextAlignment.Center, TextAlignment.Center);
         }
 
         /// <inheritdoc />

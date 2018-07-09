@@ -124,7 +124,19 @@ namespace FlaxEngine.GUI
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000)]
         public Color BorderColorHighlighted { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the image used to render checkbox checked state.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The image used to render checkbox checked state.")]
+        public IImageSource CheckedImage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the image used to render checkbox intermediate state.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The image used to render checkbox intermediate state.")]
+        public IImageSource IntermediateImage { get; set; }
+
         /// <summary>
         /// Event fired when 'checked' state gets changed.
         /// </summary>
@@ -155,7 +167,9 @@ namespace FlaxEngine.GUI
             ImageColor = style.BorderSelected * 1.2f;
             BorderColor = style.BorderNormal;
             BorderColorHighlighted = style.BorderSelected;
-            
+            CheckedImage = new SpriteImageSource(style.CheckBoxTick);
+            IntermediateImage = new SpriteImageSource(style.CheckBoxIntermediate);
+
             CacheBox();
         }
 
@@ -180,7 +194,6 @@ namespace FlaxEngine.GUI
             bool enabled = EnabledInHierarchy;
 
             // Border
-            var style = Style.Current;
             Color borderColor = BorderColor;
             if (!enabled)
                 borderColor *= 0.5f;
@@ -190,7 +203,16 @@ namespace FlaxEngine.GUI
 
             // Icon
             if (_state != CheckBoxState.Default)
-                Render2D.DrawSprite(_state == CheckBoxState.Checked ? style.CheckBoxTick : style.CheckBoxIntermediate, _box, enabled ? ImageColor : style.ForegroundDisabled);
+            {
+                var color = ImageColor;
+                if (!enabled)
+                    color *= 0.6f;
+
+                if (_state == CheckBoxState.Checked)
+                    CheckedImage?.Draw(_box, color, true);
+                else
+                    IntermediateImage?.Draw(_box, color, true);
+            }
         }
 
         /// <inheritdoc />
