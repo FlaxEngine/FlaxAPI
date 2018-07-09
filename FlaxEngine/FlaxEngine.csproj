@@ -353,8 +353,6 @@
     <Compile Include="GUI\ScrollableControl.cs" />
     <Compile Include="GUI\Style.cs" />
     <Compile Include="GUI\Tooltip.cs" />
-    <Compile Include="GUI\Tree\Tree.cs" />
-    <Compile Include="GUI\Tree\TreeNode.cs" />
     <Compile Include="GUI\RootControl.cs" />
     <Compile Include="API\Actors\EmptyActor.cs" />
     <Compile Include="Assertions\Assert.cs" />

@@ -3,14 +3,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEngine;
 using FlaxEngine.Assertions;
+using FlaxEngine.GUI;
 
-namespace FlaxEngine.GUI
+namespace FlaxEditor.GUI
 {
     /// <summary>
     /// Tree control.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    [HideInEditor]
     public class Tree : ContainerControl
     {
         /// <summary>
@@ -225,7 +228,7 @@ namespace FlaxEngine.GUI
             SelectedChanged?.Invoke(prev, Selection);
         }
 
-        private void walkSelectRangeExpandedTree(List<TreeNode> selection, TreeNode node, ref Rectangle range)
+        private void WalkSelectRangeExpandedTree(List<TreeNode> selection, TreeNode node, ref Rectangle range)
         {
             for (int i = 0; i < node.ChildrenCount; i++)
             {
@@ -239,12 +242,12 @@ namespace FlaxEngine.GUI
 
                     var nodeArea = new Rectangle(pos, child.Size);
                     if (child.IsExpanded && range.Intersects(ref nodeArea))
-                        walkSelectRangeExpandedTree(selection, child, ref range);
+                        WalkSelectRangeExpandedTree(selection, child, ref range);
                 }
             }
         }
 
-        private Rectangle calcNodeRangeRect(TreeNode node)
+        private Rectangle CalcNodeRangeRect(TreeNode node)
         {
             Vector2 pos = node.PointToParent(this, Vector2.One);
             return new Rectangle(pos, new Vector2(10000, 4));
@@ -262,12 +265,12 @@ namespace FlaxEngine.GUI
                 var prev = new List<TreeNode>(Selection);
 
                 // Update selection
-                var selectionRect = calcNodeRangeRect(Selection[0]);
+                var selectionRect = CalcNodeRangeRect(Selection[0]);
                 for (int i = 1; i < Selection.Count; i++)
                 {
-                    selectionRect = Rectangle.Union(selectionRect, calcNodeRangeRect(Selection[i]));
+                    selectionRect = Rectangle.Union(selectionRect, CalcNodeRangeRect(Selection[i]));
                 }
-                var endNodeRect = calcNodeRangeRect(endNode);
+                var endNodeRect = CalcNodeRangeRect(endNode);
                 if (endNodeRect.Top - Mathf.Epsilon <= selectionRect.Top)
                 {
                     float diff = selectionRect.Top - endNodeRect.Top;
@@ -280,7 +283,7 @@ namespace FlaxEngine.GUI
                     selectionRect.Size.Y += diff;
                 }
                 Selection.Clear();
-                walkSelectRangeExpandedTree(Selection, _children[0] as TreeNode, ref selectionRect);
+                WalkSelectRangeExpandedTree(Selection, _children[0] as TreeNode, ref selectionRect);
 
                 // Check if changed
                 if (Selection.Count != prev.Count || !Selection.SequenceEqual(prev))
