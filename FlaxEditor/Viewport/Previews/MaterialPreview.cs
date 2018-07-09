@@ -27,7 +27,7 @@ namespace FlaxEditor.Viewport.Previews
         private Decal _decal;
         private MaterialBase _material;
         private int _selectedModelIndex;
-        private GUIMaterialControl _guiMaterialControl;
+        private Image _guiMaterialControl;
         private readonly MaterialBase[] _postFxMaterialsCache = new MaterialBase[1];
 
         /// <summary>
@@ -166,16 +166,18 @@ namespace FlaxEditor.Viewport.Previews
             // GUI
             if (guiMaterial && _guiMaterialControl == null)
             {
-                _guiMaterialControl = new GUIMaterialControl
+                _guiMaterialControl = new Image
                 {
                     DockStyle = DockStyle.Fill,
+                    KeepAspectRatio = false,
+                    Brush = new MaterialBrush(),
                     Parent = this,
                     IndexInParent = 0,
                 };
             }
             if (_guiMaterialControl != null)
             {
-                _guiMaterialControl.Material = guiMaterial;
+                ((MaterialBrush)_guiMaterialControl.Brush).Material = guiMaterial;
                 _guiMaterialControl.Enabled = _guiMaterialControl.Visible = guiMaterial != null;
             }
         }
