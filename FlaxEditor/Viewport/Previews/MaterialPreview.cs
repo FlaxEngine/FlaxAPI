@@ -187,8 +187,11 @@ namespace FlaxEditor.Viewport.Previews
         {
             _material = null;
 
-            _guiMaterialControl.Dispose();
-            _guiMaterialControl = null;
+            if (_guiMaterialControl != null)
+            {
+                _guiMaterialControl.Dispose();
+                _guiMaterialControl = null;
+            }
 
             // Ensure to cleanup created actor objects
             Object.Destroy(ref _previewModel);
