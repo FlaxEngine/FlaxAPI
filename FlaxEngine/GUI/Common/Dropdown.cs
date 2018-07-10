@@ -83,7 +83,7 @@ namespace FlaxEngine.GUI
         protected DropdownRoot _popup;
 
         private bool _mouseDown;
-        
+
         /// <summary>
         /// The selected index of the item (-1 for no selection).
         /// </summary>
@@ -146,6 +146,12 @@ namespace FlaxEngine.GUI
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000)]
         public FontReference Font { get; set; }
+
+        /// <summary>
+        /// Gets or sets the custom material used to render the text. It must has domain set to GUI and have a public texture parameter named Font used to sample font atlas texture with font characters data.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
+        public MaterialBase CustomMaterial { get; set; }
 
         /// <summary>
         /// Gets or sets the color of the text.
@@ -431,7 +437,7 @@ namespace FlaxEngine.GUI
                 var textRect = new Rectangle(margin, 0, clientRect.Width - boxSize - 2.0f * margin, clientRect.Height);
                 Render2D.PushClip(textRect);
                 var textColor = TextColor;
-                Render2D.DrawText(Font.GetFont(), _items[_selectedIndex], textRect, enabled ? textColor : textColor * 0.5f, TextAlignment.Near, TextAlignment.Center);
+                Render2D.DrawText(Font.GetFont(), CustomMaterial, _items[_selectedIndex], textRect, enabled ? textColor : textColor * 0.5f, TextAlignment.Near, TextAlignment.Center);
                 Render2D.PopClip();
             }
 
@@ -453,7 +459,7 @@ namespace FlaxEngine.GUI
         {
             // Clear flags
             _mouseDown = false;
-            
+
             base.OnMouseLeave();
         }
 

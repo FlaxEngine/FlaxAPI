@@ -62,6 +62,12 @@ namespace FlaxEngine.GUI
         public FontReference Font { get; set; }
 
         /// <summary>
+        /// Gets or sets the custom material used to render the text. It must has domain set to GUI and have a public texture parameter named Font used to sample font atlas texture with font characters data.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
+        public MaterialBase CustomMaterial { get; set; }
+
+        /// <summary>
         /// Gets or sets the margin for the text within the control bounds.
         /// </summary>
         [EditorOrder(70), Tooltip("The margin for the text within the control bounds.")]
@@ -127,6 +133,7 @@ namespace FlaxEngine.GUI
 
             Render2D.DrawText(
                 Font.GetFont(),
+                CustomMaterial,
                 Text,
                 rect,
                 color,
