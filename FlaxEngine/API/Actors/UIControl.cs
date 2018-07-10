@@ -127,6 +127,16 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Checks if the control object is of the given type.
+        /// </summary>
+        /// <typeparam name="T">The type of the control.</typeparam>
+        /// <returns>True if control object is of the given type.</returns>
+        public bool Is<T>() where T : Control
+        {
+            return _control is T;
+        }
+
+        /// <summary>
         /// Creates a new UIControl with the control of the given type and links it to this control as a child.
         /// </summary>
         /// <remarks>
