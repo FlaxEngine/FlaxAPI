@@ -112,7 +112,7 @@ namespace FlaxEngine.GUI
         /// Gets or sets the custom material used to render the text. It must has domain set to GUI and have a public texture parameter named Font used to sample font atlas texture with font characters data.
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000)]
-        public MaterialBase HeaderTextCustomMaterial { get; set; }
+        public MaterialBase HeaderTextMaterial { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether enable drop down icon drawing.
@@ -348,7 +348,7 @@ namespace FlaxEngine.GUI
             {
                 textColor *= 0.6f;
             }
-            Render2D.DrawText(HeaderTextFont.GetFont(), HeaderTextCustomMaterial, HeaderText, textRect, textColor, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(HeaderTextFont.GetFont(), HeaderTextMaterial, HeaderText, textRect, textColor, TextAlignment.Near, TextAlignment.Center);
 
             // Draw child controls that are not arranged (pined to the header, etc.)
             for (int i = 0; i < _children.Count; i++)

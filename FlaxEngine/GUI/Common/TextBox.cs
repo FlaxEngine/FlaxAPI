@@ -277,7 +277,7 @@ namespace FlaxEngine.GUI
         /// Gets or sets the custom material used to render the text. It must has domain set to GUI and have a public texture parameter named Font used to sample font atlas texture with font characters data.
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000)]
-        public MaterialBase CustomMaterial { get; set; }
+        public MaterialBase Material { get; set; }
 
         /// <summary>
         /// Gets or sets textbox background color when the control is selected (has focus).
@@ -903,11 +903,11 @@ namespace FlaxEngine.GUI
                 var color = TextColor;
                 if (!enabled)
                     color *= 0.6f;
-                Render2D.DrawText(font, CustomMaterial, _text, _layout.Bounds, color, _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
+                Render2D.DrawText(font, Material, _text, _layout.Bounds, color, _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
             }
             else if (!string.IsNullOrEmpty(WatermarkText) && !IsFocused)
             {
-                Render2D.DrawText(font, CustomMaterial, WatermarkText, _layout.Bounds, WatermarkTextColor, _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
+                Render2D.DrawText(font, Material, WatermarkText, _layout.Bounds, WatermarkTextColor, _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
             }
 
             // Caret
