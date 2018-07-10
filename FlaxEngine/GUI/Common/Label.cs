@@ -28,8 +28,14 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the color of the text.
         /// </summary>
-        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the text")]
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the text.")]
         public Color TextColor { get; set; } = Color.White;
+
+        /// <summary>
+        /// Gets or sets the color of the text when it is highlighted (mouse is over).
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the text when it is highlighted (mouse is over).")]
+        public Color TextColorHighlighted { get; set; } = Color.White;
 
         /// <summary>
         /// Gets or sets the horizontal text alignment within the control bounds.
@@ -114,11 +120,16 @@ namespace FlaxEngine.GUI
             if (ClipText)
                 Render2D.PushClip(ref rect);
 
+            var color = IsMouseOver ? TextColorHighlighted : TextColor;
+
+            if (!EnabledInHierarchy)
+                color *= 0.6f;
+
             Render2D.DrawText(
                 Font.GetFont(),
                 Text,
                 rect,
-                TextColor,
+                color,
                 HorizontalAlignment,
                 _autoHeight ? TextAlignment.Near : VerticalAlignment,
                 Wrapping

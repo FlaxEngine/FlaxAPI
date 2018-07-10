@@ -113,7 +113,7 @@ namespace FlaxEngine.GUI
                     // Check if skip smoothing
                     if (!UseSmoothing)
                     {
-                        setValue(value);
+                        SetValue(value);
                     }
                 }
             }
@@ -171,7 +171,7 @@ namespace FlaxEngine.GUI
             }*/
         }
 
-        private void updateThumb()
+        private void UpdateThumb()
         {
             // Cache data
             float trackSize = TrackSize;
@@ -206,16 +206,16 @@ namespace FlaxEngine.GUI
             _value = _targetValue = 0;
         }
 
-        private void setValue(float value)
+        private void SetValue(float value)
         {
             _value = value;
 
             // Update
-            updateThumb();
+            UpdateThumb();
 
             // Change parent panel view offset
             if (Parent is Panel panel)
-                panel.setViewOffset(_orientation, _value);
+                panel.SetViewOffset(_orientation, _value);
         }
 
         /// <inheritdoc />
@@ -225,10 +225,7 @@ namespace FlaxEngine.GUI
 
             // Opacity smoothing
             float targetOpacity = Parent.IsMouseOver ? 1.0f : DefaultMinimumOpacity;
-            if (isDeltaSlow)
-                _thumbOpacity = targetOpacity;
-            else
-                _thumbOpacity = Mathf.Lerp(_thumbOpacity, targetOpacity, deltaTime * 10.0f);
+            _thumbOpacity = isDeltaSlow ? targetOpacity : Mathf.Lerp(_thumbOpacity, targetOpacity, deltaTime * 10.0f);
 
             // Ensure scroll bar is visible
             if (Visible)
@@ -242,7 +239,7 @@ namespace FlaxEngine.GUI
                         value = Mathf.Lerp(_value, _targetValue, deltaTime * 20.0f * SmoothingScale);
                     else
                         value = _targetValue;
-                    setValue(value);
+                    SetValue(value);
                 }
             }
 
@@ -342,7 +339,7 @@ namespace FlaxEngine.GUI
         {
             base.SetSizeInternal(ref size);
 
-            updateThumb();
+            UpdateThumb();
         }
 
         /// <inheritdoc />

@@ -168,7 +168,7 @@ namespace FlaxEngine.GUI
                 var style = Style.Current;
 
                 // Draw sliding UI
-                Render2D.DrawSprite(style.Scale16, SlideRect);
+                Render2D.DrawSprite(style.Scale, SlideRect);
 
                 // Check if is sliding
                 if (_isSliding)

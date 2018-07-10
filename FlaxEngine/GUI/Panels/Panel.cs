@@ -50,7 +50,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the scroll bars usege by this panel.
         /// </summary>
-        [EditorOrder(0)]
+        [EditorOrder(0), Tooltip("The scroll bars usage.")]
         public ScrollBars ScrollBars
         {
             get => _scrollBars;
@@ -166,7 +166,7 @@ namespace FlaxEngine.GUI
             PerformLayout();
         }
 
-        internal void setViewOffset(Orientation orientation, float value)
+        internal void SetViewOffset(Orientation orientation, float value)
         {
             if (orientation == Orientation.Vertical)
                 _viewOffset.Y = -value;
@@ -302,7 +302,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
-            const float ScrollSpaceLeft = 0.1f;
+            const float scrollSpaceLeft = 0.1f;
 
             // Arrange controls and get scroll bounds
             ArrageAndGetBounds();
@@ -329,7 +329,7 @@ namespace FlaxEngine.GUI
 
                 if (vScrollEnabled)
                 {
-                    VScrollBar.Maximum = _scrollRightCorner.Y - height * (1 - ScrollSpaceLeft);
+                    VScrollBar.Maximum = _scrollRightCorner.Y - height * (1 - scrollSpaceLeft);
                 }
             }
             if (HScrollBar != null)
@@ -354,7 +354,7 @@ namespace FlaxEngine.GUI
 
                 if (hScrollEnabled)
                 {
-                    HScrollBar.Maximum = _scrollRightCorner.X - width * (1 - ScrollSpaceLeft);
+                    HScrollBar.Maximum = _scrollRightCorner.X - width * (1 - scrollSpaceLeft);
                 }
             }
         }
@@ -394,53 +394,49 @@ namespace FlaxEngine.GUI
         {
             var result = base.OnDragMove(ref location, data);
 
-            // Auto scroll when using drag and drop
-            //if (result == DragDropEffect.None)
+            float width = Width;
+            float height = Height;
+            float MinSize = 70;
+            float AreaSize = 25;
+            float MoveScale = 4.0f;
+            Vector2 viewOffset = -_viewOffset;
+
+            if (VScrollBar != null && VScrollBar.Visible && height > MinSize)
             {
-                float width = Width;
-                float height = Height;
-                float MinSize = 70;
-                float AreaSize = 25;
-                float MoveScale = 4.0f;
-                Vector2 viewOffset = -_viewOffset;
-
-                if (VScrollBar != null && VScrollBar.Visible && height > MinSize)
+                if (new Rectangle(0, 0, width, AreaSize).Contains(ref location))
                 {
-                    if (new Rectangle(0, 0, width, AreaSize).Contains(ref location))
-                    {
-                        viewOffset.Y -= MoveScale;
-                    }
-                    else if (new Rectangle(0, height - AreaSize, width, AreaSize).Contains(ref location))
-                    {
-                        viewOffset.Y += MoveScale;
-                    }
-
-                    viewOffset.Y = Mathf.Clamp(viewOffset.Y, VScrollBar.Minimum, VScrollBar.Maximum);
-                    VScrollBar.Value = viewOffset.Y;
+                    viewOffset.Y -= MoveScale;
+                }
+                else if (new Rectangle(0, height - AreaSize, width, AreaSize).Contains(ref location))
+                {
+                    viewOffset.Y += MoveScale;
                 }
 
-                if (HScrollBar != null && HScrollBar.Visible && width > MinSize)
-                {
-                    if (new Rectangle(0, 0, AreaSize, height).Contains(ref location))
-                    {
-                        viewOffset.X -= MoveScale;
-                    }
-                    else if (new Rectangle(width - AreaSize, 0, AreaSize, height).Contains(ref location))
-                    {
-                        viewOffset.X += MoveScale;
-                    }
+                viewOffset.Y = Mathf.Clamp(viewOffset.Y, VScrollBar.Minimum, VScrollBar.Maximum);
+                VScrollBar.Value = viewOffset.Y;
+            }
 
-                    viewOffset.X = Mathf.Clamp(viewOffset.X, HScrollBar.Minimum, HScrollBar.Maximum);
-                    HScrollBar.Value = viewOffset.X;
+            if (HScrollBar != null && HScrollBar.Visible && width > MinSize)
+            {
+                if (new Rectangle(0, 0, AreaSize, height).Contains(ref location))
+                {
+                    viewOffset.X -= MoveScale;
+                }
+                else if (new Rectangle(width - AreaSize, 0, AreaSize, height).Contains(ref location))
+                {
+                    viewOffset.X += MoveScale;
                 }
 
-                viewOffset *= -1;
+                viewOffset.X = Mathf.Clamp(viewOffset.X, HScrollBar.Minimum, HScrollBar.Maximum);
+                HScrollBar.Value = viewOffset.X;
+            }
 
-                if (viewOffset != _viewOffset)
-                {
-                    _viewOffset = viewOffset;
-                    PerformLayout();
-                }
+            viewOffset *= -1;
+
+            if (viewOffset != _viewOffset)
+            {
+                _viewOffset = viewOffset;
+                PerformLayout();
             }
 
             return result;

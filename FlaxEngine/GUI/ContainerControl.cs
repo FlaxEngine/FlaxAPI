@@ -259,6 +259,29 @@ namespace FlaxEngine.GUI
         ///     Tries to find any child contol at given point in control local coordinates
         /// </summary>
         /// <param name="point">Local point to check</param>
+        /// <returns>Found control index or -1</returns>
+        public int GetChildIndexAt(Vector2 point)
+        {
+            int result = -1;
+            for (int i = 0; i < _children.Count; i++)
+            {
+                var child = _children[i];
+
+                // Check collision
+                Vector2 childLocation;
+                if (IntersectsChildContent(child, point, out childLocation))
+                {
+                    result = i;
+                    break;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        ///     Tries to find any child contol at given point in control local coordinates
+        /// </summary>
+        /// <param name="point">Local point to check</param>
         /// <returns>Found control or null</returns>
         public Control GetChildAt(Vector2 point)
         {

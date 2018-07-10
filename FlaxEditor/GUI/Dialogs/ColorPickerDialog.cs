@@ -23,7 +23,7 @@ namespace FlaxEditor.GUI.Dialogs
         private Color _newColor;
         private bool _disableEvents;
         private bool _useDynamicEditing;
-        private Style.ColorPickerEvent _onChangedOk;
+        private ColorValueBox.ColorPickerEvent _onChangedOk;
 
         private ColorSelectorWithSliders _cSelector;
         private IntValueBox _cRed;
@@ -88,7 +88,7 @@ namespace FlaxEditor.GUI.Dialogs
         /// <param name="initialValue">The initial value.</param>
         /// <param name="colorChanged">The color changed event.</param>
         /// <param name="useDynamicEditing">True if allow dynamic value editing (slider-like usage), otherwise will fire color change event only on editing end.</param>
-        public ColorPickerDialog(Color initialValue, Style.ColorPickerEvent colorChanged, bool useDynamicEditing)
+        public ColorPickerDialog(Color initialValue, ColorValueBox.ColorPickerEvent colorChanged, bool useDynamicEditing)
         : base("Pick a color!")
         {
             _oldColor = initialValue;

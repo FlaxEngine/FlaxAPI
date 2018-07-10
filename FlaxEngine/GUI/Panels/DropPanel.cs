@@ -159,6 +159,18 @@ namespace FlaxEngine.GUI
         public float CloseAnimationTime { get; set; } = 0.2f;
 
         /// <summary>
+        /// Gets or sets the image used to render drop panel drop arrow icon when panel is opened.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The image used to render drop panel drop arrow icon when panel is opened.")]
+        public IBrush ArrowImageOpened { get; set; }
+
+        /// <summary>
+        /// Gets or sets the image used to render drop panel drop arrow icon when panel is closed.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The image used to render drop panel drop arrow icon when panel is closed.")]
+        public IBrush ArrowImageClosed { get; set; }
+
+        /// <summary>
         /// Gets the header rectangle.
         /// </summary>
         protected Rectangle HeaderRectangle => new Rectangle(0, 0, Width, HeaderHeight);
@@ -197,6 +209,8 @@ namespace FlaxEngine.GUI
             HeaderColorMouseOver = style.BackgroundHighlighted;
             HeaderTextFont = new FontReference(style.FontMedium);
             HeaderTextColor = style.Foreground;
+            ArrowImageOpened = new SpriteBrush(style.ArrowDown);
+            ArrowImageClosed = new SpriteBrush(style.ArrowRight);
         }
 
         /// <summary>
@@ -291,7 +305,6 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void Draw()
         {
-            var style = Style.Current;
             var enabled = EnabledInHierarchy;
 
             // Paint Background
@@ -314,7 +327,11 @@ namespace FlaxEngine.GUI
             {
                 textLeft += 14;
                 var dropDownRect = new Rectangle(2, (HeaderHeight - 12) / 2, 12, 12);
-                Render2D.DrawSprite(_isClosed ? style.ArrowRight : style.ArrowDown, dropDownRect, _mouseOverHeader ? Color.White : new Color(0.8f, 0.8f, 0.8f, 0.8f));
+                var arrowColor = _mouseOverHeader ? Color.White : new Color(0.8f);
+                if (_isClosed)
+                    ArrowImageClosed?.Draw(dropDownRect, arrowColor, true);
+                else
+                    ArrowImageOpened?.Draw(dropDownRect, arrowColor, true);
             }
 
             // Text
