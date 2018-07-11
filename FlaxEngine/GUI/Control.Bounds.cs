@@ -190,9 +190,9 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets the shear.
+        /// Gets or sets the shear. Defined in degrees.
         /// </summary>
-        [EditorDisplay("Transform"), EditorOrder(1040), Tooltip("The shear transform angles (x, y).")]
+        [EditorDisplay("Transform"), EditorOrder(1040), Tooltip("The shear transform angles (x, y). Defined in degrees.")]
         public Vector2 Shear
         {
             get => _shear;
