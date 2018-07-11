@@ -23,7 +23,6 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="Border"/> class.
         /// </summary>
         public Border()
-        : base(0, 0, 64, 64)
         {
             BorderColor = Color.White;
             BorderWidth = 2.0f;

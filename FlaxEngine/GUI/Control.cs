@@ -332,25 +332,39 @@ namespace FlaxEngine.GUI
         public object Tag;
 
         /// <summary>
-        ///     Init
+        /// Initializes a new instance of the <see cref="Control"/> class.
+        /// </summary>
+        protected Control()
+        {
+            _bounds = new Rectangle(0, 0, 64, 64);
+
+            UpdateTransform();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Control"/> class.
         /// </summary>
         /// <param name="x">X coordinate</param>
         /// <param name="y">Y coordinate</param>
         /// <param name="width">Width</param>
         /// <param name="height">Height</param>
         protected Control(float x, float y, float width, float height)
-        : this(new Rectangle(x, y, width, height))
         {
+            _bounds = new Rectangle(x, y, width, height);
+
+            UpdateTransform();
         }
 
         /// <summary>
-        ///     Init
+        /// Initializes a new instance of the <see cref="Control"/> class.
         /// </summary>
         /// <param name="location">Upper left corner location.</param>
         /// <param name="size">Bounds size.</param>
         protected Control(Vector2 location, Vector2 size)
-        : this(new Rectangle(location, size))
         {
+            _bounds = new Rectangle(location, size);
+
+            UpdateTransform();
         }
 
         /// <summary>

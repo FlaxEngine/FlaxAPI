@@ -37,21 +37,26 @@ namespace FlaxEngine.GUI
         /// </summary>
         public event Action<Control> OnChildControlResized;
 
-        ///<inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContainerControl"/> class.
+        /// </summary>
         public ContainerControl()
-        : base(0, 0, 64, 64)
         {
             IsLayoutLocked = true;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContainerControl"/> class.
+        /// </summary>
         public ContainerControl(float x, float y, float width, float height)
         : base(x, y, width, height)
         {
             IsLayoutLocked = true;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContainerControl"/> class.
+        /// </summary>
         public ContainerControl(Vector2 location, Vector2 size)
         : base(location, size)
         {
