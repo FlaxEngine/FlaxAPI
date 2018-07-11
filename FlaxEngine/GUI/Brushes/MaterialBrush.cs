@@ -36,7 +36,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public void Draw(Rectangle rect, Color color, bool withAlpha = false)
         {
-            Render2D.DrawMaterial(Material, rect);
+            Render2D.DrawMaterial(Material, rect, color);
         }
     }
 }

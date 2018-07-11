@@ -308,7 +308,26 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawMaterial(Object.GetUnmanagedPtr(material), ref rect);
+            Internal_DrawMaterial1(Object.GetUnmanagedPtr(material), ref rect);
+#endif
+        }
+
+        /// <summary>
+        /// Draws the GUI material in the 2D.
+        /// </summary>
+        /// <param name="material">Material to render. Must be a GUI material type.</param>
+        /// <param name="rect">The target rectangle to draw.</param>
+        /// <param name="color">Color to use</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DrawMaterial(MaterialBase material, Rectangle rect, Color color)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawMaterial2(Object.GetUnmanagedPtr(material), ref rect, ref color);
 #endif
         }
 
@@ -376,7 +395,10 @@ namespace FlaxEngine
         internal static extern void Internal_DrawBezier(ref Vector2 p1, ref Vector2 p2, ref Vector2 p3, ref Vector2 p4, ref Color color, float thickness, bool withAlpha);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawMaterial(IntPtr material, ref Rectangle rect);
+        internal static extern void Internal_DrawMaterial1(IntPtr material, ref Rectangle rect);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawMaterial2(IntPtr material, ref Rectangle rect, ref Color color);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawBlur(ref Rectangle rect, float blurStrength);
