@@ -284,7 +284,10 @@ namespace FlaxEditor.GUI
 
             // Update
             OnExpandedChanged();
-            PerformLayout();
+            if (HasParent)
+                Parent.PerformLayout();
+            else
+                PerformLayout();
         }
 
         /// <summary>
@@ -307,7 +310,10 @@ namespace FlaxEditor.GUI
 
             // Update
             OnExpandedChanged();
-            PerformLayout();
+            if (HasParent)
+                Parent.PerformLayout();
+            else
+                PerformLayout();
         }
 
         /// <summary>
