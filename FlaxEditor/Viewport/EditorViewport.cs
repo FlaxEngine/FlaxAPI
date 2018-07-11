@@ -967,7 +967,6 @@ namespace FlaxEditor.Viewport
             new ViewFlagOptions(ViewFlags.EyeAdaptation, "Eye Adaptaion"),
             new ViewFlagOptions(ViewFlags.CameraArtifacts, "Camera Artifacts"),
             new ViewFlagOptions(ViewFlags.LensFlares, "Lens Flares"),
-            new ViewFlagOptions(ViewFlags.CSG, "CSG Brushes"),
             new ViewFlagOptions(ViewFlags.DepthOfField, "Depth of Field"),
             new ViewFlagOptions(ViewFlags.PhysicsDebug, "Physics Debug"),
         };
