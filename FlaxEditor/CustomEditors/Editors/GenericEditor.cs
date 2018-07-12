@@ -246,20 +246,21 @@ namespace FlaxEditor.CustomEditors.Editors
                 // TODO: cache properties items array per type?
 
                 // Process properties
-                var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                var properties = type.GetProperties(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
                 items.Capacity = Math.Max(items.Capacity, items.Count + properties.Length);
                 for (int i = 0; i < properties.Length; i++)
                 {
                     var p = properties[i];
 
-                    // Skip hidden properties and only set properties
+                    // Skip only set properties and special cases
                     var getter = p.GetMethod;
-                    if (!p.CanRead || !p.CanWrite || getter == null || !getter.IsPublic || p.GetIndexParameters().GetLength(0) != 0)
+                    if (getter == null || !p.CanWrite || p.GetIndexParameters().GetLength(0) != 0)
                         continue;
 
-                    // Handle HideInEditorAttribute
                     var attributes = p.GetCustomAttributes(true);
-                    if (attributes.Any(x => x is HideInEditorAttribute))
+
+                    // Skip hidden properties, handle special attributes
+                    if ((!getter.IsPublic && !attributes.Any(x => x is ShowInEditorAttribute)) || attributes.Any(x => x is HideInEditorAttribute))
                         continue;
 
                     var item = new ItemInfo(p, attributes);
@@ -272,19 +273,16 @@ namespace FlaxEditor.CustomEditors.Editors
                 // TODO: cache fields items array per type?
 
                 // Process fields
-                var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+                var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
                 items.Capacity = Math.Max(items.Capacity, items.Count + fields.Length);
                 for (int i = 0; i < fields.Length; i++)
                 {
                     var f = fields[i];
 
-                    // Skip hidden fields
-                    if (!f.IsPublic)
-                        continue;
-
-                    // Handle HideInEditorAttribute
                     var attributes = f.GetCustomAttributes(true);
-                    if (attributes.Any(x => x is HideInEditorAttribute))
+
+                    // Skip hidden fields, handle special attributes
+                    if ((!f.IsPublic && !attributes.Any(x => x is ShowInEditorAttribute)) || attributes.Any(x => x is HideInEditorAttribute))
                         continue;
 
                     var item = new ItemInfo(f, attributes);
