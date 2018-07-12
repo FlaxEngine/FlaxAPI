@@ -247,6 +247,7 @@
     <Compile Include="Attributes\Editor\RangeAttribute.cs" />
     <Compile Include="Attributes\Editor\SpaceAttribute.cs" />
     <Compile Include="Attributes\Editor\VisibleIfAttribute.cs" />
+    <Compile Include="Attributes\Editor\VisibleInEditorAttribute.cs" />
     <Compile Include="Attributes\MemberCollectionAttribute.cs" />
     <Compile Include="Attributes\NoSerializeAttribute.cs" />
     <Compile Include="Attributes\PersisitentDataAttribute.cs" />

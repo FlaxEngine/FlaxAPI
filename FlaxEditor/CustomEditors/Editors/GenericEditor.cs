@@ -272,19 +272,19 @@ namespace FlaxEditor.CustomEditors.Editors
                 // TODO: cache fields items array per type?
 
                 // Process fields
-                var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+                var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
                 items.Capacity = Math.Max(items.Capacity, items.Count + fields.Length);
                 for (int i = 0; i < fields.Length; i++)
                 {
                     var f = fields[i];
 
-                    // Skip hidden fields
-                    if (!f.IsPublic)
-                        continue;
-
                     // Handle HideInEditorAttribute
                     var attributes = f.GetCustomAttributes(true);
                     if (attributes.Any(x => x is HideInEditorAttribute))
+                        continue;
+
+                    // Skip hidden fields
+                    if (!f.IsPublic && !attributes.Any(x => x is VisibleInEditorAttribute))
                         continue;
 
                     var item = new ItemInfo(f, attributes);
