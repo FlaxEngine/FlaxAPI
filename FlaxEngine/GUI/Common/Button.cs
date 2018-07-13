@@ -34,8 +34,8 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the custom material used to render the text. It must has domain set to GUI and have a public texture parameter named Font used to sample font atlas texture with font characters data.
         /// </summary>
-        [EditorDisplay("Style"), EditorOrder(2000)]
-        public MaterialBase Material { get; set; }
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("Custom material used to render the text. It must has domain set to GUI and have a public texture parameter named Font used to sample font atlas texture with font characters data.")]
+        public MaterialBase TextMaterial { get; set; }
 
         /// <summary>
         /// Gets or sets the color used to draw button text.
@@ -168,7 +168,7 @@ namespace FlaxEngine.GUI
             Render2D.DrawRectangle(clientRect, borderColor);
 
             // Draw text
-            Render2D.DrawText(Font.GetFont(), Material, Text, clientRect, textColor, TextAlignment.Center, TextAlignment.Center);
+            Render2D.DrawText(Font.GetFont(), TextMaterial, Text, clientRect, textColor, TextAlignment.Center, TextAlignment.Center);
         }
 
         /// <inheritdoc />

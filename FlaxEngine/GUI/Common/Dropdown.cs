@@ -150,8 +150,8 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the custom material used to render the text. It must has domain set to GUI and have a public texture parameter named Font used to sample font atlas texture with font characters data.
         /// </summary>
-        [EditorDisplay("Style"), EditorOrder(2000)]
-        public MaterialBase Material { get; set; }
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("Custom material used to render the text. It must has domain set to GUI and have a public texture parameter named Font used to sample font atlas texture with font characters data.")]
+        public MaterialBase FontMaterial { get; set; }
 
         /// <summary>
         /// Gets or sets the color of the text.
@@ -437,7 +437,7 @@ namespace FlaxEngine.GUI
                 var textRect = new Rectangle(margin, 0, clientRect.Width - boxSize - 2.0f * margin, clientRect.Height);
                 Render2D.PushClip(textRect);
                 var textColor = TextColor;
-                Render2D.DrawText(Font.GetFont(), Material, _items[_selectedIndex], textRect, enabled ? textColor : textColor * 0.5f, TextAlignment.Near, TextAlignment.Center);
+                Render2D.DrawText(Font.GetFont(), FontMaterial, _items[_selectedIndex], textRect, enabled ? textColor : textColor * 0.5f, TextAlignment.Near, TextAlignment.Center);
                 Render2D.PopClip();
             }
 
