@@ -36,17 +36,22 @@ namespace FlaxEditor.CustomEditors
             {
                 var c = name[i];
 
+                // Space before word starting with uppercase letter
                 if (char.IsUpper(c) && i > 0)
                 {
                     if (i + 2 < length && !char.IsUpper(name[i + 1]) && !char.IsUpper(name[i + 2]))
                         sb.Append(' ');
                 }
+                // Space instead of underscore
                 else if (c == '_')
                 {
                     if (sb.Length > 0)
                         sb.Append(' ');
                     continue;
                 }
+                // Space before digits sequence
+                else if (i > 1 && char.IsDigit(c) && !char.IsDigit(name[i - 1]))
+                    sb.Append(' ');
 
                 sb.Append(c);
             }

@@ -26,8 +26,8 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <param name="cm">The context menu.</param>
         /// <param name="archetype">The group archetype.</param>
         public VisjectCMGroup(VisjectCM cm, GroupArchetype archetype)
-        : base(archetype.Name)
         {
+            HeaderText = archetype.Name;
             ContextMenu = cm;
             Archetype = archetype;
         }

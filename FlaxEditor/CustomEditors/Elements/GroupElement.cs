@@ -13,7 +13,7 @@ namespace FlaxEditor.CustomEditors.Elements
         /// <summary>
         /// The drop panel.
         /// </summary>
-        public readonly DropPanel Panel = new DropPanel(string.Empty);
+        public readonly DropPanel Panel = new DropPanel();
 
         /// <summary>
         /// Initializes the element.
@@ -21,7 +21,7 @@ namespace FlaxEditor.CustomEditors.Elements
         /// <param name="text">The text.</param>
         public void Init(string text)
         {
-            Panel.HeaderText = Panel.Name = text;
+            Panel.HeaderText = text;
         }
 
         /// <inheritdoc />

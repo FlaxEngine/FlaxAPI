@@ -178,7 +178,7 @@ namespace FlaxEditor.Surface
                 if (_leftMouseDown && nodeAtMouse.HitsHeader(ref cLocation))
                 {
                     // Check if user is pressing control
-                    if (ParentWindow.GetKey(Keys.Control))
+                    if (Root.GetKey(Keys.Control))
                     {
                         // Add to selection
                         AddToSelection(nodeAtMouse);
@@ -312,7 +312,7 @@ namespace FlaxEditor.Surface
                 return true;
             }
 
-            if (ParentWindow.GetKey(Keys.Control))
+            if (Root.GetKey(Keys.Control))
             {
                 switch (key)
                 {

@@ -20,7 +20,7 @@ namespace FlaxEditor.CustomEditors.Editors
         public override void Initialize(LayoutElementsContainer layout)
         {
             element = layout.Checkbox();
-            element.CheckBox.CheckChanged += (box) => SetValue(box.Checked);
+            element.CheckBox.StateChanged += (box) => SetValue(box.Checked);
         }
 
         /// <inheritdoc />

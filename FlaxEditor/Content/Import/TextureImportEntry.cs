@@ -238,6 +238,12 @@ namespace FlaxEditor.Content.Import
         public bool GenerateMipMaps { get; set; } = true;
 
         /// <summary>
+        /// True if flip Y coordinate of the texture.
+        /// </summary>
+        [EditorOrder(65), EditorDisplay(null, "Flip Y"), Tooltip("True if flip Y coordinate of the texture.")]
+        public bool FlipY { get; set; } = false;
+
+        /// <summary>
         /// The import texture scale.
         /// </summary>
         [EditorOrder(70), Tooltip("Texture scale. Default is 1.")]
@@ -266,6 +272,7 @@ namespace FlaxEditor.Content.Import
             public byte IndependentChannels;
             public byte IsSRGB;
             public byte GenerateMipMaps;
+            public byte FlipY;
             public float Scale;
             public int MaxSize;
             public Rectangle[] SpriteAreas;
@@ -283,6 +290,7 @@ namespace FlaxEditor.Content.Import
                 IndependentChannels = (byte)(IndependentChannels ? 1 : 0),
                 IsSRGB = (byte)(IsSRGB ? 1 : 0),
                 GenerateMipMaps = (byte)(GenerateMipMaps ? 1 : 0),
+                FlipY = (byte)(FlipY ? 1 : 0),
                 Scale = Scale,
                 MaxSize = (int)MaxSize
             };
@@ -313,6 +321,7 @@ namespace FlaxEditor.Content.Import
             IndependentChannels = options.IndependentChannels != 0;
             IsSRGB = options.IsSRGB != 0;
             GenerateMipMaps = options.GenerateMipMaps != 0;
+            FlipY = options.FlipY != 0;
             Scale = options.Scale;
             MaxSize = ConvertMaxSize(options.MaxSize);
             if (options.SpriteAreas != null)

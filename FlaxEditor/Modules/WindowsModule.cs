@@ -12,9 +12,11 @@ using FlaxEditor.Windows.Assets;
 using FlaxEditor.Windows.Profiler;
 using FlaxEngine;
 using FlaxEngine.Assertions;
-using FlaxEngine.GUI.Docking;
 using FlaxEngine.Rendering;
 using FlaxEngine.Utilities;
+using DockPanel = FlaxEditor.GUI.Docking.DockPanel;
+using DockState = FlaxEditor.GUI.Docking.DockState;
+using FloatWindowDockPanel = FlaxEditor.GUI.Docking.FloatWindowDockPanel;
 using Window = FlaxEngine.Window;
 
 namespace FlaxEditor.Modules
@@ -527,7 +529,7 @@ namespace FlaxEditor.Modules
                     SavePanel(writer, panel);
 
                     writer.WriteStartElement("Bounds");
-                    SaveBounds(writer, window.NativeWindow);
+                    SaveBounds(writer, window.Window);
                     writer.WriteEndElement();
 
                     writer.WriteEndElement();

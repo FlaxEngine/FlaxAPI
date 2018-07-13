@@ -109,7 +109,7 @@ namespace FlaxEditor.GUI
         {
             var button = new ToolStripButton(ItemsHeight, ref sprite)
             {
-                Name = text,
+                Text = text,
                 Parent = this,
             };
             if (onClick != null)
@@ -127,7 +127,7 @@ namespace FlaxEditor.GUI
         {
             var button = new ToolStripButton(ItemsHeight, ref Sprite.Invalid)
             {
-                Name = text,
+                Text = text,
                 Parent = this,
             };
             if (onClick != null)

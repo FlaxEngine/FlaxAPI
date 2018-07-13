@@ -71,7 +71,7 @@ namespace FlaxEngine
         /// Gets or sets the material used for the text rendering.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(20), AssetReference(true), EditorDisplay("Text"), Tooltip("Material to use for rendering")]
+        [EditorOrder(20), AssetReference(true), EditorDisplay("Text"), Tooltip("Material to use for rendering. It must contain texture parameter named Font used to sample font texture.")]
         public MaterialBase Material
         {
 #if UNIT_TEST_COMPILANT

@@ -72,6 +72,11 @@ namespace FlaxEditor.Windows
                             }
                         }
                     }
+
+                    if (Editor.CanExport(item.Path))
+                    {
+                        b = cm.AddButton("Export", ExportSelection);
+                    }
                 }
 
                 cm.AddButton("Delete", () => Delete(item));
@@ -168,6 +173,42 @@ namespace FlaxEditor.Windows
             {
                 if (selection[i] is BinaryAssetItem binaryAssetItem)
                     Editor.ContentImporting.Reimport(binaryAssetItem);
+            }
+        }
+
+        private bool Export(ContentItem item, string outputFolder)
+        {
+            if (item is ContentFolder folder)
+            {
+                for (int i = 0; i < folder.Children.Count; i++)
+                {
+                    if (Export(folder.Children[i], outputFolder))
+                        return true;
+                }
+            }
+            else if (item is AssetItem asset && Editor.CanExport(asset.Path))
+            {
+                if (Editor.Export(asset.Path, outputFolder))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Exports the selected items.
+        /// </summary>
+        private void ExportSelection()
+        {
+            string outputFolder = MessageBox.BrowseFolderDialog(Editor.Windows.MainWindow, null, "Select the output folder");
+            if (outputFolder == null)
+                return;
+
+            var selection = _view.Selection;
+            for (int i = 0; i < selection.Count; i++)
+            {
+                if (Export(selection[i], outputFolder))
+                    return;
             }
         }
     }

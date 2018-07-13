@@ -33,13 +33,13 @@ namespace FlaxEditor.Windows
         {
             Image icon = new Image(4, 4, 80, 80)
             {
-                ImageSource = new SpriteImageSource(Editor.Instance.UI.GetIcon("Logo128")),
+                Brush = new SpriteBrush(Editor.Instance.UI.GetIcon("Logo128")),
                 Parent = this
             };
             var nameLabel = new Label(icon.Right + 10, icon.Top, 200, 34)
             {
                 Text = "Flax Engine",
-                Font = Style.Current.FontTitle,
+                Font = new FontReference(Style.Current.FontTitle),
                 HorizontalAlignment = TextAlignment.Near,
                 VerticalAlignment = TextAlignment.Center,
                 Parent = this
@@ -128,9 +128,9 @@ namespace FlaxEditor.Windows
                 "Editor icons - www.icons8.com, www.iconfinder.com",
                 "",
 #if USE_AUTODESK_FBX_SDK
-				"This software contains AutodeskÆ FBXÆ code developed by Autodesk, Inc.",
+				"This software contains Autodesk¬Æ FBX¬Æ code developed by Autodesk, Inc.",
 				"Copyright 2017 Autodesk, Inc. All rights, reserved.",
-				"Such code is provided ìas isî and Autodesk, Inc. disclaims any and all",
+				"Such code is provided ‚Äúas is‚Äù and Autodesk, Inc. disclaims any and all",
 				"warranties, whether express or implied, including without limitation",
 				"the implied warranties of merchantability, fitness for a particular",
 				"purpose or non - infringement of third party rights.In no event shall",

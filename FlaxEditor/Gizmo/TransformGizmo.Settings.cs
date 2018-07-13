@@ -74,12 +74,7 @@ namespace FlaxEditor.Gizmo
         /// The value to adjust all transformation when precisionMode is active.
         /// </summary>
         public float PrecisionModeScale = 0.1f;
-
-        /// <summary>
-        /// Gizmo scale factor
-        /// </summary>
-        public float ScaleFactor = 0.01f;
-
+        
         /// <summary>
         /// True if enable grid snapping when moving objects
         /// </summary>
@@ -108,7 +103,7 @@ namespace FlaxEditor.Gizmo
         /// <summary>
         /// Scale snap value
         /// </summary>
-        public float ScaleSnapValue = 4.0f;
+        public float ScaleSnapValue = 1.0f;
 
         /// <summary>
         /// Gets the current pivot type.

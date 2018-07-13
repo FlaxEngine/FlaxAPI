@@ -893,7 +893,7 @@ namespace FlaxEngine
 
             //Scaling is the length of the rows. ( just take one row since this is a uniform matrix)
             scale = (float)Math.Sqrt(M11 * M11 + M12 * M12 + M13 * M13);
-            float inv_scale = 1f / scale;
+            float invScale = 1f / scale;
 
             //If any of the scaling factors are zero, then the rotation matrix can not exist.
             if (Math.Abs(scale) < Mathf.Epsilon)
@@ -903,18 +903,18 @@ namespace FlaxEngine
             }
 
             //The rotation is the left over matrix after dividing out the scaling.
-            var rotationmatrix = new Matrix();
-            rotationmatrix.M11 = M11 * inv_scale;
-            rotationmatrix.M12 = M12 * inv_scale;
-            rotationmatrix.M13 = M13 * inv_scale;
+            Matrix rotationmatrix = new Matrix();
+            rotationmatrix.M11 = M11 * invScale;
+            rotationmatrix.M12 = M12 * invScale;
+            rotationmatrix.M13 = M13 * invScale;
 
-            rotationmatrix.M21 = M21 * inv_scale;
-            rotationmatrix.M22 = M22 * inv_scale;
-            rotationmatrix.M23 = M23 * inv_scale;
+            rotationmatrix.M21 = M21 * invScale;
+            rotationmatrix.M22 = M22 * invScale;
+            rotationmatrix.M23 = M23 * invScale;
 
-            rotationmatrix.M31 = M31 * inv_scale;
-            rotationmatrix.M32 = M32 * inv_scale;
-            rotationmatrix.M33 = M33 * inv_scale;
+            rotationmatrix.M31 = M31 * invScale;
+            rotationmatrix.M32 = M32 * invScale;
+            rotationmatrix.M33 = M33 * invScale;
 
             rotationmatrix.M44 = 1f;
 
@@ -1515,7 +1515,7 @@ namespace FlaxEngine
             float d14 = value.M21 * b3 + value.M22 * -b1 + value.M23 * b0;
 
             float det = value.M11 * d11 - value.M12 * d12 + value.M13 * d13 - value.M14 * d14;
-            if (Math.Abs(det) == 0.0f)
+            if (Math.Abs(det) < Mathf.Epsilon)
             {
                 result = Zero;
                 return;
@@ -2020,7 +2020,7 @@ namespace FlaxEngine
 
                 int i = r;
 
-                while (matrix[i, lead] == 0)
+                while (Mathf.IsZero(matrix[i, lead]))
                 {
                     i++;
 
@@ -2091,7 +2091,7 @@ namespace FlaxEngine
         /// <param name="cameraUpVector">The up vector of the camera.</param>
         /// <param name="cameraForwardVector">The forward vector of the camera.</param>
         /// <param name="result">When the method completes, contains the created billboard matrix.</param>
-        public static void BillboardLH(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Matrix result)
+        public static void Billboard(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Matrix result)
         {
             Vector3 crossed;
             Vector3 final;
@@ -2133,10 +2133,10 @@ namespace FlaxEngine
         /// <param name="cameraUpVector">The up vector of the camera.</param>
         /// <param name="cameraForwardVector">The forward vector of the camera.</param>
         /// <returns>The created billboard matrix.</returns>
-        public static Matrix BillboardLH(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector)
+        public static Matrix Billboard(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector)
         {
             Matrix result;
-            BillboardLH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
+            Billboard(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
             return result;
         }
 
@@ -2147,7 +2147,7 @@ namespace FlaxEngine
         /// <param name="target">The camera look-at target.</param>
         /// <param name="up">The camera's up vector.</param>
         /// <param name="result">When the method completes, contains the created look-at matrix.</param>
-        public static void LookAtLH(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Matrix result)
+        public static void LookAt(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Matrix result)
         {
             Vector3 xaxis, yaxis, zaxis;
             Vector3.Subtract(ref target, ref eye, out zaxis);
@@ -2183,10 +2183,10 @@ namespace FlaxEngine
         /// <param name="target">The camera look-at target.</param>
         /// <param name="up">The camera's up vector.</param>
         /// <returns>The created look-at matrix.</returns>
-        public static Matrix LookAtLH(Vector3 eye, Vector3 target, Vector3 up)
+        public static Matrix LookAt(Vector3 eye, Vector3 target, Vector3 up)
         {
             Matrix result;
-            LookAtLH(ref eye, ref target, ref up, out result);
+            LookAt(ref eye, ref target, ref up, out result);
             return result;
         }
 
@@ -2198,12 +2198,12 @@ namespace FlaxEngine
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void OrthoLH(float width, float height, float znear, float zfar, out Matrix result)
+        public static void Ortho(float width, float height, float znear, float zfar, out Matrix result)
         {
             float halfWidth = width * 0.5f;
             float halfHeight = height * 0.5f;
 
-            OrthoOffCenterLH(-halfWidth, halfWidth, -halfHeight, halfHeight, znear, zfar, out result);
+            OrthoOffCenter(-halfWidth, halfWidth, -halfHeight, halfHeight, znear, zfar, out result);
         }
 
         /// <summary>
@@ -2214,10 +2214,10 @@ namespace FlaxEngine
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <returns>The created projection matrix.</returns>
-        public static Matrix OrthoLH(float width, float height, float znear, float zfar)
+        public static Matrix Ortho(float width, float height, float znear, float zfar)
         {
             Matrix result;
-            OrthoLH(width, height, znear, zfar, out result);
+            Ortho(width, height, znear, zfar, out result);
             return result;
         }
 
@@ -2231,7 +2231,7 @@ namespace FlaxEngine
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void OrthoOffCenterLH(float left, float right, float bottom, float top, float znear, float zfar, out Matrix result)
+        public static void OrthoOffCenter(float left, float right, float bottom, float top, float znear, float zfar, out Matrix result)
         {
             float zRange = 1.0f / (zfar - znear);
 
@@ -2254,10 +2254,10 @@ namespace FlaxEngine
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <returns>The created projection matrix.</returns>
-        public static Matrix OrthoOffCenterLH(float left, float right, float bottom, float top, float znear, float zfar)
+        public static Matrix OrthoOffCenter(float left, float right, float bottom, float top, float znear, float zfar)
         {
             Matrix result;
-            OrthoOffCenterLH(left, right, bottom, top, znear, zfar, out result);
+            OrthoOffCenter(left, right, bottom, top, znear, zfar, out result);
             return result;
         }
 
@@ -2269,12 +2269,12 @@ namespace FlaxEngine
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void PerspectiveLH(float width, float height, float znear, float zfar, out Matrix result)
+        public static void Perspective(float width, float height, float znear, float zfar, out Matrix result)
         {
             float halfWidth = width * 0.5f;
             float halfHeight = height * 0.5f;
 
-            PerspectiveOffCenterLH(-halfWidth, halfWidth, -halfHeight, halfHeight, znear, zfar, out result);
+            PerspectiveOffCenter(-halfWidth, halfWidth, -halfHeight, halfHeight, znear, zfar, out result);
         }
 
         /// <summary>
@@ -2285,10 +2285,10 @@ namespace FlaxEngine
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <returns>The created projection matrix.</returns>
-        public static Matrix PerspectiveLH(float width, float height, float znear, float zfar)
+        public static Matrix Perspective(float width, float height, float znear, float zfar)
         {
             Matrix result;
-            PerspectiveLH(width, height, znear, zfar, out result);
+            Perspective(width, height, znear, zfar, out result);
             return result;
         }
 
@@ -2300,7 +2300,7 @@ namespace FlaxEngine
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void PerspectiveFovLH(float fov, float aspect, float znear, float zfar, out Matrix result)
+        public static void PerspectiveFov(float fov, float aspect, float znear, float zfar, out Matrix result)
         {
             var yScale = (float)(1.0f / Math.Tan(fov * 0.5f));
             float q = zfar / (zfar - znear);
@@ -2321,10 +2321,10 @@ namespace FlaxEngine
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <returns>The created projection matrix.</returns>
-        public static Matrix PerspectiveFovLH(float fov, float aspect, float znear, float zfar)
+        public static Matrix PerspectiveFov(float fov, float aspect, float znear, float zfar)
         {
             Matrix result;
-            PerspectiveFovLH(fov, aspect, znear, zfar, out result);
+            PerspectiveFov(fov, aspect, znear, zfar, out result);
             return result;
         }
 
@@ -2338,7 +2338,7 @@ namespace FlaxEngine
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <param name="result">When the method completes, contains the created projection matrix.</param>
-        public static void PerspectiveOffCenterLH(float left, float right, float bottom, float top, float znear, float zfar, out Matrix result)
+        public static void PerspectiveOffCenter(float left, float right, float bottom, float top, float znear, float zfar, out Matrix result)
         {
             float zRange = zfar / (zfar - znear);
 
@@ -2362,10 +2362,10 @@ namespace FlaxEngine
         /// <param name="znear">Minimum z-value of the viewing volume.</param>
         /// <param name="zfar">Maximum z-value of the viewing volume.</param>
         /// <returns>The created projection matrix.</returns>
-        public static Matrix PerspectiveOffCenterLH(float left, float right, float bottom, float top, float znear, float zfar)
+        public static Matrix PerspectiveOffCenter(float left, float right, float bottom, float top, float znear, float zfar)
         {
             Matrix result;
-            PerspectiveOffCenterLH(left, right, bottom, top, znear, zfar, out result);
+            PerspectiveOffCenter(left, right, bottom, top, znear, zfar, out result);
             return result;
         }
 
@@ -2649,7 +2649,7 @@ namespace FlaxEngine
         /// <param name="result">When the method completes, contains the created rotation matrix.</param>
         public static void RotationYawPitchRoll(float yaw, float pitch, float roll, out Matrix result)
         {
-            var quaternion = new Quaternion();
+            Quaternion quaternion;
             Quaternion.RotationYawPitchRoll(yaw, pitch, roll, out quaternion);
             RotationQuaternion(ref quaternion, out result);
         }

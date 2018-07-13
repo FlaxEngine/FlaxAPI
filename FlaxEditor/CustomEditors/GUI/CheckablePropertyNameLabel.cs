@@ -33,7 +33,7 @@ namespace FlaxEditor.CustomEditors.GUI
                 Size = new Vector2(14),
                 Parent = this
             };
-            CheckBox.CheckChanged += OnCheckChanged;
+            CheckBox.StateChanged += OnCheckChanged;
             Margin = new Margin(CheckBox.Right + 4, 0, 0, 0);
         }
 

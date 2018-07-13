@@ -452,15 +452,10 @@ namespace FlaxEditor.Windows.Assets
         /// <returns>True if cannot refresh it, otherwise false.</returns>
         public bool RefreshTempMaterial()
         {
-            // Esnure material is loaded
-            if (_asset == null || !_asset.IsLoaded)
-            {
-                // Error
+            // Early check
+            if (_asset == null || _isWaitingForSurfaceLoad)
                 return true;
-            }
-            if (_isWaitingForSurfaceLoad)
-                return true;
-
+            
             // Check if surface has been edited
             if (_surface.IsEdited)
             {

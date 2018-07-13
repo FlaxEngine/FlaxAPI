@@ -13,9 +13,9 @@ namespace FlaxEngine.Rendering
         Default = 0,
 
         /// <summary>
-        /// Fast rendering. Without post-process
+        /// Without post-process pass
         /// </summary>
-        Fast = 1,
+        NoPostFx = 1,
 
         /// <summary>
         /// Draw Diffuse
@@ -68,9 +68,9 @@ namespace FlaxEngine.Rendering
         ShadingModel = 11,
 
         /// <summary>
-        /// Draw Lights buffer
+        /// Draw Light buffer
         /// </summary>
-        LightsBuffer = 12,
+        LightBuffer = 12,
 
         /// <summary>
         /// Draw reflections buffer

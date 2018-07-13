@@ -223,13 +223,20 @@ namespace FlaxEditor.Content.GUI
             var wasLayoutLocked = IsLayoutLocked;
             IsLayoutLocked = true;
 
-            // Deselect items if need to
-            if (!additive)
-                _selection.Clear();
-
             // Select items
-            Assert.IsTrue(items.TrueForAll(x => _items.Contains(x)));
-            _selection.AddRange(items);
+            if (additive)
+            {
+                for (int i = 0; i < items.Count; i++)
+                {
+                    if (!_selection.Contains(items[i]))
+                        _selection.Add(items[i]);
+                }
+            }
+            else
+            {
+                _selection.Clear();
+                _selection.AddRange(items);
+            }
 
             // Unload and perform UI layout
             IsLayoutLocked = wasLayoutLocked;
@@ -250,13 +257,17 @@ namespace FlaxEditor.Content.GUI
             var wasLayoutLocked = IsLayoutLocked;
             IsLayoutLocked = true;
 
-            // Deselect items if need to
-            if (!additive)
-                _selection.Clear();
-
             // Select item
-            Assert.IsTrue(_items.Contains(item));
-            _selection.Add(item);
+            if (additive)
+            {
+                if (!_selection.Contains(item))
+                    _selection.Add(item);
+            }
+            else
+            {
+                _selection.Clear();
+                _selection.Add(item);
+            }
 
             // Unload and perform UI layout
             IsLayoutLocked = wasLayoutLocked;
@@ -295,8 +306,8 @@ namespace FlaxEditor.Content.GUI
             IsLayoutLocked = true;
 
             // Deselect item
-            Assert.IsTrue(_selection.Contains(item));
-            _selection.Remove(item);
+            if (_selection.Contains(item))
+                _selection.Remove(item);
 
             // Unload and perform UI layout
             IsLayoutLocked = wasLayoutLocked;
@@ -381,7 +392,7 @@ namespace FlaxEditor.Content.GUI
             bool isSelected = _selection.Contains(item);
 
             // Add/remove from selection
-            if (ParentWindow.GetKey(Keys.Control))
+            if (Root.GetKey(Keys.Control))
             {
                 if (isSelected)
                     Deselect(item);
@@ -389,7 +400,7 @@ namespace FlaxEditor.Content.GUI
                     Select(item, true);
             }
             // Range select
-            else if (ParentWindow.GetKey(Keys.Shift))
+            else if (Root.GetKey(Keys.Shift))
             {
                 int min = _selection.Min(x => x.IndexInParent);
                 int max = _selection.Max(x => x.IndexInParent);
@@ -398,7 +409,10 @@ namespace FlaxEditor.Content.GUI
                 var selection = new List<ContentItem>(_selection);
                 for (int i = min; i <= max; i++)
                 {
-                    selection.Add((ContentItem)_children[i]);
+                    if (_children[i] is ContentItem cc && !selection.Contains(cc))
+                    {
+                        selection.Add(cc);
+                    }
                 }
                 Select(selection);
             }
@@ -536,7 +550,7 @@ namespace FlaxEditor.Content.GUI
         public override bool OnMouseWheel(Vector2 location, float delta)
         {
             // Check if pressing control key
-            if (ParentWindow.GetKey(Keys.Control))
+            if (Root.GetKey(Keys.Control))
             {
                 // Zoom
                 ViewScale += delta * 0.05f;
@@ -559,7 +573,7 @@ namespace FlaxEditor.Content.GUI
             }
 
             // Select all
-            if (key == Keys.A && ParentWindow.GetKey(Keys.Control))
+            if (key == Keys.A && Root.GetKey(Keys.Control))
             {
                 SelectAll();
                 return true;
@@ -582,7 +596,7 @@ namespace FlaxEditor.Content.GUI
                     return true;
                 }
 
-                if (ParentWindow.GetKey(Keys.Control))
+                if (Root.GetKey(Keys.Control))
                 {
                     switch (key)
                     {

@@ -3,6 +3,7 @@
 using System;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using FlaxEngine.Rendering;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Viewport.Previews
@@ -21,11 +22,12 @@ namespace FlaxEditor.Viewport.Previews
             "Cylinder",
             "Cone"
         };
-        
+
         private ModelActor _previewModel;
         private Decal _decal;
         private MaterialBase _material;
         private int _selectedModelIndex;
+        private Image _guiMaterialControl;
         private readonly MaterialBase[] _postFxMaterialsCache = new MaterialBase[1];
 
         /// <summary>
@@ -52,7 +54,7 @@ namespace FlaxEditor.Viewport.Previews
             get => _selectedModelIndex;
             set
             {
-                if(value < 0 || value > Models.Length)
+                if (value < 0 || value > Models.Length)
                     throw new ArgumentOutOfRangeException();
 
                 _selectedModelIndex = value;
@@ -115,6 +117,7 @@ namespace FlaxEditor.Viewport.Previews
             MaterialBase surfaceMaterial = null;
             MaterialBase postFxMaterial = null;
             MaterialBase decalMaterial = null;
+            MaterialBase guiMaterial = null;
             if (_material != null)
             {
                 if (_material is MaterialInstance materialInstance && materialInstance.BaseMaterial == null)
@@ -123,20 +126,33 @@ namespace FlaxEditor.Viewport.Previews
                 }
                 else
                 {
-                    if (_material.IsPostFx)
-                        postFxMaterial = _material;
-                    else if (_material.IsDecal)
-                        decalMaterial = _material;
-                    else
+                    switch (_material.Info.Domain)
+                    {
+                    case MaterialDomain.Surface:
                         surfaceMaterial = _material;
+                        break;
+                    case MaterialDomain.PostProcess:
+                        postFxMaterial = _material;
+                        break;
+                    case MaterialDomain.Decal:
+                        decalMaterial = _material;
+                        break;
+                    case MaterialDomain.GUI:
+                        guiMaterial = _material;
+                        break;
+                    default: throw new ArgumentOutOfRangeException();
+                    }
                 }
             }
 
+            // PostFx
             var entries = _previewModel.Entries;
             if (entries.Length == 1)
                 entries[0].Material = surfaceMaterial;
             _postFxMaterialsCache[0] = postFxMaterial;
             PostFxVolume.Settings.PostFxMaterials = _postFxMaterialsCache;
+
+            // Decal
             if (decalMaterial && _decal == null)
             {
                 _decal = Decal.New();
@@ -146,12 +162,36 @@ namespace FlaxEditor.Viewport.Previews
             }
             if (_decal)
                 _decal.Material = decalMaterial;
+
+            // GUI
+            if (guiMaterial && _guiMaterialControl == null)
+            {
+                _guiMaterialControl = new Image
+                {
+                    DockStyle = DockStyle.Fill,
+                    KeepAspectRatio = false,
+                    Brush = new MaterialBrush(),
+                    Parent = this,
+                    IndexInParent = 0,
+                };
+            }
+            if (_guiMaterialControl != null)
+            {
+                ((MaterialBrush)_guiMaterialControl.Brush).Material = guiMaterial;
+                _guiMaterialControl.Enabled = _guiMaterialControl.Visible = guiMaterial != null;
+            }
         }
 
         /// <inheritdoc />
         public override void OnDestroy()
         {
             _material = null;
+
+            if (_guiMaterialControl != null)
+            {
+                _guiMaterialControl.Dispose();
+                _guiMaterialControl = null;
+            }
 
             // Ensure to cleanup created actor objects
             Object.Destroy(ref _previewModel);

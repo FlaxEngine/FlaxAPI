@@ -6,6 +6,7 @@ namespace FlaxEngine.GUI
     /// GUI control that contains two child panels and the splitter between them.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    [HideInEditor]
     public class SplitPanel : ContainerControl
     {
         /// <summary>
@@ -207,9 +208,9 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(Vector2 size)
+        protected override void SetSizeInternal(ref Vector2 size)
         {
-            base.SetSizeInternal(size);
+            base.SetSizeInternal(ref size);
 
             // Refresh
             UpdateSplitRect();

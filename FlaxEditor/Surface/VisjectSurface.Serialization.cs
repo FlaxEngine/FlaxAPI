@@ -777,6 +777,7 @@ namespace FlaxEditor.Surface
         /// <returns>The bytes with surface data or null if failed.</returns>
         public byte[] Save()
         {
+            var hasFocus = IsFocused;
             Enabled = false;
 
             // Save surface meta
@@ -818,6 +819,7 @@ namespace FlaxEditor.Surface
             }
 
             Enabled = true;
+            if (hasFocus) Focus();
 
             if (result)
             {

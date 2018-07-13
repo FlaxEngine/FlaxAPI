@@ -15,7 +15,7 @@ namespace FlaxEditor.Windows
     public class GameWindow : EditorWindow
     {
         private readonly RenderOutputControl _viewport;
-        private readonly ContainerControl _guiRoot;
+        private readonly GameRoot _guiRoot;
         private bool _showGUI = true;
         private float _gameStartTime;
 
@@ -48,6 +48,123 @@ namespace FlaxEditor.Windows
         /// </summary>
         public bool CenterMouseOnFocus { get; set; }
 
+        private class GameRoot : ContainerControl
+        {
+            public bool EnableEvents => SceneManager.IsGameLogicRunning;
+
+            public override bool OnCharInput(char c)
+            {
+                if (!EnableEvents)
+                    return false;
+
+                return base.OnCharInput(c);
+            }
+
+            public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
+            {
+                if (!EnableEvents)
+                    return DragDropEffect.None;
+
+                return base.OnDragDrop(ref location, data);
+            }
+
+            public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
+            {
+                if (!EnableEvents)
+                    return DragDropEffect.None;
+
+                return base.OnDragEnter(ref location, data);
+            }
+
+            public override void OnDragLeave()
+            {
+                if (!EnableEvents)
+                    return;
+
+                base.OnDragLeave();
+            }
+
+            public override DragDropEffect OnDragMove(ref Vector2 location, DragData data)
+            {
+                if (!EnableEvents)
+                    return DragDropEffect.None;
+
+                return base.OnDragMove(ref location, data);
+            }
+
+            public override bool OnKeyDown(Keys key)
+            {
+                if (!EnableEvents)
+                    return false;
+
+                return base.OnKeyDown(key);
+            }
+
+            public override void OnKeyUp(Keys key)
+            {
+                if (!EnableEvents)
+                    return;
+
+                base.OnKeyUp(key);
+            }
+
+            public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+            {
+                if (!EnableEvents)
+                    return false;
+
+                return base.OnMouseDoubleClick(location, buttons);
+            }
+
+            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            {
+                if (!EnableEvents)
+                    return false;
+
+                return base.OnMouseDown(location, buttons);
+            }
+
+            public override void OnMouseEnter(Vector2 location)
+            {
+                if (!EnableEvents)
+                    return;
+
+                base.OnMouseEnter(location);
+            }
+
+            public override void OnMouseLeave()
+            {
+                if (!EnableEvents)
+                    return;
+
+                base.OnMouseLeave();
+            }
+
+            public override void OnMouseMove(Vector2 location)
+            {
+                if (!EnableEvents)
+                    return;
+
+                base.OnMouseMove(location);
+            }
+
+            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            {
+                if (!EnableEvents)
+                    return false;
+
+                return base.OnMouseUp(location, buttons);
+            }
+
+            public override bool OnMouseWheel(Vector2 location, float delta)
+            {
+                if (!EnableEvents)
+                    return false;
+
+                return base.OnMouseWheel(location, delta);
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GameWindow"/> class.
         /// </summary>
@@ -69,15 +186,14 @@ namespace FlaxEditor.Windows
             };
 
             // Override the game GUI root
-            _guiRoot = new ContainerControl
+            _guiRoot = new GameRoot
             {
                 DockStyle = DockStyle.Fill,
-                Visible = false,
-                Enabled = false,
+                //Visible = false,
                 CanFocus = false,
                 Parent = _viewport
             };
-            FlaxEngine.GUI.Window.Root = _guiRoot;
+            RootControl.GameRoot = _guiRoot;
             Editor.StateMachine.PlayingState.SceneDuplicating += PlayingStateOnSceneDuplicating;
             Editor.StateMachine.PlayingState.SceneRestored += PlayingStateOnSceneRestored;
 
@@ -95,21 +211,19 @@ namespace FlaxEditor.Windows
         private void PlayingStateOnSceneDuplicating()
         {
             // Remove reaming GUI controls so loaded scene can add own GUI
-            _guiRoot.DisposeChildren();
+            //_guiRoot.DisposeChildren();
 
             // Show GUI
-            _guiRoot.Visible = _showGUI;
-            _guiRoot.Enabled = true;
+            //_guiRoot.Visible = _showGUI;
         }
 
         private void PlayingStateOnSceneRestored()
         {
             // Remove reaming GUI controls so loaded scene can add own GUI
-            _guiRoot.DisposeChildren();
+            //_guiRoot.DisposeChildren();
 
             // Hide GUI
-            _guiRoot.Visible = false;
-            _guiRoot.Enabled = false;
+            //_guiRoot.Visible = false;
         }
 
         /// <inheritdoc />
@@ -166,7 +280,7 @@ namespace FlaxEditor.Windows
             }
             else if (key == Keys.F11)
             {
-                if (ParentWindow.GetKey(Keys.Shift))
+                if (Root.GetKey(Keys.Shift))
                 {
                     // Unlock mouse in game mode
                     if (Editor.StateMachine.IsPlayMode)
@@ -192,7 +306,7 @@ namespace FlaxEditor.Windows
             if (CenterMouseOnFocus && Editor.StateMachine.IsPlayMode)
             {
                 Vector2 center = PointToWindow(Size * 0.5f);
-                ParentWindow.MousePosition = center;
+                Root.MousePosition = center;
             }
         }
 

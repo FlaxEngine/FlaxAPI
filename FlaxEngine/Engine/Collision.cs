@@ -88,6 +88,7 @@ namespace FlaxEngine
 
         internal static List<Collision> _pool = new List<Collision>();
         internal static Collision[] _data;
+        internal static int _dataUsed;
 
         internal static Collision GetCollision(int contactsCount)
         {
@@ -105,14 +106,6 @@ namespace FlaxEngine
 
         internal static unsafe Collision[] Internal_ExtractCollisions(byte[] data)
         {
-            // Return used collisions to pool
-            if (_data != null)
-            {
-                _pool.AddRange(_data);
-                _data = null;
-            }
-
-            //CollisionData collisionData = new CollisionData();
             fixed (byte* dataPtr = data)
             {
                 using (var memoryStream = new MemoryStream(data, false))
@@ -123,12 +116,15 @@ namespace FlaxEngine
                         return null;
                     int collisionsCount = stream.ReadInt32();
 
+                    if (_data == null || _data.Length < collisionsCount * 2)
+                        _data = new Collision[(int)(collisionsCount * 2 * 1.5f)];
+                    _dataUsed = collisionsCount * 2;
+
                     int index = 0;
-                    _data = new Collision[collisionsCount * 2];
                     for (int i = 0; i < collisionsCount; i++)
                     {
                         var ptr = dataPtr + memoryStream.Position;
-                        CollisionData* collisionData = (CollisionData*)ptr;
+                        CollisionData* collisionData = ((CollisionData*)ptr) + i;
 
                         var c1 = GetCollision(collisionData->ContactsCount);
                         var c2 = GetCollision(collisionData->ContactsCount);
@@ -144,6 +140,32 @@ namespace FlaxEngine
             }
 
             return _data;
+        }
+
+        internal static void Internal_SendCollisions(int newStart, int newCount, int removedStart, int removedCount)
+        {
+            Collision c;
+
+            for (int i = 0; i < newCount;)
+            {
+                c = _data[newStart + i++];
+                c.ThisCollider.OnCollisionEnter(c);
+                c = _data[newStart + i++];
+                c.ThisCollider.OnCollisionEnter(c);
+            }
+
+            for (int i = 0; i < removedCount;)
+            {
+                c = _data[removedStart + i++];
+                c.ThisCollider.OnCollisionExit(c);
+                c = _data[removedStart + i++];
+                c.ThisCollider.OnCollisionExit(c);
+            }
+
+            for (int i = 0; i < _dataUsed; i++)
+                _pool.Add(_data[i]);
+            Array.Clear(_data, 0, _dataUsed);
+            _dataUsed = 0;
         }
 
         internal unsafe void CopyFrom(CollisionData* data)
@@ -170,7 +192,9 @@ namespace FlaxEngine
             _velocityB = data._velocityB;
             _colliderA = data._colliderA;
             _colliderB = data._colliderB;
-            _contacts = (ContactPoint[])data._contacts.Clone();
+
+            for (int i = 0; i < _contacts.Length; i++)
+                _contacts[i] = data._contacts[i];
         }
 
         internal void SwapObjects()

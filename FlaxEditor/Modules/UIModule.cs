@@ -12,8 +12,9 @@ using FlaxEditor.Windows;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
-using FlaxEngine.GUI.Docking;
 using FlaxEngine.Rendering;
+using DockHintWindow = FlaxEditor.GUI.Docking.DockHintWindow;
+using MasterDockPanel = FlaxEditor.GUI.Docking.MasterDockPanel;
 
 namespace FlaxEditor.Modules
 {
@@ -261,7 +262,7 @@ namespace FlaxEditor.Modules
             if (_progressLabel != null)
                 _progressLabel.Text = text;
             if (_progressBar != null)
-                _progressBar.Value = progress;
+                _progressBar.Value = progress * 100.0f;
         }
 
         /// <inheritdoc />
@@ -332,7 +333,7 @@ namespace FlaxEditor.Modules
             style.ProgressNormal = Color.FromBgra(0xFF0ad328);
 
             // Color picking
-            style.ShowPickColorDialog += (initialValue, colorChanged, useDynamicEditing) => new ColorPickerDialog(initialValue, colorChanged, useDynamicEditing).Show();
+            ColorValueBox.ShowPickColorDialog += (initialValue, colorChanged, useDynamicEditing) => new ColorPickerDialog(initialValue, colorChanged, useDynamicEditing).Show();
 
             // Font
             var primaryFont = FlaxEngine.Content.LoadInternal<FontAsset>(EditorAssets.PrimaryFont);
@@ -365,9 +366,9 @@ namespace FlaxEditor.Modules
             style.CheckBoxIntermediate = GetIcon("CheckBoxIntermediate12");
             style.CheckBoxTick = GetIcon("CheckBoxTick12");
             style.StatusBarSizeGrip = GetIcon("StatusBarSizeGrip12");
-            style.Translate16 = GetIcon("Translate16");
-            style.Rotate16 = GetIcon("Rotate16");
-            style.Scale16 = GetIcon("Scale16");
+            style.Translate = GetIcon("Translate16");
+            style.Rotate = GetIcon("Rotate16");
+            style.Scale = GetIcon("Scale16");
 
             style.SharedTooltip = new Tooltip();
 
@@ -381,7 +382,7 @@ namespace FlaxEditor.Modules
             Style.Current = style;
         }
 
-        private void InitMainMenu(FlaxEngine.GUI.Window mainWindow)
+        private void InitMainMenu(FlaxEngine.GUI.RootControl mainWindow)
         {
             MainMenu = new MainMenu();
             MainMenu.Parent = mainWindow;
@@ -490,7 +491,7 @@ namespace FlaxEditor.Modules
             cm.AddButton("Information about Flax", () => new AboutDialog().Show());
         }
 
-        private void InitToolstrip(FlaxEngine.GUI.Window mainWindow)
+        private void InitToolstrip(FlaxEngine.GUI.RootControl mainWindow)
         {
             ToolStrip = new ToolStrip();
             ToolStrip.Parent = mainWindow;
@@ -511,7 +512,7 @@ namespace FlaxEditor.Modules
             UpdateToolstrip();
         }
 
-        private void InitStatusBar(FlaxEngine.GUI.Window mainWindow)
+        private void InitStatusBar(FlaxEngine.GUI.RootControl mainWindow)
         {
             // Status Bar
             StatusBar = new StatusBar
@@ -550,7 +551,7 @@ namespace FlaxEditor.Modules
             UpdateStatusBar();
         }
 
-        private void InitDockPanel(FlaxEngine.GUI.Window mainWindow)
+        private void InitDockPanel(FlaxEngine.GUI.RootControl mainWindow)
         {
             // Dock Panel
             MasterPanel.Parent = mainWindow;

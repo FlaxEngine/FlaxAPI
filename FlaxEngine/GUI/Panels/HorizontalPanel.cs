@@ -19,22 +19,23 @@ namespace FlaxEngine.GUI
         protected override void PerformLayoutSelf()
         {
             // Sort controls from left to right
-            float x = _leftMargin;
-            float h = Height - _topMargin - _bottomMargin;
+            float x = _margin.Left;
+            float h = Height - _margin.Height;
             for (int i = 0; i < _children.Count; i++)
             {
                 Control c = _children[i];
                 if (c.Visible)
                 {
                     var w = c.Width;
-                    c.Bounds = new Rectangle(x + _spacing + _offset.X, _topMargin + _offset.Y, h, w);
-                    x = c.Bottom;
+                    c.Bounds = new Rectangle(x + _spacing + _offset.X, _margin.Top + _offset.Y, h, w);
+                    x = c.Right;
                 }
             }
-            x += _rightMargin;
+            x += _margin.Right;
 
             // Update size
-            Width = x;
+            if (_autoSize)
+                Width = x;
         }
     }
 }

@@ -65,6 +65,43 @@ namespace FlaxEditor
         }
 
         /// <summary>
+        /// Checks if the given asset can be exported.
+        /// </summary>
+        /// <param name="path">The asset path (absolute path with an extension).</param>
+        /// <returns>True if can export given asset, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool CanExport(string path)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_CanExport(path);
+#endif
+        }
+
+        /// <summary>
+        /// Exports the given asset to the specified file location.
+        /// </summary>
+        /// <param name="inputPath">The input asset path (absolute path with an extension).</param>
+        /// <param name="outputFolder">The output folder path (filename with extension is computed by auto).</param>
+        /// <returns>True if given asset has been exported, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool Export(string inputPath, string outputFolder)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_Export(inputPath, outputFolder);
+#endif
+        }
+
+        /// <summary>
         /// Checks if every managed assembly has been loaded (including user scripts assembly).
         /// </summary>
         [UnmanagedCall]
@@ -88,6 +125,12 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_CanImport(string extension);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_CanExport(string path);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_Export(string inputPath, string outputFolder);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetIsEveryAssemblyLoaded();

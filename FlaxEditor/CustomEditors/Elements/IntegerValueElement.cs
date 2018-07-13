@@ -81,4 +81,78 @@ namespace FlaxEditor.CustomEditors.Elements
         /// <inheritdoc />
         public bool IsSliding => IntValue.IsSliding;
     }
+
+    /// <summary>
+    /// The signed integer value element (maps to the full range of long type).
+    /// </summary>
+    /// <seealso cref="FlaxEditor.CustomEditors.LayoutElement" />
+    public class SignedIntegerValueElement : LayoutElement
+    {
+        /// <summary>
+        /// The signed integer (long) value box.
+        /// </summary>
+        public readonly LongValueBox LongValue;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SignedIntegerValueElement"/> class.
+        /// </summary>
+        public SignedIntegerValueElement()
+        {
+            LongValue = new LongValueBox(0);
+        }
+
+        /// <inheritdoc />
+        public override Control Control => LongValue;
+
+        /// <summary>
+        /// Gets or sets the value.
+        /// </summary>
+        public long Value
+        {
+            get => LongValue.Value;
+            set => LongValue.Value = value;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether user is using a slider.
+        /// </summary>
+        public bool IsSliding => LongValue.IsSliding;
+    }
+
+    /// <summary>
+    /// The unsigned integer value element (maps to the full range of ulong type).
+    /// </summary>
+    /// <seealso cref="FlaxEditor.CustomEditors.LayoutElement" />
+    public class UnsignedIntegerValueElement : LayoutElement
+    {
+        /// <summary>
+        /// The unsigned integer (ulong) value box.
+        /// </summary>
+        public readonly ULongValueBox ULongValue;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnsignedIntegerValueElement"/> class.
+        /// </summary>
+        public UnsignedIntegerValueElement()
+        {
+            ULongValue = new ULongValueBox(0);
+        }
+
+        /// <inheritdoc />
+        public override Control Control => ULongValue;
+
+        /// <summary>
+        /// Gets or sets the value.
+        /// </summary>
+        public ulong Value
+        {
+            get => ULongValue.Value;
+            set => ULongValue.Value = value;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether user is using a slider.
+        /// </summary>
+        public bool IsSliding => ULongValue.IsSliding;
+    }
 }

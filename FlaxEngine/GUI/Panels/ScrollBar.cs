@@ -8,6 +8,7 @@ namespace FlaxEngine.GUI
     /// Scroll Bars base class - allows to scroll contents of the GUI panel.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.Control" />
+    [HideInEditor]
     public abstract class ScrollBar : Control
     {
         /// <summary>
@@ -23,7 +24,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The default minimum opacity.
         /// </summary>
-        public const float DefaultMinimumOpacity = 0.4f;
+        public const float DefaultMinimumOpacity = 0.7f;
 
         /// <summary>
         /// The default minimum size.
@@ -112,7 +113,7 @@ namespace FlaxEngine.GUI
                     // Check if skip smoothing
                     if (!UseSmoothing)
                     {
-                        setValue(value);
+                        SetValue(value);
                     }
                 }
             }
@@ -164,13 +165,13 @@ namespace FlaxEngine.GUI
             {
                 Value = min;
             }
-            else if (Mathf.IsNotInRange(max, viewMin, viewMax))
+            /*else if (Mathf.IsNotInRange(max, viewMin, viewMax))
             {
                 Value = max - viewSize;
-            }
+            }*/
         }
 
-        private void updateThumb()
+        private void UpdateThumb()
         {
             // Cache data
             float trackSize = TrackSize;
@@ -205,16 +206,16 @@ namespace FlaxEngine.GUI
             _value = _targetValue = 0;
         }
 
-        private void setValue(float value)
+        private void SetValue(float value)
         {
             _value = value;
 
             // Update
-            updateThumb();
+            UpdateThumb();
 
             // Change parent panel view offset
             if (Parent is Panel panel)
-                panel.setViewOffset(_orientation, _value);
+                panel.SetViewOffset(_orientation, _value);
         }
 
         /// <inheritdoc />
@@ -224,10 +225,7 @@ namespace FlaxEngine.GUI
 
             // Opacity smoothing
             float targetOpacity = Parent.IsMouseOver ? 1.0f : DefaultMinimumOpacity;
-            if (isDeltaSlow)
-                _thumbOpacity = targetOpacity;
-            else
-                _thumbOpacity = Mathf.Lerp(_thumbOpacity, targetOpacity, deltaTime * 10.0f);
+            _thumbOpacity = isDeltaSlow ? targetOpacity : Mathf.Lerp(_thumbOpacity, targetOpacity, deltaTime * 10.0f);
 
             // Ensure scroll bar is visible
             if (Visible)
@@ -241,7 +239,7 @@ namespace FlaxEngine.GUI
                         value = Mathf.Lerp(_value, _targetValue, deltaTime * 20.0f * SmoothingScale);
                     else
                         value = _targetValue;
-                    setValue(value);
+                    SetValue(value);
                 }
             }
 
@@ -276,7 +274,7 @@ namespace FlaxEngine.GUI
         {
             if (_thumbClicked)
             {
-                Vector2 slidePosition = location + ParentWindow.TrackingMouseOffset;
+                Vector2 slidePosition = location + Root.TrackingMouseOffset;
                 float mousePosition = _orientation == Orientation.Vertical ? slidePosition.Y : slidePosition.X;
 
                 float perc = (mousePosition - _mouseOffset - _thumbSize / 2) / (TrackSize - _thumbSize);
@@ -298,7 +296,7 @@ namespace FlaxEngine.GUI
             if (buttons == MouseButton.Left)
             {
                 // Remove focus
-                var parentWin = ParentWindow;
+                var parentWin = Root;
                 parentWin.FocusedControl?.Defocus();
 
                 float mousePosition = _orientation == Orientation.Vertical ? location.Y : location.X;
@@ -337,10 +335,11 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(Vector2 size)
+        protected override void SetSizeInternal(ref Vector2 size)
         {
-            base.SetSizeInternal(size);
-            updateThumb();
+            base.SetSizeInternal(ref size);
+
+            UpdateThumb();
         }
 
         /// <inheritdoc />

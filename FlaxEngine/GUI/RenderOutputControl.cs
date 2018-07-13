@@ -9,6 +9,7 @@ namespace FlaxEngine.GUI
     /// A common control used to present rendered frame in the UI.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    [HideInEditor]
     public class RenderOutputControl : ContainerControl
     {
         /// <summary>
@@ -84,7 +85,7 @@ namespace FlaxEngine.GUI
         {
             while (c != null)
             {
-                if (c is Window win)
+                if (c is RootControl win)
                 {
                     return false;
                 }

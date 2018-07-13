@@ -22,7 +22,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static T LoadAsync<T>(Guid id)where T : Asset
+        public static T LoadAsync<T>(Guid id) where T : Asset
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -41,7 +41,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static T LoadAsync<T>(string path)where T : Asset
+        public static T LoadAsync<T>(string path) where T : Asset
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -60,7 +60,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static T LoadAsyncInternal<T>(string internalPath)where T : Asset
+        public static T LoadAsyncInternal<T>(string internalPath) where T : Asset
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -115,7 +115,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static T GetAsset<T>(Guid id)where T : Asset
+        public static T GetAsset<T>(Guid id) where T : Asset
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -134,7 +134,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static T GetAsset<T>(string path)where T : Asset
+        public static T GetAsset<T>(string path) where T : Asset
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");

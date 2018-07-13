@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors
@@ -39,6 +40,7 @@ namespace FlaxEditor.CustomEditors
         private ValueContainer _values;
         private bool _isSetBlocked;
         private bool _hasValueDirty;
+        private bool _rebuildOnRefresh;
         private object _valueToSet;
 
         /// <summary>
@@ -142,6 +144,14 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Rebuilds the editor layout on editor refresh. Postponed after dirty value gets synced. Call it after <see cref="SetValue"/> to update editor after actual value assign.
+        /// </summary>
+        public void RebuildLayoutOnRefresh()
+        {
+            _rebuildOnRefresh = true;
+        }
+
+        /// <summary>
         /// Initializes this editor.
         /// </summary>
         /// <param name="layout">The layout builder.</param>
@@ -164,6 +174,7 @@ namespace FlaxEditor.CustomEditors
             _valueToSet = null;
             _values = null;
             _isSetBlocked = false;
+            _rebuildOnRefresh = false;
         }
 
         internal void RefreshRoot()
@@ -216,8 +227,27 @@ namespace FlaxEditor.CustomEditors
             _isSetBlocked = false;
 
             // Update children
-            for (int i = 0; i < _children.Count; i++)
-                _children[i].RefreshInternal();
+            try
+            {
+                for (int i = 0; i < _children.Count; i++)
+                    _children[i].RefreshInternal();
+            }
+            catch (TargetException ex)
+            {
+                // This happens when one of the edited objects changes its type.
+                // Eg. from Label to TextBox, while both types were assigned to the same field of type Control.
+                // It's valid, just rebuild the child editors and log the warning to keep it tracking.
+                Editor.LogWarning("Exception while updating the child editors");
+                Editor.LogWarning(ex);
+                RebuildLayout();
+            }
+
+            // Rebuild if flag is set
+            if (_rebuildOnRefresh)
+            {
+                _rebuildOnRefresh = false;
+                RebuildLayout();
+            }
         }
 
         /// <summary>

@@ -114,17 +114,18 @@ namespace FlaxEditor
 
             if (_highlightTriangles.Count > 0)
             {
+                var mesh = _highlightTrianglesModel.LODs[0].Meshes[0];
                 if (!Utils.ArraysEqual(_highlightTrianglesSet, _highlightTriangles))
                 {
                     _highlightIndicesSet = new int[_highlightTriangles.Count];
                     for (int i = 0; i < _highlightIndicesSet.Length; i++)
                         _highlightIndicesSet[i] = i;
                     _highlightTrianglesSet = _highlightTriangles.ToArray();
-                    _highlightTrianglesModel.UpdateMesh(_highlightTrianglesSet, _highlightIndicesSet);
+                    mesh.UpdateMesh(_highlightTrianglesSet, _highlightIndicesSet);
                 }
 
                 world = Matrix.Identity;
-                collector.AddDrawCall(_highlightTrianglesModel.LODs[0].Meshes[0], _highlightMaterial, ref world);
+                collector.AddDrawCall(mesh, _highlightMaterial, ref world);
             }
         }
 

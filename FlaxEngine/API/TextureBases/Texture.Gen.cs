@@ -32,11 +32,35 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Saves asset to the file. It must be fully loaded.
+        /// </summary>
+        /// <remarks>
+        /// Supported only in Editor.
+        /// </remarks>
+        /// <param name="path">The custom asset path to use for the saving. Use empty value to save this asset to its own storage location. Can be used to duplicate asset.</param>
+        /// <returns>True if cannot save data, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public bool Save(string path = null)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_Save(unmanagedPtr, path);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetIsNormalMap(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_Save(IntPtr obj, string path);
 #endif
 
         #endregion

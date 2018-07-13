@@ -4,7 +4,6 @@ using System;
 using FlaxEditor.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.GUI.Tabs;
 
 namespace FlaxEditor.Windows.Profiler
 {

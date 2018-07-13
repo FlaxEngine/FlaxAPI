@@ -8,9 +8,5 @@ namespace FlaxEngine
     /// <seealso cref="FlaxEngine.BinaryAsset" />
     public sealed class Shader : BinaryAsset
     {
-        /// <summary>
-        /// The asset type content domain.
-        /// </summary>
-        public const ContentDomain Domain = ContentDomain.Shader;
     }
 }

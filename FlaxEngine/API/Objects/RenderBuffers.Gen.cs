@@ -90,6 +90,19 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
+        /// Gets the depth buffer render target allocated within this render buffers collection (read only).
+        /// </summary>
+        [UnmanagedCall]
+        public RenderTarget DepthBuffer
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetDepthBuffer(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
         /// Initializes render buffers.
         /// </summary>
         /// <param name="width">The surface width in pixels.</param>
@@ -140,6 +153,9 @@ namespace FlaxEngine.Rendering
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetSize(IntPtr obj, ref Vector2 val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern RenderTarget Internal_GetDepthBuffer(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Init(IntPtr obj, int width, int height);

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using FlaxEditor.CustomEditors;
+using FlaxEditor.GUI;
 using FlaxEditor.GUI.Dialogs;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -39,7 +40,7 @@ namespace FlaxEditor.Content.Import
                 Text = "Import settings",
                 DockStyle = DockStyle.Top,
                 Parent = this,
-                Font = Style.Current.FontTitle
+                Font = new FontReference(Style.Current.FontTitle)
             };
             var infoLabel = new Label(10, headerLabel.Bottom + 5, TotalWidth - 20, 40)
             {
@@ -99,7 +100,9 @@ namespace FlaxEditor.Content.Import
                 node.LinkTooltip(entry.SourceUrl);
             }
             _rootNode.Expand();
+            _rootNode.ChildrenIndent = 0;
             _rootNode.Parent = tree;
+            tree.Margin = new Margin(0.0f, 0.0f, -14.0f, 2.0f); // Hide root node
             tree.SelectedChanged += OnSelectedChanged;
 
             // Select the first item

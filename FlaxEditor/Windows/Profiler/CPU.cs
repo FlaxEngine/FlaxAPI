@@ -345,7 +345,7 @@ namespace FlaxEditor.Windows.Profiler
             float totalTimeMs = _mainChart.SelectedSample;
 
             // Add rows
-            var rowColor2 = Style.Current.Background * 1.02f;
+            var rowColor2 = Style.Current.Background * 1.4f;
             for (int j = 0; j < data.Length; j++)
             {
                 var events = data[j].Events;

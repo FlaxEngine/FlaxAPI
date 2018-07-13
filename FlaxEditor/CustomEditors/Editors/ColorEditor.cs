@@ -26,7 +26,7 @@ namespace FlaxEditor.CustomEditors.Editors
 
         private void OnValueChanged()
         {
-            var token = this;
+            var token = element.CustomControl.IsSliding ? this : null;
             SetValue(element.CustomControl.Value, token);
         }
 

@@ -289,6 +289,7 @@ namespace FlaxEditor.Viewport
 
         private static readonly float[] EditorViewportScaleSnapValues =
         {
+            0.05f,
             0.1f,
             0.25f,
             0.5f,
@@ -513,7 +514,7 @@ namespace FlaxEditor.Viewport
                     }
                 }
 
-                bool addRemove = ParentWindow.GetKey(Keys.Control);
+                bool addRemove = Root.GetKey(Keys.Control);
                 bool isSelected = sceneEditing.Selection.Contains(hit);
 
                 if (addRemove)
@@ -628,6 +629,105 @@ namespace FlaxEditor.Viewport
             base.OnDragLeave();
         }
 
+        private Vector3 PostProcessSpawnedActorLocation(ref Vector3 hitLocation, BoundingBox box)
+        {
+            // Place the object
+            var location = hitLocation - (box.Size.Length * 0.5f) * ViewDirection;
+
+            // Apply grid snapping if enabled
+            if (UseSnapping || TransformGizmo.TranslationSnapEnable)
+            {
+                float snapValue = TransformGizmo.TranslationSnapValue;
+                location = new Vector3(
+                    (int)(location.X / snapValue) * snapValue,
+                    (int)(location.Y / snapValue) * snapValue,
+                    (int)(location.Z / snapValue) * snapValue);
+            }
+
+            return location;
+        }
+
+        private void Spawn(AssetItem item, SceneGraphNode hit, ref Vector3 hitLocation)
+        {
+            switch (item.ItemDomain)
+            {
+            case ContentDomain.Material:
+            {
+                if (hit is ModelActorNode.EntryNode meshNode)
+                {
+                    var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
+                    using (new UndoBlock(Undo, meshNode.ModelActor, "Change material"))
+                        meshNode.Entry.Material = material;
+                }
+                else if (hit is BoxBrushNode.SideLinkNode brushSurfaceNode)
+                {
+                    var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
+                    using (new UndoBlock(Undo, brushSurfaceNode.Brush, "Change material"))
+                        brushSurfaceNode.Surface.Material = material;
+                }
+
+                break;
+            }
+            case ContentDomain.Model:
+            {
+                if (item.TypeName == typeof(SkinnedModel).FullName)
+                {
+                    var model = FlaxEngine.Content.LoadAsync<SkinnedModel>(item.ID);
+                    var actor = AnimatedModel.New();
+                    actor.Name = item.ShortName;
+                    actor.SkinnedModel = model;
+                    actor.Position = PostProcessSpawnedActorLocation(ref hitLocation, actor.Box);
+                    Editor.Instance.SceneEditing.Spawn(actor);
+                }
+                else
+                {
+                    var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
+                    var actor = ModelActor.New();
+                    actor.Name = item.ShortName;
+                    actor.Model = model;
+                    actor.Position = PostProcessSpawnedActorLocation(ref hitLocation, actor.Box);
+                    Editor.Instance.SceneEditing.Spawn(actor);
+                }
+
+                break;
+            }
+            case ContentDomain.Audio:
+            {
+                var clip = FlaxEngine.Content.LoadAsync<AudioClip>(item.ID);
+                var actor = AudioSource.New();
+                actor.Name = item.ShortName;
+                actor.Clip = clip;
+                actor.Position = PostProcessSpawnedActorLocation(ref hitLocation, BoundingBox.Empty);
+                Editor.Instance.SceneEditing.Spawn(actor);
+
+                break;
+            }
+            case ContentDomain.Prefab:
+            {
+                throw new NotImplementedException("Spawning prefabs");
+            }
+            case ContentDomain.Scene:
+            {
+                Editor.Instance.Scene.OpenScene(item.ID, true);
+                break;
+            }
+            default: throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private void Spawn(Type item, SceneGraphNode hit, ref Vector3 hitLocation)
+        {
+            var actor = FlaxEngine.Object.New(item) as Actor;
+            if (actor == null)
+            {
+                Editor.LogWarning("Failed to spawn actor of type " + item.FullName);
+                return;
+            }
+            actor.Name = item.Name;
+            actor.Position = PostProcessSpawnedActorLocation(ref hitLocation, actor.Box);
+            Editor.Instance.SceneEditing.Spawn(actor);
+        }
+
         /// <inheritdoc />
         public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
         {
@@ -658,7 +758,7 @@ namespace FlaxEditor.Viewport
                 else
                 {
                     // Use area in front of the viewport
-                    hitLocation = ViewPosition + ViewDirection * 10;
+                    hitLocation = ViewPosition + ViewDirection * 100;
                 }
             }
 
@@ -671,83 +771,7 @@ namespace FlaxEditor.Viewport
                 for (int i = 0; i < _dragAssets.Objects.Count; i++)
                 {
                     var item = _dragAssets.Objects[i];
-
-                    switch (item.ItemDomain)
-                    {
-                    case ContentDomain.Material:
-                    {
-                        if (hit is ModelActorNode.EntryNode meshNode)
-                        {
-                            var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
-                            using (new UndoBlock(Undo, meshNode.ModelActor, "Change material"))
-                                meshNode.Entry.Material = material;
-                        }
-                        else if (hit is BoxBrushNode.SideLinkNode brushSurfaceNode)
-                        {
-                            var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
-                            using (new UndoBlock(Undo, brushSurfaceNode.Brush, "Change material"))
-                                brushSurfaceNode.Surface.Material = material;
-                        }
-
-                        break;
-                    }
-                    case ContentDomain.Model:
-                    {
-                        if (item.TypeName == typeof(SkinnedModel).FullName)
-                        {
-                            // Create actor
-                            var model = FlaxEngine.Content.LoadAsync<SkinnedModel>(item.ID);
-                            var actor = AnimatedModel.New();
-                            actor.Name = item.ShortName;
-                            actor.SkinnedModel = model;
-
-                            // Place it
-                            var box = actor.Box;
-                            actor.Position = hitLocation - (box.Size.Length * 0.5f) * ViewDirection;
-
-                            // Spawn
-                            Editor.Instance.SceneEditing.Spawn(actor);
-                        }
-                        else
-                        {
-                            // Create actor
-                            var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
-                            var actor = ModelActor.New();
-                            actor.Name = item.ShortName;
-                            actor.Model = model;
-
-                            // Place it
-                            var box = actor.Box;
-                            actor.Position = hitLocation - (box.Size.Length * 0.5f) * ViewDirection;
-
-                            // Spawn
-                            Editor.Instance.SceneEditing.Spawn(actor);
-                        }
-
-                        break;
-                    }
-                    case ContentDomain.Audio:
-                    {
-                        var clip = FlaxEngine.Content.LoadAsync<AudioClip>(item.ID);
-                        var actor = AudioSource.New();
-                        actor.Name = item.ShortName;
-                        actor.Clip = clip;
-                        actor.Position = hitLocation;
-                        Editor.Instance.SceneEditing.Spawn(actor);
-
-                        break;
-                    }
-                    case ContentDomain.Prefab:
-                    {
-                        throw new NotImplementedException("Spawning prefabs");
-                    }
-                    case ContentDomain.Scene:
-                    {
-                        Editor.Instance.Scene.OpenScene(item.ID, true);
-                        break;
-                    }
-                    default: throw new ArgumentOutOfRangeException();
-                    }
+                    Spawn(item, hit, ref hitLocation);
                 }
             }
             // Drag actor type
@@ -759,22 +783,7 @@ namespace FlaxEditor.Viewport
                 for (int i = 0; i < _dragActorType.Objects.Count; i++)
                 {
                     var item = _dragActorType.Objects[i];
-
-                    // Create actor
-                    var actor = FlaxEngine.Object.New(item) as Actor;
-                    if (actor == null)
-                    {
-                        Editor.LogWarning("Failed to spawn actor of type " + item.FullName);
-                        continue;
-                    }
-                    actor.Name = item.Name;
-
-                    // Place it
-                    var box = actor.Box;
-                    actor.Position = hitLocation - (box.Size.Length * 0.5f) * ViewDirection;
-
-                    // Spawn
-                    Editor.Instance.SceneEditing.Spawn(actor);
+                    Spawn(item, hit, ref hitLocation);
                 }
             }
 

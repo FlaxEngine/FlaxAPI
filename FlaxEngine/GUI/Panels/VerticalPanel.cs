@@ -18,23 +18,24 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
-            // Sort controls from up to down
-            float y = _topMargin;
-            float w = Width - _leftMargin - _rightMargin;
+            // Sort controls from top to bottom
+            float y = _margin.Top;
+            float w = Width - _margin.Width;
             for (int i = 0; i < _children.Count; i++)
             {
                 Control c = _children[i];
                 if (c.Visible)
                 {
                     var h = c.Height;
-                    c.Bounds = new Rectangle(_leftMargin + _offset.X, y + _spacing + _offset.Y, w, h);
+                    c.Bounds = new Rectangle(_margin.Left + _offset.X, y + _spacing + _offset.Y, w, h);
                     y = c.Bottom;
                 }
             }
-            y += _bottomMargin;
+            y += _margin.Bottom;
 
             // Update size
-            Height = y;
+            if (_autoSize)
+                Height = y;
         }
     }
 }

@@ -4,11 +4,6 @@ namespace FlaxEngine
 {
     public sealed partial class Material
     {
-        /// <summary>
-        /// The asset type content domain.
-        /// </summary>
-        public const ContentDomain Domain = ContentDomain.Material;
-
         /// <inheritdoc />
         public override MaterialInstance CreateVirtualInstance()
         {

@@ -23,7 +23,7 @@ namespace FlaxEditor.GUI.Dialogs
         private Color _newColor;
         private bool _disableEvents;
         private bool _useDynamicEditing;
-        private Action<Color> _onChangedOk;
+        private ColorValueBox.ColorPickerEvent _onChangedOk;
 
         private ColorSelectorWithSliders _cSelector;
         private IntValueBox _cRed;
@@ -75,7 +75,7 @@ namespace FlaxEditor.GUI.Dialogs
                 // Dynamic value
                 if (_useDynamicEditing)
                 {
-                    _onChangedOk?.Invoke(_newColor);
+                    _onChangedOk?.Invoke(_newColor, true);
                 }
 
                 _disableEvents = false;
@@ -88,7 +88,7 @@ namespace FlaxEditor.GUI.Dialogs
         /// <param name="initialValue">The initial value.</param>
         /// <param name="colorChanged">The color changed event.</param>
         /// <param name="useDynamicEditing">True if allow dynamic value editing (slider-like usage), otherwise will fire color change event only on editing end.</param>
-        public ColorPickerDialog(Color initialValue, Action<Color> colorChanged, bool useDynamicEditing)
+        public ColorPickerDialog(Color initialValue, ColorValueBox.ColorPickerEvent colorChanged, bool useDynamicEditing)
         : base("Pick a color!")
         {
             _oldColor = initialValue;
@@ -98,7 +98,7 @@ namespace FlaxEditor.GUI.Dialogs
 
             // Selector
             _cSelector = new ColorSelectorWithSliders(180, 18);
-            _cSelector.SetLocation(PICKER_MARGIN, PICKER_MARGIN);
+            _cSelector.Location = new Vector2(PICKER_MARGIN, PICKER_MARGIN);
             _cSelector.ColorChanged += x => SelectedColor = x;
             _cSelector.Parent = this;
 
@@ -169,7 +169,7 @@ namespace FlaxEditor.GUI.Dialogs
         private void OnOkClicked()
         {
             _result = DialogResult.OK;
-            _onChangedOk?.Invoke(_newColor);
+            _onChangedOk?.Invoke(_newColor, false);
             Close();
         }
 
@@ -177,7 +177,7 @@ namespace FlaxEditor.GUI.Dialogs
         {
             // Restore color
             if(_useDynamicEditing)
-                _onChangedOk?.Invoke(_oldColor);
+                _onChangedOk?.Invoke(_oldColor, false);
 
             Close(DialogResult.Cancel);
         }
@@ -256,7 +256,7 @@ namespace FlaxEditor.GUI.Dialogs
         protected override void OnShow()
         {
             // Auto cancel on lost focus
-            ParentWindow.NativeWindow.OnLostFocus += OnCancelClicked;
+            ((WindowRootControl)Root).Window.OnLostFocus += OnCancelClicked;
 
             base.OnShow();
         }

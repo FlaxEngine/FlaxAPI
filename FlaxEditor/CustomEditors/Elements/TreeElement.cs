@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using FlaxEditor.GUI;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors.Elements
@@ -8,7 +9,7 @@ namespace FlaxEditor.CustomEditors.Elements
     /// The tree structure element.
     /// </summary>
     /// <seealso cref="FlaxEditor.CustomEditors.LayoutElementsContainer" />
-    public class TreeElement : LayoutElementsContainer
+    public class TreeElement : LayoutElementsContainer, ITreeElement
     {
         /// <summary>
         /// The tree control.
@@ -18,11 +19,7 @@ namespace FlaxEditor.CustomEditors.Elements
         /// <inheritdoc />
         public override ContainerControl ContainerControl => TreeControl;
 
-        /// <summary>
-        /// Adds new tree node element.
-        /// </summary>
-        /// <param name="text">The node name (title text).</param>
-        /// <returns>The created element.</returns>
+        /// <inheritdoc />
         public TreeNodeElement Node(string text)
         {
             TreeNodeElement element = new TreeNodeElement();

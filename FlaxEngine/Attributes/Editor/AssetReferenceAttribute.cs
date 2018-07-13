@@ -9,7 +9,7 @@ namespace FlaxEngine
     /// </summary>
     /// <seealso cref="System.Attribute" />
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    public sealed class AssetReferenceAttribute : Attribute
+    public class AssetReferenceAttribute : Attribute
     {
         /// <summary>
         /// The full name of the asset type to link. Use null or empty to skip it.

@@ -18,7 +18,7 @@ namespace FlaxEditor.Content
             if (value is AssetItem obj)
                 id = obj.ID;
 
-            writer.WriteValue(FlaxEngine.Json.FlaxObjectConverter.GetStringID(id));
+            writer.WriteValue(FlaxEngine.Json.JsonSerializer.GetStringID(id));
         }
 
         /// <inheritdoc />
@@ -27,7 +27,7 @@ namespace FlaxEditor.Content
             if (reader.TokenType == JsonToken.String)
             {
                 Guid id;
-                FlaxEngine.Json.FlaxObjectConverter.ParseID((string)reader.Value, out id);
+                FlaxEngine.Json.JsonSerializer.ParseID((string)reader.Value, out id);
                 return Editor.Instance.ContentDatabase.Find(id);
             }
 

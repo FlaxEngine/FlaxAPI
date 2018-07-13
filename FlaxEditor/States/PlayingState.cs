@@ -97,7 +97,7 @@ namespace FlaxEditor.States
         private void SetupEditorEnvOptions()
         {
             Time.TimeScale = 1.0f;
-            Time.UpdateFPS = 40;
+            Time.UpdateFPS = 60;
             Time.PhysicsFPS = 30;
             Time.DrawFPS = 60;
             Physics.AutoSimulation = true;
@@ -122,7 +122,7 @@ namespace FlaxEditor.States
 
             // Restore game settings and state for editor environment
             SetupEditorEnvOptions();
-            var win = Editor.Windows.GameWin?.ParentWindow;
+            var win = Editor.Windows.GameWin?.Root;
             if (win != null)
                 win.Cursor = CursorType.Default;
             IsPaused = true;

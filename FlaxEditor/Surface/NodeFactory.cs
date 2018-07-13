@@ -83,7 +83,6 @@ namespace FlaxEditor.Surface
                 Color = new Color(105, 179, 160),
                 Archetypes = Archetypes.Animation.Nodes
             },
-            // GroupID = 100 -> used by the dynamic surface parameters collection in VisjectCM
         };
 
 #if DEBUG

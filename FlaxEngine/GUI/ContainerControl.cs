@@ -10,22 +10,26 @@ namespace FlaxEngine.GUI
     /// <summary>
     ///     Base interface for all GUI controls that can contain controls
     /// </summary>
+    [HideInEditor]
     public class ContainerControl : Control
     {
         /// <summary>
         /// The children collection.
         /// </summary>
+        [NoSerialize]
         protected readonly List<Control> _children = new List<Control>();
 
         /// <summary>
         /// The contains focus cached flag.
         /// </summary>
+        [NoSerialize]
         protected bool _containsFocus;
 
         /// <summary>
         /// The option to update child controls layout first before self.
         /// Useful for controls which dimensions are based on children.
         /// </summary>
+        [NoSerialize]
         protected bool _performChildrenLayoutFirst;
 
         /// <summary>
@@ -33,21 +37,26 @@ namespace FlaxEngine.GUI
         /// </summary>
         public event Action<Control> OnChildControlResized;
 
-        ///<inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContainerControl"/> class.
+        /// </summary>
         public ContainerControl()
-        : base(0, 0, 64, 64)
         {
             IsLayoutLocked = true;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContainerControl"/> class.
+        /// </summary>
         public ContainerControl(float x, float y, float width, float height)
         : base(x, y, width, height)
         {
             IsLayoutLocked = true;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContainerControl"/> class.
+        /// </summary>
         public ContainerControl(Vector2 location, Vector2 size)
         : base(location, size)
         {
@@ -86,14 +95,13 @@ namespace FlaxEngine.GUI
         ///     True if automatic updates for control layout are locked (usefull when createing a lot of GUI control to prevent
         ///     lags)
         /// </summary>
+        [HideInEditor, NoSerialize]
         public bool IsLayoutLocked { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether apply clipping mask on children during rendering.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if clip children; otherwise, <c>false</c>.
-        /// </value>
+        [EditorOrder(530), Tooltip("If checked, control will apply clipping mask on children during rendering..")]
         public bool ClipChildren { get; set; } = true;
 
         /// <summary>
@@ -238,7 +246,41 @@ namespace FlaxEngine.GUI
         {
             int oldIndex = _children.IndexOf(child);
             _children.RemoveAt(oldIndex);
-            _children.Insert(newIndex, child);
+
+            // Check if index is invalid
+            if (newIndex < 0 || newIndex >= _children.Count)
+            {
+                // Append at the end
+                _children.Add(child);
+            }
+            else
+            {
+                // Change order
+                _children.Insert(newIndex, child);
+            }
+        }
+
+        /// <summary>
+        ///     Tries to find any child contol at given point in control local coordinates
+        /// </summary>
+        /// <param name="point">Local point to check</param>
+        /// <returns>Found control index or -1</returns>
+        public int GetChildIndexAt(Vector2 point)
+        {
+            int result = -1;
+            for (int i = 0; i < _children.Count; i++)
+            {
+                var child = _children[i];
+
+                // Check collision
+                Vector2 childLocation;
+                if (IntersectsChildContent(child, point, out childLocation))
+                {
+                    result = i;
+                    break;
+                }
+            }
+            return result;
         }
 
         /// <summary>
@@ -501,15 +543,13 @@ namespace FlaxEngine.GUI
                 {
                     float height = child.Height;
                     float width = clientArea.Width;
-                    child.SetSize(width, height);
-                    child.SetLocation(clientArea.Left, clientArea.Bottom - height);
+                    child.Bounds = new Rectangle(clientArea.Left, clientArea.Bottom - height, width, height);
                     clientArea.Size.Y -= height;
                     break;
                 }
                 case DockStyle.Fill:
                 {
-                    child.Size = clientArea.Size;
-                    child.Location = clientArea.Location;
+                    child.Bounds = clientArea;
                     GetDesireClientArea(out clientArea);
                     break;
                 }
@@ -517,8 +557,7 @@ namespace FlaxEngine.GUI
                 {
                     float width = child.Width;
                     float height = clientArea.Height;
-                    child.SetSize(width, height);
-                    child.SetLocation(clientArea.Left, clientArea.Top);
+                    child.Bounds = new Rectangle(clientArea.Left, clientArea.Top, width, height);
                     clientArea.Location.X += width;
                     clientArea.Size.X -= width;
                     break;
@@ -527,8 +566,7 @@ namespace FlaxEngine.GUI
                 {
                     float width = child.Width;
                     float height = clientArea.Height;
-                    child.SetSize(width, height);
-                    child.SetLocation(clientArea.Right - width, clientArea.Top);
+                    child.Bounds = new Rectangle(clientArea.Right - width, clientArea.Top, width, height);
                     clientArea.Size.X -= width;
                     break;
                 }
@@ -536,8 +574,7 @@ namespace FlaxEngine.GUI
                 {
                     float height = child.Height;
                     float width = clientArea.Width;
-                    child.SetSize(width, height);
-                    child.SetLocation(clientArea.Left, clientArea.Top);
+                    child.Bounds = new Rectangle(clientArea.Left, clientArea.Top, width, height);
                     clientArea.Location.Y += height;
                     clientArea.Size.Y -= height;
                     break;
@@ -1082,7 +1119,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(Vector2 size)
+        protected override void SetSizeInternal(ref Vector2 size)
         {
             // Lock updates to prevent additional layout calculations
             bool wasLayoutLocked = IsLayoutLocked;
@@ -1092,7 +1129,7 @@ namespace FlaxEngine.GUI
             Vector2 prevSize = Size;
 
             // Base
-            base.SetSizeInternal(size);
+            base.SetSizeInternal(ref size);
 
             // Fire event
             for (int i = 0; i < _children.Count; i++)

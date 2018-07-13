@@ -35,7 +35,7 @@ namespace FlaxEditor.Content
         public override Color AccentColor => Color.FromRGB(0x2D74B2);
 
         /// <inheritdoc />
-        public override ContentDomain Domain => FontAsset.Domain;
+        public override ContentDomain Domain => ContentDomain.Font;
 
         /// <inheritdoc />
         public override Type AssetType => typeof(FontAsset);
@@ -44,9 +44,10 @@ namespace FlaxEditor.Content
         public override void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
         {
             var asset = FlaxEngine.Content.Load<FontAsset>(request.Item.Path);
-            guiRoot.AddChild(new Label(Vector2.Zero, guiRoot.Size)
+            guiRoot.AddChild(new Label
             {
                 Text = asset.FamilyName,
+                Size = guiRoot.Size,
                 Wrapping = TextWrapping.WrapWords
             });
         }

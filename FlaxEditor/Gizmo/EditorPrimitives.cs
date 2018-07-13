@@ -13,6 +13,9 @@ namespace FlaxEditor.Gizmo
         private readonly DrawCallsCollector _drawCallsCollector = new DrawCallsCollector();
 
         /// <inheritdoc />
+        public override int Order => -100;
+
+        /// <inheritdoc />
         public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
         {
             Profiler.BeginEventGPU("Editor Primitives");

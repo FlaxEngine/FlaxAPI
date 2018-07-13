@@ -1,9 +1,9 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEditor.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.GUI.Tabs;
 
 namespace FlaxEditor.Windows
 {
@@ -106,8 +106,11 @@ namespace FlaxEditor.Windows
             groupOther.AddChild(CreateActorItem("CSG Box Brush", typeof(BoxBrush)));
             groupOther.AddChild(CreateActorItem("Audio Source", typeof(AudioSource)));
             groupOther.AddChild(CreateActorItem("Audio Listner", typeof(AudioListener)));
+            groupOther.AddChild(CreateActorItem("Empty Actor", typeof(EmptyActor)));
 
             var groupGui = createGroupWithList(actorGroups, "GUI");
+            groupGui.AddChild(CreateActorItem("UI Control", typeof(UIControl)));
+            groupGui.AddChild(CreateActorItem("UI Canvas", typeof(UICanvas)));
             groupGui.AddChild(CreateActorItem("Text Render", typeof(TextRender)));
 
             actorGroups.SelectedTabIndex = 0;
@@ -157,6 +160,7 @@ namespace FlaxEditor.Windows
                 Text = text;
                 _dragData = dragData;
                 Height = 20;
+                TextMargin = new Margin(-5.0f, 2.0f, 2.0f, 2.0f);
             }
 
             /// <inheritdoc />
@@ -179,15 +183,9 @@ namespace FlaxEditor.Windows
             {
                 DockStyle = DockStyle.Top,
                 IsScrollable = true,
-                RootNodesOffset = -8,
                 Parent = panel
             };
-            var root = new TreeNode(false)
-            {
-                Parent = tree
-            };
-            root.Expand();
-            return root;
+            return tree;
         }
     }
 }

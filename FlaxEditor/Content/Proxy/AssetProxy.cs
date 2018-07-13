@@ -75,9 +75,10 @@ namespace FlaxEditor.Content
         /// <param name="context">GPU context.</param>
         public virtual void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
         {
-            guiRoot.AddChild(new Label(Vector2.Zero, guiRoot.Size)
+            guiRoot.AddChild(new Label
             {
                 Text = Name,
+                Size = guiRoot.Size,
                 Wrapping = TextWrapping.WrapWords
             });
         }

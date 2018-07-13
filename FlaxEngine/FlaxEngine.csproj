@@ -97,6 +97,10 @@
     </Compile>
     <Compile Include="API\Actors\TextRender.cs" />
     <Compile Include="API\Actors\TextRender.Gen.cs" />
+    <Compile Include="API\Actors\UICanvas.cs" />
+    <Compile Include="API\Actors\UICanvas.Gen.cs" />
+    <Compile Include="API\Actors\UIControl.cs" />
+    <Compile Include="API\Actors\UIControl.Gen.cs" />
     <Compile Include="API\Assets\BinaryAsset.cs" />
     <Compile Include="API\Assets\BinaryAsset.Gen.cs" />
     <Compile Include="API\Assets\JsonAsset.cs" />
@@ -236,11 +240,14 @@
     <Compile Include="Attributes\Editor\CustomEditorAliasAttribute.cs" />
     <Compile Include="Attributes\Editor\DefaultEditorAttribute.cs" />
     <Compile Include="Attributes\Editor\EditorDisplayAttribute.cs" />
+    <Compile Include="Attributes\Editor\ExpandGroupsAttribute.cs" />
     <Compile Include="Attributes\Editor\HeaderAttribute.cs" />
     <Compile Include="Attributes\Editor\LimitAttribute.cs" />
     <Compile Include="Attributes\Editor\MultilineTextAttribute.cs" />
     <Compile Include="Attributes\Editor\RangeAttribute.cs" />
+    <Compile Include="Attributes\Editor\ShowInEditorAttribute.cs" />
     <Compile Include="Attributes\Editor\SpaceAttribute.cs" />
+    <Compile Include="Attributes\Editor\VisibleIfAttribute.cs" />
     <Compile Include="Attributes\MemberCollectionAttribute.cs" />
     <Compile Include="Attributes\NoSerializeAttribute.cs" />
     <Compile Include="Attributes\PersisitentDataAttribute.cs" />
@@ -253,6 +260,7 @@
     <Compile Include="Engine\BrushSurface.cs" />
     <Compile Include="Engine\Collision.cs" />
     <Compile Include="Engine\ContactPoint.cs" />
+    <Compile Include="Engine\FontReference.cs" />
     <Compile Include="Engine\Gamepad.cs" />
     <Compile Include="Engine\GamepadLayout.cs" />
     <Compile Include="Engine\GamepadVibrationState.cs" />
@@ -267,6 +275,7 @@
     <Compile Include="Engine\ModelLOD.cs" />
     <Compile Include="Engine\PhysicalMaterial.cs" />
     <Compile Include="Engine\RayCastHit.cs" />
+    <Compile Include="Engine\SceneReference.cs" />
     <Compile Include="Engine\SkeletonBone.cs" />
     <Compile Include="Engine\SkinnedMesh.cs" />
     <Compile Include="Engine\SpringParameters.cs" />
@@ -284,45 +293,38 @@
       <DependentUpon>IOrderedDictionary.cs</DependentUpon>
     </Compile>
     <Compile Include="Enums\WindowEnums.cs" />
+    <Compile Include="GUI\Brushes\LinearGradientBrush.cs" />
+    <Compile Include="GUI\Brushes\MaterialBrush.cs" />
+    <Compile Include="GUI\Brushes\RenderTargetBrush.cs" />
+    <Compile Include="GUI\Brushes\SolidColorBrush.cs" />
+    <Compile Include="GUI\Brushes\SpriteBrush.cs" />
+    <Compile Include="GUI\Brushes\TextureBrush.cs" />
+    <Compile Include="GUI\CanvasContainer.cs" />
+    <Compile Include="GUI\CanvasRootControl.cs" />
+    <Compile Include="GUI\Common\Border.cs" />
     <Compile Include="GUI\Common\Button.cs" />
     <Compile Include="GUI\Common\CheckBox.cs" />
-    <Compile Include="GUI\Common\ComboBox.cs" />
-    <Compile Include="GUI\Common\IImageSource.cs" />
+    <Compile Include="GUI\Brushes\IBrush.cs" />
+    <Compile Include="GUI\Common\Dropdown.cs" />
     <Compile Include="GUI\Common\Image.cs" />
     <Compile Include="GUI\Common\Label.cs" />
     <Compile Include="GUI\Common\ProgressBar.cs" />
     <Compile Include="GUI\Common\Spacer.cs" />
     <Compile Include="GUI\ContainerControl.cs" />
-    <Compile Include="GUI\ContextMenu\ContextMenu.cs" />
-    <Compile Include="GUI\ContextMenu\ContextMenuBase.cs" />
-    <Compile Include="GUI\ContextMenu\ContextMenuButton.cs" />
-    <Compile Include="GUI\ContextMenu\ContextMenuChildMenu.cs" />
-    <Compile Include="GUI\ContextMenu\ContextMenuItem.cs" />
-    <Compile Include="GUI\ContextMenu\ContextMenuSeparator.cs" />
     <Compile Include="GUI\Control.Bounds.cs">
       <DependentUpon>Control.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\Control.cs" />
-    <Compile Include="GUI\Docking\DockHintWindow.cs" />
-    <Compile Include="GUI\Docking\DockPanel.cs" />
-    <Compile Include="GUI\Docking\DockPanelProxy.cs" />
-    <Compile Include="GUI\Docking\DockWindow.cs" />
-    <Compile Include="GUI\Docking\FloatWindowDockPanel.cs" />
-    <Compile Include="GUI\Docking\MasterDockPanel.cs" />
     <Compile Include="GUI\DragData.cs" />
     <Compile Include="GUI\DragDataFiles.cs" />
     <Compile Include="GUI\DragDataText.cs" />
     <Compile Include="GUI\Enums.cs" />
-    <Compile Include="GUI\Input\ColorValueBox.cs" />
-    <Compile Include="GUI\Input\FloatValueBox.cs" />
-    <Compile Include="GUI\Input\IntValueBox.cs" />
-    <Compile Include="GUI\Input\SliderControl.cs" />
-    <Compile Include="GUI\Input\TextBox.cs" />
-    <Compile Include="GUI\Input\TextBox.Keys.cs">
+    <Compile Include="GUI\Common\TextBox.cs" />
+    <Compile Include="GUI\Common\TextBox.Keys.cs">
       <DependentUpon>TextBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Input\ValueBox.cs" />
     <Compile Include="GUI\Margin.cs" />
+    <Compile Include="GUI\Panels\BlurPanel.cs" />
     <Compile Include="GUI\Panels\DropPanel.cs" />
     <Compile Include="GUI\Panels\GridPanel.cs" />
     <Compile Include="GUI\Panels\HorizontalPanel.cs" />
@@ -338,12 +340,8 @@
     <Compile Include="GUI\RenderOutputControl.cs" />
     <Compile Include="GUI\ScrollableControl.cs" />
     <Compile Include="GUI\Style.cs" />
-    <Compile Include="GUI\Tabs\Tab.cs" />
-    <Compile Include="GUI\Tabs\Tabs.cs" />
     <Compile Include="GUI\Tooltip.cs" />
-    <Compile Include="GUI\Tree\Tree.cs" />
-    <Compile Include="GUI\Tree\TreeNode.cs" />
-    <Compile Include="GUI\Window.cs" />
+    <Compile Include="GUI\RootControl.cs" />
     <Compile Include="API\Actors\EmptyActor.cs" />
     <Compile Include="Assertions\Assert.cs" />
     <Compile Include="Assertions\AssertionException.cs" />
@@ -353,6 +351,7 @@
     <Compile Include="AssetTypes\Shader.cs" />
     <Compile Include="Enums\BrushMode.cs" />
     <Compile Include="Enums\Input.Enums.cs" />
+    <Compile Include="GUI\WindowRootControl.cs" />
     <Compile Include="Json\JsonSerializer.cs" />
     <Compile Include="Json\JsonCustomSerializers\ExtendedDefaultContractResolver.cs" />
     <Compile Include="Math\BoundingBox.cs" />
@@ -383,6 +382,7 @@
     <Compile Include="Math\Half3.cs" />
     <Compile Include="Math\Half4.cs" />
     <Compile Include="Math\HalfUtils.cs" />
+    <Compile Include="Math\Int4.cs" />
     <Compile Include="Math\Mathf.cs" />
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="Math\Matrix2x2.cs" />
@@ -439,7 +439,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
-    <Exec Command="call &quot;$(SolutionDir)onbuild.bat&quot;" Condition=" '$(OS)' == 'Windows_NT' " />
+    <Exec Command="call &quot;$(SolutionDir)onbuild.bat&quot; -Engine" Condition=" '$(OS)' == 'Windows_NT' " />
   </Target>
   <PropertyGroup>
     <PostBuildEvent>

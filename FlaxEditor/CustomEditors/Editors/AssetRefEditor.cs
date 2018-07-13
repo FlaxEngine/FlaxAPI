@@ -18,15 +18,22 @@ namespace FlaxEditor.CustomEditors.Editors
     }
 
     /// <summary>
+    /// Default implementation of the inspector used to edit reference to the <see cref="SceneReference"/>.
+    /// </summary>
+    [CustomEditor(typeof(SceneReference)), DefaultEditor]
+    public sealed class SceneRefEditor : AssetRefEditor
+    {
+    }
+
+    /// <summary>
     /// Default implementation of the inspector used to edit reference to the <see cref="FlaxEngine.Asset"/>.
     /// </summary>
     /// <remarks>Supports editing reference to the asset using various containers: <see cref="Asset"/> or <see cref="AssetItem"/> or <see cref="Guid"/>.</remarks>
     [CustomEditor(typeof(Asset)), DefaultEditor]
     public class AssetRefEditor : CustomEditor
     {
-        private CustomElement<AssetPicker> element;
-        private string typeName;
-        private Type type;
+        private CustomElement<AssetPicker> _element;
+        private Type _type;
 
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.Inline;
@@ -36,33 +43,8 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             if (!HasDifferentTypes)
             {
-                // TODO: find better way to get content domain from the asset type (mayb util function?)
-                var domain = ContentDomain.Other;
-                type = Values.Type != typeof(object) || Values[0] == null ? Values.Type : Values[0].GetType();
-                if (type == typeof(Texture) || type == typeof(SpriteAtlas))
-                    domain = ContentDomain.Texture;
-                else if (type == typeof(CubeTexture))
-                    domain = ContentDomain.CubeTexture;
-                else if (type == typeof(Material) || type == typeof(MaterialInstance) || type == typeof(MaterialBase))
-                    domain = ContentDomain.Material;
-                else if (type == typeof(Model) || type == typeof(SkinnedModel))
-                    domain = ContentDomain.Model;
-                //else if (type == typeof(PrefabAsset))
-                //    domain = ContentDomain.Prefab;
-                else if (type == typeof(Shader))
-                    domain = ContentDomain.Shader;
-                else if (type == typeof(FontAsset))
-                    domain = ContentDomain.Font;
-                else if (type == typeof(IESProfile))
-                    domain = ContentDomain.IESProfile;
-                else if (type == typeof(AudioClip))
-                    domain = ContentDomain.Audio;
-                //else if (type == typeof(SceneAsset))
-                //    domain = ContentDomain.Scene;
-                else if (type == typeof(JsonAsset))
-                    domain = JsonAsset.Domain;
+                _type = Values.Type != typeof(object) || Values[0] == null ? Values.Type : Values[0].GetType();
 
-                typeName = null;
                 float height = 48;
                 if (Values.Info != null)
                 {
@@ -70,43 +52,37 @@ namespace FlaxEditor.CustomEditors.Editors
                     var assetReference = (AssetReferenceAttribute)attributes.FirstOrDefault(x => x is AssetReferenceAttribute);
                     if (assetReference != null)
                     {
-                        typeName = assetReference.TypeName;
                         if (assetReference.UseSmallPicker)
                             height = 24;
 
-                        if (typeName == SceneItem.SceneAssetTypename)
-                            domain = ContentDomain.Scene;
+                        if (!string.IsNullOrEmpty(assetReference.TypeName))
+                        {
+                            var customType = Utilities.Utils.GetType(assetReference.TypeName);
+                            if (customType != null)
+                                _type = customType;
+                            else
+                                Debug.LogWarning(string.Format("Unknown asset type '{0}' to use for asset picker filter.", assetReference.TypeName));
+                        }
                     }
                 }
 
-                element = layout.Custom<AssetPicker>();
-                element.CustomControl.Domain = domain;
-                element.CustomControl.Height = height;
-                element.CustomControl.SelectedItemChanged += OnSelectedItemChanged;
-                element.CustomControl.ValidateValue += ValidateValue;
+                _element = layout.Custom<AssetPicker>();
+                _element.CustomControl.AssetType = _type;
+                _element.CustomControl.Height = height;
+                _element.CustomControl.SelectedItemChanged += OnSelectedItemChanged;
             }
         }
 
         private void OnSelectedItemChanged()
         {
-            if (typeof(AssetItem).IsAssignableFrom(type))
-                SetValue(element.CustomControl.SelectedItem);
-            else if (type == typeof(Guid))
-                SetValue(element.CustomControl.SelectedID);
+            if (typeof(AssetItem).IsAssignableFrom(_type))
+                SetValue(_element.CustomControl.SelectedItem);
+            else if (_type == typeof(Guid))
+                SetValue(_element.CustomControl.SelectedID);
+            else if (_type == typeof(SceneReference))
+                SetValue(new SceneReference(_element.CustomControl.SelectedID));
             else
-                SetValue(element.CustomControl.SelectedAsset);
-        }
-
-        private bool ValidateValue(AssetItem item)
-        {
-            // Filter invalid typename
-            if (!string.IsNullOrEmpty(typeName) && item != null)
-            {
-                if (item.TypeName != typeName)
-                    return false;
-            }
-
-            return true;
+                SetValue(_element.CustomControl.SelectedAsset);
         }
 
         /// <inheritdoc />
@@ -115,11 +91,13 @@ namespace FlaxEditor.CustomEditors.Editors
             if (!HasDifferentValues)
             {
                 if (Values[0] is AssetItem assetItem)
-                    element.CustomControl.SelectedItem = assetItem;
+                    _element.CustomControl.SelectedItem = assetItem;
                 else if (Values[0] is Guid guid)
-                    element.CustomControl.SelectedID = guid;
+                    _element.CustomControl.SelectedID = guid;
+                else if (Values[0] is SceneReference sceneAsset)
+                    _element.CustomControl.SelectedItem = Editor.Instance.ContentDatabase.FindAsset(sceneAsset.ID);
                 else
-                    element.CustomControl.SelectedAsset = Values[0] as Asset;
+                    _element.CustomControl.SelectedAsset = Values[0] as Asset;
             }
         }
     }

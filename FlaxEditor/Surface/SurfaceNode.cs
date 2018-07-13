@@ -46,6 +46,11 @@ namespace FlaxEditor.Surface
         public readonly object[] Values;
 
         /// <summary>
+        /// Gets or sets the node title text.
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
         /// Gets a value indicating whether this node is selected.
         /// </summary>
         /// <value>
@@ -86,7 +91,7 @@ namespace FlaxEditor.Surface
         : base(0, 0, nodeArch.Size.X + Constants.NodeMarginX * 2, nodeArch.Size.Y + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize)
         {
             ClipChildren = false;
-            Name = nodeArch.Title;
+            Title = nodeArch.Title;
 
             ID = id;
             Surface = surface;
@@ -337,7 +342,7 @@ namespace FlaxEditor.Surface
 
             // Header
             Render2D.FillRectangle(_headerRect, style.BackgroundHighlighted);
-            Render2D.DrawText(style.FontLarge, Name, _headerRect, style.Foreground, TextAlignment.Center, TextAlignment.Center, TextWrapping.NoWrap, 1.0f);
+            Render2D.DrawText(style.FontLarge, Title, _headerRect, style.Foreground, TextAlignment.Center, TextAlignment.Center, TextWrapping.NoWrap, 1.0f);
 
             // Close button
             if ((Archetype.Flags & NodeFlags.NoCloseButton) == 0)
@@ -410,9 +415,9 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(Vector2 size)
+        protected override void SetSizeInternal(ref Vector2 size)
         {
-            base.SetSizeInternal(size);
+            base.SetSizeInternal(ref size);
 
             UpdateRectangles();
         }

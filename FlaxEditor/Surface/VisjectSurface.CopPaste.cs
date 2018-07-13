@@ -313,6 +313,14 @@ namespace FlaxEditor.Surface
                                 {
                                     src = Guid.Parse((string)src);
                                 }
+                                else if (dst is int)
+                                {
+                                    src = Convert.ToInt32(src);
+                                }
+                                else if (dst is float)
+                                {
+                                    src = Convert.ToSingle(src);
+                                }
 
                                 node.Values[l] = src;
                             }

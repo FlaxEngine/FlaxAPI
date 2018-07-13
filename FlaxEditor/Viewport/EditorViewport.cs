@@ -522,7 +522,7 @@ namespace FlaxEditor.Viewport
         {
             // Create projection matrix
             float aspect = Width / Height;
-            Matrix.PerspectiveFovLH(_fieldOfView * Mathf.DegreesToRadians, aspect, _nearPlane, _farPlane, out result);
+            Matrix.PerspectiveFov(_fieldOfView * Mathf.DegreesToRadians, aspect, _nearPlane, _farPlane, out result);
         }
 
         /// <summary>
@@ -537,7 +537,7 @@ namespace FlaxEditor.Viewport
             Vector3 target = position + direction;
             Vector3 right = Vector3.Normalize(Vector3.Cross(Vector3.Up, direction));
             Vector3 up = Vector3.Normalize(Vector3.Cross(direction, right));
-            Matrix.LookAtLH(ref position, ref target, ref up, out result);
+            Matrix.LookAt(ref position, ref target, ref up, out result);
         }
 
         /// <summary>
@@ -658,8 +658,8 @@ namespace FlaxEditor.Viewport
             _camera?.Update(deltaTime);
 
             // Get parent window
-            var win = ParentWindow;
-
+            var win = (WindowRootControl)Root;
+            
             // Get current mouse position in the view
             _viewMousePos = PointFromWindow(win.MousePosition);
 
@@ -668,7 +668,7 @@ namespace FlaxEditor.Viewport
                 // Get input buttons and keys (skip if viewort has no focus or mouse is over a child control)
                 _prevInput = _input;
                 if (ContainsFocus && GetChildAt(_viewMousePos) == null)
-                    _input.Gather(win.NativeWindow);
+                    _input.Gather(win.Window);
                 else
                     _input.Clear();
 
@@ -678,9 +678,9 @@ namespace FlaxEditor.Viewport
                 if (wasControllingMouse != _isControllingMouse)
                 {
                     if (_isControllingMouse)
-                        OnControlMouseBegin(win.NativeWindow);
+                        OnControlMouseBegin(win.Window);
                     else
-                        OnControlMouseEnd(win.NativeWindow);
+                        OnControlMouseEnd(win.Window);
                 }
 
                 // Track mouse buttons state change
@@ -881,8 +881,8 @@ namespace FlaxEditor.Viewport
         private ViewModeOptions[] EditorViewportViewModeValues =
         {
             new ViewModeOptions(ViewMode.Default, "Default"),
-            new ViewModeOptions(ViewMode.Fast, "No PostFx"),
-            new ViewModeOptions(ViewMode.LightsBuffer, "Light Buffer"),
+            new ViewModeOptions(ViewMode.NoPostFx, "No PostFx"),
+            new ViewModeOptions(ViewMode.LightBuffer, "Light Buffer"),
             new ViewModeOptions(ViewMode.Reflections, "Reflections Buffer"),
             new ViewModeOptions(ViewMode.Depth, "Depth Buffer"),
             new ViewModeOptions(ViewMode.Diffuse, "Diffuse"),
@@ -967,7 +967,6 @@ namespace FlaxEditor.Viewport
             new ViewFlagOptions(ViewFlags.EyeAdaptation, "Eye Adaptaion"),
             new ViewFlagOptions(ViewFlags.CameraArtifacts, "Camera Artifacts"),
             new ViewFlagOptions(ViewFlags.LensFlares, "Lens Flares"),
-            new ViewFlagOptions(ViewFlags.CSG, "CSG Brushes"),
             new ViewFlagOptions(ViewFlags.DepthOfField, "Depth of Field"),
             new ViewFlagOptions(ViewFlags.PhysicsDebug, "Physics Debug"),
         };

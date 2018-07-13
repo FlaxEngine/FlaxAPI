@@ -14,9 +14,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the text.
         /// </summary>
-        /// <value>
-        /// The text.
-        /// </value>
+        [EditorOrder(10), MultilineText, Tooltip("The label text.")]
         public string Text
         {
             get => _text;
@@ -30,62 +28,61 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the color of the text.
         /// </summary>
-        /// <value>
-        /// The color of the text.
-        /// </value>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the text.")]
         public Color TextColor { get; set; } = Color.White;
 
         /// <summary>
-        /// Gets or sets the horizontal text alignment.
+        /// Gets or sets the color of the text when it is highlighted (mouse is over).
         /// </summary>
-        /// <value>
-        /// The horizontal alignment.
-        /// </value>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the text when it is highlighted (mouse is over).")]
+        public Color TextColorHighlighted { get; set; } = Color.White;
+
+        /// <summary>
+        /// Gets or sets the horizontal text alignment within the control bounds.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2010), Tooltip("The horizontal text aligment within the control bounds.")]
         public TextAlignment HorizontalAlignment { get; set; } = TextAlignment.Center;
 
         /// <summary>
-        /// Gets or sets the vertical text alignment.
+        /// Gets or sets the vertical text alignment within the control bounds.
         /// </summary>
-        /// <value>
-        /// The vertical alignment.
-        /// </value>
+        [EditorDisplay("Style"), EditorOrder(2020), Tooltip("The vertical text aligment within the control bounds.")]
         public TextAlignment VerticalAlignment { get; set; } = TextAlignment.Center;
 
         /// <summary>
-        /// Gets or sets the text wrapping.
+        /// Gets or sets the text wrapping within the control bounds.
         /// </summary>
-        /// <value>
-        /// The wrapping.
-        /// </value>
+        [EditorDisplay("Style"), EditorOrder(2030), Tooltip("The text wrapping within the control bounds.")]
         public TextWrapping Wrapping { get; set; } = TextWrapping.NoWrap;
 
         /// <summary>
         /// Gets or sets the font.
         /// </summary>
-        /// <value>
-        /// The font.
-        /// </value>
-        public Font Font { get; set; }
+        [EditorDisplay("Style"), EditorOrder(2000)]
+        public FontReference Font { get; set; }
 
         /// <summary>
-        /// Gets or sets the margin for the text.
+        /// Gets or sets the custom material used to render the text. It must has domain set to GUI and have a public texture parameter named Font used to sample font atlas texture with font characters data.
         /// </summary>
-        /// <value>
-        /// The margin.
-        /// </value>
+        [EditorDisplay("Style"), EditorOrder(2000)]
+        public MaterialBase Material { get; set; }
+
+        /// <summary>
+        /// Gets or sets the margin for the text within the control bounds.
+        /// </summary>
+        [EditorOrder(70), Tooltip("The margin for the text within the control bounds.")]
         public Margin Margin { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether clip text during rendering.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if clip text; otherwise, <c>false</c>.
-        /// </value>
+        [EditorOrder(80), Tooltip("If checked, text will be clipped during rendering.")]
         public bool ClipText { get; set; } = false;
 
         /// <summary>
         /// Gets or sets a value indicating whether set automatic height based on text contents.
         /// </summary>
+        [EditorOrder(90), Tooltip("If checked, the control height will be based on text contents.")]
         public bool AutoHeight
         {
             get => _autoHeight;
@@ -106,6 +103,8 @@ namespace FlaxEngine.GUI
         : base(0, 0, 100, 20)
         {
             CanFocus = false;
+            var style = Style.Current;
+            Font = new FontReference(style.FontMedium);
         }
 
         /// <inheritdoc />
@@ -113,13 +112,8 @@ namespace FlaxEngine.GUI
         : base(x, y, width, height)
         {
             CanFocus = false;
-        }
-
-        /// <inheritdoc />
-        public Label(Vector2 location, Vector2 size)
-        : base(location, size)
-        {
-            CanFocus = false;
+            var style = Style.Current;
+            Font = new FontReference(style.FontMedium);
         }
 
         /// <inheritdoc />
@@ -127,18 +121,22 @@ namespace FlaxEngine.GUI
         {
             base.Draw();
 
-            var style = Style.Current;
-            var font = Font ?? style.FontMedium;
             var rect = new Rectangle(new Vector2(Margin.Left, Margin.Top), Size - Margin.Size);
 
             if (ClipText)
                 Render2D.PushClip(ref rect);
 
+            var color = IsMouseOver ? TextColorHighlighted : TextColor;
+
+            if (!EnabledInHierarchy)
+                color *= 0.6f;
+
             Render2D.DrawText(
-                font,
+                Font.GetFont(),
+                Material,
                 Text,
                 rect,
-                TextColor,
+                color,
                 HorizontalAlignment,
                 _autoHeight ? TextAlignment.Near : VerticalAlignment,
                 Wrapping
@@ -154,8 +152,7 @@ namespace FlaxEngine.GUI
             // Check if size is controlled via text
             if (AutoHeight)
             {
-                var style = Style.Current;
-                var font = Font ?? style.FontMedium;
+                var font = Font.GetFont();
                 if (font)
                 {
                     // Calculate text size

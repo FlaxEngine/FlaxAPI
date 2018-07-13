@@ -48,6 +48,11 @@ namespace FlaxEditor.Windows.Profiler
             public const float DefaultHeight = 25.0f;
 
             /// <summary>
+            /// Gets or sets the event name.
+            /// </summary>
+            public string Name { get; set; }
+
+            /// <summary>
             /// Initializes a new instance of the <see cref="Event"/> class.
             /// </summary>
             /// <param name="x">The x position.</param>
@@ -100,6 +105,11 @@ namespace FlaxEditor.Windows.Profiler
         /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
         public class TrackLabel : ContainerControl
         {
+            /// <summary>
+            /// Gets or sets the name.
+            /// </summary>
+            public string Name { get; set; }
+
             /// <inheritdoc />
             public override void Draw()
             {

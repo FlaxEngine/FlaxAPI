@@ -4,14 +4,14 @@ using System;
 using FlaxEditor.Content;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.GUI.Docking;
+using DockWindow = FlaxEditor.GUI.Docking.DockWindow;
 
 namespace FlaxEditor.Windows
 {
     /// <summary>
     ///  Base class for all windows in Editor.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.Docking.DockWindow" />
+    /// <seealso cref="DockWindow" />
     public abstract class EditorWindow : DockWindow
     {
         /// <summary>

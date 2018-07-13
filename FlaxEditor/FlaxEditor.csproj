@@ -96,12 +96,14 @@
     <Compile Include="CustomEditors\CustomEditorsUtil.cs" />
     <Compile Include="CustomEditors\Dedicated\ActorEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\EnvironmentProbeEditor.cs" />
+    <Compile Include="CustomEditors\Dedicated\FontReferenceEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\LayersMatrixEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\PhysicalMaterialEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\PostProcessSettingsEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\RigidBodyEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\ScriptsEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\SkyLightEditor.cs" />
+    <Compile Include="CustomEditors\Dedicated\UIControlEditor.cs" />
     <Compile Include="CustomEditors\Editors\ActorLayerEditor.cs" />
     <Compile Include="CustomEditors\Editors\ActorStaticFlagsEditor.cs" />
     <Compile Include="CustomEditors\Editors\ActorTagEditor.cs" />
@@ -113,15 +115,21 @@
     <Compile Include="CustomEditors\Editors\ColorEditor.cs" />
     <Compile Include="CustomEditors\Editors\ColorTrackball.cs" />
     <Compile Include="CustomEditors\Editors\DictionaryEditor.cs" />
+    <Compile Include="CustomEditors\Editors\DoubleEditor.cs" />
     <Compile Include="CustomEditors\Editors\EnumEditor.cs" />
     <Compile Include="CustomEditors\Editors\FlaxObjectRefEditor.cs" />
     <Compile Include="CustomEditors\Editors\FloatEditor.cs" />
     <Compile Include="CustomEditors\Editors\GenericEditor.cs" />
+    <Compile Include="CustomEditors\Editors\GuidEditor.cs" />
+    <Compile Include="CustomEditors\Editors\IBrushEditor.cs" />
     <Compile Include="CustomEditors\Editors\IntegerEditor.cs" />
     <Compile Include="CustomEditors\Editors\ListEditor.cs" />
     <Compile Include="CustomEditors\Editors\MatrixEditor.cs" />
+    <Compile Include="CustomEditors\Editors\ModelEntryInfoEditor.cs" />
+    <Compile Include="CustomEditors\Editors\ObjectSwitcherEditor.cs" />
     <Compile Include="CustomEditors\Editors\QuaternionEditor.cs" />
     <Compile Include="CustomEditors\Editors\SkeletonBoneEditor.cs" />
+    <Compile Include="CustomEditors\Editors\SpriteEditor.cs" />
     <Compile Include="CustomEditors\Editors\StringEditor.cs" />
     <Compile Include="CustomEditors\Editors\Vector2Editor.cs" />
     <Compile Include="CustomEditors\Editors\Vector3Editor.cs" />
@@ -129,6 +137,7 @@
     <Compile Include="CustomEditors\Elements\CheckBoxElement.cs" />
     <Compile Include="CustomEditors\Elements\ComboBoxElement.cs" />
     <Compile Include="CustomEditors\Elements\CustomElement.cs" />
+    <Compile Include="CustomEditors\Elements\DoubleValueElement.cs" />
     <Compile Include="CustomEditors\Elements\EnumElement.cs" />
     <Compile Include="CustomEditors\Elements\FloatValueElement.cs" />
     <Compile Include="CustomEditors\Elements\IFloatValueEditor.cs" />
@@ -156,6 +165,19 @@
     <Compile Include="CustomEditors\Values\ValueContainer.cs" />
     <Compile Include="CustomEditorWindow.cs" />
     <Compile Include="EditorAssets.cs" />
+    <Compile Include="GUI\ComboBox.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenu.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuBase.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuButton.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuChildMenu.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuItem.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuSeparator.cs" />
+    <Compile Include="GUI\Docking\DockHintWindow.cs" />
+    <Compile Include="GUI\Docking\DockPanel.cs" />
+    <Compile Include="GUI\Docking\DockPanelProxy.cs" />
+    <Compile Include="GUI\Docking\DockWindow.cs" />
+    <Compile Include="GUI\Docking\FloatWindowDockPanel.cs" />
+    <Compile Include="GUI\Docking\MasterDockPanel.cs" />
     <Compile Include="Gizmo\EditorPrimitives.cs" />
     <Compile Include="Gizmo\GridGizmo.cs" />
     <Compile Include="Gizmo\SelectionOutline.cs" />
@@ -166,6 +188,14 @@
     <Compile Include="GUI\Drag\DragScriptItems.cs" />
     <Compile Include="GUI\Drag\DragScripts.cs" />
     <Compile Include="GUI\Drag\DragSurfaceParameter.cs" />
+    <Compile Include="GUI\Input\ColorValueBox.cs" />
+    <Compile Include="GUI\Input\DoubleValueBox.cs" />
+    <Compile Include="GUI\Input\FloatValueBox.cs" />
+    <Compile Include="GUI\Input\IntValueBox.cs" />
+    <Compile Include="GUI\Input\LongValueBox.cs" />
+    <Compile Include="GUI\Input\SliderControl.cs" />
+    <Compile Include="GUI\Input\ULongValueBox.cs" />
+    <Compile Include="GUI\Input\ValueBox.cs" />
     <Compile Include="GUI\PlatformSelector.cs" />
     <Compile Include="GUI\RenamePopup.cs" />
     <Compile Include="Content\Proxy\BinaryAssetProxy.cs" />
@@ -219,9 +249,13 @@
     <Compile Include="GUI\ItemsListContextMenu.cs" />
     <Compile Include="GUI\StatusBar.cs" />
     <Compile Include="GUI\Table.cs" />
+    <Compile Include="GUI\Tabs\Tab.cs" />
+    <Compile Include="GUI\Tabs\Tabs.cs" />
     <Compile Include="GUI\ToolStrip.cs" />
     <Compile Include="GUI\ToolStripButton.cs" />
     <Compile Include="GUI\ToolStripSeparator.cs" />
+    <Compile Include="GUI\Tree\Tree.cs" />
+    <Compile Include="GUI\Tree\TreeNode.cs" />
     <Compile Include="History\HistoryStack.cs" />
     <Compile Include="History\IHistoryAction.cs" />
     <Compile Include="History\UndoActionObject.cs" />
@@ -276,6 +310,8 @@
     <Compile Include="SceneGraph\Actors\SkyNode.cs" />
     <Compile Include="SceneGraph\Actors\SpotLightNode.cs" />
     <Compile Include="SceneGraph\Actors\TextRenderNode.cs" />
+    <Compile Include="SceneGraph\Actors\UICanvasNode.cs" />
+    <Compile Include="SceneGraph\Actors\UIControlNode.cs" />
     <Compile Include="SceneGraph\GUI\ActorTreeNode.cs" />
     <Compile Include="SceneGraph\GUI\SceneTreeNode.cs" />
     <Compile Include="SceneGraph\RootNode.cs" />
@@ -464,6 +500,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
-    <Exec Command="call &quot;$(SolutionDir)onbuild.bat&quot;" Condition=" '$(OS)' == 'Windows_NT' " />
+    <Exec Command="call &quot;$(SolutionDir)onbuild.bat&quot; -Editor" Condition=" '$(OS)' == 'Windows_NT' " />
   </Target>
 </Project>

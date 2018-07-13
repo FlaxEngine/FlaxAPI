@@ -29,6 +29,10 @@ namespace FlaxEngine.Rendering
 
     public partial class GPUContext
     {
+        private static IntPtr[] _cachedActors;
+        private static List<PostProcessEffect> _cachedPostFxA;
+        private static IntPtr[] _cachedPostFxB;
+
         /// <summary>
         /// Draws sprite atlas texture to render target. Copies contents with resizing and format conversion support. Uses linear texture sampling.
         /// </summary>
@@ -70,32 +74,57 @@ namespace FlaxEngine.Rendering
 #else
             // Get unmanaged actors
             IntPtr[] actors = null;
+            int actorsCount = 0;
             if (customActors != null)
             {
-                actors = new IntPtr[customActors.Length];
-                for (int i = 0; i < customActors.Length; i++)
+                actorsCount = customActors.Length;
+                if (_cachedActors == null || _cachedActors.Length < actorsCount)
+                    _cachedActors = new IntPtr[Mathf.NextPowerOfTwo(actorsCount)];
+                actors = _cachedActors;
+
+                for (int i = 0; i < actorsCount; i++)
                 {
-                    actors[i] = GetUnmanagedPtr(customActors[i]);
+                    _cachedActors[i] = GetUnmanagedPtr(customActors[i]);
                 }
             }
 
             // Get unmanaged postFx
             IntPtr[] postFx = null;
+            int postFxCount = 0;
             if (customPostFx != null && customPostFx.Count > 0)
             {
-                var postFxList = new List<IntPtr>(customPostFx.Count);
+                if (_cachedPostFxA == null)
+                    _cachedPostFxA = new List<PostProcessEffect>();
+                _cachedPostFxA.Capacity = Mathf.Max(_cachedPostFxA.Capacity, Mathf.NextPowerOfTwo(customPostFx.Count));
+
                 foreach (var e in customPostFx)
                 {
                     if (e && e.CanRender)
-                        postFxList.Add(e.unmanagedPtr);
+                        _cachedPostFxA.Add(e);
                 }
 
-                if (postFxList.Count > 0)
-                    postFx = postFxList.ToArray();
+                _cachedPostFxA.Sort(ComparePostFx);
+
+                postFxCount = _cachedPostFxA.Count;
+                if (_cachedPostFxB == null || _cachedPostFxB.Length < postFxCount)
+                    _cachedPostFxB = new IntPtr[_cachedPostFxA.Capacity];
+                postFx = _cachedPostFxB;
+
+                for (int i = 0; i < postFxCount; i++)
+                {
+                    _cachedPostFxB[i] = GetUnmanagedPtr(_cachedPostFxA[i]);
+                }
+
+                _cachedPostFxA.Clear();
             }
 
-            Internal_DrawScene(unmanagedPtr, GetUnmanagedPtr(task), GetUnmanagedPtr(output), GetUnmanagedPtr(buffers), ref view, flags, mode, actors, actorsSource, postFx);
+            Internal_DrawScene(unmanagedPtr, GetUnmanagedPtr(task), GetUnmanagedPtr(output), GetUnmanagedPtr(buffers), ref view, flags, mode, actors, actorsCount, actorsSource, postFx, postFxCount);
 #endif
+        }
+
+        private int ComparePostFx(PostProcessEffect x, PostProcessEffect y)
+        {
+            return x.Order - y.Order;
         }
 
         /// <summary>
@@ -117,16 +146,20 @@ namespace FlaxEngine.Rendering
 #else
             // Get unmanaged actors
             IntPtr[] actors = null;
+            int actorsCount = 0;
             if (customActors != null)
             {
-                actors = new IntPtr[customActors.Length];
-                for (int i = 0; i < customActors.Length; i++)
+                actorsCount = customActors.Length;
+                if (_cachedActors == null || _cachedActors.Length < actorsCount)
+                    _cachedActors = new IntPtr[Mathf.NextPowerOfTwo(actorsCount)];
+                actors = _cachedActors;
+                for (int i = 0; i < actorsCount; i++)
                 {
-                    actors[i] = GetUnmanagedPtr(customActors[i]);
+                    _cachedActors[i] = GetUnmanagedPtr(customActors[i]);
                 }
             }
 
-            Internal_DrawSceneDepth(unmanagedPtr, GetUnmanagedPtr(task), GetUnmanagedPtr(output), drawTransparency, actors, actorsSource);
+            Internal_DrawSceneDepth(unmanagedPtr, GetUnmanagedPtr(task), GetUnmanagedPtr(output), drawTransparency, actors, actorsCount, actorsSource);
 #endif
         }
 
@@ -154,10 +187,10 @@ namespace FlaxEngine.Rendering
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawScene(IntPtr obj, IntPtr task, IntPtr output, IntPtr buffers, ref RenderView view, ViewFlags flags, ViewMode mode, IntPtr[] customActors, ActorsSources actorsSource, IntPtr[] customPostFx);
+        internal static extern void Internal_DrawScene(IntPtr obj, IntPtr task, IntPtr output, IntPtr buffers, ref RenderView view, ViewFlags flags, ViewMode mode, IntPtr[] customActors, int customActorsCount, ActorsSources actorsSource, IntPtr[] customPostFx, int customPostFxCount);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawSceneDepth(IntPtr obj, IntPtr task, IntPtr output, bool drawTransparency, IntPtr[] customActors, ActorsSources actorsSource);
+        internal static extern void Internal_DrawSceneDepth(IntPtr obj, IntPtr task, IntPtr output, bool drawTransparency, IntPtr[] customActors, int customActorsCount, ActorsSources actorsSource);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ExecuteDrawCalls(IntPtr obj, IntPtr task, IntPtr output, RenderTask.DrawCall[] drawCalls, RenderPass pass);

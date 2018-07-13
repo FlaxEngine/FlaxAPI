@@ -56,7 +56,7 @@ namespace FlaxEditor.Windows.Assets
             if (Editor.SaveJsonAsset(_item.Path, _object))
             {
                 // Error
-                Editor.LogError("Failed to save " + _item.Name);
+                Editor.LogError("Failed to save " + _item);
                 return;
             }
 

@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.GUI;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.GUI;
 using FlaxEditor.States;
@@ -44,8 +45,10 @@ namespace FlaxEditor.Windows
 
             // Create scene structure tree
             var root = editor.Scene.Root;
+            root.TreeNode.ChildrenIndent = 0;
             root.TreeNode.Expand();
             _tree = new Tree(true);
+            _tree.Margin = new Margin(0.0f, 0.0f, -14.0f, 0.0f); // Hide root node
             _tree.AddChild(root.TreeNode);
             _tree.SelectedChanged += Tree_OnSelectedChanged;
             _tree.RightClick += Tree_OnRightClick;
@@ -126,6 +129,8 @@ namespace FlaxEditor.Windows
                     Name = "GUI",
                     Types = new[]
                     {
+                        new KeyValuePair<string, Type>("UI Control", typeof(UIControl)),
+                        new KeyValuePair<string, Type>("UI Canvas", typeof(UICanvas)),
                         new KeyValuePair<string, Type>("Text Render", typeof(TextRender)),
                     }
                 },

@@ -1,8 +1,13 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using FlaxEditor.Content;
 using FlaxEditor.Scripting;
+using FlaxEngine;
+using FlaxEngine.GUI;
+using Utils = FlaxEditor.Utilities.Utils;
 
 namespace FlaxEditor.Modules
 {
@@ -13,7 +18,8 @@ namespace FlaxEditor.Modules
     public sealed class CodeEditingModule : EditorModule
     {
         private readonly List<ScriptItem> _scripts = new List<ScriptItem>();
-        private bool _hasValidScripts;
+        private readonly List<Type> _controlTypes = new List<Type>();
+        private bool _hasValidScripts, _hasValidControlTypes;
 
         internal CodeEditingModule(Editor editor)
         : base(editor)
@@ -50,6 +56,8 @@ namespace FlaxEditor.Modules
             // Invalidate cached script items
             _hasValidScripts = false;
             _scripts.Clear();
+            _hasValidControlTypes = false;
+            _controlTypes.Clear();
         }
 
         private void ContentDatabaseOnItemAdded(ContentItem contentItem)
@@ -90,6 +98,33 @@ namespace FlaxEditor.Modules
             }
 
             return _scripts;
+        }
+
+        /// <summary>
+        /// Gets the collection of the Control types that can be spawned in the game (valid ones).
+        /// </summary>
+        /// <returns>The Control types collection (readonly).</returns>
+        public List<Type> GetControlTypes()
+        {
+            if (!_hasValidControlTypes)
+            {
+                _controlTypes.Clear();
+                _hasValidControlTypes = true;
+
+                Utils.GetDerivedTypes(typeof(Control), _controlTypes, IsTypeValidControlType, HasAssemblyValidControlTypes);
+            }
+
+            return _controlTypes;
+        }
+
+        private bool HasAssemblyValidControlTypes(Assembly a)
+        {
+            return a.GetName().Name != "FlaxEditor";
+        }
+
+        private bool IsTypeValidControlType(Type t)
+        {
+            return !t.IsAbstract && !Attribute.IsDefined(t, typeof(HideInEditorAttribute), false);
         }
     }
 }

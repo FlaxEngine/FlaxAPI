@@ -22,12 +22,26 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Button text property.
         /// </summary>
+        [EditorOrder(10), Tooltip("The buton label text.")]
         public string Text { get; set; }
 
         /// <summary>
         /// Gets or sets the font used to draw button text.
         /// </summary>
-        public Font Font { get; set; }
+        [EditorDisplay("Style"), EditorOrder(2000)]
+        public FontReference Font { get; set; }
+
+        /// <summary>
+        /// Gets or sets the custom material used to render the text. It must has domain set to GUI and have a public texture parameter named Font used to sample font atlas texture with font characters data.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("Custom material used to render the text. It must has domain set to GUI and have a public texture parameter named Font used to sample font atlas texture with font characters data.")]
+        public MaterialBase TextMaterial { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color used to draw button text.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
+        public Color TextColor;
 
         /// <summary>
         /// Event fired when user clicks on the button
@@ -42,40 +56,54 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the color of the border.
         /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
         public Color BorderColor { get; set; }
 
         /// <summary>
         /// Gets or sets the background color when button is selected.
         /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2010)]
         public Color BackgroundColorSelected { get; set; }
 
         /// <summary>
         /// Gets or sets the border color when button is selected.
         /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2020)]
         public Color BorderColorSelected { get; set; }
 
         /// <summary>
         /// Gets or sets the background color when button is highlighted.
         /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
         public Color BackgroundColorHighlighted { get; set; }
 
         /// <summary>
         /// Gets or sets the border color when button is highlighted.
         /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
         public Color BorderColorHighlighted { get; set; }
 
         /// <summary>
-        /// Init
+        /// Initializes a new instance of the <see cref="Button"/> class.
+        /// </summary>
+        public Button()
+        : this(0, 0)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Button"/> class.
         /// </summary>
         /// <param name="x">Position X coordinate</param>
         /// <param name="y">Position Y coordinate</param>
         /// <param name="width">Width</param>
         /// <param name="height">Height</param>
-        public Button(float x = 0, float y = 0, float width = 120, float height = DefaultHeight)
+        public Button(float x, float y, float width = 120, float height = DefaultHeight)
         : base(x, y, width, height)
         {
             var style = Style.Current;
-            Font = style.FontMedium;
+            Font = new FontReference(style.FontMedium);
+            TextColor = style.Foreground;
             BackgroundColor = style.BackgroundNormal;
             BorderColor = style.BorderNormal;
             BackgroundColorSelected = style.BackgroundSelected;
@@ -113,17 +141,16 @@ namespace FlaxEngine.GUI
         public override void Draw()
         {
             // Cache data
-            var style = Style.Current;
             Rectangle clientRect = new Rectangle(Vector2.Zero, Size);
             bool enabled = EnabledInHierarchy;
-
-            // Draw background
             Color backgroundColor = BackgroundColor;
             Color borderColor = BorderColor;
+            Color textColor = TextColor;
             if (!enabled)
             {
                 backgroundColor *= 0.5f;
                 borderColor *= 0.5f;
+                textColor *= 0.6f;
             }
             else if (_mouseDown)
             {
@@ -135,11 +162,13 @@ namespace FlaxEngine.GUI
                 backgroundColor = BackgroundColorHighlighted;
                 borderColor = BorderColorHighlighted;
             }
+
+            // Draw background
             Render2D.FillRectangle(clientRect, backgroundColor);
             Render2D.DrawRectangle(clientRect, borderColor);
 
             // Draw text
-            Render2D.DrawText(Font, Text, clientRect, enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
+            Render2D.DrawText(Font.GetFont(), TextMaterial, Text, clientRect, textColor, TextAlignment.Center, TextAlignment.Center);
         }
 
         /// <inheritdoc />

@@ -52,10 +52,9 @@ namespace FlaxEditor.GUI
             base.Draw();
 
             var style = Style.Current;
-            var window = ParentWindow;
 
             // Draw size grip
-            if (window != null && !window.IsMaximized)
+            if (Root is WindowRootControl window && !window.IsMaximized)
                 Render2D.DrawSprite(style.StatusBarSizeGrip, new Rectangle(Width - 12, 10, 12, 12));
 
             // Draw status text

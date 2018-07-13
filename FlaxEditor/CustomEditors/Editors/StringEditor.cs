@@ -2,7 +2,6 @@
 
 using System.Linq;
 using FlaxEditor.CustomEditors.Elements;
-using FlaxEditor.Surface.Elements;
 using FlaxEngine;
 
 namespace FlaxEditor.CustomEditors.Editors
@@ -13,7 +12,7 @@ namespace FlaxEditor.CustomEditors.Editors
     [CustomEditor(typeof(string)), DefaultEditor]
     public sealed class StringEditor : CustomEditor
     {
-        private TextBoxElement element;
+        private TextBoxElement _element;
 
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.Inline;
@@ -33,8 +32,8 @@ namespace FlaxEditor.CustomEditors.Editors
                 }
             }
 
-            element = layout.TextBox(isMultiLine);
-            element.TextBox.EditEnd += () => SetValue(element.Text);
+            _element = layout.TextBox(isMultiLine);
+            _element.TextBox.EditEnd += () => SetValue(_element.Text);
         }
 
         /// <inheritdoc />
@@ -42,13 +41,13 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             if (HasDifferentValues)
             {
-                element.TextBox.Text = string.Empty;
-                element.TextBox.WatermarkText = "Different Values";
+                _element.TextBox.Text = string.Empty;
+                _element.TextBox.WatermarkText = "Different values";
             }
             else
             {
-                element.TextBox.Text = (string)Values[0];
-                element.TextBox.WatermarkText = string.Empty;
+                _element.TextBox.Text = (string)Values[0];
+                _element.TextBox.WatermarkText = string.Empty;
             }
         }
     }

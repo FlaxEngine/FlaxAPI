@@ -115,6 +115,8 @@ namespace FlaxEditor.Content.Import
             FileTypes["tif"] = ImportTexture;
             FileTypes["jpeg"] = ImportTexture;
             FileTypes["jpg"] = ImportTexture;
+            FileTypes["dds"] = ImportTexture;
+            FileTypes["hdr"] = ImportTexture;
 
             // Models
             FileTypes["obj"] = ImportModel;

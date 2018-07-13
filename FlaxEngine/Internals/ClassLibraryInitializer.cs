@@ -40,7 +40,7 @@ namespace FlaxEngine
         {
             // Link it as a GUI root control
             window.GUI.BackgroundColor = Color.Transparent;
-            GUI.Window.Root = window.GUI;
+            RootControl.GameRoot = window.GUI;
         }
 
         private static void CreateGuiStyle()

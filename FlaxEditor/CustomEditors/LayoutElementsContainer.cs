@@ -159,7 +159,7 @@ namespace FlaxEditor.CustomEditors
         public ImageElement Image(Sprite sprite)
         {
             ImageElement element = new ImageElement();
-            element.Image.ImageSource = new SpriteImageSource(sprite);
+            element.Image.Brush = new SpriteBrush(sprite);
             OnAddElement(element);
             return element;
         }
@@ -172,7 +172,7 @@ namespace FlaxEditor.CustomEditors
         public ImageElement Image(Texture texture)
         {
             ImageElement element = new ImageElement();
-            element.Image.ImageSource = new TextureImageSource(texture);
+            element.Image.Brush = new TextureBrush(texture);
             OnAddElement(element);
             return element;
         }
@@ -185,7 +185,7 @@ namespace FlaxEditor.CustomEditors
         public ImageElement Image(RenderTarget renderTarget)
         {
             ImageElement element = new ImageElement();
-            element.Image.ImageSource = new RenderTargetImageSource(renderTarget);
+            element.Image.Brush = new RenderTargetBrush(renderTarget);
             OnAddElement(element);
             return element;
         }
@@ -198,7 +198,7 @@ namespace FlaxEditor.CustomEditors
         public LabelElement Header(string text)
         {
             var element = Label(text);
-            element.Label.Font = Style.Current.FontLarge;
+            element.Label.Font = new FontReference(Style.Current.FontLarge);
             return element;
         }
 
@@ -300,6 +300,29 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Adds new double value element.
+        /// </summary>
+        /// <returns>The created element.</returns>
+        public DoubleValueElement DoubleValue()
+        {
+            DoubleValueElement element = new DoubleValueElement();
+            OnAddElement(element);
+            return element;
+        }
+
+        /// <summary>
+        /// Adds new double value element with name label.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// <param name="tooltip">The property label tooltip text.</param>
+        /// <returns>The created element.</returns>
+        public DoubleValueElement DoubleValue(string name, string tooltip = null)
+        {
+            var property = AddPropertyItem(name, tooltip);
+            return property.DoubleValue();
+        }
+
+        /// <summary>
         /// Adds new slider element.
         /// </summary>
         /// <returns>The created element.</returns>
@@ -320,6 +343,28 @@ namespace FlaxEditor.CustomEditors
         {
             var property = AddPropertyItem(name, tooltip);
             return property.Slider();
+        }
+
+        /// <summary>
+        /// Adds new signed integer (up to long range) value element.
+        /// </summary>
+        /// <returns>The created element.</returns>
+        public SignedIntegerValueElement SignedIntegerValue()
+        {
+            SignedIntegerValueElement element = new SignedIntegerValueElement();
+            OnAddElement(element);
+            return element;
+        }
+
+        /// <summary>
+        /// Adds new unsigned signed integer (up to ulong range) value element.
+        /// </summary>
+        /// <returns>The created element.</returns>
+        public UnsignedIntegerValueElement UnsignedIntegerValue()
+        {
+            UnsignedIntegerValueElement element = new UnsignedIntegerValueElement();
+            OnAddElement(element);
+            return element;
         }
 
         /// <summary>
@@ -450,6 +495,7 @@ namespace FlaxEditor.CustomEditors
             {
                 var group = Group(name, true);
                 group.Panel.Close(false);
+                group.Panel.TooltipText = tooltip;
                 return group.Object(values, editor);
             }
 
@@ -477,7 +523,7 @@ namespace FlaxEditor.CustomEditors
 
             if (style == DisplayStyle.Group)
             {
-                var group = Group(label.Name, true);
+                var group = Group(label.Text, true);
                 group.Panel.Close(false);
                 return group.Object(values, editor);
             }

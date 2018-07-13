@@ -14,6 +14,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the padding given to each slot.
         /// </summary>
+        [EditorOrder(0), Tooltip("The padding margin appied to each item slot.")]
         public Margin SlotPadding
         {
             get => _slotPadding;
@@ -27,6 +28,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the amount of slots horizontally. Use 0 to don't limit it.
         /// </summary>
+        [EditorOrder(10), Limit(0, 100000, 0.1f), Tooltip("The amount of slots horizontally. Use 0 to don't limit it.")]
         public int SlotsHorizontally
         {
             get => _slotsH;
@@ -44,6 +46,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the amount of slots vertically. Use 0 to don't limit it.
         /// </summary>
+        [EditorOrder(20), Limit(0, 100000, 0.1f), Tooltip("The amount of slots vertically. Use 0 to don't limit it.")]
         public int SlotsVertically
         {
             get => _slotsV;

@@ -42,7 +42,7 @@ namespace FlaxEngine
         /// <param name="filter">The files filter text. Eg. 'All files (*.*)\0*.*\0'.</param>
         /// <param name="multiselect">Enable or disable support to select more than one file.</param>
         /// <param name="title">The dialog window title.</param>
-        /// <returns>Selected file path(s) or null if cancelled.</returns>
+        /// <returns>Selected file path(s) or null if cancelled or not supported.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -56,6 +56,26 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Displays a standard dialog box that prompts the user to select a folder.
+        /// </summary>
+        /// <param name="parent">Parant window or null if not used.</param>
+        /// <param name="initialDirectory">The initial directory to show.</param>
+        /// <param name="title">The dialog window title.</param>
+        /// <returns>Selected folder path or null if cancelled or not supported.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static string BrowseFolderDialog(Window parent, string initialDirectory, string title)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_BrowseFolderDialog(Object.GetUnmanagedPtr(parent), initialDirectory, title);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -64,6 +84,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string[] Internal_OpenFileDialog(IntPtr parent, string initialDirectory, string filter, bool multiselect, string title);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern string Internal_BrowseFolderDialog(IntPtr parent, string initialDirectory, string title);
 #endif
 
         #endregion

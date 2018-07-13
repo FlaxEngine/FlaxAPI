@@ -4,7 +4,7 @@ using FlaxEditor.CustomEditors;
 using FlaxEditor.Scripting;
 using FlaxEditor.Windows;
 using FlaxEngine.GUI;
-using FlaxEngine.GUI.Docking;
+using DockState = FlaxEditor.GUI.Docking.DockState;
 
 namespace FlaxEditor
 {

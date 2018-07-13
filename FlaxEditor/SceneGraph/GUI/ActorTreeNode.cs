@@ -13,7 +13,7 @@ namespace FlaxEditor.SceneGraph.GUI
     /// <summary>
     /// Tree node GUI control used as a proxy object for actors hierarchy.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.TreeNode" />
+    /// <seealso cref="FlaxEditor.GUI.TreeNode" />
     public class ActorTreeNode : TreeNode
     {
         private int _orderInParent;
@@ -108,7 +108,7 @@ namespace FlaxEditor.SceneGraph.GUI
         protected override Color CacheTextColor()
         {
             // Update node text color (based on ActorNode.IsActiveInHierarchy but with optimized logic a little)
-            if (Parent is ActorTreeNode parent)
+            if (Parent is ActorTreeNode)
             {
                 var style = Style.Current;
                 bool isActive = Actor?.IsActiveInHierarchy ?? true;
@@ -117,7 +117,7 @@ namespace FlaxEditor.SceneGraph.GUI
                     // Inactive
                     return style.ForegroundDisabled;
                 }
-                if (Editor.Instance.StateMachine.IsPlayMode && Actor.IsStatic)
+                if (Actor != null && Editor.Instance.StateMachine.IsPlayMode && Actor.IsStatic)
                 {
                     // Static
                     return style.Foreground * 0.85f;
@@ -134,10 +134,9 @@ namespace FlaxEditor.SceneGraph.GUI
         public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
         {
             var actor = Actor;
-            if (actor && testHeaderHit(ref location))
+            if (actor && TestHeaderHit(ref location))
             {
-                Select();
-                Editor.Instance.Windows.EditWin.ShowActor(actor);
+                StartRenaming();
                 return true;
             }
 
@@ -154,12 +153,6 @@ namespace FlaxEditor.SceneGraph.GUI
             return base.Compare(other);
         }
 
-        /// <inheritdoc />
-        protected override void OnLongPress()
-        {
-            StartRenaming();
-        }
-
         /// <summary>
         /// Starts the actor renaming action.
         /// </summary>
@@ -168,7 +161,7 @@ namespace FlaxEditor.SceneGraph.GUI
             Select();
 
             // Start renaming the actor
-            var dialog = RenamePopup.Show(this, _headerRect, _actorNode.Name, false);
+            var dialog = RenamePopup.Show(this, HeaderRect, _actorNode.Name, false);
             dialog.Renamed += OnRenamed;
         }
 
@@ -188,6 +181,23 @@ namespace FlaxEditor.SceneGraph.GUI
                 var id = Actor.ID;
                 Editor.Instance.ProjectCache.SetExpandedActor(ref id, IsExpanded);
             }
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            if (IsFocused)
+            {
+                Debug.Log("is focused " + Text);
+
+                if (key == Keys.F2)
+                {
+                    StartRenaming();
+                    return true;
+                }
+            }
+
+            return base.OnKeyDown(key);
         }
 
         /// <inheritdoc />
@@ -262,7 +272,7 @@ namespace FlaxEditor.SceneGraph.GUI
                 newParent = myActor;
 
                 // Use drag positioning to change target parent and index
-                if (_dragOverMode == DragItemPositioning.Above)
+                if (DragOverMode == DragItemPositioning.Above)
                 {
                     if (myActor.HasParent)
                     {
@@ -270,7 +280,7 @@ namespace FlaxEditor.SceneGraph.GUI
                         newOrder = myActor.OrderInParent;
                     }
                 }
-                else if (_dragOverMode == DragItemPositioning.Below)
+                else if (DragOverMode == DragItemPositioning.Below)
                 {
                     if (myActor.HasParent)
                     {
@@ -285,7 +295,7 @@ namespace FlaxEditor.SceneGraph.GUI
             // Drag actors
             if (_dragActors != null && _dragActors.HasValidDrag)
             {
-                bool worldPositionLock = ParentWindow.GetKey(Keys.Control) == false;
+                bool worldPositionLock = Root.GetKey(Keys.Control) == false;
                 var singleObject = _dragActors.Objects.Count == 1;
                 if (singleObject)
                 {

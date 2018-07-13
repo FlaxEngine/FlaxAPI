@@ -22,6 +22,7 @@ namespace FlaxEditor.Surface.Archetypes
             private ComboBoxElement _combobox;
             private readonly List<ISurfaceNodeElement> _dynamicChildren = new List<ISurfaceNodeElement>();
             private bool _isUpdateLocked;
+            private float _layoutHeight;
 
             static NodeElementArchetype[] Prototypes =
             {
@@ -80,7 +81,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
             }
 
-            private void UpdateElements()
+            private void UpdateLayout()
             {
                 // Clean
                 ClearDynamicElements();
@@ -170,7 +171,10 @@ namespace FlaxEditor.Surface.Archetypes
                     default: break;
                     }
                 }
-                Resize(140, height);
+                
+                _layoutHeight = height;
+
+                UpdateTitle();
             }
 
             private void UpdateCombo()
@@ -223,7 +227,7 @@ namespace FlaxEditor.Surface.Archetypes
                 if (selectedID != (Guid)Values[0])
                 {
                     SetValue(0, selectedID);
-                    UpdateElements();
+                    UpdateLayout();
                 }
             }
 
@@ -283,6 +287,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 // Update
                 UpdateCombo();
+                UpdateTitle();
             }
 
             /// <inheritdoc />
@@ -306,7 +311,20 @@ namespace FlaxEditor.Surface.Archetypes
 
                 // Setup
                 UpdateCombo();
-                UpdateElements();
+                UpdateLayout();
+            }
+
+            private void UpdateTitle()
+            {
+                if (_layoutHeight < 10)
+                    return;
+
+                var selected = GetSelected();
+                Title = selected != null ? "Get " + selected.Name : "Get Parameter";
+
+                var style = Style.Current;
+                var width = Mathf.Max(140, style.FontLarge.MeasureText(Title).X + 30);
+                Resize(width, _layoutHeight);
             }
         }
 

@@ -21,7 +21,7 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Shows the primary menu.
         /// </summary>
-        /// <param name="location">The location in teh Surface Space.</param>
+        /// <param name="location">The location in the Surface Space.</param>
         public void ShowPrimaryMenu(Vector2 location)
         {
             _cmPrimaryMenu.Show(this, location);

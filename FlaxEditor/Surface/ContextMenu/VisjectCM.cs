@@ -170,12 +170,13 @@ namespace FlaxEditor.Surface.ContextMenu
             {
                 // TODO: cache the allocated memory to reduce dynamic allocations
                 var archetypes = new NodeArchetype[count];
-                for (int i = 0; i < count; i++)
+                int archetypeIndex = 0;
+                for (int i = 0; i < parameters.Count; i++)
                 {
                     if(!parameters[i].IsPublic)
                         continue;
-
-                    archetypes[i] = new NodeArchetype
+                    
+                    archetypes[archetypeIndex++] = new NodeArchetype
                     {
                         TypeID = 1,
                         Create = Archetypes.Parameters.CreateGetNode,
@@ -194,16 +195,20 @@ namespace FlaxEditor.Surface.ContextMenu
                 }
                 var groupArchetype = new GroupArchetype
                 {
-                    GroupID = 100,
+                    GroupID = 6,
                     Name = "Surface Parameters",
-                    Color = new Color(231, 76, 60),
+                    Color = new Color(52, 73, 94),
                     Archetypes = archetypes
                 };
                 var group = new VisjectCMGroup(this, groupArchetype);
                 group.Close(false);
-                for (int i = 0; i < count; i++)
+                archetypeIndex = 0;
+                for (int i = 0; i < parameters.Count; i++)
                 {
-                    var item = new VisjectCMItem(group, archetypes[i]);
+                    if (!parameters[i].IsPublic)
+                        continue;
+
+                    var item = new VisjectCMItem(group, archetypes[archetypeIndex++]);
                     item.Parent = group;
                 }
                 group.SortChildren();

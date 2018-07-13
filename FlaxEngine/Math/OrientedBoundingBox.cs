@@ -64,6 +64,17 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="OrientedBoundingBox"/> struct.
+        /// </summary>
+        /// <param name="extents">The half lengths of the box along each axis.</param>
+        /// <param name="transformation">The matrix which aligns and scales the box, and its translation vector represents the center of the box.</param>
+        public OrientedBoundingBox(Vector3 extents, Matrix transformation)
+        {
+            Extents = extents;
+            Transformation = transformation;
+        }
+        
+        /// <summary>
         /// Creates an <see cref="OrientedBoundingBox" /> which contained between two minimum and maximum points.
         /// </summary>
         /// <param name="minimum">The minimum vertex of the bounding box.</param>

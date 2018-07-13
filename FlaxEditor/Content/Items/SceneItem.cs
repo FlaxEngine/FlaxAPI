@@ -12,17 +12,12 @@ namespace FlaxEditor.Content
     public sealed class SceneItem : JsonAssetItem
     {
         /// <summary>
-        /// The scene asset typename.
-        /// </summary>
-        public const string SceneAssetTypename = "FlaxEngine.SceneAsset";
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="SceneItem"/> class.
         /// </summary>
         /// <param name="path">The asset path.</param>
         /// <param name="id">The asset identifier.</param>
         public SceneItem(string path, Guid id)
-        : base(path, id, SceneAssetTypename)
+        : base(path, id, Scene.EditorPickerTypename)
         {
         }
 

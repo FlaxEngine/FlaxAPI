@@ -24,7 +24,6 @@ namespace FlaxEditor.Windows.Assets
     public sealed class ModelWindow : AssetEditorWindowBase<Model>
     {
         // TODO: debug model UVs channels
-        // TODO: adding/removing material slots
         // TODO: refresh material slots comboboxes on material slot rename
         // TODO: add button to draw model bounds
         // TODO: add small panel in `General` group with lods switches visualization
@@ -35,14 +34,39 @@ namespace FlaxEditor.Windows.Assets
         [CustomEditor(typeof(ProxyEditor))]
         private sealed class PropertiesProxy
         {
-            [EditorOrder(10), EditorDisplay("Materials", EditorDisplayAttribute.InlineStyle), MemberCollection(CanReorderItems = true, NotNullItems = true, ReadOnly = true)]
+            [EditorOrder(10), EditorDisplay("Materials", EditorDisplayAttribute.InlineStyle), MemberCollection(CanReorderItems = true, NotNullItems = true)]
             public MaterialSlot[] MaterialSlots
             {
                 get => Asset?.MaterialSlots;
                 set
                 {
                     if (Asset != null)
-                        Asset.MaterialSlots = value;
+                    {
+                        if (Asset.MaterialSlots.Length != value.Length)
+                        {
+                            MaterialBase[] materials = new MaterialBase[value.Length];
+                            string[] names = new string[value.Length];
+                            ShadowsCastingMode[] shadowsModes = new ShadowsCastingMode[value.Length];
+                            for (int i = 0; i < value.Length; i++)
+                            {
+                                materials[i] = value[i].Material;
+                                names[i] = value[i].Name;
+                                shadowsModes[i] = value[i].ShadowsMode;
+                            }
+
+                            Asset.SetupMaterialSlots(value.Length);
+
+                            var slots = Asset.MaterialSlots;
+                            for (int i = 0; i < slots.Length; i++)
+                            {
+                                slots[i].Material = materials[i];
+                                slots[i].Name = names[i];
+                                slots[i].ShadowsMode = shadowsModes[i];
+                            }
+
+                            UpdateMaterialSlotsUI();
+                        }
+                    }
                 }
             }
 
@@ -283,13 +307,13 @@ namespace FlaxEditor.Windows.Assets
                             // Isolate
                             var isolate = group.Checkbox("Isolate", "Shows only this mesh (and meshes using the same material slot)");
                             isolate.CheckBox.Tag = mesh;
-                            isolate.CheckBox.CheckChanged += (box) => proxy.SetIsolate(box.Checked ? (Mesh)box.Tag : null);
+                            isolate.CheckBox.StateChanged += (box) => proxy.SetIsolate(box.Checked ? (Mesh)box.Tag : null);
                             proxy._isolateCheckBoxes.Add(isolate.CheckBox);
 
                             // Highlight
                             var highlight = group.Checkbox("Highlight", "Highlights this mesh with a tint color (and meshes using the same material slot)");
                             highlight.CheckBox.Tag = mesh;
-                            highlight.CheckBox.CheckChanged += (box) => proxy.SetHighlight(box.Checked ? (Mesh)box.Tag : null);
+                            highlight.CheckBox.StateChanged += (box) => proxy.SetHighlight(box.Checked ? (Mesh)box.Tag : null);
                             proxy._highlightCheckBoxes.Add(highlight.CheckBox);
                         }
                     }
@@ -434,7 +458,7 @@ namespace FlaxEditor.Windows.Assets
             if (_asset.Save())
             {
                 // Error
-                Editor.LogError("Failed to save model " + _item.Name);
+                Editor.LogError("Failed to save model " + _item.Path);
                 return;
             }
 

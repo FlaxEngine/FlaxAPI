@@ -7,13 +7,23 @@ namespace FlaxEngine
 {
     public sealed partial class Model
     {
-        /// <summary>
-        /// The asset type content domain.
-        /// </summary>
-        public const ContentDomain Domain = ContentDomain.Model;
-
         private MaterialSlot[] _slots;
         private ModelLOD[] _lods;
+
+        /// <summary>
+        /// The maximum amount of levels of detail for the model.
+        /// </summary>
+        public const int MaxLODs = 6;
+
+        /// <summary>
+        /// The maximum amount of meshes per model LOD.
+        /// </summary>
+        public const int MaxMeshes = 4096;
+
+        /// <summary>
+        /// The maximum allowed amount of material slots per model resource
+        /// </summary>
+        public const int MaxMaterialSlots = 4096;
 
         /// <summary>
         /// Gets the material slots colelction. Each slot contains information how to render mesh or meshes using it. See <see cref="Mesh.MaterialSlotIndex"/>.
@@ -23,12 +33,22 @@ namespace FlaxEngine
             get
             {
                 if (_slots == null)
-                    CacheData();
+                {
+                    // Ask unmanaged world for amount of material slots
+                    int slotsCount = Internal_GetSlots(unmanagedPtr);
+                    if (slotsCount > 0)
+                    {
+                        _slots = new MaterialSlot[slotsCount];
+                        for (int i = 0; i < slotsCount; i++)
+                            _slots[i] = new MaterialSlot(this, i);
+                    }
+                }
+
                 return _slots;
             }
             internal set
             {
-                // TODO: implement setter and allow to modify the colelction
+                // Hidden by default
             }
         }
 
@@ -63,64 +83,69 @@ namespace FlaxEngine
             get
             {
                 if (_lods == null)
-                    CacheData();
+                {
+                    // Ask unmanaged world for array with mesh count per lod
+                    var lodsSizes = Internal_GetLODs(unmanagedPtr);
+                    if (lodsSizes != null)
+                    {
+                        _lods = new ModelLOD[lodsSizes.Length];
+                        for (int i = 0; i < lodsSizes.Length; i++)
+                        {
+                            _lods[i] = new ModelLOD(this, i, lodsSizes[i]);
+                        }
+                    }
+                }
+
                 return _lods;
             }
         }
 
         /// <summary>
-        /// Updates the model mesh vertex and index buffer data.
-        /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
-        /// Mesh data will be cached and uploaded to the GPU with a delay.
+        /// Setups the model LODs collection including meshes creation.
         /// </summary>
-        /// <param name="vertices">The mesh verticies positions. Cannot be null.</param>
-        /// <param name="triangles">The mesh index buffer (triangles). Cannot be null.</param>
-        /// <param name="normals">The normal vectors (per vertex).</param>
-        /// <param name="uv">The texture cordinates (per vertex).</param>
-        /// <param name="colors">The vertex colors (per vertex).</param>
-        public void UpdateMesh(Vector3[] vertices, int[] triangles, Vector3[] normals = null, Vector2[] uv = null, Color32[] colors = null)
+        /// <remarks>
+        /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
+        /// </remarks>
+        /// <param name="meshesCountPerLod">The meshes count per LOD. Each model LOD contains a collection of meshes which has to be specified.</param>
+        public void SetupLODs(params int[] meshesCountPerLod)
         {
             // Validate state and input
             if (!IsVirtual)
-                throw new InvalidOperationException("Only virtual models can be updated at runtime.");
-            if (vertices == null)
-                throw new ArgumentNullException(nameof(vertices));
-            if (triangles == null)
-                throw new ArgumentNullException(nameof(triangles));
-            if (triangles.Length == 0 || triangles.Length % 3 != 0)
-                throw new ArgumentOutOfRangeException(nameof(triangles));
-            if (normals != null && normals.Length != vertices.Length)
-                throw new ArgumentOutOfRangeException(nameof(normals));
-            if (uv != null && uv.Length != vertices.Length)
-                throw new ArgumentOutOfRangeException(nameof(uv));
-            if (colors != null && colors.Length != vertices.Length)
-                throw new ArgumentOutOfRangeException(nameof(colors));
+                throw new InvalidOperationException("Only virtual models can be modified at runtime.");
+            if (meshesCountPerLod == null || meshesCountPerLod.Length == 0 || meshesCountPerLod.Length > MaxLODs)
+                throw new ArgumentOutOfRangeException(nameof(meshesCountPerLod));
+            for (int lodIndex = 0; lodIndex < meshesCountPerLod.Length; lodIndex++)
+            {
+                if (meshesCountPerLod[lodIndex] <= 0 || meshesCountPerLod[lodIndex] > MaxMeshes)
+                    throw new ArgumentException("Too many meshes per LOD.");
+            }
 
-            if (Internal_UpdateMesh(unmanagedPtr, vertices, triangles, normals, uv, colors))
-                throw new FlaxException("Failed to update mesh data.");
+            // Cleanup data
+            _lods = null;
+
+            // Call backend
+            if (Internal_SetupLODs(unmanagedPtr, meshesCountPerLod))
+                throw new FlaxException("Failed to update model LODs collection.");
         }
 
-        private void CacheData()
+        /// <summary>
+        /// Setups the material slots collection.
+        /// </summary>
+        /// <param name="slotsCount">The slots count.</param>
+        public void SetupMaterialSlots(int slotsCount)
         {
-            // Ask unmanaged world for amount of material slots
-            int slotsCount = Internal_GetSlots(unmanagedPtr);
-            if (slotsCount > 0)
-            {
-                _slots = new MaterialSlot[slotsCount];
-                for (int i = 0; i < slotsCount; i++)
-                    _slots[i] = new MaterialSlot(this, i);
-            }
+            // Validate state and input
+            if (!IsVirtual && WaitForLoaded())
+                throw new FlaxException("Failed to update model if asset is not virtual and loading failed.");
+            if (slotsCount <= 0 || slotsCount > MaxMaterialSlots)
+                throw new ArgumentOutOfRangeException(nameof(slotsCount));
 
-            // Ask unmanaged world for array with mesh count per lod
-            var lodsSizes = Internal_GetLODs(unmanagedPtr);
-            if (lodsSizes != null)
-            {
-                _lods = new ModelLOD[lodsSizes.Length];
-                for (int i = 0; i < lodsSizes.Length; i++)
-                {
-                    _lods[i] = new ModelLOD(this, i, lodsSizes[i]);
-                }
-            }
+            // Cleanup data
+            _slots = null;
+
+            // Call backend
+            if (Internal_SetupSlots(unmanagedPtr, slotsCount))
+                throw new FlaxException("Failed to update model material slots collection.");
         }
 
         internal void Internal_OnUnload()
@@ -138,7 +163,10 @@ namespace FlaxEngine
         internal static extern int[] Internal_GetLODs(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_UpdateMesh(IntPtr obj, Vector3[] vertices, int[] triangles, Vector3[] normals, Vector2[] uv, Color32[] colors);
+        internal static extern bool Internal_SetupLODs(IntPtr obj, int[] meshesCountPerLod);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_SetupSlots(IntPtr obj, int slotsCount);
 #endif
     }
 }

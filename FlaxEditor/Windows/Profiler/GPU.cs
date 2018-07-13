@@ -263,7 +263,7 @@ namespace FlaxEditor.Windows.Profiler
             float totalTimeMs = _mainChart.SelectedSample;
 
             // Add rows
-            var rowColor2 = Style.Current.Background * 1.02f;
+            var rowColor2 = Style.Current.Background * 1.4f;
             for (int i = 0; i < data.Length; i++)
             {
                 var e = data[i];

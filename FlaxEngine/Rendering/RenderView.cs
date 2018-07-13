@@ -90,12 +90,12 @@ namespace FlaxEngine.Rendering
             Position = position;
 
             // Create projection matrix
-            Matrix.PerspectiveFovLH(angle * Mathf.DegreesToRadians, 1.0f, nearPlane, farPlane, out Projection);
+            Matrix.PerspectiveFov(angle * Mathf.DegreesToRadians, 1.0f, nearPlane, farPlane, out Projection);
 
             // Create view matrix
             Direction = direction;
             Vector3 target = Position + Direction;
-            Matrix.LookAtLH(ref Position, ref target, ref up, out View);
+            Matrix.LookAt(ref Position, ref target, ref up, out View);
         }
 
         /// <summary>

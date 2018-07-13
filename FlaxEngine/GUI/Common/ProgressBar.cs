@@ -33,9 +33,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the value smoothing scale (0 to not use it).
         /// </summary>
-        /// <value>
-        /// The value smoothing scale.
-        /// </value>
+        [EditorOrder(40), Limit(0, 100, 0.1f), Tooltip("The value smoothing scale (0 to not use it).")]
         public float SmoothingScale { get; set; } = 1;
 
         /// <summary>
@@ -49,9 +47,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the minimum value.
         /// </summary>
-        /// <value>
-        /// The minimum value.
-        /// </value>
+        [EditorOrder(20), Tooltip("The minimum progress value.")]
         public float Minimum
         {
             get => _minimum;
@@ -68,15 +64,13 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the maximum value.
         /// </summary>
-        /// <value>
-        /// The maximum value.
-        /// </value>
+        [EditorOrder(30), Tooltip("The maximum progress value.")]
         public float Maximum
         {
             get => _maximum;
             set
             {
-                if (value < _minimum)
+                if (value < _minimum || Mathf.IsZero(value))
                     throw new ArgumentOutOfRangeException();
                 _maximum = value;
                 if (Value > _maximum)
@@ -87,9 +81,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the value.
         /// </summary>
-        /// <value>
-        /// The value.
-        /// </value>
+        [EditorOrder(10), Tooltip("The current progress value.")]
         public float Value
         {
             get => _value;
@@ -109,25 +101,38 @@ namespace FlaxEngine.GUI
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets or sets the margin for the progress bar rectangle within the control bounds.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The margin for the progress bar rectangle within the control bounds.")]
+        public Margin BarMargin { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color of the progress bar rectangle.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the progress bar rectangle.")]
+        public Color BarColor { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProgressBar"/> class.
+        /// </summary>
+        public ProgressBar()
+        : this(0, 0, 120)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProgressBar"/> class.
+        /// </summary>
         public ProgressBar(float x, float y, float width, float height = 28)
         : base(x, y, width, height)
         {
             CanFocus = false;
-        }
 
-        /// <inheritdoc />
-        public ProgressBar(Vector2 location, Vector2 size)
-        : base(location, size)
-        {
-            CanFocus = false;
-        }
-
-        /// <inheritdoc />
-        public ProgressBar(Rectangle bounds)
-        : base(bounds)
-        {
-            CanFocus = false;
+            var style = Style.Current;
+            BackgroundColor = style.Background;
+            BarColor = style.ProgressNormal;
+            BarMargin = new Margin(1);
         }
 
         /// <inheritdoc />
@@ -144,7 +149,7 @@ namespace FlaxEngine.GUI
                     // Lerp or not if running slow
                     float value;
                     if (!isDeltaSlow && UseSmoothing)
-                        value = Mathf.Lerp(_current, _value, deltaTime * 5.0f * SmoothingScale);
+                        value = Mathf.Lerp(_current, _value, Mathf.Clamp01(deltaTime * 5.0f * SmoothingScale));
                     else
                         value = _value;
                     _current = value;
@@ -159,9 +164,13 @@ namespace FlaxEngine.GUI
         {
             base.Draw();
 
-            var style = Style.Current;
-            Render2D.FillRectangle(new Rectangle(0, 0, Width, Height), style.Background);
-            Render2D.FillRectangle(new Rectangle(1, 1, (Width - 2) * _current, Height - 2), style.ProgressNormal);
+            float progressNormalized = (_current - _minimum) / _maximum;
+            if (progressNormalized > 0.001f)
+            {
+                var barRect = new Rectangle(0, 0, Width * progressNormalized, Height);
+                BarMargin.ShrinkRectangle(ref barRect);
+                Render2D.FillRectangle(barRect, BarColor);
+            }
         }
     }
 }

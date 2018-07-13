@@ -18,6 +18,7 @@ namespace FlaxEditor.GUI
         public const int DefaultMargin = 2;
 
         private Sprite _icon;
+        private string _text;
         private bool _mouseDown;
 
         /// <summary>
@@ -34,6 +35,18 @@ namespace FlaxEditor.GUI
         /// The automatic check mode.
         /// </summary>
         public bool AutoCheck;
+
+        /// <summary>
+        /// Gets or sets the button text.
+        /// </summary>
+        public string Text {
+            get { return _text; }
+            set
+            {
+                _text = value;
+                PerformLayout();
+            }
+        }
 
         /// <summary>
         /// The icon.
@@ -106,12 +119,12 @@ namespace FlaxEditor.GUI
             }
 
             // Draw text
-            if (!string.IsNullOrEmpty(Name))
+            if (!string.IsNullOrEmpty(_text))
             {
                 textRect.Size.X = Width - DefaultMargin - textRect.Left;
                 Render2D.DrawText(
                     style.FontMedium,
-                    Name,
+                    _text,
                     textRect,
                     enabled ? style.Foreground : style.ForegroundDisabled,
                     TextAlignment.Near,
@@ -129,8 +142,8 @@ namespace FlaxEditor.GUI
 
             if (hasSprite)
                 width += iconSize;
-            if (!string.IsNullOrEmpty(Name) && style.FontMedium)
-                width += style.FontMedium.MeasureText(Name).X + (hasSprite ? DefaultMargin : 0);
+            if (!string.IsNullOrEmpty(_text) && style.FontMedium)
+                width += style.FontMedium.MeasureText(_text).X + (hasSprite ? DefaultMargin : 0);
 
             Width = width;
         }

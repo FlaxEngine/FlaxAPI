@@ -57,7 +57,7 @@ namespace FlaxEditor.Content
         public override Color AccentColor => Color.FromRGB(0xbb37ef);
 
         /// <inheritdoc />
-        public override string TypeName => "FlaxEngine.SceneAsset";
+        public override string TypeName => Scene.AssetTypename;
 
         /// <inheritdoc />
         public override AssetItem ConstructItem(string path, string typeName, ref Guid id)

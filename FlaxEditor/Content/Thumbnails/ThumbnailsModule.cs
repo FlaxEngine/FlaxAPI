@@ -523,7 +523,7 @@ namespace FlaxEditor.Content.Thumbnails
             }
 
             /// <inheritdoc />
-            protected override void SetSizeInternal(Vector2 size)
+            protected override void SetSizeInternal(ref Vector2 size)
             {
                 // Cannot change default preview size
             }

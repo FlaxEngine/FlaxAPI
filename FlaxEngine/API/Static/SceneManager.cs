@@ -174,5 +174,46 @@ namespace FlaxEngine
                 break;
             }
         }
+        
+        /// <summary>
+        /// Unlaods all active scenes and loads the given scene (in the background).
+        /// </summary>
+        /// <param name="sceneAssetId">The scene asset identifier (scene to load).</param>
+        /// <returns>True if action fails (given asset is not a scene asset, missing data, scene loading error), otherwise false.</returns>
+        public static bool ChangeSceneAsync(Guid sceneAssetId)
+        {
+            UnloadAllScenesAsync();
+            return LoadSceneAsync(sceneAssetId);
+        }
+        
+        /// <summary>
+        /// Unlaods all active scenes and loads the given scene (in the background).
+        /// </summary>
+        /// <param name="sceneAsset">The asset with the scene to load.</param>
+        /// <returns>True if action fails (given asset is not a scene asset, missing data, scene loading error), otherwise false.</returns>
+        public static bool ChangeSceneAsync(SceneReference sceneAsset)
+        {
+            return ChangeSceneAsync(sceneAsset.ID);
+        }
+
+        /// <summary>
+        /// Loads scene from the asset.
+        /// </summary>
+        /// <param name="sceneAsset">The asset with the scene to load.</param>
+        /// <returns>True if action fails (given asset is not a scene asset, missing data, scene loading error), otherwise false.</returns>
+        public static bool LoadScene(SceneReference sceneAsset)
+        {
+            return LoadScene(sceneAsset.ID);
+        }
+
+        /// <summary>
+        /// Loads scene from the asset. Done in the background.
+        /// </summary>
+        /// <param name="sceneAsset">The asset with the sceneto load.</param>
+        /// <returns>True if failed (given asset is not a scene asset, missing data), otherwise false.</returns>
+        public static bool LoadSceneAsync(SceneReference sceneAsset)
+        {
+            return LoadSceneAsync(sceneAsset.ID);
+        }
     }
 }

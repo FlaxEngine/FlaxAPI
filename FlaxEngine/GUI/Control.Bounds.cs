@@ -8,78 +8,97 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets X coordinate of the upper-left corner of the control relative to the upper-left corner of its container
         /// </summary>
+        [HideInEditor, NoSerialize]
         public float X
         {
             get => _bounds.X;
             set
             {
                 if (!Mathf.NearEqual(_bounds.X, value))
-                    SetLocationInternal(new Vector2(value, _bounds.Y));
+                {
+                    var location = new Vector2(value, _bounds.Y);
+                    SetLocationInternal(ref location);
+                }
             }
         }
 
         /// <summary>
         /// Gets or sets Y coordinate of the upper-left corner of the control relative to the upper-left corner of its container
         /// </summary>
+        [HideInEditor, NoSerialize]
         public float Y
         {
             get => _bounds.Y;
             set
             {
                 if (!Mathf.NearEqual(_bounds.Y, value))
-                    SetLocationInternal(new Vector2(_bounds.X, value));
+                {
+                    var location = new Vector2(_bounds.X, value);
+                    SetLocationInternal(ref location);
+                }
             }
         }
 
         /// <summary>
         /// Gets or sets coordinates of the upper-left corner of the control relative to the upper-left corner of its container
         /// </summary>
+        [NoSerialize]
+        [ExpandGroups, EditorDisplay("Transform"), EditorOrder(1000), Tooltip("The location of the upper-left corner of the control relative to he upper-left corner of its container.")]
         public Vector2 Location
         {
             get => _bounds.Location;
             set
             {
                 if (!_bounds.Location.Equals(ref value))
-                    SetLocationInternal(value);
+                    SetLocationInternal(ref value);
             }
         }
 
         /// <summary>
         /// Gets or sets width of the control
         /// </summary>
+        [HideInEditor, NoSerialize]
         public float Width
         {
             get => _bounds.Width;
             set
             {
                 if (!Mathf.NearEqual(_bounds.Width, value))
-                    SetSizeInternal(new Vector2(value, _bounds.Height));
+                {
+                    var size = new Vector2(value, _bounds.Height);
+                    SetSizeInternal(ref size);
+                }
             }
         }
 
         /// <summary>
         /// Gets or sets height of the control
         /// </summary>
+        [HideInEditor, NoSerialize]
         public float Height
         {
             get => _bounds.Height;
             set
             {
                 if (!Mathf.NearEqual(_bounds.Height, value))
-                    SetSizeInternal(new Vector2(_bounds.Width, value));
+                {
+                    var size = new Vector2(_bounds.Width, value);
+                    SetSizeInternal(ref size);
+                }
             }
         }
 
         /// <summary>
         /// Gets or sets control's size
         /// </summary>
+        [EditorDisplay("Transform"), EditorOrder(1010), Tooltip("The size of the control bounds.")]
         public Vector2 Size
         {
             get => _bounds.Size;
             set
             {
                 if (!_bounds.Size.Equals(ref value))
-                    SetSizeInternal(value);
+                    SetSizeInternal(ref value);
             }
         }
 
@@ -131,6 +150,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets control's bounds retangle
         /// </summary>
+        [HideInEditor, NoSerialize]
         public Rectangle Bounds
         {
             get => _bounds;
@@ -144,6 +164,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the scale.
         /// </summary>
+        [EditorDisplay("Transform"), Limit(float.MinValue, float.MaxValue, 0.1f), EditorOrder(1020), Tooltip("The control scale parameter.")]
         public Vector2 Scale
         {
             get => _scale;
@@ -155,8 +176,9 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets the normalized pivot location (used to transform control around it).
+        /// Gets or sets the normalized pivot location (used to transform control around it). Point (0,0) is upper left corner, (0.5,0.5) is center, (1,1) is bottom left corner.
         /// </summary>
+        [EditorDisplay("Transform"), Limit(0.0f, 1.0f, 0.1f), EditorOrder(1030), Tooltip("The control rotation pivot location in normalized control size. Point (0,0) is upper left corner, (0.5,0.5) is center, (1,1) is bottom left corner.")]
         public Vector2 Pivot
         {
             get => _pivot;
@@ -168,8 +190,9 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets the shear.
+        /// Gets or sets the shear. Defined in degrees.
         /// </summary>
+        [EditorDisplay("Transform"), EditorOrder(1040), Tooltip("The shear transform angles (x, y). Defined in degrees.")]
         public Vector2 Shear
         {
             get => _shear;
@@ -183,6 +206,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the rotation angle (in degrees).
         /// </summary>
+        [EditorDisplay("Transform"), EditorOrder(1050), Tooltip("The control rotation angle (in degrees).")]
         public float Rotation
         {
             get => _rotation;

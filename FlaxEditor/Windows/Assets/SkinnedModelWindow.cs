@@ -1,6 +1,5 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Xml;
@@ -25,7 +24,6 @@ namespace FlaxEditor.Windows.Assets
     public sealed class SkinnedModelWindow : AssetEditorWindowBase<SkinnedModel>
     {
         // TODO: debug model UVs channel
-        // TODO: adding/removing material slots
         // TODO: refresh material slots comboboxes on material slot rename
         // TODO: add button to draw model/bone bounds
 
@@ -35,14 +33,36 @@ namespace FlaxEditor.Windows.Assets
         [CustomEditor(typeof(ProxyEditor))]
         private sealed class PropertiesProxy
         {
-            [EditorOrder(10), EditorDisplay("Materials", EditorDisplayAttribute.InlineStyle), MemberCollection(CanReorderItems = true, NotNullItems = true, ReadOnly = true)]
+            [EditorOrder(10), EditorDisplay("Materials", EditorDisplayAttribute.InlineStyle), MemberCollection(CanReorderItems = true, NotNullItems = true)]
             public MaterialSlot[] MaterialSlots
             {
                 get => Asset?.MaterialSlots;
                 set
                 {
-                    if (Asset != null)
-                        Asset.MaterialSlots = value;
+                    if (Asset.MaterialSlots.Length != value.Length)
+                    {
+                        MaterialBase[] materials = new MaterialBase[value.Length];
+                        string[] names = new string[value.Length];
+                        ShadowsCastingMode[] shadowsModes = new ShadowsCastingMode[value.Length];
+                        for (int i = 0; i < value.Length; i++)
+                        {
+                            materials[i] = value[i].Material;
+                            names[i] = value[i].Name;
+                            shadowsModes[i] = value[i].ShadowsMode;
+                        }
+
+                        Asset.SetupMaterialSlots(value.Length);
+
+                        var slots = Asset.MaterialSlots;
+                        for (int i = 0; i < slots.Length; i++)
+                        {
+                            slots[i].Material = materials[i];
+                            slots[i].Name = names[i];
+                            slots[i].ShadowsMode = shadowsModes[i];
+                        }
+
+                        UpdateMaterialSlotsUI();
+                    }
                 }
             }
 
@@ -273,13 +293,13 @@ namespace FlaxEditor.Windows.Assets
                         // Isolate
                         var isolate = group.Checkbox("Isolate", "Shows only this mesh (and meshes using the same material slot)");
                         isolate.CheckBox.Tag = mesh;
-                        isolate.CheckBox.CheckChanged += (box) => proxy.SetIsolate(box.Checked ? (SkinnedMesh)box.Tag : null);
+                        isolate.CheckBox.StateChanged += (box) => proxy.SetIsolate(box.Checked ? (SkinnedMesh)box.Tag : null);
                         proxy._isolateCheckBoxes.Add(isolate.CheckBox);
 
                         // Highlight
                         var highlight = group.Checkbox("Highlight", "Highlights this mesh with a tint color (and meshes using the same material slot)");
                         highlight.CheckBox.Tag = mesh;
-                        highlight.CheckBox.CheckChanged += (box) => proxy.SetHighlight(box.Checked ? (SkinnedMesh)box.Tag : null);
+                        highlight.CheckBox.StateChanged += (box) => proxy.SetHighlight(box.Checked ? (SkinnedMesh)box.Tag : null);
                         proxy._highlightCheckBoxes.Add(highlight.CheckBox);
                     }
 
@@ -289,17 +309,15 @@ namespace FlaxEditor.Windows.Assets
                         group.Panel.Close(false);
 
                         var tree = group.Tree();
-                        var root = tree.Node("Root");
                         for (int i = 0; i < skeleton.Length; i++)
                         {
                             if (skeleton[i].ParentIndex == -1)
                             {
-                                var node = root.Node(skeleton[i].Name);
+                                var node = tree.Node(skeleton[i].Name);
                                 BuildSkeletonNodeTree(skeleton, node, i);
+                                node.TreeNode.ExpandAll(true);
                             }
                         }
-
-                        root.TreeNode.ExpandAll();
                     }
 
                     // Import Settings
@@ -450,7 +468,7 @@ namespace FlaxEditor.Windows.Assets
             if (_asset.Save())
             {
                 // Error
-                Editor.LogError("Failed to save model " + _item.Name);
+                Editor.LogError("Failed to save model " + _item);
                 return;
             }
 

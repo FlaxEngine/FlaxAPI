@@ -160,6 +160,28 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Draws the arrow.
+        /// </summary>
+        /// <param name="position">The arrow origin position.</param>
+        /// <param name="orientation">The orientation (defines the arrow direction).</param>
+        /// <param name="color">The color.</param>
+        /// <param name="scale">The arrow scale (used to adjust the arrow size).</param>
+        /// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
+        /// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DrawArrow(Vector3 position, Quaternion orientation, Color color, float scale = 1.0f, float duration = 0.0f, bool depthTest = true)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawArrow(ref position, ref orientation, ref color, scale, duration, depthTest);
+#endif
+        }
+
+        /// <summary>
         /// Draws the debug shapes to the custom texture using given GPU command context.
         /// </summary>
         /// <param name="task">The calling rendering task.</param>
@@ -204,6 +226,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawTube(ref Vector3 position, ref Quaternion orientation, float radius, float length, ref Color color, float duration, bool depthTest);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawArrow(ref Vector3 position, ref Quaternion orientation, ref Color color, float scale, float duration, bool depthTest);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Draw(IntPtr task, IntPtr[] selectedActors, IntPtr target, IntPtr context, IntPtr depthBuffer, bool enableDepthTest);

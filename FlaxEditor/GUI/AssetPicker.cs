@@ -20,7 +20,7 @@ namespace FlaxEditor.GUI
         private const float ButtonsSize = 12;
 
         private AssetItem _selected;
-        private ContentDomain _domain;
+        private Type _type;
 
         private bool _isMosueDown;
         private Vector2 _mosueDownPos;
@@ -39,7 +39,7 @@ namespace FlaxEditor.GUI
                 if (value == _selected)
                     return;
                 if (value != null && !IsValid(value))
-                    throw new ArgumentException("Invalid asset domain.");
+                    throw new ArgumentException("Invalid asset type.");
 
                 // Change value
                 _selected?.RemoveReference(this);
@@ -63,7 +63,7 @@ namespace FlaxEditor.GUI
             {
                 if (value != SelectedID)
                 {
-                    SelectedItem = Editor.Instance.ContentDatabase.Find(value) as AssetItem;
+                    SelectedItem = Editor.Instance.ContentDatabase.FindAsset(value);
                 }
             }
         }
@@ -82,24 +82,25 @@ namespace FlaxEditor.GUI
                 }
                 else if (value.ID != SelectedID)
                 {
-                    SelectedItem = Editor.Instance.ContentDatabase.Find(value.ID) as AssetItem;
+                    SelectedItem = Editor.Instance.ContentDatabase.FindAsset(value.ID);
                 }
             }
         }
 
         /// <summary>
-        /// Gets or sets the assets domain that this picker acepts.
+        /// Gets or sets the assets types that this picker acepts (it supports types derived from the given type).
         /// </summary>
-        public ContentDomain Domain
+        public Type AssetType
         {
-            get => _domain;
+            get => _type;
             set
             {
-                if (_domain != value)
+                if (_type != value)
                 {
-                    _domain = value;
+                    _type = value;
 
-                    if (_selected != null && _selected.ItemDomain != _domain)
+                    // Auto deselect if the current value is invalid
+                    if (_selected != null && !IsValid(_selected))
                         SelectedItem = null;
                 }
             }
@@ -110,49 +111,41 @@ namespace FlaxEditor.GUI
         /// </summary>
         public event Action SelectedItemChanged;
 
-        /// <summary>
-        /// Checks if given value is valid and can be assigned to the picker.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>True if is valid, otherwise false.</returns>
-        public delegate bool IsValueValid(AssetItem item);
-
-        /// <summary>
-        /// The performs value validation before assigment.
-        /// </summary>
-        public IsValueValid ValidateValue;
-
         private bool IsValid(AssetItem item)
         {
-            return item.ItemDomain == _domain && (ValidateValue == null || ValidateValue(item));
+            // Type filter
+            var type = Utilities.Utils.GetType(item.TypeName);
+            if (_type.IsAssignableFrom(type))
+                return true;
+
+            // Json assets can contain any type of the object defined by the C# type (data oriented design)
+            if (_type == typeof(JsonAsset) && item is JsonAssetItem)
+                return true;
+
+            // Special case for scene asset references
+            if (_type == typeof(SceneReference) && item is SceneItem)
+                return true;
+
+            return false;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssetPicker"/> class.
         /// </summary>
         public AssetPicker()
-        : this(ContentDomain.Invalid, Vector2.Zero)
+        : this(typeof(Asset), Vector2.Zero)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssetPicker"/> class.
         /// </summary>
-        /// <param name="contentDomain">The assets content domain.</param>
-        public AssetPicker(ContentDomain contentDomain)
-        : this(contentDomain, Vector2.Zero)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AssetPicker"/> class.
-        /// </summary>
-        /// <param name="contentDomain">The assets content domain.</param>
+        /// <param name="assetType">The assets types that this picker accepts.</param>
         /// <param name="location">The control location.</param>
-        public AssetPicker(ContentDomain contentDomain, Vector2 location)
+        public AssetPicker(Type assetType, Vector2 location)
         : base(location, new Vector2(DefaultIconSize + ButtonsOffset + ButtonsSize, DefaultIconSize))
         {
-            _domain = contentDomain;
+            _type = assetType;
             _mousePos = Vector2.Minimum;
         }
 

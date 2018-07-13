@@ -106,9 +106,9 @@ namespace FlaxEngine.Rendering
         LensFlares = 1 << 18,
 
         /// <summary>
-        /// Shows/hides Constructive Solid Geometry
+        /// Shows/hides deferred decals.
         /// </summary>
-        CSG = 1 << 19,
+        Decals = 1 << 19,
 
         /// <summary>
         /// Shows/hides deph of field effect
@@ -126,21 +126,16 @@ namespace FlaxEngine.Rendering
         Fog = 1 << 22,
 
         /// <summary>
-        /// Shows/hides deferred decals.
-        /// </summary>
-        Decals = 1 << 23,
-
-        /// <summary>
         /// Default flags for Game
         /// </summary>
-        DefaultGame = DynamicActors | Reflections | CSG | DepthOfField | Fog | Decals
+        DefaultGame = DynamicActors | Reflections | DepthOfField | Fog | Decals
                       | SSR | AO | GI | DirectionalLights | PointLights | SpotLights | SkyLights | Shadows | SpecularLight
                       | AntiAliasing | CustomPostProcess | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares,
 
         /// <summary>
         /// Default flags for Editor
         /// </summary>
-        DefaultEditor = DynamicActors | Reflections | CSG | Fog | Decals
+        DefaultEditor = DynamicActors | Reflections | Fog | Decals
                         | SSR | AO | GI | DirectionalLights | PointLights | SpotLights | SkyLights | Shadows | SpecularLight
                         | AntiAliasing | CustomPostProcess | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares | EditorSprites,
 

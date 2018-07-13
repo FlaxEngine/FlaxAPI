@@ -63,6 +63,22 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Gets a value indicating whether any value in the collection is null.
+        /// </summary>
+        public bool HasNull
+        {
+            get
+            {
+                for (int i = 0; i < Count; i++)
+                {
+                    if (this[i] == null)
+                        return true;
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Gets the values types array (without duplicates).
         /// </summary>
         public Type[] ValuesTypes
@@ -114,6 +130,19 @@ namespace FlaxEditor.CustomEditors
                 for (int i = 0; i < instanceValues.Count; i++)
                     Add(fieldInfo.GetValue(instanceValues[i]));
             }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValueContainer"/> class.
+        /// </summary>
+        /// <param name="customType">The target custom type of the container values. Used to override the data.</param>
+        /// <param name="other">The other values container to clone.</param>
+        public ValueContainer(Type customType, ValueContainer other)
+        {
+            Capacity = other.Capacity;
+            AddRange(other);
+            Info = other.Info;
+            Type = customType;
         }
 
         /// <summary>

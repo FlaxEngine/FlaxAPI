@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEditor.Actions;
 using FlaxEditor.Content;
 using FlaxEditor.GUI;
@@ -408,7 +409,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 IsScrollable = false,
                 Color = new Color(0.7f),
                 Margin = new Margin(1),
-                ImageSource = new SpriteImageSource(FlaxEngine.GUI.Style.Current.Settings),
+                Brush = new SpriteBrush(FlaxEngine.GUI.Style.Current.Settings),
                 Tag = index,
                 Parent = group.Panel
             };
@@ -481,6 +482,12 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 var group = layout.Group(title);
                 group.Panel.Open(false);
 
+                // Customize
+                var typeAttributes = type.GetCustomAttributes(true);
+                var tooltip = (TooltipAttribute)typeAttributes.FirstOrDefault(x => x is TooltipAttribute);
+                if (tooltip != null)
+                    group.Panel.TooltipText = tooltip.Text;
+
                 // Add toggle button to the group
                 var scriptToggle = new CheckBox(2, 0, script.Enabled)
                 {
@@ -491,7 +498,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     Tag = script,
                     Parent = group.Panel
                 };
-                scriptToggle.CheckChanged += ScriptToggleOnCheckChanged;
+                scriptToggle.StateChanged += ScriptToggleOnCheckChanged;
 
                 // Add drag button to the group
                 const float dragIconSize = 14;
@@ -502,7 +509,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     IsScrollable = false,
                     Color = new Color(0.7f),
                     Margin = new Margin(1),
-                    ImageSource = new SpriteImageSource(Editor.Instance.UI.DragBar12),
+                    Brush = new SpriteBrush(Editor.Instance.UI.DragBar12),
                     Tag = script,
                     Parent = group.Panel
                 };
@@ -517,13 +524,13 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     IsScrollable = false,
                     Color = new Color(0.7f),
                     Margin = new Margin(1),
-                    ImageSource = new SpriteImageSource(FlaxEngine.GUI.Style.Current.Settings),
+                    Brush = new SpriteBrush(FlaxEngine.GUI.Style.Current.Settings),
                     Tag = script,
                     Parent = group.Panel
                 };
                 settingsButton.Clicked += SettingsButtonOnClicked;
 
-                group.Panel.HeaderMargin = new Margin(scriptDrag.Right, 15, 2, 2);
+                group.Panel.HeaderTextMargin = new Margin(scriptDrag.Right, 15, 2, 2);
                 group.Object(values, editor);
 
                 // Scripts arrange bar

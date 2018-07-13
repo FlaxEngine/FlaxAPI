@@ -25,7 +25,7 @@ namespace FlaxEditor.Surface.Elements
         /// <param name="parentNode">The parent node.</param>
         /// <param name="archetype">The archetype.</param>
         public AssetSelect(SurfaceNode parentNode, NodeElementArchetype archetype)
-        : base((ContentDomain)archetype.BoxID, archetype.ActualPosition)
+        : base(Utilities.Utils.GetType((ContentDomain)archetype.BoxID), archetype.ActualPosition)
         {
             SelectedID = (Guid)parentNode.Values[archetype.ValueIndex];
 

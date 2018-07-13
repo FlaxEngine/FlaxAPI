@@ -1500,7 +1500,7 @@ namespace FlaxEngine
         /// <param name="cameraUpVector">The up vector of the camera.</param>
         /// <param name="cameraForwardVector">The forward vector of the camera.</param>
         /// <param name="result">When the method completes, contains the created billboard Matrix3x3.</param>
-        public static void BillboardLH(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Matrix3x3 result)
+        public static void Billboard(ref Vector3 objectPosition, ref Vector3 cameraPosition, ref Vector3 cameraUpVector, ref Vector3 cameraForwardVector, out Matrix3x3 result)
         {
             Vector3 crossed;
             Vector3 final;
@@ -1535,10 +1535,10 @@ namespace FlaxEngine
         /// <param name="cameraUpVector">The up vector of the camera.</param>
         /// <param name="cameraForwardVector">The forward vector of the camera.</param>
         /// <returns>The created billboard Matrix3x3.</returns>
-        public static Matrix3x3 BillboardLH(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector)
+        public static Matrix3x3 Billboard(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector)
         {
             Matrix3x3 result;
-            BillboardLH(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
+            Billboard(ref objectPosition, ref cameraPosition, ref cameraUpVector, ref cameraForwardVector, out result);
             return result;
         }
 
@@ -1549,7 +1549,7 @@ namespace FlaxEngine
         /// <param name="target">The camera look-at target.</param>
         /// <param name="up">The camera's up vector.</param>
         /// <param name="result">When the method completes, contains the created look-at Matrix3x3.</param>
-        public static void LookAtLH(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Matrix3x3 result)
+        public static void LookAt(ref Vector3 eye, ref Vector3 target, ref Vector3 up, out Matrix3x3 result)
         {
             Vector3 xaxis, yaxis, zaxis;
             Vector3.Subtract(ref target, ref eye, out zaxis);
@@ -1577,10 +1577,10 @@ namespace FlaxEngine
         /// <param name="target">The camera look-at target.</param>
         /// <param name="up">The camera's up vector.</param>
         /// <returns>The created look-at Matrix3x3.</returns>
-        public static Matrix3x3 LookAtLH(Vector3 eye, Vector3 target, Vector3 up)
+        public static Matrix3x3 LookAt(Vector3 eye, Vector3 target, Vector3 up)
         {
             Matrix3x3 result;
-            LookAtLH(ref eye, ref target, ref up, out result);
+            LookAt(ref eye, ref target, ref up, out result);
             return result;
         }
 
