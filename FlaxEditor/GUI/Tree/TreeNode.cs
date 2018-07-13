@@ -460,7 +460,7 @@ namespace FlaxEditor.GUI
         }
 
         /// <summary>
-        /// Updates the drag over mode based on teh given mouse location.
+        /// Updates the drag over mode based on the given mouse location.
         /// </summary>
         /// <param name="location">The location.</param>
         private void UpdateDrawPositioning(ref Vector2 location)

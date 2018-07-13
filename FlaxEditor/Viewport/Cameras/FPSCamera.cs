@@ -7,7 +7,7 @@ using FlaxEngine;
 namespace FlaxEditor.Viewport.Cameras
 {
     /// <summary>
-    /// Implementation of <see cref="ViewportCamera"/> that simulated teh first-person ccamera which can fly though the scene.
+    /// Implementation of <see cref="ViewportCamera"/> that simulated the first-person ccamera which can fly though the scene.
     /// </summary>
     /// <seealso cref="FlaxEditor.Viewport.Cameras.ViewportCamera" />
     public class FPSCamera : ViewportCamera
