@@ -52,10 +52,6 @@ namespace FlaxEditor.Surface
         private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem)
         {
             var node = SpawnNode(visjectCmItem.GroupArchetype, visjectCmItem.NodeArchetype, _surface.PointFromParent(_cmStartPos));
-            //if (node.GetBoxes().ConvertAll(b => b.IsOutput).Aggregate((a, b) => a && b) && HasSelection) //TODO: No way! You're not getting away with this ***
-            // {
-            //    node.Location += new Vector2(-node.Width - 40, 90 * Selection.Count);
-            //}
 
             var toBeDeselected = new System.Collections.Generic.List<SurfaceNode>();
 

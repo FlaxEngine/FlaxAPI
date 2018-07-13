@@ -332,6 +332,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <summary>
         /// Gets the next siblings of a control that have a specific type.
         /// </summary>
+        /// <typeparam name="T">The type that the controls should have.</typeparam>
         /// <param name="item">A control that is attached to a parent</param>
         /// <returns>An <see cref="IEnumerable{T}"/> with the siblings that come after the current one.</returns>
         private IEnumerable<T> GetNextSiblings<T>(Control item) where T : Control
@@ -358,6 +359,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <summary>
         /// Gets the previous sibling of a control that have a specific type.
         /// </summary>
+        /// <typeparam name="T">The type that the controls should have.</typeparam>
         /// <param name="item">A control that is attached to a parent</param>
         /// <returns>An <see cref="IEnumerable{T}"/> with the siblings that come before the current one.</returns>
         private IEnumerable<T> GetPreviousSiblings<T>(Control item) where T : Control
