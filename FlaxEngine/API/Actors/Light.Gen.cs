@@ -59,6 +59,21 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the factor that controls how much this light will contribute idnirect lighting. When set to 0, there is no GI from the light. The default value is 1.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(40), Limit(0, 100, 0.1f), EditorDisplay("Light", "Indirect Lighting Intensity"), Tooltip("Controls how much this light will contribute idnirect lighting. When set to 0, there is no GI from the light. The default value is 1.")]
+        public float IndirectLightingIntensity
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetIndirectLightingIntensity(unmanagedPtr); }
+            set { Internal_SetIndirectLightingIntensity(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
         /// Gets or sets the factor that controls how much this light will contribute to the Volumetric Fog. When set to 0, there is no contribution.
         /// </summary>
         [UnmanagedCall]
@@ -111,6 +126,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetViewDistance(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetIndirectLightingIntensity(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetIndirectLightingIntensity(IntPtr obj, float val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern float Internal_GetVolumetricScatteringIntensity(IntPtr obj);
