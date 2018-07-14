@@ -105,6 +105,8 @@
     <Compile Include="API\Assets\BinaryAsset.Gen.cs" />
     <Compile Include="API\Assets\JsonAsset.cs" />
     <Compile Include="API\Assets\JsonAsset.Gen.cs" />
+    <Compile Include="API\Assets\Prefab.cs" />
+    <Compile Include="API\Assets\Prefab.Gen.cs" />
     <Compile Include="API\BinaryAssets\Animation.cs" />
     <Compile Include="API\BinaryAssets\Animation.Gen.cs" />
     <Compile Include="API\BinaryAssets\AnimationGraph.cs" />
