@@ -158,6 +158,10 @@ namespace FlaxEditor.SceneGraph.GUI
         /// </summary>
         public void StartRenaming()
         {
+            // Block renaming during scripts reload
+            if (Editor.Instance.ProgressReporting.CompileScripts.IsActive)
+                return;
+
             Select();
 
             // Start renaming the actor
@@ -188,8 +192,6 @@ namespace FlaxEditor.SceneGraph.GUI
         {
             if (IsFocused)
             {
-                Debug.Log("is focused " + Text);
-
                 if (key == Keys.F2)
                 {
                     StartRenaming();
