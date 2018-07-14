@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using FlaxEngine;
+using System.Linq;
 
 namespace FlaxEditor.Surface
 {
@@ -238,14 +239,6 @@ namespace FlaxEditor.Surface
 
             // Check if any node is under the mouse
             SurfaceNode nodeAtMouse = GetNodeUnderMouse();
-            if (nodeAtMouse == null)
-            {
-                // Check if no move has been made at all
-                if (_mouseMoveAmount < 5.0f)
-                {
-                    ClearSelection();
-                }
-            }
 
             // Cache flags and state
             if (_leftMouseDown && buttons == MouseButton.Left)
@@ -316,21 +309,21 @@ namespace FlaxEditor.Surface
             {
                 switch (key)
                 {
-                case Keys.A:
-                    SelectAll();
-                    return true;
-                case Keys.C:
-                    Copy();
-                    return true;
-                case Keys.V:
-                    Paste();
-                    return true;
-                case Keys.X:
-                    Cut();
-                    return true;
-                case Keys.D:
-                    Duplicate();
-                    return true;
+                    case Keys.A:
+                        SelectAll();
+                        return true;
+                    case Keys.C:
+                        Copy();
+                        return true;
+                    case Keys.V:
+                        Paste();
+                        return true;
+                    case Keys.X:
+                        Cut();
+                        return true;
+                    case Keys.D:
+                        Duplicate();
+                        return true;
                 }
             }
 

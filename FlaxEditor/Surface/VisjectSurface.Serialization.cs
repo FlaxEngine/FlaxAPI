@@ -97,108 +97,108 @@ namespace FlaxEditor.Surface
 
             switch (type)
             {
-            case 0: // CommonType::Bool:
-                value = stream.ReadByte() != 0;
-                break;
-            case 1: // CommonType::Integer:
-            {
-                value = stream.ReadInt32();
-            }
-                break;
-            case 2: // CommonType::Float:
-            {
-                value = stream.ReadSingle();
-            }
-                break;
-            case 3: // CommonType::Vector2:
-            {
-                value = new Vector2(stream.ReadSingle(), stream.ReadSingle());
-            }
-                break;
-            case 4: // CommonType::Vector3:
-            {
-                value = new Vector3(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
-            }
-                break;
-            case 5: // CommonType::Vector4:
-            {
-                value = new Vector4(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
-            }
-                break;
-            case 6: // CommonType::Color:
-            {
-                value = new Color(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
-            }
-                break;
-            case 7: // CommonType::Guid:
-            {
-                value = new Guid(stream.ReadBytes(16));
-            }
-                break;
-            case 8: // CommonType::String:
-            {
-                int length = stream.ReadInt32();
-                if (length <= 0)
-                {
-                    value = string.Empty;
-                }
-                else
-                {
-                    var data = new char[length];
-                    for (int i = 0; i < length; i++)
+                case 0: // CommonType::Bool:
+                    value = stream.ReadByte() != 0;
+                    break;
+                case 1: // CommonType::Integer:
                     {
-                        var c = stream.ReadUInt16();
-                        data[i] = (char)(c ^ 953);
+                        value = stream.ReadInt32();
                     }
-                    value = new string(data);
+                    break;
+                case 2: // CommonType::Float:
+                    {
+                        value = stream.ReadSingle();
+                    }
+                    break;
+                case 3: // CommonType::Vector2:
+                    {
+                        value = new Vector2(stream.ReadSingle(), stream.ReadSingle());
+                    }
+                    break;
+                case 4: // CommonType::Vector3:
+                    {
+                        value = new Vector3(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+                    }
+                    break;
+                case 5: // CommonType::Vector4:
+                    {
+                        value = new Vector4(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+                    }
+                    break;
+                case 6: // CommonType::Color:
+                    {
+                        value = new Color(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+                    }
+                    break;
+                case 7: // CommonType::Guid:
+                    {
+                        value = new Guid(stream.ReadBytes(16));
+                    }
+                    break;
+                case 8: // CommonType::String:
+                    {
+                        int length = stream.ReadInt32();
+                        if (length <= 0)
+                        {
+                            value = string.Empty;
+                        }
+                        else
+                        {
+                            var data = new char[length];
+                            for (int i = 0; i < length; i++)
+                            {
+                                var c = stream.ReadUInt16();
+                                data[i] = (char)(c ^ 953);
+                            }
+                            value = new string(data);
+                        }
+                        break;
+                    }
+                /*case 9:// CommonType::Box:
+                {
+                    BoundingBox v;
+                    ReadBox(&v);
+                    data.Set(v);
                 }
-                break;
-            }
-            /*case 9:// CommonType::Box:
-            {
-                BoundingBox v;
-                ReadBox(&v);
-                data.Set(v);
-            }
-                break;
-            case 10:// CommonType::Rotation:
-            {
-                Quaternion v;
-                ReadQuaternion(&v);
-                data.Set(v);
-            }
-                break;
-            case 11:// CommonType::Transform:
-            {
-                Transform v;
-                ReadTransform(&v);
-                data.Set(v);
-            }
-                break;
-            case 12:// CommonType::Sphere:
-            {
-                BoundingSphere v;
-                ReadSphere(&v);
-                data.Set(v);
-            }
-                break;
-            case 13:// CommonType::Rect:
-            {
-                Rect v;
-                ReadRect(&v);
-                data.Set(v);
-            }
-                break;*/
-            case 15: // CommonType::Matrix
-            {
-                value = new Matrix(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(),
-                                   stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(),
-                                   stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(),
-                                   stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
-                break;
-            }
+                    break;
+                case 10:// CommonType::Rotation:
+                {
+                    Quaternion v;
+                    ReadQuaternion(&v);
+                    data.Set(v);
+                }
+                    break;
+                case 11:// CommonType::Transform:
+                {
+                    Transform v;
+                    ReadTransform(&v);
+                    data.Set(v);
+                }
+                    break;
+                case 12:// CommonType::Sphere:
+                {
+                    BoundingSphere v;
+                    ReadSphere(&v);
+                    data.Set(v);
+                }
+                    break;
+                case 13:// CommonType::Rect:
+                {
+                    Rect v;
+                    ReadRect(&v);
+                    data.Set(v);
+                }
+                    break;*/
+                case 15: // CommonType::Matrix
+                    {
+                        value = new Matrix(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(),
+                                           stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(),
+                                           stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(),
+                                           stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+                        break;
+                    }
 
-            default: throw new SystemException();
+                default: throw new SystemException();
             }
         }
 
@@ -777,6 +777,7 @@ namespace FlaxEditor.Surface
         /// <returns>The bytes with surface data or null if failed.</returns>
         public byte[] Save()
         {
+            var hasFocus = IsFocused;
             Enabled = false;
 
             // Save surface meta
@@ -818,6 +819,7 @@ namespace FlaxEditor.Surface
             }
 
             Enabled = true;
+            if (hasFocus) Focus();
 
             if (result)
             {

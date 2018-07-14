@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -18,8 +19,14 @@ namespace FlaxEditor.Surface.ContextMenu
         private readonly TextBox _searchBox;
         private bool _waitingForInput;
         private VisjectCMGroup _surfaceParametersGroup;
+        private Panel _panel1;
         private VerticalPanel _panel2;
         private Func<List<SurfaceParameter>> _parametersGetter;
+
+        /// <summary>
+        /// The selected item
+        /// </summary>
+        public VisjectCMItem SelectedItem;
 
         /// <summary>
         /// The type of the surface.
@@ -59,6 +66,8 @@ namespace FlaxEditor.Surface.ContextMenu
                 Bounds = new Rectangle(0, _searchBox.Bottom + 1, Width, Height - _searchBox.Bottom - 2),
                 Parent = this
             };
+
+            _panel1 = panel1;
 
             // Create second panel (for groups arrangement)
             var panel2 = new VerticalPanel
@@ -119,6 +128,12 @@ namespace FlaxEditor.Surface.ContextMenu
             // Update groups
             for (int i = 0; i < _groups.Count; i++)
                 _groups[i].UpdateFilter(_searchBox.Text);
+            //If no item is selected (or it's not visible anymore), select the top one
+            if (SelectedItem == null || !SelectedItem.VisibleInHierarchy)
+            {
+                SelectedItem = _groups.Find(g => g.Visible)?.Children.Find(c => c.Visible && c is VisjectCMItem) as VisjectCMItem;
+            }
+            if (SelectedItem != null) _panel1.ScrollViewTo(SelectedItem);
             PerformLayout();
             _searchBox.Focus();
         }
@@ -145,7 +160,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 _groups[i].ResetView();
 
             _searchBox.Clear();
-
+            SelectedItem = null;
             IsLayoutLocked = wasLayoutLocked;
             PerformLayout();
         }
@@ -173,9 +188,9 @@ namespace FlaxEditor.Surface.ContextMenu
                 int archetypeIndex = 0;
                 for (int i = 0; i < parameters.Count; i++)
                 {
-                    if(!parameters[i].IsPublic)
+                    if (!parameters[i].IsPublic)
                         continue;
-                    
+
                     archetypes[archetypeIndex++] = new NodeArchetype
                     {
                         TypeID = 1,
@@ -247,6 +262,47 @@ namespace FlaxEditor.Surface.ContextMenu
                 Hide();
                 return true;
             }
+            else if (key == Keys.Return)
+            {
+                if (SelectedItem != null) OnClickItem(SelectedItem);
+                else Hide();
+                return true;
+            }
+            else if (key == Keys.ArrowUp)
+            {
+                if (SelectedItem == null) return true;
+
+                var previousSelectedItem = GetPreviousSiblings<VisjectCMItem>(SelectedItem).FirstOrDefault(c => c.Visible) ??
+                                           (GetPreviousSiblings<VisjectCMGroup>(SelectedItem.Group).FirstOrDefault()?.Children
+                                                .FindLast(c => c.Visible && c is VisjectCMItem) as VisjectCMItem);
+
+                if (previousSelectedItem != null)
+                {
+                    SelectedItem = previousSelectedItem;
+
+                    // Scroll into view (without smoothing)
+                    _panel1.VScrollBar.SmoothingScale = 0;
+                    _panel1.ScrollViewTo(SelectedItem);
+                    _panel1.VScrollBar.SmoothingScale = 1;
+                }
+                return true;
+            }
+            else if (key == Keys.ArrowDown)
+            {
+                if (SelectedItem == null) return true;
+
+                var nextSelectedItem = GetNextSiblings<VisjectCMItem>(SelectedItem).FirstOrDefault(c => c.Visible) ??
+                                       (GetNextSiblings<VisjectCMGroup>(SelectedItem.Group).FirstOrDefault()?.Children
+                                            .OfType<VisjectCMItem>().FirstOrDefault(c => c.Visible));
+
+                if (nextSelectedItem != null)
+                {
+                    SelectedItem = nextSelectedItem;
+                    _panel1.ScrollViewTo(SelectedItem);
+                }
+                return true;
+            }
+
             if (_waitingForInput)
             {
                 _waitingForInput = false;
@@ -255,6 +311,60 @@ namespace FlaxEditor.Surface.ContextMenu
             }
 
             return base.OnKeyDown(key);
+        }
+
+        /// <summary>
+        /// Gets the next siblings of a control.
+        /// </summary>
+        /// <param name="item">A control that is attached to a parent</param>
+        /// <returns>An <see cref="IEnumerable{Control}"/> with the siblings that come after the current one.</returns>
+        private IEnumerable<Control> GetNextSiblings(Control item)
+        {
+            if (item == null || item.Parent == null) yield break;
+
+            var parent = item.Parent;
+            for (int i = item.IndexInParent + 1; i < parent.ChildrenCount; i++)
+            {
+                yield return parent.GetChild(i);
+            }
+        }
+
+        /// <summary>
+        /// Gets the next siblings of a control that have a specific type.
+        /// </summary>
+        /// <typeparam name="T">The type that the controls should have.</typeparam>
+        /// <param name="item">A control that is attached to a parent</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> with the siblings that come after the current one.</returns>
+        private IEnumerable<T> GetNextSiblings<T>(Control item) where T : Control
+        {
+            return GetNextSiblings(item).OfType<T>();
+        }
+
+        /// <summary>
+        /// Gets the previous siblings of a control.
+        /// </summary>
+        /// <param name="item">A control that is attached to a parent</param>
+        /// <returns>An <see cref="IEnumerable{Control}"/> with the siblings that come before the current one.</returns>
+        private IEnumerable<Control> GetPreviousSiblings(Control item)
+        {
+            if (item == null || item.Parent == null) yield break;
+
+            var parent = item.Parent;
+            for (int i = item.IndexInParent - 1; i >= 0; i--)
+            {
+                yield return parent.GetChild(i);
+            }
+        }
+
+        /// <summary>
+        /// Gets the previous sibling of a control that have a specific type.
+        /// </summary>
+        /// <typeparam name="T">The type that the controls should have.</typeparam>
+        /// <param name="item">A control that is attached to a parent</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> with the siblings that come before the current one.</returns>
+        private IEnumerable<T> GetPreviousSiblings<T>(Control item) where T : Control
+        {
+            return GetPreviousSiblings(item).OfType<T>();
         }
     }
 }

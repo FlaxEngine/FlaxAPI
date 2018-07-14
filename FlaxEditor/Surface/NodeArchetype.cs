@@ -45,6 +45,11 @@ namespace FlaxEditor.Surface
         public string Description;
 
         /// <summary>
+        /// Alternative node titles.
+        /// </summary>
+        public string[] AlternativeTitles;
+
+        /// <summary>
         /// Default node values.
         /// </summary>
         public object[] DefaultValues;

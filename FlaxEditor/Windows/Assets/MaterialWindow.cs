@@ -136,22 +136,22 @@ namespace FlaxEditor.Windows.Assets
                         Type pType;
                         switch (p.Type)
                         {
-                        case MaterialParameterType.CubeTexture:
-                            pType = typeof(CubeTexture);
-                            pGuidType = true;
-                            break;
-                        case MaterialParameterType.Texture:
-                        case MaterialParameterType.NormalMap:
-                            pType = typeof(Texture);
-                            pGuidType = true;
-                            break;
-                        case MaterialParameterType.RenderTarget:
-                            pType = typeof(RenderTarget);
-                            pGuidType = true;
-                            break;
-                        default:
-                            pType = p.Value.GetType();
-                            break;
+                            case MaterialParameterType.CubeTexture:
+                                pType = typeof(CubeTexture);
+                                pGuidType = true;
+                                break;
+                            case MaterialParameterType.Texture:
+                            case MaterialParameterType.NormalMap:
+                                pType = typeof(Texture);
+                                pGuidType = true;
+                                break;
+                            case MaterialParameterType.RenderTarget:
+                                pType = typeof(RenderTarget);
+                                pGuidType = true;
+                                break;
+                            default:
+                                pType = p.Value.GetType();
+                                break;
                         }
 
                         var propertyValue = new CustomValueContainer(

@@ -21,7 +21,7 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Shows the primary menu.
         /// </summary>
-        /// <param name="location">The location in teh Surface Space.</param>
+        /// <param name="location">The location in the Surface Space.</param>
         public void ShowPrimaryMenu(Vector2 location)
         {
             _cmPrimaryMenu.Show(this, location);
@@ -51,7 +51,83 @@ namespace FlaxEditor.Surface
 
         private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem)
         {
-            SpawnNode(visjectCmItem.GroupArchetype, visjectCmItem.NodeArchetype, _surface.PointFromParent(_cmStartPos));
+            var node = SpawnNode(visjectCmItem.GroupArchetype, visjectCmItem.NodeArchetype, _surface.PointFromParent(_cmStartPos));
+
+            var toBeDeselected = new System.Collections.Generic.List<SurfaceNode>();
+
+            using (var outputBoxes = Selection
+                                    .OrderBy(n => n.Top)
+                                    .SelectMany(n => n.GetBoxes())
+                                    .Where(b => b.IsOutput && !b.HasAnyConnection)
+                                    .GetEnumerator())
+            {
+                // For each input box (I'm assuming that they are sorted properly)
+                foreach (var inputBox in node.GetBoxes().Where(box => !box.IsOutput))
+                {
+                    Box connectWith = null;
+                    // Find the next decent output box and connect them
+                    while (connectWith == null && outputBoxes.MoveNext())
+                    {
+                        var outputBox = outputBoxes.Current;
+                        bool connectAnyways = true;
+
+                        // Can I rely on the box indices?
+                        // If it's a constant node, it needs some special handling (either connect the first box or the other ones, never both)
+                        if (outputBox.ParentNode.GroupArchetype.Name == "Constants")
+                        {
+                            // Don't always connect this sort of box
+                            connectAnyways = false;
+
+                            // If it's the first box, everything is fine?
+                            if (outputBox.ID == 0)
+                            {
+                                // Everything is fine
+                                // If this one doesn't have any alternatives, I can just connect it regardless of the consequences
+                                if (outputBox.ParentNode.Elements.Where(e => e is Box).Count() <= 1)
+                                {
+                                    connectAnyways = true;
+                                }
+                            }
+                            // It's an alternative box
+                            else
+                            {
+                                // The first one is already connected => skip this one!
+                                if (outputBox.ParentNode.GetBox(0).HasAnyConnection)
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    // It's an actual alternative
+                                }
+                            }
+                        }
+
+                        //If they can easily be connected, just do it ✔
+                        if ((inputBox.CurrentType & outputBox.CurrentType) != 0)
+                        {
+                            connectWith = outputBox;
+                        }
+                        else if (connectAnyways && inputBox.CanUseType(outputBox.CurrentType))
+                        {
+                            connectWith = outputBox;
+                        }
+                    }
+                    if (connectWith != null)
+                    {
+                        //Connect them
+                        connectWith.CreateConnection(inputBox);
+                        toBeDeselected.Add(connectWith.ParentNode);
+                    }
+                }
+            }
+
+            foreach (var toDeselect in toBeDeselected)
+            {
+                Deselect(toDeselect);
+            }
+
+            AddToSelection(node);
         }
     }
 }
