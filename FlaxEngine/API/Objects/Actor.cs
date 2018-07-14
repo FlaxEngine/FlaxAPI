@@ -20,7 +20,7 @@ namespace FlaxEngine
         public bool IsStatic
         {
 #if UNIT_TEST_COMPILANT
-			get; set;
+            get { return StaticFlags == StaticFlags.FullyStatic; }
 #else
             get { return Internal_GetStaticFlags(unmanagedPtr) == StaticFlags.FullyStatic; }
 #endif
