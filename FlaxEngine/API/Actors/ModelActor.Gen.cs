@@ -53,6 +53,21 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets hidden shadow flag. If set to true, the object will cast a shadow but won't be visible.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(15), EditorDisplay("Model"), Tooltip("If checked, the object will cast a shadow but won't be visible.")]
+        public bool HiddenShadow
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetHiddenShadow(unmanagedPtr); }
+            set { Internal_SetHiddenShadow(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
         /// Gets or sets model asset
         /// </summary>
         [UnmanagedCall]
@@ -110,6 +125,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetScaleInLightmap(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetHiddenShadow(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetHiddenShadow(IntPtr obj, bool val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Model Internal_GetModel(IntPtr obj);
