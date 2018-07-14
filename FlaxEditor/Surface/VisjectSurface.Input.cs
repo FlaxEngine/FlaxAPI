@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using FlaxEngine;
-using System.Linq;
 
 namespace FlaxEditor.Surface
 {
@@ -309,21 +308,21 @@ namespace FlaxEditor.Surface
             {
                 switch (key)
                 {
-                    case Keys.A:
-                        SelectAll();
-                        return true;
-                    case Keys.C:
-                        Copy();
-                        return true;
-                    case Keys.V:
-                        Paste();
-                        return true;
-                    case Keys.X:
-                        Cut();
-                        return true;
-                    case Keys.D:
-                        Duplicate();
-                        return true;
+                case Keys.A:
+                    SelectAll();
+                    return true;
+                case Keys.C:
+                    Copy();
+                    return true;
+                case Keys.V:
+                    Paste();
+                    return true;
+                case Keys.X:
+                    Cut();
+                    return true;
+                case Keys.D:
+                    Duplicate();
+                    return true;
                 }
             }
 
