@@ -71,10 +71,12 @@
     <Compile Include="Content\Import\ImportFilesDialog.cs" />
     <Compile Include="Content\Import\ModelImportEntry.cs" />
     <Compile Include="Content\Import\TextureImportEntry.cs" />
+    <Compile Include="Content\Items\PrefabItem.cs" />
     <Compile Include="Content\Proxy\AnimationGraphProxy.cs" />
     <Compile Include="Content\Proxy\AnimationProxy.cs" />
     <Compile Include="Content\Proxy\AudioClipProxy.cs" />
     <Compile Include="Content\Proxy\CollisionDataProxy.cs" />
+    <Compile Include="Content\Proxy\PrefabProxy.cs" />
     <Compile Include="Content\Proxy\SettingsProxy.cs" />
     <Compile Include="Content\Proxy\SkeletonMaskProxy.cs" />
     <Compile Include="Content\Proxy\SkinnedModelProxy.cs" />

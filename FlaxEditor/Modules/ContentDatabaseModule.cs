@@ -857,6 +857,7 @@ namespace FlaxEditor.Modules
             Proxy.Add(new FontProxy());
             Proxy.Add(new ScriptProxy());
             Proxy.Add(new SceneProxy());
+            Proxy.Add(new PrefabProxy());
             Proxy.Add(new IESProfileProxy());
             Proxy.Add(new CollisionDataProxy());
             Proxy.Add(new AudioClipProxy());
