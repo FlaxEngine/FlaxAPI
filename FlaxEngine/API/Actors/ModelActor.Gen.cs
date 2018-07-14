@@ -53,6 +53,24 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the model bounds scale. It is useful when using Position Offset to animate the vertices of the object outside of its bounds.
+        /// </summary>
+        /// <remarks>
+        /// Increasing the bounds of an object will reduce performance and shadow quality.
+        /// </remarks>
+        [UnmanagedCall]
+        [EditorOrder(12), EditorDisplay("Model"), Tooltip("Model bounds scale parameter. It is useful when using Position Offset to animate the vertices of the object outside of its bounds."), Limit(0, 10.0f, 0.1f)]
+        public float BoundsScale
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetBoundsScale(unmanagedPtr); }
+            set { Internal_SetBoundsScale(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
         /// Gets or sets hidden shadow flag. If set to true, the object will cast a shadow but won't be visible.
         /// </summary>
         [UnmanagedCall]
@@ -125,6 +143,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetScaleInLightmap(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetBoundsScale(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetBoundsScale(IntPtr obj, float val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetHiddenShadow(IntPtr obj);

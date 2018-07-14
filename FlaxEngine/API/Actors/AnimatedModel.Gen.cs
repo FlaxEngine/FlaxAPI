@@ -116,7 +116,7 @@ namespace FlaxEngine
         /// Gets or sets the master scale parameter for the actor bounding box. Helps reducing mesh flickering effect on screen edges.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(60), EditorDisplay("Skinned Model"), Tooltip("The master scale parameter for the actor bounding box. Helps reducing mesh flickering effect on screen edges.")]
+        [EditorOrder(60), Limit(0), EditorDisplay("Skinned Model"), Tooltip("The master scale parameter for the actor bounding box. Helps reducing mesh flickering effect on screen edges.")]
         public float BoundsScale
         {
 #if UNIT_TEST_COMPILANT
