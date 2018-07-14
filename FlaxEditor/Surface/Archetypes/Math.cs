@@ -27,14 +27,19 @@ namespace FlaxEditor.Surface.Archetypes
                 }
             };
         }
-
         private static NodeArchetype Op2(ushort id, string title, string desc, ConnectionType inputType = ConnectionType.Variable, ConnectionType outputType = ConnectionType.Variable, bool isOutputDependant = true)
+        {
+            return Op2(id, title, desc, null, inputType, outputType, isOutputDependant);
+        }
+
+        private static NodeArchetype Op2(ushort id, string title, string desc, string[] altTitles, ConnectionType inputType = ConnectionType.Variable, ConnectionType outputType = ConnectionType.Variable, bool isOutputDependant = true)
         {
             return new NodeArchetype
             {
                 TypeID = id,
                 Title = title,
                 Description = desc,
+                AlternativeTitles = altTitles,
                 Size = new Vector2(110, 40),
                 DefaultType = inputType,
                 IndependentBoxes = new[]
@@ -69,11 +74,11 @@ namespace FlaxEditor.Surface.Archetypes
         /// </summary>
         public static NodeArchetype[] Nodes =
         {
-            Op2(1, "Add", "Result is sum A and B"),
-            Op2(2, "Subtract", "Result is difference A and B"),
-            Op2(3, "Multiply", "Result is A times B"),
-            Op2(4, "Modulo", "Result is remainder A from A divided by B B"),
-            Op2(5, "Divide", "Result is A divided by B"),
+            Op2(1, "Add", "Result is sum A and B", new []{ "+" }),
+            Op2(2, "Subtract", "Result is difference A and B", new []{ "-" }),
+            Op2(3, "Multiply", "Result is A times B", new []{ "*" }),
+            Op2(4, "Modulo", "Result is remainder A from A divided by B B", new []{ "%" }),
+            Op2(5, "Divide", "Result is A divided by B", new []{ "/" }),
             Op1(7, "Absolute", "Result is absolute value of A"),
             Op1(8, "Ceil", "Returns the smallest integer value greater than or equal to A"),
             Op1(9, "Cosine", "Returns cosine of A"),
@@ -103,7 +108,7 @@ namespace FlaxEditor.Surface.Archetypes
             Op2(20, "Dot", "Returns the dot product of A and B", ConnectionType.Vector, ConnectionType.Float, false),
             Op2(21, "Max", "Selects the greater of A and B"),
             Op2(22, "Min", "Selects the lesser of A and B"),
-            Op2(23, "Power", "Returns A raised to the specified at B power"),
+            Op2(23, "Power", "Returns A raised to the specified at B power", new []{ "^", "**" }), //TODO: Fight a religious war over which operator is better
             //
             new NodeArchetype
             {
