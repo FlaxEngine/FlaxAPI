@@ -383,18 +383,31 @@ namespace FlaxEditor.SceneGraph.GUI
                     }
                     case ContentDomain.Audio:
                     {
+                        // Create actor
                         var actor = AudioSource.New();
                         actor.StaticFlags = Actor.StaticFlags;
                         actor.Name = item.ShortName;
                         actor.Clip = FlaxEngine.Content.LoadAsync<AudioClip>(item.ID);
                         actor.Transform = Actor.Transform;
+
+                        // Spawn
                         Editor.Instance.SceneEditing.Spawn(actor, Actor);
 
                         break;
                     }
                     case ContentDomain.Prefab:
                     {
-                        throw new NotImplementedException("Spawning prefabs");
+                        // Create prefab instance
+                        var prefab = FlaxEngine.Content.LoadAsync<Prefab>(item.ID);
+                        var actor = PrefabManager.SpawnPrefab(prefab, null);
+                        actor.StaticFlags = Actor.StaticFlags;
+                        actor.Name = item.ShortName;
+                        actor.Transform = Actor.Transform;
+
+                        // Spawn
+                        Editor.Instance.SceneEditing.Spawn(actor, Actor);
+
+                        break;
                     }
                     }
                 }

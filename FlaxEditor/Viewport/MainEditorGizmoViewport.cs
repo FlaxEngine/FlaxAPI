@@ -704,7 +704,13 @@ namespace FlaxEditor.Viewport
             }
             case ContentDomain.Prefab:
             {
-                throw new NotImplementedException("Spawning prefabs");
+                var prefab = FlaxEngine.Content.LoadAsync<Prefab>(item.ID);
+                var actor = PrefabManager.SpawnPrefab(prefab, null);
+                actor.Name = item.ShortName;
+                actor.Position = PostProcessSpawnedActorLocation(ref hitLocation, actor.Box);
+                Editor.Instance.SceneEditing.Spawn(actor);
+
+                break;
             }
             case ContentDomain.Scene:
             {
