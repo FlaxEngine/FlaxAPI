@@ -51,6 +51,9 @@ namespace FlaxEditor.SceneGraph.Actors
         }
 
         /// <inheritdoc />
+        public override bool CanCreatePrefab => false;
+
+        /// <inheritdoc />
         public override bool CanCopyPaste => false;
 
         /// <inheritdoc />

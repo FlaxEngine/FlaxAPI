@@ -11,7 +11,7 @@ using Object = FlaxEngine.Object;
 namespace FlaxEditor.Modules
 {
     /// <summary>
-    /// Scene/prefabs/actors management module.
+    /// Scenes and actors management module.
     /// </summary>
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class SceneModule : EditorModule

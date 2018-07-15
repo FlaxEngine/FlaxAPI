@@ -267,6 +267,7 @@
     <Compile Include="Modules\ContentEditingModule.cs" />
     <Compile Include="Modules\ContentImportingModule.cs" />
     <Compile Include="Modules\EditorModule.cs" />
+    <Compile Include="Modules\PrefabsModule.cs" />
     <Compile Include="Modules\ProgressReportingModule.cs" />
     <Compile Include="Modules\ProjectCacheModule.cs" />
     <Compile Include="Modules\SceneEditingModule.cs" />

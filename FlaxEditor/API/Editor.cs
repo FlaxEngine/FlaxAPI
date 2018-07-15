@@ -88,6 +88,11 @@ namespace FlaxEditor
         public readonly SceneModule Scene;
 
         /// <summary>
+        /// The prefabs module.
+        /// </summary>
+        public readonly PrefabsModule Prefabs;
+
+        /// <summary>
         /// The scene editing module.
         /// </summary>
         public readonly SceneEditingModule SceneEditing;
@@ -168,6 +173,7 @@ namespace FlaxEditor
             RegisterModule(Thumbnails = new ThumbnailsModule(this));
             RegisterModule(Simulation = new SimulationModule(this));
             RegisterModule(Scene = new SceneModule(this));
+            RegisterModule(Prefabs = new PrefabsModule(this));
             RegisterModule(SceneEditing = new SceneEditingModule(this));
             RegisterModule(ContentEditing = new ContentEditingModule(this));
             RegisterModule(ContentDatabase = new ContentDatabaseModule(this));
@@ -625,6 +631,22 @@ namespace FlaxEditor
             return Internal_CookMeshCollision(path, type, model.unmanagedPtr, modelLodIndex, convexFlags, convexVertexLimit);
         }
 
+        /// <summary>
+        /// Creates the prefab asset from the given root actor. Saves it to the output file path.
+        /// </summary>
+        /// <param name="path">The output asset path.</param>
+        /// <param name="actor">The target actor (prefab root). It canot be a scene but it can contain a scripts and/or full hierarchy of objects to save.</param>
+        /// <returns>True if failed, otherwise false.</returns>
+        public static bool CreatePrefab(string path, Actor actor)
+        {
+            if (string.IsNullOrEmpty(path))
+                throw new ArgumentNullException(nameof(path));
+            if (actor == null)
+                throw new ArgumentNullException(nameof(actor));
+
+            return Internal_CreatePrefab(path, actor.unmanagedPtr);
+        }
+
         #region Env Probes Baking
 
         /// <summary>
@@ -840,7 +862,7 @@ namespace FlaxEditor
         {
             return StateMachine.CurrentState.CanReloadScripts;
         }
-        
+
         internal bool Internal_CanAutoBuildCSG()
         {
             return StateMachine.CurrentState.CanEditScene;
@@ -940,6 +962,9 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_CookMeshCollision(string path, CollisionDataType type, IntPtr model, int modelLodIndex, ConvexMeshGenerationFlags convexFlags, int convexVertexLimit);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_CreatePrefab(string path, IntPtr actor);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetCollisionWires(IntPtr collisionData, out Vector3[] triangles, out int[] indices);
