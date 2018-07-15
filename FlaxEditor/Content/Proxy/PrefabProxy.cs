@@ -44,6 +44,12 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
+        public override bool IsProxyFor<T>()
+        {
+            return typeof(T) == typeof(Prefab);
+        }
+
+        /// <inheritdoc />
         public override Color AccentColor => Color.FromRGB(0x7eef21);
 
         /// <inheritdoc />
@@ -53,6 +59,16 @@ namespace FlaxEditor.Content
         public override AssetItem ConstructItem(string path, string typeName, ref Guid id)
         {
             return new PrefabItem(path, id);
+        }
+
+        /// <inheritdoc />
+        public override void Create(string outputPath, object arg)
+        {
+            var actor = arg as Actor;
+            if (actor == null)
+                throw new ArgumentNullException(nameof(arg));
+
+            Editor.CreatePrefab(outputPath, actor);
         }
     }
 }

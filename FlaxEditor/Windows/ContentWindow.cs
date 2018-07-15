@@ -408,6 +408,8 @@ namespace FlaxEditor.Windows
         public void NewItem(ContentProxy proxy, object argument = null, Action<ContentItem> created = null)
         {
             Assert.IsNull(_newElement);
+            if(proxy == null)
+                throw new ArgumentNullException(nameof(proxy));
 
             string proxyName = proxy.Name;
             ContentFolder parentFolder = CurrentViewFolder;

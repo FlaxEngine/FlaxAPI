@@ -48,6 +48,10 @@ namespace FlaxEditor.Modules
             if (!Editor.StateMachine.CurrentState.CanEditContent)
                 return;
 
+            // Skip if cannot create assets in the given location
+            if (!Editor.Windows.ContentWin.CurrentViewFolder.CanHaveAssets)
+                return;
+
             var proxy = Editor.ContentDatabase.GetProxy<Prefab>();
             Editor.Windows.ContentWin.NewItem(proxy, actor, OnPrefabCreated);
         }
