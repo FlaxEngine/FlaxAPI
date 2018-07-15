@@ -649,7 +649,7 @@ namespace FlaxEditor.Modules
             _menuToolsBakeAllEnvProbes.Enabled = canEdit;
             _menuToolsBuildCSGMesh.Enabled = canEdit;
             _menuToolsCancelBuilding.Enabled = GameCooker.IsRunning;
-            _menuToolsSetTheCurrentSceneViewAsDefault.Enabled = SceneManager.LoadedScenesCount > 0;
+            _menuToolsSetTheCurrentSceneViewAsDefault.Enabled = SceneManager.ScenesCount > 0;
 
             c.PerformLayout();
         }

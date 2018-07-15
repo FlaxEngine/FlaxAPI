@@ -13,6 +13,37 @@ namespace FlaxEngine
     public static partial class SceneManager
     {
         /// <summary>
+        /// Gets the amount of the loaded scenes.
+        /// </summary>
+        [UnmanagedCall]
+        public static int ScenesCount
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetScenesCount(); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets the scene.
+        /// </summary>
+        /// <param name="index">The zero-based index of the scene to get.</param>
+        /// <returns>The scene object or null if index is invalid or there is no loaded scenes.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static Scene GetScene(int index)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_GetScene(index);
+#endif
+        }
+
+        /// <summary>
         /// Gets array of the loaded scenes.
         /// </summary>
         [UnmanagedCall]
@@ -76,45 +107,6 @@ namespace FlaxEngine
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
             return Internal_FindScene(ref id);
-#endif
-        }
-
-        /// <summary>
-        /// Gets amount of loaded scenes.
-        /// </summary>
-        [UnmanagedCall]
-        public static int LoadedScenesCount
-        {
-#if UNIT_TEST_COMPILANT
-            get; set;
-#else
-            get { return Internal_GetLoadedScenesCount(); }
-#endif
-        }
-
-        /// <summary>
-        /// Checks if any scene has been loaded. Loaded scene means deserialzied and added to the scenes collection.
-        /// </summary>
-        [UnmanagedCall]
-        public static bool IsAnySceneLoaded
-        {
-#if UNIT_TEST_COMPILANT
-            get; set;
-#else
-            get { return Internal_IsAnySceneLoaded(); }
-#endif
-        }
-
-        /// <summary>
-        /// Checks if any scene has any actor.
-        /// </summary>
-        [UnmanagedCall]
-        public static bool IsAnyActorInGame
-        {
-#if UNIT_TEST_COMPILANT
-            get; set;
-#else
-            get { return Internal_IsAnyActorInGame(); }
 #endif
         }
 
@@ -404,6 +396,12 @@ namespace FlaxEngine
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetScenesCount();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Scene Internal_GetScene(int index);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Scene[] Internal_GetScenes();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -414,15 +412,6 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Scene Internal_FindScene(ref Guid id);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern int Internal_GetLoadedScenesCount();
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_IsAnySceneLoaded();
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_IsAnyActorInGame();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_IsGameLogicRunning();

@@ -320,7 +320,7 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void OnSceneLoaded(Scene scene, Guid sceneId)
         {
-            if (SceneManager.LoadedScenesCount == 1)
+            if (SceneManager.ScenesCount == 1)
             {
                 // TODO: load cached viewport for that scene
             }

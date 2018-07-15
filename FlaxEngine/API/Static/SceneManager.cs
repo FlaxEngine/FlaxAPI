@@ -27,6 +27,11 @@ namespace FlaxEngine
     public static partial class SceneManager
     {
         /// <summary>
+        /// Checks if any scene has been loaded. Loaded scene means deserialzied and added to the scenes collection.
+        /// </summary>
+        public static bool IsAnySceneLoaded => ScenesCount != 0;
+
+        /// <summary>
         /// Fired when scene starts saving.
         /// </summary>
         public static event SceneDelegate SceneSaving;
