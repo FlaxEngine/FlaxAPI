@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -8,6 +9,11 @@ namespace FlaxEditor.Windows
 {
     public partial class SceneTreeWindow
     {
+        /// <summary>
+        /// Occurs when scene tree window wants to show the context menu. Allows to add custom options.
+        /// </summary>
+        public event Action<ContextMenu> ContextMenuShow;
+
         /// <summary>
         /// Creates the context menu for the current objects selection and the current Editor state.
         /// </summary>
@@ -25,7 +31,7 @@ namespace FlaxEditor.Windows
             var contextMenu = new ContextMenu();
             contextMenu.MinimumWidth = 120;
 
-            // Basic editing actions
+            // Basic editing options
 
             var b = contextMenu.AddButton("Rename", Rename);
             b.Enabled = isSingleActorSelected;
@@ -43,9 +49,9 @@ namespace FlaxEditor.Windows
             contextMenu.AddButton("Paste", Editor.SceneEditing.Paste);
 
             b = contextMenu.AddButton("Cut", Editor.SceneEditing.Cut);
-            b.Enabled = hasSthSelected;
+            b.Enabled = canEditScene;
             
-            // Spawning actors
+            // Spawning actors options
 
             contextMenu.AddSeparator();
             var spawnMenu = contextMenu.AddChildMenu("New");
@@ -69,6 +75,10 @@ namespace FlaxEditor.Windows
                     }
                 }
             }
+
+            // Custom options
+
+            ContextMenuShow?.Invoke(contextMenu);
 
             return contextMenu;
         }
