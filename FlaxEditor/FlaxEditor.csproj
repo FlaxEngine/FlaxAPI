@@ -458,6 +458,7 @@
     <Compile Include="Windows\Profiler\Timeline.cs" />
     <Compile Include="Windows\PropertiesWindow.cs" />
     <Compile Include="Windows\SceneEditorWindow.cs" />
+    <Compile Include="Windows\SceneTreeWindow.ContextMenu.cs" />
     <Compile Include="Windows\SceneTreeWindow.cs" />
     <Compile Include="Windows\ToolboxWindow.cs" />
   </ItemGroup>

@@ -15,18 +15,12 @@ namespace FlaxEditor.Windows
     /// Windows used to present loaded scenes collection and whole scene graph.
     /// </summary>
     /// <seealso cref="FlaxEditor.Windows.SceneEditorWindow" />
-    public class SceneTreeWindow : SceneEditorWindow
+    public partial class SceneTreeWindow : SceneEditorWindow
     {
         private Tree _tree;
         private bool _isUpdatingSelection;
         private bool _isMouseDown;
-        private readonly ContextMenu _contextMenu;
-        private readonly ContextMenuButton _cmRename;
-        private readonly ContextMenuButton _cmDuplicate;
-        private readonly ContextMenuButton _cmDelete;
-        private readonly ContextMenuButton _cmCopy;
-        private readonly ContextMenuButton _cmCut;
-        private readonly ContextMenuChildMenu _spawnMenu;
+        private ActorsGroup[] _spawnActorsGroups;
 
         private struct ActorsGroup
         {
@@ -55,7 +49,7 @@ namespace FlaxEditor.Windows
             _tree.Parent = this;
 
             // Spawnable actors (groups with single entry are inlined without a child menu)
-            var groups = new[]
+            _spawnActorsGroups = new[]
             {
                 new ActorsGroup
                 {
@@ -135,53 +129,6 @@ namespace FlaxEditor.Windows
                     }
                 },
             };
-
-            // Create context menu
-            _contextMenu = new ContextMenu();
-            _contextMenu.MinimumWidth = 120;
-            _cmRename = _contextMenu.AddButton("Rename", Rename);
-            _cmDuplicate = _contextMenu.AddButton("Duplicate", Editor.SceneEditing.Duplicate);
-            _cmDelete = _contextMenu.AddButton("Delete", Editor.SceneEditing.Delete);
-            _contextMenu.AddSeparator();
-            _cmCopy = _contextMenu.AddButton("Copy", Editor.SceneEditing.Copy);
-            _contextMenu.AddButton("Paste", Editor.SceneEditing.Paste);
-            _cmCut = _contextMenu.AddButton("Cut", Editor.SceneEditing.Cut);
-            _contextMenu.AddSeparator();
-            _spawnMenu = _contextMenu.AddChildMenu("New");
-            var newActorCm = _spawnMenu.ContextMenu;
-            for (int i = 0; i < groups.Length; i++)
-            {
-                var group = groups[i];
-
-                if (group.Types.Length == 1)
-                {
-                    var type = group.Types[0].Value;
-                    newActorCm.AddButton(group.Types[0].Key, () => Spawn(type));
-                }
-                else
-                {
-                    var groupCm = newActorCm.AddChildMenu(group.Name).ContextMenu;
-                    for (int j = 0; j < group.Types.Length; j++)
-                    {
-                        var type = group.Types[j].Value;
-                        groupCm.AddButton(group.Types[j].Key, () => Spawn(type));
-                    }
-                }
-            }
-
-            _contextMenu.VisibleChanged += ContextMenuOnVisibleChanged;
-        }
-
-        private void ContextMenuOnVisibleChanged(Control control)
-        {
-            bool hasSthSelected = Editor.SceneEditing.HasSthSelected;
-
-            _cmRename.Enabled = Editor.SceneEditing.SelectionCount == 1 && Editor.SceneEditing.Selection[0] is ActorNode;
-            _cmDuplicate.Enabled = hasSthSelected;
-            _cmDelete.Enabled = hasSthSelected;
-            _cmCopy.Enabled = hasSthSelected;
-            _cmCut.Enabled = hasSthSelected;
-            _spawnMenu.Enabled = Editor.StateMachine.CurrentState.CanEditScene && SceneManager.IsAnySceneLoaded;
         }
 
         private void Rename()
@@ -257,8 +204,7 @@ namespace FlaxEditor.Windows
             if (!Editor.StateMachine.CurrentState.CanEditScene)
                 return;
 
-            // Show context menu
-            _contextMenu.Show(node, location);
+            ShowContextMenu(node, ref location);
         }
 
         /// <inheritdoc />
@@ -356,7 +302,7 @@ namespace FlaxEditor.Windows
                 {
                     // Show context menu
                     Editor.SceneEditing.Deselect();
-                    _contextMenu.Show(this, location);
+                    ShowContextMenu(this, ref location);
                 }
 
                 return true;
@@ -376,7 +322,8 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void OnDestroy()
         {
-            _contextMenu.Dispose();
+            _tree = null;
+            _spawnActorsGroups = null;
 
             base.OnDestroy();
         }
