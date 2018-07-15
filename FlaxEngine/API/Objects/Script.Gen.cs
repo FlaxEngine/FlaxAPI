@@ -56,6 +56,32 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets a value indicating whether this script has a valid linkage to the prefab asset.
+        /// </summary>
+        [UnmanagedCall]
+        public bool HasPrefabLink
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_HasPrefabLink(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets the ID of the objet within a script that is used for synchronization with this script. Empty if no prefab link exists.
+        /// </summary>
+        [UnmanagedCall]
+        public Guid PrefabObjectID
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { Guid resultAsRef; Internal_GetPrefabObjectID(unmanagedPtr, out resultAsRef); return resultAsRef; }
+#endif
+        }
+
+        /// <summary>
         /// Breaks the prefab linkage for this script.
         /// </summary>
 #if UNIT_TEST_COMPILANT
@@ -88,6 +114,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetOrderInParent(IntPtr obj, int val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_HasPrefabLink(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetPrefabObjectID(IntPtr obj, out Guid resultAsRef);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_BreakPrefabLink(IntPtr obj);
