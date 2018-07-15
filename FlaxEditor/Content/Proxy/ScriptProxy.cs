@@ -39,7 +39,7 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
-        public override void Create(string outputPath)
+        public override void Create(string outputPath, object arg)
         {
             // Load template
             var templatePath = StringUtils.CombinePaths(Globals.EditorFolder, "Scripting/ScriptTemplate.cs");

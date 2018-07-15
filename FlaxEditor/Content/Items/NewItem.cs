@@ -14,14 +14,21 @@ namespace FlaxEditor.Content
         public ContentProxy Proxy { get; }
 
         /// <summary>
+        /// Gets the argument passed to the proxy for the item creation. In most cases it is null.
+        /// </summary>
+        public object Argument { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="NewItem"/> class.
         /// </summary>
         /// <param name="path">The path for the new item.</param>
         /// <param name="proxy">The content proxy object.</param>
-        public NewItem(string path, ContentProxy proxy)
+        /// <param name="arg">The argument passed to the proxy for the item creation. In most cases it is null.</param>
+        public NewItem(string path, ContentProxy proxy, object arg)
         : base(path)
         {
             Proxy = proxy;
+            Argument = arg;
         }
 
         /// <inheritdoc />

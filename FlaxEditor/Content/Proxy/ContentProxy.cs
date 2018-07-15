@@ -91,7 +91,8 @@ namespace FlaxEditor.Content
         /// Creates new item at the specified output path.
         /// </summary>
         /// <param name="outputPath">The output path.</param>
-        public virtual void Create(string outputPath)
+        /// <param name="arg">The custom argument provided for the item creation. Can be used as a source of data or null.</param>
+        public virtual void Create(string outputPath, object arg)
         {
             throw new NotImplementedException();
         }

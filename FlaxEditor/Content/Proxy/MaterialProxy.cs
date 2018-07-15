@@ -44,7 +44,7 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
-        public override void Create(string outputPath)
+        public override void Create(string outputPath, object arg)
         {
             if (Editor.CreateAsset(Editor.NewAssetType.Material, outputPath))
                 throw new Exception("Failed to create new asset.");
@@ -80,7 +80,7 @@ namespace FlaxEditor.Content
                 throw new ArgumentException();
 
             var materialIntanceProxy = Editor.Instance.ContentDatabase.GetProxy<MaterialInstance>();
-            Editor.Instance.Windows.ContentWin.NewItem(materialIntanceProxy, (item) => OnMaterialInstanceCreated(item, materialItem));
+            Editor.Instance.Windows.ContentWin.NewItem(materialIntanceProxy, null, (item) => OnMaterialInstanceCreated(item, materialItem));
         }
 
         private static void OnMaterialInstanceCreated(ContentItem item, BinaryAssetItem materialItem)

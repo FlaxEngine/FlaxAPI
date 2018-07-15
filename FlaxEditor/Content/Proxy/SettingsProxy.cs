@@ -26,7 +26,7 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
-        public override void Create(string outputPath)
+        public override void Create(string outputPath, object arg)
         {
             Editor.Instance.ContentImporting.Create(new SettingsCreateEntry(outputPath));
         }
