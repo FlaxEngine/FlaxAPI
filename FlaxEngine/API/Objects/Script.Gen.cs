@@ -55,6 +55,22 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Breaks the prefab linkage for this script.
+        /// </summary>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void BreakPrefabLink()
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_BreakPrefabLink(unmanagedPtr);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -72,6 +88,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetOrderInParent(IntPtr obj, int val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_BreakPrefabLink(IntPtr obj);
 #endif
 
         #endregion
