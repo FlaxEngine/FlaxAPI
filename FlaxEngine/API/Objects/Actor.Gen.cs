@@ -564,13 +564,51 @@ namespace FlaxEngine
         /// Returns true if actor has loaded content
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor, NoSerialize]
         public bool HasContentLoaded
         {
 #if UNIT_TEST_COMPILANT
             get; set;
 #else
             get { return Internal_HasContentLoaded(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this actor has a valid linkage to the prefab asset.
+        /// </summary>
+        [UnmanagedCall]
+        public bool HasPrefabLink
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_HasPrefabLink(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets the prefab asset ID. Empty if no prefab link exists.
+        /// </summary>
+        [UnmanagedCall]
+        public Guid PrefabID
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { Guid resultAsRef; Internal_GetPrefabID(unmanagedPtr, out resultAsRef); return resultAsRef; }
+#endif
+        }
+
+        /// <summary>
+        /// Gets the ID of the objet within a prefab that is used for synchronization with this actor. Empty if no prefab link exists.
+        /// </summary>
+        [UnmanagedCall]
+        public Guid PrefabObjectID
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { Guid resultAsRef; Internal_GetPrefabObjectID(unmanagedPtr, out resultAsRef); return resultAsRef; }
 #endif
         }
 
@@ -796,6 +834,15 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_HasContentLoaded(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_HasPrefabLink(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetPrefabID(IntPtr obj, out Guid resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetPrefabObjectID(IntPtr obj, out Guid resultAsRef);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_BreakPrefabLink(IntPtr obj);

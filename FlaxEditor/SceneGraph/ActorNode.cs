@@ -148,7 +148,7 @@ namespace FlaxEditor.SceneGraph
         /// <summary>
         /// Gets a value indicating whether this actor has a valid linkage to the prefab asset.
         /// </summary>
-        public virtual bool HasPrefabLink => false;
+        public virtual bool HasPrefabLink => Actor.HasPrefabLink;
 
         /// <inheritdoc />
         public override string Name => _actor.Name;
