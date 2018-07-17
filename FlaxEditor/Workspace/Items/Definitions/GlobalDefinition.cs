@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using FlaxEditor.Workspace.Items.Configuration;
+using FlaxEditor.Workspace.Items.Definitions.Abstract;
 
-namespace FlaxEditor.Workspace.Items
+namespace FlaxEditor.Workspace.Items.Definitions
 {
     /// <summary>
     /// Global definition of the *.sln file, this will only contain GlobalSection elements
@@ -33,8 +35,7 @@ namespace FlaxEditor.Workspace.Items
         /// <returns></returns>
         public SectionDefinition AddSection(string sectionName, string sectionValue)
         {
-            var sectionDefinition = new SectionDefinition(sectionName, sectionValue, SectionDefinitionType.Global,
-                                                          new List<DefinitionItem>(), Indent + 1);
+            var sectionDefinition = new SectionDefinition(sectionName, sectionValue, SectionDefinitionType.Global, new List<DefinitionItem>(), Indent + 1);
             Add(sectionDefinition);
             return sectionDefinition;
         }

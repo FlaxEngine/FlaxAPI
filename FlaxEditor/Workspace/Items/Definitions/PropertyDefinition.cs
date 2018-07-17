@@ -1,8 +1,9 @@
 using System;
 using System.IO;
 using FlaxEditor.Utilities;
+using FlaxEditor.Workspace.Items.Definitions.Abstract;
 
-namespace FlaxEditor.Workspace.Items
+namespace FlaxEditor.Workspace.Items.Definitions
 {
     /// <summary>
     /// <see cref="DefinitionItem"/> that is a single property that contains a Name and a Value

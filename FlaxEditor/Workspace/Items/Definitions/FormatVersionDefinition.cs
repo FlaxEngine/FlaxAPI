@@ -1,4 +1,6 @@
-namespace FlaxEditor.Workspace.Items
+using FlaxEditor.Workspace.Items.Definitions.Abstract;
+
+namespace FlaxEditor.Workspace.Items.Definitions
 {
     /// <summary>
     /// Format version definition of the current document

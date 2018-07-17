@@ -1,10 +1,15 @@
+// ////////////////////////////////////////////////////////////////////////////////////
+// // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
+// ////////////////////////////////////////////////////////////////////////////////////
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using FlaxEditor.Workspace.Items.Configuration;
 using FlaxEngine.Assertions;
 
-namespace FlaxEditor.Workspace.Items
+namespace FlaxEditor.Workspace.Items.Definitions.Abstract
 {
     /// <summary>
     /// Create abstractior for Project definition
@@ -24,24 +29,40 @@ namespace FlaxEditor.Workspace.Items
         public readonly string Path;
 
         /// <summary>
-        /// Unique GUID of the project 
+        /// Unique GUID of the project
         /// </summary>
         public readonly Guid ProjectGuid;
+
         /// <summary>
         /// Project type GUID
         /// </summary>
-        /// <remarks>This value ussuably will be FAE04EC0-301F-11D3-BF4B-00C04F79EFBC as this is C#. Other project types might have diffrent guid</remarks>
+        /// <remarks>
+        /// This value ussuably will be FAE04EC0-301F-11D3-BF4B-00C04F79EFBC as this is C#. Other project types might have
+        /// diffrent guid
+        /// </remarks>
         public readonly Guid ProjectTypeGuid;
 
         /// <summary>
         /// Default constructor containg all required fields by project definition
         /// </summary>
-        /// <param name="name"><see cref="Name"/></param>
-        /// <param name="path"><see cref="Path"/></param>
-        /// <param name="projectGuid"><see cref="ProjectGuid"/></param>
-        /// <param name="projectTypeGuid"><see cref="ProjectTypeGuid"/></param>
-        /// <param name="items"><see cref="CompositeDefinitionItem.ItemsList"/></param>
-        /// <param name="indent"><inheritdoc cref="DefinitionItem.Indent"/></param>
+        /// <param name="name">
+        /// <see cref="Name" />
+        /// </param>
+        /// <param name="path">
+        /// <see cref="Path" />
+        /// </param>
+        /// <param name="projectGuid">
+        /// <see cref="ProjectGuid" />
+        /// </param>
+        /// <param name="projectTypeGuid">
+        /// <see cref="ProjectTypeGuid" />
+        /// </param>
+        /// <param name="items">
+        /// <see cref="CompositeDefinitionItem.ItemsList" />
+        /// </param>
+        /// <param name="indent">
+        /// <inheritdoc cref="DefinitionItem.Indent" />
+        /// </param>
         protected ProjectDefinition(string name, string path, Guid projectGuid,
                                     Guid projectTypeGuid, IList<DefinitionItem> items, int indent)
         : base(items, indent)
@@ -59,7 +80,7 @@ namespace FlaxEditor.Workspace.Items
         {
             get
             {
-                if(Parent == null)
+                if (Parent == null)
                 {
                     throw new AssertionException();
                 }
@@ -78,24 +99,24 @@ namespace FlaxEditor.Workspace.Items
         /// <summary>
         /// Get all elements from internal list that are projects
         /// </summary>
-        /// <returns>Returns cutout section of the <see cref="ProjectDefinition"/></returns>
+        /// <returns>Returns cutout section of the <see cref="ProjectDefinition" /></returns>
         public IEnumerable<SectionDefinition> GetProjectSections()
         {
             return Items.OfType<SectionDefinition>().Where(x => x.Type == SectionDefinitionType.Project);
         }
 
         /// <summary>
-        /// Get all elements from internal list that matches <see cref="sectionName"/>
+        /// Get all elements from internal list that matches <see cref="sectionName" />
         /// </summary>
         /// <param name="sectionName">Name of the section to find</param>
-        /// <returns>Returns cutout section of the <see cref="ProjectDefinition"/></returns>
+        /// <returns>Returns cutout section of the <see cref="ProjectDefinition" /></returns>
         public IEnumerable<SectionDefinition> GetProjectSections(string sectionName)
         {
             return GetProjectSections().Where(section => section.SectionName == sectionName);
         }
 
         /// <summary>
-        /// Get Projects fisrt project that matches <see cref="sectionName"/> and <see cref="sectionValue"/> and return is
+        /// Get Projects fisrt project that matches <see cref="sectionName" /> and <see cref="sectionValue" /> and return is
         /// <para>If element was not found, create new one with given parameters</para>
         /// </summary>
         /// <param name="sectionName">Name of project to find or create</param>
@@ -118,7 +139,7 @@ namespace FlaxEditor.Workspace.Items
             }
 
             var newProjectSection = new SectionDefinition(sectionName, sectionValue, SectionDefinitionType.Project,
-                                                           new List<DefinitionItem>(), Indent);
+                                                          new List<DefinitionItem>(), Indent);
             Add(newProjectSection);
             return newProjectSection;
         }
@@ -133,7 +154,7 @@ namespace FlaxEditor.Workspace.Items
         }
 
         /// <summary>
-        /// Converts Project current to string (see <see cref="Dump"/> for writing to .sln file)
+        /// Converts Project current to string (see <see cref="Dump" /> for writing to .sln file)
         /// </summary>
         public override string ToString()
         {
@@ -141,7 +162,7 @@ namespace FlaxEditor.Workspace.Items
         }
 
         /// <summary>
-        /// TODO Chagne name 
+        /// TODO Chagne name
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="indent"></param>
@@ -149,7 +170,7 @@ namespace FlaxEditor.Workspace.Items
 
         /// <summary>
         /// TODO change name
-        /// Writes given <see cref="DefinitionItem"/> to the given TextWriter
+        /// Writes given <see cref="DefinitionItem" /> to the given TextWriter
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="indent"></param>

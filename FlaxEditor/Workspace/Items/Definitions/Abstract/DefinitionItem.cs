@@ -2,23 +2,22 @@
 // // Copyright (c) 2012-2017 Flax Engine. All rights reserved.
 // ////////////////////////////////////////////////////////////////////////////////////
 
-
 using System;
 
-namespace FlaxEditor.Workspace.Items
+namespace FlaxEditor.Workspace.Items.Definitions.Abstract
 {
     /// <summary>
-    /// Creates definition for a single item in workspace hierarchy
+    /// Creates definition a base definition for a single item in workspace hierarchy
     /// </summary>
     public abstract class DefinitionItem
     {
         /// <summary>
-        /// Indent of defined item 
+        /// Indent of defined item
         /// </summary>
         public int Indent;
 
         /// <summary>
-        ///     Generate new item with nulll parent and set item indent
+        /// Generate new item with nulll parent and set item indent
         /// </summary>
         /// <param name="indent"></param>
         protected DefinitionItem(int indent)

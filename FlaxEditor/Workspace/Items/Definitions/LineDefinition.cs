@@ -1,7 +1,9 @@
-namespace FlaxEditor.Workspace.Items
+using FlaxEditor.Workspace.Items.Definitions.Abstract;
+
+namespace FlaxEditor.Workspace.Items.Definitions
 {
     /// <summary>
-    /// Definition for single line of the item. This is raw format of the .sln file and should not be used
+    /// Definition for single line of the item. This is raw for raw format of the file and should be used with caution
     /// </summary>
     public class LineDefinition : DefinitionItem
     {

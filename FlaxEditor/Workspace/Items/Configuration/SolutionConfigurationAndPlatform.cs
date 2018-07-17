@@ -1,6 +1,6 @@
 using System;
 
-namespace FlaxEditor.Workspace.Items
+namespace FlaxEditor.Workspace.Items.Configuration
 {
     public class SolutionConfigurationAndPlatform : ISolutionConfigurationAndPlatform,
                                                     IEquatable<SolutionConfigurationAndPlatform>

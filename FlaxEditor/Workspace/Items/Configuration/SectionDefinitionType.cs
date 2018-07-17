@@ -1,4 +1,4 @@
-namespace FlaxEditor.Workspace.Items
+namespace FlaxEditor.Workspace.Items.Configuration
 {
     /// <summary>
     /// Sln files in current revision "Microsoft Visual Studio Solution File, Format Version 12.00" Have only 2 sections. Project and Global thus usage of this simple enum for easier definition

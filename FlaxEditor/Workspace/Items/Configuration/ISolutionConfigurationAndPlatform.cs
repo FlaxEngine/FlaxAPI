@@ -1,4 +1,4 @@
-﻿namespace FlaxEditor.Workspace.Items
+namespace FlaxEditor.Workspace.Items.Configuration
 {
     public interface ISolutionConfigurationAndPlatform
     {

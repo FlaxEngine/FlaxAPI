@@ -1,3 +1,6 @@
+using FlaxEditor.Workspace.Items.Definitions;
+using FlaxEditor.Workspace.Items.Definitions.Abstract;
+
 namespace FlaxEditor.Workspace.Items
 {
     public abstract class DefinitionItemVisitor

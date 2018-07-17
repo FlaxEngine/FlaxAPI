@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using FlaxEditor.Workspace.Items.Configuration;
+using FlaxEditor.Workspace.Items.Definitions.Abstract;
 
-namespace FlaxEditor.Workspace.Items
+namespace FlaxEditor.Workspace.Items.Definitions
 {
-    public partial class SectionDefinition : CompositeDefinitionItem
+    public class SectionDefinition : CompositeDefinitionItem
     {
         public readonly string SectionName;
 

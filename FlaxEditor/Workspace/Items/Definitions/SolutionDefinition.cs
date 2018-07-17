@@ -4,40 +4,46 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using FlaxEditor.Workspace.Generation;
+using FlaxEngine;
+using FlaxEditor.Utilities;
+using FlaxEditor.Workspace.Items.Configuration;
+using FlaxEditor.Workspace.Items.Definitions.Abstract;
+using FlaxEditor.Workspace.Parsers;
+using FlaxEditor.Workspace.Utils;
 
-namespace FlaxEditor.Workspace.Items
+namespace FlaxEditor.Workspace.Items.Definitions
 {
     public class SolutionDefinition : CompositeDefinitionItem
     {
-        private SolutionDefinition(FileSystemPath location, IList<DefinitionItem> items, ICollection<string> errors)
+        private SolutionDefinition(string location, IList<DefinitionItem> items, ICollection<string> errors)
         : base(items, 0)
         {
             Location = location;
             Errors = errors;
         }
 
-        
-        public string Name => Location.NameWithoutExtension;
 
-        
-        public FileSystemPath Location { get; }
+        public string Name => Path.GetFileNameWithoutExtension(Location);
 
-        
-        public FileSystemPath Directory => Location.Directory;
 
-        
+        public string Location { get; }
+
+
+        public string Directory => Path.GetDirectoryName(Location);
+
+
         public ICollection<string> Errors { get; }
 
-        public static SolutionDefinition Read(FileSystemPath location)
+        public static SolutionDefinition Read(string location)
         {
             var definitionReader = new SolutionDefinitionReader(location);
             definitionReader.Read();
             return new SolutionDefinition(location, definitionReader.Items, definitionReader.Errors);
         }
 
-        public static SolutionDefinition Create(FileSystemPath location, IList<DefinitionItem> items)
+        public static SolutionDefinition Create(string location, IList<DefinitionItem> items)
         {
-            return new SolutionDefinition(location, items, EmptyList<string>.Instance);
+            return new SolutionDefinition(location, items, new List<string>());
         }
 
         public string Write()
@@ -50,13 +56,19 @@ namespace FlaxEditor.Workspace.Items
             visitor.VisitSolution(this);
         }
 
-        
+        /// <summary>
+        /// Get all projects definitions from current solution definiton
+        /// </summary>
+        /// <returns>Returns list of all ProjectDefinitions</returns>
         public ICollection<ProjectDefinition> GetProjects()
         {
             return Items.OfType<ProjectDefinition>().ToList();
         }
 
-        
+        /// <summary>
+        /// Gets all global sections from the root of solution
+        /// </summary>
+        /// <returns></returns>
         public ICollection<SectionDefinition> GetGlobalSections()
         {
             var sectionDefinitionList = new List<SectionDefinition>();
@@ -74,27 +86,42 @@ namespace FlaxEditor.Workspace.Items
             return sectionDefinitionList;
         }
 
-        
-        public ICollection<SectionDefinition> GetGlobalSections( string sectionName)
+        /// <summary>
+        /// Get global section with given name
+        /// </summary>
+        /// <param name="sectionName"></param>
+        /// <returns></returns>
+        public ICollection<SectionDefinition> GetGlobalSections(string sectionName)
         {
             return GetGlobalSections().Where(section => section.SectionName == sectionName).ToList();
         }
 
-        
+        /// <summary>
+        /// Gets all properties defined in the solution root
+        /// </summary>
+        /// <returns></returns>
         public ICollection<PropertyDefinition> GetProperties()
         {
             return Items.OfType<PropertyDefinition>().ToList();
         }
 
-        
+        /// <summary>
+        /// Get format version definition for current solution
+        /// </summary>
+        /// <returns></returns>
         public FormatVersionDefinition GetFormatVersion()
         {
             return Items.OfType<FormatVersionDefinition>().FirstOrDefault();
         }
 
-        
-        public ProjectDefinition AddProject( ProjectDefinitionDescriptor descriptor,
-                                             ProjectDefinition parent = null)
+        /// <summary>
+        /// Adds new project to the solution under given folder (or root)
+        /// </summary>
+        /// <param name="descriptor">Descriptor form which new project will be created</param>
+        /// <param name="parent">Parent folder</param>
+        /// <returns>Returns injected project definition</returns>
+        public ProjectDefinition AddProject(ProjectDefinitionDescriptor descriptor,
+                                            ProjectDefinition parent = null)
         {
             var projectDefinition = AddProjectDefinitionInternal(descriptor, parent, (path, items, indent) =>
             {
@@ -107,7 +134,7 @@ namespace FlaxEditor.Workspace.Items
                 return (ProjectDefinition)new RegularProjectDefinition(descriptor.Name, path, descriptor.ProjectGuid,
                                                                        descriptor.ProjectTypeGuid, items, indent, new EnvironmentVariablesExpander());
             });
-            if (descriptor.Configurations.IsEmpty())
+            if (descriptor.Configurations.Count == 0)
             {
                 return projectDefinition;
             }
@@ -116,33 +143,39 @@ namespace FlaxEditor.Workspace.Items
             foreach (var projectConfigurations in SolutionDefinitionConfigurator.BuildNewProjectConfigurationsList(this,
                                                                                                                    projectDefinition, descriptor.Configurations))
             {
-                globalSection.AddProperty(projectConfigurations.First, projectConfigurations.Second);
+                globalSection.AddProperty(projectConfigurations.Item1, projectConfigurations.Item2);
             }
 
             return projectDefinition;
         }
 
-        
-        private ProjectDefinition AddProjectDefinitionInternal( ProjectDefinitionDescriptor descriptor,
-                                                                ProjectDefinition parent,
-                                                                Func<string, List<DefinitionItem>, int, ProjectDefinition> factory)
+        /// <summary>
+        /// Injects new project defintion at the end of all current project definitions
+        /// </summary>
+        /// <param name="descriptor">Project description with all global project related data</param>
+        /// <param name="parent">Parent folder of the project</param>
+        /// <param name="projectFactory">Elements to create new project from</param>
+        /// <returns>Returns new project definition injected into Solution</returns>
+        private ProjectDefinition AddProjectDefinitionInternal(ProjectDefinitionDescriptor descriptor,
+                                                               ProjectDefinition parent,
+                                                               Func<string, List<DefinitionItem>, int, ProjectDefinition> projectFactory)
         {
-            var projectDefinition1 = GetProjects().LastOrDefault();
+            var lastProjectDefinition = GetProjects().LastOrDefault();
+
             var definitionItemList = new List<DefinitionItem>();
-            var num = projectDefinition1 != null ? projectDefinition1.Indent : 0;
-            var fileSystemPath = FileSystemPath.TryParse(descriptor.Path, FileSystemPathInternStrategy.INTERN);
-            var str = fileSystemPath.IsEmpty || !fileSystemPath.IsAbsolute
-                      ? descriptor.Path
-                      : fileSystemPath.MakeRelativeTo(Location.Directory).FullPath;
-            var projectDefinition2 = factory(str, definitionItemList, num);
-            if (projectDefinition1 == null)
+            var num = lastProjectDefinition?.Indent ?? 0;
+            var fileSystemPath = descriptor.Path;
+            var str = FlaxEngine.Utils.MakeRelativePath(fileSystemPath, Path.GetDirectoryName(Location));
+            var projectToInject = projectFactory(str, definitionItemList, num);
+
+            if (lastProjectDefinition == null)
             {
                 var globalDefinition = GetOrCreateGlobalDefinition();
-                InsertBefore(projectDefinition2, globalDefinition);
+                InsertBefore(projectToInject, globalDefinition);
             }
             else
             {
-                InsertAfter(projectDefinition2, projectDefinition1);
+                InsertAfter(projectToInject, lastProjectDefinition);
             }
 
             if (parent != null)
@@ -151,19 +184,24 @@ namespace FlaxEditor.Workspace.Items
                                                                PropertyDefinition.ToProperty(parent.ProjectGuid));
             }
 
-            return projectDefinition2;
+            return projectToInject;
         }
 
-        public void RemoveProject( ProjectDefinition projectDefinition)
+        /// <summary>
+        /// Removes project with provided definition
+        /// </summary>
+        /// <param name="projectDefinition">Project to remove</param>
+        public void RemoveProject(ProjectDefinition projectDefinition)
         {
             Remove(projectDefinition);
-            var sectionDefinition1 = GetGlobalSections("NestedProjects").FirstOrDefault();
-            if (sectionDefinition1 != null)
+            //Handle removing from nested project section
+            var nestedSection = GetGlobalSections("NestedProjects").FirstOrDefault();
+            if (nestedSection != null)
             {
                 var projectGuid = PropertyDefinition.ToProperty(projectDefinition.ProjectGuid);
-                foreach (var propertyDefinition in sectionDefinition1.GetProperties().Where(p =>
+                foreach (var propertyDefinition in nestedSection.GetProperties().Where(p =>
                 {
-                    if (!(p.PropertyName == projectGuid))
+                    if (p.PropertyName != projectGuid)
                     {
                         return p.PropertyValue == projectGuid;
                     }
@@ -171,27 +209,34 @@ namespace FlaxEditor.Workspace.Items
                     return true;
                 }).ToList())
                 {
-                    sectionDefinition1.RemoveProperty(propertyDefinition);
+                    nestedSection.RemoveProperty(propertyDefinition);
                 }
             }
-
-            var sectionDefinition2 = GetGlobalSections("SolutionConfigurationPlatforms").FirstOrDefault();
-            var sectionDefinition3 = GetGlobalSections("ProjectConfigurationPlatforms").FirstOrDefault();
-            if (sectionDefinition2 == null || sectionDefinition3 == null)
+            
+            //Handle globals
+            var solutionConfig = GetGlobalSections("SolutionConfigurationPlatforms").FirstOrDefault();
+            var projectConfig = GetGlobalSections("ProjectConfigurationPlatforms").FirstOrDefault();
+            if (solutionConfig == null || projectConfig == null)
             {
                 return;
             }
 
-            foreach (var propertyDefinition in sectionDefinition3.Items.OfType<PropertyDefinition>()
+            //Handle given project in found region
+            foreach (var propertyDefinition in projectConfig.Items.OfType<PropertyDefinition>()
                                                                  .Where(propertyDefinition => propertyDefinition.PropertyName.ToUpper(CultureInfo.InvariantCulture)
                                                                                                                 .StartsWith(projectDefinition.ProjectGuid.ToUpperCurlyString())).ToList())
             {
-                sectionDefinition3.RemoveProperty(propertyDefinition);
+                projectConfig.RemoveProperty(propertyDefinition);
             }
         }
 
-        public void MoveProject( ProjectDefinition projectDefinition,
-                                 ProjectDefinition parentProjectDefinition)
+        /// <summary>
+        /// Move project to provided folder with given definition
+        /// </summary>
+        /// <param name="projectDefinition">Project to move</param>
+        /// <param name="parentProjectDefinition">Parent folder to move into</param>
+        public void MoveProject(ProjectDefinition projectDefinition,
+                                ProjectDefinition parentProjectDefinition)
         {
             var nestedProjectsSection = GetOrCreateNestedProjectsSection();
             var projectGuid = PropertyDefinition.ToProperty(projectDefinition.ProjectGuid);
@@ -210,18 +255,35 @@ namespace FlaxEditor.Workspace.Items
             nestedProjectsSection.AddProperty(projectGuid, property);
         }
 
+        /// <summary>
+        /// Gets first global section of the file or creates new one if one desn't exists
+        /// </summary>
+        /// <param name="sectionName">Name of the section (see example)</param>
+        /// <param name="sectionValue">Value of the section (see example)</param>
+        /// <example>
+        /// GlobalSection({sectionName}) = {sectionValue}
+        /// GlobalSection(SolutionConfigurationPlatforms) = preSolution
+        /// </example>
+        /// <returns>Returns the global definition</returns>
         public SectionDefinition GetOrCreateGlobalSection(string sectionName, string sectionValue)
         {
             return GetGlobalSections(sectionName).FirstOrDefault() ??
                    GetOrCreateGlobalDefinition().AddSection(sectionName, sectionValue);
         }
 
+        /// <summary>
+        /// Create global section for nested project in solution or gets existing one
+        /// </summary>
+        /// <returns></returns>
         private SectionDefinition GetOrCreateNestedProjectsSection()
         {
             return GetOrCreateGlobalSection("NestedProjects", "preSolution");
         }
 
-        
+        /// <summary>
+        /// Gets first global section of the file or creates new one if one desn't exists
+        /// </summary>
+        /// <returns>Returns the global definition</returns>
         private GlobalDefinition GetOrCreateGlobalDefinition()
         {
             var list = Items.OfType<GlobalDefinition>().ToList();
@@ -235,6 +297,7 @@ namespace FlaxEditor.Workspace.Items
             return globalDefinition;
         }
 
+        //TODO
         public void Dump(TextWriter writer)
         {
             if (Errors.Any())
@@ -246,7 +309,12 @@ namespace FlaxEditor.Workspace.Items
             }
             else
             {
-                var original = GetFormatVersion().NotNull().FormatVersion.VsTechVersion;
+                var formatVersionDefinition = GetFormatVersion();
+                if (formatVersionDefinition == null)
+                {
+                    throw new NullReferenceException(nameof(formatVersionDefinition) + " cannot be null");
+                }
+                var original = formatVersionDefinition.FormatVersion.VsTechVersion;
                 if (original.EndsWith("00"))
                 {
                     original = original.RemoveEnd("0");

@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace FlaxEngine.Tests
 {
     /// <summary>
-    /// Tests for <see cref="StringUtils"/>.
+    /// Tests for <see cref="FlaxEngine.StringExtensions"/>.
     /// </summary>
     [TestFixture]
     public class TestStringUtils

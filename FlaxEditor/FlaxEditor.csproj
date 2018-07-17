@@ -459,29 +459,33 @@
     <Compile Include="Windows\SceneEditorWindow.cs" />
     <Compile Include="Windows\SceneTreeWindow.cs" />
     <Compile Include="Windows\ToolboxWindow.cs" />
+    <Compile Include="Workspace\Utils\EnvironmentVariablesExpander.cs" />
     <Compile Include="Workspace\Generation\GenerationOptions.cs" />
-    <Compile Include="Workspace\Generation\Generators\ProjectGenerator.cs" />
-    <Compile Include="Workspace\Generation\Generators\SolutionGenerator.cs" />
     <Compile Include="Workspace\Generation\IGenerator.cs" />
-    <Compile Include="Workspace\Items\CompositeDefinitionItem.cs" />
-    <Compile Include="Workspace\Items\DefinitionItem.cs" />
+    <Compile Include="Workspace\Items\Definitions\Abstract\CompositeDefinitionItem.cs" />
+    <Compile Include="Workspace\Utils\ConfigurationExtensions.cs" />
+    <Compile Include="Workspace\Items\Definitions\Abstract\DefinitionItem.cs" />
     <Compile Include="Workspace\Items\DefinitionItemVisitor.cs" />
-    <Compile Include="Workspace\Items\FormatVersionDefinition.cs" />
-    <Compile Include="Workspace\Items\GlobalDefinition.cs" />
-    <Compile Include="Workspace\Items\IProjectConfigurationAndPlatform.cs" />
-    <Compile Include="Workspace\Items\ISolutionConfigurationAndPlatform.cs" />
-    <Compile Include="Workspace\Items\LineDefinition.cs" />
-    <Compile Include="Workspace\Items\ProjectConfigurationAndPlatform.cs" />
-    <Compile Include="Workspace\Items\ProjectDefinition.cs" />
-    <Compile Include="Workspace\Items\ProjectDefinitionDescriptor.cs" />
-    <Compile Include="Workspace\Items\PropertyDefinition.cs" />
-    <Compile Include="Workspace\Items\SectionDefinition.cs" />
-    <Compile Include="Workspace\Items\SectionDefinitionType.cs" />
-    <Compile Include="Workspace\Items\SolutionConfigurationAndPlatform.cs" />
-    <Compile Include="Workspace\Items\SolutionDefinition.cs" />
-    <Compile Include="Workspace\Items\SolutionFormatVersion.cs" />
-    <Compile Include="Workspace\Parsers\GenerationOptions.cs" />
+    <Compile Include="Workspace\Items\Definitions\FormatVersionDefinition.cs" />
+    <Compile Include="Workspace\Items\Definitions\GlobalDefinition.cs" />
+    <Compile Include="Workspace\Items\Configuration\IProjectConfigurationAndPlatform.cs" />
+    <Compile Include="Workspace\Items\Configuration\ISolutionConfigurationAndPlatform.cs" />
+    <Compile Include="Workspace\Items\Definitions\LineDefinition.cs" />
+    <Compile Include="Workspace\Items\Configuration\ProjectConfigurationAndPlatform.cs" />
+    <Compile Include="Workspace\Items\Definitions\Abstract\ProjectDefinition.cs" />
+    <Compile Include="Workspace\Items\Definitions\ProjectDefinitionDescriptor.cs" />
+    <Compile Include="Workspace\Items\Definitions\PropertyDefinition.cs" />
+    <Compile Include="Workspace\Items\Definitions\SectionDefinition.cs" />
+    <Compile Include="Workspace\Items\Configuration\SectionDefinitionType.cs" />
+    <Compile Include="Workspace\Items\Configuration\SolutionConfigurationAndPlatform.cs" />
+    <Compile Include="Workspace\Items\Definitions\SolutionDefinition.cs" />
+    <Compile Include="Workspace\Items\Configuration\SolutionDefinitionConfigurator.cs" />
+    <Compile Include="Workspace\Items\Definitions\SolutionFolderDefinition.cs" />
+    <Compile Include="Workspace\Parsers\SolutionFormatVersion.cs" />
+    <Compile Include="Workspace\Items\Definitions\RegularProjectDefinition.cs" />
+    <Compile Include="Workspace\Parsers\SolutionDefinitionReader.cs" />
     <Compile Include="Workspace\Parsers\SolutionDefinitionConstants.cs" />
+    <Compile Include="Workspace\Parsers\SolutionDefinitionWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlaxEngine\FlaxEngine.csproj">
@@ -495,9 +499,7 @@
   <ItemGroup>
     <None Include=".editorconfig" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Workspace\Items\Configuration\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <Exec Command="call &quot;$(SolutionDir)onbuild.bat&quot; -Editor" Condition=" '$(OS)' == 'Windows_NT' " />

@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
+using FlaxEditor.Workspace.Items.Definitions;
+using FlaxEditor.Workspace.Utils;
 
-namespace FlaxEditor.Workspace.Items
+namespace FlaxEditor.Workspace.Items.Configuration
 {
     /// <summary>Store configuration and platform for a project</summary>
     /// <remarks>
@@ -11,6 +14,26 @@ namespace FlaxEditor.Workspace.Items
     public class ProjectConfigurationAndPlatform : IProjectConfigurationAndPlatform,
                                                    IEquatable<ProjectConfigurationAndPlatform>
     {
+        public static ProjectConfigurationAndPlatform[] CreateDefaultConfigurationAndPlatform()
+        {
+            return new ProjectConfigurationAndPlatform[]
+            {
+                new ProjectConfigurationAndPlatform("Debug", "AnyCPU", true, false),
+                new ProjectConfigurationAndPlatform("Release", "AnyCPU", true, false),
+            };
+        }
+
+        public static ProjectConfigurationAndPlatform[] CreateSolutionConfigurationAndPlatform(SolutionDefinition solutionDefinition)
+        {
+            var list = new List<ProjectConfigurationAndPlatform>();
+            var definitions = solutionDefinition.GetSolutionConfigurations();
+            foreach (var definition in definitions)
+            {
+                list.Add(new ProjectConfigurationAndPlatform(definition, true, false));
+            }
+            return list.ToArray();
+        }
+
         public readonly string Configuration;
 
         public readonly string Platform;

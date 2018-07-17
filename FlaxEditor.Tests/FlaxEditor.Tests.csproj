@@ -56,6 +56,7 @@
     <Compile Include="TestSceneGraph.cs" />
     <Compile Include="UndoTests.cs" />
     <Compile Include="TestEditorStates.cs" />
+    <Compile Include="WorkspaceTests\Solution\BasicSolutionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlaxEditor\FlaxEditor.csproj">
