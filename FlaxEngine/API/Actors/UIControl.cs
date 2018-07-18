@@ -54,7 +54,7 @@ namespace FlaxEngine
 
                     if (containerControl != null && IsActiveInHierarchy)
                     {
-                        var children = ChildCount;
+                        var children = ChildrenCount;
                         for (int i = 0; i < children; i++)
                         {
                             var child = GetChild(i) as UIControl;

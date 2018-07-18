@@ -31,7 +31,7 @@ namespace FlaxEditor.CustomEditors.Editors
         private void GetActorsTree(List<Actor> list, Actor a)
         {
             list.Add(a);
-            int cnt = a.ChildCount;
+            int cnt = a.ChildrenCount;
             for (int i = 0; i < cnt; i++)
             {
                 GetActorsTree(list, a.GetChild(i));

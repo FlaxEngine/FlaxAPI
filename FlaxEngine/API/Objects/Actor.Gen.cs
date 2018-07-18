@@ -311,7 +311,7 @@ namespace FlaxEngine
         /// </summary>
         [UnmanagedCall]
         [HideInEditor, NoSerialize]
-        public int ChildCount
+        public int ChildrenCount
         {
 #if UNIT_TEST_COMPILANT
             get; set;
@@ -442,6 +442,38 @@ namespace FlaxEngine
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
             return Internal_GetChildren(unmanagedPtr);
+#endif
+        }
+
+        /// <summary>
+        /// Gets amount of scripts added to this actor.
+        /// </summary>
+        [UnmanagedCall]
+        [HideInEditor, NoSerialize]
+        public int ScriptsCount
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetScriptsCount(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets the child script at given index.
+        /// </summary>
+        /// <param name="index">The zero-based index of the script in the actor scripts array.</param>
+        /// <returns>The script instance.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public Script GetScript(int index)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_GetScriptAtIndex(unmanagedPtr, index);
 #endif
         }
 
@@ -810,6 +842,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Actor[] Internal_GetChildren(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetScriptsCount(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Script Internal_GetScriptAtIndex(IntPtr obj, int index);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Script Internal_GetScript(IntPtr obj, Type type);
