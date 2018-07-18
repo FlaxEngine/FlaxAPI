@@ -647,6 +647,29 @@ namespace FlaxEditor
             return Internal_CreatePrefab(path, actor.unmanagedPtr);
         }
 
+        /// <summary>
+        /// Gets the actor bounding sphere (including child actors).
+        /// </summary>
+        /// <param name="actor">The actor.</param>
+        /// <param name="sphere">The bounding sphere.</param>
+        public static void GetActorEditorSphere(Actor actor, out BoundingSphere sphere)
+        {
+            BoundingBox box;
+            Internal_GetEditorBoxWithChildren(actor.unmanagedPtr, out box);
+            BoundingSphere.FromBox(ref box, out sphere);
+            sphere.Radius = Math.Max(sphere.Radius, 15.0f);
+        }
+
+        /// <summary>
+        /// Gets the actor bounding box (including child actors).
+        /// </summary>
+        /// <param name="actor">The actor.</param>
+        /// <param name="box">The bounding box.</param>
+        public static void GetActorEditorBox(Actor actor, out BoundingBox box)
+        {
+            Internal_GetEditorBoxWithChildren(actor.unmanagedPtr, out box);
+        }
+
         #region Env Probes Baking
 
         /// <summary>
