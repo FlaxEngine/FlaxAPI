@@ -383,6 +383,7 @@
     <Compile Include="Surface\VisjectSurface.Paramaters.cs" />
     <Compile Include="Surface\VisjectSurface.Serialization.cs" />
     <Compile Include="Undo\Actions\AddRemoveScriptAction.cs" />
+    <Compile Include="Undo\Actions\BreakPrefabLinkAction.cs" />
     <Compile Include="Undo\Actions\ChangeScriptAction.cs" />
     <Compile Include="Undo\Actions\DeleteActorsAction.cs" />
     <Compile Include="Undo\Actions\PasteActorsAction.cs" />

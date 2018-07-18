@@ -1,5 +1,8 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
+using System.Runtime.CompilerServices;
+
 namespace FlaxEngine
 {
     public abstract partial class Script
@@ -23,5 +26,8 @@ namespace FlaxEngine
             get => Actor.LocalTransform;
             set => Actor.LocalTransform = value;
         }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_LinkPrefab(IntPtr obj, ref Guid prefabObjectId);
     }
 }

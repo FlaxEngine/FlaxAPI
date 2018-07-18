@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System.Linq;
+using FlaxEditor.Actions;
 using FlaxEditor.Content;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.Windows;
@@ -63,6 +64,10 @@ namespace FlaxEditor.Modules
                 return;
 
             // TODO: change the prefab source actor to be its instance
+            if (Editor.Undo.Enabled)
+            {
+
+            }
         }
 
         /// <summary>
@@ -82,19 +87,32 @@ namespace FlaxEditor.Modules
             // Perform action
             if (Editor.StateMachine.CurrentState.CanUseUndoRedo)
             {
-                using (new UndoMultiBlock(Undo, selection, "Break Prefab Link"))
+                if (selection.Count == 1)
                 {
-                    foreach (var e in selection)
+                    var action = BreakPrefabLinkAction.Break(((ActorNode)selection[0]).Actor);
+                    Undo.AddAction(action);
+                    action.Do();
+                }
+                else
+                {
+                    var actions = new IUndoAction[selection.Count];
+                    for (int i = 0; i < selection.Count; i++)
                     {
-                        // TODO: break link
+                        var action = BreakPrefabLinkAction.Break(((ActorNode)selection[i]).Actor);
+                        actions[i] = action;
+                        action.Do();
                     }
+                    Undo.AddAction(new MultiUndoAction(actions));
                 }
             }
             else
             {
                 foreach (var e in selection)
                 {
-                    // TODO: break link
+                    for (int i = 0; i < selection.Count; i++)
+                    {
+                        ((ActorNode)selection[i]).Actor.BreakPrefabLink();
+                    }
                 }
             }
         }
