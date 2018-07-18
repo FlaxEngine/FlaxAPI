@@ -629,8 +629,11 @@ namespace FlaxEditor.Viewport
             base.OnDragLeave();
         }
 
-        private Vector3 PostProcessSpawnedActorLocation(ref Vector3 hitLocation, BoundingBox box)
+        private Vector3 PostProcessSpawnedActorLocation(Actor actor, ref Vector3 hitLocation)
         {
+            BoundingBox box;
+            Editor.GetActorEditorBox(actor, out box);
+            
             // Place the object
             var location = hitLocation - (box.Size.Length * 0.5f) * ViewDirection;
 
@@ -676,7 +679,7 @@ namespace FlaxEditor.Viewport
                     var actor = AnimatedModel.New();
                     actor.Name = item.ShortName;
                     actor.SkinnedModel = model;
-                    actor.Position = PostProcessSpawnedActorLocation(ref hitLocation, actor.Box);
+                    actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
                     Editor.Instance.SceneEditing.Spawn(actor);
                 }
                 else
@@ -685,7 +688,7 @@ namespace FlaxEditor.Viewport
                     var actor = ModelActor.New();
                     actor.Name = item.ShortName;
                     actor.Model = model;
-                    actor.Position = PostProcessSpawnedActorLocation(ref hitLocation, actor.Box);
+                    actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
                     Editor.Instance.SceneEditing.Spawn(actor);
                 }
 
@@ -697,7 +700,7 @@ namespace FlaxEditor.Viewport
                 var actor = AudioSource.New();
                 actor.Name = item.ShortName;
                 actor.Clip = clip;
-                actor.Position = PostProcessSpawnedActorLocation(ref hitLocation, BoundingBox.Empty);
+                actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
                 Editor.Instance.SceneEditing.Spawn(actor);
 
                 break;
@@ -707,7 +710,7 @@ namespace FlaxEditor.Viewport
                 var prefab = FlaxEngine.Content.LoadAsync<Prefab>(item.ID);
                 var actor = PrefabManager.SpawnPrefab(prefab, null);
                 actor.Name = item.ShortName;
-                actor.Position = PostProcessSpawnedActorLocation(ref hitLocation, actor.Box);
+                actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
                 Editor.Instance.SceneEditing.Spawn(actor);
 
                 break;
@@ -730,7 +733,7 @@ namespace FlaxEditor.Viewport
                 return;
             }
             actor.Name = item.Name;
-            actor.Position = PostProcessSpawnedActorLocation(ref hitLocation, actor.Box);
+            actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
             Editor.Instance.SceneEditing.Spawn(actor);
         }
 

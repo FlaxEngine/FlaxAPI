@@ -148,7 +148,7 @@ namespace FlaxEditor.Windows
         public void ShowActor(Actor actor)
         {
             BoundingSphere sphere;
-            GetActorSphere(actor, out sphere);
+            Editor.GetActorEditorSphere(actor, out sphere);
             ShowSphere(ref sphere);
         }
 
@@ -167,19 +167,11 @@ namespace FlaxEditor.Windows
                 if (selection[i] is ActorNode actor)
                 {
                     BoundingSphere sphere;
-                    GetActorSphere(actor.Actor, out sphere);
+                    Editor.GetActorEditorSphere(actor.Actor, out sphere);
                     BoundingSphere.Merge(ref mergesSphere, ref sphere, out mergesSphere);
                 }
             }
             ShowSphere(ref mergesSphere);
-        }
-
-        private void GetActorSphere(Actor actor, out BoundingSphere sphere)
-        {
-            BoundingBox box;
-            Editor.Internal_GetEditorBoxWithChildren(actor.unmanagedPtr, out box);
-            BoundingSphere.FromBox(ref box, out sphere);
-            sphere.Radius = Math.Max(sphere.Radius, 15.0f);
         }
 
         private void ShowSphere(ref BoundingSphere sphere)
