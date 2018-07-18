@@ -62,8 +62,13 @@ namespace FlaxEditor.Windows
                         (Editor.SceneEditing.Selection[0] as ActorNode).CanCreatePrefab &&
                         Editor.Windows.ContentWin.CurrentViewFolder.CanHaveAssets;
 
+            bool hasPrefabLink = canEditScene && isSingleActorSelected && (Editor.SceneEditing.Selection[0] as ActorNode).HasPrefabLink;
+
+            b = contextMenu.AddButton("Select Prefab", Editor.Prefabs.SelectPrefab);
+            b.Enabled = hasPrefabLink;
+
             b = contextMenu.AddButton("Break Prefab Link", Editor.Prefabs.BreakLinks);
-            b.Enabled = canEditScene && isSingleActorSelected && (Editor.SceneEditing.Selection[0] as ActorNode).HasPrefabLink;
+            b.Enabled = hasPrefabLink;
 
             // Spawning actors options
 

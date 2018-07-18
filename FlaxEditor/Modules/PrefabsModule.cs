@@ -98,5 +98,20 @@ namespace FlaxEditor.Modules
                 }
             }
         }
+
+        /// <summary>
+        /// Selects in Content Window the prefab asset used by the selected objects.
+        /// </summary>
+        public void SelectPrefab()
+        {
+            // Get valid objects (the top ones, C++ backend will process the child objects)
+            var selection = Editor.SceneEditing.Selection.Where(x => x is ActorNode actorNode && actorNode.HasPrefabLink).ToList().BuildNodesParents();
+            if (selection.Count == 0)
+                return;
+
+            var prefabId = ((ActorNode)selection[0]).Actor.PrefabID;
+            var prefab = FlaxEngine.Content.LoadAsync<Prefab>(prefabId);
+            Editor.Windows.ContentWin.Select(prefab);
+        }
     }
 }
