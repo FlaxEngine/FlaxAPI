@@ -29,8 +29,8 @@ This repository contains an open source public C# API as well as full source cod
 * and many more...
 
 # Development
-* [Homepage](http://flaxengine.com)
-* [Dev Blog](http://flaxengine.com/blog)
+* [Homepage](https://flaxengine.com)
+* [Dev Blog](https://flaxengine.com/blog)
 * [Documentation](https://docs.flaxengine.com)
 * [Roadmap](https://trello.com/b/NQjLXRCP/flax-roadmap)
 
@@ -42,11 +42,11 @@ Extension is available to download [here](https://marketplace.visualstudio.com/i
 
 # Screenshots
 
-![rendering](http://flaxengine.com/wp-content/images/Screenshot_2017_03_11_18_12_35.png "Rendering")
-![pbr-rendering](http://flaxengine.com/wp-content/images/visuals/pbr.jpg "PBR Rendering")
-![gi](http://flaxengine.com/wp-content/images/visuals/gi.jpg "Global Illumination")
-![materials-editor](http://flaxengine.com/wp-content/images/editor/materials-editor.jpg "Materials Editor")
-![editor](http://flaxengine.com/wp-content/uploads/2017/05/HistoryOfTheCelelej_0029.png "Editor")
+![rendering](https://flaxengine.com/wp-content/images/Screenshot_2017_03_11_18_12_35.png "Rendering")
+![pbr-rendering](https://flaxengine.com/wp-content/images/visuals/pbr.jpg "PBR Rendering")
+![gi](https://flaxengine.com/wp-content/images/visuals/gi.jpg "Global Illumination")
+![materials-editor](https://flaxengine.com/wp-content/images/editor/materials-editor.jpg "Materials Editor")
+![editor](https://flaxengine.com/wp-content/uploads/2017/05/HistoryOfTheCelelej_0029.png "Editor")
 
 # Licensing and Contributions
 
