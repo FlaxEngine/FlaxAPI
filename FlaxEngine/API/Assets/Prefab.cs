@@ -11,7 +11,7 @@ namespace FlaxEngine
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Actor Internal_GetDefaultInstance(IntPtr obj);
+        internal static extern Actor Internal_GetDefaultInstance(IntPtr obj, ref Guid objectId);
 #endif
 
         #endregion
