@@ -5,7 +5,7 @@ namespace FlaxEngine
     public static partial class PrefabManager
     {
         /// <summary>
-        /// Spawns the instance of the prefab objects. Prefab wil be spawned to the first scene.
+        /// Spawns the instance of the prefab objects. Prefab will be spawned to the first loaded scene.
         /// </summary>
         /// <param name="prefab">The prefab asset.</param>
         /// <returns>The created actor (root) or null if failed</returns>

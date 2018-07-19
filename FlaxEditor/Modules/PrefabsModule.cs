@@ -69,7 +69,7 @@ namespace FlaxEditor.Modules
                 var selection = Editor.SceneEditing.Selection.Where(x => x is ActorNode).ToList().BuildNodesParents();
                 if (selection.Count == 0)
                     return;
-                
+
                 if (selection.Count == 1)
                 {
                     var action = BreakPrefabLinkAction.Linked(((ActorNode)selection[0]).Actor);
@@ -86,6 +86,8 @@ namespace FlaxEditor.Modules
                     Undo.AddAction(new MultiUndoAction(actions));
                 }
             }
+            
+            Editor.Instance.Windows.PropertiesWin.Presenter.BuildLayout();
         }
 
         /// <summary>

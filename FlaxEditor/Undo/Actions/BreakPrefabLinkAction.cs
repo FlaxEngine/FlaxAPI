@@ -112,6 +112,7 @@ namespace FlaxEditor.Actions
             }
 
             Editor.Instance.Scene.MarkSceneEdited(actor.Scene);
+            Editor.Instance.Windows.PropertiesWin.Presenter.BuildLayout();
         }
 
         private void CollectIds(Actor actor)
@@ -149,6 +150,7 @@ namespace FlaxEditor.Actions
             actor.BreakPrefabLink();
 
             Editor.Instance.Scene.MarkSceneEdited(actor.Scene);
+            Editor.Instance.Windows.PropertiesWin.Presenter.BuildLayout();
         }
     }
 }
