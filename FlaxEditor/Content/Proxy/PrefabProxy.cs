@@ -68,7 +68,7 @@ namespace FlaxEditor.Content
             if (actor == null)
                 throw new ArgumentNullException(nameof(arg));
 
-            Editor.CreatePrefab(outputPath, actor);
+            Editor.CreatePrefab(outputPath, actor, true);
         }
     }
 }

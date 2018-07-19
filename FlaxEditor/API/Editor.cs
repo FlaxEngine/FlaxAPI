@@ -636,15 +636,16 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="path">The output asset path.</param>
         /// <param name="actor">The target actor (prefab root). It canot be a scene but it can contain a scripts and/or full hierarchy of objects to save.</param>
+        /// <param name="autoLink">True if autoconnect the target actor and related objects to the created prefab.</param>
         /// <returns>True if failed, otherwise false.</returns>
-        public static bool CreatePrefab(string path, Actor actor)
+        public static bool CreatePrefab(string path, Actor actor, bool autoLink)
         {
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException(nameof(path));
             if (actor == null)
                 throw new ArgumentNullException(nameof(actor));
 
-            return Internal_CreatePrefab(path, actor.unmanagedPtr);
+            return Internal_CreatePrefab(path, actor.unmanagedPtr, autoLink);
         }
 
         /// <summary>
@@ -987,7 +988,7 @@ namespace FlaxEditor
         internal static extern bool Internal_CookMeshCollision(string path, CollisionDataType type, IntPtr model, int modelLodIndex, ConvexMeshGenerationFlags convexFlags, int convexVertexLimit);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_CreatePrefab(string path, IntPtr actor);
+        internal static extern bool Internal_CreatePrefab(string path, IntPtr actor, bool autoLink);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetCollisionWires(IntPtr collisionData, out Vector3[] triangles, out int[] indices);

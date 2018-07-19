@@ -10,6 +10,9 @@ namespace FlaxEditor.Actions
     /// <summary>
     /// Implementation of <see cref="IUndoAction"/> used to break/restore <see cref="Prefab"/> connection for the collection of <see cref="Actor"/> and <see cref="Script"/> objects.
     /// </summary>
+    /// <remarks>
+    /// This action assumes that all objects in the given actor hierarchy are using the same prefab asset.
+    /// </remarks>
     /// <seealso cref="IUndoAction" />
     public sealed class BreakPrefabLinkAction : IUndoAction
     {
@@ -18,11 +21,21 @@ namespace FlaxEditor.Actions
         private Guid _prefabId;
         private Dictionary<Guid, Guid> _prefabObjectIds;
 
-        internal BreakPrefabLinkAction(bool isBreak, Guid actorId, Guid prefabId)
+        private BreakPrefabLinkAction(bool isBreak, Guid actorId, Guid prefabId)
         {
             _isBreak = isBreak;
             _actorId = actorId;
             _prefabId = prefabId;
+        }
+
+        private BreakPrefabLinkAction(bool isBreak, Actor actor)
+        {
+            _isBreak = isBreak;
+            _actorId = actor.ID;
+            _prefabId = actor.PrefabID;
+
+            _prefabObjectIds = new Dictionary<Guid, Guid>(1024);
+            CollectIds(actor);
         }
 
         /// <summary>
@@ -38,15 +51,17 @@ namespace FlaxEditor.Actions
         }
 
         /// <summary>
-        /// Creates a new undo action that in state for breaking prefab connection.
+        /// Creates a new undo action that in state for linked prefab connection. Action on perform will undo that.
         /// </summary>
         /// <param name="actor">The target actor.</param>
         /// <returns>The action.</returns>
-        public static BreakPrefabLinkAction Link(Actor actor)
+        public static BreakPrefabLinkAction Linked(Actor actor)
         {
             if (actor == null)
                 throw new ArgumentNullException(nameof(actor));
-            return new BreakPrefabLinkAction(false, actor.id, actor.PrefabID);
+            if (!actor.HasPrefabLink)
+                throw new FlaxException("Cannot register missing prefab link.");
+            return new BreakPrefabLinkAction(false, actor);
         }
 
         /// <inheritdoc />
@@ -123,9 +138,6 @@ namespace FlaxEditor.Actions
             if (!actor.HasPrefabLink)
                 throw new FlaxException("Cannot break missing prefab link.");
 
-            // Note: this code assumes that all objects are using the same prefab asset
-
-            // Cache prefab objects ids to restore them on undo
             if (_prefabObjectIds == null)
                 _prefabObjectIds = new Dictionary<Guid, Guid>(1024);
             else
@@ -133,6 +145,7 @@ namespace FlaxEditor.Actions
             CollectIds(actor);
 
             _prefabId = actor.PrefabID;
+
             actor.BreakPrefabLink();
 
             Editor.Instance.Scene.MarkSceneEdited(actor.Scene);

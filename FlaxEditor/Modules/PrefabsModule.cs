@@ -63,10 +63,28 @@ namespace FlaxEditor.Modules
             if (!Editor.StateMachine.CurrentState.CanEditScene)
                 return;
 
-            // TODO: change the prefab source actor to be its instance
+            // Record undo for prefab creating (backend links the target instance with the prefab)
             if (Editor.Undo.Enabled)
             {
-
+                var selection = Editor.SceneEditing.Selection.Where(x => x is ActorNode).ToList().BuildNodesParents();
+                if (selection.Count == 0)
+                    return;
+                
+                if (selection.Count == 1)
+                {
+                    var action = BreakPrefabLinkAction.Linked(((ActorNode)selection[0]).Actor);
+                    Undo.AddAction(action);
+                }
+                else
+                {
+                    var actions = new IUndoAction[selection.Count];
+                    for (int i = 0; i < selection.Count; i++)
+                    {
+                        var action = BreakPrefabLinkAction.Linked(((ActorNode)selection[i]).Actor);
+                        actions[i] = action;
+                    }
+                    Undo.AddAction(new MultiUndoAction(actions));
+                }
             }
         }
 
