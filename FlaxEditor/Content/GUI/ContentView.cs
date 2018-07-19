@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.Windows;
 using FlaxEngine;
-using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Content.GUI
@@ -15,13 +14,12 @@ namespace FlaxEditor.Content.GUI
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     /// <seealso cref="FlaxEditor.Content.IContentItemOwner" />
-    public class ContentView : ContainerControl, IContentItemOwner
+    public partial class ContentView : ContainerControl, IContentItemOwner
     {
         private readonly List<ContentItem> _items = new List<ContentItem>(256);
         private readonly List<ContentItem> _selection = new List<ContentItem>(16);
 
         private float _viewScale = 1.0f;
-        private bool _validDragOver;
 
         #region External Events
 
@@ -75,7 +73,6 @@ namespace FlaxEditor.Content.GUI
         /// <summary>
         /// Gets the selected count.
         /// </summary>
-
         public int SelectedCount => _selection.Count;
 
         /// <summary>
@@ -479,71 +476,6 @@ namespace FlaxEditor.Content.GUI
             // Check if drag is over
             if (IsDragOver && _validDragOver)
                 Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), Style.Current.BackgroundSelected * 0.4f, true);
-        }
-
-        /// <inheritdoc />
-        public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
-        {
-            var result = base.OnDragEnter(ref location, data);
-            if (result != DragDropEffect.None)
-                return result;
-
-            // Check if drop file(s)
-            if (data is DragDataFiles)
-            {
-                _validDragOver = true;
-                result = DragDropEffect.Copy;
-            }
-
-            return result;
-        }
-
-        /// <inheritdoc />
-        public override DragDropEffect OnDragMove(ref Vector2 location, DragData data)
-        {
-            _validDragOver = false;
-            var result = base.OnDragMove(ref location, data);
-            if (result != DragDropEffect.None)
-                return result;
-
-            if (data is DragDataFiles)
-            {
-                _validDragOver = true;
-                result = DragDropEffect.Copy;
-            }
-
-            return result;
-        }
-
-        /// <inheritdoc />
-        public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
-        {
-            var result = base.OnDragDrop(ref location, data);
-            if (result != DragDropEffect.None)
-                return result;
-
-            // Check if drop file(s)
-            if (data is DragDataFiles files)
-            {
-                // Import files
-                var currentFolder = Editor.Instance.Windows.ContentWin.CurrentViewFolder;
-                if (currentFolder != null)
-                    Editor.Instance.ContentImporting.Import(files.Files, currentFolder);
-                result = DragDropEffect.Copy;
-            }
-
-            // Clear cache
-            _validDragOver = false;
-
-            return result;
-        }
-
-        /// <inheritdoc />
-        public override void OnDragLeave()
-        {
-            _validDragOver = false;
-
-            base.OnDragLeave();
         }
 
         /// <inheritdoc />
