@@ -167,7 +167,11 @@ namespace FlaxEngine.GUI
             HideChild();
 
             // Unlink
-            _parentCM = null;
+            if (_parentCM != null)
+            {
+                _parentCM._childCM = null;
+                _parentCM = null;
+            }
             Parent = null;
 
             // Close window
@@ -250,7 +254,17 @@ namespace FlaxEngine.GUI
             var root = TopmostCM;
             if (_parentCM != null)
             {
-                root.Hide();
+                // Skip if user clicked over the parent popup
+                var mouse = _parentCM.ScreenToClient(Application.MousePosition);
+                if (!_parentCM.ContainsPoint(ref mouse))
+                {
+                    root.Hide();
+                }
+                else
+                {
+                    root._window.Focus();
+                    Hide();
+                }
             }
             else if (!HasChildCMOpened)
             {
