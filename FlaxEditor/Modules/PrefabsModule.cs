@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Linq;
 using FlaxEditor.Actions;
 using FlaxEditor.Content;
@@ -86,7 +87,7 @@ namespace FlaxEditor.Modules
                     Undo.AddAction(new MultiUndoAction(actions));
                 }
             }
-            
+
             Editor.Instance.Windows.PropertiesWin.Presenter.BuildLayout();
         }
 
@@ -150,6 +151,21 @@ namespace FlaxEditor.Modules
             var prefabId = ((ActorNode)selection[0]).Actor.PrefabID;
             var prefab = FlaxEngine.Content.LoadAsync<Prefab>(prefabId);
             Editor.Windows.ContentWin.Select(prefab);
+        }
+
+        /// <summary>
+        /// Applies the difference from the prefab object instance, saves the changes and synchronizes them with the active instances of the prefab asset.
+        /// </summary>
+        /// <param name="instance">The modified instance.</param>
+        public void ApplyDiff(Actor instance)
+        {
+            // Validate input
+            if (instance == null)
+                throw new ArgumentNullException(nameof(instance));
+            if (!instance.HasPrefabLink || instance.PrefabID == Guid.Empty)
+                throw new ArgumentException("The modified actor instance has missing prefab link.");
+
+            throw new NotImplementedException("TODO: apply prefab changes");
         }
     }
 }

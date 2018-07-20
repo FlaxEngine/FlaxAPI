@@ -263,6 +263,14 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Sets the editor value to the reference value (if assigned).
+        /// </summary>
+        public void SetValueToReference()
+        {
+            SetValue(Values.ReferenceValue);
+        }
+
+        /// <summary>
         /// Sets the object value. Actual update is performed during editor refresh in sync.
         /// </summary>
         /// <param name="value">The value.</param>
