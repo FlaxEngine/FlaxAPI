@@ -13,6 +13,16 @@ namespace FlaxEditor.CustomEditors
     public class ValueContainer : List<object>
     {
         /// <summary>
+        /// The has reference value flag. Set if <see cref="_referenceValue"/> is valid and assigned.
+        /// </summary>
+        protected bool _hasReferenceValue;
+
+        /// <summary>
+        /// The reference value used to show difference in the UI compared to the other object. Used by the prefabs system.
+        /// </summary>
+        protected object _referenceValue;
+
+        /// <summary>
         /// The values source information from reflection. Used to update values.
         /// </summary>
         public readonly MemberInfo Info;
@@ -79,6 +89,11 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Gets a value indicating whether this values container type is array.
+        /// </summary>
+        public bool IsArray => Type != null && Type.IsArray;
+
+        /// <summary>
         /// Gets the values types array (without duplicates).
         /// </summary>
         public Type[] ValuesTypes
@@ -110,6 +125,38 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Gets a value indicating whether this instance has reference value assigned (see <see cref="ReferenceValue"/>).
+        /// </summary>
+        public bool HasReferenceValue => _hasReferenceValue;
+
+        /// <summary>
+        /// Gets the reference value used to show difference in the UI compared to the other object. Used by the prefabs system.
+        /// </summary>
+        public object ReferenceValue => _referenceValue;
+
+        /// <summary>
+        /// Gets a value indicating whether this instance has reference value and the any of the values in the contains is modified (compared to the reference).
+        /// </summary>
+        /// <remarks>
+        /// For prefabs system it means that object property has been modified compared to the prefab value.
+        /// </remarks>
+        public bool IsReferenceValueModified
+        {
+            get
+            {
+                if (_hasReferenceValue)
+                {
+                    for (int i = 0; i < Count; i++)
+                    {
+                        if (!Equals(this[i], _referenceValue))
+                            return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ValueContainer"/> class.
         /// </summary>
         /// <param name="info">The member info.</param>
@@ -122,13 +169,29 @@ namespace FlaxEditor.CustomEditors
             if (Info is PropertyInfo propertyInfo)
             {
                 for (int i = 0; i < instanceValues.Count; i++)
+                {
                     Add(propertyInfo.GetValue(instanceValues[i]));
+                }
+
+                if (instanceValues._hasReferenceValue)
+                {
+                    _referenceValue = propertyInfo.GetValue(instanceValues._referenceValue);
+                    _hasReferenceValue = true;
+                }
             }
             else
             {
                 var fieldInfo = (FieldInfo)Info;
                 for (int i = 0; i < instanceValues.Count; i++)
+                {
                     Add(fieldInfo.GetValue(instanceValues[i]));
+                }
+
+                if (instanceValues._hasReferenceValue)
+                {
+                    _referenceValue = fieldInfo.GetValue(instanceValues._referenceValue);
+                    _hasReferenceValue = true;
+                }
             }
         }
 
@@ -237,6 +300,16 @@ namespace FlaxEditor.CustomEditors
                     fieldInfo.SetValue(instanceValues[i], this[i]);
                 }
             }
+        }
+
+        /// <summary>
+        /// Sets the reference value of the container.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        public virtual void SetReferenceValue(object value)
+        {
+            _referenceValue = value;
+            _hasReferenceValue = true;
         }
     }
 }

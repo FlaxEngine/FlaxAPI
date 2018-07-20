@@ -79,6 +79,11 @@ namespace FlaxEditor.CustomEditors
         public CustomEditor ParentEditor => _parent;
 
         /// <summary>
+        /// Gets the children editors (readonly).
+        /// </summary>
+        public List<CustomEditor> ChildrenEditors => _children;
+
+        /// <summary>
         /// Gets the presenter control. It's the top most part of the Custom Editors layout.
         /// </summary>
         public CustomEditorPresenter Presenter => _presenter;
