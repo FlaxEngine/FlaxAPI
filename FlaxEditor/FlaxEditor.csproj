@@ -200,6 +200,7 @@
     <Compile Include="GUI\Input\ULongValueBox.cs" />
     <Compile Include="GUI\Input\ValueBox.cs" />
     <Compile Include="GUI\PlatformSelector.cs" />
+    <Compile Include="GUI\PrefabDiffContextMenu.cs" />
     <Compile Include="GUI\RenamePopup.cs" />
     <Compile Include="Content\Proxy\BinaryAssetProxy.cs" />
     <Compile Include="Content\Proxy\ContentProxy.cs" />
