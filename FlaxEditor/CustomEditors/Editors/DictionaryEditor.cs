@@ -219,6 +219,8 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Refresh()
         {
+            base.Refresh();
+
             // No support for different collections for now
             if (HasDifferentValues || HasDifferentTypes)
                 return;

@@ -79,6 +79,8 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Refresh()
         {
+            base.Refresh();
+
             if (HasDifferentValues || _spritePicker == null)
                 return;
 

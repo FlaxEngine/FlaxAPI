@@ -26,6 +26,8 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Refresh()
         {
+            base.Refresh();
+
             if (HasDifferentValues)
             {
                 element.CheckBox.Intermediate = true;

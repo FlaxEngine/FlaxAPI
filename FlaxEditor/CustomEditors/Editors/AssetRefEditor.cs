@@ -88,6 +88,8 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Refresh()
         {
+            base.Refresh();
+
             if (!HasDifferentValues)
             {
                 if (Values[0] is AssetItem assetItem)

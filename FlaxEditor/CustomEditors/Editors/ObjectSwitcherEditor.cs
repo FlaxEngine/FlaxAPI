@@ -122,6 +122,8 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Refresh()
         {
+            base.Refresh();
+
             // Check if type has been modified outside the editor (eg. from code)
             if (Type != _type)
             {

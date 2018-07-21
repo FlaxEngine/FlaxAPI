@@ -103,6 +103,8 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Refresh()
         {
+            base.Refresh();
+
             if (!HasDifferentValues)
             {
                 var value = (Vector4)Values[0];

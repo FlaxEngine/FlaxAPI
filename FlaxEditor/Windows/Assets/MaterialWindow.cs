@@ -285,6 +285,8 @@ namespace FlaxEditor.Windows.Assets
                 /// <inheritdoc />
                 public override void Refresh()
                 {
+                    base.Refresh();
+
                     var materialWin = Values[0] as MaterialWindow;
                     var material = materialWin?.Asset;
                     int parametersHash = -1;

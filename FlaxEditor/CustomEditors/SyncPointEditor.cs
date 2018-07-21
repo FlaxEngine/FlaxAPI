@@ -84,6 +84,8 @@ namespace FlaxEditor.CustomEditors
         /// <inheritdoc />
         public override void Refresh()
         {
+            base.Refresh();
+
             RefreshRoot();
         }
 

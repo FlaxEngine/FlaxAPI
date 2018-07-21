@@ -39,6 +39,8 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Refresh()
         {
+            base.Refresh();
+
             if (HasDifferentValues)
             {
                 _element.TextBox.Text = string.Empty;

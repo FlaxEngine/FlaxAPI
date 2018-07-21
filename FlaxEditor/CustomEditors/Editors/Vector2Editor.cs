@@ -70,6 +70,8 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Refresh()
         {
+            base.Refresh();
+
             if (HasDifferentValues)
             {
                 // TODO: support different values for ValueBox<T>

@@ -209,6 +209,8 @@ namespace FlaxEditor.Windows
 
                 public override void Refresh()
                 {
+                    base.Refresh();
+
                     if (_buildButton != null)
                     {
                         _buildButton.Enabled = !GameCooker.IsRunning;

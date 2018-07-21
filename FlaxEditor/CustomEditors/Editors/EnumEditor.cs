@@ -45,6 +45,8 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Refresh()
         {
+            base.Refresh();
+
             if (HasDifferentValues)
             {
                 // No support for different enum values

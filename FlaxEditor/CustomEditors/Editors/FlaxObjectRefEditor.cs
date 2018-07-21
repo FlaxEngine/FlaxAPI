@@ -413,6 +413,8 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Refresh()
         {
+            base.Refresh();
+
             if (!HasDifferentValues)
             {
                 element.CustomControl.Value = Values[0] as Object;
