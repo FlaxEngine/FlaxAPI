@@ -284,6 +284,38 @@ namespace FlaxEditor.CustomEditors
             LinkedLabel = label;
         }
 
+        private void RevertDiff(CustomEditor editor)
+        {
+            // Skip if no change detected
+            if (!editor.Values.IsReferenceValueModified)
+                return;
+
+            if (editor.ChildrenEditors.Count == 0)
+            {
+                editor.SetValueToReference();
+            }
+            else
+            {
+                for (int i = 0; i < editor.ChildrenEditors.Count; i++)
+                {
+                    RevertDiff(editor.ChildrenEditors[i]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reverts the property value to reference value (if has). Handles undo.
+        /// </summary>
+        public void RevertToReferenceValue()
+        {
+            if (!Values.HasReferenceValue)
+                return;
+
+            Editor.Log("Reverting object changes to prefab");
+
+            RevertDiff(this);
+        }
+
         /// <summary>
         /// Sets the editor value to the reference value (if assigned).
         /// </summary>

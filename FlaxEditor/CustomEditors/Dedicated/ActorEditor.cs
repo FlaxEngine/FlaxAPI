@@ -213,30 +213,9 @@ namespace FlaxEditor.CustomEditors.Dedicated
             Editor.Instance.Prefabs.ApplyDiff((Actor)Values[0]);
         }
 
-        private void RevertDiff(CustomEditor editor)
-        {
-            // Skip if no change detected
-            if (!editor.Values.IsReferenceValueModified)
-                return;
-
-            if (editor.ChildrenEditors.Count == 0)
-            {
-                editor.SetValueToReference();
-            }
-            else
-            {
-                for (int i = 0; i < editor.ChildrenEditors.Count; i++)
-                {
-                    RevertDiff(editor.ChildrenEditors[i]);
-                }
-            }
-        }
-
         private void OnDiffRevert(CustomEditor editor)
         {
-            Editor.Log("Reverting object changes to prefab");
-
-            RevertDiff(editor);
+            editor.RevertToReferenceValue();
         }
     }
 }

@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -12,6 +13,8 @@ namespace FlaxEditor.CustomEditors.GUI
     public class PropertyNameLabel : Label
     {
         // TODO: if name is too long to show -> use tooltip to show it
+
+        private bool _mouseDown;
 
         /// <summary>
         /// Helper value used by the <see cref="PropertiesList"/> to draw property names in a proper area.
@@ -27,6 +30,11 @@ namespace FlaxEditor.CustomEditors.GUI
         /// The highlight strip color drawn on a side (transparen if skip rendering).
         /// </summary>
         public Color HighlightStripColor;
+
+        /// <summary>
+        /// Occurs when label creates the context menu popup for th property. Can be used to add some custom logic per property editor.
+        /// </summary>
+        public event Action<PropertyNameLabel, ContextMenu> SetupContextMenu;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyNameLabel"/> class.
@@ -61,6 +69,69 @@ namespace FlaxEditor.CustomEditors.GUI
             {
                 Render2D.FillRectangle(new Rectangle(0, 0, 2, Height), HighlightStripColor, HighlightStripColor.A < 1.0f);
             }
+        }
+
+        /// <inheritdoc />
+        public override void OnMouseLeave()
+        {
+            _mouseDown = false;
+
+            base.OnMouseLeave();
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        {
+            if (buttons == MouseButton.Right)
+            {
+                _mouseDown = true;
+            }
+
+            return base.OnMouseDown(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        {
+            if (base.OnMouseUp(location, buttons))
+                return true;
+
+            if (_mouseDown && buttons == MouseButton.Right)
+            {
+                _mouseDown = false;
+
+                if (LinkedEditor == null && SetupContextMenu == null)
+                    return false;
+
+                var menu = new ContextMenu();
+                if (LinkedEditor != null)
+                {
+                    var revertToPrefab = menu.AddButton("Revert to Prefab", LinkedEditor.RevertToReferenceValue);
+                    revertToPrefab.Enabled = LinkedEditor.Values.IsReferenceValueModified;
+                }
+                SetupContextMenu?.Invoke(this, menu);
+                menu.Show(this, location);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc />
+        public override void OnLostFocus()
+        {
+            _mouseDown = false;
+
+            base.OnLostFocus();
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            SetupContextMenu = null;
+
+            base.Dispose();
         }
     }
 }
