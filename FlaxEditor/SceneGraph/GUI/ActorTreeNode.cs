@@ -114,7 +114,7 @@ namespace FlaxEditor.SceneGraph.GUI
                 if (Actor != null && Actor.HasPrefabLink)
                 {
                     // Prefab
-                    color = new Color(29, 93, 196);
+                    color = Style.Current.ProgressNormal;
                 }
 
                 if (Actor != null && !Actor.IsActiveInHierarchy)
