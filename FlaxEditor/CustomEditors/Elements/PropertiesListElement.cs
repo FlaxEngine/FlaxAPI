@@ -53,6 +53,18 @@ namespace FlaxEditor.CustomEditors.Elements
         }
 
         /// <inheritdoc />
+        protected override void OnAddEditor(CustomEditor editor)
+        {
+            // Link to the last label
+            if (Labels.Count > 0)
+            {
+                Labels[Labels.Count - 1].LinkEditor(editor);
+            }
+
+            base.OnAddEditor(editor);
+        }
+
+        /// <inheritdoc />
         public override void ClearLayout()
         {
             base.ClearLayout();

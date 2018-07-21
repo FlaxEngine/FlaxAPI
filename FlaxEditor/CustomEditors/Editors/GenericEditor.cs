@@ -362,7 +362,7 @@ namespace FlaxEditor.CustomEditors.Editors
                     return;
 
                 // Find the target control to show/hide
-                
+
 
                 // Resize cache
                 if (_visibleIfCaches == null)
@@ -522,7 +522,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 }
             }
         }
-        
+
         /// <inheritdoc />
         public override void Refresh()
         {

@@ -19,6 +19,16 @@ namespace FlaxEditor.CustomEditors.GUI
         internal int FirstChildControlIndex;
 
         /// <summary>
+        /// The linked custom editor (shows the label property).
+        /// </summary>
+        internal CustomEditor LinkedEditor;
+
+        /// <summary>
+        /// The highlight strip color drawn on a side (transparen if skip rendering).
+        /// </summary>
+        public Color HighlightStripColor;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PropertyNameLabel"/> class.
         /// </summary>
         /// <param name="name">The name.</param>
@@ -29,6 +39,28 @@ namespace FlaxEditor.CustomEditors.GUI
             VerticalAlignment = TextAlignment.Center;
             Margin = new Margin(4, 0, 0, 0);
             ClipText = true;
+
+            HighlightStripColor = Color.Transparent;
+        }
+
+        internal void LinkEditor(CustomEditor editor)
+        {
+            if (LinkedEditor == null)
+            {
+                LinkedEditor = editor;
+                editor.LinkLabel(this);
+            }
+        }
+
+        /// <inheritdoc />
+        public override void Draw()
+        {
+            base.Draw();
+
+            if (HighlightStripColor.A > 0.0f)
+            {
+                Render2D.FillRectangle(new Rectangle(0, 0, 2, Height), HighlightStripColor, HighlightStripColor.A < 1.0f);
+            }
         }
     }
 }

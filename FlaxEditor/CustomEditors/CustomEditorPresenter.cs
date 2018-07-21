@@ -93,6 +93,7 @@ namespace FlaxEditor.CustomEditors
             public override void Initialize(LayoutElementsContainer layout)
             {
                 var selection = Presenter.Selection;
+                selection.ClearReferenceValue();
                 if (selection.Count > 0)
                 {
                     if (_overrideEditor != null)

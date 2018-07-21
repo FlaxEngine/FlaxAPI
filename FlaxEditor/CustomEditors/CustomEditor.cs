@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using FlaxEditor.CustomEditors.GUI;
+using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors
@@ -93,6 +95,11 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         protected bool IsSetBlocked => _isSetBlocked;
 
+        /// <summary>
+        /// The linked label used to show this custom editor. Can be null if not used (eg. editor is inlined or is usign a very customized UI layout).
+        /// </summary>
+        protected PropertyNameLabel LinkedLabel;
+
         internal virtual void Initialize(CustomEditorPresenter presenter, LayoutElementsContainer layout, ValueContainer values)
         {
             _layout = layout;
@@ -180,6 +187,7 @@ namespace FlaxEditor.CustomEditors
             _values = null;
             _isSetBlocked = false;
             _rebuildOnRefresh = false;
+            LinkedLabel = null;
         }
 
         internal void RefreshRoot()
@@ -260,6 +268,20 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         public virtual void Refresh()
         {
+            if (LinkedLabel != null)
+            {
+                // Prefab value diff
+                if (Values.HasReferenceValue)
+                {
+                    var style = FlaxEngine.GUI.Style.Current;
+                    LinkedLabel.HighlightStripColor = Values.IsReferenceValueModified ? style.BackgroundSelected * 0.8f : Color.Transparent;
+                }
+            }
+        }
+
+        internal void LinkLabel(PropertyNameLabel label)
+        {
+            LinkedLabel = label;
         }
 
         /// <summary>

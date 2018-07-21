@@ -311,5 +311,14 @@ namespace FlaxEditor.CustomEditors
             _referenceValue = value;
             _hasReferenceValue = true;
         }
+
+        /// <summary>
+        /// Clears the reference value of the container.
+        /// </summary>
+        public virtual void ClearReferenceValue()
+        {
+            _referenceValue = null;
+            _hasReferenceValue = false;
+        }
     }
 }
