@@ -329,6 +329,30 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Float, 0),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 16,
+                Title = "Tangent Vector",
+                Description = "World space tangent vector",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(160, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "Tangent", ConnectionType.Vector3, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 17,
+                Title = "Bitangent Vector",
+                Description = "World space bitangent vector",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(160, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "Bitangent", ConnectionType.Vector3, 0),
+                }
+            },
         };
     }
 }
