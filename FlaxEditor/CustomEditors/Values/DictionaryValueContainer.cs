@@ -42,6 +42,16 @@ namespace FlaxEditor.CustomEditors
                 var v = (IDictionary)values[i];
                 Add(v[Key]);
             }
+
+            if (values.HasReferenceValue)
+            {
+                var v = (IDictionary)values.ReferenceValue;
+                if (v.Contains(key))
+                {
+                    _referenceValue = v[key];
+                    _hasReferenceValue = true;
+                }
+            }
         }
 
         /// <inheritdoc />
