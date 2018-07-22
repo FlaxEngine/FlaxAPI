@@ -43,11 +43,11 @@ namespace FlaxEditor.GUI
             var revertAll = new Button(2.0f, 2.0f, buttonsWidth, buttonsHeight);
             revertAll.Text = "Revert All";
             revertAll.Parent = this;
-            revertAll.Clicked += () => RevertAll?.Invoke();
+            revertAll.Clicked += OnRevertAllClicked;
             var applyAll = new Button(revertAll.Right + 2.0f, 2.0f, buttonsWidth, buttonsHeight);
             applyAll.Text = "Apply All";
             applyAll.Parent = this;
-            applyAll.Clicked += () => ApplyAll?.Invoke();
+            applyAll.Clicked += OnApplyAllClicked;
 
             // Actual panel
             var panel1 = new Panel(ScrollBars.Vertical)
@@ -61,6 +61,18 @@ namespace FlaxEditor.GUI
                 IsScrollable = true,
                 Parent = panel1
             };
+        }
+
+        private void OnRevertAllClicked()
+        {
+            Hide();
+            RevertAll?.Invoke();
+        }
+
+        private void OnApplyAllClicked()
+        {
+            Hide();
+            ApplyAll?.Invoke();
         }
 
         /// <inheritdoc />
