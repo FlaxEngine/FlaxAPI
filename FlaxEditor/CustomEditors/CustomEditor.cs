@@ -274,7 +274,7 @@ namespace FlaxEditor.CustomEditors
                 if (Values.HasReferenceValue)
                 {
                     var style = FlaxEngine.GUI.Style.Current;
-                    LinkedLabel.HighlightStripColor = Values.IsReferenceValueModified ? style.BackgroundSelected * 0.8f : Color.Transparent;
+                    LinkedLabel.HighlightStripColor = CanRevertReferenceValue ? style.BackgroundSelected * 0.8f : Color.Transparent;
                 }
             }
         }
@@ -300,6 +300,24 @@ namespace FlaxEditor.CustomEditors
                 {
                     RevertDiff(editor.ChildrenEditors[i]);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this editor can revert the value to reference value.
+        /// </summary>
+        public bool CanRevertReferenceValue
+        {
+            get
+            {
+                if (!Values.IsReferenceValueModified)
+                    return false;
+
+                // Skip array items (show diff only on a bottom level properties and fields)
+                if (ParentEditor != null && ParentEditor.Values.Type != null && ParentEditor.Values.Type.IsArray)
+                    return false;
+
+                return true;
             }
         }
 

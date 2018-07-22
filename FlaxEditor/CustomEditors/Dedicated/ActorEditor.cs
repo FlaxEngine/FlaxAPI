@@ -144,11 +144,9 @@ namespace FlaxEditor.CustomEditors.Dedicated
             if (!editor.Values.IsReferenceValueModified)
                 return null;
 
-            bool isArray = editor.Values.IsArray;
-
             TreeNode result = null;
 
-            if (!isArray)
+            if (editor.ChildrenEditors.Count == 0)
                 result = CreateDiffNode(editor);
 
             for (int i = 0; i < editor.ChildrenEditors.Count; i++)

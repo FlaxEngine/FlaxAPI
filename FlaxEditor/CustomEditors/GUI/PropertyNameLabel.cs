@@ -107,7 +107,7 @@ namespace FlaxEditor.CustomEditors.GUI
                 if (LinkedEditor != null)
                 {
                     var revertToPrefab = menu.AddButton("Revert to Prefab", LinkedEditor.RevertToReferenceValue);
-                    revertToPrefab.Enabled = LinkedEditor.Values.IsReferenceValueModified;
+                    revertToPrefab.Enabled = LinkedEditor.CanRevertReferenceValue;
                 }
                 SetupContextMenu?.Invoke(this, menu);
                 menu.Show(this, location);
