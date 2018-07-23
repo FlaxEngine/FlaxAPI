@@ -156,16 +156,21 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Applies the difference from the prefab object instance, saves the changes and synchronizes them with the active instances of the prefab asset.
         /// </summary>
+        /// <remarks>
+        /// Applies all the changes from not only the given actor instance but all actors created within that prefab instance.
+        /// </remarks>
         /// <param name="instance">The modified instance.</param>
-        public void ApplyDiff(Actor instance)
+        public void ApplyAll(Actor instance)
         {
             // Validate input
-            if (instance == null)
+            if (instance == null || instance.unmanagedPtr == IntPtr.Zero)
                 throw new ArgumentNullException(nameof(instance));
             if (!instance.HasPrefabLink || instance.PrefabID == Guid.Empty)
                 throw new ArgumentException("The modified actor instance has missing prefab link.");
 
-            throw new NotImplementedException("TODO: apply prefab changes");
+            // Call backend
+            if (PrefabManager.Internal_ApplyAll(instance.unmanagedPtr))
+                throw new FlaxException("Failed to apply the prefab. See log to learn more.");
         }
     }
 }

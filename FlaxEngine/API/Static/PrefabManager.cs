@@ -1,5 +1,8 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
+using System.Runtime.CompilerServices;
+
 namespace FlaxEngine
 {
     public static partial class PrefabManager
@@ -16,5 +19,15 @@ namespace FlaxEngine
                 return null;
             return SpawnPrefab(prefab, scene);
         }
+
+
+        #region Internal Calls
+
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_ApplyAll(IntPtr instance);
+#endif
+
+        #endregion
     }
 }

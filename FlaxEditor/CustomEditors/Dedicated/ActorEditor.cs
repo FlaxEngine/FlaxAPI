@@ -208,7 +208,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
         private void OnDiffApplyAll()
         {
-            Editor.Instance.Prefabs.ApplyDiff((Actor)Values[0]);
+            Editor.Instance.Prefabs.ApplyAll((Actor)Values[0]);
         }
 
         private void OnDiffRevert(CustomEditor editor)
