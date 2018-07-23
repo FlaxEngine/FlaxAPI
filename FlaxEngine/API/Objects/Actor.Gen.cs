@@ -619,6 +619,19 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets a value indicating whether this actor is a prefab instance root object.
+        /// </summary>
+        [UnmanagedCall]
+        public bool IsPrefabRoot
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_IsPrefabRoot(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
         /// Gets the prefab asset ID. Empty if no prefab link exists.
         /// </summary>
         [UnmanagedCall]
@@ -875,6 +888,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_HasPrefabLink(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_IsPrefabRoot(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetPrefabID(IntPtr obj, out Guid resultAsRef);
