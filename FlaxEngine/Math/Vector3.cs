@@ -825,6 +825,62 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Calculates the distance between two vectors.
+        /// </summary>
+        /// <param name="value1">The first vector.</param>
+        /// <param name="value2">The second vector.</param>
+        /// <param name="result">When the method completes, contains the distance between the two vectors in the XZ plane.</param>
+        public static void Distance2D(ref Vector2 value1, ref Vector2 value2, out float result)
+        {
+            float x = value1.X - value2.X;
+            float y = value1.Y - value2.Y;
+
+            result = (float)Math.Sqrt(x * x + y * y);
+        }
+
+        /// <summary>
+        /// Calculates the distance between two vectors in the XZ plane (ignoring Y).
+        /// </summary>
+        /// <param name="value1">The first vector.</param>
+        /// <param name="value2">The second vector.</param>
+        /// <returns>The distance between the two vectors in the XZ plane.</returns>
+        public static float Distance2D(Vector2 value1, Vector2 value2)
+        {
+            float x = value1.X - value2.X;
+            float y = value1.Y - value2.Y;
+
+            return (float)Math.Sqrt(x * x + y * y);
+        }
+
+        /// <summary>
+        /// Calculates the squared distance between two vectors in the XZ plane (ignoring Y).
+        /// </summary>
+        /// <param name="value1">The first vector.</param>
+        /// <param name="value2">The second vector</param>
+        /// <param name="result">When the method completes, contains the squared distance between the two vectors in the XZ plane.</param>
+        public static void Distance2DSquared(ref Vector2 value1, ref Vector2 value2, out float result)
+        {
+            float x = value1.X - value2.X;
+            float y = value1.Y - value2.Y;
+
+            result = x * x + y * y;
+        }
+
+        /// <summary>
+        /// Calculates the squared distance between two vectors in the XZ plane (ignoring Y).
+        /// </summary>
+        /// <param name="value1">The first vector.</param>
+        /// <param name="value2">The second vector.</param>
+        /// <returns>The squared distance between the two vectors in the XZ plane.</returns>
+        public static float Distance2DSquared(Vector2 value1, Vector2 value2)
+        {
+            float x = value1.X - value2.X;
+            float y = value1.Y - value2.Y;
+
+            return x * x + y * y;
+        }
+
+        /// <summary>
         /// Tests whether one 3D vector is near another 3D vector.
         /// </summary>
         /// <param name="left">The left vector.</param>
