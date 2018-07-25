@@ -48,7 +48,7 @@ namespace FlaxEditor.CustomEditors
                 var v = (IList)values.ReferenceValue;
 
                 // Get the reference value if collections are the same size
-                if (values.Count == v.Count)
+                if (v != null && values.Count == v.Count)
                 {
                     _referenceValue = v[index];
                     _hasReferenceValue = true;
