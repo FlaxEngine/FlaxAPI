@@ -395,36 +395,36 @@ namespace FlaxEngine
         /// <summary>
         /// Searches for a child actor of a specific type. If there are multiple actors matching the type, only the first one found is returned.
         /// </summary>
-        /// <typeparam name="T">Type of the actor to search for. Includes any actors derived from the type.</typeparam>
+        /// <param name="actorType">Type of the actor to search for. Includes any actors derived from the type.</param>
         /// <returns>Actor instance if found, null otherwise</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public T GetChild<T>() where T : Actor
+        public Actor GetChild(Type actorType)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return (T)Internal_GetChild(unmanagedPtr, typeof(T));
+            return Internal_GetChild(unmanagedPtr, actorType);
 #endif
         }
 
         /// <summary>
         /// Searches for all actors of a specific type.
         /// </summary>
-        /// <typeparam name="T">Type of the actor to search for. Includes any actors derived from the type.</typeparam>
+        /// <param name="actorType">Type of the actor to search for. Includes any actors derived from the type.</param>
         /// <returns>All actors matching the specified type</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public T[] GetChildren<T>() where T : Actor
+        public Actor[] GetChildren(Type actorType)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Array.ConvertAll(Internal_GetChildrenPerType(unmanagedPtr, typeof(T)), x => (T)x);
+            return Internal_GetChildrenPerType(unmanagedPtr, actorType);
 #endif
         }
 
@@ -480,36 +480,74 @@ namespace FlaxEngine
         /// <summary>
         /// Searches for a child script of a specific type. If there are multiple scripts matching the type, only the first one found is returned.
         /// </summary>
-        /// <typeparam name="T">Type of the script to search for. Includes any scripts derived from the type.</typeparam>
+        /// <param name="scriptType">Type of the script to search for. Includes any scripts derived from the type.</param>
         /// <returns>Script instance if found, null otherwise.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public T GetScript<T>() where T : Script
+        public Script GetScript(Type scriptType)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return (T)Internal_GetScript(unmanagedPtr, typeof(T));
+            return Internal_GetScript(unmanagedPtr, scriptType);
 #endif
         }
 
         /// <summary>
         /// Searches for all scripts of a specific type.
         /// </summary>
-        /// <typeparam name="T">Type of the scripts to search for. Includes any scripts derived from the type.</typeparam>
+        /// <param name="scriptType">Type of the script to search for. Includes any scripts derived from the type.</param>
         /// <returns>All scripts matching the specified type.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public T[] GetScripts<T>() where T : Script
+        public Script[] GetScripts(Type scriptType)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Array.ConvertAll(Internal_GetScriptsPerType(unmanagedPtr, typeof(T)), x => (T)x);
+            return Internal_GetScriptsPerType(unmanagedPtr, scriptType);
+#endif
+        }
+
+        /// <summary>
+        /// Searches for a child script of a specific type in this actor or any of its children. If there are multiple scripts matching the type, only the first one found is returned.
+        /// </summary>
+        /// <param name="scriptType">Type of the script to search for. Includes any scripts derived from the type.</param>
+        /// <param name="includeDisabled">Determines whether include disabled scripts into results (disabled scripts and/or inactive actors).</param>
+        /// <returns>Script instance if found, null otherwise.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public Script GetScriptInChildren(Type scriptType, bool includeDisabled = false)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_GetScriptInChildren(unmanagedPtr, scriptType, includeDisabled);
+#endif
+        }
+
+        /// <summary>
+        /// Searches for all scripts of a specific type in this actor and any of its children.
+        /// </summary>
+        /// <param name="scriptType">Type of the script to search for. Includes any scripts derived from the type.</param>
+        /// <param name="includeDisabled">Determines whether include incactive scripts into results (disabled scripts and/or inactive actors).</param>
+        /// <returns>All scripts matching the specified type and query options.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public Script[] GetScriptsInChildren(Type scriptType, bool includeDisabled = false)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_GetScriptsInChildrenPerType(unmanagedPtr, scriptType, includeDisabled);
 #endif
         }
 
@@ -848,10 +886,10 @@ namespace FlaxEngine
         internal static extern Actor Internal_FindActor(string name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Actor Internal_GetChild(IntPtr obj, Type type);
+        internal static extern Actor Internal_GetChild(IntPtr obj, Type actorType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Actor[] Internal_GetChildrenPerType(IntPtr obj, Type type);
+        internal static extern Actor[] Internal_GetChildrenPerType(IntPtr obj, Type actorType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Actor[] Internal_GetChildren(IntPtr obj);
@@ -863,10 +901,16 @@ namespace FlaxEngine
         internal static extern Script Internal_GetScriptAtIndex(IntPtr obj, int index);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Script Internal_GetScript(IntPtr obj, Type type);
+        internal static extern Script Internal_GetScript(IntPtr obj, Type scriptType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Script[] Internal_GetScriptsPerType(IntPtr obj, Type type);
+        internal static extern Script[] Internal_GetScriptsPerType(IntPtr obj, Type scriptType);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Script Internal_GetScriptInChildren(IntPtr obj, Type scriptType, bool includeDisabled);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Script[] Internal_GetScriptsInChildrenPerType(IntPtr obj, Type scriptType, bool includeDisabled);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_AddScript(IntPtr obj, IntPtr script);
