@@ -16,6 +16,26 @@ namespace FlaxEditor.Modules
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class PrefabsModule : EditorModule
     {
+        /// <summary>
+        /// Occurs before prefab asset creating. Argument is a target actor.
+        /// </summary>
+        public event Action<Actor> PrefabCreating;
+
+        /// <summary>
+        /// Occurs after prefab asset creating. Arguments is created prefab asset item.
+        /// </summary>
+        public event Action<PrefabItem> PrefabCreated;
+
+        /// <summary>
+        /// Occurs before applying changes to the prefab. Argumnets are prefab and the target instance.
+        /// </summary>
+        public event Action<Prefab, Actor> PrefabApplying;
+
+        /// <summary>
+        /// Occurs after applying changes to the prefab. Argumnets are prefab and the target instance.
+        /// </summary>
+        public event Action<Prefab, Actor> PrefabApplied;
+
         internal PrefabsModule(Editor editor)
         : base(editor)
         {
@@ -54,12 +74,19 @@ namespace FlaxEditor.Modules
             if (!Editor.Windows.ContentWin.CurrentViewFolder.CanHaveAssets)
                 return;
 
+            PrefabCreating?.Invoke(actor);
+
             var proxy = Editor.ContentDatabase.GetProxy<Prefab>();
             Editor.Windows.ContentWin.NewItem(proxy, actor, OnPrefabCreated);
         }
 
         private void OnPrefabCreated(ContentItem contetItem)
         {
+            if (contetItem is PrefabItem prefabItem)
+            {
+                PrefabCreated?.Invoke(prefabItem);
+            }
+
             // Skip in invalid states
             if (!Editor.StateMachine.CurrentState.CanEditScene)
                 return;
@@ -128,12 +155,9 @@ namespace FlaxEditor.Modules
             }
             else
             {
-                foreach (var e in selection)
+                for (int i = 0; i < selection.Count; i++)
                 {
-                    for (int i = 0; i < selection.Count; i++)
-                    {
-                        ((ActorNode)selection[i]).Actor.BreakPrefabLink();
-                    }
+                    ((ActorNode)selection[i]).Actor.BreakPrefabLink();
                 }
             }
         }
@@ -168,9 +192,16 @@ namespace FlaxEditor.Modules
             if (!instance.HasPrefabLink || instance.PrefabID == Guid.Empty)
                 throw new ArgumentException("The modified actor instance has missing prefab link.");
 
+            var prefab = FlaxEngine.Content.LoadAsync<Prefab>(instance.PrefabID);
+            if (prefab == null)
+                throw new ArgumentException("Missing prefab to apply.");
+            PrefabApplying?.Invoke(prefab, instance);
+
             // Call backend
             if (PrefabManager.Internal_ApplyAll(instance.unmanagedPtr))
                 throw new FlaxException("Failed to apply the prefab. See log to learn more.");
+
+            PrefabApplied?.Invoke(prefab, instance);
         }
     }
 }
