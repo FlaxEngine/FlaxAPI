@@ -20,7 +20,6 @@ namespace FlaxEngine
             return SpawnPrefab(prefab, scene);
         }
 
-
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT

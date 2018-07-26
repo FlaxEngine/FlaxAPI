@@ -416,6 +416,7 @@
     <Compile Include="Viewport\Previews\IESProfilePreview.cs" />
     <Compile Include="Viewport\Previews\MaterialPreview.cs" />
     <Compile Include="Viewport\Previews\ModelPreview.cs" />
+    <Compile Include="Viewport\Previews\PrefabPreview.cs" />
     <Compile Include="Viewport\Previews\TexturePreview.cs" />
     <Compile Include="ViewportDebugDrawData.cs" />
     <Compile Include="Viewport\Widgets\ViewportWidgetButton.cs" />
@@ -433,6 +434,7 @@
     <Compile Include="Windows\Assets\MaterialInstanceWindow.cs" />
     <Compile Include="Windows\Assets\MaterialWindow.cs" />
     <Compile Include="Windows\Assets\ModelWindow.cs" />
+    <Compile Include="Windows\Assets\PrefabWindow.cs" />
     <Compile Include="Windows\Assets\PreviewsCacheWindow.cs" />
     <Compile Include="Windows\Assets\SkeletonMaskWindow.cs" />
     <Compile Include="Windows\Assets\SkinnedModelWindow.cs" />
