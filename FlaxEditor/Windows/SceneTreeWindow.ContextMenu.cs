@@ -2,7 +2,6 @@
 
 using System;
 using FlaxEditor.SceneGraph;
-using FlaxEditor.SceneGraph.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -74,9 +73,9 @@ namespace FlaxEditor.Windows
             contextMenu.AddSeparator();
             var spawnMenu = contextMenu.AddChildMenu("New");
             var newActorCm = spawnMenu.ContextMenu;
-            for (int i = 0; i < _spawnActorsGroups.Length; i++)
+            for (int i = 0; i < SpawnActorsGroups.Length; i++)
             {
-                var group = _spawnActorsGroups[i];
+                var group = SpawnActorsGroups[i];
 
                 if (group.Types.Length == 1)
                 {
