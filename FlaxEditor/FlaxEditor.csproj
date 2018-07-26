@@ -409,6 +409,7 @@
     <Compile Include="Viewport\EditorGizmoViewport.cs" />
     <Compile Include="Viewport\EditorViewport.cs" />
     <Compile Include="Viewport\MainEditorGizmoViewport.cs" />
+    <Compile Include="Viewport\PrefabWindowViewport.cs" />
     <Compile Include="Viewport\Previews\AnimatedModelPreview.cs" />
     <Compile Include="Viewport\Previews\AssetPreview.cs" />
     <Compile Include="Viewport\Previews\AudioClipPreview.cs" />

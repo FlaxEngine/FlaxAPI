@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using FlaxEngine;
-using FlaxEngine.Rendering;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Viewport.Previews
