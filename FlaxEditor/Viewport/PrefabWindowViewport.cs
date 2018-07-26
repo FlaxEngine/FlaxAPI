@@ -26,8 +26,7 @@ namespace FlaxEditor.Viewport
     public class PrefabWindowViewport : PrefabPreview, IGizmoOwner
     {
         private readonly PrefabWindow _window;
-
-        private ContextMenuButton _showGridButton;
+        
         private readonly ViewportWidgetButton _gizmoModeTranslate;
         private readonly ViewportWidgetButton _gizmoModeRotate;
         private readonly ViewportWidgetButton _gizmoModeScale;
@@ -38,29 +37,16 @@ namespace FlaxEditor.Viewport
 
         private readonly DragAssets _dragAssets = new DragAssets();
         private readonly DragActorType _dragActorType = new DragActorType();
-        private readonly ViewportDebugDrawData _debugDrawData = new ViewportDebugDrawData(32);
 
         /// <summary>
         /// The transform gizmo.
         /// </summary>
         public readonly TransformGizmo TransformGizmo;
-
-        /// <summary>
-        /// The grid gizmo.
-        /// </summary>
-        public readonly GridGizmo Grid;
-
+        
         /// <summary>
         /// The selection outline postFx.
         /// </summary>
         public SelectionOutline SelectionOutline;
-
-        /// <summary>
-        /// The editor primitives postFx.
-        /// </summary>
-        public EditorPrimitives EditorPrimitives;
-
-        internal ViewportDebugDrawData DebugDrawData => _debugDrawData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PrefabWindowViewport"/> class.
@@ -76,26 +62,18 @@ namespace FlaxEditor.Viewport
             // Prepare rendering task
             Task.ActorsSource = ActorsSources.CustomActors;
             Task.Flags = ViewFlags.DefaultEditor & ~ViewFlags.EditorSprites;
-            Task.Begin += RenderTaskOnBegin;
-            Task.Draw += RenderTaskOnDraw;
-            Task.End += RenderTaskOnEnd;
 
             // Create post effects
             SelectionOutline = FlaxEngine.Object.New<SelectionOutline>();
+            SelectionOutline.SelectiongGetter = () => new List<SceneGraphNode>(); // TODO: gather selection
             Task.CustomPostFx.Add(SelectionOutline);
-            EditorPrimitives = FlaxEngine.Object.New<EditorPrimitives>();
-            Task.CustomPostFx.Add(EditorPrimitives);
 
             // Add transformation gizmo
             TransformGizmo = new TransformGizmo(this);
             TransformGizmo.OnApplyTransformation += ApplyTransform;
             TransformGizmo.OnModeChanged += OnGizmoModeChanged;
             Gizmos.Active = TransformGizmo;
-
-            // Add grid
-            Grid = new GridGizmo(this);
-            Grid.EnabledChanged += gizmo => _showGridButton.Icon = gizmo.Enabled ? Style.Current.CheckBoxTick : Sprite.Invalid;
-
+            
             // TODO: register for selection change event to sync it
             //_window.OnSelectionChanged += OnSelectionChanged;
 
@@ -204,11 +182,6 @@ namespace FlaxEditor.Viewport
             };
             _gizmoModeScale.OnToggle += OnGizmoModeToggle;
             gizmoMode.Parent = this;
-
-            // Show grid
-            _showGridButton = ViewWidgetButtonMenu.AddButton("Show grid", () => Grid.Enabled = !Grid.Enabled);
-            _showGridButton.Icon = Style.Current.CheckBoxTick;
-            _showGridButton.IndexInParent = 1;
         }
 
         /// <inheritdoc />
@@ -246,37 +219,6 @@ namespace FlaxEditor.Viewport
             for (int i = 0; i < Gizmos.Count; i++)
             {
                 Gizmos[i].Update(deltaTime);
-            }
-        }
-
-        private void RenderTaskOnBegin(SceneRenderTask task, GPUContext context)
-        {
-            _debugDrawData.Clear();
-
-            // Collect selected objects debug shapes and visuals
-            var selectedParents = TransformGizmo.SelectedParents;
-            if (selectedParents.Count > 0)
-            {
-                for (int i = 0; i < selectedParents.Count; i++)
-                {
-                    if (selectedParents[i].IsActiveInHierarchy)
-                        selectedParents[i].OnDebugDraw(_debugDrawData);
-                }
-            }
-        }
-
-        private void RenderTaskOnDraw(DrawCallsCollector collector)
-        {
-            _debugDrawData.OnDraw(collector);
-        }
-
-        private void RenderTaskOnEnd(SceneRenderTask task, GPUContext context)
-        {
-            // Render editor primitives, gizmo and debug shapes in debug view modes
-            if (task.Mode != ViewMode.Default)
-            {
-                // Note: can use Output buffer as both input and output because EditorPrimitives is using a intermdiate buffers
-                EditorPrimitives.Render(context, task, task.Output, task.Output);
             }
         }
 
@@ -503,11 +445,8 @@ namespace FlaxEditor.Viewport
             // Get mouse ray and try to hit any object
             var ray = MouseRay;
             float closest = float.MaxValue;
-            bool selectColliders = (Task.Flags & ViewFlags.PhysicsDebug) == ViewFlags.PhysicsDebug;
-            SceneGraphNode.RayCastData.FlagTypes rayCastFlags = SceneGraphNode.RayCastData.FlagTypes.None;
-            if (!selectColliders)
-                rayCastFlags |= SceneGraphNode.RayCastData.FlagTypes.SkipColliders;
-            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest, rayCastFlags);
+            // TODO: raycasting
+            //var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
 
             // Update selection
             // TODO: selecting objects with mouse
@@ -742,11 +681,6 @@ namespace FlaxEditor.Viewport
 
                 break;
             }
-            case ContentDomain.Scene:
-            {
-                Editor.Instance.Scene.OpenScene(item.ID, true);
-                break;
-            }
             default: throw new ArgumentOutOfRangeException();
             }
         }
@@ -785,23 +719,18 @@ namespace FlaxEditor.Viewport
                 // Get mouse ray and try to hit any object
                 var ray = ConvertMouseToRay(ref location);
                 float closest = float.MaxValue;
-                var gridPlane = new Plane(Vector3.Zero, Vector3.Up);
-                hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
+                // TODO: raycasting
+                /*hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
                 if (hit != null)
                 {
                     // Use hit location
-                    hitLocation = ray.Position + ray.Direction * closest;
-                }
-                else if (Grid.Enabled && CollisionsHelper.RayIntersectsPlane(ref ray, ref gridPlane, out closest) && closest < 4000.0f)
-                {
-                    // Use grid location
                     hitLocation = ray.Position + ray.Direction * closest;
                 }
                 else
                 {
                     // Use area in front of the viewport
                     hitLocation = ViewPosition + ViewDirection * 100;
-                }
+                }*/
             }
 
             // Drag assets
@@ -835,9 +764,7 @@ namespace FlaxEditor.Viewport
         /// <inheritdoc />
         public override void OnDestroy()
         {
-            _debugDrawData.Dispose();
             FlaxEngine.Object.Destroy(ref SelectionOutline);
-            FlaxEngine.Object.Destroy(ref EditorPrimitives);
 
             base.OnDestroy();
         }

@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
@@ -69,6 +70,9 @@ namespace FlaxEditor.Windows.Assets
         {
             // Undo
             _undo = new Undo();
+            _undo.UndoDone += UpdateToolstrip;
+            _undo.RedoDone += UpdateToolstrip;
+            _undo.ActionDone += UpdateToolstrip;
 
             // Split Panel 1
             _split1 = new SplitPanel(Orientation.Horizontal, ScrollBars.Both, ScrollBars.None)
@@ -102,6 +106,7 @@ namespace FlaxEditor.Windows.Assets
             {
                 Parent = _split2.Panel1
             };
+            _viewport.TransformGizmo.OnModeChanged += UpdateToolstrip;
 
             // Prefab properties editor
             _propertiesEditor = new CustomEditorPresenter(_undo, "Loading...");
@@ -111,8 +116,8 @@ namespace FlaxEditor.Windows.Assets
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Save32"), Save).LinkTooltip("Save");
             _toolstrip.AddSeparator();
-            _toolStripUndo = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Undo32"), Editor.PerformUndo).LinkTooltip("Undo (Ctrl+Z)");
-            _toolStripRedo = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Redo32"), Editor.PerformRedo).LinkTooltip("Redo (Ctrl+Y)");
+            _toolStripUndo = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Undo32"), _undo.PerformUndo).LinkTooltip("Undo (Ctrl+Z)");
+            _toolStripRedo = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Redo32"), _undo.PerformRedo).LinkTooltip("Redo (Ctrl+Y)");
             _toolstrip.AddSeparator();
             _toolStripTranslate = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Translate32"), () => _viewport.TransformGizmo.ActiveMode = TransformGizmo.Mode.Translate).LinkTooltip("Change Gizmo tool mode to Translate (1)");
             _toolStripRotate = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Rotate32"), () => _viewport.TransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate).LinkTooltip("Change Gizmo tool mode to Rotate (2)");
@@ -176,6 +181,93 @@ namespace FlaxEditor.Windows.Assets
             _propertiesEditor.Select(_viewport.Instance);
 
             base.OnAssetLinked();
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            // Base
+            bool result = base.OnKeyDown(key);
+            if (!result)
+            {
+                if (Root.GetKey(Keys.Control))
+                {
+                    switch (key)
+                    {
+                    case Keys.Z:
+                        _undo.PerformUndo();
+                        Focus();
+                        return true;
+                    case Keys.Y:
+                        _undo.PerformRedo();
+                        Focus();
+                        return true;
+                    case Keys.X:
+                        Cut();
+                        break;
+                    case Keys.C:
+                        Copy();
+                        break;
+                    case Keys.V:
+                        Paste();
+                        break;
+                    case Keys.D:
+                        Duplicate();
+                        break;
+                    }
+                }
+                else
+                {
+                    switch (key)
+                    {
+                    case Keys.Delete:
+                        Delete();
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Cuts selected objects.
+        /// </summary>
+        public void Cut()
+        {
+            throw new NotImplementedException("TODO: Cut");
+        }
+
+        /// <summary>
+        /// Copies selected objects to system clipboard.
+        /// </summary>
+        public void Copy()
+        {
+            throw new NotImplementedException("TODO: Copy");
+        }
+
+        /// <summary>
+        /// Pastes objects from the system clipboard.
+        /// </summary>
+        public void Paste()
+        {
+            throw new NotImplementedException("TODO: Paste");
+        }
+
+        /// <summary>
+        /// Duplicates selected objects.
+        /// </summary>
+        public void Duplicate()
+        {
+            throw new NotImplementedException("TODO: Duplicate");
+        }
+
+        /// <summary>
+        /// Deletes selected objects.
+        /// </summary>
+        public void Delete()
+        {
+            throw new NotImplementedException("TODO: Delete");
         }
 
         /// <inheritdoc />
