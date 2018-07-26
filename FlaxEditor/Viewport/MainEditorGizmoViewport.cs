@@ -76,6 +76,7 @@ namespace FlaxEditor.Viewport
 
             // Create post effects
             SelectionOutline = FlaxEngine.Object.New<SelectionOutline>();
+            SelectionOutline.SelectiongGetter = () => _editor.SceneEditing.Selection;
             Task.CustomPostFx.Add(SelectionOutline);
             EditorPrimitives = FlaxEngine.Object.New<EditorPrimitives>();
             Task.CustomPostFx.Add(EditorPrimitives);
