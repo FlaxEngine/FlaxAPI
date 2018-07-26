@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System.Collections.Generic;
 using FlaxEditor.Options;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
@@ -15,6 +16,7 @@ namespace FlaxEditor.Gizmo
         private Material _outlineMaterial;
         private MaterialInstance _material;
         private Color _color0, _color1;
+        private List<Actor> _actors;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectionOutline"/> class.
@@ -54,9 +56,23 @@ namespace FlaxEditor.Gizmo
             var customDepth = RenderTarget.GetTemporary(PixelFormat.R32_Typeless, input.Width, input.Height, TextureFlags.DepthStencil | TextureFlags.ShaderResource);
             context.ClearDepth(customDepth);
 
+            // Get selected actors
+            var selection = Editor.Instance.SceneEditing.Selection;
+            if (_actors == null)
+                _actors = new List<Actor>();
+            else
+                _actors.Clear();
+            _actors.Capacity = Mathf.NextPowerOfTwo(Mathf.Max(_actors.Capacity, selection.Count));
+            for (int i = 0; i < selection.Count; i++)
+            {
+                if (selection[i] is ActorNode actorNode)
+                    _actors.Add(actorNode.Actor);
+            }
+
             // Render selected objects depth
-            var actors = Editor.Instance.SceneEditing.Selection.ConvertAll(x => (x as ActorNode)?.Actor).ToArray();
-            context.DrawSceneDepth(task, customDepth, true, actors, ActorsSources.CustomActors);
+            context.DrawSceneDepth(task, customDepth, true, _actors, ActorsSources.CustomActors);
+
+            _actors.Clear();
 
             var near = task.View.Near;
             var far = task.View.Far;

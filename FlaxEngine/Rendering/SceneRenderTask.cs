@@ -179,8 +179,7 @@ namespace FlaxEngine.Rendering
             }
 
             // Call scene rendering
-            var customActors = CustomActors.Count > 0 ? CustomActors.ToArray() : null;
-            context.DrawScene(this, Output, Buffers, View, Flags, Mode, customActors, ActorsSource, _postFx);
+            context.DrawScene(this, Output, Buffers, View, Flags, Mode, CustomActors, ActorsSource, _postFx);
 
             // Finish
             OnEnd(context);
