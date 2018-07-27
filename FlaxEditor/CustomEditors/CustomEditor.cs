@@ -170,10 +170,19 @@ namespace FlaxEditor.CustomEditors
         public abstract void Initialize(LayoutElementsContainer layout);
 
         /// <summary>
+        /// Deinitializes this editor (unbind events and cleanup).
+        /// </summary>
+        protected virtual void Deinitialize()
+        {
+        }
+
+        /// <summary>
         /// Cleanups this editor resources and child editors.
         /// </summary>
         internal void Cleanup()
         {
+            Deinitialize();
+
             for (int i = 0; i < _children.Count; i++)
             {
                 _children[i].Cleanup();
