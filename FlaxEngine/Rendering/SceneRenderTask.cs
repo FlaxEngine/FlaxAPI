@@ -112,6 +112,11 @@ namespace FlaxEngine.Rendering
         /// </summary>
         public event DrawDelegate Draw;
 
+        /// <summary>
+        /// The amount of frame rendered by this task. Is auto incremented on scene rendering.
+        /// </summary>
+        public int FrameCount;
+
         private readonly DrawCallsCollector _collector = new DrawCallsCollector();
         private readonly HashSet<PostProcessEffect> _postFx = new HashSet<PostProcessEffect>();
 
@@ -180,6 +185,7 @@ namespace FlaxEngine.Rendering
 
             // Call scene rendering
             context.DrawScene(this, Output, Buffers, View, Flags, Mode, CustomActors, ActorsSource, _postFx);
+            FrameCount++;
 
             // Finish
             OnEnd(context);
