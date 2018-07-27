@@ -16,6 +16,8 @@ namespace FlaxEditor.CustomEditors.Dedicated
     [CustomEditor(typeof(Actor)), DefaultEditor]
     public class ActorEditor : GenericEditor
     {
+        private Guid _linkedPrefabId;
+
         /// <inheritdoc />
         protected override void SpawnProperty(LayoutElementsContainer itemLayout, ValueContainer itemValues, ItemInfo item)
         {
@@ -102,11 +104,35 @@ namespace FlaxEditor.CustomEditors.Dedicated
                         // Viewwing changes applied to this actor
                         var viewChanges = panel.Button("View Changes");
                         viewChanges.Button.Clicked += () => ViewChanges(viewChanges.Button, new Vector2(0.0f, 20.0f));
+
+                        // Link event to update editor on prefab apply
+                        _linkedPrefabId = prefab.ID;
+                        Editor.Instance.Prefabs.PrefabApplied += OnPrefabApplied;
                     }
                 }
             }
 
             base.Initialize(layout);
+        }
+
+        /// <inheritdoc />
+        protected override void Deinitialize()
+        {
+            base.Deinitialize();
+
+            if (_linkedPrefabId != Guid.Empty)
+            {
+                _linkedPrefabId = Guid.Empty;
+                Editor.Instance.Prefabs.PrefabApplied -= OnPrefabApplied;
+            }
+        }
+
+        private void OnPrefabApplied(Prefab prefab, Actor instance)
+        {
+            if (prefab.ID == _linkedPrefabId)
+            {
+                Presenter.BuildLayout();
+            }
         }
 
         private TreeNode CreateDiffNode(CustomEditor editor)
@@ -209,8 +235,6 @@ namespace FlaxEditor.CustomEditors.Dedicated
         private void OnDiffApplyAll()
         {
             Editor.Instance.Prefabs.ApplyAll((Actor)Values[0]);
-
-            Presenter.BuildLayout();
         }
 
         private void OnDiffRevert(CustomEditor editor)
