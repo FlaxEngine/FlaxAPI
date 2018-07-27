@@ -48,6 +48,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly ToolStripButton _toolStripScale;
 
         private Undo _undo;
+        private bool _focusCamera;
 
         /// <summary>
         /// Gets the prefab hierarchy tree control.
@@ -178,9 +179,26 @@ namespace FlaxEditor.Windows.Assets
         protected override void OnAssetLinked()
         {
             _viewport.Prefab = _asset;
+            _focusCamera = true;
             _propertiesEditor.Select(_viewport.Instance);
 
             base.OnAssetLinked();
+        }
+
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            base.Update(deltaTime);
+
+            if (_focusCamera && _viewport.Task.FrameCount > 1)
+            {
+                _focusCamera = false;
+
+                // Auto fit
+                BoundingSphere bounds;
+                Editor.GetActorEditorSphere(_viewport.Instance, out bounds);
+                _viewport.ViewPosition = bounds.Center - _viewport.ViewDirection * (bounds.Radius * 1.2f);
+            }
         }
 
         /// <inheritdoc />
