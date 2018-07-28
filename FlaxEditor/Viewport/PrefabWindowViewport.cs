@@ -56,6 +56,7 @@ namespace FlaxEditor.Viewport
         : base(true)
         {
             _window = window;
+            _window.SelectionChanged += OnSelectionChanged;
             Undo = window.Undo;
             ViewportCamera = new FPSCamera();
 
@@ -65,7 +66,7 @@ namespace FlaxEditor.Viewport
 
             // Create post effects
             SelectionOutline = FlaxEngine.Object.New<SelectionOutline>();
-            SelectionOutline.SelectiongGetter = () => new List<SceneGraphNode>(); // TODO: gather selection
+            SelectionOutline.SelectiongGetter = () => _window.Selection;
             Task.CustomPostFx.Add(SelectionOutline);
 
             // Add transformation gizmo
@@ -74,9 +75,6 @@ namespace FlaxEditor.Viewport
             TransformGizmo.OnModeChanged += OnGizmoModeChanged;
             Gizmos.Active = TransformGizmo;
             
-            // TODO: register for selection change event to sync it
-            //_window.OnSelectionChanged += OnSelectionChanged;
-
             // Transform space widget
             var transformSpaceWidget = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperRight);
             var transformSpaceToggle = new ViewportWidgetButton(string.Empty, window.Editor.UI.GetIcon("World16"), null, true)
@@ -369,9 +367,7 @@ namespace FlaxEditor.Viewport
 
         private void OnSelectionChanged()
         {
-            throw new NotImplementedException("synchronize selection for gizmos");
-            //var selection = _editor.SceneEditing.Selection;
-            //Gizmos.ForEach(x => x.OnSelectionChanged(selection));
+            Gizmos.ForEach(x => x.OnSelectionChanged(_window.Selection));
         }
 
         /// <summary>
