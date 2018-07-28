@@ -1,11 +1,14 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.Gizmo;
 using FlaxEditor.GUI;
+using FlaxEditor.SceneGraph;
 using FlaxEditor.Viewport;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -49,7 +52,7 @@ namespace FlaxEditor.Windows.Assets
 
         private Undo _undo;
         private bool _focusCamera;
-
+        
         /// <summary>
         /// Gets the prefab hierarchy tree control.
         /// </summary>
@@ -64,6 +67,21 @@ namespace FlaxEditor.Windows.Assets
         /// Gets the undo system used by this window for changes tracking.
         /// </summary>
         public Undo Undo => _undo;
+
+        /// <summary>
+        /// The current selection (readonly).
+        /// </summary>
+        public readonly List<SceneGraphNode> Selection = new List<SceneGraphNode>();
+
+        /// <summary>
+        /// Occurs when selection gets changed.
+        /// </summary>
+        public event Action SelectionChanged;
+
+        /// <summary>
+        /// The local scene nodes graph used by the prefab editor.
+        /// </summary>
+        public readonly LocalSceneGraph Graph;
 
         /// <inheritdoc />
         public PrefabWindow(Editor editor, AssetItem item)
@@ -92,12 +110,10 @@ namespace FlaxEditor.Windows.Assets
             };
 
             // Prefab structure tree
-            //var root = editor.Scene.Root;
-            //root.TreeNode.ChildrenIndent = 0;
-            //root.TreeNode.Expand();
+            Graph = new LocalSceneGraph();
             _tree = new PrefabTree();
-            //_tree.Margin = new Margin(0.0f, 0.0f, -14.0f, 0.0f); // Hide root node
-            //_tree.AddChild(root.TreeNode);
+            _tree.Margin = new Margin(0.0f, 0.0f, -14.0f, 0.0f); // Hide root node
+            _tree.AddChild(Graph.Root.TreeNode);
             //_tree.SelectedChanged += Tree_OnSelectedChanged;
             //_tree.RightClick += Tree_OnRightClick;
             _tree.Parent = _split1.Panel1;
@@ -137,6 +153,33 @@ namespace FlaxEditor.Windows.Assets
             }
         }
 
+        /// <summary>
+        /// Called when selection gets changed.
+        /// </summary>
+        /// <param name="before">The selection before the change.</param>
+        public void OnSelectionChanged(SceneGraphNode[] before)
+        {
+            Undo.AddAction(new SelectionChangeAction(before, Selection.ToArray(), OnSelectionUndo));
+            
+            UpdatePropertiesSelection();
+            SelectionChanged?.Invoke();
+        }
+
+        private void OnSelectionUndo(SceneGraphNode[] toSelect)
+        {
+            Selection.Clear();
+            Selection.AddRange(toSelect);
+
+            UpdatePropertiesSelection();
+            SelectionChanged?.Invoke();
+        }
+
+        private void UpdatePropertiesSelection()
+        {
+            var objects = Selection.ConvertAll(x => x.EditableObject).Distinct();
+            _propertiesEditor.Select(objects);
+        }
+
         /// <inheritdoc />
         public override void Save()
         {
@@ -167,22 +210,28 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        protected override void UnlinkItem()
+        protected override void OnAssetLoaded()
         {
-            _propertiesEditor.Deselect();
-            _viewport.Prefab = null;
+            _viewport.Prefab = _asset;
+            Graph.MainActor = _viewport.Instance;
+            _focusCamera = true;
+            _undo.Clear();
+            Selection.Clear();
+            Select(Graph.Main);
+            Graph.Root.TreeNode.ExpandAll(true);
 
-            base.UnlinkItem();
+            base.OnAssetLoaded();
         }
 
         /// <inheritdoc />
-        protected override void OnAssetLinked()
+        protected override void UnlinkItem()
         {
-            _viewport.Prefab = _asset;
-            _focusCamera = true;
-            _propertiesEditor.Select(_viewport.Instance);
-
-            base.OnAssetLinked();
+            Deselect();
+            Graph.Dispose();
+            _viewport.Prefab = null;
+            _undo?.Clear();
+            
+            base.UnlinkItem();
         }
 
         /// <inheritdoc />
@@ -246,6 +295,39 @@ namespace FlaxEditor.Windows.Assets
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Selects the specified node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        public void Select(SceneGraphNode node)
+        {
+            if (node == null)
+            {
+                Deselect();
+                return;
+            }
+            if (Selection.Count == 1 && Selection[0] == node)
+                return;
+
+            var before = Selection.ToArray();
+            Selection.Clear();
+            Selection.Add(node);
+            OnSelectionChanged(before);
+        }
+
+        /// <summary>
+        /// Clears the selection.
+        /// </summary>
+        public void Deselect()
+        {
+            if (Selection.Count == 0)
+                return;
+
+            var before = Selection.ToArray();
+            Selection.Clear();
+            OnSelectionChanged(before);
         }
 
         /// <summary>
