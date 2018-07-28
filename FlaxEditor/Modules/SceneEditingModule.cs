@@ -156,12 +156,12 @@ namespace FlaxEditor.Modules
 
         private void SelectionChange(SceneGraphNode[] before)
         {
-            Undo.AddAction(new SelectionChangeAction(before, Selection.ToArray()));
+            Undo.AddAction(new SelectionChangeAction(before, Selection.ToArray(), OnSelectionUndo));
 
             OnSelectionChanged?.Invoke();
         }
 
-        internal void OnSelectionUndo(SceneGraphNode[] toSelect)
+        private void OnSelectionUndo(SceneGraphNode[] toSelect)
         {
             Selection.Clear();
             if (toSelect != null)
@@ -226,7 +226,7 @@ namespace FlaxEditor.Modules
                 return;
 
             // Change selection
-            var action1 = new SelectionChangeAction(Selection.ToArray(), new SceneGraphNode[0]);
+            var action1 = new SelectionChangeAction(Selection.ToArray(), new SceneGraphNode[0], OnSelectionUndo);
 
             // Delete objects
             var action2 = new DeleteActorsAction(objects);
@@ -348,7 +348,7 @@ namespace FlaxEditor.Modules
             pasteAction.Do(out _, out var nodeParents);
 
             // Select spawned objects
-            var selectAction = new SelectionChangeAction(Selection.ToArray(), nodeParents.Cast<SceneGraphNode>().ToArray());
+            var selectAction = new SelectionChangeAction(Selection.ToArray(), nodeParents.Cast<SceneGraphNode>().ToArray(), OnSelectionUndo);
             selectAction.Do();
 
             Undo.AddAction(new MultiUndoAction(pasteAction, selectAction));

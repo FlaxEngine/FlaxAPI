@@ -28,13 +28,16 @@ namespace FlaxEditor
             public SceneGraphNode[] After;
         }
 
-        internal SelectionChangeAction(SceneGraphNode[] before, SceneGraphNode[] after)
+        private Action<SceneGraphNode[]> _callback;
+
+        internal SelectionChangeAction(SceneGraphNode[] before, SceneGraphNode[] after, Action<SceneGraphNode[]> callback)
         {
             Data = new DataStorage
             {
                 Before = before,
                 After = after,
             };
+            _callback = callback;
         }
 
         /// <inheritdoc />
@@ -44,14 +47,14 @@ namespace FlaxEditor
         public override void Do()
         {
             var data = Data;
-            Editor.Instance.SceneEditing.OnSelectionUndo(data.After);
+            _callback(data.After);
         }
 
         /// <inheritdoc />
         public override void Undo()
         {
             var data = Data;
-            Editor.Instance.SceneEditing.OnSelectionUndo(data.Before);
+            _callback(data.Before);
         }
     }
 }
