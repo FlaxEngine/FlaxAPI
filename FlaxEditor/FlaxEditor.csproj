@@ -319,6 +319,7 @@
     <Compile Include="SceneGraph\Actors\UIControlNode.cs" />
     <Compile Include="SceneGraph\GUI\ActorTreeNode.cs" />
     <Compile Include="SceneGraph\GUI\SceneTreeNode.cs" />
+    <Compile Include="SceneGraph\LocalSceneGraph.cs" />
     <Compile Include="SceneGraph\RootNode.cs" />
     <Compile Include="SceneGraph\SceneGraphFactory.cs" />
     <Compile Include="SceneGraph\Actors\SceneNode.cs" />
