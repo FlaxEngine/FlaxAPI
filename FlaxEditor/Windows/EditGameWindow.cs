@@ -142,51 +142,13 @@ namespace FlaxEditor.Windows
         }
 
         /// <summary>
-        /// Moves the viewport to visualize the actor.
-        /// </summary>
-        /// <param name="actor">The actor to preview.</param>
-        public void ShowActor(Actor actor)
-        {
-            BoundingSphere sphere;
-            Editor.GetActorEditorSphere(actor, out sphere);
-            ShowSphere(ref sphere);
-        }
-
-        /// <summary>
         /// Moves the viewport to visualize selected actors.
         /// </summary>
         public void ShowSelectedActors()
         {
-            var selection = Viewport.TransformGizmo.SelectedParents;
-            if (selection.Count == 0)
-                return;
-
-            BoundingSphere mergesSphere = BoundingSphere.Empty;
-            for (int i = 0; i < selection.Count; i++)
-            {
-                if (selection[i] is ActorNode actor)
-                {
-                    BoundingSphere sphere;
-                    Editor.GetActorEditorSphere(actor.Actor, out sphere);
-                    BoundingSphere.Merge(ref mergesSphere, ref sphere, out mergesSphere);
-                }
-            }
-            ShowSphere(ref mergesSphere);
+            ((FPSCamera)Viewport.ViewportCamera).ShowActors(Viewport.TransformGizmo.SelectedParents);
         }
-
-        private void ShowSphere(ref BoundingSphere sphere)
-        {
-            var camera = (FPSCamera)Viewport.ViewportCamera;
-
-            // Calculate view transform
-            Quaternion orientation = new Quaternion(0.424461186f, -0.0940724313f, 0.0443938486f, 0.899451137f);
-            Vector3 position = sphere.Center - Vector3.Forward * orientation * (sphere.Radius * 2.5f);
-
-            // Move vieport
-            camera.TargetPoint = sphere.Center;
-            camera.MoveViewport(position, orientation);
-        }
-
+        
         /// <summary>
         /// Updates the camera previews.
         /// </summary>

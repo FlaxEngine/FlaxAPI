@@ -1,7 +1,9 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using FlaxEditor.Gizmo;
+using FlaxEditor.SceneGraph;
 using FlaxEngine;
 
 namespace FlaxEditor.Viewport.Cameras
@@ -75,6 +77,51 @@ namespace FlaxEditor.Viewport.Cameras
             _startMove = Viewport.ViewTransform;
             _endMove = target;
             _moveStartTime = Time.UnscaledGameTime;
+        }
+
+        /// <summary>
+        /// Moves the viewport to visualize the actor.
+        /// </summary>
+        /// <param name="actor">The actor to preview.</param>
+        public void ShowActor(Actor actor)
+        {
+            BoundingSphere sphere;
+            Editor.GetActorEditorSphere(actor, out sphere);
+            ShowSphere(ref sphere);
+        }
+
+        /// <summary>
+        /// Moves the viewport to visualize selected actors.
+        /// </summary>
+        /// <param name="actors">The actors to show.</param>
+        public void ShowActors(List<SceneGraphNode> actors)
+        {
+            if (actors.Count == 0)
+                return;
+
+            BoundingSphere mergesSphere = BoundingSphere.Empty;
+            for (int i = 0; i < actors.Count; i++)
+            {
+                if (actors[i] is ActorNode actor)
+                {
+                    BoundingSphere sphere;
+                    Editor.GetActorEditorSphere(actor.Actor, out sphere);
+                    BoundingSphere.Merge(ref mergesSphere, ref sphere, out mergesSphere);
+                }
+            }
+
+            ShowSphere(ref mergesSphere);
+        }
+
+        private void ShowSphere(ref BoundingSphere sphere)
+        {
+            // Calculate view transform
+            Quaternion orientation = new Quaternion(0.424461186f, -0.0940724313f, 0.0443938486f, 0.899451137f);
+            Vector3 position = sphere.Center - Vector3.Forward * orientation * (sphere.Radius * 2.5f);
+
+            // Move vieport
+            TargetPoint = sphere.Center;
+            MoveViewport(position, orientation);
         }
 
         /// <inheritdoc />
