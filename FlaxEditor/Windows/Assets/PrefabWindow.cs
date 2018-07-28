@@ -9,6 +9,7 @@ using FlaxEditor.CustomEditors;
 using FlaxEditor.Gizmo;
 using FlaxEditor.GUI;
 using FlaxEditor.SceneGraph;
+using FlaxEditor.SceneGraph.GUI;
 using FlaxEditor.Viewport;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -52,7 +53,8 @@ namespace FlaxEditor.Windows.Assets
 
         private Undo _undo;
         private bool _focusCamera;
-        
+        private bool _isUpdatingSelection;
+
         /// <summary>
         /// Gets the prefab hierarchy tree control.
         /// </summary>
@@ -114,7 +116,7 @@ namespace FlaxEditor.Windows.Assets
             _tree = new PrefabTree();
             _tree.Margin = new Margin(0.0f, 0.0f, -14.0f, 0.0f); // Hide root node
             _tree.AddChild(Graph.Root.TreeNode);
-            //_tree.SelectedChanged += Tree_OnSelectedChanged;
+            _tree.SelectedChanged += OnTreeSelectedChanged;
             //_tree.RightClick += Tree_OnRightClick;
             _tree.Parent = _split1.Panel1;
 
@@ -143,6 +145,32 @@ namespace FlaxEditor.Windows.Assets
             Editor.Prefabs.PrefabApplied += OnPrefabApplied;
         }
 
+        private void OnTreeSelectedChanged(List<TreeNode> before, List<TreeNode> after)
+        {
+            // Check if lock events
+            if (_isUpdatingSelection)
+                return;
+
+            if (after.Count > 0)
+            {
+                // Get actors from nodes
+                var actors = new List<SceneGraphNode>(after.Count);
+                for (int i = 0; i < after.Count; i++)
+                {
+                    if (after[i] is ActorTreeNode node && node.Actor)
+                        actors.Add(node.ActorNode);
+                }
+
+                // Select
+                Select(actors);
+            }
+            else
+            {
+                // Deselect
+                Deselect();
+            }
+        }
+
         private void OnPrefabApplied(Prefab prefab, Actor instance)
         {
             if (prefab == Asset)
@@ -160,9 +188,8 @@ namespace FlaxEditor.Windows.Assets
         public void OnSelectionChanged(SceneGraphNode[] before)
         {
             Undo.AddAction(new SelectionChangeAction(before, Selection.ToArray(), OnSelectionUndo));
-            
-            UpdatePropertiesSelection();
-            SelectionChanged?.Invoke();
+
+            OnSelectionChanges();
         }
 
         private void OnSelectionUndo(SceneGraphNode[] toSelect)
@@ -170,14 +197,49 @@ namespace FlaxEditor.Windows.Assets
             Selection.Clear();
             Selection.AddRange(toSelect);
 
-            UpdatePropertiesSelection();
-            SelectionChanged?.Invoke();
+            OnSelectionChanges();
         }
 
-        private void UpdatePropertiesSelection()
+        private void OnSelectionChanges()
         {
+            _isUpdatingSelection = true;
+
+            // Update tree
+            var selection = Selection;
+            if (selection.Count == 0)
+            {
+                _tree.Deselect();
+            }
+            else
+            {
+                // Find nodes to select
+                var nodes = new List<TreeNode>(selection.Count);
+                for (int i = 0; i < selection.Count; i++)
+                {
+                    if (selection[i] is ActorNode node)
+                    {
+                        nodes.Add(node.TreeNode);
+                    }
+                }
+
+                // Select nodes
+                _tree.Select(nodes);
+
+                // For single node selected scroll view so user can see it
+                if (nodes.Count == 1)
+                {
+                    ScrollViewTo(nodes[0]);
+                }
+            }
+
+            // Update properties editor
             var objects = Selection.ConvertAll(x => x.EditableObject).Distinct();
             _propertiesEditor.Select(objects);
+
+            _isUpdatingSelection = false;
+
+            // Send event
+            SelectionChanged?.Invoke();
         }
 
         /// <inheritdoc />
@@ -295,6 +357,26 @@ namespace FlaxEditor.Windows.Assets
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Selects the specified nodes collection.
+        /// </summary>
+        /// <param name="nodes">The nodec.</param>
+        public void Select(List<SceneGraphNode> nodes)
+        {
+            if (nodes == null || nodes.Count == 0)
+            {
+                Deselect();
+                return;
+            }
+            if (Utils.ArraysEqual(Selection, nodes))
+                return;
+
+            var before = Selection.ToArray();
+            Selection.Clear();
+            Selection.AddRange(nodes);
+            OnSelectionChanged(before);
         }
 
         /// <summary>
