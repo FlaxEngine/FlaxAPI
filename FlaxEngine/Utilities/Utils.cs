@@ -78,9 +78,6 @@ namespace FlaxEngine
         /// <returns><c>true</c> if the two source sequences are of equal length and their corresponding elements are equal according to the default equality comparer for their type; otherwise, <c>false</c>.</returns>
         public static bool ArraysEqual<T>(T[] a1, List<T> a2)
         {
-            if (ReferenceEquals(a1, a2))
-                return true;
-
             if (a1 == null || a2 == null)
                 return false;
 

@@ -45,6 +45,7 @@ namespace FlaxEditor.Windows
         private void OnSelectionChanged()
         {
             // Update selected objects
+            // TODO: use cached collection for less memory allocations
             undoRecordObjects = Editor.SceneEditing.Selection.ConvertAll(x => x.UndoRecordObject).Distinct();
             var objects = Editor.SceneEditing.Selection.ConvertAll(x => x.EditableObject).Distinct();
             Presenter.Select(objects);

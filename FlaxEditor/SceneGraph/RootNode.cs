@@ -20,6 +20,15 @@ namespace FlaxEditor.SceneGraph
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RootNode"/> class.
+        /// </summary>
+        /// <param name="id">The node id.</param>
+        public RootNode(Guid id)
+        : base(null, id)
+        {
+        }
+
         /// <inheritdoc />
         public override string Name => "Root";
 
