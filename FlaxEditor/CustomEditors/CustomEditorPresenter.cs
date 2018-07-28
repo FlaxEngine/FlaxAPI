@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -227,9 +228,12 @@ namespace FlaxEditor.CustomEditors
         {
             if (objects == null)
                 throw new ArgumentNullException();
+            var objectsArray = objects as object[] ?? objects.ToArray();
+            if (Utils.ArraysEqual(objectsArray, Selection))
+                return;
 
             Selection.Clear();
-            Selection.AddRange(objects);
+            Selection.AddRange(objectsArray);
 
             OnSelectionChanged();
         }
