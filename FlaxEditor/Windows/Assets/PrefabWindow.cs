@@ -62,9 +62,9 @@ namespace FlaxEditor.Windows.Assets
         {
             // Undo
             _undo = new Undo();
-            _undo.UndoDone += UpdateToolstrip;
-            _undo.RedoDone += UpdateToolstrip;
-            _undo.ActionDone += UpdateToolstrip;
+            _undo.UndoDone += OnUndoAction;
+            _undo.RedoDone += OnUndoAction;
+            _undo.ActionDone += OnUndoAction;
 
             // Split Panel 1
             _split1 = new SplitPanel(Orientation.Horizontal, ScrollBars.Both, ScrollBars.None)
@@ -116,6 +116,13 @@ namespace FlaxEditor.Windows.Assets
             Editor.Prefabs.PrefabApplied += OnPrefabApplied;
         }
 
+        private void OnUndoAction()
+        {
+            // All undo actions modify the asset
+            MarkAsEdited();
+            UpdateToolstrip();
+        }
+
         private void OnPrefabApplied(Prefab prefab, Actor instance)
         {
             if (prefab == Asset)
@@ -161,11 +168,13 @@ namespace FlaxEditor.Windows.Assets
             _viewport.Prefab = _asset;
             Graph.MainActor = _viewport.Instance;
             _focusCamera = true;
-            _undo.Clear();
             Selection.Clear();
             Select(Graph.Main);
             Graph.Root.TreeNode.ExpandAll(true);
-
+            
+            _undo.Clear();
+            ClearEditedFlag();
+            
             base.OnAssetLoaded();
         }
 
