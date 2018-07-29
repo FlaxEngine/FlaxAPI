@@ -19,7 +19,7 @@ namespace FlaxEditor.Viewport
     /// Main edior gizmo viewport used by the <see cref="EditGameWindow"/>.
     /// </summary>
     /// <seealso cref="FlaxEditor.Viewport.EditorGizmoViewport" />
-    public class MainEditorGizmoViewport : EditorGizmoViewport
+    public class MainEditorGizmoViewport : EditorGizmoViewport, IEditorPrimitivesOwner
     {
         private readonly Editor _editor;
 
@@ -56,7 +56,8 @@ namespace FlaxEditor.Viewport
         /// </summary>
         public EditorPrimitives EditorPrimitives;
 
-        internal ViewportDebugDrawData DebugDrawData => _debugDrawData;
+        /// <inheritdoc />
+        public ViewportDebugDrawData DebugDrawData => _debugDrawData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainEditorGizmoViewport"/> class.
@@ -79,12 +80,15 @@ namespace FlaxEditor.Viewport
             SelectionOutline.SelectiongGetter = () => _editor.SceneEditing.Selection;
             Task.CustomPostFx.Add(SelectionOutline);
             EditorPrimitives = FlaxEngine.Object.New<EditorPrimitives>();
+            EditorPrimitives.DrawDebugDraw = true;
+            EditorPrimitives.Viewport = this;
             Task.CustomPostFx.Add(EditorPrimitives);
 
             // Add transformation gizmo
             TransformGizmo = new TransformGizmo(this);
             TransformGizmo.OnApplyTransformation += ApplyTransform;
-            TransformGizmo.OnModeChanged += OnGizmoModeChanged;
+            TransformGizmo.ModeChanged += OnGizmoModeChanged;
+            TransformGizmo.Duplicate += Editor.Instance.SceneEditing.Duplicate;
             Gizmos.Active = TransformGizmo;
 
             // Add grid

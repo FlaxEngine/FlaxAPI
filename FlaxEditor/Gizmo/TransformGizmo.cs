@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Collections.Generic;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
@@ -52,6 +53,11 @@ namespace FlaxEditor.Gizmo
         public ApplyTransformationDelegate OnApplyTransformation;
 
         /// <summary>
+        /// The event to duplicate selected objects.
+        /// </summary>
+        public Action Duplicate;
+
+        /// <summary>
         /// Gets the gizmo position.
         /// </summary>
         /// <value>
@@ -94,7 +100,7 @@ namespace FlaxEditor.Gizmo
             if (Owner.UseDuplicate && !_isDuplicating)
             {
                 _isDuplicating = true;
-                Editor.Instance.SceneEditing.Duplicate();
+                Duplicate();
                 return;
             }
 

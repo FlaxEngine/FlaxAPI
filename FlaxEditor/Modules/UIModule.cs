@@ -286,7 +286,7 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnEndInit()
         {
-            Editor.MainTransformGizmo.OnModeChanged += UpdateToolstrip;
+            Editor.MainTransformGizmo.ModeChanged += UpdateToolstrip;
             Editor.StateMachine.StateChanged += StateMachineOnStateChanged;
             Editor.Undo.UndoDone += UpdateToolstrip;
             Editor.Undo.RedoDone += UpdateToolstrip;

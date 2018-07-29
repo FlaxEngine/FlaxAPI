@@ -23,10 +23,10 @@ namespace FlaxEditor.Viewport
     /// <seealso cref="PrefabWindow" />
     /// <seealso cref="PrefabPreview" />
     /// <seealso cref="IGizmoOwner" />
-    public class PrefabWindowViewport : PrefabPreview, IGizmoOwner
+    public class PrefabWindowViewport : PrefabPreview, IEditorPrimitivesOwner
     {
         private readonly PrefabWindow _window;
-        
+
         private readonly ViewportWidgetButton _gizmoModeTranslate;
         private readonly ViewportWidgetButton _gizmoModeRotate;
         private readonly ViewportWidgetButton _gizmoModeScale;
@@ -42,11 +42,16 @@ namespace FlaxEditor.Viewport
         /// The transform gizmo.
         /// </summary>
         public readonly TransformGizmo TransformGizmo;
-        
+
         /// <summary>
         /// The selection outline postFx.
         /// </summary>
         public SelectionOutline SelectionOutline;
+
+        /// <summary>
+        /// The editor primitives postFx.
+        /// </summary>
+        public EditorPrimitives EditorPrimitives;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PrefabWindowViewport"/> class.
@@ -63,18 +68,24 @@ namespace FlaxEditor.Viewport
             // Prepare rendering task
             Task.ActorsSource = ActorsSources.CustomActors;
             Task.Flags = ViewFlags.DefaultEditor & ~ViewFlags.EditorSprites;
+            Task.End += RenderTaskOnEnd;
 
             // Create post effects
             SelectionOutline = FlaxEngine.Object.New<SelectionOutline>();
             SelectionOutline.SelectiongGetter = () => _window.Selection;
             Task.CustomPostFx.Add(SelectionOutline);
+            EditorPrimitives = FlaxEngine.Object.New<EditorPrimitives>();
+            EditorPrimitives.DrawDebugDraw = false;
+            EditorPrimitives.Viewport = this;
+            Task.CustomPostFx.Add(EditorPrimitives);
 
             // Add transformation gizmo
             TransformGizmo = new TransformGizmo(this);
             TransformGizmo.OnApplyTransformation += ApplyTransform;
-            TransformGizmo.OnModeChanged += OnGizmoModeChanged;
+            TransformGizmo.ModeChanged += OnGizmoModeChanged;
+            TransformGizmo.Duplicate += _window.Duplicate;
             Gizmos.Active = TransformGizmo;
-            
+
             // Transform space widget
             var transformSpaceWidget = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperRight);
             var transformSpaceToggle = new ViewportWidgetButton(string.Empty, window.Editor.UI.GetIcon("World16"), null, true)
@@ -182,6 +193,16 @@ namespace FlaxEditor.Viewport
             gizmoMode.Parent = this;
         }
 
+        private void RenderTaskOnEnd(SceneRenderTask task, GPUContext context)
+        {
+            // Render editor primitives, gizmo and debug shapes in debug view modes
+            if (task.Mode != ViewMode.Default)
+            {
+                // Note: can use Output buffer as both input and output because EditorPrimitives is using a intermdiate buffers
+                EditorPrimitives.Render(context, task, task.Output, task.Output);
+            }
+        }
+
         /// <summary>
         /// Moves the viewport to visualize selected actors.
         /// </summary>
@@ -189,7 +210,7 @@ namespace FlaxEditor.Viewport
         {
             ((FPSCamera)ViewportCamera).ShowActors(TransformGizmo.SelectedParents);
         }
-        
+
         /// <inheritdoc />
         public GizmosCollection Gizmos { get; } = new GizmosCollection();
 
@@ -557,15 +578,14 @@ namespace FlaxEditor.Viewport
             case ContentDomain.Material:
             case ContentDomain.Model:
             case ContentDomain.Audio:
-            case ContentDomain.Prefab: return SceneManager.IsAnySceneLoaded;
-            case ContentDomain.Scene: return true;
+            case ContentDomain.Prefab: return true;
             default: return false;
             }
         }
 
         private bool ValidateDragActorType(Type actorType)
         {
-            return SceneManager.IsAnySceneLoaded;
+            return true;
         }
 
         /// <inheritdoc />
@@ -762,8 +782,12 @@ namespace FlaxEditor.Viewport
         public override void OnDestroy()
         {
             FlaxEngine.Object.Destroy(ref SelectionOutline);
+            FlaxEngine.Object.Destroy(ref EditorPrimitives);
 
             base.OnDestroy();
         }
+
+        /// <inheritdoc />
+        public ViewportDebugDrawData DebugDrawData => null;
     }
 }

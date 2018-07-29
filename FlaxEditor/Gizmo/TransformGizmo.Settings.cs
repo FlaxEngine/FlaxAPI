@@ -21,7 +21,7 @@ namespace FlaxEditor.Gizmo
         private static readonly Color AxisColorY = new Color(61, 255, 12);
         private static readonly Color AxisColorZ = new Color(0, 6, 255);
 
-        private Vector3[] _translationLineVertices =
+        private readonly Vector3[] _translationLineVertices =
         {
             // -- X Axis -- // index 0 - 5
             new Vector3(HalfLineOffset, 0, 0),
@@ -126,7 +126,7 @@ namespace FlaxEditor.Gizmo
                 if (_activeMode != value)
                 {
                     _activeMode = value;
-                    OnModeChanged?.Invoke();
+                    ModeChanged?.Invoke();
                 }
             }
         }
@@ -134,7 +134,7 @@ namespace FlaxEditor.Gizmo
         /// <summary>
         /// Event fired when active gizmo mode gets changed.
         /// </summary>
-        public Action OnModeChanged;
+        public Action ModeChanged;
 
         /// <summary>
         /// Gets or sets the current gizmo transform space.
@@ -147,7 +147,7 @@ namespace FlaxEditor.Gizmo
                 if (_activeTransformSpace != value)
                 {
                     _activeTransformSpace = value;
-                    OnTransformSpaceChanged?.Invoke();
+                    TransformSpaceChanged?.Invoke();
                 }
             }
         }
@@ -155,7 +155,7 @@ namespace FlaxEditor.Gizmo
         /// <summary>
         /// Event fired when active transform space gets changed.
         /// </summary>
-        public Action OnTransformSpaceChanged;
+        public Action TransformSpaceChanged;
 
         /// <summary>
         /// Toggles gizmo transform space
