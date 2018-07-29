@@ -436,7 +436,9 @@
     <Compile Include="Windows\Assets\MaterialInstanceWindow.cs" />
     <Compile Include="Windows\Assets\MaterialWindow.cs" />
     <Compile Include="Windows\Assets\ModelWindow.cs" />
+    <Compile Include="Windows\Assets\PrefabWindow.Actions.cs" />
     <Compile Include="Windows\Assets\PrefabWindow.cs" />
+    <Compile Include="Windows\Assets\PrefabWindow.Selection.cs" />
     <Compile Include="Windows\Assets\PreviewsCacheWindow.cs" />
     <Compile Include="Windows\Assets\SkeletonMaskWindow.cs" />
     <Compile Include="Windows\Assets\SkinnedModelWindow.cs" />
