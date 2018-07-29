@@ -59,9 +59,10 @@ namespace FlaxEditor.SceneGraph
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalSceneGraph"/> class.
         /// </summary>
-        public LocalSceneGraph()
+        /// <param name="root">The root node of the graph. Allows to override some logic for the scene graph section.</param>
+        public LocalSceneGraph(RootNode root)
         {
-            Root = new RootNode(Guid.NewGuid());
+            Root = root;
             Root.TreeNode.ChildrenIndent = 0;
             Root.TreeNode.Expand();
         }

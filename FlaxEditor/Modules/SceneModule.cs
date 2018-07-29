@@ -17,9 +17,25 @@ namespace FlaxEditor.Modules
     public sealed class SceneModule : EditorModule
     {
         /// <summary>
+        /// The root node for the scene graph created for the loaded scenes and actors hierarchy.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.SceneGraph.RootNode" />
+        public class ScenesRootNode : RootNode
+        {
+            /// <inheritdoc />
+            public override void Spawn(Actor actor, Actor parent)
+            {
+                Editor.Instance.SceneEditing.Spawn(actor, parent);
+            }
+
+            /// <inheritdoc />
+            public override Undo Undo => Editor.Instance.Undo;
+        }
+
+        /// <summary>
         /// The root tree node for the whole scene graph.
         /// </summary>
-        public readonly RootNode Root = new RootNode();
+        public readonly ScenesRootNode Root = new ScenesRootNode();
 
         /// <summary>
         /// Occurs when actor gets removed. Editor and all submodules should remove references to that actor.

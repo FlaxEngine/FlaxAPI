@@ -10,13 +10,13 @@ namespace FlaxEditor.SceneGraph
     /// Represents root node of the whole scene graph.
     /// </summary>
     /// <seealso cref="ActorNode" />
-    public sealed class RootNode : ActorNode
+    public abstract class RootNode : ActorNode
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RootNode"/> class.
         /// </summary>
-        public RootNode()
-        : base(null, new Guid(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1))
+        protected RootNode()
+        : base(null, Guid.NewGuid())
         {
         }
 
@@ -34,6 +34,9 @@ namespace FlaxEditor.SceneGraph
 
         /// <inheritdoc />
         public override SceneNode ParentScene => null;
+
+        /// <inheritdoc />
+        public override RootNode Root => this;
 
         /// <inheritdoc />
         public override bool CanCopyPaste => false;
@@ -89,5 +92,17 @@ namespace FlaxEditor.SceneGraph
         public override void Delete()
         {
         }
+
+        /// <summary>
+        /// Spawns the specified actor.
+        /// </summary>
+        /// <param name="actor">The actor.</param>
+        /// <param name="parent">The parent.</param>
+        public abstract void Spawn(Actor actor, Actor parent);
+
+        /// <summary>
+        /// Gets the undo.
+        /// </summary>
+        public abstract Undo Undo { get; }
     }
 }

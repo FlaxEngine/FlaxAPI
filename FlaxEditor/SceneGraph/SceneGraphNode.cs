@@ -51,6 +51,11 @@ namespace FlaxEditor.SceneGraph
         /// </summary>
         public abstract SceneNode ParentScene { get; }
 
+        /// <summary>
+        /// Gets the root node of the scene graph (if has).
+        /// </summary>
+        public virtual RootNode Root => ParentNode?.Root;
+
         /// <inheritdoc />
         public abstract Transform Transform { get; set; }
 

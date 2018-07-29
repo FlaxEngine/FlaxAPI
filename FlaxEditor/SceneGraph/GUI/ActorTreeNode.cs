@@ -123,7 +123,7 @@ namespace FlaxEditor.SceneGraph.GUI
                     return color * 0.6f;
                 }
 
-                if (Actor != null && Editor.Instance.StateMachine.IsPlayMode && Actor.IsStatic)
+                if (Actor?.Scene != null && Editor.Instance.StateMachine.IsPlayMode && Actor.IsStatic)
                 {
                     // Static
                     return color * 0.85f;
@@ -177,7 +177,7 @@ namespace FlaxEditor.SceneGraph.GUI
 
         private void OnRenamed(RenamePopup renamePopup)
         {
-            using (new UndoBlock(Editor.Instance.Undo, Actor, "Rename"))
+            using (new UndoBlock(ActorNode.Root.Undo, Actor, "Rename"))
                 Actor.Name = renamePopup.Text;
         }
 
@@ -308,7 +308,7 @@ namespace FlaxEditor.SceneGraph.GUI
                 if (singleObject)
                 {
                     var targetActor = _dragActors.Objects[0].Actor;
-                    using (new UndoBlock(Editor.Instance.Undo, targetActor, "Change actor parent"))
+                    using (new UndoBlock(ActorNode.Root.Undo, targetActor, "Change actor parent"))
                     {
                         targetActor.SetParent(newParent, worldPositionLock);
                         targetActor.OrderInParent = newOrder;
@@ -317,7 +317,7 @@ namespace FlaxEditor.SceneGraph.GUI
                 else
                 {
                     var targetActors = _dragActors.Objects.ConvertAll(x => x.Actor);
-                    using (new UndoMultiBlock(Editor.Instance.Undo, targetActors, "Change actors parent"))
+                    using (new UndoMultiBlock(ActorNode.Root.Undo, targetActors, "Change actors parent"))
                     {
                         for (int i = 0; i < targetActors.Count; i++)
                         {
@@ -352,7 +352,7 @@ namespace FlaxEditor.SceneGraph.GUI
                             actor.Transform = Actor.Transform;
 
                             // Spawn
-                            Editor.Instance.SceneEditing.Spawn(actor, Actor);
+                            ActorNode.Root.Spawn(actor, Actor);
                         }
                         else
                         {
@@ -365,7 +365,7 @@ namespace FlaxEditor.SceneGraph.GUI
                             actor.Transform = Actor.Transform;
 
                             // Spawn
-                            Editor.Instance.SceneEditing.Spawn(actor, Actor);
+                            ActorNode.Root.Spawn(actor, Actor);
                         }
 
                         break;
@@ -382,7 +382,7 @@ namespace FlaxEditor.SceneGraph.GUI
                             actor.Transform = Actor.Transform;
 
                             // Spawn
-                            Editor.Instance.SceneEditing.Spawn(actor, Actor);
+                            ActorNode.Root.Spawn(actor, Actor);
                         }
 
                         break;
@@ -397,7 +397,7 @@ namespace FlaxEditor.SceneGraph.GUI
                         actor.Transform = Actor.Transform;
 
                         // Spawn
-                        Editor.Instance.SceneEditing.Spawn(actor, Actor);
+                        ActorNode.Root.Spawn(actor, Actor);
 
                         break;
                     }
@@ -411,7 +411,7 @@ namespace FlaxEditor.SceneGraph.GUI
                         actor.Transform = Actor.Transform;
 
                         // Spawn
-                        Editor.Instance.SceneEditing.Spawn(actor, Actor);
+                        ActorNode.Root.Spawn(actor, Actor);
 
                         break;
                     }
@@ -439,7 +439,7 @@ namespace FlaxEditor.SceneGraph.GUI
                     actor.Transform = Actor.Transform;
 
                     // Spawn
-                    Editor.Instance.SceneEditing.Spawn(actor, Actor);
+                    ActorNode.Root.Spawn(actor, Actor);
                 }
 
                 result = DragDropEffect.Move;

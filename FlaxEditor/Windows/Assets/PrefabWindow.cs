@@ -83,7 +83,7 @@ namespace FlaxEditor.Windows.Assets
             };
 
             // Prefab structure tree
-            Graph = new LocalSceneGraph();
+            Graph = new LocalSceneGraph(new CustomRootNode(this));
             _tree = new PrefabTree();
             _tree.Margin = new Margin(0.0f, 0.0f, -14.0f, 0.0f); // Hide root node
             _tree.AddChild(Graph.Root.TreeNode);
@@ -99,7 +99,7 @@ namespace FlaxEditor.Windows.Assets
             _viewport.TransformGizmo.ModeChanged += UpdateToolstrip;
 
             // Prefab properties editor
-            _propertiesEditor = new CustomEditorPresenter(_undo, "Loading...");
+            _propertiesEditor = new CustomEditorPresenter(_undo);
             _propertiesEditor.Panel.Parent = _split2.Panel2;
             _propertiesEditor.Modified += MarkAsEdited;
 

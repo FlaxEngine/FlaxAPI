@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using FlaxEditor.Actions;
 using FlaxEditor.GUI;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
@@ -12,6 +11,32 @@ namespace FlaxEditor.Windows.Assets
 {
     public sealed partial class PrefabWindow
     {
+        /// <summary>
+        /// The custom implementation of the root node for the scene graph.
+        /// </summary>
+        public class CustomRootNode : RootNode
+        {
+            private readonly PrefabWindow _window;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="CustomRootNode"/> class.
+            /// </summary>
+            /// <param name="window">The window.</param>
+            public CustomRootNode(PrefabWindow window)
+            {
+                _window = window;
+            }
+
+            /// <inheritdoc />
+            public override void Spawn(Actor actor, Actor parent)
+            {
+                _window.Spawn(actor, parent);
+            }
+
+            /// <inheritdoc />
+            public override Undo Undo => _window.Undo;
+        }
+
         /// <summary>
         /// The prefab hierarchy tree control.
         /// </summary>
