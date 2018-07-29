@@ -42,6 +42,7 @@ namespace FlaxEditor.Windows.Assets
 
             bool hasSthSelected = Selection.Count > 0;
             bool isSingleActorSelected = Selection.Count == 1 && Selection[0] is ActorNode;
+            bool isRootSelected = isSingleActorSelected && Selection[0] == Graph.Main;
 
             // Create popup
 
@@ -54,10 +55,10 @@ namespace FlaxEditor.Windows.Assets
             b.Enabled = isSingleActorSelected;
 
             b = contextMenu.AddButton("Duplicate", Duplicate);
-            b.Enabled = hasSthSelected;
+            b.Enabled = hasSthSelected && !isRootSelected;
 
             b = contextMenu.AddButton("Delete", Delete);
-            b.Enabled = hasSthSelected;
+            b.Enabled = hasSthSelected && !isRootSelected;
 
             contextMenu.AddSeparator();
             b = contextMenu.AddButton("Copy", Copy);
@@ -67,7 +68,7 @@ namespace FlaxEditor.Windows.Assets
             contextMenu.AddButton("Paste", Paste);
 
             b = contextMenu.AddButton("Cut", Cut);
-            b.Enabled = hasSthSelected;
+            b.Enabled = hasSthSelected && !isRootSelected;
 
             // Prefab options
 
@@ -189,6 +190,31 @@ namespace FlaxEditor.Windows.Assets
                 return;
 
             ShowContextMenu(node, ref location);
+        }
+
+        private void Update(ActorNode actorNode)
+        {
+            actorNode.TreeNode.OnNameChanged();
+            actorNode.TreeNode.SortChildren();
+
+            for (int i = 0; i < actorNode.ChildNodes.Count; i++)
+            {
+                if (actorNode.ChildNodes[i] is ActorNode child)
+                    Update(child);
+            }
+        }
+
+        /// <inheritdoc />
+        public override void OnUpdate()
+        {
+            // Due to fact that actors in prefab editor are only created but not added to gameplay 
+            // we have to manually update some data (SceneManager events work only for actors in a gameplay)
+            if (Graph.Main != null)
+            {
+                Update(Graph.Main);
+            }
+
+            base.OnUpdate();
         }
     }
 }
