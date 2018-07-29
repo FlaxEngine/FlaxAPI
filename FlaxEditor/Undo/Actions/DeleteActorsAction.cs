@@ -10,11 +10,15 @@ namespace FlaxEditor.Actions
     /// Implementation of <see cref="IUndoAction"/> used to delete a selection of <see cref="ActorNode"/>.
     /// </summary>
     /// <seealso cref="FlaxEditor.IUndoAction" />
-    public sealed class DeleteActorsAction : IUndoAction
+    public class DeleteActorsAction : IUndoAction
     {
-        private List<ActorNode> _nodeParents;
         private byte[] _data;
         private bool _isInverted;
+
+        /// <summary>
+        /// The node parents.
+        /// </summary>
+        protected List<ActorNode> _nodeParents;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeleteActorsAction"/> class.
@@ -61,7 +65,10 @@ namespace FlaxEditor.Actions
                 Create();
         }
 
-        private void Delete()
+        /// <summary>
+        /// Deletes the objects.
+        /// </summary>
+        protected virtual void Delete()
         {
             // Remove objects
             for (int i = 0; i < _nodeParents.Count; i++)
@@ -73,7 +80,10 @@ namespace FlaxEditor.Actions
             _nodeParents.Clear();
         }
 
-        private void Create()
+        /// <summary>
+        /// Creates the removed objects (from data).
+        /// </summary>
+        protected virtual void Create()
         {
             // Restore objects
             var actors = Actor.FromBytes(_data);

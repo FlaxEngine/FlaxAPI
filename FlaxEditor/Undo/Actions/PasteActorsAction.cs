@@ -12,14 +12,25 @@ namespace FlaxEditor.Actions
     /// Implementation of <see cref="IUndoAction"/> used to paste a set of <see cref="ActorNode"/>.
     /// </summary>
     /// <seealso cref="FlaxEditor.IUndoAction" />
-    public sealed class PasteActorsAction : IUndoAction
+    public class PasteActorsAction : IUndoAction
     {
         private Dictionary<Guid, Guid> _idsMapping;
-        private List<Guid> _nodeParents;
         private byte[] _data;
         private Guid _pasteParent;
 
-        private PasteActorsAction(byte[] data, Guid[] objectIds, ref Guid pasteParent, string name)
+        /// <summary>
+        /// The node parents.
+        /// </summary>
+        protected List<Guid> _nodeParents;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PasteActorsAction"/> class.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="objectIds">The object ids.</param>
+        /// <param name="pasteParent">The paste parent object id.</param>
+        /// <param name="name">The action name.</param>
+        protected PasteActorsAction(byte[] data, Guid[] objectIds, ref Guid pasteParent, string name)
         {
             ActionString = name;
 
@@ -52,6 +63,18 @@ namespace FlaxEditor.Actions
             return new PasteActorsAction(data, objectIds, ref pasteParent, "Duplicate actors");
         }
 
+        /// <summary>
+        /// Links the broken parent reference (missing parent). By default links the actor to the first scene.
+        /// </summary>
+        /// <param name="actor">The actor.</param>
+        protected virtual void LinkBrokenParentReference(Actor actor)
+        {
+            // Link to the first scene root
+            if (SceneManager.ScenesCount == 0)
+                throw new Exception("Failed to paste actor with a broken reference. No loaded scenes.");
+            actor.SetParent(SceneManager.GetScene(0), false);
+        }
+
         /// <inheritdoc />
         public string ActionString { get; }
 
@@ -60,7 +83,7 @@ namespace FlaxEditor.Actions
         /// </summary>
         /// <param name="nodes">The nodes.</param>
         /// <param name="nodeParents">The node parents.</param>
-        public void Do(out List<ActorNode> nodes, out List<ActorNode> nodeParents)
+        public virtual void Do(out List<ActorNode> nodes, out List<ActorNode> nodeParents)
         {
             // Restore objects
             var actors = Actor.FromBytes(_data, _idsMapping);
@@ -71,7 +94,6 @@ namespace FlaxEditor.Actions
                 return;
             }
             nodes = new List<ActorNode>(actors.Length);
-            Scene[] scenes = null;
             for (int i = 0; i < actors.Length; i++)
             {
                 var actor = actors[i];
@@ -79,10 +101,7 @@ namespace FlaxEditor.Actions
                 // Check if has no parent linked (broken reference eg. old parent not existing)
                 if (actor.Parent == null)
                 {
-                    // Link to the first scene root
-                    if (scenes == null)
-                        scenes = SceneManager.Scenes;
-                    actor.SetParent(scenes[0], false);
+                    LinkBrokenParentReference(actor);
                 }
 
                 var foundNode = SceneGraphFactory.FindNode(actor.ID);
@@ -139,7 +158,7 @@ namespace FlaxEditor.Actions
         }
 
         /// <inheritdoc />
-        public void Undo()
+        public virtual void Undo()
         {
             // Remove objects
             for (int i = 0; i < _nodeParents.Count; i++)
