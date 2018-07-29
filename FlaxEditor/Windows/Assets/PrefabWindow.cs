@@ -19,21 +19,6 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public sealed partial class PrefabWindow : AssetEditorWindowBase<Prefab>
     {
-        /// <summary>
-        /// The prefab hierarchy tree control.
-        /// </summary>
-        /// <seealso cref="FlaxEditor.GUI.Tree" />
-        public class PrefabTree : Tree
-        {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PrefabTree"/> class.
-            /// </summary>
-            public PrefabTree()
-            : base(true)
-            {
-            }
-        }
-
         private readonly SplitPanel _split1;
         private readonly SplitPanel _split2;
         private readonly PrefabTree _tree;
@@ -103,7 +88,7 @@ namespace FlaxEditor.Windows.Assets
             _tree.Margin = new Margin(0.0f, 0.0f, -14.0f, 0.0f); // Hide root node
             _tree.AddChild(Graph.Root.TreeNode);
             _tree.SelectedChanged += OnTreeSelectedChanged;
-            //_tree.RightClick += Tree_OnRightClick;
+            _tree.RightClick += OnTreeRightClick;
             _tree.Parent = _split1.Panel1;
 
             // Prefab viewport

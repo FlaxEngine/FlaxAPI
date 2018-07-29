@@ -438,6 +438,7 @@
     <Compile Include="Windows\Assets\ModelWindow.cs" />
     <Compile Include="Windows\Assets\PrefabWindow.Actions.cs" />
     <Compile Include="Windows\Assets\PrefabWindow.cs" />
+    <Compile Include="Windows\Assets\PrefabWindow.Hierarchy.cs" />
     <Compile Include="Windows\Assets\PrefabWindow.Selection.cs" />
     <Compile Include="Windows\Assets\PreviewsCacheWindow.cs" />
     <Compile Include="Windows\Assets\SkeletonMaskWindow.cs" />

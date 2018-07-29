@@ -115,8 +115,8 @@ namespace FlaxEditor.Windows.Assets
 
         private class CustomDeleteActorsAction : DeleteActorsAction
         {
-            public CustomDeleteActorsAction(List<SceneGraphNode> objects)
-            : base(objects)
+            public CustomDeleteActorsAction(List<SceneGraphNode> objects, bool isInverted = false)
+            : base(objects, isInverted)
             {
             }
 
