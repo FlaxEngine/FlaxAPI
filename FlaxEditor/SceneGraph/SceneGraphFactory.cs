@@ -83,7 +83,7 @@ namespace FlaxEditor.SceneGraph
             var sceneNode = new SceneNode(scene);
 
             BuildSceneTree(sceneNode);
-            
+
             return sceneNode;
         }
 
@@ -121,16 +121,17 @@ namespace FlaxEditor.SceneGraph
                 Debug.LogWarning($"Failed to create scene graph node for actor {actor.Name} (type: {actor.GetType()}).");
                 Debug.LogException(ex);
             }
-            
+
             return result;
         }
 
         private static void BuildSceneTree(ActorNode node)
         {
-            var children = node.Actor.GetChildren();
-            for (int i = 0; i < children.Length; i++)
+            var childrenCount = node.Actor.ChildrenCount;
+            for (int i = 0; i < childrenCount; i++)
             {
-                var childNode = BuildActorNode(children[i]);
+                var child = node.Actor.GetChild(i);
+                var childNode = BuildActorNode(child);
                 if (childNode != null)
                     childNode.ParentNode = node;
             }
