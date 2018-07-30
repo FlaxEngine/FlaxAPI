@@ -470,25 +470,21 @@ namespace FlaxEditor.Viewport
             // Get mouse ray and try to hit any object
             var ray = MouseRay;
             float closest = float.MaxValue;
-            // TODO: raycasting
-            //var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
+            var hit = _window.Graph.Root.RayCast(ref ray, ref closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
 
             // Update selection
-            // TODO: selecting objects with mouse
-            /*
-            var sceneEditing = Editor.Instance.SceneEditing;
             if (hit != null)
             {
                 // For child actor nodes (mesh, link or sth) we need to select it's owning actor node first or any other child node (but not a child actor)
                 if (hit is ActorChildNode actorChildNode)
                 {
                     var parentNode = actorChildNode.ParentNode;
-                    bool canChildBeSelected = sceneEditing.Selection.Contains(parentNode);
+                    bool canChildBeSelected = _window.Selection.Contains(parentNode);
                     if (!canChildBeSelected)
                     {
                         for (int i = 0; i < parentNode.ChildNodes.Count; i++)
                         {
-                            if (sceneEditing.Selection.Contains(parentNode.ChildNodes[i]))
+                            if (_window.Selection.Contains(parentNode.ChildNodes[i]))
                             {
                                 canChildBeSelected = true;
                                 break;
@@ -504,24 +500,24 @@ namespace FlaxEditor.Viewport
                 }
 
                 bool addRemove = Root.GetKey(Keys.Control);
-                bool isSelected = sceneEditing.Selection.Contains(hit);
+                bool isSelected = _window.Selection.Contains(hit);
 
                 if (addRemove)
                 {
                     if (isSelected)
-                        sceneEditing.Deselect(hit);
+                        _window.Deselect(hit);
                     else
-                        sceneEditing.Select(hit, true);
+                        _window.Select(hit, true);
                 }
                 else
                 {
-                    sceneEditing.Select(hit);
+                    _window.Select(hit);
                 }
             }
             else
             {
-                sceneEditing.Deselect();
-            }*/
+                _window.Deselect();
+            }
 
             // Keep focus
             Focus();
@@ -735,8 +731,7 @@ namespace FlaxEditor.Viewport
                 // Get mouse ray and try to hit any object
                 var ray = ConvertMouseToRay(ref location);
                 float closest = float.MaxValue;
-                // TODO: raycasting
-                /*hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
+                hit = _window.Graph.Root.RayCast(ref ray, ref closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
                 if (hit != null)
                 {
                     // Use hit location
@@ -746,7 +741,7 @@ namespace FlaxEditor.Viewport
                 {
                     // Use area in front of the viewport
                     hitLocation = ViewPosition + ViewDirection * 100;
-                }*/
+                }
             }
 
             // Drag assets

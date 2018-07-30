@@ -126,6 +126,7 @@ namespace FlaxEditor.Windows.Assets
             var before = Selection.ToArray();
             Selection.Clear();
             Selection.AddRange(nodes);
+
             OnSelectionChanged(before);
         }
 
@@ -133,19 +134,40 @@ namespace FlaxEditor.Windows.Assets
         /// Selects the specified node.
         /// </summary>
         /// <param name="node">The node.</param>
-        public void Select(SceneGraphNode node)
+        /// <param name="additive">if set to <c>true</c> will use additive mode, otherwise will clear previous selection.</param>
+        public void Select(SceneGraphNode node, bool additive = false)
         {
             if (node == null)
             {
                 Deselect();
                 return;
             }
-            if (Selection.Count == 1 && Selection[0] == node)
+
+            // Check if won't change
+            if (!additive && Selection.Count == 1 && Selection[0] == node)
+                return;
+            if (additive && Selection.Contains(node))
                 return;
 
             var before = Selection.ToArray();
-            Selection.Clear();
+            if (!additive)
+                Selection.Clear();
             Selection.Add(node);
+
+            OnSelectionChanged(before);
+        }
+
+        /// <summary>
+        /// Deselects the specified node.
+        /// </summary>
+        public void Deselect(SceneGraphNode node)
+        {
+            if (!Selection.Contains(node))
+                return;
+
+            var before = Selection.ToArray();
+            Selection.Remove(node);
+
             OnSelectionChanged(before);
         }
 
@@ -159,6 +181,7 @@ namespace FlaxEditor.Windows.Assets
 
             var before = Selection.ToArray();
             Selection.Clear();
+
             OnSelectionChanged(before);
         }
     }
