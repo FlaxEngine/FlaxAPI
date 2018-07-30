@@ -14,6 +14,12 @@ namespace FlaxEditor
     /// </summary>
     public class Undo : IDisposable
     {
+        /// <summary>
+        /// Undo system event.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        public delegate void UndoEventDelegate(IUndoAction action);
+
         internal interface IUndoInternal
         {
             /// <summary>
@@ -40,17 +46,17 @@ namespace FlaxEditor
         /// <summary>
         /// Occurs when undo operation is done.
         /// </summary>
-        public event Action UndoDone;
+        public event UndoEventDelegate UndoDone;
 
         /// <summary>
         /// Occurs when redo operation is done.
         /// </summary>
-        public event Action RedoDone;
+        public event UndoEventDelegate RedoDone;
 
         /// <summary>
         /// Occurs when action is done and appended to the <see cref="Undo"/>.
         /// </summary>
-        public event Action ActionDone;
+        public event UndoEventDelegate ActionDone;
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="Undo"/> is enabled.
@@ -323,7 +329,7 @@ namespace FlaxEditor
         /// <param name="action">The action.</param>
         protected virtual void OnAction(IUndoAction action)
         {
-            ActionDone?.Invoke();
+            ActionDone?.Invoke(action);
         }
 
         /// <summary>
@@ -332,7 +338,7 @@ namespace FlaxEditor
         /// <param name="action">The action.</param>
         protected virtual void OnUndo(IUndoAction action)
         {
-            UndoDone?.Invoke();
+            UndoDone?.Invoke(action);
         }
 
         /// <summary>
@@ -341,7 +347,7 @@ namespace FlaxEditor
         /// <param name="action">The action.</param>
         protected virtual void OnRedo(IUndoAction action)
         {
-            RedoDone?.Invoke();
+            RedoDone?.Invoke(action);
         }
 
         /// <summary>
