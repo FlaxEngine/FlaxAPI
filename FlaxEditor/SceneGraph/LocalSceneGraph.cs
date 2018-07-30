@@ -73,6 +73,7 @@ namespace FlaxEditor.SceneGraph
         public void Dispose()
         {
             MainActor = null;
+            Root.Dispose();
         }
 
         private void RegisterEvents()

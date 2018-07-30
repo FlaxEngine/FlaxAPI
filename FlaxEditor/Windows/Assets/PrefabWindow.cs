@@ -171,10 +171,10 @@ namespace FlaxEditor.Windows.Assets
             Selection.Clear();
             Select(Graph.Main);
             Graph.Root.TreeNode.ExpandAll(true);
-            
+
             _undo.Clear();
             ClearEditedFlag();
-            
+
             base.OnAssetLoaded();
         }
 
@@ -182,7 +182,7 @@ namespace FlaxEditor.Windows.Assets
         protected override void UnlinkItem()
         {
             Deselect();
-            Graph.Dispose();
+            Graph.MainActor = null;
             _viewport.Prefab = null;
             _undo?.Clear();
 
@@ -287,7 +287,7 @@ namespace FlaxEditor.Windows.Assets
                 return;
 
             _undo.Dispose();
-            _undo = null;
+            Graph.Dispose();
 
             base.Dispose();
         }
