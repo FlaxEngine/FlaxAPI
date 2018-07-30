@@ -8,6 +8,7 @@ using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
+using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Content
 {
@@ -69,11 +70,24 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
+        public override bool CanCreate(ContentFolder targetLocation)
+        {
+            return targetLocation.CanHaveAssets;
+        }
+
+        /// <inheritdoc />
         public override void Create(string outputPath, object arg)
         {
             var actor = arg as Actor;
             if (actor == null)
-                throw new ArgumentNullException(nameof(arg));
+            {
+                // Create default prefab root object
+                actor = EmptyActor.New();
+                actor.Name = "Root";
+
+                // Cleanup it after usage
+                Object.Destroy(actor, 20.0f);
+            }
 
             Editor.CreatePrefab(outputPath, actor, true);
         }
