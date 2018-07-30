@@ -121,7 +121,12 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			get; set;
 #else
-            get { return Internal_GetScripts(unmanagedPtr); }
+            get
+            {
+                if (Internal_GetScriptsCount(unmanagedPtr) == 0)
+                    return Enumerable.Empty<Script>() as Script[];
+                return Internal_GetScripts(unmanagedPtr);
+            }
             internal set { }
 #endif
         }
