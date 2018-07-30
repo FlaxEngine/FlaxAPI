@@ -704,8 +704,7 @@ namespace FlaxEditor.Viewport
 
         private void Spawn(Actor actor)
         {
-            throw new NotImplementedException("spawning actors");
-            //Editor.Instance.SceneEditing.Spawn(actor);
+            _window.Spawn(actor);
         }
 
         private void Spawn(Type item, SceneGraphNode hit, ref Vector3 hitLocation)

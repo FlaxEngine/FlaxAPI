@@ -158,10 +158,13 @@ namespace FlaxEditor.Windows.Assets
             ((ActorNode)Selection[0]).TreeNode.StartRenaming();
         }
 
-        private void Spawn(Type type)
+        /// <summary>
+        /// Spawns the specified actor to the prefab (adds actor to root).
+        /// </summary>
+        /// <param name="actor">The actor.</param>
+        public void Spawn(Actor actor)
         {
-            // Create actor
-            Actor actor = (Actor)FlaxEngine.Object.New(type);
+            // Link to parent
             Actor parentActor = null;
             if (Selection.Count > 0 && Selection[0] is ActorNode actorNode)
             {
@@ -178,14 +181,32 @@ namespace FlaxEditor.Windows.Assets
                 actor.Transform = parentActor.Transform;
 
                 // Rename actor to identify it easly
-                actor.Name = StringUtils.IncrementNameNumber(type.Name, x => parentActor.GetChild(x) == null);
+                actor.Name = StringUtils.IncrementNameNumber(actor.GetType().Name, x => parentActor.GetChild(x) == null);
             }
 
             // Spawn it
             Spawn(actor, parentActor);
         }
 
-        private void Spawn(Actor actor, Actor parent)
+        /// <summary>
+        /// Spawns the actor of the specified type to the prefab (adds actor to root).
+        /// </summary>
+        /// <param name="type">The actor type.</param>
+        public void Spawn(Type type)
+        {
+            // Create actor
+            Actor actor = (Actor)FlaxEngine.Object.New(type);
+
+            // Spawn it
+            Spawn(actor);
+        }
+
+        /// <summary>
+        /// Spawns the specified actor.
+        /// </summary>
+        /// <param name="actor">The actor.</param>
+        /// <param name="parent">The parent.</param>
+        public void Spawn(Actor actor, Actor parent)
         {
             if (actor == null)
                 throw new ArgumentNullException(nameof(actor));
@@ -193,12 +214,16 @@ namespace FlaxEditor.Windows.Assets
                 throw new ArgumentNullException(nameof(parent));
 
             // Link it
-            actor.Parent = parent;
+            actor.SetParent(parent);
 
             // Peek spawned node
             var actorNode = SceneGraphFactory.FindNode(actor.ID) as ActorNode ?? SceneGraphFactory.BuildActorNode(actor);
             if (actorNode == null)
                 throw new InvalidOperationException("Failed to create scene node for the spawned actor.");
+            var parentNode = SceneGraphFactory.FindNode(parent.ID) as ActorNode;
+            if (parentNode == null)
+                throw new InvalidOperationException("Missing scene graph node for the spawned parent actor.");
+            actorNode.ParentNode = parentNode;
 
             // Call post spawn action (can possibly setup custom default values)
             actorNode.PostSpawn();
