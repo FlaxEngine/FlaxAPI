@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
@@ -35,6 +36,7 @@ namespace FlaxEditor.Windows.Assets
         private Undo _undo;
         private bool _focusCamera;
         private bool _isUpdatingSelection;
+        private DateTime _modifiedTime = DateTime.MinValue;
 
         /// <summary>
         /// Gets the prefab hierarchy tree control.
@@ -55,6 +57,16 @@ namespace FlaxEditor.Windows.Assets
         /// The local scene nodes graph used by the prefab editor.
         /// </summary>
         public readonly LocalSceneGraph Graph;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether use live reloading for the prefab changes (applies prefab changes on modification by auto).
+        /// </summary>
+        public bool LiveReload { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets the live reload timeout. It defines the time to apply prefab changes after modification.
+        /// </summary>
+        public TimeSpan LiveReloadTimeout { get; set; } = TimeSpan.FromMilliseconds(100);
 
         /// <inheritdoc />
         public PrefabWindow(Editor editor, AssetItem item)
@@ -99,7 +111,7 @@ namespace FlaxEditor.Windows.Assets
             _viewport.TransformGizmo.ModeChanged += UpdateToolstrip;
             _viewport.ViewWidgetButtonMenu.AddSeparator();
             _viewport.ViewWidgetButtonMenu.AddButton("Show Default Scene", () => _viewport.ShowDefaultSceneActors = !_viewport.ShowDefaultSceneActors).SetChecked(true).SetAutoCheck(true).LinkTooltip("Shows/hides the default preview scene actors (sky light, directional light and sky)");
-            
+
             // Prefab properties editor
             _propertiesEditor = new CustomEditorPresenter(_undo);
             _propertiesEditor.Panel.Parent = _split2.Panel2;
@@ -114,6 +126,8 @@ namespace FlaxEditor.Windows.Assets
             _toolStripTranslate = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Translate32"), () => _viewport.TransformGizmo.ActiveMode = TransformGizmo.Mode.Translate).LinkTooltip("Change Gizmo tool mode to Translate (1)");
             _toolStripRotate = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Rotate32"), () => _viewport.TransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate).LinkTooltip("Change Gizmo tool mode to Rotate (2)");
             _toolStripScale = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Scale32"), () => _viewport.TransformGizmo.ActiveMode = TransformGizmo.Mode.Scale).LinkTooltip("Change Gizmo tool mode to Scale (3)");
+            _toolstrip.AddSeparator();
+            _toolstrip.AddButton(Editor.UI.GetIcon("Reload32"), () => LiveReload = !LiveReload).SetChecked(true).SetAutoCheck(true).LinkTooltip("Live changes preview (applies prefab changes on modification by auto)");
 
             Editor.Prefabs.PrefabApplied += OnPrefabApplied;
         }
@@ -169,6 +183,14 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
+        protected override void OnEditedState()
+        {
+            base.OnEditedState();
+
+            _modifiedTime = DateTime.Now;
+        }
+
+        /// <inheritdoc />
         protected override void OnAssetLoaded()
         {
             _viewport.Prefab = _asset;
@@ -200,14 +222,20 @@ namespace FlaxEditor.Windows.Assets
         {
             base.Update(deltaTime);
 
+            // Auto fit
             if (_focusCamera && _viewport.Task.FrameCount > 1)
             {
                 _focusCamera = false;
 
-                // Auto fit
                 BoundingSphere bounds;
                 Editor.GetActorEditorSphere(_viewport.Instance, out bounds);
                 _viewport.ViewPosition = bounds.Center - _viewport.ViewDirection * (bounds.Radius * 1.2f);
+            }
+
+            // Auto save
+            if (IsEdited && LiveReload && DateTime.Now - _modifiedTime > LiveReloadTimeout)
+            {
+                Save();
             }
         }
 
