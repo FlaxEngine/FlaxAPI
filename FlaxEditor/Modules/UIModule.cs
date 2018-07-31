@@ -338,7 +338,7 @@ namespace FlaxEditor.Modules
             style.ProgressNormal = Color.FromBgra(0xFF0ad328);
 
             // Color picking
-            ColorValueBox.ShowPickColorDialog += (initialValue, colorChanged, useDynamicEditing) => new ColorPickerDialog(initialValue, colorChanged, useDynamicEditing).Show();
+            ColorValueBox.ShowPickColorDialog += ShowPickColorDialog;
 
             // Font
             var primaryFont = FlaxEngine.Content.LoadInternal<FontAsset>(EditorAssets.PrimaryFont);
@@ -385,6 +385,13 @@ namespace FlaxEditor.Modules
 
             // Set as default
             Style.Current = style;
+        }
+
+        private IColorPickerDialog ShowPickColorDialog(Color initialValue, ColorValueBox.ColorPickerEvent colorChanged, bool useDynamicEditing)
+        {
+            var dialog = new ColorPickerDialog(initialValue, colorChanged, useDynamicEditing);
+            dialog.Show();
+            return dialog;
         }
 
         private void InitMainMenu(FlaxEngine.GUI.RootControl mainWindow)

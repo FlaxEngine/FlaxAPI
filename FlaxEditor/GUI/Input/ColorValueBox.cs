@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEditor.GUI.Dialogs;
 
 namespace FlaxEngine.GUI
 {
@@ -24,12 +25,18 @@ namespace FlaxEngine.GUI
         /// <param name="initialValue">The initial value.</param>
         /// <param name="colorChanged">The color changed event.</param>
         /// <param name="useDynamicEditing">True if allow dynamic value editing (slider-like usage), otherwise will fire color change event only on editing end.</param>
-        public delegate void ShowPickColorDialogDelegate(Color initialValue, ColorPickerEvent colorChanged, bool useDynamicEditing = true);
+        /// <returns>The created color picker dialog or null if failed.</returns>
+        public delegate IColorPickerDialog ShowPickColorDialogDelegate(Color initialValue, ColorPickerEvent colorChanged, bool useDynamicEditing = true);
 
         /// <summary>
         /// Shows picking color dialog (see <see cref="ShowPickColorDialogDelegate"/>).
         /// </summary>
         public static ShowPickColorDialogDelegate ShowPickColorDialog;
+
+        /// <summary>
+        /// The current opened dialog.
+        /// </summary>
+        protected IColorPickerDialog _currentDialog;
 
         /// <summary>
         /// True if slider is in use.
@@ -116,7 +123,7 @@ namespace FlaxEngine.GUI
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             // Show color picker dialog
-            ShowPickColorDialog?.Invoke(_value, OnColorChanged);
+            _currentDialog = ShowPickColorDialog?.Invoke(_value, OnColorChanged);
 
             return true;
         }
@@ -131,6 +138,18 @@ namespace FlaxEngine.GUI
 
             _isSliding = sliding;
             Value = color;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            if (_currentDialog != null)
+            {
+                _currentDialog.ClosePicker();
+                _currentDialog = null;
+            }
+
+            base.Dispose();
         }
     }
 }

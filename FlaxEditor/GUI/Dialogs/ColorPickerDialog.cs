@@ -1,16 +1,26 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
-using System;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Dialogs
 {
     /// <summary>
+    /// The base interface for the color picker dialogs.
+    /// </summary>
+    public interface IColorPickerDialog
+    {
+        /// <summary>
+        /// Closes the picker (similar to value editing cancel).
+        /// </summary>
+        void ClosePicker();
+    }
+
+    /// <summary>
     /// Color picking dialog.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Dialogs.Dialog" />
-    public class ColorPickerDialog : Dialog
+    public class ColorPickerDialog : Dialog, IColorPickerDialog
     {
         private const float BUTTONS_WIDTH = 60.0f;
         private const float PICKER_MARGIN = 6.0f;
@@ -176,7 +186,7 @@ namespace FlaxEditor.GUI.Dialogs
         private void OnCancelClicked()
         {
             // Restore color
-            if(_useDynamicEditing)
+            if (_useDynamicEditing)
                 _onChangedOk?.Invoke(_oldColor, false);
 
             Close(DialogResult.Cancel);
@@ -259,6 +269,12 @@ namespace FlaxEditor.GUI.Dialogs
             ((WindowRootControl)Root).Window.OnLostFocus += OnCancelClicked;
 
             base.OnShow();
+        }
+
+        /// <inheritdoc />
+        public void ClosePicker()
+        {
+            OnCancelClicked();
         }
     }
 }
