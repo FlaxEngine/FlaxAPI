@@ -131,7 +131,21 @@ namespace FlaxEditor.CustomEditors.Dedicated
         {
             if (prefab.ID == _linkedPrefabId)
             {
-                Presenter.BuildLayout();
+                // This works fine but in PrefabWindow when using live update it crashes on using color picker/float slider because UI is being rebuilded
+                //Presenter.BuildLayoutOnUpdate();
+
+                // Better way is to just update the rreference value using the new default instance of the prefab, created after changes apply
+                if (prefab && !prefab.WaitForLoaded())
+                {
+                    var actor = (Actor)Values[0];
+                    var prefabObjectId = actor.PrefabObjectID;
+                    var prefabInstance = Prefab.Internal_GetDefaultInstance(prefab.unmanagedPtr, ref prefabObjectId);
+                    if (prefabInstance != null)
+                    {
+                        Values.SetReferenceValue(prefabInstance);
+                        RefreshReferenceValue();
+                    }
+                }
             }
         }
 
