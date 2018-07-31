@@ -40,6 +40,24 @@ namespace FlaxEditor.Viewport.Previews
         public PostFxVolume PostFxVolume;
 
         /// <summary>
+        /// Gets or sets a value indicating whether show default scene actors (sky, env probe, skylight, directional light, etc.).
+        /// </summary>
+        public bool ShowDefaultSceneActors
+        {
+            get => PreviewLight.IsActive;
+            set
+            {
+                if (ShowDefaultSceneActors != value)
+                {
+                    PreviewLight.IsActive = value;
+                    EnvProbe.IsActive = value;
+                    Sky.IsActive = value;
+                    SkyLight.IsActive = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="AssetPreview"/> class.
         /// </summary>
         /// <param name="useWidgets">if set to <c>true</c> use widgets.</param>

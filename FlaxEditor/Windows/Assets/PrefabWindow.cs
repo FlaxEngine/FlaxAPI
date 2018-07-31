@@ -97,7 +97,9 @@ namespace FlaxEditor.Windows.Assets
                 Parent = _split2.Panel1
             };
             _viewport.TransformGizmo.ModeChanged += UpdateToolstrip;
-
+            _viewport.ViewWidgetButtonMenu.AddSeparator();
+            _viewport.ViewWidgetButtonMenu.AddButton("Show Default Scene", () => _viewport.ShowDefaultSceneActors = !_viewport.ShowDefaultSceneActors).SetChecked(true).SetAutoCheck(true).LinkTooltip("Shows/hides the default preview scene actors (sky light, directional light and sky)");
+            
             // Prefab properties editor
             _propertiesEditor = new CustomEditorPresenter(_undo);
             _propertiesEditor.Panel.Parent = _split2.Panel2;

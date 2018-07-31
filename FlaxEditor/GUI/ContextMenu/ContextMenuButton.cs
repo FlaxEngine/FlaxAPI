@@ -26,7 +26,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The button text.
         /// </summary>
-        public string Text { get; set; }
+        public string Text;
 
         /// <summary>
         /// The button short keys information (eg. 'Ctrl+C').
@@ -37,6 +37,16 @@ namespace FlaxEngine.GUI
         /// Item icon (best is 16x16).
         /// </summary>
         public Sprite Icon;
+        
+        /// <summary>
+        /// The checked state.
+        /// </summary>
+        public bool Checked;
+
+        /// <summary>
+        /// The automatic check mode.
+        /// </summary>
+        public bool AutoCheck;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContextMenuButton"/> class.
@@ -49,6 +59,28 @@ namespace FlaxEngine.GUI
         {
             Text = text;
             Shortkeys = shortKeys;
+        }
+
+        /// <summary>
+        /// Sets the automatic check mode. In auto check mode the button sets the check sprite as an icon when user clicks it.
+        /// </summary>
+        /// <param name="value">True if use auto check, otherwise false.</param>
+        /// <returns>This button.</returns>
+        public ContextMenuButton SetAutoCheck(bool value)
+        {
+            AutoCheck = value;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the checked state.
+        /// </summary>
+        /// <param name="value">True if check it, otherwise false.</param>
+        /// <returns>This button.</returns>
+        public ContextMenuButton SetChecked(bool value)
+        {
+            Checked = value;
+            return this;
         }
 
         /// <inheritdoc />
@@ -74,8 +106,9 @@ namespace FlaxEngine.GUI
 
             // Draw icon
             const float iconSize = 14;
-            if (Icon.IsValid)
-                Render2D.DrawSprite(Icon, new Rectangle(-iconSize - 1, (Height - iconSize) / 2, iconSize, iconSize));
+            var icon = Checked ? Style.Current.CheckBoxTick : Icon;
+            if (icon.IsValid)
+                Render2D.DrawSprite(icon, new Rectangle(-iconSize - 1, (Height - iconSize) / 2, iconSize, iconSize));
         }
 
         /// <inheritdoc />
@@ -113,6 +146,12 @@ namespace FlaxEngine.GUI
 
                 // Close topmost context menu
                 ParentContextMenu?.TopmostCM.Hide();
+
+                // Auto check logic
+                if (AutoCheck)
+                {
+                    Checked = !Checked;
+                }
 
                 // Fire event
                 Clicked?.Invoke();

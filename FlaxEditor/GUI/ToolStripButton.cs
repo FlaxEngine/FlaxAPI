@@ -39,8 +39,9 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// Gets or sets the button text.
         /// </summary>
-        public string Text {
-            get { return _text; }
+        public string Text
+        {
+            get => _text;
             set
             {
                 _text = value;
@@ -53,7 +54,7 @@ namespace FlaxEditor.GUI
         /// </summary>
         public Sprite Icon
         {
-            get { return _icon; }
+            get => _icon;
             set
             {
                 _icon = value;
@@ -75,7 +76,7 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// Sets the automatic check mode.
         /// </summary>
-        /// <param name="value">True if use ato check, otherwise false.</param>
+        /// <param name="value">True if use auto check, otherwise false.</param>
         /// <returns>This button.</returns>
         public ToolStripButton SetAutoCheck(bool value)
         {
