@@ -313,6 +313,24 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Refreshes the reference value of the container.
+        /// </summary>
+        /// <param name="instanceValue">The parent value.</param>
+        public virtual void RefreshReferenceValue(object instanceValue)
+        {
+            if (Info is PropertyInfo propertyInfo)
+            {
+                _referenceValue = propertyInfo.GetValue(instanceValue);
+            }
+            else
+            {
+                _referenceValue = ((FieldInfo)Info).GetValue(instanceValue);
+            }
+
+            _hasReferenceValue = true;
+        }
+
+        /// <summary>
         /// Clears the reference value of the container.
         /// </summary>
         public virtual void ClearReferenceValue()

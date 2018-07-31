@@ -97,5 +97,11 @@ namespace FlaxEditor.CustomEditors
                 _setter(v, i, _getter(v, i));
             }
         }
+
+        /// <inheritdoc />
+        public override void RefreshReferenceValue(object instanceValue)
+        {
+            // Not supported
+        }
     }
 }

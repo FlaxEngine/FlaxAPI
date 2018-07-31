@@ -93,5 +93,15 @@ namespace FlaxEditor.CustomEditors
                 v[Key] = this[i];
             }
         }
+
+        /// <inheritdoc />
+        public override void RefreshReferenceValue(object instanceValue)
+        {
+            if (instanceValue is IDictionary v)
+            {
+                _referenceValue = v[Key];
+                _hasReferenceValue = true;
+            }
+        }
     }
 }

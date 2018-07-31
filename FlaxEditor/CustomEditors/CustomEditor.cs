@@ -344,6 +344,28 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Updates the reference value assigned to the editor's values container. Sends the event down the custom editors hierarchy to propagate the change.
+        /// </summary>
+        /// <remarks>
+        /// Has no effect on editors that don't have reference value assigned.
+        /// </remarks>
+        public void RefreshReferenceValue()
+        {
+            if (!Values.HasReferenceValue)
+                return;
+
+            if (ParentEditor?.Values?.HasReferenceValue ?? false)
+            {
+                Values.RefreshReferenceValue(ParentEditor.Values.ReferenceValue);
+            }
+
+            for (int i = 0; i < ChildrenEditors.Count; i++)
+            {
+                ChildrenEditors[i].RefreshReferenceValue();
+            }
+        }
+
+        /// <summary>
         /// Sets the editor value to the reference value (if assigned).
         /// </summary>
         public void SetValueToReference()

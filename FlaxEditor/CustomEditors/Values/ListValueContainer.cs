@@ -95,5 +95,15 @@ namespace FlaxEditor.CustomEditors
                 v[Index] = this[i];
             }
         }
+
+        /// <inheritdoc />
+        public override void RefreshReferenceValue(object instanceValue)
+        {
+            if (instanceValue is IList v)
+            {
+                _referenceValue = v[Index];
+                _hasReferenceValue = true;
+            }
+        }
     }
 }
