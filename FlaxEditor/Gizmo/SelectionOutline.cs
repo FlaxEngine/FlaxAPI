@@ -51,7 +51,7 @@ namespace FlaxEditor.Gizmo
         }
 
         /// <inheritdoc />
-        public override bool CanRender => _outlineMaterial && _outlineMaterial.IsLoaded && SelectiongGetter().Count > 0;
+        public override bool CanRender => _material && _outlineMaterial.IsLoaded && SelectiongGetter().Count > 0;
 
         /// <inheritdoc />
         public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
