@@ -59,10 +59,10 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets the factor that controls how much this light will contribute idnirect lighting. When set to 0, there is no GI from the light. The default value is 1.
+        /// Gets or sets the factor that controls how much this light will contribute indirect lighting. When set to 0, there is no GI from the light. The default value is 1.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(40), Limit(0, 100, 0.1f), EditorDisplay("Light", "Indirect Lighting Intensity"), Tooltip("Controls how much this light will contribute idnirect lighting. When set to 0, there is no GI from the light. The default value is 1.")]
+        [EditorOrder(40), Limit(0, 100, 0.1f), EditorDisplay("Light", "Indirect Lighting Intensity"), Tooltip("Controls how much this light will contribute indirect lighting. When set to 0, there is no GI from the light. The default value is 1.")]
         public float IndirectLightingIntensity
         {
 #if UNIT_TEST_COMPILANT

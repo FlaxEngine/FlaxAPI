@@ -53,9 +53,9 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Controls how much all lights will contribute idnirect lighting.
+        /// Controls how much all lights will contribute indirect lighting.
         /// </summary>
-        [EditorOrder(0), Limit(0, 100.0f, 0.1f), Tooltip("Controls how much all lights will contribute idnirect lighting.")]
+        [EditorOrder(0), Limit(0, 100.0f, 0.1f), Tooltip("Controls how much all lights will contribute indirect lighting.")]
         public float IndirectLightingIntensity;
 
         /// <summary>
