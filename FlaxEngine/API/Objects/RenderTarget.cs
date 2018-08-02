@@ -42,7 +42,7 @@ namespace FlaxEngine.Rendering
             }
         }
 
-        private static readonly List<Temporary> _tmpRenderTargets = new List<Temporary>(8);
+        private static readonly List<Temporary> Pool = new List<Temporary>(8);
 
         /// <summary>
         /// The timout value for unused temporary render targets (in seconds).
@@ -62,17 +62,17 @@ namespace FlaxEngine.Rendering
         public static RenderTarget GetTemporary(PixelFormat format, int width, int height, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget, MSAALevel msaa = MSAALevel.None)
         {
             // Try reuse
-            for (int i = 0; i < _tmpRenderTargets.Count; i++)
+            for (int i = 0; i < Pool.Count; i++)
             {
-                if (_tmpRenderTargets[i].TryReuse(format, width, height, flags, msaa))
+                if (Pool[i].TryReuse(format, width, height, flags, msaa))
                 {
-                    return _tmpRenderTargets[i].OnUse();
+                    return Pool[i].OnUse();
                 }
             }
 
             // Allocate new
             var target = new Temporary(format, width, height, flags, msaa);
-            _tmpRenderTargets.Add(target);
+            Pool.Add(target);
             return target.OnUse();
         }
 
@@ -85,11 +85,11 @@ namespace FlaxEngine.Rendering
         /// <exception cref="InvalidOperationException"></exception>
         public static void ReleaseTemporary(RenderTarget temp)
         {
-            for (int i = 0; i < _tmpRenderTargets.Count; i++)
+            for (int i = 0; i < Pool.Count; i++)
             {
-                if (_tmpRenderTargets[i].Texture == temp)
+                if (Pool[i].Texture == temp)
                 {
-                    _tmpRenderTargets[i].IsFree = true;
+                    Pool[i].IsFree = true;
                     return;
                 }
             }
@@ -108,13 +108,13 @@ namespace FlaxEngine.Rendering
 
             // Flush old unused render targets
             var time = Time.UnscaledGameTime;
-            for (int i = 0; i < _tmpRenderTargets.Count; i++)
+            for (int i = 0; i < Pool.Count; i++)
             {
-                if (time - _tmpRenderTargets[i].LastUsage >= UnusedTemporaryRenderTargetLifeTime)
+                if (time - Pool[i].LastUsage >= UnusedTemporaryRenderTargetLifeTime)
                 {
                     // Recycle
-                    Destroy(_tmpRenderTargets[i].Texture);
-                    _tmpRenderTargets.RemoveAt(i);
+                    Destroy(Pool[i].Texture);
+                    Pool.RemoveAt(i);
                 }
             }
 
