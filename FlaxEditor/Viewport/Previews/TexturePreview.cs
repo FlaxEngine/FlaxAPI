@@ -241,6 +241,9 @@ namespace FlaxEditor.Viewport.Previews
         }
 
         private ChannelFlags _channelFlags = ChannelFlags.All;
+        private bool _usePointSampler = false;
+        private float _mipLevel = -1;
+        private ContextMenu _mipWidgetMenu;
 
         /// <summary>
         /// The preview material instance used to draw texture.
@@ -263,6 +266,38 @@ namespace FlaxEditor.Viewport.Previews
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether use point sampler when drawing the texture. The default value is false.
+        /// </summary>
+        public bool UsePointSampler
+        {
+            get => _usePointSampler;
+            set
+            {
+                if (_usePointSampler != value)
+                {
+                    _usePointSampler = value;
+                    _previewMaterial.GetParam("PointSampler").Value = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the mip level to show. The default value is -1.
+        /// </summary>
+        public float MipLevel
+        {
+            get => _mipLevel;
+            set
+            {
+                if (!Mathf.NearEqual(_mipLevel, value))
+                {
+                    _mipLevel = value;
+                    _previewMaterial.GetParam("Mip").Value = value;
+                }
+            }
+        }
+
         /// <inheritdoc />
         /// <param name="useWidgets">True if show viewport widgets.</param>
         protected TexturePreviewCustomBase(bool useWidgets)
@@ -272,7 +307,7 @@ namespace FlaxEditor.Viewport.Previews
             if (baseMaterial == null)
                 throw new FlaxException("Cannot load texture preview material.");
             _previewMaterial = baseMaterial.CreateVirtualInstance();
-            if(_previewMaterial == null)
+            if (_previewMaterial == null)
                 throw new FlaxException("Failed to create virtual material instance for preview material.");
 
             // Add widgets
@@ -311,6 +346,19 @@ namespace FlaxEditor.Viewport.Previews
                 channelA.OnToggle += button => ViewChannels = button.Checked ? ViewChannels | ChannelFlags.Alpha : (ViewChannels & ~ChannelFlags.Alpha);
                 //
                 channelsWidget.Parent = this;
+
+                // Mip widget
+                var mipWidget = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperLeft);
+                _mipWidgetMenu = new ContextMenu();
+                _mipWidgetMenu.VisibleChanged += OnMipWidgetMenuOnVisibleChanged;
+                _mipWidgetMenu.AddButton("Loading...");
+                var mipWidgetButton = new ViewportWidgetButton("Mip", Sprite.Invalid, _mipWidgetMenu)
+                {
+                    TooltipText = "The mip level to show. The default is -1.",
+                    Parent = mipWidget
+                };
+                //
+                mipWidget.Parent = this;
             }
 
             // Wait for base (don't want to async material parameters set due to async loading)
@@ -325,6 +373,29 @@ namespace FlaxEditor.Viewport.Previews
         {
             _previewMaterial.GetParam("Texture").Value = value;
             UpdateTextureRect();
+        }
+
+        private void OnMipWidgetMenuOnVisibleChanged(Control control)
+        {
+            if (!control.Visible)
+                return;
+
+            var textureObj = _previewMaterial.GetParam("Texture").Value;
+
+            if (textureObj is TextureBase texture && !texture.WaitForLoaded())
+            {
+                _mipWidgetMenu.ItemsContainer.DisposeChildren();
+                var mipLevels = texture.MipLevels;
+                for (int i = -1; i < mipLevels; i++)
+                {
+                    _mipWidgetMenu.AddButton(i.ToString(), OnMipWidgetClicked).Tag = i;
+                }
+            }
+        }
+
+        private void OnMipWidgetClicked(ContextMenuButton button)
+        {
+            MipLevel = (int)button.Tag;
         }
 
         private void UpdateMask()
