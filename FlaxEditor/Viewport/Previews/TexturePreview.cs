@@ -244,6 +244,8 @@ namespace FlaxEditor.Viewport.Previews
         private bool _usePointSampler = false;
         private float _mipLevel = -1;
         private ContextMenu _mipWidgetMenu;
+        private ContextMenuButton _filterWidgetPointButton;
+        private ContextMenuButton _filterWidgetLinearButton;
 
         /// <summary>
         /// The preview material instance used to draw texture.
@@ -359,10 +361,33 @@ namespace FlaxEditor.Viewport.Previews
                 };
                 //
                 mipWidget.Parent = this;
+
+                // Filter widget
+                var filterWidget = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperLeft);
+                var filterWidgetMenu = new ContextMenu();
+                filterWidgetMenu.VisibleChanged += OnFilterWidgetMenuVisibleChanged;
+                _filterWidgetPointButton = filterWidgetMenu.AddButton("Point", () => UsePointSampler = true);
+                _filterWidgetLinearButton = filterWidgetMenu.AddButton("Linear", () => UsePointSampler = false);
+                var filterWidgetButton = new ViewportWidgetButton("Filter", Sprite.Invalid, filterWidgetMenu)
+                {
+                    TooltipText = "The texture preview filtering mode. The default is Linear.",
+                    Parent = filterWidget
+                };
+                //
+                filterWidget.Parent = this;
             }
 
             // Wait for base (don't want to async material parameters set due to async loading)
             baseMaterial.WaitForLoaded();
+        }
+
+        private void OnFilterWidgetMenuVisibleChanged(Control control)
+        {
+            if (!control.Visible)
+                return;
+
+            _filterWidgetPointButton.Checked = UsePointSampler;
+            _filterWidgetLinearButton.Checked = !UsePointSampler;
         }
 
         /// <summary>
@@ -388,7 +413,9 @@ namespace FlaxEditor.Viewport.Previews
                 var mipLevels = texture.MipLevels;
                 for (int i = -1; i < mipLevels; i++)
                 {
-                    _mipWidgetMenu.AddButton(i.ToString(), OnMipWidgetClicked).Tag = i;
+                    var button = _mipWidgetMenu.AddButton(i.ToString(), OnMipWidgetClicked);
+                    button.Tag = i;
+                    button.Checked = Mathf.Abs(MipLevel - i) < 0.9f;
                 }
             }
         }
