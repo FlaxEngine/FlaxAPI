@@ -215,7 +215,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Sample Texture",
                 Description = "Custom texture sampling",
                 Flags = NodeFlags.MaterialOnly,
-                Size = new Vector2(150, 110),
+                Size = new Vector2(160, 110),
                 DefaultValues = new object[]
                 {
                     0,
@@ -224,11 +224,11 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "Texture", true, ConnectionType.Object, 0),
-                    NodeElementArchetype.Factory.Input(1, "UVs", true, ConnectionType.Vector2, 1),
+                    NodeElementArchetype.Factory.Input(1, "UVs", true, ConnectionType.Vector, 1),
                     NodeElementArchetype.Factory.Input(2, "Level", true, ConnectionType.Float, 2, 1),
                     NodeElementArchetype.Factory.Input(3, "Offset", true, ConnectionType.Vector2, 3),
                     NodeElementArchetype.Factory.Output(0, "Color", ConnectionType.Vector4, 4),
-                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 4, "Sampler"),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 4 + 4, "Sampler"),
                     NodeElementArchetype.Factory.ComboBox(50, Surface.Constants.LayoutOffsetY * 4, 100, 0, typeof(CommonSamplerType))
                 }
             },
