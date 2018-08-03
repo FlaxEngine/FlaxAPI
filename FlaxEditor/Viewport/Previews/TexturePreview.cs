@@ -198,48 +198,48 @@ namespace FlaxEditor.Viewport.Previews
     }
 
     /// <summary>
+    /// Texture channel flags.
+    /// </summary>
+    [Flags]
+    public enum ChannelFlags
+    {
+        /// <summary>
+        /// The none.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// The red channel.
+        /// </summary>
+        Red = 1,
+
+        /// <summary>
+        /// The green channel.
+        /// </summary>
+        Green = 2,
+
+        /// <summary>
+        /// The blue channel.
+        /// </summary>
+        Blue = 4,
+
+        /// <summary>
+        /// The alpha channel.
+        /// </summary>
+        Alpha = 8,
+
+        /// <summary>
+        /// All texture channels.
+        /// </summary>
+        All = Red | Green | Blue | Alpha
+    }
+
+    /// <summary>
     /// Base class for texture previews with custom drawing features. Uses in-build postFx material to render a texture.
     /// </summary>
     /// <seealso cref="TexturePreviewBase" />
     public abstract class TexturePreviewCustomBase : TexturePreviewBase
     {
-        /// <summary>
-        /// Texture channel flags.
-        /// </summary>
-        [Flags]
-        public enum ChannelFlags
-        {
-            /// <summary>
-            /// The none.
-            /// </summary>
-            None = 0,
-
-            /// <summary>
-            /// The red channel.
-            /// </summary>
-            Red = 1,
-
-            /// <summary>
-            /// The green channel.
-            /// </summary>
-            Green = 2,
-
-            /// <summary>
-            /// The blue channel.
-            /// </summary>
-            Blue = 4,
-
-            /// <summary>
-            /// The alpha channel.
-            /// </summary>
-            Alpha = 8,
-
-            /// <summary>
-            /// All texture channels.
-            /// </summary>
-            All = Red | Green | Blue | Alpha
-        }
-
         private ChannelFlags _channelFlags = ChannelFlags.All;
         private bool _usePointSampler = false;
         private float _mipLevel = -1;
@@ -353,7 +353,6 @@ namespace FlaxEditor.Viewport.Previews
                 var mipWidget = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperLeft);
                 _mipWidgetMenu = new ContextMenu();
                 _mipWidgetMenu.VisibleChanged += OnMipWidgetMenuOnVisibleChanged;
-                _mipWidgetMenu.AddButton("Loading...");
                 var mipWidgetButton = new ViewportWidgetButton("Mip", Sprite.Invalid, _mipWidgetMenu)
                 {
                     TooltipText = "The mip level to show. The default is -1.",
@@ -443,6 +442,7 @@ namespace FlaxEditor.Viewport.Previews
         protected override void PerformLayoutSelf()
         {
             base.PerformLayoutSelf();
+
             ViewportWidgetsContainer.ArrangeWidgets(this);
         }
 
