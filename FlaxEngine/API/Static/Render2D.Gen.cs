@@ -266,7 +266,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawTexture1(Object.GetUnmanagedPtr(t), ref rect, ref color, withAlpha);
+            Internal_DrawTexture3(Object.GetUnmanagedPtr(t), ref rect, ref color, withAlpha);
 #endif
         }
 
@@ -286,7 +286,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawTexture2(Object.GetUnmanagedPtr(t), ref rect, ref color, withAlpha);
+            Internal_DrawTexture4(Object.GetUnmanagedPtr(t), ref rect, ref color, withAlpha);
 #endif
         }
 
@@ -427,6 +427,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawTexture2(IntPtr t, ref Rectangle rect, ref Color color, bool withAlpha);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawTexture3(IntPtr t, ref Rectangle rect, ref Color color, bool withAlpha);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawTexture4(IntPtr t, ref Rectangle rect, ref Color color, bool withAlpha);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawLine(ref Vector2 p1, ref Vector2 p2, ref Color color, float thickness, bool withAlpha);
