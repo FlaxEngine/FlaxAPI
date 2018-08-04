@@ -143,6 +143,33 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
+        /// Gets or sets texture surface depth (in pixels). Used only by volume textures. For 1D and 2D textures it defaults to 1.
+        /// </summary>
+        [UnmanagedCall]
+        public int Depth
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetDepth(unmanagedPtr); }
+            set { Internal_SetDepth(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets or sets texture array size.
+        /// </summary>
+        [UnmanagedCall]
+        public int ArraySize
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetArraySize(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
         /// Gets or sets texture surface size (in pixels).
         /// </summary>
         [UnmanagedCall]
@@ -157,7 +184,7 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Initializes render target texture.
+        /// Initializes render target texture (2D texture or 2D texture array).
         /// </summary>
         /// <param name="format">The surface pixels format.</param>
         /// <param name="width">The surface width in pixels.</param>
@@ -165,16 +192,59 @@ namespace FlaxEngine.Rendering
         /// <param name="flags">The surface usage flags.</param>
         /// <param name="mipMaps">Number of mipmaps for the texture. Default is 1. Use 0 to allocate full mip chain.</param>
         /// <param name="multiSampleLevel">The surface multisampling level.</param>
+        /// <param name="arraySize">Size of the texture 2D array. Default is 1.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void Init(PixelFormat format, int width, int height, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget, int mipMaps = 1, MSAALevel multiSampleLevel = MSAALevel.None)
+        public void Init(PixelFormat format, int width, int height, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget, int mipMaps = 1, MSAALevel multiSampleLevel = MSAALevel.None, int arraySize = 1)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_Init(unmanagedPtr, format, width, height, flags, mipMaps, multiSampleLevel);
+            Internal_Init(unmanagedPtr, format, width, height, flags, mipMaps, multiSampleLevel, arraySize);
+#endif
+        }
+
+        /// <summary>
+        /// Initializes render target texture (cube map).
+        /// </summary>
+        /// <param name="format">The surface pixels format.</param>
+        /// <param name="size">The surface size in pixels (width and height).</param>
+        /// <param name="flags">The surface usage flags.</param>
+        /// <param name="mipMaps">Number of mipmaps for the texture. Default is 1. Use 0 to allocate full mip chain.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void InitCube(PixelFormat format, int size, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget, int mipMaps = 1)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_InitCube(unmanagedPtr, format, size, flags, mipMaps);
+#endif
+        }
+
+        /// <summary>
+        /// Initializes render target texture (3D volume texture).
+        /// </summary>
+        /// <param name="format">The surface pixels format.</param>
+        /// <param name="width">The surface width in pixels.</param>
+        /// <param name="height">The surface height in pixels.</param>
+        /// <param name="depth">The surface depth in pixels.</param>
+        /// <param name="flags">The surface usage flags.</param>
+        /// <param name="mipMaps">Number of mipmaps for the texture. Default is 1. Use 0 to allocate full mip chain.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void Init3D(PixelFormat format, int width, int height, int depth, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget, int mipMaps = 1)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_Init3D(unmanagedPtr, format, width, height, depth, flags, mipMaps);
 #endif
         }
 
@@ -228,13 +298,28 @@ namespace FlaxEngine.Rendering
         internal static extern void Internal_SetHeight(IntPtr obj, int val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetDepth(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetDepth(IntPtr obj, int val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetArraySize(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetSize(IntPtr obj, out Vector2 resultAsRef);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetSize(IntPtr obj, ref Vector2 val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_Init(IntPtr obj, PixelFormat format, int width, int height, TextureFlags flags, int mipMaps, MSAALevel multiSampleLevel);
+        internal static extern void Internal_Init(IntPtr obj, PixelFormat format, int width, int height, TextureFlags flags, int mipMaps, MSAALevel multiSampleLevel, int arraySize);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_InitCube(IntPtr obj, PixelFormat format, int size, TextureFlags flags, int mipMaps);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Init3D(IntPtr obj, PixelFormat format, int width, int height, int depth, TextureFlags flags, int mipMaps);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Dispose(IntPtr obj);
