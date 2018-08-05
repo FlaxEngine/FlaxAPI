@@ -111,6 +111,9 @@ namespace FlaxEditor.Surface
             case ParameterType.Texture:
             case ParameterType.NormalMap:
             case ParameterType.RenderTarget:
+            case ParameterType.RenderTargetArray:
+            case ParameterType.RenderTargetCube:
+            case ParameterType.RenderTargetVolume:
                 param.Value = Guid.Empty;
                 break;
             default: throw new IndexOutOfRangeException();

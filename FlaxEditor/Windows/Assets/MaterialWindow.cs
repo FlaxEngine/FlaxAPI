@@ -98,6 +98,9 @@ namespace FlaxEditor.Windows.Assets
                     CubeTexture = (int)ParameterType.CubeTexture,
                     NormalMap = (int)ParameterType.NormalMap,
                     RenderTarget = (int)ParameterType.RenderTarget,
+                    RenderTargetArray = (int)ParameterType.RenderTargetArray,
+                    RenderTargetCube = (int)ParameterType.RenderTargetCube,
+                    RenderTargetVolume = (int)ParameterType.RenderTargetVolume,
                     Matrix = (int)ParameterType.Matrix,
                 }
 
@@ -146,6 +149,9 @@ namespace FlaxEditor.Windows.Assets
                             pGuidType = true;
                             break;
                         case MaterialParameterType.RenderTarget:
+                        case MaterialParameterType.RenderTargetArray:
+                        case MaterialParameterType.RenderTargetCube:
+                        case MaterialParameterType.RenderTargetVolume:
                             pType = typeof(RenderTarget);
                             pGuidType = true;
                             break;

@@ -134,6 +134,9 @@ namespace FlaxEditor.Surface.Archetypes
                     case ParameterType.Texture:
                     case ParameterType.CubeTexture:
                     case ParameterType.RenderTarget:
+                    case ParameterType.RenderTargetArray:
+                    case ParameterType.RenderTargetCube:
+                    case ParameterType.RenderTargetVolume:
                         AddInput(Prototypes[20]);
                         AddOutput(Prototypes[21]);
                         AddOutput(Prototypes[22]);

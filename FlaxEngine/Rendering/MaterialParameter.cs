@@ -78,6 +78,21 @@ namespace FlaxEngine.Rendering
         /// The matrix.
         /// </summary>
         Matrix = 13,
+
+        /// <summary>
+        /// The render target array (created from code).
+        /// </summary>
+        RenderTargetArray = 14,
+
+        /// <summary>
+        /// The volume render target (created from code).
+        /// </summary>
+        RenderTargetVolume = 15,
+
+        /// <summary>
+        /// The cube render target (created from code).
+        /// </summary>
+        RenderTargetCube = 16,
     }
 
     /// <summary>
@@ -175,6 +190,9 @@ namespace FlaxEngine.Rendering
                 case MaterialParameterType.Texture:
                 case MaterialParameterType.NormalMap:
                 case MaterialParameterType.RenderTarget:
+                case MaterialParameterType.RenderTargetArray:
+                case MaterialParameterType.RenderTargetCube:
+                case MaterialParameterType.RenderTargetVolume:
                     ptr = new IntPtr(&vGuid);
                     break;
 
@@ -197,6 +215,9 @@ namespace FlaxEngine.Rendering
                 case MaterialParameterType.CubeTexture:
                 case MaterialParameterType.Texture:
                 case MaterialParameterType.NormalMap:
+                case MaterialParameterType.RenderTargetArray:
+                case MaterialParameterType.RenderTargetCube:
+                case MaterialParameterType.RenderTargetVolume:
                 case MaterialParameterType.RenderTarget: return Object.Find<Object>(ref vGuid);
 
                 default: throw new ArgumentOutOfRangeException();
@@ -273,6 +294,9 @@ namespace FlaxEngine.Rendering
                 case MaterialParameterType.Texture:
                 case MaterialParameterType.NormalMap:
                 case MaterialParameterType.RenderTarget:
+                case MaterialParameterType.RenderTargetArray:
+                case MaterialParameterType.RenderTargetCube:
+                case MaterialParameterType.RenderTargetVolume:
                     ptr = Object.GetUnmanagedPtr(value as Object);
                     break;
 

@@ -95,7 +95,10 @@ namespace FlaxEditor.Windows.Assets
                             pType = typeof(Texture);
                             break;
                         case MaterialParameterType.RenderTarget:
-                            pType = typeof(RenderTarget);
+                        case MaterialParameterType.RenderTargetArray:
+                        case MaterialParameterType.RenderTargetCube:
+                        case MaterialParameterType.RenderTargetVolume:
+                                pType = typeof(RenderTarget);
                             break;
                         default:
                             pType = p.Value.GetType();

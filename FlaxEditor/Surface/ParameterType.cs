@@ -106,5 +106,20 @@ namespace FlaxEditor.Surface
         /// The matrix.
         /// </summary>
         Matrix = 19,
+
+        /// <summary>
+        /// The render target array (created from code).
+        /// </summary>
+        RenderTargetArray = 20,
+
+        /// <summary>
+        /// The volume render target (created from code).
+        /// </summary>
+        RenderTargetVolume = 21,
+
+        /// <summary>
+        /// The cube render target (created from code).
+        /// </summary>
+        RenderTargetCube = 22,
     }
 }
