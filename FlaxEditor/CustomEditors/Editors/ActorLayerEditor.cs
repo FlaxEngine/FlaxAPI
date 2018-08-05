@@ -62,7 +62,17 @@ namespace FlaxEditor.CustomEditors.Editors
                     // But it's the easiest way to set value for selected actor and its children with one undo action
                     List<Actor> actors = new List<Actor>(32);
                     GetActorsTree(actors, actor);
-                    using (new UndoMultiBlock(Editor.Instance.Undo, actors.ToArray(), "Change layer"))
+                    if (Presenter.Undo != null)
+                    {
+                        using (new UndoMultiBlock(Presenter.Undo, actors.ToArray(), "Change layer"))
+                        {
+                            for (int i = 0; i < actors.Count; i++)
+                            {
+                                actors[i].Layer = value;
+                            }
+                        }
+                    }
+                    else
                     {
                         for (int i = 0; i < actors.Count; i++)
                         {

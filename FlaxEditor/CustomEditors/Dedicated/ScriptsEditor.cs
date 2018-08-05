@@ -73,7 +73,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
         /// <inheritdoc />
         public override void Draw()
         {
-            var style = FlaxEngine.GUI.Style.Current;
+            var style = Style.Current;
             var size = Size;
 
             // Info
@@ -182,7 +182,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
             var multiAction = new MultiUndoAction(actions);
             multiAction.Do();
-            Editor.Instance.Undo.AddAction(multiAction);
+            ScriptsEditor.Presenter?.Undo.AddAction(multiAction);
         }
     }
 
@@ -564,7 +564,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
             var action = ChangeScriptAction.ChangeOrder(script, targetIndex);
             action.Do();
-            Editor.Instance.Undo.AddAction(action);
+            Presenter?.Undo.AddAction(action);
         }
 
         private void ScriptToggleOnCheckChanged(CheckBox box)
@@ -603,7 +603,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             var script = (Script)button.ParentContextMenu.Tag;
             var action = AddRemoveScript.Remove(script);
             action.Do();
-            Editor.Instance.Undo.AddAction(action);
+            Presenter.Undo?.AddAction(action);
         }
 
         private void OnClickMoveUp(ContextMenuButton button)
@@ -611,7 +611,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             var script = (Script)button.ParentContextMenu.Tag;
             var action = ChangeScriptAction.ChangeOrder(script, script.OrderInParent - 1);
             action.Do();
-            Editor.Instance.Undo.AddAction(action);
+            Presenter.Undo?.AddAction(action);
         }
 
         private void OnClickMoveDown(ContextMenuButton button)
@@ -619,7 +619,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             var script = (Script)button.ParentContextMenu.Tag;
             var action = ChangeScriptAction.ChangeOrder(script, script.OrderInParent + 1);
             action.Do();
-            Editor.Instance.Undo.AddAction(action);
+            Presenter.Undo?.AddAction(action);
         }
 
         private void OnClickCopyName(ContextMenuButton button)

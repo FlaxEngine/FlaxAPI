@@ -73,7 +73,18 @@ namespace FlaxEditor.CustomEditors.Dedicated
         private void SetType(Type controlType)
         {
             var uiControls = ParentEditor.Values;
-            using (new UndoMultiBlock(Editor.Instance.Undo, uiControls, "Set Control Type"))
+            if (Presenter.Undo != null)
+            {
+                using (new UndoMultiBlock(Presenter.Undo, uiControls, "Set Control Type"))
+                {
+                    for (int i = 0; i < uiControls.Count; i++)
+                    {
+                        var uiControl = (UIControl)uiControls[i];
+                        uiControl.Control = (Control)Activator.CreateInstance(controlType);
+                    }
+                }
+            }
+            else
             {
                 for (int i = 0; i < uiControls.Count; i++)
                 {
