@@ -33,7 +33,52 @@ namespace FlaxEngine.Rendering
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_Clear(unmanagedPtr, Object.GetUnmanagedPtr(rt), ref color);
+            Internal_Clear1(unmanagedPtr, Object.GetUnmanagedPtr(rt), ref color);
+#endif
+        }
+
+        /// <summary>
+        /// Clears texture surface with a color.
+        /// </summary>
+        /// <remarks>
+        /// To clear per array/depth slice you need to specify the TextureFlags.PerSliceHandles when creating the resource.
+        /// </remarks>
+        /// <param name="rt">Target surface.</param>
+        /// <param name="color">Clear color.</param>
+        /// <param name="arrayOrDepthIndex">The index of the surface in an array (or depth slice index).</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void Clear(RenderTarget rt, Color color, int arrayOrDepthIndex)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_Clear2(unmanagedPtr, Object.GetUnmanagedPtr(rt), ref color, arrayOrDepthIndex);
+#endif
+        }
+
+        /// <summary>
+        /// Clears texture surface with a color.
+        /// </summary>
+        /// <remarks>
+        /// To clear per mip map you need to specify the TextureFlags.PerMipHandles when creating the resource.
+        /// </remarks>
+        /// <param name="rt">Target surface.</param>
+        /// <param name="color">Clear color.</param>
+        /// <param name="arrayOrDepthIndex">The index of the surface in an array (or depth slice index).</param>
+        /// <param name="mipMapIndex">The index of the mip level.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void Clear(RenderTarget rt, Color color, int arrayOrDepthIndex, int mipMapIndex)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_Clear3(unmanagedPtr, Object.GetUnmanagedPtr(rt), ref color, arrayOrDepthIndex, mipMapIndex);
 #endif
         }
 
@@ -156,7 +201,13 @@ namespace FlaxEngine.Rendering
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_Clear(IntPtr obj, IntPtr rt, ref Color color);
+        internal static extern void Internal_Clear1(IntPtr obj, IntPtr rt, ref Color color);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Clear2(IntPtr obj, IntPtr rt, ref Color color, int arrayOrDepthIndex);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Clear3(IntPtr obj, IntPtr rt, ref Color color, int arrayOrDepthIndex, int mipMapIndex);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ClearDepth(IntPtr obj, IntPtr depthBuffer, float depthValue);
