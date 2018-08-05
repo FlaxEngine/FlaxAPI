@@ -220,6 +220,26 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
+        /// Clears texture surface with a color.
+        /// </summary>
+        /// <param name="renderTarget">The render target to clear. Must be valid and created.</param>
+        /// <param name="color">Clear color.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void Clear(RenderTarget renderTarget, Color color)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            if (renderTarget == null)
+                throw new ArgumentNullException(nameof(renderTarget));
+            Internal_Clear(unmanagedPtr, renderTarget.View(), ref color);
+#endif
+        }
+
+        /// <summary>
         /// Draws scene objects depth (to the output Z buffer).
         /// </summary>
         /// <param name="task">Calling render task. Uses it's cache, buffers and the view properties.</param>
@@ -250,19 +270,15 @@ namespace FlaxEngine.Rendering
         /// <param name="output">The output texture. Must be valid and created.</param>
         /// <param name="input">The input texture. It's optional.</param>
         /// <param name="sceneRenderTask">Render task to use it's view description and the render buffers.</param>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
         public void DrawPostFxMaterial(MaterialBase material, RenderTarget output, RenderTarget input, SceneRenderTask sceneRenderTask)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawPostFxMaterial2(unmanagedPtr, GetUnmanagedPtr(material), GetUnmanagedPtr(output), GetUnmanagedPtr(input), ref sceneRenderTask.View, Object.GetUnmanagedPtr(sceneRenderTask.Buffers));
+            Internal_DrawPostFxMaterial1(unmanagedPtr, GetUnmanagedPtr(material), GetUnmanagedPtr(output), GetUnmanagedPtr(input), ref sceneRenderTask.View, Object.GetUnmanagedPtr(sceneRenderTask.Buffers));
 #endif
         }
-
+        
         /// <summary>
         /// Draws postFx material to the render target.
         /// </summary>
@@ -271,47 +287,7 @@ namespace FlaxEngine.Rendering
         /// <param name="input">The input texture. It's optional.</param>
         public void DrawPostFxMaterial(MaterialBase material, RenderTarget output, RenderTarget input = null)
         {
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
-            Viewport viewport = new Viewport(Vector2.Zero, output.Size);
-            DrawPostFxMaterial(material, output, ref viewport, input);
-        }
-
-        /// <summary>
-        /// Draws postFx material to the render target mip map using a custom viewport. Can be used to draw material to subarea of the texture.
-        /// </summary>
-        /// <remarks>
-        /// To render to mip map you need to specify the TextureFlags.PerMipHandles when creating the resource.
-        /// </remarks>
-        /// <param name="material">The material to render. It must be a post fx material.</param>
-        /// <param name="output">The output texture. Must be valid and created.</param>
-        /// <param name="arrayOrDepthIndex">The index of the surface in an array (or depth slice index).</param>
-        /// <param name="mipMapIndex">The index of the mip level.</param>
-        /// <param name="input">The input texture. It's optional.</param>
-        public void DrawPostFxMaterial(MaterialBase material, RenderTarget output, int arrayOrDepthIndex, int mipMapIndex, RenderTarget input = null)
-        {
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
-            Viewport viewport = new Viewport(Vector2.Zero, output.Size);
-            DrawPostFxMaterial(material, output, ref viewport, arrayOrDepthIndex, mipMapIndex, input);
-        }
-
-        /// <summary>
-        /// Draws postFx material to the render target array/depth slice using a custom viewport (topmost mip). Can be used to draw material to subarea of the texture.
-        /// </summary>
-        /// <remarks>
-        /// To render to array/depth slice you need to specify the TextureFlags.PerSliceHandles when creating the resource.
-        /// </remarks>
-        /// <param name="material">The material to render. It must be a post fx material.</param>
-        /// <param name="output">The output texture. Must be valid and created.</param>
-        /// <param name="arrayOrDepthIndex">The index of the surface in an array (or depth slice index).</param>
-        /// <param name="input">The input texture. It's optional.</param>
-        public void DrawPostFxMaterial(MaterialBase material, RenderTarget output, int arrayOrDepthIndex, RenderTarget input = null)
-        {
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
-            Viewport viewport = new Viewport(Vector2.Zero, output.Size);
-            DrawPostFxMaterial(material, output, ref viewport, arrayOrDepthIndex, input);
+            DrawPostFxMaterial(material, output.View(), input);
         }
 
         #region Internal Calls

@@ -22,63 +22,18 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Clears texture surface with a color.
         /// </summary>
-        /// <param name="rt">Target surface.</param>
+        /// <param name="view">The render target view to clear. Must be valid and created.</param>
         /// <param name="color">Clear color.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void Clear(RenderTarget rt, Color color)
+        public void Clear(RenderTargetView view, Color color)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_Clear1(unmanagedPtr, Object.GetUnmanagedPtr(rt), ref color);
-#endif
-        }
-
-        /// <summary>
-        /// Clears texture surface with a color.
-        /// </summary>
-        /// <remarks>
-        /// To clear per array/depth slice you need to specify the TextureFlags.PerSliceHandles when creating the resource.
-        /// </remarks>
-        /// <param name="rt">Target surface.</param>
-        /// <param name="color">Clear color.</param>
-        /// <param name="arrayOrDepthIndex">The index of the surface in an array (or depth slice index).</param>
-#if UNIT_TEST_COMPILANT
-        [Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
-        public void Clear(RenderTarget rt, Color color, int arrayOrDepthIndex)
-        {
-#if UNIT_TEST_COMPILANT
-            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-            Internal_Clear2(unmanagedPtr, Object.GetUnmanagedPtr(rt), ref color, arrayOrDepthIndex);
-#endif
-        }
-
-        /// <summary>
-        /// Clears texture surface with a color.
-        /// </summary>
-        /// <remarks>
-        /// To clear per mip map you need to specify the TextureFlags.PerMipHandles when creating the resource.
-        /// </remarks>
-        /// <param name="rt">Target surface.</param>
-        /// <param name="color">Clear color.</param>
-        /// <param name="arrayOrDepthIndex">The index of the surface in an array (or depth slice index).</param>
-        /// <param name="mipMapIndex">The index of the mip level.</param>
-#if UNIT_TEST_COMPILANT
-        [Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
-        public void Clear(RenderTarget rt, Color color, int arrayOrDepthIndex, int mipMapIndex)
-        {
-#if UNIT_TEST_COMPILANT
-            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-            Internal_Clear3(unmanagedPtr, Object.GetUnmanagedPtr(rt), ref color, arrayOrDepthIndex, mipMapIndex);
+            Internal_Clear(unmanagedPtr, view, ref color);
 #endif
         }
 
@@ -174,76 +129,46 @@ namespace FlaxEngine.Rendering
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawPostFxMaterial2(unmanagedPtr, Object.GetUnmanagedPtr(material), Object.GetUnmanagedPtr(output), Object.GetUnmanagedPtr(input), ref view, Object.GetUnmanagedPtr(buffers));
+            Internal_DrawPostFxMaterial1(unmanagedPtr, Object.GetUnmanagedPtr(material), Object.GetUnmanagedPtr(output), Object.GetUnmanagedPtr(input), ref view, Object.GetUnmanagedPtr(buffers));
 #endif
         }
 
         /// <summary>
-        /// Draws postFx material to the render target using a custom viewport. Can be used to draw material to subarea of the texture.
+        /// Draws postFx material to the render target view. Can be used to draw material to subarea of the texture.
         /// </summary>
         /// <param name="material">The material to render. It must be a post fx material.</param>
-        /// <param name="output">The output texture. Must be valid and created.</param>
+        /// <param name="view">The output render target view. Must be valid and created.</param>
+        /// <param name="input">The input texture. It's optional.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void DrawPostFxMaterial(MaterialBase material, RenderTargetView view, RenderTarget input = null)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawPostFxMaterial2(unmanagedPtr, Object.GetUnmanagedPtr(material), view, Object.GetUnmanagedPtr(input));
+#endif
+        }
+
+        /// <summary>
+        /// Draws postFx material to the render target view using a custom viewport. Can be used to draw material to subarea of the texture.
+        /// </summary>
+        /// <param name="material">The material to render. It must be a post fx material.</param>
+        /// <param name="view">The output render target view. Must be valid and created.</param>
         /// <param name="viewport">The custom rendering viewport to use.</param>
         /// <param name="input">The input texture. It's optional.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void DrawPostFxMaterial(MaterialBase material, RenderTarget output, ref Viewport viewport, RenderTarget input = null)
+        public void DrawPostFxMaterial(MaterialBase material, RenderTargetView view, ref Viewport viewport, RenderTarget input = null)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawPostFxMaterial3(unmanagedPtr, Object.GetUnmanagedPtr(material), Object.GetUnmanagedPtr(output), ref viewport, Object.GetUnmanagedPtr(input));
-#endif
-        }
-
-        /// <summary>
-        /// Draws postFx material to the render target mip map using a custom viewport. Can be used to draw material to subarea of the texture.
-        /// </summary>
-        /// <remarks>
-        /// To render to mip map you need to specify the TextureFlags.PerMipHandles when creating the resource.
-        /// </remarks>
-        /// <param name="material">The material to render. It must be a post fx material.</param>
-        /// <param name="output">The output texture. Must be valid and created.</param>
-        /// <param name="viewport">The custom rendering viewport to use.</param>
-        /// <param name="arrayOrDepthIndex">The index of the surface in an array (or depth slice index).</param>
-        /// <param name="mipMapIndex">The index of the mip level.</param>
-        /// <param name="input">The input texture. It's optional.</param>
-#if UNIT_TEST_COMPILANT
-        [Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
-        public void DrawPostFxMaterial(MaterialBase material, RenderTarget output, ref Viewport viewport, int arrayOrDepthIndex, int mipMapIndex, RenderTarget input = null)
-        {
-#if UNIT_TEST_COMPILANT
-            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-            Internal_DrawPostFxMaterial4(unmanagedPtr, Object.GetUnmanagedPtr(material), Object.GetUnmanagedPtr(output), ref viewport, arrayOrDepthIndex, mipMapIndex, Object.GetUnmanagedPtr(input));
-#endif
-        }
-
-        /// <summary>
-        /// Draws postFx material to the render target array/depth slice using a custom viewport (topmost mip). Can be used to draw material to subarea of the texture.
-        /// </summary>
-        /// <remarks>
-        /// To render to array/depth slice you need to specify the TextureFlags.PerSliceHandles when creating the resource.
-        /// </remarks>
-        /// <param name="material">The material to render. It must be a post fx material.</param>
-        /// <param name="output">The output texture. Must be valid and created.</param>
-        /// <param name="viewport">The custom rendering viewport to use.</param>
-        /// <param name="arrayOrDepthIndex">The index of the surface in an array (or depth slice index).</param>
-        /// <param name="input">The input texture. It's optional.</param>
-#if UNIT_TEST_COMPILANT
-        [Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
-        public void DrawPostFxMaterial(MaterialBase material, RenderTarget output, ref Viewport viewport, int arrayOrDepthIndex, RenderTarget input = null)
-        {
-#if UNIT_TEST_COMPILANT
-            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-            Internal_DrawPostFxMaterial5(unmanagedPtr, Object.GetUnmanagedPtr(material), Object.GetUnmanagedPtr(output), ref viewport, arrayOrDepthIndex, Object.GetUnmanagedPtr(input));
+            Internal_DrawPostFxMaterial3(unmanagedPtr, Object.GetUnmanagedPtr(material), view, ref viewport, Object.GetUnmanagedPtr(input));
 #endif
         }
 
@@ -251,13 +176,7 @@ namespace FlaxEngine.Rendering
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_Clear1(IntPtr obj, IntPtr rt, ref Color color);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_Clear2(IntPtr obj, IntPtr rt, ref Color color, int arrayOrDepthIndex);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_Clear3(IntPtr obj, IntPtr rt, ref Color color, int arrayOrDepthIndex, int mipMapIndex);
+        internal static extern void Internal_Clear(IntPtr obj, RenderTargetView view, ref Color color);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ClearDepth(IntPtr obj, IntPtr depthBuffer, float depthValue);
@@ -272,16 +191,13 @@ namespace FlaxEngine.Rendering
         internal static extern void Internal_Draw2(IntPtr obj, IntPtr dst, IntPtr src);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawPostFxMaterial2(IntPtr obj, IntPtr material, IntPtr output, IntPtr input, ref RenderView view, IntPtr buffers);
+        internal static extern void Internal_DrawPostFxMaterial1(IntPtr obj, IntPtr material, IntPtr output, IntPtr input, ref RenderView view, IntPtr buffers);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawPostFxMaterial3(IntPtr obj, IntPtr material, IntPtr output, ref Viewport viewport, IntPtr input);
+        internal static extern void Internal_DrawPostFxMaterial2(IntPtr obj, IntPtr material, RenderTargetView view, IntPtr input);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawPostFxMaterial4(IntPtr obj, IntPtr material, IntPtr output, ref Viewport viewport, int arrayOrDepthIndex, int mipMapIndex, IntPtr input);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawPostFxMaterial5(IntPtr obj, IntPtr material, IntPtr output, ref Viewport viewport, int arrayOrDepthIndex, IntPtr input);
+        internal static extern void Internal_DrawPostFxMaterial3(IntPtr obj, IntPtr material, RenderTargetView view, ref Viewport viewport, IntPtr input);
 #endif
 
         #endregion

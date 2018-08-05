@@ -2,15 +2,113 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace FlaxEngine.Rendering
 {
+    /// <summary>
+    /// Defines a view for the <see cref="RenderTarget"/> surface or 
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct RenderTargetView
+    {
+        internal enum Types : byte
+        {
+            Full = 0,
+            Slice = 1,
+            Mip = 2,
+            Array = 3,
+            Volume = 4,
+        }
+
+        private readonly Types Type;
+        private readonly byte MipMapIndex;
+        private readonly ushort ArrayOrDepthIndex;
+        private readonly IntPtr Pointer;
+
+        internal RenderTargetView(IntPtr pointer, Types type)
+        {
+            Pointer = pointer;
+            Type = type;
+            MipMapIndex = 0;
+            ArrayOrDepthIndex = 0;
+        }
+
+        internal RenderTargetView(IntPtr pointer, Types type, int mipMapIndex, int arrayOrDepthIndex)
+        {
+            Pointer = pointer;
+            Type = type;
+            MipMapIndex = (byte)mipMapIndex;
+            ArrayOrDepthIndex = (ushort)arrayOrDepthIndex;
+        }
+    }
+
     public partial class RenderTarget
     {
         /// <summary>
         /// Returns true if texture has size that is power of two.
         /// </summary>
         public bool IsPowerOfTwo => Mathf.IsPowerOfTwo(Width) && Mathf.IsPowerOfTwo(Height);
+
+        /// <summary>
+        /// Gets the view to the first surface (only for 2D textures).
+        /// </summary>
+        /// <returns>The view for the render target.</returns>
+        public RenderTargetView View()
+        {
+            return new RenderTargetView(unmanagedPtr, RenderTargetView.Types.Full);
+        }
+
+        /// <summary>
+        /// Gets the view to the surface at index in an array.
+        /// </summary>
+        /// <remarks>
+        /// To use per depth/array slice view you need to specify the TextureFlags.PerSliceHandles when creating the resource.
+        /// </remarks>
+        /// <param name="arrayOrDepthIndex">The index of the surface in an array (or depth slice index).</param>
+        /// <returns>The view for the render target.</returns>
+        public RenderTargetView View(int arrayOrDepthIndex)
+        {
+            return new RenderTargetView(unmanagedPtr, RenderTargetView.Types.Slice, 0, arrayOrDepthIndex);
+        }
+
+        /// <summary>
+        /// Gets the view to the surface at index in an array.
+        /// </summary>
+        /// <remarks>
+        /// To use per mip map view you need to specify the TextureFlags.PerMipHandles when creating the resource.
+        /// </remarks>
+        /// <param name="arrayOrDepthIndex">The index of the surface in an array (or depth slice index).</param>
+        /// <param name="mipMapIndex">The index of the mip level.</param>
+        /// <returns>The view for the render target.</returns>
+        public RenderTargetView View(int arrayOrDepthIndex, int mipMapIndex)
+        {
+            return new RenderTargetView(unmanagedPtr, RenderTargetView.Types.Mip, mipMapIndex, arrayOrDepthIndex);
+        }
+
+        /// <summary>
+        /// Gets the view to the array of surfaces.
+        /// </summary>
+        /// <remarks>
+        /// To use array texture view you need to create render target as an array.
+        /// </remarks>
+        /// <returns>The view for the render target.</returns>
+        public RenderTargetView ViewArray()
+        {
+            return new RenderTargetView(unmanagedPtr, RenderTargetView.Types.Array);
+        }
+
+        /// <summary>
+        /// Gets the view to the volume texture (3D).
+        /// </summary>
+        /// <remarks>
+        /// To use volume texture view you need to create render target as a volume resource (3D texture with Depth > 1).
+        /// </remarks>
+        /// <returns>The view for the render target.</returns>
+        public RenderTargetView ViewVolume()
+        {
+            return new RenderTargetView(unmanagedPtr, RenderTargetView.Types.Volume);
+        }
 
         private class Temporary
         {
