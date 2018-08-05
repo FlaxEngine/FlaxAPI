@@ -21,6 +21,16 @@ namespace FlaxEditor.Windows
         private class ViewModel
         {
             /// <summary>
+            /// Enables rendering synchronization with the refresh rate of the display device to avoid "tearing" artifacts.
+            /// </summary>
+            [EditorOrder(0), EditorDisplay("Rendering", "Use V-Sync"), Tooltip("Enables rendering synchronization with the refresh rate of the display device to avoid \"tearing\" artifacts.")]
+            public bool UseVSync
+            {
+                get => GraphicsQuality.UseVSync;
+                set => GraphicsQuality.UseVSync = value;
+            }
+
+            /// <summary>
             /// Anti Aliasing quality setting.
             /// </summary>
             [EditorOrder(1000), EditorDisplay("Quality", "AA Quality"), Tooltip("Anti Aliasing quality.")]
