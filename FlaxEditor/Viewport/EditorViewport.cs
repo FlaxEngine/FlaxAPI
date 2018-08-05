@@ -419,6 +419,15 @@ namespace FlaxEditor.Viewport
                     farPlaneValue.ValueChanged += () => _farPlane = farPlaneValue.Value;
                     ViewWidgetButtonMenu.VisibleChanged += control => farPlaneValue.Value = _farPlane;
                 }
+
+                // Brightness
+                {
+                    var brightness = ViewWidgetButtonMenu.AddButton("Brightness");
+                    var brightnessValue = new FloatValueBox(1.0f, 75, 2, 50.0f, 0.001f, 10.0f, 0.001f);
+                    brightnessValue.Parent = brightness;
+                    brightnessValue.ValueChanged += () => Brightness = brightnessValue.Value;
+                    ViewWidgetButtonMenu.VisibleChanged += control => brightnessValue.Value = Brightness;
+                }
             }
 
             // Link for task event
