@@ -169,6 +169,17 @@ namespace FlaxEditor.Surface.Archetypes
                 }
             },
             // TODO: 9 - String
+            new NodeArchetype
+            {
+                TypeID = 10,
+                Title = "PI",
+                Description = "A value specifying the approximation of π which is 180 degrees",
+                Size = new Vector2(50, 20),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "π", ConnectionType.Float, 0),
+                }
+            },
         };
     }
 }
