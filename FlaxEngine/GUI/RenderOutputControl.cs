@@ -47,6 +47,16 @@ namespace FlaxEngine.GUI
         public bool RenderOnlyWithWindow { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets the color of the tint used to color the backbuffer of the render output.
+        /// </summary>
+        public Color TintColor { get; set; } = Color.White;
+
+        /// <summary>
+        /// Gets or sets the brightness of the output.
+        /// </summary>
+        public float Brightness { get; set; } = 1.0f;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RenderOutputControl"/> class.
         /// </summary>
         /// <param name="task">The task. Cannot be null.</param>
@@ -158,7 +168,8 @@ namespace FlaxEngine.GUI
         {
             // Draw backbuffer texture
             var buffer = _backBufferOld ? _backBufferOld : _backBuffer;
-            Render2D.DrawRenderTarget(buffer, new Rectangle(Vector2.Zero, Size), Color.White);
+            var color = TintColor * Brightness;
+            Render2D.DrawRenderTarget(buffer, new Rectangle(Vector2.Zero, Size), color);
 
             base.Draw();
         }
