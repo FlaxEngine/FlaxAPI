@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.org/FlaxEngine/FlaxAPI.svg?branch=master)](https://travis-ci.org/FlaxEngine/FlaxAPI)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/flaxengine/lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![VS Extension](https://img.shields.io/badge/vs-extension-green.svg)](https://marketplace.visualstudio.com/items?itemName=Flax.FlaxVS)
+[![Discord](https://discordapp.com/api/guilds/437989205315158016/widget.png)](http://discord.flaxengine.com)
 
 Flax Engine is a high quality modern 3D game engine written in C++.
 From stunning graphics to powerful scripts - Flax can give everything for your games. Designed for fast workflow with many ready to use features waiting for you right now. To learn more see the website ([www.flaxengine.com](https://flaxengine.com)).
@@ -14,7 +15,6 @@ This repository contains an open source public C# API as well as full source cod
 * PBR Rendering (DirectX 10, 11, 12)
 * C# Scripting (C# 7.2)
 * Physics (NVIDIA PhysX)
-* Nested Prefabs
 * Top Performance
 * Xbox One, Windows and UWP support
 * Global Illumination (lightmaps baking on GPU)
