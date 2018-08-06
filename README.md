@@ -15,6 +15,7 @@ This repository contains an open source public C# API as well as full source cod
 * PBR Rendering (DirectX 10, 11, 12)
 * C# Scripting (C# 7.2)
 * Physics (NVIDIA PhysX)
+* Nested Prefabs
 * Top Performance
 * Xbox One, Windows and UWP support
 * Global Illumination (lightmaps baking on GPU)
