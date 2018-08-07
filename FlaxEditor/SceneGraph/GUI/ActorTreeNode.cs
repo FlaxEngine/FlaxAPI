@@ -462,6 +462,12 @@ namespace FlaxEditor.SceneGraph.GUI
 
         private bool ValidateDragActor(ActorNode actorNode)
         {
+            // Reject dragging actors not linked to scene (eg. from prefab) or in the opposite way
+            var thisHasScene = ActorNode.ParentScene != null;
+            var otherHasScene = actorNode.ParentScene != null;
+            if (thisHasScene != otherHasScene)
+                return false;
+
             // Reject dragging parents and itself
             return actorNode.Actor != null && actorNode != ActorNode && actorNode.Find(Actor) == null;
         }
