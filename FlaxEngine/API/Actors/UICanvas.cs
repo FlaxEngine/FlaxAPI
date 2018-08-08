@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -164,7 +165,7 @@ namespace FlaxEngine
         /// </summary>
         [EditorOrder(30), EditorDisplay("Canvas"), VisibleIf(nameof(Editor_Is3D)), Tooltip("If checked, scene depth will be ignored when rendering the GUI (scene objects won't cover the interface).")]
         public bool IgnoreDepth { get; set; } = false;
-        
+
         /// <summary>
         /// Gets or sets the camera used to place the GUI when render mode is set to <see cref="CanvasRenderMode.CameraSpace"/>.
         /// </summary>
@@ -293,7 +294,7 @@ namespace FlaxEngine
                 Matrix.Translation(_guiRoot.Width / -2.0f, _guiRoot.Height / -2.0f, 0, out world);
                 Matrix.RotationYawPitchRoll(Mathf.Pi, Mathf.Pi, 0, out tmp2);
                 Matrix.Multiply(ref world, ref tmp2, out tmp1);
-                
+
                 // In front of the camera
                 var viewPos = RenderCamera.Position;
                 var viewRot = RenderCamera.Orientation;
@@ -386,13 +387,13 @@ namespace FlaxEngine
 
                 jsonWriter.WritePropertyName("IgnoreDepth");
                 jsonWriter.WriteValue(IgnoreDepth);
-                
+
                 jsonWriter.WritePropertyName("RenderCamera");
                 jsonWriter.WriteValue(Json.JsonSerializer.GetStringID(RenderCamera));
 
                 jsonWriter.WritePropertyName("Distance");
                 jsonWriter.WriteValue(Distance);
-                
+
                 jsonWriter.WritePropertyName("Size");
                 jsonWriter.WriteStartObject();
                 jsonWriter.WritePropertyName("X");
@@ -400,6 +401,77 @@ namespace FlaxEngine
                 jsonWriter.WritePropertyName("Y");
                 jsonWriter.WriteValue(Size.Y);
                 jsonWriter.WriteEndObject();
+
+                jsonWriter.WriteEndObject();
+            }
+
+            return sw.ToString();
+        }
+
+        internal string SerializeDiff(UICanvas other)
+        {
+            StringBuilder sb = new StringBuilder(256);
+            StringWriter sw = new StringWriter(sb, CultureInfo.InvariantCulture);
+            using (JsonTextWriter jsonWriter = new JsonTextWriter(sw))
+            {
+                jsonWriter.IndentChar = '\t';
+                jsonWriter.Indentation = 1;
+                jsonWriter.Formatting = Formatting.Indented;
+
+                jsonWriter.WriteStartObject();
+
+                if (_renderMode != other._renderMode)
+                {
+                    jsonWriter.WritePropertyName("RenderMode");
+                    jsonWriter.WriteValue(_renderMode);
+                }
+
+                if (RenderLocation != other.RenderLocation)
+                {
+                    jsonWriter.WritePropertyName("RenderLocation");
+                    jsonWriter.WriteValue(RenderLocation);
+                }
+
+                if (Order != other.Order)
+                {
+                    jsonWriter.WritePropertyName("Order");
+                    jsonWriter.WriteValue(Order);
+                }
+
+                if (ReceivesEvents != other.ReceivesEvents)
+                {
+                    jsonWriter.WritePropertyName("ReceivesEvents");
+                    jsonWriter.WriteValue(ReceivesEvents);
+                }
+
+                if (IgnoreDepth != other.IgnoreDepth)
+                {
+                    jsonWriter.WritePropertyName("IgnoreDepth");
+                    jsonWriter.WriteValue(IgnoreDepth);
+                }
+
+                if (RenderCamera != other.RenderCamera)
+                {
+                    jsonWriter.WritePropertyName("RenderCamera");
+                    jsonWriter.WriteValue(Json.JsonSerializer.GetStringID(RenderCamera));
+                }
+
+                if (Mathf.Abs(Distance - other.Distance) > Mathf.Epsilon)
+                {
+                    jsonWriter.WritePropertyName("Distance");
+                    jsonWriter.WriteValue(Distance);
+                }
+
+                if (Size != other.Size)
+                {
+                    jsonWriter.WritePropertyName("Size");
+                    jsonWriter.WriteStartObject();
+                    jsonWriter.WritePropertyName("X");
+                    jsonWriter.WriteValue(Size.X);
+                    jsonWriter.WritePropertyName("Y");
+                    jsonWriter.WriteValue(Size.Y);
+                    jsonWriter.WriteEndObject();
+                }
 
                 jsonWriter.WriteEndObject();
             }
