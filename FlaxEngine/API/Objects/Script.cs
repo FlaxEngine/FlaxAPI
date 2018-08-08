@@ -27,7 +27,13 @@ namespace FlaxEngine
             set => Actor.LocalTransform = value;
         }
 
+        #region Internal Calls
+
+#if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_LinkPrefab(IntPtr obj, ref Guid prefabObjectId);
+        internal static extern void Internal_LinkPrefab(IntPtr obj, ref Guid prefabId, ref Guid prefabObjectId);
+#endif
+
+        #endregion
     }
 }

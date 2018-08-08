@@ -107,7 +107,7 @@ namespace FlaxEditor.Actions
                 }
                 else if (obj is Script)
                 {
-                    Script.Internal_LinkPrefab(obj.unmanagedPtr, ref prefabObjId);
+                    Script.Internal_LinkPrefab(obj.unmanagedPtr, ref _prefabId, ref prefabObjId);
                 }
             }
 
