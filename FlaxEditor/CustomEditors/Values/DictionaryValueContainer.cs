@@ -9,7 +9,7 @@ namespace FlaxEditor.CustomEditors
     /// Custom <see cref="ValueContainer"/> for <see cref="IDictionary"/>.
     /// </summary>
     /// <seealso cref="FlaxEditor.CustomEditors.ValueContainer" />
-    public sealed class DictionaryValueContainer : ValueContainer
+    public class DictionaryValueContainer : ValueContainer
     {
         /// <summary>
         /// The key in the collection.

@@ -9,7 +9,7 @@ namespace FlaxEditor.CustomEditors
     /// Custom <see cref="ValueContainer"/> for <see cref="IList"/> (used for <see cref="Array"/> and <see cref="System.Collections.Generic.List{T}"/>.
     /// </summary>
     /// <seealso cref="FlaxEditor.CustomEditors.ValueContainer" />
-    public sealed class ListValueContainer : ValueContainer
+    public class ListValueContainer : ValueContainer
     {
         /// <summary>
         /// The index in the collection.
