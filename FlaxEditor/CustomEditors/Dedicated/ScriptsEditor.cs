@@ -1,5 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.Actions;
@@ -442,6 +444,53 @@ namespace FlaxEditor.CustomEditors.Dedicated
             }
         }
 
+        /// <summary>
+        /// Values container for the collection of the scripts. Helps with prefab linkage and reference value usage (uses Prefab Instance ID rather than index in array).
+        /// </summary>
+        private sealed class ScriptsContainer : ListValueContainer
+        {
+            private Guid _prefabObjectId;
+
+            public ScriptsContainer(Type elementType, int index, ValueContainer values)
+            : base(elementType, index)
+            {
+                Capacity = values.Count;
+                for (int i = 0; i < values.Count; i++)
+                {
+                    var v = (IList)values[i];
+                    Add(v[index]);
+                }
+
+                if (values.HasReferenceValue && Count > 0 && this[0] is Script script && script.HasPrefabLink)
+                {
+                    _prefabObjectId = script.PrefabObjectID;
+                    RefreshReferenceValue(values.ReferenceValue);
+                }
+            }
+
+            /// <inheritdoc />
+            public override void RefreshReferenceValue(object instanceValue)
+            {
+                // Clear
+                _referenceValue = null;
+                _hasReferenceValue = false;
+
+                if (instanceValue is IList v)
+                {
+                    // Get the reference value if script with the given link id exists in the reference values collection
+                    for (int i = 0; i < v.Count; i++)
+                    {
+                        if (v[i] is Script script && script.PrefabObjectID == _prefabObjectId)
+                        {
+                            _referenceValue = script;
+                            _hasReferenceValue = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
@@ -473,7 +522,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     continue;
                 }
 
-                var values = new ListValueContainer(elementType, i, Values);
+                var values = new ScriptsContainer(elementType, i, Values);
                 var type = script.GetType();
                 var editor = CustomEditorsUtil.CreateEditor(type, false);
 
