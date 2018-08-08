@@ -95,9 +95,13 @@ namespace FlaxEditor.Actions
 
         private void DoRemove()
         {
-            // Remove script
-            Editor.Instance.Scene.MarkSceneEdited(_script.Actor.Scene);
-            Object.Destroy(ref _script);
+            // Remove script (it could be removed by sth else, just check it)
+            if (_script)
+            {
+                if (_script.Actor)
+                    Editor.Instance.Scene.MarkSceneEdited(_script.Actor.Scene);
+                Object.Destroy(ref _script);
+            }
         }
 
         private void DoAdd()
