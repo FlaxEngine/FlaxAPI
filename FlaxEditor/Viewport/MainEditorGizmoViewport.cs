@@ -36,6 +36,9 @@ namespace FlaxEditor.Viewport
         private readonly DragActorType _dragActorType = new DragActorType();
         private readonly ViewportDebugDrawData _debugDrawData = new ViewportDebugDrawData(32);
 
+        private ModelActor _previewModelActor;
+        private int _previewModelActorEntryIndex;
+
         /// <summary>
         /// The transform gizmo.
         /// </summary>
@@ -247,6 +250,11 @@ namespace FlaxEditor.Viewport
 
         private void RenderTaskOnDraw(DrawCallsCollector collector)
         {
+            if (_previewModelActor)
+            {
+                _debugDrawData.HighlightModel(_previewModelActor, _previewModelActorEntryIndex);
+            }
+
             _debugDrawData.OnDraw(collector);
         }
 
@@ -579,9 +587,57 @@ namespace FlaxEditor.Viewport
             return base.OnKeyDown(key);
         }
 
+        private void GetHitLocation(ref Vector2 location, out SceneGraphNode hit, out Vector3 hitLocation)
+        {
+            // Get mouse ray and try to hit any object
+            var ray = ConvertMouseToRay(ref location);
+            float closest = float.MaxValue;
+            var gridPlane = new Plane(Vector3.Zero, Vector3.Up);
+            hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
+            if (hit != null)
+            {
+                // Use hit location
+                hitLocation = ray.Position + ray.Direction * closest;
+            }
+            else if (Grid.Enabled && CollisionsHelper.RayIntersectsPlane(ref ray, ref gridPlane, out closest) && closest < 4000.0f)
+            {
+                // Use grid location
+                hitLocation = ray.Position + ray.Direction * closest;
+            }
+            else
+            {
+                // Use area in front of the viewport
+                hitLocation = ViewPosition + ViewDirection * 100;
+            }
+        }
+
+        private void SetDragEffects(ref Vector2 location)
+        {
+            if (_dragAssets.HasValidDrag && _dragAssets.Objects[0].ItemDomain == ContentDomain.Material)
+            {
+                Vector3 hitLocation = ViewPosition;
+                SceneGraphNode hit;
+                GetHitLocation(ref location, out hit, out hitLocation);
+
+                if (hit is ModelActorNode.EntryNode meshNode)
+                {
+                    _previewModelActor = meshNode.ModelActor;
+                    _previewModelActorEntryIndex = meshNode.Index;
+                }
+            }
+        }
+
+        private void ClearDragEffects()
+        {
+            _previewModelActor = null;
+            _previewModelActorEntryIndex = -1;
+        }
+
         /// <inheritdoc />
         public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
         {
+            ClearDragEffects();
+
             var result = base.OnDragEnter(ref location, data);
             if (result != DragDropEffect.None)
                 return result;
@@ -590,6 +646,8 @@ namespace FlaxEditor.Viewport
                 result = _dragAssets.Effect;
             if (_dragActorType.OnDragEnter(data, ValidateDragActorType))
                 result = _dragActorType.Effect;
+
+            SetDragEffects(ref location);
 
             return result;
         }
@@ -615,9 +673,13 @@ namespace FlaxEditor.Viewport
         /// <inheritdoc />
         public override DragDropEffect OnDragMove(ref Vector2 location, DragData data)
         {
+            ClearDragEffects();
+
             var result = base.OnDragMove(ref location, data);
             if (result != DragDropEffect.None)
                 return result;
+
+            SetDragEffects(ref location);
 
             if (_dragAssets.HasValidDrag)
                 return _dragAssets.Effect;
@@ -630,6 +692,8 @@ namespace FlaxEditor.Viewport
         /// <inheritdoc />
         public override void OnDragLeave()
         {
+            ClearDragEffects();
+
             _dragAssets.OnDragLeave();
             _dragActorType.OnDragLeave();
 
@@ -747,6 +811,8 @@ namespace FlaxEditor.Viewport
         /// <inheritdoc />
         public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
         {
+            ClearDragEffects();
+
             var result = base.OnDragDrop(ref location, data);
             if (result != DragDropEffect.None)
                 return result;
@@ -756,26 +822,7 @@ namespace FlaxEditor.Viewport
             SceneGraphNode hit = null;
             if (_dragAssets.HasValidDrag || _dragActorType.HasValidDrag)
             {
-                // Get mouse ray and try to hit any object
-                var ray = ConvertMouseToRay(ref location);
-                float closest = float.MaxValue;
-                var gridPlane = new Plane(Vector3.Zero, Vector3.Up);
-                hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
-                if (hit != null)
-                {
-                    // Use hit location
-                    hitLocation = ray.Position + ray.Direction * closest;
-                }
-                else if (Grid.Enabled && CollisionsHelper.RayIntersectsPlane(ref ray, ref gridPlane, out closest) && closest < 4000.0f)
-                {
-                    // Use grid location
-                    hitLocation = ray.Position + ray.Direction * closest;
-                }
-                else
-                {
-                    // Use area in front of the viewport
-                    hitLocation = ViewPosition + ViewDirection * 100;
-                }
+                GetHitLocation(ref location, out hit, out hitLocation);
             }
 
             // Drag assets
