@@ -141,7 +141,7 @@ namespace FlaxEngine
                 var model = SkinnedModel;
                 if (model && model.IsLoaded)
                 {
-                    var meshesCount = model.MaterialSlots.Length;
+                    var meshesCount = model.MaterialSlotsCount;
                     _entries = new ModelEntryInfo[meshesCount];
                     for (int i = 0; i < meshesCount; i++)
                     {

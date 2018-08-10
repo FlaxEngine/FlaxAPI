@@ -44,6 +44,11 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets the amount of the material slots used by this model.
+        /// </summary>
+        public int MaterialSlotsCount => Model.Internal_GetSlots(unmanagedPtr);
+
+        /// <summary>
         /// Gets the material slot by the name.
         /// </summary>
         /// <param name="name">The slot name.</param>

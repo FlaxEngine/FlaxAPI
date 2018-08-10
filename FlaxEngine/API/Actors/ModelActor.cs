@@ -29,9 +29,9 @@ namespace FlaxEngine
                 var model = Model;
                 if (model && model.IsLoaded)
                 {
-                    var meshesCount = model.LODs[0].Meshes.Length;
-                    _entries = new ModelEntryInfo[meshesCount];
-                    for (int i = 0; i < meshesCount; i++)
+                    var slotsCount = model.MaterialSlotsCount;
+                    _entries = new ModelEntryInfo[slotsCount];
+                    for (int i = 0; i < slotsCount; i++)
                     {
                         _entries[i] = new ModelEntryInfo(this, i);
                     }
