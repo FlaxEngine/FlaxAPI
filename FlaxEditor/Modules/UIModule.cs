@@ -451,7 +451,7 @@ namespace FlaxEditor.Modules
             cm = MenuGame.ContextMenu;
             cm.VisibleChanged += OnMenuGameShowHide;
             _menuGamePlay = cm.AddButton("Play", "F5", Editor.Simulation.RequestStartPlay);
-            _menuGamePause = cm.AddButton("Pause", Editor.Simulation.RequestPausePlay);
+            _menuGamePause = cm.AddButton("Pause", "F6", Editor.Simulation.RequestPausePlay);
 
             // Tools
             MenuTools = MainMenu.AddButton("Tools");
@@ -518,7 +518,7 @@ namespace FlaxEditor.Modules
             _toolStripScale = (ToolStripButton)ToolStrip.AddButton(GetIcon("Scale32"), () => Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Scale).LinkTooltip("Change Gizmo tool mode to Scale (3)");
             ToolStrip.AddSeparator();
             _toolStripPlay = (ToolStripButton)ToolStrip.AddButton(GetIcon("Play32"), Editor.Simulation.RequestPlayOrStopPlay).LinkTooltip("Start/Stop simulation (F5)");
-            _toolStripPause = (ToolStripButton)ToolStrip.AddButton(GetIcon("Pause32"), Editor.Simulation.RequestResumeOrPause).LinkTooltip("Pause simulation");
+            _toolStripPause = (ToolStripButton)ToolStrip.AddButton(GetIcon("Pause32"), Editor.Simulation.RequestResumeOrPause).LinkTooltip("Pause/Resume simulation(F6)");
             _toolStripStep = (ToolStripButton)ToolStrip.AddButton(GetIcon("Step32"), Editor.Simulation.RequestPlayOneFrame).LinkTooltip("Step one frame in simulation");
 
             UpdateToolstrip();

@@ -84,6 +84,9 @@ namespace FlaxEditor.Windows
                     case Keys.F5:
                         Editor.Simulation.RequestStartPlay();
                         break;
+                    case Keys.F6:
+                        Editor.Simulation.RequestResumeOrPause();
+                        break;
                     case Keys.F11:
                         Editor.Simulation.RequestPlayOneFrame();
                         break;
