@@ -34,6 +34,11 @@ namespace FlaxEngine.Tests
             Assert.AreEqual(id1, id1Tmp);
         }
 
+        public static string FilterLineBreak(string str)
+        {
+            return str.Replace("\r", "");
+        }
+
         /// <summary>
         /// Test object serialization to JSON.
         /// </summary>
@@ -42,15 +47,15 @@ namespace FlaxEngine.Tests
         {
             ObjectOne obj = new ObjectOne();
 
-            Assert.AreEqual("{\r\n\t\"MyValue\": 0.0,\r\n\t\"MyVector\": {\r\n\t\t\"X\": 0.0,\r\n\t\t\"Y\": 0.0\r\n\t}\r\n}", JsonSerializer.Serialize(obj));
+            Assert.AreEqual("{\n\t\"MyValue\": 0.0,\n\t\"MyVector\": {\n\t\t\"X\": 0.0,\n\t\t\"Y\": 0.0\n\t}\n}", FilterLineBreak(JsonSerializer.Serialize(obj)));
 
             obj.MyValue = 1.2f;
 
-            Assert.AreEqual("{\r\n\t\"MyValue\": 1.2,\r\n\t\"MyVector\": {\r\n\t\t\"X\": 0.0,\r\n\t\t\"Y\": 0.0\r\n\t}\r\n}", JsonSerializer.Serialize(obj));
+            Assert.AreEqual("{\n\t\"MyValue\": 1.2,\n\t\"MyVector\": {\n\t\t\"X\": 0.0,\n\t\t\"Y\": 0.0\n\t}\n}", FilterLineBreak(JsonSerializer.Serialize(obj)));
 
             obj.MyVector.Y = 2.0f;
 
-            Assert.AreEqual("{\r\n\t\"MyValue\": 1.2,\r\n\t\"MyVector\": {\r\n\t\t\"X\": 0.0,\r\n\t\t\"Y\": 2.0\r\n\t}\r\n}", JsonSerializer.Serialize(obj));
+            Assert.AreEqual("{\n\t\"MyValue\": 1.2,\n\t\"MyVector\": {\n\t\t\"X\": 0.0,\n\t\t\"Y\": 2.0\n\t}\n}", FilterLineBreak(JsonSerializer.Serialize(obj)));
 
             obj.MyArray = new[]
             {
@@ -60,7 +65,7 @@ namespace FlaxEngine.Tests
                 4
             };
 
-            Assert.AreEqual("{\r\n\t\"MyValue\": 1.2,\r\n\t\"MyVector\": {\r\n\t\t\"X\": 0.0,\r\n\t\t\"Y\": 2.0\r\n\t},\r\n\t\"MyArray\": [\r\n\t\t1,\r\n\t\t2,\r\n\t\t3,\r\n\t\t4\r\n\t]\r\n}", JsonSerializer.Serialize(obj));
+            Assert.AreEqual("{\n\t\"MyValue\": 1.2,\n\t\"MyVector\": {\n\t\t\"X\": 0.0,\n\t\t\"Y\": 2.0\n\t},\n\t\"MyArray\": [\n\t\t1,\n\t\t2,\n\t\t3,\n\t\t4\n\t]\n}", FilterLineBreak(JsonSerializer.Serialize(obj)));
         }
 
         /// <summary>
@@ -71,25 +76,25 @@ namespace FlaxEngine.Tests
         {
             ObjectOne obj = new ObjectOne();
 
-            JsonSerializer.Deserialize(obj, "{\r\n\t\"MyValue\": 0.0,\r\n\t\"MyVector\": {\r\n\t\t\"X\": 0.0,\r\n\t\t\"Y\": 0.0\r\n\t}\r\n}");
+            JsonSerializer.Deserialize(obj, "{\n\t\"MyValue\": 0.0,\n\t\"MyVector\": {\n\t\t\"X\": 0.0,\n\t\t\"Y\": 0.0\n\t}\n}");
 
             Assert.AreEqual(0.0f, obj.MyValue);
             Assert.AreEqual(Vector2.Zero, obj.MyVector);
             Assert.IsNull(obj.MyArray);
 
-            JsonSerializer.Deserialize(obj, "{\r\n\t\"MyValue\": 1.2,\r\n\t\"MyVector\": {\r\n\t\t\"X\": 0.0,\r\n\t\t\"Y\": 0.0\r\n\t}\r\n}");
+            JsonSerializer.Deserialize(obj, "{\n\t\"MyValue\": 1.2,\n\t\"MyVector\": {\n\t\t\"X\": 0.0,\n\t\t\"Y\": 0.0\n\t}\n}");
 
             Assert.AreEqual(1.2f, obj.MyValue);
             Assert.AreEqual(Vector2.Zero, obj.MyVector);
             Assert.IsNull(obj.MyArray);
 
-            JsonSerializer.Deserialize(obj, "{\r\n\t\"MyValue\": 1.2,\r\n\t\"MyVector\": {\r\n\t\t\"X\": 0.0,\r\n\t\t\"Y\": 2.0\r\n\t}\r\n}");
+            JsonSerializer.Deserialize(obj, "{\n\t\"MyValue\": 1.2,\n\t\"MyVector\": {\n\t\t\"X\": 0.0,\n\t\t\"Y\": 2.0\n\t}\n}");
 
             Assert.AreEqual(1.2f, obj.MyValue);
             Assert.AreEqual(new Vector2(0.0f, 2.0f), obj.MyVector);
             Assert.IsNull(obj.MyArray);
 
-            JsonSerializer.Deserialize(obj, "{\r\n\t\"MyValue\": 1.2,\r\n\t\"MyVector\": {\r\n\t\t\"X\": 0.0,\r\n\t\t\"Y\": 2.0\r\n\t},\r\n\t\"MyArray\": [\r\n\t\t1,\r\n\t\t2,\r\n\t\t3,\r\n\t\t4\r\n\t]\r\n}");
+            JsonSerializer.Deserialize(obj, "{\n\t\"MyValue\": 1.2,\n\t\"MyVector\": {\n\t\t\"X\": 0.0,\n\t\t\"Y\": 2.0\n\t},\n\t\"MyArray\": [\n\t\t1,\n\t\t2,\n\t\t3,\n\t\t4\n\t]\n}");
 
             Assert.AreEqual(1.2f, obj.MyValue);
             Assert.AreEqual(new Vector2(0.0f, 2.0f), obj.MyVector);
@@ -116,7 +121,7 @@ namespace FlaxEngine.Tests
 
             obj.MyValue = 2.0f;
 
-            Assert.AreEqual("{\r\n\t\"MyValue\": 2.0\r\n}", JsonSerializer.SerializeDiff(obj, other));
+            Assert.AreEqual("{\n\t\"MyValue\": 2.0\n}", FilterLineBreak(JsonSerializer.SerializeDiff(obj, other)));
 
             obj.MyValue = 2.0f;
             other.MyValue = 2.0f;
@@ -125,7 +130,7 @@ namespace FlaxEngine.Tests
 
             other.MyArray = new[] { 1 };
 
-            Assert.AreEqual("{\r\n\t\"MyArray\": null\r\n}", JsonSerializer.SerializeDiff(obj, other));
+            Assert.AreEqual("{\n\t\"MyArray\": null\n}", FilterLineBreak(JsonSerializer.SerializeDiff(obj, other)));
 
             obj.MyArray = other.MyArray;
 
@@ -137,11 +142,11 @@ namespace FlaxEngine.Tests
 
             obj.MyArray = new[] { 2 };
 
-            Assert.AreEqual("{\r\n\t\"MyArray\": [\r\n\t\t2\r\n\t]\r\n}", JsonSerializer.SerializeDiff(obj, other));
+            Assert.AreEqual("{\n\t\"MyArray\": [\n\t\t2\n\t]\n}", FilterLineBreak(JsonSerializer.SerializeDiff(obj, other)));
 
             other.MyArray = null;
 
-            Assert.AreEqual("{\r\n\t\"MyArray\": [\r\n\t\t2\r\n\t]\r\n}", JsonSerializer.SerializeDiff(obj, other));
+            Assert.AreEqual("{\n\t\"MyArray\": [\n\t\t2\n\t]\n}", FilterLineBreak(JsonSerializer.SerializeDiff(obj, other)));
         }
     }
 }
