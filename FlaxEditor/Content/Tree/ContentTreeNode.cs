@@ -10,7 +10,7 @@ namespace FlaxEditor.Content
     /// <summary>
     /// Content folder tree node.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.TreeNode" />
+    /// <seealso cref="TreeNode" />
     public class ContentTreeNode : TreeNode
     {
         private DragItems _dragOverItems;

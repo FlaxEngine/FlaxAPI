@@ -1,13 +1,16 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEngine;
+using FlaxEngine.GUI;
 
-namespace FlaxEngine.GUI
+namespace FlaxEditor.GUI
 {
     /// <summary>
     /// Tree node control.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    [HideInEditor]
     public class TreeNode : ContainerControl
     {
         public const float DefaultDragInsertPositionMargin = 2.0f;
@@ -281,7 +284,10 @@ namespace FlaxEngine.GUI
 
             // Update
             OnExpandedChanged();
-            PerformLayout();
+            if (HasParent)
+                Parent.PerformLayout();
+            else
+                PerformLayout();
         }
 
         /// <summary>
@@ -304,7 +310,10 @@ namespace FlaxEngine.GUI
 
             // Update
             OnExpandedChanged();
-            PerformLayout();
+            if (HasParent)
+                Parent.PerformLayout();
+            else
+                PerformLayout();
         }
 
         /// <summary>
@@ -451,7 +460,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Updates the drag over mode based on teh given mouse location.
+        /// Updates the drag over mode based on the given mouse location.
         /// </summary>
         /// <param name="location">The location.</param>
         private void UpdateDrawPositioning(ref Vector2 location)

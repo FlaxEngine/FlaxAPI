@@ -134,7 +134,7 @@ namespace FlaxEngine.GUI
         ///     Gets or sets the docking style of the control.
         /// If vlue set is other than <see cref="FlaxEngine.GUI.DockStyle.None"/> then <see cref="IsScrollable"/> will be disabled by auto.
         /// </summary>
-        [EditorDisplay("Transform"), EditorOrder(1060), Tooltip("The docking style of the control. Define how control will be doced into the parent container. use None to disable it.")]
+        [EditorDisplay("Transform"), EditorOrder(1060), Tooltip("The docking style of the control. Defines how control will be docked into the parent container. Use None to disable it. Docked controls have disabled scrolling.")]
         public DockStyle DockStyle
         {
             get => _dockStyle;
@@ -172,8 +172,7 @@ namespace FlaxEngine.GUI
                     {
                         if (_anchorStyle == AnchorStyle.Center)
                         {
-                            var size = _parent.Size;
-                            OnParentResized(ref size);
+                            UpdateCenterAnchor();
                         }
                         else
                         {
@@ -333,25 +332,39 @@ namespace FlaxEngine.GUI
         public object Tag;
 
         /// <summary>
-        ///     Init
+        /// Initializes a new instance of the <see cref="Control"/> class.
+        /// </summary>
+        protected Control()
+        {
+            _bounds = new Rectangle(0, 0, 64, 64);
+
+            UpdateTransform();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Control"/> class.
         /// </summary>
         /// <param name="x">X coordinate</param>
         /// <param name="y">Y coordinate</param>
         /// <param name="width">Width</param>
         /// <param name="height">Height</param>
         protected Control(float x, float y, float width, float height)
-        : this(new Rectangle(x, y, width, height))
         {
+            _bounds = new Rectangle(x, y, width, height);
+
+            UpdateTransform();
         }
 
         /// <summary>
-        ///     Init
+        /// Initializes a new instance of the <see cref="Control"/> class.
         /// </summary>
         /// <param name="location">Upper left corner location.</param>
         /// <param name="size">Bounds size.</param>
         protected Control(Vector2 location, Vector2 size)
-        : this(new Rectangle(location, size))
         {
+            _bounds = new Rectangle(location, size);
+
+            UpdateTransform();
         }
 
         /// <summary>
@@ -964,6 +977,12 @@ namespace FlaxEngine.GUI
             UpdateTransform();
             SizeChanged?.Invoke(this);
             _parent?.OnChildResized(this);
+
+            // Auto-center
+            if (_anchorStyle == AnchorStyle.Center)
+            {
+                UpdateCenterAnchor();
+            }
         }
 
         /// <summary>
@@ -1028,6 +1047,11 @@ namespace FlaxEngine.GUI
         protected virtual void OnParentChangedInternal()
         {
             ParentChanged?.Invoke(this);
+        }
+
+        private void UpdateCenterAnchor()
+        {
+            Location = (_parent.Size - Size) * 0.5f;
         }
 
         /// <summary>

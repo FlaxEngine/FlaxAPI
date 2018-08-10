@@ -53,6 +53,12 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
+        /// Controls how much all lights will contribute idnirect lighting.
+        /// </summary>
+        [EditorOrder(0), Limit(0, 100.0f, 0.1f), Tooltip("Controls how much all lights will contribute idnirect lighting.")]
+        public float IndirectLightingIntensity;
+
+        /// <summary>
         /// Global scale for objects in lightmap to increase quality
         /// </summary>
         [EditorOrder(10), Limit(0, 100.0f, 0.1f), Tooltip("Global scale for objects in lightmap to increase quality")]
@@ -91,6 +97,7 @@ namespace FlaxEngine.Rendering
         [StructLayout(LayoutKind.Sequential)]
         internal struct Internal
         {
+            public float IndirectLightingIntensity;
             public float GlobalObjectsScale;
             public int ChartsPadding;
             public int AtlasSize;
@@ -103,6 +110,7 @@ namespace FlaxEngine.Rendering
         {
             return new LightmapSettings
             {
+                IndirectLightingIntensity = data.IndirectLightingIntensity,
                 GlobalObjectsScale = data.GlobalObjectsScale,
                 ChartsPadding = data.ChartsPadding,
                 AtlasSize = (AtlasSizes)data.AtlasSize,
@@ -116,6 +124,7 @@ namespace FlaxEngine.Rendering
         {
             return new Internal
             {
+                IndirectLightingIntensity = data.IndirectLightingIntensity,
                 GlobalObjectsScale = data.GlobalObjectsScale,
                 ChartsPadding = data.ChartsPadding,
                 AtlasSize = (int)data.AtlasSize,

@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using FlaxEditor.GUI;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors.Elements

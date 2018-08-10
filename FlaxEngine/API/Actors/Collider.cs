@@ -11,6 +11,12 @@ namespace FlaxEngine
     /// <param name="collision">The collision information.</param>
     public delegate void CollisionDelegate(Collision collision);
 
+    /// <summary>
+    /// Function delegate used for the trigger events.
+    /// </summary>
+    /// <param name="collider">The other collider.</param>
+    public delegate void TriggerDelegate(Collider collider);
+
     public abstract partial class Collider
     {
         /// <summary>
@@ -31,6 +37,26 @@ namespace FlaxEngine
         internal void OnCollisionExit(Collision collision)
         {
             CollisionExit?.Invoke(collision);
+        }
+
+        /// <summary>
+        /// Occurs when a trigger touching start gets registered for this collider (the other collider enters it and triggers the event).
+        /// </summary>
+        public event TriggerDelegate TriggerEnter;
+
+        /// <summary>
+        /// Occurs when a trigger touching end gets registered for this collider (the other collider enters it and triggers the event).
+        /// </summary>
+        public event TriggerDelegate TriggerExit;
+
+        internal void OnTriggerEnter(Collider collider)
+        {
+            TriggerEnter?.Invoke(collider);
+        }
+
+        internal void OnTriggerExit(Collider collider)
+        {
+            TriggerExit?.Invoke(collider);
         }
 
         /// <summary>

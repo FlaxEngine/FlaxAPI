@@ -28,8 +28,14 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the color of the text.
         /// </summary>
-        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the text")]
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the text.")]
         public Color TextColor { get; set; } = Color.White;
+
+        /// <summary>
+        /// Gets or sets the color of the text when it is highlighted (mouse is over).
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the text when it is highlighted (mouse is over).")]
+        public Color TextColorHighlighted { get; set; } = Color.White;
 
         /// <summary>
         /// Gets or sets the horizontal text alignment within the control bounds.
@@ -54,6 +60,12 @@ namespace FlaxEngine.GUI
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000)]
         public FontReference Font { get; set; }
+
+        /// <summary>
+        /// Gets or sets the custom material used to render the text. It must has domain set to GUI and have a public texture parameter named Font used to sample font atlas texture with font characters data.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
+        public MaterialBase Material { get; set; }
 
         /// <summary>
         /// Gets or sets the margin for the text within the control bounds.
@@ -105,29 +117,26 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public Label(Vector2 location, Vector2 size)
-        : base(location, size)
-        {
-            CanFocus = false;
-            var style = Style.Current;
-            Font = new FontReference(style.FontMedium);
-        }
-
-        /// <inheritdoc />
         public override void Draw()
         {
             base.Draw();
-            
+
             var rect = new Rectangle(new Vector2(Margin.Left, Margin.Top), Size - Margin.Size);
 
             if (ClipText)
                 Render2D.PushClip(ref rect);
 
+            var color = IsMouseOver ? TextColorHighlighted : TextColor;
+
+            if (!EnabledInHierarchy)
+                color *= 0.6f;
+
             Render2D.DrawText(
                 Font.GetFont(),
+                Material,
                 Text,
                 rect,
-                TextColor,
+                color,
                 HorizontalAlignment,
                 _autoHeight ? TextAlignment.Near : VerticalAlignment,
                 Wrapping

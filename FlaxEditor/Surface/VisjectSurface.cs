@@ -566,39 +566,39 @@ namespace FlaxEditor.Surface
                 ISurfaceNodeElement element = null;
                 switch (arch.Type)
                 {
-                    case NodeElementType.Input:
-                        element = new InputBox(node, arch);
-                        break;
-                    case NodeElementType.Output:
-                        element = new OutputBox(node, arch);
-                        break;
-                    case NodeElementType.BoolValue:
-                        element = new BoolValue(node, arch);
-                        break;
-                    case NodeElementType.FloatValue:
-                        element = new FloatValue(node, arch);
-                        break;
-                    case NodeElementType.IntegerValue:
-                        element = new IntegerValue(node, arch);
-                        break;
-                    case NodeElementType.ColorValue:
-                        element = new ColorValue(node, arch);
-                        break;
-                    case NodeElementType.ComboBox:
-                        element = new ComboBoxElement(node, arch);
-                        break;
-                    case NodeElementType.Asset:
-                        element = new AssetSelect(node, arch);
-                        break;
-                    case NodeElementType.Text:
-                        element = new TextView(node, arch);
-                        break;
-                    case NodeElementType.TextBox:
-                        element = new TextBoxView(node, arch);
-                        break;
-                    case NodeElementType.SkeletonNodeSelect:
-                        element = new SkeletonNodeSelectElement(node, arch);
-                        break;
+                case NodeElementType.Input:
+                    element = new InputBox(node, arch);
+                    break;
+                case NodeElementType.Output:
+                    element = new OutputBox(node, arch);
+                    break;
+                case NodeElementType.BoolValue:
+                    element = new BoolValue(node, arch);
+                    break;
+                case NodeElementType.FloatValue:
+                    element = new FloatValue(node, arch);
+                    break;
+                case NodeElementType.IntegerValue:
+                    element = new IntegerValue(node, arch);
+                    break;
+                case NodeElementType.ColorValue:
+                    element = new ColorValue(node, arch);
+                    break;
+                case NodeElementType.ComboBox:
+                    element = new ComboBoxElement(node, arch);
+                    break;
+                case NodeElementType.Asset:
+                    element = new AssetSelect(node, arch);
+                    break;
+                case NodeElementType.Text:
+                    element = new TextView(node, arch);
+                    break;
+                case NodeElementType.TextBox:
+                    element = new TextBoxView(node, arch);
+                    break;
+                case NodeElementType.SkeletonNodeSelect:
+                    element = new SkeletonNodeSelectElement(node, arch);
+                    break;
                 }
                 if (element != null)
                 {

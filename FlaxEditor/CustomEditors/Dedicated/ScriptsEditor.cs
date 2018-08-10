@@ -409,7 +409,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 IsScrollable = false,
                 Color = new Color(0.7f),
                 Margin = new Margin(1),
-                ImageSource = new SpriteImageSource(FlaxEngine.GUI.Style.Current.Settings),
+                Brush = new SpriteBrush(FlaxEngine.GUI.Style.Current.Settings),
                 Tag = index,
                 Parent = group.Panel
             };
@@ -509,7 +509,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     IsScrollable = false,
                     Color = new Color(0.7f),
                     Margin = new Margin(1),
-                    ImageSource = new SpriteImageSource(Editor.Instance.UI.DragBar12),
+                    Brush = new SpriteBrush(Editor.Instance.UI.DragBar12),
                     Tag = script,
                     Parent = group.Panel
                 };
@@ -524,7 +524,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     IsScrollable = false,
                     Color = new Color(0.7f),
                     Margin = new Margin(1),
-                    ImageSource = new SpriteImageSource(FlaxEngine.GUI.Style.Current.Settings),
+                    Brush = new SpriteBrush(FlaxEngine.GUI.Style.Current.Settings),
                     Tag = script,
                     Parent = group.Panel
                 };

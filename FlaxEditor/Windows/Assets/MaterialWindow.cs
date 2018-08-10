@@ -136,22 +136,22 @@ namespace FlaxEditor.Windows.Assets
                         Type pType;
                         switch (p.Type)
                         {
-                            case MaterialParameterType.CubeTexture:
-                                pType = typeof(CubeTexture);
-                                pGuidType = true;
-                                break;
-                            case MaterialParameterType.Texture:
-                            case MaterialParameterType.NormalMap:
-                                pType = typeof(Texture);
-                                pGuidType = true;
-                                break;
-                            case MaterialParameterType.RenderTarget:
-                                pType = typeof(RenderTarget);
-                                pGuidType = true;
-                                break;
-                            default:
-                                pType = p.Value.GetType();
-                                break;
+                        case MaterialParameterType.CubeTexture:
+                            pType = typeof(CubeTexture);
+                            pGuidType = true;
+                            break;
+                        case MaterialParameterType.Texture:
+                        case MaterialParameterType.NormalMap:
+                            pType = typeof(Texture);
+                            pGuidType = true;
+                            break;
+                        case MaterialParameterType.RenderTarget:
+                            pType = typeof(RenderTarget);
+                            pGuidType = true;
+                            break;
+                        default:
+                            pType = p.Value.GetType();
+                            break;
                         }
 
                         var propertyValue = new CustomValueContainer(
@@ -205,7 +205,7 @@ namespace FlaxEditor.Windows.Assets
                     var parameter = material.Parameters[(int)label.Tag];
                     return DragSurfaceParameter.GetDragData(parameter.Name);
                 }
-                
+
                 /// <summary>
                 /// Shows the parameter context menu.
                 /// </summary>
@@ -455,7 +455,7 @@ namespace FlaxEditor.Windows.Assets
             // Early check
             if (_asset == null || _isWaitingForSurfaceLoad)
                 return true;
-            
+
             // Check if surface has been edited
             if (_surface.IsEdited)
             {

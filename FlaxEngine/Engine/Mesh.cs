@@ -246,6 +246,46 @@ namespace FlaxEngine
                 throw new FlaxException("Failed to update mesh data.");
         }
 
+        /// <summary>
+        /// Updates the model mesh index buffer data.
+        /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
+        /// Mesh data will be cached and uploaded to the GPU with a delay.
+        /// </summary>
+        /// <param name="triangles">The mesh index buffer (triangles). Uses 32-bit stride buffer. Cannot be null.</param>
+        public void UpdateTriangles(int[] triangles)
+        {
+            // Validate state and input
+            if (!_model.IsVirtual)
+                throw new InvalidOperationException("Only virtual models can be updated at runtime.");
+            if (triangles == null)
+                throw new ArgumentNullException(nameof(triangles));
+            if (triangles.Length == 0 || triangles.Length % 3 != 0)
+                throw new ArgumentOutOfRangeException(nameof(triangles));
+
+            if (Internal_UpdateTrianglesInt(_model.unmanagedPtr, _lodIndex, _meshIndex, triangles))
+                throw new FlaxException("Failed to update mesh data.");
+        }
+
+        /// <summary>
+        /// Updates the model mesh index buffer data.
+        /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
+        /// Mesh data will be cached and uploaded to the GPU with a delay.
+        /// </summary>
+        /// <param name="triangles">The mesh index buffer (triangles). Uses 16-bit stride buffer. Cannot be null.</param>
+        public void UpdateTriangles(ushort[] triangles)
+        {
+            // Validate state and input
+            if (!_model.IsVirtual)
+                throw new InvalidOperationException("Only virtual models can be updated at runtime.");
+            if (triangles == null)
+                throw new ArgumentNullException(nameof(triangles));
+            if (triangles.Length == 0 || triangles.Length % 3 != 0)
+                throw new ArgumentOutOfRangeException(nameof(triangles));
+
+            if (Internal_UpdateTrianglesUShort(_model.unmanagedPtr, _lodIndex, _meshIndex, triangles))
+                throw new FlaxException("Failed to update mesh data.");
+        }
+
         internal enum InternalBufferType
         {
             VB0 = 0,
@@ -400,6 +440,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_UpdateMeshUShort(IntPtr obj, int lodIndex, int meshIndex, Vector3[] vertices, ushort[] triangles, Vector3[] normals, Vector3[] tangents, Vector2[] uv, Color32[] colors);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_UpdateTrianglesInt(IntPtr obj, int lodIndex, int meshIndex, int[] triangles);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_UpdateTrianglesUShort(IntPtr obj, int lodIndex, int meshIndex, ushort[] triangles);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_DownloadBuffer(IntPtr obj, int lodIndex, int meshIndex, bool forceGpu, Array result, InternalBufferType type);

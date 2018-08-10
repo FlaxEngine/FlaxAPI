@@ -333,7 +333,7 @@ namespace FlaxEditor.Modules
             style.ProgressNormal = Color.FromBgra(0xFF0ad328);
 
             // Color picking
-            style.ShowPickColorDialog += (initialValue, colorChanged, useDynamicEditing) => new ColorPickerDialog(initialValue, colorChanged, useDynamicEditing).Show();
+            ColorValueBox.ShowPickColorDialog += (initialValue, colorChanged, useDynamicEditing) => new ColorPickerDialog(initialValue, colorChanged, useDynamicEditing).Show();
 
             // Font
             var primaryFont = FlaxEngine.Content.LoadInternal<FontAsset>(EditorAssets.PrimaryFont);
@@ -366,9 +366,9 @@ namespace FlaxEditor.Modules
             style.CheckBoxIntermediate = GetIcon("CheckBoxIntermediate12");
             style.CheckBoxTick = GetIcon("CheckBoxTick12");
             style.StatusBarSizeGrip = GetIcon("StatusBarSizeGrip12");
-            style.Translate16 = GetIcon("Translate16");
-            style.Rotate16 = GetIcon("Rotate16");
-            style.Scale16 = GetIcon("Scale16");
+            style.Translate = GetIcon("Translate16");
+            style.Rotate = GetIcon("Rotate16");
+            style.Scale = GetIcon("Scale16");
 
             style.SharedTooltip = new Tooltip();
 

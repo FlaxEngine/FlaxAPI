@@ -56,15 +56,16 @@ namespace FlaxEditor.Surface
             var toBeDeselected = new System.Collections.Generic.List<SurfaceNode>();
 
             using (var outputBoxes = Selection
-                                    .OrderBy(n => n.Top)
-                                    .SelectMany(n => n.GetBoxes())
-                                    .Where(b => b.IsOutput && !b.HasAnyConnection)
-                                    .GetEnumerator())
+                                     .OrderBy(n => n.Top)
+                                     .SelectMany(n => n.GetBoxes())
+                                     .Where(b => b.IsOutput && !b.HasAnyConnection)
+                                     .GetEnumerator())
             {
                 // For each input box (I'm assuming that they are sorted properly)
                 foreach (var inputBox in node.GetBoxes().Where(box => !box.IsOutput))
                 {
                     Box connectWith = null;
+
                     // Find the next decent output box and connect them
                     while (connectWith == null && outputBoxes.MoveNext())
                     {
@@ -83,7 +84,7 @@ namespace FlaxEditor.Surface
                             {
                                 // Everything is fine
                                 // If this one doesn't have any alternatives, I can just connect it regardless of the consequences
-                                if (outputBox.ParentNode.Elements.Where(e => e is Box).Count() <= 1)
+                                if (outputBox.ParentNode.Elements.Count(e => e is Box) <= 1)
                                 {
                                     connectAnyways = true;
                                 }
@@ -103,7 +104,7 @@ namespace FlaxEditor.Surface
                             }
                         }
 
-                        //If they can easily be connected, just do it ✔
+                        // If they can easily be connected, just do it ✔
                         if ((inputBox.CurrentType & outputBox.CurrentType) != 0)
                         {
                             connectWith = outputBox;
@@ -115,7 +116,7 @@ namespace FlaxEditor.Surface
                     }
                     if (connectWith != null)
                     {
-                        //Connect them
+                        // Connect them
                         connectWith.CreateConnection(inputBox);
                         toBeDeselected.Add(connectWith.ParentNode);
                     }

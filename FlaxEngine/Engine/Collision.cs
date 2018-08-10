@@ -115,7 +115,7 @@ namespace FlaxEngine
                     if (version != 1)
                         return null;
                     int collisionsCount = stream.ReadInt32();
-                    
+
                     if (_data == null || _data.Length < collisionsCount * 2)
                         _data = new Collision[(int)(collisionsCount * 2 * 1.5f)];
                     _dataUsed = collisionsCount * 2;
@@ -142,7 +142,7 @@ namespace FlaxEngine
             return _data;
         }
 
-        internal static void Internal_SendEvents(int newStart, int newCount, int removedStart, int removedCount)
+        internal static void Internal_SendCollisions(int newStart, int newCount, int removedStart, int removedCount)
         {
             Collision c;
 

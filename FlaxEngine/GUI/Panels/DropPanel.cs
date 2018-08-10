@@ -85,6 +85,12 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Gets or sets the color used to draw header text.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
+        public Color HeaderTextColor;
+
+        /// <summary>
         /// Gets or sets the color of the header.
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000)]
@@ -101,6 +107,12 @@ namespace FlaxEngine.GUI
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000)]
         public FontReference HeaderTextFont { get; set; }
+
+        /// <summary>
+        /// Gets or sets the custom material used to render the text. It must has domain set to GUI and have a public texture parameter named Font used to sample font atlas texture with font characters data.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("Custom material used to render the header text. It must has domain set to GUI and have a public texture parameter named Font used to sample font atlas texture with font characters data.")]
+        public MaterialBase HeaderTextMaterial { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether enable drop down icon drawing.
@@ -153,6 +165,18 @@ namespace FlaxEngine.GUI
         public float CloseAnimationTime { get; set; } = 0.2f;
 
         /// <summary>
+        /// Gets or sets the image used to render drop panel drop arrow icon when panel is opened.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The image used to render drop panel drop arrow icon when panel is opened.")]
+        public IBrush ArrowImageOpened { get; set; }
+
+        /// <summary>
+        /// Gets or sets the image used to render drop panel drop arrow icon when panel is closed.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The image used to render drop panel drop arrow icon when panel is closed.")]
+        public IBrush ArrowImageClosed { get; set; }
+
+        /// <summary>
         /// Gets the header rectangle.
         /// </summary>
         protected Rectangle HeaderRectangle => new Rectangle(0, 0, Width, HeaderHeight);
@@ -190,6 +214,9 @@ namespace FlaxEngine.GUI
             HeaderColor = style.BackgroundNormal;
             HeaderColorMouseOver = style.BackgroundHighlighted;
             HeaderTextFont = new FontReference(style.FontMedium);
+            HeaderTextColor = style.Foreground;
+            ArrowImageOpened = new SpriteBrush(style.ArrowDown);
+            ArrowImageClosed = new SpriteBrush(style.ArrowRight);
         }
 
         /// <summary>
@@ -284,7 +311,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void Draw()
         {
-            var style = Style.Current;
+            var enabled = EnabledInHierarchy;
 
             // Paint Background
             var backgroundColor = BackgroundColor;
@@ -306,13 +333,22 @@ namespace FlaxEngine.GUI
             {
                 textLeft += 14;
                 var dropDownRect = new Rectangle(2, (HeaderHeight - 12) / 2, 12, 12);
-                Render2D.DrawSprite(_isClosed ? style.ArrowRight : style.ArrowDown, dropDownRect, _mouseOverHeader ? Color.White : new Color(0.8f, 0.8f, 0.8f, 0.8f));
+                var arrowColor = _mouseOverHeader ? Color.White : new Color(0.8f);
+                if (_isClosed)
+                    ArrowImageClosed?.Draw(dropDownRect, arrowColor, true);
+                else
+                    ArrowImageOpened?.Draw(dropDownRect, arrowColor, true);
             }
 
             // Text
             var textRect = new Rectangle(textLeft, 0, Width - textLeft, HeaderHeight);
             _headerTextMargin.ShrinkRectangle(ref textRect);
-            Render2D.DrawText(HeaderTextFont.GetFont(), HeaderText, textRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
+            var textColor = HeaderTextColor;
+            if (!enabled)
+            {
+                textColor *= 0.6f;
+            }
+            Render2D.DrawText(HeaderTextFont.GetFont(), HeaderTextMaterial, HeaderText, textRect, textColor, TextAlignment.Near, TextAlignment.Center);
 
             // Draw child controls that are not arranged (pined to the header, etc.)
             for (int i = 0; i < _children.Count; i++)

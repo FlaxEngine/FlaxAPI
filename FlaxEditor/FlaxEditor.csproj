@@ -121,7 +121,7 @@
     <Compile Include="CustomEditors\Editors\FloatEditor.cs" />
     <Compile Include="CustomEditors\Editors\GenericEditor.cs" />
     <Compile Include="CustomEditors\Editors\GuidEditor.cs" />
-    <Compile Include="CustomEditors\Editors\IImageSourceEditor.cs" />
+    <Compile Include="CustomEditors\Editors\IBrushEditor.cs" />
     <Compile Include="CustomEditors\Editors\IntegerEditor.cs" />
     <Compile Include="CustomEditors\Editors\ListEditor.cs" />
     <Compile Include="CustomEditors\Editors\MatrixEditor.cs" />
@@ -165,6 +165,13 @@
     <Compile Include="CustomEditors\Values\ValueContainer.cs" />
     <Compile Include="CustomEditorWindow.cs" />
     <Compile Include="EditorAssets.cs" />
+    <Compile Include="GUI\ComboBox.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenu.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuBase.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuButton.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuChildMenu.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuItem.cs" />
+    <Compile Include="GUI\ContextMenu\ContextMenuSeparator.cs" />
     <Compile Include="GUI\Docking\DockHintWindow.cs" />
     <Compile Include="GUI\Docking\DockPanel.cs" />
     <Compile Include="GUI\Docking\DockPanelProxy.cs" />
@@ -181,6 +188,14 @@
     <Compile Include="GUI\Drag\DragScriptItems.cs" />
     <Compile Include="GUI\Drag\DragScripts.cs" />
     <Compile Include="GUI\Drag\DragSurfaceParameter.cs" />
+    <Compile Include="GUI\Input\ColorValueBox.cs" />
+    <Compile Include="GUI\Input\DoubleValueBox.cs" />
+    <Compile Include="GUI\Input\FloatValueBox.cs" />
+    <Compile Include="GUI\Input\IntValueBox.cs" />
+    <Compile Include="GUI\Input\LongValueBox.cs" />
+    <Compile Include="GUI\Input\SliderControl.cs" />
+    <Compile Include="GUI\Input\ULongValueBox.cs" />
+    <Compile Include="GUI\Input\ValueBox.cs" />
     <Compile Include="GUI\PlatformSelector.cs" />
     <Compile Include="GUI\RenamePopup.cs" />
     <Compile Include="Content\Proxy\BinaryAssetProxy.cs" />
@@ -239,6 +254,8 @@
     <Compile Include="GUI\ToolStrip.cs" />
     <Compile Include="GUI\ToolStripButton.cs" />
     <Compile Include="GUI\ToolStripSeparator.cs" />
+    <Compile Include="GUI\Tree\Tree.cs" />
+    <Compile Include="GUI\Tree\TreeNode.cs" />
     <Compile Include="History\HistoryStack.cs" />
     <Compile Include="History\IHistoryAction.cs" />
     <Compile Include="History\UndoActionObject.cs" />

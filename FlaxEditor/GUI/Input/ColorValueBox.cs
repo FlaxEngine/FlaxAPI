@@ -12,6 +12,26 @@ namespace FlaxEngine.GUI
     public class ColorValueBox : Control
     {
         /// <summary>
+        /// Delegate function used for the color picker events handling.
+        /// </summary>
+        /// <param name="color">The selected color.</param>
+        /// <param name="sliding">True if user is using a slider, otherwise false.</param>
+        public delegate void ColorPickerEvent(Color color, bool sliding);
+
+        /// <summary>
+        /// Delegate function used to handle showing color picking dialog.
+        /// </summary>
+        /// <param name="initialValue">The initial value.</param>
+        /// <param name="colorChanged">The color changed event.</param>
+        /// <param name="useDynamicEditing">True if allow dynamic value editing (slider-like usage), otherwise will fire color change event only on editing end.</param>
+        public delegate void ShowPickColorDialogDelegate(Color initialValue, ColorPickerEvent colorChanged, bool useDynamicEditing = true);
+
+        /// <summary>
+        /// Shows picking color dialog (see <see cref="ShowPickColorDialogDelegate"/>).
+        /// </summary>
+        public static ShowPickColorDialogDelegate ShowPickColorDialog;
+
+        /// <summary>
         /// True if slider is in use.
         /// </summary>
         protected bool _isSliding;
@@ -96,7 +116,7 @@ namespace FlaxEngine.GUI
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             // Show color picker dialog
-            Style.Current.ShowPickColorDialog?.Invoke(_value, OnColorChanged);
+            ShowPickColorDialog?.Invoke(_value, OnColorChanged);
 
             return true;
         }

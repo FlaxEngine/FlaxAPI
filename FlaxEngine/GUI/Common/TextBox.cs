@@ -274,6 +274,42 @@ namespace FlaxEngine.GUI
         public FontReference Font { get; set; }
 
         /// <summary>
+        /// Gets or sets the custom material used to render the text. It must has domain set to GUI and have a public texture parameter named Font used to sample font atlas texture with font characters data.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("Custom material used to render the text. It must has domain set to GUI and have a public texture parameter named Font used to sample font atlas texture with font characters data.")]
+        public MaterialBase TextMaterial { get; set; }
+
+        /// <summary>
+        /// Gets or sets textbox background color when the control is selected (has focus).
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The textbox background color when the control is selected (has focus).")]
+        public Color BackgroundSelectedColor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color of the text.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the text.")]
+        public Color TextColor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color of the text.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the watermark text.")]
+        public Color WatermarkTextColor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color of the selection (Transparent if not used).
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the selection (Transparent if not used).")]
+        public Color SelectionColor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color of the caret (Transparent if not used).
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the caret (Transparent if not used).")]
+        public Color CaretColor { get; set; }
+
+        /// <summary>
         /// Gets or sets the color of the border (Transparent if not used).
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the border (Transparent if not used).")]
@@ -335,8 +371,14 @@ namespace FlaxEngine.GUI
 
             var style = Style.Current;
             Font = new FontReference(style.FontMedium);
+            TextColor = style.Foreground;
+            WatermarkTextColor = new Color(0.7f);
+            CaretColor = style.Foreground;
+            SelectionColor = style.BackgroundSelected;
             BorderColor = Color.Transparent;
             BorderSelectedColor = style.BackgroundSelected;
+            BackgroundColor = style.TextBoxBackground;
+            BackgroundSelectedColor = style.TextBoxBackgroundSelected;
         }
 
         /// <summary>
@@ -353,7 +395,7 @@ namespace FlaxEngine.GUI
         public void ClearSelection()
         {
             OnSelectingEnd();
-            setSelection(-1);
+            SetSelection(-1);
         }
 
         /// <summary>
@@ -394,7 +436,7 @@ namespace FlaxEngine.GUI
                 // Remove selection
                 int left = SelectionLeft;
                 _text = _text.Remove(left, SelectionLength);
-                setSelection(left);
+                SetSelection(left);
                 OnTextChanged();
             }
         }
@@ -414,7 +456,7 @@ namespace FlaxEngine.GUI
 
             var right = SelectionRight;
             Insert(clipboardText);
-            setSelection(right + clipboardText.Length);
+            SetSelection(right + clipboardText.Length);
         }
 
         /// <summary>
@@ -429,9 +471,9 @@ namespace FlaxEngine.GUI
             if (selectedText.Length > 0)
             {
                 var right = SelectionRight;
-                setSelection(right);
+                SetSelection(right);
                 Insert(selectedText);
-                setSelection(right, right + selectedText.Length);
+                SetSelection(right, right + selectedText.Length);
             }
         }
 
@@ -463,7 +505,7 @@ namespace FlaxEngine.GUI
         {
             if (TextLength > 0)
             {
-                setSelection(0, TextLength);
+                SetSelection(0, TextLength);
             }
         }
 
@@ -472,11 +514,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void Deselect()
         {
-            setSelection(-1);
+            SetSelection(-1);
         }
 
         #region Logic
-        
+
         private int CharIndexAtPoint(ref Vector2 location)
         {
             Assert.IsNotNull(Font, "Missing font.");
@@ -507,7 +549,7 @@ namespace FlaxEngine.GUI
             if (TextLength == 0)
             {
                 _text = str;
-                setSelection(TextLength);
+                SetSelection(TextLength);
             }
             else
             {
@@ -517,7 +559,7 @@ namespace FlaxEngine.GUI
 
                 _text = _text.Insert(left, str);
 
-                setSelection(left + 1);
+                SetSelection(left + 1);
             }
 
             OnTextChanged();
@@ -527,7 +569,7 @@ namespace FlaxEngine.GUI
         {
             if (HasSelection && !shift)
             {
-                setSelection(SelectionRight);
+                SetSelection(SelectionRight);
             }
             else if (SelectionRight < TextLength)
             {
@@ -539,11 +581,11 @@ namespace FlaxEngine.GUI
 
                 if (shift)
                 {
-                    setSelection(_selectionStart, position);
+                    SetSelection(_selectionStart, position);
                 }
                 else
                 {
-                    setSelection(position);
+                    SetSelection(position);
                 }
             }
         }
@@ -552,7 +594,7 @@ namespace FlaxEngine.GUI
         {
             if (HasSelection && !shift)
             {
-                setSelection(SelectionLeft);
+                SetSelection(SelectionLeft);
             }
             else if (SelectionLeft > 0)
             {
@@ -564,11 +606,11 @@ namespace FlaxEngine.GUI
 
                 if (shift)
                 {
-                    setSelection(_selectionStart, position);
+                    SetSelection(_selectionStart, position);
                 }
                 else
                 {
-                    setSelection(position);
+                    SetSelection(position);
                 }
             }
         }
@@ -577,7 +619,7 @@ namespace FlaxEngine.GUI
         {
             if (HasSelection && !shift)
             {
-                setSelection(SelectionRight);
+                SetSelection(SelectionRight);
             }
             else
             {
@@ -585,11 +627,11 @@ namespace FlaxEngine.GUI
 
                 if (shift)
                 {
-                    setSelection(_selectionStart, position);
+                    SetSelection(_selectionStart, position);
                 }
                 else
                 {
-                    setSelection(position);
+                    SetSelection(position);
                 }
             }
         }
@@ -598,7 +640,7 @@ namespace FlaxEngine.GUI
         {
             if (HasSelection && !shift)
             {
-                setSelection(SelectionLeft);
+                SetSelection(SelectionLeft);
             }
             else
             {
@@ -606,21 +648,21 @@ namespace FlaxEngine.GUI
 
                 if (shift)
                 {
-                    setSelection(_selectionStart, position);
+                    SetSelection(_selectionStart, position);
                 }
                 else
                 {
-                    setSelection(position);
+                    SetSelection(position);
                 }
             }
         }
 
-        private void setSelection(int caret)
+        private void SetSelection(int caret)
         {
-            setSelection(caret, caret);
+            SetSelection(caret, caret);
         }
 
-        private void setSelection(int start, int end)
+        private void SetSelection(int start, int end)
         {
             // Update parameters
             int textLength = _text.Length;
@@ -791,18 +833,15 @@ namespace FlaxEngine.GUI
         public override void Draw()
         {
             // Cache data
-            var style = Style.Current;
             var rect = new Rectangle(Vector2.Zero, Size);
             bool enabled = EnabledInHierarchy;
             var font = Font.GetFont();
             Assert.IsNotNull(font, "Missing font.");
 
             // Background
-            Color backColor = style.TextBoxBackground;
+            Color backColor = BackgroundColor;
             if (IsMouseOver)
-                backColor = style.TextBoxBackgroundSelected;
-            if (BackgroundColor.A > 0)
-                backColor = BackgroundColor;
+                backColor = BackgroundSelectedColor;
             Render2D.FillRectangle(rect, backColor);
             if (IsFocused && BorderSelectedColor.A > 0.0f)
                 Render2D.DrawRectangle(rect, BorderSelectedColor);
@@ -829,7 +868,7 @@ namespace FlaxEngine.GUI
                 alpha = alpha * alpha;
                 if (!IsFocused)
                     alpha = 0.1f;
-                Color selectionColor = style.BackgroundSelected * alpha;
+                Color selectionColor = SelectionColor * alpha;
                 //
                 int selectedLinesCount = 1 + Mathf.FloorToInt((rightEdge.Y - leftEdge.Y) / fontHeight);
                 if (selectedLinesCount == 1)
@@ -861,11 +900,14 @@ namespace FlaxEngine.GUI
             // Text or watermark
             if (_text.Length > 0)
             {
-                Render2D.DrawText(font, _text, _layout.Bounds, enabled ? style.Foreground : style.ForegroundDisabled, _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
+                var color = TextColor;
+                if (!enabled)
+                    color *= 0.6f;
+                Render2D.DrawText(font, TextMaterial, _text, _layout.Bounds, color, _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
             }
             else if (!string.IsNullOrEmpty(WatermarkText) && !IsFocused)
             {
-                Render2D.DrawText(font, WatermarkText, _layout.Bounds, new Color(0.7f), _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
+                Render2D.DrawText(font, TextMaterial, WatermarkText, _layout.Bounds, WatermarkTextColor, _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
             }
 
             // Caret
@@ -873,7 +915,7 @@ namespace FlaxEngine.GUI
             {
                 float alpha = Mathf.Saturate(Mathf.Cos(_animateTime * Mathf.TwoPi) * 0.5f + 0.7f);
                 alpha = alpha * alpha * alpha * alpha * alpha * alpha;
-                Render2D.FillRectangle(CaretBounds, style.Foreground * alpha, true);
+                Render2D.FillRectangle(CaretBounds, CaretColor * alpha, true);
             }
 
             // Restore rendering state
@@ -920,7 +962,7 @@ namespace FlaxEngine.GUI
                 int currentIndex = CharIndexAtPoint(ref location);
 
                 // Modify selection end
-                setSelection(_selectionStart, currentIndex);
+                SetSelection(_selectionStart, currentIndex);
             }
         }
 
@@ -932,7 +974,7 @@ namespace FlaxEngine.GUI
                 OnSelectingBegin();
 
                 // Calculate char index under the mouse location
-                setSelection(CharIndexAtPoint(ref location));
+                SetSelection(CharIndexAtPoint(ref location));
             }
 
             // Base

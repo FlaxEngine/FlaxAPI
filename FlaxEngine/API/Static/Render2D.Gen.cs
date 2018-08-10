@@ -99,7 +99,33 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawText(Object.GetUnmanagedPtr(font), text, ref layoutRect, ref color, horizontalAlignment, verticalAlignment, textWrapping, baseLinesGapScale, scale);
+            Internal_DrawText1(Object.GetUnmanagedPtr(font), text, ref layoutRect, ref color, horizontalAlignment, verticalAlignment, textWrapping, baseLinesGapScale, scale);
+#endif
+        }
+
+        /// <summary>
+        /// Draws text using a custom material shader. Given material must have GUI domain and a public parameter named Font (texture parameter used for a font atlas sampling).
+        /// </summary>
+        /// <param name="font">Font to use</param>
+        /// <param name="customMaterial">Custom material for font characters rendering. It must contain texture parameter named Font used to sample font texture.</param>
+        /// <param name="text">Text to render</param>
+        /// <param name="layoutRect">The size and position of the area in which the text is drawn</param>
+        /// <param name="color">Text color</param>
+        /// <param name="horizontalAlignment">Horizontal alignment of the text in a layout rectangle</param>
+        /// <param name="verticalAlignment">Vetical alignment of the text in a layout rectangle</param>
+        /// <param name="textWrapping">Describes how wrap text inside a layout rectangle</param>
+        /// <param name="baseLinesGapScale">Scale for distance one baseline from another. Default is 1.</param>
+        /// <param name="scale">Text drawing scale. Default is 1.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DrawText(Font font, MaterialBase customMaterial, string text, Rectangle layoutRect, Color color, TextAlignment horizontalAlignment = TextAlignment.Near, TextAlignment verticalAlignment = TextAlignment.Near, TextWrapping textWrapping = TextWrapping.NoWrap, float baseLinesGapScale = 1.0f, float scale = 1.0f)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawText2(Object.GetUnmanagedPtr(font), Object.GetUnmanagedPtr(customMaterial), text, ref layoutRect, ref color, horizontalAlignment, verticalAlignment, textWrapping, baseLinesGapScale, scale);
 #endif
         }
 
@@ -282,7 +308,44 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawMaterial(Object.GetUnmanagedPtr(material), ref rect);
+            Internal_DrawMaterial1(Object.GetUnmanagedPtr(material), ref rect);
+#endif
+        }
+
+        /// <summary>
+        /// Draws the GUI material in the 2D.
+        /// </summary>
+        /// <param name="material">Material to render. Must be a GUI material type.</param>
+        /// <param name="rect">The target rectangle to draw.</param>
+        /// <param name="color">Color to use</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DrawMaterial(MaterialBase material, Rectangle rect, Color color)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawMaterial2(Object.GetUnmanagedPtr(material), ref rect, ref color);
+#endif
+        }
+
+        /// <summary>
+        /// Draws the Gaussian-blur rectangle in the 2D that blurs the background.
+        /// </summary>
+        /// <param name="rect">The target rectangle to draw (blurs its background).</param>
+        /// <param name="blurStrength">The blur strength defines how blurry the background is. Larger numbers increase blur, resulting in a larger runtime cost on the GPU.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DrawBlur(Rectangle rect, float blurStrength)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawBlur(ref rect, blurStrength);
 #endif
         }
 
@@ -302,7 +365,10 @@ namespace FlaxEngine
         internal static extern void Internal_PopClip();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawText(IntPtr font, string text, ref Rectangle layoutRect, ref Color color, TextAlignment horizontalAlignment, TextAlignment verticalAlignment, TextWrapping textWrapping, float baseLinesGapScale, float scale);
+        internal static extern void Internal_DrawText1(IntPtr font, string text, ref Rectangle layoutRect, ref Color color, TextAlignment horizontalAlignment, TextAlignment verticalAlignment, TextWrapping textWrapping, float baseLinesGapScale, float scale);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawText2(IntPtr font, IntPtr customMaterial, string text, ref Rectangle layoutRect, ref Color color, TextAlignment horizontalAlignment, TextAlignment verticalAlignment, TextWrapping textWrapping, float baseLinesGapScale, float scale);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_FillRectangle1(ref Rectangle rect, ref Color color, bool withAlpha);
@@ -329,7 +395,13 @@ namespace FlaxEngine
         internal static extern void Internal_DrawBezier(ref Vector2 p1, ref Vector2 p2, ref Vector2 p3, ref Vector2 p4, ref Color color, float thickness, bool withAlpha);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawMaterial(IntPtr material, ref Rectangle rect);
+        internal static extern void Internal_DrawMaterial1(IntPtr material, ref Rectangle rect);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawMaterial2(IntPtr material, ref Rectangle rect, ref Color color);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawBlur(ref Rectangle rect, float blurStrength);
 #endif
 
         #endregion

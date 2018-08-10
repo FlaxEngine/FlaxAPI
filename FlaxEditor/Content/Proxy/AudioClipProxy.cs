@@ -43,9 +43,10 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
         {
-            guiRoot.AddChild(new Label(Vector2.Zero, guiRoot.Size)
+            guiRoot.AddChild(new Label
             {
                 Text = "Audio",
+                Size = guiRoot.Size,
                 Wrapping = TextWrapping.WrapWords
             });
         }

@@ -13,7 +13,7 @@ namespace FlaxEngine.Rendering
         Default = 0,
 
         /// <summary>
-        ///The 'before' in-build PostFx pass (bloom, color grading, etc.). After Forward Pass (transparency) and fog effects.
+        /// The 'before' in-build PostFx pass (bloom, color grading, etc.). After Forward Pass (transparency) and fog effects.
         /// </summary>
         BeforePostProcessingPass = 1,
 
@@ -23,7 +23,7 @@ namespace FlaxEngine.Rendering
         BeforeForwardPass = 2,
 
         /// <summary>
-        /// The 'before' Reflections pass. After the Light pass. Can be used to implement a custom light types that accumulate lighting to the light buffer.
+        /// The 'before' Reflections pass. After the Light pass. Can be used to affect Screen Space Reflections by the GUI.
         /// </summary>
         BeforeReflectionsPass = 3,
 

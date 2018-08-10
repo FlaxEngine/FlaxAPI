@@ -37,21 +37,26 @@ namespace FlaxEngine.GUI
         /// </summary>
         public event Action<Control> OnChildControlResized;
 
-        ///<inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContainerControl"/> class.
+        /// </summary>
         public ContainerControl()
-        : base(0, 0, 64, 64)
         {
             IsLayoutLocked = true;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContainerControl"/> class.
+        /// </summary>
         public ContainerControl(float x, float y, float width, float height)
         : base(x, y, width, height)
         {
             IsLayoutLocked = true;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContainerControl"/> class.
+        /// </summary>
         public ContainerControl(Vector2 location, Vector2 size)
         : base(location, size)
         {
@@ -253,6 +258,29 @@ namespace FlaxEngine.GUI
                 // Change order
                 _children.Insert(newIndex, child);
             }
+        }
+
+        /// <summary>
+        ///     Tries to find any child contol at given point in control local coordinates
+        /// </summary>
+        /// <param name="point">Local point to check</param>
+        /// <returns>Found control index or -1</returns>
+        public int GetChildIndexAt(Vector2 point)
+        {
+            int result = -1;
+            for (int i = 0; i < _children.Count; i++)
+            {
+                var child = _children[i];
+
+                // Check collision
+                Vector2 childLocation;
+                if (IntersectsChildContent(child, point, out childLocation))
+                {
+                    result = i;
+                    break;
+                }
+            }
+            return result;
         }
 
         /// <summary>

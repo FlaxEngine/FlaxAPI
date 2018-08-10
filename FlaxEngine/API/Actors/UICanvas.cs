@@ -25,7 +25,7 @@ namespace FlaxEngine
         CameraSpace = 1,
 
         /// <summary>
-        /// The world space rendering mode that places Canvas as any other object in the scene. The size of the Canvas can be set manually using its Rect Transform, and UI elements will render in front of or behind other objects in the scene based on 3D placement. This is useful for UIs that are meant to be a part of the world. This is also known as a "diegetic interface".
+        /// The world space rendering mode that places Canvas as any other object in the scene. The size of the Canvas can be set manually using its Transform, and UI elements will render in front of or behind other objects in the scene based on 3D placement. This is useful for UIs that are meant to be a part of the world. This is also known as a "diegetic interface".
         /// </summary>
         WorldSpace = 2,
     }

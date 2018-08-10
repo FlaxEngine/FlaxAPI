@@ -18,6 +18,7 @@ namespace FlaxEditor.GUI
         public const int DefaultMargin = 2;
 
         private Sprite _icon;
+        private string _text;
         private bool _mouseDown;
 
         /// <summary>
@@ -38,7 +39,14 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// Gets or sets the button text.
         /// </summary>
-        public string Text { get; set; }
+        public string Text {
+            get { return _text; }
+            set
+            {
+                _text = value;
+                PerformLayout();
+            }
+        }
 
         /// <summary>
         /// The icon.
@@ -111,12 +119,12 @@ namespace FlaxEditor.GUI
             }
 
             // Draw text
-            if (!string.IsNullOrEmpty(Text))
+            if (!string.IsNullOrEmpty(_text))
             {
                 textRect.Size.X = Width - DefaultMargin - textRect.Left;
                 Render2D.DrawText(
                     style.FontMedium,
-                    Text,
+                    _text,
                     textRect,
                     enabled ? style.Foreground : style.ForegroundDisabled,
                     TextAlignment.Near,
@@ -134,8 +142,8 @@ namespace FlaxEditor.GUI
 
             if (hasSprite)
                 width += iconSize;
-            if (!string.IsNullOrEmpty(Text) && style.FontMedium)
-                width += style.FontMedium.MeasureText(Text).X + (hasSprite ? DefaultMargin : 0);
+            if (!string.IsNullOrEmpty(_text) && style.FontMedium)
+                width += style.FontMedium.MeasureText(_text).X + (hasSprite ? DefaultMargin : 0);
 
             Width = width;
         }

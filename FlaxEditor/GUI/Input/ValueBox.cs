@@ -7,7 +7,7 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// Base class for text boxes for float/int value editing. Supports slider and range clamping.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The value type.</typeparam>
     /// <seealso cref="FlaxEngine.GUI.TextBox" />
     [HideInEditor]
     public abstract class ValueBox<T> : TextBox where T : struct, IComparable<T>
@@ -168,7 +168,7 @@ namespace FlaxEngine.GUI
                 var style = Style.Current;
 
                 // Draw sliding UI
-                Render2D.DrawSprite(style.Scale16, SlideRect);
+                Render2D.DrawSprite(style.Scale, SlideRect);
 
                 // Check if is sliding
                 if (_isSliding)

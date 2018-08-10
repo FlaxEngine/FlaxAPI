@@ -13,7 +13,7 @@ namespace FlaxEditor.SceneGraph.GUI
     /// <summary>
     /// Tree node GUI control used as a proxy object for actors hierarchy.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.TreeNode" />
+    /// <seealso cref="FlaxEditor.GUI.TreeNode" />
     public class ActorTreeNode : TreeNode
     {
         private int _orderInParent;
@@ -108,7 +108,7 @@ namespace FlaxEditor.SceneGraph.GUI
         protected override Color CacheTextColor()
         {
             // Update node text color (based on ActorNode.IsActiveInHierarchy but with optimized logic a little)
-            if (Parent is ActorTreeNode parent)
+            if (Parent is ActorTreeNode)
             {
                 var style = Style.Current;
                 bool isActive = Actor?.IsActiveInHierarchy ?? true;
@@ -117,7 +117,7 @@ namespace FlaxEditor.SceneGraph.GUI
                     // Inactive
                     return style.ForegroundDisabled;
                 }
-                if (Editor.Instance.StateMachine.IsPlayMode && Actor.IsStatic)
+                if (Actor != null && Editor.Instance.StateMachine.IsPlayMode && Actor.IsStatic)
                 {
                     // Static
                     return style.Foreground * 0.85f;
@@ -158,6 +158,10 @@ namespace FlaxEditor.SceneGraph.GUI
         /// </summary>
         public void StartRenaming()
         {
+            // Block renaming during scripts reload
+            if (Editor.Instance.ProgressReporting.CompileScripts.IsActive)
+                return;
+
             Select();
 
             // Start renaming the actor
@@ -181,6 +185,21 @@ namespace FlaxEditor.SceneGraph.GUI
                 var id = Actor.ID;
                 Editor.Instance.ProjectCache.SetExpandedActor(ref id, IsExpanded);
             }
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            if (IsFocused)
+            {
+                if (key == Keys.F2)
+                {
+                    StartRenaming();
+                    return true;
+                }
+            }
+
+            return base.OnKeyDown(key);
         }
 
         /// <inheritdoc />

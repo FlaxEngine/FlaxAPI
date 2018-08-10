@@ -64,7 +64,7 @@ namespace FlaxEditor.Surface.Archetypes
                 else
                 {
                     GetBox(1).Enabled = isLitSurface; // Color
-                    GetBox(2).Enabled = isSurface; // Mask
+                    GetBox(2).Enabled = isSurface || isGUI; // Mask
                     GetBox(3).Enabled = isSurface || isPostFx || isGUI; // Emissive
                     GetBox(4).Enabled = isLitSurface; // Metalness
                     GetBox(5).Enabled = isLitSurface; // Specular

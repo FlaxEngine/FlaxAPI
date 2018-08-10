@@ -136,5 +136,15 @@ namespace FlaxEditor.GUI
             // Remove itself
             Dispose();
         }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            Renamed = null;
+            Closed = null;
+            _inputField = null;
+
+            base.Dispose();
+        }
     }
 }

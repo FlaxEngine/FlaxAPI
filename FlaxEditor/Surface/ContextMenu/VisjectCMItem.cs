@@ -18,8 +18,7 @@ namespace FlaxEditor.Surface.ContextMenu
         private bool _isMouseDown;
         private List<Rectangle> _highlights;
         private NodeArchetype _archetype;
-
-
+        
         /// <summary>
         /// Gets the item's group
         /// </summary>
