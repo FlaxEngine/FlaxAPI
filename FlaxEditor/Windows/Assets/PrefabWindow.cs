@@ -7,6 +7,7 @@ using FlaxEditor.CustomEditors;
 using FlaxEditor.Gizmo;
 using FlaxEditor.GUI;
 using FlaxEditor.SceneGraph;
+using FlaxEditor.Scripting;
 using FlaxEditor.Viewport;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -35,7 +36,7 @@ namespace FlaxEditor.Windows.Assets
 
         private Undo _undo;
         private bool _focusCamera;
-        private bool _isUpdatingSelection;
+        private bool _isUpdatingSelection, _isScriptsReloading;
         private DateTime _modifiedTime = DateTime.MinValue;
 
         /// <summary>
@@ -130,6 +131,56 @@ namespace FlaxEditor.Windows.Assets
             _toolstrip.AddButton(Editor.UI.GetIcon("Reload32"), () => LiveReload = !LiveReload).SetChecked(true).SetAutoCheck(true).LinkTooltip("Live changes preview (applies prefab changes on modification by auto)");
 
             Editor.Prefabs.PrefabApplied += OnPrefabApplied;
+            ScriptsBuilder.ScriptsReloadBegin += OnScriptsReloadBegin;
+            ScriptsBuilder.ScriptsReloadEnd += OnScriptsReloadEnd;
+        }
+
+        private void OnScriptsReloadBegin()
+        {
+            _isScriptsReloading = true;
+
+            if (_asset == null || !_asset.IsLoaded)
+                return;
+
+            Editor.Log("Reloading prefab editor data on scripts reload. Prefab: " + _asset.Path);
+
+            // Check if asset has been edited and not saved (and stil has linked item)
+            if (IsEdited)
+            {
+                // Ask user for further action
+                var result = MessageBox.Show(
+                    string.Format("Asset \'{0}\' has been edited. Save before scripts reload?", _item.Path),
+                    "Save before reloading?",
+                    MessageBox.Buttons.YesNo
+                );
+                if (result == DialogResult.OK || result == DialogResult.Yes)
+                {
+                    Save();
+                }
+            }
+
+            // Cleanup
+            Deselect();
+            Graph.MainActor = null;
+            _viewport.Prefab = null;
+            _undo?.Clear(); // TODO: maybe don't clear undo?
+        }
+
+        private void OnScriptsReloadEnd()
+        {
+            _isScriptsReloading = false;
+
+            if (_asset == null || !_asset.IsLoaded)
+                return;
+
+            // Restore
+            _viewport.Prefab = _asset;
+            Graph.MainActor = _viewport.Instance;
+            Selection.Clear();
+            Select(Graph.Main);
+            Graph.Root.TreeNode.ExpandAll(true);
+            _undo.Clear();
+            ClearEditedFlag();
         }
 
         private void OnUndoEvent(IUndoAction action)
@@ -193,6 +244,13 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         protected override void OnAssetLoaded()
         {
+            // Skip during scripts reload to prevent issues
+            if (_isScriptsReloading)
+            {
+                base.OnAssetLoaded();
+                return;
+            }
+
             _viewport.Prefab = _asset;
             Graph.MainActor = _viewport.Instance;
             _focusCamera = true;
@@ -319,6 +377,10 @@ namespace FlaxEditor.Windows.Assets
         {
             if (IsDisposing)
                 return;
+
+            Editor.Prefabs.PrefabApplied -= OnPrefabApplied;
+            ScriptsBuilder.ScriptsReloadBegin -= OnScriptsReloadBegin;
+            ScriptsBuilder.ScriptsReloadEnd -= OnScriptsReloadEnd;
 
             _undo.Dispose();
             Graph.Dispose();

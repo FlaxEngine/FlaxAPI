@@ -33,6 +33,7 @@ namespace FlaxEditor.SceneGraph
                         UnregisterEvents();
                     }
                     Root.DisposeChildNodes();
+                    Root.TreeNode.DisposeChildren();
 
                     if (value != null)
                     {
