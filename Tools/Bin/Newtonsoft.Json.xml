@@ -2786,6 +2786,49 @@
             <param name="objectType">The <see cref="T:System.Type"/> of object being deserialized.</param>
             <returns>The instance of <paramref name="objectType"/> being deserialized.</returns>
         </member>
+        <member name="M:Newtonsoft.Json.JsonSerializer.SerializeDiff(System.IO.TextWriter,System.Object,System.Object)">
+            <summary>
+            Serializes the specified <see cref="T:System.Object"/> difference to the other object of the same type. and writes the JSON structure using the specified <see cref="T:System.IO.TextWriter"/>.
+            </summary>
+            <param name="textWriter">The <see cref="T:System.IO.TextWriter"/> used to write the JSON structure.</param>
+            <param name="value">The <see cref="T:System.Object"/> to serialize.</param>
+            <param name="other">The reference object.</param>
+        </member>
+        <member name="M:Newtonsoft.Json.JsonSerializer.SerializeDiff(Newtonsoft.Json.JsonWriter,System.Object,System.Type,System.Object)">
+            <summary>
+            Serializes the specified <see cref="T:System.Object"/> difference to the other object of the same type. Writes the JSON structure using the specified <see cref="T:Newtonsoft.Json.JsonWriter"/>.
+            </summary>
+            <param name="jsonWriter">The <see cref="T:Newtonsoft.Json.JsonWriter"/> used to write the JSON structure.</param>
+            <param name="value">The <see cref="T:System.Object"/> to serialize.</param>
+            <param name="objectType">
+            The type of the value being serialized.
+            This parameter is used when <see cref="P:Newtonsoft.Json.JsonSerializer.TypeNameHandling"/> is <see cref="F:Newtonsoft.Json.TypeNameHandling.Auto"/> to write out the type name if the type of the value does not match.
+            Specifying the type is optional.
+            </param>
+            <param name="other">The reference object.</param>
+        </member>
+        <member name="M:Newtonsoft.Json.JsonSerializer.SerializeDiff(System.IO.TextWriter,System.Object,System.Type,System.Object)">
+            <summary>
+            Serializes the specified <see cref="T:System.Object"/> difference to the other object of the same type. Writes the JSON structure using the specified <see cref="T:System.IO.TextWriter"/>.
+            </summary>
+            <param name="textWriter">The <see cref="T:System.IO.TextWriter"/> used to write the JSON structure.</param>
+            <param name="value">The <see cref="T:System.Object"/> to serialize.</param>
+            <param name="objectType">
+            The type of the value being serialized.
+            This parameter is used when <see cref="P:Newtonsoft.Json.JsonSerializer.TypeNameHandling"/> is Auto to write out the type name if the type of the value does not match.
+            Specifying the type is optional.
+            </param>
+            <param name="other">The reference object.</param>
+        </member>
+        <member name="M:Newtonsoft.Json.JsonSerializer.SerializeDiff(Newtonsoft.Json.JsonWriter,System.Object,System.Object)">
+            <summary>
+            Serializes the specified <see cref="T:System.Object"/> and writes the JSON structure
+            using the specified <see cref="T:Newtonsoft.Json.JsonWriter"/>.
+            </summary>
+            <param name="jsonWriter">The <see cref="T:Newtonsoft.Json.JsonWriter"/> used to write the JSON structure.</param>
+            <param name="value">The <see cref="T:System.Object"/> to serialize.</param>
+            <param name="other">The reference object.</param>
+        </member>
         <member name="M:Newtonsoft.Json.JsonSerializer.Serialize(System.IO.TextWriter,System.Object)">
             <summary>
             Serializes the specified <see cref="T:System.Object"/> and writes the JSON structure
@@ -10090,6 +10133,12 @@
             <param name="propertyName">The name of the property to get.</param>
             <param name="comparisonType">Type property name string comparison.</param>
             <returns>A matching property if found.</returns>
+        </member>
+        <member name="T:Newtonsoft.Json.Serialization.JsonSerializerInternalWriter">
+            <summary>
+            The JSON writer.
+            </summary>
+            <seealso cref="T:Newtonsoft.Json.Serialization.JsonSerializerInternalBase" />
         </member>
         <member name="P:Newtonsoft.Json.Serialization.JsonSerializerInternalWriter.SerializeStackSize">
             <summary>

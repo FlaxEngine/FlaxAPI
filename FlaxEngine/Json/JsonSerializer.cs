@@ -64,7 +64,8 @@ namespace FlaxEngine.Json
         /// <inheritdoc />
         public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
         {
-            writer.WriteValue(JsonSerializer.GetStringID(((SceneReference)value).ID));
+            Guid id = ((SceneReference)value).ID;
+            writer.WriteValue(JsonSerializer.GetStringID(id));
         }
 
         /// <inheritdoc />
@@ -175,6 +176,45 @@ namespace FlaxEngine.Json
                 CurrentWriter.Value = serializerWriter;
 
                 serializerWriter.Serialize(jsonWriter, obj, type);
+
+                CurrentWriter.Value = null;
+            }
+
+            return sw.ToString();
+        }
+
+        /// <summary>
+        /// Serializes the specified object difference to the other object of the same type. Used to serialize modified properties of the object during prefab instance serialization.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <param name="other">The reference object.</param>
+        /// <returns>The output json string.</returns>
+        public static string SerializeDiff(object obj, object other)
+        {
+            Type type = obj.GetType();
+
+            Newtonsoft.Json.JsonSerializer jsonSerializer = Newtonsoft.Json.JsonSerializer.CreateDefault(Settings);
+            jsonSerializer.Formatting = Formatting.Indented;
+
+            StringBuilder sb = new StringBuilder(256);
+            StringWriter sw = new StringWriter(sb, CultureInfo.InvariantCulture);
+            using (JsonTextWriter jsonWriter = new JsonTextWriter(sw))
+            {
+                // Prepare writer settings
+                jsonWriter.IndentChar = '\t';
+                jsonWriter.Indentation = 1;
+                jsonWriter.Formatting = jsonSerializer.Formatting;
+                jsonWriter.DateFormatHandling = jsonSerializer.DateFormatHandling;
+                jsonWriter.DateTimeZoneHandling = jsonSerializer.DateTimeZoneHandling;
+                jsonWriter.FloatFormatHandling = jsonSerializer.FloatFormatHandling;
+                jsonWriter.StringEscapeHandling = jsonSerializer.StringEscapeHandling;
+                jsonWriter.Culture = jsonSerializer.Culture;
+                jsonWriter.DateFormatString = jsonSerializer.DateFormatString;
+
+                JsonSerializerInternalWriter serializerWriter = new JsonSerializerInternalWriter(jsonSerializer);
+                CurrentWriter.Value = serializerWriter;
+
+                serializerWriter.SerializeDiff(jsonWriter, obj, type, other);
 
                 CurrentWriter.Value = null;
             }
