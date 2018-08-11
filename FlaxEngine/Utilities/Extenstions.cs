@@ -23,7 +23,7 @@ namespace FlaxEngine.Utilities
             Type type = typeof(T);
 
             JsonSerializer jsonSerializer = JsonSerializer.CreateDefault(Json.JsonSerializer.Settings);
-            jsonSerializer.Formatting = Formatting.Indented;
+            jsonSerializer.Formatting = Formatting.None;
 
             StringBuilder sb = new StringBuilder(256);
             StringWriter sw = new StringWriter(sb, CultureInfo.InvariantCulture);
@@ -31,7 +31,7 @@ namespace FlaxEngine.Utilities
             {
                 // Prepare writer settings
                 jsonWriter.IndentChar = '\t';
-                jsonWriter.Indentation = 1;
+                jsonWriter.Indentation = 0;
                 jsonWriter.Formatting = jsonSerializer.Formatting;
                 jsonWriter.DateFormatHandling = jsonSerializer.DateFormatHandling;
                 jsonWriter.DateTimeZoneHandling = jsonSerializer.DateTimeZoneHandling;
