@@ -781,12 +781,4 @@ namespace FlaxEditor.Surface
             base.OnDestroy();
         }
     }
-}
-
-        }
-
-        private void OnTextChanged(string text)
-        {
-
-        }
-
+}

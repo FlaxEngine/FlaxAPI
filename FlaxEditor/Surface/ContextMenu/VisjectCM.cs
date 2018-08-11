@@ -120,7 +120,6 @@ namespace FlaxEditor.Surface.ContextMenu
 
         private void OnSearchFilterChanged()
         {
-            OnTextChanged.Invoke(_searchBox.Text);
             // Skip events during setup or init stuff
             if (IsLayoutLocked)
                 return;
