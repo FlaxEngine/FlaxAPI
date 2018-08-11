@@ -120,6 +120,7 @@ namespace FlaxEditor.Surface.ContextMenu
 
         private void OnSearchFilterChanged()
         {
+            OnTextChanged.Invoke(_searchBox.Text);
             // Skip events during setup or init stuff
             if (IsLayoutLocked)
                 return;
@@ -272,8 +273,8 @@ namespace FlaxEditor.Surface.ContextMenu
                 if (SelectedItem == null) return true;
 
                 var previousSelectedItem = GetPreviousSiblings<VisjectCMItem>(SelectedItem).FirstOrDefault(c => c.Visible) ??
-                                           (GetPreviousSiblings<VisjectCMGroup>(SelectedItem.Group).FirstOrDefault()?.Children
-                                                                                                   .FindLast(c => c.Visible && c is VisjectCMItem) as VisjectCMItem);
+                                           (GetPreviousSiblings<VisjectCMGroup>(SelectedItem.Group).FirstOrDefault(c => c.Visible)?.Children
+                                                .FindLast(c => c.Visible && c is VisjectCMItem) as VisjectCMItem);
 
                 if (previousSelectedItem != null)
                 {
@@ -291,8 +292,8 @@ namespace FlaxEditor.Surface.ContextMenu
                 if (SelectedItem == null) return true;
 
                 var nextSelectedItem = GetNextSiblings<VisjectCMItem>(SelectedItem).FirstOrDefault(c => c.Visible) ??
-                                       (GetNextSiblings<VisjectCMGroup>(SelectedItem.Group).FirstOrDefault()?.Children
-                                                                                           .OfType<VisjectCMItem>().FirstOrDefault(c => c.Visible));
+                                       (GetNextSiblings<VisjectCMGroup>(SelectedItem.Group).FirstOrDefault(c => c.Visible)?.Children
+                                            .OfType<VisjectCMItem>().FirstOrDefault(c => c.Visible));
 
                 if (nextSelectedItem != null)
                 {
