@@ -9,6 +9,9 @@ using Newtonsoft.Json.Serialization;
 
 namespace FlaxEngine.Utilities
 {
+    /// <summary>
+    /// Collection of various extension methods.
+    /// </summary>
     public static partial class Extenstions
     {
         /// <summary>
@@ -191,6 +194,43 @@ namespace FlaxEngine.Utilities
             var numArray = new byte[8];
             random.NextBytes(numArray);
             return (long)(BitConverter.ToUInt64(numArray, 0) & 9223372036854775807L);
+        }
+
+        /// <summary>
+        /// Generates a random normalized 2D direction vector.
+        /// </summary>
+        /// <param name="random">An instance of <see cref="Random"/>.</param>
+        /// <returns>A random normalized 2D direction vector.</returns>
+        public static Vector2 NextDirection2D(this Random random)
+        {
+            return Vector2.Normalize(new Vector2((float)random.NextDouble(), (float)random.NextDouble()));
+        }
+
+        /// <summary>
+        /// Generates a random normalized 3D direction vector.
+        /// </summary>
+        /// <param name="random">An instance of <see cref="Random"/>.</param>
+        /// <returns>A random normalized 3D direction vector.</returns>
+        public static Vector3 NextDirection3D(this Random random)
+        {
+            return Vector3.Normalize(new Vector3((float)random.NextDouble(), (float)random.NextDouble(), (float)random.NextDouble()));
+        }
+
+        /// <summary>
+        /// Generates a random point in a circle of a given radius.
+        /// </summary>
+        /// <param name="random">An instance of <see cref="Random"/>.</param>
+        /// <param name="radius">Radius of circle. Default 1.0f.</param>
+        /// <returns>A random point in a circle of a given radius.</returns>
+        public static Vector2 PointInACircle(this Random random, float radius = 1.0f)
+        {
+            var randomRadius = (float)random.NextDouble() * radius;
+
+            return new Vector2
+            {
+                X = (float)Math.Cos(random.NextDouble()) * randomRadius,
+                Y = (float)Math.Sin(random.NextDouble()) * randomRadius,
+            };
         }
     }
 }
