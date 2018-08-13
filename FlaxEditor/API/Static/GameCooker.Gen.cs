@@ -39,7 +39,7 @@ namespace FlaxEditor
         }
 
         /// <summary>
-        /// ends a cancel event to the game building service.
+        /// Sends a cancel event to the game building service.
         /// </summary>
         /// <param name="waitForEnd">If set to <c>true</c> wait for the stopped building end.</param>
 #if UNIT_TEST_COMPILANT
