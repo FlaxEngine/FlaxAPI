@@ -536,6 +536,8 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 var tooltip = (TooltipAttribute)typeAttributes.FirstOrDefault(x => x is TooltipAttribute);
                 if (tooltip != null)
                     group.Panel.TooltipText = tooltip.Text;
+                if (script.HasPrefabLink)
+                    group.Panel.HeaderTextColor = FlaxEngine.GUI.Style.Current.ProgressNormal;
 
                 // Add toggle button to the group
                 var scriptToggle = new CheckBox(2, 0, script.Enabled)
