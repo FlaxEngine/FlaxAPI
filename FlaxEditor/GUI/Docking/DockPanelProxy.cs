@@ -364,9 +364,48 @@ namespace FlaxEditor.GUI.Docking
         }
 
         /// <inheritdoc />
+        public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
+        {
+            var result = base.OnDragEnter(ref location, data);
+            if (result != DragDropEffect.None)
+                return result;
+
+            if (TrySelectTabUnderLocation(ref location))
+                return DragDropEffect.Move;
+
+            return DragDropEffect.None;
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragMove(ref Vector2 location, DragData data)
+        {
+            var result = base.OnDragMove(ref location, data);
+            if (result != DragDropEffect.None)
+                return result;
+
+            if (TrySelectTabUnderLocation(ref location))
+                return DragDropEffect.Move;
+
+            return DragDropEffect.None;
+        }
+
+        /// <inheritdoc />
         protected override void GetDesireClientArea(out Rectangle rect)
         {
             rect = new Rectangle(0, DockPanel.DefaultHeaderHeight, Width, Height - DockPanel.DefaultHeaderHeight);
+        }
+
+        private bool TrySelectTabUnderLocation(ref Vector2 location)
+        {
+            var tab = getTabAtPos(location, out _);
+            if (tab != null)
+            {
+                _panel.SelectTab(tab);
+                Update(0);// Fake update
+                return true;
+            }
+
+            return false;
         }
     }
 }
