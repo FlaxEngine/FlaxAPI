@@ -257,12 +257,14 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void OnUpdate()
         {
+#if true // TODO: maybe disable this?
             // Due to fact that actors in prefab editor are only created but not added to gameplay 
             // we have to manually update some data (SceneManager events work only for actors in a gameplay)
             if (Graph.Main != null)
             {
                 Update(Graph.Main);
             }
+#endif
 
             base.OnUpdate();
         }
