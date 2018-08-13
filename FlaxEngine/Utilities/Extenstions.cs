@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -231,6 +232,186 @@ namespace FlaxEngine.Utilities
                 X = (float)Math.Cos(random.NextDouble()) * randomRadius,
                 Y = (float)Math.Sin(random.NextDouble()) * randomRadius,
             };
+        }
+
+        /// <summary>
+        /// Adds the elements of the specified collection to the end of the <see cref="ICollection{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the collection.</typeparam>
+        /// <param name="destination">The <see cref="ICollection{T}"/> to add items to.</param>
+        /// <param name="collection">The collection whose elements should be added to the end of the <paramref name="destination"/>. It can contain elements that are <see langword="null"/>, if type <typeparamref name="T"/> is a reference type.</param>
+        /// <exception cref="ArgumentNullException">If <paramref name="destination"/> or <paramref name="collection"/> are <see langword="null"/>.</exception>
+        public static void AddRange<T>(this ICollection<T> destination, IEnumerable<T> collection)
+        {
+            if (destination == null)
+            {
+                throw new ArgumentNullException(nameof(destination));
+            }
+
+            if (collection == null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            foreach (var item in collection)
+            {
+                destination.Add(item);
+            }
+        }
+
+        /// <summary>
+        /// Enqueues the elements of the specified collection to the <see cref="Queue{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the collection.</typeparam>
+        /// <param name="queue">The <see cref="Queue{T}"/> to add items to.</param>
+        /// <param name="collection">The collection whose elements should be added to the <paramref name="queue"/>. It can contain elements that are <see langword="null"/>, if type <typeparamref name="T"/> is a reference type.</param>
+        /// <exception cref="ArgumentNullException">If <paramref name="queue"/> or <paramref name="collection"/> are <see langword="null"/>.</exception>
+        public static void EnqueueRange<T>(this Queue<T> queue, IEnumerable<T> collection)
+        {
+            if (queue == null)
+            {
+                throw new ArgumentNullException(nameof(queue));
+            }
+
+            if (collection == null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            foreach (var item in collection)
+            {
+                queue.Enqueue(item);
+            }
+        }
+
+        /// <summary>
+        /// Pushes the elements of the specified collection to the <see cref="Stack{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the collection.</typeparam>
+        /// <param name="stack">The <see cref="Stack{T}"/> to add items to.</param>
+        /// <param name="collection">The collection whose elements should be pushed on to the <paramref name="stack"/>. It can contain elements that are <see langword="null"/>, if type <typeparamref name="T"/> is a reference type.</param>
+        /// <exception cref="ArgumentNullException">If <paramref name="stack"/> or <paramref name="collection"/> are <see langword="null"/>.</exception>
+        public static void PushRange<T>(this Stack<T> stack, IEnumerable<T> collection)
+        {
+            if (stack == null)
+            {
+                throw new ArgumentNullException(nameof(stack));
+            }
+
+            if (collection == null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+
+            foreach (var item in collection)
+            {
+                stack.Push(item);
+            }
+        }
+
+        /// <summary>
+        /// Performs the specified action on each element of the <see cref="IEnumerable{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of the input sequence.</typeparam>
+        /// <param name="source">The sequence of elements to execute the <see cref="IEnumerable{T}"/>.</param>
+        /// <param name="action">The <see cref="Action{T}"/> delegate to perform on each element of the <see cref="IEnumerable{T}"/>1.</param>
+        /// <exception cref="ArgumentException"><paramref name="source"/> or <paramref name="action"/> is <see langword="null"/>.</exception>
+        public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            foreach (var item in source)
+            {
+                action(item);
+            }
+        }
+
+        /// <summary>
+        /// Chooses a random item from the collection.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of the input sequence.</typeparam>
+        /// <param name="random">An instance of <see cref="Random"/>.</param>
+        /// <param name="collection">Collection to choose item from.</param>
+        /// <returns>A random item from collection</returns>
+        /// <exception cref="ArgumentNullException">If the random argument is null.</exception>
+        /// <exception cref="ArgumentNullException">If the collection is null.</exception>
+        public static T Choose<T>(this Random random, IList<T> collection)
+        {
+            if (random == null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            if (collection == null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            return collection[random.Next(collection.Count)];
+        }
+
+        /// <summary>
+        /// Chooses a random item.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of the input sequence.</typeparam>
+        /// <param name="random">An instance of <see cref="Random"/>.</param>
+        /// <param name="collection">Collection to choose item from.</param>
+        /// <returns>A random item from collection</returns>
+        /// <exception cref="ArgumentNullException">If the random  is null.</exception>
+        /// <exception cref="ArgumentNullException">If the collection is null.</exception>
+        public static T Choose<T>(this Random random, params T[] collection)
+        {
+            if (random == null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            if (collection == null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            return collection[random.Next(collection.Length)];
+        }
+
+        /// <summary>
+        /// Shuffles the collection in place.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of the input sequence.</typeparam>
+        /// <param name="random">An instance of <see cref="Random"/>.</param>
+        /// <param name="collection">Collection to shuffle.</param>
+        /// <exception cref="ArgumentNullException">If the random argument is null.</exception>
+        /// <exception cref="ArgumentNullException">If the random collection is null.</exception>
+        public static void Shuffle<T>(this Random random, IList<T> collection)
+        {
+            if (random == null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            if (collection == null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            int n = collection.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = random.Next(n + 1);
+                T value = collection[k];
+                collection[k] = collection[n];
+                collection[n] = value;
+            }
         }
     }
 }
