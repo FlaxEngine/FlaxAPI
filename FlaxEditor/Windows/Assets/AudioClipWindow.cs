@@ -146,6 +146,8 @@ namespace FlaxEditor.Windows.Assets
 
             // Toolstrip
             _toolstrip.AddButton(Editor.UI.GetIcon("Import32"), () => Editor.ContentImporting.Reimport((BinaryAssetItem)Item)).LinkTooltip("Reimport");
+            _toolstrip.AddSeparator();
+            _toolstrip.AddButton(editor.UI.GetIcon("Docs32"), () => Application.StartProcess(Utilities.Constants.DocsUrl + "manual/audio/audio-clip.html")).LinkTooltip("See documentation to learn more");
         }
 
         /// <inheritdoc />

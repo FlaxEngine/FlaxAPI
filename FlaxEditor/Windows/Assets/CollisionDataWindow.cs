@@ -159,6 +159,10 @@ namespace FlaxEditor.Windows.Assets
         public CollisionDataWindow(Editor editor, AssetItem item)
         : base(editor, item)
         {
+            // Toolstrip
+            _toolstrip.AddSeparator();
+            _toolstrip.AddButton(editor.UI.GetIcon("Docs32"), () => Application.StartProcess(Utilities.Constants.DocsUrl + "manual/physics/colliders/collision-data.html")).LinkTooltip("See documentation to learn more");
+
             // Split Panel
             _split = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
             {

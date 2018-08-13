@@ -142,6 +142,8 @@ namespace FlaxEditor.Windows.Assets
             _toolstrip.AddButton(Editor.UI.GetIcon("Import32"), () => Editor.ContentImporting.Reimport((BinaryAssetItem)Item)).LinkTooltip("Reimport");
             _toolstrip.AddSeparator();
             _toolstrip.AddButton(Editor.UI.GetIcon("PageScale32"), _preview.CenterView).LinkTooltip("Center view");
+            _toolstrip.AddSeparator();
+            _toolstrip.AddButton(editor.UI.GetIcon("Docs32"), () => Application.StartProcess(Utilities.Constants.DocsUrl + "manual/graphics/textures/index.html")).LinkTooltip("See documentation to learn more");
         }
 
         /// <inheritdoc />
