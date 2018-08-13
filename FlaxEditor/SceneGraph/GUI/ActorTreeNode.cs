@@ -111,19 +111,20 @@ namespace FlaxEditor.SceneGraph.GUI
             if (Parent is ActorTreeNode)
             {
                 Color color = Color.White;
-                if (Actor != null && Actor.HasPrefabLink)
+                var actor = Actor;
+                if (actor != null && actor.HasPrefabLink)
                 {
                     // Prefab
                     color = Style.Current.ProgressNormal;
                 }
 
-                if (Actor != null && !Actor.IsActiveInHierarchy)
+                if (actor != null && !actor.IsActiveInHierarchy)
                 {
                     // Inactive
                     return color * 0.6f;
                 }
 
-                if (Actor?.Scene != null && Editor.Instance.StateMachine.IsPlayMode && Actor.IsStatic)
+                if (actor?.Scene != null && Editor.Instance.StateMachine.IsPlayMode && actor.IsStatic)
                 {
                     // Static
                     return color * 0.85f;
