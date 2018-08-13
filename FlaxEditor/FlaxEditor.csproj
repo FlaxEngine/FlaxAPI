@@ -399,6 +399,7 @@
     <Compile Include="Undo\UndoActionBase.cs" />
     <Compile Include="Undo\UndoBlock.cs" />
     <Compile Include="Undo\UndoMultiBlock.cs" />
+    <Compile Include="Utilities\Constants.cs" />
     <Compile Include="Utilities\DuplicateScenes.cs" />
     <Compile Include="Utilities\MemberInfoPath.cs" />
     <Compile Include="Utilities\ObjectSnapshot.cs" />

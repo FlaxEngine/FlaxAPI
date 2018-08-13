@@ -7,6 +7,7 @@ using FlaxEditor.GUI.Dialogs;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.Scripting;
+using FlaxEditor.Utilities;
 using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Windows;
 using FlaxEngine;
@@ -491,14 +492,14 @@ namespace FlaxEditor.Modules
             // Help
             MenuHelp = MainMenu.AddButton("Help");
             cm = MenuHelp.ContextMenu;
-            cm.AddButton("Discord", () => Application.StartProcess("http://discord.flaxengine.com/"));
-            cm.AddButton("Documentation", () => Application.StartProcess("https://docs.flaxengine.com/"));
-            cm.AddButton("Report an issue", () => Application.StartProcess("https://github.com/FlaxEngine/FlaxAPI/issues"));
+            cm.AddButton("Discord", () => Application.StartProcess(Constants.DiscordUrl));
+            cm.AddButton("Documentation", () => Application.StartProcess(Constants.DocsUrl));
+            cm.AddButton("Report an issue", () => Application.StartProcess(Constants.BugTrackerUrl));
             cm.AddSeparator();
-            cm.AddButton("Official Website", () => Application.StartProcess("https://flaxengine.com"));
-            cm.AddButton("Facebook Fanpage", () => Application.StartProcess("https://facebook.com/FlaxEngine"));
-            cm.AddButton("Youtube Channel", () => Application.StartProcess("https://www.youtube.com/channel/UChdER2A3n19rJWIMOZJClhw"));
-            cm.AddButton("Twitter", () => Application.StartProcess("https://twitter.com/FlaxEngine"));
+            cm.AddButton("Official Website", () => Application.StartProcess(Constants.WebsiteUrl));
+            cm.AddButton("Facebook Fanpage", () => Application.StartProcess(Constants.FacebookUrl));
+            cm.AddButton("Youtube Channel", () => Application.StartProcess(Constants.YoutubeUrl));
+            cm.AddButton("Twitter", () => Application.StartProcess(Constants.TwitterUrl));
             cm.AddSeparator();
             cm.AddButton("Information about Flax", () => new AboutDialog().Show());
         }

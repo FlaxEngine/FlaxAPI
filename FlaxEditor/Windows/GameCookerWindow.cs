@@ -7,6 +7,7 @@ using System.Linq;
 using FlaxEditor.Content.Settings;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI;
+using FlaxEditor.Utilities;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Utilities;
@@ -337,7 +338,7 @@ namespace FlaxEditor.Windows
                     AnchorStyle = AnchorStyle.BottomLeft,
                     Parent = this,
                 };
-                helpButton.Clicked += () => Application.StartProcess("https://docs.flaxengine.com/manual/editor/game-cooker/");
+                helpButton.Clicked += () => Application.StartProcess(Constants.DocsUrl + "manual/editor/game-cooker/");
                 var buildAllButton = new Button
                 {
                     Text = "Build All",
