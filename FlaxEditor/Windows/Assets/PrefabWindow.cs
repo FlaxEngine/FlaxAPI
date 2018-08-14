@@ -33,9 +33,11 @@ namespace FlaxEditor.Windows.Assets
         private readonly ToolStripButton _toolStripTranslate;
         private readonly ToolStripButton _toolStripRotate;
         private readonly ToolStripButton _toolStripScale;
+        private readonly ToolStripButton _toolStripLiveReload;
 
         private Undo _undo;
         private bool _focusCamera;
+        private bool _liveReload = true;
         private bool _isUpdatingSelection, _isScriptsReloading;
         private DateTime _modifiedTime = DateTime.MinValue;
 
@@ -62,7 +64,19 @@ namespace FlaxEditor.Windows.Assets
         /// <summary>
         /// Gets or sets a value indicating whether use live reloading for the prefab changes (applies prefab changes on modification by auto).
         /// </summary>
-        public bool LiveReload { get; set; } = true;
+        public bool LiveReload
+        {
+            get => _liveReload;
+            set
+            {
+                if (_liveReload != value)
+                {
+                    _liveReload = value;
+
+                    UpdateToolstrip();
+                }
+            }
+        }
 
         /// <summary>
         /// Gets or sets the live reload timeout. It defines the time to apply prefab changes after modification.
@@ -128,7 +142,7 @@ namespace FlaxEditor.Windows.Assets
             _toolStripRotate = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Rotate32"), () => _viewport.TransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate).LinkTooltip("Change Gizmo tool mode to Rotate (2)");
             _toolStripScale = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Scale32"), () => _viewport.TransformGizmo.ActiveMode = TransformGizmo.Mode.Scale).LinkTooltip("Change Gizmo tool mode to Scale (3)");
             _toolstrip.AddSeparator();
-            _toolstrip.AddButton(Editor.UI.GetIcon("Reload32"), () => LiveReload = !LiveReload).SetChecked(true).SetAutoCheck(true).LinkTooltip("Live changes preview (applies prefab changes on modification by auto)");
+            _toolStripLiveReload = (ToolStripButton)_toolstrip.AddButton(Editor.UI.GetIcon("Reload32"), () => LiveReload = !LiveReload).SetChecked(true).SetAutoCheck(true).LinkTooltip("Live changes preview (applies prefab changes on modification by auto)");
 
             Editor.Prefabs.PrefabApplied += OnPrefabApplied;
             ScriptsBuilder.ScriptsReloadBegin += OnScriptsReloadBegin;
@@ -229,6 +243,8 @@ namespace FlaxEditor.Windows.Assets
             _toolStripTranslate.Checked = gizmoMode == TransformGizmo.Mode.Translate;
             _toolStripRotate.Checked = gizmoMode == TransformGizmo.Mode.Rotate;
             _toolStripScale.Checked = gizmoMode == TransformGizmo.Mode.Scale;
+            //
+            _toolStripLiveReload.Checked = _liveReload;
 
             base.UpdateToolstrip();
         }
@@ -278,7 +294,36 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
-            base.Update(deltaTime);
+            try
+            {
+                if (Graph.Main != null)
+                {
+                    // Due to fact that actors in prefab editor are only created but not added to gameplay 
+                    // we have to manually update some data (SceneManager events work only for actors in a gameplay)
+                    Update(Graph.Main);
+                }
+
+                base.Update(deltaTime);
+            }
+            catch (Exception ex)
+            {
+                // Info
+                Editor.LogWarning("Error when updating prefab window for " + _asset);
+                Editor.LogWarning(ex);
+
+                // Refresh
+                Deselect();
+                Graph.MainActor = null;
+                _viewport.Prefab = null;
+                if (_asset.IsLoaded)
+                {
+                    _viewport.Prefab = _asset;
+                    Graph.MainActor = _viewport.Instance;
+                    Selection.Clear();
+                    Select(Graph.Main);
+                    Graph.Root.TreeNode.ExpandAll(true);
+                }
+            }
 
             // Auto fit
             if (_focusCamera && _viewport.Task.FrameCount > 1)
@@ -352,6 +397,8 @@ namespace FlaxEditor.Windows.Assets
         {
             writer.WriteAttributeString("Split1", _split1.SplitterValue.ToString());
             writer.WriteAttributeString("Split2", _split2.SplitterValue.ToString());
+            writer.WriteAttributeString("LiveReload", LiveReload.ToString());
+            writer.WriteAttributeString("GizmoMode", Viewport.TransformGizmo.ActiveMode.ToString());
         }
 
         /// <inheritdoc />
@@ -363,6 +410,15 @@ namespace FlaxEditor.Windows.Assets
                 _split1.SplitterValue = value1;
             if (float.TryParse(node.GetAttribute("Split2"), out value1))
                 _split2.SplitterValue = value1;
+
+            bool value2;
+
+            if (bool.TryParse(node.GetAttribute("LiveReload"), out value2))
+                LiveReload = value2;
+
+            TransformGizmo.Mode value3;
+            if (Enum.TryParse(node.GetAttribute("GizmoMode"), out value3))
+                Viewport.TransformGizmo.ActiveMode = value3;
         }
 
         /// <inheritdoc />
@@ -370,6 +426,7 @@ namespace FlaxEditor.Windows.Assets
         {
             _split1.SplitterValue = 0.2f;
             _split2.SplitterValue = 0.6f;
+            LiveReload = true;
         }
 
         /// <inheritdoc />
