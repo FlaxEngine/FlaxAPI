@@ -69,7 +69,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Performs physics simulation. Usefull to execute physics simulation manually when AutoSimulation is disabled. If delta time is too small simulation may not be performed but time accumulated.
+        /// Performs physics simulation. Useful to execute physics simulation manually when AutoSimulation is disabled. If delta time is too small simulation may not be performed but time accumulated.
         /// </summary>
         /// <param name="dt">The delta time (in seconds).</param>
 #if UNIT_TEST_COMPILANT

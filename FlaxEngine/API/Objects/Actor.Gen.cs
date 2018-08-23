@@ -683,7 +683,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets the ID of the objet within a prefab that is used for synchronization with this actor. Empty if no prefab link exists.
+        /// Gets the ID of the object within a prefab that is used for synchronization with this actor. Empty if no prefab link exists.
         /// </summary>
         [UnmanagedCall]
         public Guid PrefabObjectID

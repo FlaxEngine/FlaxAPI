@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// The debug shapes rendering service. Not available in builded game. For use only in the editor.
+    /// The debug shapes rendering service. Not available in build game. For use only in the editor.
     /// </summary>
     public static partial class DebugDraw
     {

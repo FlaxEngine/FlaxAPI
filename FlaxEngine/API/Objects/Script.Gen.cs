@@ -69,7 +69,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets the ID of the objet within a script that is used for synchronization with this script. Empty if no prefab link exists.
+        /// Gets the ID of the object within a script that is used for synchronization with this script. Empty if no prefab link exists.
         /// </summary>
         [UnmanagedCall]
         public Guid PrefabObjectID

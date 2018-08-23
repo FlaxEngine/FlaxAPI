@@ -15,7 +15,7 @@ namespace FlaxEngine
         /// <summary>
         /// Displays a message box with specified text, caption, buttons, and icon.
         /// </summary>
-        /// <param name="parent">Parant window or null if not used.</param>
+        /// <param name="parent">The parent window or null if not used.</param>
         /// <param name="text">The text to display in the message box.</param>
         /// <param name="caption">The text to display in the title bar of the message box.</param>
         /// <param name="buttons">One of the Buttons values that specifies which buttons to display in the message box.</param>
@@ -37,7 +37,7 @@ namespace FlaxEngine
         /// <summary>
         /// Displays a standard dialog box that prompts the user to open a file(s).
         /// </summary>
-        /// <param name="parent">Parant window or null if not used.</param>
+        /// <param name="parent">The parent window or null if not used.</param>
         /// <param name="initialDirectory">The initial directory to show.</param>
         /// <param name="filter">The files filter text. Eg. 'All files (*.*)\0*.*\0'.</param>
         /// <param name="multiselect">Enable or disable support to select more than one file.</param>
@@ -59,7 +59,7 @@ namespace FlaxEngine
         /// <summary>
         /// Displays a standard dialog box that prompts the user to select a folder.
         /// </summary>
-        /// <param name="parent">Parant window or null if not used.</param>
+        /// <param name="parent">The parent window or null if not used.</param>
         /// <param name="initialDirectory">The initial directory to show.</param>
         /// <param name="title">The dialog window title.</param>
         /// <returns>Selected folder path or null if cancelled or not supported.</returns>

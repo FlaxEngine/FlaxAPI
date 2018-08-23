@@ -68,7 +68,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets value indicating if probe should be updated automaticlly on change.
+        /// Gets or sets value indicating if probe should be updated automatically on change.
         /// </summary>
         [UnmanagedCall]
         [EditorOrder(30), EditorDisplay("Probe"), Tooltip("Enable auto probe update on transform changed")]

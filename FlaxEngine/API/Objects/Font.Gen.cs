@@ -197,7 +197,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Calculates hited character index at given location.
+        /// Calculates hit character index at given location.
         /// </summary>
         /// <param name="text">Input text to test.</param>
         /// <param name="location">Location to test.</param>
@@ -217,7 +217,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Calculates hited character index at given location.
+        /// Calculates hit character index at given location.
         /// </summary>
         /// <param name="text">Input text to test.</param>
         /// <param name="location">Location to test.</param>

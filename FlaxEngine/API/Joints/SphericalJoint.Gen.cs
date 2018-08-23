@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Physics joint that removes all translational degrees of freedom but allows all rotational degrees of freedom. Essentially this ensures that the anchor points of the two bodies are always coincident. Bodies are allowed to rotate around the anchor points, and their rotatation can be limited by an elliptical cone.
+    /// Physics joint that removes all translational degrees of freedom but allows all rotational degrees of freedom. Essentially this ensures that the anchor points of the two bodies are always coincident. Bodies are allowed to rotate around the anchor points, and their rotation can be limited by an elliptical cone.
     /// </summary>
     [Serializable]
     public sealed partial class SphericalJoint : Joint
