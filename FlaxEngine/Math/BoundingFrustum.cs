@@ -869,10 +869,10 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Indicate whether the current BoundingFrustrum is Orthographic.
+        /// Indicate whether the current BoundingFrustum is Orthographic.
         /// </summary>
         /// <value>
-        /// <c>true</c> if the current BoundingFrustrum is Orthographic; otherwise, <c>false</c>.
+        /// <c>true</c> if the current BoundingFrustum is Orthographic; otherwise, <c>false</c>.
         /// </value>
         public bool IsOrthographic => (pLeft.Normal == -pRight.Normal) && (pTop.Normal == -pBottom.Normal);
     }

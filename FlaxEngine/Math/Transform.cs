@@ -174,7 +174,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Perform tranformation of the given transform in local space
+        /// Perform transformation of the given transform in local space
         /// </summary>
         /// <param name="other">Local space transform</param>
         /// <returns>World space transform</returns>
@@ -190,7 +190,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Perform tranformation of the given point in local space
+        /// Perform transformation of the given point in local space
         /// </summary>
         /// <param name="point">Local space point</param>
         /// <returns>World space point</returns>
@@ -202,7 +202,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Perform tranformation of the given points in local space
+        /// Perform transformation of the given points in local space
         /// </summary>
         /// <param name="points">Local space points</param>
         /// <param name="result">World space points</param>
@@ -215,7 +215,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Perform tranformation of the given transform in world space
+        /// Perform transformation of the given transform in world space
         /// </summary>
         /// <param name="other">World space transform</param>
         /// <returns>Local space transform</returns>
@@ -237,7 +237,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Perform tranformation of the given point in world space
+        /// Perform transformation of the given point in world space
         /// </summary>
         /// <param name="point">World space point</param>
         /// <returns>Local space point</returns>
@@ -258,7 +258,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Perform tranformation of the given points in world space
+        /// Perform transformation of the given points in world space
         /// </summary>
         /// <param name="points">World space points</param>
         /// <param name="result">Local space points</param>

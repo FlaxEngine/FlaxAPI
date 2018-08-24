@@ -1,13 +1,12 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Configuration;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
     /// <summary>
-    /// Single material slot desribies how to render meshes using it.
+    /// Single material slot describes how to render meshes using it.
     /// </summary>
     public sealed class MaterialSlot
     {
@@ -15,7 +14,7 @@ namespace FlaxEngine
         internal readonly int _index;
 
         /// <summary>
-        /// Gets the index of the slot (in the parnet model).
+        /// Gets the index of the slot (in the parent model).
         /// </summary>
         public int SlotIndex => _index;
 

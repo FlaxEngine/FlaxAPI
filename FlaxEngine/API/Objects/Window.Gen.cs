@@ -176,7 +176,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Restores the window state before minimizing or maximazing.
+        /// Restores the window state before minimizing or maximizing.
         /// </summary>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
@@ -332,7 +332,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or set window opacity value (vaild only for windows created with SupportsTransparency flag). Opacity values are normalized to range [0;1].
+        /// Gets or set window opacity value (valid only for windows created with SupportsTransparency flag). Opacity values are normalized to range [0;1].
         /// </summary>
         [UnmanagedCall]
         public float Opacity
@@ -377,7 +377,7 @@ namespace FlaxEngine
         /// <summary>
         /// Brings window to the front of the Z order.
         /// </summary>
-        /// <param name="force">True if move to the front by force, otheriwse false.</param>
+        /// <param name="force">True if move to the front by force, otherwise false.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif

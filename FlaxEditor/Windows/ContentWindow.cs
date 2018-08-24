@@ -519,7 +519,7 @@ namespace FlaxEditor.Windows
         }
 
         /// <summary>
-        /// Refreshes the current view items colelction.
+        /// Refreshes the current view items collection.
         /// </summary>
         public void RefreshView()
         {

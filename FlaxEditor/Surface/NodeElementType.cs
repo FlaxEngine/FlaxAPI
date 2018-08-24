@@ -8,9 +8,9 @@ namespace FlaxEditor.Surface
     public enum NodeElementType
     {
         /// <summary>
-        /// The invlid element.
+        /// The invalid element.
         /// </summary>
-        Invlid = 0,
+        Invalid = 0,
 
         /// <summary>
         /// The input box.

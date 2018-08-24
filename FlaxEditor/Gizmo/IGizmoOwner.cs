@@ -6,7 +6,7 @@ using FlaxEngine;
 namespace FlaxEditor.Gizmo
 {
     /// <summary>
-    /// Describies objects that can own gizmo tools.
+    /// Describes objects that can own gizmo tools.
     /// </summary>
     public interface IGizmoOwner
     {
@@ -61,7 +61,7 @@ namespace FlaxEditor.Gizmo
         bool UseSnapping { get; }
 
         /// <summary>
-        /// Gets a value indicating whether duplicate objects during gizmo operation (eg. when tranforming).
+        /// Gets a value indicating whether duplicate objects during gizmo operation (eg. when transforming).
         /// </summary>
         bool UseDuplicate { get; }
 

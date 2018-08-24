@@ -66,7 +66,7 @@ namespace FlaxEditor.Content
         void OnItemReimported(ContentItem item);
 
         /// <summary>
-        /// Called when referenced item gets disposed (editor closing, database inetrnal changes, etc.).
+        /// Called when referenced item gets disposed (editor closing, database internal changes, etc.).
         /// Item should not be used after that.
         /// </summary>
         /// <param name="item">The item.</param>

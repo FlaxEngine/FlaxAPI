@@ -10,12 +10,12 @@ namespace FlaxEngine.GUI
     public class SplitPanel : ContainerControl
     {
         /// <summary>
-        /// The spliter size (in pixels).
+        /// The splitter size (in pixels).
         /// </summary>
         public const int SpliterSize = 4;
 
         /// <summary>
-        /// The spliter half size (in pixels).
+        /// The splitter half size (in pixels).
         /// </summary>
         private const int SpliterSizeHalf = SpliterSize / 2;
 

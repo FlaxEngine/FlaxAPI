@@ -15,7 +15,7 @@ namespace FlaxEngine.GUI
         public const float DefaultHeight = 24.0f;
 
         /// <summary>
-        /// The mosue down flag.
+        /// The mouse down flag.
         /// </summary>
         protected bool _mouseDown;
 

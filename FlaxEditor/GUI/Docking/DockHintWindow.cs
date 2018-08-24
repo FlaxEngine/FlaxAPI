@@ -374,7 +374,7 @@ namespace FlaxEditor.GUI.Docking
             public const float HintWindowsSize = 32.0f;
 
             /// <summary>
-            /// Initializes the hit proxy windows. Those windows are used to incidate drag target areas (left, right, top, bottom, etc.).
+            /// Initializes the hit proxy windows. Those windows are used to indicate drag target areas (left, right, top, bottom, etc.).
             /// </summary>
             public static void InitHitProxy()
             {

@@ -3,7 +3,7 @@
 using System;
 
 /// <summary>
-/// Attibute stops serialization of given property since it is calling unmanaged code.
+/// Attribute that marks methods and properties that call unmanaged code directly.
 /// </summary>
 internal class UnmanagedCallAttribute : Attribute
 {

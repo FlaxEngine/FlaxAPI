@@ -49,7 +49,7 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="logType">The type of the log message.</param>
         /// <returns>
-        /// Retrun true in case logs of LogType will be logged otherwise returns false.
+        /// Return true in case logs of LogType will be logged otherwise returns false.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsLogTypeAllowed(LogType logType)

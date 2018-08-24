@@ -29,7 +29,7 @@ namespace FlaxEngine
         public static string EngineFolder { get; private set; }
 
         /// <summary>
-        /// Gets the development files fodler path.
+        /// Gets the development files folder path.
         /// Valid only in development builds.
         /// </summary>
         public static string DevelopmentFolder { get; private set; }

@@ -42,7 +42,7 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
-        /// Called when Editor is ready and winn start work.
+        /// Called when Editor is ready and will start work.
         /// </summary>
         public virtual void OnEndInit()
         {

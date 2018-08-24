@@ -27,7 +27,7 @@ namespace FlaxEngine
     public static partial class SceneManager
     {
         /// <summary>
-        /// Checks if any scene has been loaded. Loaded scene means deserialzied and added to the scenes collection.
+        /// Checks if any scene has been loaded. Loaded scene means deserialized and added to the scenes collection.
         /// </summary>
         public static bool IsAnySceneLoaded => ScenesCount != 0;
 
@@ -214,7 +214,7 @@ namespace FlaxEngine
         /// <summary>
         /// Loads scene from the asset. Done in the background.
         /// </summary>
-        /// <param name="sceneAsset">The asset with the sceneto load.</param>
+        /// <param name="sceneAsset">The asset with the scene to load.</param>
         /// <returns>True if failed (given asset is not a scene asset, missing data), otherwise false.</returns>
         public static bool LoadSceneAsync(SceneReference sceneAsset)
         {

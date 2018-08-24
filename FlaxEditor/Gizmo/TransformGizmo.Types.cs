@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 namespace FlaxEditor.Gizmo
 {
@@ -72,7 +72,7 @@ namespace FlaxEditor.Gizmo
         }
 
         /// <summary>
-        /// Tranform object space.
+        /// Transform object space.
         /// </summary>
         public enum TransformSpace
         {
@@ -93,7 +93,7 @@ namespace FlaxEditor.Gizmo
         public enum PivotType
         {
             /// <summary>
-            /// First selected object ssenter
+            /// First selected object center
             /// </summary>
             ObjectCenter,
 

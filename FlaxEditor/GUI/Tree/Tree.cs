@@ -46,7 +46,7 @@ namespace FlaxEditor.GUI
         public event SelectionChangedDelegate SelectedChanged;
 
         /// <summary>
-        /// Action fired when ouse goes right click up on node.
+        /// Action fired when mouse goes right click up on node.
         /// </summary>
         public event NodeClickDelegate RightClick;
 
@@ -374,7 +374,7 @@ namespace FlaxEditor.GUI
                     bool keyUpArrow = window.GetKeyDown(Keys.ArrowUp);
                     bool keyDownArrow = window.GetKeyDown(Keys.ArrowDown);
 
-                    // Check if arrow flags are dffrent
+                    // Check if arrow flags are different
                     if (keyDownArrow != keyUpArrow)
                     {
                         var nodeParent = node.Parent;

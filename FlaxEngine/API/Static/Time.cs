@@ -82,12 +82,12 @@ namespace FlaxEngine
         public static long UnscaledDeltaTimeTicks => data.UnscaledDeltaTimeTicks;
 
         /// <summary>
-        /// Gets timeScale-independant time at the beginning of this frame. This is the time in seconds since the start of the game.
+        /// Gets timeScale-independent time at the beginning of this frame. This is the time in seconds since the start of the game.
         /// </summary>
         public static float UnscaledGameTime => data.UnscaledTime;
 
         /// <summary>
-        /// Gets timeScale-independant time at the beginning of this frame in ticks. This is the time in seconds since the start of the game.
+        /// Gets timeScale-independent time at the beginning of this frame in ticks. This is the time in seconds since the start of the game.
         /// </summary>
         public static long UnscaledGameTimeTicks => data.UnscaledTimeTicks;
 

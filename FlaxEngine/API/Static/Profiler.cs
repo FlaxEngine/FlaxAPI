@@ -7,7 +7,7 @@ namespace FlaxEngine
     public static partial class Profiler
     {
         /// <summary>
-        /// Beginss profiling a piece of code with a custom label.
+        /// Begins profiling a piece of code with a custom label.
         /// </summary>
         /// <param name="name">The name of the event.</param>
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -20,7 +20,7 @@ namespace FlaxEngine
         public static extern void EndEvent();
 
         /// <summary>
-        /// Beginss GPU profiling a piece of code with a custom label.
+        /// Begins GPU profiling a piece of code with a custom label.
         /// </summary>
         /// <param name="name">The name of the event.</param>
         [MethodImpl(MethodImplOptions.InternalCall)]

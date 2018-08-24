@@ -288,7 +288,7 @@ namespace FlaxEngine.Rendering
         public const int MaxPostFxMaterials = 8;
 
         /// <summary>
-        /// Gets the overridde flag for the given property.
+        /// Gets the override flag for the given property.
         /// </summary>
         /// <param name="p">The property.</param>
         /// <returns>True if property value is being overriden, otherwise false.</returns>
@@ -302,7 +302,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Sets the override flag for the given property.
         /// </summary>
-        /// <param name="p">The propety.</param>
+        /// <param name="p">The property.</param>
         /// <param name="value">True if override the property value, otherwise false..</param>
         public void SetOverrideFlag(PropertyInfo p, bool value)
         {
@@ -312,7 +312,7 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Gets the overridde flag for the given property.
+        /// Gets the override flag for the given property.
         /// </summary>
         /// <param name="order">The property order (see <see cref="EditorOrderAttribute"/> order value for properties).</param>
         /// <returns>True if property value is being overriden, otherwise false.</returns>
@@ -324,7 +324,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Sets the override flag for the given property.
         /// </summary>
-        /// <param name="order">The propety order (see <see cref="EditorOrderAttribute"/> order value for properties.</param>
+        /// <param name="order">The property order (see <see cref="EditorOrderAttribute"/> order value for properties.</param>
         /// <param name="value">True if override the property value, otherwise false..</param>
         public void SetOverrideFlag(int order, bool value)
         {
@@ -362,7 +362,7 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Gets or sets the ambient occluion power.
+        /// Gets or sets the ambient occlusion power.
         /// </summary>
         [NoSerialize, EditorOrder(102), EditorDisplay("Ambient Occlusion", "Power"), Limit(0, 4.0f, 0.01f)]
         public float AO_Power
@@ -1030,9 +1030,9 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Gets or sets the distance in World Units which describes border after that there is no blur (usefull to disable DoF on sky).
+        /// Gets or sets the distance in World Units which describes border after that there is no blur (useful to disable DoF on sky).
         /// </summary>
-        [NoSerialize, EditorOrder(705), EditorDisplay("Depth of Field", "Depth Limit"), Tooltip("The distance in World Units which describes border after that there is no blur (usefull to disable DoF on sky)"), Limit(50, 1000000.0f, 2)]
+        [NoSerialize, EditorOrder(705), EditorDisplay("Depth of Field", "Depth Limit"), Tooltip("The distance in World Units which describes border after that there is no blur (useful to disable DoF on sky)"), Limit(50, 1000000.0f, 2)]
         public float DOF_DepthLimit
         {
             get => data.DOF_DepthLimit;
@@ -1114,9 +1114,9 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Controls Bokeh shapes blur threashold.
+        /// Controls Bokeh shapes blur threshold.
         /// </summary>
-        [NoSerialize, EditorOrder(711), EditorDisplay("Depth of Field", "Bokeh Blur Threshold"), Tooltip("Controls Bokeh shapes blur threashold"), Limit(0, 1.0f, 0.001f)]
+        [NoSerialize, EditorOrder(711), EditorDisplay("Depth of Field", "Bokeh Blur Threshold"), Tooltip("Controls Bokeh shapes blur threshold"), Limit(0, 1.0f, 0.001f)]
         public float DOF_BokehBlurThreshold
         {
             get => data.DOF_BokehBlurThreshold;
@@ -1203,7 +1203,7 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Gets or sets the BRDF bias. This value controlls source roughness effect on reflections blur.
+        /// Gets or sets the BRDF bias. This value controls source roughness effect on reflections blur.
         /// Smaller values produce wider reflections spread but also introduce more noise.
         /// Higher values provide more mirror-like reflections. Default value is 0.8.
         /// </summary>

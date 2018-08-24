@@ -158,7 +158,7 @@ namespace FlaxEditor.Windows.Assets
 
             Editor.Log("Reloading prefab editor data on scripts reload. Prefab: " + _asset.Path);
 
-            // Check if asset has been edited and not saved (and stil has linked item)
+            // Check if asset has been edited and not saved (and still has linked item)
             if (IsEdited)
             {
                 // Ask user for further action
@@ -221,7 +221,7 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void Save()
         {
-            // Check if don't need to push any new changes to the orginal asset
+            // Check if don't need to push any new changes to the original asset
             if (!IsEdited)
                 return;
 

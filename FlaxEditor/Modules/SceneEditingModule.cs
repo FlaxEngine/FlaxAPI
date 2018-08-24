@@ -34,9 +34,9 @@ namespace FlaxEditor.Modules
         public bool HasSthSelected => Selection.Count > 0;
 
         /// <summary>
-        /// Occurs when selected objects colelction gets changed.
+        /// Occurs when selected objects collection gets changed.
         /// </summary>
-        public event Action OnSelectionChanged;
+        public event Action SelectionChanged;
 
         internal SceneEditingModule(Editor editor)
         : base(editor)
@@ -48,7 +48,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void SelectAllScenes()
         {
-            // Select all sccenes (linked to the root node)
+            // Select all scenes (linked to the root node)
             Select(Editor.Scene.Root.ChildNodes);
         }
 
@@ -158,7 +158,7 @@ namespace FlaxEditor.Modules
         {
             Undo.AddAction(new SelectionChangeAction(before, Selection.ToArray(), OnSelectionUndo));
 
-            OnSelectionChanged?.Invoke();
+            SelectionChanged?.Invoke();
         }
 
         private void OnSelectionUndo(SceneGraphNode[] toSelect)
@@ -175,7 +175,7 @@ namespace FlaxEditor.Modules
                 }
             }
 
-            OnSelectionChanged?.Invoke();
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void Copy()
         {
-            // Peek things that can be copied (copy all acctors)
+            // Peek things that can be copied (copy all actors)
             var objects = Selection.Where(x => x.CanCopyPaste).ToList().BuildAllNodes().Where(x => x.CanCopyPaste && x is ActorNode).ToList();
             if (objects.Count == 0)
                 return;
@@ -293,7 +293,7 @@ namespace FlaxEditor.Modules
             // Get clipboard data
             var data = Application.ClipboardRawData;
 
-            // Ser aste target if only one actor is selected and no target provided
+            // Set paste target if only one actor is selected and no target provided
             if (pasteTargetActor == null && SelectionCount == 1 && Selection[0] is ActorNode actorNode)
             {
                 pasteTargetActor = actorNode.Actor;
@@ -321,7 +321,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void Duplicate()
         {
-            // Peek things that can be copied (copy all acctors)
+            // Peek things that can be copied (copy all actors)
             var objects = Selection.Where(x => x.CanCopyPaste).ToList().BuildAllNodes().Where(x => x.CanCopyPaste && x is ActorNode).ToList();
             if (objects.Count == 0)
                 return;
@@ -352,7 +352,7 @@ namespace FlaxEditor.Modules
             selectAction.Do();
 
             Undo.AddAction(new MultiUndoAction(pasteAction, selectAction));
-            OnSelectionChanged?.Invoke();
+            SelectionChanged?.Invoke();
         }
 
         /// <inheritdoc />

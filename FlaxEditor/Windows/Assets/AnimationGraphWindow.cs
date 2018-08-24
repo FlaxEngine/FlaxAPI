@@ -166,7 +166,7 @@ namespace FlaxEditor.Windows.Assets
                                 // Set parameter and surface parameter
                                 var win = (AnimationGraphWindow)instance;
 
-                                // Visject surface paramaters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
+                                // Visject surface parameters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
                                 var surfaceParam = value;
                                 if (pGuidType)
                                     surfaceParam = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
@@ -497,7 +497,7 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void Save()
         {
-            // Check if don't need to push any new changes to the orginal asset
+            // Check if don't need to push any new changes to the original asset
             if (!IsEdited)
                 return;
 

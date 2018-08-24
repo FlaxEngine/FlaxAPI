@@ -22,7 +22,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Initializes a new instance of the <see cref="ContextMenuChildMenu"/> class.
         /// </summary>
-        /// <param name="parent">The parent cotext menu.</param>
+        /// <param name="parent">The parent context menu.</param>
         /// <param name="text">The text.</param>
         public ContextMenuChildMenu(ContextMenu parent, string text)
         : base(parent, 8, 22)

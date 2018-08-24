@@ -27,7 +27,7 @@ namespace FlaxEditor.CustomEditors.GUI
         internal CustomEditor LinkedEditor;
 
         /// <summary>
-        /// The highlight strip color drawn on a side (transparen if skip rendering).
+        /// The highlight strip color drawn on a side (transparent if skip rendering).
         /// </summary>
         public Color HighlightStripColor;
 

@@ -204,7 +204,7 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="path">Target file path.</param>
         /// <param name="args">Custom command line arguments to pass to the new application.</param>
-        /// <param name="hiddenWindow">True if hide processs window, otherwise false (it's not always possible).</param>
+        /// <param name="hiddenWindow">True if hide process window, otherwise false (it's not always possible).</param>
         /// <param name="waitForEnd">True if wait for the process end, otherwise false.</param>
         /// <returns>Retrieves the termination status of the specified process. Invalid if process is still running.</returns>
 #if UNIT_TEST_COMPILANT

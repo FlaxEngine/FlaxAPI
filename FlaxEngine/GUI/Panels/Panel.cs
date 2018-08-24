@@ -48,7 +48,7 @@ namespace FlaxEngine.GUI
         public Vector2 ViewBottom => Size + _viewOffset;
 
         /// <summary>
-        /// Gets or sets the scroll bars usege by this panel.
+        /// Gets or sets the scroll bars usage by this panel.
         /// </summary>
         [EditorOrder(0), Tooltip("The scroll bars usage.")]
         public ScrollBars ScrollBars
@@ -63,7 +63,7 @@ namespace FlaxEngine.GUI
 
                 if ((value & ScrollBars.Vertical) == ScrollBars.Vertical)
                 {
-                    // Create vertical sroll bar
+                    // Create vertical scroll bar
                     VScrollBar = new VScrollBar(Width - ScrollBar.DefaultSize, Height)
                     {
                         DockStyle = DockStyle.Right,
@@ -78,7 +78,7 @@ namespace FlaxEngine.GUI
 
                 if ((value & ScrollBars.Horizontal) == ScrollBars.Horizontal)
                 {
-                    // Create vertical sroll bar
+                    // Create vertical scroll bar
                     HScrollBar = new HScrollBar(Height - ScrollBar.DefaultSize, Width)
                     {
                         DockStyle = DockStyle.Bottom,
@@ -360,7 +360,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Arrages the child controls and gets their bounds.
+        /// Arranges the child controls and gets their bounds.
         /// </summary>
         protected virtual void ArrageAndGetBounds()
         {
@@ -382,7 +382,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Arrages the child controls.
+        /// Arranges the child controls.
         /// </summary>
         protected virtual void Arrage()
         {

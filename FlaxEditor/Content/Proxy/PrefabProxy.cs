@@ -140,7 +140,7 @@ namespace FlaxEditor.Content
             _preview.Prefab = (Prefab)request.Asset;
             _preview.Parent = guiRoot;
 
-            // Update some actors data (some actor types update bounds/data later but its requried to be done before rendering)
+            // Update some actors data (some actor types update bounds/data later but its required to be done before rendering)
             Prepare(_preview.Instance);
 
             // Auto fit

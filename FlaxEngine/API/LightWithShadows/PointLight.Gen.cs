@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Point light emmits light from point in all directions.
+    /// Point light emits light from point in all directions.
     /// </summary>
     [Serializable]
     public sealed partial class PointLight : LightWithShadow
@@ -128,7 +128,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Enables or diables using light brightness from IES profile.
+        /// Enables or disables using light brightness from IES profile.
         /// </summary>
         [UnmanagedCall]
         [EditorOrder(212), EditorDisplay("IES Profile", "Use IES Brightness"), Tooltip("Enable/disable using light brightness from IES profile")]

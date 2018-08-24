@@ -32,9 +32,9 @@ namespace FlaxEngine.GUI
         private bool _blockPopup;
 
         /// <summary>
-        /// The selected indicies.
+        /// The selected indices.
         /// </summary>
-        protected readonly List<int> _selectedIndicies = new List<int>(4);
+        protected readonly List<int> _selectedIndices = new List<int>(4);
 
         /// <summary>
         /// Gets or sets the items collection.
@@ -70,7 +70,7 @@ namespace FlaxEngine.GUI
         [HideInEditor, NoSerialize]
         public string SelectedItem
         {
-            get => _selectedIndicies.Count == 1 ? _items[_selectedIndicies[0]] : string.Empty;
+            get => _selectedIndices.Count == 1 ? _items[_selectedIndices[0]] : string.Empty;
             set => SelectedIndex = _items.IndexOf(value);
         }
 
@@ -80,7 +80,7 @@ namespace FlaxEngine.GUI
         [EditorOrder(2), Tooltip("The index of the selected item from the list.")]
         public int SelectedIndex
         {
-            get => _selectedIndicies.Count == 1 ? _selectedIndicies[0] : -1;
+            get => _selectedIndices.Count == 1 ? _selectedIndices[0] : -1;
             set
             {
                 // Clamp index
@@ -90,8 +90,8 @@ namespace FlaxEngine.GUI
                 if (value != SelectedIndex)
                 {
                     // Select
-                    _selectedIndicies.Clear();
-                    _selectedIndicies.Add(value);
+                    _selectedIndices.Clear();
+                    _selectedIndices.Add(value);
                     OnSelectedIndexChanged();
                 }
             }
@@ -103,7 +103,7 @@ namespace FlaxEngine.GUI
         [NoSerialize, HideInEditor]
         public List<int> Selection
         {
-            get => _selectedIndicies;
+            get => _selectedIndices;
             set
             {
                 if (value == null)
@@ -111,11 +111,11 @@ namespace FlaxEngine.GUI
                 if (!SupportMultiSelect && value.Count > 1)
                     throw new InvalidOperationException();
 
-                if (!_selectedIndicies.SequenceEqual(value))
+                if (!_selectedIndices.SequenceEqual(value))
                 {
                     // Select
-                    _selectedIndicies.Clear();
-                    _selectedIndicies.AddRange(value);
+                    _selectedIndices.Clear();
+                    _selectedIndices.AddRange(value);
                     OnSelectedIndexChanged();
                 }
             }
@@ -285,10 +285,10 @@ namespace FlaxEngine.GUI
         {
             if (SupportMultiSelect)
             {
-                if (_selectedIndicies.Contains(index))
-                    _selectedIndicies.Remove(index);
+                if (_selectedIndices.Contains(index))
+                    _selectedIndices.Remove(index);
                 else
-                    _selectedIndicies.Add(index);
+                    _selectedIndices.Add(index);
                 OnSelectedIndexChanged();
             }
             else
@@ -353,9 +353,9 @@ namespace FlaxEngine.GUI
             Render2D.DrawRectangle(clientRect, borderColor);
 
             // Check if has selected item
-            if (_selectedIndicies.Count > 0)
+            if (_selectedIndices.Count > 0)
             {
-                string text = _selectedIndicies.Count == 1 ? _items[_selectedIndicies[0]] : "Multiple Values";
+                string text = _selectedIndices.Count == 1 ? _items[_selectedIndices[0]] : "Multiple Values";
 
                 // Draw text of the selected item
                 float textScale = Height / DefaultHeight;
@@ -393,7 +393,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
-            // Check mosue buttons
+            // Check mouse buttons
             if (buttons == MouseButton.Left)
             {
                 // Set flag
@@ -454,7 +454,7 @@ namespace FlaxEngine.GUI
                     for (int i = 0; i < _items.Count; i++)
                     {
                         var button = _popupMenu.AddButton(_items[i]);
-                        if (_selectedIndicies.Contains(i))
+                        if (_selectedIndices.Contains(i))
                         {
                             button.Icon = style.CheckBoxTick;
                         }

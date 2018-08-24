@@ -68,7 +68,7 @@ namespace FlaxEngine.GUI
         #region Public Properties
 
         /// <summary>
-        ///     Parent control (the one above in the tree hierachy)
+        ///     Parent control (the one above in the tree hierarchy)
         /// </summary>
         [HideInEditor, NoSerialize]
         public ContainerControl Parent
@@ -421,7 +421,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Update control layout
         /// </summary>
-        /// <param name="force">True if perform layout by force even if cached state wants to skip it due to optimalization.</param>
+        /// <param name="force">True if perform layout by force even if cached state wants to skip it due to optimization.</param>
         public virtual void PerformLayout(bool force = false)
         {
         }
@@ -572,7 +572,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     When mosue leaves control's area
+        ///     When mouse leaves control's area
         /// </summary>
         public virtual void OnMouseLeave()
         {
@@ -589,7 +589,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="delta">
-        ///   Mosue wheel move delta. A positive value indicates that the wheel was rotated forward, away from
+        ///   Mouse wheel move delta. A positive value indicates that the wheel was rotated forward, away from
         ///   the user; a negative value indicates that the wheel was rotated backward, toward the user. Normalized to [-1;1] range.
         /// </param>
         /// <returns>True if event has been handled</returns>
@@ -614,7 +614,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="buttons">Mouse buttons state (flags)</param>
-        /// <returns>True if event has been handled, oherwise false</returns>
+        /// <returns>True if event has been handled, otherwise false</returns>
         public virtual bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             return false;
@@ -712,7 +712,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     When mosue dragging leaves control's area
+        ///     When mouse dragging leaves control's area
         /// </summary>
         public virtual void OnDragLeave()
         {
@@ -762,7 +762,7 @@ namespace FlaxEngine.GUI
         /// Gets a value indicating whether show control tooltip (control is in a proper state, tooltip text is valid, etc.). Can be used to implement custom conditions for showing tooltips (eg. based on current mouse location within the control bounds).
         /// </summary>
         /// <remarks>
-        /// Tooltip ccan be only visible if mouse is over the control area (see <see cref="IsMouseOver"/>).
+        /// Tooltip can be only visible if mouse is over the control area (see <see cref="IsMouseOver"/>).
         /// </remarks>
         protected virtual bool ShowTooltip => _tooltipText != null;
         
@@ -771,7 +771,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="text">The text.</param>
         /// <param name="customTooltip">The custom tooltip.</param>
-        /// <returns>This control pointer. Usefull for creating controls in code.</returns>
+        /// <returns>This control pointer. Useful for creating controls in code.</returns>
         public Control LinkTooltip(string text, Tooltip customTooltip = null)
         {
             _tooltipText = text;
@@ -818,7 +818,7 @@ namespace FlaxEngine.GUI
         #region Helper Functions
 
         /// <summary>
-        /// Checks if given location point in Parent Space intresects with the control content and calculates local position.
+        /// Checks if given location point in Parent Space intersects with the control content and calculates local position.
         /// </summary>
         /// <param name="locationParent">The location in Parent Space.</param>
         /// <param name="location">The location of intersection in Control Space.</param>
@@ -1143,7 +1143,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Method called when managed instance should be destoryed
+        ///     Method called when managed instance should be destroyed
         /// </summary>
         public virtual void OnDestroy()
         {
@@ -1167,7 +1167,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Compares this control with the otheer control.
+        /// Compares this control with the other control.
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns>Comparision result.</returns>

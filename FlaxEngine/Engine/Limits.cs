@@ -17,9 +17,9 @@ namespace FlaxEngine
         public float ContactDist;
 
         /// <summary>
-        /// Controls how do objects react when the limit is reached, values closer to zero specify non-ellastic collision, while those closer to one specify more ellastic (i.e bouncy) collision. Must be in [0, 1] range.
+        /// Controls how do objects react when the limit is reached, values closer to zero specify non-elastic collision, while those closer to one specify more elastic (i.e bouncy) collision. Must be in [0, 1] range.
         /// </summary>
-        [EditorOrder(10), Limit(0.0f, 1.0f), Tooltip("Controls how do objects react when the limit is reached, values closer to zero specify non-ellastic collision, while those closer to one specify more ellastic (i.e bouncy) collision. Must be in [0, 1] range.")]
+        [EditorOrder(10), Limit(0.0f, 1.0f), Tooltip("Controls how do objects react when the limit is reached, values closer to zero specify non-elastic collision, while those closer to one specify more elastic (i.e bouncy) collision. Must be in [0, 1] range.")]
         public float Restitution;
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace FlaxEngine
         /// <param name="lower">The lower distance of the limit. Must be less than upper.</param>
         /// <param name="upper">The upper distance of the limit. Must be more than lower.</param>
         /// <param name="spring">The spring that controls how are the bodies pulled back towards the limit when they breach it.</param>
-        /// <param name="restitution">Controls how do objects react when the limit is reached, values closer to zero specify non-ellastic collision, while those closer to one specify more ellastic (i.e bouncy) collision. Must be in [0, 1] range.</param>
+        /// <param name="restitution">Controls how do objects react when the limit is reached, values closer to zero specify non-elastic collision, while those closer to one specify more elastic (i.e bouncy) collision. Must be in [0, 1] range.</param>
         public LimitLinearRange(float lower, float upper, SpringParameters spring, float restitution = 0.0f)
         {
             ContactDist = -1.0f;
@@ -90,9 +90,9 @@ namespace FlaxEngine
         public float ContactDist;
 
         /// <summary>
-        /// Controls how do objects react when the limit is reached, values closer to zero specify non-ellastic collision, while those closer to one specify more ellastic (i.e bouncy) collision. Must be in [0, 1] range.
+        /// Controls how do objects react when the limit is reached, values closer to zero specify non-elastic collision, while those closer to one specify more elastic (i.e bouncy) collision. Must be in [0, 1] range.
         /// </summary>
-        [EditorOrder(10), Limit(0.0f, 1.0f), Tooltip("Controls how do objects react when the limit is reached, values closer to zero specify non-ellastic collision, while those closer to one specify more ellastic (i.e bouncy) collision. Must be in [0, 1] range.")]
+        [EditorOrder(10), Limit(0.0f, 1.0f), Tooltip("Controls how do objects react when the limit is reached, values closer to zero specify non-elastic collision, while those closer to one specify more elastic (i.e bouncy) collision. Must be in [0, 1] range.")]
         public float Restitution;
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="extent">The distance at which the limit becomes active.</param>
         /// <param name="spring">The spring that controls how are the bodies pulled back towards the limit when they breach it.</param>
-        /// <param name="restitution">Controls how do objects react when the limit is reached, values closer to zero specify non-ellastic collision, while those closer to one specify more ellastic (i.e bouncy) collision. Must be in [0, 1] range.</param>
+        /// <param name="restitution">Controls how do objects react when the limit is reached, values closer to zero specify non-elastic collision, while those closer to one specify more elastic (i.e bouncy) collision. Must be in [0, 1] range.</param>
         public LimitLinear(float extent, SpringParameters spring, float restitution = 0.0f)
         {
             ContactDist = -1.0f;
@@ -153,9 +153,9 @@ namespace FlaxEngine
         public float ContactDist;
 
         /// <summary>
-        /// Controls how do objects react when the limit is reached, values closer to zero specify non-ellastic collision, while those closer to one specify more ellastic (i.e bouncy) collision. Must be in [0, 1] range.
+        /// Controls how do objects react when the limit is reached, values closer to zero specify non-elastic collision, while those closer to one specify more elastic (i.e bouncy) collision. Must be in [0, 1] range.
         /// </summary>
-        [EditorOrder(10), Limit(0.0f, 1.0f), Tooltip("Controls how do objects react when the limit is reached, values closer to zero specify non-ellastic collision, while those closer to one specify more ellastic (i.e bouncy) collision. Must be in [0, 1] range.")]
+        [EditorOrder(10), Limit(0.0f, 1.0f), Tooltip("Controls how do objects react when the limit is reached, values closer to zero specify non-elastic collision, while those closer to one specify more elastic (i.e bouncy) collision. Must be in [0, 1] range.")]
         public float Restitution;
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace FlaxEngine
         /// <param name="lower">The lower angle of the limit. Must be less than upper.</param>
         /// <param name="upper">The upper angle of the limit. Must be more than lower.</param>
         /// <param name="spring">The spring that controls how are the bodies pulled back towards the limit when they breach it.</param>
-        /// <param name="restitution">Controls how do objects react when the limit is reached, values closer to zero specify non-ellastic collision, while those closer to one specify more ellastic (i.e bouncy) collision. Must be in [0, 1] range.</param>
+        /// <param name="restitution">Controls how do objects react when the limit is reached, values closer to zero specify non-elastic collision, while those closer to one specify more elastic (i.e bouncy) collision. Must be in [0, 1] range.</param>
         public LimitAngularRange(float lower, float upper, SpringParameters spring, float restitution = 0.0f)
         {
             ContactDist = -1.0f;
@@ -226,9 +226,9 @@ namespace FlaxEngine
         public float ContactDist;
 
         /// <summary>
-        /// Controls how do objects react when the limit is reached, values closer to zero specify non-ellastic collision, while those closer to one specify more ellastic (i.e bouncy) collision. Must be in [0, 1] range.
+        /// Controls how do objects react when the limit is reached, values closer to zero specify non-elastic collision, while those closer to one specify more elastic (i.e bouncy) collision. Must be in [0, 1] range.
         /// </summary>
-        [EditorOrder(10), Limit(0.0f, 1.0f), Tooltip("Controls how do objects react when the limit is reached, values closer to zero specify non-ellastic collision, while those closer to one specify more ellastic (i.e bouncy) collision. Must be in [0, 1] range.")]
+        [EditorOrder(10), Limit(0.0f, 1.0f), Tooltip("Controls how do objects react when the limit is reached, values closer to zero specify non-elastic collision, while those closer to one specify more elastic (i.e bouncy) collision. Must be in [0, 1] range.")]
         public float Restitution;
 
         /// <summary>
@@ -275,7 +275,7 @@ namespace FlaxEngine
         /// <param name="yLimitAngle">The Y angle of the cone (in degrees). Movement is constrainted between 0 and this angle on the Y axis.</param>
         /// <param name="zLimitAngle">The Z angle of the cone (in degrees). Movement is constrainted between 0 and this angle on the Z axis.</param>
         /// <param name="spring">The spring that controls how are the bodies pulled back towards the limit when they breach it.</param>
-        /// <param name="restitution">Controls how do objects react when the limit is reached, values closer to zero specify non-ellastic collision, while those closer to one specify more ellastic (i.e bouncy) collision. Must be in [0, 1] range.</param>
+        /// <param name="restitution">Controls how do objects react when the limit is reached, values closer to zero specify non-elastic collision, while those closer to one specify more elastic (i.e bouncy) collision. Must be in [0, 1] range.</param>
         public LimitConeRange(float yLimitAngle, float zLimitAngle, SpringParameters spring, float restitution = 0.0f)
         {
             ContactDist = -1.0f;

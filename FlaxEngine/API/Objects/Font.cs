@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Represents font object that can be using durng text rendering (it uses Font Asset but with precached data for chosen font properties).
+    /// Represents font object that can be using during text rendering (it uses Font Asset but with precached data for chosen font properties).
     /// </summary>
     public partial class Font
     {

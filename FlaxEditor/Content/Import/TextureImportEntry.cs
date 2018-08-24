@@ -202,9 +202,9 @@ namespace FlaxEditor.Content.Import
         public CustomTextureFormatType Type { get; set; } = CustomTextureFormatType.ColorRGB;
 
         /// <summary>
-        /// True if texture should be improted as a texture atlas resource
+        /// True if texture should be imported as a texture atlas resource
         /// </summary>
-        [EditorOrder(10), Tooltip("True if texture should be improted as a texture atlas (with sprites)")]
+        [EditorOrder(10), Tooltip("True if texture should be imported as a texture atlas (with sprites)")]
         public bool IsAtlas { get; set; }
 
         /// <summary>
@@ -369,7 +369,7 @@ namespace FlaxEditor.Content.Import
         public TextureImportEntry(string url, string resultUrl)
         : base(url, resultUrl)
         {
-            // Try to restore target asset texture import options (usefull for fast reimport)
+            // Try to restore target asset texture import options (useful for fast reimport)
             TextureImportSettings.TryRestore(ref _settings, resultUrl);
 
             // Try to guess format type based on file name

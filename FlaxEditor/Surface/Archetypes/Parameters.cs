@@ -14,7 +14,7 @@ namespace FlaxEditor.Surface.Archetypes
     public static class Parameters
     {
         /// <summary>
-        /// Surface node type for paramaters group Get node.
+        /// Surface node type for parameters group Get node.
         /// </summary>
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
         public class SurfaceNodeParamsGet : SurfaceNode, IParametersDependantNode

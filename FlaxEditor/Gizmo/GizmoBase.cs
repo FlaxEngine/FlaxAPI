@@ -12,7 +12,7 @@ namespace FlaxEditor.Gizmo
     public abstract class GizmoBase
     {
         /// <summary>
-        /// Gets the gizmo wner.
+        /// Gets the gizmo owner.
         /// </summary>
         public IGizmoOwner Owner { get; }
 

@@ -104,7 +104,7 @@ namespace FlaxEditor.CustomEditors
                 EndUndoRecord();
             _setValueToken = token;
 
-            // Mark as modified and don't pass event futher
+            // Mark as modified and don't pass event further
             _isDirty = true;
             return false;
         }

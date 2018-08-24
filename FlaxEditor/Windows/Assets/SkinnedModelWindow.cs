@@ -97,7 +97,7 @@ namespace FlaxEditor.Windows.Assets
                 HighlightIndex = -1;
                 Window.UpdateEffectsOnAsset();
 
-                // Try to restore target asset import options (usefull for fast reimport)
+                // Try to restore target asset import options (useful for fast reimport)
                 ModelImportSettings.TryRestore(ref ImportSettings, window.Item.Path);
             }
 

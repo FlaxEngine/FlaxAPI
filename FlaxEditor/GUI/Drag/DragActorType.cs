@@ -40,7 +40,7 @@ namespace FlaxEditor.GUI.Drag
         {
             if (data.Text.StartsWith(DragPrefix))
             {
-                // Remove prefix and parse splited names
+                // Remove prefix and parse splitted names
                 var types = data.Text.Remove(0, DragPrefix.Length).Split('\n');
                 var results = new List<Type>(types.Length);
                 var assembly = Utils.GetAssemblyByName("FlaxEngine");

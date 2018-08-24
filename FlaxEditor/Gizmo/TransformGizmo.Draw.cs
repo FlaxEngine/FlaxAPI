@@ -24,7 +24,7 @@ namespace FlaxEditor.Gizmo
             _materialAxisZ = FlaxEngine.Content.LoadAsyncInternal<MaterialInstance>("Editor/Gizmo/MaterialAxisZ");
             _materialAxisFocus = FlaxEngine.Content.LoadAsyncInternal<MaterialInstance>("Editor/Gizmo/MaterialAxisFocus");
 
-            // Ensure that evey asset was loaded
+            // Ensure that every asset was loaded
             if (_modelTranslateAxis == null ||
                 _modelScaleAxis == null ||
                 _materialAxisX == null ||

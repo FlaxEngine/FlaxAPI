@@ -166,7 +166,7 @@ namespace FlaxEditor.Content.GUI
                 items[i].AddReference(this);
             }
 
-            // Sort itmes
+            // Sort items
             _children.Sort();
 
             // Unload and perform UI layout
@@ -370,7 +370,7 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <summary>
-        /// Refreshes thumbnails of all itmes in the <see cref="ContentView"/>.
+        /// Refreshes thumbnails of all items in the <see cref="ContentView"/>.
         /// </summary>
         public void RefreshThumbnails()
         {

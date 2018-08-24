@@ -9,7 +9,7 @@ using FlaxEditor.Progress.Handlers;
 namespace FlaxEditor.Modules
 {
     /// <summary>
-    /// Helper module for engine long-operations progress reporting in the editor (eg. files importing, sttatic light baking, etc.).
+    /// Helper module for engine long-operations progress reporting in the editor (eg. files importing, static light baking, etc.).
     /// </summary>
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class ProgressReportingModule : EditorModule
@@ -132,7 +132,7 @@ namespace FlaxEditor.Modules
         {
             UpdateProgress();
 
-            // Flash main window when no stuff to wait for (user coudl come back to app)
+            // Flash main window when no stuff to wait for (user could come back to app)
             if (!IsAnyActive)
             {
                 Editor.Windows.FlashMainWindow();

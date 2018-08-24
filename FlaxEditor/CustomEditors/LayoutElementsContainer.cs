@@ -19,7 +19,7 @@ namespace FlaxEditor.CustomEditors
     {
         /// <summary>
         /// Helper flag that is set to true if this container is in root presenter area, otherwise it's one of child groups.
-        /// It's used to collapse all chil groups and open the root ones by auto.
+        /// It's used to collapse all child groups and open the root ones by auto.
         /// </summary>
         internal bool isRootGroup = true;
 

@@ -473,122 +473,122 @@ namespace FlaxEngine
         NumpadDivide = 0x6F,
 
         /// <summary>
-        /// F1 funcion key
+        /// F1 function key
         /// </summary>
         F1 = 0x70,
 
         /// <summary>
-        /// F2 funcion key
+        /// F2 function key
         /// </summary>
         F2 = 0x71,
 
         /// <summary>
-        /// F3 funcion key
+        /// F3 function key
         /// </summary>
         F3 = 0x72,
 
         /// <summary>
-        /// F4 funcion key
+        /// F4 function key
         /// </summary>
         F4 = 0x73,
 
         /// <summary>
-        /// F5 funcion key
+        /// F5 function key
         /// </summary>
         F5 = 0x74,
 
         /// <summary>
-        /// F6 funcion key
+        /// F6 function key
         /// </summary>
         F6 = 0x75,
 
         /// <summary>
-        /// F7 funcion key
+        /// F7 function key
         /// </summary>
         F7 = 0x76,
 
         /// <summary>
-        /// F8 funcion key
+        /// F8 function key
         /// </summary>
         F8 = 0x77,
 
         /// <summary>
-        /// F9 funcion key
+        /// F9 function key
         /// </summary>
         F9 = 0x78,
 
         /// <summary>
-        /// F10 funcion key
+        /// F10 function key
         /// </summary>
         F10 = 0x79,
 
         /// <summary>
-        /// F11 funcion key
+        /// F11 function key
         /// </summary>
         F11 = 0x7A,
 
         /// <summary>
-        /// F12 funcion key
+        /// F12 function key
         /// </summary>
         F12 = 0x7B,
 
         /// <summary>
-        /// F13 funcion key
+        /// F13 function key
         /// </summary>
         F13 = 0x7C,
 
         /// <summary>
-        /// F14 funcion key
+        /// F14 function key
         /// </summary>
         F14 = 0x7D,
 
         /// <summary>
-        /// F15 funcion key
+        /// F15 function key
         /// </summary>
         F15 = 0x7E,
 
         /// <summary>
-        /// F16 funcion key
+        /// F16 function key
         /// </summary>
         F16 = 0x7F,
 
         /// <summary>
-        /// F17 funcion key
+        /// F17 function key
         /// </summary>
         F17 = 0x80,
 
         /// <summary>
-        /// F18 funcion key
+        /// F18 function key
         /// </summary>
         F18 = 0x81,
 
         /// <summary>
-        /// F19 funcion key
+        /// F19 function key
         /// </summary>
         F19 = 0x82,
 
         /// <summary>
-        /// F20 funcion key
+        /// F20 function key
         /// </summary>
         F20 = 0x83,
 
         /// <summary>
-        /// F21 funcion key
+        /// F21 function key
         /// </summary>
         F21 = 0x84,
 
         /// <summary>
-        /// F22 funcion key
+        /// F22 function key
         /// </summary>
         F22 = 0x85,
 
         /// <summary>
-        /// F23 funcion key
+        /// F23 function key
         /// </summary>
         F23 = 0x86,
 
         /// <summary>
-        /// F24 funcion key
+        /// F24 function key
         /// </summary>
         F24 = 0x87,
 

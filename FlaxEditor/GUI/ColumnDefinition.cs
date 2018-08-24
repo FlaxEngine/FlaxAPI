@@ -42,7 +42,7 @@ namespace FlaxEditor.GUI
         public Color TitleColor = Color.White;
 
         /// <summary>
-        /// The column title bakground background.
+        /// The column title background background.
         /// </summary>
         public Color TitleBackgroundColor = Color.Brown;
 
@@ -72,11 +72,11 @@ namespace FlaxEditor.GUI
         public ValueFormatDelegate FormatValue;
 
         /// <summary>
-        /// Clamps the size of the column (in percantage size of the table).
+        /// Clamps the size of the column (in percentage size of the table).
         /// </summary>
         /// <param name="value">The percentage size of the column (split value).</param>
         /// <param name="tableSize">Size of the table (width in pixels).</param>
-        /// <returns>The lampespercentage size of the column (split value).</returns>
+        /// <returns>The clamped percentage size of the column (split value).</returns>
         public float ClampColumnSize(float value, float tableSize)
         {
             float width = Mathf.Clamp(value, MinSizePercentage, MaxSizePercentage) * tableSize;

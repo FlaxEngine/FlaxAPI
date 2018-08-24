@@ -86,12 +86,12 @@ namespace FlaxEngine.Rendering
         Bloom = 1 << 14,
 
         /// <summary>
-        /// Shows/hides tone mapping effct
+        /// Shows/hides tone mapping effect
         /// </summary>
         ToneMapping = 1 << 15,
 
         /// <summary>
-        /// Shows/hides eye adaptation effct
+        /// Shows/hides eye adaptation effect
         /// </summary>
         EyeAdaptation = 1 << 16,
 
@@ -111,7 +111,7 @@ namespace FlaxEngine.Rendering
         Decals = 1 << 19,
 
         /// <summary>
-        /// Shows/hides deph of field effect
+        /// Shows/hides depth of field effect
         /// </summary>
         DepthOfField = 1 << 20,
 
@@ -142,7 +142,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Default flags for materials/models previews generating
         /// </summary>
-        DefaulAssetPreview = DynamicActors | Reflections | Decals
+        DefaultAssetPreview = DynamicActors | Reflections | Decals
                              | GI | DirectionalLights | PointLights | SpotLights | SkyLights | SpecularLight
                              | AntiAliasing | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares,
     }

@@ -6,7 +6,7 @@ using FlaxEngine;
 namespace FlaxEditor.Surface
 {
     /// <summary>
-    /// Describies GUI style used by the surface.
+    /// Describes GUI style used by the surface.
     /// </summary>
     public class SurfaceStyle
     {

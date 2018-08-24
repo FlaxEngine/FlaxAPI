@@ -87,7 +87,7 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Gets or sets the type of the imported asset.
         /// </summary>
-        [EditorOrder(0), Tooltip("Type of the imorted asset")]
+        [EditorOrder(0), Tooltip("Type of the imported asset")]
         public ModelType Type { get; set; } = ModelType.Model;
 
         /// <summary>
@@ -139,10 +139,10 @@ namespace FlaxEditor.Content.Import
         public bool ImportVertexColors { get; set; } = true;
 
         /// <summary>
-        /// The lighmap UVs source.
+        /// The lightmap UVs source.
         /// </summary>
-        [EditorOrder(90), EditorDisplay("Geometry", "Lighmap UVs Source"), Tooltip("Model lightmap UVs source")]
-        public ModelLightmapUVsSource LighmapUVsSource { get; set; } = ModelLightmapUVsSource.Disable;
+        [EditorOrder(90), EditorDisplay("Geometry", "Lightmap UVs Source"), Tooltip("Model lightmap UVs source")]
+        public ModelLightmapUVsSource LightmapUVsSource { get; set; } = ModelLightmapUVsSource.Disable;
 
         /// <summary>
         /// Custom uniform import scale.
@@ -193,9 +193,9 @@ namespace FlaxEditor.Content.Import
         public float SamplingRate { get; set; } = 0.0f;
 
         /// <summary>
-        /// The imported animation will have removed tracks with no keyframes or unspeficied data.
+        /// The imported animation will have removed tracks with no keyframes or unspecified data.
         /// </summary>
-        [EditorOrder(1040), EditorDisplay("Animation"), Tooltip("The imported animation will have removed tracks with no keyframes or unspeficied data.")]
+        [EditorOrder(1040), EditorDisplay("Animation"), Tooltip("The imported animation will have removed tracks with no keyframes or unspecified data.")]
         public bool SkipEmptyCurves { get; set; } = true;
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace FlaxEditor.Content.Import
             public byte MergeMeshes;
             public byte ImportLODs;
             public byte ImportVertexColors;
-            public ModelLightmapUVsSource LighmapUVsSource;
+            public ModelLightmapUVsSource LightmapUVsSource;
 
             // Transform
             public float Scale;
@@ -262,7 +262,7 @@ namespace FlaxEditor.Content.Import
                 MergeMeshes = (byte)(MergeMeshes ? 1 : 0),
                 ImportLODs = (byte)(ImportLODs ? 1 : 0),
                 ImportVertexColors = (byte)(ImportVertexColors ? 1 : 0),
-                LighmapUVsSource = LighmapUVsSource,
+                LightmapUVsSource = LightmapUVsSource,
                 Scale = Scale,
                 Rotation = Rotation,
                 Translation = Translation,
@@ -289,7 +289,7 @@ namespace FlaxEditor.Content.Import
             MergeMeshes = options.MergeMeshes != 0;
             ImportLODs = options.ImportLODs != 0;
             ImportVertexColors = options.ImportVertexColors != 0;
-            LighmapUVsSource = options.LighmapUVsSource;
+            LightmapUVsSource = options.LightmapUVsSource;
             Scale = options.Scale;
             Rotation = options.Rotation;
             Translation = options.Translation;
@@ -337,7 +337,7 @@ namespace FlaxEditor.Content.Import
         public ModelImportEntry(string url, string resultUrl)
         : base(url, resultUrl)
         {
-            // Try to restore target asset model import options (usefull for fast reimport)
+            // Try to restore target asset model import options (useful for fast reimport)
             ModelImportSettings.TryRestore(ref _settings, resultUrl);
         }
 

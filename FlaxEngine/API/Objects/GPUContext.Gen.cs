@@ -56,7 +56,7 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Resolves the multisamples texture by performing a copy of the resource into a non-multisampled resource.
+        /// Resolves the multisampled texture by performing a copy of the resource into a non-multisampled resource.
         /// </summary>
         /// <param name="sourceMultisampleTexture">The source multisample texture. Must be multisampled.</param>
         /// <param name="destTexture">The destination texture. Must be single-sampled.</param>

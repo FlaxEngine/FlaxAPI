@@ -41,7 +41,7 @@ namespace FlaxEngine
                             // Create instance
                             obj = Activator.CreateInstance(type);
 
-                            // Deserialzie object
+                            // Deserialize object
                             var data = Data;
                             JsonSerializer.Deserialize(obj, data);
                         }

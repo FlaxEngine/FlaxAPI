@@ -63,7 +63,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Pop clippng rectangle mask
+        /// Pop clipping rectangle mask
         /// </summary>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
@@ -86,7 +86,7 @@ namespace FlaxEngine
         /// <param name="layoutRect">The size and position of the area in which the text is drawn</param>
         /// <param name="color">Text color</param>
         /// <param name="horizontalAlignment">Horizontal alignment of the text in a layout rectangle</param>
-        /// <param name="verticalAlignment">Vetical alignment of the text in a layout rectangle</param>
+        /// <param name="verticalAlignment">Vertical alignment of the text in a layout rectangle</param>
         /// <param name="textWrapping">Describes how wrap text inside a layout rectangle</param>
         /// <param name="baseLinesGapScale">Scale for distance one baseline from another. Default is 1.</param>
         /// <param name="scale">Text drawing scale. Default is 1.</param>
@@ -112,7 +112,7 @@ namespace FlaxEngine
         /// <param name="layoutRect">The size and position of the area in which the text is drawn</param>
         /// <param name="color">Text color</param>
         /// <param name="horizontalAlignment">Horizontal alignment of the text in a layout rectangle</param>
-        /// <param name="verticalAlignment">Vetical alignment of the text in a layout rectangle</param>
+        /// <param name="verticalAlignment">Vertical alignment of the text in a layout rectangle</param>
         /// <param name="textWrapping">Describes how wrap text inside a layout rectangle</param>
         /// <param name="baseLinesGapScale">Scale for distance one baseline from another. Default is 1.</param>
         /// <param name="scale">Text drawing scale. Default is 1.</param>

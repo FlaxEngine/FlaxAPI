@@ -3,7 +3,7 @@
 namespace FlaxEngine
 {
     /// <summary>
-    /// Defines the single skeleton hierarchy bone inclusing its default bind pose, name and parent node index.
+    /// Defines the single skeleton hierarchy bone including its default bind pose, name and parent node index.
     /// </summary>
     public struct SkeletonBone
     {

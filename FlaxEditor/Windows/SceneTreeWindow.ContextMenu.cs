@@ -20,7 +20,7 @@ namespace FlaxEditor.Windows
         /// <returns>The context menu.</returns>
         private ContextMenu CreateContextMenu()
         {
-            // Preapre
+            // Prepare
 
             bool hasSthSelected = Editor.SceneEditing.HasSthSelected;
             bool isSingleActorSelected = Editor.SceneEditing.SelectionCount == 1 && Editor.SceneEditing.Selection[0] is ActorNode;

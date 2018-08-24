@@ -167,7 +167,7 @@ namespace FlaxEditor.Modules
 
                 if (item.IsFolder)
                 {
-                    // Check if direcotry is unique
+                    // Check if directory is unique
                     if (System.IO.Directory.Exists(destinationPath))
                     {
                         hint = "Already exists.";

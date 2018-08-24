@@ -76,7 +76,7 @@ namespace FlaxEngine
         {
             /// <summary>
             /// PersistentData will not be loaded automaticaly
-            /// <para>Load has to be performed manualy, or data will be set to default until overwritten</para>
+            /// <para>Load has to be performed manually, or data will be set to default until overwritten</para>
             /// </summary>
             Never = 0,
 
@@ -84,21 +84,21 @@ namespace FlaxEngine
             /// PersistentData will be loaded automaticaly before scene loading is performed
             /// </summary>
             /// <remarks>
-            /// Most usefull when scene requires some data from file. Same effect will be achieved when used <see cref="OnFirstUse"/>
+            /// Most useful when scene requires some data from file. Same effect will be achieved when used <see cref="OnFirstUse"/>
             /// </remarks>
             BeforeSceneLoad = 10,
 
             /// <summary>
             /// PersistentData will be loaded automaticaly before scene loading is performed. 
             /// </summary>
-            /// <remarks>Most of the scene initalization is performed, but object creation is waiting for data to be loaded</remarks>
+            /// <remarks>Most of the scene initialization is performed, but object creation is waiting for data to be loaded</remarks>
             /// <seealso cref="BeforeSceneLoad"/>
             BeforeSceneLoadAsynchronus = 11,
 
             /// <summary>
             /// PersistentData will be loaded after scene is loaded and all objects on the scene are created and before Awake is executed
             /// <para>
-            /// Most usefull when object are initialized with persistant data but we want to include settings on first loading screen.
+            /// Most useful when object are initialized with persistant data but we want to include settings on first loading screen.
             /// </para>
             /// <para>
             /// Same effect will be achieved when used <see cref="OnFirstUse"/>
@@ -109,7 +109,7 @@ namespace FlaxEngine
             /// <summary>
             /// PersistentData will be loaded after scene is loaded and all objects on the scene are created and before Awake is executed
             /// </summary>
-            /// <remarks>Most usefull when object are initialized with persistant data but we want to include settings on first loading screen.</remarks>
+            /// <remarks>Most useful when object are initialized with persistant data but we want to include settings on first loading screen.</remarks>
             /// <seealso cref="BeforeObjectInitialization"/>
             BeforeObjectInitializationAsynchronus = 21,
 

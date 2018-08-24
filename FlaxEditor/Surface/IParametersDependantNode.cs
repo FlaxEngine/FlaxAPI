@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 namespace FlaxEditor.Surface
 {
@@ -10,19 +10,19 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// On new parameter created
         /// </summary>
-        /// <param name="param">The paramater.</param>
+        /// <param name="param">The parameter.</param>
         void OnParamCreated(SurfaceParameter param);
 
         /// <summary>
         /// On new parameter renamed
         /// </summary>
-        /// <param name="param">The paramater.</param>
+        /// <param name="param">The parameter.</param>
         void OnParamRenamed(SurfaceParameter param);
 
         /// <summary>
         /// On new parameter deleted
         /// </summary>
-        /// <param name="param">The paramater.</param>
+        /// <param name="param">The parameter.</param>
         void OnParamDeleted(SurfaceParameter param);
     }
 }

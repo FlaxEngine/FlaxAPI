@@ -52,7 +52,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 return;
             }
 
-            // List all prites from the atlas asset
+            // List all sprites from the atlas asset
             var spritesCount = value.SpritesCount;
             var spritePicker = spriteLabel.ComboBox();
             spritePicker.ComboBox.Items.Capacity = spritesCount;

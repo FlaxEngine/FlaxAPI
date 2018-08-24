@@ -68,7 +68,7 @@ namespace FlaxEditor.Windows.Assets
                 // Link
                 _window = window;
 
-                // Try to restore target asset texture import options (usefull for fast reimport)
+                // Try to restore target asset texture import options (useful for fast reimport)
                 TextureImportSettings.TryRestore(ref ImportSettings, window.Item.Path);
 
                 // Prepare restore data

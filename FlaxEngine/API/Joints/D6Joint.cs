@@ -122,9 +122,9 @@ namespace FlaxEngine
         public float Stiffness;
 
         /// <summary>
-        /// Damping strength. Force propertional to the velocity error.
+        /// Damping strength. Force proportional to the velocity error.
         /// </summary>
-        [EditorOrder(10), Limit(0.0f), Tooltip("Damping strength. Force propertional to the velocity error.")]
+        [EditorOrder(10), Limit(0.0f), Tooltip("Damping strength. Force proportional to the velocity error.")]
         public float Damping;
 
         /// <summary>

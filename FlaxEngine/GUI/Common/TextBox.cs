@@ -958,7 +958,7 @@ namespace FlaxEngine.GUI
             // Check if user is selecting
             if (_isSelecting)
             {
-                // Find char index at current mosue location
+                // Find char index at current mouse location
                 int currentIndex = CharIndexAtPoint(ref location);
 
                 // Modify selection end

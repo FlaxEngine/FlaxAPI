@@ -80,7 +80,7 @@ namespace FlaxEditor.Viewport
 
             // Create post effects
             SelectionOutline = FlaxEngine.Object.New<SelectionOutline>();
-            SelectionOutline.SelectiongGetter = () => _editor.SceneEditing.Selection;
+            SelectionOutline.SelectionGetter = () => _editor.SceneEditing.Selection;
             Task.CustomPostFx.Add(SelectionOutline);
             EditorPrimitives = FlaxEngine.Object.New<EditorPrimitives>();
             EditorPrimitives.DrawDebugDraw = true;
@@ -98,7 +98,7 @@ namespace FlaxEditor.Viewport
             Grid = new GridGizmo(this);
             Grid.EnabledChanged += gizmo => _showGridButton.Icon = gizmo.Enabled ? Style.Current.CheckBoxTick : Sprite.Invalid;
 
-            editor.SceneEditing.OnSelectionChanged += OnSelectionChanged;
+            editor.SceneEditing.SelectionChanged += OnSelectionChanged;
 
             // Transform space widget
             var transformSpaceWidget = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperRight);
@@ -263,7 +263,7 @@ namespace FlaxEditor.Viewport
             // Render editor primitives, gizmo and debug shapes in debug view modes
             if (task.Mode != ViewMode.Default)
             {
-                // Note: can use Output buffer as both input and output because EditorPrimitives is using a intermdiate buffers
+                // Note: can use Output buffer as both input and output because EditorPrimitives is using a intermediate buffers
                 EditorPrimitives.Render(context, task, task.Output, task.Output);
             }
         }

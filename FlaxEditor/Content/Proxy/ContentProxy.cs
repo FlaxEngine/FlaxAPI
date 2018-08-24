@@ -8,7 +8,7 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.Content
 {
     /// <summary>
-    /// Base class for asstes proxy objects used to manage <see cref="ContentItem"/>.
+    /// Base class for assets proxy objects used to manage <see cref="ContentItem"/>.
     /// </summary>
     public abstract class ContentProxy
     {

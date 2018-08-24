@@ -140,7 +140,7 @@ namespace FlaxEditor.Windows.Assets
             }
 
             /// <summary>
-            /// Updates the sprites colelction.
+            /// Updates the sprites collection.
             /// </summary>
             public void UpdateSprites()
             {
@@ -162,7 +162,7 @@ namespace FlaxEditor.Windows.Assets
                 _window = win;
                 UpdateSprites();
 
-                // Try to restore target asset texture import options (usefull for fast reimport)
+                // Try to restore target asset texture import options (useful for fast reimport)
                 TextureImportSettings.InternalOptions options;
                 if (TextureImportEntry.Internal_GetTextureImportOptions(win.Item.Path, out options))
                 {
@@ -258,7 +258,7 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void Save()
         {
-            // Check if don't need to push any new changes to the orginal asset
+            // Check if don't need to push any new changes to the original asset
             if (!IsEdited)
                 return;
 

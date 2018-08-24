@@ -41,7 +41,7 @@ namespace FlaxEditor.Surface
         public readonly List<ISurfaceNodeElement> Elements = new List<ISurfaceNodeElement>();
 
         /// <summary>
-        /// The values (node paramaters in layout based on <see cref="NodeArchetype.DefaultValues"/>).
+        /// The values (node parameters in layout based on <see cref="NodeArchetype.DefaultValues"/>).
         /// </summary>
         public readonly object[] Values;
 

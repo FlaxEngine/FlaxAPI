@@ -95,7 +95,7 @@ namespace FlaxEditor.Windows
                 public virtual void OnNotAvailableLayout(LayoutElementsContainer layout)
                 {
                     layout.Label("Missing platform data tools for the target platform.", TextAlignment.Center);
-                    layout.Label("Use Flax Launcher and download the requried package.", TextAlignment.Center);
+                    layout.Label("Use Flax Launcher and download the required package.", TextAlignment.Center);
                 }
 
                 public virtual void Build()

@@ -123,17 +123,17 @@ namespace FlaxEngine.GUI
         None = 0,
 
         /// <summary>
-        /// Use horizontal scrolllbar.
+        /// Use horizontal scrollbar.
         /// </summary>
         Horizontal = 1,
 
         /// <summary>
-        /// Use vertical scrolllbar.
+        /// Use vertical scrollbar.
         /// </summary>
         Vertical = 2,
 
         /// <summary>
-        /// Use horizontal and vertical scrolllbar.
+        /// Use horizontal and vertical scrollbar.
         /// </summary>
         Both = Horizontal | Vertical
     }

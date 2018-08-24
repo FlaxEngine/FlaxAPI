@@ -88,7 +88,7 @@ namespace FlaxEditor.GUI
         }
 
         /// <summary>
-        /// Gets or sets the assets types that this picker acepts (it supports types derived from the given type).
+        /// Gets or sets the assets types that this picker accepts (it supports types derived from the given type).
         /// </summary>
         public Type AssetType
         {

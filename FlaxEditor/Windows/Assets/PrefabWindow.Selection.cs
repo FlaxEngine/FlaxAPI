@@ -112,7 +112,7 @@ namespace FlaxEditor.Windows.Assets
         /// <summary>
         /// Selects the specified nodes collection.
         /// </summary>
-        /// <param name="nodes">The nodec.</param>
+        /// <param name="nodes">The nodes.</param>
         public void Select(List<SceneGraphNode> nodes)
         {
             if (nodes == null || nodes.Count == 0)

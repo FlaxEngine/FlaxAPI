@@ -270,7 +270,7 @@ namespace FlaxEditor.GUI
             // Parents first
             ExpandAllParents(noAnimation);
 
-            // Chnage state
+            // Change state
             bool prevState = _opened;
             _opened = true;
             if (prevState != _opened)
@@ -296,7 +296,7 @@ namespace FlaxEditor.GUI
         /// <param name="noAnimation">True if skip node expanding animation.</param>
         public void Collapse(bool noAnimation = false)
         {
-            // Chnage state
+            // Change state
             bool prevState = _opened;
             _opened = false;
             if (prevState != _opened)
@@ -623,7 +623,7 @@ namespace FlaxEditor.GUI
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
-            // Check if mosue hits bar and node isn't a root
+            // Check if mouse hits bar and node isn't a root
             if (_mouseOverHeader)
             {
                 // Check if left buton goes down
@@ -665,7 +665,7 @@ namespace FlaxEditor.GUI
                 _mouseDownTime = -1;
             }
 
-            // Check if mosue hits bar and node isn't a root
+            // Check if mouse hits bar and node isn't a root
             if (_mouseOverHeader)
             {
                 // Prevent from selecting node when user is just clicking at an arrow
@@ -691,7 +691,7 @@ namespace FlaxEditor.GUI
                     }
                 }
 
-                // Check if mosue hits arrow
+                // Check if mouse hits arrow
                 if (_children.Count > 0 && _mouseOverArrow)
                 {
                     // Toggle open state
@@ -713,7 +713,7 @@ namespace FlaxEditor.GUI
         /// <inheritdoc />
         public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
         {
-            // Check if mosue hits bar
+            // Check if mouse hits bar
             if (TestHeaderHit(ref location))
             {
                 // Toggle open state
@@ -852,7 +852,7 @@ namespace FlaxEditor.GUI
             {
                 UpdateDrawPositioning(ref location);
 
-                // Check if mosue is over header
+                // Check if mouse is over header
                 _isDragOverHeader = TestHeaderHit(ref location);
                 if (_isDragOverHeader)
                 {
@@ -884,7 +884,7 @@ namespace FlaxEditor.GUI
             {
                 UpdateDrawPositioning(ref location);
 
-                // Check if mosue is over header
+                // Check if mouse is over header
                 bool isDragOverHeader = TestHeaderHit(ref location);
                 if (isDragOverHeader)
                 {
@@ -919,7 +919,7 @@ namespace FlaxEditor.GUI
             {
                 UpdateDrawPositioning(ref location);
 
-                // Check if mosue is over header
+                // Check if mouse is over header
                 if (TestHeaderHit(ref location))
                 {
                     result = OnDragDropHeader(data);

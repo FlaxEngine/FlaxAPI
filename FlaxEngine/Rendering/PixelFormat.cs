@@ -5,7 +5,7 @@
 namespace FlaxEngine.Rendering
 {
     /// <summary>
-    /// Enumaration with all pixel formats used by the graphics pipeline.
+    /// Enumeration with all pixel formats used by the graphics pipeline.
     /// </summary>
     /// <remarks>
     /// Reference: https://msdn.microsoft.com/en-us/library/windows/desktop/bb173059(v=vs.85).aspx

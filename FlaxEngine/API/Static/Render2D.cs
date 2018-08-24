@@ -76,7 +76,7 @@ namespace FlaxEngine
         /// <param name="context">The GPU context to handle graphics commands.</param>
         /// <param name="output">The output render target.</param>
         /// <param name="depthBuffer">The depth buffer render target. It's optional parameter but if provided must match output texture.</param>
-        /// <param name="viewProjection">The View*Projection matrix used to transform all rendered verticies.</param>
+        /// <param name="viewProjection">The View*Projection matrix used to transform all rendered vertices.</param>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif

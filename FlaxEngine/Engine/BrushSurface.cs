@@ -33,7 +33,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets the scale in lightmap (per surfcae).
+        /// Gets or sets the scale in lightmap (per surface).
         /// </summary>
         [EditorOrder(20), EditorDisplay("Brush", "Scale In Lightmap"), Limit(0, 10000, 0.1f)]
         public float ScaleInLightmap
@@ -114,7 +114,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets the brush surface triangles array (group by 3 verticies).
+        /// Gets the brush surface triangles array (group by 3 vertices).
         /// </summary>
         /// <returns>The vertices buffer with triangles or empty if no data loaded.</returns>
         public Vector3[] GetVertices()

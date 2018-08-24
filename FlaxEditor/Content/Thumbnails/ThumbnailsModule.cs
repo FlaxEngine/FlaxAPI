@@ -18,7 +18,7 @@ namespace FlaxEditor.Content.Thumbnails
     public sealed class ThumbnailsModule : EditorModule, IContentItemOwner
     {
         /// <summary>
-        /// The minimum requried quality (in range [0;1]) for content streaming resources to be loaded in order to generate thumbnail for them.
+        /// The minimum required quality (in range [0;1]) for content streaming resources to be loaded in order to generate thumbnail for them.
         /// </summary>
         public const float MinimumRequriedResourcesQuality = 0.8f;
 

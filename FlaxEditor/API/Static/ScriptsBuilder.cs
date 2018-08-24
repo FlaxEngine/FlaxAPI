@@ -7,7 +7,7 @@ namespace FlaxEditor.Scripting
 {
     /// <summary>
     /// Game scrips building service. Compiles user C# scripts into binary assemblies.
-    /// Exposes many events used to track scripts copilation and reloading.
+    /// Exposes many events used to track scripts compilation and reloading.
     /// </summary>
     public static partial class ScriptsBuilder
     {
@@ -64,7 +64,7 @@ namespace FlaxEditor.Scripting
         public static event Action ScriptsReloadBegin;
 
         /// <summary>
-        /// Occurs when user scripts reload is performed (just before the actual reload, scenes are serialized and unloaded). All user objects should be cleanud up.
+        /// Occurs when user scripts reload is performed (just before the actual reload, scenes are serialized and unloaded). All user objects should be cleanup.
         /// </summary>
         public static event Action ScriptsReload;
 

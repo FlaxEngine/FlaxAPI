@@ -20,9 +20,9 @@ namespace FlaxEditor.Gizmo
         private List<Actor> _actors;
 
         /// <summary>
-        /// The selectiong getter.
+        /// The selection getter.
         /// </summary>
-        public Func<List<SceneGraphNode>> SelectiongGetter;
+        public Func<List<SceneGraphNode>> SelectionGetter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectionOutline"/> class.
@@ -51,7 +51,7 @@ namespace FlaxEditor.Gizmo
         }
 
         /// <inheritdoc />
-        public override bool CanRender => _material && _outlineMaterial.IsLoaded && SelectiongGetter().Count > 0;
+        public override bool CanRender => _material && _outlineMaterial.IsLoaded && SelectionGetter().Count > 0;
 
         /// <inheritdoc />
         public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
@@ -63,7 +63,7 @@ namespace FlaxEditor.Gizmo
             context.ClearDepth(customDepth);
 
             // Get selected actors
-            var selection = SelectiongGetter();
+            var selection = SelectionGetter();
             if (_actors == null)
                 _actors = new List<Actor>();
             else

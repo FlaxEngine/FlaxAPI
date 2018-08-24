@@ -14,7 +14,7 @@ namespace FlaxEditor.CustomEditors.GUI
         private bool _isLeftMouseButtonDown;
 
         /// <summary>
-        /// Mosue drag action delegate.
+        /// Mouse drag action delegate.
         /// </summary>
         /// <param name="label">The label.</param>
         /// <returns>The drag data or null if not use drag.</returns>

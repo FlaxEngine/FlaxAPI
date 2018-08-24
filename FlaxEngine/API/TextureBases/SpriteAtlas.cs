@@ -93,7 +93,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets the sprite area in atlas (in normalized atlas coordinaes [0;1]).
+        /// Gets or sets the sprite area in atlas (in normalized atlas coordinates [0;1]).
         /// </summary>
         [NoSerialize]
         public Rectangle Area

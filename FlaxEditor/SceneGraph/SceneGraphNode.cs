@@ -197,11 +197,11 @@ namespace FlaxEditor.SceneGraph
         }
 
         /// <summary>
-        /// Performs raycasting over nodes hierarchy trying to get the closest object hited by the given ray.
+        /// Performs raycasting over nodes hierarchy trying to get the closest object hit by the given ray.
         /// </summary>
         /// <param name="ray">The ray casting data.</param>
         /// <param name="distance">The result distance.</param>
-        /// <returns>Hitted object or null if there is no interseciotn at all.</returns>
+        /// <returns>Hit object or null if there is no intersection at all.</returns>
         public virtual SceneGraphNode RayCast(ref RayCastData ray, ref float distance)
         {
             if (!IsActive)

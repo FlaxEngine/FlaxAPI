@@ -256,7 +256,7 @@ namespace FlaxEditor.GUI.Dialogs
             var hex = new Rectangle(_cHex.Left - 26, _cHex.Y, 10000, _cHex.Height);
             Render2D.DrawText(style.FontMedium, "Hex", hex, textColor, TextAlignment.Near, TextAlignment.Center);
 
-            // Color diffrence
+            // Color difference
             var newRect = new Rectangle(_cOK.X, _cHex.Bottom + PICKER_MARGIN, _cCancel.Right - _cOK.Left, 0);
             newRect.Size.Y = _cValue.Bottom - newRect.Y;
             Render2D.FillRectangle(newRect, _newColor * _newColor.A);

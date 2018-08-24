@@ -26,7 +26,7 @@ namespace FlaxEngine
         public const int MaxMaterialSlots = 4096;
 
         /// <summary>
-        /// Gets the material slots colelction. Each slot contains information how to render mesh or meshes using it. See <see cref="Mesh.MaterialSlotIndex"/>.
+        /// Gets the material slots collection. Each slot contains information how to render mesh or meshes using it. See <see cref="Mesh.MaterialSlotIndex"/>.
         /// </summary>
         public MaterialSlot[] MaterialSlots
         {

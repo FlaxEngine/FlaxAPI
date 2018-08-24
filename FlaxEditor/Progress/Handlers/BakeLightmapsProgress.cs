@@ -5,7 +5,7 @@ using FlaxEngine;
 namespace FlaxEditor.Progress.Handlers
 {
     /// <summary>
-    /// Statis lightmaps baking progress reporting handler.
+    /// Static lightmaps baking progress reporting handler.
     /// </summary>
     /// <seealso cref="FlaxEditor.Progress.ProgressHandler" />
     public sealed class BakeLightmapsProgress : ProgressHandler

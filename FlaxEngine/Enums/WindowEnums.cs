@@ -303,7 +303,7 @@ namespace FlaxEngine
         CenterParent = 0,
 
         /// <summary>
-        /// The windows is centered on the current display, and has the dimensions specified in the windows's size.
+        /// The windows is centered on the current display, and has the dimensions specified in the window's size.
         /// </summary>
         CenterScreen = 1,
 

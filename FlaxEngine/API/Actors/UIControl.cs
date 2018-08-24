@@ -49,7 +49,7 @@ namespace FlaxEngine
                     _control.Parent = GetParent();
                     _control.IndexInParent = OrderInParent;
                     _control.Location = new Vector2(LocalPosition);
-                    // TODO: sync control order in parent with actor order in parent (think about specialcases like Panel with scroll bars used as internal controls)
+                    // TODO: sync control order in parent with actor order in parent (think about special cases like Panel with scroll bars used as internal controls)
                     _control.LocationChanged += OnControlLocationChanged;
 
                     if (containerControl != null && IsActiveInHierarchy)
@@ -142,9 +142,9 @@ namespace FlaxEngine
         /// <remarks>
         /// The current actor has to have a valid container control.
         /// </remarks>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">Type of the child control to addd.</typeparam>
         /// <returns>The created UIControl that contains a new control of the given type.</returns>
-        public UIControl AddChild<T>() where T : Control
+        public UIControl AddChildControl<T>() where T : Control
         {
             if (!(_control is ContainerControl))
                 throw new InvalidOperationException("To add child to the control it has to be ContainerControl.");
@@ -156,7 +156,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Unlinks the control from the actor without disposing it or modyfing.
+        /// Unlinks the control from the actor without disposing it or modifying.
         /// </summary>
         public void UnlinkControl()
         {

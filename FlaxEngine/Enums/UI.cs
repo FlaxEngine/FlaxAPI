@@ -3,7 +3,7 @@
 namespace FlaxEngine
 {
     /// <summary>
-    /// Specifies the alignment of the text along horizontal or vetical direction in the layout box
+    /// Specifies the alignment of the text along horizontal or vertical direction in the layout box
     /// </summary>
     public enum TextAlignment
     {

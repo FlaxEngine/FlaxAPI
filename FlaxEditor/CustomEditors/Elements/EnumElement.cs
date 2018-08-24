@@ -102,13 +102,13 @@ namespace FlaxEditor.CustomEditors.Elements
 
                     // Calculate value that will be set after change
                     int valueAfter = 0;
-                    for (int i = 0; i < _selectedIndicies.Count; i++)
+                    for (int i = 0; i < _selectedIndices.Count; i++)
                     {
-                        int selectedIndex = _selectedIndicies[i];
+                        int selectedIndex = _selectedIndices[i];
                         if (selectedIndex != index)
                             valueAfter |= entries[selectedIndex].Value;
                     }
-                    bool contains = _selectedIndicies.Contains(index);
+                    bool contains = _selectedIndices.Contains(index);
                     if (!contains)
                         valueAfter |= entries[index].Value;
 
@@ -127,13 +127,13 @@ namespace FlaxEditor.CustomEditors.Elements
                             return;
                         }
                     }
-                    _selectedIndicies.Clear();
+                    _selectedIndices.Clear();
                     for (int i = 0; i < entries.Count; i++)
                     {
                         var e = entries[i].Value;
                         if (e != 0 && (e & valueAfter) == e)
                         {
-                            _selectedIndicies.Add(i);
+                            _selectedIndices.Add(i);
                         }
                     }
                     OnSelectedIndexChanged();

@@ -3,7 +3,7 @@
 namespace FlaxEngine.Rendering
 {
     /// <summary>
-    /// Describies frame rendering modes.
+    /// Describes frame rendering modes.
     /// </summary>
     public enum ViewMode
     {

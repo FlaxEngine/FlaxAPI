@@ -76,7 +76,7 @@ namespace FlaxEditor.GUI.Docking
         public const float DefaultLeftTextMargin = 4;
 
         /// <summary>
-        /// The default tabs header text mright argin.
+        /// The default tabs header text right margin.
         /// </summary>
         public const float DefaultRightTextMargin = 8;
 
@@ -212,7 +212,7 @@ namespace FlaxEditor.GUI.Docking
         }
 
         /// <summary>
-        /// Determines whether panel contains the specifiedtab.
+        /// Determines whether panel contains the specified tab.
         /// </summary>
         /// <param name="tab">The tab.</param>
         /// <returns>
@@ -280,7 +280,7 @@ namespace FlaxEditor.GUI.Docking
         /// Performs hit test over dock panel
         /// </summary>
         /// <param name="position">Screen space position to test</param>
-        /// <returns>Dock panel that has been hitted or null if nothing found</returns>
+        /// <returns>Dock panel that has been hit or null if nothing found</returns>
         public DockPanel HitTest(ref Vector2 position)
         {
             // Get parent window and transform point position into local coordinates system

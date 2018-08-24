@@ -5,7 +5,7 @@ using FlaxEngine;
 namespace FlaxEditor.Options
 {
     /// <summary>
-    /// Ediotr interface options data container.
+    /// Editor interface options data container.
     /// </summary>
     [CustomEditor(typeof(Editor<InterfaceOptions>))]
     public class InterfaceOptions

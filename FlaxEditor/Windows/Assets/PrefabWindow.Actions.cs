@@ -25,7 +25,7 @@ namespace FlaxEditor.Windows.Assets
         /// </summary>
         public void Copy()
         {
-            // Peek things that can be copied (copy all acctors)
+            // Peek things that can be copied (copy all actors)
             var objects = Selection.Where(x => x.CanCopyPaste).ToList().BuildAllNodes().Where(x => x.CanCopyPaste && x is ActorNode).ToList();
             if (objects.Count == 0)
                 return;
@@ -79,7 +79,7 @@ namespace FlaxEditor.Windows.Assets
         /// </summary>
         public void Duplicate()
         {
-            // Peek things that can be copied (copy all acctors)
+            // Peek things that can be copied (copy all actors)
             var objects = Selection.Where(x => x.CanCopyPaste && x != Graph.Main).ToList().BuildAllNodes().Where(x => x.CanCopyPaste && x is ActorNode).ToList();
             if (objects.Count == 0)
                 return;

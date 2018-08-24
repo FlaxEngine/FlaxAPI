@@ -30,7 +30,7 @@ namespace FlaxEngine
         /// Initializes a new instance of the <see cref="EditorDisplayAttribute"/> class.
         /// </summary>
         /// <param name="group">The group name.</param>
-        /// <param name="name">The display name. Use special name `__inline__` (see <see cref="InlineStyle"/>) to inline proerty into the parent container.</param>
+        /// <param name="name">The display name. Use special name `__inline__` (see <see cref="InlineStyle"/>) to inline property into the parent container.</param>
         public EditorDisplayAttribute(string group = null, string name = null)
         {
             Group = group;

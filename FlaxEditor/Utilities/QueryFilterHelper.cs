@@ -108,7 +108,7 @@ namespace FlaxEditor.Utilities
         }
 
         /// <summary>
-        /// Describies subrange of the text.
+        /// Describes subrange of the text.
         /// </summary>
         public struct Range
         {

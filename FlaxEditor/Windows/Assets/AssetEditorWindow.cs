@@ -429,7 +429,7 @@ namespace FlaxEditor.Windows.Assets
             var sourcePath = _asset.Path;
             var destinationPath = _item.Path;
 
-            // Check if orginal asset is loaded
+            // Check if original asset is loaded
             var originalAsset = FlaxEngine.Content.GetAsset<T>(id);
             if (originalAsset)
             {

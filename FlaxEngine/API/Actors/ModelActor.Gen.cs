@@ -120,7 +120,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Resets all meshes lcoal transformations.
+        /// Resets all meshes local transformations.
         /// </summary>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]

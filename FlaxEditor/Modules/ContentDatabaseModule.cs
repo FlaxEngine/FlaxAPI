@@ -252,7 +252,7 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Tries to find asset with the specified ID.
         /// </summary>
-        /// <param name="id">The assset ID.</param>
+        /// <param name="id">The asset ID.</param>
         /// <returns>Found asset item or null if cannot find it.</returns>
         public AssetItem FindAsset(Guid id)
         {

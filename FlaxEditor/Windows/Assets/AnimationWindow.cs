@@ -33,7 +33,7 @@ namespace FlaxEditor.Windows.Assets
                 Window = window;
                 Asset = window.Asset;
 
-                // Try to restore target asset import options (usefull for fast reimport)
+                // Try to restore target asset import options (useful for fast reimport)
                 ModelImportSettings.TryRestore(ref ImportSettings, window.Item.Path);
             }
 

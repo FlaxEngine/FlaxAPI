@@ -34,7 +34,7 @@ namespace FlaxEditor.Windows
             Presenter.Panel.Parent = this;
             Presenter.GetUndoObjects += GetUndoObjects;
 
-            Editor.SceneEditing.OnSelectionChanged += OnSelectionChanged;
+            Editor.SceneEditing.SelectionChanged += OnSelectionChanged;
         }
 
         private IEnumerable<object> GetUndoObjects(CustomEditorPresenter customEditorPresenter)

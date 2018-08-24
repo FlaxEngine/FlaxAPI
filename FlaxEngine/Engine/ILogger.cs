@@ -45,7 +45,7 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="logType"></param>
         /// <returns>
-        /// <para>Retrun true in case logs of LogType will be logged otherwise returns false.</para>
+        /// <para>Return true in case logs of LogType will be logged otherwise returns false.</para>
         /// </returns>
         bool IsLogTypeAllowed(LogType logType);
 

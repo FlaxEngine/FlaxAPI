@@ -314,7 +314,7 @@ namespace FlaxEngine
         /// Perform a component-wise subtraction
         /// </summary>
         /// <param name="left">The input vector</param>
-        /// <param name="right">The scalar value to be subtraced from elements</param>
+        /// <param name="right">The scalar value to be subtracted from elements</param>
         /// <param name="result">The vector with subtracted scalar for each element.</param>
         public static void Subtract(ref Int3 left, ref int right, out Int3 result)
         {
@@ -325,7 +325,7 @@ namespace FlaxEngine
         /// Perform a component-wise subtraction
         /// </summary>
         /// <param name="left">The input vector</param>
-        /// <param name="right">The scalar value to be subtraced from elements</param>
+        /// <param name="right">The scalar value to be subtracted from elements</param>
         /// <returns>The vector with subtracted scalar for each element.</returns>
         public static Int3 Subtract(Int3 left, int right)
         {
@@ -335,7 +335,7 @@ namespace FlaxEngine
         /// <summary>
         /// Perform a component-wise subtraction
         /// </summary>
-        /// <param name="left">The scalar value to be subtraced from elements</param>
+        /// <param name="left">The scalar value to be subtracted from elements</param>
         /// <param name="right">The input vector.</param>
         /// <param name="result">The vector with subtracted scalar for each element.</param>
         public static void Subtract(ref int left, ref Int3 right, out Int3 result)
@@ -346,7 +346,7 @@ namespace FlaxEngine
         /// <summary>
         /// Perform a component-wise subtraction
         /// </summary>
-        /// <param name="left">The scalar value to be subtraced from elements</param>
+        /// <param name="left">The scalar value to be subtracted from elements</param>
         /// <param name="right">The input vector.</param>
         /// <returns>The vector with subtracted scalar for each element.</returns>
         public static Int3 Subtract(int left, Int3 right)
@@ -866,7 +866,7 @@ namespace FlaxEngine
         /// Perform a component-wise subtraction
         /// </summary>
         /// <param name="value">The input vector.</param>
-        /// <param name="scalar">The scalar value to be subtraced from elements</param>
+        /// <param name="scalar">The scalar value to be subtracted from elements</param>
         /// <returns>The vector with added scalar from each element.</returns>
         public static Int3 operator -(Int3 value, int scalar)
         {
@@ -877,8 +877,8 @@ namespace FlaxEngine
         /// Perform a component-wise subtraction
         /// </summary>
         /// <param name="value">The input vector.</param>
-        /// <param name="scalar">The scalar value to be subtraced from elements</param>
-        /// <returns>The vector with subtraced scalar from each element.</returns>
+        /// <param name="scalar">The scalar value to be subtracted from elements</param>
+        /// <returns>The vector with subtracted scalar from each element.</returns>
         public static Int3 operator -(int scalar, Int3 value)
         {
             return new Int3(scalar - value.X, scalar - value.Y, scalar - value.Z);

@@ -248,7 +248,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Initializes the texture storage container with the given data. Valid only for virtual assets. Can be used in both Editor and at runtime in a builded game.
+        /// Initializes the texture storage container with the given data. Valid only for virtual assets. Can be used in both Editor and at runtime in a build game.
         /// It does not perform any data streaming or uploading to the GPU. Only the texture resource is being initialized and the data is copied to be streamed later.
         /// </summary>
         /// <remarks>

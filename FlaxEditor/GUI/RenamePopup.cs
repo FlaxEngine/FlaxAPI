@@ -21,7 +21,7 @@ namespace FlaxEditor.GUI
         public event Action<RenamePopup> Renamed;
 
         /// <summary>
-        /// Occurs when popup is closeing (after renaming done or not).
+        /// Occurs when popup is closing (after renaming done or not).
         /// </summary>
         public event Action<RenamePopup> Closed;
 

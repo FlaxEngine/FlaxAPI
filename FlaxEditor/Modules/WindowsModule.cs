@@ -255,7 +255,7 @@ namespace FlaxEditor.Modules
                         Rectangle bounds = LoadBounds(mainWindowNode["Bounds"]);
                         bool isMaximized = bool.Parse(mainWindowNode.GetAttribute("IsMaximized"));
 
-                        // Clamp position to match current destop dimensions (if window was on desktop that is now inactive)
+                        // Clamp position to match current desktop dimensions (if window was on desktop that is now inactive)
                         if (bounds.X < 0 || bounds.Y < 0 || bounds.X > virtualDesktopSafeRightCorner.X || bounds.Y > virtualDesktopSafeRightCorner.Y)
                             bounds.Location = virtualDesktopSafeLefttCorner;
 
@@ -626,9 +626,9 @@ namespace FlaxEditor.Modules
 
             if (Editor.StateMachine.IsPlayMode)
             {
-                // Cancel closing buut leave the play mode
+                // Cancel closing but leave the play mode
                 cancel = true;
-                Editor.Log("Skip closing ediotr and leave the play mode");
+                Editor.Log("Skip closing editor and leave the play mode");
                 Editor.Simulation.RequestStopPlay();
                 return;
             }

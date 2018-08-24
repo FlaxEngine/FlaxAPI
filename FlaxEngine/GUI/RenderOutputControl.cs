@@ -122,7 +122,7 @@ namespace FlaxEngine.GUI
             if (Width < MinRenderSize || Height < MinRenderSize)
                 return true;
 
-            // Disable task rendering if control is not used in a window (has issing ParentWindow)
+            // Disable task rendering if control is not used in a window (has using ParentWindow)
             if (RenderOnlyWithWindow)
             {
                 return walkTree(Parent);
@@ -138,7 +138,7 @@ namespace FlaxEngine.GUI
         /// <param name="context">The GPU execution context.</param>
         protected virtual void OnEnd(SceneRenderTask task, GPUContext context)
         {
-            // Check if was using old backuffer
+            // Check if was using old backbuffer
             if (_backBufferOld)
             {
                 _oldBackbufferLiveTimeLeft--;
@@ -190,14 +190,14 @@ namespace FlaxEngine.GUI
                 return;
             }
 
-            // Cache old backuffer to remove flckering effect
+            // Cache old backbuffer to remove flickering effect
             if (_backBufferOld == null && _backBuffer.IsAllocated)
             {
                 _backBufferOld = _backBuffer;
                 _backBuffer = RenderTarget.New();
             }
 
-            // Set timout to remove old buffer
+            // Set timeout to remove old buffer
             _oldBackbufferLiveTimeLeft = 3;
 
             // Resize backbuffer

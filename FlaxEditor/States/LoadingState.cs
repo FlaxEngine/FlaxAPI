@@ -44,7 +44,7 @@ namespace FlaxEditor.States
                 // Check if compilation has been ended
                 if (ScriptsBuilder.IsReady)
                 {
-                    // We assume source code has been compilled before Editor init
+                    // We assume source code has been compiled before Editor init
                     onCompilationEnd(true);
                 }
             }

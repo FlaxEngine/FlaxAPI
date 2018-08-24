@@ -33,7 +33,7 @@ namespace FlaxEditor.Surface.Elements
         public ConnectionType DefaultType => Archetype.ConnectionsType;
 
         /// <summary>
-        /// List with all connections to oher boxes.
+        /// List with all connections to other boxes.
         /// </summary>
         public readonly List<Box> Connections = new List<Box>();
 
@@ -113,14 +113,14 @@ namespace FlaxEditor.Surface.Elements
         /// </returns>
         public bool CanUseType(ConnectionType type)
         {
-            // Check drect connection
+            // Check direct connection
             if (Surface.CanUseDirectCast(_currentType, type))
             {
                 // Can
                 return true;
             }
 
-            // Check independent and if there is box with bigger potencial because it may block current one from changing type
+            // Check independent and if there is box with bigger potential because it may block current one from changing type
             var parentArch = ParentNode.Archetype;
             var boxes = parentArch.IndependentBoxes;
             if (boxes != null)
@@ -157,7 +157,7 @@ namespace FlaxEditor.Surface.Elements
         /// </summary>
         public void RemoveConnections()
         {
-            // Check if sth is conected
+            // Check if sth is connected
             if (HasAnyConnection)
             {
                 // Remove all connections
@@ -227,7 +227,7 @@ namespace FlaxEditor.Surface.Elements
         /// <param name="box">The other box.</param>
         public void CreateConnection(Box box)
         {
-            // Check if any box can have only single conenction
+            // Check if any box can have only single connection
             if (box.IsSingle)
                 box.RemoveConnections();
             if (IsSingle)
@@ -250,7 +250,7 @@ namespace FlaxEditor.Surface.Elements
         /// <summary>
         /// True if box can use only single connection.
         /// </summary>
-        /// <returns>True if only single conenction.</returns>
+        /// <returns>True if only single connection.</returns>
         public bool IsSingle => Archetype.Single;
 
         /// <summary>
@@ -281,7 +281,7 @@ namespace FlaxEditor.Surface.Elements
         /// <summary>
         /// True if box type doesn't depend on other boxes types of the node.
         /// </summary>
-        /// <returns>True if is independant, otherwise false.</returns>
+        /// <returns>True if is independent, otherwise false.</returns>
         public bool IsIndependentBox
         {
             get

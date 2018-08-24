@@ -96,7 +96,7 @@ namespace FlaxEditor.CustomEditors
         protected bool IsSetBlocked => _isSetBlocked;
 
         /// <summary>
-        /// The linked label used to show this custom editor. Can be null if not used (eg. editor is inlined or is usign a very customized UI layout).
+        /// The linked label used to show this custom editor. Can be null if not used (eg. editor is inlined or is using a very customized UI layout).
         /// </summary>
         protected PropertyNameLabel LinkedLabel;
 

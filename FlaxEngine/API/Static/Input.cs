@@ -271,7 +271,7 @@ namespace FlaxEngine
         /// Gets the value of the virtual axis identified by name. Use <see cref="AxisMappings"/> to get the current config.
         /// </summary>
         /// <param name="name">The action name.</param>
-        /// <returns>The current axis value (e.g for gamepads it's in the range -1..1). Value is smoothed to redue artifacts.</returns>
+        /// <returns>The current axis value (e.g for gamepads it's in the range -1..1). Value is smoothed to reduce artifacts.</returns>
         /// <seealso cref="AxisMappings"/>
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]

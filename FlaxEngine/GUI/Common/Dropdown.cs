@@ -466,7 +466,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
-            // Check mosue buttons
+            // Check mouse buttons
             if (buttons == MouseButton.Left)
             {
                 // Set flag

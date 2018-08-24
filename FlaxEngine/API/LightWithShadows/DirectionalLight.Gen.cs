@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Directional light emmits light from direction in space.
+    /// Directional light emits light from direction in space.
     /// </summary>
     [Serializable]
     public sealed partial class DirectionalLight : LightWithShadow

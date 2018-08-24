@@ -235,7 +235,7 @@ namespace FlaxEditor.Modules
         /// Opens scene (async).
         /// </summary>
         /// <param name="sceneId">Scene ID</param>
-        /// <param name="additive">True if don't close opened scenes and jus tadd new scene to them, otherwise will release current scenes and load single one.</param>
+        /// <param name="additive">True if don't close opened scenes and just add new scene to them, otherwise will release current scenes and load single one.</param>
         public void OpenScene(Guid sceneId, bool additive = false)
         {
             // Check if cannot change scene now
@@ -301,7 +301,7 @@ namespace FlaxEditor.Modules
             // Check if scene was edited after last saving
             if (scene.IsEdited)
             {
-                // Ask user for futher action
+                // Ask user for further action
                 var result = MessageBox.Show(
                     string.Format("Scene \'{0}\' has been edited. Save before closing?", scene.Name),
                     "Close without saving?",
@@ -337,7 +337,7 @@ namespace FlaxEditor.Modules
             // Check if scene was edited after last saving
             if (IsEdited())
             {
-                // Ask user for futher action
+                // Ask user for further action
                 var scenes = SceneManager.Scenes;
                 var result = MessageBox.Show(
                     scenes.Length == 1 ? string.Format("Scene \'{0}\' has been edited. Save before closing?", scenes[0].Name) : string.Format("{0} scenes have been edited. Save before closing?", scenes.Length),

@@ -157,7 +157,7 @@ namespace FlaxEditor
         public delegate void BuildEventDelegate(EventType type, ref Options options);
 
         /// <summary>
-        /// Game building progress reporitng delegate type.
+        /// Game building progress reporting delegate type.
         /// </summary>
         /// <param name="info">The information text.</param>
         /// <param name="totalProgress">The total progress percentage (normalized to 0-1).</param>
@@ -169,7 +169,7 @@ namespace FlaxEditor
         public static event BuildEventDelegate Event;
 
         /// <summary>
-        /// Occurs when building gane progress fires.
+        /// Occurs when building game progress fires.
         /// </summary>
         public static event BuildProgressDelegate Progress;
 

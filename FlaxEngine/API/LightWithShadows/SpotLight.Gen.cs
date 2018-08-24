@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Spot light emmits light from the point in a given direction
+    /// Spot light emits light from the point in a given direction.
     /// </summary>
     [Serializable]
     public sealed partial class SpotLight : LightWithShadow
@@ -143,7 +143,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Enables or diables using light brightness from IES profile.
+        /// Enables or disables using light brightness from IES profile.
         /// </summary>
         [UnmanagedCall]
         [EditorOrder(212), EditorDisplay("IES Profile", "Use IES Brightness"), Tooltip("Enable/disable using light brightness from IES profile")]

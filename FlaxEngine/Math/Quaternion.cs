@@ -230,7 +230,7 @@ namespace FlaxEngine
                 {
                     // singularity at north pole
 
-                    // yaw picth roll
+                    // yaw pitch roll
                     result.Y = 2.0f * Mathf.Atan2(Y, X);
                     result.X = Mathf.PiOverTwo;
                     result.Z = 0;
@@ -239,7 +239,7 @@ namespace FlaxEngine
                 {
                     // singularity at south pole
 
-                    // yaw picth roll
+                    // yaw pitch roll
                     result.Y = -2.0f * Mathf.Atan2(Y, X);
                     result.X = -Mathf.PiOverTwo;
                     result.Z = 0;
@@ -248,7 +248,7 @@ namespace FlaxEngine
                 {
                     Quaternion q = new Quaternion(W, Z, X, Y); // TOOD: optimize this (remove additional allocation)
 
-                    // yaw picth roll
+                    // yaw pitch roll
                     result.Y = Mathf.Atan2(2.0f * q.X * q.W + 2.0f * q.Y * q.Z, 1 - 2.0f * (q.Z * q.Z + q.W * q.W));
                     result.X = Mathf.Asin(2.0f * (q.X * q.Z - q.W * q.Y));
                     result.Z = Mathf.Atan2(2.0f * q.X * q.Y + 2.0f * q.Z * q.W, 1 - 2.0f * (q.Y * q.Y + q.Z * q.Z));

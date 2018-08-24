@@ -148,7 +148,7 @@ namespace FlaxEngine.GUI
         public Vector2 Center => _bounds.Center;
 
         /// <summary>
-        /// Gets or sets control's bounds retangle
+        /// Gets or sets control's bounds rectangle
         /// </summary>
         [HideInEditor, NoSerialize]
         public Rectangle Bounds

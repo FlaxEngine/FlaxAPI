@@ -99,7 +99,7 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
-        /// Creates the specified file entry (can show create settigns dialog if needed).
+        /// Creates the specified file entry (can show create settings dialog if needed).
         /// </summary>
         /// <param name="entry">The entry.</param>
         public void Create(CreateFileEntry entry)
@@ -245,7 +245,7 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
-        /// Imports the specified file to the target destnation.
+        /// Imports the specified file to the target destination.
         /// Actual importing is done later after gathering settings from the user via <see cref="ImportFilesDialog"/>.
         /// </summary>
         /// <param name="inputPath">The input path.</param>

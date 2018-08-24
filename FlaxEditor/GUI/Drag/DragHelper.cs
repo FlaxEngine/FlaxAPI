@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -80,7 +80,7 @@ namespace FlaxEditor.GUI.Drag
         }
 
         /// <summary>
-        /// Gethers the objects from the drag data (text).
+        /// Gathers the objects from the drag data (text).
         /// </summary>
         /// <param name="data">The data.</param>
         /// <param name="validateFunc">The validate function.</param>
@@ -89,7 +89,7 @@ namespace FlaxEditor.GUI.Drag
         }
 
         /// <summary>
-        /// Gethers the objects from the drag data (files).
+        /// Gathers the objects from the drag data (files).
         /// </summary>
         /// <param name="data">The data.</param>
         /// <param name="validateFunc">The validate function.</param>

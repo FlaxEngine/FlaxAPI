@@ -51,9 +51,9 @@ namespace FlaxEditor.Progress
         public event ProgressDelegate ProgressEnd;
 
         /// <summary>
-        /// Gets a value indicating whether this handler action can be canelled.
+        /// Gets a value indicating whether this handler action can be cancelled.
         /// </summary>
-        public virtual bool CanBeCaneled => false;
+        public virtual bool CanBeCanceled => false;
 
         /// <summary>
         /// Cancels this progress action.

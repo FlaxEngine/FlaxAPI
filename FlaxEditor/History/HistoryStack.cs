@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Linq;
@@ -131,7 +131,7 @@ namespace FlaxEditor.History
                 return result;
             }
 
-            // iterate all but one elements to skip. Last element is handled exclusivly
+            // iterate all but one elements to skip. Last element is handled exclusively
             for (int i = 0; i < skipElements - 1; i++)
             {
                 PopHistory();
@@ -163,7 +163,7 @@ namespace FlaxEditor.History
                 return PeekHistory();
             }
 
-            // iterate all but one elements to skip. Last element is handled exclusivly
+            // iterate all but one elements to skip. Last element is handled exclusively
             for (int i = 0; i < skipElements - 1; i++)
             {
                 PopReverse();

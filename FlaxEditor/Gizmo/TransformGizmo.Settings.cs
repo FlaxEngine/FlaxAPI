@@ -96,7 +96,7 @@ namespace FlaxEditor.Gizmo
         public float TranslationSnapValue = 10;
 
         /// <summary>
-        /// Rotatino snap value
+        /// Rotation snap value
         /// </summary>
         public float RotationSnapValue = 15;
 

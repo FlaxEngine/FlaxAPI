@@ -92,7 +92,7 @@ namespace FlaxEngine.GUI
         public override bool ContainsFocus => _containsFocus;
 
         /// <summary>
-        ///     True if automatic updates for control layout are locked (usefull when createing a lot of GUI control to prevent
+        ///     True if automatic updates for control layout are locked (useful when createing a lot of GUI control to prevent
         ///     lags)
         /// </summary>
         [HideInEditor, NoSerialize]
@@ -206,7 +206,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Gets child control at given idnex
+        ///     Gets child control at given index.
         /// </summary>
         /// <param name="index">Control index</param>
         /// <returns>Control handle</returns>
@@ -261,7 +261,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Tries to find any child contol at given point in control local coordinates
+        ///     Tries to find any child control at given point in control local coordinates
         /// </summary>
         /// <param name="point">Local point to check</param>
         /// <returns>Found control index or -1</returns>
@@ -284,7 +284,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Tries to find any child contol at given point in control local coordinates
+        ///     Tries to find any child control at given point in control local coordinates
         /// </summary>
         /// <param name="point">Local point to check</param>
         /// <returns>Found control or null</returns>
@@ -307,7 +307,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Tries to find lowest child contol at given point in control local coordinates
+        ///     Tries to find lowest child control at given point in control local coordinates
         /// </summary>
         /// <param name="point">Local point to check</param>
         /// <returns>Found control or null</returns>
@@ -427,7 +427,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void OnChildrenChanged()
         {
-            // Check if control isn't durig disposing state
+            // Check if control isn't during disposing state
             if (!IsDisposing)
             {
                 // Arrange child controls
@@ -672,7 +672,7 @@ namespace FlaxEngine.GUI
         {
             base.OnDestroy();
 
-            // Pass event futher
+            // Pass event further
             for (int i = 0; i < _children.Count; i++)
             {
                 _children[i].OnDestroy();
@@ -897,7 +897,7 @@ namespace FlaxEngine.GUI
                     Vector2 childLocation;
                     if (IntersectsChildContent(child, location, out childLocation))
                     {
-                        // Send event futher
+                        // Send event further
                         if (child.OnMouseDown(childLocation, buttons))
                         {
                             return true;
@@ -923,7 +923,7 @@ namespace FlaxEngine.GUI
                     Vector2 childLocation;
                     if (IntersectsChildContent(child, location, out childLocation))
                     {
-                        // Send event futher
+                        // Send event further
                         if (child.OnMouseUp(childLocation, buttons))
                         {
                             return true;
@@ -949,7 +949,7 @@ namespace FlaxEngine.GUI
                     Vector2 childLocation;
                     if (IntersectsChildContent(child, location, out childLocation))
                     {
-                        // Send event futher
+                        // Send event further
                         if (child.OnMouseDoubleClick(childLocation, buttons))
                         {
                             return true;

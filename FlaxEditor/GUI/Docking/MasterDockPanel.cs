@@ -101,8 +101,8 @@ namespace FlaxEditor.GUI.Docking
         /// Performs hit test over dock panel.
         /// </summary>
         /// <param name="position">Screen space position to test.</param>
-        /// <param name="excluded">Floating window to ommit during searching (and all docked to that one).</param>
-        /// <returns>Dock panel that has been hitted or null if nothing found.</returns>
+        /// <param name="excluded">Floating window to omit during searching (and all docked to that one).</param>
+        /// <returns>Dock panel that has been hit or null if nothing found.</returns>
         public DockPanel HitTest(ref Vector2 position, FloatWindowDockPanel excluded)
         {
             // Check all floating windows

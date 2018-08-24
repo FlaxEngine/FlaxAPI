@@ -466,7 +466,7 @@ namespace FlaxEngine
         /// <summary>
         /// Check the intersection between two <see cref="OrientedBoundingBox" />
         /// </summary>
-        /// <param name="obb">The OrientedBoundingBoxs to test.</param>
+        /// <param name="obb">The OrientedBoundingBox to test.</param>
         /// <returns>The type of containment the two objects have.</returns>
         /// <remarks>
         /// For accuracy, The transformation matrix for both <see cref="OrientedBoundingBox" /> must not have any scaling applied

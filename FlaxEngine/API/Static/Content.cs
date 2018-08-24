@@ -51,7 +51,7 @@ namespace FlaxEngine
         /// <summary>
         /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
         /// </summary>
-        /// <param name="internalPath">Intenral path to the asset. Relative to the Engine startup folder.</param>
+        /// <param name="internalPath">Internal path to the asset. Relative to the Engine startup folder.</param>
         /// <returns>Asset instance if loaded, null otherwise</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Asset LoadAsyncInternal(string internalPath)
@@ -64,7 +64,7 @@ namespace FlaxEngine
         /// Waits until asset will be loaded. It's equivalent to LoadAsync + WaitForLoaded.
         /// </summary>
         /// <param name="id">Asset unique ID.</param>
-        /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
+        /// <param name="timeoutInMiliseconds">Custom timeout value in milliseconds.</param>
         /// <returns>Asset instance if loaded, null otherwise</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Asset Load(Guid id, double timeoutInMiliseconds = 10000.0)
@@ -77,7 +77,7 @@ namespace FlaxEngine
         /// Waits until asset will be loaded. It's equivalent to LoadAsync + WaitForLoaded.
         /// </summary>
         /// <param name="path">Path to the asset.</param>
-        /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
+        /// <param name="timeoutInMiliseconds">Custom timeout value in milliseconds.</param>
         /// <returns>Asset instance if loaded, null otherwise</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Asset Load(string path, double timeoutInMiliseconds = 10000.0)
@@ -89,8 +89,8 @@ namespace FlaxEngine
         /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
         /// Waits until asset will be loaded. It's equivalent to LoadAsync + WaitForLoaded.
         /// </summary>
-        /// <param name="internalPath">Intenral path to the asset. Relative to the Engine startup folder.</param>
-        /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
+        /// <param name="internalPath">Internal path to the asset. Relative to the Engine startup folder.</param>
+        /// <param name="timeoutInMiliseconds">Custom timeout value in milliseconds.</param>
         /// <returns>Asset instance if loaded, null otherwise</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Asset LoadInternal(string internalPath, double timeoutInMiliseconds = 10000.0)
@@ -103,7 +103,7 @@ namespace FlaxEngine
         /// Waits until asset will be loaded. It's equivalent to LoadAsync + WaitForLoaded.
         /// </summary>
         /// <param name="id">Asset unique ID.</param>
-        /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
+        /// <param name="timeoutInMiliseconds">Custom timeout value in milliseconds.</param>
         /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
         /// <returns>Asset instance if loaded, null otherwise</returns>
         public static T Load<T>(Guid id, double timeoutInMiliseconds = 10000.0) where T : Asset
@@ -119,7 +119,7 @@ namespace FlaxEngine
         /// Waits until asset will be loaded. It's equivalent to LoadAsync + WaitForLoaded.
         /// </summary>
         /// <param name="path">Path to the asset.</param>
-        /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
+        /// <param name="timeoutInMiliseconds">Custom timeout value in milliseconds.</param>
         /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
         /// <returns>Asset instance if loaded, null otherwise</returns>
         public static T Load<T>(string path, double timeoutInMiliseconds = 10000.0) where T : Asset
@@ -134,8 +134,8 @@ namespace FlaxEngine
         /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
         /// Waits until asset will be loaded. It's equivalent to LoadAsync + WaitForLoaded.
         /// </summary>
-        /// <param name="internalPath">Intenral path to the asset. Relative to the Engine startup folder and without an asset file extension.</param>
-        /// <param name="timeoutInMiliseconds">Custom timeout value in miliseconds.</param>
+        /// <param name="internalPath">Internal path to the asset. Relative to the Engine startup folder and without an asset file extension.</param>
+        /// <param name="timeoutInMiliseconds">Custom timeout value in milliseconds.</param>
         /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
         /// <returns>Asset instance if loaded, null otherwise</returns>
         public static T LoadInternal<T>(string internalPath, double timeoutInMiliseconds = 10000.0) where T : Asset

@@ -79,7 +79,7 @@ namespace FlaxEngine.GUI
         /// Show context menu over given control.
         /// </summary>
         /// <param name="parent">Parent control to attach to it.</param>
-        /// <param name="location">Popup menu orgin location in parent control coordinates.</param>
+        /// <param name="location">Popup menu origin location in parent control coordinates.</param>
         public virtual void Show(Control parent, Vector2 location)
         {
             Assert.IsNotNull(parent);
@@ -91,7 +91,7 @@ namespace FlaxEngine.GUI
             UnlockChildrenRecursive();
             PerformLayout();
 
-            // Calculate popup directinon and initial location (fit on a single monitor)
+            // Calculate popup direction and initial location (fit on a single monitor)
             var parentWin = parent.RootWindow;
             if (parentWin == null)
                 return;
@@ -246,7 +246,7 @@ namespace FlaxEngine.GUI
 
         private void onWindowLostFocus()
         {
-            // Skip for parent menus (child should hanndle lost of focus)
+            // Skip for parent menus (child should handle lost of focus)
             if (_childCM != null)
                 return;
 

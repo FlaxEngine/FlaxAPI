@@ -36,8 +36,8 @@ namespace FlaxEngine.GUI
         /// Shows tooltip over given control.
         /// </summary>
         /// <param name="target">The parent control to attach to it.</param>
-        /// <param name="location">Popup menu orgin location in parent cntrol coordinates.</param>
-        /// <param name="targetArea">Tooltip target area or intrest.</param>
+        /// <param name="location">Popup menu origin location in parent control coordinates.</param>
+        /// <param name="targetArea">Tooltip target area of interest.</param>
         public void Show(Control target, Vector2 location, Rectangle targetArea)
         {
             if (target == null)
@@ -50,7 +50,7 @@ namespace FlaxEngine.GUI
             UnlockChildrenRecursive();
             PerformLayout();
 
-            // Calculate popup directinon and initial location
+            // Calculate popup direction and initial location
             var parentWin = target.Root;
             if (parentWin == null)
                 return;

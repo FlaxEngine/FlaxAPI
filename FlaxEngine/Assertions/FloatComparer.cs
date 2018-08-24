@@ -14,7 +14,7 @@ namespace FlaxEngine.Assertions
         public const float Epsilon = 1E-05f;
 
         /// <summary>
-        /// Default instance of a comparer class with deafult error epsilon and absolute error check.
+        /// Default instance of a comparer class with default error epsilon and absolute error check.
         /// </summary>
         public static readonly FloatComparer ComparerWithDefaultTolerance;
 

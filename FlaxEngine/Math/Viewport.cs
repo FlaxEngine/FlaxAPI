@@ -120,7 +120,7 @@ namespace FlaxEngine
         /// <summary>
         /// Initializes a new instance of the <see cref="Viewport"/> struct.
         /// </summary>
-        /// <param name="location">The loation of the upper-left corner of the viewport in pixels.</param>
+        /// <param name="location">The location of the upper-left corner of the viewport in pixels.</param>
         /// <param name="size">The size of the viewport in pixels.</param>
         public Viewport(Vector2 location, Vector2 size)
         {

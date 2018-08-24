@@ -142,7 +142,7 @@ namespace FlaxEditor.CustomEditors
         public readonly PresenterPanel Panel;
 
         /// <summary>
-        /// The selected objects editor (root, it generatec actual editor for selection).
+        /// The selected objects editor (root, it generates actual editor for selection).
         /// </summary>
         protected readonly RootEditor Editor;
 
@@ -191,7 +191,7 @@ namespace FlaxEditor.CustomEditors
         /// Initializes a new instance of the <see cref="CustomEditorPresenter"/> class.
         /// </summary>
         /// <param name="undo">The undo. It's optional.</param>
-        /// <param name="noSelectionText">The custom text to disaply when no object is selected. Default is No selection.</param>
+        /// <param name="noSelectionText">The custom text to display when no object is selected. Default is No selection.</param>
         public CustomEditorPresenter(Undo undo, string noSelectionText = null)
         {
             Undo = undo;

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using FlaxEngine;
 
@@ -27,7 +27,7 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Gets the surface background texture.
         /// </summary>
-        /// <returns>The backgroudn texture.</returns>
+        /// <returns>The background texture.</returns>
         Texture GetSurfaceBackground();
     }
 }

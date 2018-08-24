@@ -19,7 +19,7 @@ namespace FlaxEditor.Gizmo
         /// <summary>
         /// Gets the selection center point (in world space).
         /// </summary>
-        /// <returns>Center point or <see cref="Vector3.Zero"/> if no object selectd.</returns>
+        /// <returns>Center point or <see cref="Vector3.Zero"/> if no object selected.</returns>
         public Vector3 GetSelectionCenter()
         {
             int count = _selectionParents.Count;

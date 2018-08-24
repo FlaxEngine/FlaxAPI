@@ -6,7 +6,7 @@ using FlaxEngine;
 namespace FlaxEditor.CustomEditors.Editors
 {
     /// <summary>
-    /// Custom editor for picking actor static flags. Overrides the default enum editor logic to provide more usefull functionalities.
+    /// Custom editor for picking actor static flags. Overrides the default enum editor logic to provide more useful functionalities.
     /// </summary>
     public sealed class ActorStaticFlagsEditor : EnumEditor
     {

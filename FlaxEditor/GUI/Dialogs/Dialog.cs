@@ -184,7 +184,7 @@ namespace FlaxEditor.GUI.Dialogs
                 return;
             }
 
-            // Supress closing
+            // Suppress closing
             cancel = true;
         }
 

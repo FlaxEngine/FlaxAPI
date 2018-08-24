@@ -44,7 +44,7 @@ namespace FlaxEngine.Json
         /// <inheritdoc />
         public override bool CanConvert(Type objectType)
         {
-            // Skip serialziation as reference id for the root object serialization (eg. Script)
+            // Skip serialization as reference id for the root object serialization (eg. Script)
             var writer = JsonSerializer.CurrentWriter.Value;
             if (writer != null && writer.SerializeStackSize == 0)
             {
@@ -250,7 +250,7 @@ namespace FlaxEngine.Json
         /// <returns>The serialized ID.</returns>
         public static unsafe string GetStringID(Guid id)
         {
-            // TODO: make to more efficent, don't use string format, use cached string buffer, dont allocate any byte during this conversion
+            // TODO: make to more efficient, don't use string format, use cached string buffer, dont allocate any byte during this conversion
 
             GuidInterop* g = (GuidInterop*)&id;
             return string.Format("{0:x8}{1:x8}{2:x8}{3:x8}", g->A, g->B, g->C, g->D);

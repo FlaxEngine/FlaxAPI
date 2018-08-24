@@ -44,8 +44,8 @@ namespace FlaxEditor.Surface.Elements
                 AddItems(items);
 
                 // Select saved value
-                _selectedIndicies.Clear();
-                _selectedIndicies.Add((int)ParentNode.Values[Archetype.ValueIndex]);
+                _selectedIndices.Clear();
+                _selectedIndices.Add((int)ParentNode.Values[Archetype.ValueIndex]);
             }
         }
 

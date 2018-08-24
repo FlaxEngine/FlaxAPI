@@ -55,7 +55,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Starts the mouse tracking. Used by the scrollbars, splitters, etc.
         /// </summary>
-        /// <param name="control">The target control that want to track mouse. It will recive OnMouseMove event.</param>
+        /// <param name="control">The target control that want to track mouse. It will receive OnMouseMove event.</param>
         /// <param name="useMouseScreenOffset">If set to <c>true</c> will use mouse screen offset.</param>
         public abstract void StartTrackingMouse(Control control, bool useMouseScreenOffset);
 

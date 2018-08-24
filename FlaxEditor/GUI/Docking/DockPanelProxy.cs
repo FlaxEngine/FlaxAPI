@@ -202,7 +202,7 @@ namespace FlaxEditor.GUI.Docking
                         tabColor = containsFocus ? style.BackgroundSelected : style.BackgroundNormal;
                         Render2D.FillRectangle(tabRect, tabColor);
                     }
-                    // Check if mosue is over
+                    // Check if mouse is over
                     else if (isMouseOver)
                     {
                         tabColor = style.BackgroundHighlighted;
@@ -281,7 +281,7 @@ namespace FlaxEditor.GUI.Docking
                 // Clear flag
                 IsMouseDown = false;
 
-                // Check tabs under mouse position at the begining and at the end
+                // Check tabs under mouse position at the beginning and at the end
                 bool overCross;
                 var tab = getTabAtPos(location, out overCross);
 

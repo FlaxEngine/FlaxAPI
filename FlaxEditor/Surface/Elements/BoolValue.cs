@@ -95,7 +95,7 @@ namespace FlaxEditor.Surface.Elements
         /// <inheritdoc />
         public override void OnMouseLeave()
         {
-            // Clar flag
+            // Clear flag
             _mouseDown = false;
 
             base.OnMouseLeave();

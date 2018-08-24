@@ -18,7 +18,7 @@ namespace FlaxEngine
         StaticOnly,
 
         /// <summary>
-        /// Render shados only in dynamic views (game, editor, etc.).
+        /// Render shadows only in dynamic views (game, editor, etc.).
         /// </summary>
         DynamicOnly,
 

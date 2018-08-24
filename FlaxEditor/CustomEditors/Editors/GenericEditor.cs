@@ -18,7 +18,7 @@ namespace FlaxEditor.CustomEditors.Editors
     public class GenericEditor : CustomEditor
     {
         /// <summary>
-        /// Describies object property/field information for custom editors pipeline.
+        /// Describes object property/field information for custom editors pipeline.
         /// </summary>
         /// <seealso cref="System.IComparable" />
         protected class ItemInfo : IComparable
@@ -84,7 +84,7 @@ namespace FlaxEditor.CustomEditors.Editors
             public bool UseGroup => Display?.Group != null;
 
             /// <summary>
-            /// Gets the overrided custom editor for item editing.
+            /// Gets the overridden custom editor for item editing.
             /// </summary>
             public CustomEditor OverrideEditor
             {
@@ -352,7 +352,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 }
                 else
                 {
-                    // TODO: support inlined objects hididng?
+                    // TODO: support inlined objects hiding?
                     return;
                 }
 

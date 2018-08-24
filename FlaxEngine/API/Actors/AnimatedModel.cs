@@ -68,7 +68,7 @@ namespace FlaxEngine
         private AnimationGraphParameter[] _parameters;
 
         /// <summary>
-        /// Helper value used to keep paramaters collection in sync with actual backend data.
+        /// Helper value used to keep parameters collection in sync with actual backend data.
         /// </summary>
         internal int _parametersHash;
 

@@ -10,7 +10,7 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.CustomEditors.Dedicated
 {
     /// <summary>
-    /// Deciated custom editor for <see cref="Actor"/> objects.
+    /// Dedicated custom editor for <see cref="Actor"/> objects.
     /// </summary>
     /// <seealso cref="FlaxEditor.CustomEditors.Editors.GenericEditor" />
     [CustomEditor(typeof(Actor)), DefaultEditor]
@@ -101,7 +101,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                         var selectPrefab = panel.Button("Select Prefab");
                         selectPrefab.Button.Clicked += () => Editor.Instance.Windows.ContentWin.Select(prefab);
 
-                        // Viewwing changes applied to this actor
+                        // Viewing changes applied to this actor
                         var viewChanges = panel.Button("View Changes");
                         viewChanges.Button.Clicked += () => ViewChanges(viewChanges.Button, new Vector2(0.0f, 20.0f));
 
@@ -131,10 +131,10 @@ namespace FlaxEditor.CustomEditors.Dedicated
         {
             if (prefab.ID == _linkedPrefabId)
             {
-                // This works fine but in PrefabWindow when using live update it crashes on using color picker/float slider because UI is being rebuilded
+                // This works fine but in PrefabWindow when using live update it crashes on using color picker/float slider because UI is being rebuild
                 //Presenter.BuildLayoutOnUpdate();
 
-                // Better way is to just update the rreference value using the new default instance of the prefab, created after changes apply
+                // Better way is to just update the reference value using the new default instance of the prefab, created after changes apply
                 if (prefab && !prefab.WaitForLoaded())
                 {
                     var actor = (Actor)Values[0];

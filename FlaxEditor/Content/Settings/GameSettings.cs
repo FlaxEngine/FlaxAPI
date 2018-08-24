@@ -109,9 +109,9 @@ namespace FlaxEditor.Content.Settings
         public JsonAsset UWPPlatform;
 
         /// <summary>
-        /// Gets the absolute path to the game settigns asset file.
+        /// Gets the absolute path to the game settings asset file.
         /// </summary>
-        public static string GameSettignsAssetPath
+        public static string GameSettingsAssetPath
         {
             get { return StringUtils.CombinePaths(Globals.ContentFolder, "GameSettings.json"); }
         }
@@ -122,7 +122,7 @@ namespace FlaxEditor.Content.Settings
         /// <returns>The loaded game settings.</returns>
         public static GameSettings Load()
         {
-            var asset = FlaxEngine.Content.Load<JsonAsset>(GameSettignsAssetPath);
+            var asset = FlaxEngine.Content.Load<JsonAsset>(GameSettingsAssetPath);
             if (asset)
             {
                 if (asset.CreateInstance() is GameSettings result)
@@ -205,7 +205,7 @@ namespace FlaxEditor.Content.Settings
             if (Editor.SaveJsonAsset(path, obj))
                 return true;
             asset = FlaxEngine.Content.LoadAsync<JsonAsset>(path);
-            return Editor.SaveJsonAsset(GameSettignsAssetPath, gameSettings);
+            return Editor.SaveJsonAsset(GameSettingsAssetPath, gameSettings);
         }
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace FlaxEditor.Content.Settings
 
             if (type == typeof(GameSettings))
             {
-                return Editor.SaveJsonAsset(GameSettignsAssetPath, obj);
+                return Editor.SaveJsonAsset(GameSettingsAssetPath, obj);
             }
 
             var gameSettings = Load();

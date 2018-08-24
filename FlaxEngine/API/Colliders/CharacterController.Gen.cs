@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Physical objects that allows to easly do player movement constrained by collisions without having to deal with a rigidbody.
+    /// Physical objects that allows to easily do player movement constrained by collisions without having to deal with a rigidbody.
     /// </summary>
     [Serializable]
     public sealed partial class CharacterController : Collider

@@ -75,7 +75,7 @@ namespace FlaxEditor.GUI.Drag
         }
 
         /// <summary>
-        /// Gethers the objects from the drag data (text).
+        /// Gathers the objects from the drag data (text).
         /// </summary>
         /// <param name="data">The data.</param>
         /// <param name="validateFunc">The validate function. Check if gathered object is valid to drop it.</param>
@@ -83,7 +83,7 @@ namespace FlaxEditor.GUI.Drag
         {
             if (data.Text.StartsWith(DragPrefix))
             {
-                // Remove prefix and parse splited names
+                // Remove prefix and parse splitted names
                 var name = data.Text.Remove(0, DragPrefix.Length);
                 if (validateFunc(name))
                 {

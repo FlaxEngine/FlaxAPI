@@ -157,7 +157,7 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override ContentItem Find(string path)
         {
-            // TODO: split name into parts and check each going tree sructure level down - make it faster
+            // TODO: split name into parts and check each going tree structure level down - make it faster
 
             if (Path == path)
                 return this;

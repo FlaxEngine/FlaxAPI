@@ -7,7 +7,7 @@ using FlaxEngine.Rendering;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Represents part of the skinned model that is made of verticies which can be rendered.
+    /// Represents part of the skinned model that is made of vertices which can be rendered.
     /// </summary>
     public sealed class SkinnedMesh
     {
@@ -142,13 +142,13 @@ namespace FlaxEngine
         /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
         /// Mesh data will be cached and uploaded to the GPU with a delay.
         /// </summary>
-        /// <param name="vertices">The mesh verticies positions. Cannot be null.</param>
+        /// <param name="vertices">The mesh vertices positions. Cannot be null.</param>
         /// <param name="triangles">The mesh index buffer (triangles). Uses 32-bit stride buffer. Cannot be null.</param>
         /// <param name="blendIndices">The skinned mesh blend indices buffer. Contains indices of the skeleton bones (up to 4 bones per vertex) to use for vertex position blending. Cannot be null.</param>
         /// <param name="blendWeights">The skinned mesh blend weights buffer (normalized). Contains weights per blend bone (up to 4 bones per vertex) of the skeleton bones to mix for vertex position blending. Cannot be null.</param>
         /// <param name="normals">The normal vectors (per vertex).</param>
         /// <param name="tangents">The normal vectors (per vertex). Use null to compute them from normal vectors.</param>
-        /// <param name="uv">The texture cordinates (per vertex).</param>
+        /// <param name="uv">The texture coordinates (per vertex).</param>
         public void UpdateMesh(Vector3[] vertices, int[] triangles, Int4[] blendIndices, Vector4[] blendWeights, Vector3[] normals = null, Vector3[] tangents = null, Vector2[] uv = null)
         {
             // Validate state and input
@@ -178,13 +178,13 @@ namespace FlaxEngine
         /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
         /// Mesh data will be cached and uploaded to the GPU with a delay.
         /// </summary>
-        /// <param name="vertices">The mesh verticies positions. Cannot be null.</param>
+        /// <param name="vertices">The mesh vertices positions. Cannot be null.</param>
         /// <param name="triangles">The mesh index buffer (triangles). Uses 16-bit stride buffer. Cannot be null.</param>
         /// <param name="blendIndices">The skinned mesh blend indices buffer. Contains indices of the skeleton bones (up to 4 bones per vertex) to use for vertex position blending. Cannot be null.</param>
         /// <param name="blendWeights">The skinned mesh blend weights buffer (normalized). Contains weights per blend bone (up to 4 bones per vertex) of the skeleton bones to mix for vertex position blending. Cannot be null.</param>
         /// <param name="normals">The normal vectors (per vertex).</param>
         /// <param name="tangents">The tangent vectors (per vertex). Use null to compute them from normal vectors.</param>
-        /// <param name="uv">The texture cordinates (per vertex).</param>
+        /// <param name="uv">The texture coordinates (per vertex).</param>
         public void UpdateMesh(Vector3[] vertices, ushort[] triangles, Int4[] blendIndices, Vector4[] blendWeights, Vector3[] normals = null, Vector3[] tangents = null, Vector2[] uv = null)
         {
             // Validate state and input
@@ -219,7 +219,7 @@ namespace FlaxEngine
         /// <summary>
         /// Downloads the first vertex buffer that contains mesh vertices data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Application.IsInMainThread"/>).
         /// </summary>
-        /// <param name="forceGpu">If set to <c>true</c> the data will be downloaded from the GPU, otherwise it can be loaded from the drive (source asset file) or from memory (if cached). Downloading mesh from GPU requries this call to be made fro mthe other thread than main thread. Virtual assets are always downloaded from GPU memory due to lack of dedicated storage container for the asset data.</param>
+        /// <param name="forceGpu">If set to <c>true</c> the data will be downloaded from the GPU, otherwise it can be loaded from the drive (source asset file) or from memory (if cached). Downloading mesh from GPU requires this call to be made from the other thread than main thread. Virtual assets are always downloaded from GPU memory due to lack of dedicated storage container for the asset data.</param>
         /// <returns>The gathered data.</returns>
         public Vertex0[] DownloadVertexBuffer0(bool forceGpu = false)
         {
@@ -233,7 +233,7 @@ namespace FlaxEngine
         /// <summary>
         /// Downloads the raw vertex buffer that contains mesh vertices data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Application.IsInMainThread"/>).
         /// </summary>
-        /// <param name="forceGpu">If set to <c>true</c> the data will be downloaded from the GPU, otherwise it can be loaded from the drive (source asset file) or from memory (if cached). Downloading mesh from GPU requries this call to be made fro mthe other thread than main thread. Virtual assets are always downloaded from GPU memory due to lack of dedicated storage container for the asset data.</param>
+        /// <param name="forceGpu">If set to <c>true</c> the data will be downloaded from the GPU, otherwise it can be loaded from the drive (source asset file) or from memory (if cached). Downloading mesh from GPU requires this call to be made from the other thread than main thread. Virtual assets are always downloaded from GPU memory due to lack of dedicated storage container for the asset data.</param>
         /// <returns>The gathered data.</returns>
         public Vertex[] DownloadVertexBuffer(bool forceGpu = false)
         {
@@ -264,7 +264,7 @@ namespace FlaxEngine
         /// Downloads the index buffer that contains mesh triangles data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Application.IsInMainThread"/>).
         /// </summary>
         /// <remarks>If mesh index buffer format (see <see cref="IndexBufferFormat"/>) is <see cref="PixelFormat.R16_UInt"/> then it's faster to call .</remarks>
-        /// <param name="forceGpu">If set to <c>true</c> the data will be downloaded from the GPU, otherwise it can be loaded from the drive (source asset file) or from memory (if cached). Downloading mesh from GPU requries this call to be made fro mthe other thread than main thread. Virtual assets are always downloaded from GPU memory due to lack of dedicated storage container for the asset data.</param>
+        /// <param name="forceGpu">If set to <c>true</c> the data will be downloaded from the GPU, otherwise it can be loaded from the drive (source asset file) or from memory (if cached). Downloading mesh from GPU requires this call to be made from the other thread than main thread. Virtual assets are always downloaded from GPU memory due to lack of dedicated storage container for the asset data.</param>
         /// <returns>The gathered data.</returns>
         public int[] DownloadIndexBuffer(bool forceGpu = false)
         {
@@ -279,7 +279,7 @@ namespace FlaxEngine
         /// Downloads the index buffer that contains mesh triangles data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Application.IsInMainThread"/>).
         /// </summary>
         /// <remarks>If mesh index buffer format (see <see cref="IndexBufferFormat"/>) is <see cref="PixelFormat.R32_UInt"/> then data won't be downloaded.</remarks>
-        /// <param name="forceGpu">If set to <c>true</c> the data will be downloaded from the GPU, otherwise it can be loaded from the drive (source asset file) or from memory (if cached). Downloading mesh from GPU requries this call to be made fro mthe other thread than main thread. Virtual assets are always downloaded from GPU memory due to lack of dedicated storage container for the asset data.</param>
+        /// <param name="forceGpu">If set to <c>true</c> the data will be downloaded from the GPU, otherwise it can be loaded from the drive (source asset file) or from memory (if cached). Downloading mesh from GPU requires this call to be made from the other thread than main thread. Virtual assets are always downloaded from GPU memory due to lack of dedicated storage container for the asset data.</param>
         /// <returns>The gathered data.</returns>
         public ushort[] DownloadIndexBufferUShort(bool forceGpu = false)
         {

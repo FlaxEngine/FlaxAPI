@@ -10,7 +10,7 @@ using FlaxEngine;
 namespace FlaxEditor.SceneGraph
 {
     /// <summary>
-    /// A tree node used to visalize scene actors structure in <see cref="SceneTreeWindow"/>. It's a ViewModel object for <see cref="Actor"/>.
+    /// A tree node used to visualize scene actors structure in <see cref="SceneTreeWindow"/>. It's a ViewModel object for <see cref="Actor"/>.
     /// It's part of the Scene Graph.
     /// </summary>
     /// <seealso cref="SceneGraphNode" />
@@ -23,7 +23,7 @@ namespace FlaxEditor.SceneGraph
         protected readonly Actor _actor;
 
         /// <summary>
-        /// The tree node used to present hierachy structure in GUI.
+        /// The tree node used to present hierarchy structure in GUI.
         /// </summary>
         protected readonly ActorTreeNode _treeNode;
 
@@ -247,7 +247,7 @@ namespace FlaxEditor.SceneGraph
             _treeNode.Parent = (ParentNode as ActorNode)?.TreeNode;
 
             // Check if it's a new node and parent has been already ready
-            // (eg. we builded new node for spawned actor and link it to the game)
+            // (eg. we build new node for spawned actor and link it to the game)
             if (_treeNode.Parent != null && !_treeNode.Parent.IsLayoutLocked)
             {
                 _treeNode.Parent.SortChildren();

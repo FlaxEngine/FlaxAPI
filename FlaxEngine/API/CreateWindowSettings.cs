@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Runtime.InteropServices;
@@ -65,7 +65,7 @@ namespace FlaxEngine
         public bool HasBorder;
 
         /// <summary>
-        /// Enable/disable window transparency support. Requiried to change window opacity property.
+        /// Enable/disable window transparency support. Required to change window opacity property.
         /// </summary>
         public bool SupportsTransparency;
 

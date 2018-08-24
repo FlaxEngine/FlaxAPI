@@ -41,7 +41,7 @@ namespace FlaxEngine.GUI
         public bool WithAlpha { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets a value indicating whether keep aspect ratio whend rawing the image.
+        /// Gets or sets a value indicating whether keep aspect ratio when drawing the image.
         /// </summary>
         [EditorOrder(60), Tooltip("If checked, control will keep aspect ratio of the image.")]
         public bool KeepAspectRatio { get; set; } = true;

@@ -536,7 +536,7 @@ namespace FlaxEngine
         /// Searches for all scripts of a specific type in this actor and any of its children.
         /// </summary>
         /// <param name="scriptType">Type of the script to search for. Includes any scripts derived from the type.</param>
-        /// <param name="includeDisabled">Determines whether include incactive scripts into results (disabled scripts and/or inactive actors).</param>
+        /// <param name="includeDisabled">Determines whether include inactive scripts into results (disabled scripts and/or inactive actors).</param>
         /// <returns>All scripts matching the specified type and query options.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]

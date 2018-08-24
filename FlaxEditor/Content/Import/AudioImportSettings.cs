@@ -155,7 +155,7 @@ namespace FlaxEditor.Content.Import
         public AudioImportEntry(string url, string resultUrl)
         : base(url, resultUrl)
         {
-            // Try to restore target asset Audio import options (usefull for fast reimport)
+            // Try to restore target asset Audio import options (useful for fast reimport)
             AudioImportSettings.TryRestore(ref _settings, resultUrl);
         }
 

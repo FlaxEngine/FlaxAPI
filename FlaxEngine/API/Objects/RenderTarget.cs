@@ -143,7 +143,7 @@ namespace FlaxEngine.Rendering
         private static readonly List<Temporary> Pool = new List<Temporary>(8);
 
         /// <summary>
-        /// The timout value for unused temporary render targets (in seconds).
+        /// The timeout value for unused temporary render targets (in seconds).
         /// When render target is not used for a given amount of time, it's being released.
         /// </summary>
         public static float UnusedTemporaryRenderTargetLifeTime = 5.0f;

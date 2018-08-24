@@ -63,7 +63,7 @@ namespace FlaxEditor.Windows.Assets
         /// <returns>The context menu.</returns>
         private ContextMenu CreateContextMenu()
         {
-            // Preapre
+            // Prepare
 
             bool hasSthSelected = Selection.Count > 0;
             bool isSingleActorSelected = Selection.Count == 1 && Selection[0] is ActorNode;
@@ -180,7 +180,7 @@ namespace FlaxEditor.Windows.Assets
                 // Use the same location
                 actor.Transform = parentActor.Transform;
 
-                // Rename actor to identify it easly
+                // Rename actor to identify it easily
                 actor.Name = StringUtils.IncrementNameNumber(actor.GetType().Name, x => parentActor.GetChild(x) == null);
             }
 

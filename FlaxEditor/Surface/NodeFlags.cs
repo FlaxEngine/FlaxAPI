@@ -21,7 +21,7 @@ namespace FlaxEditor.Surface
         NoCloseButton = 1,
 
         /// <summary>
-        /// Node should use dependant and independant boxes types.
+        /// Node should use dependant and independent boxes types.
         /// </summary>
         UseDependantBoxes = 2,
 

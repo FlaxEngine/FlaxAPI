@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Performs CSG box brush operation thats adds or removes geometry.
+    /// Performs CSG box brush operation that adds or removes geometry.
     /// </summary>
     [Serializable]
     public sealed partial class BoxBrush : Actor

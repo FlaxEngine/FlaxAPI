@@ -93,7 +93,7 @@ namespace FlaxEditor.Viewport.Widgets
             var iconRect = new Rectangle(0, (Height - iconSize) / 2, iconSize, iconSize);
             var textRect = new Rectangle(0, 0, Width + 1, Height + 1);
 
-            // Check if is checked or mosue is over and auto check feature is enabled
+            // Check if is checked or mouse is over and auto check feature is enabled
             if (_checked)
                 Render2D.FillRectangle(textRect, style.BackgroundSelected * (IsMouseOver ? 0.9f : 0.6f), true);
             else if (_autoCheck && IsMouseOver)

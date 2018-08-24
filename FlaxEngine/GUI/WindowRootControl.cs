@@ -100,7 +100,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Restores the window state before minimizing or maximazing.
+        /// Restores the window state before minimizing or maximizing.
         /// </summary>
         public void Restore()
         {
@@ -119,7 +119,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Brings window to the front of the Z order.
         /// </summary>
-        /// <param name="force">True if move to the front by force, otheriwse false.</param>
+        /// <param name="force">True if move to the front by force, otherwise false.</param>
         public void BringToFront(bool force = false)
         {
             _window.BringToFront(force);

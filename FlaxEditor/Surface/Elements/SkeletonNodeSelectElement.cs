@@ -20,9 +20,9 @@ namespace FlaxEditor.Surface.Elements
             UpdateComboBox();
 
             // Select saved value
-            _selectedIndicies.Clear();
+            _selectedIndices.Clear();
             if (Archetype.ValueIndex != -1)
-                _selectedIndicies.Add((int)ParentNode.Values[Archetype.ValueIndex]);
+                _selectedIndices.Add((int)ParentNode.Values[Archetype.ValueIndex]);
         }
 
         /// <summary>

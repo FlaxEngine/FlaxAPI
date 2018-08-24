@@ -174,7 +174,7 @@ namespace FlaxEditor.States
             _scenesToUnload.Clear();
 
             // Spacial case when all scenes are unloaded and no scene loaded we won't be able too handle OnSceneEvent so just leave state now
-            // It may be caused when scripts are not laoded due to ocmpilation errors or cannot find scene asset or other internal engine.
+            // It may be caused when scripts are not loaded due to compilation errors or cannot find scene asset or other internal engine.
             if (_lastSceneFromRequest == Guid.Empty)
             {
                 Editor.LogWarning("Cannot perform scene change");

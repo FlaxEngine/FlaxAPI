@@ -10,7 +10,7 @@ namespace FlaxEngine.GUI
     public class ScrollableControl : ContainerControl
     {
         /// <summary>
-        /// The view offset. Usefull to offset contents of the container (used by the scrollbars and drop panels).
+        /// The view offset. Useful to offset contents of the container (used by the scrollbars and drop panels).
         /// </summary>
         protected Vector2 _viewOffset;
 
@@ -58,7 +58,7 @@ namespace FlaxEngine.GUI
         public override bool IntersectsContent(ref Vector2 locationParent, out Vector2 location)
         {
             // Little workaround to prevent applying offset when performing intersection test with this scrollable control.
-            // Note that overriden PointFromParent applyies view offset.
+            // Note that overriden PointFromParent applies view offset.
             location = base.PointFromParent(locationParent);
             return ContainsPoint(ref location);
         }

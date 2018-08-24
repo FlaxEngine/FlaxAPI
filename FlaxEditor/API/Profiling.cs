@@ -56,17 +56,17 @@ namespace FlaxEditor.Profiling
         public int FPS;
 
         /// <summary>
-        /// The update time on CPU (in miliseconds).
+        /// The update time on CPU (in milliseconds).
         /// </summary>
         public float UpdateTimeMs;
 
         /// <summary>
-        /// The fixed update time on CPU (in miliseconds).
+        /// The fixed update time on CPU (in milliseconds).
         /// </summary>
         public float PhysicsTimeMs;
 
         /// <summary>
-        /// The draw time on CPU (in miliseconds).
+        /// The draw time on CPU (in milliseconds).
         /// </summary>
         public float DrawTimeMs;
     }
@@ -78,12 +78,12 @@ namespace FlaxEditor.Profiling
     public struct EventCPU
     {
         /// <summary>
-        /// The start time (in miliseconds).
+        /// The start time (in milliseconds).
         /// </summary>
         public double Start;
 
         /// <summary>
-        /// The end time (in miliseconds).
+        /// The end time (in milliseconds).
         /// </summary>
         public double End;
 
@@ -122,7 +122,7 @@ namespace FlaxEditor.Profiling
     public struct EventGPU
     {
         /// <summary>
-        /// The event execution time on a GPU (in miliseconds).
+        /// The event execution time on a GPU (in milliseconds).
         /// </summary>
         public float Time;
 

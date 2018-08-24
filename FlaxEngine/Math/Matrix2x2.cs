@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Globalization;
@@ -287,7 +287,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Creates the uniform scale metrix.
+        /// Creates the uniform scale matrix.
         /// </summary>
         /// <param name="scale">The scale.</param>
         /// <param name="result">The result.</param>
@@ -297,7 +297,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Creates the scale metrix.
+        /// Creates the scale matrix.
         /// </summary>
         /// <param name="scaleX">The scale x.</param>
         /// <param name="scaleY">The scale y.</param>
@@ -308,7 +308,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Creates the scale metrix.
+        /// Creates the scale matrix.
         /// </summary>
         /// <param name="scale">The scale vector.</param>
         /// <param name="result">The result.</param>
@@ -332,7 +332,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Creates the rotation metrix.
+        /// Creates the rotation matrix.
         /// </summary>
         /// <param name="rotationRadians">The rotation angle (in radians).</param>
         /// <param name="result">The result.</param>

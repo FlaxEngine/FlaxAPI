@@ -11,7 +11,7 @@ namespace FlaxEditor.SceneGraph
     public static class SceneGraphTools
     {
         /// <summary>
-        /// Delegate for scene graph action exeuction callback.
+        /// Delegate for scene graph action execution callback.
         /// </summary>
         /// <param name="node">The node.</param>
         /// <returns>True if call deeper, otherwise skip calling node children.</returns>

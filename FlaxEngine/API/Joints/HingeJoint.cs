@@ -28,7 +28,7 @@ namespace FlaxEngine
     }
 
     /// <summary>
-    /// Properties of a drive that drives the joint's angular velocity towards a paricular value.
+    /// Properties of a drive that drives the joint's angular velocity towards a particular value.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct HingeJointDrive

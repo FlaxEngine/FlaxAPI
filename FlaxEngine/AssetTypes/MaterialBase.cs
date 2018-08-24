@@ -13,14 +13,14 @@ namespace FlaxEngine
     public abstract class MaterialBase : BinaryAsset
     {
         /// <summary>
-        /// Helper value used to keep material paramaters collection in sync with actual backend data.
+        /// Helper value used to keep material parameters collection in sync with actual backend data.
         /// </summary>
         internal int _parametersHash;
 
         private MaterialParameter[] _parameters;
 
         /// <summary>
-        /// Gets the material info, structure which describies material surface.
+        /// Gets the material info, structure which describes material surface.
         /// </summary>
         [UnmanagedCall]
         public MaterialInfo Info

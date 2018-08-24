@@ -292,7 +292,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Creats a new script of a specific type and adds it to the actor.
+        /// Creates a new script of a specific type and adds it to the actor.
         /// </summary>
         /// <typeparam name="T">Type of the script to create.</typeparam>
         /// <returns>The created script instance, null otherwise.</returns>
@@ -345,7 +345,7 @@ namespace FlaxEngine
         /// <param name="data">The data.</param>
         /// <param name="idsMapping">
         /// The serialized objects ids mapping table used to change object ids and keep valid reference
-        /// links. Use null value to skipp ids mapping.
+        /// links. Use null value to skip ids mapping. To generate a new ids for the loaded objects use <see cref="TryGetSerializedObjectsIds"/> to extract the object ids from the data.
         /// </param>
         /// <returns>Spawned actors deserialized from the data. Returns null if fails.</returns>
 #if UNIT_TEST_COMPILANT
@@ -458,7 +458,7 @@ namespace FlaxEngine
         /// <summary>
         /// Searches for all scripts of a specific type in this actor and any of its children.
         /// </summary>
-        /// <param name="includeDisabled">Determines whether include incactive scripts into results (disabled scripts and/or inactive actors).</param>
+        /// <param name="includeDisabled">Determines whether include inactive scripts into results (disabled scripts and/or inactive actors).</param>
         /// <typeparam name="T">Type of the scripts to search for. Includes any scripts derived from the type.</typeparam>
         /// <returns>All scripts matching the specified type and query options.</returns>
 #if UNIT_TEST_COMPILANT

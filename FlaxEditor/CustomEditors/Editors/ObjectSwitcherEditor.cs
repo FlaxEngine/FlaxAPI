@@ -6,7 +6,7 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.CustomEditors.Editors
 {
     /// <summary>
-    /// Base implementation of the inspector used to edit properties of the given abstract or interface type that contain a setter to asign a derived implemntation type.
+    /// Base implementation of the inspector used to edit properties of the given abstract or interface type that contain a setter to assign a derived implementation type.
     /// </summary>
     public abstract class ObjectSwitcherEditor : CustomEditor
     {
@@ -55,7 +55,7 @@ namespace FlaxEditor.CustomEditors.Editors
         }
 
         /// <summary>
-        /// Gets the options collection for the property value assignement.
+        /// Gets the options collection for the property value assignment.
         /// </summary>
         protected abstract OptionType[] Options { get; }
 

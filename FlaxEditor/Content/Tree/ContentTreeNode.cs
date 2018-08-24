@@ -48,13 +48,13 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Returns true if that folder belongs to the project workspace.
         /// </summary>
-        /// <returns>True if folder belogns to the project workspace otherwise false</returns>
+        /// <returns>True if folder belongs to the project workspace otherwise false</returns>
         public bool IsProjectOnly => _folder.IsProjectOnly;
 
         /// <summary>
         /// Returns true if that folder belongs to the Engine or Editor private files.
         /// </summary>
-        /// <returns>True if folder belogns to Engine private files otherwise false</returns>
+        /// <returns>True if folder belongs to Engine private files otherwise false</returns>
         public bool IsEnginePrivate => _folder.IsEnginePrivate;
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace FlaxEditor.Content
         public ContentTreeNode ParentNode => Parent as ContentTreeNode;
 
         /// <summary>
-        /// Gets the folderpath.
+        /// Gets the folder path.
         /// </summary>
         public string Path => _folder.Path;
 

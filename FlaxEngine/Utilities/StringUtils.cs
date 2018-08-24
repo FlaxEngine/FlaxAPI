@@ -84,7 +84,7 @@ namespace FlaxEngine
         /// For example: '.TxT' will return 'txt'.
         /// </summary>
         /// <param name="extension">The extension.</param>
-        /// <returns>The nomralized extension.</returns>
+        /// <returns>The normalized extension.</returns>
         public static string NormalizeExtension(string extension)
         {
             if (extension[0] == '.')
@@ -97,7 +97,7 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
-        /// <returns>The cobined path</returns>
+        /// <returns>The combined path</returns>
         public static string CombinePaths(string left, string right)
         {
             int cnt = left.Length;

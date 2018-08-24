@@ -11,21 +11,21 @@ namespace FlaxEditor.Content.Settings
     public sealed class BuildSettings : SettingsBase
     {
         /// <summary>
-        /// The maximum amount of assets to include into a single assets package. Assets will be spli into several packages if need to.
+        /// The maximum amount of assets to include into a single assets package. Assets will be split into several packages if need to.
         /// </summary>
-        [EditorOrder(10), Limit(32, short.MaxValue), EditorDisplay("General", "Max assets per package"), Tooltip("The maximum amount of assets to include into a single assets package. Assets will be spli into several packages if need to.")]
+        [EditorOrder(10), Limit(32, short.MaxValue), EditorDisplay("General", "Max assets per package"), Tooltip("The maximum amount of assets to include into a single assets package. Assets will be split into several packages if need to.")]
         public int MaxAssetsPerPackage = 256;
 
         /// <summary>
-        /// The maximum size of the single assets package (in megabytes). Assets will be spli into several packages if need to.
+        /// The maximum size of the single assets package (in megabytes). Assets will be split into several packages if need to.
         /// </summary>
-        [EditorOrder(20), Limit(16, short.MaxValue), EditorDisplay("General", "Max package size (in MB)"), Tooltip("The maximum size of the single assets package (in megabytes). Assets will be spli into several packages if need to.")]
+        [EditorOrder(20), Limit(16, short.MaxValue), EditorDisplay("General", "Max package size (in MB)"), Tooltip("The maximum size of the single assets package (in megabytes). Assets will be split into several packages if need to.")]
         public int MaxPackageSizeMB = 256;
 
         /// <summary>
-        /// The game content cooking Keys. Use the same value for a game and DLC packages to support loading them by the builded game. Use 0 to randomize it during building.
+        /// The game content cooking Keys. Use the same value for a game and DLC packages to support loading them by the build game. Use 0 to randomize it during building.
         /// </summary>
-        [EditorOrder(30), EditorDisplay("General"), Tooltip("The game content cooking Keys. Use the same value for a game and DLC packages to support loading them by the builded game. Use 0 to randomize it during building.")]
+        [EditorOrder(30), EditorDisplay("General"), Tooltip("The game content cooking Keys. Use the same value for a game and DLC packages to support loading them by the build game. Use 0 to randomize it during building.")]
         public int ContentKey = 0;
 
         /// <summary>

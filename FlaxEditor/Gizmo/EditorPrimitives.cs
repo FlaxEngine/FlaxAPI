@@ -19,7 +19,7 @@ namespace FlaxEditor.Gizmo
     }
 
     /// <summary>
-    /// In-build postFx used to render debug shapes, gizmo tools and other editor primities to MSAA render target and composite it with the editor preview window.
+    /// In-build postFx used to render debug shapes, gizmo tools and other editor primitives to MSAA render target and composite it with the editor preview window.
     /// </summary>
     public sealed class EditorPrimitives : PostProcessEffect
     {

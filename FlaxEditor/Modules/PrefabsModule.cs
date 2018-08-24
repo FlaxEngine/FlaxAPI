@@ -27,12 +27,12 @@ namespace FlaxEditor.Modules
         public event Action<PrefabItem> PrefabCreated;
 
         /// <summary>
-        /// Occurs before applying changes to the prefab. Argumnets are prefab and the target instance.
+        /// Occurs before applying changes to the prefab. Arguments are prefab and the target instance.
         /// </summary>
         public event Action<Prefab, Actor> PrefabApplying;
 
         /// <summary>
-        /// Occurs after applying changes to the prefab. Argumnets are prefab and the target instance.
+        /// Occurs after applying changes to the prefab. Arguments are prefab and the target instance.
         /// </summary>
         public event Action<Prefab, Actor> PrefabApplied;
 
@@ -45,7 +45,7 @@ namespace FlaxEditor.Modules
         /// Starts the creating prefab for the selected actor by showing the new item creation dialog in <see cref="ContentWindow"/>.
         /// </summary>
         /// <remarks>
-        /// To create prefab manualy use <see cref="Editor.CreatePrefab"/> method.
+        /// To create prefab manually use <see cref="Editor.CreatePrefab"/> method.
         /// </remarks>
         public void CreatePrefab()
         {
@@ -61,7 +61,7 @@ namespace FlaxEditor.Modules
         /// Starts the creating prefab for the given actor by showing the new item creation dialog in <see cref="ContentWindow"/>. User can specify the new asset name.
         /// </summary>
         /// <remarks>
-        /// To create prefab manualy use <see cref="Editor.CreatePrefab"/> method.
+        /// To create prefab manually use <see cref="Editor.CreatePrefab"/> method.
         /// </remarks>
         /// <param name="actor">The root prefab actor.</param>
         public void CreatePrefab(Actor actor)
@@ -80,9 +80,9 @@ namespace FlaxEditor.Modules
             Editor.Windows.ContentWin.NewItem(proxy, actor, OnPrefabCreated);
         }
 
-        private void OnPrefabCreated(ContentItem contetItem)
+        private void OnPrefabCreated(ContentItem contentItem)
         {
-            if (contetItem is PrefabItem prefabItem)
+            if (contentItem is PrefabItem prefabItem)
             {
                 PrefabCreated?.Invoke(prefabItem);
             }

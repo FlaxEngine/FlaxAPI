@@ -520,7 +520,7 @@ namespace FlaxEngine
         /// <summary>
         /// Creates RGB color from Hue[0-360], Saturation[0-1] and Value[0-1].
         /// </summary>
-        /// <param name="hue">The hue angle in degress [0-360].</param>
+        /// <param name="hue">The hue angle in degrees [0-360].</param>
         /// <param name="saturation">The saturation normalized [0-1].</param>
         /// <param name="value">The value normalized [0-1].</param>
         /// <param name="alpha">The alpha value. Default is 1.</param>
@@ -728,7 +728,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Converts the color to HSV color space (retured as vector).
+        /// Converts the color to HSV color space (returned as vector).
         /// </summary>
         /// <returns>The HSV color.</returns>
         public Vector3 ToHSV()
@@ -756,7 +756,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Convert color from the RGB colro space to HSV color space.
+        /// Convert color from the RGB color space to HSV color space.
         /// </summary>
         /// <param name="rgbColor">Color of the RGB.</param>
         /// <param name="h">The output Hue.</param>

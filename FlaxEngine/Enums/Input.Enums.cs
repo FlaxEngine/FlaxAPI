@@ -232,7 +232,7 @@ namespace FlaxEngine
     public enum InputActionMode
     {
         /// <summary>
-        /// Uuser is pressing the key/button.
+        /// Uuer is pressing the key/button.
         /// </summary>
         Pressing = 0,
 
@@ -242,7 +242,7 @@ namespace FlaxEngine
         Press = 1,
 
         /// <summary>
-        /// User released the key/button (was presssing it in the previous frame).
+        /// User released the key/button (was pressing it in the previous frame).
         /// </summary>
         Release = 2,
     }

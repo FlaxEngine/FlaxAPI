@@ -72,7 +72,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Arguments for item being replaced because of buffer was oveflown with data
+        ///     Arguments for item being replaced because of buffer was overflown with data
         /// </summary>
         public class ItemOverflownEventArgs : EventArgs
         {
@@ -142,7 +142,7 @@ namespace FlaxEngine.Collections
         public int Capacity => _buffer.Length;
 
         /// <summary>
-        ///     Returns true if there are no items in sturcutre, or false if there are
+        ///     Returns true if there are no items in structure, or false if there are
         /// </summary>
         public bool IsEmpty => Count == 0;
 
@@ -163,13 +163,13 @@ namespace FlaxEngine.Collections
             var insertionArray = buffer.ToArray();
             if (insertionArray.Length < frontItem)
                 throw new ArgumentOutOfRangeException(nameof(frontItem),
-                                                      "argument cannot be larger then requested capaclity");
+                                                      "argument cannot be larger then requested capacity");
             if (-1 > frontItem)
                 throw new ArgumentOutOfRangeException(nameof(frontItem),
                                                       "argument cannot be smaller then -1");
             if (insertionArray.Length < backItem)
                 throw new ArgumentOutOfRangeException(nameof(frontItem),
-                                                      "argument cannot be larger then requested capaclity");
+                                                      "argument cannot be larger then requested capacity");
             if (-1 > backItem)
                 throw new ArgumentOutOfRangeException(nameof(frontItem),
                                                       "argument cannot be smaller then -1");
@@ -189,7 +189,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Creates new instance of object with given capacity and adds array of items to internall buffer
+        ///     Creates new instance of object with given capacity and adds array of items to internal buffer
         /// </summary>
         /// <param name="capacity">Capacity of internal structure</param>
         /// <param name="items">Items to input</param>
@@ -199,8 +199,7 @@ namespace FlaxEngine.Collections
             if (capacity <= 0)
                 throw new ArgumentOutOfRangeException(nameof(capacity), "argument cannot be lower or equal zero");
             if (items.Length + arrayIndex > capacity)
-                throw new ArgumentOutOfRangeException(nameof(items),
-                                                      "argument cannot be larger then requested capaclity with moved arrayIndex");
+                throw new ArgumentOutOfRangeException(nameof(items), "argument cannot be larger then requested capacity with moved arrayIndex");
             _buffer = new T[capacity];
             items.CopyTo(_buffer, arrayIndex);
             _backItem = arrayIndex;
@@ -212,7 +211,7 @@ namespace FlaxEngine.Collections
 
         /// <summary>
         ///     Gets or sets item from list at given index.
-        ///     <remarks>All items are in order of input regardless of overlow that may occur</remarks>
+        ///     <remarks>All items are in order of input regardless of overflow that may occur</remarks>
         /// </summary>
         /// <param name="index">Index to item required</param>
         public T this[int index]
@@ -339,7 +338,7 @@ namespace FlaxEngine.Collections
 
 
         /// <summary>
-        ///     Copies the buffer contents to an array, acording to the logical
+        ///     Copies the buffer contents to an array, according to the logical
         ///     contents of the buffer (i.e. independent of the internal
         ///     order/contents)
         /// </summary>

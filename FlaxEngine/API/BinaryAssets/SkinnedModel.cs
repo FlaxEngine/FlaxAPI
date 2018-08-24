@@ -17,7 +17,7 @@ namespace FlaxEngine
         public const int MaxBones = 256;
 
         /// <summary>
-        /// Gets the material slots colelction. Each slot contains information how to render mesh or meshes using it.
+        /// Gets the material slots collection. Each slot contains information how to render mesh or meshes using it.
         /// </summary>
         public MaterialSlot[] MaterialSlots
         {

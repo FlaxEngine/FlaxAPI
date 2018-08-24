@@ -15,16 +15,16 @@ namespace FlaxEditor.CustomEditors.GUI
         // TODO: sync splitter for whole presenter
 
         /// <summary>
-        /// The spliter size (in pixels).
+        /// The splitter size (in pixels).
         /// </summary>
-        public const int SpliterSize = 2;
+        public const int SplitterSize = 2;
 
         /// <summary>
         /// The splitter margin (in pixels).
         /// </summary>
         public const int SplitterMargin = 4;
 
-        private const int SpliterSizeHalf = SpliterSize / 2;
+        private const int SplitterSizeHalf = SplitterSize / 2;
 
         private PropertiesListElement _element;
         private float _splitterValue;
@@ -73,7 +73,7 @@ namespace FlaxEditor.CustomEditors.GUI
 
         private void UpdateSplitRect()
         {
-            _splitterRect = new Rectangle(Mathf.Clamp(_splitterValue * Width - SpliterSizeHalf, 0.0f, Width), 0, SpliterSize, Height);
+            _splitterRect = new Rectangle(Mathf.Clamp(_splitterValue * Width - SplitterSizeHalf, 0.0f, Width), 0, SplitterSize, Height);
             LeftMargin = _splitterValue * Width + SplitterMargin;
         }
 

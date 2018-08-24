@@ -227,7 +227,7 @@ namespace FlaxEditor
                 _modules[i].OnInit();
             }
 
-            // Start Editor initalization ending phrase (will wait for scripts compilation result)
+            // Start Editor initialization ending phrase (will wait for scripts compilation result)
             StateMachine.LoadingState.StartInitEnding();
         }
 
@@ -635,8 +635,8 @@ namespace FlaxEditor
         /// Creates the prefab asset from the given root actor. Saves it to the output file path.
         /// </summary>
         /// <param name="path">The output asset path.</param>
-        /// <param name="actor">The target actor (prefab root). It canot be a scene but it can contain a scripts and/or full hierarchy of objects to save.</param>
-        /// <param name="autoLink">True if autoconnect the target actor and related objects to the created prefab.</param>
+        /// <param name="actor">The target actor (prefab root). It cannot be a scene but it can contain a scripts and/or full hierarchy of objects to save.</param>
+        /// <param name="autoLink">True if auto connect the target actor and related objects to the created prefab.</param>
         /// <returns>True if failed, otherwise false.</returns>
         public static bool CreatePrefab(string path, Actor actor, bool autoLink)
         {
@@ -750,7 +750,7 @@ namespace FlaxEditor
         public delegate void LightmapsBakeProgressDelegate(LightmapsBakeSteps step, float stepProgress, float totalProgress);
 
         /// <summary>
-        /// Lighmaps baking nd event delegate.
+        /// Lightmaps baking nd event delegate.
         /// </summary>
         /// <param name="failed">True if baking failed or has been canceled, otherwise false.</param>
         public delegate void LightmapsBakeEndDelegate(bool failed);

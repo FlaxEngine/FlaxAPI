@@ -68,7 +68,7 @@ namespace FlaxEditor.Windows
                 // Use the same location
                 actor.Transform = parentActor.Transform;
 
-                // Rename actor to identify it easly
+                // Rename actor to identify it easily
                 actor.Name = StringUtils.IncrementNameNumber(type.Name, x => parentActor.GetChild(x) == null);
             }
 
@@ -121,7 +121,7 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void OnInit()
         {
-            Editor.SceneEditing.OnSelectionChanged += OnOnSelectionChanged;
+            Editor.SceneEditing.SelectionChanged += OnOnSelectionChanged;
         }
 
         private void OnOnSelectionChanged()

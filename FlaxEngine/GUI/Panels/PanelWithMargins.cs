@@ -24,7 +24,7 @@ namespace FlaxEngine.GUI
         protected bool _autoSize = true;
 
         /// <summary>
-        /// The ocontorls ffset.
+        /// The control offset.
         /// </summary>
         protected Vector2 _offset;
 

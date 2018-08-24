@@ -140,7 +140,7 @@ namespace FlaxEngine
         /// <summary>
         /// Displays a message box with specified text
         /// </summary>
-        /// <param name="parent">Parant window or null if not used</param>
+        /// <param name="parent">Parent window or null if not used</param>
         /// <param name="text">The text to display in the message box</param>
         /// <returns>One of the DialogResult values</returns>
         public static DialogResult Show(Window parent, string text)
@@ -151,7 +151,7 @@ namespace FlaxEngine
         /// <summary>
         /// Displays a message box with specified text and caption
         /// </summary>
-        /// <param name="parent">Parant window or null if not used</param>
+        /// <param name="parent">Parent window or null if not used</param>
         /// <param name="text">The text to display in the message box</param>
         /// <param name="caption">The text to display in the title bar of the message box</param>
         /// <returns>One of the DialogResult values</returns>
@@ -163,7 +163,7 @@ namespace FlaxEngine
         /// <summary>
         /// Displays a message box with specified text, caption and buttons
         /// </summary>
-        /// <param name="parent">Parant window or null if not used</param>
+        /// <param name="parent">Parent window or null if not used</param>
         /// <param name="text">The text to display in the message box</param>
         /// <param name="caption">The text to display in the title bar of the message box</param>
         /// <param name="buttons">One of the Buttons values that specifies which buttons to display in the message box</param>

@@ -52,7 +52,7 @@ namespace FlaxEditor.Scripting
         }
 
         /// <summary>
-        /// Returns true if source code has been compilled and assembies are ready to load.
+        /// Returns true if source code has been compiled and assemblies are ready to load.
         /// </summary>
         [UnmanagedCall]
         public static bool IsReady
@@ -78,7 +78,7 @@ namespace FlaxEditor.Scripting
         }
 
         /// <summary>
-        /// Indicates that scripting directory has been modified so scripts need to be rebuilded.
+        /// Indicates that scripting directory has been modified so scripts need to be rebuild.
         /// </summary>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]

@@ -201,7 +201,7 @@ namespace FlaxEngine
         /// Determines whether a specified rectangle intersects with this rectangle
         /// </summary>
         /// <param name="value">The rectangle to evaluate</param>
-        /// <returns>True if the specified rectangle intersects with this one, therwise false</returns>
+        /// <returns>True if the specified rectangle intersects with this one, otherwise false</returns>
         public bool Intersects(Rectangle value)
         {
             return (value.Location.X < Right) && (Location.X < value.Right) && (value.Location.Y < Bottom) && (Location.Y < value.Bottom);
@@ -211,7 +211,7 @@ namespace FlaxEngine
         /// Determines whether a specified rectangle intersects with this rectangle
         /// </summary>
         /// <param name="value">The rectangle to evaluate</param>
-        /// <returns>True if the specified rectangle intersects with this one, therwise false</returns>
+        /// <returns>True if the specified rectangle intersects with this one, otherwise false</returns>
         public bool Intersects(ref Rectangle value)
         {
             return (value.Location.X < Right) && (Location.X < value.Right) && (value.Location.Y < Bottom) && (Location.Y < value.Bottom);
@@ -248,7 +248,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Expand rectangle area in all directions by given amout
+        /// Expand rectangle area in all directions by given amount
         /// </summary>
         /// <param name="toExpand">Amount of units to expand a rectangle</param>
         public void Expand(float toExpand)
@@ -258,7 +258,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Make expanded rectangle area in all directions by given amout
+        /// Make expanded rectangle area in all directions by given amount
         /// </summary>
         /// <param name="toExpand">Amount of units to expand a rectangle</param>
         /// <returns>Expanded rectangle</returns>
@@ -268,7 +268,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Scale rectangle area in all directions by given amout
+        /// Scale rectangle area in all directions by given amount
         /// </summary>
         /// <param name="scale">Scale value to expand a rectangle</param>
         public void Scale(float scale)
@@ -279,7 +279,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Make scaled rectangle area in all directions by given amout
+        /// Make scaled rectangle area in all directions by given amount
         /// </summary>
         /// <param name="scale">Scale value to expand a rectangle</param>
         /// <returns>Scaled rectangle</returns>

@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEditor
 {
     /// <summary>
-    /// Game building service. Processes project files and outputs builded game for a target platform.
+    /// Game building service. Processes project files and outputs build game for a target platform.
     /// </summary>
     public static partial class GameCooker
     {

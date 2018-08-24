@@ -7,7 +7,7 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.GUI
 {
     /// <summary>
-    /// The custom context menu that shows a tree of prefa diff items.
+    /// The custom context menu that shows a tree of prefab diff items.
     /// </summary>
     /// <seealso cref="ContextMenuBase" />
     public class PrefabDiffContextMenu : ContextMenuBase
