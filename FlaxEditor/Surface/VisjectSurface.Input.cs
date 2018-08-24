@@ -239,6 +239,13 @@ namespace FlaxEditor.Surface
             // Check if any node is under the mouse
             SurfaceNode nodeAtMouse = GetNodeUnderMouse();
 
+            // Right clicking while attempting to connect a node to something
+            if (!_rightMouseDown && buttons == MouseButton.Right && !_isMovingSelection && _startBox != null)
+            {
+                _cmStartPos = location;
+                ShowPrimaryMenu(_cmStartPos);
+            }
+
             // Cache flags and state
             if (_leftMouseDown && buttons == MouseButton.Left)
             {
@@ -285,7 +292,7 @@ namespace FlaxEditor.Surface
 
             if (buttons == MouseButton.Left)
             {
-                ConnectingEnd(null);
+                if (!_cmPrimaryMenu.Visible) ConnectingEnd(null);
                 EndMouseCapture();
             }
 
