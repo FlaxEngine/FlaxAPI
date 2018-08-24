@@ -82,6 +82,7 @@ namespace FlaxEditor.Surface
                 }
             }
 
+            // Disable intelligent connecting for now
             /*
             var toBeDeselected = new System.Collections.Generic.List<SurfaceNode>();
 
@@ -158,7 +159,8 @@ namespace FlaxEditor.Surface
                 Deselect(toDeselect);
             }
 
-            AddToSelection(node);*/
+            AddToSelection(node);
+            */
         }
     }
 }
