@@ -119,19 +119,31 @@ namespace FlaxEditor.Windows
         private void InitPaintTab(Tabs tabs)
         {
             var paintTab = tabs.AddTab(new Tab(string.Empty, Editor.UI.GetIcon("Paint48")));
-            //paintTab.LinkTooltip("Vertex painint tool"));
+            //paintTab.LinkTooltip("Vertex paining tool"));
+
+            var info = paintTab.AddChild<Label>();
+            info.Text = "Vertex painting coming soon...";
+            info.DockStyle = DockStyle.Fill;
         }
 
         private void InitFoliageTab(Tabs tabs)
         {
             var foliageTab = tabs.AddTab(new Tab(string.Empty, Editor.UI.GetIcon("Foliage48")));
             //foliageTab.LinkTooltip("Foliage spawning tool"));
+
+            var info = foliageTab.AddChild<Label>();
+            info.Text = "Foliage spawning coming soon...";
+            info.DockStyle = DockStyle.Fill;
         }
 
         private void InitCarveTab(Tabs tabs)
         {
             var carveTab = tabs.AddTab(new Tab(string.Empty, Editor.UI.GetIcon("Mountain48")));
             //carveTab.LinkTooltip("Terrain carving tool"));
+
+            var info = carveTab.AddChild<Label>();
+            info.Text = "Terrain carving coming soon...";
+            info.DockStyle = DockStyle.Fill;
         }
 
         private Item CreateEditorAssetItem(string name, string path)
