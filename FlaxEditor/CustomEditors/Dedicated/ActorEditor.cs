@@ -175,6 +175,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             if (editor.Values[0] is Script script)
             {
                 node.TextColor = script.HasPrefabLink ? FlaxEngine.GUI.Style.Current.ProgressNormal : FlaxEngine.GUI.Style.Current.BackgroundSelected;
+                node.Text = CustomEditorsUtil.GetPropertyNameUI(script.GetType().Name);
             }
 
             node.Expand(true);
