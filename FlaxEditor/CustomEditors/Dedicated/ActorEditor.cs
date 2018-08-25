@@ -7,6 +7,7 @@ using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using FlaxEngine.Json;
 
 namespace FlaxEditor.CustomEditors.Dedicated
 {
@@ -156,32 +157,57 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
             node.Tag = editor;
 
-            if (editor.ParentEditor?.Values?.Type?.IsArray ?? false)
+            // Removed Script
+            if (editor is RemovedScriptDummy removed)
+            {
+                node.TextColor = Color.OrangeRed;
+                node.Text = CustomEditorsUtil.GetPropertyNameUI(removed.PrefabObject.GetType().Name);
+            }
+            // Actor
+            else if (editor.Values[0] is Actor actor)
+            {
+                node.TextColor = FlaxEngine.GUI.Style.Current.ProgressNormal;
+                node.Text = CustomEditorsUtil.GetPropertyNameUI(actor.GetType().Name);
+            }
+            // Script
+            else if (editor.Values[0] is Script script)
+            {
+                node.TextColor = script.HasPrefabLink ? FlaxEngine.GUI.Style.Current.ProgressNormal : FlaxEngine.GUI.Style.Current.BackgroundSelected;
+                node.Text = CustomEditorsUtil.GetPropertyNameUI(script.GetType().Name);
+            }
+            // Array Item
+            else if (editor.ParentEditor?.Values?.Type?.IsArray ?? false)
             {
                 node.Text = "Element " + editor.ParentEditor.ChildrenEditors.IndexOf(editor);
             }
+            // Common type
             else if (editor.Values.Info != null)
             {
                 node.Text = CustomEditorsUtil.GetPropertyNameUI(editor.Values.Info.Name);
             }
+            // Custom type
             else if (editor.Values[0] != null)
             {
                 node.Text = editor.Values[0].ToString();
             }
 
-            if (editor.Values[0] is Actor)
-            {
-                node.TextColor = FlaxEngine.GUI.Style.Current.ProgressNormal;
-            }
-            if (editor.Values[0] is Script script)
-            {
-                node.TextColor = script.HasPrefabLink ? FlaxEngine.GUI.Style.Current.ProgressNormal : FlaxEngine.GUI.Style.Current.BackgroundSelected;
-                node.Text = CustomEditorsUtil.GetPropertyNameUI(script.GetType().Name);
-            }
-
             node.Expand(true);
 
             return node;
+        }
+
+        private class RemovedScriptDummy : CustomEditor
+        {
+            /// <summary>
+            /// The removed prefab object (from the prefab default instance).
+            /// </summary>
+            public Script PrefabObject;
+
+            /// <inheritdoc />
+            public override void Initialize(LayoutElementsContainer layout)
+            {
+                // Not used
+            }
         }
 
         private TreeNode ProcessDiff(CustomEditor editor)
@@ -191,9 +217,6 @@ namespace FlaxEditor.CustomEditors.Dedicated
             {
                 return CreateDiffNode(editor);
             }
-
-            // TODO: show scripts removed from the actor
-            // TODO: proper reverting removed scripts from actor with undo
 
             // Skip if no change detected
             if (!editor.Values.IsReferenceValueModified)
@@ -213,6 +236,39 @@ namespace FlaxEditor.CustomEditors.Dedicated
                         result = CreateDiffNode(editor);
 
                     result.AddChild(child);
+                }
+            }
+
+            // Show scripts removed from prefab instance (user may want to restore them)
+            if (editor is ScriptsEditor && editor.Values.HasReferenceValue && editor.Values.ReferenceValue is Script[] prefabObjectScripts)
+            {
+                for (int j = 0; j < prefabObjectScripts.Length; j++)
+                {
+                    var prefabObjectScript = prefabObjectScripts[j];
+                    bool isRemoved = true;
+
+                    for (int i = 0; i < editor.ChildrenEditors.Count; i++)
+                    {
+                        if (editor.ChildrenEditors[i].Values is ScriptsEditor.ScriptsContainer container && container.PrefabObjectId == prefabObjectScript.PrefabObjectID)
+                        {
+                            // Found
+                            isRemoved = false;
+                            break;
+                        }
+                    }
+
+                    if (isRemoved)
+                    {
+                        var dummy = new RemovedScriptDummy
+                        {
+                            PrefabObject = prefabObjectScript
+                        };
+
+                        var child = CreateDiffNode(dummy);
+                        if (result == null)
+                            result = CreateDiffNode(editor);
+                        result.AddChild(child);
+                    }
                 }
             }
 
@@ -268,13 +324,34 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
         private void OnDiffRevert(CustomEditor editor)
         {
+            // Special case for removed Script from actor
+            if (editor is RemovedScriptDummy removed)
+            {
+                Editor.Log("Reverting removed script changes to prefab (adding it)");
+
+                var actor = (Actor)Values[0];
+                var restored = actor.AddScript(removed.PrefabObject.GetType());
+                var prefabId = actor.PrefabID;
+                var prefabObjectId = restored.PrefabObjectID;
+                Script.Internal_LinkPrefab(restored.unmanagedPtr, ref prefabId, ref prefabObjectId);
+                string data = JsonSerializer.Serialize(removed.PrefabObject);
+                JsonSerializer.Deserialize(restored, data);
+
+                var action = AddRemoveScript.Added(restored);
+                Presenter.Undo?.AddAction(action);
+
+                return;
+            }
+
             // Special case for new Script added to actor
             if (editor.Values[0] is Script script && !script.HasPrefabLink)
             {
                 Editor.Log("Reverting added script changes to prefab (removing it)");
+
                 var action = AddRemoveScript.Remove(script);
                 action.Do();
                 Presenter.Undo?.AddAction(action);
+
                 return;
             }
 

@@ -447,10 +447,21 @@ namespace FlaxEditor.CustomEditors.Dedicated
         /// <summary>
         /// Values container for the collection of the scripts. Helps with prefab linkage and reference value usage (uses Prefab Instance ID rather than index in array).
         /// </summary>
-        private sealed class ScriptsContainer : ListValueContainer
+        public sealed class ScriptsContainer : ListValueContainer
         {
-            private Guid _prefabObjectId;
+            private readonly Guid _prefabObjectId;
 
+            /// <summary>
+            /// Gets the prefab object identifier used by the container scripts. Empty if there is no valid linkage to the prefab object.
+            /// </summary>
+            public Guid PrefabObjectId => _prefabObjectId;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ScriptsContainer"/> class.
+            /// </summary>
+            /// <param name="elementType">Type of the collection elements (script type).</param>
+            /// <param name="index">The script index in the actor scripts collection.</param>
+            /// <param name="values">The collection values (scripts array).</param>
             public ScriptsContainer(Type elementType, int index, ValueContainer values)
             : base(elementType, index)
             {

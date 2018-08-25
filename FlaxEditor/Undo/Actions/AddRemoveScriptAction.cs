@@ -46,6 +46,18 @@ namespace FlaxEditor.Actions
         }
 
         /// <summary>
+        /// Creates a new added script undo action.
+        /// </summary>
+        /// <param name="script">The new script.</param>
+        /// <returns>The action.</returns>
+        public static AddRemoveScript Added(Script script)
+        {
+            if (script == null)
+                throw new ArgumentNullException(nameof(script));
+            return new AddRemoveScript(true, script);
+        }
+
+        /// <summary>
         /// Creates a new add script undo action.
         /// </summary>
         /// <param name="parentActor">The parent actor.</param>
