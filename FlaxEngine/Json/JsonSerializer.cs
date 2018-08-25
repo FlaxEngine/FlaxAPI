@@ -225,7 +225,7 @@ namespace FlaxEngine.Json
         /// <summary>
         /// Deserializes the specified object (from the input json data).
         /// </summary>
-        /// <param name="input">The objeect.</param>
+        /// <param name="input">The object.</param>
         /// <param name="json">The input json data.</param>
         public static void Deserialize(object input, string json)
         {

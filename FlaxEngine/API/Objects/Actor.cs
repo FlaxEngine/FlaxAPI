@@ -266,6 +266,18 @@ namespace FlaxEngine
         /// <summary>
         /// Creates a new child actor of the given type.
         /// </summary>
+        /// <param name="type">Type of the actor.</param>
+        /// <returns>The child actor.</returns>
+        public Actor AddChild(Type type)
+        {
+            var result = (Actor)New(type);
+            result.SetParent(this, false);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a new child actor of the given type.
+        /// </summary>
         /// <typeparam name="T">Type of the actor.</typeparam>
         /// <returns>The child actor.</returns>
         public T AddChild<T>() where T : Actor
@@ -289,6 +301,18 @@ namespace FlaxEngine
                 result.SetParent(this, false);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Creates a new script of a specific type and adds it to the actor.
+        /// </summary>
+        /// <param name="type">Type of the script to create.</param>
+        /// <returns>The created script instance, null otherwise.</returns>
+        public Script AddScript(Type type)
+        {
+            var script = (Script)New(type);
+            AddScript(script);
+            return script;
         }
 
         /// <summary>
