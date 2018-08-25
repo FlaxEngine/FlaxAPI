@@ -173,6 +173,17 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Creates a new control and adds it to the container.
+        /// </summary>
+        /// <returns>Added control.</returns>
+        public T AddChild<T>() where T : Control
+        {
+            var child = (T)Activator.CreateInstance(typeof(T));
+            child.Parent = this;
+            return child;
+        }
+
+        /// <summary>
         ///     Add control to the container
         /// </summary>
         /// <param name="child">Control to add</param>
@@ -436,6 +447,17 @@ namespace FlaxEngine.GUI
         }
 
         #region Internal Events
+
+        /// <inheritdoc />
+        internal override void CacheRootHandle()
+        {
+            base.CacheRootHandle();
+
+            for (int i = 0; i < _children.Count; i++)
+            {
+                _children[i].CacheRootHandle();
+            }
+        }
 
         /// <summary>
         ///     Add child control to the container

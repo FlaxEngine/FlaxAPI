@@ -10,6 +10,7 @@ namespace FlaxEngine.GUI
     public partial class Control : IComparable
     {
         private ContainerControl _parent;
+        private RootControl _root;
         private bool _isDisposing, _isFocused;
 
         // State
@@ -95,6 +96,7 @@ namespace FlaxEngine.GUI
                 _parent = value;
                 _parent?.AddChildInternal(this);
 
+                CacheRootHandle();
                 OnParentChangedInternal();
 
                 // Check if parent size has been changed
@@ -286,7 +288,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets the GUI tree root control which contains that control (or null if not linked to any)
         /// </summary>
-        public virtual RootControl Root => _parent?.Root;
+        public virtual RootControl Root => _root;
 
         /// <summary>
         /// Gets the GUI window root control which contains that control (or null if not linked to any).
@@ -1047,6 +1049,14 @@ namespace FlaxEngine.GUI
         protected virtual void OnParentChangedInternal()
         {
             ParentChanged?.Invoke(this);
+        }
+
+        /// <summary>
+        /// Caches the root control handle.
+        /// </summary>
+        internal virtual void CacheRootHandle()
+        {
+            _root = _parent?.Root;
         }
 
         private void UpdateCenterAnchor()
