@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.Actions;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI;
 using FlaxEngine;
@@ -257,7 +258,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
         private void OnDiffRevertAll()
         {
-            OnDiffRevert(this);
+            RevertToReferenceValue();
         }
 
         private void OnDiffApplyAll()
@@ -267,6 +268,16 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
         private void OnDiffRevert(CustomEditor editor)
         {
+            // Special case for new Script added to actor
+            if (editor.Values[0] is Script script && !script.HasPrefabLink)
+            {
+                Editor.Log("Reverting added script changes to prefab (removing it)");
+                var action = AddRemoveScript.Remove(script);
+                action.Do();
+                Presenter.Undo?.AddAction(action);
+                return;
+            }
+
             editor.RevertToReferenceValue();
         }
     }
