@@ -317,14 +317,14 @@ namespace FlaxEngine.GUI
             var backgroundColor = BackgroundColor;
             if (backgroundColor.A > 0.0f)
             {
-                Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), backgroundColor, !Mathf.IsOne(backgroundColor.A));
+                Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), backgroundColor);
             }
 
             // Header
             var color = _mouseOverHeader ? HeaderColorMouseOver : HeaderColor;
             if (color.A > 0.0f)
             {
-                Render2D.FillRectangle(new Rectangle(0, 0, Width, HeaderHeight), color, !Mathf.IsOne(color.A));
+                Render2D.FillRectangle(new Rectangle(0, 0, Width, HeaderHeight), color);
             }
 
             // Drop down icon
@@ -335,9 +335,9 @@ namespace FlaxEngine.GUI
                 var dropDownRect = new Rectangle(2, (HeaderHeight - 12) / 2, 12, 12);
                 var arrowColor = _mouseOverHeader ? Color.White : new Color(0.8f);
                 if (_isClosed)
-                    ArrowImageClosed?.Draw(dropDownRect, arrowColor, true);
+                    ArrowImageClosed?.Draw(dropDownRect, arrowColor);
                 else
-                    ArrowImageOpened?.Draw(dropDownRect, arrowColor, true);
+                    ArrowImageOpened?.Draw(dropDownRect, arrowColor);
             }
 
             // Text

@@ -17,7 +17,6 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="rect">The draw area rectangle.</param>
         /// <param name="color">The color.</param>
-        /// <param name="withAlpha">True if use alpha blending, otherwise it will be disabled.</param>
-        void Draw(Rectangle rect, Color color, bool withAlpha = false);
+        void Draw(Rectangle rect, Color color);
     }
 }

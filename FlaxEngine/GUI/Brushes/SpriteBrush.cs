@@ -34,9 +34,9 @@ namespace FlaxEngine.GUI
         public Vector2 Size => Sprite.IsValid ? Sprite.Size : Vector2.Zero;
 
         /// <inheritdoc />
-        public void Draw(Rectangle rect, Color color, bool withAlpha = false)
+        public void Draw(Rectangle rect, Color color)
         {
-            Render2D.DrawSprite(Sprite, rect, color, withAlpha);
+            Render2D.DrawSprite(Sprite, rect, color);
         }
     }
 }

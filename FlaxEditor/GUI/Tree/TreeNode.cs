@@ -601,7 +601,7 @@ namespace FlaxEditor.GUI
                     rect = Rectangle.Empty;
                     break;
                 }
-                Render2D.FillRectangle(rect, dragOverColor, true);
+                Render2D.FillRectangle(rect, dragOverColor);
             }
 
             // Base

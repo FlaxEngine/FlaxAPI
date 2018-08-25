@@ -44,11 +44,11 @@ namespace FlaxEngine.GUI
         public Vector2 Size => Vector2.One;
 
         /// <inheritdoc />
-        public void Draw(Rectangle rect, Color color, bool withAlpha = false)
+        public void Draw(Rectangle rect, Color color)
         {
             var startColor = StartColor * color;
             var endColor = EndColor * color;
-            Render2D.FillRectangle(rect, startColor, startColor, endColor, endColor, withAlpha);
+            Render2D.FillRectangle(rect, startColor, startColor, endColor, endColor);
         }
     }
 }

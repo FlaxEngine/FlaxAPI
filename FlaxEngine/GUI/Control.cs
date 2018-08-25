@@ -414,7 +414,7 @@ namespace FlaxEngine.GUI
             // Paint Background
             if (_backgroundColor.A > 0.0f)
             {
-                Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), _backgroundColor, !Mathf.IsOne(_backgroundColor.A));
+                Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), _backgroundColor);
             }
         }
 

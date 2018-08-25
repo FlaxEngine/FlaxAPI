@@ -47,7 +47,7 @@ namespace FlaxEditor.GUI
 
             if (IsMouseOver)
             {
-                Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), style.BackgroundHighlighted * 0.7f, true);
+                Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), style.BackgroundHighlighted * 0.7f);
             }
 
             if (Values != null && _table?.Columns != null)

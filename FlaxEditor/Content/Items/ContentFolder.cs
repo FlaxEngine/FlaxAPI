@@ -233,7 +233,7 @@ namespace FlaxEditor.Content
 
             // Check if drag is over
             if (IsDragOver && _validDragOver)
-                Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), Style.Current.BackgroundSelected * 0.6f, true);
+                Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), Style.Current.BackgroundSelected * 0.6f);
         }
 
         private bool ValidateDragItem(ContentItem item)

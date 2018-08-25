@@ -67,7 +67,7 @@ namespace FlaxEditor.CustomEditors.GUI
 
             if (HighlightStripColor.A > 0.0f)
             {
-                Render2D.FillRectangle(new Rectangle(0, 0, 2, Height), HighlightStripColor, HighlightStripColor.A < 1.0f);
+                Render2D.FillRectangle(new Rectangle(0, 0, 2, Height), HighlightStripColor);
             }
         }
 

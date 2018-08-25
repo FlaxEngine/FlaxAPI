@@ -239,7 +239,7 @@ namespace FlaxEditor.GUI
 
             // Check if drag is over
             if (IsDragOver && _dragOverElement.HasValidDrag)
-                Render2D.FillRectangle(iconRect, style.BackgroundSelected * 0.4f, true);
+                Render2D.FillRectangle(iconRect, style.BackgroundSelected * 0.4f);
         }
 
         /// <inheritdoc />

@@ -35,12 +35,6 @@ namespace FlaxEngine.GUI
         public Color MouseOverColor { get; set; } = Color.White;
 
         /// <summary>
-        /// Gets or sets a value indicating whether render image with alpha blending.
-        /// </summary>
-        [EditorOrder(50), Tooltip("If checked, image will be rendered with alpha blending, otherwise it will be opaque.")]
-        public bool WithAlpha { get; set; } = true;
-
-        /// <summary>
         /// Gets or sets a value indicating whether keep aspect ratio when drawing the image.
         /// </summary>
         [EditorOrder(60), Tooltip("If checked, control will keep aspect ratio of the image.")]
@@ -114,7 +108,7 @@ namespace FlaxEngine.GUI
 
             Margin.ShrinkRectangle(ref rect);
 
-            Brush.Draw(rect, IsMouseOver ? MouseOverColor : Color, WithAlpha);
+            Brush.Draw(rect, IsMouseOver ? MouseOverColor : Color);
         }
 
         /// <inheritdoc />

@@ -175,7 +175,7 @@ namespace FlaxEngine.GUI
                 {
                     // Draw overlay
                     // TODO: render nicer overlay with some glow from the borders (inside)
-                    Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), Color.Orange * 0.3f, true);
+                    Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), Color.Orange * 0.3f);
                 }
             }
         }

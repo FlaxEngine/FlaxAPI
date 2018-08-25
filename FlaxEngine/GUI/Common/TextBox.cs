@@ -843,10 +843,7 @@ namespace FlaxEngine.GUI
             if (IsMouseOver)
                 backColor = BackgroundSelectedColor;
             Render2D.FillRectangle(rect, backColor);
-            if (IsFocused && BorderSelectedColor.A > 0.0f)
-                Render2D.DrawRectangle(rect, BorderSelectedColor);
-            else if (BorderColor.A > 0.0f)
-                Render2D.DrawRectangle(rect, BorderColor);
+            Render2D.DrawRectangle(rect, IsFocused ? BorderSelectedColor : BorderColor);
 
             // Apply view offset and clip mask
             Render2D.PushClip(TextClipRectangle);
@@ -875,7 +872,7 @@ namespace FlaxEngine.GUI
                 {
                     // Selected is part of single line
                     Rectangle r1 = new Rectangle(leftEdge.X, leftEdge.Y, rightEdge.X - leftEdge.X, fontHeight);
-                    Render2D.FillRectangle(r1, selectionColor, true);
+                    Render2D.FillRectangle(r1, selectionColor);
                 }
                 else
                 {
@@ -883,17 +880,17 @@ namespace FlaxEngine.GUI
 
                     // Selected is more than one line
                     Rectangle r1 = new Rectangle(leftEdge.X, leftEdge.Y, 1000000000, fontHeight);
-                    Render2D.FillRectangle(r1, selectionColor, true);
+                    Render2D.FillRectangle(r1, selectionColor);
                     //
                     for (int i = 3; i <= selectedLinesCount; i++)
                     {
                         leftEdge.Y += fontHeight;
                         Rectangle r = new Rectangle(leftMargin, leftEdge.Y, 1000000000, fontHeight);
-                        Render2D.FillRectangle(r, selectionColor, true);
+                        Render2D.FillRectangle(r, selectionColor);
                     }
                     //
                     Rectangle r2 = new Rectangle(leftMargin, rightEdge.Y, rightEdge.X - leftMargin, fontHeight);
-                    Render2D.FillRectangle(r2, selectionColor, true);
+                    Render2D.FillRectangle(r2, selectionColor);
                 }
             }
 
@@ -915,7 +912,7 @@ namespace FlaxEngine.GUI
             {
                 float alpha = Mathf.Saturate(Mathf.Cos(_animateTime * Mathf.TwoPi) * 0.5f + 0.7f);
                 alpha = alpha * alpha * alpha * alpha * alpha * alpha;
-                Render2D.FillRectangle(CaretBounds, CaretColor * alpha, true);
+                Render2D.FillRectangle(CaretBounds, CaretColor * alpha);
             }
 
             // Restore rendering state

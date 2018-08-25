@@ -276,14 +276,14 @@ namespace FlaxEditor.GUI.Dialogs
             // Value
             float valueY = _slider2Rect.Height * (1 - hsv.Z);
             var valueR = new Rectangle(_slider1Rect.X - slidersOffset, _slider1Rect.Y + valueY - slidersThickness / 2, _slider1Rect.Width + slidersOffset * 2, slidersThickness);
-            Render2D.FillRectangle(_slider1Rect, hsC, hsC, Color.Black, Color.Black, true);
+            Render2D.FillRectangle(_slider1Rect, hsC, hsC, Color.Black, Color.Black);
             Render2D.DrawRectangle(_slider1Rect, _isMouseDownSlider1 ? style.BackgroundSelected : Color.Black);
             Render2D.DrawRectangle(valueR, _isMouseDownSlider1 ? Color.White : Color.Gray);
 
             // Alpha
             float alphaY = _slider2Rect.Height * (1 - _color.A);
             var alphaR = new Rectangle(_slider2Rect.X - slidersOffset, _slider2Rect.Y + alphaY - slidersThickness / 2, _slider2Rect.Width + slidersOffset * 2, slidersThickness);
-            Render2D.FillRectangle(_slider2Rect, _color, _color, Color.Transparent, Color.Transparent, true);
+            Render2D.FillRectangle(_slider2Rect, _color, _color, Color.Transparent, Color.Transparent);
             Render2D.DrawRectangle(_slider2Rect, _isMouseDownSlider2 ? style.BackgroundSelected : Color.Black);
             Render2D.DrawRectangle(alphaR, _isMouseDownSlider2 ? Color.White : Color.Gray);
         }

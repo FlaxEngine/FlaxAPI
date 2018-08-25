@@ -168,7 +168,7 @@ namespace FlaxEditor.CustomEditors.Editors
 
                 // Check if drag is over
                 if (IsDragOver && _hasValidDragOver)
-                    Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), style.BackgroundSelected * 0.4f, true);
+                    Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), style.BackgroundSelected * 0.4f);
             }
 
             /// <inheritdoc />

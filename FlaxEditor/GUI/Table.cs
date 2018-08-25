@@ -126,9 +126,8 @@ namespace FlaxEditor.GUI
         protected virtual void DrawColumn(ref Rectangle rect, int columnIndex)
         {
             var column = _columns[columnIndex];
-
-            if (column.TitleBackgroundColor.A > 0)
-                Render2D.FillRectangle(rect, column.TitleBackgroundColor, true);
+            
+            Render2D.FillRectangle(rect, column.TitleBackgroundColor);
 
             var style = Style.Current;
             var font = column.TitleFont ?? style.FontMedium;

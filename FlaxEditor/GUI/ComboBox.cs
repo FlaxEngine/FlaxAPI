@@ -367,7 +367,7 @@ namespace FlaxEngine.GUI
             }
 
             // Arrow
-            ArrowImage?.Draw(new Rectangle(clientRect.Width - margin - boxSize, margin, boxSize, boxSize), arrowColor, true);
+            ArrowImage?.Draw(new Rectangle(clientRect.Width - margin - boxSize, margin, boxSize, boxSize), arrowColor);
         }
 
         /// <inheritdoc />

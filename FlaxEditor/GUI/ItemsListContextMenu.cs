@@ -105,7 +105,7 @@ namespace FlaxEditor.GUI
                 {
                     var color = style.ProgressNormal * 0.6f;
                     for (int i = 0; i < _highlights.Count; i++)
-                        Render2D.FillRectangle(_highlights[i], color, true);
+                        Render2D.FillRectangle(_highlights[i], color);
                 }
 
                 // Draw name

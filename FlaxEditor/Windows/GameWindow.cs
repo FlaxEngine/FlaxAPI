@@ -266,7 +266,7 @@ namespace FlaxEditor.Windows
                 if (animTime < 0)
                 {
                     float alpha = Mathf.Clamp01(-animTime / fadeOutTime);
-                    Render2D.DrawRectangle(new Rectangle(new Vector2(4), Size - 8), Color.Orange * alpha, true);
+                    Render2D.DrawRectangle(new Rectangle(new Vector2(4), Size - 8), Color.Orange * alpha);
                 }
             }
         }

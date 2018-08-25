@@ -209,9 +209,9 @@ namespace FlaxEngine.GUI
                     color *= 0.6f;
 
                 if (_state == CheckBoxState.Checked)
-                    CheckedImage?.Draw(_box, color, true);
+                    CheckedImage?.Draw(_box, color);
                 else
-                    IntermediateImage?.Draw(_box, color, true);
+                    IntermediateImage?.Draw(_box, color);
             }
         }
 

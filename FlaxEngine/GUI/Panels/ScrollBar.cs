@@ -255,10 +255,10 @@ namespace FlaxEngine.GUI
 
             // Draw track line
             var lineRect = _orientation == Orientation.Vertical ? new Rectangle(Width / 2, 4, 1, Height - 8) : new Rectangle(4, Height / 2, Width - 8, 1);
-            Render2D.FillRectangle(lineRect, style.BackgroundHighlighted * _thumbOpacity, _thumbOpacity < 0.99f);
+            Render2D.FillRectangle(lineRect, style.BackgroundHighlighted * _thumbOpacity);
 
             // Draw thumb
-            Render2D.FillRectangle(_thumbRect, (_thumbClicked ? style.BackgroundSelected : style.BackgroundNormal) * _thumbOpacity, _thumbOpacity < 0.99f);
+            Render2D.FillRectangle(_thumbRect, (_thumbClicked ? style.BackgroundSelected : style.BackgroundNormal) * _thumbOpacity);
         }
 
         /// <inheritdoc />

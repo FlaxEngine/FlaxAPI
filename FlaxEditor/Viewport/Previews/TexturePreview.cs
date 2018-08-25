@@ -499,7 +499,7 @@ namespace FlaxEditor.Viewport.Previews
             // Check if has loaded asset
             if (_asset && _asset.IsLoaded)
             {
-                Render2D.DrawTexture(_asset, rect, Color, true);
+                Render2D.DrawTexture(_asset, rect, Color);
             }
         }
     }
@@ -548,7 +548,7 @@ namespace FlaxEditor.Viewport.Previews
             // Check if has loaded asset
             if (_asset && _asset.IsLoaded)
             {
-                Render2D.DrawTexture(_asset, rect, Color, true);
+                Render2D.DrawTexture(_asset, rect, Color);
             }
         }
     }

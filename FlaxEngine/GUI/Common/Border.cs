@@ -37,14 +37,13 @@ namespace FlaxEngine.GUI
             if (width > Mathf.Epsilon)
             {
                 var color = BorderColor;
-                var withAlpha = color.A < 1.0f;
                 var widthOver2 = width * 0.5f;
                 var size = Size;
 
-                Render2D.DrawLine(Vector2.Zero, new Vector2(size.X - widthOver2, 0), color, width, withAlpha);
-                Render2D.DrawLine(new Vector2(0, -widthOver2), new Vector2(0, size.Y + widthOver2), color, width, withAlpha);
-                Render2D.DrawLine(new Vector2(size.X, -widthOver2), new Vector2(size.X, size.Y + widthOver2), color, width, withAlpha);
-                Render2D.DrawLine(new Vector2(widthOver2, size.Y), new Vector2(size.X - widthOver2, size.Y), color, width, withAlpha);
+                Render2D.DrawLine(Vector2.Zero, new Vector2(size.X - widthOver2, 0), color, width);
+                Render2D.DrawLine(new Vector2(0, -widthOver2), new Vector2(0, size.Y + widthOver2), color, width);
+                Render2D.DrawLine(new Vector2(size.X, -widthOver2), new Vector2(size.X, size.Y + widthOver2), color, width);
+                Render2D.DrawLine(new Vector2(widthOver2, size.Y), new Vector2(size.X - widthOver2, size.Y), color, width);
             }
         }
     }

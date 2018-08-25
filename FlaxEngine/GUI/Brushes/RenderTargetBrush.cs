@@ -36,9 +36,9 @@ namespace FlaxEngine.GUI
         public Vector2 Size => RenderTarget?.Size ?? Vector2.Zero;
 
         /// <inheritdoc />
-        public void Draw(Rectangle rect, Color color, bool withAlpha = false)
+        public void Draw(Rectangle rect, Color color)
         {
-            Render2D.DrawRenderTarget(RenderTarget, rect, color, withAlpha);
+            Render2D.DrawRenderTarget(RenderTarget, rect, color);
         }
     }
 }

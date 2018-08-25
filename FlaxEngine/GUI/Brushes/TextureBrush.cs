@@ -34,9 +34,9 @@ namespace FlaxEngine.GUI
         public Vector2 Size => Texture?.Size ?? Vector2.Zero;
 
         /// <inheritdoc />
-        public void Draw(Rectangle rect, Color color, bool withAlpha = false)
+        public void Draw(Rectangle rect, Color color)
         {
-            Render2D.DrawTexture(Texture, rect, color, withAlpha);
+            Render2D.DrawTexture(Texture, rect, color);
         }
     }
 }
