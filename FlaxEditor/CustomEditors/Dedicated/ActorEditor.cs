@@ -168,9 +168,13 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 node.Text = editor.Values[0].ToString();
             }
 
-            if (editor.Values[0] is Actor || editor.Values[0] is Script)
+            if (editor.Values[0] is Actor)
             {
                 node.TextColor = FlaxEngine.GUI.Style.Current.ProgressNormal;
+            }
+            if (editor.Values[0] is Script script)
+            {
+                node.TextColor = script.HasPrefabLink ? FlaxEngine.GUI.Style.Current.ProgressNormal : FlaxEngine.GUI.Style.Current.BackgroundSelected;
             }
 
             node.Expand(true);
@@ -180,6 +184,15 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
         private TreeNode ProcessDiff(CustomEditor editor)
         {
+            // Special case for new Script added to actor
+            if (editor.Values[0] is Script script && !script.HasPrefabLink)
+            {
+                return CreateDiffNode(editor);
+            }
+
+            // TODO: show scripts removed from the actor
+            // TODO: proper reverting removed scripts from actor with undo
+
             // Skip if no change detected
             if (!editor.Values.IsReferenceValueModified)
                 return null;
