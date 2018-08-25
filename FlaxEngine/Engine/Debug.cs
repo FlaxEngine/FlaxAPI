@@ -236,6 +236,12 @@ namespace FlaxEngine
         public static void LogException(Exception exception)
         {
             Logger.LogException(exception, null);
+
+            if (exception.InnerException != null)
+            {
+                LogWarning("Inner exception:");
+                LogException(exception.InnerException);
+            }
         }
 
         /// <summary>
@@ -246,6 +252,12 @@ namespace FlaxEngine
         public static void LogException(Exception exception, Object context)
         {
             Logger.LogException(exception, context);
+
+            if (exception.InnerException != null)
+            {
+                LogWarning("Inner exception:");
+                LogException(exception.InnerException, context);
+            }
         }
 
         /// <summary>
