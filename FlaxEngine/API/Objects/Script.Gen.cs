@@ -69,6 +69,19 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets the prefab asset ID. Empty if no prefab link exists.
+        /// </summary>
+        [UnmanagedCall]
+        public Guid PrefabID
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { Guid resultAsRef; Internal_GetPrefabID(unmanagedPtr, out resultAsRef); return resultAsRef; }
+#endif
+        }
+
+        /// <summary>
         /// Gets the ID of the object within a script that is used for synchronization with this script. Empty if no prefab link exists.
         /// </summary>
         [UnmanagedCall]
@@ -117,6 +130,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_HasPrefabLink(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetPrefabID(IntPtr obj, out Guid resultAsRef);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetPrefabObjectID(IntPtr obj, out Guid resultAsRef);

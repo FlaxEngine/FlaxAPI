@@ -15,6 +15,8 @@ namespace FlaxEditor.Actions
         private bool _isAdd;
         private Script _script;
         private Guid _scriptId;
+        private Guid _prefabId;
+        private Guid _prefabObjectId;
         private Type _scriptType;
         private string _scriptData;
         private Guid _parentId;
@@ -27,6 +29,8 @@ namespace FlaxEditor.Actions
             _script = script;
             _scriptId = script.ID;
             _scriptType = script.GetType();
+            _prefabId = script.PrefabID;
+            _prefabObjectId = script.PrefabObjectID;
             _scriptData = FlaxEngine.Json.JsonSerializer.Serialize(script);
             _parentId = script.Actor.ID;
             _orderInParent = script.OrderInParent;
@@ -140,6 +144,8 @@ namespace FlaxEditor.Actions
             parentActor.AddScript(_script);
             if (_orderInParent != -1)
                 _script.OrderInParent = _orderInParent;
+            if(_prefabObjectId != Guid.Empty)
+                Script.Internal_LinkPrefab(_script.unmanagedPtr, ref _prefabId, ref _prefabObjectId);
             Editor.Instance.Scene.MarkSceneEdited(parentActor.Scene);
         }
     }
