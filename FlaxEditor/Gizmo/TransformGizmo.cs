@@ -507,31 +507,6 @@ namespace FlaxEditor.Gizmo
 
             // Update
             UpdateMatricies();
-
-            // Draw gizmo parts
-            switch (_activeMode)
-            {
-            case Mode.Translate:
-            {
-                DebugDraw.DrawBox(new OrientedBoundingBox(XYBox) * _gizmoWorld, _activeAxis == Axis.XY ? AxisColorFocus : Color.Gray, 0, false);
-                DebugDraw.DrawBox(new OrientedBoundingBox(XZBox) * _gizmoWorld, _activeAxis == Axis.ZX ? AxisColorFocus : Color.Gray, 0, false);
-                DebugDraw.DrawBox(new OrientedBoundingBox(YZBox) * _gizmoWorld, _activeAxis == Axis.YZ ? AxisColorFocus : Color.Gray, 0, false);
-                break;
-            }
-            case Mode.Rotate:
-            {
-                DebugDraw.DrawCircle(Position, _gizmoWorld.Right, RotateRadius, _activeAxis == Axis.X ? AxisColorFocus : AxisColorX, 0, false);
-                DebugDraw.DrawCircle(Position, _gizmoWorld.Up, RotateRadius, _activeAxis == Axis.Y ? AxisColorFocus : AxisColorY, 0, false);
-                DebugDraw.DrawCircle(Position, _gizmoWorld.Backward, RotateRadius, _activeAxis == Axis.Z ? AxisColorFocus : AxisColorZ, 0, false);
-                DebugDraw.DrawSphere(CenterSphere, _activeAxis == Axis.Center ? AxisColorFocus : Color.Gray, 0, false);
-                break;
-            }
-            case Mode.Scale:
-            {
-                DebugDraw.DrawBox(CenterBox, _activeAxis == Axis.Center ? AxisColorFocus : Color.Gray, 0, false);
-                break;
-            }
-            }
         }
     }
 }
