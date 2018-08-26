@@ -121,6 +121,8 @@ namespace FlaxEditor.Modules
                     '<',
                     '>',
                     '|',
+                    ':',
+                    '*',
                     '\u0001',
                     '\u0002',
                     '\u0003',
