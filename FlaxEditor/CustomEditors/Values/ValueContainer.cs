@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using FlaxEngine;
 
 namespace FlaxEditor.CustomEditors
 {
@@ -146,10 +147,35 @@ namespace FlaxEditor.CustomEditors
             {
                 if (_hasReferenceValue)
                 {
-                    for (int i = 0; i < Count; i++)
+                    if (_referenceValue is Actor referenceValueActor)
                     {
-                        if (!Equals(this[i], _referenceValue))
-                            return true;
+                        for (int i = 0; i < Count; i++)
+                        {
+                            if (this[i] == referenceValueActor)
+                                continue;
+
+                            if (this[i] == null || (this[i] is Actor valueActor && valueActor && valueActor.PrefabObjectID != referenceValueActor.PrefabObjectID))
+                                return true;
+                        }
+                    }
+                    else if (_referenceValue is Script referenceValueScript)
+                    {
+                        for (int i = 0; i < Count; i++)
+                        {
+                            if (this[i] == referenceValueScript)
+                                continue;
+
+                            if (this[i] == null || (this[i] is Script valueScript && valueScript && valueScript.PrefabObjectID != referenceValueScript.PrefabObjectID))
+                                return true;
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < Count; i++)
+                        {
+                            if (!Equals(this[i], _referenceValue))
+                                return true;
+                        }
                     }
                 }
                 return false;
