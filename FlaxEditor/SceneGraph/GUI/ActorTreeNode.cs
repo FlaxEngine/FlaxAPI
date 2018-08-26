@@ -214,9 +214,17 @@ namespace FlaxEditor.SceneGraph.GUI
         /// <inheritdoc />
         protected override DragDropEffect OnDragEnterHeader(DragData data)
         {
-            // Check if cannot edit scene or there is no scene loaded
-            if (!Editor.Instance.StateMachine.CurrentState.CanEditScene || !SceneManager.IsAnySceneLoaded)
-                return DragDropEffect.None;
+            // Check if cannot edit scene or there is no scene loaded (handle case for actors in prefab editor)
+            if (_actorNode?.ParentScene != null)
+            {
+                if (!Editor.Instance.StateMachine.CurrentState.CanEditScene || !SceneManager.IsAnySceneLoaded)
+                    return DragDropEffect.None;
+            }
+            else
+            {
+                if (!Editor.Instance.StateMachine.CurrentState.CanEditContent)
+                    return DragDropEffect.None;
+            }
 
             // Check if drop actors
             if (_dragActors == null)
