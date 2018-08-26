@@ -10,7 +10,7 @@ namespace FlaxEngine
     /// <summary>
     /// Base class for all actor types on the scene
     /// </summary>
-    public abstract partial class Actor : ITransformable
+    public abstract partial class Actor : ITransformable, ISceneObject
     {
         /// <summary>
         /// Returns true if object is fully static on the scene

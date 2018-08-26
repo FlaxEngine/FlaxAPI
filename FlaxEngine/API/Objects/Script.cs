@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-    public abstract partial class Script
+    public abstract partial class Script : ISceneObject
     {
         /// <summary>
         /// Gets or sets the world space transformation of the actors owning this script.

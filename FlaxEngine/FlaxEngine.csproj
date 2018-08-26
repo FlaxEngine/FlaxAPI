@@ -271,6 +271,7 @@
     <Compile Include="Engine\HideFlags.cs" />
     <Compile Include="Engine\InputAxis.cs" />
     <Compile Include="Engine\InputEvent.cs" />
+    <Compile Include="Engine\ISceneObject.cs" />
     <Compile Include="Engine\ITransformable.cs" />
     <Compile Include="Engine\Limits.cs" />
     <Compile Include="Engine\MaterialSlot.cs" />
