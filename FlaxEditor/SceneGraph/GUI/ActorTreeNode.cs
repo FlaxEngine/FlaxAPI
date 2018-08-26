@@ -2,11 +2,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEditor.Content;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Drag;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.SceneGraph.GUI
 {
@@ -258,6 +260,110 @@ namespace FlaxEditor.SceneGraph.GUI
             _dragActorType?.OnDragLeave();
         }
 
+        private class ReparentAction : IUndoAction
+        {
+            private Guid[] _ids;
+            private int _actorsCount;
+            private Guid[] _prefabIds;
+            private Guid[] _prefabObjectIds;
+
+            public ReparentAction(Actor actor)
+            : this(new List<Actor> { actor })
+            {
+            }
+
+            public ReparentAction(List<Actor> actors)
+            {
+                var allActors = new List<Actor>();
+                allActors.Capacity = Mathf.NextPowerOfTwo(actors.Count);
+                for (int i = 0; i < actors.Count; i++)
+                {
+                    GetAllActors(allActors, actors[i]);
+                }
+
+                var allScripts = new List<Script>();
+                allScripts.Capacity = allActors.Capacity;
+                GetAllScripts(allActors, allScripts);
+
+                int allCount = allActors.Count + allScripts.Count;
+                _actorsCount = allActors.Count;
+                _ids = new Guid[allCount];
+                _prefabIds = new Guid[allCount];
+                _prefabObjectIds = new Guid[allCount];
+
+                for (int i = 0; i < allActors.Count; i++)
+                {
+                    _ids[i] = allActors[i].ID;
+                    _prefabIds[i] = allActors[i].PrefabID;
+                    _prefabObjectIds[i] = allActors[i].PrefabObjectID;
+                }
+                for (int i = 0; i < allScripts.Count; i++)
+                {
+                    int j = _actorsCount + i;
+                    _ids[j] = allScripts[i].ID;
+                    _prefabIds[j] = allScripts[i].PrefabID;
+                    _prefabObjectIds[j] = allScripts[i].PrefabObjectID;
+                }
+            }
+
+            private void GetAllActors(List<Actor> allActors, Actor actor)
+            {
+                allActors.Add(actor);
+
+                for (int i = 0; i < actor.ChildrenCount; i++)
+                {
+                    var child = actor.GetChild(i);
+                    if (!allActors.Contains(child))
+                    {
+                        GetAllActors(allActors, child);
+                    }
+                }
+            }
+
+            private void GetAllScripts(List<Actor> allActors, List<Script> allScripts)
+            {
+                for (int i = 0; i < allActors.Count; i++)
+                {
+                    var actor = allActors[i];
+                    for (int j = 0; j < actor.ScriptsCount; j++)
+                    {
+                        allScripts.Add(actor.GetScript(j));
+                    }
+                }
+            }
+
+            /// <inheritdoc />
+            public string ActionString => string.Empty;
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                // Note: prefab links are broken by the C++ backend on actor reparenting
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                // Restore links
+                for (int i = 0; i < _actorsCount; i++)
+                {
+                    var actor = Object.Find<Actor>(ref _ids[i]);
+                    if (actor != null && _prefabIds[i] != Guid.Empty)
+                    {
+                        Actor.Internal_LinkPrefab(actor.unmanagedPtr, ref _prefabIds[i], ref _prefabObjectIds[i]);
+                    }
+                }
+                for (int i = _actorsCount; i < _ids.Length; i++)
+                {
+                    var script = Object.Find<Script>(ref _ids[i]);
+                    if (script != null && _prefabIds[i] != Guid.Empty)
+                    {
+                        Script.Internal_LinkPrefab(script.unmanagedPtr, ref _prefabIds[i], ref _prefabObjectIds[i]);
+                    }
+                }
+            }
+        }
+
         /// <inheritdoc />
         protected override DragDropEffect OnDragDropHeader(DragData data)
         {
@@ -309,7 +415,8 @@ namespace FlaxEditor.SceneGraph.GUI
                 if (singleObject)
                 {
                     var targetActor = _dragActors.Objects[0].Actor;
-                    using (new UndoBlock(ActorNode.Root.Undo, targetActor, "Change actor parent"))
+                    var customAction = targetActor.HasPrefabLink ? new ReparentAction(targetActor) : null;
+                    using (new UndoBlock(ActorNode.Root.Undo, targetActor, "Change actor parent", customAction))
                     {
                         targetActor.SetParent(newParent, worldPositionLock);
                         targetActor.OrderInParent = newOrder;
@@ -318,7 +425,8 @@ namespace FlaxEditor.SceneGraph.GUI
                 else
                 {
                     var targetActors = _dragActors.Objects.ConvertAll(x => x.Actor);
-                    using (new UndoMultiBlock(ActorNode.Root.Undo, targetActors, "Change actors parent"))
+                    var customAction = targetActors.Any(x => x.HasPrefabLink) ? new ReparentAction(targetActors) : null;
+                    using (new UndoMultiBlock(ActorNode.Root.Undo, targetActors, "Change actors parent", customAction))
                     {
                         for (int i = 0; i < targetActors.Count; i++)
                         {
