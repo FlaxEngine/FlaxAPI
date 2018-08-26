@@ -185,7 +185,7 @@ namespace FlaxEditor.Utilities
 
         /// <summary>
         /// Gets a list of MemberComparison values that represent the fields and/or properties
-        /// that differbetween the given object and the captured state.
+        /// that differ between the given object and the captured state.
         /// </summary>
         /// <param name="obj">The object to compare.</param>
         /// <returns>The collection of modified properties.</returns>

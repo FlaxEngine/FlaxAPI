@@ -16,8 +16,8 @@ namespace FlaxEditor
     /// <seealso cref="System.IDisposable" />
     public class UndoBlock : IDisposable
     {
-        private readonly Undo Undo;
-        private readonly object SnapshotUndoInternal;
+        private readonly Undo _undo;
+        private readonly object _snapshotUndoInternal;
 
         /// <summary>
         ///     Creates new undo object for recording actions with using pattern.
@@ -27,15 +27,15 @@ namespace FlaxEditor
         /// <param name="actionString">Name of action to be displayed in undo stack.</param>
         public UndoBlock(Undo undo, object snapshotInstance, string actionString)
         {
-            SnapshotUndoInternal = snapshotInstance;
-            Undo = undo;
-            Undo.RecordBegin(SnapshotUndoInternal, actionString);
+            _snapshotUndoInternal = snapshotInstance;
+            _undo = undo;
+            _undo.RecordBegin(_snapshotUndoInternal, actionString);
         }
 
         /// <inheritdoc />
         public void Dispose()
         {
-            Undo.RecordEnd(SnapshotUndoInternal);
+            _undo.RecordEnd(_snapshotUndoInternal);
         }
     }
 }
