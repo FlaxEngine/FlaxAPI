@@ -25,7 +25,7 @@ namespace FlaxEditor
             /// <summary>
             /// Creates the undo action object on recording end.
             /// </summary>
-            /// <param name="snapshotInstance">The snapshoted object.</param>
+            /// <param name="snapshotInstance">The snapshot object.</param>
             /// <returns>The undo action. May be null if no changes found.</returns>
             IUndoAction End(object snapshotInstance);
         }
@@ -141,7 +141,9 @@ namespace FlaxEditor
         ///     Ends recording for undo action.
         /// </summary>
         /// <param name="snapshotInstance">Instance of an object to finish recording, if null take last provided.</param>
-        public void RecordEnd(object snapshotInstance = null)
+        /// <param name="customActionBefore">Custom action to append to the undo block action before recorded modifications apply.</param>
+        /// <param name="customActionAfter">Custom action to append to the undo block action after recorded modifications apply.</param>
+        public void RecordEnd(object snapshotInstance = null, IUndoAction customActionBefore = null, IUndoAction customActionAfter = null)
         {
             if (!Enabled)
                 return;
@@ -156,6 +158,20 @@ namespace FlaxEditor
             // It may be null if no changes has been found during recording
             if (action != null)
             {
+                // Batch with a custom action if provided
+                if (customActionBefore != null && customActionAfter != null)
+                {
+                    action = new MultiUndoAction(new[] { customActionBefore, action, customActionAfter });
+                }
+                else if (customActionBefore != null)
+                {
+                    action = new MultiUndoAction(new[] { customActionBefore, action });
+                }
+                else if (customActionAfter != null)
+                {
+                    action = new MultiUndoAction(new[] { action, customActionAfter });
+                }
+
                 UndoOperationsStack.Push(action);
                 OnAction(action);
             }
@@ -218,7 +234,9 @@ namespace FlaxEditor
         ///     Ends recording for undo action.
         /// </summary>
         /// <param name="snapshotInstance">Instance of an object to finish recording, if null take last provided.</param>
-        public void RecordMultiEnd(object[] snapshotInstance = null)
+        /// <param name="customActionBefore">Custom action to append to the undo block action before recorded modifications apply.</param>
+        /// <param name="customActionAfter">Custom action to append to the undo block action after recorded modifications apply.</param>
+        public void RecordMultiEnd(object[] snapshotInstance = null, IUndoAction customActionBefore = null, IUndoAction customActionAfter = null)
         {
             if (!Enabled)
                 return;
@@ -233,6 +251,20 @@ namespace FlaxEditor
             // It may be null if no changes has been found during recording
             if (action != null)
             {
+                // Batch with a custom action if provided
+                if (customActionBefore != null && customActionAfter != null)
+                {
+                    action = new MultiUndoAction(new[] { customActionBefore, action, customActionAfter });
+                }
+                else if (customActionBefore != null)
+                {
+                    action = new MultiUndoAction(new[] { customActionBefore, action });
+                }
+                else if (customActionAfter != null)
+                {
+                    action = new MultiUndoAction(new[] { action, customActionAfter });
+                }
+
                 UndoOperationsStack.Push(action);
                 OnAction(action);
             }
