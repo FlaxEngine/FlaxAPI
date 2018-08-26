@@ -66,6 +66,19 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
+        /// Gets the native pointer to the underlying graphics device. It's a low-level platform-specific handle.
+        /// </summary>
+        [UnmanagedCall]
+        public static IntPtr NativePtr
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetNativePtr(); }
+#endif
+        }
+
+        /// <summary>
         /// Dumps all resources information to the log.
         /// </summary>
 #if UNIT_TEST_COMPILANT
@@ -95,6 +108,9 @@ namespace FlaxEngine.Rendering
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ulong Internal_GetMemoryUsage();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern IntPtr Internal_GetNativePtr();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DumpResourcesToLog();
