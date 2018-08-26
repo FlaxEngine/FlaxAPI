@@ -225,8 +225,21 @@ namespace FlaxEditor.Windows.Assets
             if (!IsEdited)
                 return;
 
-            // Simply update changes
-            Editor.Prefabs.ApplyAll(_viewport.Instance);
+            try
+            {
+                // Simply update changes
+                Editor.Prefabs.ApplyAll(_viewport.Instance);
+            }
+            catch (Exception)
+            {
+                // Disable live reload on error
+                if (LiveReload)
+                {
+                    LiveReload = false;
+                }
+
+                throw;
+            }
         }
 
         /// <inheritdoc />
