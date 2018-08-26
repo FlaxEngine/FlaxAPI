@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Collections.Generic;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
@@ -13,6 +14,8 @@ namespace FlaxEditor.Actions
     public class DeleteActorsAction : IUndoAction
     {
         private byte[] _data;
+        private Guid[] _prefabIds;
+        private Guid[] _prefabObjectIds;
         private bool _isInverted;
 
         /// <summary>
@@ -42,6 +45,14 @@ namespace FlaxEditor.Actions
             actorNodes.BuildNodesParents(_nodeParents);
 
             _data = Actor.ToBytes(actors.ToArray());
+
+            _prefabIds = new Guid[actors.Count];
+            _prefabObjectIds = new Guid[actors.Count];
+            for (int i = 0; i < actors.Count; i++)
+            {
+                _prefabIds[i] = actors[i].PrefabID;
+                _prefabObjectIds[i] = actors[i].PrefabObjectID;
+            }
         }
 
         /// <inheritdoc />
@@ -89,6 +100,14 @@ namespace FlaxEditor.Actions
             var actors = Actor.FromBytes(_data);
             if (actors == null)
                 return;
+            for (int i = 0; i < actors.Length; i++)
+            {
+                Guid prefabId = _prefabIds[i];
+                if (prefabId != Guid.Empty)
+                {
+                    Actor.Internal_LinkPrefab(actors[i].unmanagedPtr, ref prefabId, ref _prefabObjectIds[i]);
+                }
+            }
             var actorNodes = new List<ActorNode>(actors.Length);
             for (int i = 0; i < actors.Length; i++)
             {
