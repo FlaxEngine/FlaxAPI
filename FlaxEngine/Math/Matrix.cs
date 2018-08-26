@@ -2880,7 +2880,21 @@ namespace FlaxEngine
         /// <param name="translation">The translation.</param>
         /// <param name="rotation">Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis toward the origin.</param>
         /// <param name="scaling">The scaling.</param>
-        /// <param name="result">When the method completes, contains the created rotation matrix.</param>
+        /// <returns>The created transformation matrix.</returns>
+        public static Matrix Transformation(Vector3 scaling, Quaternion rotation, Vector3 translation)
+        {
+            Matrix result;
+            Transformation(ref scaling, ref rotation, ref translation, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a matrix that contains both the X, Y and Z rotation, as well as scaling and translation.
+        /// </summary>
+        /// <param name="translation">The translation.</param>
+        /// <param name="rotation">Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis toward the origin.</param>
+        /// <param name="scaling">The scaling.</param>
+        /// <param name="result">When the method completes, contains the created transformation matrix.</param>
         public static void Transformation(ref Vector3 scaling, ref Quaternion rotation, ref Vector3 translation, out Matrix result)
         {
             // Equivalent to:
