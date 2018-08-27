@@ -289,8 +289,8 @@ namespace FlaxEditor
                 {
                     bool isFocused = Application.HasFocus;
                     Time.DrawFPS = isFocused ? 60 : 15;
-                    Time.UpdateFPS = isFocused ? 30 : 15;
-                    Time.PhysicsFPS = isFocused ? 60 : 20;
+                    Time.UpdateFPS = isFocused ? 60 : 15;
+                    Time.PhysicsFPS = isFocused ? 30 : 20;
                 }
 
                 // Update modules
