@@ -365,12 +365,12 @@ namespace FlaxEditor.CustomEditors
             }
         }
 
-        private Actor FindPrefabRoot(ISceneObject sceneObject)
+        private Actor FindPrefabRoot(CustomEditor editor)
         {
-            if (sceneObject is Actor actor)
+            if (editor.Values[0] is Actor actor)
                 return FindPrefabRoot(actor);
-            if (sceneObject is Script script)
-                return FindPrefabRoot(script.Actor);
+            if (editor.ParentEditor != null)
+                return FindPrefabRoot(editor.ParentEditor);
             return null;
         }
 
@@ -426,7 +426,7 @@ namespace FlaxEditor.CustomEditors
                     return;
                 }
 
-                var prefabInstanceRoot = FindPrefabRoot((ISceneObject)Values[0]);
+                Actor prefabInstanceRoot = FindPrefabRoot(this);
                 if (prefabInstanceRoot == null)
                 {
                     Editor.LogError("Cannot revert to reference value. Missing prefab instance root actor.");
