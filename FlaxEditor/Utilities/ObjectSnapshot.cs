@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using FlaxEngine;
+using FlaxEngine.Json;
 
 namespace FlaxEditor.Utilities
 {
@@ -204,7 +205,7 @@ namespace FlaxEditor.Utilities
                 object xValue = _values[i];
                 object yValue = m.Path.GetLastValue(obj);
 
-                if (!Equals(xValue, yValue))
+                if (!JsonSerializer.ValueEquals(xValue, yValue))
                 {
                     //Debug.Log("Diff on: " + (new MemberComparison(m.Path, xValue, yValue)));
 

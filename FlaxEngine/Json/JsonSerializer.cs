@@ -132,6 +132,8 @@ namespace FlaxEngine.Json
 
         internal static JsonSerializerSettings CreateDefaultSettings()
         {
+            Newtonsoft.Json.Utilities.MiscellaneousUtils.ValueEquals = ValueEquals;
+
             var settings = new JsonSerializerSettings
             {
                 ContractResolver = new ExtendedDefaultContractResolver(),
@@ -143,6 +145,23 @@ namespace FlaxEngine.Json
             settings.Converters.Add(new SceneReferenceConverter());
             //settings.Converters.Add(new GuidConverter());
             return settings;
+        }
+
+        /// <summary>
+        /// The default implementation of the values comparision function used by the serialization system.
+        /// </summary>
+        /// <param name="objA">The object a.</param>
+        /// <param name="objB">The object b.</param>
+        /// <returns>True if both objects are equal, otherwise false.</returns>
+        public static bool ValueEquals(object objA, object objB)
+        {
+            // If referenced object has the same linkage to the prefab object as the default value used in SerializeDiff, then mark it as equal
+            if (objA is ISceneObject sceneObjA && objB is ISceneObject sceneObjB)
+            {
+                return sceneObjA.PrefabObjectID == sceneObjB.PrefabObjectID;
+            }
+
+            return Newtonsoft.Json.Utilities.MiscellaneousUtils.DefaultValueEquals(objA, objB);
         }
 
         /// <summary>

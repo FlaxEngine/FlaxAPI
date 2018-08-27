@@ -2,6 +2,7 @@
 
 using System;
 using System.Reflection;
+using FlaxEngine.Json;
 
 namespace FlaxEditor.Utilities
 {
@@ -84,7 +85,7 @@ namespace FlaxEditor.Utilities
         /// <inheritdoc />
         public override string ToString()
         {
-            return MemberPath.Path + ": " + (Value1 ?? "<null>") + (Equals(Value1, Value2) ? " == " : " != ") + (Value2 ?? "<null>");
+            return MemberPath.Path + ": " + (Value1 ?? "<null>") + (JsonSerializer.ValueEquals(Value1, Value2) ? " == " : " != ") + (Value2 ?? "<null>");
         }
     }
 }
