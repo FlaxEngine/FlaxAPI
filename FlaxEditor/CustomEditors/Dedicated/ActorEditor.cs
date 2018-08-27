@@ -204,7 +204,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             }
         }
 
-        private TreeNode ProcessDiff(CustomEditor editor)
+        private TreeNode ProcessDiff(CustomEditor editor, bool skipIfNotModified = true)
         {
             // Special case for new Script added to actor
             if (editor.Values[0] is Script script && !script.HasPrefabLink)
@@ -213,7 +213,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             }
 
             // Skip if no change detected
-            if (!editor.Values.IsReferenceValueModified)
+            if (!editor.Values.IsReferenceValueModified && skipIfNotModified)
                 return null;
 
             TreeNode result = null;
@@ -221,9 +221,11 @@ namespace FlaxEditor.CustomEditors.Dedicated
             if (editor.ChildrenEditors.Count == 0)
                 result = CreateDiffNode(editor);
 
+            bool isScriptEditorWithRefValue = editor is ScriptsEditor && editor.Values.HasReferenceValue;
+
             for (int i = 0; i < editor.ChildrenEditors.Count; i++)
             {
-                var child = ProcessDiff(editor.ChildrenEditors[i]);
+                var child = ProcessDiff(editor.ChildrenEditors[i], !isScriptEditorWithRefValue);
                 if (child != null)
                 {
                     if (result == null)
@@ -272,7 +274,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
         private void ViewChanges(Control target, Vector2 targetLocation)
         {
             // Build a tree out of modified properties
-            var rootNode = ProcessDiff(this);
+            var rootNode = ProcessDiff(this, false);
 
             // Skip if no changes detected
             if (rootNode == null || rootNode.ChildrenCount == 0)

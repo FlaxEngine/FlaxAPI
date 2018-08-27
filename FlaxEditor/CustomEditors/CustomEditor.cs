@@ -295,12 +295,12 @@ namespace FlaxEditor.CustomEditors
 
         private void RevertDiffTOReference(CustomEditor editor)
         {
-            // Skip if no change detected
-            if (!editor.Values.IsReferenceValueModified)
-                return;
-
             if (editor.ChildrenEditors.Count == 0)
             {
+                // Skip if no change detected
+                if (!editor.Values.IsReferenceValueModified)
+                    return;
+
                 editor.SetValueToReference();
             }
             else
