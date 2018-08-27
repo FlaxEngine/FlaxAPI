@@ -115,7 +115,7 @@ namespace FlaxEditor.Actions
             if (_script)
             {
                 if (_script.Actor)
-                    Editor.Instance.Scene.MarkSceneEdited(_script.Actor.Scene);
+                    Editor.Instance.Scene.MarkSceneEdited(_script.Scene);
                 Object.Destroy(ref _script);
             }
         }

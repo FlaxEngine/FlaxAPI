@@ -10,7 +10,12 @@ namespace FlaxEngine
     public interface ISceneObject
     {
         /// <summary>
-        /// Gets a value indicating whether this script has a valid linkage to the prefab asset.
+        /// Gets the scene object which contains this object.
+        /// </summary>
+        Scene Scene { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this object has a valid linkage to the prefab asset.
         /// </summary>
         bool HasPrefabLink { get; }
 
@@ -20,12 +25,12 @@ namespace FlaxEngine
         Guid PrefabID { get; }
 
         /// <summary>
-        /// Gets the ID of the object within a script that is used for synchronization with this script. Empty if no prefab link exists.
+        /// Gets the ID of the object within a object that is used for synchronization with this object. Empty if no prefab link exists.
         /// </summary>
         Guid PrefabObjectID { get; }
 
         /// <summary>
-        /// Breaks the prefab linkage for this script.
+        /// Breaks the prefab linkage for this object (including all children).
         /// </summary>
         void BreakPrefabLink();
     }

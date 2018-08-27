@@ -78,7 +78,7 @@ namespace FlaxEditor.Actions
         {
             var script = FlaxEngine.Object.Find<Script>(ref _scriptId);
             if (script != null)
-                sceneModule.MarkSceneEdited(script.Actor.Scene);
+                sceneModule.MarkSceneEdited(script.Scene);
         }
     }
 }

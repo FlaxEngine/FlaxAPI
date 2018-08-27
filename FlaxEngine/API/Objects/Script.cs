@@ -8,6 +8,23 @@ namespace FlaxEngine
     public abstract partial class Script : ISceneObject
     {
         /// <summary>
+        /// Gets the scene object which contains this script.
+        /// </summary>
+        [HideInEditor, NoSerialize]
+        public Scene Scene
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get
+            {
+                var parent = Actor;
+                return parent ? parent.Scene : null;
+            }
+#endif
+        }
+
+        /// <summary>
         /// Gets or sets the world space transformation of the actors owning this script.
         /// </summary>
         [HideInEditor, NoSerialize]
