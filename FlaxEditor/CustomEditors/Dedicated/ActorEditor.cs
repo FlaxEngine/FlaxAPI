@@ -163,17 +163,11 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 node.TextColor = Color.OrangeRed;
                 node.Text = CustomEditorsUtil.GetPropertyNameUI(removed.PrefabObject.GetType().Name);
             }
-            // Actor
-            else if (editor.Values[0] is Actor actor)
+            // Actor or Script
+            else if (editor.Values[0] is ISceneObject sceneObject)
             {
-                node.TextColor = FlaxEngine.GUI.Style.Current.ProgressNormal;
-                node.Text = CustomEditorsUtil.GetPropertyNameUI(actor.GetType().Name);
-            }
-            // Script
-            else if (editor.Values[0] is Script script)
-            {
-                node.TextColor = script.HasPrefabLink ? FlaxEngine.GUI.Style.Current.ProgressNormal : FlaxEngine.GUI.Style.Current.BackgroundSelected;
-                node.Text = CustomEditorsUtil.GetPropertyNameUI(script.GetType().Name);
+                node.TextColor = sceneObject.HasPrefabLink ? FlaxEngine.GUI.Style.Current.ProgressNormal : FlaxEngine.GUI.Style.Current.BackgroundSelected;
+                node.Text = CustomEditorsUtil.GetPropertyNameUI(sceneObject.GetType().Name);
             }
             // Array Item
             else if (editor.ParentEditor?.Values?.Type?.IsArray ?? false)
