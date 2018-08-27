@@ -293,7 +293,7 @@ namespace FlaxEditor.CustomEditors
             LinkedLabel = label;
         }
 
-        private void RevertDiff(CustomEditor editor)
+        private void RevertDiffTOReference(CustomEditor editor)
         {
             // Skip if no change detected
             if (!editor.Values.IsReferenceValueModified)
@@ -307,7 +307,7 @@ namespace FlaxEditor.CustomEditors
             {
                 for (int i = 0; i < editor.ChildrenEditors.Count; i++)
                 {
-                    RevertDiff(editor.ChildrenEditors[i]);
+                    RevertDiffTOReference(editor.ChildrenEditors[i]);
                 }
             }
         }
@@ -340,7 +340,7 @@ namespace FlaxEditor.CustomEditors
 
             Editor.Log("Reverting object changes to prefab");
 
-            RevertDiff(this);
+            RevertDiffTOReference(this);
         }
 
         /// <summary>
@@ -365,11 +365,86 @@ namespace FlaxEditor.CustomEditors
             }
         }
 
+        private Actor FindPrefabRoot(ISceneObject sceneObject)
+        {
+            if (sceneObject is Actor actor)
+                return FindPrefabRoot(actor);
+            if (sceneObject is Script script)
+                return FindPrefabRoot(script.Actor);
+            return null;
+        }
+
+        private Actor FindPrefabRoot(Actor actor)
+        {
+            if (actor is Scene)
+                return null;
+            if (actor.IsPrefabRoot)
+                return actor;
+            return FindPrefabRoot(actor.Parent);
+        }
+
+        private ISceneObject FindObjectWithPrefabObjectId(Actor actor, ref Guid prefabObjectId)
+        {
+            if (actor.PrefabObjectID == prefabObjectId)
+                return actor;
+
+            for (int i = 0; i < actor.ScriptsCount; i++)
+            {
+                if (actor.GetScript(i).PrefabObjectID == prefabObjectId)
+                {
+                    var a = actor.GetScript(i);
+                    if (a != null)
+                        return a;
+                }
+            }
+
+            for (int i = 0; i < actor.ChildrenCount; i++)
+            {
+                if (actor.GetChild(i).PrefabObjectID == prefabObjectId)
+                {
+                    var a = actor.GetChild(i);
+                    if (a != null)
+                        return a;
+                }
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// Sets the editor value to the reference value (if assigned).
         /// </summary>
         public void SetValueToReference()
         {
+            // Special case for object references
+            // If prefab object has reference to other object in prefab needs to revert to matching prefab instance object not the reference prefab object value
+            if (Values.ReferenceValue is ISceneObject referenceSceneObject && referenceSceneObject.HasPrefabLink)
+            {
+                if (Values.Count > 1)
+                {
+                    Editor.LogError("Cannot revert to reference value for more than one object selected.");
+                    return;
+                }
+
+                var prefabInstanceRoot = FindPrefabRoot((ISceneObject)Values[0]);
+                if (prefabInstanceRoot == null)
+                {
+                    Editor.LogError("Cannot revert to reference value. Missing prefab instance root actor.");
+                    return;
+                }
+
+                var prefabObjectId = referenceSceneObject.PrefabObjectID;
+                var prefabInstanceRef = FindObjectWithPrefabObjectId(prefabInstanceRoot, ref prefabObjectId);
+                if (prefabInstanceRef == null)
+                {
+                    Editor.LogWarning("Missing prefab instance reference in the prefab instance. Cannot revert to it.");
+                }
+
+                SetValue(prefabInstanceRef);
+
+                return;
+            }
+
             SetValue(Values.ReferenceValue);
         }
 
