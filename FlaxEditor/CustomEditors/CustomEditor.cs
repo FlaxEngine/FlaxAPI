@@ -365,6 +365,20 @@ namespace FlaxEditor.CustomEditors
             }
         }
 
+
+        /// <summary>
+        /// Clears all the reference value of the container in the whole custom editors tree (this container and all children).
+        /// </summary>
+        public void ClearReferenceValueAll()
+        {
+            Values.ClearReferenceValue();
+
+            for (int i = 0; i < ChildrenEditors.Count; i++)
+            {
+                ChildrenEditors[i].ClearReferenceValueAll();
+            }
+        }
+
         private Actor FindPrefabRoot(CustomEditor editor)
         {
             if (editor.Values[0] is Actor actor)

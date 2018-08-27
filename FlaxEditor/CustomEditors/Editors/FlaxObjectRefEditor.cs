@@ -394,7 +394,7 @@ namespace FlaxEditor.CustomEditors.Editors
             }
         }
 
-        private CustomElement<ReferencePickerControl> element;
+        private CustomElement<ReferencePickerControl> _element;
 
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.Inline;
@@ -404,9 +404,9 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             if (!HasDifferentTypes)
             {
-                element = layout.Custom<ReferencePickerControl>();
-                element.CustomControl.Type = Values.Type != typeof(object) || Values[0] == null ? Values.Type : Values[0].GetType();
-                element.CustomControl.ValueChanged += () => SetValue(element.CustomControl.Value);
+                _element = layout.Custom<ReferencePickerControl>();
+                _element.CustomControl.Type = Values.Type != typeof(object) || Values[0] == null ? Values.Type : Values[0].GetType();
+                _element.CustomControl.ValueChanged += () => SetValue(_element.CustomControl.Value);
             }
         }
 
@@ -417,7 +417,7 @@ namespace FlaxEditor.CustomEditors.Editors
 
             if (!HasDifferentValues)
             {
-                element.CustomControl.Value = Values[0] as Object;
+                _element.CustomControl.Value = Values[0] as Object;
             }
         }
     }

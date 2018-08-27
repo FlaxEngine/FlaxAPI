@@ -109,6 +109,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
                         // Link event to update editor on prefab apply
                         _linkedPrefabId = prefab.ID;
+                        Editor.Instance.Prefabs.PrefabApplying += OnPrefabApplying;
                         Editor.Instance.Prefabs.PrefabApplied += OnPrefabApplied;
                     }
                 }
@@ -125,6 +126,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             if (_linkedPrefabId != Guid.Empty)
             {
                 _linkedPrefabId = Guid.Empty;
+                Editor.Instance.Prefabs.PrefabApplied -= OnPrefabApplying;
                 Editor.Instance.Prefabs.PrefabApplied -= OnPrefabApplied;
             }
         }
@@ -148,6 +150,15 @@ namespace FlaxEditor.CustomEditors.Dedicated
                         RefreshReferenceValue();
                     }
                 }
+            }
+        }
+
+        private void OnPrefabApplying(Prefab prefab, Actor instance)
+        {
+            if (prefab.ID == _linkedPrefabId)
+            {
+                // Unlink reference value (it gets deleted by the prefabs system during apply)
+                ClearReferenceValueAll();
             }
         }
 
