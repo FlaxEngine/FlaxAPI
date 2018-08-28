@@ -334,8 +334,9 @@ namespace FlaxEditor.Content
         {
             get
             {
-                float textRectHeight = DefaultTextHeight * Width / DefaultWidth;
-                return new Rectangle(2, Height - textRectHeight, Width - 4, textRectHeight);
+                float width = Width;
+                float textRectHeight = DefaultTextHeight * width / DefaultWidth;
+                return new Rectangle(0, Height - textRectHeight, width, textRectHeight);
             }
         }
 
@@ -508,7 +509,9 @@ namespace FlaxEditor.Content
             DrawThumbnail(ref thumbnailRect);
 
             // Draw short name
+            Render2D.PushClip(ref textRect);
             Render2D.DrawText(style.FontMedium, ShortName, textRect, style.Foreground, TextAlignment.Center, TextAlignment.Center, TextWrapping.WrapWords, 0.75f, 0.95f);
+            Render2D.PopClip();
         }
 
         /// <inheritdoc />
