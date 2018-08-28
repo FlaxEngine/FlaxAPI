@@ -342,7 +342,7 @@ namespace FlaxEditor.Surface
 
             // Header
             Render2D.FillRectangle(_headerRect, style.BackgroundHighlighted);
-            Render2D.DrawText(style.FontLarge, Title, _headerRect, style.Foreground, TextAlignment.Center, TextAlignment.Center, TextWrapping.NoWrap, 1.0f);
+            Render2D.DrawText(style.FontLarge, Title, _headerRect, style.Foreground, TextAlignment.Center, TextAlignment.Center);
 
             // Close button
             if ((Archetype.Flags & NodeFlags.NoCloseButton) == 0)
