@@ -293,6 +293,10 @@ namespace FlaxEditor.Windows
                     }
                 }
             }
+            else if (key == Keys.F6)
+            {
+                Editor.Simulation.RequestResumeOrPause();
+            }
 
             return base.OnKeyDown(key);
         }
