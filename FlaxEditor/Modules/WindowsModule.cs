@@ -97,6 +97,11 @@ namespace FlaxEditor.Modules
         public EditorOptionsWindow EditorOptionsWin;
 
         /// <summary>
+        /// The plugins manager window.
+        /// </summary>
+        public PluginsWindow PluginsWin;
+
+        /// <summary>
         /// List with all created editor windows.
         /// </summary>
         public readonly List<EditorWindow> Windows = new List<EditorWindow>(32);
@@ -608,6 +613,7 @@ namespace FlaxEditor.Modules
             GameCookerWin = new GameCookerWindow(Editor);
             ProfilerWin = new ProfilerWindow(Editor);
             EditorOptionsWin = new EditorOptionsWindow(Editor);
+            PluginsWin = new PluginsWindow(Editor);
 
             // Bind events
             SceneManager.SceneSaveError += OnSceneSaveError;
