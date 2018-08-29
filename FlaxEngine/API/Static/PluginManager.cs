@@ -6,6 +6,12 @@ using System.Reflection;
 
 namespace FlaxEngine
 {
+    /// <summary>
+    /// Plugin related event delegate type.
+    /// </summary>
+    /// <param name="plugin">The plugin.</param>
+    public delegate void PluginDelegate(Plugin plugin);
+
     public static partial class PluginManager
     {
         private static readonly List<GamePlugin> _gamePlugins = new List<GamePlugin>();
@@ -22,6 +28,26 @@ namespace FlaxEngine
         public static IReadOnlyList<Plugin> EditorPlugins => _editorPlugins;
 
         /// <summary>
+        /// Occurs before loading plugin.
+        /// </summary>
+        public static event PluginDelegate PluginLoading;
+
+        /// <summary>
+        /// Occurs when plugin gets loaded and initialized.
+        /// </summary>
+        public static event PluginDelegate PluginLoaded;
+
+        /// <summary>
+        /// Occurs before unloading plugin.
+        /// </summary>
+        public static event PluginDelegate PluginUnloading;
+
+        /// <summary>
+        /// Occurs when plugin gets unloaded. It should not be used anymore.
+        /// </summary>
+        public static event PluginDelegate PluginUnloaded;
+
+        /// <summary>
         /// Determines whether can load the specified plugin.
         /// </summary>
         /// <param name="pluginDesc">The plugin description.</param>
@@ -32,6 +58,12 @@ namespace FlaxEngine
         /// Determines whether can load the specified plugin.
         /// </summary>
         public static CanLoadPluginDelegate CanLoadPlugin = DefaultCanLoadPlugin;
+
+        /// <summary>
+        /// Plugin related event delegate type.
+        /// </summary>
+        /// <param name="plugin">The plugin.</param>
+        public delegate void PluginDelegate(Plugin plugin);
 
         /// <summary>
         /// The default implementation for <see cref="CanLoadPlugin"/>.
@@ -48,7 +80,12 @@ namespace FlaxEngine
             try
             {
                 Debug.Write(LogType.Log, "Loading plugin " + plugin);
+
+                PluginLoading?.Invoke(plugin);
+
                 plugin.Initialize();
+
+                PluginLoaded?.Invoke(plugin);
             }
             catch (Exception ex)
             {
@@ -62,7 +99,12 @@ namespace FlaxEngine
             try
             {
                 Debug.Write(LogType.Log, "Unloading plugin " + plugin);
+
+                PluginUnloading?.Invoke(plugin);
+
                 plugin.Deinitialize();
+
+                PluginUnloaded?.Invoke(plugin);
             }
             catch (Exception ex)
             {
