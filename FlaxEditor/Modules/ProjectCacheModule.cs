@@ -18,6 +18,7 @@ namespace FlaxEditor.Modules
         private DateTime _lastSaveTime;
 
         private readonly HashSet<Guid> _expandedActors = new HashSet<Guid>();
+        private readonly Dictionary<string, string> _customData = new Dictionary<string, string>();
 
         /// <summary>
         /// Gets or sets the automatic data save interval.
@@ -59,6 +60,40 @@ namespace FlaxEditor.Modules
             _isDirty = true;
         }
 
+        /// <summary>
+        /// Determines whether project cache contains custom data of the specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns><c>true</c> if has custom data of the specified key; otherwise, <c>false</c>.</returns>
+        public bool HasCustomData(string key)
+        {
+            return _customData.ContainsKey(key);
+        }
+
+        /// <summary>
+        /// Gets the custom data by the key.
+        /// </summary>
+        /// <remarks>
+        /// Use <see cref="HasCustomData"/> to check if a key is valid.
+        /// </remarks>
+        /// <param name="key">The key.</param>
+        /// <returns>The custom data.</returns>
+        public string GetCustomData(string key)
+        {
+            return _customData[key];
+        }
+
+        /// <summary>
+        /// Sets the custom data.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        public void SetCustomData(string key, string value)
+        {
+            _customData[key] = value;
+            _isDirty = true;
+        }
+
         private void LoadGuarded()
         {
             using (var stream = new FileStream(_cachePath, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -77,6 +112,30 @@ namespace FlaxEditor.Modules
                     {
                         reader.Read(bytes16, 0, 16);
                         _expandedActors.Add(new Guid(bytes16));
+                    }
+
+                    _customData.Clear();
+
+                    break;
+                }
+                case 2:
+                {
+                    int expandedActorsCount = reader.ReadInt32();
+                    _expandedActors.Clear();
+                    var bytes16 = new byte[16];
+                    for (int i = 0; i < expandedActorsCount; i++)
+                    {
+                        reader.Read(bytes16, 0, 16);
+                        _expandedActors.Add(new Guid(bytes16));
+                    }
+
+                    _customData.Clear();
+                    int customDataCount = reader.ReadInt32();
+                    for (int i = 0; i < customDataCount; i++)
+                    {
+                        var key = reader.ReadString();
+                        var value = reader.ReadString();
+                        _customData.Add(key, value);
                     }
 
                     break;
@@ -114,11 +173,19 @@ namespace FlaxEditor.Modules
             using (var stream = new FileStream(_cachePath, FileMode.Create, FileAccess.Write, FileShare.Read))
             using (var writer = new BinaryWriter(stream))
             {
-                writer.Write(1);
+                writer.Write(2);
+
                 writer.Write(_expandedActors.Count);
                 foreach (var e in _expandedActors)
                 {
                     writer.Write(e.ToByteArray());
+                }
+
+                writer.Write(_customData.Count);
+                foreach (var e in _customData)
+                {
+                    writer.Write(e.Key);
+                    writer.Write(e.Value);
                 }
             }
         }
