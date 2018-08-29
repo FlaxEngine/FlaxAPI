@@ -298,6 +298,11 @@ namespace FlaxEditor
                 {
                     _modules[i].OnUpdate();
                 }
+
+                if (Input.GetKeyDown(Keys.F6))
+                {
+                    Simulation.RequestResumeOrPause();
+                }
             }
             catch (Exception ex)
             {
