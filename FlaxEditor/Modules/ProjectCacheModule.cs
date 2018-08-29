@@ -14,6 +14,7 @@ namespace FlaxEditor.Modules
     public sealed class ProjectCacheModule : EditorModule
     {
         private readonly string _cachePath;
+        private bool _isDirty;
         private DateTime _lastSaveTime;
 
         private readonly HashSet<Guid> _expandedActors = new HashSet<Guid>();
@@ -21,7 +22,7 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Gets or sets the automatic data save interval.
         /// </summary>
-        public TimeSpan AutoSaveInterval { get; set; }
+        public TimeSpan AutoSaveInterval { get; set; } = TimeSpan.FromSeconds(3);
 
         /// <inheritdoc />
         internal ProjectCacheModule(Editor editor)
@@ -31,6 +32,7 @@ namespace FlaxEditor.Modules
             InitOrder = -900;
 
             _cachePath = StringUtils.CombinePaths(Globals.ProjectCacheFolder, "ProjectCache.dat");
+            _isDirty = true;
         }
 
         /// <summary>
@@ -54,9 +56,10 @@ namespace FlaxEditor.Modules
                 _expandedActors.Add(id);
             else
                 _expandedActors.Remove(id);
+            _isDirty = true;
         }
 
-        private void LoadGuareded()
+        private void LoadGuarded()
         {
             using (var stream = new FileStream(_cachePath, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (var reader = new BinaryReader(stream))
@@ -97,7 +100,7 @@ namespace FlaxEditor.Modules
 
             try
             {
-                LoadGuareded();
+                LoadGuarded();
             }
             catch (Exception ex)
             {
@@ -106,7 +109,7 @@ namespace FlaxEditor.Modules
             }
         }
 
-        private void SaveGuareded()
+        private void SaveGuarded()
         {
             using (var stream = new FileStream(_cachePath, FileMode.Create, FileAccess.Write, FileShare.Read))
             using (var writer = new BinaryWriter(stream))
@@ -122,11 +125,16 @@ namespace FlaxEditor.Modules
 
         private void Save()
         {
+            if (!_isDirty)
+                return;
+
             _lastSaveTime = DateTime.UtcNow;
 
             try
             {
-                SaveGuareded();
+                SaveGuarded();
+
+                _isDirty = false;
             }
             catch (Exception ex)
             {
