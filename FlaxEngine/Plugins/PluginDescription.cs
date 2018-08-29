@@ -60,6 +60,11 @@ namespace FlaxEngine
         public bool IsAlpha;
 
         /// <summary>
+        /// True if keep plugin disabled by default.
+        /// </summary>
+        public bool DisabledByDefault;
+
+        /// <summary>
         /// The supported platforms by this plugin.
         /// </summary>
         public PlatformType[] SupportedPlatforms;

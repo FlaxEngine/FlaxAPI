@@ -21,6 +21,28 @@ namespace FlaxEngine
         /// </summary>
         public static IReadOnlyList<Plugin> EditorPlugins => _editorPlugins;
 
+        /// <summary>
+        /// Determines whether can load the specified plugin.
+        /// </summary>
+        /// <param name="pluginDesc">The plugin description.</param>
+        /// <returns>True if load it, otherwise false.</returns>
+        public delegate bool CanLoadPluginDelegate(ref PluginDescription pluginDesc);
+
+        /// <summary>
+        /// Determines whether can load the specified plugin.
+        /// </summary>
+        public static CanLoadPluginDelegate CanLoadPlugin = DefaultCanLoadPlugin;
+
+        /// <summary>
+        /// The default implementation for <see cref="CanLoadPlugin"/>.
+        /// </summary>
+        /// <param name="pluginDesc">The plugin description.</param>
+        /// <returns>True if load it, otherwise false.</returns>
+        public static bool DefaultCanLoadPlugin(ref PluginDescription pluginDesc)
+        {
+            return !pluginDesc.DisabledByDefault;
+        }
+
         private static void InvokeInitialize(Plugin plugin)
         {
             try
@@ -49,12 +71,52 @@ namespace FlaxEngine
             }
         }
 
-        internal static void Dispose(Assembly assembly)
+        internal static void Internal_LoadPlugin(Type type, bool isEditor)
         {
-            Debug.Write(LogType.Log, assembly.FullName + ", " + assembly.Location);
+            if (type == null)
+                throw new ArgumentNullException();
+
+            // Create and check if use it
+            var plugin = (Plugin)Activator.CreateInstance(type);
+            var desc = plugin.Description;
+            if (!CanLoadPlugin(ref desc))
+            {
+                Debug.Write(LogType.Log, "Skip loading plugin " + plugin);
+                return;
+            }
+
+            // Init
+            InvokeInitialize(plugin);
+
+            // Register
+            if (isEditor)
+                _editorPlugins.Add(plugin);
+            else
+                _gamePlugins.Add((GamePlugin)plugin);
         }
 
-        internal static void Dispose()
+        internal static void Internal_Dispose(Assembly assembly)
+        {
+            for (int i = _editorPlugins.Count - 1; i >= 0 && _editorPlugins.Count > 0; i--)
+            {
+                if (_editorPlugins[i].GetType().Assembly == assembly)
+                {
+                    InvokeDeinitialize(_editorPlugins[i]);
+                    _editorPlugins.RemoveAt(i);
+                }
+            }
+
+            for (int i = _gamePlugins.Count - 1; i >= 0 && _gamePlugins.Count > 0; i--)
+            {
+                if (_gamePlugins[i].GetType().Assembly == assembly)
+                {
+                    InvokeDeinitialize(_gamePlugins[i]);
+                    _gamePlugins.RemoveAt(i);
+                }
+            }
+        }
+
+        internal static void Internal_Dispose()
         {
             int pluginsCount = _editorPlugins.Count + _gamePlugins.Count;
             if (pluginsCount == 0)
