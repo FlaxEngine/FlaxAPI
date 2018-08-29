@@ -127,6 +127,16 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Logs the raw message to the log.
+        /// </summary>
+        /// <param name="logType">Type of the log message. Not: fatal will stop the engine. Error may show a message popup.</param>
+        /// <param name="message">The message contents.</param>
+        public static void Write(LogType logType, string message)
+        {
+            Logger.LogHandler.LogWrite(logType, message);
+        }
+
+        /// <summary>
         /// Logs message to the Flax Console.
         /// </summary>
         /// <param name="message">String or object to be converted to string representation for display.</param>

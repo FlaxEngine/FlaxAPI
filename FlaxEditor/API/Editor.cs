@@ -439,7 +439,7 @@ namespace FlaxEditor
         /// <param name="msg">The message.</param>
         public static void Log(string msg)
         {
-            Internal_LogWrite(LogType.Log, msg);
+            Debug.Logger.LogHandler.LogWrite(LogType.Log, msg);
         }
 
         /// <summary>
@@ -448,7 +448,7 @@ namespace FlaxEditor
         /// <param name="msg">The message.</param>
         public static void LogWarning(string msg)
         {
-            Internal_LogWrite(LogType.Warning, msg);
+            Debug.Logger.LogHandler.LogWrite(LogType.Warning, msg);
         }
 
         /// <summary>
@@ -467,7 +467,7 @@ namespace FlaxEditor
         /// <param name="msg">The message.</param>
         public static void LogError(string msg)
         {
-            Internal_LogWrite(LogType.Error, msg);
+            Debug.Logger.LogHandler.LogWrite(LogType.Error, msg);
         }
 
         /// <summary>
@@ -985,9 +985,6 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_BakeLightmaps(bool cancel);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_LogWrite(LogType type, string msg);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_CookMeshCollision(string path, CollisionDataType type, IntPtr model, int modelLodIndex, ConvexMeshGenerationFlags convexFlags, int convexVertexLimit);

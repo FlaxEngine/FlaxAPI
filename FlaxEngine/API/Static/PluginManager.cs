@@ -25,7 +25,7 @@ namespace FlaxEngine
         {
             try
             {
-                Debug.LogFormat("Loading plugin " + plugin);
+                Debug.Write(LogType.Log, "Loading plugin " + plugin);
                 plugin.Initialize();
             }
             catch (Exception ex)
@@ -39,7 +39,7 @@ namespace FlaxEngine
         {
             try
             {
-                Debug.LogFormat("Unloading plugin " + plugin);
+                Debug.Write(LogType.Log, "Unloading plugin " + plugin);
                 plugin.Deinitialize();
             }
             catch (Exception ex)
@@ -51,7 +51,7 @@ namespace FlaxEngine
 
         internal static void Dispose(Assembly assembly)
         {
-            Debug.LogError(assembly.FullName + ", " + assembly.Location);
+            Debug.Write(LogType.Log, assembly.FullName + ", " + assembly.Location);
         }
 
         internal static void Dispose()
@@ -59,7 +59,7 @@ namespace FlaxEngine
             int pluginsCount = _editorPlugins.Count + _gamePlugins.Count;
             if (pluginsCount == 0)
                 return;
-            Debug.LogFormat("Unloading {0} plugins", pluginsCount);
+            Debug.Write(LogType.Log, string.Format("Unloading {0} plugins", pluginsCount));
 
             for (int i = _editorPlugins.Count - 1; i >= 0 && _editorPlugins.Count > 0; i--)
             {
