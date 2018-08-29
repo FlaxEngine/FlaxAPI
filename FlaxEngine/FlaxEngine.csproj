@@ -214,6 +214,8 @@
     <Compile Include="API\Static\MessageBox.Gen.cs" />
     <Compile Include="API\Static\Physics.cs" />
     <Compile Include="API\Static\Physics.Gen.cs" />
+    <Compile Include="API\Static\PluginManager.cs" />
+    <Compile Include="API\Static\PluginManager.Gen.cs" />
     <Compile Include="API\Static\PrefabManager.cs" />
     <Compile Include="API\Static\PrefabManager.Gen.cs" />
     <Compile Include="API\Static\Profiler.cs" />
@@ -401,6 +403,9 @@
     <Compile Include="Math\Viewport.cs" />
     <Compile Include="Engine\Object.cs" />
     <Compile Include="Math\Plane.cs" />
+    <Compile Include="Plugins\GamePlugin.cs" />
+    <Compile Include="Plugins\Plugin.cs" />
+    <Compile Include="Plugins\PluginDescription.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Math\Quaternion.cs" />
     <Compile Include="Math\Ray.cs" />
