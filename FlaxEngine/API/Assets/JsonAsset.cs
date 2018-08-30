@@ -8,13 +8,22 @@ namespace FlaxEngine
     public partial class JsonAsset
     {
         /// <summary>
-        /// Creates the serialized object instance from the json asset data. Asset must be loaded.
+        /// Creates the serialized object instance from the json asset data.
+        /// </summary>
+        /// <returns>The created object or null.</returns>
+        public T CreateInstance<T>()
+        {
+            return (T)CreateInstance();
+        }
+
+        /// <summary>
+        /// Creates the serialized object instance from the json asset data.
         /// </summary>
         /// <returns>The created object or null.</returns>
         public object CreateInstance()
         {
-            if (!IsLoaded)
-                throw new InvalidOperationException("Cannot use unloaded asset.");
+            if (WaitForLoaded())
+                return null;
 
             var allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
             var assemblies = new[]
@@ -54,6 +63,7 @@ namespace FlaxEngine
                     }
                 }
             }
+
             return null;
         }
     }
