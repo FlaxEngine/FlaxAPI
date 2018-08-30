@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using FlaxEngine;
@@ -252,6 +253,27 @@ namespace FlaxEditor.Content.Settings
                 return SaveAsset(gameSettings, ref gameSettings.Audio, obj);
 
             return true;
+        }
+
+        /// <summary>
+        /// Sets the custom settings (or unsets if provided asset is null).
+        /// </summary>
+        /// <param name="key">The custom key (must be unique per context).</param>
+        /// <param name="customSettingsAsset">The custom settings asset.</param>
+        /// <returns>True if failed otherwise false.</returns>
+        public static bool SetCustomSettings(string key, JsonAsset customSettingsAsset)
+        {
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+
+            var gameSettings = Load();
+
+            if (customSettingsAsset == null)
+                gameSettings.CustomSettings.Remove(key);
+            else
+                gameSettings.CustomSettings[key] = customSettingsAsset;
+
+            return Editor.SaveJsonAsset(GameSettingsAssetPath, gameSettings);
         }
 
         /// <summary>
