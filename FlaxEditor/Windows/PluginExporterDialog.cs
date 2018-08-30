@@ -1,7 +1,12 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI.Dialogs;
+using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -17,6 +22,15 @@ namespace FlaxEditor.Windows
         {
             [HideInEditor]
             public readonly PluginDescription Description;
+
+            [HideInEditor]
+            public readonly GamePlugin GamePlugin;
+
+            [HideInEditor]
+            public readonly EditorPlugin EditorPlugin;
+
+            [HideInEditor]
+            public string OutputPath => Path.Combine(Globals.ProjectFolder, Output, ShortName);
 
             [EditorOrder(0), Tooltip("The plugin short name used for the output assemblies naming.")]
             public string ShortName;
@@ -35,6 +49,8 @@ namespace FlaxEditor.Windows
 
             public ExportOptions(GamePlugin gamePlugin, EditorPlugin editorPlugin)
             {
+                GamePlugin = gamePlugin;
+                EditorPlugin = editorPlugin;
                 Description = gamePlugin?.Description ?? editorPlugin.Description;
                 ShortName = ((Plugin)gamePlugin ?? editorPlugin).GetType().Name;
             }
@@ -116,7 +132,193 @@ namespace FlaxEditor.Windows
         {
             // TODO: consider doing this stuff on a custom thread with a progress reporting
 
+            var errorMsg = DoExport();
+            if (errorMsg != null)
+            {
+                MessageBox.Show("Cannot export plugin. " + errorMsg, "Failed to export plugin.", MessageBox.Buttons.OK, MessageBox.Icon.Error);
+                return;
+            }
 
+            MessageBox.Show("Plugin exported!", "Plugin exported!", MessageBox.Buttons.OK, MessageBox.Icon.Information);
+
+            // Show the output folder
+            Application.StartProcess(_options.OutputPath);
+
+            Close(DialogResult.OK);
+        }
+
+        private string DoExport()
+        {
+            var startTime = DateTime.Now;
+            Editor.Log("Exporting plugin " + _options.Description.Name);
+
+            // Validate data
+            if (string.IsNullOrEmpty(_options.ShortName))
+                return "Missing short name.";
+
+            // Compile project scripts
+            var solutionPath = ScriptsBuilder.SolutionPath;
+            if (ScriptsBuilder.Compile(solutionPath, _options.Configuration))
+                return "Scripts compilation failed.";
+
+            // Setup output directory
+            var outputPath = _options.OutputPath;
+            try
+            {
+                Editor.Log("Setup output directory");
+                if (Directory.Exists(outputPath))
+                    Directory.Delete(outputPath, true);
+                Directory.CreateDirectory(outputPath);
+            }
+            catch (Exception ex)
+            {
+                Editor.LogWarning(ex);
+                return "Failed to setup output directory.";
+            }
+
+            // Copy plugin binaries
+            try
+            {
+                Editor.Log("Exporting plugin binaries");
+
+                var files = Directory.GetFiles(Path.Combine(Globals.ProjectCacheFolder, "bin")).ToList();
+
+                // Don't copy Flax files
+                RemoveStartsWith(files, "FlaxEngine");
+                RemoveStartsWith(files, "FlaxEditor");
+                RemoveStartsWith(files, "Newtonsoft.Json");
+
+                // Don't copy pdb files if release mode is checked
+                if (_options.Configuration == BuildMode.Release)
+                {
+                    RemoveEndsWith(files, ".pdb");
+                }
+
+                // Don't copy game assembly if plugin is editor-only and vice versa
+                if (_options.GamePlugin == null)
+                {
+                    Remove(files, "Assembly");
+                }
+                else if (_options.EditorPlugin == null)
+                {
+                    Remove(files, "Assembly.Editor");
+                }
+
+                Editor.Log(files.Count + " files");
+                for (int i = 0; i < files.Count; i++)
+                {
+                    var src = files[i];
+                    var filename = Path.GetFileName(src);
+
+                    // Rename plugin assemblies
+                    var filenameNoExt = Path.GetFileNameWithoutExtension(src);
+                    if (filenameNoExt == "Assembly")
+                        filename = _options.ShortName + Path.GetExtension(src);
+                    else if (filenameNoExt == "Assembly.Editor")
+                        filename = _options.ShortName + ".Editor" + Path.GetExtension(src);
+
+                    var dst = Path.Combine(outputPath, filename);
+                    File.Copy(src, dst);
+                }
+            }
+            catch (Exception ex)
+            {
+                Editor.LogWarning(ex);
+                return "Failed to copy plugin binaries.";
+            }
+
+            // Copy content
+            try
+            {
+                if (_options.IncludeContent)
+                {
+                    Editor.Log("Exporting plugin content");
+
+                    // Copy all assets
+                    var src = Globals.ContentFolder;
+                    var dst = Path.Combine(outputPath, "Content");
+                    Utilities.Utils.DirectoryCopy(src, dst);
+
+                    // Remove some unwanted data
+                    Utilities.Utils.RemoveFileIfExists(Path.Combine(dst, "GameSettings.json"));
+                }
+            }
+            catch (Exception ex)
+            {
+                Editor.LogWarning(ex);
+                return "Failed to copy plugin content.";
+            }
+
+            // Copy plugin icon
+            try
+            {
+                if (_options.Icon)
+                {
+                    Editor.Log("Exporting plugin icon");
+
+                    var src = _options.Icon.Path;
+                    var dst = Path.Combine(outputPath, _options.ShortName + ".Icon.flax");
+                    File.Copy(src, dst);
+                }
+            }
+            catch (Exception ex)
+            {
+                Editor.LogWarning(ex);
+                return "Failed to copy plugin icon.";
+            }
+
+            // Generate plugin description json file
+            try
+            {
+                Editor.Log("Exporting plugin description");
+
+                var dst = Path.Combine(outputPath, _options.ShortName + ".json");
+                if (Editor.SaveJsonAsset(dst, _options.Description))
+                    throw new FlaxException("Failed to save json asset.");
+            }
+            catch (Exception ex)
+            {
+                Editor.LogWarning(ex);
+                return "Failed to generate plugin description.";
+            }
+
+            // Done!
+            var endTime = DateTime.Now;
+            Editor.Log(string.Format("Plugin exported in {0}s", Math.Max(1, (int)(endTime - startTime).TotalSeconds)));
+            return null;
+        }
+
+        private void Remove(List<string> files, string filenameNoExt)
+        {
+            for (int i = files.Count - 1; i >= 0 && files.Count > 0; i--)
+            {
+                if (Path.GetFileNameWithoutExtension(files[i]).Equals(filenameNoExt, StringComparison.OrdinalIgnoreCase))
+                {
+                    files.RemoveAt(i);
+                }
+            }
+        }
+
+        private void RemoveStartsWith(List<string> files, string prefix)
+        {
+            for (int i = files.Count - 1; i >= 0 && files.Count > 0; i--)
+            {
+                if (Path.GetFileName(files[i]).StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                {
+                    files.RemoveAt(i);
+                }
+            }
+        }
+
+        private void RemoveEndsWith(List<string> files, string postfix)
+        {
+            for (int i = files.Count - 1; i >= 0 && files.Count > 0; i--)
+            {
+                if (files[i].EndsWith(postfix, StringComparison.OrdinalIgnoreCase))
+                {
+                    files.RemoveAt(i);
+                }
+            }
         }
 
         private void OnCancel()
