@@ -180,13 +180,16 @@ namespace FlaxEditor.Content.Settings
             if (type == typeof(AudioSettings))
                 return LoadAsset<AudioSettings>(gameSettings.Audio) as T;
 
-            foreach (var e in gameSettings.CustomSettings)
+            if (gameSettings.CustomSettings != null)
             {
-                if (e.Value && !e.Value.WaitForLoaded() && e.Value.DataTypeName == type.FullName)
+                foreach (var e in gameSettings.CustomSettings)
                 {
-                    var custom = e.Value.CreateInstance();
-                    if (custom is T result)
-                        return result;
+                    if (e.Value && !e.Value.WaitForLoaded() && e.Value.DataTypeName == type.FullName)
+                    {
+                        var custom = e.Value.CreateInstance();
+                        if (custom is T result)
+                            return result;
+                    }
                 }
             }
 
@@ -268,10 +271,16 @@ namespace FlaxEditor.Content.Settings
 
             var gameSettings = Load();
 
-            if (customSettingsAsset == null)
+            if (customSettingsAsset == null && gameSettings.CustomSettings != null)
+            {
                 gameSettings.CustomSettings.Remove(key);
+            }
             else
+            {
+                if (gameSettings.CustomSettings == null)
+                    gameSettings.CustomSettings = new Dictionary<string, JsonAsset>();
                 gameSettings.CustomSettings[key] = customSettingsAsset;
+            }
 
             return Editor.SaveJsonAsset(GameSettingsAssetPath, gameSettings);
         }
