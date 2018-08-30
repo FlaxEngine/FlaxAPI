@@ -81,7 +81,12 @@ namespace FlaxEditor
 
         private void OnScriptsReloadBegin()
         {
-            // TODO: support restoring custom editor windows on code reload (deselect obj and restore it later)
+            // Skip if window type is not from game script assembly (eg. plugin code)
+            var type = GetType();
+            if (!type.Assembly.GetName().Name.StartsWith("Assembly"))
+                return;
+
+            Editor.Instance.Windows.AddToRestore(this);
             Window.Close();
         }
 

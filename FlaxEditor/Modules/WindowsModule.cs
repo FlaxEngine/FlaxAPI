@@ -4,9 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Xml;
 using FlaxEditor.Content;
+using FlaxEditor.GUI.Docking;
+using FlaxEditor.Scripting;
 using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
 using FlaxEditor.Windows.Profiler;
@@ -30,6 +33,14 @@ namespace FlaxEditor.Modules
         private DateTime _lastLayoutSaveTime;
         private float _projectIconScreenshotTimeout = -1;
         private string _windowsLayoutPath;
+
+        private struct WindowRestoreData
+        {
+            public string AssemblyName;
+            public string TypeName;
+        }
+
+        private readonly List<WindowRestoreData> _restoreWindows = new List<WindowRestoreData>();
 
         /// <summary>
         /// The main editor window.
@@ -624,6 +635,51 @@ namespace FlaxEditor.Modules
             SceneManager.SceneSaving += OnSceneSaving;
             SceneManager.SceneUnloaded += OnSceneUnloaded;
             SceneManager.SceneUnloading += OnSceneUnloading;
+            ScriptsBuilder.ScriptsReloadEnd += OnScriptsReloadEnd;
+        }
+
+        internal void AddToRestore(CustomEditorWindow win)
+        {
+            var type = win.GetType();
+
+            // Validate if can restore type
+            var constructor = type.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, Type.EmptyTypes, null);
+            if (constructor == null || type.IsGenericType)
+                return;
+
+            WindowRestoreData winData;
+            winData.AssemblyName = type.Assembly.GetName().Name;
+            winData.TypeName = type.FullName;
+            // TODO: cache and restore docking info
+            _restoreWindows.Add(winData);
+        }
+
+        private void OnScriptsReloadEnd()
+        {
+            for (int i = 0; i < _restoreWindows.Count; i++)
+            {
+                var winData = _restoreWindows[i];
+
+                try
+                {
+                    var assembly = Utils.GetAssemblyByName(winData.AssemblyName);
+                    if (assembly != null)
+                    {
+                        var type = assembly.GetType(winData.TypeName);
+                        if (type != null)
+                        {
+                            var win = (CustomEditorWindow)Activator.CreateInstance(type);
+                            win.Show();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Editor.LogWarning(ex);
+                    Editor.LogWarning(string.Format("Failed to restore window {0} (assembly: {1})", winData.TypeName, winData.AssemblyName));
+                }
+            }
+            _restoreWindows.Clear();
         }
 
         private void MainWindow_OnClosing(ClosingReason reason, ref bool cancel)
@@ -761,6 +817,7 @@ namespace FlaxEditor.Modules
             SceneManager.SceneSaving -= OnSceneSaving;
             SceneManager.SceneUnloaded -= OnSceneUnloaded;
             SceneManager.SceneUnloading -= OnSceneUnloading;
+            ScriptsBuilder.ScriptsReloadEnd -= OnScriptsReloadEnd;
 
             // Close main window
             MainWindow?.Close(ClosingReason.EngineExit);
