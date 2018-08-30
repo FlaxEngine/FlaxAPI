@@ -134,7 +134,7 @@ namespace FlaxEngine.GUI
 
         /// <summary>
         ///     Gets or sets the docking style of the control.
-        /// If vlue set is other than <see cref="FlaxEngine.GUI.DockStyle.None"/> then <see cref="IsScrollable"/> will be disabled by auto.
+        /// If value set is other than <see cref="FlaxEngine.GUI.DockStyle.None"/> then <see cref="IsScrollable"/> will be disabled by auto.
         /// </summary>
         [EditorDisplay("Transform"), EditorOrder(1060), Tooltip("The docking style of the control. Defines how control will be docked into the parent container. Use None to disable it. Docked controls have disabled scrolling.")]
         public DockStyle DockStyle
