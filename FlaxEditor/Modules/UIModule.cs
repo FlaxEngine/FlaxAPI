@@ -473,6 +473,7 @@ namespace FlaxEditor.Modules
             _menuToolsSetTheCurrentSceneViewAsDefault = cm.AddButton("Set current scene view as project default", SetTheCurrentSceneViewAsDefualt);
             cm.AddButton("Take screenshot!", "F12", Editor.Windows.TakeScreenshot);
             cm.AddSeparator();
+            cm.AddButton("Plugin Exporter", PluginExporterDialog.ShowIt);
             cm.AddButton("Plugins", () => Editor.Windows.PluginsWin.Show());
             cm.AddButton("Options", () => Editor.Windows.EditorOptionsWin.Show());
 

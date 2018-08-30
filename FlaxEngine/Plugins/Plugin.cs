@@ -7,6 +7,9 @@ namespace FlaxEngine
     /// <summary>
     /// Base class for game engine editor plugins.
     /// </summary>
+    /// <remarks>
+    /// Plugins should have a public and parameter-less constructor.
+    /// </remarks>
     public abstract class Plugin
     {
         /// <summary>

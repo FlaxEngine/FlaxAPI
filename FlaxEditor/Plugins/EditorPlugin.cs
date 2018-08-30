@@ -8,6 +8,9 @@ namespace FlaxEditor
     /// <summary>
     /// Base class for all plugins used in Editor.
     /// </summary>
+    /// <remarks>
+    /// Plugins should have a public and parameter-less constructor.
+    /// </remarks>
     /// <seealso cref="FlaxEngine.Plugin" />
     public abstract class EditorPlugin : Plugin
     {

@@ -285,6 +285,7 @@
     <Compile Include="Options\OptionsModule.cs" />
     <Compile Include="Options\VisualOptions.cs" />
     <Compile Include="Plugins\EditorPlugin.cs" />
+    <Compile Include="Plugins\PluginUtils.cs" />
     <Compile Include="Progress\Handlers\BakeEnvProbesProgress.cs" />
     <Compile Include="Progress\Handlers\BakeLightmapsProgress.cs" />
     <Compile Include="Progress\Handlers\BuildingGameProgress.cs" />
@@ -461,6 +462,7 @@
     <Compile Include="Windows\GameCookerWindow.cs" />
     <Compile Include="Windows\GameWindow.cs" />
     <Compile Include="Windows\GraphicsQualityWindow.cs" />
+    <Compile Include="Windows\PluginExporterDialog.cs" />
     <Compile Include="Windows\PluginsWindow.cs" />
     <Compile Include="Windows\Profiler\CPU.cs" />
     <Compile Include="Windows\Profiler\GPU.cs" />
