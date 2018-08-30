@@ -180,6 +180,28 @@ namespace FlaxEditor.Scripting
 #endif
         }
 
+        /// <summary>
+        /// Compiles the specified solution project.
+        /// </summary>
+        /// <remarks>
+        /// It does not fire any CompileBegin, CompileEnd or other events except compilation warnings and errors. Also does not fires any scripting assemblies reload or any other actions. Scripts compilation is performed on a separate process.
+        /// </remarks>
+        /// <param name="solutionPath">The solution path (normalized, full path).</param>
+        /// <param name="configuration">The build configuration.</param>
+        /// <returns>True if failed, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool Compile(string solutionPath, BuildMode configuration)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_Compile2(solutionPath, configuration);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -215,6 +237,9 @@ namespace FlaxEditor.Scripting
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Type Internal_FindScript(string name);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_Compile2(string solutionPath, BuildMode configuration);
 #endif
 
         #endregion
