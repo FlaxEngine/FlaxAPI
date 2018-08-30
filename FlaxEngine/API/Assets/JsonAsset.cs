@@ -25,15 +25,7 @@ namespace FlaxEngine
             if (WaitForLoaded())
                 return null;
 
-            var allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
-            var assemblies = new[]
-            {
-                Utils.GetAssemblyByName("Assembly", allAssemblies),
-                Utils.GetAssemblyByName("Assembly.Editor", allAssemblies),
-                Utils.GetAssemblyByName("FlaxEditor", allAssemblies),
-                Utils.GetAssemblyByName("FlaxEngine", allAssemblies),
-            };
-
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             var dataTypeName = DataTypeName;
 
             for (int i = 0; i < assemblies.Length; i++)
