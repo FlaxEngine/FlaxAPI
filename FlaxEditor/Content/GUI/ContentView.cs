@@ -521,6 +521,15 @@ namespace FlaxEditor.Content.GUI
                     return true;
                 }
 
+                // Rename
+                if (key == Keys.F2 && _selection[0].CanRename)
+                {
+                    if (_selection.Count > 1)
+                        Select(_selection[0]);
+                    OnRename?.Invoke(_selection[0]);
+                    return true;
+                }
+
                 // Open
                 if (key == Keys.Return && _selection.Count == 1)
                 {
