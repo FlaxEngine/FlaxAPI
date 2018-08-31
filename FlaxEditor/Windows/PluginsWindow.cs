@@ -6,6 +6,7 @@ using System.Linq;
 using FlaxEditor.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using FlaxEngine.Utilities;
 
 namespace FlaxEditor.Windows
 {
@@ -192,6 +193,11 @@ namespace FlaxEditor.Windows
                 Parent = this
             };
 
+            // Check already loaded plugins
+            PluginManager.GamePlugins.ForEach(OnPluginLoaded);
+            PluginManager.EditorPlugins.ForEach(OnPluginLoaded);
+
+            // Register for events
             PluginManager.PluginLoaded += OnPluginLoaded;
             PluginManager.PluginUnloading += OnPluginUnloading;
         }
