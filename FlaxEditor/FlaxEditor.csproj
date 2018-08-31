@@ -72,11 +72,13 @@
     <Compile Include="Content\Import\ImportFilesDialog.cs" />
     <Compile Include="Content\Import\ModelImportEntry.cs" />
     <Compile Include="Content\Import\TextureImportEntry.cs" />
+    <Compile Include="Content\Items\FileItem.cs" />
     <Compile Include="Content\Items\PrefabItem.cs" />
     <Compile Include="Content\Proxy\AnimationGraphProxy.cs" />
     <Compile Include="Content\Proxy\AnimationProxy.cs" />
     <Compile Include="Content\Proxy\AudioClipProxy.cs" />
     <Compile Include="Content\Proxy\CollisionDataProxy.cs" />
+    <Compile Include="Content\Proxy\FileProxy.cs" />
     <Compile Include="Content\Proxy\PrefabProxy.cs" />
     <Compile Include="Content\Proxy\SettingsProxy.cs" />
     <Compile Include="Content\Proxy\SkeletonMaskProxy.cs" />
@@ -137,6 +139,7 @@
     <Compile Include="CustomEditors\Editors\Vector2Editor.cs" />
     <Compile Include="CustomEditors\Editors\Vector3Editor.cs" />
     <Compile Include="CustomEditors\Editors\Vector4Editor.cs" />
+    <Compile Include="CustomEditors\Editors\VersionEditor.cs" />
     <Compile Include="CustomEditors\Elements\CheckBoxElement.cs" />
     <Compile Include="CustomEditors\Elements\ComboBoxElement.cs" />
     <Compile Include="CustomEditors\Elements\CustomElement.cs" />

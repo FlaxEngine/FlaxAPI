@@ -713,7 +713,6 @@ namespace FlaxEditor.Modules
             }
 
             // Find elements (use separate path for scripts and assets - perf stuff)
-            // TODO: we could make it more modular
             if (node.CanHaveAssets)
             {
                 LoadAssets(node, path);
@@ -815,26 +814,32 @@ namespace FlaxEditor.Modules
                     // Flax isn't John Snow. Flax knows something :)
                     // Also Flax Content Layer is using smart caching so this query gonna be fast.
 
+                    ContentItem item;
+
                     string typeName;
                     Guid id;
                     if (FlaxEngine.Content.GetAssetInfo(path, out typeName, out id))
                     {
                         var proxy = GetAssetProxy(typeName, path);
-                        var item = proxy?.ConstructItem(path, typeName, ref id);
+                        item = proxy?.ConstructItem(path, typeName, ref id);
+                    }
+                    else
+                    {
+                        item = new FileItem(path);
+                    }
 
-                        if (item != null)
+                    if (item != null)
+                    {
+                        // Link
+                        item.ParentFolder = parent.Folder;
+
+                        // Fire event
+                        if (_enableEvents)
                         {
-                            // Link
-                            item.ParentFolder = parent.Folder;
-
-                            // Fire event
-                            if (_enableEvents)
-                            {
-                                ItemAdded?.Invoke(item);
-                                OnWorkspaceModified?.Invoke();
-                            }
-                            _itemsCreated++;
+                            ItemAdded?.Invoke(item);
+                            OnWorkspaceModified?.Invoke();
                         }
+                        _itemsCreated++;
                     }
                 }
             }
@@ -864,6 +869,7 @@ namespace FlaxEditor.Modules
             Proxy.Add(new AnimationGraphProxy());
             Proxy.Add(new AnimationProxy());
             Proxy.Add(new SkeletonMaskProxy());
+            Proxy.Add(new FileProxy());
             Proxy.Add(new SpawnableJsonAssetProxy<PhysicalMaterial>());
 
             // Settings
