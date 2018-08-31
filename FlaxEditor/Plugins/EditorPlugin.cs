@@ -30,6 +30,27 @@ namespace FlaxEditor
             base.Initialize();
 
             Editor = Editor.Instance;
+            if (Editor.IsInitialized)
+            {
+                InitializeEditor();
+            }
+            else
+            {
+                Editor.InitializationEnd += OnEditorInitializationEnd;
+            }
+        }
+
+        private void OnEditorInitializationEnd()
+        {
+            Editor.InitializationEnd -= OnEditorInitializationEnd;
+            InitializeEditor();
+        }
+
+        /// <summary>
+        /// Initialization method called when this plugin is loaded and the Editor is after initialization. Use this method to add custom editor functionalities or override the existing ones.
+        /// </summary>
+        public virtual void InitializeEditor()
+        {
         }
     }
 }

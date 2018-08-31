@@ -27,7 +27,7 @@ namespace FlaxEngine
         };
 
         /// <summary>
-        /// Initialization method called when this plugin is loaded do the memory and can be used.
+        /// Initialization method called when this plugin is loaded to the memory and can be used.
         /// </summary>
         public virtual void Initialize()
         {
