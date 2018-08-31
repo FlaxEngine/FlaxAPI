@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.IO;
 using FlaxEngine;
 
 namespace FlaxEditor
@@ -10,6 +11,32 @@ namespace FlaxEditor
     /// </summary>
     public static class PluginUtils
     {
+        /// <summary>
+        /// Tries the get plugin icon (plugin may not have it).
+        /// </summary>
+        /// <param name="plugin">The plugin.</param>
+        /// <returns>The found texture asset to be used as a icon, or null if missing or invalid.</returns>
+        public static Texture TryGetPluginIcon(Plugin plugin)
+        {
+            if (plugin == null)
+                throw new ArgumentNullException();
+
+            var type = plugin.GetType();
+            var assembly = type.Assembly;
+            var assemblyPath = assembly.Location;
+            var assemblyName = assembly.GetName().Name;
+            var dotEditorPos = assemblyName.LastIndexOf(".Editor", StringComparison.OrdinalIgnoreCase);
+            if (dotEditorPos != -1)
+                assemblyName = assemblyName.Substring(dotEditorPos);
+
+            var iconPath = Path.Combine(Path.GetDirectoryName(assemblyPath), assemblyName + ".Icon.flax");
+
+            if (!File.Exists(iconPath))
+                return null;
+
+            return FlaxEngine.Content.LoadAsync<Texture>(iconPath);
+        }
+
         private static int CountSubTypes(Type[] types, Type type)
         {
             int result = 0;

@@ -56,6 +56,10 @@ namespace FlaxEditor.Windows
                     Parent = this,
                 };
 
+                var icon = PluginUtils.TryGetPluginIcon(plugin);
+                if (icon)
+                    iconImage.Brush = new TextureBrush(icon);
+
                 Width = 300;
                 Height = 100;
 
