@@ -155,11 +155,18 @@ namespace FlaxEditor.Windows
             // Validate data
             if (string.IsNullOrEmpty(_options.ShortName))
                 return "Missing short name.";
+            if (_options.ShortName == "Assembly" || _options.ShortName.Contains(' '))
+                return "Invalid short name.";
 
-            // Compile project scripts
+            // Compile project scripts as a plugin
+            var assemblyName = _options.ShortName;
             var solutionPath = ScriptsBuilder.SolutionPath;
+            if(ScriptsBuilder.GeneratePluginProject(assemblyName))
+                return "Failed to generate plugin solution and project files.";
             if (ScriptsBuilder.Compile(solutionPath, _options.Configuration))
-                return "Scripts compilation failed.";
+                return "Scripts compilation failed. See Debug Console or log file to learn more.";
+            if (ScriptsBuilder.GenerateProject(true, true))
+                return "Failed to generate restore solution and project files.";
 
             // Setup output directory
             var outputPath = _options.OutputPath;
@@ -197,26 +204,22 @@ namespace FlaxEditor.Windows
                 // Don't copy game assembly if plugin is editor-only and vice versa
                 if (_options.GamePlugin == null)
                 {
-                    Remove(files, "Assembly");
+                    Remove(files, assemblyName);
                 }
                 else if (_options.EditorPlugin == null)
                 {
-                    Remove(files, "Assembly.Editor");
+                    Remove(files, assemblyName + ".Editor");
                 }
+
+                // Don't copy previous game assembly
+                Remove(files, "Assembly");
+                Remove(files, "Assembly.Editor");
 
                 Editor.Log(files.Count + " files");
                 for (int i = 0; i < files.Count; i++)
                 {
                     var src = files[i];
                     var filename = Path.GetFileName(src);
-
-                    // Rename plugin assemblies
-                    var filenameNoExt = Path.GetFileNameWithoutExtension(src);
-                    if (filenameNoExt == "Assembly")
-                        filename = _options.ShortName + Path.GetExtension(src);
-                    else if (filenameNoExt == "Assembly.Editor")
-                        filename = _options.ShortName + ".Editor" + Path.GetExtension(src);
-
                     var dst = Path.Combine(outputPath, filename);
                     File.Copy(src, dst);
                 }
@@ -257,7 +260,7 @@ namespace FlaxEditor.Windows
                     Editor.Log("Exporting plugin icon");
 
                     var src = _options.Icon.Path;
-                    var dst = Path.Combine(outputPath, _options.ShortName + ".Icon.flax");
+                    var dst = Path.Combine(outputPath, assemblyName + ".Icon.flax");
                     File.Copy(src, dst);
                 }
             }
@@ -272,7 +275,7 @@ namespace FlaxEditor.Windows
             {
                 Editor.Log("Exporting plugin description");
 
-                var dst = Path.Combine(outputPath, _options.ShortName + ".json");
+                var dst = Path.Combine(outputPath, assemblyName + ".json");
                 if (Editor.SaveJsonAsset(dst, _options.Description))
                     throw new FlaxException("Failed to save json asset.");
             }

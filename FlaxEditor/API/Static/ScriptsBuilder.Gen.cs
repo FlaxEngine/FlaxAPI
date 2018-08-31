@@ -110,6 +110,24 @@ namespace FlaxEditor.Scripting
         }
 
         /// <summary>
+        /// Generates Visual Studio solution and project files for project as a plugin.
+        /// </summary>
+        /// <param name="assemblyName">Assembly name for the plugin.</param>
+        /// <returns>True if cannot generate project files, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool GeneratePluginProject(string assemblyName)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_GeneratePluginProject(assemblyName);
+#endif
+        }
+
+        /// <summary>
         /// Generates solution and project files.
         /// </summary>
         /// <param name="forceGenerateSolution">True if generate solution file by force even if there is no need to.</param>
@@ -225,6 +243,9 @@ namespace FlaxEditor.Scripting
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Compile();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GeneratePluginProject(string assemblyName);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GenerateProject(bool forceGenerateSolution, bool forceGenerateProject);
