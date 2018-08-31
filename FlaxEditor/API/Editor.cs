@@ -40,7 +40,7 @@ namespace FlaxEditor
         }
 
         private readonly List<EditorModule> _modules = new List<EditorModule>(16);
-        private bool _isAfterInit, _isHeadlessMode;
+        private bool _isAfterInit, _areModulesInited, _areModulesAfterInitEnd, _isHeadlessMode;
         private ProjectInfo _projectInfo;
         private string _projectToOpen;
 
@@ -157,6 +157,21 @@ namespace FlaxEditor
         /// </summary>
         public ProjectInfo ProjectInfo => _projectInfo;
 
+        /// <summary>
+        /// Gets a value indicating whether Editor instance is initialized.
+        /// </summary>
+        public bool IsInitialized => _areModulesAfterInitEnd;
+
+        /// <summary>
+        /// Occurs when editor initialization starts. All editor modules already received OnInit callback and editor splash screen is visible.
+        /// </summary>
+        public event Action InitializationStart;
+
+        /// <summary>
+        /// Occurs when editor initialization ends. All editor modules already received OnEndInit callback and editor splash screen will be closed.
+        /// </summary>
+        public event Action InitializationEnd;
+
         internal Editor()
         {
             Instance = this;
@@ -207,6 +222,10 @@ namespace FlaxEditor
             _modules.Add(module);
             if (_isAfterInit)
                 _modules.Sort((a, b) => a.InitOrder - b.InitOrder);
+            if (_areModulesInited)
+                module.OnInit();
+            if (_areModulesAfterInitEnd)
+                module.OnEndInit();
         }
 
         internal void Init(bool isHeadless)
@@ -226,9 +245,12 @@ namespace FlaxEditor
             {
                 _modules[i].OnInit();
             }
+            _areModulesInited = true;
 
             // Start Editor initialization ending phrase (will wait for scripts compilation result)
             StateMachine.LoadingState.StartInitEnding();
+
+            InitializationStart?.Invoke();
         }
 
         internal void EndInit()
@@ -252,6 +274,9 @@ namespace FlaxEditor
                     LogError("Failed to initialize editor module " + _modules[i]);
                 }
             }
+            _areModulesAfterInitEnd = true;
+
+            InitializationEnd?.Invoke();
 
             // Close splash and show main window
             CloseSplashScreen();
