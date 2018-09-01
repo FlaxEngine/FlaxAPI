@@ -14,16 +14,24 @@ namespace FlaxEditor.GUI.Dialogs
     {
         private string _title;
 
+        /// <summary>
+        /// Flag used to block the calling thread if it used ShowDialog option.
+        /// </summary>
         protected long _isWaitingForDialog;
+
+        /// <summary>
+        /// The parent window.
+        /// </summary>
         protected FlaxEngine.Window _window;
+
+        /// <summary>
+        /// The dialog result.
+        /// </summary>
         protected DialogResult _result;
 
         /// <summary>
         /// Gets the dialog result.
         /// </summary>
-        /// <value>
-        /// The result.
-        /// </value>
         public DialogResult Result => _result;
 
         /// <summary>

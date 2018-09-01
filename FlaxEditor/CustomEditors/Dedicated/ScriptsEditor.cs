@@ -586,7 +586,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     IsScrollable = false,
                     Color = new Color(0.7f),
                     Margin = new Margin(1),
-                    Brush = new SpriteBrush(Editor.Instance.UI.DragBar12),
+                    Brush = new SpriteBrush(Editor.Instance.Icons.DragBar12),
                     Tag = script,
                     Parent = group.Panel
                 };

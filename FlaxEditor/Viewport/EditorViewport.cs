@@ -345,7 +345,7 @@ namespace FlaxEditor.Viewport
                 // Camera speed widget
                 var camSpeed = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperRight);
                 var camSpeedCM = new ContextMenu();
-                var camSpeedButton = new ViewportWidgetButton("1", Editor.Instance.UI.GetIcon("ArrowRightBorder16"), camSpeedCM);
+                var camSpeedButton = new ViewportWidgetButton("1", Editor.Instance.Icons.ArrowRightBorder16, camSpeedCM);
                 camSpeedButton.Tag = this;
                 camSpeedButton.TooltipText = "Camera speed scale";
                 _speedWidget = camSpeedButton;

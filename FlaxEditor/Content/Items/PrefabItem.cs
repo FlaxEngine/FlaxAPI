@@ -28,6 +28,6 @@ namespace FlaxEditor.Content
         public override ContentItemType ItemType => ContentItemType.Asset;
 
         /// <inheritdoc />
-        public override string DefaultThumbnailName => null;
+        public override Sprite DefaultThumbnail => Sprite.Invalid;
     }
 }

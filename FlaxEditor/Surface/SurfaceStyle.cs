@@ -231,10 +231,10 @@ namespace FlaxEditor.Surface
                 },
                 Icons =
                 {
-                    BoxOpen = editor.UI.GetIcon("VisjectBoxOpen"),
-                    BoxClose = editor.UI.GetIcon("VisjectBoxClose"),
-                    ArowOpen = editor.UI.GetIcon("VisjectArrowOpen"),
-                    ArowClose = editor.UI.GetIcon("VisjectArrowClose"),
+                    BoxOpen = editor.Icons.VisjectBoxOpen,
+                    BoxClose = editor.Icons.VisjectBoxClose,
+                    ArowOpen = editor.Icons.VisjectArrowOpen,
+                    ArowClose = editor.Icons.VisjectArrowClose,
                 }
             };
         }

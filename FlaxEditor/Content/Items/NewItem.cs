@@ -1,5 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using FlaxEngine;
+
 namespace FlaxEditor.Content
 {
     /// <summary>
@@ -35,7 +37,7 @@ namespace FlaxEditor.Content
         public override ContentItemType ItemType => ContentItemType.Other;
 
         /// <inheritdoc />
-        public override string DefaultThumbnailName => "Document64";
+        public override Sprite DefaultThumbnail => Editor.Instance.Icons.Document64;
 
         /// <inheritdoc />
         protected override bool DrawShadow => true;

@@ -33,7 +33,7 @@ namespace FlaxEditor.Windows
         {
             Image icon = new Image(4, 4, 80, 80)
             {
-                Brush = new SpriteBrush(Editor.Instance.UI.GetIcon("Logo128")),
+                Brush = new SpriteBrush(Editor.Instance.Icons.Logo128),
                 Parent = this
             };
             var nameLabel = new Label(icon.Right + 10, icon.Top, 200, 34)

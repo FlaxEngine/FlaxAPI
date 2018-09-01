@@ -171,6 +171,7 @@
     <Compile Include="CustomEditors\Values\ValueContainer.cs" />
     <Compile Include="CustomEditorWindow.cs" />
     <Compile Include="EditorAssets.cs" />
+    <Compile Include="EditorIcons.cs" />
     <Compile Include="GUI\ComboBox.cs" />
     <Compile Include="GUI\ContextMenu\ContextMenu.cs" />
     <Compile Include="GUI\ContextMenu\ContextMenuBase.cs" />

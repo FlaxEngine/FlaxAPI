@@ -52,10 +52,10 @@ namespace FlaxEditor.Content.Thumbnails
                 throw new ArgumentNullException();
 
             // Check if use default icon
-            var defaultThumbnail = item.DefaultThumbnailName;
-            if (!string.IsNullOrEmpty(defaultThumbnail))
+            var defaultThumbnail = item.DefaultThumbnail;
+            if (defaultThumbnail.IsValid)
             {
-                item.Thumbnail = Editor.Instance.UI.GetIcon(defaultThumbnail);
+                item.Thumbnail = defaultThumbnail;
                 return;
             }
 

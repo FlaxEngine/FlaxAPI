@@ -34,7 +34,7 @@ namespace FlaxEditor.Windows
             {
                 Parent = this
             };
-            _saveButton = (ToolStripButton)toolstrip.AddButton(editor.UI.GetIcon("Save32"), SaveData).LinkTooltip("Save");
+            _saveButton = (ToolStripButton)toolstrip.AddButton(editor.Icons.Save32, SaveData).LinkTooltip("Save");
             _saveButton.Enabled = false;
 
             _tabs = new Tabs

@@ -54,7 +54,7 @@ namespace FlaxEditor.Windows
 
         private void InitSpawnTab(Tabs tabs)
         {
-            var spawnTab = tabs.AddTab(new Tab(string.Empty, Editor.UI.GetIcon("Add48")));
+            var spawnTab = tabs.AddTab(new Tab(string.Empty, Editor.Icons.Add48));
             var actorGroups = new Tabs
             {
                 Orientation = Orientation.Vertical,
@@ -118,7 +118,7 @@ namespace FlaxEditor.Windows
 
         private void InitPaintTab(Tabs tabs)
         {
-            var paintTab = tabs.AddTab(new Tab(string.Empty, Editor.UI.GetIcon("Paint48")));
+            var paintTab = tabs.AddTab(new Tab(string.Empty, Editor.Icons.Paint48));
             //paintTab.LinkTooltip("Vertex paining tool"));
 
             var info = paintTab.AddChild<Label>();
@@ -128,7 +128,7 @@ namespace FlaxEditor.Windows
 
         private void InitFoliageTab(Tabs tabs)
         {
-            var foliageTab = tabs.AddTab(new Tab(string.Empty, Editor.UI.GetIcon("Foliage48")));
+            var foliageTab = tabs.AddTab(new Tab(string.Empty, Editor.Icons.Foliage48));
             //foliageTab.LinkTooltip("Foliage spawning tool"));
 
             var info = foliageTab.AddChild<Label>();
@@ -138,7 +138,7 @@ namespace FlaxEditor.Windows
 
         private void InitCarveTab(Tabs tabs)
         {
-            var carveTab = tabs.AddTab(new Tab(string.Empty, Editor.UI.GetIcon("Mountain48")));
+            var carveTab = tabs.AddTab(new Tab(string.Empty, Editor.Icons.Mountain48));
             //carveTab.LinkTooltip("Terrain carving tool"));
 
             var info = carveTab.AddChild<Label>();

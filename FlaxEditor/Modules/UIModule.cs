@@ -26,7 +26,6 @@ namespace FlaxEditor.Modules
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class UIModule : EditorModule
     {
-        private SpriteAtlas _iconsAtlas;
         private Label _progressLabel;
         private ProgressBar _progressBar;
 
@@ -120,51 +119,12 @@ namespace FlaxEditor.Modules
         /// </summary>
         public MainMenuButton MenuHelp { get; private set; }
 
-        // Cached internally to improve performance
-
-        internal Sprite FolderClosed12;
-        internal Sprite FolderOpened12;
-        internal Sprite DragBar12;
-        internal Sprite Plugin64;
-
         internal UIModule(Editor editor)
         : base(editor)
         {
             InitOrder = -90;
 
             CreateStyle();
-        }
-
-        /// <summary>
-        /// Gets the editor icon sprite with given name.
-        /// </summary>
-        /// <param name="name">The icon name.</param>
-        /// <returns>Sprite handle (may be invalid if icon has not been found or cannot load the sprite atlas).</returns>
-        public Sprite GetIcon(string name)
-        {
-            // Load asset if needed
-            if (_iconsAtlas == null)
-            {
-                _iconsAtlas = FlaxEngine.Content.LoadInternal<SpriteAtlas>(EditorAssets.IconsAtlas);
-                if (_iconsAtlas == null)
-                {
-                    // Error
-                    Editor.LogError("Cannot load editor icons atlas.");
-                    return Sprite.Invalid;
-                }
-
-                Assert.IsTrue(_iconsAtlas.IsLoaded);
-            }
-
-            // Find icon
-            var result = _iconsAtlas.GetSprite(name);
-            if (!result.IsValid)
-            {
-                // Warning
-                Editor.LogWarning($"Failed to load sprite icon \'{name}\'.");
-            }
-
-            return result;
         }
 
         /// <summary>
@@ -212,7 +172,7 @@ namespace FlaxEditor.Modules
             if (Editor.StateMachine.IsPlayMode)
             {
                 play.Checked = false;
-                play.Icon = GetIcon("Stop32");
+                play.Icon = Editor.Icons.Stop32;
                 pause.Enabled = true;
                 pause.Checked = Editor.StateMachine.PlayingState.IsPaused;
                 pause.AutoCheck = false;
@@ -221,7 +181,7 @@ namespace FlaxEditor.Modules
             else
             {
                 play.Checked = Editor.Simulation.IsPlayModeRequested;
-                play.Icon = GetIcon("Play32");
+                play.Icon = Editor.Icons.Play32;
                 pause.Enabled = canEnterPlayMode;
                 pause.AutoCheck = true;
                 step.Enabled = false;
@@ -325,8 +285,6 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnExit()
         {
-            _iconsAtlas = null;
-
             // Cleanup dock panel hint proxy windows (Flax will destroy them by var but it's better to clear them earlier)
             DockHintWindow.Proxy.Dispsoe();
         }
@@ -379,25 +337,20 @@ namespace FlaxEditor.Modules
             }
 
             // Icons
-            style.ArrowDown = GetIcon("ArrowDown12");
-            style.ArrowRight = GetIcon("ArrowRight12");
-            style.Search = GetIcon("Search12");
-            style.Settings = GetIcon("Settings12");
-            style.Cross = GetIcon("Cross12");
-            style.CheckBoxIntermediate = GetIcon("CheckBoxIntermediate12");
-            style.CheckBoxTick = GetIcon("CheckBoxTick12");
-            style.StatusBarSizeGrip = GetIcon("StatusBarSizeGrip12");
-            style.Translate = GetIcon("Translate16");
-            style.Rotate = GetIcon("Rotate16");
-            style.Scale = GetIcon("Scale16");
+            style.ArrowDown = Editor.Icons.ArrowDown12;
+            style.ArrowRight = Editor.Icons.ArrowRight12;
+            style.Search = Editor.Icons.Search12;
+            style.Settings = Editor.Icons.Settings12;
+            style.Cross = Editor.Icons.Cross12;
+            style.CheckBoxIntermediate = Editor.Icons.CheckBoxIntermediate12;
+            style.CheckBoxTick = Editor.Icons.CheckBoxTick12;
+            style.StatusBarSizeGrip = Editor.Icons.StatusBarSizeGrip12;
+            style.Translate = Editor.Icons.Translate16;
+            style.Rotate = Editor.Icons.Rotate16;
+            style.Scale = Editor.Icons.Scale16;
 
             style.SharedTooltip = new Tooltip();
 
-            // Cache icons
-            FolderClosed12 = GetIcon("FolderClosed12");
-            FolderOpened12 = GetIcon("FolderOpened12");
-            DragBar12 = GetIcon("DragBar12");
-            Plugin64 = GetIcon("Plugin64");
             VisjectSurfaceBackground = FlaxEngine.Content.LoadAsyncInternal<Texture>("Editor/VisjectSurface");
 
             // Set as default
@@ -527,18 +480,18 @@ namespace FlaxEditor.Modules
             ToolStrip = new ToolStrip();
             ToolStrip.Parent = mainWindow;
 
-            ToolStrip.AddButton(GetIcon("Save32"), Editor.SaveAll).LinkTooltip("Save all (Ctrl+S)");
+            ToolStrip.AddButton(Editor.Icons.Save32, Editor.SaveAll).LinkTooltip("Save all (Ctrl+S)");
             ToolStrip.AddSeparator();
-            _toolStripUndo = (ToolStripButton)ToolStrip.AddButton(GetIcon("Undo32"), Editor.PerformUndo).LinkTooltip("Undo (Ctrl+Z)");
-            _toolStripRedo = (ToolStripButton)ToolStrip.AddButton(GetIcon("Redo32"), Editor.PerformRedo).LinkTooltip("Redo (Ctrl+Y)");
+            _toolStripUndo = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Undo32, Editor.PerformUndo).LinkTooltip("Undo (Ctrl+Z)");
+            _toolStripRedo = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Redo32, Editor.PerformRedo).LinkTooltip("Redo (Ctrl+Y)");
             ToolStrip.AddSeparator();
-            _toolStripTranslate = (ToolStripButton)ToolStrip.AddButton(GetIcon("Translate32"), () => Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Translate).LinkTooltip("Change Gizmo tool mode to Translate (1)");
-            _toolStripRotate = (ToolStripButton)ToolStrip.AddButton(GetIcon("Rotate32"), () => Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate).LinkTooltip("Change Gizmo tool mode to Rotate (2)");
-            _toolStripScale = (ToolStripButton)ToolStrip.AddButton(GetIcon("Scale32"), () => Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Scale).LinkTooltip("Change Gizmo tool mode to Scale (3)");
+            _toolStripTranslate = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Translate32, () => Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Translate).LinkTooltip("Change Gizmo tool mode to Translate (1)");
+            _toolStripRotate = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Rotate32, () => Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate).LinkTooltip("Change Gizmo tool mode to Rotate (2)");
+            _toolStripScale = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Scale32, () => Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Scale).LinkTooltip("Change Gizmo tool mode to Scale (3)");
             ToolStrip.AddSeparator();
-            _toolStripPlay = (ToolStripButton)ToolStrip.AddButton(GetIcon("Play32"), Editor.Simulation.RequestPlayOrStopPlay).LinkTooltip("Start/Stop simulation (F5)");
-            _toolStripPause = (ToolStripButton)ToolStrip.AddButton(GetIcon("Pause32"), Editor.Simulation.RequestResumeOrPause).LinkTooltip("Pause/Resume simulation(F6)");
-            _toolStripStep = (ToolStripButton)ToolStrip.AddButton(GetIcon("Step32"), Editor.Simulation.RequestPlayOneFrame).LinkTooltip("Step one frame in simulation");
+            _toolStripPlay = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Play32, Editor.Simulation.RequestPlayOrStopPlay).LinkTooltip("Start/Stop simulation (F5)");
+            _toolStripPause = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Pause32, Editor.Simulation.RequestResumeOrPause).LinkTooltip("Pause/Resume simulation(F6)");
+            _toolStripStep = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Step32, Editor.Simulation.RequestPlayOneFrame).LinkTooltip("Step one frame in simulation");
 
             UpdateToolstrip();
         }

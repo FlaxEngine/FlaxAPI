@@ -234,9 +234,9 @@ namespace FlaxEditor.Windows
             _clearOnPlayButton = (ToolStripButton)toolstrip.AddButton("Clear on Play").SetAutoCheck(true).SetChecked(true).LinkTooltip("Clears all log entries on enter playmode");
             _pauseOnErrorButton = (ToolStripButton)toolstrip.AddButton("Pause on Error").SetAutoCheck(true).LinkTooltip("Performs auto pause on error");
             toolstrip.AddSeparator();
-            _groupButtons[0] = (ToolStripButton)toolstrip.AddButton(editor.UI.GetIcon("Error32"), () => UpdateLogTypeVisibility(LogGroup.Error, _groupButtons[0].Checked)).SetAutoCheck(true).SetChecked(true).LinkTooltip("Shows/hides error messages");
-            _groupButtons[1] = (ToolStripButton)toolstrip.AddButton(editor.UI.GetIcon("Warning32"), () => UpdateLogTypeVisibility(LogGroup.Warning, _groupButtons[1].Checked)).SetAutoCheck(true).SetChecked(true).LinkTooltip("Shows/hides warning messages");
-            _groupButtons[2] = (ToolStripButton)toolstrip.AddButton(editor.UI.GetIcon("Info32"), () => UpdateLogTypeVisibility(LogGroup.Info, _groupButtons[2].Checked)).SetAutoCheck(true).SetChecked(true).LinkTooltip("Shows/hides info messages");
+            _groupButtons[0] = (ToolStripButton)toolstrip.AddButton(editor.Icons.Error32, () => UpdateLogTypeVisibility(LogGroup.Error, _groupButtons[0].Checked)).SetAutoCheck(true).SetChecked(true).LinkTooltip("Shows/hides error messages");
+            _groupButtons[1] = (ToolStripButton)toolstrip.AddButton(editor.Icons.Warning32, () => UpdateLogTypeVisibility(LogGroup.Warning, _groupButtons[1].Checked)).SetAutoCheck(true).SetChecked(true).LinkTooltip("Shows/hides warning messages");
+            _groupButtons[2] = (ToolStripButton)toolstrip.AddButton(editor.Icons.Info32, () => UpdateLogTypeVisibility(LogGroup.Info, _groupButtons[2].Checked)).SetAutoCheck(true).SetChecked(true).LinkTooltip("Shows/hides info messages");
             toolstrip.Parent = this;
             UpdateCount();
 
@@ -531,9 +531,9 @@ namespace FlaxEditor.Windows
         public override void OnInit()
         {
             // Cache entries icons
-            IconInfo = Editor.UI.GetIcon("Info32");
-            IconWarning = Editor.UI.GetIcon("Warning32");
-            IconError = Editor.UI.GetIcon("Error32");
+            IconInfo = Editor.Icons.Info32;
+            IconWarning = Editor.Icons.Warning32;
+            IconError = Editor.Icons.Error32;
 
             // TODO: restore cached buttons 'Checked' state from editor prefs
         }

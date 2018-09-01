@@ -94,7 +94,7 @@ namespace FlaxEditor.Content
         /// <param name="type">The folder type.</param>
         /// <param name="path">The folder path.</param>
         protected ContentTreeNode(ContentFolderType type, string path)
-        : base(false, Editor.Instance.UI.FolderClosed12, Editor.Instance.UI.FolderOpened12)
+        : base(false, Editor.Instance.Icons.FolderClosed12, Editor.Instance.Icons.FolderOpened12)
         {
             _folder = new ContentFolder(type, path, this);
             Text = _folder.ShortName;

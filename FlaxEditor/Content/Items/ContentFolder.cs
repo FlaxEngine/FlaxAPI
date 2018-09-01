@@ -134,7 +134,7 @@ namespace FlaxEditor.Content
         public override bool Exists => System.IO.Directory.Exists(Path);
 
         /// <inheritdoc />
-        public override string DefaultThumbnailName => "Folder64";
+        public override Sprite DefaultThumbnail => Editor.Instance.Icons.Folder64;
 
         /// <inheritdoc />
         internal override void UpdatePath(string value)

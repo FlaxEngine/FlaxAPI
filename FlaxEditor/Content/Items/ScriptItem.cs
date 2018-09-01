@@ -2,6 +2,7 @@
 
 using System.Text;
 using FlaxEditor.Scripting;
+using FlaxEngine;
 
 namespace FlaxEditor.Content
 {
@@ -77,7 +78,7 @@ namespace FlaxEditor.Content
         public override ContentItemType ItemType => ContentItemType.Script;
 
         /// <inheritdoc />
-        public override string DefaultThumbnailName => "Script64";
+        public override Sprite DefaultThumbnail => Editor.Instance.Icons.Script64;
 
         /// <inheritdoc />
         public override ScriptItem FindScriptWitScriptName(string scriptName)

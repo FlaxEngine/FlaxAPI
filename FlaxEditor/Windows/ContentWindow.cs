@@ -66,11 +66,11 @@ namespace FlaxEditor.Windows
 
             // Tool strip
             _toolStrip = new ToolStrip();
-            _importButton = (ToolStripButton)_toolStrip.AddButton(Editor.UI.GetIcon("Import32"), () => Editor.ContentImporting.ShowImportFileDialog(CurrentViewFolder)).LinkTooltip("Import content");
+            _importButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.Import32, () => Editor.ContentImporting.ShowImportFileDialog(CurrentViewFolder)).LinkTooltip("Import content");
             _toolStrip.AddSeparator();
-            _navigateBackwardButton = (ToolStripButton)_toolStrip.AddButton(Editor.UI.GetIcon("ArrowLeft32"), NavigateBackward).LinkTooltip("Navigate backward");
-            _navigateForwardButton = (ToolStripButton)_toolStrip.AddButton(Editor.UI.GetIcon("ArrowRight32"), NavigateForward).LinkTooltip("Navigate forward");
-            _nnavigateUpButton = (ToolStripButton)_toolStrip.AddButton(Editor.UI.GetIcon("ArrowUp32"), NavigateUp).LinkTooltip("Navigate up");
+            _navigateBackwardButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.ArrowLeft32, NavigateBackward).LinkTooltip("Navigate backward");
+            _navigateForwardButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.ArrowRight32, NavigateForward).LinkTooltip("Navigate forward");
+            _nnavigateUpButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.ArrowUp32, NavigateUp).LinkTooltip("Navigate up");
             _toolStrip.Parent = this;
 
             // Navigation bar

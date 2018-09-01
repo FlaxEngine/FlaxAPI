@@ -76,12 +76,12 @@ namespace FlaxEditor.GUI
         /// </summary>
         public PlatformSelector()
         {
-            var ui = Editor.Instance.UI;
+            var icons = Editor.Instance.Icons;
             var platforms = new[]
             {
-                new PlatformData(PlatformType.Windows, ui.GetIcon("Windows")),
-                new PlatformData(PlatformType.XboxOne, ui.GetIcon("XboxOne")),
-                new PlatformData(PlatformType.WindowsStore, ui.GetIcon("WindowsStore")),
+                new PlatformData(PlatformType.Windows, icons.Windows),
+                new PlatformData(PlatformType.XboxOne, icons.XboxOne),
+                new PlatformData(PlatformType.WindowsStore, icons.WindowsStore),
             };
 
             const float IconSize = 48.0f;

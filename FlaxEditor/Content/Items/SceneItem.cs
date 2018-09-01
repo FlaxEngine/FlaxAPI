@@ -28,6 +28,6 @@ namespace FlaxEditor.Content
         public override ContentItemType ItemType => ContentItemType.Scene;
 
         /// <inheritdoc />
-        public override string DefaultThumbnailName => "Scene64";
+        public override Sprite DefaultThumbnail => Editor.Instance.Icons.Scene64;
     }
 }

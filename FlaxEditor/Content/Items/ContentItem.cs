@@ -208,12 +208,12 @@ namespace FlaxEditor.Content
         /// Gets the default name of the content item thumbnail.
         /// Returns null if not used.
         /// </summary>
-        public virtual string DefaultThumbnailName => null;
+        public virtual Sprite DefaultThumbnail => Sprite.Invalid;
 
         /// <summary>
         /// Gets a value indicating whether this item has default thumbnail.
         /// </summary>
-        public bool HasDefaultThumbnail => DefaultThumbnailName != null;
+        public bool HasDefaultThumbnail => DefaultThumbnail.IsValid;
 
         /// <summary>
         /// Gets or sets the item thumbnail. Warning, thumbnail may not be available if item has no references (<see cref="ReferencesCount"/>).
@@ -352,7 +352,7 @@ namespace FlaxEditor.Content
                 const float thumbnailInShadowSize = 50.0f;
                 var shadowRect = rectangle.MakeExpanded((DefaultThumbnailSize - thumbnailInShadowSize) * rectangle.Width / DefaultThumbnailSize * 1.3f);
                 if (!_shadowIcon.IsValid)
-                    _shadowIcon = Editor.Instance.UI.GetIcon("AssetShadow");
+                    _shadowIcon = Editor.Instance.Icons.AssetShadow;
                 Render2D.DrawSprite(_shadowIcon, shadowRect);
             }
 

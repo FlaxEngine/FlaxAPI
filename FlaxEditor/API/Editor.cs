@@ -143,6 +143,11 @@ namespace FlaxEditor
         public readonly EditorUndo Undo;
 
         /// <summary>
+        /// The icons container.
+        /// </summary>
+        public readonly EditorIcons Icons;
+
+        /// <summary>
         /// Gets the main transform gizmo used by the <see cref="SceneEditorWindow"/>.
         /// </summary>
         public Gizmo.TransformGizmo MainTransformGizmo => Windows.EditWin.Viewport.TransformGizmo;
@@ -179,6 +184,9 @@ namespace FlaxEditor
             Log("Setting up C# Editor...");
 
             Internal_GetProjectInfo(out _projectInfo);
+
+            Icons = new EditorIcons();
+            Icons.GetIcons();
 
             // Create common editor modules
             RegisterModule(Options = new OptionsModule(this));
