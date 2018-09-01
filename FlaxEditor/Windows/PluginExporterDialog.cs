@@ -18,37 +18,75 @@ namespace FlaxEditor.Windows
     /// <seealso cref="FlaxEditor.GUI.Dialogs.Dialog" />
     public class PluginExporterDialog : Dialog
     {
-        private class ExportOptions
+        /// <summary>
+        /// Plugin exporting options.
+        /// </summary>
+        public class ExportOptions
         {
+            /// <summary>
+            /// The description.
+            /// </summary>
             [HideInEditor]
             public readonly PluginDescription Description;
 
+            /// <summary>
+            /// The game plugin.
+            /// </summary>
             [HideInEditor]
             public readonly GamePlugin GamePlugin;
 
+            /// <summary>
+            /// The editor plugin.
+            /// </summary>
             [HideInEditor]
             public readonly EditorPlugin EditorPlugin;
 
+            /// <summary>
+            /// Gets the output path.
+            /// </summary>
             [HideInEditor]
             public string OutputPath => Path.Combine(Globals.ProjectFolder, Output, ShortName);
 
+            /// <summary>
+            /// The short name.
+            /// </summary>
             [EditorOrder(0), Tooltip("The plugin short name used for the output assemblies naming.")]
             public string ShortName;
 
+            /// <summary>
+            /// The icon.
+            /// </summary>
             [EditorOrder(10), Tooltip("The plugin icon, used only in the editor's plugin manager.")]
             public Texture Icon;
 
+            /// <summary>
+            /// The include content flag.
+            /// </summary>
             [EditorOrder(20), Tooltip("If checked, the project content directory will be exported alongside the plugin modules.")]
             public bool IncludeContent = true;
 
+            /// <summary>
+            /// The output.
+            /// </summary>
             [EditorOrder(30), Tooltip("Output folder path (relative to the project root directory).")]
             public string Output = "Output\\";
 
+            /// <summary>
+            /// The configuration mode.
+            /// </summary>
             [EditorOrder(40), Tooltip("Plugin code configuration mode.")]
             public BuildMode Configuration = BuildMode.Release;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ExportOptions"/> class.
+            /// </summary>
+            /// <param name="gamePlugin">The game plugin.</param>
+            /// <param name="editorPlugin">The editor plugin.</param>
             public ExportOptions(GamePlugin gamePlugin, EditorPlugin editorPlugin)
             {
+                if (gamePlugin == null && editorPlugin == null)
+                    throw new ArgumentException();
+
                 GamePlugin = gamePlugin;
                 EditorPlugin = editorPlugin;
                 Description = gamePlugin?.Description ?? editorPlugin.Description;
@@ -73,7 +111,7 @@ namespace FlaxEditor.Windows
             dialog.Show(parentWin);
         }
 
-        private readonly ExportOptions _options;
+        private ExportOptions _options;
 
         private PluginExporterDialog(GamePlugin gamePlugin, EditorPlugin editorPlugin)
         : base("Export Plugin")
@@ -132,7 +170,7 @@ namespace FlaxEditor.Windows
         {
             // TODO: consider doing this stuff on a custom thread with a progress reporting
 
-            var errorMsg = DoExport();
+            var errorMsg = DoExport(ref _options);
             if (errorMsg != null)
             {
                 MessageBox.Show("Cannot export plugin. " + errorMsg, "Failed to export plugin.", MessageBox.Buttons.OK, MessageBox.Icon.Error);
@@ -145,29 +183,34 @@ namespace FlaxEditor.Windows
             Close(DialogResult.OK);
         }
 
-        private string DoExport()
+        /// <summary>
+        /// Performs the plugin exporting.
+        /// </summary>
+        /// <param name="options">The export options.</param>
+        /// <returns>The error message or null if not failed.</returns>
+        public static string DoExport(ref ExportOptions options)
         {
             var startTime = DateTime.Now;
-            Editor.Log("Exporting plugin " + _options.Description.Name);
+            Editor.Log("Exporting plugin " + options.Description.Name);
 
             // Validate data
-            if (string.IsNullOrEmpty(_options.ShortName))
+            if (string.IsNullOrEmpty(options.ShortName))
                 return "Missing short name.";
-            if (_options.ShortName == "Assembly" || _options.ShortName.Contains(' '))
+            if (options.ShortName == "Assembly" || options.ShortName.Contains(' '))
                 return "Invalid short name.";
 
             // Compile project scripts as a plugin
-            var assemblyName = _options.ShortName;
+            var assemblyName = options.ShortName;
             var solutionPath = ScriptsBuilder.SolutionPath;
-            if(ScriptsBuilder.GeneratePluginProject(assemblyName))
+            if (ScriptsBuilder.GeneratePluginProject(assemblyName))
                 return "Failed to generate plugin solution and project files.";
-            if (ScriptsBuilder.Compile(solutionPath, _options.Configuration))
+            if (ScriptsBuilder.Compile(solutionPath, options.Configuration))
                 return "Scripts compilation failed. See Debug Console or log file to learn more.";
             if (ScriptsBuilder.GenerateProject(true, true))
                 return "Failed to generate restore solution and project files.";
 
             // Setup output directory
-            var outputPath = _options.OutputPath;
+            var outputPath = options.OutputPath;
             try
             {
                 Editor.Log("Setup output directory");
@@ -194,17 +237,17 @@ namespace FlaxEditor.Windows
                 RemoveStartsWith(files, "Newtonsoft.Json");
 
                 // Don't copy pdb files if release mode is checked
-                if (_options.Configuration == BuildMode.Release)
+                if (options.Configuration == BuildMode.Release)
                 {
                     RemoveEndsWith(files, ".pdb");
                 }
 
                 // Don't copy game assembly if plugin is editor-only and vice versa
-                if (_options.GamePlugin == null)
+                if (options.GamePlugin == null)
                 {
                     Remove(files, assemblyName);
                 }
-                else if (_options.EditorPlugin == null)
+                else if (options.EditorPlugin == null)
                 {
                     Remove(files, assemblyName + ".Editor");
                 }
@@ -231,7 +274,7 @@ namespace FlaxEditor.Windows
             // Copy content
             try
             {
-                if (_options.IncludeContent)
+                if (options.IncludeContent)
                 {
                     Editor.Log("Exporting plugin content");
 
@@ -253,11 +296,11 @@ namespace FlaxEditor.Windows
             // Copy plugin icon
             try
             {
-                if (_options.Icon)
+                if (options.Icon)
                 {
                     Editor.Log("Exporting plugin icon");
 
-                    var src = _options.Icon.Path;
+                    var src = options.Icon.Path;
                     var dst = Path.Combine(outputPath, assemblyName + ".Icon.flax");
                     File.Copy(src, dst);
                 }
@@ -274,7 +317,7 @@ namespace FlaxEditor.Windows
                 Editor.Log("Exporting plugin description");
 
                 var dst = Path.Combine(outputPath, assemblyName + ".json");
-                if (Editor.SaveJsonAsset(dst, _options.Description))
+                if (Editor.SaveJsonAsset(dst, options.Description))
                     throw new FlaxException("Failed to save json asset.");
             }
             catch (Exception ex)
@@ -289,7 +332,7 @@ namespace FlaxEditor.Windows
             return null;
         }
 
-        private void Remove(List<string> files, string filenameNoExt)
+        private static void Remove(List<string> files, string filenameNoExt)
         {
             for (int i = files.Count - 1; i >= 0 && files.Count > 0; i--)
             {
@@ -300,7 +343,7 @@ namespace FlaxEditor.Windows
             }
         }
 
-        private void RemoveStartsWith(List<string> files, string prefix)
+        private static void RemoveStartsWith(List<string> files, string prefix)
         {
             for (int i = files.Count - 1; i >= 0 && files.Count > 0; i--)
             {
@@ -311,7 +354,7 @@ namespace FlaxEditor.Windows
             }
         }
 
-        private void RemoveEndsWith(List<string> files, string postfix)
+        private static void RemoveEndsWith(List<string> files, string postfix)
         {
             for (int i = files.Count - 1; i >= 0 && files.Count > 0; i--)
             {
