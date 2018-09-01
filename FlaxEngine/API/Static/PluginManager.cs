@@ -72,7 +72,8 @@ namespace FlaxEngine
         /// <returns>True if load it, otherwise false.</returns>
         public static bool DefaultCanLoadPlugin(ref PluginDescription pluginDesc)
         {
-            return !pluginDesc.DisabledByDefault;
+            return true;
+            //return !pluginDesc.DisabledByDefault;
         }
 
         private static void InvokeInitialize(Plugin plugin)
