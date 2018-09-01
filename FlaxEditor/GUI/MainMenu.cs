@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -31,6 +32,25 @@ namespace FlaxEditor.GUI
         public MainMenuButton AddButton(string text)
         {
             return AddChild(new MainMenuButton(text));
+        }
+
+        /// <summary>
+        /// Gets the button.
+        /// </summary>
+        /// <param name="text">The button text.</param>
+        /// <returns>The button or null if missing.</returns>
+        public MainMenuButton GetButton(string text)
+        {
+            MainMenuButton result = null;
+            for (int i = 0; i < Children.Count; i++)
+            {
+                if (Children[i] is MainMenuButton button && string.Equals(button.Text, text, StringComparison.OrdinalIgnoreCase))
+                {
+                    result = button;
+                    break;
+                }
+            }
+            return result;
         }
 
         /// <summary>

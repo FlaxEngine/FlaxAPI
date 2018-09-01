@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Linq;
 using FlaxEditor.Gizmo;
 using FlaxEditor.GUI;
@@ -225,6 +226,19 @@ namespace FlaxEditor.Modules
                 pause.AutoCheck = true;
                 step.Enabled = false;
             }
+        }
+
+        /// <summary>
+        /// Adds the menu button.
+        /// </summary>
+        /// <param name="group">The group.</param>
+        /// <param name="text">The text.</param>
+        /// <param name="clicked">The button clicked event.</param>
+        /// <returns>The created menu item.</returns>
+        public ContextMenuButton AddMenuButton(string group, string text, Action clicked)
+        {
+            var menuGroup = MainMenu.GetButton(group) ?? MainMenu.AddButton(group);
+            return menuGroup.ContextMenu.AddButton(text, clicked);
         }
 
         /// <summary>
