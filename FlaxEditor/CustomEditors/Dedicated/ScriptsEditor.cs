@@ -63,11 +63,14 @@ namespace FlaxEditor.CustomEditors.Dedicated
             var cm = new ItemsListContextMenu(180);
             for (int i = 0; i < scripts.Count; i++)
             {
-                var script = scripts[i];
-                cm.ItemsPanel.AddChild(new ItemsListContextMenu.Item(script.ScriptName, script));
+                var scriptType = scripts[i];
+                cm.ItemsPanel.AddChild(new ItemsListContextMenu.Item(scriptType.Name, scriptType)
+                {
+                    TooltipText = scriptType.FullName,
+                });
             }
 
-            cm.ItemClicked += script => AddScript((ScriptItem)script.Tag);
+            cm.ItemClicked += script => AddScript((Type)script.Tag);
             cm.SortChildren();
             cm.Show(this, button.BottomLeft);
         }
@@ -147,16 +150,15 @@ namespace FlaxEditor.CustomEditors.Dedicated
             return result;
         }
 
-        private void AddScript(ScriptItem items)
+        private void AddScript(Type items)
         {
-            var list = new List<ScriptItem>(1) { items };
+            var list = new List<Type>(1) { items };
             AddScripts(list);
         }
 
         private void AddScripts(List<ScriptItem> items)
         {
-            var actions = new List<IUndoAction>(4);
-
+            var list = new List<Type>(items.Count);
             for (int i = 0; i < items.Count; i++)
             {
                 var item = items[i];
@@ -164,10 +166,23 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 var scriptType = ScriptsBuilder.FindScript(scriptName);
                 if (scriptType == null)
                 {
-                    Editor.LogError("Invalid script type " + scriptName);
-                    return;
+                    Editor.LogWarning("Invalid script type " + scriptName);
                 }
+                else
+                {
+                    list.Add(scriptType);
+                }
+            }
+            AddScripts(list);
+        }
 
+        private void AddScripts(List<Type> items)
+        {
+            var actions = new List<IUndoAction>(4);
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                var scriptType = items[i];
                 var actors = ScriptsEditor.ParentEditor.Values;
                 for (int j = 0; j < actors.Count; j++)
                 {

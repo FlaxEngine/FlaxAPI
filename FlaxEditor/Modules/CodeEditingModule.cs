@@ -2,8 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-using FlaxEditor.Content;
 using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -17,7 +17,7 @@ namespace FlaxEditor.Modules
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class CodeEditingModule : EditorModule
     {
-        private readonly List<ScriptItem> _scripts = new List<ScriptItem>();
+        private readonly List<Type> _scripts = new List<Type>();
         private readonly List<Type> _controlTypes = new List<Type>();
         private bool _hasValidScripts, _hasValidControlTypes;
 
@@ -38,16 +38,12 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnInit()
         {
-            Editor.ContentDatabase.ItemAdded += ContentDatabaseOnItemAdded;
-            Editor.ContentDatabase.ItemRemoved += ContentDatabaseOnItemRemoved;
             ScriptsBuilder.ScriptsReload += OnScriptsReload;
         }
 
         /// <inheritdoc />
         public override void OnExit()
         {
-            Editor.ContentDatabase.ItemAdded -= ContentDatabaseOnItemAdded;
-            Editor.ContentDatabase.ItemRemoved -= ContentDatabaseOnItemRemoved;
             ScriptsBuilder.ScriptsReload -= OnScriptsReload;
         }
 
@@ -60,44 +56,41 @@ namespace FlaxEditor.Modules
             _controlTypes.Clear();
         }
 
-        private void ContentDatabaseOnItemAdded(ContentItem contentItem)
-        {
-            if (_hasValidScripts && contentItem is ScriptItem script && script.IsValid)
-                _scripts.Add(script);
-        }
-
-        private void ContentDatabaseOnItemRemoved(ContentItem contentItem)
-        {
-            if (contentItem is ScriptItem script)
-                _scripts.Remove(script);
-        }
-
-        private void FindScripts(ContentFolder folder)
-        {
-            for (int i = 0; i < folder.Children.Count; i++)
-            {
-                if (folder.Children[i] is ContentFolder subFolder)
-                    FindScripts(subFolder);
-                else if (folder.Children[i] is ScriptItem script && script.IsValid)
-                    _scripts.Add(script);
-            }
-        }
-
         /// <summary>
-        /// Gets the scripts from the project (valid ones).
+        /// Gets all the script types from the all loaded assemblies (including project scripts and scripts from the plugins).
         /// </summary>
-        /// <returns>The scripts collection (readonly).</returns>
-        public List<ScriptItem> GetScripts()
+        /// <returns>The script types collection (readonly).</returns>
+        public List<Type> GetScripts()
         {
             if (!_hasValidScripts)
             {
                 _scripts.Clear();
                 _hasValidScripts = true;
 
-                FindScripts(Editor.ContentDatabase.ProjectSource.Folder);
+                Editor.Log("Searching valid script types");
+                var start = DateTime.Now;
+                Utils.GetDerivedTypes(typeof(Script), _scripts, IsTypeValidScriptType, HasAssemblyValidScriptTypes);
+                var end = DateTime.Now;
+                Editor.Log(string.Format("Found {0} script types (in {1} ms)", _scripts.Count, (int)(end - start).TotalMilliseconds));
             }
 
             return _scripts;
+        }
+
+        private bool HasAssemblyValidScriptTypes(Assembly a)
+        {
+            // Skip editor
+            if (a.GetName().Name == "FlaxEditor")
+                return false;
+
+            // Skip assemblies not referencing engine
+            var references = a.GetReferencedAssemblies();
+            return references.Any(x => x.Name == "FlaxEngine");
+        }
+
+        private bool IsTypeValidScriptType(Type t)
+        {
+            return !t.IsGenericType && !t.IsAbstract;
         }
 
         /// <summary>
@@ -111,7 +104,11 @@ namespace FlaxEditor.Modules
                 _controlTypes.Clear();
                 _hasValidControlTypes = true;
 
+                Editor.Log("Searching valid control types");
+                var start = DateTime.Now;
                 Utils.GetDerivedTypes(typeof(Control), _controlTypes, IsTypeValidControlType, HasAssemblyValidControlTypes);
+                var end = DateTime.Now;
+                Editor.Log(string.Format("Found {0} control types (in {1} ms)", _controlTypes.Count, (int)(end - start).TotalMilliseconds));
             }
 
             return _controlTypes;
@@ -119,12 +116,24 @@ namespace FlaxEditor.Modules
 
         private bool HasAssemblyValidControlTypes(Assembly a)
         {
-            return a.GetName().Name != "FlaxEditor";
+            var name = a.GetName();
+
+            // Skip editor
+            if (name.Name == "FlaxEditor")
+                return false;
+
+            // Use engine
+            if (name.Name == "FlaxEngine")
+                return true;
+
+            // Skip assemblies not referencing engine
+            var references = a.GetReferencedAssemblies();
+            return references.Any(x => x.Name == "FlaxEngine");
         }
 
         private bool IsTypeValidControlType(Type t)
         {
-            return !t.IsAbstract && !Attribute.IsDefined(t, typeof(HideInEditorAttribute), false);
+            return !t.IsGenericType && !t.IsAbstract && !Attribute.IsDefined(t, typeof(HideInEditorAttribute), false);
         }
     }
 }
