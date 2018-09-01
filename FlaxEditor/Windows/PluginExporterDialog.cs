@@ -139,8 +139,6 @@ namespace FlaxEditor.Windows
                 return;
             }
 
-            MessageBox.Show("Plugin exported!", "Plugin exported!", MessageBox.Buttons.OK, MessageBox.Icon.Information);
-
             // Show the output folder
             Application.StartProcess(_options.OutputPath);
 
