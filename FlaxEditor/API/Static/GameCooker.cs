@@ -217,7 +217,7 @@ namespace FlaxEditor
 
             // Check if plugins supports the given platform
             var platform = GetPlatformType(buildPlatform);
-            if (!desc.SupportedPlatforms.Contains(platform))
+            if (desc.SupportedPlatforms != null && !desc.SupportedPlatforms.Contains(platform))
             {
                 Debug.Write(LogType.Log, "Skip game plugin from assembly " + assembly.FullName);
                 result = false;

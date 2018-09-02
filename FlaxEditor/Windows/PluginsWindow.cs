@@ -90,7 +90,7 @@ namespace FlaxEditor.Windows
                 else if (desc.IsBeta)
                     versionString = "BETA ";
                 versionString += "Version ";
-                versionString += desc.Version.ToString();
+                versionString += desc.Version != null ? desc.Version.ToString() : "1.0";
                 var versionLabel = new Label(Width - 140 - margin, margin, 140, 14)
                 {
                     HorizontalAlignment = TextAlignment.Far,
@@ -104,9 +104,9 @@ namespace FlaxEditor.Windows
                 if (!string.IsNullOrEmpty(desc.AuthorUrl))
                     url = desc.AuthorUrl;
                 else if (!string.IsNullOrEmpty(desc.HomepageUrl))
-                    url = desc.AuthorUrl;
+                    url = desc.HomepageUrl;
                 else if (!string.IsNullOrEmpty(desc.RepositoryUrl))
-                    url = desc.AuthorUrl;
+                    url = desc.RepositoryUrl;
                 versionLabel.Font.Font.WaitForLoaded();
                 var font = versionLabel.Font.GetFont();
                 var authorWidth = font.MeasureText(desc.Author).X + 8;
