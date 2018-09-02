@@ -23,7 +23,12 @@ namespace FlaxEngine
             Name = GetType().Name,
             Category = "Other",
             Version = new Version(1, 0),
-            SupportedPlatforms = new[] { PlatformType.Windows },
+            SupportedPlatforms = new[]
+            {
+                PlatformType.Windows,
+                PlatformType.WindowsStore,
+                PlatformType.XboxOne
+            },
         };
 
         /// <summary>
