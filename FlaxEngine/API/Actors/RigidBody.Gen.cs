@@ -326,7 +326,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets the ceneter of the mass in the local space.
+        /// Gets or sets the center of the mass in the local space.
         /// </summary>
         [UnmanagedCall]
         public Vector3 CenterOfMass
