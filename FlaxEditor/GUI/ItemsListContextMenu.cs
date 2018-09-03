@@ -103,30 +103,34 @@ namespace FlaxEditor.GUI
             /// <param name="rect">The output rectangle.</param>
             protected virtual void GetTextRect(out Rectangle rect)
             {
-                rect = new Rectangle(Vector2.Zero, Size);
+                rect = new Rectangle(2, 0, Width - 4, Height);
             }
 
             /// <inheritdoc />
             public override void Draw()
             {
                 var style = Style.Current;
-                Rectangle rect;
-                GetTextRect(out rect);
+                GetTextRect(out var textRect);
 
                 // Overlay
                 if (IsMouseOver)
-                    Render2D.FillRectangle(rect, style.BackgroundHighlighted);
+                    Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), style.BackgroundHighlighted);
 
                 // Draw all highlights
                 if (_highlights != null)
                 {
                     var color = style.ProgressNormal * 0.6f;
                     for (int i = 0; i < _highlights.Count; i++)
-                        Render2D.FillRectangle(_highlights[i], color);
+                    {
+                        var rect = _highlights[i];
+                        rect.Location += textRect.Location;
+                        rect.Height = textRect.Height;
+                        Render2D.FillRectangle(rect, color);
+                    }
                 }
 
                 // Draw name
-                Render2D.DrawText(style.FontSmall, Name, new Rectangle(2, 0, rect.Width - 4, rect.Height), Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
+                Render2D.DrawText(style.FontSmall, Name, textRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
             }
 
             /// <inheritdoc />

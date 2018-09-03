@@ -22,6 +22,11 @@ namespace FlaxEditor.GUI
             private AssetItem _asset;
 
             /// <summary>
+            /// The icon size (in pixels).
+            /// </summary>
+            public const float IconSize = 28;
+
+            /// <summary>
             /// Gets the asset.
             /// </summary>
             public AssetItem Asset => _asset;
@@ -37,6 +42,25 @@ namespace FlaxEditor.GUI
 
                 Name = asset.ShortName;
                 TooltipText = asset.Path;
+
+                Height = IconSize + 4;
+            }
+
+            /// <inheritdoc />
+            protected override void GetTextRect(out Rectangle rect)
+            {
+                var height = Height;
+                rect = new Rectangle(IconSize + 4, (height - 16) * 0.5f, Width - IconSize - 6, 16);
+            }
+
+            /// <inheritdoc />
+            public override void Draw()
+            {
+                base.Draw();
+
+                // Draw icon
+                var iconRect = new Rectangle(2, 2, IconSize, IconSize);
+                _asset.DrawThumbnail(ref iconRect);
             }
 
             /// <inheritdoc />
