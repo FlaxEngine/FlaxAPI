@@ -188,7 +188,7 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
-            // Sync helper actor size with actual preview model (preview scales model for better usage experiance)
+            // Sync helper actor size with actual preview model (preview scales model for better usage experience)
             if (_collisionWiresShowActor && _collisionWiresShowActor.IsActive)
             {
                 _collisionWiresShowActor.Transform = _preview.PreviewModelActor.Transform;

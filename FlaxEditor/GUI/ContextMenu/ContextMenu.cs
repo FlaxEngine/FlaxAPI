@@ -148,11 +148,11 @@ namespace FlaxEngine.GUI
         /// Adds the button.
         /// </summary>
         /// <param name="text">The text.</param>
-        /// <param name="shortkeys">The shortkeys.</param>
+        /// <param name="shortKeys">The short keys.</param>
         /// <returns>Created context menu item control.</returns>
-        public ContextMenuButton AddButton(string text, string shortkeys)
+        public ContextMenuButton AddButton(string text, string shortKeys)
         {
-            var item = new ContextMenuButton(this, text, shortkeys);
+            var item = new ContextMenuButton(this, text, shortKeys);
             item.Parent = _panel;
             return item;
         }
@@ -189,12 +189,12 @@ namespace FlaxEngine.GUI
         /// Adds the button.
         /// </summary>
         /// <param name="text">The text.</param>
-        /// <param name="shortkeys">The shortkeys.</param>
+        /// <param name="shortKeys">The shortKeys.</param>
         /// <param name="clicked">On button clicked event.</param>
         /// <returns>Created context menu item control.</returns>
-        public ContextMenuButton AddButton(string text, string shortkeys, Action clicked)
+        public ContextMenuButton AddButton(string text, string shortKeys, Action clicked)
         {
-            var item = new ContextMenuButton(this, text, shortkeys);
+            var item = new ContextMenuButton(this, text, shortKeys);
             item.Parent = _panel;
             item.Clicked += clicked;
             return item;

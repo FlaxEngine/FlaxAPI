@@ -150,7 +150,7 @@ namespace FlaxEditor.Windows.Assets
 
                     if (parametersHash != _parametersHash)
                     {
-                        // Parameters has been modifed (loaded/unloaded/edited)
+                        // Parameters has been modified (loaded/unloaded/edited)
                         RebuildLayout();
                     }
                 }

@@ -125,7 +125,7 @@ namespace FlaxEditor.Windows.Assets
             // Block closing only on user events
             if (reason == ClosingReason.User)
             {
-                // Check if asset has been edited and not saved (and stil has linked item)
+                // Check if asset has been edited and not saved (and still has linked item)
                 if (IsEdited && _item != null)
                 {
                     // Ask user for further action
@@ -230,7 +230,7 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <summary>
-        /// Action firecd when object edited state gets changed.
+        /// Action fired when object edited state gets changed.
         /// </summary>
         protected virtual void OnEditedStateChanged()
         {
@@ -416,7 +416,7 @@ namespace FlaxEditor.Windows.Assets
         /// <returns>True if failed, otherwise false.</returns>
         protected bool SaveToOriginal()
         {
-            // Wait until temporary asset fille be fully loaded
+            // Wait until temporary asset file be fully loaded
             if (_asset.WaitForLoaded())
             {
                 // Error

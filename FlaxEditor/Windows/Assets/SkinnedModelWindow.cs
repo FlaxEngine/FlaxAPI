@@ -437,13 +437,13 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
-            // Sync highlight actor size with actual preview model (preview scales model for better usage experiance)
+            // Sync highlight actor size with actual preview model (preview scales model for better usage experience)
             if (_highlightActor && _highlightActor.IsActive)
             {
                 _highlightActor.Transform = _preview.PreviewModelActor.Transform;
             }
 
-            // Model is loaded but meshes data may be during streaming so refresh proeprties on fully loaded
+            // Model is loaded but meshes data may be during streaming so refresh properties on fully loaded
             if (_refreshOnMeshesLoaded && _asset && _asset.HasMeshesLoaded)
             {
                 _refreshOnMeshesLoaded = false;

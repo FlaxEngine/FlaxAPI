@@ -502,7 +502,7 @@ namespace FlaxEditor.Windows
                 {
                     // TODO: we should provide max limit for entries count and remove if too many
 
-                    // Check if user want's to scroll view by var (or is vewing earlier entry)
+                    // Check if user want's to scroll view by var (or is viewing earlier entry)
                     bool scrollView = (_entriesPanel.VScrollBar.Maximum - _entriesPanel.VScrollBar.TargetValue) < LogEntry.DefaultHeight * 1.5f;
 
                     // Add pending entries

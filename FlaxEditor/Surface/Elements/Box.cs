@@ -105,7 +105,7 @@ namespace FlaxEditor.Surface.Elements
         }
 
         /// <summary>
-        /// Determines whether this box can use the specified type as a conection.
+        /// Determines whether this box can use the specified type as a connection.
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>
@@ -331,7 +331,7 @@ namespace FlaxEditor.Surface.Elements
             if (rect.Size.LengthSquared < minBoxSize * minBoxSize)
                 return;
 
-            // Debuging boxes size
+            // Debugging boxes size
             //Render2D.DrawRectangle(rect, Color.Orange); return;
 
             // Draw icon

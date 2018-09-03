@@ -204,7 +204,7 @@ namespace FlaxEditor.Surface
             /// Creates new Vector value element description to edit Y component.
             /// </summary>
             /// <param name="x">The x location (in node area space).</param>
-            /// <param name="y">The y location (in node area space). Actual position is offseted by 1 times <see cref="Constants.LayoutOffsetY"/> to make it easier to arrange.</param>
+            /// <param name="y">The y location (in node area space). The actual position is offset by 1 times <see cref="Constants.LayoutOffsetY"/> to make it easier to arrange.</param>
             /// <param name="valueIndex">The index of the node variable linked as the input. Useful to make a physical connection between input box and default value for it.</param>
             /// <returns>The archetype.</returns>
             public static NodeElementArchetype Vector_Y(float x, float y, int valueIndex = -1)
@@ -216,7 +216,7 @@ namespace FlaxEditor.Surface
             /// Creates new Vector value element description to edit Z component.
             /// </summary>
             /// <param name="x">The x location (in node area space).</param>
-            /// <param name="y">The y location (in node area space). Actual position is offseted by 2 times <see cref="Constants.LayoutOffsetY"/> to make it easier to arrange.</param>
+            /// <param name="y">The y location (in node area space). The actual position is offset by 2 times <see cref="Constants.LayoutOffsetY"/> to make it easier to arrange.</param>
             /// <param name="valueIndex">The index of the node variable linked as the input. Useful to make a physical connection between input box and default value for it.</param>
             /// <returns>The archetype.</returns>
             public static NodeElementArchetype Vector_Z(float x, float y, int valueIndex = -1)
@@ -228,7 +228,7 @@ namespace FlaxEditor.Surface
             /// Creates new Vector value element description to edit W component.
             /// </summary>
             /// <param name="x">The x location (in node area space).</param>
-            /// <param name="y">The y location (in node area space). Actual position is offseted by 3 times <see cref="Constants.LayoutOffsetY"/> to make it easier to arrange.</param>
+            /// <param name="y">The y location (in node area space). The actual position is offset by 3 times <see cref="Constants.LayoutOffsetY"/> to make it easier to arrange.</param>
             /// <param name="valueIndex">The index of the node variable linked as the input. Useful to make a physical connection between input box and default value for it.</param>
             /// <returns>The archetype.</returns>
             public static NodeElementArchetype Vector_W(float x, float y, int valueIndex = -1)

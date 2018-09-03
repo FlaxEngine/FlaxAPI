@@ -21,7 +21,7 @@ namespace FlaxEditor.GUI.Drag
         public const string DragPrefix = "ATYPE!?";
 
         /// <inheritdoc />
-        protected override void GetherObjects(DragDataText data, Func<Type, bool> validateFunc)
+        protected override void GatherObjects(DragDataText data, Func<Type, bool> validateFunc)
         {
             var items = ParseData(data);
             for (int i = 0; i < items.Length; i++)

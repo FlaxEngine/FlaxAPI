@@ -21,7 +21,7 @@ namespace FlaxEditor.GUI.Drag
         public const string DragPrefix = "ACTOR!?";
 
         /// <inheritdoc />
-        protected override void GetherObjects(DragDataText data, Func<ActorNode, bool> validateFunc)
+        protected override void GatherObjects(DragDataText data, Func<ActorNode, bool> validateFunc)
         {
             var items = ParseData(data);
             for (int i = 0; i < items.Length; i++)
@@ -40,7 +40,7 @@ namespace FlaxEditor.GUI.Drag
         {
             if (data.Text.StartsWith(DragPrefix))
             {
-                // Remove prefix and parse splitted names
+                // Remove prefix and parse spitted names
                 var ids = data.Text.Remove(0, DragPrefix.Length).Split('\n');
                 var results = new List<ActorNode>(ids.Length);
                 for (int i = 0; i < ids.Length; i++)

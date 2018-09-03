@@ -56,7 +56,7 @@ namespace FlaxEditor.Viewport
         /// <summary>
         /// Initializes a new instance of the <see cref="PrefabWindowViewport"/> class.
         /// </summary>
-        /// <param name="window">Ediotr window.</param>
+        /// <param name="window">Editor window.</param>
         public PrefabWindowViewport(PrefabWindow window)
         : base(true)
         {

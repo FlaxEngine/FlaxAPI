@@ -254,7 +254,7 @@ namespace FlaxEditor.GUI.Docking
                 }
                 else
                 {
-                    createTabsProxy();
+                    CreateTabsProxy();
                     proxy = _tabsProxy;
                 }
                 _selectedTab = tab;
@@ -363,7 +363,7 @@ namespace FlaxEditor.GUI.Docking
         /// <returns>Child panel</returns>
         public DockPanel CreateChildPanel(DockState state, float splitterValue)
         {
-            createTabsProxy();
+            CreateTabsProxy();
 
             // Create child dock panel
             var dockPanel = new DockPanel(this);
@@ -496,13 +496,13 @@ namespace FlaxEditor.GUI.Docking
         /// <param name="window">The window.</param>
         protected virtual void DockWindow(DockState state, DockWindow window)
         {
-            createTabsProxy();
+            CreateTabsProxy();
 
             // Check if dock like a tab or not
             if (state == DockState.DockFill)
             {
                 // Add tab
-                addTab(window);
+                AddTab(window);
             }
             else
             {
@@ -559,7 +559,7 @@ namespace FlaxEditor.GUI.Docking
         /// Adds the tab.
         /// </summary>
         /// <param name="window">The window to insert as a tab.</param>
-        protected virtual void addTab(DockWindow window)
+        protected virtual void AddTab(DockWindow window)
         {
             // Dock
             _tabs.Add(window);
@@ -569,7 +569,7 @@ namespace FlaxEditor.GUI.Docking
             SelectTab(window);
         }
 
-        private void createTabsProxy()
+        private void CreateTabsProxy()
         {
             // Check if has no tabs proxy created
             if (_tabsProxy == null)

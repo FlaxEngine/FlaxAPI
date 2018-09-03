@@ -163,7 +163,7 @@ namespace FlaxEditor.Windows
 
             var selection = Editor.SceneEditing.Selection;
 
-            // Hide unpined previews for which camera being previews is not selected
+            // Hide unpinned previews for which camera being previews is not selected
             for (int i = 0; i < _previews.Count; i++)
             {
                 if (_previews[i].IsPinned)
@@ -179,7 +179,7 @@ namespace FlaxEditor.Windows
 
             if (Editor.Options.Options.Interface.ShowSelectedCameraPreview)
             {
-                // Find any selected cameras and create pewviews for them
+                // Find any selected cameras and create previews for them
                 for (int i = 0; i < selection.Count; i++)
                 {
                     if (selection[i] is CameraNode cameraNode)

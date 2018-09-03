@@ -212,9 +212,9 @@ namespace FlaxEngine
         Menu = 5,
 
         /// <summary>
-        /// The horizontal scrol.
+        /// The horizontal scroll.
         /// </summary>
-        HScrol = 6,
+        HScroll = 6,
 
         /// <summary>
         /// The vertical scroll.

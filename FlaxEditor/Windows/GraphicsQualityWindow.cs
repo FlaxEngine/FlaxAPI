@@ -8,7 +8,7 @@ using FlaxEngine.Rendering;
 namespace FlaxEditor.Windows
 {
     /// <summary>
-    /// Window used to show and edit current gaephics rendering settings via <see cref="GraphicsQuality"/>.
+    /// Window used to show and edit current graphics rendering settings via <see cref="GraphicsQuality"/>.
     /// </summary>
     /// <seealso cref="FlaxEditor.Windows.EditorWindow" />
     public class GraphicsQualityWindow : EditorWindow

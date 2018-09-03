@@ -12,7 +12,7 @@ namespace FlaxEditor.Surface
     public partial class VisjectSurface
     {
         // Note: surface serialization is port from c++ code base (also a legacy)
-        // Refactor this in future togather with c++ backend
+        // Refactor this in future together with c++ backend
 
         private struct ConnectionHint
         {

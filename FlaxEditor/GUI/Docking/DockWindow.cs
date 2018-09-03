@@ -314,7 +314,7 @@ namespace FlaxEditor.GUI.Docking
         /// Called when window is closing. Operation can be cancelled.
         /// </summary>
         /// <param name="reason">The reason.</param>
-        /// <returns>True if cancel, otherise false to allow.</returns>
+        /// <returns>True if cancel, otherwise false to allow.</returns>
         protected virtual bool OnClosing(ClosingReason reason)
         {
             // Allow
@@ -343,7 +343,7 @@ namespace FlaxEditor.GUI.Docking
         public virtual bool UseLayoutData => false;
 
         /// <summary>
-        /// Called when during windows layout serialization. Each window can use it to store custom interface data (eg. spitter position).
+        /// Called when during windows layout serialization. Each window can use it to store custom interface data (eg. splitter position).
         /// </summary>
         /// <param name="writer">The Xml writer.</param>
         public virtual void OnLayoutSerialize(XmlWriter writer)
@@ -351,7 +351,7 @@ namespace FlaxEditor.GUI.Docking
         }
 
         /// <summary>
-        /// Called when during windows layout deserialization. Each window can use it to load custom interface data (eg. spitter position).
+        /// Called when during windows layout deserialization. Each window can use it to load custom interface data (eg. splitter position).
         /// </summary>
         /// <param name="node">The Xml document node.</param>
         public virtual void OnLayoutDeserialize(XmlElement node)
@@ -359,7 +359,7 @@ namespace FlaxEditor.GUI.Docking
         }
 
         /// <summary>
-        /// Called when during windows layout deserialization if window has no layou data to load. Can be used to restore default UI layout.
+        /// Called when during windows layout deserialization if window has no layout data to load. Can be used to restore default UI layout.
         /// </summary>
         public virtual void OnLayoutDeserialize()
         {
@@ -368,7 +368,7 @@ namespace FlaxEditor.GUI.Docking
         /// <inheritdoc />
         public override void OnDestroy()
         {
-            // Auto undock from non-disposing parent (user wants to remvoe only the dock window)
+            // Auto undock from non-disposing parent (user wants to remove only the dock window)
             if (HasParent && !Parent.IsDisposing)
                 Undock();
 

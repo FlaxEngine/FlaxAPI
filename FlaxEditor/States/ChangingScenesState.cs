@@ -49,7 +49,7 @@ namespace FlaxEditor.States
         }
 
         /// <summary>
-        /// Unloades the scene.
+        /// Unloads the scene.
         /// </summary>
         /// <param name="scene">The scene to unload.</param>
         public void UnloadScene(Scene scene)
@@ -68,7 +68,7 @@ namespace FlaxEditor.States
         }
 
         /// <summary>
-        /// Unloades the scenes collection.
+        /// Unloads the scenes collection.
         /// </summary>
         /// <param name="scenes">The scenes to unload.</param>
         public void UnloadScene(IEnumerable<Scene> scenes)

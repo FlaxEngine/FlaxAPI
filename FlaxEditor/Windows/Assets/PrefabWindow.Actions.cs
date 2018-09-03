@@ -60,7 +60,7 @@ namespace FlaxEditor.Windows.Assets
             // Get clipboard data
             var data = Application.ClipboardRawData;
 
-            // Ser aste target if only one actor is selected and no target provided
+            // Set paste target if only one actor is selected and no target provided
             if (pasteTargetActor == null && Selection.Count == 1 && Selection[0] is ActorNode actorNode)
             {
                 pasteTargetActor = actorNode.Actor;

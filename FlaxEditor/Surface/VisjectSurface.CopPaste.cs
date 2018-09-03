@@ -261,7 +261,7 @@ namespace FlaxEditor.Surface
                     nodes.Add(nodeData.ID, node);
                     nodesData.Add(nodeData.ID, nodeData);
 
-                    // Intiialize
+                    // Initialize
                     if (nodeData.Values != null && node.Values.Length > 0)
                     {
                         if (node.Values != null && node.Values.Length == nodeData.Values.Length)

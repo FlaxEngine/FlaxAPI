@@ -16,7 +16,7 @@ using FlaxEngine.Rendering;
 namespace FlaxEditor.Viewport
 {
     /// <summary>
-    /// Main edior gizmo viewport used by the <see cref="EditGameWindow"/>.
+    /// Main editor gizmo viewport used by the <see cref="EditGameWindow"/>.
     /// </summary>
     /// <seealso cref="FlaxEditor.Viewport.EditorGizmoViewport" />
     public class MainEditorGizmoViewport : EditorGizmoViewport, IEditorPrimitivesOwner

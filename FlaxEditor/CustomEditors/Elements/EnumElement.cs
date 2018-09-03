@@ -70,7 +70,7 @@ namespace FlaxEditor.CustomEditors.Elements
         }
 
         /// <summary>
-        /// The custom conbobox for enum editing. Supports some special cases for flag enums.
+        /// The custom combobox for enum editing. Supports some special cases for flag enums.
         /// </summary>
         /// <seealso cref="FlaxEngine.GUI.ComboBox" />
         protected class EnumComboBox : ComboBox

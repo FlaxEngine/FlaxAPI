@@ -92,7 +92,7 @@ namespace FlaxEngine.GUI
         public override bool ContainsFocus => _containsFocus;
 
         /// <summary>
-        ///     True if automatic updates for control layout are locked (useful when createing a lot of GUI control to prevent
+        ///     True if automatic updates for control layout are locked (useful when creating a lot of GUI control to prevent
         ///     lags)
         /// </summary>
         [HideInEditor, NoSerialize]

@@ -59,7 +59,7 @@ namespace FlaxEditor.Windows
                 //RedoList.SetSize(32);
                 //UndoList.SetSize(32);
 
-                // Unlcok navigation
+                // Unlock navigation
                 _navigationUnlocked = true;
 
                 // Update UI
@@ -97,7 +97,7 @@ namespace FlaxEditor.Windows
                 // Clear search form and update view
                 //ClearSearch();
 
-                // Unlcok navigation
+                // Unlock navigation
                 _navigationUnlocked = true;
 
                 // Update UI
@@ -135,7 +135,7 @@ namespace FlaxEditor.Windows
                 // Clear search form and update view
                 //ClearSearch();
 
-                // Unlcok navigation
+                // Unlock navigation
                 _navigationUnlocked = true;
 
                 // Update UI

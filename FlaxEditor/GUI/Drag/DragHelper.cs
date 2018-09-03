@@ -56,9 +56,9 @@ namespace FlaxEditor.GUI.Drag
             Objects.Clear();
 
             if (data is DragDataText text)
-                GetherObjects(text, validateFunc);
+                GatherObjects(text, validateFunc);
             else if (data is DragDataFiles files)
-                GetherObjects(files, validateFunc);
+                GatherObjects(files, validateFunc);
 
             return HasValidDrag;
         }
@@ -84,7 +84,7 @@ namespace FlaxEditor.GUI.Drag
         /// </summary>
         /// <param name="data">The data.</param>
         /// <param name="validateFunc">The validate function.</param>
-        protected virtual void GetherObjects(DragDataText data, Func<T, bool> validateFunc)
+        protected virtual void GatherObjects(DragDataText data, Func<T, bool> validateFunc)
         {
         }
 
@@ -93,7 +93,7 @@ namespace FlaxEditor.GUI.Drag
         /// </summary>
         /// <param name="data">The data.</param>
         /// <param name="validateFunc">The validate function.</param>
-        protected virtual void GetherObjects(DragDataFiles data, Func<T, bool> validateFunc)
+        protected virtual void GatherObjects(DragDataFiles data, Func<T, bool> validateFunc)
         {
         }
     }

@@ -536,7 +536,7 @@ namespace FlaxEditor.Surface
             }
             _nodes.Add(node);
 
-            // Intiialize
+            // Initialize
             if (customValues != null)
             {
                 if (node.Values != null && node.Values.Length == customValues.Length)

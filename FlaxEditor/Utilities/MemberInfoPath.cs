@@ -27,7 +27,7 @@ namespace FlaxEditor.Utilities
             public readonly int Index;
 
             /// <summary>
-            /// Gets the member type (field or proeprty type).
+            /// Gets the member type (field or property type).
             /// </summary>
             /// <value>
             /// The type.

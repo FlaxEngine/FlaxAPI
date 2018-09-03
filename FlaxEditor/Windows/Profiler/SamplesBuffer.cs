@@ -25,7 +25,7 @@ namespace FlaxEditor.Windows.Profiler
         /// Gets or sets the sample value at the specified index.
         /// </summary>
         /// <param name="index">The index.</param>
-        /// <returns>The sampel value.</returns>
+        /// <returns>The sample value.</returns>
         public T this[int index]
         {
             get => _data[index];
@@ -46,7 +46,7 @@ namespace FlaxEditor.Windows.Profiler
         /// Gets the sample at the specified index or the last sample if index is equal to -1.
         /// </summary>
         /// <param name="index">The index.</param>
-        /// <returns>The sampel value</returns>
+        /// <returns>The sample value</returns>
         public T Get(int index)
         {
             return index == -1 ? _data[_count - 1] : _data[index];

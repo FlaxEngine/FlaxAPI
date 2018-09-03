@@ -142,7 +142,7 @@ namespace FlaxEngine
         /// <remarks>
         /// The current actor has to have a valid container control.
         /// </remarks>
-        /// <typeparam name="T">Type of the child control to addd.</typeparam>
+        /// <typeparam name="T">Type of the child control to add.</typeparam>
         /// <returns>The created UIControl that contains a new control of the given type.</returns>
         public UIControl AddChildControl<T>() where T : Control
         {

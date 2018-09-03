@@ -46,9 +46,9 @@ namespace FlaxEditor.Content.Settings
         public PhysicsCombineMode RestitutionCombineMode = PhysicsCombineMode.Average;
 
         /// <summary>
-        /// If true CCD will be ignored. This is an optimization when CCD is never used which removes the need for physx to check it internally.
+        /// If true CCD will be ignored. This is an optimization when CCD is never used which removes the need for PhysX to check it internally.
         /// </summary>
-        [EditorOrder(70), EditorDisplay("Simulation", "Disable CCD"), Tooltip("If true CCD will be ignored. This is an optimization when CCD is never used which removes the need for physx to check it internally.")]
+        [EditorOrder(70), EditorDisplay("Simulation", "Disable CCD"), Tooltip("If true CCD will be ignored. This is an optimization when CCD is never used which removes the need for PhysX to check it internally.")]
         public bool DisableCCD;
 
         /// <summary>

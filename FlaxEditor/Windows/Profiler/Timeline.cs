@@ -124,7 +124,7 @@ namespace FlaxEditor.Windows.Profiler
         }
 
         /// <summary>
-        /// Gets the events container control. Use it to remvoe/add events to the timeline.
+        /// Gets the events container control. Use it to remove/add events to the timeline.
         /// </summary>
         public ContainerControl EventsContainer => this;
 

@@ -21,7 +21,7 @@ namespace FlaxEditor.Windows.Profiler
         public const double MinEventTimeMs = 0.000000001;
 
         /// <summary>
-        /// Occurs when selected sample gets changed. Profiling window should propagate this cahnge to all charts and view modes.
+        /// Occurs when selected sample gets changed. Profiling window should propagate this change to all charts and view modes.
         /// </summary>
         public event Action<int> SelectedSampleChanged;
 

@@ -232,7 +232,7 @@ namespace FlaxEngine
     public enum InputActionMode
     {
         /// <summary>
-        /// Uuer is pressing the key/button.
+        /// User is pressing the key/button.
         /// </summary>
         Pressing = 0,
 
@@ -294,17 +294,17 @@ namespace FlaxEngine
     public enum InputAxisType
     {
         /// <summary>
-        /// The mouse X-Axis (mouse delta position scaled by the sensitivty).
+        /// The mouse X-Axis (mouse delta position scaled by the sensitivity).
         /// </summary>
         MouseX = 0,
 
         /// <summary>
-        /// The mouse Y-Axis (mouse delta position scaled by the sensitivty).
+        /// The mouse Y-Axis (mouse delta position scaled by the sensitivity).
         /// </summary>
         MouseY = 1,
 
         /// <summary>
-        /// The mouse wheel (mouse wheel delta scaled by the sensitivty).
+        /// The mouse wheel (mouse wheel delta scaled by the sensitivity).
         /// </summary>
         MouseWheel = 2,
 

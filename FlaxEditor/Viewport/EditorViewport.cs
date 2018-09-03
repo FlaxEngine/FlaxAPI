@@ -503,7 +503,7 @@ namespace FlaxEditor.Viewport
         /// <param name="view">The view.</param>
         public void CopyViewData(ref RenderView view)
         {
-            // Ceate matricies
+            // Create matrices
             CreateProjectionMatrix(out view.Projection);
             CreateViewMatrix(out view.View);
 
@@ -674,7 +674,7 @@ namespace FlaxEditor.Viewport
 
             // Update input
             {
-                // Get input buttons and keys (skip if viewort has no focus or mouse is over a child control)
+                // Get input buttons and keys (skip if viewport has no focus or mouse is over a child control)
                 _prevInput = _input;
                 if (ContainsFocus && GetChildAt(_viewMousePos) == null)
                     _input.Gather(win.Window);
@@ -773,7 +773,7 @@ namespace FlaxEditor.Viewport
                     _deltaFilteringBuffer[_deltaFilteringStep] = _mouseDeltaRight;
                     _deltaFilteringStep++;
 
-                    // if the step is too far, zeroe
+                    // if the step is too far, zero
                     if (_deltaFilteringStep == FpsCameraFilteringFrames)
                         _deltaFilteringStep = 0;
 

@@ -37,7 +37,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets the bounding box combined for all mshes in this model LOD.
+        /// Gets the bounding box combined for all meshes in this model LOD.
         /// </summary>
         public BoundingBox Bounds
         {

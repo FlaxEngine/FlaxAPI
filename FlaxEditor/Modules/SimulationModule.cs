@@ -245,7 +245,7 @@ namespace FlaxEditor.Modules
                     }
                     else
                     {
-                        // Fixed update may not be called but don't allow to call pdate for more than 2 times during single step
+                        // Fixed update may not be called but don't allow to call update for more than 2 times during single step
                         _updateOrFixedUpdateWasCalled = true;
                     }
                 }

@@ -203,7 +203,7 @@ namespace FlaxEditor.Modules
             // Ensure path is normalized to the Flax format
             path = StringUtils.NormalizePath(path);
 
-            // TODO: if it's a bottleneck try to optimize searching by spliting path
+            // TODO: if it's a bottleneck try to optimize searching by spiting path
 
             var result = ProjectContent.Folder.Find(path);
             if (result != null)
@@ -624,7 +624,7 @@ namespace FlaxEditor.Modules
             // Special case for folders
             if (item is ContentFolder folder)
             {
-                // TODO: maybe dont' remove folders reqursive but at once?
+                // TODO: maybe don't remove folders recursive but at once?
 
                 // Delete all children
                 if (folder.Children.Count > 0)

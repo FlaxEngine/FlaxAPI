@@ -145,7 +145,7 @@ namespace FlaxEditor.Content
         public virtual bool CanRename => true;
 
         /// <summary>
-        /// Gets a value indicating whether this item can be dragged and droped.
+        /// Gets a value indicating whether this item can be dragged and dropped.
         /// </summary>
         public virtual bool CanDrag => true;
 

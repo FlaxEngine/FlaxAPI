@@ -54,7 +54,7 @@ namespace FlaxEditor.Windows.Profiler
         public event Action<int> SelectedSampleChanged;
 
         /// <summary>
-        /// The handler funtion to format sample value for label text.
+        /// The handler function to format sample value for label text.
         /// </summary>
         public Func<float, string> FormatSample = (v) => v.ToString();
 

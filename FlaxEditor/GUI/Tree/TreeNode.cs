@@ -363,7 +363,7 @@ namespace FlaxEditor.GUI
         }
 
         /// <summary>
-        /// Ensure that all node paents are expanded.
+        /// Ensure that all node parents are expanded.
         /// </summary>
         /// <param name="noAnimation">True if skip node expanding animation.</param>
         public void ExpandAllParents(bool noAnimation = false)
@@ -626,7 +626,7 @@ namespace FlaxEditor.GUI
             // Check if mouse hits bar and node isn't a root
             if (_mouseOverHeader)
             {
-                // Check if left buton goes down
+                // Check if left button goes down
                 if (buttons == MouseButton.Left)
                 {
                     _isMouseDown = true;

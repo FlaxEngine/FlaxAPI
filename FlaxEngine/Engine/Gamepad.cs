@@ -119,7 +119,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Sets the gamead vibration.
+        /// Sets the gamepad vibration.
         /// </summary>
         /// <param name="state">The state.</param>
         public void SetVibration(GamepadVibrationState state)

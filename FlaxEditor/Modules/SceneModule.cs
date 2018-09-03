@@ -610,7 +610,7 @@ namespace FlaxEditor.Modules
                 lastSceneStream.ReadString(&lastScene);
                 if (lastScene.HasChars())
                 {
-                    // Check if file stil exists
+                    // Check if file slit exists
                     if (FileSystem::FileExists(lastScene))
                     {
                         // Change scene

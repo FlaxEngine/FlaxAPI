@@ -36,16 +36,16 @@ namespace FlaxEditor.States
         /// </summary>
         internal void StartInitEnding()
         {
-            ScriptsBuilder.CompilationEnd += onCompilationEnd;
+            ScriptsBuilder.CompilationEnd += OnCompilationEnd;
 
-            // Check source code has been cmpilled on start
+            // Check source code has been compiled on start
             if (ScriptsBuilder.CompilationsCount > 0)
             {
                 // Check if compilation has been ended
                 if (ScriptsBuilder.IsReady)
                 {
                     // We assume source code has been compiled before Editor init
-                    onCompilationEnd(true);
+                    OnCompilationEnd(true);
                 }
             }
             else
@@ -60,7 +60,7 @@ namespace FlaxEditor.States
             }
         }
 
-        private void onCompilationEnd(bool success)
+        private void OnCompilationEnd(bool success)
         {
             // Check if compilation success
             if (success)
@@ -98,7 +98,7 @@ namespace FlaxEditor.States
         /// <inheritdoc />
         public override void OnExit(State nextState)
         {
-            ScriptsBuilder.CompilationEnd -= onCompilationEnd;
+            ScriptsBuilder.CompilationEnd -= OnCompilationEnd;
         }
     }
 }

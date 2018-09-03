@@ -9,7 +9,7 @@ using FlaxEngine;
 namespace FlaxEditor.Viewport.Cameras
 {
     /// <summary>
-    /// Implementation of <see cref="ViewportCamera"/> that simulated the first-person ccamera which can fly though the scene.
+    /// Implementation of <see cref="ViewportCamera"/> that simulated the first-person camera which can fly though the scene.
     /// </summary>
     /// <seealso cref="FlaxEditor.Viewport.Cameras.ViewportCamera" />
     public class FPSCamera : ViewportCamera
@@ -119,7 +119,7 @@ namespace FlaxEditor.Viewport.Cameras
             Quaternion orientation = new Quaternion(0.424461186f, -0.0940724313f, 0.0443938486f, 0.899451137f);
             Vector3 position = sphere.Center - Vector3.Forward * orientation * (sphere.Radius * 2.5f);
 
-            // Move vieport
+            // Move viewport
             TargetPoint = sphere.Center;
             MoveViewport(position, orientation);
         }
@@ -127,7 +127,7 @@ namespace FlaxEditor.Viewport.Cameras
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
-            // Udate animated movement
+            // Update animated movement
             if (IsAnimatingMove)
             {
                 // Calculate linear progress

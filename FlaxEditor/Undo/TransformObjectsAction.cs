@@ -10,7 +10,7 @@ namespace FlaxEditor
 {
     /// <summary>
     /// Implementation of <see cref="IUndoAction"/> used to transform a selection of <see cref="SceneGraphNode"/>.
-    /// The same logic could be achivied using <see cref="UndoMultiBlock"/> but it would be slower.
+    /// The same logic could be achieved using <see cref="UndoMultiBlock"/> but it would be slower.
     /// Since we use this kind of action very ofter (for <see cref="FlaxEditor.Gizmo.TransformGizmo"/> operations) it's better to provide faster implementation.
     /// </summary>
     /// <seealso cref="FlaxEditor.IUndoAction" />

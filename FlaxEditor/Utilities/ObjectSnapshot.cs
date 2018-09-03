@@ -89,7 +89,7 @@ namespace FlaxEditor.Utilities
 
         private static void GetEntries(object instance, Stack<MemberInfoPath.Entry> membersPath, Type type, List<TypeEntry> result, List<object> values, Stack<object> refStack)
         {
-            // Note: this should match Flax serialization rules and atttributes (see ExtendedDefaultContractResolver)
+            // Note: this should match Flax serialization rules and attributes (see ExtendedDefaultContractResolver)
 
             var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);

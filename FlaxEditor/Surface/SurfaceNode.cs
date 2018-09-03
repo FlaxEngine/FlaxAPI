@@ -68,7 +68,7 @@ namespace FlaxEditor.Surface
         public readonly uint ID;
 
         /// <summary>
-        /// Gets the type (packed GrouID (higher 16 bits) and TypeID (lower 16 bits)).
+        /// Gets the type (packed GroupID (higher 16 bits) and TypeID (lower 16 bits)).
         /// </summary>
         /// <value>
         /// The type.
@@ -154,7 +154,7 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
-        /// Remeove all connections from and to that node.
+        /// Removes all connections from and to that node.
         /// </summary>
         public void RemoveConnections()
         {
@@ -172,7 +172,7 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void UpdateBoxesTypes()
         {
-            // Check there is no need to use box types depedency feature
+            // Check there is no need to use box types dependency feature
             if (Archetype.DependentBoxes == null || Archetype.IndependentBoxes == null)
             {
                 // Back
@@ -225,7 +225,7 @@ namespace FlaxEditor.Surface
         /// <returns>Box or null if cannot find.</returns>
         public Box GetBox(int id)
         {
-            // TODO: maybe create local cache for boxes? but not a dictionary, use lookup table because ids are usally small (less than 20)
+            // TODO: maybe create local cache for boxes? but not a dictionary, use lookup table because ids are usually small (less than 20)
             for (int i = 0; i < Elements.Count; i++)
             {
                 if (Elements[i] is Box box && box.ID == id)
@@ -242,7 +242,7 @@ namespace FlaxEditor.Surface
         /// <returns>True fi box has been found, otherwise false.</returns>
         public bool TryGetBox(int id, out Box result)
         {
-            // TODO: maybe create local cache for boxes? but not a dictionary, use lookup table because ids are usally small (less than 20)
+            // TODO: maybe create local cache for boxes? but not a dictionary, use lookup table because ids are usually small (less than 20)
             for (int i = 0; i < Elements.Count; i++)
             {
                 if (Elements[i] is Box box && box.ID == id)

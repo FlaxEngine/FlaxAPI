@@ -27,7 +27,7 @@ namespace FlaxEditor.GUI.Docking
         {
             _toMove = toMove;
             _toSet = DockState.Float;
-            var window = ((WindowRootControl)toMove.Window).Window;
+            var window = toMove.Window.Window;
 
             // Remove focus from drag target
             _toMove.Focus();
@@ -48,9 +48,9 @@ namespace FlaxEditor.GUI.Docking
             Proxy.Init(ref _defaultWindowSize);
 
             // Bind events
-            Proxy.Window.OnMouseUp += onMouseUp;
-            Proxy.Window.OnMouseMove += onMouseMove;
-            Proxy.Window.OnLostFocus += onLostFocus;
+            Proxy.Window.OnMouseUp += OnMouseUp;
+            Proxy.Window.OnMouseMove += OnMouseMove;
+            Proxy.Window.OnLostFocus += OnLostFocus;
 
             // Start tracking mouse
             Proxy.Window.StartTrackingMouse(false);
@@ -59,7 +59,7 @@ namespace FlaxEditor.GUI.Docking
             Proxy.Window.GUI.PerformLayout();
 
             // Update rectangles
-            updateRects();
+            UpdateRects();
 
             // Hide base window
             window.Hide();
@@ -80,9 +80,9 @@ namespace FlaxEditor.GUI.Docking
             Proxy.Window.RenderingEnabled = false;
 
             // Unbind events
-            Proxy.Window.OnMouseUp -= onMouseUp;
-            Proxy.Window.OnMouseMove -= onMouseMove;
-            Proxy.Window.OnLostFocus -= onLostFocus;
+            Proxy.Window.OnMouseUp -= OnMouseUp;
+            Proxy.Window.OnMouseMove -= OnMouseMove;
+            Proxy.Window.OnLostFocus -= OnLostFocus;
 
             // Hide the proxy
             Proxy.Hide();
@@ -90,7 +90,7 @@ namespace FlaxEditor.GUI.Docking
             // Check if window won't be docked
             if (_toSet == DockState.Float)
             {
-                var window = ((WindowRootControl)_toMove.Window).Window;
+                var window = _toMove.Window.Window;
                 Vector2 mouse = Application.MousePosition;
 
                 // Move base window
@@ -211,7 +211,7 @@ namespace FlaxEditor.GUI.Docking
             return result;
         }
 
-        private void updateRects()
+        private void UpdateRects()
         {
             // Cache mouse position
             _mouse = Application.MousePosition;
@@ -315,7 +315,7 @@ namespace FlaxEditor.GUI.Docking
             Proxy.Window.ClientBounds = _rectWindow;
         }
 
-        private void onMouseUp(Vector2 location, MouseButton buttons)
+        private void OnMouseUp(Vector2 location, MouseButton buttons)
         {
             if (buttons == MouseButton.Left)
             {
@@ -323,12 +323,12 @@ namespace FlaxEditor.GUI.Docking
             }
         }
 
-        private void onMouseMove(Vector2 mousePos)
+        private void OnMouseMove(Vector2 mousePos)
         {
-            updateRects();
+            UpdateRects();
         }
 
-        private void onLostFocus()
+        private void OnLostFocus()
         {
             Dispose();
         }
@@ -341,32 +341,32 @@ namespace FlaxEditor.GUI.Docking
             /// <summary>
             /// The drag proxy window.
             /// </summary>
-            public static FlaxEngine.Window Window;
+            public static Window Window;
 
             /// <summary>
             /// The left hint proxy window.
             /// </summary>
-            public static FlaxEngine.Window Left;
+            public static Window Left;
 
             /// <summary>
             /// The right hint proxy window.
             /// </summary>
-            public static FlaxEngine.Window Right;
+            public static Window Right;
 
             /// <summary>
             /// The up hint proxy window.
             /// </summary>
-            public static FlaxEngine.Window Up;
+            public static Window Up;
 
             /// <summary>
             /// The down hint proxy window.
             /// </summary>
-            public static FlaxEngine.Window Down;
+            public static Window Down;
 
             /// <summary>
             /// The center hint proxy window.
             /// </summary>
-            public static FlaxEngine.Window Center;
+            public static Window Center;
 
             /// <summary>
             /// The hint windows size.
@@ -386,7 +386,7 @@ namespace FlaxEditor.GUI.Docking
             }
 
             /// <summary>
-            /// Inits docking proxy windows.
+            /// Initializes the hint window.
             /// </summary>
             /// <param name="initSize">Initial size of the proxy window.</param>
             public static void Init(ref Vector2 initSize)
@@ -408,7 +408,7 @@ namespace FlaxEditor.GUI.Docking
                     settings.ShowAfterFirstPaint = true;
                     settings.IsTopmost = true;
 
-                    Window = FlaxEngine.Window.Create(settings);
+                    Window = Window.Create(settings);
 
                     // Set opacity and background color
                     Window.Opacity = 0.6f;
@@ -423,7 +423,7 @@ namespace FlaxEditor.GUI.Docking
                 InitHitProxy();
             }
 
-            private static void CreateProxy(ref FlaxEngine.Window win, string name)
+            private static void CreateProxy(ref Window win, string name)
             {
                 if (win != null)
                     return;
@@ -442,7 +442,7 @@ namespace FlaxEditor.GUI.Docking
                 settings.ActivateWhenFirstShown = false;
                 settings.IsTopmost = true;
 
-                win = FlaxEngine.Window.Create(settings);
+                win = Window.Create(settings);
 
                 win.Opacity = 0.6f;
                 win.GUI.BackgroundColor = Style.Current.DragWindow;
@@ -461,7 +461,7 @@ namespace FlaxEditor.GUI.Docking
                 HideProxy(ref Center);
             }
 
-            private static void HideProxy(ref FlaxEngine.Window win)
+            private static void HideProxy(ref Window win)
             {
                 if (win)
                 {
@@ -472,7 +472,7 @@ namespace FlaxEditor.GUI.Docking
             /// <summary>
             /// Releases proxy data and windows.
             /// </summary>
-            public static void Dispsoe()
+            public static void Dispose()
             {
                 DisposeProxy(ref Window);
                 DisposeProxy(ref Left);
@@ -482,7 +482,7 @@ namespace FlaxEditor.GUI.Docking
                 DisposeProxy(ref Center);
             }
 
-            private static void DisposeProxy(ref FlaxEngine.Window win)
+            private static void DisposeProxy(ref Window win)
             {
                 if (win)
                 {

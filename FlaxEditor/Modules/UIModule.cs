@@ -255,7 +255,7 @@ namespace FlaxEditor.Modules
             InitStatusBar(mainWindow);
             InitDockPanel(mainWindow);
 
-            // Precache hint windows
+            // Cache hint windows
             DockHintWindow.Proxy.InitHitProxy();
         }
 
@@ -286,7 +286,7 @@ namespace FlaxEditor.Modules
         public override void OnExit()
         {
             // Cleanup dock panel hint proxy windows (Flax will destroy them by var but it's better to clear them earlier)
-            DockHintWindow.Proxy.Dispsoe();
+            DockHintWindow.Proxy.Dispose();
         }
 
         private void CreateStyle()

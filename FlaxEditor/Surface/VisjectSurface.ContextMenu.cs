@@ -54,7 +54,7 @@ namespace FlaxEditor.Surface
             var node = SpawnNode(visjectCmItem.GroupArchetype, visjectCmItem.NodeArchetype, _surface.PointFromParent(_cmStartPos));
 
             // And, if the user is patiently waiting for his box to get connected to the newly created one
-            //   fullfill his wish! #MagicLamp? #Genie?
+            //   fulfill his wish! #MagicLamp? #Genie?
             if (_startBox != null)
             {
                 Box alternativeBox = null;

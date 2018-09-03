@@ -135,7 +135,7 @@ namespace FlaxEditor.Windows
         }
 
         /// <summary>
-        /// Called when window should be initializated.
+        /// Called when window should be initialized.
         /// At this point, main window, content database, default editor windows are ready.
         /// </summary>
         public virtual void OnInit()

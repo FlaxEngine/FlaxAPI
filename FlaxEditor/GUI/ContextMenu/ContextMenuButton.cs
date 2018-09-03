@@ -101,7 +101,7 @@ namespace FlaxEngine.GUI
             // Draw text
             Render2D.DrawText(style.FontMedium, Text, textRect, textColor, TextAlignment.Near, TextAlignment.Center);
 
-            // Draw shortkeys
+            // Draw short keys
             Render2D.DrawText(style.FontMedium, Shortkeys, textRect, textColor, TextAlignment.Far, TextAlignment.Center);
 
             // Draw icon

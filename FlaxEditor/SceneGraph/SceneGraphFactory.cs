@@ -78,7 +78,7 @@ namespace FlaxEditor.SceneGraph
         /// <returns>The root scene node.</returns>
         public static SceneNode BuildSceneTree(Scene scene)
         {
-            // TODO: make it faster by calling engine internaly only once to gather optimzied scene tree -> but do it in late stage of editor development - no early optimization!
+            // TODO: make it faster by calling engine internally only once to gather optimized scene tree -> but do it in late stage of editor development - no early optimization!
 
             var sceneNode = new SceneNode(scene);
 

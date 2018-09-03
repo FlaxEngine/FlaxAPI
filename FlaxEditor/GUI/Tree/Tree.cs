@@ -314,7 +314,7 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// Select all expanded nodes
         /// </summary>
-        public void SelectAllExpaned()
+        public void SelectAllExpanded()
         {
             if (_supportMultiSelect)
             {
@@ -506,7 +506,7 @@ namespace FlaxEditor.GUI
                 // Select all expanded nodes
                 if (key == Keys.A && isCtrlDown)
                 {
-                    SelectAllExpaned();
+                    SelectAllExpanded();
                     return true;
                 }
             }

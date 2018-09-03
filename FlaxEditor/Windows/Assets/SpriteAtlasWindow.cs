@@ -44,7 +44,7 @@ namespace FlaxEditor.Windows.Assets
                     var count = Asset.SpritesCount;
                     var style = Style.Current;
 
-                    // Draw all splites
+                    // Draw all splits
                     for (int i = 0; i < count; i++)
                     {
                         Asset.GetSpriteArea(i, out area);
