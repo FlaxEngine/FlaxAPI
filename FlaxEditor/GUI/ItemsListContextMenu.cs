@@ -20,8 +20,15 @@ namespace FlaxEditor.GUI
         /// <seealso cref="FlaxEngine.GUI.Control" />
         public class Item : Control
         {
-            private bool _isMouseDown;
-            private List<Rectangle> _highlights;
+            /// <summary>
+            /// The is mouse down flag.
+            /// </summary>
+            protected bool _isMouseDown;
+
+            /// <summary>
+            /// The search query highlights.
+            /// </summary>
+            protected List<Rectangle> _highlights;
 
             /// <summary>
             /// Gets or sets the name.
@@ -90,11 +97,21 @@ namespace FlaxEditor.GUI
                 }
             }
 
+            /// <summary>
+            /// Gets the text rectangle.
+            /// </summary>
+            /// <param name="rect">The output rectangle.</param>
+            protected virtual void GetTextRect(out Rectangle rect)
+            {
+                rect = new Rectangle(Vector2.Zero, Size);
+            }
+
             /// <inheritdoc />
             public override void Draw()
             {
                 var style = Style.Current;
-                var rect = new Rectangle(Vector2.Zero, Size);
+                Rectangle rect;
+                GetTextRect(out rect);
 
                 // Overlay
                 if (IsMouseOver)

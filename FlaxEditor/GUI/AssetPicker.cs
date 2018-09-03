@@ -196,6 +196,8 @@ namespace FlaxEditor.GUI
 
         private Rectangle Button2Rect => new Rectangle(Height + ButtonsOffset, ButtonsSize, ButtonsSize, ButtonsSize);
 
+        private Rectangle Button3Rect => new Rectangle(Height + ButtonsOffset, ButtonsSize * 2, ButtonsSize, ButtonsSize);
+
         /// <inheritdoc />
         public override void Draw()
         {
@@ -204,6 +206,10 @@ namespace FlaxEditor.GUI
             var iconRect = IconRect;
             var button1Rect = Button1Rect;
             var button2Rect = Button2Rect;
+            var button3Rect = Button3Rect;
+
+            // Draw asset picker button
+            Render2D.DrawSprite(style.ArrowDown, button1Rect, new Color(button1Rect.Contains(_mousePos) ? 1.0f : 0.7f));
 
             // Check if has item selected
             if (_selected != null)
@@ -212,10 +218,10 @@ namespace FlaxEditor.GUI
                 _selected.DrawThumbnail(ref iconRect);
 
                 // Draw find button
-                Render2D.DrawSprite(style.Search, button1Rect, new Color(button1Rect.Contains(_mousePos) ? 1.0f : 0.7f));
+                Render2D.DrawSprite(style.Search, button2Rect, new Color(button2Rect.Contains(_mousePos) ? 1.0f : 0.7f));
 
                 // Draw remove button
-                Render2D.DrawSprite(style.Cross, button2Rect, new Color(button2Rect.Contains(_mousePos) ? 1.0f : 0.7f));
+                Render2D.DrawSprite(style.Cross, button3Rect, new Color(button3Rect.Contains(_mousePos) ? 1.0f : 0.7f));
 
                 // Draw name
                 float sizeForTextLeft = Width - button1Rect.Right;
@@ -305,14 +311,19 @@ namespace FlaxEditor.GUI
             }
 
             // Buttons logic
-            if (_selected != null)
+            if (Button1Rect.Contains(location))
             {
-                if (Button1Rect.Contains(location))
+                // Show asset picker popup
+                AssetSearchPopup.Show(this, Button1Rect.BottomLeft, IsValid, (assetItem) => SelectedItem = assetItem);
+            }
+            else if (_selected != null)
+            {
+                if (Button2Rect.Contains(location))
                 {
                     // Select asset
                     Editor.Instance.Windows.ContentWin.Select(_selected);
                 }
-                else if (Button2Rect.Contains(location))
+                else if (Button3Rect.Contains(location))
                 {
                     // Deselect asset
                     SelectedItem = null;
