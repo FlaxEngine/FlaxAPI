@@ -97,6 +97,27 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(1, "Delta Seconds", ConnectionType.Float, 1),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 6,
+                Title = "Panner",
+                Description = "Animates UVs over time",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(170, 80),
+                DefaultValues = new object[]
+                {
+                    false
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "UV", true, ConnectionType.Vector2, 0),
+                    NodeElementArchetype.Factory.Input(1, "Time", true, ConnectionType.Float, 1),
+                    NodeElementArchetype.Factory.Input(2, "Speed", true, ConnectionType.Vector2, 2),
+                    NodeElementArchetype.Factory.Text(18, Surface.Constants.LayoutOffsetY * 3 + 5, "Fractional Part"),
+                    NodeElementArchetype.Factory.Bool(0, Surface.Constants.LayoutOffsetY * 3 + 5, 0),
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Vector2, 3)
+                }
+            },
         };
     }
 }
