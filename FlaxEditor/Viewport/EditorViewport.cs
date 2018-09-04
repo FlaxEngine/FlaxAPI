@@ -891,6 +891,7 @@ namespace FlaxEditor.Viewport
         {
             new ViewModeOptions(ViewMode.Default, "Default"),
             new ViewModeOptions(ViewMode.NoPostFx, "No PostFx"),
+            new ViewModeOptions(ViewMode.Wireframe, "Wireframe"),
             new ViewModeOptions(ViewMode.LightBuffer, "Light Buffer"),
             new ViewModeOptions(ViewMode.Reflections, "Reflections Buffer"),
             new ViewModeOptions(ViewMode.Depth, "Depth Buffer"),

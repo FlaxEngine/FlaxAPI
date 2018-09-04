@@ -76,5 +76,10 @@ namespace FlaxEngine.Rendering
         /// Draw reflections buffer
         /// </summary>
         Reflections = 13,
+
+        /// <summary>
+        /// Draw scene objects in wireframe mode
+        /// </summary>
+        Wireframe = 14,
     }
 }
