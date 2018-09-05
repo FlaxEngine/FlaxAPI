@@ -228,20 +228,20 @@ namespace FlaxEditor.SceneGraph.GUI
 
             // Check if drop actors
             if (_dragActors == null)
-                _dragActors = new DragActors();
-            if (_dragActors.OnDragEnter(data, ValidateDragActor))
+                _dragActors = new DragActors(ValidateDragActor);
+            if (_dragActors.OnDragEnter(data))
                 return _dragActors.Effect;
 
             // Check if drag assets
             if (_dragAssets == null)
-                _dragAssets = new DragAssets();
-            if (_dragAssets.OnDragEnter(data, ValidateDragAsset))
+                _dragAssets = new DragAssets(ValidateDragAsset);
+            if (_dragAssets.OnDragEnter(data))
                 return _dragAssets.Effect;
 
             // Check if drag actor type
             if (_dragActorType == null)
-                _dragActorType = new DragActorType();
-            if (_dragActorType.OnDragEnter(data, ValidateDragActorType))
+                _dragActorType = new DragActorType(ValidateDragActorType);
+            if (_dragActorType.OnDragEnter(data))
                 return _dragActorType.Effect;
 
             return DragDropEffect.None;

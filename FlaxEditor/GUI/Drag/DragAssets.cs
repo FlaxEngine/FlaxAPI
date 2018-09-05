@@ -19,6 +19,10 @@ namespace FlaxEditor.GUI.Drag
         /// </summary>
         public const string DragPrefix = DragItems.DragPrefix;
 
+        public DragAssets(Func<AssetItem, bool> validateFunction) : base(validateFunction)
+        {
+        }
+
         /// <inheritdoc />
         protected override void GetherObjects(DragDataText data, Func<AssetItem, bool> validateFunc)
         {

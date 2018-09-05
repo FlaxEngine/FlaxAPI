@@ -35,8 +35,8 @@ namespace FlaxEditor.Viewport
         private ViewportWidgetButton _rotateSnapping;
         private ViewportWidgetButton _scaleSnapping;
 
-        private readonly DragAssets _dragAssets = new DragAssets();
-        private readonly DragActorType _dragActorType = new DragActorType();
+        private readonly DragAssets _dragAssets = new DragAssets(ValidateDragItem);
+        private readonly DragActorType _dragActorType = new DragActorType(ValidateDragActorType);
 
         /// <summary>
         /// The transform gizmo.
@@ -559,15 +559,15 @@ namespace FlaxEditor.Viewport
             if (result != DragDropEffect.None)
                 return result;
 
-            if (_dragAssets.OnDragEnter(data, ValidateDragItem))
+            if (_dragAssets.OnDragEnter(data))
                 result = _dragAssets.Effect;
-            if (_dragActorType.OnDragEnter(data, ValidateDragActorType))
+            if (_dragActorType.OnDragEnter(data))
                 result = _dragActorType.Effect;
 
             return result;
         }
 
-        private bool ValidateDragItem(ContentItem contentItem)
+        private static bool ValidateDragItem(ContentItem contentItem)
         {
             switch (contentItem.ItemDomain)
             {
@@ -579,7 +579,7 @@ namespace FlaxEditor.Viewport
             }
         }
 
-        private bool ValidateDragActorType(Type actorType)
+        private static bool ValidateDragActorType(Type actorType)
         {
             return true;
         }

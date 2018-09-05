@@ -20,6 +20,10 @@ namespace FlaxEditor.GUI.Drag
         /// </summary>
         public const string DragPrefix = "ACTOR!?";
 
+        public DragActors(Func<ActorNode, bool> validateFunction) : base(validateFunction)
+        {
+        }
+
         /// <inheritdoc />
         protected override void GetherObjects(DragDataText data, Func<ActorNode, bool> validateFunc)
         {

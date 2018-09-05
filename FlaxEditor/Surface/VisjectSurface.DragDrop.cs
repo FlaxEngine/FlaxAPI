@@ -11,7 +11,7 @@ namespace FlaxEditor.Surface
 {
     public partial class VisjectSurface
     {
-        private DragAssets _dragOverItems = new DragAssets();
+        private DragAssets _dragOverItems;
         private DragSurfaceParameter _dragOverParameter = new DragSurfaceParameter();
 
         /// <inheritdoc />
@@ -21,7 +21,7 @@ namespace FlaxEditor.Surface
 
             if (result == DragDropEffect.None)
             {
-                if (_dragOverItems.OnDragEnter(data, ValidateDragItemFunc))
+                if (_dragOverItems.OnDragEnter(data))
                 {
                     result = _dragOverItems.Effect;
                 }

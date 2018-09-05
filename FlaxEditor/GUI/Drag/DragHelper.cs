@@ -7,11 +7,21 @@ using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Drag
 {
+    public abstract class DragHelper
+    {
+        public abstract bool HasValidDrag { get; }
+        public abstract DragDropEffect Effect { get; }
+
+        public abstract bool OnDragEnter(DragData data);
+
+        public abstract void OnDragLeave();
+    }
+
     /// <summary>
     /// Base class for drag and drop operation helpers.
     /// </summary>
     /// <typeparam name="T">Type of the objects to collect from drag data.</typeparam>
-    public abstract class DragHelper<T>
+    public abstract class DragHelper<T> : DragHelper
     {
         /// <summary>
         /// The objects gathered.
@@ -24,7 +34,7 @@ namespace FlaxEditor.GUI.Drag
         /// <value>
         ///   <c>true</c> if this instance has valid drag data; otherwise, <c>false</c>.
         /// </value>
-        public bool HasValidDrag => Objects.Count > 0;
+        public override bool HasValidDrag => Objects.Count > 0;
 
         /// <summary>
         /// Gets the current drag effect.
@@ -32,7 +42,21 @@ namespace FlaxEditor.GUI.Drag
         /// <value>
         /// The effect.
         /// </value>
-        public DragDropEffect Effect => HasValidDrag ? DragDropEffect.Move : DragDropEffect.None;
+        public override DragDropEffect Effect => HasValidDrag ? DragDropEffect.Move : DragDropEffect.None;
+
+        /// <summary>
+        /// The validation function
+        /// </summary>
+        public Func<T, bool> ValidateFunction { get; set; }
+
+        /// <summary>
+        /// Creates a new DragHelper
+        /// </summary>
+        /// <param name="validateFunction">The validation function</param>
+        public DragHelper(Func<T, bool> validateFunction)
+        {
+            ValidateFunction = validateFunction;
+        }
 
         /// <summary>
         /// Invalids the drag data.
@@ -46,19 +70,18 @@ namespace FlaxEditor.GUI.Drag
         /// Called when drag enters.
         /// </summary>
         /// <param name="data">The data.</param>
-        /// <param name="validateFunc">The validate function. Check if gathered object is valid to drop it.</param>
         /// <returns>True if drag event is valid and can be performed, otherwise false.</returns>
-        public bool OnDragEnter(DragData data, Func<T, bool> validateFunc)
+        public override bool OnDragEnter(DragData data)
         {
-            if (data == null || validateFunc == null)
+            if (data == null || ValidateFunction == null)
                 throw new ArgumentNullException();
 
             Objects.Clear();
 
             if (data is DragDataText text)
-                GetherObjects(text, validateFunc);
+                GetherObjects(text, ValidateFunction);
             else if (data is DragDataFiles files)
-                GetherObjects(files, validateFunc);
+                GetherObjects(files, ValidateFunction);
 
             return HasValidDrag;
         }
@@ -66,7 +89,7 @@ namespace FlaxEditor.GUI.Drag
         /// <summary>
         /// Called when drag leaves.
         /// </summary>
-        public void OnDragLeave()
+        public override void OnDragLeave()
         {
             Objects.Clear();
         }
