@@ -61,6 +61,12 @@ namespace FlaxEditor.Windows.Assets
             [EditorOrder(150), EditorDisplay("Transparency"), Tooltip("Controls opacity values clipping point"), Limit(0.0f, 1.0f, 0.01f)]
             public float OpacityThreshold { get; set; }
 
+            [EditorOrder(170), EditorDisplay("Tessellation"), Tooltip("Mesh tessellation method")]
+            public TessellationMethod TessellationMode { get; set; }
+
+            [EditorOrder(175), EditorDisplay("Tessellation"), Tooltip("Maximum triangle tessellation factor"), Limit(1, 60, 0.01f)]
+            public int MaxTessellationFactor { get; set; }
+
             [EditorOrder(200), EditorDisplay("Misc"), Tooltip("True if disable depth buffer write when rendering material")]
             public bool DisableDepthWrite { get; set; }
 
@@ -334,6 +340,8 @@ namespace FlaxEditor.Windows.Assets
                 DisableDepthWrite = (info.Flags & MaterialFlags.DisableDepthWrite) != 0;
                 DisableDistortion = (info.Flags & MaterialFlags.TransparentDisableDistortion) != 0;
                 OpacityThreshold = info.OpacityThreshold;
+                TessellationMode = info.TessellationMode;
+                MaxTessellationFactor = info.MaxTessellationFactor;
                 MaskThreshold = info.MaskThreshold;
                 DecalBlendingMode = info.DecalBlendingMode;
                 PostFxLocation = info.PostFxLocation;
@@ -367,6 +375,8 @@ namespace FlaxEditor.Windows.Assets
                 if (DisableDistortion)
                     info.Flags |= MaterialFlags.TransparentDisableDistortion;
                 info.OpacityThreshold = OpacityThreshold;
+                info.TessellationMode = TessellationMode;
+                info.MaxTessellationFactor = MaxTessellationFactor;
                 info.MaskThreshold = MaskThreshold;
                 info.DecalBlendingMode = DecalBlendingMode;
                 info.PostFxLocation = PostFxLocation;

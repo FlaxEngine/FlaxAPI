@@ -44,6 +44,7 @@ namespace FlaxEditor.Surface.Archetypes
                 bool isSurface = info.Domain == MaterialDomain.Surface && isntLayered;
                 bool isLitSurface = isSurface && info.BlendMode != MaterialBlendMode.Unlit;
                 bool isTransparent = isSurface && info.BlendMode == MaterialBlendMode.Transparent;
+                bool isSurfaceWithTess = isSurface && info.TessellationMode != TessellationMethod.None;
 
                 // Update boxes
                 if (isDecal)
@@ -60,6 +61,8 @@ namespace FlaxEditor.Surface.Archetypes
                     GetBox(9).Enabled = true; // Opacity
                     GetBox(10).Enabled = false; // Refraction
                     GetBox(11).Enabled = false; // Position Offset
+                    GetBox(12).Enabled = false; // Tessellation Multiplier
+                    GetBox(13).Enabled = false; // World Displacement
                 }
                 else
                 {
@@ -74,6 +77,8 @@ namespace FlaxEditor.Surface.Archetypes
                     GetBox(9).Enabled = isTransparent || isPostFx || isGUI; // Opacity
                     GetBox(10).Enabled = isTransparent; // Refraction
                     GetBox(11).Enabled = isSurface; // Position Offset
+                    GetBox(12).Enabled = isSurfaceWithTess; // Tessellation Multiplier
+                    GetBox(13).Enabled = isSurfaceWithTess; // World Displacement
                 }
             }
 
@@ -115,7 +120,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Material",
                 Description = "Main material node",
                 Flags = NodeFlags.MaterialOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI,
-                Size = new Vector2(150, 240),
+                Size = new Vector2(150, 280),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "", true, ConnectionType.Impulse, 0),
@@ -130,6 +135,8 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(9, "Opacity", true, ConnectionType.Float, 9),
                     NodeElementArchetype.Factory.Input(10, "Refraction", true, ConnectionType.Float, 10),
                     NodeElementArchetype.Factory.Input(11, "Position Offset", true, ConnectionType.Vector3, 11),
+                    NodeElementArchetype.Factory.Input(12, "Tessellation Multiplier", true, ConnectionType.Float, 12),
+                    NodeElementArchetype.Factory.Input(13, "World Displacement", true, ConnectionType.Vector3, 13),
                 }
             },
             new NodeArchetype

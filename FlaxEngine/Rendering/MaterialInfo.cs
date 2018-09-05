@@ -312,6 +312,16 @@ namespace FlaxEngine.Rendering
         public float OpacityThreshold;
 
         /// <summary>
+        /// The tessellation mode.
+        /// </summary>
+        public TessellationMethod TessellationMode;
+
+        /// <summary>
+        /// The maximum tessellation factor (used only if material uses tessellation).
+        /// </summary>
+        public int MaxTessellationFactor;
+
+        /// <summary>
         /// Creates the default <see cref="MaterialInfo"/>.
         /// </summary>
         /// <returns>The result.</returns>
@@ -319,14 +329,16 @@ namespace FlaxEngine.Rendering
         {
             return new MaterialInfo
             {
-                Flags = MaterialFlags.None,
-                BlendMode = MaterialBlendMode.Opaque,
                 Domain = MaterialDomain.Surface,
+                BlendMode = MaterialBlendMode.Opaque,
+                Flags = MaterialFlags.None,
                 TransparentLighting = MaterialTransparentLighting.None,
                 DecalBlendingMode = MaterialDecalBlendingMode.Translucent,
                 PostFxLocation = MaterialPostFxLocation.AfterPostProcessingPass,
                 MaskThreshold = 0.3f,
                 OpacityThreshold = 0.004f,
+                TessellationMode = TessellationMethod.None,
+                MaxTessellationFactor = 15,
             };
         }
 
@@ -368,7 +380,11 @@ namespace FlaxEngine.Rendering
                    && Flags == other.Flags
                    && TransparentLighting == other.TransparentLighting
                    && DecalBlendingMode == other.DecalBlendingMode
-                   && PostFxLocation == other.PostFxLocation;
+                   && PostFxLocation == other.PostFxLocation
+                   && Mathf.NearEqual(MaskThreshold, other.MaskThreshold)
+                   && Mathf.NearEqual(OpacityThreshold, other.OpacityThreshold)
+                   && TessellationMode == other.TessellationMode
+                   && MaxTessellationFactor == other.MaxTessellationFactor;
         }
 
         /// <inheritdoc />
@@ -388,8 +404,10 @@ namespace FlaxEngine.Rendering
                 hashCode = (hashCode * 397) ^ (int)TransparentLighting;
                 hashCode = (hashCode * 397) ^ (int)PostFxLocation;
                 hashCode = (hashCode * 397) ^ (int)DecalBlendingMode;
-                hashCode = (hashCode * 397) ^ (int)MaskThreshold;
-                hashCode = (hashCode * 397) ^ (int)OpacityThreshold;
+                hashCode = (hashCode * 397) ^ (int)(MaskThreshold * 1000.0f);
+                hashCode = (hashCode * 397) ^ (int)(OpacityThreshold * 1000.0f);
+                hashCode = (hashCode * 397) ^ (int)TessellationMode;
+                hashCode = (hashCode * 397) ^ MaxTessellationFactor;
                 return hashCode;
             }
         }
