@@ -34,11 +34,16 @@ namespace FlaxEditor.Viewport
 
         private readonly DragAssets _dragAssets = new DragAssets(ValidateDragItem);
         private readonly DragActorType _dragActorType = new DragActorType(ValidateDragActorType);
-        public readonly DragHandlers DragHandlers = new DragHandlers();
         private readonly ViewportDebugDrawData _debugDrawData = new ViewportDebugDrawData(32);
 
         private ModelActor _previewModelActor;
         private int _previewModelActorEntryIndex;
+
+
+        /// <summary>
+        /// Drag handlers
+        /// </summary>
+        public readonly DragHandlers DragHandlers = new DragHandlers();
 
         /// <summary>
         /// The transform gizmo.

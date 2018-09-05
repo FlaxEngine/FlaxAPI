@@ -37,6 +37,7 @@ namespace FlaxEditor.Viewport
 
         private readonly DragAssets _dragAssets = new DragAssets(ValidateDragItem);
         private readonly DragActorType _dragActorType = new DragActorType(ValidateDragActorType);
+        private readonly DragHandlers _dragHandlers = new DragHandlers();
 
         /// <summary>
         /// The transform gizmo.
@@ -191,6 +192,9 @@ namespace FlaxEditor.Viewport
             };
             _gizmoModeScale.OnToggle += OnGizmoModeToggle;
             gizmoMode.Parent = this;
+
+            _dragHandlers.DragHelpers.Add(_dragActorType);
+            _dragHandlers.DragHelpers.Add(_dragAssets);
         }
 
         private void RenderTaskOnEnd(SceneRenderTask task, GPUContext context)
@@ -559,12 +563,9 @@ namespace FlaxEditor.Viewport
             if (result != DragDropEffect.None)
                 return result;
 
-            if (_dragAssets.OnDragEnter(data))
-                result = _dragAssets.Effect;
-            if (_dragActorType.OnDragEnter(data))
-                result = _dragActorType.Effect;
+            var dragEffect = _dragHandlers.OnDragEnter(data);
 
-            return result;
+            return dragEffect ?? result;
         }
 
         private static bool ValidateDragItem(ContentItem contentItem)
@@ -591,19 +592,15 @@ namespace FlaxEditor.Viewport
             if (result != DragDropEffect.None)
                 return result;
 
-            if (_dragAssets.HasValidDrag)
-                return _dragAssets.Effect;
-            if (_dragActorType.HasValidDrag)
-                return _dragActorType.Effect;
+            var dragEffect = _dragHandlers.Effect();
 
-            return DragDropEffect.None;
+            return dragEffect ?? DragDropEffect.None;
         }
 
         /// <inheritdoc />
         public override void OnDragLeave()
         {
-            _dragAssets.OnDragLeave();
-            _dragActorType.OnDragLeave();
+            _dragHandlers.OnDragLeave();
 
             base.OnDragLeave();
         }
@@ -726,7 +723,7 @@ namespace FlaxEditor.Viewport
             // Check if drag sth
             Vector3 hitLocation = ViewPosition;
             SceneGraphNode hit = null;
-            if (_dragAssets.HasValidDrag || _dragActorType.HasValidDrag)
+            if (_dragHandlers.HasValidDrag())
             {
                 // Get mouse ray and try to hit any object
                 var ray = ConvertMouseToRay(ref location);

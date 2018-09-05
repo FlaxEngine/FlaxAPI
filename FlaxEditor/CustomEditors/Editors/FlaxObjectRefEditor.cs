@@ -36,6 +36,7 @@ namespace FlaxEditor.CustomEditors.Editors
             private DragActors _dragActorsWithScript;
             private DragAssets _dragAssets;
             private DragScripts _dragScripts;
+            private DragHandlers _dragHandlers;
 
             /// <summary>
             /// Gets or sets the allowed objects type (given type and all sub classes). Must be <see cref="Object"/> type of any subclass.
@@ -307,6 +308,14 @@ namespace FlaxEditor.CustomEditors.Editors
                     _dragAssets = new DragAssets(ValidateDragAsset);
                 if (_dragScripts == null)
                     _dragScripts = new DragScripts(IsValid);
+                if (_dragHandlers == null)
+                {
+                    _dragHandlers = new DragHandlers();
+                    _dragHandlers.DragHelpers.Add(_dragActors);
+                    _dragHandlers.DragHelpers.Add(_dragActorsWithScript);
+                    _dragHandlers.DragHelpers.Add(_dragAssets);
+                    _dragHandlers.DragHelpers.Add(_dragScripts);
+                }
 
                 _hasValidDragOver = false;
                 if (_dragActors.OnDragEnter(data))
@@ -366,9 +375,7 @@ namespace FlaxEditor.CustomEditors.Editors
             public override void OnDragLeave()
             {
                 _hasValidDragOver = false;
-                _dragActors.OnDragLeave();
-                _dragAssets.OnDragLeave();
-                _dragScripts.OnDragLeave();
+                _dragHandlers.OnDragLeave();
 
                 base.OnDragLeave();
             }

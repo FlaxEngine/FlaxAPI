@@ -22,6 +22,7 @@ namespace FlaxEditor.SceneGraph.GUI
         private DragActors _dragActors;
         private DragAssets _dragAssets;
         private DragActorType _dragActorType;
+        private DragHandlers _dragHandlers;
 
         /// <summary>
         /// The actor node that owns this node.
@@ -226,21 +227,33 @@ namespace FlaxEditor.SceneGraph.GUI
                     return DragDropEffect.None;
             }
 
+            if (_dragHandlers == null)
+                _dragHandlers = new DragHandlers();
+
             // Check if drop actors
             if (_dragActors == null)
+            {
                 _dragActors = new DragActors(ValidateDragActor);
+                _dragHandlers.DragHelpers.Add(_dragActors);
+            }
             if (_dragActors.OnDragEnter(data))
                 return _dragActors.Effect;
 
             // Check if drag assets
             if (_dragAssets == null)
+            {
                 _dragAssets = new DragAssets(ValidateDragAsset);
+                _dragHandlers.DragHelpers.Add(_dragAssets);
+            }
             if (_dragAssets.OnDragEnter(data))
                 return _dragAssets.Effect;
 
             // Check if drag actor type
             if (_dragActorType == null)
+            {
                 _dragActorType = new DragActorType(ValidateDragActorType);
+                _dragHandlers.DragHelpers.Add(_dragActorType);
+            }
             if (_dragActorType.OnDragEnter(data))
                 return _dragActorType.Effect;
 
@@ -250,22 +263,13 @@ namespace FlaxEditor.SceneGraph.GUI
         /// <inheritdoc />
         protected override DragDropEffect OnDragMoveHeader(DragData data)
         {
-            if (_dragActors != null && _dragActors.HasValidDrag)
-                return _dragActors.Effect;
-            if (_dragAssets != null && _dragAssets.HasValidDrag)
-                return _dragAssets.Effect;
-            if (_dragActorType != null && _dragActorType.HasValidDrag)
-                return _dragActorType.Effect;
-
-            return DragDropEffect.None;
+            return _dragHandlers.Effect() ?? DragDropEffect.None;
         }
 
         /// <inheritdoc />
         protected override void OnDragLeaveHeader()
         {
-            _dragActors?.OnDragLeave();
-            _dragAssets?.OnDragLeave();
-            _dragActorType?.OnDragLeave();
+            _dragHandlers.OnDragLeave();
         }
 
         private class ReparentAction : IUndoAction
