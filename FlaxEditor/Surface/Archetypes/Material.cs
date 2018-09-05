@@ -360,6 +360,18 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "Bitangent", ConnectionType.Vector3, 0),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 18,
+                Title = "Camera Position",
+                Description = "World space camera location",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(160, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "XYZ", ConnectionType.Vector3, 0),
+                }
+            },
         };
     }
 }
