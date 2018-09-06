@@ -234,7 +234,7 @@ namespace FlaxEditor.SceneGraph.GUI
             if (_dragActors == null)
             {
                 _dragActors = new DragActors(ValidateDragActor);
-                _dragHandlers.DragHelpers.Add(_dragActors);
+                _dragHandlers.Add(_dragActors);
             }
             if (_dragActors.OnDragEnter(data))
                 return _dragActors.Effect;
@@ -243,7 +243,7 @@ namespace FlaxEditor.SceneGraph.GUI
             if (_dragAssets == null)
             {
                 _dragAssets = new DragAssets(ValidateDragAsset);
-                _dragHandlers.DragHelpers.Add(_dragAssets);
+                _dragHandlers.Add(_dragAssets);
             }
             if (_dragAssets.OnDragEnter(data))
                 return _dragAssets.Effect;
@@ -252,7 +252,7 @@ namespace FlaxEditor.SceneGraph.GUI
             if (_dragActorType == null)
             {
                 _dragActorType = new DragActorType(ValidateDragActorType);
-                _dragHandlers.DragHelpers.Add(_dragActorType);
+                _dragHandlers.Add(_dragActorType);
             }
             if (_dragActorType.OnDragEnter(data))
                 return _dragActorType.Effect;

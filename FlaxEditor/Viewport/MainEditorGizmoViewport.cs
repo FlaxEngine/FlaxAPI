@@ -222,8 +222,8 @@ namespace FlaxEditor.Viewport
             ViewWidgetButtonMenu.AddSeparator();
             ViewWidgetButtonMenu.AddButton("Create camera here", CreateCameraAtView);
 
-            DragHandlers.DragHelpers.Add(_dragActorType);
-            DragHandlers.DragHelpers.Add(_dragAssets);
+            DragHandlers.Add(_dragActorType);
+            DragHandlers.Add(_dragAssets);
         }
 
         private void CreateCameraAtView()

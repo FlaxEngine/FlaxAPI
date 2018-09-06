@@ -311,10 +311,10 @@ namespace FlaxEditor.CustomEditors.Editors
                 if (_dragHandlers == null)
                 {
                     _dragHandlers = new DragHandlers();
-                    _dragHandlers.DragHelpers.Add(_dragActors);
-                    _dragHandlers.DragHelpers.Add(_dragActorsWithScript);
-                    _dragHandlers.DragHelpers.Add(_dragAssets);
-                    _dragHandlers.DragHelpers.Add(_dragScripts);
+                    _dragHandlers.Add(_dragActors);
+                    _dragHandlers.Add(_dragActorsWithScript);
+                    _dragHandlers.Add(_dragAssets);
+                    _dragHandlers.Add(_dragScripts);
                 }
 
                 _hasValidDragOver = false;

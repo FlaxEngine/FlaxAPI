@@ -193,8 +193,8 @@ namespace FlaxEditor.Viewport
             _gizmoModeScale.OnToggle += OnGizmoModeToggle;
             gizmoMode.Parent = this;
 
-            _dragHandlers.DragHelpers.Add(_dragActorType);
-            _dragHandlers.DragHelpers.Add(_dragAssets);
+            _dragHandlers.Add(_dragActorType);
+            _dragHandlers.Add(_dragAssets);
         }
 
         private void RenderTaskOnEnd(SceneRenderTask task, GPUContext context)

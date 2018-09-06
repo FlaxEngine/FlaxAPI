@@ -7,34 +7,27 @@ using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Drag
 {
-    public sealed class DragCustom<T> : DragHelper<T> where T : class
+    public abstract class DragCustom<T> : DragHelper<T> where T : class
     {
-        private Func<DragData, T> _fromDragData { get; }
-
-        private Action<T> _spawn { get; }
-
-        public DragCustom(Func<T, DragData> toDragData, Func<DragData, T> fromDragData, Action<T> spawn) : this(_ => true, toDragData, fromDragData, spawn)
+        protected DragCustom(Func<T, bool> validateFunction) : base(validateFunction)
         {
         }
 
-        public DragCustom(Func<T, bool> validateFunction, Func<T, DragData> toDragData, Func<DragData, T> fromDragData, Action<T> spawn) : base(validateFunction)
-        {
-            ToDragData = toDragData;
-            _fromDragData = fromDragData;
-            _spawn = spawn;
-        }
+        public abstract DragData ToDragData(T item);
 
-        public Func<T, DragData> ToDragData { get; }
+        public abstract T FromDragData(DragData data);
+
+        public abstract void DragDrop(T item);
 
         ///<inheritdoc/>
-        public override bool OnDragEnter(DragData data)
+        public sealed override bool OnDragEnter(DragData data)
         {
             if (data == null || ValidateFunction == null)
                 throw new ArgumentNullException();
 
             Objects.Clear();
 
-            var item = _fromDragData(data);
+            var item = FromDragData(data);
             if (item != null && ValidateFunction(item))
                 Objects.Add(item);
 
@@ -42,9 +35,9 @@ namespace FlaxEditor.GUI.Drag
         }
 
         ///<inheritdoc/>
-        public override void OnDragDrop()
+        public sealed override void OnDragDrop()
         {
-            if (HasValidDrag) _spawn(Objects[0]);
+            if (HasValidDrag) DragDrop(Objects[0]);
             base.OnDragDrop();
         }
     }

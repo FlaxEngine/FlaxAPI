@@ -8,14 +8,28 @@ using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Drag
 {
+    /// <summary>
+    /// Handles a list of <see cref="DragHelper{T}"/>s
+    /// </summary>
     public class DragHandlers
     {
-        public readonly List<DragHelper> DragHelpers = new List<DragHelper>();
+        private readonly List<DragHelper> _dragHelpers = new List<DragHelper>();
+
+        /// <summary>
+        /// Adds a <see cref="DragHelper{T}"/>
+        /// </summary>
+        /// <param name="helper">The drag helper to add</param>
+        /// <returns>The drag helper that was just added</returns>
+        public DragHelper Add(DragHelper helper)
+        {
+            _dragHelpers.Add(helper);
+            return helper;
+        }
 
         public DragDropEffect? OnDragEnter(/*ref Vector2 location, */DragData data)
         {
             DragDropEffect? effect = null;
-            foreach (var dragHelper in DragHelpers)
+            foreach (var dragHelper in _dragHelpers)
             {
                 if (dragHelper.OnDragEnter(data))
                 {
@@ -28,7 +42,7 @@ namespace FlaxEditor.GUI.Drag
 
         public void OnDragLeave()
         {
-            foreach (var dragHelper in DragHelpers)
+            foreach (var dragHelper in _dragHelpers)
             {
                 dragHelper.OnDragLeave();
             }
@@ -36,7 +50,7 @@ namespace FlaxEditor.GUI.Drag
 
         public void OnDragDrop(/*ref Vector2 location, DragData data*/)
         {
-            foreach (var dragHelper in DragHelpers)
+            foreach (var dragHelper in _dragHelpers)
             {
                 dragHelper.OnDragDrop();
             }
@@ -44,7 +58,7 @@ namespace FlaxEditor.GUI.Drag
 
         public bool HasValidDrag()
         {
-            foreach (var dragHelper in DragHelpers)
+            foreach (var dragHelper in _dragHelpers)
             {
                 if (dragHelper.HasValidDrag)
                 {
@@ -56,14 +70,14 @@ namespace FlaxEditor.GUI.Drag
 
         public DragHelper WithValidDrag()
         {
-            return DragHelpers
+            return _dragHelpers
                 .DefaultIfEmpty()
                 .First(helper => helper.HasValidDrag);
         }
 
         public DragHelper<T> WithValidDrag<T>()
         {
-            return DragHelpers
+            return _dragHelpers
                 .DefaultIfEmpty()
                 .OfType<DragHelper<T>>()
                 .First(helper => helper.HasValidDrag);
@@ -71,7 +85,7 @@ namespace FlaxEditor.GUI.Drag
 
         public DragDropEffect? Effect()
         {
-            foreach (var dragHelper in DragHelpers)
+            foreach (var dragHelper in _dragHelpers)
             {
                 if (dragHelper.HasValidDrag)
                 {
