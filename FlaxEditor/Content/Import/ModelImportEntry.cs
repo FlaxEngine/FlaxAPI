@@ -216,6 +216,12 @@ namespace FlaxEditor.Content.Import
         [EditorOrder(1070), EditorDisplay("Animation"), Tooltip("The custom node name to be used as a root motion source. If not specified the actual root node will be used.")]
         public string RootNodeName { get; set; }
 
+        /// <summary>
+        /// If checked, the importer will try to restore the model material slots.
+        /// </summary>
+        [EditorOrder(1100), EditorDisplay("Miscellaneous"), Tooltip("If checked, the importer will try to restore the model material slots.")]
+        public bool RestoreMaterialsOnReimport { get; set; }
+
         [StructLayout(LayoutKind.Sequential)]
         internal struct InternalOptions
         {
@@ -247,6 +253,9 @@ namespace FlaxEditor.Content.Import
             public byte OptimizeKeyframes;
             public byte EnableRootMotion;
             public string RootNodeName;
+
+            // Misc
+            public bool RestoreMaterialsOnReimport;
         }
 
         internal void ToInternal(out InternalOptions options)
@@ -275,6 +284,7 @@ namespace FlaxEditor.Content.Import
                 OptimizeKeyframes = (byte)(OptimizeKeyframes ? 1 : 0),
                 EnableRootMotion = (byte)(EnableRootMotion ? 1 : 0),
                 RootNodeName = RootNodeName,
+                RestoreMaterialsOnReimport = RestoreMaterialsOnReimport,
             };
         }
 
@@ -301,6 +311,7 @@ namespace FlaxEditor.Content.Import
             OptimizeKeyframes = options.OptimizeKeyframes != 0;
             EnableRootMotion = options.EnableRootMotion != 0;
             RootNodeName = options.RootNodeName;
+            RestoreMaterialsOnReimport = options.RestoreMaterialsOnReimport;
         }
 
         /// <summary>
