@@ -34,12 +34,17 @@ namespace FlaxEditor.Viewport
 
         private readonly DragAssets _dragAssets = new DragAssets(ValidateDragItem);
         private readonly DragActorType _dragActorType = new DragActorType(ValidateDragActorType);
-        private readonly DragHandlers _dragHandlers = new DragHandlers();
+
 
         private readonly ViewportDebugDrawData _debugDrawData = new ViewportDebugDrawData(32);
 
         private ModelActor _previewModelActor;
         private int _previewModelActorEntryIndex;
+
+        /// <summary>
+        /// Drag and drop handlers
+        /// </summary>
+        public readonly DragHandlers DragHandlers = new DragHandlers();
 
         /// <summary>
         /// The transform gizmo.
@@ -63,11 +68,6 @@ namespace FlaxEditor.Viewport
 
         /// <inheritdoc />
         public ViewportDebugDrawData DebugDrawData => _debugDrawData;
-
-        /// <summary>
-        /// When something is dropped into the main editor viewport
-        /// </summary>
-        public event Action<Vector2, DragData> DragDrop;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainEditorGizmoViewport"/> class.
@@ -222,8 +222,8 @@ namespace FlaxEditor.Viewport
             ViewWidgetButtonMenu.AddSeparator();
             ViewWidgetButtonMenu.AddButton("Create camera here", CreateCameraAtView);
 
-            _dragHandlers.DragHelpers.Add(_dragActorType);
-            _dragHandlers.DragHelpers.Add(_dragAssets);
+            DragHandlers.DragHelpers.Add(_dragActorType);
+            DragHandlers.DragHelpers.Add(_dragAssets);
         }
 
         private void CreateCameraAtView()
@@ -652,7 +652,7 @@ namespace FlaxEditor.Viewport
             if (result != DragDropEffect.None)
                 return result;
 
-            var dragEffect = _dragHandlers.OnDragEnter(data);
+            var dragEffect = DragHandlers.OnDragEnter(data);
             if (dragEffect.HasValue)
                 result = dragEffect.Value;
 
@@ -690,7 +690,7 @@ namespace FlaxEditor.Viewport
 
             SetDragEffects(ref location);
 
-            var dragEffect = _dragHandlers.Effect();
+            var dragEffect = DragHandlers.Effect();
             if (dragEffect.HasValue)
                 return dragEffect.Value;
 
@@ -702,7 +702,7 @@ namespace FlaxEditor.Viewport
         {
             ClearDragEffects();
 
-            _dragHandlers.OnDragLeave();
+            DragHandlers.OnDragLeave();
 
             base.OnDragLeave();
         }
@@ -827,7 +827,7 @@ namespace FlaxEditor.Viewport
             // Check if drag sth
             Vector3 hitLocation = ViewPosition;
             SceneGraphNode hit = null;
-            if (_dragHandlers.HasValidDrag())
+            if (DragHandlers.HasValidDrag())
             {
                 GetHitLocation(ref location, out hit, out hitLocation);
             }
@@ -857,8 +857,7 @@ namespace FlaxEditor.Viewport
                 }
             }
 
-            DragDrop?.Invoke(location, data);
-
+            DragHandlers.OnDragDrop();
 
             return result;
         }

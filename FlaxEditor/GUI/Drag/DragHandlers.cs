@@ -34,6 +34,14 @@ namespace FlaxEditor.GUI.Drag
             }
         }
 
+        public void OnDragDrop(/*ref Vector2 location, DragData data*/)
+        {
+            foreach (var dragHelper in DragHelpers)
+            {
+                dragHelper.OnDragDrop();
+            }
+        }
+
         public bool HasValidDrag()
         {
             foreach (var dragHelper in DragHelpers)

@@ -11,10 +11,9 @@ namespace FlaxEditor.GUI.Drag
     {
         public abstract bool HasValidDrag { get; }
         public abstract DragDropEffect Effect { get; }
-
         public abstract bool OnDragEnter(DragData data);
-
         public abstract void OnDragLeave();
+        public abstract void OnDragDrop();
     }
 
     /// <summary>
@@ -34,7 +33,7 @@ namespace FlaxEditor.GUI.Drag
         /// <value>
         ///   <c>true</c> if this instance has valid drag data; otherwise, <c>false</c>.
         /// </value>
-        public override bool HasValidDrag => Objects.Count > 0;
+        public sealed override bool HasValidDrag => Objects.Count > 0;
 
         /// <summary>
         /// Gets the current drag effect.
@@ -53,7 +52,7 @@ namespace FlaxEditor.GUI.Drag
         /// Creates a new DragHelper
         /// </summary>
         /// <param name="validateFunction">The validation function</param>
-        public DragHelper(Func<T, bool> validateFunction)
+        protected DragHelper(Func<T, bool> validateFunction)
         {
             ValidateFunction = validateFunction;
         }
@@ -97,7 +96,7 @@ namespace FlaxEditor.GUI.Drag
         /// <summary>
         /// Called when drag drops.
         /// </summary>
-        public void OnDragDrop()
+        public override void OnDragDrop()
         {
             Objects.Clear();
         }
