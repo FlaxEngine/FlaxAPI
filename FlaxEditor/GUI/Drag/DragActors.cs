@@ -8,12 +8,18 @@ using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Drag
 {
+    public sealed class DragActors : DragActors<DragEventArgs>
+    {
+        public DragActors(Func<ActorNode, bool> validateFunction) : base(validateFunction)
+        {
+        }
+    }
     /// <summary>
     /// Helper class for handling <see cref="ActorNode"/> drag and drop.
     /// </summary>
     /// <seealso cref="Actor" />
     /// <seealso cref="ActorNode" />
-    public sealed class DragActors : DragHelper<ActorNode, DragEventArgs>
+    public class DragActors<U> : DragHelper<ActorNode, U> where U : DragEventArgs
     {
         /// <summary>
         /// The default prefix for drag data used for <see cref="ActorNode"/>.
@@ -100,7 +106,7 @@ namespace FlaxEditor.GUI.Drag
         }
 
         /// <inheritdoc/>
-        public override void DragDrop(DragEventArgs dragEventArgs, IEnumerable<ActorNode> item)
+        public override void DragDrop(U dragEventArgs, IEnumerable<ActorNode> item)
         {
 
         }

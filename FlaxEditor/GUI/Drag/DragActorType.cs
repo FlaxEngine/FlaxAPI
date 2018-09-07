@@ -8,12 +8,18 @@ using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Drag
 {
+    public sealed class DragActorType : DragActorType<DragEventArgs>
+    {
+        public DragActorType(Func<Type, bool> validateFunction) : base(validateFunction)
+        {
+        }
+    }
     /// <summary>
     /// Helper class for handling actor type drag and drop (for spawning).
     /// </summary>
     /// <seealso cref="Actor" />
     /// <seealso cref="ActorNode" />
-    public sealed class DragActorType : DragHelper<Type, DragEventArgs>
+    public class DragActorType<U> : DragHelper<Type, U> where U : DragEventArgs
     {
         /// <summary>
         /// The default prefix for drag data used for actor type drag and drop.
@@ -81,7 +87,7 @@ namespace FlaxEditor.GUI.Drag
             return new Type[0];
         }
 
-        public override void DragDrop(DragEventArgs dragEventArgs, IEnumerable<Type> item)
+        public override void DragDrop(U dragEventArgs, IEnumerable<Type> item)
         {
 
         }

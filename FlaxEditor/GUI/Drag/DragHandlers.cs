@@ -9,14 +9,14 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.GUI.Drag
 {
     /// <summary>
-    /// Handles a list of <see cref="DragHelper{T}"/>s
+    /// Handles a list of <see cref="DragHelper{T, U}"/>s
     /// </summary>
     public class DragHandlers
     {
         private readonly List<DragHelper> _dragHelpers = new List<DragHelper>();
 
         /// <summary>
-        /// Adds a <see cref="DragHelper{T}"/>
+        /// Adds a <see cref="DragHelper{T, U}"/>
         /// </summary>
         /// <param name="helper">The drag helper to add</param>
         /// <returns>The drag helper that was just added</returns>
@@ -48,11 +48,11 @@ namespace FlaxEditor.GUI.Drag
             }
         }
 
-        public void OnDragDrop(/*ref Vector2 location, DragData data*/)
+        public void OnDragDrop(DragEventArgs dragEventArgs)
         {
             foreach (var dragHelper in _dragHelpers)
             {
-                dragHelper.OnDragDrop();
+                dragHelper.OnDragDrop(dragEventArgs);
             }
         }
 
@@ -74,14 +74,6 @@ namespace FlaxEditor.GUI.Drag
                 .DefaultIfEmpty()
                 .First(helper => helper.HasValidDrag);
         }
-
-        /* public DragHelper<T> WithValidDrag<T>()
-         {
-             return _dragHelpers
-                 .DefaultIfEmpty()
-                 .OfType<DragHelper<T>>()
-                 .First(helper => helper.HasValidDrag);
-         }*/
 
         public DragDropEffect? Effect()
         {

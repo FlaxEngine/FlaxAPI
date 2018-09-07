@@ -567,7 +567,7 @@ namespace FlaxEditor.SceneGraph.GUI
             }
 
             // Clear cache
-            _dragHandlers.OnDragDrop();
+            _dragHandlers.OnDragDrop(null);
 
             // Check if scene has been modified
             if (result != DragDropEffect.None)

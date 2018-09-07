@@ -7,16 +7,23 @@ using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Drag
 {
+    public sealed class DragScriptItems : DragScriptItems<DragEventArgs>
+    {
+        public DragScriptItems(Func<ScriptItem, bool> validateFunction) : base(validateFunction)
+        {
+        }
+    }
+
     /// <summary>
     /// Helper class for handling <see cref="ScriptItem"/> drag and drop.
     /// </summary>
     /// <seealso cref="ScriptItem" />
-    public sealed class DragScriptItems : DragHelper<ScriptItem, DragEventArgs>
+    public class DragScriptItems<U> : DragHelper<ScriptItem, U> where U : DragEventArgs
     {
         /// <summary>
         /// The default prefix for drag data used for <see cref="ContentItem"/>.
         /// </summary>
-        public const string DragPrefix = DragItems.DragPrefix;
+        public const string DragPrefix = DragItems<DragEventArgs>.DragPrefix;
 
         /// <summary>
         /// Creates a new DragHelper
@@ -34,12 +41,12 @@ namespace FlaxEditor.GUI.Drag
 
         public static DragData GetDragData(ScriptItem item)
         {
-            return DragItems.GetDragData(item);
+            return DragItems<DragEventArgs>.GetDragData(item);
         }
 
         public static DragData GetDragData(IEnumerable<ScriptItem> items)
         {
-            return DragItems.GetDragData(items);
+            return DragItems<DragEventArgs>.GetDragData(items);
         }
 
         public override IEnumerable<ScriptItem> FromDragData(DragData data)
@@ -67,7 +74,7 @@ namespace FlaxEditor.GUI.Drag
             return new ScriptItem[0];
         }
 
-        public override void DragDrop(DragEventArgs dragEventArgs, IEnumerable<ScriptItem> item)
+        public override void DragDrop(U dragEventArgs, IEnumerable<ScriptItem> item)
         {
 
         }

@@ -8,16 +8,22 @@ using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Drag
 {
+    public sealed class DragAssets : DragAssets<DragEventArgs>
+    {
+        public DragAssets(Func<AssetItem, bool> validateFunction) : base(validateFunction)
+        {
+        }
+    }
     /// <summary>
     /// Helper class for handling <see cref="AssetItem"/> drag and drop.
     /// </summary>
     /// <seealso cref="AssetItem" />
-    public sealed class DragAssets : DragHelper<AssetItem, DragEventArgs>
+    public class DragAssets<U> : DragHelper<AssetItem, U> where U : DragEventArgs
     {
         /// <summary>
         /// The default prefix for drag data used for <see cref="ContentItem"/>.
         /// </summary>
-        public const string DragPrefix = DragItems.DragPrefix;
+        public const string DragPrefix = DragItems<DragEventArgs>.DragPrefix;
 
         /// <summary>
         /// Creates a new DragHelper
@@ -43,16 +49,16 @@ namespace FlaxEditor.GUI.Drag
 
         public static DragData GetDragData(Asset asset)
         {
-            return DragItems.GetDragData(Editor.Instance.ContentDatabase.Find(asset.ID));
+            return DragItems<DragEventArgs>.GetDragData(Editor.Instance.ContentDatabase.Find(asset.ID));
         }
         public static DragData GetDragData(AssetItem item)
         {
-            return DragItems.GetDragData(item);
+            return DragItems<DragEventArgs>.GetDragData(item);
         }
 
         public static DragData GetDragData(IEnumerable<AssetItem> items)
         {
-            return DragItems.GetDragData(items);
+            return DragItems<DragEventArgs>.GetDragData(items);
         }
 
         /// <summary>
@@ -85,7 +91,7 @@ namespace FlaxEditor.GUI.Drag
             return new AssetItem[0];
         }
 
-        public override void DragDrop(DragEventArgs dragEventArgs, IEnumerable<AssetItem> item)
+        public override void DragDrop(U dragEventArgs, IEnumerable<AssetItem> item)
         {
 
         }

@@ -857,7 +857,7 @@ namespace FlaxEditor.Viewport
                 }
             }
 
-            DragHandlers.OnDragDrop();
+            DragHandlers.OnDragDrop(null);
 
             return result;
         }
