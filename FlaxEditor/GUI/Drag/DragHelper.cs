@@ -20,7 +20,8 @@ namespace FlaxEditor.GUI.Drag
     /// Base class for drag and drop operation helpers.
     /// </summary>
     /// <typeparam name="T">Type of the objects to collect from drag data.</typeparam>
-    public abstract class DragHelper<T> : DragHelper
+    /// <typeparam name="U">Type of the drag-drop event.</typeparam>
+    public abstract class DragHelper<T, U> : DragHelper where U : DragEventArgs
     {
         /// <summary>
         /// The objects gathered.
@@ -58,6 +59,29 @@ namespace FlaxEditor.GUI.Drag
         }
 
         /// <summary>
+        /// Gets the drag data.
+        /// </summary>
+        /// <param name="item">An item.</param>
+        /// <returns>The data.</returns>
+        public abstract DragData ToDragData(T item);
+
+        /// <summary>
+        /// Gets the drag data.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        /// <returns>The data.</returns>
+        public abstract DragData ToDragData(IEnumerable<T> items);
+
+        /// <summary>
+        /// Tries to parse the drag data.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>Gathered objects or empty IEnumerable if cannot get any valid.</returns>
+        public abstract IEnumerable<T> FromDragData(DragData data);
+
+        public abstract void DragDrop(U dragEventArgs, IEnumerable<T> item);
+
+        /// <summary>
         /// Invalids the drag data.
         /// </summary>
         public void InvalidDrag()
@@ -70,17 +94,19 @@ namespace FlaxEditor.GUI.Drag
         /// </summary>
         /// <param name="data">The data.</param>
         /// <returns>True if drag event is valid and can be performed, otherwise false.</returns>
-        public override bool OnDragEnter(DragData data)
+        public sealed override bool OnDragEnter(DragData data)
         {
             if (data == null || ValidateFunction == null)
                 throw new ArgumentNullException();
 
             Objects.Clear();
 
-            if (data is DragDataText text)
-                GetherObjects(text, ValidateFunction);
-            else if (data is DragDataFiles files)
-                GetherObjects(files, ValidateFunction);
+            var items = FromDragData(data);
+            foreach (var item in items)
+            {
+                if (ValidateFunction(item))
+                    Objects.Add(item);
+            }
 
             return HasValidDrag;
         }
@@ -96,27 +122,16 @@ namespace FlaxEditor.GUI.Drag
         /// <summary>
         /// Called when drag drops.
         /// </summary>
-        public override void OnDragDrop()
+        public sealed override void OnDragDrop()
         {
+            if (HasValidDrag) DragDrop(null, Objects);
             Objects.Clear();
         }
 
-        /// <summary>
-        /// Gathers the objects from the drag data (text).
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <param name="validateFunc">The validate function.</param>
-        protected virtual void GetherObjects(DragDataText data, Func<T, bool> validateFunc)
+        public void OnDragDrop(U dragEventArgs)
         {
-        }
-
-        /// <summary>
-        /// Gathers the objects from the drag data (files).
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <param name="validateFunc">The validate function.</param>
-        protected virtual void GetherObjects(DragDataFiles data, Func<T, bool> validateFunc)
-        {
+            if (HasValidDrag) DragDrop(dragEventArgs, Objects);
+            Objects.Clear();
         }
     }
 }

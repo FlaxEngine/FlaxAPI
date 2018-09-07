@@ -13,26 +13,36 @@ namespace FlaxEditor.GUI.Drag
     /// </summary>
     /// <seealso cref="Actor" />
     /// <seealso cref="ActorNode" />
-    public sealed class DragActorType : DragHelper<Type>
+    public sealed class DragActorType : DragHelper<Type, DragEventArgs>
     {
         /// <summary>
         /// The default prefix for drag data used for actor type drag and drop.
         /// </summary>
         public const string DragPrefix = "ATYPE!?";
 
+        /// <summary>
+        /// Creates a new DragHelper
+        /// </summary>
+        /// <param name="validateFunction">The validation function</param>
         public DragActorType(Func<Type, bool> validateFunction) : base(validateFunction)
         {
         }
 
-        /// <inheritdoc />
-        protected override void GetherObjects(DragDataText data, Func<Type, bool> validateFunc)
+        /// <inheritdoc/>
+        public override DragData ToDragData(Type item) => GetDragData(item);
+
+        /// <inheritdoc/>
+        public override DragData ToDragData(IEnumerable<Type> items)
         {
-            var items = ParseData(data);
-            for (int i = 0; i < items.Length; i++)
-            {
-                if (validateFunc(items[i]))
-                    Objects.Add(items[i]);
-            }
+            throw new NotImplementedException();
+        }
+
+        public static DragData GetDragData(Type item)
+        {
+            if (item == null)
+                throw new ArgumentNullException();
+
+            return new DragDataText(DragPrefix + item.FullName);
         }
 
         /// <summary>
@@ -40,46 +50,40 @@ namespace FlaxEditor.GUI.Drag
         /// </summary>
         /// <param name="data">The data.</param>
         /// <returns>Gathered objects or empty array if cannot get any valid.</returns>
-        public static Type[] ParseData(DragDataText data)
+        public override IEnumerable<Type> FromDragData(DragData data)
         {
-            if (data.Text.StartsWith(DragPrefix))
+            if (data is DragDataText dataText)
             {
-                // Remove prefix and parse splitted names
-                var types = data.Text.Remove(0, DragPrefix.Length).Split('\n');
-                var results = new List<Type>(types.Length);
-                var assembly = Utils.GetAssemblyByName("FlaxEngine");
-                if (assembly != null)
+                if (dataText.Text.StartsWith(DragPrefix))
                 {
-                    for (int i = 0; i < types.Length; i++)
+                    // Remove prefix and parse splitted names
+                    var types = dataText.Text.Remove(0, DragPrefix.Length).Split('\n');
+                    var results = new List<Type>(types.Length);
+                    var assembly = Utils.GetAssemblyByName("FlaxEngine");
+                    if (assembly != null)
                     {
-                        // Find type
-                        var obj = assembly.GetType(types[i]);
-                        if (obj != null)
-                            results.Add(obj);
-                    }
+                        for (int i = 0; i < types.Length; i++)
+                        {
+                            // Find type
+                            var obj = assembly.GetType(types[i]);
+                            if (obj != null)
+                                results.Add(obj);
+                        }
 
-                    return results.ToArray();
-                }
-                else
-                {
-                    Editor.LogWarning("Failed to get FlaxEngine assembly to spawn actor type");
+                        return results.ToArray();
+                    }
+                    else
+                    {
+                        Editor.LogWarning("Failed to get FlaxEngine assembly to spawn actor type");
+                    }
                 }
             }
-
             return new Type[0];
         }
 
-        /// <summary>
-        /// Gets the drag data.
-        /// </summary>
-        /// <param name="actorType">The actor type.</param>
-        /// <returns>The data.</returns>
-        public static DragDataText GetDragData(Type actorType)
+        public override void DragDrop(DragEventArgs dragEventArgs, IEnumerable<Type> item)
         {
-            if (actorType == null)
-                throw new ArgumentNullException();
 
-            return new DragDataText(DragPrefix + actorType.FullName);
         }
     }
 }

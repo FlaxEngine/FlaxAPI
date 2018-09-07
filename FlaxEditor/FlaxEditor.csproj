@@ -192,7 +192,7 @@
     <Compile Include="GUI\ColumnDefinition.cs" />
     <Compile Include="GUI\Drag\DragActors.cs" />
     <Compile Include="GUI\Drag\DragActorType.cs" />
-    <Compile Include="GUI\Drag\DragCustom.cs" />
+    <Compile Include="GUI\Drag\DragEventArgs.cs" />
     <Compile Include="GUI\Drag\DragHandlers.cs" />
     <Compile Include="GUI\Drag\DragScriptItems.cs" />
     <Compile Include="GUI\Drag\DragScripts.cs" />

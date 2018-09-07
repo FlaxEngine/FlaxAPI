@@ -11,61 +11,37 @@ namespace FlaxEditor.GUI.Drag
     /// Helper class for handling <see cref="ContentItem"/> drag and drop.
     /// </summary>
     /// <seealso cref="ContentItem" />
-    public sealed class DragItems : DragHelper<ContentItem>
+    public sealed class DragItems : DragHelper<ContentItem, DragEventArgs>
     {
         /// <summary>
         /// The default prefix for drag data used for <see cref="ContentItem"/>.
         /// </summary>
         public const string DragPrefix = "ASSET!?";
 
+        /// <summary>
+        /// Creates a new DragHelper
+        /// </summary>
+        /// <param name="validateFunction">The validation function</param>
         public DragItems(Func<ContentItem, bool> validateFunction) : base(validateFunction)
         {
         }
 
-        /// <inheritdoc />
-        protected override void GetherObjects(DragDataText data, Func<ContentItem, bool> validateFunc)
+        public DragData ToDragData(string path) => GetDragData(path);
+
+        /// <inheritdoc/>
+        public override DragData ToDragData(ContentItem item) => GetDragData(item);
+
+        /// <inheritdoc/>
+        public override DragData ToDragData(IEnumerable<ContentItem> items) => GetDragData(items);
+
+        public static DragData GetDragData(string path)
         {
-            var items = ParseData(data);
-            for (int i = 0; i < items.Length; i++)
-            {
-                if (validateFunc(items[i]))
-                    Objects.Add(items[i]);
-            }
+            if (path == null)
+                throw new ArgumentNullException();
+
+            return new DragDataText(DragPrefix + path);
         }
 
-        /// <summary>
-        /// Tries to parse the drag data to extract <see cref="ContentItem"/> collection.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <returns>Gathered objects or empty array if cannot get any valid.</returns>
-        public static ContentItem[] ParseData(DragDataText data)
-        {
-            if (data.Text.StartsWith(DragPrefix))
-            {
-                // Remove prefix and parse splitted names
-                var paths = data.Text.Remove(0, DragPrefix.Length).Split('\n');
-                var results = new List<ContentItem>(paths.Length);
-                for (int i = 0; i < paths.Length; i++)
-                {
-                    // Find element
-                    var obj = Editor.Instance.ContentDatabase.Find(paths[i]);
-
-                    // Check it
-                    if (obj != null)
-                        results.Add(obj);
-                }
-
-                return results.ToArray();
-            }
-
-            return new ContentItem[0];
-        }
-
-        /// <summary>
-        /// Gets the drag data.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The data.</returns>
         public static DragDataText GetDragData(ContentItem item)
         {
             if (item == null)
@@ -74,25 +50,7 @@ namespace FlaxEditor.GUI.Drag
             return new DragDataText(DragPrefix + item.Path);
         }
 
-        /// <summary>
-        /// Gets the drag data.
-        /// </summary>
-        /// <param name="path">The full content item path.</param>
-        /// <returns>The data.</returns>
-        public static DragDataText GetDragData(string path)
-        {
-            if (path == null)
-                throw new ArgumentNullException();
-
-            return new DragDataText(DragPrefix + path);
-        }
-
-        /// <summary>
-        /// Gets the drag data.
-        /// </summary>
-        /// <param name="items">The items.</param>
-        /// <returns>The data.</returns>
-        public static DragDataText GetDragData(IEnumerable<ContentItem> items)
+        public static DragData GetDragData(IEnumerable<ContentItem> items)
         {
             if (items == null)
                 throw new ArgumentNullException();
@@ -101,6 +59,38 @@ namespace FlaxEditor.GUI.Drag
             foreach (var item in items)
                 text += item.Path + '\n';
             return new DragDataText(text);
+        }
+
+        /// <inheritdoc/>
+        public override IEnumerable<ContentItem> FromDragData(DragData data)
+        {
+            if (data is DragDataText dataText)
+            {
+                if (dataText.Text.StartsWith(DragPrefix))
+                {
+                    // Remove prefix and parse splitted names
+                    var paths = dataText.Text.Remove(0, DragPrefix.Length).Split('\n');
+                    var results = new List<ContentItem>(paths.Length);
+                    for (int i = 0; i < paths.Length; i++)
+                    {
+                        // Find element
+                        var obj = Editor.Instance.ContentDatabase.Find(paths[i]);
+
+                        // Check it
+                        if (obj != null)
+                            results.Add(obj);
+                    }
+
+                    return results.ToArray();
+                }
+            }
+            return new ContentItem[0];
+        }
+
+        /// <inheritdoc/>
+        public override void DragDrop(DragEventArgs dragEventArgs, IEnumerable<ContentItem> item)
+        {
+
         }
     }
 }

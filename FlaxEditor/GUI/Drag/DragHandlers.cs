@@ -75,13 +75,13 @@ namespace FlaxEditor.GUI.Drag
                 .First(helper => helper.HasValidDrag);
         }
 
-        public DragHelper<T> WithValidDrag<T>()
-        {
-            return _dragHelpers
-                .DefaultIfEmpty()
-                .OfType<DragHelper<T>>()
-                .First(helper => helper.HasValidDrag);
-        }
+        /* public DragHelper<T> WithValidDrag<T>()
+         {
+             return _dragHelpers
+                 .DefaultIfEmpty()
+                 .OfType<DragHelper<T>>()
+                 .First(helper => helper.HasValidDrag);
+         }*/
 
         public DragDropEffect? Effect()
         {
