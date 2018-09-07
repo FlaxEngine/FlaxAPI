@@ -46,7 +46,7 @@ namespace FlaxEditor.GUI.Drag
         /// <summary>
         /// The validation function
         /// </summary>
-        public Func<T, bool> ValidateFunction { get; set; }
+        protected Func<T, bool> ValidateFunction { get; set; }
 
         /// <summary>
         /// Creates a new DragHelper
