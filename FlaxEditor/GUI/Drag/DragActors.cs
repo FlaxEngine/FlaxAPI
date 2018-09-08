@@ -104,11 +104,5 @@ namespace FlaxEditor.GUI.Drag
 
             return new ActorNode[0];
         }
-
-        /// <inheritdoc/>
-        public override void DragDrop(U dragEventArgs, IEnumerable<ActorNode> item)
-        {
-
-        }
     }
 }

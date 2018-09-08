@@ -73,10 +73,5 @@ namespace FlaxEditor.GUI.Drag
             }
             return new ScriptItem[0];
         }
-
-        public override void DragDrop(U dragEventArgs, IEnumerable<ScriptItem> item)
-        {
-
-        }
     }
 }

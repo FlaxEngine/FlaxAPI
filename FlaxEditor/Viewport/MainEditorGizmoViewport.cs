@@ -32,9 +32,14 @@ namespace FlaxEditor.Viewport
         private readonly ViewportWidgetButton _rotateSnapping;
         private readonly ViewportWidgetButton _scaleSnapping;
 
-        private readonly DragAssets _dragAssets = new DragAssets(ValidateDragItem);
-        private readonly DragActorType _dragActorType = new DragActorType(ValidateDragActorType);
+        private readonly DragAssets<DragDropEventArgs> _dragAssets = new DragAssets<DragDropEventArgs>(ValidateDragItem);
+        private readonly DragActorType<DragDropEventArgs> _dragActorType = new DragActorType<DragDropEventArgs>(ValidateDragActorType);
 
+        public class DragDropEventArgs : DragEventArgs
+        {
+            public SceneGraphNode Hit;
+            public Vector3 HitLocation;
+        }
 
         private readonly ViewportDebugDrawData _debugDrawData = new ViewportDebugDrawData(32);
 
@@ -857,7 +862,7 @@ namespace FlaxEditor.Viewport
                 }
             }
 
-            DragHandlers.OnDragDrop(null);
+            DragHandlers.OnDragDrop(new DragDropEventArgs() { Hit = hit, HitLocation = hitLocation });
 
             return result;
         }

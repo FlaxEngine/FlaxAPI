@@ -93,11 +93,5 @@ namespace FlaxEditor.GUI.Drag
             }
             return new ContentItem[0];
         }
-
-        /// <inheritdoc/>
-        public override void DragDrop(U dragEventArgs, IEnumerable<ContentItem> item)
-        {
-
-        }
     }
 }

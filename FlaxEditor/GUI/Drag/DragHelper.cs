@@ -80,7 +80,9 @@ namespace FlaxEditor.GUI.Drag
         /// <returns>Gathered objects or empty IEnumerable if cannot get any valid.</returns>
         public abstract IEnumerable<T> FromDragData(DragData data);
 
+
         //TODO: This could also be an event or something
+        //public DragDropEvent<U> DragDrop;
         public virtual void DragDrop(U dragEventArgs, IEnumerable<T> item)
         {
 
@@ -133,6 +135,11 @@ namespace FlaxEditor.GUI.Drag
             Objects.Clear();
         }
 
+
+        /// <summary>
+        /// Called when drag drops.
+        /// </summary>
+        /// <param name="dragEventArgs">Arguments</param>
         public sealed override void OnDragDrop(DragEventArgs dragEventArgs)
         {
             if (HasValidDrag) DragDrop(dragEventArgs as U, Objects);
