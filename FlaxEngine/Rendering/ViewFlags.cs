@@ -126,9 +126,14 @@ namespace FlaxEngine.Rendering
         Fog = 1 << 22,
 
         /// <summary>
+        /// Shows/hides the motion blur effect.
+        /// </summary>
+        MotionBlur = 1 << 23,
+
+        /// <summary>
         /// Default flags for Game
         /// </summary>
-        DefaultGame = DynamicActors | Reflections | DepthOfField | Fog | Decals
+        DefaultGame = DynamicActors | Reflections | DepthOfField | Fog | Decals | MotionBlur
                       | SSR | AO | GI | DirectionalLights | PointLights | SpotLights | SkyLights | Shadows | SpecularLight
                       | AntiAliasing | CustomPostProcess | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares,
 
@@ -143,7 +148,7 @@ namespace FlaxEngine.Rendering
         /// Default flags for materials/models previews generating
         /// </summary>
         DefaultAssetPreview = DynamicActors | Reflections | Decals
-                             | GI | DirectionalLights | PointLights | SpotLights | SkyLights | SpecularLight
-                             | AntiAliasing | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares,
+                              | GI | DirectionalLights | PointLights | SpotLights | SkyLights | SpecularLight
+                              | AntiAliasing | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares,
     }
 }

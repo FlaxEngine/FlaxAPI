@@ -960,7 +960,7 @@ namespace FlaxEditor.Viewport
             new ViewFlagOptions(ViewFlags.Shadows, "Shadows"),
             new ViewFlagOptions(ViewFlags.DynamicActors, "Dynamic Actors"),
             new ViewFlagOptions(ViewFlags.EditorSprites, "Editor Sprites"),
-            new ViewFlagOptions(ViewFlags.Reflections, "Reflectons"),
+            new ViewFlagOptions(ViewFlags.Reflections, "Reflections"),
             new ViewFlagOptions(ViewFlags.SSR, "Screen Space Reflections"),
             new ViewFlagOptions(ViewFlags.AO, "Ambient Occlusion"),
             new ViewFlagOptions(ViewFlags.GI, "Global Illumination"),
@@ -974,10 +974,11 @@ namespace FlaxEditor.Viewport
             new ViewFlagOptions(ViewFlags.CustomPostProcess, "Custom Post Process"),
             new ViewFlagOptions(ViewFlags.Bloom, "Bloom"),
             new ViewFlagOptions(ViewFlags.ToneMapping, "Tone Mapping"),
-            new ViewFlagOptions(ViewFlags.EyeAdaptation, "Eye Adaptaion"),
+            new ViewFlagOptions(ViewFlags.EyeAdaptation, "Eye Adaptation"),
             new ViewFlagOptions(ViewFlags.CameraArtifacts, "Camera Artifacts"),
             new ViewFlagOptions(ViewFlags.LensFlares, "Lens Flares"),
             new ViewFlagOptions(ViewFlags.DepthOfField, "Depth of Field"),
+            new ViewFlagOptions(ViewFlags.MotionBlur, "Motion Blur"),
             new ViewFlagOptions(ViewFlags.PhysicsDebug, "Physics Debug"),
         };
 

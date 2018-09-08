@@ -26,5 +26,10 @@ namespace FlaxEngine.Rendering
         /// Output transparent materials distortion vectors (with blending).
         /// </summary>
         TransparentDistortion,
+
+        /// <summary>
+        /// Motion vectors rendering pass (for dynamic objects).
+        /// </summary>
+        MotionVectors,
     }
 }
