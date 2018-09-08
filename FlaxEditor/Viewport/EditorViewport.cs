@@ -904,6 +904,7 @@ namespace FlaxEditor.Viewport
             new ViewModeOptions(ViewMode.Emissive, "Emissive Light"),
             new ViewModeOptions(ViewMode.Normals, "Normals"),
             new ViewModeOptions(ViewMode.AmbientOcclusion, "Ambient Occlusion"),
+            new ViewModeOptions(ViewMode.MotionVectors, "Motion Vectors"),
         };
 
         private void widgetCamSpeedShowHide(Control cm)

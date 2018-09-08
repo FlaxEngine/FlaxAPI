@@ -81,5 +81,10 @@ namespace FlaxEngine.Rendering
         /// Draw scene objects in wireframe mode
         /// </summary>
         Wireframe = 14,
+
+        /// <summary>
+        /// Draw motion vectors debug view
+        /// </summary>
+        MotionVectors = 15,
     }
 }
