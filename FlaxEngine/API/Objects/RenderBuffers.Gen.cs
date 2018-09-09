@@ -103,6 +103,22 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
+        /// Gets the motion vectors render target allocated within this render buffers collection (read only).
+        /// </summary>
+        /// <remarks>
+        /// Texture ca be null or not initialized if motion blur is disabled or not yet rendered.
+        /// </remarks>
+        [UnmanagedCall]
+        public RenderTarget MotionVectors
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetMotionVectors(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
         /// Initializes render buffers.
         /// </summary>
         /// <param name="width">The surface width in pixels.</param>
@@ -156,6 +172,9 @@ namespace FlaxEngine.Rendering
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern RenderTarget Internal_GetDepthBuffer(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern RenderTarget Internal_GetMotionVectors(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Init(IntPtr obj, int width, int height);
