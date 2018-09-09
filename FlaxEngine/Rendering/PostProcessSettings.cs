@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
+// ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
 // ReSharper disable NonReadonlyMemberInGetHashCode
 
@@ -65,7 +66,7 @@ namespace FlaxEngine.Rendering
     /// <summary>
     /// The effect pass resolution.
     /// </summary>
-    public enum ResolutionMode : int
+    public enum ResolutionMode
     {
         /// <summary>
         /// Full resolution
@@ -85,7 +86,7 @@ namespace FlaxEngine.Rendering
     public struct PostProcessSettings : IEquatable<PostProcessSettings>
     {
         /// <summary>
-        /// Packed setings storage container used with C++ interop.
+        /// Packed settings storage container used with C++ interop.
         /// </summary>
         [Serializable, StructLayout(LayoutKind.Sequential)]
         internal struct Data
@@ -106,6 +107,7 @@ namespace FlaxEngine.Rendering
             public int Flags7; // DOF
             public int Flags8; // SSR
             public int Flags9; // ColorGrading
+            public int Flags10; // MB
 
             // Ambient Occlusion
 
@@ -226,6 +228,12 @@ namespace FlaxEngine.Rendering
             public float DOF_BokehFalloff;
             public float DOF_BokehDepthCutoff;
 
+            // Motion Blur
+
+            public byte MB_Enabled;
+            public float MB_Scale;
+            public int MB_SampleCount;
+
             // Post Fx Materials
 
             public int PostFxMaterialsCount;
@@ -292,10 +300,10 @@ namespace FlaxEngine.Rendering
         /// </summary>
         /// <param name="p">The property.</param>
         /// <returns>True if property value is being overriden, otherwise false.</returns>
-        public bool GetOverriddeFlag(PropertyInfo p)
+        public bool GetOverrideFlag(PropertyInfo p)
         {
             var attributes = p.GetCustomAttributes(true);
-            var order = (EditorOrderAttribute)attributes.FirstOrDefault(x => x is EditorOrderAttribute);
+            var order = (EditorOrderAttribute)attributes.First(x => x is EditorOrderAttribute);
             return data.GetFlag(order.Order);
         }
 
@@ -307,7 +315,7 @@ namespace FlaxEngine.Rendering
         public void SetOverrideFlag(PropertyInfo p, bool value)
         {
             var attributes = p.GetCustomAttributes(true);
-            var order = (EditorOrderAttribute)attributes.FirstOrDefault(x => x is EditorOrderAttribute);
+            var order = (EditorOrderAttribute)attributes.First(x => x is EditorOrderAttribute);
             data.SetFlag(order.Order, value);
         }
 
@@ -316,7 +324,7 @@ namespace FlaxEngine.Rendering
         /// </summary>
         /// <param name="order">The property order (see <see cref="EditorOrderAttribute"/> order value for properties).</param>
         /// <returns>True if property value is being overriden, otherwise false.</returns>
-        public bool GetOverriddeFlag(int order)
+        public bool GetOverrideFlag(int order)
         {
             return data.GetFlag(order);
         }
@@ -1128,9 +1136,9 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Controls Bokeh shapes brightness fallouff parameter.
+        /// Controls Bokeh shapes brightness falloff parameter.
         /// </summary>
-        [NoSerialize, EditorOrder(712), EditorDisplay("Depth of Field", "Bokeh Falloff"), Tooltip("Controls Bokeh shapes brightness fallouff parameter"), Limit(0, 2.0f, 0.001f)]
+        [NoSerialize, EditorOrder(712), EditorDisplay("Depth of Field", "Bokeh Falloff"), Tooltip("Controls Bokeh shapes brightness falloff parameter"), Limit(0, 2.0f, 0.001f)]
         public float DOF_BokehFalloff
         {
             get => data.DOF_BokehFalloff;
@@ -1177,7 +1185,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the input depth resolution mode.
         /// </summary>
-        [NoSerialize, EditorOrder(801), EditorDisplay("Screen Space Reflections", "Depth Resolution"), Tooltip("Downscales the depth buffer to optimize raycast performance. Full gives better quality, but half improves performance. The default value is half.")]
+        [NoSerialize, EditorOrder(801), EditorDisplay("Screen Space Reflections", "Depth Resolution"), Tooltip("The depth buffer downscale option to optimize raycast performance. Full gives better quality, but half improves performance. The default value is half.")]
         public ResolutionMode SSR_DepthResolution
         {
             get => data.SSR_DepthResolution;
@@ -1236,10 +1244,10 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Ray tracing starting position is offseted by a percent of the normal in world space to avoid self occlusions.
+        /// Ray tracing starting position is offset by a percent of the normal in world space to avoid self occlusions.
         /// </summary>
         [Limit(0, 10.0f, 0.01f)]
-        [NoSerialize, EditorOrder(805), EditorDisplay("Screen Space Reflections", "World Anti Self Occlusion Bias"), Tooltip("The offset of the raycast origin. Lower values produce more correct reflection placement, but produce more artefacts. We recommend values of 0.3 or lower. The default value is 0.1.")]
+        [NoSerialize, EditorOrder(805), EditorDisplay("Screen Space Reflections", "World Anti Self Occlusion Bias"), Tooltip("The offset of the raycast origin. Lower values produce more correct reflection placement, but produce more artifacts. We recommend values of 0.3 or lower. The default value is 0.1.")]
         public float SSR_WorldAntiSelfOcclusionBias
         {
             get => data.SSR_WorldAntiSelfOcclusionBias;
@@ -1296,10 +1304,10 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether use color buffer mipsmaps chain; otherwise will use raw input color buffer to sample reflections color.
+        /// Gets or sets a value indicating whether use color buffer mipmaps chain; otherwise will use raw input color buffer to sample reflections color.
         /// Using mipmaps improves resolve pass performance and reduces GPU cache misses.
         /// </summary>
-        [NoSerialize, EditorOrder(809), EditorDisplay("Screen Space Reflections", "Use Color Buffer Mips"), Tooltip("Downscales the input color buffer and uses blurred mipmaps when resolving the reflection color. Produces more realistic results by blurring distant parts of reflections in rough (low-gloss) materials. It also improves performance on most platforms but uses more memory.")]
+        [NoSerialize, EditorOrder(809), EditorDisplay("Screen Space Reflections", "Use Color Buffer Mips"), Tooltip("The input color buffer downscale mode that uses blurred mipmaps when resolving the reflection color. Produces more realistic results by blurring distant parts of reflections in rough (low-gloss) materials. It also improves performance on most platforms but uses more memory.")]
         public bool SSR_UseColorBufferMips
         {
             get => data.SSR_UseColorBufferMips != 0;
@@ -1703,6 +1711,53 @@ namespace FlaxEngine.Rendering
             set
             {
                 data.ColorGrading_HighlightsMin = value;
+                isDataDirty = true;
+            }
+        }
+
+        #endregion
+
+
+        #region Depth of Field
+
+        /// <summary>
+        /// Gets or sets a value indicating whether Motion Blur is enabled.
+        /// </summary>
+        [NoSerialize, EditorOrder(1000), EditorDisplay("Motion Blur", "Enabled"), Tooltip("Enable motion blur effect")]
+        public bool MB_Enabled
+        {
+            get => data.MB_Enabled != 0;
+            set
+            {
+                data.MB_Enabled = (byte)(value ? 1 : 0);
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the motion blur effect scale.
+        /// </summary>
+        [NoSerialize, EditorOrder(1001), Limit(0, 5, 0.01f), EditorDisplay("Motion Blur", "Scale"), Tooltip("The motion blur effect scale.")]
+        public float MB_Scale
+        {
+            get => data.MB_Scale;
+            set
+            {
+                data.MB_Scale = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the amount of sample points used during motion blur rendering. It affects quality and performances.
+        /// </summary>
+        [NoSerialize, EditorOrder(1002), Limit(4, 32, 0.1f), EditorDisplay("Motion Blur", "Sample Count"), Tooltip("The amount of sample points used during motion blur rendering. It affects quality and performances.")]
+        public int MB_SampleCount
+        {
+            get => data.MB_SampleCount;
+            set
+            {
+                data.MB_SampleCount = value;
                 isDataDirty = true;
             }
         }
