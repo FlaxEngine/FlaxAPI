@@ -233,6 +233,7 @@ namespace FlaxEngine.Rendering
             public byte MB_Enabled;
             public float MB_Scale;
             public int MB_SampleCount;
+            public ResolutionMode MB_MotionVectorsResolution;
 
             // Post Fx Materials
 
@@ -1758,6 +1759,21 @@ namespace FlaxEngine.Rendering
             set
             {
                 data.MB_SampleCount = value;
+                isDataDirty = true;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the motion vectors texture resolution. Motion blur uses per-pixel motion vectors buffer that contains objects movement information. Use lowe resolution to improve performance.
+        /// </summary>
+        [NoSerialize, EditorOrder(1003), EditorDisplay("Motion Blur", "Motion Vectors Resolution"), Tooltip("The motion vectors texture resolution. Motion blur uses per-pixel motion vectors buffer that contains objects movement information. Use lowe resolution to improve performance.")]
+        public ResolutionMode MB_MotionVectorsResolution
+        {
+            get => data.MB_MotionVectorsResolution;
+            set
+            {
+                data.MB_MotionVectorsResolution = value;
                 isDataDirty = true;
             }
         }
