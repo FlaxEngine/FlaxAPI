@@ -61,7 +61,7 @@ namespace FlaxEditor.Viewport.Previews
         /// Initializes a new instance of the <see cref="AssetPreview"/> class.
         /// </summary>
         /// <param name="useWidgets">if set to <c>true</c> use widgets.</param>
-        public AssetPreview(bool useWidgets)
+        protected AssetPreview(bool useWidgets)
         : base(RenderTask.Create<SceneRenderTask>(), new ArcBallCamera(Vector3.Zero, 50), useWidgets)
         {
             DockStyle = DockStyle.Fill;
