@@ -1,11 +1,25 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using FlaxEngine;
 
 namespace FlaxEditor.Surface
 {
     public partial class VisjectSurface
     {
+        private string _currentInputText = "";
+        private string CurrentInputText
+        {
+            get => _currentInputText;
+            set
+            {
+                _currentInputText = value;
+                CurrentInputTextChanged(_currentInputText);
+            }
+        }
+
         /// <summary>
         /// Gets the node under the mouse location.
         /// </summary>
@@ -299,6 +313,79 @@ namespace FlaxEditor.Surface
             return true;
         }
 
+
+        /// <inheritdoc />
+        public override bool OnCharInput(char c)
+        {
+            if (base.OnCharInput(c))
+                return true;
+
+            if (HasInputSelection)
+            {
+
+                if (_hasInputSelectionChanged)
+                {
+                    ResetInputSelection();
+                }
+
+                CurrentInputText += c;
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool HasInputSelection => HasSelection;
+
+        private bool _hasInputSelectionChanged = false;
+
+        private void ResetInputSelection()
+        {
+            CurrentInputText = "";
+            _hasInputSelectionChanged = false;
+        }
+
+        private void CurrentInputTextChanged(string currentInputText)
+        {
+            if (!HasInputSelection) return;
+            if (string.IsNullOrEmpty(currentInputText)) return;
+
+            if (!_cmPrimaryMenu.Visible)
+            {
+                var node = Selection[0];
+                var firstOutputBox = node.GetBoxes().DefaultIfEmpty(null).First(box => box.IsOutput);
+                if (firstOutputBox == null) return;
+
+                _cmStartPos = _surface.PointToParent(_surface.Parent, PositionAfterNode(node));
+                _cmStartPos = Vector2.Max(_cmStartPos, Vector2.Zero);
+
+                // Show it 
+                _startBox = firstOutputBox;
+                ShowPrimaryMenu(_cmStartPos);
+
+                foreach (char character in currentInputText)
+                {
+                    // OnKeyDown-- > VisjectCM focuses on the text-thingy
+                    _cmPrimaryMenu.OnKeyDown(Keys.None);
+                    _cmPrimaryMenu.OnCharInput(character);
+                    _cmPrimaryMenu.OnKeyUp(Keys.None);
+                }
+                ResetInputSelection();
+            }
+
+            Debug.Log(currentInputText);
+        }
+
+        private Vector2 PositionAfterNode(SurfaceNode node)
+        {
+            const float DistanceBetweenNodes = 40;
+            //TODO: Doge (Much wow, such spelling) the other nodes 
+            return node.Location + new Vector2(node.Width + DistanceBetweenNodes, 0);
+        }
+
         /// <inheritdoc />
         public override bool OnKeyDown(Keys key)
         {
@@ -333,7 +420,23 @@ namespace FlaxEditor.Surface
                 }
             }
 
+            if (HasInputSelection)
+            {
+
+                if (_hasInputSelectionChanged)
+                {
+                    ResetInputSelection();
+                }
+
+                if (key == Keys.Backspace)
+                {
+                    if (CurrentInputText.Length > 0)
+                        CurrentInputText = CurrentInputText.Substring(0, CurrentInputText.Length - 1);
+                    return true;
+                }
+            }
             return false;
+
         }
     }
 }

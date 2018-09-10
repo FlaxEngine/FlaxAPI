@@ -1,7 +1,7 @@
 REM Press Build->Build Solution (F6) or Build->Build FlaxEngine (Shift+F6) to invoke this script automatically form Visual Studio Enviroment
 @echo off
 
-set outputDir=..\Source\Bin\Editor
+set outputDir=..\Source\Editor
 set outputAssembliesDir=%outputDir%\Assemblies
 
 if exist %outputDir% (
@@ -25,7 +25,9 @@ if exist %outputDir% (
 )
 
 REM Remove "REM" from lines below to enable automatic flax update with your custom DLLs, and change name of your current project
-REM if [%~1]==[-Editor] (
-REM start /wait taskkill /f /im FlaxEditor.exe /t
-REM start "Flax Editor - Development Mode" "%outputDir%\..\Win64\FlaxEditor.exe" -project "%userprofile%\Documents\Flax Projects\MyProject"
-REM )
+rem if [%~1]==[-Editor] (
+rem start /wait taskkill /f /im FlaxEditor.exe /t
+rem rem start "Flax Editor - Development Mode" "%outputDir%\..\Win64\FlaxEditor.exe" -project "%userprofile%\Documents\Flax Projects\MyProject"
+
+rem powershell start-process "%outputDir%\..\Win64\FlaxEditor.exe" -ArgumentList '-project """%userprofile%\Documents\Flax Projects\MyProject"""'
+rem )

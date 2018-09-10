@@ -24,6 +24,13 @@ namespace FlaxEditor.Surface
         /// <param name="location">The location in the Surface Space.</param>
         public void ShowPrimaryMenu(Vector2 location)
         {
+            //If the menu is not fully visible, move the surface a bit 
+            Vector2 overflow = (location + _cmPrimaryMenu.Size) - _surface.Parent.Size;
+            overflow = Vector2.Max(overflow, Vector2.Zero);
+
+            ViewPosition += overflow;
+            location -= overflow;
+
             _cmPrimaryMenu.Show(this, location);
         }
 
