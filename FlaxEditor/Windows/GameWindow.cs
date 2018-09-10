@@ -226,6 +226,18 @@ namespace FlaxEditor.Windows
             //_guiRoot.Visible = false;
         }
 
+        /// <summary>
+        /// Sets the mouse position (handles call from the game scripts). Skips if editor is not focused on a game to prevent mouse position stealing.
+        /// </summary>
+        /// <param name="val">The value.</param>
+        public void SetGameMousePosition(ref Vector2 val)
+        {
+            if (Root is WindowRootControl win && win.Window.IsFocused && win.ContainsFocus && Viewport.IsMouseOver)
+            {
+                win.MousePosition = Viewport.PointToWindow(val);
+            }
+        }
+
         /// <inheritdoc />
         public override void OnPlayBegin()
         {
