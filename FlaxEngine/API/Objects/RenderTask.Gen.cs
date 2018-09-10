@@ -48,6 +48,22 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
+        /// Marks the next rendered frame as camera cut. Used to clear the temporal effects history and prevent visual artifacts blended from the previous frames.
+        /// </summary>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void CameraCut()
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_CameraCut(unmanagedPtr);
+#endif
+        }
+
+        /// <summary>
         /// Creates the new task object.
         /// </summary>
         /// <typeparam name="T">Type of the render task to create. Includes any task derived from the type.</typeparam>
@@ -79,6 +95,9 @@ namespace FlaxEngine.Rendering
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetOrder(IntPtr obj, int val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_CameraCut(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern RenderTask Internal_CreateTask(Type type);
