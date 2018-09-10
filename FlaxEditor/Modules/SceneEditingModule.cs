@@ -185,6 +185,8 @@ namespace FlaxEditor.Modules
         /// <param name="parent">The parent actor. Set null as default.</param>
         public void Spawn(Actor actor, Actor parent = null)
         {
+            bool isPlayMode = Editor.StateMachine.IsPlayMode;
+
             if (SceneManager.IsAnySceneLoaded == false)
                 throw new InvalidOperationException("Cannot spawn actor when no scene is loaded.");
 
@@ -197,7 +199,7 @@ namespace FlaxEditor.Modules
                 throw new InvalidOperationException("Failed to create scene node for the spawned actor.");
 
             // During play in editor mode spawned actors should be dynamic (user can move them)
-            if (Editor.StateMachine.IsPlayMode)
+            if (isPlayMode)
                 actor.StaticFlags = StaticFlags.None;
 
             // Call post spawn action (can possibly setup custom default values)
@@ -211,11 +213,10 @@ namespace FlaxEditor.Modules
             Editor.Scene.MarkSceneEdited(actor.Scene);
 
             // Auto CSG mesh rebuild
-            var options = Editor.Options.Options;
-            if (options.General.AutoRebuildCSG)
+            if (isPlayMode && !Editor.Options.Options.General.AutoRebuildCSG)
             {
                 if (actor is BoxBrush && actor.Scene)
-                    actor.Scene.BuildCSG(options.General.AutoRebuildCSGTimeoutMs);
+                    actor.Scene.BuildCSG(Editor.Options.Options.General.AutoRebuildCSGTimeoutMs);
             }
         }
 
