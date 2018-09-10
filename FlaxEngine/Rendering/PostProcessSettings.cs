@@ -1763,7 +1763,6 @@ namespace FlaxEngine.Rendering
             }
         }
 
-
         /// <summary>
         /// Gets or sets the motion vectors texture resolution. Motion blur uses per-pixel motion vectors buffer that contains objects movement information. Use lowe resolution to improve performance.
         /// </summary>
