@@ -79,6 +79,7 @@ namespace FlaxEngine
         /// <value>
         /// The size.
         /// </value>
+        [NoSerialize]
         public Vector3 Size
         {
             get => Maximum - Minimum;
@@ -96,6 +97,7 @@ namespace FlaxEngine
         /// <value>
         /// The center.
         /// </value>
+        [NoSerialize]
         public Vector3 Center
         {
             get => Minimum + (Maximum - Minimum) * 0.5f;
