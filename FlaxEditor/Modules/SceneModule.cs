@@ -493,6 +493,7 @@ namespace FlaxEditor.Modules
         private void OnActorParentChanged(Actor actor, Actor prevParent)
         {
             ActorNode node = null;
+            var parentNode = GetActorNode(actor.Parent);
 
             // Try use previous parent actor to find actor node
             var prevParentNode = GetActorNode(prevParent);
@@ -507,7 +508,7 @@ namespace FlaxEditor.Modules
                     node = GetActorNode(actor);
                 }
             }
-            else
+            else if (parentNode != null)
             {
                 // Create new node for that actor (user may unlink it from the scene before and now link it)
                 node = SceneGraphFactory.BuildActorNode(actor);
@@ -516,7 +517,6 @@ namespace FlaxEditor.Modules
                 return;
 
             // Get the new parent node (may be missing)
-            var parentNode = GetActorNode(actor.Parent);
             if (parentNode != null)
             {
                 // Change parent
