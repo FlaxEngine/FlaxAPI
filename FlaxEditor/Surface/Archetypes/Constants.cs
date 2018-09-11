@@ -266,7 +266,10 @@ namespace FlaxEditor.Surface.Archetypes
             },
         };
 
-        private static bool TryParseValues(string filterText, out float[] vector)
+        /// <summary>
+        /// Tries to parse a list of numbers separated by commas
+        /// </summary>
+        private static bool TryParseValues(string filterText, out float[] values)
         {
             float[] vec = new float[4];
             int count = 0;
@@ -288,20 +291,20 @@ namespace FlaxEditor.Surface.Archetypes
                 // If the user inputted something like 3+2.2, it can't be turned into a single node
                 if (filterText.TrimEnd().Length > 0)
                 {
-                    vector = null;
+                    values = null;
                     return false;
                 }
 
                 // And return the values
-                vector = new float[count];
-                for (int i = 0; i < vector.Length; i++)
+                values = new float[count];
+                for (int i = 0; i < values.Length; i++)
                 {
-                    vector[i] = vec[i];
+                    values[i] = vec[i];
                 }
                 return true;
             }
 
-            vector = null;
+            values = null;
             return false;
         }
 
