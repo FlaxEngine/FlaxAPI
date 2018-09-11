@@ -4,6 +4,9 @@ using FlaxEngine;
 
 namespace FlaxEditor.Surface
 {
+
+    public delegate bool NodeArchetypeTryParseHandler(string filterText, out object[] data);
+
     /// <summary>
     /// Surface node archetype description.
     /// </summary>
@@ -73,5 +76,10 @@ namespace FlaxEditor.Surface
         /// Array with default elements descriptions.
         /// </summary>
         public NodeElementArchetype[] Elements;
+
+        /// <summary>
+        /// Tries to parse some text and extract the data from it
+        /// </summary>
+        public NodeArchetypeTryParseHandler TryParseText { get; internal set; }
     }
 }

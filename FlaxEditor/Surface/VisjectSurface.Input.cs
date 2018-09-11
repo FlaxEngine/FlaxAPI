@@ -350,31 +350,42 @@ namespace FlaxEditor.Surface
 
         private void CurrentInputTextChanged(string currentInputText)
         {
-            if (!HasInputSelection) return;
+            if (Selection.Count != 1) return;
             if (string.IsNullOrEmpty(currentInputText)) return;
+            if (_cmPrimaryMenu.Visible) return;
 
-            if (!_cmPrimaryMenu.Visible)
+            // # => color
+            // 1,43 => Vector2
+            // Current node should be modify-able
+
+            // Multiple nodes selected?
+
+            var node = Selection[0];
+            var firstOutputBox = node.GetBoxes().DefaultIfEmpty(null).FirstOrDefault(box => box.IsOutput);
+            if (firstOutputBox == null) return;
+
+            _cmStartPos = _surface.PointToParent(_surface.Parent, PositionAfterNode(node));
+            _cmStartPos = Vector2.Max(_cmStartPos, Vector2.Zero);
+
+            //If the menu is not fully visible, move the surface a bit 
+            Vector2 overflow = (_cmStartPos + _cmPrimaryMenu.Size) - _surface.Parent.Size;
+            overflow = Vector2.Max(overflow, Vector2.Zero);
+
+            ViewPosition += overflow;
+            _cmStartPos -= overflow;
+
+            // Show it 
+            _startBox = firstOutputBox;
+            ShowPrimaryMenu(_cmStartPos);
+
+            foreach (char character in currentInputText)
             {
-                var node = Selection[0];
-                var firstOutputBox = node.GetBoxes().DefaultIfEmpty(null).First(box => box.IsOutput);
-                if (firstOutputBox == null) return;
-
-                _cmStartPos = _surface.PointToParent(_surface.Parent, PositionAfterNode(node));
-                _cmStartPos = Vector2.Max(_cmStartPos, Vector2.Zero);
-
-                // Show it 
-                _startBox = firstOutputBox;
-                ShowPrimaryMenu(_cmStartPos);
-
-                foreach (char character in currentInputText)
-                {
-                    // OnKeyDown-- > VisjectCM focuses on the text-thingy
-                    _cmPrimaryMenu.OnKeyDown(Keys.None);
-                    _cmPrimaryMenu.OnCharInput(character);
-                    _cmPrimaryMenu.OnKeyUp(Keys.None);
-                }
-                ResetInputSelection();
+                // OnKeyDown-- > VisjectCM focuses on the text-thingy
+                _cmPrimaryMenu.OnKeyDown(Keys.None);
+                _cmPrimaryMenu.OnCharInput(character);
+                _cmPrimaryMenu.OnKeyUp(Keys.None);
             }
+            ResetInputSelection();
 
             Debug.Log(currentInputText);
         }
@@ -382,7 +393,7 @@ namespace FlaxEditor.Surface
         private Vector2 PositionAfterNode(SurfaceNode node)
         {
             const float DistanceBetweenNodes = 40;
-            //TODO: Doge (Much wow, such spelling) the other nodes 
+            //TODO: Doge the other nodes 
             return node.Location + new Vector2(node.Width + DistanceBetweenNodes, 0);
         }
 

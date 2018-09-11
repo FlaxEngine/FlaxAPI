@@ -18,7 +18,7 @@ namespace FlaxEditor.Surface.ContextMenu
         private bool _isMouseDown;
         private List<Rectangle> _highlights;
         private NodeArchetype _archetype;
-        
+
         /// <summary>
         /// Gets the item's group
         /// </summary>
@@ -42,6 +42,14 @@ namespace FlaxEditor.Surface.ContextMenu
         /// The node archetype.
         /// </value>
         public NodeArchetype NodeArchetype => _archetype;
+
+        /// <summary>
+        /// Gets and sets the data of the node.
+        /// </summary>
+        /// <value>
+        /// The data of the node.
+        /// </value>
+        public object[] Data { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VisjectCMItem"/> class.
@@ -69,6 +77,8 @@ namespace FlaxEditor.Surface.ContextMenu
             }
             else
             {
+                object[] data;
+
                 QueryFilterHelper.Range[] ranges;
                 if (QueryFilterHelper.Match(filterText, _archetype.Title, out ranges))
                 {
@@ -100,6 +110,22 @@ namespace FlaxEditor.Surface.ContextMenu
                     var end = font.GetCharPosition(_archetype.Title, _archetype.Title.Length - 1);
                     _highlights.Add(new Rectangle(start.X + 2, 0, end.X - start.X, Height));
                     Visible = true;
+                }
+                else if (NodeArchetype.TryParseText != null && NodeArchetype.TryParseText(filterText, out data))
+                {
+                    // Update highlights
+                    if (_highlights == null)
+                        _highlights = new List<Rectangle>(1);
+                    else
+                        _highlights.Clear();
+                    var style = Style.Current;
+                    var font = style.FontSmall;
+                    var start = font.GetCharPosition(_archetype.Title, 0);
+                    var end = font.GetCharPosition(_archetype.Title, _archetype.Title.Length - 1);
+                    _highlights.Add(new Rectangle(start.X + 2, 0, end.X - start.X, Height));
+                    Visible = true;
+
+                    Data = data;
                 }
                 else
                 {
